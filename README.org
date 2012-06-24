@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     fni@missioncriticalit.com
 #+DATE:      2012-06-22
-#+Time-stamp: <2012-06-24 Sun 14:56 Fabrice on MEDIACENTER>
+#+Time-stamp: <2012-06-24 Sun 14:57 Fabrice on MEDIACENTER>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en_US
@@ -20,9 +20,9 @@ a more pleasant set of defaults?  Here's the place to find one!
 Get the full Git repository at https://github.com/fniessen/emacs-leuven
 using the following command:
 
-#+begin_src sh
+#+BEGIN_SRC sh
 git clone git://github.com/fniessen/emacs-leuven.git
-#+end_src
+#+END_SRC
 
 ** Installation
 
