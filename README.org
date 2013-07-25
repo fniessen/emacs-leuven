@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     fni@missioncriticalit.com
 #+DATE:      2012-06-22
-#+Time-stamp: <2013-07-25 Thu 21:35>
+#+Time-stamp: <2013-07-25 Thu 22:47>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en_US
@@ -33,6 +33,163 @@ git clone git://github.com/fniessen/emacs-leuven.git
   #+END_SRC
 
 - Restart Emacs.
+
+** Keyboard shortcuts
+
+*** Global key bindings
+
+| <f1>    | info                                     |
+| <S-f1>  | man-follow                               |
+| <C-f1>  | info-lookup-symbol                       |
+| <f2>    | save-buffer                              |
+| <C-f2>  |                                          |
+| <f3>    | find-file (or helm-for-files)            |
+| <S-f3>  |                                          |
+| <f4>    | helm-org-headlines                       |
+| <C-f4>  | leuven-open-timeclock                    |
+| <M-f4>  | save-buffers-kill-terminal               |
+| <f5>    | delete-other-windows                     |
+| <f6>    | other-window                             |
+| <C-f6>  | balance-windows                          |
+| <M-f6>  | visible-mode                             |
+| <f7>    | leuven-babel-translate                   |
+| <f8>    | call-last-kbd-macro                      |
+| <S-f8>  | leuven-toggle-kbd-macro-recording-on/off |
+| <C-f8>  | name-last-kbd-macro                      |
+| <f9>    | recompile                                |
+| <S-f9>  | make-clean                               |
+| <C-f9>  | leuven-vc-jump                           |
+| <f10>   | next-error                               |
+| <S-f10> | previous-error                           |
+| <C-f10> | first-error                              |
+| <M-f10> | leuven-flyspell-toggle-dictionary        |
+| <f11>   | undo                                     |
+| <S-f11> | redo                                     |
+| <C-f11> | bbdb                                     |
+| <f12>   | bury-buffer                              |
+| <S-f12> | leuven-kill-this-buffer-dont-ask         |
+| <C-f12> | leuven-revert-buffer-without-query       |
+
+*** Others
+
+I still have to sort them out, by mode (when applicable).
+
+| M-g           | goto-line                                      |
+| M-G           | what-line                                      |
+| C-h E         | elisp-index-search                             |
+| C-h A         | apropos-variable                               |
+| <prior>       | pager-page-up                                  |
+| <next>        | pager-page-down                                |
+| C-*           | leuven-hlt-highlight-current-word              |
+| C-S-p         | hlt-previous-highlight                         |
+| C-S-n         | hlt-next-highlight                             |
+| C-c t         | toggle-truncate-lines                          |
+| C-o           | leuven--isearch-occur                          |
+| C-o           | occur                                          |
+| C-c d l       | dictionary-lookup-definition                   |
+| C-c d s       | dictionary-search                              |
+| C-c d m       | dictionary-match-words                         |
+| C-=           | compare-windows                                |
+| M-x           | helm-M-x                                       |
+| C-x b         | helm-buffers-list                              |
+| C-c o         | helm-occur                                     |
+| C-x r l       | helm-bookmarks                                 |
+| C-x r b       | helm-bookmark-ext                              |
+| C-x C-b       | electric-buffer-list                           |
+| C-x C-b       | ibuffer                                        |
+| <C-S-up>      | enlarge-window                                 |
+| <C-S-down>    | shrink-window                                  |
+| <C-S-left>    | enlarge-window-horizontally                    |
+| <C-S-right>   | shrink-window-horizontally                     |
+| C-c ~         | leuven-swap-windows                            |
+| C-c <pipe>    | leuven-toggle-window-split                     |
+| C-c z         | toggle-full-screen                             |
+| <right>       | speedbar-expand-line                           |
+| <left>        | speedbar-contract-line                         |
+| C-c C-x nil   |                                                |
+| <C-backspace> | backward-kill-word                             |
+| M-o           |                                                |
+| C-M-]         | org-cycle-global ;; <S-tab>                    |
+| M-]           | org-cycle-local                                |
+| C-c l         | org-store-link                                 |
+| C-c c         | org-capture                                    |
+| C-c b         | org-switchb                                    |
+| C-c a         | org-agenda                                     |
+| C-c L         | org-insert-link-global                         |
+| C-c o         | org-open-at-point-global                       |
+| C-c C-b       | org-switch-to-agenda                           |
+| C-c h         | hide-other                                     |
+| \C-\M-n       | outline-next-visible-heading                   |
+| \C-\M-p       | outline-previous-visible-heading               |
+| \C-\M-u       | outline-up-heading                             |
+| C-c C-x f     | org-footnote-action                            |
+| C-c C-x C-i   | org-clock-in                                   |
+| C-c C-x C-j   | org-clock-goto                                 |
+| C-c C-x C-o   | org-clock-out                                  |
+| C-c C-x C-q   | leuven-org-clock-in-interrupted-task           |
+| L             | leuven-org-agenda-toggle-task-details          |
+| L             | leuven-org-agenda-toggle-task-details          |
+| C-c C-e       | org-export-dispatch                            |
+| M-P           | htmlize-buffer                                 |
+| C-c C-e h o   | htmlize-view-buffer                            |
+| M-;           | leuven-org-comment-dwim                        |
+| C-M-\\        | leuven-org-indent-region                       |
+| C-c C-v C-d   | org-babel-demarcate-block                      |
+| C-c m         | org-mime-subtree                               |
+| C-c m         | leuven-mail-subtree                            |
+| <return>      | newline-and-indent                             |
+| C-%           | match-paren                                    |
+| C-c @ h       | hs-hide-block                                  |
+| C-c @ s       | hs-show-block                                  |
+| C-c 4         | leuven-rgrep                                   |
+| x             | leuven-vc-dir-hide-up-to-date-and-unregistered |
+| E             | vc-ediff                                       |
+| =             | leuven-vc-diff                                 |
+| M-?           | etags-select-find-tag-at-point                 |
+| C-c e         | ecb-minor-mode                                 |
+| M-/           | hippie-expand                                  |
+| <tab>         | ac-expand                                      |
+| <return>      | joc-dired-single-buffer                        |
+| <mouse-1>     | joc-dired-single-buffer-mouse                  |
+| ^             |                                                |
+| e             | browse-url-of-dired-file ;; <C-RET>            |
+| E             | w32-dired-open-files-externally                |
+| C-c 1         | find-name-dired                                |
+| C-c 2         | find-grep-dired                                |
+| C-c 3         | grep-find                                      |
+| >             | scroll-calendar-left                           |
+| <             | scroll-calendar-right                          |
+| C-c .         | leuven-insert-current-date                     |
+| C-c n"        |                                                |
+| <up>          | comint-previous-input                          |
+| <down>        | comint-next-input                              |
+| C-c T         | multi-term ;; create a new on                  |
+| C-c !         | shell                                          |
+| C-x p         | proced                                         |
+| M-p           | ps-print-buffer-with-faces                     |
+| C-c ^         | sort-lines                                     |
+| C-c C-c       | tidy-buffer                                    |
+| C-c g s       | google                                         |
+| C-c g g       | leuven-google-search                           |
+| C-c g w       | leuven-google-search-word-at-point             |
+| C-c g r       | leuven-google-search-region                    |
+| a             | lookup-word-definition-in-w3m                  |
+| U             | leuven-w3m-goto-url                            |
+| <up>          | previous-line                                  |
+| <down>        | next-line                                      |
+| <left>        | backward-char                                  |
+| <right>       | forward-char                                   |
+| <tab>         | w3m-next-anchor                                |
+| F             | w3m-view-next-page                             |
+| <C-tab>       | w3m-next-buffer                                |
+| <C-S-tab>     | w3m-previous-buffer                            |
+| C-t           | w3m-new-tab                                    |
+| C-w           | w3m-delete-buffer                              |
+| f             | leuven-w3m-go-to-link-number                   |
+| M--           | ess-smart-underscore                           |
+| <S-return>    | leuven-ess-eval                                |
+| <C-up>        | comint-previous-input                          |
+| <C-down>      | comint-next-input                              |
 
 ** License
 
