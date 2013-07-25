@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     fni@missioncriticalit.com
 #+DATE:      2012-06-22
-#+Time-stamp: <2013-07-25 Thu 21:08>
+#+Time-stamp: <2013-07-25 Thu 21:35>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en_US
@@ -10,10 +10,6 @@
 
 Looking for an Emacs configuration file with many packages already enabled and
 a more pleasant set of defaults?  Here's the place to find one!
-
-# Welcome to Emacs Leuven, an elegant theme for light backgrounds, with
-# built-in style for many components such as Org-mode, Gnus, Dired+ and EDiff.
-# Make it yours!
 
 ** Download
 
@@ -29,7 +25,10 @@ git clone git://github.com/fniessen/emacs-leuven.git
 - Download and install [[https://github.com/fniessen/emacs-leuven][emacs-leuven]]:
 
   #+BEGIN_SRC emacs-lisp
+  ;; make sure `emacs-leuven.el' is in your `load-path'
   (add-to-list 'load-path "/path/to/emacs-leuven")
+
+  ;; require it as normal
   (require 'emacs-leuven)
   #+END_SRC
 
