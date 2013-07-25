@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     fni@missioncriticalit.com
 #+DATE:      2012-06-22
-#+Time-stamp: <2012-06-24 Sun 15:00 Fabrice on MEDIACENTER>
+#+Time-stamp: <2013-07-25 Thu 21:08>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en_US
@@ -37,4 +37,4 @@ git clone git://github.com/fniessen/emacs-leuven.git
 
 ** License
 
-Copyright (C) 1999-2012 Fabrice Niessen
+Copyright (C) 1999-2013 Fabrice Niessen
