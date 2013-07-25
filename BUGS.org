@@ -1,0 +1,21 @@
+* Fix
+
+** Use =eval-after-load= for package config
+
+Using =eval-after-load= is one way of achieving fine grained configuration
+per-package. It falls back gracefully if the package is not present.
+
+The following code is an example of customizing a hypothetical major mode
+called =abcd-mode= using =eval-after-load=:
+
+#+begin_src emacs-lisp
+(eval-after-load "abcd-mode" ; <-- "abcd-mode", not 'abcd-mode
+#+end_src
+
+And here is an example for a hypothetical global minor mode called =broccoli=
+mode.
+
+#+begin_src emacs-lisp
+(eval-after-load "broccoli-autoloads" ; <-- "broccoli-autoloads", not "broccoli"
+#+end_src
+
