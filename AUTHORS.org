@@ -1,1 +1,1 @@
-Fabrice Niessen <fni@pirilampo.org>.
+Fabrice Niessen <(concat "fni" at-sign "pirilampo.org")>.
