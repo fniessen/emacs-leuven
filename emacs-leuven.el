@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130726.2255
+;; Version: 20130726.233
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,7 +70,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130726.2255]--")
+(message "* --[ Loading Emacs Leuven 20130726.233]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1608,27 +1608,6 @@
   ;; visit a file
   (global-set-key
    (kbd "<f3>") 'find-file)
-
-  ;; open my Timeclock file
-  (defun leuven-open-timeclock ()
-    "Switch to my timeclock file, or switch to the previous buffer."
-    (interactive)
-    (let ((timeclock-file "~/org/work/Work.org"))
-      (when (file-exists-p timeclock-file)
-        (if (and (buffer-file-name)
-                 (string= (expand-file-name timeclock-file)
-                          (expand-file-name (buffer-file-name))))
-            (bury-buffer)
-          (find-file timeclock-file)))))
-  (global-set-key
-   (kbd "<C-f4>") 'leuven-open-timeclock)
-
-  ;; visit a file
-  (global-set-key
-   (kbd "<S-f3>")
-   (lambda ()
-     (interactive)
-     (find-file "~/org/tests/org-test.txt")))
 
 ;;** 18.3 (info "(emacs)Saving") Files
 
@@ -9365,7 +9344,7 @@ From %c"
            (- (float-time) leuven-before-time))
   (sit-for 0.5)
 
-(message "* --[ Loaded Emacs Leuven 20130726.2255]--")
+(message "* --[ Loaded Emacs Leuven 20130726.233]--")
 
 (provide 'emacs-leuven)
 

@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-07-26 Fri 22:55>
+# Time-stamp: <2013-07-26 Fri 23:28>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -2382,27 +2382,6 @@ If you have some keystroke you never use, then:
   ;; visit a file
   (global-set-key
    (kbd "<f3>") 'find-file)
-
-  ;; open my Timeclock file
-  (defun leuven-open-timeclock ()
-    "Switch to my timeclock file, or switch to the previous buffer."
-    (interactive)
-    (let ((timeclock-file "~/org/work/Work.org"))
-      (when (file-exists-p timeclock-file)
-        (if (and (buffer-file-name)
-                 (string= (expand-file-name timeclock-file)
-                          (expand-file-name (buffer-file-name))))
-            (bury-buffer)
-          (find-file timeclock-file)))))
-  (global-set-key
-   (kbd "<C-f4>") 'leuven-open-timeclock)
-
-  ;; visit a file
-  (global-set-key
-   (kbd "<S-f3>")
-   (lambda ()
-     (interactive)
-     (find-file "~/org/tests/org-test.txt")))
 #+end_src
 
 ** Saving Files

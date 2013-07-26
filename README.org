@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     fni@missioncriticalit.com
 #+DATE:      2012-06-22
-#+Time-stamp: <2013-07-26 Fri 16:17>
+#+Time-stamp: <2013-07-26 Fri 23:29>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en_US
@@ -42,9 +42,8 @@ git clone git://github.com/fniessen/emacs-leuven.git
 | <S-f1>  | man-follow                               |
 | <C-f1>  | info-lookup-symbol                       |
 | <f2>    | save-buffer                              |
-| <C-f2>  |                                          |
+| <C-f2>  | (for interaction-log mode)               |
 | <f3>    | find-file (or helm-for-files)            |
-| <S-f3>  |                                          |
 | <M-f4>  | save-buffers-kill-terminal               |
 | <f5>    | delete-other-windows                     |
 | <f6>    | other-window                             |
@@ -68,9 +67,8 @@ git clone git://github.com/fniessen/emacs-leuven.git
 
 *** For Org mode
 
-| <f4>    | helm-org-headlines                       |
-| <C-f4>  | leuven-open-timeclock                    |
-| <M-f6>  | visible-mode                             |
+| <f4>   | helm-org-headlines |
+| <M-f6> | visible-mode       |
 
 *** Others
 
