@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130726.1427
+;; Version: 20130726.1642
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,7 +70,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130726.1427]--")
+(message "* --[ Loading Emacs Leuven 20130726.1642]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2245,14 +2245,14 @@
   (leuven--section "19.4 (emacs)Kill Buffer")
 
   ;; kill buffer without confirmation (if not modified)
-  (defun leuven-kill-this-buffer-dont-ask ()
+  (defun leuven-kill-this-buffer-without-query ()
     "Kill the current buffer without confirmation (if not modified)."
     (interactive)
     (kill-buffer nil))
 
   ;; key binding
   (global-set-key
-   (kbd "<S-f12>") 'leuven-kill-this-buffer-dont-ask)
+   (kbd "<S-f12>") 'leuven-kill-this-buffer-without-query)
 
 ;;** 19.5 (info "(emacs)Several Buffers")
 
@@ -8416,23 +8416,25 @@ From %c"
              (cond (running-ms-windows "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
                    (t t)))))
 
+  (defun leuven-ps-print-buffer-with-faces-query ()
+    "Query user before printing the buffer."
+    (interactive)
+    (when (y-or-n-p "Are you sure you want to print this buffer? ")
+      (ps-print-buffer-with-faces)))
+
   ;; generate and print a PostScript image of the buffer
   (GNUEmacs
    (when running-ms-windows
      ;; override `Print Screen' globally used as a hotkey by Windows
      (w32-register-hot-key (kbd "<snapshot>"))
      (global-set-key
-      (kbd "<snapshot>")
-      (lambda ()
-        (interactive)
-        (when (y-or-n-p "Are you sure you want to print this buffer? ")
-          (ps-print-buffer-with-faces))))))
+      (kbd "<snapshot>") 'leuven-ps-print-buffer-with-faces-query)))
+
+  (global-set-key
+   (kbd "M-p") 'leuven-ps-print-buffer-with-faces-query)
 
   (XEmacs
    (setq toolbar-print-function 'ps-print-buffer-with-faces))
-
-  (global-set-key
-   (kbd "M-p") 'ps-print-buffer-with-faces)
 
   ;; print text from the buffer as PostScript
   (eval-after-load "ps-print"
@@ -9342,7 +9344,7 @@ From %c"
            (- (float-time) leuven-before-time))
   (sit-for 0.5)
 
-(message "* --[ Loaded Emacs Leuven 20130726.1428]--")
+(message "* --[ Loaded Emacs Leuven 20130726.1643]--")
 
 (provide 'emacs-leuven)
 
