@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130726.223
+;; Version: 20130726.2255
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,7 +70,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130726.223]--")
+(message "* --[ Loading Emacs Leuven 20130726.2255]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3736,6 +3736,11 @@
 ;;* 8 (info "(org)Dates and Times")
 
   (leuven--section "8 (org)Dates and Times")
+
+  ;; insinuate appt if Org mode is loaded
+  (eval-after-load "org"
+    '(progn
+       (try-require 'appt)))
 
 ;;** 8.2 (info "(org)Creating timestamps")
 
@@ -7681,80 +7686,85 @@ From %c"
 
   (leuven--section "31.11 (emacs)Appointments")
 
-  ;; insinuate appt
-  (when (try-require 'appt) ;; requires `diary-lib', which requires `diary-loaddefs'
+  ;; insinuate appt if `diary-file' exists
+  (if (file-readable-p "~/diary")
+      (try-require 'appt) ;; requires `diary-lib', which requires `diary-loaddefs'
+    (message "Appointment reminders library `appt' not required (no diary file found)"))
 
-    ;; send the first warning 60 minutes before an appointment
-    (setq appt-message-warning-time 60) ;; [default: 12]
+  (eval-after-load "appt"
+    '(progn
 
-    ;; warn every 15 minutes
-    (setq appt-display-interval 15) ;; [default: 3]
+       ;; send the first warning 60 minutes before an appointment
+       (setq appt-message-warning-time 60) ;; [default: 12]
 
-    ;; use a separate window to display appointment reminders
-    (setq appt-display-format 'window)
+       ;; warn every 15 minutes
+       (setq appt-display-interval 15) ;; [default: 3]
 
-    ;; function called to display appointment reminders *in a window*
-    (setq appt-disp-window-function (function leuven--appt-display))
+       ;; use a separate window to display appointment reminders
+       (setq appt-display-format 'window)
 
-    (defun leuven--appt-display (mins-to-appt current-time notification-string)
-      "Display a reminder for appointments.
+       ;; function called to display appointment reminders *in a window*
+       (setq appt-disp-window-function (function leuven--appt-display))
 
-    Use libnotify if available and if display is graphical, or fall back on a
-    message in the echo area."
-      (or (listp mins-to-appt)
-          (setq notification-string (list notification-string)))
-      (dotimes (i (length notification-string))
-        (cond ((and (display-graphic-p)
-                    (executable-find "notify-send"))
-               (shell-command
-                (concat "notify-send "
-                        "-i /usr/share/icons/gnome/32x32/status/appointment-soon.png "
-                        "-t 1000 "
-                        "'Appointment' "
-                        "'" (nth i notification-string) "'")))
-              (t
-               (message "%s" (nth i notification-string))
-               (sit-for 1)))))
+       (defun leuven--appt-display (mins-to-appt current-time notification-string)
+         "Display a reminder for appointments.
 
-    ;; turn appointment checking on (enable reminders)
-    (when leuven-load-verbose (message "(info) Enable appointment reminders..."))
-    (GNUEmacs (appt-activate 1))
-    (XEmacs (appt-initialize))
-    (when leuven-load-verbose (message "(info) Enable appointment reminders... Done"))
+       Use libnotify if available and if display is graphical, or fall back on a
+       message in the echo area."
+         (or (listp mins-to-appt)
+             (setq notification-string (list notification-string)))
+         (dotimes (i (length notification-string))
+           (cond ((and (display-graphic-p)
+                       (executable-find "notify-send"))
+                  (shell-command
+                   (concat "notify-send "
+                           "-i /usr/share/icons/gnome/32x32/status/appointment-soon.png "
+                           "-t 1000 "
+                           "'Appointment' "
+                           "'" (nth i notification-string) "'")))
+                 (t
+                  (message "%s" (nth i notification-string))
+                  (sit-for 1)))))
 
-    ;; enable appointment notification, several minutes beforehand
-    (add-hook 'diary-hook 'appt-make-list)
+       ;; turn appointment checking on (enable reminders)
+       (when leuven-load-verbose (message "(info) Enable appointment reminders..."))
+       (GNUEmacs (appt-activate 1))
+       (XEmacs (appt-initialize))
+       (when leuven-load-verbose (message "(info) Enable appointment reminders... Done"))
 
-    (eval-after-load "org-agenda"
-      '(progn
+       ;; enable appointment notification, several minutes beforehand
+       (add-hook 'diary-hook 'appt-make-list)
 
-         ;; keep your appointment list clean: if you delete an appointment from
-         ;; your Org agenda file, delete the corresponding alert
-         (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
-           "Clear the existing appt-time-msg-list."
-           (setq appt-time-msg-list nil))
+       (eval-after-load "org-agenda"
+         '(progn
 
-         ;; add today's appointments (found in `org-agenda-files') each time the
-         ;; agenda buffer is (re)built
-         (add-hook 'org-finalize-agenda-hook
-                   'org-agenda-to-appt)
-         ;;! don't use the `org-agenda-mode-hook' because the Org agenda files
-         ;;! would be opened once by `org-agenda-to-appt', and then killed by
-         ;;! `org-release-buffers' (because `org-agenda-to-appt' closes all the
-         ;;! files it opened itself -- as they weren't already opened), to be
-         ;;! finally re-opened!
+            ;; keep your appointment list clean: if you delete an appointment from
+            ;; your Org agenda file, delete the corresponding alert
+            (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
+              "Clear the existing appt-time-msg-list."
+              (setq appt-time-msg-list nil))
 
-         ;; add today's appointments (found in `org-agenda-files') each time such a
-         ;; file is saved
-         (add-hook 'after-save-hook
-                   (lambda ()
-                     (when (and (eq major-mode 'org-mode)
-                                (org-agenda-file-p))
-                       (org-agenda-to-appt))))
+            ;; add today's appointments (found in `org-agenda-files') each time the
+            ;; agenda buffer is (re)built
+            (add-hook 'org-finalize-agenda-hook
+                      'org-agenda-to-appt)
+            ;;! don't use the `org-agenda-mode-hook' because the Org agenda files
+            ;;! would be opened once by `org-agenda-to-appt', and then killed by
+            ;;! `org-release-buffers' (because `org-agenda-to-appt' closes all the
+            ;;! files it opened itself -- as they weren't already opened), to be
+            ;;! finally re-opened!
 
-         )) ;; eval-after-load "org-agenda" ends here
+            ;; add today's appointments (found in `org-agenda-files') each time such a
+            ;; file is saved
+            (add-hook 'after-save-hook
+                      (lambda ()
+                        (when (and (eq major-mode 'org-mode)
+                                   (org-agenda-file-p))
+                          (org-agenda-to-appt))))
 
-    )
+            )) ;; eval-after-load "org-agenda" ends here
+
+       )) ;; eval-after-load "appt" ends here
 
 ;;** 31.15 (info "(emacs)Advanced Calendar/Diary Usage")
 
@@ -9355,7 +9365,7 @@ From %c"
            (- (float-time) leuven-before-time))
   (sit-for 0.5)
 
-(message "* --[ Loaded Emacs Leuven 20130726.2231]--")
+(message "* --[ Loaded Emacs Leuven 20130726.2255]--")
 
 (provide 'emacs-leuven)
 
