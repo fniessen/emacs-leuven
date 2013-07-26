@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130725.2058
+;; Version: 20130726.1427
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,7 +70,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130725.2058]--")
+(message "* --[ Loading Emacs Leuven 20130726.1427]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1379,20 +1379,43 @@
 
   (leuven--section "16.4 (emacs)Checking and Correcting Spelling")
 
-  ;; program invoked by `ispell-word' and `ispell-region' commands
+  ;; spelling checker program
   (setq ispell-program-name ;; XXX undefined
         (or (executable-find "aspell")
             (executable-find "ispell")
-            ;; nil [old default: "ispell"]
+            ;; nil [default: "ispell"]
             ))
 
-  (when nil ;; XXX ispell-program-name
+  ;; check if `ispell-program-name' seems correct
+  (defun ispell-check-program-name ()
+    "Ensure that `ispell-program-name' is defined and non-nil."
+    (interactive)
+    (and (boundp 'ispell-program-name)
+         ispell-program-name))
+
+  (when (ispell-check-program-name)
+
+    (defun ispell-region-or-buffer ()
+      "Interactively check the current region or buffer for spelling errors."
+      (interactive)
+      (if mark-active
+          (if (< (mark) (point))
+              (ispell-region (mark) (point))
+              (ispell-region (point) (mark)))
+          (ispell-buffer)))
+
+    ;; key bindings (or `C-c i' prefix key binding?)
+    (global-set-key
+      (kbd "C-$") 'ispell-region-or-buffer)
+    (global-set-key
+      (kbd "C-M-$") 'ispell-change-dictionary)
 
     ;; ;; default dictionary to use (if `ispell-local-dictionary' is nil, that is
     ;; ;; if there is no local dictionary to use in the buffer)
-    ;; (setq ispell-dictionary "en_US")
+    ;; (setq ispell-dictionary "american")
 
-    ;; turn on `flyspell' when changing a buffer which was unmodified
+    ;; enable on-the-fly spell checking when changing a buffer which was
+    ;; unmodified
     (add-hook 'first-change-hook
               (lambda ()
                 (when (derived-mode-p 'text-mode)
@@ -1402,7 +1425,7 @@
     ;; programming mode buffers (preventing it from finding mistakes in the
     ;; code, which is pretty cool)
     (GNUEmacs24
-     (add-hook 'prog-mode-hook 'flyspell-prog-mode))
+     (add-hook 'prog-mode-hook 'flyspell-prog-mode)) ;; ispell-comments-and-strings
 
     (eval-after-load "ispell"
       ;; so that following modifications won't be lost when `ispell' is
@@ -1425,105 +1448,55 @@
            (setq ispell-really-aspell nil)
            (setq ispell-really-hunspell nil)))
 
-         ;; redefine the list of installed dictionaries
-         ;; customize to ("-B" "-d" "spanish") or ("-C" "-d" "dutch") if
-         ;; aliases are needed for the file names
-         ;; FIXME This variable is reset once latter in this .emacs
-         ;; file!!!
-         (setq ispell-local-dictionary-alist
-               ;; dictionaries not in that list will result in "undefined dictionary"
-               '((nil ;; default
-                  "[[:alpha:]]"
-                  "[^[:alpha:]]"
-                  "[']" nil ("-B") nil iso-8859-1) ;; or utf-8?
-                  ;; otherchars, many-otherchars-p, ispell-args, character-set
+         ))
 
-                 ("en_US" ;; Yankee English
-                  "[[:alpha:]]"
-                  "[^[:alpha:]]"
-                  "[']" nil ("-B") nil utf-8)))
+    ;; don't use `M-TAB' to auto-correct the current word (only use `C-.')
+    (setq flyspell-use-meta-tab nil)
+    ;; FIXME M-TAB is still bound to `flyspell-auto-correct-word' when this
+    ;; chunk of code is placed within (eval-after-load "flyspell"...)
 
-         ;; standard French
-         (when (or
-                (locate-file "fr_FR" '("/usr/lib/aspell"))
-                (locate-file "francais.alias" '("/usr/lib/aspell"))
-                (locate-file "francais.alias" `(,(concat windows-program-files-dir "Aspell/dict"))))
-           (add-to-list 'ispell-local-dictionary-alist
-                        '("fr_FR"
-                          "[[:alpha:]àâäéèêëîïôöùûüçÀÂÄÉÈÊËÎÏÔÖÙÛÜÇ]"
-                          "[^[:alpha:]àâäéèêëîïôöùûüçÀÂÄÉÈÊËÎÏÔÖÙÛÜÇ]"
-                          "[-']" t nil "~list" iso-8859-1)
-                        'append))
+    (eval-after-load "flyspell"
+      '(progn
 
-         ;; Spanish (español)
-         (when (locate-file "es_ES" '("/usr/lib/aspell"))
-           (add-to-list 'ispell-local-dictionary-alist
-                        '("es_ES"
-                          "[[:alpha:]ñáàéèíìóòúùüÑÁÀÉÈÍÌÓÒÚÙÜ]"
-                          "[^[:alpha:]ñáàéèíìóòúùüÑÁÀÉÈÍÌÓÒÚÙÜ]"
-                          "[-]" nil ("-B") "~tex" iso-8859-1)
-                        'append))
+         ;; don't consider that a word repeated twice is an error
+         (setq flyspell-mark-duplications-flag nil)
 
-         ;; Dutch (Nederlands)
-         (when (locate-file "nl_NL" '("/usr/lib/aspell"))
-           (add-to-list 'ispell-local-dictionary-alist
-                        '("nl_NL"
-                          "[[:alpha:]àâçëîïôùûüÀÂÇËÎÏÔÙÛÜ]"
-                          "[^[:alpha:]àâçëîïôùûüÀÂÇËÎÏÔÙÛÜ]"
-                          "[']" t ("-C") nil iso-8859-1)
-                        'append))
+         ;; enable the likeness criteria (no alphabetical ordering)
+         (setq flyspell-sort-corrections nil)
 
-         ;; ;; solve the problem of words separated by `-' flagged as
-         ;; ;; erroneous by removing the `-' from the value of otherchars
-         ;; (if (fboundp 'ispell-get-decoded-string)
-         ;;     (defun ispell-get-otherchars ()
-         ;;       (replace-regexp-in-string "-" "" (ispell-get-decoded-string 3))))
+         ;; this fixes the "enabling flyspell mode gave an error" bug
+         (setq flyspell-issue-welcome-flag nil)
 
-         ;; don't use `M-TAB' to auto-correct the current word (only use
-         ;; `C-.')
-         (setq flyspell-use-meta-tab nil)
-         ;; FIXME M-TAB is still bound to `flyspell-auto-correct-word'
-         ;; when this chunk of code is placed within (eval-after-load "flyspell"...)
+         ;; ;; don't print messages for every word (when checking the
+         ;; ;; entire buffer) as it causes an enormous slowdown
+         ;; (setq flyspell-issue-message-flag nil)
 
-         (eval-after-load "flyspell"
-           '(progn
+         ;; dash character (`-') is considered as a word delimiter
+         (setq flyspell-consider-dash-as-word-delimiter-flag t)
 
-           ;; don't consider that a word repeated twice is an error
-           (setq flyspell-mark-duplications-flag nil)
+         (defun leuven-flyspell-toggle-dictionary ()
+           "Change the dictionary."
+           (interactive)
+           (let ((dict (or ispell-local-dictionary
+                           ispell-dictionary)))
+             (setq dict (if (string= dict "francais") "american" "francais"))
+             (message "Switched to %S" dict)
+             (sit-for 0.5)
+             (ispell-change-dictionary dict)
+             (when flyspell-mode
+               ;; (flyspell-delete-all-overlays)
+               ;; if above is executed, the advised `org-mode-flyspell-verify'
+               ;; won't work anymore
+               (flyspell-buffer))))
 
-           ;; enable the likeness criteria (no alphabetical ordering)
-           (setq flyspell-sort-corrections nil)
+         ;; spell-check your XHTML
+         (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)
 
-           ;; this fixes the "enabling flyspell mode gave an error" bug
-           (setq flyspell-issue-welcome-flag nil)
-
-           ;; ;; don't print messages for every word (when checking the
-           ;; ;; entire buffer) as it causes an enormous slowdown
-           ;; (setq flyspell-issue-message-flag nil)
-
-           ;; dash character (`-') is considered as a word delimiter
-           (setq flyspell-consider-dash-as-word-delimiter-flag t)
-
-           (defun leuven-flyspell-toggle-dictionary ()
-             "Change the dictionary."
-             (interactive)
-             (let ((dict (or ispell-local-dictionary ispell-dictionary)))
-               (setq dict (if (string= dict "fr_FR") "en_US" "fr_FR"))
-               (message "Switched to %S" dict)
-               (sit-for 0.5)
-               (ispell-change-dictionary dict)
-               (when flyspell-mode
-                 ;; (flyspell-delete-all-overlays)
-                 ;; if above is executed, the advised `org-mode-flyspell-verify'
-                 ;; won't work anymore
-                 (flyspell-buffer))))
-
-           ;; my default key bindings
-           (global-set-key
-            (kbd "<M-f10>") 'leuven-flyspell-toggle-dictionary)
-
-           ;; spell-check your XHTML
-           (add-to-list 'flyspell-prog-text-faces 'nxml-text-face))))))
+         ;; key binding
+         (global-set-key
+           (kbd "C-$") 'flyspell-buffer)
+         (global-set-key
+          (kbd "<C-M-$>") 'leuven-flyspell-toggle-dictionary))))
 
   (when (locate-library "dictionary-init")
 
@@ -2161,7 +2134,7 @@
 
      ;; max length of buffer names before truncate
      (setq helm-buffer-max-length 40)
-     (setq helm-buffer-max-length nil) ;; don't truncate anymore
+     ;; (setq helm-buffer-max-length nil) ;; don't truncate anymore
 
      (defun helm-toggle-debug ()
        (interactive)
@@ -5927,15 +5900,15 @@ From %c"
       (find-file "/tmp/org-scratch.org")
       (if contents (insert contents))))
 
-  ;; flyspell should not check babel blocks
-  (defadvice org-mode-flyspell-verify
-    (after leuven-org-mode-flyspell-verify activate)
-    "Don't spell check src blocks."
-    (require 'org-element)
-    (setq ad-return-value
-          (and ad-return-value
-               (not (eq (org-element-type (org-element-at-point))
-                        'src-block)))))
+  ;; ;; flyspell should not check babel blocks
+  ;; (defadvice org-mode-flyspell-verify
+  ;;   (after leuven-org-mode-flyspell-verify activate)
+  ;;   "Don't spell check src blocks."
+  ;;   (require 'org-element)
+  ;;   (setq ad-return-value
+  ;;         (and ad-return-value
+  ;;              (not (eq (org-element-type (org-element-at-point))
+  ;;                       'src-block)))))
 
   (defun leuven--org-switch-language ()
     "Switch language for Org file, if a `#+LANGUAGE:' meta-tag is
@@ -6504,22 +6477,21 @@ From %c"
   (global-set-key
    (kbd "C-%") 'match-paren)
 
-  ;; highlight matching parenthesis
-  (GNUEmacs
-   (show-paren-mode t)
-   (setq show-paren-ring-bell-on-mismatch t)
-   (setq show-paren-style 'mixed))
-  (XEmacs
-   (paren-set-mode 'paren))
+  ;; advanced highlighting of matching parentheses
+  (if (try-require 'mic-paren)
 
-  ;; if the matching paren is offscreen, show the matching line in the
-  ;; echo area + many other useful things
-  (when (display-graphic-p)
-    ;; advanced highlighting of matching parentheses
-    (when (try-require 'mic-paren)
+      ;; activate `mic-paren' parenthesis highlighting (if the matching paren
+      ;; is offscreen, show the matching line in the echo area + many other
+      ;; useful things)
+      (paren-activate)
 
-      ;; activating
-      (paren-activate)))
+    ;; enable Show Paren mode (highlight matching parenthesis)
+    (GNUEmacs
+     (show-paren-mode 1)
+     (setq show-paren-style 'mixed)
+     (setq show-paren-ring-bell-on-mismatch t))
+    (XEmacs
+     (paren-set-mode 'paren)))
 
   ;; highlight surrounding parentheses
   (GNUEmacs
@@ -6976,35 +6948,35 @@ From %c"
   (eval-after-load "vc"
     '(progn
 
-       (when (image-type-available-p 'png)
-         ;; http://www.emacswiki.org/emacs/VcIcon
-         (defun vc-icon ()
-           "Display a colored icon indicating the vc status of the current
-         file."
-           (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name))
-                           (concat leuven-site-lisp-directory
-                                   "Pictures/NormalIcon.png")
-                         (concat leuven-site-lisp-directory
-                                 "Pictures/ModifiedIcon.png")))
-                 (bg-colour (face-attribute 'mode-line :background)))
-             (propertize
-              "  "
-              'display (find-image `((:type png
-                                      :file ,icon
-                                      :ascent center
-                                      :background ,bg-colour))))))
+       (GNUEmacs
+        (when (image-type-available-p 'png)
+          ;; http://www.emacswiki.org/emacs/VcIcon
+          (defun vc-icon ()
+            "Display a colored icon indicating the vc status of the current
+          file."
+            (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name))
+                            (concat leuven-site-lisp-directory
+                                    "Pictures/NormalIcon.png")
+                          (concat leuven-site-lisp-directory
+                                  "Pictures/ModifiedIcon.png")))
+                  (bg-colour (face-attribute 'mode-line :background)))
+              (propertize
+               "  "
+               'display (find-image `((:type png
+                                       :file ,icon
+                                       :ascent center
+                                       :background ,bg-colour))))))
 
-         (setq-default mode-line-format
-                       (push '(vc-mode (:eval (vc-icon))) mode-line-format))
-         )))
+          (setq-default mode-line-format
+                        (push '(vc-mode (:eval (vc-icon))) mode-line-format))
+          ))))
 
 ;;*** 28.1.4 (info "(emacs)Log Buffer")
 
     (defun leuven--vc-log-mode-setup ()
-      (setq ispell-local-dictionary "american")
       ;; check if `ispell-program-name' seems correct
-      (when (and (boundp 'ispell-program-name)
-                 ispell-program-name)
+      (when (ispell-check-program-name)
+        (setq ispell-local-dictionary "american")
         (flyspell-mode)))
 
     (add-hook 'vc-log-mode-hook 'leuven--vc-log-mode-setup)
@@ -7311,7 +7283,7 @@ From %c"
   (when (try-require 'ecb-autoloads)
 
     ;; trick for starting ECB 2.40 (with CEDET merged in Emacs since 23.2)
-    (require 'semantic/analyze)
+    (GNUEmacs (require 'semantic/analyze))
     (provide 'semantic-analyze)
     (provide 'semantic-ctxt)
     (provide 'semanticdb)
@@ -7739,10 +7711,10 @@ From %c"
        (setq calendar-location-name "Leuven, BE")
 
        ;; latitude of `calendar-location-name'
-       (setq calendar-latitude 50.64) ;; XXX Use correct info for Leuven
+       (setq calendar-latitude 50.88)
 
        ;; longitude of `calendar-location-name'
-       (setq calendar-longitude 3.05))) ;; XXX Use correct info for Leuven
+       (setq calendar-longitude 4.70)))
 
   (defun leuven--diary-sunrise () ;; XXX
     (let ((dss (diary-sunrise-sunset)))
@@ -9370,7 +9342,7 @@ From %c"
            (- (float-time) leuven-before-time))
   (sit-for 0.5)
 
-(message "* --[ Loaded Emacs Leuven 20130725.2059]--")
+(message "* --[ Loaded Emacs Leuven 20130726.1428]--")
 
 (provide 'emacs-leuven)
 
