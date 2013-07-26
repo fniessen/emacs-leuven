@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130726.1642
+;; Version: 20130726.2128
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,7 +70,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130726.1642]--")
+(message "* --[ Loading Emacs Leuven 20130726.2128]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -418,7 +418,6 @@
          circe
          dictionary
          ess
-         flyspell
          fuzzy
          git-commit-mode
          gnuplot-mode ;; or gnuplot?
@@ -9344,7 +9343,7 @@ From %c"
            (- (float-time) leuven-before-time))
   (sit-for 0.5)
 
-(message "* --[ Loaded Emacs Leuven 20130726.1643]--")
+(message "* --[ Loaded Emacs Leuven 20130726.2129]--")
 
 (provide 'emacs-leuven)
 

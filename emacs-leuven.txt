@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-07-26 Fri 16:40>
+# Time-stamp: <2013-07-26 Fri 17:13>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -531,7 +531,6 @@ by hit =y= (/Yes/) when asked.
          circe
          dictionary
          ess
-         flyspell
          fuzzy
          git-commit-mode
          gnuplot-mode ;; or gnuplot?
