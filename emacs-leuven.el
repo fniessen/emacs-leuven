@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130726.2128
+;; Version: 20130726.2203
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,7 +70,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130726.2128]--")
+(message "* --[ Loading Emacs Leuven 20130726.2203]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3740,62 +3740,69 @@
   ;; TODO Some of this should go back in section
   ;;** 31.11 (info "(emacs)Appointments")
 
-  ;; Insinuate appt
-  (try-require 'appt) ;; requires `diary-lib', which requires `diary-loaddefs'
+  ;; insinuate appt
+  (when (try-require 'appt) ;; requires `diary-lib', which requires `diary-loaddefs'
 
-  ;; send the first warning 60 minutes before an appointment
-  (setq appt-message-warning-time 60) ;; [default: 12]
+    ;; send the first warning 60 minutes before an appointment
+    (setq appt-message-warning-time 60) ;; [default: 12]
 
-  ;; warn every 15 minutes
-  (setq appt-display-interval 15) ;; [default: 3]
+    ;; warn every 15 minutes
+    (setq appt-display-interval 15) ;; [default: 3]
 
-  ;; use a separate window to display appointment reminders
-  (setq appt-display-format 'window)
+    ;; use a separate window to display appointment reminders
+    (setq appt-display-format 'window)
 
-  ;; function called to display appointment reminders *in a window*
-  (setq appt-disp-window-function (function leuven--appt-display))
+    ;; function called to display appointment reminders *in a window*
+    (setq appt-disp-window-function (function leuven--appt-display))
 
-  (defun leuven--appt-display (mins-to-appt current-time notification-string)
-    "Display a reminder for appointments.
+    (defun leuven--appt-display (mins-to-appt current-time notification-string)
+      "Display a reminder for appointments.
 
-  Use libnotify if available and if display is graphical, or fall back on a
-  message in the echo area."
-    (or (listp mins-to-appt)
-        (setq notification-string (list notification-string)))
-    (dotimes (i (length notification-string))
-      (cond ((and (display-graphic-p)
-                  (executable-find "notify-send"))
-             (shell-command
-              (concat "notify-send "
-                      "-i /usr/share/icons/gnome/32x32/status/appointment-soon.png "
-                      "-t 1000 "
-                      "'Appointment' "
-                      "'" (nth i notification-string) "'")))
-            (t
-             (message "%s" (nth i notification-string))
-             (sit-for 1)))))
+    Use libnotify if available and if display is graphical, or fall back on a
+    message in the echo area."
+      (or (listp mins-to-appt)
+          (setq notification-string (list notification-string)))
+      (dotimes (i (length notification-string))
+        (cond ((and (display-graphic-p)
+                    (executable-find "notify-send"))
+               (shell-command
+                (concat "notify-send "
+                        "-i /usr/share/icons/gnome/32x32/status/appointment-soon.png "
+                        "-t 1000 "
+                        "'Appointment' "
+                        "'" (nth i notification-string) "'")))
+              (t
+               (message "%s" (nth i notification-string))
+               (sit-for 1)))))
 
-  ;; keep your appointment list clean: if you delete an appointment from
-  ;; your Org agenda file, delete the corresponding alert
-  (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
-    "Clear the existing appt-time-msg-list."
-    (setq appt-time-msg-list nil))
+    ;; turn appointment checking on (enable reminders)
+    (when leuven-load-verbose (message "(info) Enable appointment reminders..."))
+    (GNUEmacs (appt-activate 1))
+    (XEmacs (appt-initialize))
+    (when leuven-load-verbose (message "(info) Enable appointment reminders... Done"))
 
-  ;; add today's appointments (found in `org-agenda-files') each time the
-  ;; agenda buffer is (re)built
-  (add-hook 'org-finalize-agenda-hook
-            'org-agenda-to-appt)
-  ;;! don't use the `org-agenda-mode-hook' because the Org agenda files
-  ;;! would be opened once by `org-agenda-to-appt', and then killed by
-  ;;! `org-release-buffers' (because `org-agenda-to-appt' closes all the
-  ;;! files it opened itself -- as they weren't already opened), to be
-  ;;! finally re-opened!
+    (eval-after-load "org-agenda"
+      '(progn
 
-  ;; turn appointment checking on (enable reminders)
-  (when leuven-load-verbose (message "(info) Enable appointment reminders..."))
-  (GNUEmacs (appt-activate 1))
-  (XEmacs (appt-initialize))
-  (when leuven-load-verbose (message "(info) Enable appointment reminders... Done"))
+         ;; keep your appointment list clean: if you delete an appointment from
+         ;; your Org agenda file, delete the corresponding alert
+         (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
+           "Clear the existing appt-time-msg-list."
+           (setq appt-time-msg-list nil))
+
+         ;; add today's appointments (found in `org-agenda-files') each time the
+         ;; agenda buffer is (re)built
+         (add-hook 'org-finalize-agenda-hook
+                   'org-agenda-to-appt)
+         ;;! don't use the `org-agenda-mode-hook' because the Org agenda files
+         ;;! would be opened once by `org-agenda-to-appt', and then killed by
+         ;;! `org-release-buffers' (because `org-agenda-to-appt' closes all the
+         ;;! files it opened itself -- as they weren't already opened), to be
+         ;;! finally re-opened!
+
+         )) ;; eval-after-load "org-agenda" ends here
+
+    )
 
 ;;** 8.2 (info "(org)Creating timestamps")
 
@@ -7279,7 +7286,7 @@ From %c"
 
   ;; Emacs Code Browser
   (custom-set-variables '(ecb-options-version "2.40"))
-  (when (try-require 'ecb-autoloads)
+  (when (try-require 'ecb-autoloads-XXX)
 
     ;; trick for starting ECB 2.40 (with CEDET merged in Emacs since 23.2)
     (GNUEmacs (require 'semantic/analyze))
@@ -9343,7 +9350,7 @@ From %c"
            (- (float-time) leuven-before-time))
   (sit-for 0.5)
 
-(message "* --[ Loaded Emacs Leuven 20130726.2129]--")
+(message "* --[ Loaded Emacs Leuven 20130726.2204]--")
 
 (provide 'emacs-leuven)
 
