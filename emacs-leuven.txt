@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-07-26 Fri 22:06>
+# Time-stamp: <2013-07-26 Fri 22:22>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -5438,17 +5438,15 @@ It uses =notify-send= (if the =libnotify-bin= Ubuntu package is installed).
          ;;! files it opened itself -- as they weren't already opened), to be
          ;;! finally re-opened!
 
-         )) ;; eval-after-load "org-agenda" ends here
-#+end_src
+         ;; add today's appointments (found in `org-agenda-files') each time such a
+         ;; file is saved
+         (add-hook 'after-save-hook
+                   (lambda ()
+                     (when (and (eq major-mode 'org-mode)
+                                (org-agenda-file-p))
+                       (org-agenda-to-appt))))
 
-#+begin_src emacs-lisp :tangle no
-    ;; add today's appointments (found in `org-agenda-files') each time such a
-    ;; file is saved
-    (add-hook 'after-save-hook
-              (lambda ()
-                (when (and (eq major-mode 'org-mode)
-                           (org-agenda-file-p))
-                  (org-agenda-to-appt))))
+         )) ;; eval-after-load "org-agenda" ends here
 #+end_src
 
 #+begin_src emacs-lisp

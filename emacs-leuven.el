@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130726.2203
+;; Version: 20130726.2223
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,7 +70,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130726.2203]--")
+(message "* --[ Loading Emacs Leuven 20130726.2223]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3799,6 +3799,14 @@
          ;;! `org-release-buffers' (because `org-agenda-to-appt' closes all the
          ;;! files it opened itself -- as they weren't already opened), to be
          ;;! finally re-opened!
+
+         ;; add today's appointments (found in `org-agenda-files') each time such a
+         ;; file is saved
+         (add-hook 'after-save-hook
+                   (lambda ()
+                     (when (and (eq major-mode 'org-mode)
+                                (org-agenda-file-p))
+                       (org-agenda-to-appt))))
 
          )) ;; eval-after-load "org-agenda" ends here
 
@@ -9350,7 +9358,7 @@ From %c"
            (- (float-time) leuven-before-time))
   (sit-for 0.5)
 
-(message "* --[ Loaded Emacs Leuven 20130726.2204]--")
+(message "* --[ Loaded Emacs Leuven 20130726.2224]--")
 
 (provide 'emacs-leuven)
 
