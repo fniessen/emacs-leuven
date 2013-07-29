@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-07-26 Fri 23:28>
+# Time-stamp: <2013-07-29 Mon 17:17>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -2052,14 +2052,17 @@ it to the *file word list* (=ispell-add-per-file-word-list=).
     ;; unmodified
     (add-hook 'first-change-hook
               (lambda ()
-                (when (derived-mode-p 'text-mode)
-                  (flyspell-mode 1))))
-
-    ;; enable on-the-fly spell checking (only) in comments and strings in all
-    ;; programming mode buffers (preventing it from finding mistakes in the
-    ;; code, which is pretty cool)
-    (GNUEmacs24
-     (add-hook 'prog-mode-hook 'flyspell-prog-mode)) ;; ispell-comments-and-strings
+                (message "First-change-hook called for buffer `%s' (in `%s')"
+                         (buffer-name)
+                         major-mode)
+                (sit-for 0.01)
+                (cond ((derived-mode-p 'text-mode) ;; org-mode
+                       (flyspell-mode 1))
+                      ((derived-mode-p 'prog-mode)
+                       (flyspell-prog-mode)) ;; `ispell-comments-and-strings'
+                      ;; prevent flyspell from finding mistakes in the code,
+                      ;; which is pretty cool
+                      )))
 
     (eval-after-load "ispell"
       ;; so that following modifications won't be lost when `ispell' is
@@ -2182,13 +2185,13 @@ previously detected error.
     (eval-after-load "flyspell"
       '(progn
 
+(message "flyspell has been loaded!!!")
+(sit-for 2)
+
          ;; don't consider that a word repeated twice is an error
          (setq flyspell-mark-duplications-flag nil)
 
-         ;; enable the likeness criteria (no alphabetical ordering)
-         (setq flyspell-sort-corrections nil)
-
-         ;; this fixes the "enabling flyspell mode gave an error" bug
+         ;; fix the "enabling flyspell mode gave an error" bug
          (setq flyspell-issue-welcome-flag nil)
 
          ;; ;; don't print messages for every word (when checking the
@@ -2196,7 +2199,8 @@ previously detected error.
          ;; (setq flyspell-issue-message-flag nil)
 
          ;; dash character (`-') is considered as a word delimiter
-         (setq flyspell-consider-dash-as-word-delimiter-flag t)
+         (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
+         ;; '("francais" "deutsch8" "norsk")
 
          (defun leuven-flyspell-toggle-dictionary ()
            "Change the dictionary."
@@ -2220,7 +2224,7 @@ previously detected error.
          (global-set-key
            (kbd "C-$") 'flyspell-buffer)
          (global-set-key
-          (kbd "<C-M-$>") 'leuven-flyspell-toggle-dictionary))))
+          (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary))))
 #+end_src
 
 *************** TODO Have a look at `diction' (style and grammar for English)
@@ -5360,7 +5364,8 @@ something best implemented with tags.
 
   ;; (setq org-time-clocksum-use-fractional t)
 
-  ;; XXX not a string in Org 7.9.2+
+  ;; format string used when creating CLOCKSUM lines and when generating a
+  ;; time duration (avoid showing days)
   (setq org-time-clocksum-format
         '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
 #+end_src

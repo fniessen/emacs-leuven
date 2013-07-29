@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130726.233
+;; Version: 20130729.1718
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,7 +70,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130726.233]--")
+(message "* --[ Loading Emacs Leuven 20130729.1718]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1417,14 +1417,17 @@
     ;; unmodified
     (add-hook 'first-change-hook
               (lambda ()
-                (when (derived-mode-p 'text-mode)
-                  (flyspell-mode 1))))
-
-    ;; enable on-the-fly spell checking (only) in comments and strings in all
-    ;; programming mode buffers (preventing it from finding mistakes in the
-    ;; code, which is pretty cool)
-    (GNUEmacs24
-     (add-hook 'prog-mode-hook 'flyspell-prog-mode)) ;; ispell-comments-and-strings
+                (message "First-change-hook called for buffer `%s' (in `%s')"
+                         (buffer-name)
+                         major-mode)
+                (sit-for 0.01)
+                (cond ((derived-mode-p 'text-mode) ;; org-mode
+                       (flyspell-mode 1))
+                      ((derived-mode-p 'prog-mode)
+                       (flyspell-prog-mode)) ;; `ispell-comments-and-strings'
+                      ;; prevent flyspell from finding mistakes in the code,
+                      ;; which is pretty cool
+                      )))
 
     (eval-after-load "ispell"
       ;; so that following modifications won't be lost when `ispell' is
@@ -1457,13 +1460,13 @@
     (eval-after-load "flyspell"
       '(progn
 
+(message "flyspell has been loaded!!!")
+(sit-for 2)
+
          ;; don't consider that a word repeated twice is an error
          (setq flyspell-mark-duplications-flag nil)
 
-         ;; enable the likeness criteria (no alphabetical ordering)
-         (setq flyspell-sort-corrections nil)
-
-         ;; this fixes the "enabling flyspell mode gave an error" bug
+         ;; fix the "enabling flyspell mode gave an error" bug
          (setq flyspell-issue-welcome-flag nil)
 
          ;; ;; don't print messages for every word (when checking the
@@ -1471,7 +1474,8 @@
          ;; (setq flyspell-issue-message-flag nil)
 
          ;; dash character (`-') is considered as a word delimiter
-         (setq flyspell-consider-dash-as-word-delimiter-flag t)
+         (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
+         ;; '("francais" "deutsch8" "norsk")
 
          (defun leuven-flyspell-toggle-dictionary ()
            "Change the dictionary."
@@ -1495,7 +1499,7 @@
          (global-set-key
            (kbd "C-$") 'flyspell-buffer)
          (global-set-key
-          (kbd "<C-M-$>") 'leuven-flyspell-toggle-dictionary))))
+          (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary))))
 
   (when (locate-library "dictionary-init")
 
@@ -3731,7 +3735,8 @@
 
   ;; (setq org-time-clocksum-use-fractional t)
 
-  ;; XXX not a string in Org 7.9.2+
+  ;; format string used when creating CLOCKSUM lines and when generating a
+  ;; time duration (avoid showing days)
   (setq org-time-clocksum-format
         '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
 
@@ -9344,7 +9349,7 @@ From %c"
            (- (float-time) leuven-before-time))
   (sit-for 0.5)
 
-(message "* --[ Loaded Emacs Leuven 20130726.233]--")
+(message "* --[ Loaded Emacs Leuven 20130729.1719]--")
 
 (provide 'emacs-leuven)
 
