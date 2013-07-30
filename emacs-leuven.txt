@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-07-30 Tue 16:00>
+# Time-stamp: <2013-07-30 Tue 21:24>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -563,7 +563,7 @@ by hit =y= (/Yes/) when asked.
              (ignore-errors
                (package-install pkg))
            (message "Customize `leuven-packages' to ignore this package at next startup...")
-           (sit-for 3))))
+           (sit-for 1.5))))
 
      ;; don't truncate package names in Emacs package list
      (add-hook 'package-menu-mode-hook
@@ -13707,7 +13707,7 @@ To get a backtrace when a specific regexp is displayed in the echo area
   (message "Loading `%s'...done (in %.3f s)"
            load-file-name
            (- (float-time) leuven-before-time))
-  (sit-for 0.5)
+  (sit-for 0.3)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -13722,6 +13722,10 @@ To get a backtrace when a specific regexp is displayed in the echo area
                  (message "Loading %s...done (%.3fs) [after-init]"
                           ,load-file-name elapsed)))
             t)
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+  (message "Emacs initialization: %s" (emacs-init-time))
 #+end_src
 
 #+begin_src emacs-lisp :noweb yes

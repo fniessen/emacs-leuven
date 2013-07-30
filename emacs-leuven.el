@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130730.16
+;; Version: 20130730.2124
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130730.16]--")
+(message "* --[ Loading Emacs Leuven 20130730.2124]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -450,7 +450,7 @@
              (ignore-errors
                (package-install pkg))
            (message "Customize `leuven-packages' to ignore this package at next startup...")
-           (sit-for 3))))
+           (sit-for 1.5))))
 
      ;; don't truncate package names in Emacs package list
      (add-hook 'package-menu-mode-hook
@@ -9328,9 +9328,9 @@ From %c"
   (message "Loading `%s'...done (in %.3f s)"
            load-file-name
            (- (float-time) leuven-before-time))
-  (sit-for 0.5)
+  (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130730.1601]--")
+(message "* --[ Loaded Emacs Leuven 20130730.2124]--")
 
 (provide 'emacs-leuven)
 
