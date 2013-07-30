@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-07-29 Mon 17:17>
+# Time-stamp: <2013-07-30 Tue 10:52>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -2052,10 +2052,10 @@ it to the *file word list* (=ispell-add-per-file-word-list=).
     ;; unmodified
     (add-hook 'first-change-hook
               (lambda ()
-                (message "First-change-hook called for buffer `%s' (in `%s')"
-                         (buffer-name)
-                         major-mode)
-                (sit-for 0.01)
+                (when (string-match "^ \\*" (buffer-name))
+                  (message "First-change-hook called for temporary buffer `%s' (in `%s')"
+                           (buffer-name)
+                           major-mode))
                 (cond ((derived-mode-p 'text-mode) ;; org-mode
                        (flyspell-mode 1))
                       ((derived-mode-p 'prog-mode)
@@ -2523,7 +2523,7 @@ Make the message "/FILENAME has auto save data/" unmissable:
 
 #+begin_src emacs-lisp
   (defface leuven-recover-this-file-face
-    '((t (:background "tomato")))
+    '((t (:weight bold :background "#FBE3E4")))
     "Face for buffers visiting files with auto save data."
     :group 'files)
 
@@ -6117,11 +6117,13 @@ arrives -- at which point it will be in all lists.
 
   ;; don't search headline for a time-of-day
   (setq org-agenda-search-headline-for-time nil)
+#+end_src
 
+#+begin_src emacs-lisp
   ;; 10.3.5 keyword search
   (defun leuven-org-grep (search &optional context)
-    "Search for word in org files.
-   Prefix argument determines number of lines."
+    "Search for word in Org files.
+  Prefix argument determines number of lines."
     (interactive "sSearch for: \nP")
     (let ((grep-find-ignored-files '("#*" ".#*"))
           (grep-template (concat "grep <X> -i -nH "
@@ -8277,9 +8279,8 @@ For security reasons, evaluation is not turned on by default.
 
 #+begin_src emacs-lisp
   ;; allow YASnippet to do its thing in Org files
-  ;; (from http://orgmode.org/worg/org-faq.php)
-  (when (fboundp 'yas/expand)
-    ;;! make sure you initialise YASnippet *before* Org mode
+  ;;! make sure you initialise YASnippet *before* Org mode
+  (when (try-require 'yasnippet)
 
     (defun yas/org-very-safe-expand ()
       (let ((yas/fallback-behavior 'return-nil))
@@ -8292,7 +8293,7 @@ For security reasons, evaluation is not turned on by default.
                 (add-to-list 'org-tab-first-hook
                              'yas/org-very-safe-expand)
                 (define-key yas/keymap
-                  (kbd "tab") 'yas/next-field) ;; needed?
+                  (kbd "tab") 'yas/next-field) ;; `yas/next-field-or-maybe-expand'?
                 )))
 #+end_src
 
@@ -9475,15 +9476,33 @@ without a =Makefile=.
   (leuven--section "27.4 (emacs)Grep Searching under Emacs")
 
   ;; ignore case distinctions in the default grep command
-  (setq grep-command "grep -n -i -e ")
+  (setq grep-command "grep -i -n -e ")
+
+;; ;; for Windows
+;; (setq grep-find-command '("findstr /sn *" . 13))
+
+  ;; ignore `.svn' and `CVS' directories
+  (setq grep-find-command
+        (concat
+         "find . \\( -path '*/.svn' -o -path '*/CVS' \\) -prune -o -type f -print0 | "
+         "xargs -0 -e grep -i -n -e "))
+
+  ;; use `find -print0' and `xargs -0'
+  (setq grep-find-use-xargs 'gnu)
+
+  ;; run grep via find, with user-specified arguments
+  (global-set-key
+   (kbd "C-c 3") 'grep-find)
 
   ;; grep + Emacs 22 + Cygwin does not follow file links
   ;; try adding "-nH" to your grep options.
+#+end_src
 
-  ;; The commands lgrep and rgrep are somehow more user-friendly than the
-  ;; `M-x grep' command. The word at point can be captured using the
-  ;; command (thing-at-point 'word). So you may try:
+The commands =lgrep= and =rgrep= are somehow more user-friendly than the =M-x grep=
+command. The word at point can be captured using the command =(thing-at-point
+'word)=. So you may try:
 
+#+begin_src emacs-lisp
   (defun leuven-rgrep (term)
     "Look for word at point in all files recursively starting from the parent
     directory."
@@ -10863,7 +10882,7 @@ Check this out as well: http://www.emacswiki.org/emacs/DiredSortMenu
 For searches in Dired, see =dired-do-search= (=A=).
 - Search through all marked files for a match for regexp
 - Stops when a match is found
-- To continue searching for next match, use command M-,
+- To continue searching for next match, use command "M-,"
 
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Dired and Find")
@@ -10875,13 +10894,6 @@ For searches in Dired, see =dired-do-search= (=A=).
        ;; ;; command (variable defined in `find-dired.el')
        ;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
 
-       ;; ignore `.svn' and `CVS' directories
-       (setq grep-find-command
-             (concat
-              "find . \\( -path '*/.svn' -o -path '*/CVS' \\) -prune -o -type f "
-              "-print0 | "
-              "xargs -0 -e grep -i -n -e "))
-
 ;; (when Cygwin... XXX
        ;; search for files with names matching a wild card pattern and Dired
        ;; the output
@@ -10892,10 +10904,6 @@ For searches in Dired, see =dired-do-search= (=A=).
        ;; the output
        (global-set-key
         (kbd "C-c 2") 'find-grep-dired)
-
-       ;; run grep via find, with user-specified arguments
-       (global-set-key
-        (kbd "C-c 3") 'grep-find)
 #+end_src
 
 ** Editing the Dired Buffer

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130729.1718
+;; Version: 20130730.1053
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,7 +70,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130729.1718]--")
+(message "* --[ Loading Emacs Leuven 20130730.1053]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1417,10 +1417,10 @@
     ;; unmodified
     (add-hook 'first-change-hook
               (lambda ()
-                (message "First-change-hook called for buffer `%s' (in `%s')"
-                         (buffer-name)
-                         major-mode)
-                (sit-for 0.01)
+                (when (string-match "^ \\*" (buffer-name))
+                  (message "First-change-hook called for temporary buffer `%s' (in `%s')"
+                           (buffer-name)
+                           major-mode))
                 (cond ((derived-mode-p 'text-mode) ;; org-mode
                        (flyspell-mode 1))
                       ((derived-mode-p 'prog-mode)
@@ -1726,7 +1726,7 @@
           (auto-save-mode 1))))
 
   (defface leuven-recover-this-file-face
-    '((t (:background "tomato")))
+    '((t (:weight bold :background "#FBE3E4")))
     "Face for buffers visiting files with auto save data."
     :group 'files)
 
@@ -4311,8 +4311,8 @@ From %c"
 
   ;; 10.3.5 keyword search
   (defun leuven-org-grep (search &optional context)
-    "Search for word in org files.
-   Prefix argument determines number of lines."
+    "Search for word in Org files.
+  Prefix argument determines number of lines."
     (interactive "sSearch for: \nP")
     (let ((grep-find-ignored-files '("#*" ".#*"))
           (grep-template (concat "grep <X> -i -nH "
@@ -5911,9 +5911,8 @@ From %c"
       (other-window 1)))
 
   ;; allow YASnippet to do its thing in Org files
-  ;; (from http://orgmode.org/worg/org-faq.php)
-  (when (fboundp 'yas/expand)
-    ;;! make sure you initialise YASnippet *before* Org mode
+  ;;! make sure you initialise YASnippet *before* Org mode
+  (when (try-require 'yasnippet)
 
     (defun yas/org-very-safe-expand ()
       (let ((yas/fallback-behavior 'return-nil))
@@ -5926,7 +5925,7 @@ From %c"
                 (add-to-list 'org-tab-first-hook
                              'yas/org-very-safe-expand)
                 (define-key yas/keymap
-                  (kbd "tab") 'yas/next-field) ;; needed?
+                  (kbd "tab") 'yas/next-field) ;; `yas/next-field-or-maybe-expand'?
                 )))
 
     ;; keep my encrypted data (like account passwords) in my Org mode
@@ -6708,14 +6707,26 @@ From %c"
   (leuven--section "27.4 (emacs)Grep Searching under Emacs")
 
   ;; ignore case distinctions in the default grep command
-  (setq grep-command "grep -n -i -e ")
+  (setq grep-command "grep -i -n -e ")
+
+;; ;; for Windows
+;; (setq grep-find-command '("findstr /sn *" . 13))
+
+  ;; ignore `.svn' and `CVS' directories
+  (setq grep-find-command
+        (concat
+         "find . \\( -path '*/.svn' -o -path '*/CVS' \\) -prune -o -type f -print0 | "
+         "xargs -0 -e grep -i -n -e "))
+
+  ;; use `find -print0' and `xargs -0'
+  (setq grep-find-use-xargs 'gnu)
+
+  ;; run grep via find, with user-specified arguments
+  (global-set-key
+   (kbd "C-c 3") 'grep-find)
 
   ;; grep + Emacs 22 + Cygwin does not follow file links
   ;; try adding "-nH" to your grep options.
-
-  ;; The commands lgrep and rgrep are somehow more user-friendly than the
-  ;; `M-x grep' command. The word at point can be captured using the
-  ;; command (thing-at-point 'word). So you may try:
 
   (defun leuven-rgrep (term)
     "Look for word at point in all files recursively starting from the parent
@@ -7499,13 +7510,6 @@ From %c"
        ;; ;; command (variable defined in `find-dired.el')
        ;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
 
-       ;; ignore `.svn' and `CVS' directories
-       (setq grep-find-command
-             (concat
-              "find . \\( -path '*/.svn' -o -path '*/CVS' \\) -prune -o -type f "
-              "-print0 | "
-              "xargs -0 -e grep -i -n -e "))
-
 ;; (when Cygwin... XXX
        ;; search for files with names matching a wild card pattern and Dired
        ;; the output
@@ -7516,10 +7520,6 @@ From %c"
        ;; the output
        (global-set-key
         (kbd "C-c 2") 'find-grep-dired)
-
-       ;; run grep via find, with user-specified arguments
-       (global-set-key
-        (kbd "C-c 3") 'grep-find)
 
 ;;** (info "(emacs)Wdired")
 
@@ -9349,7 +9349,7 @@ From %c"
            (- (float-time) leuven-before-time))
   (sit-for 0.5)
 
-(message "* --[ Loaded Emacs Leuven 20130729.1719]--")
+(message "* --[ Loaded Emacs Leuven 20130730.1053]--")
 
 (provide 'emacs-leuven)
 
