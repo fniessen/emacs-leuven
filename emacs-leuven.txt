@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-07-30 Tue 15:01>
+# Time-stamp: <2013-07-30 Tue 16:00>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -2054,7 +2054,7 @@ it to the *file word list* (=ispell-add-per-file-word-list=).
     ;; unmodified
     (add-hook 'first-change-hook
               (lambda ()
-                (when (string-match "^ \\*" (buffer-name))
+                (when (eq (aref (buffer-name) 0) ?\s) ;; buffer starts with " "
                   (message "First-change-hook called for temporary buffer `%s' (in `%s')"
                            (buffer-name)
                            major-mode))
@@ -2287,6 +2287,30 @@ previously detected error.
                   ("no_proxy" . "^.*example.com")))
                   ;; disable proxy for some hosts
      )))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; XXX excellent!
+  (defun leuven-answers-define ()
+    "Look up the word under cursor in a browser."
+    (interactive)
+    (browse-url
+     (concat "http://www.answers.com/main/ntquery?s=" (find-tag-default))))
+
+  (defun leuven-lookup-word-definition-in-w3m ()
+    "Look up the word's definition in a emacs-w3m.\n
+  If a region is active (a phrase), lookup that phrase."
+    (interactive)
+    (let (word
+          url)
+      (setq word
+            (if (use-region-p)
+                (buffer-substring-no-properties (region-beginning)
+                                                (region-end))
+              (find-tag-default)))
+      (setq word (replace-regexp-in-string " " "%20" word))
+      (setq url (concat "http://www.answers.com/main/ntquery?s=" word))
+      (w3m-browse-url url)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -9458,59 +9482,32 @@ without a =Makefile=.
 Find files matching some regexp, and click on the hyperlinks to the files to
 locate your match.
 
-#+begin_src emacs-lisp
-;;** 27.4 (info "(emacs)Grep Searching") under Emacs
-
-  (leuven--section "27.4 (emacs)Grep Searching under Emacs")
-
-  ;; ignore case distinctions in the default grep command
-  (setq grep-command "grep -i -H -n -e ")
-
-  ;; do not append `null-device' (`/dev/null' or `NUL') to `grep' commands
-  (setq grep-use-null-device nil)
-  ;; not necessary if the grep program used supports the `-H' option
-
-;; ;; for Windows
-;; (setq grep-find-command '("findstr /sn *" . 13))
-
-  ;; ignore `.svn' and `CVS' directories
-  (setq grep-find-command
-        (concat
-         "find . \\( -path '*/.svn' -o -path '*/CVS' \\) -prune -o -type f -print0 | "
-         "xargs -0 -e grep -i -H -n -e "))
-
-  ;; use `find -print0' and `xargs -0'
-  (setq grep-find-use-xargs 'gnu)
-
-  ;; run `grep' via `find', with user-specified arguments
-  (global-set-key
-   (kbd "C-c 3") 'grep-find)
-#+end_src
-
-XXX C-c 3 does not ignore .git directories!
-
 The commands
 - =lgrep= (local search, with =grep-template=) and
 - =rgrep= (*recursive* search, with =grep-find-template=)
 are somehow more user-friendly than the =M-x grep= command.
 
-The word at point can be captured using the command =(thing-at-point 'word)=. So
-you may try:
-
 #+begin_src emacs-lisp
-  (defun leuven-rgrep (regexp)
-    "Recursively search for word at point in all files starting from the current
-  directory."
-    (interactive
-     (list (completing-read "Search regexp: " nil
-                            nil nil (thing-at-point 'word))))
-    (grep-compute-defaults)
-    (rgrep regexp "*.*" "./"))
+;;** 27.4 (info "(emacs)Grep Searching") under Emacs
 
-;; (when Cygwin... XXX
-  ;; run grep via find, with user-specified arguments
+  (leuven--section "27.4 (emacs)Grep Searching under Emacs")
+
+  ;; ignore case distinctions in the default `grep' command
+  (setq grep-command "grep -i -H -n -e ")
+
+  ;; do not append `null-device' (`/dev/null' or `NUL') to `grep' commands
+  (setq grep-use-null-device nil)
+  ;; not necessary if the `grep' program used supports the `-H' option
+
+  ;; ;; for Windows
+  ;; (setq grep-find-command '("findstr /sn *" . 13))
+
+  ;; use `find -print0' and `xargs -0'
+  (setq grep-find-use-xargs 'gnu)
+
+  ;; run `grep' via `find', with user-friendly interface
   (global-set-key
-   (kbd "C-c 4") 'leuven-rgrep)
+   (kbd "C-c 3") 'rgrep)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -9518,7 +9515,7 @@ you may try:
   (defun leuven-org-grep (regexp &optional context)
     "Recursively search for REGEXP in Org files in directory tree rooted at `org-directory'.
   Prefix argument determines number of lines of output context."
-    (interactive "sSearch for: \nP")
+    (interactive "sSearch regexp: \nP")
     (let ((grep-find-ignored-files '("#*" ".#*"))
           (grep-template (concat "grep <X> -i -nH "
                                  (when context
@@ -12528,8 +12525,9 @@ You may wish to set =ps-print-landscape= to =t=.
     (defun leuven-google-search-word-at-point ()
       "Google the word at point."
       (interactive)
-      (browse-url (concat "http://www.google.com/search?q="
-                          (word-at-point))))
+      (browse-url
+       (concat "http://www.google.com/search?q=" (find-tag-default))))
+
     (defun leuven-google-search-region (prefix start end)
       "Create a search URL and send it to the web browser."
       (interactive "P\nr")
@@ -12617,34 +12615,6 @@ following code:
 
     (define-key leuven--google-prefix-map
       (kbd "r") 'leuven-google-search-region)
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; excellent!
-  (defun answers-define ()
-    "Look up the word under cursor in a browser."
-    (interactive)
-    (browse-url
-     (concat "http://www.answers.com/main/ntquery?s="
-             (thing-at-point 'word))))
-
-    (defun lookup-word-definition-in-w3m ()
-      "Look up the word's definition in a emacs-w3m.\n
-    If a region is active (a phrase), lookup that phrase."
-      (interactive)
-      (let (myword
-            myurl)
-        (setq myword
-              (if (use-region-p)
-                  (buffer-substring-no-properties (region-beginning)
-                                                  (region-end))
-                (thing-at-point 'symbol)))
-        (setq myword (replace-regexp-in-string " " "%20" myword))
-        (setq myurl (concat "http://www.answers.com/main/ntquery?s=" myword))
-        (w3m-browse-url myurl)))
-    (define-key leuven--google-prefix-map
-      (kbd "a") 'lookup-word-definition-in-w3m)
-
 )
 #+end_src
 
