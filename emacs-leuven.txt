@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-07-30 Tue 14:27>
+# Time-stamp: <2013-07-30 Tue 14:47>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -69,12 +69,14 @@ echo "$(date '+%Y%m%d.%H%M')"
 ;; To get more debug info about the packages getting loaded, add the following
 ;; line before requiring Emacs Leuven.
 ;;
+;;     ;; show messages describing progress of loading Emacs Leuven
 ;;     (setq leuven-load-verbose t)
 ;;
 ;; To avoid be questioned about packages to add to your local Emacs
 ;; installation (though, I think you should install them), add the following
 ;; line before requiring Emacs Leuven.
 ;;
+;;     ;; do not (try to) install extra Emacs packages
 ;;     (setq leuven-packages nil)
 ;;
 ;; For help on the Emacs Editor, see (info "(emacs)")  <== `C-x C-e' here!
@@ -9487,9 +9489,12 @@ locate your match.
    (kbd "C-c 3") 'grep-find)
 #+end_src
 
-The commands =lgrep= (local search, with =grep-template=) and =rgrep= (*recursive*
-search, with =grep-find-template=) are somehow more user-friendly than the
-=M-x grep= command.
+XXX C-c 3 does not ignore .git directories!
+
+The commands
+- =lgrep= (local search, with =grep-template=) and
+- =rgrep= (*recursive* search, with =grep-find-template=)
+are somehow more user-friendly than the =M-x grep= command.
 
 The word at point can be captured using the command =(thing-at-point 'word)=. So
 you may try:

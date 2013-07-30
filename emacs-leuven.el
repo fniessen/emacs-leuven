@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130730.1429
+;; Version: 20130730.1447
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -44,12 +44,14 @@
 ;; To get more debug info about the packages getting loaded, add the following
 ;; line before requiring Emacs Leuven.
 ;;
+;;     ;; show messages describing progress of loading Emacs Leuven
 ;;     (setq leuven-load-verbose t)
 ;;
 ;; To avoid be questioned about packages to add to your local Emacs
 ;; installation (though, I think you should install them), add the following
 ;; line before requiring Emacs Leuven.
 ;;
+;;     ;; do not (try to) install extra Emacs packages
 ;;     (setq leuven-packages nil)
 ;;
 ;; For help on the Emacs Editor, see (info "(emacs)")  <== `C-x C-e' here!
@@ -70,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130730.1429]--")
+(message "* --[ Loading Emacs Leuven 20130730.1447]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -9353,7 +9355,7 @@ From %c"
            (- (float-time) leuven-before-time))
   (sit-for 0.5)
 
-(message "* --[ Loaded Emacs Leuven 20130730.143]--")
+(message "* --[ Loaded Emacs Leuven 20130730.1448]--")
 
 (provide 'emacs-leuven)
 
