@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130730.1213
+;; Version: 20130730.1429
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,7 +70,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130730.1213]--")
+(message "* --[ Loading Emacs Leuven 20130730.1429]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4309,19 +4309,6 @@ From %c"
   ;; don't search headline for a time-of-day
   (setq org-agenda-search-headline-for-time nil)
 
-  ;; 10.3.5 keyword search
-  (defun leuven-org-grep (search &optional context)
-    "Search for word in Org files.
-  Prefix argument determines number of lines."
-    (interactive "sSearch for: \nP")
-    (let ((grep-find-ignored-files '("#*" ".#*"))
-          (grep-template (concat "grep <X> -i -nH "
-                                 (when context
-                                   (concat "-C" (number-to-string context)))
-                                 " -e <R> <F>")))
-      (lgrep search "*org*" org-directory)))
-  ;; (global-set-key (kbd "<f8>") 'leuven-org-grep)
-
   ;; 10.3.6 how to identify stuck projects
   (setq org-stuck-projects
         '("+LEVEL=2/-DONE" ;; identify a project
@@ -6709,6 +6696,10 @@ From %c"
   ;; ignore case distinctions in the default grep command
   (setq grep-command "grep -i -H -n -e ")
 
+  ;; do not append `null-device' (`/dev/null' or `NUL') to `grep' commands
+  (setq grep-use-null-device nil)
+  ;; not necessary if the grep program used supports the `-H' option
+
 ;; ;; for Windows
 ;; (setq grep-find-command '("findstr /sn *" . 13))
 
@@ -6721,23 +6712,35 @@ From %c"
   ;; use `find -print0' and `xargs -0'
   (setq grep-find-use-xargs 'gnu)
 
-  ;; run grep via find, with user-specified arguments
+  ;; run `grep' via `find', with user-specified arguments
   (global-set-key
    (kbd "C-c 3") 'grep-find)
 
-  (defun leuven-rgrep (term)
-    "Look for word at point in all files recursively starting from the parent
-    directory."
+  (defun leuven-rgrep (regexp)
+    "Recursively search for word at point in all files starting from the current
+  directory."
     (interactive
      (list (completing-read "Search regexp: " nil
                             nil nil (thing-at-point 'word))))
     (grep-compute-defaults)
-    (rgrep term "*.*" "../"))
+    (rgrep regexp "*.*" "./"))
 
 ;; (when Cygwin... XXX
   ;; run grep via find, with user-specified arguments
   (global-set-key
    (kbd "C-c 4") 'leuven-rgrep)
+
+  ;; 10.3.5 Org keyword search
+  (defun leuven-org-grep (regexp &optional context)
+    "Recursively search for REGEXP in Org files in directory tree rooted at `org-directory'.
+  Prefix argument determines number of lines of output context."
+    (interactive "sSearch for: \nP")
+    (let ((grep-find-ignored-files '("#*" ".#*"))
+          (grep-template (concat "grep <X> -i -nH "
+                                 (when context
+                                   (concat "-C" (number-to-string context)))
+                                 " -e <R> <F>")))
+      (rgrep regexp "*.org" org-directory)))
 
 ;;** 27.6 Running (info "(emacs)Debuggers") Under Emacs
 
@@ -7512,6 +7515,7 @@ From %c"
        ;; the output
        (global-set-key
         (kbd "C-c 1") 'find-name-dired)
+        ;; case insensitive if `read-file-name-completion-ignore-case' is non-nil
 
        ;; `find-grep-dired' case insensitivity
        (setq find-grep-options "-i -q")
@@ -9349,7 +9353,7 @@ From %c"
            (- (float-time) leuven-before-time))
   (sit-for 0.5)
 
-(message "* --[ Loaded Emacs Leuven 20130730.1213]--")
+(message "* --[ Loaded Emacs Leuven 20130730.143]--")
 
 (provide 'emacs-leuven)
 

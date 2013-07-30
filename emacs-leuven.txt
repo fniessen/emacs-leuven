@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-07-30 Tue 12:23>
+# Time-stamp: <2013-07-30 Tue 14:27>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -892,19 +892,19 @@ in echo area.
 In general, the following functions are very interesting for finding useful
 functions and documentation.
 
-- apropos-documentation (C-h d) ::
-     Show symbols whose documentation contains matches for PATTERN.
+- apropos-documentation (=C-h d=) ::
+     *Show symbols whose documentation contains matches for PATTERN.*
 
 - describe-function (=C-h f=) ::
      Used with TAB completion to show documentation of functions.
 
-- elisp-index-search (=C-h E= here) ::
+- elisp-index-search (=C-h E= in Emacs Leuven) ::
      Look up documentation on broad ELisp topics (in the indices of the Emacs
      Lisp Reference Manual).
 
-- info-lookup-symbol (=C-h S=, as well =C-f1= here) ::
-     Bring the relevant section from the manual, which describes the topic in
-     more detail.
+- info-lookup-symbol (=C-h S=, as well =C-f1= in Emacs Leuven) ::
+     *Bring the relevant section from the manual, which describes the topic in
+     more detail.*
 
 With all prefix keys, if you follow them with =C-h= (=h= for help), a list of key
 bindings in that prefix map is displayed. This is automatic and is one of the
@@ -6120,21 +6120,6 @@ arrives -- at which point it will be in all lists.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; 10.3.5 keyword search
-  (defun leuven-org-grep (search &optional context)
-    "Search for word in Org files.
-  Prefix argument determines number of lines."
-    (interactive "sSearch for: \nP")
-    (let ((grep-find-ignored-files '("#*" ".#*"))
-          (grep-template (concat "grep <X> -i -nH "
-                                 (when context
-                                   (concat "-C" (number-to-string context)))
-                                 " -e <R> <F>")))
-      (lgrep search "*org*" org-directory)))
-  ;; (global-set-key (kbd "<f8>") 'leuven-org-grep)
-#+end_src
-
-#+begin_src emacs-lisp
   ;; 10.3.6 how to identify stuck projects
   (setq org-stuck-projects
         '("+LEVEL=2/-DONE" ;; identify a project
@@ -9470,6 +9455,9 @@ without a =Makefile=.
 
 ** Searching with Grep under Emacs
 
+Find files matching some regexp, and click on the hyperlinks to the files to
+locate your match.
+
 #+begin_src emacs-lisp
 ;;** 27.4 (info "(emacs)Grep Searching") under Emacs
 
@@ -9477,6 +9465,10 @@ without a =Makefile=.
 
   ;; ignore case distinctions in the default grep command
   (setq grep-command "grep -i -H -n -e ")
+
+  ;; do not append `null-device' (`/dev/null' or `NUL') to `grep' commands
+  (setq grep-use-null-device nil)
+  ;; not necessary if the grep program used supports the `-H' option
 
 ;; ;; for Windows
 ;; (setq grep-find-command '("findstr /sn *" . 13))
@@ -9490,24 +9482,27 @@ without a =Makefile=.
   ;; use `find -print0' and `xargs -0'
   (setq grep-find-use-xargs 'gnu)
 
-  ;; run grep via find, with user-specified arguments
+  ;; run `grep' via `find', with user-specified arguments
   (global-set-key
    (kbd "C-c 3") 'grep-find)
 #+end_src
 
-The commands =lgrep= (search locally) and =rgrep= (search recursively) are somehow
-more user-friendly than the =M-x grep= command. The word at point can be
-captured using the command =(thing-at-point 'word)=. So you may try:
+The commands =lgrep= (local search, with =grep-template=) and =rgrep= (*recursive*
+search, with =grep-find-template=) are somehow more user-friendly than the
+=M-x grep= command.
+
+The word at point can be captured using the command =(thing-at-point 'word)=. So
+you may try:
 
 #+begin_src emacs-lisp
-  (defun leuven-rgrep (term)
-    "Look for word at point in all files recursively starting from the parent
-    directory."
+  (defun leuven-rgrep (regexp)
+    "Recursively search for word at point in all files starting from the current
+  directory."
     (interactive
      (list (completing-read "Search regexp: " nil
                             nil nil (thing-at-point 'word))))
     (grep-compute-defaults)
-    (rgrep term "*.*" "../"))
+    (rgrep regexp "*.*" "./"))
 
 ;; (when Cygwin... XXX
   ;; run grep via find, with user-specified arguments
@@ -9515,9 +9510,19 @@ captured using the command =(thing-at-point 'word)=. So you may try:
    (kbd "C-c 4") 'leuven-rgrep)
 #+end_src
 
-=M-x rgrep <RET>= will *recursively* find what you're looking for, and give you an
-hyperlink to the files, so that you can just click on them to locate your
-match.
+#+begin_src emacs-lisp
+  ;; 10.3.5 Org keyword search
+  (defun leuven-org-grep (regexp &optional context)
+    "Recursively search for REGEXP in Org files in directory tree rooted at `org-directory'.
+  Prefix argument determines number of lines of output context."
+    (interactive "sSearch for: \nP")
+    (let ((grep-find-ignored-files '("#*" ".#*"))
+          (grep-template (concat "grep <X> -i -nH "
+                                 (when context
+                                   (concat "-C" (number-to-string context)))
+                                 " -e <R> <F>")))
+      (rgrep regexp "*.org" org-directory)))
+#+end_src
 
 ** Running Debuggers Under Emacs
 
@@ -10877,7 +10882,7 @@ Check this out as well: http://www.emacswiki.org/emacs/DiredSortMenu
 ** Dired and =find=
 
 For searches in Dired, see =dired-do-search= (=A=).
-- Search through all marked files for a match for regexp
+- Search through all *marked files* for a match for regexp
 - Stops when a match is found
 - To continue searching for next match, use command "M-,"
 
@@ -10896,6 +10901,7 @@ For searches in Dired, see =dired-do-search= (=A=).
        ;; the output
        (global-set-key
         (kbd "C-c 1") 'find-name-dired)
+        ;; case insensitive if `read-file-name-completion-ignore-case' is non-nil
 
        ;; `find-grep-dired' case insensitivity
        (setq find-grep-options "-i -q")
