@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-07-30 Tue 14:47>
+# Time-stamp: <2013-07-30 Tue 15:01>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -2524,17 +2524,15 @@ sensitive-mode=:
 Make the message "/FILENAME has auto save data/" unmissable:
 
 #+begin_src emacs-lisp
-  (defface leuven-recover-this-file-face
+  (defface recover-this-file
     '((t (:weight bold :background "#FBE3E4")))
     "Face for buffers visiting files with auto save data."
     :group 'files)
 
   (defvar leuven--recover-this-file nil
-    "If non-nil, an overlay indicating that the visited file has auto save
-  data.")
+    "If non-nil, an overlay indicating that the visited file has auto save data.")
 
   (defun leuven--recover-this-file ()
-    ;; see after-find-file XXX
     (let ((warn (not buffer-read-only)))
       (when (and warn
                  ;; no need to warn if buffer is auto-saved under the name of
@@ -2547,7 +2545,7 @@ Make the message "/FILENAME has auto save data/" unmissable:
         (set (make-local-variable 'leuven--recover-this-file)
              (make-overlay (point-min) (point-max)))
         (overlay-put leuven--recover-this-file
-                     'face 'leuven-recover-this-file-face))))
+                     'face 'recover-this-file))))
 
   (add-hook 'find-file-hook 'leuven--recover-this-file)
 #+end_src

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130730.1447
+;; Version: 20130730.1501
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130730.1447]--")
+(message "* --[ Loading Emacs Leuven 20130730.1501]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1727,17 +1727,15 @@
       (if auto-save-default
           (auto-save-mode 1))))
 
-  (defface leuven-recover-this-file-face
+  (defface recover-this-file
     '((t (:weight bold :background "#FBE3E4")))
     "Face for buffers visiting files with auto save data."
     :group 'files)
 
   (defvar leuven--recover-this-file nil
-    "If non-nil, an overlay indicating that the visited file has auto save
-  data.")
+    "If non-nil, an overlay indicating that the visited file has auto save data.")
 
   (defun leuven--recover-this-file ()
-    ;; see after-find-file XXX
     (let ((warn (not buffer-read-only)))
       (when (and warn
                  ;; no need to warn if buffer is auto-saved under the name of
@@ -1750,7 +1748,7 @@
         (set (make-local-variable 'leuven--recover-this-file)
              (make-overlay (point-min) (point-max)))
         (overlay-put leuven--recover-this-file
-                     'face 'leuven-recover-this-file-face))))
+                     'face 'recover-this-file))))
 
   (add-hook 'find-file-hook 'leuven--recover-this-file)
 
@@ -9355,7 +9353,7 @@ From %c"
            (- (float-time) leuven-before-time))
   (sit-for 0.5)
 
-(message "* --[ Loaded Emacs Leuven 20130730.1448]--")
+(message "* --[ Loaded Emacs Leuven 20130730.1502]--")
 
 (provide 'emacs-leuven)
 
