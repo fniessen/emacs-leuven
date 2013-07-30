@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130730.1053
+;; Version: 20130730.1213
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,7 +70,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130730.1053]--")
+(message "* --[ Loading Emacs Leuven 20130730.1213]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1318,7 +1318,7 @@
 
   (leuven--section "15.8 (emacs)Search Case")
 
-  ;; make searches case sensitive by default (in all buffers that do not
+  ;; searches should ignore case by default (in all buffers that do not
   ;; override this)
   (setq-default case-fold-search t)
 
@@ -6707,7 +6707,7 @@ From %c"
   (leuven--section "27.4 (emacs)Grep Searching under Emacs")
 
   ;; ignore case distinctions in the default grep command
-  (setq grep-command "grep -i -n -e ")
+  (setq grep-command "grep -i -H -n -e ")
 
 ;; ;; for Windows
 ;; (setq grep-find-command '("findstr /sn *" . 13))
@@ -6716,7 +6716,7 @@ From %c"
   (setq grep-find-command
         (concat
          "find . \\( -path '*/.svn' -o -path '*/CVS' \\) -prune -o -type f -print0 | "
-         "xargs -0 -e grep -i -n -e "))
+         "xargs -0 -e grep -i -H -n -e "))
 
   ;; use `find -print0' and `xargs -0'
   (setq grep-find-use-xargs 'gnu)
@@ -6725,14 +6725,11 @@ From %c"
   (global-set-key
    (kbd "C-c 3") 'grep-find)
 
-  ;; grep + Emacs 22 + Cygwin does not follow file links
-  ;; try adding "-nH" to your grep options.
-
   (defun leuven-rgrep (term)
     "Look for word at point in all files recursively starting from the parent
     directory."
     (interactive
-     (list (completing-read "Search Term: " nil
+     (list (completing-read "Search regexp: " nil
                             nil nil (thing-at-point 'word))))
     (grep-compute-defaults)
     (rgrep term "*.*" "../"))
@@ -7505,16 +7502,19 @@ From %c"
 
        (leuven--section "30.16 (emacs)Dired and Find")
 
-       ;; TODO Make it case insensitive!
+       ;; ;; what to use in place of `-ls' as the final argument
+       ;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
        ;; ;; quicker to collate the matches and then use `xargs' to run the
        ;; ;; command (variable defined in `find-dired.el')
-       ;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
 
 ;; (when Cygwin... XXX
        ;; search for files with names matching a wild card pattern and Dired
        ;; the output
        (global-set-key
         (kbd "C-c 1") 'find-name-dired)
+
+       ;; `find-grep-dired' case insensitivity
+       (setq find-grep-options "-i -q")
 
        ;; search for files with contents matching a wild card pattern and Dired
        ;; the output
@@ -9349,7 +9349,7 @@ From %c"
            (- (float-time) leuven-before-time))
   (sit-for 0.5)
 
-(message "* --[ Loaded Emacs Leuven 20130730.1053]--")
+(message "* --[ Loaded Emacs Leuven 20130730.1213]--")
 
 (provide 'emacs-leuven)
 

@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-07-30 Tue 10:52>
+# Time-stamp: <2013-07-30 Tue 12:23>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -1903,7 +1903,7 @@ ELISP> (save-excursion (set-buffer "BUFFER")
 
   (leuven--section "15.8 (emacs)Search Case")
 
-  ;; make searches case sensitive by default (in all buffers that do not
+  ;; searches should ignore case by default (in all buffers that do not
   ;; override this)
   (setq-default case-fold-search t)
 #+end_src
@@ -9476,7 +9476,7 @@ without a =Makefile=.
   (leuven--section "27.4 (emacs)Grep Searching under Emacs")
 
   ;; ignore case distinctions in the default grep command
-  (setq grep-command "grep -i -n -e ")
+  (setq grep-command "grep -i -H -n -e ")
 
 ;; ;; for Windows
 ;; (setq grep-find-command '("findstr /sn *" . 13))
@@ -9485,7 +9485,7 @@ without a =Makefile=.
   (setq grep-find-command
         (concat
          "find . \\( -path '*/.svn' -o -path '*/CVS' \\) -prune -o -type f -print0 | "
-         "xargs -0 -e grep -i -n -e "))
+         "xargs -0 -e grep -i -H -n -e "))
 
   ;; use `find -print0' and `xargs -0'
   (setq grep-find-use-xargs 'gnu)
@@ -9493,21 +9493,18 @@ without a =Makefile=.
   ;; run grep via find, with user-specified arguments
   (global-set-key
    (kbd "C-c 3") 'grep-find)
-
-  ;; grep + Emacs 22 + Cygwin does not follow file links
-  ;; try adding "-nH" to your grep options.
 #+end_src
 
-The commands =lgrep= and =rgrep= are somehow more user-friendly than the =M-x grep=
-command. The word at point can be captured using the command =(thing-at-point
-'word)=. So you may try:
+The commands =lgrep= (search locally) and =rgrep= (search recursively) are somehow
+more user-friendly than the =M-x grep= command. The word at point can be
+captured using the command =(thing-at-point 'word)=. So you may try:
 
 #+begin_src emacs-lisp
   (defun leuven-rgrep (term)
     "Look for word at point in all files recursively starting from the parent
     directory."
     (interactive
-     (list (completing-read "Search Term: " nil
+     (list (completing-read "Search regexp: " nil
                             nil nil (thing-at-point 'word))))
     (grep-compute-defaults)
     (rgrep term "*.*" "../"))
@@ -10889,16 +10886,19 @@ For searches in Dired, see =dired-do-search= (=A=).
 
        (leuven--section "30.16 (emacs)Dired and Find")
 
-       ;; TODO Make it case insensitive!
+       ;; ;; what to use in place of `-ls' as the final argument
+       ;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
        ;; ;; quicker to collate the matches and then use `xargs' to run the
        ;; ;; command (variable defined in `find-dired.el')
-       ;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
 
 ;; (when Cygwin... XXX
        ;; search for files with names matching a wild card pattern and Dired
        ;; the output
        (global-set-key
         (kbd "C-c 1") 'find-name-dired)
+
+       ;; `find-grep-dired' case insensitivity
+       (setq find-grep-options "-i -q")
 
        ;; search for files with contents matching a wild card pattern and Dired
        ;; the output
