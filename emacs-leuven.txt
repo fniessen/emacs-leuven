@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-07-30 Tue 21:24>
+# Time-stamp: <2013-07-31 Wed 11:01>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -317,10 +317,6 @@ echo "$(date '+%Y%m%d.%H%M')"
     (list 'if running-gnu-emacs
           (cons 'progn body)))
 
-  (defmacro GNUEmacs23 (&rest body)
-    (list 'if (string-match "GNU Emacs 23" (version))
-          (cons 'progn body)))
-
   (defmacro GNUEmacs24 (&rest body)
     (list 'if (string-match "GNU Emacs 24" (version))
           (cons 'progn body)))
@@ -341,9 +337,10 @@ echo "$(date '+%Y%m%d.%H%M')"
    ;; migration)
    (setq load-home-init-file t))
 
-  (when running-gnu-linux
-    (modify-all-frames-parameters
-     '((height . 32))))
+  ;; ensure that the echo area is always visible during the early stage of
+  ;; startup (useful in case of error)
+  (modify-all-frames-parameters
+   '((height . 32)))
 
 ) ;; chapter 0 ends here
 #+end_src
@@ -447,6 +444,12 @@ with Emacs, and loaded before the path to the *newest* versions are set).
 Some Emacs modes are over 10K lines of code (e.g. nxml-mode, CEDET). Many
 packages (e.g. Org, Gnus) make use of the =autoload= feature, so that you only
 need to load a single file that define autoloaded functions.
+
+#+begin_src emacs-lisp
+      ;; remember this directory
+      (setq leuven--directory
+            (file-name-directory (or load-file-name (buffer-file-name))))
+#+end_src
 
 #+begin_src emacs-lisp
 ;;*** Development code
@@ -2549,7 +2552,7 @@ Make the message "/FILENAME has auto save data/" unmissable:
 
 #+begin_src emacs-lisp
   (defface recover-this-file
-    '((t (:weight bold :background "#FBE3E4")))
+    '((t (:weight bold :background "#FF3F3F")))
     "Face for buffers visiting files with auto save data."
     :group 'files)
 
@@ -9806,9 +9809,9 @@ tooltip over the VC indicator also says more explicitly.
             "Display a colored icon indicating the vc status of the current
           file."
             (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name))
-                            (concat leuven-site-lisp-directory
+                            (concat leuven--directory
                                     "Pictures/NormalIcon.png")
-                          (concat leuven-site-lisp-directory
+                          (concat leuven--directory
                                   "Pictures/ModifiedIcon.png")))
                   (bg-colour (face-attribute 'mode-line :background)))
               (propertize
@@ -13683,49 +13686,49 @@ To get a backtrace when a specific regexp is displayed in the echo area
 #+end_src
 
 #+begin_src emacs-lisp
-  (when (and (string-match "GNU Emacs" (version))
-             leuven-load-verbose)
-    (ad-disable-advice 'message 'before 'leuven-when-was-that)
-    (ad-update 'message))
+(when (and (string-match "GNU Emacs" (version))
+           leuven-load-verbose)
+  (ad-disable-advice 'message 'before 'leuven-when-was-that)
+  (ad-update 'message))
 #+end_src
 
 #+begin_src emacs-lisp
-  (when leuven-load-verbose
-    (message "| Chapter | Time |")
-    (message "|---------+------|")
-    (mapcar (lambda (el) (message el))
-            (nreverse leuven--load-times-list))
-    (message "|---------+------|")
-    (message "|         | =vsum(@-I..@-II) |"))
+(when leuven-load-verbose
+  (message "| Chapter | Time |")
+  (message "|---------+------|")
+  (mapcar (lambda (el) (message el))
+          (nreverse leuven--load-times-list))
+  (message "|---------+------|")
+  (message "|         | =vsum(@-I..@-II) |"))
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; warn that some packages were missing
-  (dolist (pkg leuven--missing-packages)
-    (message "(warning) Package `%s' not found" pkg))
+;; warn that some packages were missing
+(dolist (pkg leuven--missing-packages)
+  (message "(warning) Package `%s' not found" pkg))
 
-  (message "Loading `%s'...done (in %.3f s)"
-           load-file-name
-           (- (float-time) leuven-before-time))
-  (sit-for 0.3)
+(message "Loading `%s'...done (in %.3f s)"
+         load-file-name
+         (- (float-time) leuven-before-time))
+(sit-for 0.3)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-  (let ((elapsed (float-time (time-subtract (current-time)
-                                            emacs-start-time))))
-    (message "Loading `%s'...done (%.3fs)" load-file-name elapsed))
+(let ((elapsed (float-time (time-subtract (current-time)
+                                          emacs-start-time))))
+  (message "Loading `%s'...done (%.3fs)" load-file-name elapsed))
 
-  (add-hook 'after-init-hook
-            `(lambda ()
-               (let ((elapsed (float-time (time-subtract (current-time)
-                                                         emacs-start-time))))
-                 (message "Loading %s...done (%.3fs) [after-init]"
-                          ,load-file-name elapsed)))
-            t)
+(add-hook 'after-init-hook
+          `(lambda ()
+             (let ((elapsed (float-time (time-subtract (current-time)
+                                                       emacs-start-time))))
+               (message "Loading %s...done (%.3fs) [after-init]"
+                        ,load-file-name elapsed)))
+  t)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-  (message "Emacs initialization: %s" (emacs-init-time))
+(message "Emacs initialization: %s" (emacs-init-time))
 #+end_src
 
 #+begin_src emacs-lisp :noweb yes

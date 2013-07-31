@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130730.2124
+;; Version: 20130731.1051
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130730.2124]--")
+(message "* --[ Loading Emacs Leuven 20130731.1051]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -260,10 +260,6 @@
     (list 'if running-gnu-emacs
           (cons 'progn body)))
 
-  (defmacro GNUEmacs23 (&rest body)
-    (list 'if (string-match "GNU Emacs 23" (version))
-          (cons 'progn body)))
-
   (defmacro GNUEmacs24 (&rest body)
     (list 'if (string-match "GNU Emacs 24" (version))
           (cons 'progn body)))
@@ -282,9 +278,10 @@
    ;; migration)
    (setq load-home-init-file t))
 
-  (when running-gnu-linux
-    (modify-all-frames-parameters
-     '((height . 32))))
+  ;; ensure that the echo area is always visible during the early stage of
+  ;; startup (useful in case of error)
+  (modify-all-frames-parameters
+   '((height . 32)))
 
 ) ;; chapter 0 ends here
 
@@ -358,6 +355,10 @@
 
       (leuven-add-to-load-path leuven-site-lisp-directory)
       ;; (leuven-add-to-load-path (concat leuven-site-lisp-directory "mode-abbrevs"))
+
+      ;; remember this directory
+      (setq leuven--directory
+            (file-name-directory (or load-file-name (buffer-file-name))))
 
 ;;*** Development code
 
@@ -1750,7 +1751,7 @@
           (auto-save-mode 1))))
 
   (defface recover-this-file
-    '((t (:weight bold :background "#FBE3E4")))
+    '((t (:weight bold :background "#FF3F3F")))
     "Face for buffers visiting files with auto save data."
     :group 'files)
 
@@ -6896,9 +6897,9 @@ From %c"
             "Display a colored icon indicating the vc status of the current
           file."
             (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name))
-                            (concat leuven-site-lisp-directory
+                            (concat leuven--directory
                                     "Pictures/NormalIcon.png")
-                          (concat leuven-site-lisp-directory
+                          (concat leuven--directory
                                   "Pictures/ModifiedIcon.png")))
                   (bg-colour (face-attribute 'mode-line :background)))
               (propertize
@@ -9308,29 +9309,29 @@ From %c"
   ;; get the backtrace when uncaught errors occur
   (setq debug-on-error nil)) ;; was set to `t' at beginning of buffer
 
-  (when (and (string-match "GNU Emacs" (version))
-             leuven-load-verbose)
-    (ad-disable-advice 'message 'before 'leuven-when-was-that)
-    (ad-update 'message))
+(when (and (string-match "GNU Emacs" (version))
+           leuven-load-verbose)
+  (ad-disable-advice 'message 'before 'leuven-when-was-that)
+  (ad-update 'message))
 
-  (when leuven-load-verbose
-    (message "| Chapter | Time |")
-    (message "|---------+------|")
-    (mapcar (lambda (el) (message el))
-            (nreverse leuven--load-times-list))
-    (message "|---------+------|")
-    (message "|         | =vsum(@-I..@-II) |"))
+(when leuven-load-verbose
+  (message "| Chapter | Time |")
+  (message "|---------+------|")
+  (mapcar (lambda (el) (message el))
+          (nreverse leuven--load-times-list))
+  (message "|---------+------|")
+  (message "|         | =vsum(@-I..@-II) |"))
 
-  ;; warn that some packages were missing
-  (dolist (pkg leuven--missing-packages)
-    (message "(warning) Package `%s' not found" pkg))
+;; warn that some packages were missing
+(dolist (pkg leuven--missing-packages)
+  (message "(warning) Package `%s' not found" pkg))
 
-  (message "Loading `%s'...done (in %.3f s)"
-           load-file-name
-           (- (float-time) leuven-before-time))
-  (sit-for 0.3)
+(message "Loading `%s'...done (in %.3f s)"
+         load-file-name
+         (- (float-time) leuven-before-time))
+(sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130730.2124]--")
+(message "* --[ Loaded Emacs Leuven 20130731.1051]--")
 
 (provide 'emacs-leuven)
 
