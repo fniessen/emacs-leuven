@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130801.1206
+;; Version: 20130801.1402
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130801.1206]--")
+(message "* --[ Loading Emacs Leuven 20130801.1402]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -401,74 +401,74 @@
 
   ;; simple package system for GNU Emacs
   (GNUEmacs
-   (when (require 'package)
+    (when (require 'package)
 
-     ;; archives from which to fetch
-     (setq package-archives
-           (append '(("org"       . "http://orgmode.org/elpa/")
-                     ("melpa"     . "http://melpa.milkbox.net/packages/")
-                     ("marmalade" . "http://marmalade-repo.org/packages/")
-                     ("ELPA"      . "http://tromey.com/elpa/"))
-                   package-archives))
+      ;; archives from which to fetch
+      (setq package-archives
+            (append '(("org"       . "http://orgmode.org/elpa/")
+                      ("melpa"     . "http://melpa.milkbox.net/packages/")
+                      ("marmalade" . "http://marmalade-repo.org/packages/")
+                      ("ELPA"      . "http://tromey.com/elpa/"))
+                    package-archives))
 
-     ;; ;; download the ELPA archive description if needed
-     ;; (unless package-archive-contents
-     ;;   (package-refresh-contents))
+      ;; ;; download the ELPA archive description if needed
+      ;; (unless package-archive-contents
+      ;;   (package-refresh-contents))
 
-     ;; load the latest version of all installed packages,
-     ;; and activate them (= add to `load-path' and load `XXX-autoloads.el'?)
-     (package-initialize) ;; automatically called by Emacs 24 AFTER the init.el
-                          ;; is loaded???
+      ;; load the latest version of all installed packages,
+      ;; and activate them (= add to `load-path' and load `XXX-autoloads.el'?)
+      (package-initialize) ;; automatically called by Emacs 24 AFTER the init.el
+                           ;; is loaded???
 
-     (defcustom leuven-packages
-       '(auctex
-         auto-complete
-         bbdb
-         calfw
-         circe
-         dictionary
-         ess
-         fuzzy
-         git-commit-mode
-         gnuplot-mode ;; or gnuplot?
-         graphviz-dot-mode
-         helm
-         idle-require
-         ;; jabber
-         leuven-theme
-         ;; htmlize
-         org
-         org-mime ;; (from contrib)
-         pager
-         ;; paredit
-         rainbow-mode
-         redshank
-         w3m
-         yasnippet)
-       "A list of packages to ensure are installed at Emacs startup."
-       :group 'emacs-leuven
-       :type '(repeat (string)))
+      (defcustom leuven-packages
+        '(auctex
+          auto-complete
+          bbdb
+          calfw
+          circe
+          dictionary
+          ess
+          fuzzy
+          git-commit-mode
+          gnuplot-mode ;; or gnuplot?
+          graphviz-dot-mode
+          helm
+          idle-require
+          ;; jabber
+          leuven-theme
+          ;; htmlize
+          org
+          org-mime ;; (from contrib)
+          pager
+          ;; paredit
+          rainbow-mode
+          redshank
+          w3m
+          yasnippet)
+        "A list of packages to ensure are installed at Emacs startup."
+        :group 'emacs-leuven
+        :type '(repeat (string)))
 
-     ;; install all packages specified in `leuven-packages' which are not built-in nor
-     ;; already installed (must be run after initializing `package-initialize')
-     (dolist (pkg leuven-packages)
-       (if (package-installed-p pkg)
-           (message "(info) Package `%s' built-in or already installed..." pkg)
-         (if (yes-or-no-p (format "Install package `%s'? " pkg))
-             (ignore-errors
-               (package-install pkg))
-           (message "Customize `leuven-packages' to ignore this package at next startup...")
-           (sit-for 1.5))))
+      ;; install all packages specified in `leuven-packages' which are not built-in nor
+      ;; already installed (must be run after initializing `package-initialize')
+      (dolist (pkg leuven-packages)
+        (if (package-installed-p pkg)
+            (message "(info) Package `%s' built-in or already installed..." pkg)
+          (if (yes-or-no-p (format "Install package `%s'? " pkg))
+              (ignore-errors
+                (package-install pkg))
+            (message "Customize `leuven-packages' to ignore this package at next startup...")
+            (sit-for 1.5))))
 
-     ;; don't truncate package names in Emacs package list
-     (add-hook 'package-menu-mode-hook
-               (lambda ()
-                 (setq tabulated-list-format
-                       [("Package" 28 package-menu--name-predicate)
-                        ("Version" 14 nil)
-                        ("Status"  10 package-menu--status-predicate)
-                        ("Description" 0 nil)])
-                 (tabulated-list-init-header)))))
+      ;; don't truncate package names in Emacs package list
+      (add-hook 'package-menu-mode-hook
+                (lambda ()
+                  (setq tabulated-list-format
+                        [("Package" 28 package-menu--name-predicate)
+                         ("Version" 14 nil)
+                         ("Status"  10 package-menu--status-predicate)
+                         ("Description" 0 nil)])
+                  (tabulated-list-init-header)))))
 
 ) ;; chapter 47 ends here
 
@@ -643,12 +643,12 @@
 
   ;; move point to a given line number (XEmacs default)
   (GNUEmacs
-   (global-set-key
-    (kbd "M-g") 'goto-line))
+    (global-set-key
+      (kbd "M-g") 'goto-line))
 
   ;; print the current buffer line number
   (global-set-key
-   (kbd "M-G") 'what-line)
+    (kbd "M-G") 'what-line)
 
 ;;** 7.4 (info "(emacs)Basic Undo")ing Changes
 
@@ -656,13 +656,13 @@
 
   ;; undo some previous changes
   (global-set-key
-   (kbd "<f11>") 'undo)
+    (kbd "<f11>") 'undo)
 
   ;; redo the most recent undo
   (when (locate-library "redo")
     (autoload 'redo "redo" nil t)
     (global-set-key
-     (kbd "<S-f11>") 'redo))
+      (kbd "<S-f11>") 'redo))
 
 ) ;; chapter 7 ends here
 
@@ -672,14 +672,6 @@
 
   ;; how long to display an echo-area message when the minibuffer is active
   (setq minibuffer-message-timeout 0.5)
-
-;;** 8.2 (info "(emacs)Minibuffer File") Names
-
-  (leuven--section "8.2 (emacs)The Minibuffer")
-
-  ;; dim the ignored part of the file name
-  (GNUEmacs
-   (file-name-shadow-mode 1))
 
 ;;** 8.3 (info "(emacs)Minibuffer Edit")ing
 
@@ -742,8 +734,8 @@
 
   ;; show variables whose name matches the pattern
   (GNUEmacs
-   (global-set-key
-    (kbd "C-h A") 'apropos-variable))
+    (global-set-key
+      (kbd "C-h A") 'apropos-variable))
 
 ;;** 10.8 (info "(emacs)Misc Help")
 
@@ -787,10 +779,10 @@
                 nil)))
 
    (GNUEmacs
-    ;; with `info+.el', you can merge an Info node with its subnodes
-    ;; into the same buffer, by calling `Info-merge-subnodes' (bound to
-    ;; `+')
-    (try-require 'info+-XXX))  ;; error finding dir file
+     ;; with `info+.el', you can merge an Info node with its subnodes
+     ;; into the same buffer, by calling `Info-merge-subnodes' (bound to
+     ;; `+')
+     (try-require 'info+-XXX))  ;; error finding dir file
 
    ;; some info related functions
    ;; (to insert links such as `(info "(message)Insertion Variables")')
@@ -808,18 +800,18 @@
 
   ;; get a Unix manual page of the item under point
   (global-set-key
-   (kbd "<S-f1>") 'man-follow)
+    (kbd "<S-f1>") 'man-follow)
 
   (with-eval-after-load "man"
-   ;; make the manpage the current buffer in the current window
-   (setq Man-notify-method 'pushy))
+    ;; make the manpage the current buffer in the current window
+    (setq Man-notify-method 'pushy))
 
   ;; alias man to woman
   (defalias 'man 'woman)
 
   ;; decode and browse Unix man-pages "W.o. (without) Man"
   (with-eval-after-load "woman"
-   (defalias 'man 'woman))
+    (defalias 'man 'woman))
 
 ) ;; chapter 10 ends here
 
@@ -899,11 +891,11 @@
 
   ;; copy/paste with Gnome desktop
   (GNUEmacs
-   ;; ;; cutting and pasting uses the clipboard
-   ;; (setq x-select-enable-clipboard t) ;; default in Emacs 24
+    ;; ;; cutting and pasting uses the clipboard
+    ;; (setq x-select-enable-clipboard t) ;; default in Emacs 24
 
-   ;; make cut, copy and paste (keys and menu bar items) use the clipboard
-   (menu-bar-enable-clipboard))
+    ;; make cut, copy and paste (keys and menu bar items) use the clipboard
+    (menu-bar-enable-clipboard))
 
 ) ;; chapter 12 ends here
 
@@ -1830,22 +1822,23 @@
 
   (with-eval-after-load "ediff"
 
-   ;; (setq-default ediff-ignore-similar-regions  t)
+    ;; (setq-default ediff-ignore-similar-regions  t)
+    ;; XXX Make another key binding (than `E') with that value in a let-bind
 
-   ;; sometimes grab the mouse and put it in the control frame
-   (setq ediff-grab-mouse 'maybe)
+    ;; sometimes grab the mouse and put it in the control frame
+    (setq ediff-grab-mouse 'maybe)
 
-   ;; do everything in one frame
-   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+    ;; do everything in one frame
+    (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-   ;; split the window (horizontally or vertically) depending on the frame
-   ;; width
-   (setq ediff-split-window-function
-         (lambda (&optional arg)
-           (if (> (frame-width) 160)
-               (split-window-horizontally arg)
-             (split-window-vertically
-              arg)))))
+    ;; split the window (horizontally or vertically) depending on the frame
+    ;; width
+    (setq ediff-split-window-function
+          (lambda (&optional arg)
+            (if (> (frame-width) 160)
+                (split-window-horizontally arg)
+              (split-window-vertically
+               arg)))))
 
 ;;** 18.11 (info "(emacs)Misc File Ops")
 
@@ -3741,9 +3734,8 @@
   (leuven--section "8 (org)Dates and Times")
 
   ;; insinuate appt if Org mode is loaded
-  (eval-after-load "org"
-    '(progn
-       (try-require 'appt)))
+  (with-eval-after-load "org"
+    (try-require 'appt))
 
 ;;** 8.2 (info "(org)Creating timestamps")
 
@@ -3797,107 +3789,104 @@
   (leuven--section "8.4 (org)Clocking work time")
 
   (global-set-key
-   (kbd "C-c C-x C-i") 'org-clock-in)
+    (kbd "C-c C-x C-i") 'org-clock-in)
   (global-set-key
-   (kbd "C-c C-x C-j") 'org-clock-goto)
+    (kbd "C-c C-x C-j") 'org-clock-goto)
   (global-set-key
-   (kbd "C-c C-x C-o") 'org-clock-out)
+    (kbd "C-c C-x C-o") 'org-clock-out)
 
   ;; the time clocking code for Org mode
   ;; (try-require 'org-clock)
   ;;! needed for trying to automatically re-clock at Emacs startup
+  ;; Alternative: resume clocks when opening the first Org file
 
-  (eval-after-load "org-clock"
-    '(progn
+  (with-eval-after-load "org-clock"
 
-       ;; 8.4 save both the running clock and the entire clock history when Emacs
-       ;; is closed, and resume it next time Emacs is started up
-       (setq org-clock-persist t)
+    ;; 8.4 save both the running clock and the entire clock history when Emacs
+    ;; is closed, and resume it next time Emacs is started up
+    (setq org-clock-persist t)
 
-       ;; 8.4 set up hooks for clock persistence
-       (org-clock-persistence-insinuate)
+    ;; 8.4 set up hooks for clock persistence
+    (org-clock-persistence-insinuate)
 
+    ;; resume clocking task on clock-in if the clock is open
+    (setq org-clock-in-resume t)
 
-       ;; resume clocking task on clock-in if the clock is open
-       (setq org-clock-in-resume t)
+    ;; number of clock tasks to remember in history: 1-9A-Z
+    (setq org-clock-history-length 35)
 
-       ;; number of clock tasks to remember in history: 1-9A-Z
-       (setq org-clock-history-length 35)
+    ;; 8.4.2 include the current clocking task time in clock reports
+    (setq org-clock-report-include-clocking-task t)
 
+    (defun leuven-org-clock-in-interrupted-task ()
+      "Clock back into the task that has been interrupted, if there is one."
+      (interactive)
+      (if (and (not org-clock-resolving-clocks-due-to-idleness)
+               (marker-buffer org-clock-marker)
+               (marker-buffer org-clock-interrupted-task))
+          (org-with-point-at org-clock-interrupted-task
+            (org-clock-in nil))
+        (org-clock-out)))
 
-       ;; 8.4.2 include the current clocking task time in clock reports
-       (setq org-clock-report-include-clocking-task t)
+    (global-set-key
+      (kbd "C-c C-x C-q") 'leuven-org-clock-in-interrupted-task)
 
-       (defun leuven-org-clock-in-interrupted-task ()
-         "Clock back into the task that has been interrupted, if there is one."
-         (interactive)
-         (if (and (not org-clock-resolving-clocks-due-to-idleness)
-                  (marker-buffer org-clock-marker)
-                  (marker-buffer org-clock-interrupted-task))
-             (org-with-point-at org-clock-interrupted-task
-               (org-clock-in nil))
-           (org-clock-out)))
+    ;; 8.4.3 resolve open clocks if the user is idle more than 120 minutes
+    (setq org-clock-idle-time 120)
 
-       (global-set-key
-        (kbd "C-c C-x C-q") 'leuven-org-clock-in-interrupted-task)
+    (defun leuven--org-switch-to-started (kwd)
+      "Switch task state to STRT.
 
-       ;; 8.4.3 resolve open clocks if the user is idle more than 120 minutes
-       (setq org-clock-idle-time 120)
+    Skip normal headlines and capture tasks."
+      (if (and kwd
+               (not (string-equal kwd "STRT"))
+               (not (and (boundp 'org-capture-mode) org-capture-mode)))
+          "STRT"
+        nil))
 
-       (defun leuven--org-switch-to-started (kwd)
-         "Switch task state to STRT.
+    ;; 8.4.3 set task to todo state STRT while clocking it
+    (setq org-clock-in-switch-to-state 'leuven--org-switch-to-started)
 
-       Skip normal headlines and capture tasks."
-         (if (and kwd
-                  (not (string-equal kwd "STRT"))
-                  (not (and (boundp 'org-capture-mode) org-capture-mode)))
-             "STRT"
-           nil))
+    ;; clock won't be stopped when the clocked entry is marked DONE
+    (setq org-clock-out-when-done nil)
 
-       ;; 8.4.3 set task to todo state STRT while clocking it
-       (setq org-clock-in-switch-to-state 'leuven--org-switch-to-started)
+    ;; time included for the modeline clock is all time clocked into this
+    ;; task today
+    (setq org-clock-modeline-total 'today)
+    (setq org-clock-modeline-total 'all)
 
-       ;; clock won't be stopped when the clocked entry is marked DONE
-       (setq org-clock-out-when-done nil)
+    ;; get an alert (notification) when your planned time is over
+    (setq org-clock-sound "~/Public/Music/Sounds/alarm.wav")
+    ;;! Use start-process to have an external program play the sound to
+    ;;! avoid ignored keystrokes until after the sound plays (start-process
+    ;;! "ding" nil "play" "~/Public/Music/Sounds/alarm.wav")
 
-       ;; time included for the modeline clock is all time clocked into this
-       ;; task today
-       (setq org-clock-modeline-total 'today)
-       (setq org-clock-modeline-total 'all)
+    ;; remove the clock line when the resulting time is 0:00
+    (setq org-clock-out-remove-zero-time-clocks t)
 
-       ;; get an alert (notification) when your planned time is over
-       (setq org-clock-sound "~/Public/Music/Sounds/alarm.wav")
-       ;;! Use start-process to have an external program play the sound to
-       ;;! avoid ignored keystrokes until after the sound plays (start-process
-       ;;! "ding" nil "play" "~/Public/Music/Sounds/alarm.wav")
+    ;; ;; when clocking into a task with a clock entry which has not been
+    ;; ;; closed, resume the clock from that point
+    ;; (setq org-clock-in-resume t)
 
-       ;; remove the clock line when the resulting time is 0:00
-       (setq org-clock-out-remove-zero-time-clocks t)
+    ;; ask the user if they wish to clock out before killing Emacs
+    (defun leuven--org-query-clock-out ()
+      "Ask the user before clocking out.
+    This is a useful function for adding to `kill-emacs-query-functions'."
+      (if (and (featurep 'org-clock)
+               (funcall 'org-clocking-p)
+               (y-or-n-p "You are currently clocking time, clock out? "))
+          (org-clock-out)
+        t)) ;; only fails on keyboard quit or error
 
-       ;; ;; when clocking into a task with a clock entry which has not been
-       ;; ;; closed, resume the clock from that point
-       ;; (setq org-clock-in-resume t)
+    (add-hook 'kill-emacs-query-functions 'leuven--org-query-clock-out)
 
+    ;; format string for the total time cells
+    (setq org-clock-total-time-cell-format "%s")
 
-       ;; ask the user if they wish to clock out before killing Emacs
-       (defun leuven--org-query-clock-out ()
-         "Ask the user before clocking out.
-       This is a useful function for adding to `kill-emacs-query-functions'."
-         (if (and (featurep 'org-clock)
-                  (funcall 'org-clocking-p)
-                  (y-or-n-p "You are currently clocking time, clock out? "))
-             (org-clock-out)
-           t)) ;; only fails on keyboard quit or error
+    ;; format string for the file time cells
+    (setq org-clock-file-time-cell-format "%s")
 
-       (add-hook 'kill-emacs-query-functions 'leuven--org-query-clock-out)
-
-       ;; format string for the total time cells
-       (setq org-clock-total-time-cell-format "%s")
-
-       ;; format string for the file time cells
-       (setq org-clock-file-time-cell-format "%s")
-
-       )) ;; eval-after-load "org-clock" ends here
+    ) ;; with-eval-after-load "org-clock" ends here
 
 ;;** 8.5 (info "(org)Effort estimates")
 
@@ -4367,20 +4356,20 @@ From %c"
           (0.9999 . leuven-org-deadline-today-face)
           (0.0000 . leuven-org-deadline-tomorrow-or-later-face)))
 
-  (eval-after-load "org-faces"
-    '(progn
-       ;; Org non-standard faces
-       (defface leuven-org-deadline-yesterday-or-before-face
-         '((t (:weight bold :foreground "#D24231" :background "#F8D3D4")))
-         "Face used to highlight tasks whose deadline is in the past.")
+  (with-eval-after-load "org-faces"
 
-       (defface leuven-org-deadline-today-face
-         '((t (:weight bold :foreground "#BF8239" :background "#F8D1A9")))
-         "Face used to highlight tasks whose deadline is today.")
+    ;; Org non-standard faces
+    (defface leuven-org-deadline-yesterday-or-before-face
+      '((t (:weight bold :foreground "#D24231" :background "#F8D3D4")))
+      "Face used to highlight tasks whose deadline is in the past.")
 
-       (defface leuven-org-deadline-tomorrow-or-later-face
-         '((t (:weight bold :foreground "#45A856" :background "#B8E9B1")))
-         "Face used to highlight tasks whose deadline is for later.")))
+    (defface leuven-org-deadline-today-face
+      '((t (:weight bold :foreground "#BF8239" :background "#F8D1A9")))
+      "Face used to highlight tasks whose deadline is today.")
+
+    (defface leuven-org-deadline-tomorrow-or-later-face
+      '((t (:weight bold :foreground "#45A856" :background "#B8E9B1")))
+      "Face used to highlight tasks whose deadline is for later."))
 
   ;; 10.4 column to shift tags to (in agenda items)
   (setq org-agenda-tags-column -132)
@@ -4409,15 +4398,14 @@ From %c"
               (tags . " %i %-12:c"))))
     (org-agenda-redo))
 
-  (eval-after-load "org-agenda"
-    '(progn
-       (add-hook 'org-mode-hook
-                 (lambda ()
-                   (define-key org-agenda-keymap
-                     (kbd "L") 'leuven-org-agenda-toggle-task-details)
-                   (define-key org-agenda-mode-map
-                     (kbd "L") 'leuven-org-agenda-toggle-task-details)))
-       ))
+  (with-eval-after-load "org-agenda"
+
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (define-key org-agenda-keymap
+                  (kbd "L") 'leuven-org-agenda-toggle-task-details)
+                (define-key org-agenda-mode-map
+                  (kbd "L") 'leuven-org-agenda-toggle-task-details))))
 
   ;; 10.4.2 settings for time grid for agenda display
   (setq org-agenda-time-grid '((daily remove-match)
@@ -5236,24 +5224,23 @@ From %c"
   (setq org-hide-emphasis-markers t) ;; impact on table alignment!
 
   ;; 11.7.1 define user entities to produce special characters
-  (eval-after-load "org-entities"
-    '(progn
+  (with-eval-after-load "org-entities"
 
-       (add-to-list 'org-entities-user
-                    '("ok"
-                      ;; \definecolor{checkmark}{HTML}{1FAC21}
-                      "{\\color{checkmark}\\ding{51}}" nil
-                      "<font color='green'>&#x2714;</font>"
-                      "OK"
-                      "OK" "✔"))
+    (add-to-list 'org-entities-user
+                 '("ok"
+                   ;; \definecolor{checkmark}{HTML}{1FAC21}
+                   "{\\color{checkmark}\\ding{51}}" nil
+                   "<font color='green'>&#x2714;</font>"
+                   "OK"
+                   "OK" "✔"))
 
-       (add-to-list 'org-entities-user
-                    '("nok"
-                      ;; \usepackage{pifont}
-                      "{\\color{red}\\ding{55}}" nil
-                      "<font color='red'>&#x2718;</font>"
-                      "NOK"
-                      "NOK" "✘"))))
+    (add-to-list 'org-entities-user
+                 '("nok"
+                   ;; \usepackage{pifont}
+                   "{\\color{red}\\ding{55}}" nil
+                   "<font color='red'>&#x2718;</font>"
+                   "NOK"
+                   "NOK" "✘")))
 
   ;; 11.7 don't interpret "_" and "^" for export
   (setq org-export-with-sub-superscripts nil)
@@ -5268,19 +5255,19 @@ From %c"
           entities))
 
   ;; bind the new exporter dispatch to a key sequence
-  (eval-after-load "org"
-    '(progn
-       ;; (define-key org-mode-map
-       ;;   (kbd "C-c C-e") 'org-export-dispatch)
-       (define-key org-mode-map
-         (kbd "C-c C-e")
-         (lambda ()
-           (interactive)
-           (if (fboundp 'org-export-dispatch)
-               (org-export-dispatch)
-             (message "Please upgrade to Org 8...")
-             (sit-for 1))))
-       ))
+  (with-eval-after-load "org"
+
+    ;; (define-key org-mode-map
+    ;;   (kbd "C-c C-e") 'org-export-dispatch)
+
+    (define-key org-mode-map
+      (kbd "C-c C-e")
+      (lambda ()
+        (interactive)
+        (if (fboundp 'org-export-dispatch)
+            (org-export-dispatch)
+          (message "Please upgrade to Org 8...")
+          (sit-for 1)))))
 
 ;;* 12 (info "(org)Exporting")
 
@@ -5289,41 +5276,40 @@ From %c"
   (leuven--section "12.2 (org)Export options")
 
   ;; Org generic export engine
-  (eval-after-load "ox"
-    '(progn
+  (with-eval-after-load "ox"
 
-       ;; 12.3 don't insert a time stamp into the exported file
-       (setq org-export-time-stamp-file nil)
+    ;; 12.3 don't insert a time stamp into the exported file
+    (setq org-export-time-stamp-file nil)
 
-       ;; 13.1.5 export all drawers (including properties)
-       ;; (setq org-export-with-drawers t)
+    ;; 13.1.5 export all drawers (including properties)
+    ;; (setq org-export-with-drawers t)
 
-       ;; default language of HTML export (see `org-export-language-setup')
-       (setq org-export-default-language "en")
+    ;; default language of HTML export (see `org-export-language-setup')
+    (setq org-export-default-language "en")
 
-       ;; include priority cookies in export
-       (setq org-export-with-priority t)
+    ;; include priority cookies in export
+    (setq org-export-with-priority t)
 
-       ;; activate smart quotes during export
-       (setq org-export-with-smart-quotes t)
+    ;; activate smart quotes during export
+    (setq org-export-with-smart-quotes t)
 
-       ;; allow #+BIND to define local variable values for export
-       (setq org-export-allow-bind-keywords t)
+    ;; allow #+BIND to define local variable values for export
+    (setq org-export-allow-bind-keywords t)
 
-       ;; exported stuff will not be pushed onto the kill ring
-       (setq org-export-copy-to-kill-ring nil)
+    ;; exported stuff will not be pushed onto the kill ring
+    (setq org-export-copy-to-kill-ring nil)
 
-       ;; ;; export and publishing commands will run in background
-       ;; (setq org-export-in-background t)
+    ;; ;; export and publishing commands will run in background
+    ;; (setq org-export-in-background t)
 
-       ;; file used to initialize external export process
-       (setq org-export-async-init-file
-             (expand-file-name "~/src/org-batch/bin/org-batch-init.el"))
+    ;; file used to initialize external export process
+    (setq org-export-async-init-file
+          (expand-file-name "~/src/org-batch/bin/org-batch-init.el"))
 
-       ;; ;; use a non-intrusive export dispatcher
-       ;; (setq org-export-dispatch-use-expert-ui t)
+    ;; ;; use a non-intrusive export dispatcher
+    ;; (setq org-export-dispatch-use-expert-ui t)
 
-       )) ;; eval-after-load "ox" ends here
+    ) ;; with-eval-after-load "ox" ends here
 
   ;; execute buffer when exporting it (see some thread with Eric Schulte,
   ;; end of December 2010)
@@ -5357,33 +5343,32 @@ From %c"
   (setq org-html-style-include-default nil)
 
   ;; Org HTML export engine
-  (eval-after-load "ox-html"
-    '(progn
+  (with-eval-after-load "ox-html"
 
-       ;; check that tidy is in PATH, and that configuration file does exist
-       (when (and (executable-find "tidy")
-                  (file-exists-p "~/.tidyrc"))
+    ;; check that `tidy' is in PATH, and that configuration file exists
+    (when (and (executable-find "tidy")
+               (file-exists-p "~/.tidyrc"))
 
-         (defun leuven--export-html-final-filter (contents backend info)
-           (if (not (eq backend 'html)) contents
-             (let* ((in-file "~/tidy-stdin.html")
-                             ;; this filepath must be readable by Cygwin
-                    (err-file "~/tidy.log")
-                    new-contents)
-               (with-temp-file in-file
-                 (insert contents))
-               (setq new-contents
-                     (shell-command-to-string
-                      (format "tidy -config ~/.tidyrc -f %s %s"
-                              err-file in-file)))
-               (message "Buffer tidy'ed")
-               (message "%s" (org-file-contents err-file))
-               new-contents)))
+      (defun leuven--export-html-final-filter (contents backend info)
+        (if (not (eq backend 'html)) contents
+          (let* ((in-file "~/tidy-stdin.html")
+                          ;; this filepath must be readable by Cygwin
+                 (err-file "~/tidy.log")
+                 new-contents)
+            (with-temp-file in-file
+              (insert contents))
+            (setq new-contents
+                  (shell-command-to-string
+                   (format "tidy -config ~/.tidyrc -f %s %s"
+                           err-file in-file)))
+            (message "Buffer tidy'ed")
+            (message "%s" (org-file-contents err-file))
+            new-contents)))
 
-         (add-to-list 'org-export-filter-final-output-functions
-                      'leuven--export-html-final-filter))
+      (add-to-list 'org-export-filter-final-output-functions
+                   'leuven--export-html-final-filter))
 
-       )) ;; eval-after-load "ox-html" ends here
+       ) ;; eval-after-load "ox-html" ends here
 
 ;;** (info "(emacs-goodies-el)htmlize")
 
@@ -5397,39 +5382,38 @@ From %c"
   (autoload 'htmlize-file "htmlize"
     "Load FILE, fontify it, convert it to HTML, and save the result." t)
 
-  (eval-after-load "htmlize"
-    '(progn
+  (with-eval-after-load "htmlize"
 
-       ;; output type of generated HTML
-       (setq htmlize-output-type 'css)
+    ;; output type of generated HTML
+    (setq htmlize-output-type 'css)
 
-       ;; override output type `inline-css' used for htmlizing a region
-       (defun htmlize-region-for-paste (beg end)
-         "Htmlize the region and return just the HTML as a string.
-     This forces the `css' style and only returns the HTML body, but
-     without the BODY tag. This should make it useful for inserting
-     the text to another HTML buffer."
-         (let* ((htmlize-output-type 'css)  ; was `inline-css'
-                (htmlbuf (htmlize-region beg end)))
-           (unwind-protect
-               (with-current-buffer htmlbuf
-                 (buffer-substring
-                  (plist-get htmlize-buffer-places 'content-start)
-                  (plist-get htmlize-buffer-places 'content-end)))
-             (kill-buffer htmlbuf))))
+    ;; override output type `inline-css' used for htmlizing a region
+    (defun htmlize-region-for-paste (beg end)
+      "Htmlize the region and return just the HTML as a string.
+  This forces the `css' style and only returns the HTML body, but
+  without the BODY tag. This should make it useful for inserting
+  the text to another HTML buffer."
+      (let* ((htmlize-output-type 'css)  ; was `inline-css'
+             (htmlbuf (htmlize-region beg end)))
+        (unwind-protect
+            (with-current-buffer htmlbuf
+              (buffer-substring
+               (plist-get htmlize-buffer-places 'content-start)
+               (plist-get htmlize-buffer-places 'content-end)))
+          (kill-buffer htmlbuf))))
 
-       ;; charset declared by the resulting HTML documents
-       (setq htmlize-html-charset "utf-8")
+    ;; charset declared by the resulting HTML documents
+    (setq htmlize-html-charset "utf-8")
 
-       ;; non-ASCII characters (codes in the 128-255 range) are copied to
-       ;; HTML without modification -- if your HTML is in Unicode
-       (setq htmlize-convert-nonascii-to-entities nil)
+    ;; non-ASCII characters (codes in the 128-255 range) are copied to
+    ;; HTML without modification -- if your HTML is in Unicode
+    (setq htmlize-convert-nonascii-to-entities nil)
 
-       ;; key binding
-       (global-set-key
-        (kbd "M-P") 'htmlize-buffer)
+    ;; key binding
+    (global-set-key
+     (kbd "M-P") 'htmlize-buffer)
 
-       )) ;; eval-after-load "htmlize" ends here
+    ) ;; with-eval-after-load "htmlize" ends here
 
   ;; quick print preview (to Web browser) with `htmlize-view-buffer'
   (GNUEmacs
@@ -5440,10 +5424,10 @@ From %c"
     (kbd "C-c C-e h o") 'htmlize-view-buffer)
 
    ;; view current buffer as html in web browser
-   (eval-after-load "htmlize-view"
+   (with-eval-after-load "htmlize-view"
 
      ;; add "Quick Print" entry to file menu
-     '(htmlize-view-add-to-files-menu)))
+     (htmlize-view-add-to-files-menu)))
 
 ;;** 12.6 (info "(org)LaTeX and PDF export")
 
@@ -5573,11 +5557,11 @@ From %c"
        )) ;; eval-after-load "ox-latex" ends here
 
   ;; 12.6.6 Beamer class export
-  (eval-after-load "ox-beamer"
-    '(progn
-       (add-to-list 'org-latex-classes
-                    '("beamer"
-                      "\\documentclass[presentation,t]{beamer}
+  (with-eval-after-load "ox-beamer"
+
+    (add-to-list 'org-latex-classes
+                 '("beamer"
+                   "\\documentclass[presentation,t]{beamer}
 \\usepackage{etex}% avoid `too many packages' (for PDFTeX)
 % default packages ---------------------
 [DEFAULT-PACKAGES]
@@ -5587,25 +5571,22 @@ From %c"
 [EXTRA]
 \\ifdefined\\DeclareUnicodeCharacter{\\DeclareUnicodeCharacter{00A0}{~}}\\fi
 % end of `org-latex-classes' -------------------------------------------------"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")) t)
+              ("\\section{%s}" . "\\section*{%s}")
+              ("\\subsection{%s}" . "\\subsection*{%s}")
+              ("\\subsubsection{%s}" . "\\subsubsection*{%s}")) t)
 
-       ;; default title of a frame containing an outline
-       (setq org-beamer-outline-frame-title "Plan")
-
-       )) ;; eval-after-load "ox-beamer" ends here
+    ;; default title of a frame containing an outline
+    (setq org-beamer-outline-frame-title "Plan"))
 
   ;; libraries in this list will be loaded once the export framework is needed
   (setq org-export-backends '(ascii html icalendar latex odt))
 
-  (eval-after-load "ox-odt"
-    '(progn
+  (with-eval-after-load "ox-odt"
 
-       ;; ;; convert "odt" format to "doc" format
-       ;; (setq org-odt-preferred-output-format "doc")
+    ;; ;; convert "odt" format to "doc" format
+    ;; (setq org-odt-preferred-output-format "doc")
 
-       )) ;; eval-after-load "ox-odt" ends here
+    ) ;; eval-after-load "ox-odt" ends here
 
 ;;* 13 (info "(org)Publishing")
 
@@ -5643,13 +5624,12 @@ From %c"
 
   (leuven--section "14.2 (org)Editing source code")
 
-(eval-after-load "org-src"
-'(progn
+(with-eval-after-load "org-src"
+
   ;; mapping languages to their major mode (for editing the source code block
   ;; with `C-c '')
   (add-to-list 'org-src-lang-modes
-               '("dot" . graphviz-dot))
-))
+               '("dot" . graphviz-dot)))
 
   ;; display the source code edit buffer in the current window, keeping
   ;; all other windows
@@ -5676,34 +5656,33 @@ From %c"
   (setq org-src-tab-acts-natively t)
 
 
-(eval-after-load "org"
-'(progn
-  ;; allow comment region in the code edit buffer (according to language)
-  (defun leuven-org-comment-dwim (&optional arg)
-    (interactive "P")
-    (or (org-babel-do-key-sequence-in-edit-buffer (kbd "M-;"))
-        (comment-dwim arg)))
+  (with-eval-after-load "org"
 
-  ;; make `C-c C-v C-x M-;' more convenient
-  (define-key org-mode-map
-    (kbd "M-;") 'leuven-org-comment-dwim)
+    ;; allow comment region in the code edit buffer (according to language)
+    (defun leuven-org-comment-dwim (&optional arg)
+      (interactive "P")
+      (or (org-babel-do-key-sequence-in-edit-buffer (kbd "M-;"))
+          (comment-dwim arg)))
 
-  ;; allow indent region in the code edit buffer (according to language)
-  (defun leuven-org-indent-region (&optional arg)
-    (interactive "P")
-    (or (org-babel-do-key-sequence-in-edit-buffer (kbd "C-M-\\"))
-        (indent-region arg)))
+    ;; make `C-c C-v C-x M-;' more convenient
+    (define-key org-mode-map
+      (kbd "M-;") 'leuven-org-comment-dwim)
 
-  ;; make `C-c C-v C-x C-M-\' more convenient
-  (define-key org-mode-map
-    (kbd "C-M-\\") 'leuven-org-indent-region)
-)) ;; eval-after-load "org" ends here
+    ;; allow indent region in the code edit buffer (according to language)
+    (defun leuven-org-indent-region (&optional arg)
+      (interactive "P")
+      (or (org-babel-do-key-sequence-in-edit-buffer (kbd "C-M-\\"))
+          (indent-region arg)))
+
+    ;; make `C-c C-v C-x C-M-\' more convenient
+    (define-key org-mode-map
+      (kbd "C-M-\\") 'leuven-org-indent-region))
 
   ;; prevent auto-filling in src blocks
   (setq org-src-prevent-auto-filling t)
 
   (global-set-key
-   (kbd "C-c C-v C-d") 'org-babel-demarcate-block)
+    (kbd "C-c C-v C-d") 'org-babel-demarcate-block)
 
 
   ;; view just the source-code blocks within the current Babel file
@@ -5746,22 +5725,21 @@ From %c"
   ;; languages for which Babel will raise literate programming errors
   ;; when noweb references can not be resolved.
 
-  (eval-after-load "ob-core"
-    '(progn
-       (add-to-list 'org-babel-noweb-error-langs "emacs-lisp")))
+  (with-eval-after-load "ob-core"
+    (add-to-list 'org-babel-noweb-error-langs "emacs-lisp"))
 
 ;;** 14.6 (info "(org)Library of Babel")
 
   (leuven--section "14.6 (org)Library of Babel")
 
-  (eval-after-load "ob-lob"
-    '(progn
-       ;; load the NAMED code blocks defined in Org-mode files into the
-       ;; library of babel (global `org-babel-library-of-babel' variable)
-       (let ((lob-file (concat (file-name-directory (locate-library "org"))
-                               "../doc/library-of-babel.org")))
-         (when (file-exists-p lob-file)
-           (org-babel-lob-ingest lob-file)))))
+  (with-eval-after-load "ob-lob"
+
+    ;; load the NAMED code blocks defined in Org-mode files into the
+    ;; library of Babel (global `org-babel-library-of-babel' variable)
+    (let ((lob-file (concat (file-name-directory (locate-library "org"))
+                            "../doc/library-of-babel.org")))
+      (when (file-exists-p lob-file)
+        (org-babel-lob-ingest lob-file))))
 
   ;; template used to export the body of code blocks
   (setq org-babel-exp-code-template
@@ -5795,32 +5773,31 @@ From %c"
   ;; FIXME Test executable-find (of Rterm, gnuplot, ruby, etc.) before
   ;; setting language to yes...
 
-  (eval-after-load "org"
-    '(progn
-         (org-babel-do-load-languages ;; loads org, gnus-sum, etc...
-          'org-babel-load-languages
-          '((C . nil)
-            (R . t) ;; requires R and ess-mode
-            (awk . t)
-            (calc . t)
-            (ditaa . t) ;; sudo aptitude install openjdk-6-jre
-            (dot . t)
-            (emacs-lisp . t)
-            (gnuplot . t) ;; requires gnuplot-mode
-            (haskell . nil)
-            (latex . t)
-            (ledger . t) ;; requires ledger
-            (ocaml . nil)
-            (octave . nil)
-            (org . t)
-            (perl . nil)
-            (python . t)
-            (ruby . nil)
-            (screen . nil)
-            (sh . t)
-            (sql . t)
-            (sqlite . nil)))
-         )) ;; eval-after-load "org" ends here
+  (with-eval-after-load "org"
+
+    (org-babel-do-load-languages ;; loads org, gnus-sum, etc...
+     'org-babel-load-languages
+     '((C . nil)
+       (R . t) ;; requires R and ess-mode
+       (awk . t)
+       (calc . t)
+       (ditaa . t) ;; sudo aptitude install openjdk-6-jre
+       (dot . t)
+       (emacs-lisp . t)
+       (gnuplot . t) ;; requires gnuplot-mode
+       (haskell . nil)
+       (latex . t)
+       (ledger . t) ;; requires ledger
+       (ocaml . nil)
+       (octave . nil)
+       (org . t)
+       (perl . nil)
+       (python . t)
+       (ruby . nil)
+       (screen . nil)
+       (sh . t)
+       (sql . t)
+       (sqlite . nil))))
 
 ;;* 15 (info "(org)Miscellaneous")
 
@@ -6098,14 +6075,14 @@ From %c"
                   (leuven--org-remove-redundant-tags)))))
 
   (GNUEmacs
-   ;; add weather forecast in your Org agenda
-   (autoload 'org-google-weather "org-google-weather" nil t)
+    ;; add weather forecast in your Org agenda
+    (autoload 'org-google-weather "org-google-weather" nil t)
 
-   (eval-after-load "org-google-weather"
-     ;; '(try-require 'url)
+    (with-eval-after-load "org-google-weather"
+      ;; (try-require 'url)
 
-     ;; add the city
-     '(setq org-google-weather-format "%C %i %c, %l°-%h°")))
+      ;; add the city
+      (setq org-google-weather-format "%C %i %c, %l°-%h°")))
 
 ) ;; chapter 25.9-org-mode ends here
 
@@ -6297,37 +6274,33 @@ From %c"
         (when (locate-library "preview-latex")
           (load "preview-latex.el") t)
 
-        (eval-after-load "preview"
-          '(progn
+        (with-eval-after-load "preview"
 
-             ;; path to gs command (for conversion from EPS)
-             (setq preview-gs-command
-               (cond (running-ms-windows
-                      (concat windows-program-files-dir
-                              "gs/gs9.01/bin/gswin32c.exe")) ;; XXX Not up-to-date!!!
-                     (t
-                      "/usr/bin/gs")))
-             (leuven--file-exists-and-executable-p preview-gs-command)
+          ;; path to `gs' command (for conversion from EPS)
+          (setq preview-gs-command
+            (cond (running-ms-windows
+                   (concat windows-program-files-dir
+                           "gs/gs9.01/bin/gswin32c.exe")) ;; XXX Not up-to-date!!!
+                  (t
+                   "/usr/bin/gs")))
+          (leuven--file-exists-and-executable-p preview-gs-command)
 
-             ;; scale factor for included previews
-             (setq preview-scale-function 1.2)
-
-             )) ;; eval-after-load "preview" ends here
+          ;; scale factor for included previews
+          (setq preview-scale-function 1.2))
 
         (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
                                    ;; with AUCTeX LaTeX mode
 
         ;; minor mode with distinct support for `\label', `\ref', `\cite'
         ;; and `\index' in LaTeX
-        (eval-after-load "reftex"
-          '(progn
-             ;; turn all plug-ins on
-             (setq reftex-plug-into-AUCTeX t)
+        (with-eval-after-load "reftex"
 
-             ;; use a separate selection buffer for each label type -- so the
-             ;; menu generally comes up faster
-             (setq reftex-use-multiple-selection-buffers t)
-             )) ;; eval-after-load "reftex" ends here
+          ;; turn all plug-ins on
+          (setq reftex-plug-into-AUCTeX t)
+
+          ;; use a separate selection buffer for each label type -- so the
+          ;; menu generally comes up faster
+          (setq reftex-use-multiple-selection-buffers t))
 
         ))) ;; eval-after-load "latex" ends here
 
@@ -6429,28 +6402,25 @@ From %c"
 
   ;; highlight surrounding parentheses
   (GNUEmacs
-   (autoload 'highlight-parentheses-mode "highlight-parentheses")
+    (autoload 'highlight-parentheses-mode "highlight-parentheses")
 
-   (eval-after-load "highlight-parentheses"
-     '(progn
-        (define-globalized-minor-mode global-highlight-parentheses-mode
-          highlight-parentheses-mode
-          (lambda ()
-            (highlight-parentheses-mode t)))
-        (global-highlight-parentheses-mode t)
+    ;; (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
 
-        (setq hl-paren-background-colors
-              '("#FF993F" "#FFF33F" "#B0FF3F" "#4BFF4B"
-                "#3FFFB0" "#3FF3FF" "#3F99FF" "#3F3FFF"))
+    (with-eval-after-load "highlight-parentheses"
 
-        (setq hl-paren-colors
-              '("black" "black" "black" "black" "black"
-                "black" "black" "white")))
-     ) ;; eval-after-load "highlight-parentheses" ends here
+      (define-globalized-minor-mode global-highlight-parentheses-mode
+        highlight-parentheses-mode
+        (lambda ()
+          (highlight-parentheses-mode t)))
+      (global-highlight-parentheses-mode t)
 
-   ;; (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
+      (setq hl-paren-background-colors
+            '("#FF993F" "#FFF33F" "#B0FF3F" "#4BFF4B"
+              "#3FFFB0" "#3FF3FF" "#3F99FF" "#3F3FFF"))
 
-   )
+      (setq hl-paren-colors
+            '("black" "black" "black" "black" "black"
+              "black" "black" "white"))))
 
 ;;** 26.5 (info "(emacs)Comments")
 
@@ -6465,9 +6435,9 @@ From %c"
 
   ;; show the function arglist or the variable docstring in the echo area
   (GNUEmacs
-   (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-   (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-   (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode))
+    (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+    (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+    (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode))
 
 ;;** 26.7 (info "(emacs)Hideshow") minor mode
 
@@ -6661,13 +6631,13 @@ From %c"
 
 
   (GNUEmacs
-   (defun cc-goto-first-error( buffer exit-condition )
-     (with-current-buffer buffer
-       (goto-char (point-min))
-       (compilation-next-error 1)
-       (beep)))
+    (defun cc-goto-first-error( buffer exit-condition )
+      (with-current-buffer buffer
+        (goto-char (point-min))
+        (compilation-next-error 1)
+        (beep)))
 
-   (add-to-list 'compilation-finish-functions 'cc-goto-first-error))
+    (add-to-list 'compilation-finish-functions 'cc-goto-first-error))
 
 
   (defvar make-clean-command "make clean all"
@@ -6884,31 +6854,29 @@ From %c"
 
   (leuven--section "28.1.2 Version Control and the Mode Line")
 
-  (eval-after-load "vc"
-    '(progn
+  (with-eval-after-load "vc"
 
-       (GNUEmacs
-        (when (image-type-available-p 'png)
-          ;; http://www.emacswiki.org/emacs/VcIcon
-          (defun vc-icon ()
-            "Display a colored icon indicating the vc status of the current
-          file."
-            (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name))
-                            (concat leuven--directory
-                                    "Pictures/NormalIcon.png")
+    (GNUEmacs
+      (when (image-type-available-p 'png)
+        ;; http://www.emacswiki.org/emacs/VcIcon
+        (defun vc-icon ()
+          "Display a colored icon indicating the vc status of the current
+        file."
+          (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name))
                           (concat leuven--directory
-                                  "Pictures/ModifiedIcon.png")))
-                  (bg-colour (face-attribute 'mode-line :background)))
-              (propertize
-               "  "
-               'display (find-image `((:type png
-                                       :file ,icon
-                                       :ascent center
-                                       :background ,bg-colour))))))
+                                  "Pictures/NormalIcon.png")
+                        (concat leuven--directory
+                                "Pictures/ModifiedIcon.png")))
+                (bg-colour (face-attribute 'mode-line :background)))
+            (propertize
+             "  "
+             'display (find-image `((:type png
+                                     :file ,icon
+                                     :ascent center
+                                     :background ,bg-colour))))))
 
-          (setq-default mode-line-format
-                        (push '(vc-mode (:eval (vc-icon))) mode-line-format))
-          ))))
+        (setq-default mode-line-format
+                      (push '(vc-mode (:eval (vc-icon))) mode-line-format)))))
 
 ;;*** 28.1.4 (info "(emacs)Log Buffer")
 
@@ -7100,7 +7068,7 @@ From %c"
 
   ;; find the definition of the Emacs Lisp function or variable near point
   (GNUEmacs
-   (find-function-setup-keys))
+    (find-function-setup-keys))
 
 ;;** 28.4 (info "(emacs)EDE")
 
@@ -7258,49 +7226,49 @@ From %c"
 
   ;; Yet Another Snippet extension for Emacs
   (GNUEmacs
-   ;; use the "standard" package (NOT `yasnippet-bundle'!)
-   (when (try-require 'yasnippet)
+    ;; use the "standard" package (NOT `yasnippet-bundle'!)
+    (when (try-require 'yasnippet)
 
-     (defvar leuven-yasnippet-my-snippets-dir
-       "~/src/yasnippet/snippets"
-       "Directory containing my personal additional YASnippets.")
+      (defvar leuven-yasnippet-my-snippets-dir
+        "~/src/yasnippet/snippets"
+        "Directory containing my personal additional YASnippets.")
 
-     ;; root directories that store the snippets
-     (let ((my-snippets
-            leuven-yasnippet-my-snippets-dir)
-           (org-snippets
-            (concat leuven-local-repos-directory "yasnippet-org-mode")))
+      ;; root directories that store the snippets
+      (let ((my-snippets
+             leuven-yasnippet-my-snippets-dir)
+            (org-snippets
+             (concat leuven-local-repos-directory "yasnippet-org-mode")))
 
-       (when (file-directory-p org-snippets)
-         (add-to-list 'yas-snippet-dirs org-snippets))
+        (when (file-directory-p org-snippets)
+          (add-to-list 'yas-snippet-dirs org-snippets))
 
-       ;; the first element is always the user-created snippets directory
-       (when (file-directory-p my-snippets)
-         (add-to-list 'yas-snippet-dirs my-snippets)))
+        ;; the first element is always the user-created snippets directory
+        (when (file-directory-p my-snippets)
+          (add-to-list 'yas-snippet-dirs my-snippets)))
 
-     ;; use Snippet mode for files with a `yasnippet' extension
-     (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
+      ;; use Snippet mode for files with a `yasnippet' extension
+      (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
 
-     ;; enable the YASnippet menu and tab-trigger expansion in *all*
-     ;; buffers
-     (yas-global-mode 1)
+      ;; enable the YASnippet menu and tab-trigger expansion in *all*
+      ;; buffers
+      (yas-global-mode 1)
 
-     ;; ;; text that will be used in menu to represent the trigger
-     ;; (setq yas-trigger-symbol " <tab>")
+      ;; ;; text that will be used in menu to represent the trigger
+      ;; (setq yas-trigger-symbol " <tab>")
 
-     (add-hook 'snippet-mode-hook
-               (lambda ()
-                 (setq require-final-newline nil)))
+      (add-hook 'snippet-mode-hook
+                (lambda ()
+                  (setq require-final-newline nil)))
 
-     ;; automatically reload snippets after saving
-     (defun recompile-and-reload-all-snippets ()
-       (interactive)
-       (when (eq major-mode 'snippet-mode)
-         (yas-recompile-all)
-         (yas-reload-all)
-         (message "Reloaded all snippets")))
+      ;; automatically reload snippets after saving
+      (defun recompile-and-reload-all-snippets ()
+        (interactive)
+        (when (eq major-mode 'snippet-mode)
+          (yas-recompile-all)
+          (yas-reload-all)
+          (message "Reloaded all snippets")))
 
-     (add-hook 'after-save-hook 'recompile-and-reload-all-snippets)))
+      (add-hook 'after-save-hook 'recompile-and-reload-all-snippets)))
 
 ;;** 29.7 (info "(emacs)Dabbrev Customization")
 
@@ -7347,50 +7315,48 @@ From %c"
 
   (GNUEmacs
 
-   ;; Auto Completion
-   (when (locate-library "auto-complete-config")
-     (idle-require 'auto-complete-config)
+    ;; Auto Completion
+    (when (locate-library "auto-complete-config")
+      (idle-require 'auto-complete-config)
 
-     (eval-after-load "auto-complete-config"
-       '(progn
+      (with-eval-after-load "auto-complete-config"
 
-          ;; avoid flyspell processes when auto completion is being started
-          (ac-flyspell-workaround)
+        ;; avoid flyspell processes when auto completion is being started
+        (ac-flyspell-workaround)
 
-          ;; optimize sources to use
-          (ac-config-default)
+        ;; optimize sources to use
+        (ac-config-default)
 
-          ;; change default sources
-          (setq-default ac-sources
-                        ;; buffers whom major-mode is same to of a current
-                        ;; buffer
-                        '(ac-source-words-in-same-mode-buffers))
+        ;; change default sources
+        (setq-default ac-sources
+                      ;; buffers whom major-mode is same to of a current
+                      ;; buffer
+                      '(ac-source-words-in-same-mode-buffers))
 
-          ;; change sources for Emacs Lisp mode
-          (add-hook 'emacs-lisp-mode-hook
-                    (lambda ()
-                      (setq ac-sources
-                            '(ac-source-words-in-same-mode-buffers
-                              ac-source-words-in-buffer
-                              ac-source-symbols))))
+        ;; change sources for Emacs Lisp mode
+        (add-hook 'emacs-lisp-mode-hook
+                  (lambda ()
+                    (setq ac-sources
+                          '(ac-source-words-in-same-mode-buffers
+                            ac-source-words-in-buffer
+                            ac-source-symbols))))
 
-          ;; enable auto-complete-mode automatically for Sword mode
-          (add-to-list 'ac-modes 'sword-mode)
+        ;; enable auto-complete-mode automatically for Sword mode
+        (add-to-list 'ac-modes 'sword-mode)
 
-          ;; ;; delay to completions will be available
-          ;; (setq ac-delay 0.1)
+        ;; ;; delay to completions will be available
+        ;; (setq ac-delay 0.1)
 
-          ;; completion menu will be automatically shown
-          (setq ac-auto-show-menu 0.3)
+        ;; completion menu will be automatically shown
+        (setq ac-auto-show-menu 0.3)
 
-          ;; ;; start auto-completion at current point
-          ;; (define-key ac-mode-map
-          ;;   (kbd "M-TAB") 'auto-complete)
+        ;; ;; start auto-completion at current point
+        ;; (define-key ac-mode-map
+        ;;   (kbd "M-TAB") 'auto-complete)
 
-          ;; try expand
-          (define-key ac-complete-mode-map
-            (kbd "<tab>") 'ac-expand)
-          ))))
+        ;; try expand
+        (define-key ac-complete-mode-map
+          (kbd "<tab>") 'ac-expand))))
 
 ) ;; chapter 29 ends here
 
@@ -7457,19 +7423,19 @@ From %c"
 
        ;; open files using Windows associations
        (GNUEmacs
-        (when running-ms-windows
-          (defun w32-dired-open-files-externally (&optional arg)
-            "In Dired, open the marked files (or directories) with the default
-          Windows tool."
-            (interactive "P")
-            (mapcar
-             #'(lambda (file)
-                 (w32-shell-execute "open" (convert-standard-filename file)))
-             (dired-get-marked-files nil arg)))
+         (when running-ms-windows
+           (defun w32-dired-open-files-externally (&optional arg)
+             "In Dired, open the marked files (or directories) with the default
+           Windows tool."
+             (interactive "P")
+             (mapcar
+              #'(lambda (file)
+                  (w32-shell-execute "open" (convert-standard-filename file)))
+              (dired-get-marked-files nil arg)))
 
-          ;; bind it to `E' in Dired mode
-          (define-key dired-mode-map
-            (kbd "E") 'w32-dired-open-files-externally)))
+           ;; bind it to `E' in Dired mode
+           (define-key dired-mode-map
+             (kbd "E") 'w32-dired-open-files-externally)))
 
        ;; open current file with w3m
        (when (executable-find "w3m")
@@ -7864,7 +7830,7 @@ From %c"
 
   ;; from NoGnus
   (GNUEmacs
-   (try-require 'gnus-load)) ;; generated by `make'
+    (try-require 'gnus-load)) ;; generated by `make'
 
   (defun switch-or-start (function buffer)
     "If the buffer is current, bury it. If there is a buffer with that
@@ -8374,16 +8340,15 @@ From %c"
 
   ;; start Proced in a similar manner to Dired
   (global-set-key
-   (kbd "C-x p") 'proced)
+    (kbd "C-x p") 'proced)
 
-  (eval-after-load "proced"
-    '(progn
+  (with-eval-after-load "proced"
 
-       ;; current sort scheme for proced listing
-       (setq-default proced-sort 'start)
+    ;; current sort scheme for proced listing
+    (setq-default proced-sort 'start)
 
-       ;; display of Proced buffer as process tree
-       (setq-default proced-tree-flag t)))
+    ;; display of Proced buffer as process tree
+    (setq-default proced-tree-flag t))
 
 ;;* 37 (info "(emacs)Emacs Server")
 
@@ -8391,12 +8356,12 @@ From %c"
 
   ;; use Emacs as a server (with the `emacsclient' program)
   (GNUEmacs
-   (idle-require 'server) ;; after init
-   (eval-after-load "server"
+    (idle-require 'server) ;; after init
+    (with-eval-after-load "server"
 
-     ;; test whether server is (definitely) running, avoiding the message of
-     ;; "server-start" while opening another Emacs session
-     '(or (equal (server-running-p) t)
+      ;; test whether server is (definitely) running, avoiding the message of
+      ;; "server-start" while opening another Emacs session
+      (or (equal (server-running-p) t)
 
           ;; start the Emacs server
           (server-start)))) ;; ~ 0.20 s
@@ -8433,17 +8398,17 @@ From %c"
 
   ;; generate and print a PostScript image of the buffer
   (GNUEmacs
-   (when running-ms-windows
-     ;; override `Print Screen' globally used as a hotkey by Windows
-     (w32-register-hot-key (kbd "<snapshot>"))
-     (global-set-key
-      (kbd "<snapshot>") 'leuven-ps-print-buffer-with-faces-query)))
+    (when running-ms-windows
+      ;; override `Print Screen' globally used as a hotkey by Windows
+      (w32-register-hot-key (kbd "<snapshot>"))
+      (global-set-key
+       (kbd "<snapshot>") 'leuven-ps-print-buffer-with-faces-query)))
 
   (global-set-key
-   (kbd "M-p") 'leuven-ps-print-buffer-with-faces-query)
+    (kbd "M-p") 'leuven-ps-print-buffer-with-faces-query)
 
   (XEmacs
-   (setq toolbar-print-function 'ps-print-buffer-with-faces))
+    (setq toolbar-print-function 'ps-print-buffer-with-faces))
 
   ;; print text from the buffer as PostScript
   (eval-after-load "ps-print"
@@ -8946,9 +8911,9 @@ From %c"
 (leuven--chapter leuven-chapter-46-amusements "46 Other Amusements"
 
   (GNUEmacs
-   ;; get rid of the Games in the Tools menu
-   (define-key menu-bar-tools-menu
-     [games] nil))
+    ;; get rid of the Games in the Tools menu
+    (define-key menu-bar-tools-menu
+      [games] nil))
 
 ) ;; chapter 46 ends here
 
@@ -8957,30 +8922,30 @@ From %c"
 (leuven--chapter leuven-chapter-48-customization "48 Customization"
 
   (GNUEmacs24
-   (ignore-errors
-     (load-theme 'leuven t)))
+    (ignore-errors
+      (load-theme 'leuven t)))
 
   ;; color sort order for `list-colors-display'
   (setq list-colors-sort '(rgb-dist . "#FFFFFF"))
 
   (XEmacs
-   ;; the real color theme functions
-   (when (try-require 'color-theme-autoloads)
+    ;; the real color theme functions
+    (when (try-require 'color-theme-autoloads)
 
-     ;; `color-theme-print' allows to keep what you see
+      ;; `color-theme-print' allows to keep what you see
 
-     ;; initialize the color theme package
-     (if (fboundp 'color-theme-initialize)
-         (color-theme-initialize))
+      ;; initialize the color theme package
+      (if (fboundp 'color-theme-initialize)
+          (color-theme-initialize))
 
-     ;; color themes will be installed for all frames
-     (setq color-theme-is-global t)
+      ;; color themes will be installed for all frames
+      (setq color-theme-is-global t)
 
-     ;; set my default color theme
-     (when (try-require 'color-theme-leuven)
-       (color-theme-leuven)))
+      ;; set my default color theme
+      (when (try-require 'color-theme-leuven)
+        (color-theme-leuven)))
 
-   (setq options-save-faces t))
+    (setq options-save-faces t))
 
   ;; ;; limit serving to catch infinite recursions for you before they
   ;; ;; cause actual stack overflow in C, which would be fatal for Emacs
@@ -9257,43 +9222,43 @@ From %c"
 
   ;; divide key (needed in GNU Emacs for Windows)
   (GNUEmacs
-   (global-set-key
-    (kbd "<kp-divide>") (kbd "/")))
+    (global-set-key
+      (kbd "<kp-divide>") (kbd "/")))
 
   ;; numeric keypad (needed in XEmacs for Windows)
   (XEmacs
-   ;; keys to the right of the regular keyboard
-   (define-key key-translation-map [kp-divide]     [?/])
-   (define-key key-translation-map [kp-multiply]   [?*])
-   (define-key key-translation-map [kp-subtract]   [?-])
-   (define-key key-translation-map [kp-add]        [?+])
-   (define-key key-translation-map [kp-enter]     [?\r])
-   (define-key key-translation-map [kp-decimal]    [?.])
+    ;; keys to the right of the regular keyboard
+    (define-key key-translation-map [kp-divide]     [?/])
+    (define-key key-translation-map [kp-multiply]   [?*])
+    (define-key key-translation-map [kp-subtract]   [?-])
+    (define-key key-translation-map [kp-add]        [?+])
+    (define-key key-translation-map [kp-enter]     [?\r])
+    (define-key key-translation-map [kp-decimal]    [?.])
 
-   ;; keys with digits
-   (define-key key-translation-map [kp-0]          [?0])
-   (define-key key-translation-map [kp-1]          [?1])
-   (define-key key-translation-map [kp-2]          [?2])
-   (define-key key-translation-map [kp-3]          [?3])
-   (define-key key-translation-map [kp-4]          [?4])
-   (define-key key-translation-map [kp-5]          [?5])
-   (define-key key-translation-map [kp-6]          [?6])
-   (define-key key-translation-map [kp-7]          [?7])
-   (define-key key-translation-map [kp-8]          [?8])
-   (define-key key-translation-map [kp-9]          [?9])
+    ;; keys with digits
+    (define-key key-translation-map [kp-0]          [?0])
+    (define-key key-translation-map [kp-1]          [?1])
+    (define-key key-translation-map [kp-2]          [?2])
+    (define-key key-translation-map [kp-3]          [?3])
+    (define-key key-translation-map [kp-4]          [?4])
+    (define-key key-translation-map [kp-5]          [?5])
+    (define-key key-translation-map [kp-6]          [?6])
+    (define-key key-translation-map [kp-7]          [?7])
+    (define-key key-translation-map [kp-8]          [?8])
+    (define-key key-translation-map [kp-9]          [?9])
 
-   ;; additional keypad duplicates of keys ordinarily found elsewhere
-   (define-key key-translation-map [kp-left]     [left])
-   (define-key key-translation-map [kp-right]   [right])
-   (define-key key-translation-map [kp-up]         [up])
-   (define-key key-translation-map [kp-down]     [down])
-   (define-key key-translation-map [kp-begin]   [begin])
-   (define-key key-translation-map [kp-home]     [home])
-   (define-key key-translation-map [kp-end]       [end])
-   (define-key key-translation-map [kp-next]     [next])
-   (define-key key-translation-map [kp-prior]   [prior])
-   (define-key key-translation-map [kp-insert] [insert])
-   (define-key key-translation-map [kp-delete] [delete]))
+    ;; additional keypad duplicates of keys ordinarily found elsewhere
+    (define-key key-translation-map [kp-left]     [left])
+    (define-key key-translation-map [kp-right]   [right])
+    (define-key key-translation-map [kp-up]         [up])
+    (define-key key-translation-map [kp-down]     [down])
+    (define-key key-translation-map [kp-begin]   [begin])
+    (define-key key-translation-map [kp-home]     [home])
+    (define-key key-translation-map [kp-end]       [end])
+    (define-key key-translation-map [kp-next]     [next])
+    (define-key key-translation-map [kp-prior]   [prior])
+    (define-key key-translation-map [kp-insert] [insert])
+    (define-key key-translation-map [kp-delete] [delete]))
 
 ) ;; chapter G ends here
 
@@ -9328,7 +9293,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130801.1207]--")
+(message "* --[ Loaded Emacs Leuven 20130801.1402]--")
 
 (provide 'emacs-leuven)
 
