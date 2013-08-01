@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130801.2346
+;; Version: 20130801.2357
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130801.2346]--")
+(message "* --[ Loading Emacs Leuven 20130801.2357]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -7379,167 +7379,166 @@ From %c"
 ;;** (info "(emacs)Dired Enter")
 
   ;; directory-browsing commands
-  (eval-after-load "dired"
-    '(progn
+  (with-eval-after-load "dired"
 
-       (leuven--section "30.1 (emacs)Dired Enter")
+    (leuven--section "30.1 (emacs)Dired Enter")
 
-       ;; switches passed to `ls' for Dired
-       (setq dired-listing-switches
-             ;; "-a -F --group-directories-first -l -p --time-style=long-iso"
-             ;; causes display problems on Windows
-             "-a -F -l -p"
-             )
+    ;; switches passed to `ls' for Dired
+    (setq dired-listing-switches
+          ;; "-a -F --group-directories-first -l -p --time-style=long-iso"
+          ;; causes display problems on Windows
+          "-a -F -l -p"
+          )
 
 ;;** (info "(emacs)Dired Deletion")
 
-       (leuven--section "30.3 (emacs)Dired Deletion")
+    (leuven--section "30.3 (emacs)Dired Deletion")
 
-       ;; recursive deletes allowed, after asking for each directory at top
-       ;; level
-       (setq dired-recursive-deletes 'top)
+    ;; recursive deletes allowed, after asking for each directory at top
+    ;; level
+    (setq dired-recursive-deletes 'top)
 
 ;;** (info "(emacs)Dired Visiting")
 
-       (leuven--section "30.5 (emacs)Dired Visiting")
+    (leuven--section "30.5 (emacs)Dired Visiting")
 
-       ;; reuse Dired buffers, by running the command
-       ;; `dired-find-alternate-file' (bound to `a') on a directory
-       (put 'dired-find-alternate-file 'disabled nil)
+    ;; reuse Dired buffers, by running the command
+    ;; `dired-find-alternate-file' (bound to `a') on a directory
+    (put 'dired-find-alternate-file 'disabled nil)
 
-       ;; reuse the current Dired directory buffer to visit another directory
-       ;; (limit Dired to 1 single buffer)
-       (when (try-require 'dired-single)
+    ;; reuse the current Dired directory buffer to visit another directory
+    ;; (limit Dired to 1 single buffer)
+    (when (try-require 'dired-single)
 
-         (define-key dired-mode-map
-           (kbd "<return>") 'joc-dired-single-buffer)
+      (define-key dired-mode-map
+        (kbd "<return>") 'joc-dired-single-buffer)
 
-         (define-key dired-mode-map
-           (kbd "<mouse-1>") 'joc-dired-single-buffer-mouse)
+      (define-key dired-mode-map
+        (kbd "<mouse-1>") 'joc-dired-single-buffer-mouse)
 
-         (define-key dired-mode-map
-           (kbd "^")
-           (lambda ()
-             (interactive)
-             (joc-dired-single-buffer "..")))
+      (define-key dired-mode-map
+        (kbd "^")
+        (lambda ()
+          (interactive)
+          (joc-dired-single-buffer "..")))
 
-         ;; (define-key dired-mode-map
-         ;;   (kbd "C-x C-j")
-         ;;   (lambda ()
-         ;;     (interactive)
-         ;;     (joc-dired-single-buffer "..")))
-         )
+      ;; (define-key dired-mode-map
+      ;;   (kbd "C-x C-j")
+      ;;   (lambda ()
+      ;;     (interactive)
+      ;;     (joc-dired-single-buffer "..")))
+      )
 
-       (define-key dired-mode-map
-         (kbd "e") 'browse-url-of-dired-file) ;; <C-RET>?
+    (define-key dired-mode-map
+      (kbd "e") 'browse-url-of-dired-file) ;; <C-RET>?
 
-       ;; open files using Windows associations
-       (GNUEmacs
-         (when running-ms-windows
-           (defun w32-dired-open-files-externally (&optional arg)
-             "In Dired, open the marked files (or directories) with the default
-           Windows tool."
-             (interactive "P")
-             (mapcar
-              #'(lambda (file)
-                  (w32-shell-execute "open" (convert-standard-filename file)))
-              (dired-get-marked-files nil arg)))
+    ;; open files using Windows associations
+    (GNUEmacs
+      (when running-ms-windows
+        (defun w32-dired-open-files-externally (&optional arg)
+          "In Dired, open the marked files (or directories) with the default
+        Windows tool."
+          (interactive "P")
+          (mapcar
+           #'(lambda (file)
+               (w32-shell-execute "open" (convert-standard-filename file)))
+           (dired-get-marked-files nil arg)))
 
-           ;; bind it to `E' in Dired mode
-           (define-key dired-mode-map
-             (kbd "E") 'w32-dired-open-files-externally)))
+        ;; bind it to `E' in Dired mode
+        (define-key dired-mode-map
+          (kbd "E") 'w32-dired-open-files-externally)))
 
-       ;; open current file with w3m
-       (when (executable-find "w3m")
-         (defun dired-find-w3m ()
-           "In Dired, visit (with find-w3m) the file named on this line."
-           (interactive)
-           (w3m-find-file (file-name-sans-versions (dired-get-filename) t)))
+    ;; open current file with w3m
+    (when (executable-find "w3m")
+      (defun dired-find-w3m ()
+        "In Dired, visit (with find-w3m) the file named on this line."
+        (interactive)
+        (w3m-find-file (file-name-sans-versions (dired-get-filename) t)))
 
-         ;; add a binding "W" -> `dired-find-w3m' to Dired
-         (define-key dired-mode-map
-           "W" 'dired-find-w3m))
+      ;; add a binding "W" -> `dired-find-w3m' to Dired
+      (define-key dired-mode-map
+        "W" 'dired-find-w3m))
 
 ;;** (info "(emacs)Operating on Files")
 
-       (leuven--section "30.7 (emacs)Operating on Files")
+    (leuven--section "30.7 (emacs)Operating on Files")
 
-       ;; try to guess a default target directory
-       (setq dired-dwim-target t)
+    ;; try to guess a default target directory
+    (setq dired-dwim-target t)
 
-       ;; copy recursively without asking
-       (setq dired-recursive-copies 'always)
+    ;; copy recursively without asking
+    (setq dired-recursive-copies 'always)
 
 ;;** (info "(emacs)Dired Updating")
 
-       (leuven--section "30.15 (emacs)Dired Updating")
+    (leuven--section "30.15 (emacs)Dired Updating")
 
-       ;; add-on for sorting
-       (try-require 'dired-sort-map)
-       ;; press `s' then `s', `x', `t', `n' or `d' to sort by
-       ;;  Size, eXtension, Time, Name or name grouping Dirs
+    ;; add-on for sorting
+    (try-require 'dired-sort-map)
+    ;; press `s' then `s', `x', `t', `n' or `d' to sort by
+    ;;  Size, eXtension, Time, Name or name grouping Dirs
 
 ;;** (info "(emacs)Dired and Find")
 
-       (leuven--section "30.16 (emacs)Dired and Find")
+    (leuven--section "30.16 (emacs)Dired and Find")
 
-       ;; ;; what to use in place of `-ls' as the final argument
-       ;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
-       ;; ;; quicker to collate the matches and then use `xargs' to run the
-       ;; ;; command (variable defined in `find-dired.el')
+    ;; ;; what to use in place of `-ls' as the final argument
+    ;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
+    ;; ;; quicker to collate the matches and then use `xargs' to run the
+    ;; ;; command (variable defined in `find-dired.el')
 
 ;; (when Cygwin... XXX
-       ;; search for files with names matching a wild card pattern and Dired
-       ;; the output
-       (global-set-key
-         (kbd "C-c 1") 'find-name-dired)
-         ;; case insensitive if `read-file-name-completion-ignore-case' is non-nil
+    ;; search for files with names matching a wild card pattern and Dired
+    ;; the output
+    (global-set-key
+      (kbd "C-c 1") 'find-name-dired)
+      ;; case insensitive if `read-file-name-completion-ignore-case' is non-nil
 
-       ;; `find-grep-dired' case insensitivity
-       (setq find-grep-options "-i -q")
+    ;; `find-grep-dired' case insensitivity
+    (setq find-grep-options "-i -q")
 
-       ;; search for files with contents matching a wild card pattern and Dired
-       ;; the output
-       (global-set-key
-         (kbd "C-c 2") 'find-grep-dired)
+    ;; search for files with contents matching a wild card pattern and Dired
+    ;; the output
+    (global-set-key
+      (kbd "C-c 2") 'find-grep-dired)
 
 ;;** (info "(emacs)Wdired")
 
-       (leuven--section "30.17 Editing the (emacs)Wdired Buffer")
+    (leuven--section "30.17 Editing the (emacs)Wdired Buffer")
 
-       ;; put a Dired buffer in a mode in which filenames are editable
-       (with-eval-after-load "wdired"
+    ;; put a Dired buffer in a mode in which filenames are editable
+    (with-eval-after-load "wdired"
 
-         ;; permissions bits of the files are editable
-         (setq wdired-allow-to-change-permissions t))
+      ;; permissions bits of the files are editable
+      (setq wdired-allow-to-change-permissions t))
 
 ;;** (info "(emacs)Image-Dired")
 
-       (leuven--section "30.18 Viewing Image Thumbnails in Dired")
+    (leuven--section "30.18 Viewing Image Thumbnails in Dired")
 
-       ;; use Dired to browse and manipulate your images
-       (with-eval-after-load "image-dired"
+    ;; use Dired to browse and manipulate your images
+    (with-eval-after-load "image-dired"
 
-         ;; maximum number of files to show before warning the user
-         (setq image-dired-show-all-from-dir-max-files 100)
+      ;; maximum number of files to show before warning the user
+      (setq image-dired-show-all-from-dir-max-files 100)
 
-         ;; size of button-like border around thumbnails
-         (setq image-dired-thumb-relief 0)
+      ;; size of button-like border around thumbnails
+      (setq image-dired-thumb-relief 0)
 
-         ;; size of the margin around thumbnails
-         (setq image-dired-thumb-margin 4))
+      ;; size of the margin around thumbnails
+      (setq image-dired-thumb-margin 4))
 
 ;;** Dired Extra
 
-       (leuven--section "30.XX (dired-x)Top")
+    (leuven--section "30.XX (dired-x)Top")
 
-       ;; load `dired-x.el' when Dired is first invoked (for example, when
-       ;; you first type `C-x d')
-       (add-hook 'dired-load-hook
-                 (lambda ()
-                   (load "dired-x")))
+    ;; load `dired-x.el' when Dired is first invoked (for example, when
+    ;; you first type `C-x d')
+    (add-hook 'dired-load-hook
+              (lambda ()
+                (load "dired-x")))
 
-       )) ;; eval-after-load "dired" ends here
+    ) ;; with-eval-after-load "dired" ends here
 
 ;;** Dired+
 
@@ -9299,7 +9298,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130801.2346]--")
+(message "* --[ Loaded Emacs Leuven 20130801.2358]--")
 
 (provide 'emacs-leuven)
 
