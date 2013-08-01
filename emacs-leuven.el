@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130801.1144
+;; Version: 20130801.1206
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130801.1144]--")
+(message "* --[ Loading Emacs Leuven 20130801.1206]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1077,28 +1077,27 @@
   (leuven--section "14.13 (emacs)Highlight Interactively by Matching")
 
   (GNUEmacs
-   (autoload 'hlt-highlight-regexp-region "highlight"
-     "Highlight regular expression REGEXP in region." t)
+    (autoload 'hlt-highlight-regexp-region "highlight"
+      "Highlight regular expression REGEXP in region." t)
 
-   (defun leuven-hlt-highlight-current-word ()
-     "Highlight the word that point is on throughout the buffer."
-     (interactive)
-     (let ((cword (current-word t)))
-       (when cword
-         (save-excursion
-           (hlt-highlight-regexp-region (point-min) (point-max)
-                                        (regexp-quote cword))))))
+    (defun leuven-hlt-highlight-current-word ()
+      "Highlight the word that point is on throughout the buffer."
+      (interactive)
+      (let ((cword (current-word t)))
+        (when cword
+          (save-excursion
+            (hlt-highlight-regexp-region (point-min) (point-max)
+                                         (regexp-quote cword))))))
 
-   ;; emulation of Vim's `*' search
-   (global-set-key
-    (kbd "C-*") 'leuven-hlt-highlight-current-word)
+    ;; emulation of Vim's `*' search
+    (global-set-key
+      (kbd "C-*") 'leuven-hlt-highlight-current-word)
 
-   (eval-after-load "highlight"
-     '(progn
-        (global-set-key
-         (kbd "C-S-p") 'hlt-previous-highlight)
-        (global-set-key
-         (kbd "C-S-n") 'hlt-next-highlight))))
+    (with-eval-after-load "highlight"
+      (global-set-key
+        (kbd "C-S-p") 'hlt-previous-highlight)
+      (global-set-key
+        (kbd "C-S-n") 'hlt-next-highlight)))
 
 ;;** 14.15 (info "(emacs)Displaying Boundaries")
 
@@ -1139,31 +1138,31 @@
   ;; (setq nobreak-char-display t) ;; default
 
   (GNUEmacs
-   ;; whitespace mode
-   (add-hook 'text-mode-hook
-             (lambda ()
-               (whitespace-mode 1)))
+    ;; whitespace mode
+    (add-hook 'text-mode-hook
+              (lambda ()
+                (whitespace-mode 1)))
 
-   (add-hook 'prog-mode-hook
-             (lambda ()
-               (whitespace-mode 1)))
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (whitespace-mode 1)))
 
-   (eval-after-load "whitespace"
-     '(progn
-        ;; which kind of blank is visualized
-        (setq whitespace-style
-              '(face trailing tabs
-                ;; lines-tail
-                indentation::space space-mark tab-mark))
+    (with-eval-after-load "whitespace"
 
-        ;; column beyond which the line is highlighted
-        (setq whitespace-line-column 80)
+      ;; which kind of blank is visualized
+      (setq whitespace-style
+            '(face trailing tabs
+              ;; lines-tail
+              indentation::space space-mark tab-mark))
 
-        ;; mappings for displaying characters
-        (setq whitespace-display-mappings
-              '((space-mark ?\xA0 [?\u00B7] [?.]) ;; hard space - centered dot
-                (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) ;; tab - left quote mark
-        )))
+      ;; column beyond which the line is highlighted
+      (setq whitespace-line-column 80)
+
+      ;; mappings for displaying characters
+      (setq whitespace-display-mappings
+            '((space-mark ?\xA0 [?\u00B7] [?.]) ;; hard space - centered dot
+              (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) ;; tab - left quote mark
+      ))
 
   ;; ;; show zero-width spaces
   ;; (font-lock-add-keywords nil
@@ -1253,20 +1252,20 @@
   (setq echo-keystrokes 0.1)
 
   ;; exhaustive log of interactions with Emacs (display keystrokes, etc.)
-  (eval-after-load "interaction-log"
-    '(progn
+  (with-eval-after-load "interaction-log"
 
-       ;; maximum number of lines to keep in the *Emacs Log* buffer
-       (setq ilog-log-max 10)
+    ;; maximum number of lines to keep in the *Emacs Log* buffer
+    (setq ilog-log-max 10)
 
-       (interaction-log-mode 1)
+    ;; enable logging of keys, commands, file loads and messages
+    (interaction-log-mode 1)
 
-       ;; hotkey for showing the log buffer
-       (global-set-key
-        (kbd "<C-f2>")
-        (lambda ()
-          (interactive)
-          (display-buffer ilog-buffer-name)))))
+    ;; hotkey for showing the log buffer
+    (global-set-key
+      (kbd "<C-f2>")
+      (lambda ()
+        (interactive)
+        (display-buffer ilog-buffer-name))))
 
 ) ;; chapter 14 ends here
 
@@ -1856,22 +1855,22 @@
   (setq delete-by-moving-to-trash t)
 
   ;; the EasyPG Assistant, transparent file encryption
-  (eval-after-load "epa-file"
-    '(progn
-       ;; stop EasyPG from asking for the recipient used for encrypting files
-       (setq epa-file-encrypt-to "john@doe.com")
-       ;; if no one is selected (""), symmetric encryption will always be
-       ;; performed
+  (with-eval-after-load "epa-file"
 
-       ;; cache passphrase for symmetric encryption (VERY important)
-       (setq epa-file-cache-passphrase-for-symmetric-encryption t)
-       ;; Not to sound paranoid. But if you want caching, it's recommended to
-       ;; use *public-key encryption* instead of symmetric encryption.
-       ;; `gpg-agent' is the preferred way to do this.
+    ;; stop EasyPG from asking for the recipient used for encrypting files
+    (setq epa-file-encrypt-to "john@doe.com")
+    ;; if no one is selected (""), symmetric encryption will always be
+    ;; performed
 
-       ;; prompt for the password in the Emacs minibuffer (instead of using a
-       ;; graphical password prompt for GPG)
-       (setenv "GPG_AGENT_INFO" nil)))
+    ;; cache passphrase for symmetric encryption (VERY important)
+    (setq epa-file-cache-passphrase-for-symmetric-encryption t)
+    ;; Not to sound paranoid. But if you want caching, it's recommended to
+    ;; use *public-key encryption* instead of symmetric encryption.
+    ;; `gpg-agent' is the preferred way to do this.
+
+    ;; prompt for the password in the Emacs minibuffer (instead of using a
+    ;; graphical password prompt for GPG)
+    (setenv "GPG_AGENT_INFO" nil))
 
 ;;** 18.14 (info "(emacs)Remote Files")
 
@@ -1882,135 +1881,134 @@
   (leuven--section "Ange-FTP")
 
   ;; transparent FTP support
-  (eval-after-load "ange-ftp"
+  (with-eval-after-load "ange-ftp"
 
     ;; try to use passive mode in ftp, if the client program supports it
-    '(setq ange-ftp-try-passive-mode t)) ;; needed for Ubuntu
+    (setq ange-ftp-try-passive-mode t)) ;; needed for Ubuntu
 
 ;;*** TRAMP - Transparent Remote Access, Multiple Protocols
 
   (leuven--section "TRAMP")
 
-  (eval-after-load "tramp" ;; the autoloads are predefined
-    '(progn
+  (with-eval-after-load "tramp" ;; the autoloads are predefined
 
 ;;* 4 (info "(tramp)Configuration") of TRAMP for use
 
 ;;** 4.6 Selecting a (info "(tramp)Default Method")
 
-       ;; default transfer method
-       (setq tramp-default-method ;; [default: "scp"]
-             (cond (running-ms-windows
-                    ;; (issues with Cygwin `ssh' which does not cooperate
-                    ;; with Emacs processes -> use `plink' from PuTTY, it
-                    ;; definitely does work under Windows)
-                    ;;
-                    ;; `C-x C-f /plink:user@host:/some/directory/file'
-                    "plink")
-                   (t
-                    "ssh")))
+    ;; default transfer method
+    (setq tramp-default-method ;; [default: "scp"]
+          (cond (running-ms-windows
+                 ;; (issues with Cygwin `ssh' which does not cooperate
+                 ;; with Emacs processes -> use `plink' from PuTTY, it
+                 ;; definitely does work under Windows)
+                 ;;
+                 ;; `C-x C-f /plink:user@host:/some/directory/file'
+                 "plink")
+                (t
+                 "ssh")))
 
-       ;; You might try out the `rsync' method, which saves the remote
-       ;; files quite a bit faster than SSH. It's based on SSH, so it
-       ;; works the same, just saves faster.
+    ;; You might try out the `rsync' method, which saves the remote
+    ;; files quite a bit faster than SSH. It's based on SSH, so it
+    ;; works the same, just saves faster.
 
-       ;; ;; 2011-07-25 New test on Windows XP
-       ;; (setq tramp-default-method "ssh")
-       ;;
-       ;; (nconc (cadr (assq 'tramp-login-args (assoc "ssh" tramp-methods)))
-       ;;        '(("bash" "-i")))
-       ;; (setcdr (assq 'tramp-remote-sh (assoc "ssh" tramp-methods))
-       ;;         '("bash -i"))
+    ;; ;; 2011-07-25 New test on Windows XP
+    ;; (setq tramp-default-method "ssh")
+    ;;
+    ;; (nconc (cadr (assq 'tramp-login-args (assoc "ssh" tramp-methods)))
+    ;;        '(("bash" "-i")))
+    ;; (setcdr (assq 'tramp-remote-sh (assoc "ssh" tramp-methods))
+    ;;         '("bash -i"))
 
 ;;** 4.9 Connecting to a remote host using (info "(tramp)Multi-hops")
 
-       ;; new proxy system (introduced with Tramp 2.1, instead of the old
-       ;; "multi-hop" filename syntax) to edit files on a remote server by
-       ;; going via another server
-       (when (boundp 'tramp-default-proxies-alist)
-         (add-to-list 'tramp-default-proxies-alist
-                      ;; "final host" "user" "proxy in the middle"
-                      '("10.10.13.123" "\\`root\\'" "/ssh:%h:")))
-       ;; Opening `/sudo:10.10.13.123:' would connect first `10.10.13.123'
-       ;; via `ssh' under your account name, and perform `sudo -u root' on
-       ;; that host afterwards. It is important to know that the given
-       ;; method is applied on the host which has been reached so far. The
-       ;; trick is to think from the end.
+    ;; new proxy system (introduced with Tramp 2.1, instead of the old
+    ;; "multi-hop" filename syntax) to edit files on a remote server by
+    ;; going via another server
+    (when (boundp 'tramp-default-proxies-alist)
+      (add-to-list 'tramp-default-proxies-alist
+                   ;; "final host" "user" "proxy in the middle"
+                   '("10.10.13.123" "\\`root\\'" "/ssh:%h:")))
+    ;; Opening `/sudo:10.10.13.123:' would connect first `10.10.13.123'
+    ;; via `ssh' under your account name, and perform `sudo -u root' on
+    ;; that host afterwards. It is important to know that the given
+    ;; method is applied on the host which has been reached so far. The
+    ;; trick is to think from the end.
 
 ;;** 4.12 (info "(tramp)Password handling") for several connections
 
-       ;; how many seconds passwords are cached
-       (setq password-cache-expiry 60) ;; [default: 16]
+    ;; how many seconds passwords are cached
+    (setq password-cache-expiry 60) ;; [default: 16]
 
 ;;** 4.15 (info "(tramp)Remote shell setup") hints
 
-       ;; string used for end of line in rsh connections
-       (setq tramp-rsh-end-of-line ;; [default: "\n"]
-             (cond (running-ms-windows "\n")
-                   (t "\r")))
+    ;; string used for end of line in rsh connections
+    (setq tramp-rsh-end-of-line ;; [default: "\n"]
+          (cond (running-ms-windows "\n")
+                (t "\r")))
 
 ;;** 4.16 (info "(tramp)Auto-save and Backup") configuration
 
-       ;; faster auto saves
-       (setq tramp-auto-save-directory temporary-file-directory)
+    ;; faster auto saves
+    (setq tramp-auto-save-directory temporary-file-directory)
 
 ;;* 9 How to Customize (info "(tramp)Traces and Profiles")
 
-       ;; debugging Tramp
-       (setq tramp-verbose 6) ;; [maximum: 10]
+    ;; debugging Tramp
+    (setq tramp-verbose 6) ;; [maximum: 10]
 
-       ;; "turn off" the effect of `backup-directory-alist' for TRAMP
-       ;; files
-       (add-to-list 'backup-directory-alist
-                    (cons tramp-file-name-regexp nil))
+    ;; "turn off" the effect of `backup-directory-alist' for TRAMP
+    ;; files
+    (add-to-list 'backup-directory-alist
+                 (cons tramp-file-name-regexp nil))
 
-       ;; make Emacs beep after reading from or writing to the remote host
-       (defadvice tramp-handle-write-region ;; XXX
-         (after leuven-tramp-write-beep-advice activate)
-         "Make Tramp beep after writing a file."
-         (interactive)
-         (beep))
+    ;; make Emacs beep after reading from or writing to the remote host
+    (defadvice tramp-handle-write-region ;; XXX
+      (after leuven-tramp-write-beep-advice activate)
+      "Make Tramp beep after writing a file."
+      (interactive)
+      (beep))
 
-       (defadvice tramp-handle-do-copy-or-rename-file ;; XXX
-         (after leuven-tramp-copy-beep-advice activate)
-         "Make Tramp beep after copying a file."
-         (interactive)
-         (beep))
+    (defadvice tramp-handle-do-copy-or-rename-file ;; XXX
+      (after leuven-tramp-copy-beep-advice activate)
+      "Make Tramp beep after copying a file."
+      (interactive)
+      (beep))
 
-       (defadvice tramp-handle-insert-file-contents
-         (after leuven-tramp-insert-beep-advice activate)
-         "Make Tramp beep after inserting contents of a file."
-         (interactive)
-         (beep))
+    (defadvice tramp-handle-insert-file-contents
+      (after leuven-tramp-insert-beep-advice activate)
+      "Make Tramp beep after inserting contents of a file."
+      (interactive)
+      (beep))
 
-       (defun leuven-find-file-sudo-header-warning ()
-         "*Display a warning in header line of the current buffer."
-         (let* ((warning "WARNING: EDITING FILE WITH ROOT PRIVILEGES!")
-                (space (+ 6 (- (frame-width) (length warning))))
-                (bracket (make-string (/ space 2) ?-))
-                (warning (concat bracket warning bracket)))
-           (setq header-line-format
-                 (propertize warning 'face 'header-line))))
+    (defun leuven-find-file-sudo-header-warning ()
+      "*Display a warning in header line of the current buffer."
+      (let* ((warning "WARNING: EDITING FILE WITH ROOT PRIVILEGES!")
+             (space (+ 6 (- (frame-width) (length warning))))
+             (bracket (make-string (/ space 2) ?-))
+             (warning (concat bracket warning bracket)))
+        (setq header-line-format
+              (propertize warning 'face 'header-line))))
 
-       (defun leuven-find-file-sudo (filename)
-         "Open FILENAME with root privileges."
-         (interactive "F")
-         (set-buffer (find-file (concat "/sudo::" filename)))
-         (leuven-find-file-sudo-header-warning))
+    (defun leuven-find-file-sudo (filename)
+      "Open FILENAME with root privileges."
+      (interactive "F")
+      (set-buffer (find-file (concat "/sudo::" filename)))
+      (leuven-find-file-sudo-header-warning))
 
-       ;; ;; XXX already an existing defadvice around find-file!!
-       ;; (defadvice find-file (around leuven-find-file activate)
-       ;;   "Open FILENAME using tramp's sudo method if it's read-only."
-       ;;   (if (and (file-exists-p (ad-get-arg 0))
-       ;;            (not (file-writable-p (ad-get-arg 0)))
-       ;;            (not (file-remote-p (ad-get-arg 0)))
-       ;;            (y-or-n-p (concat "File "
-       ;;                              (ad-get-arg 0)
-       ;;                              " is read-only.  Open it as root? ")))
-       ;;       (leuven-find-file-sudo (ad-get-arg 0))
-       ;;     ad-do-it))
+    ;; ;; XXX already an existing defadvice around find-file!!
+    ;; (defadvice find-file (around leuven-find-file activate)
+    ;;   "Open FILENAME using tramp's sudo method if it's read-only."
+    ;;   (if (and (file-exists-p (ad-get-arg 0))
+    ;;            (not (file-writable-p (ad-get-arg 0)))
+    ;;            (not (file-remote-p (ad-get-arg 0)))
+    ;;            (y-or-n-p (concat "File "
+    ;;                              (ad-get-arg 0)
+    ;;                              " is read-only.  Open it as root? ")))
+    ;;       (leuven-find-file-sudo (ad-get-arg 0))
+    ;;     ad-do-it))
 
-       ))
+    )
 
 ;;** 18.17 (info "(emacs)File Conveniences")
 
@@ -2031,23 +2029,22 @@
   (GNUEmacs
    (idle-require 'recentf))
 
-  (eval-after-load "recentf"
-    '(progn
+  (with-eval-after-load "recentf"
 
-       ;; maximum number of items that will be saved
-       (setq recentf-max-saved-items 100)
+    ;; maximum number of items that will be saved
+    (setq recentf-max-saved-items 100)
 
-       ;; file to save the recent list into
-       (setq recentf-save-file "~/.emacs.d/.recentf")
+    ;; file to save the recent list into
+    (setq recentf-save-file "~/.emacs.d/.recentf")
 
-       ;; (when using Tramp) turn off the cleanup feature of `recentf'
-       (setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
+    ;; (when using Tramp) turn off the cleanup feature of `recentf'
+    (setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
 
-       ;; save file names relative to my current home directory
-       (setq recentf-filename-handlers '(abbreviate-file-name))
+    ;; save file names relative to my current home directory
+    (setq recentf-filename-handlers '(abbreviate-file-name))
 
-       ;; enable `recentf' mode
-       (recentf-mode 1)))
+    ;; enable `recentf' mode
+    (recentf-mode 1))
 
   (leuven--section "FFAP")
 
@@ -2056,12 +2053,11 @@
    (kbd "<f3>") 'find-file-at-point)
 
   ;; find file (or URL) at point
-  (eval-after-load "ffap"
-    '(progn
-       ;; function called to fetch an URL
-       (setq ffap-url-fetcher 'browse-url)
-       ;; could be `browse-url-emacs' or `w3m-browse-url'
-       ))
+  (with-eval-after-load "ffap"
+
+    ;; function called to fetch an URL
+    (setq ffap-url-fetcher 'browse-url))
+    ;; could be `browse-url-emacs' or `w3m-browse-url'
 
   (GNUEmacs
 
@@ -2176,9 +2172,10 @@
 
   ;; operate on buffers like Dired
   (global-set-key
-   (kbd "C-x C-b") 'ibuffer)
-  (eval-after-load "ibuffer"
-    '(progn
+    (kbd "C-x C-b") 'ibuffer)
+
+  (with-eval-after-load "ibuffer"
+
     ;; completely replaces `list-buffer'
     (defalias 'ibuffer-list-buffers 'list-buffer)
 
@@ -2245,7 +2242,7 @@
     ;; order the groups so the order is: [Default], [agenda], [emacs]
     (defadvice ibuffer-generate-filter-groups
       (after leuven-reverse-ibuffer-groups activate)
-      (setq ad-return-value (nreverse ad-return-value)))))
+      (setq ad-return-value (nreverse ad-return-value))))
 
 ;;** 19.4 (info "(emacs)Kill Buffer")
 
@@ -2259,7 +2256,7 @@
 
   ;; key binding
   (global-set-key
-   (kbd "<S-f12>") 'leuven-kill-this-buffer-without-query)
+    (kbd "<S-f12>") 'leuven-kill-this-buffer-without-query)
 
 ;;** 19.5 (info "(emacs)Several Buffers")
 
@@ -2275,15 +2272,15 @@
 
   ;; unique buffer names dependent on file name
   (try-require 'uniquify)
-  (eval-after-load "uniquify"
-    '(progn
 
-       ;; style used for uniquifying buffer names with parts of directory
-       ;; name
-       (setq uniquify-buffer-name-style 'forward)
+  (with-eval-after-load "uniquify"
 
-       ;; distinguish directories by adding extra separator
-       (setq uniquify-trailing-separator-p t)))
+    ;; style used for uniquifying buffer names with parts of directory
+    ;; name
+    (setq uniquify-buffer-name-style 'forward)
+
+    ;; distinguish directories by adding extra separator
+    (setq uniquify-trailing-separator-p t))
 
 ) ;; chapter 19 ends here
 
@@ -2530,36 +2527,35 @@
 
   ;; everything browser (into individual source files), or Dired on
   ;; steroids
-  (eval-after-load "speedbar"
-    '(progn
+  (with-eval-after-load "speedbar"
 
-       ;; number of spaces used for indentation
-       (setq speedbar-indentation-width 2)
+    ;; number of spaces used for indentation
+    (setq speedbar-indentation-width 2)
 
-       ;; add new extensions for speedbar tagging (allow to expand/collapse
-       ;; sections, etc.) -- do this BEFORE firing up speedbar?
-       (speedbar-add-supported-extension
-        '(".bib" ".css" ".jpg" ".js" ".nw" ".org" ".php" ".png" ".tex" ".txt"
-          ".w" "README"))
+    ;; add new extensions for speedbar tagging (allow to expand/collapse
+    ;; sections, etc.) -- do this BEFORE firing up speedbar?
+    (speedbar-add-supported-extension
+     '(".bib" ".css" ".jpg" ".js" ".nw" ".org" ".php" ".png" ".tex" ".txt"
+       ".w" "README"))
 
-       ;; bind the arrow keys in the speedbar tree
-       (define-key speedbar-key-map
-         (kbd "<right>") 'speedbar-expand-line)
-       (define-key speedbar-key-map
-         (kbd "<left>") 'speedbar-contract-line)
+    ;; bind the arrow keys in the speedbar tree
+    (define-key speedbar-key-map
+      (kbd "<right>") 'speedbar-expand-line)
+    (define-key speedbar-key-map
+      (kbd "<left>") 'speedbar-contract-line)
 
-       ;; parameters to use when creating the speedbar frame in Emacs
-       (setq speedbar-frame-parameters '((width . 30)
-                                         (height . 45)
-                                         (foreground-color . "blue")
-                                         (background-color . "white")))
+    ;; parameters to use when creating the speedbar frame in Emacs
+    (setq speedbar-frame-parameters '((width . 30)
+                                      (height . 45)
+                                      (foreground-color . "blue")
+                                      (background-color . "white")))
 
-       ;; speedbar in the current frame (vs in a new frame)
-       (when (locate-library "sr-speedbar")
-         (autoload 'sr-speedbar-toggle "sr-speedbar" nil t)
-         ;; TODO don't bind F4 if already bound to helm... If helm not there, OK do it.
-         ;; (global-set-key (kbd "<f4>") 'sr-speedbar-toggle)
-         )))
+    ;; speedbar in the current frame (vs in a new frame)
+    (when (locate-library "sr-speedbar")
+      (autoload 'sr-speedbar-toggle "sr-speedbar" nil t)
+      ;; TODO don't bind F4 if already bound to helm... If helm not there, OK do it.
+      ;; (global-set-key (kbd "<f4>") 'sr-speedbar-toggle)
+      ))
 
 ;;** 21.15 (info "(emacs)Tool Bars")
 
@@ -2670,9 +2666,9 @@
   (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
   (autoload 'csv-mode "csv-mode"
     "Major mode for editing comma-separated value files." t)
-  (eval-after-load "csv-mode"
+  (with-eval-after-load "csv-mode"
     ;; field separators: a list of *single-character* strings
-    '(setq csv-separators '("," ";")))
+    (setq csv-separators '("," ";")))
 
   (autoload 'ssh-config-mode "ssh-config-mode" t)
 
@@ -2682,12 +2678,12 @@
   ;;                  '("\\.\\(xml\\|xsl\\|svg\\)\\'" . nxml-mode))
   ;;     (fset 'xml-mode 'nxml-mode)
 
-  (eval-after-load "nxml"
+  (with-eval-after-load "nxml"
     ;; remove the binding of `C-c C-x', used by Org timeclocking commands
-    '(add-hook 'nxml-mode-hook
-               (lambda ()
-                 (define-key nxml-mode-map
-                   (kbd "C-c C-x") nil))))
+    (add-hook 'nxml-mode-hook
+              (lambda ()
+                (define-key nxml-mode-map
+                  (kbd "C-c C-x") nil))))
 
   ;; list of interpreters specified in the first line (starts with `#!')
   (push '("expect" . tcl-mode) interpreter-mode-alist)
@@ -3046,13 +3042,12 @@
     ;; quote text with a semi-box
     (autoload 'boxquote-region "boxquote" nil t)
 
-    (eval-after-load "boxquote"
-      '(progn
-         (setq boxquote-top-and-tail "────")
-         (setq boxquote-title-format " %s")
-         (setq boxquote-top-corner    "  ╭")
-         (setq boxquote-side          "  │ ")
-         (setq boxquote-bottom-corner "  ╰"))))
+    (with-eval-after-load "boxquote"
+      (setq boxquote-top-and-tail "────")
+      (setq boxquote-title-format " %s")
+      (setq boxquote-top-corner    "  ╭")
+      (setq boxquote-side          "  │ ")
+      (setq boxquote-bottom-corner "  ╰")))
 
 ;;** (info "phonetic")
 
@@ -3191,11 +3186,11 @@
     ;; make sure to turn `org-info' on in order to link to info nodes
     (add-to-list 'org-modules 'org-info))
 
-  (eval-after-load "org-id"
-    '(progn
-       ;; storing a link to an Org file will use entry IDs
-       (setq org-id-link-to-org-use-id
-             'create-if-interactive-and-no-custom-id)))
+  (with-eval-after-load "org-id"
+
+    ;; storing a link to an Org file will use entry IDs
+    (setq org-id-link-to-org-use-id
+          'create-if-interactive-and-no-custom-id))
 
 ;;* 2 (info "(org)Document Structure")
 
@@ -4149,15 +4144,15 @@ From %c"
   (leuven--section "9.4 (org)Protocols")
 
   ;; 9.4 capture from Firefox (to store links and text)
-  (eval-after-load "org-protocol"
-    '(progn
-       ;; map online URL to an existing working file
-       (add-to-list 'org-protocol-project-alist
-                    '("Worg at http://orgmode.org/worg/"
-                      :online-suffix ".html"
-                      :working-suffix ".org"
-                      :base-url "http://orgmode.org/worg/"
-                      :working-directory "/home/sva/src/Worg/") t)))
+  (with-eval-after-load "org-protocol"
+
+    ;; map online URL to an existing working file
+    (add-to-list 'org-protocol-project-alist
+                 '("Worg at http://orgmode.org/worg/"
+                   :online-suffix ".html"
+                   :working-suffix ".org"
+                   :base-url "http://orgmode.org/worg/"
+                   :working-directory "~/Public/Repositories/worg/") t))
 
   (defun make-capture-frame ()
     "Create a new frame and run `org-capture'."
@@ -9333,7 +9328,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130801.1144]--")
+(message "* --[ Loaded Emacs Leuven 20130801.1207]--")
 
 (provide 'emacs-leuven)
 
