@@ -1,0 +1,20 @@
+
+* Tasks
+
+** TODO Check for obsolete (deprecated) variables
+
+** TODO Improve naming of hook functions
+
+Don't put the name of the hook in there. Give them a semantic naming,
+depending on what they really do.
+
+** TODO Wrap =diff-= in an =eval-after-load=
+
+... if possible
+
+Check which packages do have =(require 'diff)=. Use them (or one of their
+caller) in the =eval-after-load=.
+
+** TODO Put missing packages (on a normal machine) in =eval-after-load=
+
+** TODO Use =findstr= instead of =grep= on Windows
