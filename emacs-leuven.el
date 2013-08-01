@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130801.1402
+;; Version: 20130801.2251
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130801.1402]--")
+(message "* --[ Loading Emacs Leuven 20130801.2251]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1822,6 +1822,8 @@
 
   (with-eval-after-load "ediff"
 
+    ;; skip over difference regions that differ only in white space and line
+    ;; breaks
     ;; (setq-default ediff-ignore-similar-regions  t)
     ;; XXX Make another key binding (than `E') with that value in a let-bind
 
@@ -6754,6 +6756,16 @@ From %c"
        (define-key edebug-mode-map
          [remap top-level] 'leuven-edebug-quit)))
 
+  (defun autocompile nil
+    "compile itself if ~/.emacs"
+    (interactive)
+    (require 'bytecomp)
+    (let ((dotemacs (expand-file-name "~/.emacs"))) ;; emacs-leuven.el
+      (if (string= (buffer-file-name) (file-chase-links dotemacs))
+        (byte-compile-file dotemacs))))
+
+  (add-hook 'after-save-hook 'autocompile)
+
 ;;** 27.9 (info "(emacs)Lisp Eval") Expressions
 
   (leuven--section "27.9 (emacs)Lisp Eval Expressions")
@@ -6927,15 +6939,18 @@ From %c"
 
     ;; vc status without asking for a directory
     (global-set-key
-     (kbd "<C-f9>") 'leuven-vc-jump)
+      (kbd "<C-f9>") 'leuven-vc-jump)
 
     ;; hide up-to-date and unregistered files
     (add-hook  'vc-dir-mode-hook
-               (lambda nil
+               (lambda ()
                  (define-key vc-dir-mode-map
                    (kbd "x") 'leuven-vc-dir-hide-up-to-date-and-unregistered)
                  (define-key vc-dir-mode-map
-                   (kbd "E") 'vc-ediff)))
+                   (kbd "E") 'vc-ediff)
+                 (define-key vc-dir-mode-map
+                   (kbd "#") 'vc-ediff-ignore-whitespace)
+                 ))
 
     (defun leuven-vc-dir-hide-up-to-date-and-unregistered ()
       (interactive)
@@ -6968,6 +6983,13 @@ From %c"
                    (eq (vc-dir-fileinfo->state data) 'unregistered))
               (ewoc-delete vc-ewoc crt))
             (setq crt prev)))))
+
+    (defun vc-ediff-ignore-whitespace (historic &optional not-urgent)
+      "Ignore regions that differ in white space & line breaks only."
+      (interactive (list current-prefix-arg t))
+      (require 'ediff)
+      (let ((ediff-ignore-similar-regions t))
+        (call-interactively 'vc-ediff))) ;; XXX does not work yet
 
 ;;*** 28.1.12 (info "(emacs)Customizing VC")
 
@@ -9150,14 +9172,14 @@ From %c"
   ;; needs to be done before loading `ess-site'
 
   ;; add to list of prefixes recognized by ESS
-  (setq ess-r-versions '("R-2.15.2"))
+  (setq ess-r-versions '("R-2.15.2")) ;; R-current
   ;; matching versions will appear after doing M-x R <tab> <tab>
 
   ;; ESS: Emacs Speaks Statistics
   (try-require 'ess-site-XXX)
 
   ;; set default R version, (i.e. the one launched by typing M-x R <RET>)
-  (setq inferior-R-program-name
+  (setq inferior-R-program-name ;; R-current
         "C:/Program Files/R/R-2.15.2/bin/x64/Rterm.exe")
 
   (global-set-key
@@ -9293,7 +9315,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130801.1402]--")
+(message "* --[ Loaded Emacs Leuven 20130801.2251]--")
 
 (provide 'emacs-leuven)
 

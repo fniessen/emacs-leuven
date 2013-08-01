@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-01 Thu 14:01>
+# Time-stamp: <2013-08-01 Thu 22:51>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -2650,6 +2650,8 @@ In Ediff, press:
 
   (with-eval-after-load "ediff"
 
+    ;; skip over difference regions that differ only in white space and line
+    ;; breaks
     ;; (setq-default ediff-ignore-similar-regions  t)
     ;; XXX Make another key binding (than `E') with that value in a let-bind
 
@@ -9590,6 +9592,22 @@ your program before you can test the fix. You don't do that in Lisp. You make
 the fix and then go straight to testing it. This process can be even faster
 than fixing a bug in a scripting language like Perl.
 
+** Compile your .emacs file
+
+*************** TODO Autocompile .emacs after Org tangle!
+
+#+begin_src emacs-lisp
+  (defun autocompile nil
+    "compile itself if ~/.emacs"
+    (interactive)
+    (require 'bytecomp)
+    (let ((dotemacs (expand-file-name "~/.emacs"))) ;; emacs-leuven.el
+      (if (string= (buffer-file-name) (file-chase-links dotemacs))
+        (byte-compile-file dotemacs))))
+
+  (add-hook 'after-save-hook 'autocompile)
+#+end_src
+
 ** Evaluating Emacs Lisp Expressions
 
 To (attempt to) cleanly reevaluate a buffer of elisp code, use =nuke-and-eval=.
@@ -9867,15 +9885,18 @@ Show the diff we are about to commit: =C-c C-d=.
 
     ;; vc status without asking for a directory
     (global-set-key
-     (kbd "<C-f9>") 'leuven-vc-jump)
+      (kbd "<C-f9>") 'leuven-vc-jump)
 
     ;; hide up-to-date and unregistered files
     (add-hook  'vc-dir-mode-hook
-               (lambda nil
+               (lambda ()
                  (define-key vc-dir-mode-map
                    (kbd "x") 'leuven-vc-dir-hide-up-to-date-and-unregistered)
                  (define-key vc-dir-mode-map
-                   (kbd "E") 'vc-ediff)))
+                   (kbd "E") 'vc-ediff)
+                 (define-key vc-dir-mode-map
+                   (kbd "#") 'vc-ediff-ignore-whitespace)
+                 ))
 
     (defun leuven-vc-dir-hide-up-to-date-and-unregistered ()
       (interactive)
@@ -9908,6 +9929,13 @@ Show the diff we are about to commit: =C-c C-d=.
                    (eq (vc-dir-fileinfo->state data) 'unregistered))
               (ewoc-delete vc-ewoc crt))
             (setq crt prev)))))
+
+    (defun vc-ediff-ignore-whitespace (historic &optional not-urgent)
+      "Ignore regions that differ in white space & line breaks only."
+      (interactive (list current-prefix-arg t))
+      (require 'ediff)
+      (let ((ediff-ignore-similar-regions t))
+        (call-interactively 'vc-ediff))) ;; XXX does not work yet
 #+end_src
 
 *** Customizing VC
@@ -13510,14 +13538,14 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
   ;; needs to be done before loading `ess-site'
 
   ;; add to list of prefixes recognized by ESS
-  (setq ess-r-versions '("R-2.15.2"))
+  (setq ess-r-versions '("R-2.15.2")) ;; R-current
   ;; matching versions will appear after doing M-x R <tab> <tab>
 
   ;; ESS: Emacs Speaks Statistics
   (try-require 'ess-site-XXX)
 
   ;; set default R version, (i.e. the one launched by typing M-x R <RET>)
-  (setq inferior-R-program-name
+  (setq inferior-R-program-name ;; R-current
         "C:/Program Files/R/R-2.15.2/bin/x64/Rterm.exe")
 
   (global-set-key
