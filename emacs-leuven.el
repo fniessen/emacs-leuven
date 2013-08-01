@@ -6538,9 +6538,9 @@ From %c"
   ;; when you hit `<C-tab>', call the command normally bound to `<M-tab>'
   (global-set-key
     (kbd "<C-tab>")
-    '(lambda ()
-       (interactive)
-       (call-interactively (key-binding (kbd "<M-tab>")))))
+    (lambda ()
+      (interactive)
+      (call-interactively (key-binding (kbd "<M-tab>")))))
 
 ;;** 26.9 (info "(emacs)Glasses") minor mode
 
