@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-07-31 Wed 11:01>
+# Time-stamp: <2013-08-01 Thu 11:48>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -398,6 +398,15 @@ echo "$(date '+%Y%m%d.%H%M')"
 #+end_src
 
 *************** TODO When using recursive, the load time of .emacs/Org is more than 3 times slower!!
+
+#+begin_src emacs-lisp
+;; wrapper around `eval-after-load'
+(defmacro with-eval-after-load (mode &rest body)
+  "`eval-after-load' MODE evaluate BODY."
+  (declare (indent defun))
+  `(eval-after-load ,mode
+     '(progn ,@body)))
+#+end_src
 
 ** Site-lisp
 
@@ -957,10 +966,10 @@ You can ask what pertains to a given topic by typing =M-x apropos <RET> pattern
 
   (leuven--section "10.4 (emacs)Apropos")
 
-  (eval-after-load "apropos"
+  (with-eval-after-load "apropos"
 
-    ;; check all variables and non-interactive functions as well
-    '(setq apropos-do-all t))
+   ;; check all variables and non-interactive functions as well
+   (setq apropos-do-all t))
 
   ;; show variables whose name matches the pattern
   (GNUEmacs
@@ -1015,33 +1024,32 @@ In a manual, these key bindings will make your life easier:
   (global-set-key
    (kbd "<C-f1>") 'info-lookup-symbol)
 
-  (eval-after-load "info"
-    '(progn
-       ;; Don't play with `Info-directory-list', it's not intended to be
-       ;; settable by the user. When `info' is called, this variable is
-       ;; populated from:
-       ;; 1. the `INFOPATH' environment variable and/or
-       ;; 2. the `Info-default-directory-list' variable -- non-existent
-       ;;    directories will be removed when copied to `Info-directory-list'
+  (with-eval-after-load "info"
+   ;; Don't play with `Info-directory-list', it's not intended to be
+   ;; settable by the user. When `info' is called, this variable is
+   ;; populated from:
+   ;; 1. the `INFOPATH' environment variable and/or
+   ;; 2. the `Info-default-directory-list' variable -- non-existent
+   ;;    directories will be removed when copied to `Info-directory-list'
 
-       ;; list of additional directories to search for Info documentation
-       ;; files (in the order they are listed)
-       (setq Info-default-directory-list
-             ;; FIXME `Info-additional-directory-list' does not work
-             (cond (running-ms-windows
-                    ;; EmacsW32 doesn't see `INFOPATH'...
-                    `(
-                      ,(expand-file-name
-                        (concat (file-name-directory (locate-library "org"))
-                                "../doc/"))
-                      ,(expand-file-name (concat leuven-local-repos-directory "gnus/texi/"))
-                      "c:/cygwin/usr/share/info/"
-                      ,@Info-default-directory-list))
-                   (t
-                    ;; best to set the `INFOPATH' environment variable
-                    ;; (outside of Emacs, in the same shell from which you
-                    ;; invoke Emacs)
-                    nil)))
+   ;; list of additional directories to search for Info documentation
+   ;; files (in the order they are listed)
+   (setq Info-default-directory-list
+         ;; FIXME `Info-additional-directory-list' does not work
+         (cond (running-ms-windows
+                ;; EmacsW32 doesn't see `INFOPATH'...
+                `(
+                  ,(expand-file-name
+                    (concat (file-name-directory (locate-library "org"))
+                            "../doc/"))
+                  ,(expand-file-name (concat leuven-local-repos-directory "gnus/texi/"))
+                  "c:/cygwin/usr/share/info/"
+                  ,@Info-default-directory-list))
+               (t
+                ;; best to set the `INFOPATH' environment variable
+                ;; (outside of Emacs, in the same shell from which you
+                ;; invoke Emacs)
+                nil)))
 #+end_src
 
 ~Info+~ fontifies entries for reference items (functions, macros, commands,
@@ -1049,27 +1057,27 @@ special forms, constants, options, other variables), and that includes their
 parameters, even those on continuation lines.
 
 #+begin_src emacs-lisp
-       (GNUEmacs
-        ;; with `info+.el', you can merge an Info node with its subnodes
-        ;; into the same buffer, by calling `Info-merge-subnodes' (bound to
-        ;; `+')
-        (try-require 'info+-XXX))  ;; error finding dir file
+   (GNUEmacs
+    ;; with `info+.el', you can merge an Info node with its subnodes
+    ;; into the same buffer, by calling `Info-merge-subnodes' (bound to
+    ;; `+')
+    (try-require 'info+-XXX))  ;; error finding dir file
 #+end_src
 
 #+begin_src emacs-lisp
-       ;; some info related functions
-       ;; (to insert links such as `(info "(message)Insertion Variables")')
-       (when (locate-library "rs-info")
-         (autoload 'rs-info-insert-current-node "rs-info"
-           "Insert reference to current Info node using STYPE in buffer." t)
-         (autoload 'rs-info-boxquote "rs-info"
-           "Yank text (from an info node), box it and use current info node as title." t)
-         (autoload 'rs-info-reload "rs-info"
-           "Reload current info node." t)
-         (autoload 'rs-info-insert-node-for-variable "rs-info"
-           "Insert a custom style info node for the top level form at point." t)
-         (defalias 'boxquote-info 'rs-info-boxquote))
-       ))
+   ;; some info related functions
+   ;; (to insert links such as `(info "(message)Insertion Variables")')
+   (when (locate-library "rs-info")
+     (autoload 'rs-info-insert-current-node "rs-info"
+       "Insert reference to current Info node using STYPE in buffer." t)
+     (autoload 'rs-info-boxquote "rs-info"
+       "Yank text (from an info node), box it and use current info node as title." t)
+     (autoload 'rs-info-reload "rs-info"
+       "Reload current info node." t)
+     (autoload 'rs-info-insert-node-for-variable "rs-info"
+       "Insert a custom style info node for the top level form at point." t)
+     (defalias 'boxquote-info 'rs-info-boxquote))
+   )
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1077,16 +1085,16 @@ parameters, even those on continuation lines.
   (global-set-key
    (kbd "<S-f1>") 'man-follow)
 
-  (eval-after-load "man"
-    ;; make the manpage the current buffer in the current window
-    '(setq Man-notify-method 'pushy))
+  (with-eval-after-load "man"
+   ;; make the manpage the current buffer in the current window
+   (setq Man-notify-method 'pushy))
 
   ;; alias man to woman
   (defalias 'man 'woman)
 
   ;; decode and browse Unix man-pages "W.o. (without) Man"
-  (eval-after-load "woman"
-    '(defalias 'man 'woman))
+  (with-eval-after-load "woman"
+   (defalias 'man 'woman))
 
 ) ;; chapter 10 ends here
 #+end_src
@@ -1273,14 +1281,14 @@ directory.
 
   (leuven--section "13.7 (emacs)Bookmarks")
 
-  (eval-after-load "bookmark"
-    '(progn
-       ;; where to save the bookmarks
-       (setq bookmark-default-file "~/.emacs.d/bookmarks.bmk")
-       ;;! a .txt extension would load Org at the time bookmark is required!
+  (with-eval-after-load "bookmark"
 
-       ;; each command that sets a bookmark will also save your bookmarks
-       (setq bookmark-save-flag 1)))
+   ;; where to save the bookmarks
+   (setq bookmark-default-file "~/.emacs.d/bookmarks.bmk")
+   ;;! a .txt extension would load Org at the time bookmark is required!
+
+   ;; each command that sets a bookmark will also save your bookmarks
+   (setq bookmark-save-flag 1))
 #+end_src
 
 Visible bookmarks in buffer.
@@ -1289,16 +1297,16 @@ Visible bookmarks in buffer.
 
 #+begin_src emacs-lisp
   ;; extensions to standard library `bookmark.el'
-  (eval-after-load "bookmark-XXX" ;; XXX here does not work!?
-    '(progn
-        (try-require 'bookmark+++XXX)
+  (with-eval-after-load "bookmark-XXX" ;; XXX here does not work!?
 
-        ;; bookmarks to automatically highlight when jumped to
-        (setq bmkp-auto-light-when-jump 'any-bookmark)
+   (try-require 'bookmark+++XXX)
 
-        ;; we will often be going back and forth between using Bookmark+ and
-        ;; using vanilla Emacs
-        (setq bmkp-propertize-bookmark-names-flag nil)))
+   ;; bookmarks to automatically highlight when jumped to
+   (setq bmkp-auto-light-when-jump 'any-bookmark)
+
+   ;; we will often be going back and forth between using Bookmark+ and
+   ;; using vanilla Emacs
+   (setq bmkp-propertize-bookmark-names-flag nil))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1835,8 +1843,8 @@ Since Emacs 24.3:
                (lambda ()
                  (require 'fuzzy)))
 
-     (eval-after-load "fuzzy"
-       '(turn-on-fuzzy-isearch))))
+     (with-eval-after-load "fuzzy"
+      (turn-on-fuzzy-isearch))))
 #+end_src
 
 You have to *quote the form you are passing to =eval-after-load=*, otherwise, the
@@ -2057,30 +2065,26 @@ it to the *file word list* (=ispell-add-per-file-word-list=).
     ;; unmodified
     (add-hook 'first-change-hook
               (lambda ()
-                (when (eq (aref (buffer-name) 0) ?\s) ;; buffer starts with " "
-                  (message "First-change-hook called for temporary buffer `%s' (in `%s')"
-                           (buffer-name)
-                           major-mode))
-                (cond ((derived-mode-p 'text-mode) ;; org-mode
-                       (flyspell-mode 1))
-                      ((derived-mode-p 'prog-mode)
-                       (flyspell-prog-mode)) ;; `ispell-comments-and-strings'
-                      ;; prevent flyspell from finding mistakes in the code,
-                      ;; which is pretty cool
-                      )))
+                ;; skip temporary buffers
+                ;; (XXX another test could be skipping buffers not associated with a file)
+                (unless (eq (aref (buffer-name) 0) ?\s) ;; buffer starts with " "
+                  (cond ((derived-mode-p 'text-mode) ;; org-mode
+                         (flyspell-mode 1))
+                        ((derived-mode-p 'prog-mode)
+                         (flyspell-prog-mode)) ;; `ispell-comments-and-strings'
+                        ;; prevent flyspell from finding mistakes in the code,
+                        ;; which is pretty cool
+                        ))))
 
-    (eval-after-load "ispell"
-      ;; so that following modifications won't be lost when `ispell' is
-      ;; loaded
-      '(progn
+    (with-eval-after-load "ispell"
 
-         ;; save the personal dictionary without confirmation
-         (setq ispell-silently-savep t)
+     ;; save the personal dictionary without confirmation
+     (setq ispell-silently-savep t)
 #+end_src
 
 #+begin_src emacs-lisp
-         ;; extensions and extra switches to pass to the `ispell' program
-         (cond
+     ;; extensions and extra switches to pass to the `ispell' program
+     (cond
 #+end_src
 
 Tell =aspell= to speed up, though this reduces somewhat the quality of its
@@ -2098,79 +2102,79 @@ suggestions. According to the =aspell= documentation:
 Use the =-C= option which will ConsiderCamelCaseToBeCorrect.
 
 #+begin_src emacs-lisp
-          ((string-match "aspell" ispell-program-name)
-           (setq ispell-extra-args '("--sug-mode=ultra" "-C"))
-           (setq ispell-really-aspell t)
-           (setq ispell-really-hunspell nil))
+      ((string-match "aspell" ispell-program-name)
+       (setq ispell-extra-args '("--sug-mode=ultra" "-C"))
+       (setq ispell-really-aspell t)
+       (setq ispell-really-hunspell nil))
 #+end_src
 
 #+begin_src emacs-lisp
-          ((string-match "ispell" ispell-program-name)
-           (setq ispell-extra-args '())
-           (setq ispell-really-aspell nil)
-           (setq ispell-really-hunspell nil)))
+      ((string-match "ispell" ispell-program-name)
+       (setq ispell-extra-args '())
+       (setq ispell-really-aspell nil)
+       (setq ispell-really-hunspell nil)))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-         ;; redefine the list of installed dictionaries
-         ;; customize to ("-B" "-d" "spanish") or ("-C" "-d" "dutch") if
-         ;; aliases are needed for the file names
-         ;; FIXME This variable is reset once latter in this .emacs
-         ;; file!!!
-         (setq ispell-local-dictionary-alist
-               ;; dictionaries not in that list will result in "undefined dictionary"
-               '((nil ;; default
-                  "[[:alpha:]]"
-                  "[^[:alpha:]]"
-                  "[']" nil ("-B") nil iso-8859-1) ;; or utf-8?
-                  ;; otherchars, many-otherchars-p, ispell-args, character-set
+     ;; redefine the list of installed dictionaries
+     ;; customize to ("-B" "-d" "spanish") or ("-C" "-d" "dutch") if
+     ;; aliases are needed for the file names
+     ;; FIXME This variable is reset once latter in this .emacs
+     ;; file!!!
+     (setq ispell-local-dictionary-alist
+           ;; dictionaries not in that list will result in "undefined dictionary"
+           '((nil ;; default
+              "[[:alpha:]]"
+              "[^[:alpha:]]"
+              "[']" nil ("-B") nil iso-8859-1) ;; or utf-8?
+              ;; otherchars, many-otherchars-p, ispell-args, character-set
 
-                 ("en_US" ;; Yankee English
-                  "[[:alpha:]]"
-                  "[^[:alpha:]]"
-                  "[']" nil ("-B") nil utf-8)))
+             ("en_US" ;; Yankee English
+              "[[:alpha:]]"
+              "[^[:alpha:]]"
+              "[']" nil ("-B") nil utf-8)))
 
-         ;; standard French
-         (when (or
-                (locate-file "fr_FR" '("/usr/lib/aspell"))
-                (locate-file "francais.alias" '("/usr/lib/aspell"))
-                (locate-file "francais.alias" `(,(concat windows-program-files-dir "Aspell/dict"))))
-           (add-to-list 'ispell-local-dictionary-alist
-                        '("fr_FR"
-                          "[[:alpha:]àâäéèêëîïôöùûüçÀÂÄÉÈÊËÎÏÔÖÙÛÜÇ]"
-                          "[^[:alpha:]àâäéèêëîïôöùûüçÀÂÄÉÈÊËÎÏÔÖÙÛÜÇ]"
-                          "[-']" t nil "~list" iso-8859-1)
-                        'append))
+     ;; standard French
+     (when (or
+            (locate-file "fr_FR" '("/usr/lib/aspell"))
+            (locate-file "francais.alias" '("/usr/lib/aspell"))
+            (locate-file "francais.alias" `(,(concat windows-program-files-dir "Aspell/dict"))))
+       (add-to-list 'ispell-local-dictionary-alist
+                    '("fr_FR"
+                      "[[:alpha:]àâäéèêëîïôöùûüçÀÂÄÉÈÊËÎÏÔÖÙÛÜÇ]"
+                      "[^[:alpha:]àâäéèêëîïôöùûüçÀÂÄÉÈÊËÎÏÔÖÙÛÜÇ]"
+                      "[-']" t nil "~list" iso-8859-1)
+                    'append))
 
-         ;; Spanish (español)
-         (when (locate-file "es_ES" '("/usr/lib/aspell"))
-           (add-to-list 'ispell-local-dictionary-alist
-                        '("es_ES"
-                          "[[:alpha:]ñáàéèíìóòúùüÑÁÀÉÈÍÌÓÒÚÙÜ]"
-                          "[^[:alpha:]ñáàéèíìóòúùüÑÁÀÉÈÍÌÓÒÚÙÜ]"
-                          "[-]" nil ("-B") "~tex" iso-8859-1)
-                        'append))
+     ;; Spanish (español)
+     (when (locate-file "es_ES" '("/usr/lib/aspell"))
+       (add-to-list 'ispell-local-dictionary-alist
+                    '("es_ES"
+                      "[[:alpha:]ñáàéèíìóòúùüÑÁÀÉÈÍÌÓÒÚÙÜ]"
+                      "[^[:alpha:]ñáàéèíìóòúùüÑÁÀÉÈÍÌÓÒÚÙÜ]"
+                      "[-]" nil ("-B") "~tex" iso-8859-1)
+                    'append))
 
-         ;; Dutch (Nederlands)
-         (when (locate-file "nl_NL" '("/usr/lib/aspell"))
-           (add-to-list 'ispell-local-dictionary-alist
-                        '("nl_NL"
-                          "[[:alpha:]àâçëîïôùûüÀÂÇËÎÏÔÙÛÜ]"
-                          "[^[:alpha:]àâçëîïôùûüÀÂÇËÎÏÔÙÛÜ]"
-                          "[']" t ("-C") nil iso-8859-1)
-                        'append))
+     ;; Dutch (Nederlands)
+     (when (locate-file "nl_NL" '("/usr/lib/aspell"))
+       (add-to-list 'ispell-local-dictionary-alist
+                    '("nl_NL"
+                      "[[:alpha:]àâçëîïôùûüÀÂÇËÎÏÔÙÛÜ]"
+                      "[^[:alpha:]àâçëîïôùûüÀÂÇËÎÏÔÙÛÜ]"
+                      "[']" t ("-C") nil iso-8859-1)
+                    'append))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-         ;; ;; solve the problem of words separated by `-' flagged as
-         ;; ;; erroneous by removing the `-' from the value of otherchars
-         ;; (if (fboundp 'ispell-get-decoded-string)
-         ;;     (defun ispell-get-otherchars ()
-         ;;       (replace-regexp-in-string "-" "" (ispell-get-decoded-string 3))))
+     ;; ;; solve the problem of words separated by `-' flagged as
+     ;; ;; erroneous by removing the `-' from the value of otherchars
+     ;; (if (fboundp 'ispell-get-decoded-string)
+     ;;     (defun ispell-get-otherchars ()
+     ;;       (replace-regexp-in-string "-" "" (ispell-get-decoded-string 3))))
 #+end_src
 
 #+begin_src emacs-lisp
-         ))
+     )
 #+end_src
 
 =flyspell-auto-correct-word= is bound to =C-.=. Press it one time to correct the
@@ -2187,49 +2191,48 @@ previously detected error.
     ;; FIXME M-TAB is still bound to `flyspell-auto-correct-word' when this
     ;; chunk of code is placed within (eval-after-load "flyspell"...)
 
-    (eval-after-load "flyspell"
-      '(progn
+    (with-eval-after-load "flyspell"
 
 (message "flyspell has been loaded!!!")
 (sit-for 2)
 
-         ;; don't consider that a word repeated twice is an error
-         (setq flyspell-mark-duplications-flag nil)
+     ;; don't consider that a word repeated twice is an error
+     (setq flyspell-mark-duplications-flag nil)
 
-         ;; fix the "enabling flyspell mode gave an error" bug
-         (setq flyspell-issue-welcome-flag nil)
+     ;; fix the "enabling flyspell mode gave an error" bug
+     (setq flyspell-issue-welcome-flag nil)
 
-         ;; ;; don't print messages for every word (when checking the
-         ;; ;; entire buffer) as it causes an enormous slowdown
-         ;; (setq flyspell-issue-message-flag nil)
+     ;; ;; don't print messages for every word (when checking the
+     ;; ;; entire buffer) as it causes an enormous slowdown
+     ;; (setq flyspell-issue-message-flag nil)
 
-         ;; dash character (`-') is considered as a word delimiter
-         (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
-         ;; '("francais" "deutsch8" "norsk")
+     ;; dash character (`-') is considered as a word delimiter
+     (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
+     ;; '("francais" "deutsch8" "norsk")
 
-         (defun leuven-flyspell-toggle-dictionary ()
-           "Change the dictionary."
-           (interactive)
-           (let ((dict (or ispell-local-dictionary
-                           ispell-dictionary)))
-             (setq dict (if (string= dict "francais") "american" "francais"))
-             (message "Switched to %S" dict)
-             (sit-for 0.5)
-             (ispell-change-dictionary dict)
-             (when flyspell-mode
-               ;; (flyspell-delete-all-overlays)
-               ;; if above is executed, the advised `org-mode-flyspell-verify'
-               ;; won't work anymore
-               (flyspell-buffer))))
+     (defun leuven-flyspell-toggle-dictionary ()
+       "Change the dictionary."
+       (interactive)
+       (let ((dict (or ispell-local-dictionary
+                       ispell-dictionary)))
+         (setq dict (if (string= dict "francais") "american" "francais"))
+         (message "Switched to %S" dict)
+         (sit-for 0.5)
+         (ispell-change-dictionary dict)
+         (when flyspell-mode
+           ;; (flyspell-delete-all-overlays)
+           ;; if above is executed, the advised `org-mode-flyspell-verify'
+           ;; won't work anymore
+           (flyspell-buffer))))
 
-         ;; spell-check your XHTML
-         (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)
+     ;; spell-check your XHTML
+     (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)
 
-         ;; key binding
-         (global-set-key
-           (kbd "C-$") 'flyspell-buffer)
-         (global-set-key
-          (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary))))
+     ;; key binding
+     (global-set-key
+       (kbd "C-$") 'flyspell-buffer)
+     (global-set-key
+      (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary)))
 #+end_src
 
 *************** TODO Have a look at `diction' (style and grammar for English)
@@ -2266,30 +2269,29 @@ previously detected error.
      (global-set-key
       (kbd "C-c d m") 'dictionary-match-words)
 
-     (eval-after-load "dictionary"
-       '(progn
+     (with-eval-after-load "dictionary"
 
-          (global-dictionary-tooltip-mode 1)
+      (global-dictionary-tooltip-mode 1)
 
-          ;; ;; server contacted for searching the dictionary
-          ;; (setq dictionary-server "localhost")
+      ;; ;; server contacted for searching the dictionary
+      ;; (setq dictionary-server "localhost")
 
-          ;; ;; connect via a HTTP proxy (using the CONNECT command)
-          ;; (setq dictionary-use-http-proxy t)
-          ;;
-          ;; ;; name of the HTTP proxy to use
-          ;; (setq dictionary-proxy-server "hellman") ; XXX
-          ;;
-          ;; ;; port of the proxy server
-          ;; (setq dictionary-proxy-port 8080) ; XXX
+      ;; ;; connect via a HTTP proxy (using the CONNECT command)
+      ;; (setq dictionary-use-http-proxy t)
+      ;;
+      ;; ;; name of the HTTP proxy to use
+      ;; (setq dictionary-proxy-server "hellman") ; XXX
+      ;;
+      ;; ;; port of the proxy server
+      ;; (setq dictionary-proxy-port 8080) ; XXX
 
-          ;; use proxy
-          (setq url-proxy-services
-                `(("http"     . ,(getenv "http_proxy"))
-                  ("ftp"      . ,(getenv "http_proxy"))
-                  ("no_proxy" . "^.*example.com")))
-                  ;; disable proxy for some hosts
-     )))
+      ;; use proxy
+      (setq url-proxy-services
+            `(("http"     . ,(getenv "http_proxy"))
+              ("ftp"      . ,(getenv "http_proxy"))
+              ("no_proxy" . "^.*example.com")))
+              ;; disable proxy for some hosts
+     ))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2444,11 +2446,12 @@ If you have some keystroke you never use, then:
 
   ;; maintain last change time stamps (`Time-stamp: <>' occurring within
   ;; the first 8 lines) in files edited by Emacs
-  (eval-after-load "time-stamp"
-    ;; format of the string inserted by `M-x time-stamp':
-    ;; `YYYY-MM-DD Weekday HH:MM' (see `system-time-locale' for non-numeric
-    ;; formatted items of time)
-    '(setq-default time-stamp-format "%:y-%02m-%02d %3a %02H:%02M"))
+  (with-eval-after-load "time-stamp"
+
+   ;; format of the string inserted by `M-x time-stamp':
+   ;; `YYYY-MM-DD Weekday HH:MM' (see `system-time-locale' for non-numeric
+   ;; formatted items of time)
+   (setq-default time-stamp-format "%:y-%02m-%02d %3a %02H:%02M"))
 
   (GNUEmacs
    ;; update the copyright notice in current buffer
@@ -2641,7 +2644,7 @@ In Diff mode, I can select a hunk and apply it (in reverse). Nice following
             'leuven--diff-make-fine-diffs-if-necessary)
 #+end_src
 
-In EDiff, press:
+In Ediff, press:
 
 - =?= to get help
 
@@ -2658,23 +2661,24 @@ In EDiff, press:
   ;; (try-require 'ediff-hook)
   ;; already loaded (by Emacs?)
 
-  (eval-after-load "ediff"
-    '(progn
-       ;; (setq-default ediff-ignore-similar-regions  t)
+  (with-eval-after-load "ediff"
 
-       (setq ediff-grab-mouse 'maybe)
+   ;; (setq-default ediff-ignore-similar-regions  t)
 
-       ;; do everything in one frame
-       (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+   ;; sometimes grab the mouse and put it in the control frame
+   (setq ediff-grab-mouse 'maybe)
 
-       ;; ;; split the window depending on the frame width
-       ;; (setq ediff-split-window-function
-       ;;       (lambda (&optional arg)
-       ;;         (if (> (frame-width) 160)
-       ;;             (split-window-horizontally arg)
-       ;;           (split-window-vertically
-       ;;            arg))))
-       ))
+   ;; do everything in one frame
+   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+   ;; split the window (horizontally or vertically) depending on the frame
+   ;; width
+   (setq ediff-split-window-function
+         (lambda (&optional arg)
+           (if (> (frame-width) 160)
+               (split-window-horizontally arg)
+             (split-window-vertically
+              arg)))))
 #+end_src
 
 For *comparing two directories*, you can use [[http://meldmerge.org/][Meld]].
@@ -7751,7 +7755,7 @@ The exporter will *add* a language option to the =babel= package according to th
 What about =apacite= and =tikz= in =org-latex-packages-alist=?
 
 #+begin_src emacs-lisp
-       (defun leuven--change-pdflatex-packages ()
+       (defun leuven--change-pdflatex-packages (backend)
          "When exporting an Org document to LaTeX, automatically select the
        LaTeX packages to include (depending on PDFLaTeX vs XeLaTeX)."
 

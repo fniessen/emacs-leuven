@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130731.1051
+;; Version: 20130801.1144
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130731.1051]--")
+(message "* --[ Loading Emacs Leuven 20130801.1144]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -332,6 +332,13 @@
                                              'add-subdirs 'recursive)
                       (leuven-add-to-load-path dir-or-file)))
                   (setq files (cdr files))))))))
+
+;; wrapper around `eval-after-load'
+(defmacro with-eval-after-load (mode &rest body)
+  "`eval-after-load' MODE evaluate BODY."
+  (declare (indent defun))
+  `(eval-after-load ,mode
+     '(progn ,@body)))
 
 ;;*** Site-lisp
 
@@ -728,10 +735,10 @@
 
   (leuven--section "10.4 (emacs)Apropos")
 
-  (eval-after-load "apropos"
+  (with-eval-after-load "apropos"
 
-    ;; check all variables and non-interactive functions as well
-    '(setq apropos-do-all t))
+   ;; check all variables and non-interactive functions as well
+   (setq apropos-do-all t))
 
   ;; show variables whose name matches the pattern
   (GNUEmacs
@@ -752,68 +759,67 @@
   (global-set-key
    (kbd "<C-f1>") 'info-lookup-symbol)
 
-  (eval-after-load "info"
-    '(progn
-       ;; Don't play with `Info-directory-list', it's not intended to be
-       ;; settable by the user. When `info' is called, this variable is
-       ;; populated from:
-       ;; 1. the `INFOPATH' environment variable and/or
-       ;; 2. the `Info-default-directory-list' variable -- non-existent
-       ;;    directories will be removed when copied to `Info-directory-list'
+  (with-eval-after-load "info"
+   ;; Don't play with `Info-directory-list', it's not intended to be
+   ;; settable by the user. When `info' is called, this variable is
+   ;; populated from:
+   ;; 1. the `INFOPATH' environment variable and/or
+   ;; 2. the `Info-default-directory-list' variable -- non-existent
+   ;;    directories will be removed when copied to `Info-directory-list'
 
-       ;; list of additional directories to search for Info documentation
-       ;; files (in the order they are listed)
-       (setq Info-default-directory-list
-             ;; FIXME `Info-additional-directory-list' does not work
-             (cond (running-ms-windows
-                    ;; EmacsW32 doesn't see `INFOPATH'...
-                    `(
-                      ,(expand-file-name
-                        (concat (file-name-directory (locate-library "org"))
-                                "../doc/"))
-                      ,(expand-file-name (concat leuven-local-repos-directory "gnus/texi/"))
-                      "c:/cygwin/usr/share/info/"
-                      ,@Info-default-directory-list))
-                   (t
-                    ;; best to set the `INFOPATH' environment variable
-                    ;; (outside of Emacs, in the same shell from which you
-                    ;; invoke Emacs)
-                    nil)))
+   ;; list of additional directories to search for Info documentation
+   ;; files (in the order they are listed)
+   (setq Info-default-directory-list
+         ;; FIXME `Info-additional-directory-list' does not work
+         (cond (running-ms-windows
+                ;; EmacsW32 doesn't see `INFOPATH'...
+                `(
+                  ,(expand-file-name
+                    (concat (file-name-directory (locate-library "org"))
+                            "../doc/"))
+                  ,(expand-file-name (concat leuven-local-repos-directory "gnus/texi/"))
+                  "c:/cygwin/usr/share/info/"
+                  ,@Info-default-directory-list))
+               (t
+                ;; best to set the `INFOPATH' environment variable
+                ;; (outside of Emacs, in the same shell from which you
+                ;; invoke Emacs)
+                nil)))
 
-       (GNUEmacs
-        ;; with `info+.el', you can merge an Info node with its subnodes
-        ;; into the same buffer, by calling `Info-merge-subnodes' (bound to
-        ;; `+')
-        (try-require 'info+-XXX))  ;; error finding dir file
+   (GNUEmacs
+    ;; with `info+.el', you can merge an Info node with its subnodes
+    ;; into the same buffer, by calling `Info-merge-subnodes' (bound to
+    ;; `+')
+    (try-require 'info+-XXX))  ;; error finding dir file
 
-       ;; some info related functions
-       ;; (to insert links such as `(info "(message)Insertion Variables")')
-       (when (locate-library "rs-info")
-         (autoload 'rs-info-insert-current-node "rs-info"
-           "Insert reference to current Info node using STYPE in buffer." t)
-         (autoload 'rs-info-boxquote "rs-info"
-           "Yank text (from an info node), box it and use current info node as title." t)
-         (autoload 'rs-info-reload "rs-info"
-           "Reload current info node." t)
-         (autoload 'rs-info-insert-node-for-variable "rs-info"
-           "Insert a custom style info node for the top level form at point." t)
-         (defalias 'boxquote-info 'rs-info-boxquote))
-       ))
+   ;; some info related functions
+   ;; (to insert links such as `(info "(message)Insertion Variables")')
+   (when (locate-library "rs-info")
+     (autoload 'rs-info-insert-current-node "rs-info"
+       "Insert reference to current Info node using STYPE in buffer." t)
+     (autoload 'rs-info-boxquote "rs-info"
+       "Yank text (from an info node), box it and use current info node as title." t)
+     (autoload 'rs-info-reload "rs-info"
+       "Reload current info node." t)
+     (autoload 'rs-info-insert-node-for-variable "rs-info"
+       "Insert a custom style info node for the top level form at point." t)
+     (defalias 'boxquote-info 'rs-info-boxquote))
+   )
 
   ;; get a Unix manual page of the item under point
   (global-set-key
    (kbd "<S-f1>") 'man-follow)
 
-  (eval-after-load "man"
-    ;; make the manpage the current buffer in the current window
-    '(setq Man-notify-method 'pushy))
+  (with-eval-after-load "man"
+   ;; make the manpage the current buffer in the current window
+   (setq Man-notify-method 'pushy))
 
   ;; alias man to woman
   (defalias 'man 'woman)
 
   ;; decode and browse Unix man-pages "W.o. (without) Man"
-  (eval-after-load "woman"
-    '(defalias 'man 'woman))
+  (with-eval-after-load "woman"
+   (defalias 'man 'woman))
 
 ) ;; chapter 10 ends here
 
@@ -931,26 +937,26 @@
 
   (leuven--section "13.7 (emacs)Bookmarks")
 
-  (eval-after-load "bookmark"
-    '(progn
-       ;; where to save the bookmarks
-       (setq bookmark-default-file "~/.emacs.d/bookmarks.bmk")
-       ;;! a .txt extension would load Org at the time bookmark is required!
+  (with-eval-after-load "bookmark"
 
-       ;; each command that sets a bookmark will also save your bookmarks
-       (setq bookmark-save-flag 1)))
+   ;; where to save the bookmarks
+   (setq bookmark-default-file "~/.emacs.d/bookmarks.bmk")
+   ;;! a .txt extension would load Org at the time bookmark is required!
+
+   ;; each command that sets a bookmark will also save your bookmarks
+   (setq bookmark-save-flag 1))
 
   ;; extensions to standard library `bookmark.el'
-  (eval-after-load "bookmark-XXX" ;; XXX here does not work!?
-    '(progn
-        (try-require 'bookmark+++XXX)
+  (with-eval-after-load "bookmark-XXX" ;; XXX here does not work!?
 
-        ;; bookmarks to automatically highlight when jumped to
-        (setq bmkp-auto-light-when-jump 'any-bookmark)
+   (try-require 'bookmark+++XXX)
 
-        ;; we will often be going back and forth between using Bookmark+ and
-        ;; using vanilla Emacs
-        (setq bmkp-propertize-bookmark-names-flag nil)))
+   ;; bookmarks to automatically highlight when jumped to
+   (setq bmkp-auto-light-when-jump 'any-bookmark)
+
+   ;; we will often be going back and forth between using Bookmark+ and
+   ;; using vanilla Emacs
+   (setq bmkp-propertize-bookmark-names-flag nil))
 
 ) ;; chapter 13 ends here
 
@@ -1298,8 +1304,8 @@
                (lambda ()
                  (require 'fuzzy)))
 
-     (eval-after-load "fuzzy"
-       '(turn-on-fuzzy-isearch))))
+     (with-eval-after-load "fuzzy"
+      (turn-on-fuzzy-isearch))))
 
 ;;** 15.4 (info "(emacs)Regexp Search")
 
@@ -1420,89 +1426,84 @@
     ;; unmodified
     (add-hook 'first-change-hook
               (lambda ()
-                (when (eq (aref (buffer-name) 0) ?\s) ;; buffer starts with " "
-                  (message "First-change-hook called for temporary buffer `%s' (in `%s')"
-                           (buffer-name)
-                           major-mode))
-                (cond ((derived-mode-p 'text-mode) ;; org-mode
-                       (flyspell-mode 1))
-                      ((derived-mode-p 'prog-mode)
-                       (flyspell-prog-mode)) ;; `ispell-comments-and-strings'
-                      ;; prevent flyspell from finding mistakes in the code,
-                      ;; which is pretty cool
-                      )))
+                ;; skip temporary buffers
+                ;; (XXX another test could be skipping buffers not associated with a file)
+                (unless (eq (aref (buffer-name) 0) ?\s) ;; buffer starts with " "
+                  (cond ((derived-mode-p 'text-mode) ;; org-mode
+                         (flyspell-mode 1))
+                        ((derived-mode-p 'prog-mode)
+                         (flyspell-prog-mode)) ;; `ispell-comments-and-strings'
+                        ;; prevent flyspell from finding mistakes in the code,
+                        ;; which is pretty cool
+                        ))))
 
-    (eval-after-load "ispell"
-      ;; so that following modifications won't be lost when `ispell' is
-      ;; loaded
-      '(progn
+    (with-eval-after-load "ispell"
 
-         ;; save the personal dictionary without confirmation
-         (setq ispell-silently-savep t)
+     ;; save the personal dictionary without confirmation
+     (setq ispell-silently-savep t)
 
-         ;; extensions and extra switches to pass to the `ispell' program
-         (cond
+     ;; extensions and extra switches to pass to the `ispell' program
+     (cond
 
-          ((string-match "aspell" ispell-program-name)
-           (setq ispell-extra-args '("--sug-mode=ultra" "-C"))
-           (setq ispell-really-aspell t)
-           (setq ispell-really-hunspell nil))
+      ((string-match "aspell" ispell-program-name)
+       (setq ispell-extra-args '("--sug-mode=ultra" "-C"))
+       (setq ispell-really-aspell t)
+       (setq ispell-really-hunspell nil))
 
-          ((string-match "ispell" ispell-program-name)
-           (setq ispell-extra-args '())
-           (setq ispell-really-aspell nil)
-           (setq ispell-really-hunspell nil)))
+      ((string-match "ispell" ispell-program-name)
+       (setq ispell-extra-args '())
+       (setq ispell-really-aspell nil)
+       (setq ispell-really-hunspell nil)))
 
-         ))
+     )
 
     ;; don't use `M-TAB' to auto-correct the current word (only use `C-.')
     (setq flyspell-use-meta-tab nil)
     ;; FIXME M-TAB is still bound to `flyspell-auto-correct-word' when this
     ;; chunk of code is placed within (eval-after-load "flyspell"...)
 
-    (eval-after-load "flyspell"
-      '(progn
+    (with-eval-after-load "flyspell"
 
 (message "flyspell has been loaded!!!")
 (sit-for 2)
 
-         ;; don't consider that a word repeated twice is an error
-         (setq flyspell-mark-duplications-flag nil)
+     ;; don't consider that a word repeated twice is an error
+     (setq flyspell-mark-duplications-flag nil)
 
-         ;; fix the "enabling flyspell mode gave an error" bug
-         (setq flyspell-issue-welcome-flag nil)
+     ;; fix the "enabling flyspell mode gave an error" bug
+     (setq flyspell-issue-welcome-flag nil)
 
-         ;; ;; don't print messages for every word (when checking the
-         ;; ;; entire buffer) as it causes an enormous slowdown
-         ;; (setq flyspell-issue-message-flag nil)
+     ;; ;; don't print messages for every word (when checking the
+     ;; ;; entire buffer) as it causes an enormous slowdown
+     ;; (setq flyspell-issue-message-flag nil)
 
-         ;; dash character (`-') is considered as a word delimiter
-         (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
-         ;; '("francais" "deutsch8" "norsk")
+     ;; dash character (`-') is considered as a word delimiter
+     (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
+     ;; '("francais" "deutsch8" "norsk")
 
-         (defun leuven-flyspell-toggle-dictionary ()
-           "Change the dictionary."
-           (interactive)
-           (let ((dict (or ispell-local-dictionary
-                           ispell-dictionary)))
-             (setq dict (if (string= dict "francais") "american" "francais"))
-             (message "Switched to %S" dict)
-             (sit-for 0.5)
-             (ispell-change-dictionary dict)
-             (when flyspell-mode
-               ;; (flyspell-delete-all-overlays)
-               ;; if above is executed, the advised `org-mode-flyspell-verify'
-               ;; won't work anymore
-               (flyspell-buffer))))
+     (defun leuven-flyspell-toggle-dictionary ()
+       "Change the dictionary."
+       (interactive)
+       (let ((dict (or ispell-local-dictionary
+                       ispell-dictionary)))
+         (setq dict (if (string= dict "francais") "american" "francais"))
+         (message "Switched to %S" dict)
+         (sit-for 0.5)
+         (ispell-change-dictionary dict)
+         (when flyspell-mode
+           ;; (flyspell-delete-all-overlays)
+           ;; if above is executed, the advised `org-mode-flyspell-verify'
+           ;; won't work anymore
+           (flyspell-buffer))))
 
-         ;; spell-check your XHTML
-         (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)
+     ;; spell-check your XHTML
+     (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)
 
-         ;; key binding
-         (global-set-key
-           (kbd "C-$") 'flyspell-buffer)
-         (global-set-key
-          (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary))))
+     ;; key binding
+     (global-set-key
+       (kbd "C-$") 'flyspell-buffer)
+     (global-set-key
+      (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary)))
 
   (when (locate-library "dictionary-init")
 
@@ -1535,30 +1536,29 @@
      (global-set-key
       (kbd "C-c d m") 'dictionary-match-words)
 
-     (eval-after-load "dictionary"
-       '(progn
+     (with-eval-after-load "dictionary"
 
-          (global-dictionary-tooltip-mode 1)
+      (global-dictionary-tooltip-mode 1)
 
-          ;; ;; server contacted for searching the dictionary
-          ;; (setq dictionary-server "localhost")
+      ;; ;; server contacted for searching the dictionary
+      ;; (setq dictionary-server "localhost")
 
-          ;; ;; connect via a HTTP proxy (using the CONNECT command)
-          ;; (setq dictionary-use-http-proxy t)
-          ;;
-          ;; ;; name of the HTTP proxy to use
-          ;; (setq dictionary-proxy-server "hellman") ; XXX
-          ;;
-          ;; ;; port of the proxy server
-          ;; (setq dictionary-proxy-port 8080) ; XXX
+      ;; ;; connect via a HTTP proxy (using the CONNECT command)
+      ;; (setq dictionary-use-http-proxy t)
+      ;;
+      ;; ;; name of the HTTP proxy to use
+      ;; (setq dictionary-proxy-server "hellman") ; XXX
+      ;;
+      ;; ;; port of the proxy server
+      ;; (setq dictionary-proxy-port 8080) ; XXX
 
-          ;; use proxy
-          (setq url-proxy-services
-                `(("http"     . ,(getenv "http_proxy"))
-                  ("ftp"      . ,(getenv "http_proxy"))
-                  ("no_proxy" . "^.*example.com")))
-                  ;; disable proxy for some hosts
-     )))
+      ;; use proxy
+      (setq url-proxy-services
+            `(("http"     . ,(getenv "http_proxy"))
+              ("ftp"      . ,(getenv "http_proxy"))
+              ("no_proxy" . "^.*example.com")))
+              ;; disable proxy for some hosts
+     ))
 
   ;; XXX excellent!
   (defun leuven-answers-define ()
@@ -1662,11 +1662,12 @@
 
   ;; maintain last change time stamps (`Time-stamp: <>' occurring within
   ;; the first 8 lines) in files edited by Emacs
-  (eval-after-load "time-stamp"
-    ;; format of the string inserted by `M-x time-stamp':
-    ;; `YYYY-MM-DD Weekday HH:MM' (see `system-time-locale' for non-numeric
-    ;; formatted items of time)
-    '(setq-default time-stamp-format "%:y-%02m-%02d %3a %02H:%02M"))
+  (with-eval-after-load "time-stamp"
+
+   ;; format of the string inserted by `M-x time-stamp':
+   ;; `YYYY-MM-DD Weekday HH:MM' (see `system-time-locale' for non-numeric
+   ;; formatted items of time)
+   (setq-default time-stamp-format "%:y-%02m-%02d %3a %02H:%02M"))
 
   (GNUEmacs
    ;; update the copyright notice in current buffer
@@ -1828,23 +1829,24 @@
   ;; (try-require 'ediff-hook)
   ;; already loaded (by Emacs?)
 
-  (eval-after-load "ediff"
-    '(progn
-       ;; (setq-default ediff-ignore-similar-regions  t)
+  (with-eval-after-load "ediff"
 
-       (setq ediff-grab-mouse 'maybe)
+   ;; (setq-default ediff-ignore-similar-regions  t)
 
-       ;; do everything in one frame
-       (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+   ;; sometimes grab the mouse and put it in the control frame
+   (setq ediff-grab-mouse 'maybe)
 
-       ;; ;; split the window depending on the frame width
-       ;; (setq ediff-split-window-function
-       ;;       (lambda (&optional arg)
-       ;;         (if (> (frame-width) 160)
-       ;;             (split-window-horizontally arg)
-       ;;           (split-window-vertically
-       ;;            arg))))
-       ))
+   ;; do everything in one frame
+   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+   ;; split the window (horizontally or vertically) depending on the frame
+   ;; width
+   (setq ediff-split-window-function
+         (lambda (&optional arg)
+           (if (> (frame-width) 160)
+               (split-window-horizontally arg)
+             (split-window-vertically
+              arg)))))
 
 ;;** 18.11 (info "(emacs)Misc File Ops")
 
@@ -5518,7 +5520,7 @@ From %c"
        ;; typography
        (add-to-list 'org-latex-packages-alist '("frenchb" "babel") t)
 
-       (defun leuven--change-pdflatex-packages ()
+       (defun leuven--change-pdflatex-packages (backend)
          "When exporting an Org document to LaTeX, automatically select the
        LaTeX packages to include (depending on PDFLaTeX vs XeLaTeX)."
 
@@ -9331,7 +9333,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130731.1051]--")
+(message "* --[ Loaded Emacs Leuven 20130801.1144]--")
 
 (provide 'emacs-leuven)
 
