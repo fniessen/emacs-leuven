@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130802.2329
+;; Version: 20130803.0008
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130802.2329]--")
+(message "* --[ Loading Emacs Leuven 20130803.0008]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3742,6 +3742,19 @@
 
   (leuven--section "8.2 (org)Creating timestamps")
 
+  ;; prefer the future for incomplete dates
+  (setq org-read-date-prefer-future 'time)
+
+  ;; ;; advise `org-read-date' to bury the calendar buffer after selecting
+  ;; ;; a date, so it is out of the way
+  ;; (defadvice org-read-date
+  ;;   (after leuven-bury-calendar-after-org-read-date
+  ;;          (&optional with-time to-time from-string prompt
+  ;;          default-time default-input) protect)
+  ;;   "Bury the *Calendar* buffer after reading a date."
+  ;;   (bury-buffer "*Calendar*"))
+  ;; (ad-activate 'org-read-date)
+
   ;; number of minutes to round time stamps to
   (setq org-time-stamp-rounding-minutes '(1 1))
 
@@ -5257,7 +5270,7 @@ From %c"
   ;; 11.7 interpret "_" and "^" for export when braces are used
   (setq org-export-with-sub-superscripts '{})
 
-  ;; 11.7 convert LaTeX fragments to images when exporting to HTML
+  ;; 11.7 convert LaTeX fragments to images when exporting to HTML (using MathJax)
   (setq org-export-with-LaTeX-fragments t) ;; XXX undefined?
 
   ;; highlight LaTeX and related syntax
@@ -5618,30 +5631,31 @@ From %c"
 
 ;;* 14 (info "(org)Working With Source Code")
 
-  ;; literate programming and reproducible research
+  (with-eval-after-load "ob-core"
 
-  ;; make the images in the Emacs buffer automatically refresh after
-  ;; execution
-  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+    ;; make the images in the Emacs buffer automatically refresh after
+    ;; execution
+    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
 
+  (with-eval-after-load "ob-sh"
 
-  ;; command used to invoke a shell
-  (setq org-babel-sh-command "bash")
+    ;; command used to invoke a shell
+    (setq org-babel-sh-command "bash")
 
-  ;; use plain old syntax (instead of `$(...)') for Cygwin
-  (setq org-babel-sh-var-quote-fmt
-        "`cat <<'BABEL_TABLE'\n%s\nBABEL_TABLE\n`")
+    ;; use plain old syntax (instead of `$(...)') for Cygwin
+    (setq org-babel-sh-var-quote-fmt
+          "`cat <<'BABEL_TABLE'\n%s\nBABEL_TABLE\n`"))
 
 ;;** 14.2 (info "(org)Editing source code")
 
   (leuven--section "14.2 (org)Editing source code")
 
-(with-eval-after-load "org-src"
+  (with-eval-after-load "org-src"
 
-  ;; mapping languages to their major mode (for editing the source code block
-  ;; with `C-c '')
-  (add-to-list 'org-src-lang-modes
-               '("dot" . graphviz-dot)))
+    ;; mapping languages to their major mode (for editing the source code block
+    ;; with `C-c '')
+    (add-to-list 'org-src-lang-modes
+                 '("dot" . graphviz-dot)))
 
   ;; display the source code edit buffer in the current window, keeping
   ;; all other windows
@@ -5827,21 +5841,23 @@ From %c"
 
   (leuven--section "15.2 (org)Easy Templates")
 
-  ;; keep lower-case (easy templates)
-  (setq org-structure-template-alist
-        '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
-          ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
-          ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
-          ("v" "#+begin_verse\n?\n#+end_verse" "<verse>\n?\n</verse>")
-          ("c" "#+begin_center\n?\n#+end_center" "<center>\n?\n</center>")
-          ("l" "#+begin_latex\n?\n#+end_latex" "<literal style=\"latex\">\n?\n</literal>")
-          ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
-          ("h" "#+begin_html\n?\n#+end_html" "<literal style=\"html\">\n?\n</literal>")
-          ("H" "#+html: " "<literal style=\"html\">?</literal>")
-          ("a" "#+begin_ascii\n?\n#+end_ascii")
-          ("A" "#+ascii: ")
-          ("i" "#+index: ?" "#+index: ?")
-          ("I" "#+include: %file ?" "<include file=%file markup=\"?\">")))
+  (with-eval-after-load "org"
+
+    ;; keep lower-case (easy templates)
+    (setq org-structure-template-alist
+          '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
+            ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
+            ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
+            ("v" "#+begin_verse\n?\n#+end_verse" "<verse>\n?\n</verse>")
+            ("c" "#+begin_center\n?\n#+end_center" "<center>\n?\n</center>")
+            ("l" "#+begin_latex\n?\n#+end_latex" "<literal style=\"latex\">\n?\n</literal>")
+            ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
+            ("h" "#+begin_html\n?\n#+end_html" "<literal style=\"html\">\n?\n</literal>")
+            ("H" "#+html: " "<literal style=\"html\">?</literal>")
+            ("a" "#+begin_ascii\n?\n#+end_ascii")
+            ("A" "#+ascii: ")
+            ("i" "#+index: ?" "#+index: ?")
+            ("I" "#+include: %file ?" "<include file=%file markup=\"?\">"))))
 
 ;;** 15.3 (info "(org)Speed keys")
 
@@ -5920,31 +5936,17 @@ From %c"
                   (kbd "tab") 'yas/next-field) ;; `yas/next-field-or-maybe-expand'?
                 )))
 
-    ;; keep my encrypted data (like account passwords) in my Org mode
-    ;; files with a special tag instead
-    (with-eval-after-load "org"
+  ;; keep my encrypted data (like account passwords) in my Org mode
+  ;; files with a special tag instead
+  (with-eval-after-load "org"
 
-       (when (try-require 'org-crypt) ;; loads org, gnus-sum, etc...
+    (when (try-require 'org-crypt) ;; loads org, gnus-sum, etc...
 
-         ;; encrypt all entries before saving
-         (org-crypt-use-before-save-magic)
+      ;; encrypt all entries before saving
+      (org-crypt-use-before-save-magic)
 
-         ;; which tag is used to mark headings to be encrypted
-         (setq org-tags-exclude-from-inheritance '("crypt"))))
-
-  ;; prefer the future for incomplete dates
-  (setq org-read-date-prefer-future 'time)
-
-  ;; ;; advise `org-read-date' to bury the calendar buffer after selecting
-  ;; ;; a date, so it is out of the way
-  ;; (defadvice org-read-date
-  ;;   (after leuven-bury-calendar-after-org-read-date
-  ;;          (&optional with-time to-time from-string prompt
-  ;;          default-time default-input) protect)
-  ;;   "Bury the *Calendar* buffer after reading a date."
-  ;;   (bury-buffer "*Calendar*"))
-  ;; (ad-activate 'org-read-date)
-
+      ;; which tag is used to mark headings to be encrypted
+      (setq org-tags-exclude-from-inheritance '("crypt"))))
 
   ;; don't pad tangled code with newlines
   (setq org-babel-tangle-pad-newline nil)
@@ -9305,7 +9307,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130802.233]--")
+(message "* --[ Loaded Emacs Leuven 20130803.0009]--")
 
 (provide 'emacs-leuven)
 

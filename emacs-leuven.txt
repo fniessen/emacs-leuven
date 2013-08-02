@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-02 Fri 23:29>
+# Time-stamp: <2013-08-03 Sat 00:08>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -5378,6 +5378,19 @@ something best implemented with tags.
 
   (leuven--section "8.2 (org)Creating timestamps")
 
+  ;; prefer the future for incomplete dates
+  (setq org-read-date-prefer-future 'time)
+
+  ;; ;; advise `org-read-date' to bury the calendar buffer after selecting
+  ;; ;; a date, so it is out of the way
+  ;; (defadvice org-read-date
+  ;;   (after leuven-bury-calendar-after-org-read-date
+  ;;          (&optional with-time to-time from-string prompt
+  ;;          default-time default-input) protect)
+  ;;   "Bury the *Calendar* buffer after reading a date."
+  ;;   (bury-buffer "*Calendar*"))
+  ;; (ad-activate 'org-read-date)
+
   ;; number of minutes to round time stamps to
   (setq org-time-stamp-rounding-minutes '(1 1))
 
@@ -7422,7 +7435,7 @@ To list all available entities, run =M-x org-entities-help=.
   ;; 11.7 interpret "_" and "^" for export when braces are used
   (setq org-export-with-sub-superscripts '{})
 
-  ;; 11.7 convert LaTeX fragments to images when exporting to HTML
+  ;; 11.7 convert LaTeX fragments to images when exporting to HTML (using MathJax)
   (setq org-export-with-LaTeX-fragments t) ;; XXX undefined?
 #+end_src
 
@@ -7895,22 +7908,27 @@ See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-9-2][9.2 T
 
 ** Working With Source Code
 
+Literate programming and reproducible research.
+
 #+begin_src emacs-lisp
 ;;* 14 (info "(org)Working With Source Code")
 
-  ;; literate programming and reproducible research
+  (with-eval-after-load "ob-core"
 
-  ;; make the images in the Emacs buffer automatically refresh after
-  ;; execution
-  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+    ;; make the images in the Emacs buffer automatically refresh after
+    ;; execution
+    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
+#+end_src
 
+#+begin_src emacs-lisp
+  (with-eval-after-load "ob-sh"
 
-  ;; command used to invoke a shell
-  (setq org-babel-sh-command "bash")
+    ;; command used to invoke a shell
+    (setq org-babel-sh-command "bash")
 
-  ;; use plain old syntax (instead of `$(...)') for Cygwin
-  (setq org-babel-sh-var-quote-fmt
-        "`cat <<'BABEL_TABLE'\n%s\nBABEL_TABLE\n`")
+    ;; use plain old syntax (instead of `$(...)') for Cygwin
+    (setq org-babel-sh-var-quote-fmt
+          "`cat <<'BABEL_TABLE'\n%s\nBABEL_TABLE\n`"))
 #+end_src
 
 *** Editing source code
@@ -7924,12 +7942,12 @@ See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-9-2][9.2 T
 Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org-src"
+  (with-eval-after-load "org-src"
 
-  ;; mapping languages to their major mode (for editing the source code block
-  ;; with `C-c '')
-  (add-to-list 'org-src-lang-modes
-               '("dot" . graphviz-dot)))
+    ;; mapping languages to their major mode (for editing the source code block
+    ;; with `C-c '')
+    (add-to-list 'org-src-lang-modes
+                 '("dot" . graphviz-dot)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8166,21 +8184,23 @@ function is loaded (AFTER having been adviced).
 
   (leuven--section "15.2 (org)Easy Templates")
 
-  ;; keep lower-case (easy templates)
-  (setq org-structure-template-alist
-        '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
-          ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
-          ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
-          ("v" "#+begin_verse\n?\n#+end_verse" "<verse>\n?\n</verse>")
-          ("c" "#+begin_center\n?\n#+end_center" "<center>\n?\n</center>")
-          ("l" "#+begin_latex\n?\n#+end_latex" "<literal style=\"latex\">\n?\n</literal>")
-          ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
-          ("h" "#+begin_html\n?\n#+end_html" "<literal style=\"html\">\n?\n</literal>")
-          ("H" "#+html: " "<literal style=\"html\">?</literal>")
-          ("a" "#+begin_ascii\n?\n#+end_ascii")
-          ("A" "#+ascii: ")
-          ("i" "#+index: ?" "#+index: ?")
-          ("I" "#+include: %file ?" "<include file=%file markup=\"?\">")))
+  (with-eval-after-load "org"
+
+    ;; keep lower-case (easy templates)
+    (setq org-structure-template-alist
+          '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
+            ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
+            ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
+            ("v" "#+begin_verse\n?\n#+end_verse" "<verse>\n?\n</verse>")
+            ("c" "#+begin_center\n?\n#+end_center" "<center>\n?\n</center>")
+            ("l" "#+begin_latex\n?\n#+end_latex" "<literal style=\"latex\">\n?\n</literal>")
+            ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
+            ("h" "#+begin_html\n?\n#+end_html" "<literal style=\"html\">\n?\n</literal>")
+            ("H" "#+html: " "<literal style=\"html\">?</literal>")
+            ("a" "#+begin_ascii\n?\n#+end_ascii")
+            ("A" "#+ascii: ")
+            ("i" "#+index: ?" "#+index: ?")
+            ("I" "#+include: %file ?" "<include file=%file markup=\"?\">"))))
 #+end_src
 
 *** Speed keys
@@ -8311,17 +8331,17 @@ To later decrypt an entry that's encrypted, use =M-x org-decrypt-entry= or =C-c
 C-r= (fits nicely with the meaning of "reveal").
 
 #+begin_src emacs-lisp
-    ;; keep my encrypted data (like account passwords) in my Org mode
-    ;; files with a special tag instead
-    (with-eval-after-load "org"
+  ;; keep my encrypted data (like account passwords) in my Org mode
+  ;; files with a special tag instead
+  (with-eval-after-load "org"
 
-       (when (try-require 'org-crypt) ;; loads org, gnus-sum, etc...
+    (when (try-require 'org-crypt) ;; loads org, gnus-sum, etc...
 
-         ;; encrypt all entries before saving
-         (org-crypt-use-before-save-magic)
+      ;; encrypt all entries before saving
+      (org-crypt-use-before-save-magic)
 
-         ;; which tag is used to mark headings to be encrypted
-         (setq org-tags-exclude-from-inheritance '("crypt"))))
+      ;; which tag is used to mark headings to be encrypted
+      (setq org-tags-exclude-from-inheritance '("crypt"))))
 #+end_src
 
 ** Consistency check
@@ -8441,20 +8461,6 @@ performance reasons)!
 ** Other
 
 #+begin_src emacs-lisp
-  ;; prefer the future for incomplete dates
-  (setq org-read-date-prefer-future 'time)
-
-  ;; ;; advise `org-read-date' to bury the calendar buffer after selecting
-  ;; ;; a date, so it is out of the way
-  ;; (defadvice org-read-date
-  ;;   (after leuven-bury-calendar-after-org-read-date
-  ;;          (&optional with-time to-time from-string prompt
-  ;;          default-time default-input) protect)
-  ;;   "Bury the *Calendar* buffer after reading a date."
-  ;;   (bury-buffer "*Calendar*"))
-  ;; (ad-activate 'org-read-date)
-
-
   ;; don't pad tangled code with newlines
   (setq org-babel-tangle-pad-newline nil)
 
