@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130802.2203
+;; Version: 20130802.2329
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130802.2203]--")
+(message "* --[ Loading Emacs Leuven 20130802.2329]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5200,6 +5200,10 @@ From %c"
 
   (with-eval-after-load "org"
 
+    ;;??? change the face of a headline (as an additional information) if
+    ;; it is marked DONE (to face `org-headline-done')
+    (setq org-fontify-done-headline t)
+
     ;; 11.1 hide the emphasis marker characters
     (setq org-hide-emphasis-markers t) ;; impact on table alignment!
 
@@ -5250,8 +5254,8 @@ From %c"
                    "NOK"
                    "NOK" "✘")))
 
-  ;; 11.7 don't interpret "_" and "^" for export
-  (setq org-export-with-sub-superscripts nil)
+  ;; 11.7 interpret "_" and "^" for export when braces are used
+  (setq org-export-with-sub-superscripts '{})
 
   ;; 11.7 convert LaTeX fragments to images when exporting to HTML
   (setq org-export-with-LaTeX-fragments t) ;; XXX undefined?
@@ -5262,12 +5266,18 @@ From %c"
           script
           entities))
 
+;;* 12 (info "(org)Exporting")
+
   ;; bind the exporter dispatcher to a key sequence
   (with-eval-after-load "org"
+
+    ;; libraries in this list will be loaded once the export framework is needed
+    (setq org-export-backends '(ascii html icalendar latex odt))
 
     ;; (define-key org-mode-map
     ;;   (kbd "C-c C-e") 'org-export-dispatch)
 
+    ;; XXX temporary (until Org 8 is bundled within Emacs)
     (define-key org-mode-map
       (kbd "C-c C-e")
       (lambda ()
@@ -5276,8 +5286,6 @@ From %c"
             (org-export-dispatch)
           (message "Please upgrade to Org 8...")
           (sit-for 1)))))
-
-;;* 12 (info "(org)Exporting")
 
 ;;** 12.2 (info "(org)Export options")
 
@@ -5292,7 +5300,7 @@ From %c"
     ;; 13.1.5 export all drawers (including properties)
     ;; (setq org-export-with-drawers t)
 
-    ;; default language of HTML export (see `org-export-language-setup')
+    ;; default language of HTML export (see `org-export-language-setup' XXX)
     (setq org-export-default-language "en")
 
     ;; include priority cookies in export
@@ -5325,33 +5333,33 @@ From %c"
 
 ;;** 12.5 (info "(org)HTML export")
 
-  ;; output type to be used by htmlize when formatting code snippets
-  (setq org-export-htmlize-output-type 'css)
-
-  ;; ;; URL pointing to a CSS file defining text colors for htmlized Emacs buffers
-  ;; (setq org-export-htmlized-org-css-url "style.css")
-
-  ;; XML declaration
-  (setq org-html-xml-declaration
-        '(("html" . "<!-- <xml version=\"1.0\"> -->")
-          ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
-          ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>")))
-
-  ;; coding system for HTML export
-  (setq org-html-coding-system 'utf-8)
-
-  ;; format for the HTML postamble
-  (setq org-html-postamble
-        "  <div id=\"copyright\">\n    &copy; %d %a\n  </div>")
-
-  ;; 13.1.5 don't include the JavaScript snippets in exported HTML files
-  (setq org-html-style-include-scripts nil)
-
-  ;; 12.5.9 turn inclusion of the default CSS style off
-  (setq org-html-style-include-default nil)
-
   ;; Org HTML export engine
   (with-eval-after-load "ox-html"
+
+    ;; output type to be used by htmlize when formatting code snippets
+    (setq org-export-htmlize-output-type 'css) ;; XXX
+
+    ;; ;; URL pointing to a CSS file defining text colors for htmlized Emacs buffers
+    ;; (setq org-export-htmlized-org-css-url "style.css")
+
+    ;; XML declaration
+    (setq org-html-xml-declaration
+          '(("html" . "<!-- <xml version=\"1.0\"> -->")
+            ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
+            ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>")))
+
+    ;; coding system for HTML export
+    (setq org-html-coding-system 'utf-8)
+
+    ;; format for the HTML postamble
+    (setq org-html-postamble
+          "  <div id=\"copyright\">\n    &copy; %d %a\n  </div>")
+
+    ;; 13.1.5 don't include the JavaScript snippets in exported HTML files
+    (setq org-html-style-include-scripts nil)
+
+    ;; 12.5.9 turn inclusion of the default CSS style off
+    (setq org-html-style-include-default nil)
 
     ;; check that `tidy' is in PATH, and that configuration file exists
     (when (and (executable-find "tidy")
@@ -5376,7 +5384,7 @@ From %c"
       (add-to-list 'org-export-filter-final-output-functions
                    'leuven--export-html-final-filter))
 
-       ) ;; eval-after-load "ox-html" ends here
+    ) ;; eval-after-load "ox-html" ends here
 
 ;;** (info "(emacs-goodies-el)htmlize")
 
@@ -5442,127 +5450,126 @@ From %c"
   (leuven--section "12.6 (org)LaTeX and PDF export")
 
   ;; LaTeX back-end
-  (eval-after-load "ox-latex"
-    '(progn
+  (with-eval-after-load "ox-latex"
 
-       ;; markup for TODO keywords and for tags, as a printf format
-       (defun org-latex-format-headline (todo todo-type priority text tags)
-         "Default format function for an headline."
-         (concat (when todo
-                   (format "{%s\\textbf{\\textsc{\\textsf{%s}}}} "
-                           (cond ((equal todo-type 'todo) "\\color{red}")
-                                 ((equal todo-type 'done) "\\color{teal}")
-                                 (t "\\color{gray}"))
-                           todo))
-                 (when priority
-                   (format "\\framebox{\\#%c} " priority))
-                 text
-                 (when tags
-                   (format "\\hfill{}\\fbox{\\textsc{%s}}"
-                   ;; XXX source of "undefined control sequence"?
-                     (mapconcat 'identity tags ":")))))
+    ;; markup for TODO keywords and for tags, as a printf format
+    (defun org-latex-format-headline (todo todo-type priority text tags)
+      "Default format function for an headline."
+      (concat (when todo
+                (format "{%s\\textbf{\\textsc{\\textsf{%s}}}} "
+                        (cond ((equal todo-type 'todo) "\\color{red}")
+                              ((equal todo-type 'done) "\\color{teal}")
+                              (t "\\color{gray}"))
+                        todo))
+              (when priority
+                (format "\\framebox{\\#%c} " priority))
+              text
+              (when tags
+                (format "\\hfill{}\\fbox{\\textsc{%s}}"
+                ;; XXX source of "undefined control sequence"?
+                  (mapconcat 'identity tags ":")))))
 
-       ;; function for formatting the headline's text
-       (setq org-latex-format-headline-function
-             'org-latex-format-headline)
+    ;; function for formatting the headline's text
+    (setq org-latex-format-headline-function
+          'org-latex-format-headline)
 
-       ;; format string for links with unknown path type
-       (setq org-latex-link-with-unknown-path-format "\\colorbox{red}{%s}")
+    ;; format string for links with unknown path type
+    (setq org-latex-link-with-unknown-path-format "\\colorbox{red}{%s}")
 
-       (defun leuven--change-pdflatex-program (backend)
-         "When exporting an Org document to LaTeX, automatically run XeLaTeX,
-       if asked."
+    (defun leuven--change-pdflatex-program (backend)
+      "When exporting an Org document to LaTeX, automatically run XeLaTeX,
+    if asked."
 
-         ;; default (in Windows binary)
-         (setq org-latex-pdf-process
-               (if (executable-find "latexmk")
-                   '("latexmk -pdf %f && rm -f %b.fdb_latexmk %b.fls %b.ilg %b.ind %b.*.vrb")
-                 '("pdflatex -interaction=nonstopmode -output-directory=%o %f"
-                   "pdflatex -interaction=nonstopmode -output-directory=%o %f"
-                   "pdflatex -interaction=nonstopmode -output-directory=%o %f")))
+      ;; default (in Windows binary)
+      (setq org-latex-pdf-process
+            (if (executable-find "latexmk")
+                '("latexmk -pdf %f && rm -f %b.fdb_latexmk %b.fls %b.ilg %b.ind %b.*.vrb")
+              '("pdflatex -interaction=nonstopmode -output-directory=%o %f"
+                "pdflatex -interaction=nonstopmode -output-directory=%o %f"
+                "pdflatex -interaction=nonstopmode -output-directory=%o %f")))
 
-         (when (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
-           (setq org-latex-pdf-process
-                 (if (executable-find "latexmk")
-                     '("latexmk -pdf -pdflatex=xelatex %f && rm -f %b.fdb_latexmk %b.fls %b.ilg %b.ind %b.*.vrb")
-                   '("xelatex -interaction=nonstopmode -output-directory=%o %f"
-                     "xelatex -interaction=nonstopmode -output-directory=%o %f"
-                     "xelatex -interaction=nonstopmode -output-directory=%o %f")))))
+      (when (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
+        (setq org-latex-pdf-process
+              (if (executable-find "latexmk")
+                  '("latexmk -pdf -pdflatex=xelatex %f && rm -f %b.fdb_latexmk %b.fls %b.ilg %b.ind %b.*.vrb")
+                '("xelatex -interaction=nonstopmode -output-directory=%o %f"
+                  "xelatex -interaction=nonstopmode -output-directory=%o %f"
+                  "xelatex -interaction=nonstopmode -output-directory=%o %f")))))
 
-       ;; hook run before parsing an export buffer
-       (add-hook 'org-export-before-parsing-hook
-                 'leuven--change-pdflatex-program)
+    ;; hook run before parsing an export buffer
+    (add-hook 'org-export-before-parsing-hook
+              'leuven--change-pdflatex-program)
 
-       ;; export source code using `listings' (instead of `verbatim')
-       (setq org-latex-listings t)
+    ;; export source code using `listings' (instead of `verbatim')
+    (setq org-latex-listings t)
 
-       ;; 12.6.2 default packages to be inserted in the header
-       ;; include the `listings' package for fontified source code
-       (add-to-list 'org-latex-packages-alist '("" "listings") t)
+    ;; 12.6.2 default packages to be inserted in the header
+    ;; include the `listings' package for fontified source code
+    (add-to-list 'org-latex-packages-alist '("" "listings") t)
 
-       ;; include the `xcolor' package for colored source code
-       (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
+    ;; include the `xcolor' package for colored source code
+    (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
 
-       ;; include the `babel' package for language-specific hyphenation and
-       ;; typography
-       (add-to-list 'org-latex-packages-alist '("frenchb" "babel") t)
+    ;; include the `babel' package for language-specific hyphenation and
+    ;; typography
+    (add-to-list 'org-latex-packages-alist '("frenchb" "babel") t)
 
-       (defun leuven--change-pdflatex-packages (backend)
-         "When exporting an Org document to LaTeX, automatically select the
-       LaTeX packages to include (depending on PDFLaTeX vs XeLaTeX)."
+    (defun leuven--change-pdflatex-packages (backend)
+      "When exporting an Org document to LaTeX, automatically select the
+    LaTeX packages to include (depending on PDFLaTeX vs XeLaTeX)."
 
-         ;; unconditionally remove `inputenc' from all the default packages
-         (setq org-latex-packages-alist
-               (delete '("AUTO" "inputenc" t)
-                       org-latex-packages-alist))
+      ;; unconditionally remove `inputenc' from all the default packages
+      (setq org-latex-packages-alist
+            (delete '("AUTO" "inputenc" t)
+                    org-latex-packages-alist))
 
-         ;; unconditionally remove `fontenc' from all the default packages
-         (setq org-latex-packages-alist
-               (delete '("T1" "fontenc" t)
-                       org-latex-packages-alist))
+      ;; unconditionally remove `fontenc' from all the default packages
+      (setq org-latex-packages-alist
+            (delete '("T1" "fontenc" t)
+                    org-latex-packages-alist))
 
-         ;; unconditionally remove `textcomp' from all the default packages
-         (setq org-latex-packages-alist
-               (delete '("" "textcomp" t)
-                       org-latex-packages-alist))
+      ;; unconditionally remove `textcomp' from all the default packages
+      (setq org-latex-packages-alist
+            (delete '("" "textcomp" t)
+                    org-latex-packages-alist))
 
-         (if (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
-             ;; packages to include when XeLaTeX is used
-             (setq org-export-latex-packages-alist
-                   '(("" "fontspec" t)
-                     ("" "xunicode" t)
-                     ;; add here things like `\setmainfont{Georgia}'
-                     ))
+      (if (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
+          ;; packages to include when XeLaTeX is used
+          (setq org-export-latex-packages-alist
+                '(("" "fontspec" t)
+                  ("" "xunicode" t)
+                  ;; add here things like `\setmainfont{Georgia}'
+                  ))
 
-           ;; packages to include when PDFLaTeX is used
-           (setq org-export-latex-packages-alist
-                 '(("AUTO" "inputenc" t)
-                   ("T1" "fontenc" t)
-                   ("" "textcomp" t))))
+        ;; packages to include when PDFLaTeX is used
+        (setq org-export-latex-packages-alist
+              '(("AUTO" "inputenc" t)
+                ("T1" "fontenc" t)
+                ("" "textcomp" t))))
 
-         ;; packages to always include
-         (add-to-list 'org-export-latex-packages-alist
-                      '("frenchb" "babel") t))
+      ;; packages to always include
+      (add-to-list 'org-export-latex-packages-alist
+                   '("frenchb" "babel") t))
 
-       ;; hook run before parsing an export buffer
-       (add-hook 'org-export-before-parsing-hook
-                 'leuven--change-pdflatex-packages)
+    ;; hook run before parsing an export buffer
+    (add-hook 'org-export-before-parsing-hook
+              'leuven--change-pdflatex-packages)
 
-         ;; (setq org-latex-inputenc-alist '(("utf8" . "utf8x")))
+      ;; (setq org-latex-inputenc-alist '(("utf8" . "utf8x")))
 
-         (defun leuven--latex-filter-nbsp (text backend info)
-           "Ensure that non-breaking spaces are properly handled in LaTeX/Beamer export."
-           (when (memq backend '(latex beamer))
-             (replace-regexp-in-string " " "~" text)))
+      (defun leuven--latex-filter-nbsp (text backend info)
+        "Ensure that non-breaking spaces are properly handled in LaTeX/Beamer export."
+        (when (memq backend '(latex beamer))
+          (replace-regexp-in-string " " "~" text)))
 
-         ;; check that it's defined (in org-export.el)
-         (add-to-list 'org-export-filter-plain-text-functions
-                      'leuven--latex-filter-nbsp)
+      ;; check that it's defined (in org-export.el)
+      (add-to-list 'org-export-filter-plain-text-functions
+                   'leuven--latex-filter-nbsp)
 
-       ;; 12.6.5 default position for LaTeX figures
-       (setq org-latex-default-figure-position "!htbp")
+    ;; 12.6.5 default position for LaTeX figures
+    (setq org-latex-default-figure-position "!htbp")
 
-       )) ;; eval-after-load "ox-latex" ends here
+    ) ;; with-eval-after-load "ox-latex" ends here
 
   ;; 12.6.6 Beamer class export
   (with-eval-after-load "ox-beamer"
@@ -5586,31 +5593,28 @@ From %c"
     ;; default title of a frame containing an outline
     (setq org-beamer-outline-frame-title "Plan"))
 
-  ;; libraries in this list will be loaded once the export framework is needed
-  (setq org-export-backends '(ascii html icalendar latex odt))
-
   (with-eval-after-load "ox-odt"
 
-    ;; ;; convert "odt" format to "doc" format
-    ;; (setq org-odt-preferred-output-format "doc")
-
-    ) ;; eval-after-load "ox-odt" ends here
+    ;; convert "odt" format to "doc" format
+    (setq org-odt-preferred-output-format "doc"))
 
 ;;* 13 (info "(org)Publishing")
 
   (leuven--section "13 (org)Publishing")
 
-  ;; show message about files *not* published
-  (setq org-publish-list-skipped-files nil)
+  (with-eval-after-load "ox-publish"
 
-  ;; ;; 13.2 always publish all files
-  ;; ;; (do not use timestamp checking for skipping unmodified files)
-  ;; (setq org-publish-use-timestamps-flag nil)
+    ;; show message about files *not* published
+    (setq org-publish-list-skipped-files nil)
 
-  ;; 13.4 force publishing all files
-  (defun org-publish-all-force ()
-    (interactive)
-    (org-publish-all t))
+    ;; ;; 13.2 always publish all files
+    ;; ;; (do not use timestamp checking for skipping unmodified files)
+    ;; (setq org-publish-use-timestamps-flag nil)
+
+    ;; 13.4 force publishing all files
+    (defun org-publish-all-force ()
+      (interactive)
+      (org-publish-all t)))
 
 ;;* 14 (info "(org)Working With Source Code")
 
@@ -5692,11 +5696,6 @@ From %c"
   (global-set-key
     (kbd "C-c C-v C-d") 'org-babel-demarcate-block)
 
-
-  ;; view just the source-code blocks within the current Babel file
-  ;; (something logically equivalent to "tangle", but without creating a
-  ;; separate file)
-
   (defvar only-code-overlays nil "Overlays hiding non-code blocks.")
   (make-variable-buffer-local 'only-code-overlays)
 
@@ -5758,22 +5757,6 @@ From %c"
   ;; keep lower-case
   (setq org-babel-results-keyword "results")
 
-  ;; keep lower-case (easy templates)
-  (setq org-structure-template-alist
-        '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
-          ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
-          ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
-          ("v" "#+begin_verse\n?\n#+end_verse" "<verse>\n?\n</verse>")
-          ("c" "#+begin_center\n?\n#+end_center" "<center>\n?\n</center>")
-          ("l" "#+begin_latex\n?\n#+end_latex" "<literal style=\"latex\">\n?\n</literal>")
-          ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
-          ("h" "#+begin_html\n?\n#+end_html" "<literal style=\"html\">\n?\n</literal>")
-          ("H" "#+html: " "<literal style=\"html\">?</literal>")
-          ("a" "#+begin_ascii\n?\n#+end_ascii")
-          ("A" "#+ascii: ")
-          ("i" "#+index: ?" "#+index: ?")
-          ("I" "#+include: %file ?" "<include file=%file markup=\"?\">")))
-
 ;;** 14.7 (info "(org)Languages")
 
   (leuven--section "14.7 (org)Languages")
@@ -5813,10 +5796,9 @@ From %c"
   (defun leuven-switch-to-org-scratch ()
     "Switch to a temp Org buffer. If the region is active, insert it."
     (interactive)
-    (let ((contents
-           (and (region-active-p)
-                (buffer-substring (region-beginning)
-                                  (region-end)))))
+    (let ((contents (and (region-active-p)
+                         (buffer-substring (region-beginning)
+                                           (region-end)))))
       (find-file "/tmp/org-scratch.org")
       (if contents (insert contents))))
 
@@ -5841,32 +5823,50 @@ From %c"
   ;; ;; guess language
   ;; (add-hook 'org-mode-hook 'leuven--org-switch-language)
 
+;;** 15.2 (info "(org)Easy Templates")
+
+  (leuven--section "15.2 (org)Easy Templates")
+
+  ;; keep lower-case (easy templates)
+  (setq org-structure-template-alist
+        '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
+          ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
+          ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
+          ("v" "#+begin_verse\n?\n#+end_verse" "<verse>\n?\n</verse>")
+          ("c" "#+begin_center\n?\n#+end_center" "<center>\n?\n</center>")
+          ("l" "#+begin_latex\n?\n#+end_latex" "<literal style=\"latex\">\n?\n</literal>")
+          ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
+          ("h" "#+begin_html\n?\n#+end_html" "<literal style=\"html\">\n?\n</literal>")
+          ("H" "#+html: " "<literal style=\"html\">?</literal>")
+          ("a" "#+begin_ascii\n?\n#+end_ascii")
+          ("A" "#+ascii: ")
+          ("i" "#+index: ?" "#+index: ?")
+          ("I" "#+include: %file ?" "<include file=%file markup=\"?\">")))
+
 ;;** 15.3 (info "(org)Speed keys")
 
   (leuven--section "15.3 (org)Speed keys")
 
-  ;; activate single letter commands at beginning of a headline
-  (setq org-use-speed-commands t)
+  (with-eval-after-load "org"
+
+    ;; activate single letter commands at beginning of a headline
+    (setq org-use-speed-commands t))
 
 ;;** 15.4 (info "(org)Code evaluation security") issues
 
   (leuven--section "15.4 (org)Code evaluation security issues")
 
-  ;;!! don't be prompted on every code block evaluation
-  (setq org-confirm-babel-evaluate nil)
+  (with-eval-after-load "ob-core"
 
-;;** 15.6 Summary of (info "(org)In-buffer settings")
-
-  (leuven--section "15.6 Summary of (org)In-buffer settings")
-
-  ;; 15.6 don't skip even levels for the outline
-  (setq org-odd-levels-only nil)
+    ;;!! don't be prompted on every code block evaluation
+    (setq org-confirm-babel-evaluate nil))
 
 ;;** 15.8 A (info "(org)Clean view")
 
-  ;;??? change the face of a headline (as an additional information) if
-  ;; it is marked DONE (to face `org-headline-done')
-  (setq org-fontify-done-headline t)
+  (with-eval-after-load "org"
+
+    ;; 15.8 don't skip even levels for the outline
+    (setq org-odd-levels-only nil))
 
 ;;** 15.10 (info "(org)Interaction")
 
@@ -9305,7 +9305,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130802.2204]--")
+(message "* --[ Loaded Emacs Leuven 20130802.233]--")
 
 (provide 'emacs-leuven)
 
