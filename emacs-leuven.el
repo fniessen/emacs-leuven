@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130801.2357
+;; Version: 20130802.2203
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130801.2357]--")
+(message "* --[ Loading Emacs Leuven 20130802.2203]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -86,7 +86,7 @@
   "Value of `float-time' before loading the Emacs Leuven library.")
 
 ;; turn on Common Lisp support
-(require 'cl)  ; provides useful things like `loop' and `setf'
+(eval-when-compile (require 'cl)) ;; provide useful things like `loop' and `setf'
 
 ;;; User Customizable Internal Variables
 
@@ -3927,209 +3927,236 @@
   ;; ("Someday"   ?s "** %^{Someday Heading} %U\n%?\n"  "~/Personal/someday.org")
 
   ;; fast note taking in Org mode (the ultimate capture tool)
-  (eval-after-load "org-capture"
-    '(progn
+  (with-eval-after-load "org-capture"
 
-       (add-to-list 'org-capture-templates
-                    `("t" "Task" entry
-                      (file+headline ,org-default-notes-file "Tasks")
-                      "* NEW %^{Task}%?
-
-%i"
-                      :empty-lines 1) t)
-
-       (add-to-list 'org-capture-templates
-                    `("T" "Task in current file" entry
-                      (file+headline
-                       (buffer-file-name (org-capture-get :original-buffer))
-                       "Tasks")
-                      "* TODO %?
-  %U %a %n"
-                      :prepend t) t)
-
-       (add-to-list 'org-capture-templates
-                    `("a" "Appt" entry
-                      (file+headline ,org-default-notes-file "Calendar")
-                      "* %^{Appointment}%?
-  %^T
+    (add-to-list 'org-capture-templates
+                 `("t" "Task" entry
+                   (file+headline ,org-default-notes-file "Tasks")
+                   "* NEW %^{Task}%?
 
 %i"
-                      :empty-lines 1) t)
-                      ;; TODO Prompt only for date, not time...
+                   :empty-lines 1) t)
 
-       (add-to-list 'org-capture-templates
-                    `("m" "Mail to task" entry
-                      (file+headline ,org-default-notes-file "Tasks")
-                      "* TODO %:subject%? (from %:fromname) :mail:
-  SCHEDULED: %t
-  %:date-timestamp-inactive
+    (add-to-list 'org-capture-templates
+                 `("T" "Task in current file" entry
+                   (file+headline
+                    (buffer-file-name (org-capture-get :original-buffer))
+                    "Tasks")
+                   "* TODO %?
+%U %a %n"
+                   :prepend t) t)
+
+    (add-to-list 'org-capture-templates
+                 `("a" "Appt" entry
+                   (file+headline ,org-default-notes-file "Calendar")
+                   "* %^{Appointment}%?
+%^T
+
+%i"
+                   :empty-lines 1) t)
+                   ;; TODO Prompt only for date, not time...
+
+    (add-to-list 'org-capture-templates
+                 `("m" "Mail to task" entry
+                   (file+headline ,org-default-notes-file "Tasks")
+                   "* TODO %:subject%? (from %:fromname) :mail:
+SCHEDULED: %t
+%:date-timestamp-inactive
 
 #+begin_verse
 %i
 #+end_verse
 
 From %a"
-                      :empty-lines 1 :immediate-finish t) t)
-          ;; `immediate-finish' = immediately store note without
-          ;; further prompt (skipping `C-c C-c'), which is very handy
-          ;; for quick storing of emails
+                   :empty-lines 1 :immediate-finish t) t)
+       ;; `immediate-finish' = immediately store note without
+       ;; further prompt (skipping `C-c C-c'), which is very handy
+       ;; for quick storing of emails
 
-       (add-to-list 'org-capture-templates
-                    `("M" "mailtodo" entry (file+datetree "~/Personal/mails.org")
-                      "* TODO %^{Task} %^G
-   SCHEDULED: %t
-   - From :: %:from
-   - Subject :: %:subject
-   - Email :: %a
-   %?"
-                      :kill-buffer t) t)
+    (add-to-list 'org-capture-templates
+                 `("M" "mailtodo" entry (file+datetree "~/Personal/mails.org")
+                   "* TODO %^{Task} %^G
+SCHEDULED: %t
+- From :: %:from
+- Subject :: %:subject
+- Email :: %a
+%?"
+                   :kill-buffer t) t)
 
-       (add-to-list 'org-capture-templates
-                    `("p" "Phone call" entry
-                      (file+headline ,org-default-notes-file "Phone calls")
-                      "* %?"
-                      :empty-lines 1 :clock-in t :clock-resume t) t)
+    (add-to-list 'org-capture-templates
+                 `("p" "Phone call" entry
+                   (file+headline ,org-default-notes-file "Phone calls")
+                   "* %?"
+                   :empty-lines 1 :clock-in t :clock-resume t) t)
 
-       (add-to-list 'org-capture-templates
-                    `("i" "interruption" entry
-                      (file ,org-default-notes-file)
-                      "A TEMPLATE HERE"
-                      :clock-in t :clock-resume t) t)
+    (add-to-list 'org-capture-templates
+                 `("i" "interruption" entry
+                   (file ,org-default-notes-file)
+                   "A TEMPLATE HERE"
+                   :clock-in t :clock-resume t) t)
 
-       ;; thought
-       (add-to-list 'org-capture-templates
-                    `("n" "Note" entry
-                      (file+headline ,(concat org-directory "/notes.org") "Notes")
-                      "* %^{Thought}%?
+    ;; thought
+    (add-to-list 'org-capture-templates
+                 `("n" "Note" entry
+                   (file+headline ,(concat org-directory "/notes.org") "Notes")
+                   "* %^{Thought}%?
 
 %i"
-                      :empty-lines 1) t)
+                   :empty-lines 1) t)
 
-       ;; shopping list (stuff to buy)
-       (add-to-list 'org-capture-templates
-                    `("b" "Buy" checkitem
-                      (file+headline ,org-default-notes-file "Shopping list")) t)
+    ;; shopping list (stuff to buy)
+    (add-to-list 'org-capture-templates
+                 `("b" "Buy" checkitem
+                   (file+headline ,org-default-notes-file "Shopping list")) t)
 
-       ;; add a note to the currently clocked task
-       (add-to-list 'org-capture-templates
-                    `("c" "Clock sibling" entry
-                      (clock)
-                      "* %^{Title}
- %U
- %a
+    ;; add a note to the currently clocked task
+    (add-to-list 'org-capture-templates
+                 `("c" "Clock sibling" entry
+                   (clock)
+                   "* %^{Title}
+%U
+%a
 
- %i") t)
+%i") t)
 
-       (add-to-list 'org-capture-templates
-                    `("j" "Journal" entry
-                      (file+datetree ,(concat org-directory "/journal.org"))
-                      "* %T %?  :blog:
+    (add-to-list 'org-capture-templates
+                 `("j" "Journal" entry
+                   (file+datetree ,(concat org-directory "/journal.org"))
+                   "* %T %?  :blog:
 
 %U
 
 %i
 
 From %a"
-                      ;; "* %^{Title}  :blog:\n  :PROPERTIES:\n  :on: %T\n  :END:\n  %?\n  %x"
-                      :empty-lines 1) t)
+                   ;; "* %^{Title}  :blog:\n  :PROPERTIES:\n  :on: %T\n  :END:\n  %?\n  %x"
+                   :empty-lines 1) t)
 
-       (add-to-list 'org-capture-templates
-                    `("S" "secure" entry
-                      (file+datetree+prompt "~/git/notes/secure.org.gpg")
-                      "* %(format-time-string \"%H:%M\") %^{Entry} %^G
+    (add-to-list 'org-capture-templates
+                 `("S" "secure" entry
+                   (file+datetree+prompt "~/git/notes/secure.org.gpg")
+                   "* %(format-time-string \"%H:%M\") %^{Entry} %^G
 %i%?") t)
 
-       (defun leuven--org-capture-template (keys description file headline)
-         "Create template for captured elements."
-         `(,keys ,description entry
-                 (file+headline ,file ,headline)
-                 "* %^{Title}
-  :PROPERTIES:
-  :Created: %:date-timestamp-inactive
-  :END:
+    (defun leuven--org-capture-template (keys description file headline)
+      "Create template for captured elements."
+      `(,keys ,description entry
+              (file+headline ,file ,headline)
+              "* %^{Title}
+:PROPERTIES:
+:Created: %:date-timestamp-inactive
+:END:
 %?
 %i
 
 From %a"
-                 :empty-lines 1))
+              :empty-lines 1))
 
-       ;; notes
-       (add-to-list 'org-capture-templates
-                    `("N" "Templates adding notes") t)
-       (add-to-list 'org-capture-templates
-                    (leuven--org-capture-template
-                     "Ne" "Emacs"
-                     "~/org/notes/Notes-on-Emacs.txt" "Notes") t)
-       (add-to-list 'org-capture-templates
-                    (leuven--org-capture-template
-                     "No" "Org"
-                     "~/org/notes/Notes-on-Org.txt" "Notes") t)
-       (add-to-list 'org-capture-templates
-                    (leuven--org-capture-template
-                     "NL" "Lisp"
-                     "~/org/notes/Notes-on-Lisp.txt" "Notes") t)
-       (add-to-list 'org-capture-templates
-                    (leuven--org-capture-template
-                     "Ng" "Gnus"
-                     "~/org/notes/Notes-on-Gnus.txt" "Notes") t)
-       (add-to-list 'org-capture-templates
-                    (leuven--org-capture-template
-                     "Nl" "LaTeX"
-                     "~/org/notes/Notes-on-LaTeX.txt" "Notes") t)
-       (add-to-list 'org-capture-templates
-                    (leuven--org-capture-template
-                     "NT" "TikZ"
-                     "~/org/notes/Notes-on-TikZ.txt" "Notes") t)
-       (add-to-list 'org-capture-templates
-                    (leuven--org-capture-template
-                     "Nb" "Beamer"
-                     "~/org/notes/Notes-on-Beamer.txt" "Notes") t)
-       (add-to-list 'org-capture-templates
-                    (leuven--org-capture-template
-                     "NS" "StumpWM"
-                     "~/org/notes/Notes-on-StumpWM.txt" "Notes") t)
-       (add-to-list 'org-capture-templates
-                    (leuven--org-capture-template
-                     "Nu" "Unix"
-                     "~/org/notes/Notes-on-Unix.txt" "Notes") t)
-       (add-to-list 'org-capture-templates
-                    (leuven--org-capture-template
-                     "Nc" "Ledger"
-                     "~/org/notes/Notes-on-Ledger.txt" "Notes") t)
-       (add-to-list 'org-capture-templates
-                    (leuven--org-capture-template
-                     "Nr" "RFID" "~/org/notes/Notes-on-RFID.txt" "Notes") t)
-       (add-to-list 'org-capture-templates
-                    (leuven--org-capture-template
-                     "Ns" "Security"
-                     "~/org/notes/Notes-on-Security.txt" "Notes") t)
+    ;; notes
+    (add-to-list 'org-capture-templates
+                 `("N" "Templates adding notes") t)
+    (add-to-list 'org-capture-templates
+                 (leuven--org-capture-template
+                  "Ne" "Emacs"
+                  "~/org/notes/Notes-on-Emacs.txt" "Notes") t)
+    (add-to-list 'org-capture-templates
+                 (leuven--org-capture-template
+                  "No" "Org"
+                  "~/org/notes/Notes-on-Org.txt" "Notes") t)
+    (add-to-list 'org-capture-templates
+                 (leuven--org-capture-template
+                  "NL" "Lisp"
+                  "~/org/notes/Notes-on-Lisp.txt" "Notes") t)
+    (add-to-list 'org-capture-templates
+                 (leuven--org-capture-template
+                  "Ng" "Gnus"
+                  "~/org/notes/Notes-on-Gnus.txt" "Notes") t)
+    (add-to-list 'org-capture-templates
+                 (leuven--org-capture-template
+                  "Nl" "LaTeX"
+                  "~/org/notes/Notes-on-LaTeX.txt" "Notes") t)
+    (add-to-list 'org-capture-templates
+                 (leuven--org-capture-template
+                  "NT" "TikZ"
+                  "~/org/notes/Notes-on-TikZ.txt" "Notes") t)
+    (add-to-list 'org-capture-templates
+                 (leuven--org-capture-template
+                  "Nb" "Beamer"
+                  "~/org/notes/Notes-on-Beamer.txt" "Notes") t)
+    (add-to-list 'org-capture-templates
+                 (leuven--org-capture-template
+                  "NS" "StumpWM"
+                  "~/org/notes/Notes-on-StumpWM.txt" "Notes") t)
+    (add-to-list 'org-capture-templates
+                 (leuven--org-capture-template
+                  "Nu" "Unix"
+                  "~/org/notes/Notes-on-Unix.txt" "Notes") t)
+    (add-to-list 'org-capture-templates
+                 (leuven--org-capture-template
+                  "Nc" "Ledger"
+                  "~/org/notes/Notes-on-Ledger.txt" "Notes") t)
+    (add-to-list 'org-capture-templates
+                 (leuven--org-capture-template
+                  "Nr" "RFID" "~/org/notes/Notes-on-RFID.txt" "Notes") t)
+    (add-to-list 'org-capture-templates
+                 (leuven--org-capture-template
+                  "Ns" "Security"
+                  "~/org/notes/Notes-on-Security.txt" "Notes") t)
 
-       ;;          ("w" "org-protocol" entry
-       ;;           (file ,org-default-notes-file)
-       ;;           "* TODO Review %c
-       ;; %U"
-       ;;           :immediate-finish t :clock-in t :clock-resume t)
+    ;;          ("w" "org-protocol" entry
+    ;;           (file ,org-default-notes-file)
+    ;;           "* TODO Review %c
+    ;; %U"
+    ;;           :immediate-finish t :clock-in t :clock-resume t)
 
-       ;; ("web-clippings" ?w
-       ;;  "* %^{Title} %^g \n  :PROPERTIES:\n  :date: %^t\n  :link: %^{link}\n  :END:\n\n %x %?"
-       ;;  "~/org/data.org" "Web Clippings")
+    ;; ("web-clippings" ?w
+    ;;  "* %^{Title} %^g \n  :PROPERTIES:\n  :date: %^t\n  :link: %^{link}\n  :END:\n\n %x %?"
+    ;;  "~/org/data.org" "Web Clippings")
 
-       (add-to-list 'org-capture-templates
-                    `("w" "Default template" entry
-                      ;; `org-protocol-default-template-key'
-                      (file+headline ,(concat org-directory "/capture.org") "Notes")
-                      "* %^{Title}%?
-  %u
+    (add-to-list 'org-capture-templates
+                 `("w" "Default template" entry
+                   ;; `org-protocol-default-template-key'
+                   (file+headline ,(concat org-directory "/capture.org") "Notes")
+                   "* %^{Title}%?
+%u
 
 %i
 
 From %c"
-                      :empty-lines 1 :immediate-finish t) t)
+                   :empty-lines 1 :immediate-finish t) t)
 
-       ;; default `org-capture-templates' key to use
-       (setq org-protocol-default-template-key "w")
+    ;; default `org-capture-templates' key to use
+    (setq org-protocol-default-template-key "w")
 
-       )) ;; eval-after-load "org-capture" ends here
+    (defun make-capture-frame ()
+      "Create a new frame and run `org-capture'."
+      (interactive)
+      (make-frame '((name . "capture")
+                    (width . 80)
+                    (height . 10)))
+      (select-frame-by-name "capture")
+      ;; ;; setup buffer to wrap
+      ;; (setq truncate-lines nil
+      ;;       word-wrap t)
+      (org-capture))
+
+    ;; make the frame contain a single window (by default, `org-capture'
+    ;; splits the window)
+    (add-hook 'org-capture-mode-hook 'delete-other-windows)
+
+    (defadvice org-capture-finalize
+      (after leuven-delete-capture-finalize-frame activate)
+      "Advise org-capture-finalize to close the frame (if it is the capture frame)."
+      (if (equal "capture" (frame-parameter nil 'name))
+          (delete-frame)))
+
+    (defadvice org-capture-destroy ;; XXX
+      (after leuven-delete-capture-destroy-frame activate)
+      "Advise capture-destroy to close the frame (if it is the capture frame)."
+      (if (equal "capture" (frame-parameter nil 'name))
+          (delete-frame)))
+
+    ) ;; with-eval-after-load "org-capture" ends here
 
   (leuven--section "9.4 (org)Protocols")
 
@@ -4144,92 +4171,40 @@ From %c"
                    :base-url "http://orgmode.org/worg/"
                    :working-directory "~/Public/Repositories/worg/") t))
 
-  (defun make-capture-frame ()
-    "Create a new frame and run `org-capture'."
-    (interactive)
-    (make-frame '((name . "capture")
-                  (width . 80)
-                  (height . 10)))
-    (select-frame-by-name "capture")
-    ;; ;; setup buffer to wrap
-    ;; (setq truncate-lines nil
-    ;;       word-wrap t)
-    (org-capture))
+  (with-eval-after-load "org"
 
-  ;; make the frame contain a single window (by default, `org-capture'
-  ;; splits the window)
-  (add-hook 'org-capture-mode-hook 'delete-other-windows)
+    ;; 9.1.4 any headline with level <= 2 is a target
+    (defvar leuven-org-refile-extra-files
+      (if (file-exists-p "~/org/notes/")
+          (directory-files "~/org/notes/" t "^[^\\.#].*\\.\\(txt\\|org\\)$")
+        nil)
+      "List of extra files to be used as targets for refile commands.")
 
-  (defadvice org-capture-finalize
-    (after leuven-delete-capture-finalize-frame activate)
-    "Advise org-capture-finalize to close the frame (if it is the capture frame)."
-    (if (equal "capture" (frame-parameter nil 'name))
-        (delete-frame)))
+    ;; cache refile targets to speed up the process
+    (setq org-refile-use-cache t)
 
-  (defadvice org-capture-destroy ;; XXX
-    (after leuven-delete-capture-destroy-frame activate)
-    "Advise capture-destroy to close the frame (if it is the capture frame)."
-    (if (equal "capture" (frame-parameter nil 'name))
-        (delete-frame)))
+    ;; 9.1.4 provide refile targets as paths, including the file name
+    ;; (without directory) as level 1 of the path
+    (setq org-refile-use-outline-path 'file)
 
-  (defun leuven-org-insert-image-or-take-screenshot (name)
-    "Insert a link to an already existing image, or else to a screenshot.
-  The screenshot is either taken to the given non-existing file name,
-  or added into the given directory, defaulting to the current one."
-    ;; FIXME: Should limit to '("pdf" "jpeg" "jpg" "png" "ps" "eps")
-    ;; which is org-export-latex-inline-image-extensions.
-    (interactive "GImage name? ")
-    (when (file-directory-p name)
-      (setq name (concat
-                  (make-temp-name
-                   (expand-file-name
-                    (concat (file-name-as-directory name)
-                            (subst-char-in-string
-                             "." "-"
-                             (file-name-sans-extension
-                              (file-name-nondirectory
-                               (buffer-file-name)))))))
-                  ".png")))
-    (unless (file-exists-p name)
-      (if (file-writable-p name)
-          (progn
-            (message "Taking screenshot into %s" name)
-            (call-process "import" nil nil nil name)
-            (message "Taking screenshot...done"))
-        (error "Cannot create image file")))
-    (insert (concat "[[" name "]]"))
-    (org-display-inline-images))
+    ;; 9.1.4 allow to create new nodes (must be confirmed by the user) as
+    ;; refile targets
+    (setq org-refile-allow-creating-parent-nodes 'confirm)
 
-  ;; 9.1.4 any headline with level <= 2 is a target
-  (defvar leuven-org-refile-extra-files
-    (if (file-exists-p "~/org/notes/")
-        (directory-files "~/org/notes/" t "^[^\\.#].*\\.\\(txt\\|org\\)$")
-      nil)
-    "List of extra files to be used as targets for refile commands.")
+    ;; refile only within the current buffer
+    (defun leuven-org-refile-within-current-buffer ()
+      "Move the entry at point to another heading in the current buffer."
+      (interactive)
+      (let ((org-refile-targets '((nil :maxlevel . 8))))
+        (org-refile)))
+    ;; FIXME Add a smart key binding
 
-  ;; cache refile targets to speed up the process
-  (setq org-refile-use-cache t)
+    (leuven--section "9.6 (org)Archiving")
 
-  ;; 9.1.4 provide refile targets as paths, including the file name
-  ;; (without directory) as level 1 of the path
-  (setq org-refile-use-outline-path 'file)
+    ;; 9.6.1 subtrees should be archived in the current file
+    (setq org-archive-location "::* Archive")
 
-  ;; 9.1.4 allow to create new nodes (must be confirmed by the user) as
-  ;; refile targets
-  (setq org-refile-allow-creating-parent-nodes 'confirm)
-
-  ;; refile only within the current buffer
-  (defun leuven-org-refile-within-current-buffer ()
-    "Move the entry at point to another heading in the current buffer."
-    (interactive)
-    (let ((org-refile-targets '((nil :maxlevel . 8))))
-      (org-refile)))
-  ;; FIXME Add a smart key binding
-
-  (leuven--section "9.6 (org)Archiving")
-
-  ;; 9.6.1 subtrees should be archived in the current file
-  (setq org-archive-location "::* Archive")
+    )
 
   (leuven--section "10 (org)Agenda Views")
 
@@ -5218,11 +5193,43 @@ From %c"
 
   (leuven--section "11 (org)Markup")
 
-  ;; add a face to #+begin_quote and #+begin_verse blocks
-  (setq org-fontify-quote-and-verse-blocks t)
+  (with-eval-after-load "org-faces"
 
-  ;; 11.1 hide the emphasis marker characters
-  (setq org-hide-emphasis-markers t) ;; impact on table alignment!
+    ;; add a face to #+begin_quote and #+begin_verse blocks
+    (setq org-fontify-quote-and-verse-blocks t))
+
+  (with-eval-after-load "org"
+
+    ;; 11.1 hide the emphasis marker characters
+    (setq org-hide-emphasis-markers t) ;; impact on table alignment!
+
+    (defun leuven-org-insert-image-or-take-screenshot (name)
+      "Insert a link to an already existing image, or else to a screenshot.
+    The screenshot is either taken to the given non-existing file name,
+    or added into the given directory, defaulting to the current one."
+      ;; FIXME: Should limit to '("pdf" "jpeg" "jpg" "png" "ps" "eps")
+      ;; which is org-export-latex-inline-image-extensions.
+      (interactive "GImage name? ")
+      (when (file-directory-p name)
+        (setq name (concat
+                    (make-temp-name
+                     (expand-file-name
+                      (concat (file-name-as-directory name)
+                              (subst-char-in-string
+                               "." "-"
+                               (file-name-sans-extension
+                                (file-name-nondirectory
+                                 (buffer-file-name)))))))
+                    ".png")))
+      (unless (file-exists-p name)
+        (if (file-writable-p name)
+            (progn
+              (message "Taking screenshot into %s" name)
+              (call-process "import" nil nil nil name)
+              (message "Taking screenshot...done"))
+          (error "Cannot create image file")))
+      (insert (concat "[[" name "]]"))
+      (org-display-inline-images)))
 
   ;; 11.7.1 define user entities to produce special characters
   (with-eval-after-load "org-entities"
@@ -5247,7 +5254,7 @@ From %c"
   (setq org-export-with-sub-superscripts nil)
 
   ;; 11.7 convert LaTeX fragments to images when exporting to HTML
-  (setq org-export-with-LaTeX-fragments t)
+  (setq org-export-with-LaTeX-fragments t) ;; XXX undefined?
 
   ;; highlight LaTeX and related syntax
   (setq org-highlight-latex-and-related
@@ -5255,7 +5262,7 @@ From %c"
           script
           entities))
 
-  ;; bind the new exporter dispatch to a key sequence
+  ;; bind the exporter dispatcher to a key sequence
   (with-eval-after-load "org"
 
     ;; (define-key org-mode-map
@@ -9298,7 +9305,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130801.2358]--")
+(message "* --[ Loaded Emacs Leuven 20130802.2204]--")
 
 (provide 'emacs-leuven)
 
