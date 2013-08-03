@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130803.1056
+;; Version: 20130803.1108
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130803.1056]--")
+(message "* --[ Loading Emacs Leuven 20130803.1108]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -7892,8 +7892,7 @@ From %c"
   (global-set-key
     (kbd "<C-f11>") 'bbdb)
 
-  (eval-after-load "bbdb"
-    '(progn
+  (with-eval-after-load "bbdb"
 
     ;; coding system used for reading and writing `bbdb-file'
     (setq bbdb-file-coding-system 'utf-8)
@@ -8046,7 +8045,7 @@ From %c"
     ;; use BBDB to store PGP preferences
     (when (try-require 'bbdb-pgp)
       ;; what to do if the recipient is not in the BBDB
-      (setq bbdb/pgp-default-action nil))))
+      (setq bbdb/pgp-default-action nil)))
 
 ) ;; chapter 34 ends here
 
@@ -8413,87 +8412,86 @@ From %c"
     (setq toolbar-print-function 'ps-print-buffer-with-faces))
 
   ;; print text from the buffer as PostScript
-  (eval-after-load "ps-print"
-    '(progn
+  (with-eval-after-load "ps-print"
 
-       (defvar gsprint-program
-         (concat windows-program-files-dir "Ghostgum/gsview/gsprint.exe")
-         "Defines the Windows path to the gsview executable.")
+    (defvar gsprint-program
+      (concat windows-program-files-dir "Ghostgum/gsview/gsprint.exe")
+      "Defines the Windows path to the gsview executable.")
 
-       (leuven--file-exists-and-executable-p gsprint-program)
+    (leuven--file-exists-and-executable-p gsprint-program)
 
-       (if (and gsprint-program
-                (executable-find gsprint-program))
+    (if (and gsprint-program
+             (executable-find gsprint-program))
 
-           (progn
-             ;; name of a local printer for printing PostScript files
-             ;; adjusted to run Ghostscript
-             (setq ps-printer-name t)
+        (progn
+          ;; name of a local printer for printing PostScript files
+          ;; adjusted to run Ghostscript
+          (setq ps-printer-name t)
 
-             ;; name of program for printing a PostScript file
-             ;; tell Emacs where ghostscript print utility is located
-             (setq ps-lpr-command gsprint-program)
+          ;; name of program for printing a PostScript file
+          ;; tell Emacs where ghostscript print utility is located
+          (setq ps-lpr-command gsprint-program)
 
-             ;; list of extra switches to pass to `ps-lpr-command'
-             ;; tell Ghostscript to query which printer to use
-             (setq ps-lpr-switches '("-query"))) ;; '("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2")
+          ;; list of extra switches to pass to `ps-lpr-command'
+          ;; tell Ghostscript to query which printer to use
+          (setq ps-lpr-switches '("-query"))) ;; '("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2")
 
-         (setq ps-printer-name "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
-         (setq ps-lpr-command "")
-         (setq ps-lpr-switches '("raw")))
+      (setq ps-printer-name "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
+      (setq ps-lpr-command "")
+      (setq ps-lpr-switches '("raw")))
 
-       ;; (setq ps-error-handler-message 'system)
+    ;; (setq ps-error-handler-message 'system)
 
-       ;; size of paper to format for
-       (setq ps-paper-type 'a4)
-       (setq ps-warn-paper-type nil)
+    ;; size of paper to format for
+    (setq ps-paper-type 'a4)
+    (setq ps-warn-paper-type nil)
 
-       ;; print in portrait mode
-       (setq ps-landscape-mode nil)
+    ;; print in portrait mode
+    (setq ps-landscape-mode nil)
 
-       ;; (setq ps-print-control-characters nil)
+    ;; (setq ps-print-control-characters nil)
 
-       ;; number of columns
-       (setq ps-number-of-columns 1)
+    ;; number of columns
+    (setq ps-number-of-columns 1)
 
-       (setq ps-left-margin 40)
-       (setq ps-right-margin 56)
-       (setq ps-bottom-margin 22)
-       (setq ps-top-margin 32)
+    (setq ps-left-margin 40)
+    (setq ps-right-margin 56)
+    (setq ps-bottom-margin 22)
+    (setq ps-top-margin 32)
 
-       ;; Page layout: Header [file-name     2001-06-18 Mon]
-       (setq ps-print-header-frame nil) ;; no box around the header
-       ;; see http://www.emacswiki.org/emacs/PsPrintPackage-23
-       (setq ps-header-frame-alist '((fore-color . "#CCCCCC")))
-       (setq ps-header-lines 1)
-       (setq ps-header-font-family 'Helvetica)
-       ;; (setq ps-header-font-size 11)
-       (setq ps-header-title-font-size 11)
-       (defun ps-time-stamp-yyyy-mm-dd-aaa ()
-         "Return date as \"2001-06-18 Mon\" (ISO date + day of week)."
-         (format-time-string "%Y-%m-%d %a"))
-       (setq ps-right-header '(ps-time-stamp-yyyy-mm-dd-aaa))
+    ;; Page layout: Header [file-name     2001-06-18 Mon]
+    (setq ps-print-header-frame nil) ;; no box around the header
+    ;; see http://www.emacswiki.org/emacs/PsPrintPackage-23
+    (setq ps-header-frame-alist '((fore-color . "#CCCCCC")))
+    (setq ps-header-lines 1)
+    (setq ps-header-font-family 'Helvetica)
+    ;; (setq ps-header-font-size 11)
+    (setq ps-header-title-font-size 11)
+    (defun ps-time-stamp-yyyy-mm-dd-aaa ()
+      "Return date as \"2001-06-18 Mon\" (ISO date + day of week)."
+      (format-time-string "%Y-%m-%d %a"))
+    (setq ps-right-header '(ps-time-stamp-yyyy-mm-dd-aaa))
 
-       ;; Page layout: Footer [                         n/m]
-       (setq ps-footer-offset 14)
-       (setq ps-footer-line-pad .50)
-       (setq ps-print-footer t)
-       (setq ps-print-footer-frame nil) ;; no box around the footer
-       (setq ps-footer-frame-alist '((fore-color . "#666666")))
-       (setq ps-footer-lines 1)
-       (setq ps-footer-font-family 'Helvetica)
-       (setq ps-footer-font-size 8)
-       (setq ps-left-footer nil)
-       (setq ps-right-footer (list "/pagenumberstring load")) ;; Page n of m
+    ;; Page layout: Footer [                         n/m]
+    (setq ps-footer-offset 14)
+    (setq ps-footer-line-pad .50)
+    (setq ps-print-footer t)
+    (setq ps-print-footer-frame nil) ;; no box around the footer
+    (setq ps-footer-frame-alist '((fore-color . "#666666")))
+    (setq ps-footer-lines 1)
+    (setq ps-footer-font-family 'Helvetica)
+    (setq ps-footer-font-size 8)
+    (setq ps-left-footer nil)
+    (setq ps-right-footer (list "/pagenumberstring load")) ;; Page n of m
 
-       (setq ps-font-family 'Courier) ;; see `ps-font-info-database'
-       ;; legitimate values include Courier, Helvetica, NewCenturySchlbk,
-       ;; Palatino and Times
-       (setq ps-font-size 9.1)
+    (setq ps-font-family 'Courier) ;; see `ps-font-info-database'
+    ;; legitimate values include Courier, Helvetica, NewCenturySchlbk,
+    ;; Palatino and Times
+    (setq ps-font-size 9.1)
 
-       (setq ps-use-face-background t)
+    (setq ps-use-face-background t)
 
-       (setq ps-line-spacing 3)))
+    (setq ps-line-spacing 3))
 
 ) ;; chapter 38 ends here
 
@@ -8584,10 +8582,9 @@ From %c"
   ;;         (executable-find "firefox"))) ;; could be `google-chrome'
 
   ;; ;; shortcut to view the current file in browser
-  ;; (eval-after-load "nxml-mode"
-  ;;   '(define-key nxml-mode-map
-  ;;     (kbd "C-c v") 'browse-url-of-buffer)
-  ;; )
+  ;; (with-eval-after-load "nxml-mode"
+  ;;   (define-key nxml-mode-map
+  ;;     (kbd "C-c v") 'browse-url-of-buffer))
 
   (defun leuven--browse (url)
     "If prefix is specified, use the system default browser else use the
@@ -8737,139 +8734,138 @@ From %c"
       (autoload 'w3m-browse-url "w3m"
         "Ask emacs-w3m to show a URL." t))
 
-    (eval-after-load "w3m"
-      '(progn
+    (with-eval-after-load "w3m"
 
 ;;*** 3.1 Browsing Web Pages
 
-         ;; go ahead, just try it
-         (defun leuven-w3m-goto-url ()
-           "Type in directly the URL I would like to visit (avoiding to
-         hit `C-k')."
-           (interactive)
-           (let ((w3m-current-url ""))
-             (call-interactively 'w3m-goto-url)))
+      ;; go ahead, just try it
+      (defun leuven-w3m-goto-url ()
+        "Type in directly the URL I would like to visit (avoiding to
+      hit `C-k')."
+        (interactive)
+        (let ((w3m-current-url ""))
+          (call-interactively 'w3m-goto-url)))
 
-         ;; make w3m stop "stealing" my arrow keys, allowing to move the
-         ;; cursor down the lines of an HTML email (in Gnus)
-         (setq w3m-minor-mode-map nil)
+      ;; make w3m stop "stealing" my arrow keys, allowing to move the
+      ;; cursor down the lines of an HTML email (in Gnus)
+      (setq w3m-minor-mode-map nil)
 
-         (define-key w3m-mode-map
-           (kbd "U") 'leuven-w3m-goto-url)
+      (define-key w3m-mode-map
+        (kbd "U") 'leuven-w3m-goto-url)
 
-         ;; fix inappropriate key bindings for moving from place to place in a
-         ;; page (let the cursor keys behave normally, don't jump from link to
-         ;; link)
-         (define-key w3m-mode-map
-           (kbd "<up>") 'previous-line)
-         (define-key w3m-mode-map
-           (kbd "<down>") 'next-line)
-         (define-key w3m-mode-map
-           (kbd "<left>") 'backward-char)
-         (define-key w3m-mode-map
-           (kbd "<right>") 'forward-char)
+      ;; fix inappropriate key bindings for moving from place to place in a
+      ;; page (let the cursor keys behave normally, don't jump from link to
+      ;; link)
+      (define-key w3m-mode-map
+        (kbd "<up>") 'previous-line)
+      (define-key w3m-mode-map
+        (kbd "<down>") 'next-line)
+      (define-key w3m-mode-map
+        (kbd "<left>") 'backward-char)
+      (define-key w3m-mode-map
+        (kbd "<right>") 'forward-char)
 
-         (define-key w3m-mode-map
-           (kbd "<tab>") 'w3m-next-anchor)
+      (define-key w3m-mode-map
+        (kbd "<tab>") 'w3m-next-anchor)
 
-         ;; moving from page to page
-         (define-key w3m-mode-map
-           (kbd "F") 'w3m-view-next-page)
+      ;; moving from page to page
+      (define-key w3m-mode-map
+        (kbd "F") 'w3m-view-next-page)
 
 ;;*** 3.5 Using Tabs
 
-         (define-key w3m-mode-map
-           (kbd "<C-tab>") 'w3m-next-buffer)
-         (define-key w3m-mode-map
-           (kbd "<C-S-tab>") 'w3m-previous-buffer)
+      (define-key w3m-mode-map
+        (kbd "<C-tab>") 'w3m-next-buffer)
+      (define-key w3m-mode-map
+        (kbd "<C-S-tab>") 'w3m-previous-buffer)
 
-         (defun w3m-new-tab ()
-           (interactive)
-           (w3m-copy-buffer nil nil nil t))
+      (defun w3m-new-tab ()
+        (interactive)
+        (w3m-copy-buffer nil nil nil t))
 
-         (define-key w3m-mode-map
-           (kbd "C-t") 'w3m-new-tab)
+      (define-key w3m-mode-map
+        (kbd "C-t") 'w3m-new-tab)
 
-         (define-key w3m-mode-map
-           (kbd "C-w") 'w3m-delete-buffer)
+      (define-key w3m-mode-map
+        (kbd "C-w") 'w3m-delete-buffer)
 
 ;;*** 5.1 General Variables
 
-         ;; send referers only when both the current page and the target
-         ;; page are provided by the same server
-         (setq w3m-add-referer 'lambda)
+      ;; send referers only when both the current page and the target
+      ;; page are provided by the same server
+      (setq w3m-add-referer 'lambda)
 
-         ;; home page
-         (setq w3m-home-page "http://www.emacswiki.org/")
+      ;; home page
+      (setq w3m-home-page "http://www.emacswiki.org/")
 
-         ;; number of steps in columns used when scrolling a window
-         ;; horizontally
-         (setq w3m-horizontal-shift-columns 1)  ; 2
+      ;; number of steps in columns used when scrolling a window
+      ;; horizontally
+      (setq w3m-horizontal-shift-columns 1)  ; 2
 
-         ;; proxy settings
-         (when (string= (upcase (system-name)) "PC3701")
-           (setq w3m-command-arguments
-                    (nconc w3m-command-arguments
-                           '("-o" "http_proxy=proxy:8080"))))
-                                    ; FIXME https_proxy for HTTPS support
+      ;; proxy settings
+      (when (string= (upcase (system-name)) "PC3701")
+        (setq w3m-command-arguments
+                 (nconc w3m-command-arguments
+                        '("-o" "http_proxy=proxy:8080"))))
+                                 ; FIXME https_proxy for HTTPS support
 
-         (setq w3m-no-proxy-domains '("localhost" "127.0.0.1"))
+      (setq w3m-no-proxy-domains '("localhost" "127.0.0.1"))
 
 ;;*** 5.2 Image Variables
 
-         ;; always display images
-         (setq w3m-default-display-inline-images t)
+      ;; always display images
+      (setq w3m-default-display-inline-images t)
 
-         ;; show favicon images if they are available
-         (setq w3m-use-favicon t)
+      ;; show favicon images if they are available
+      (setq w3m-use-favicon t)
 
 ;;*** 5.4 Cookie Variables
 
-         ;; functions for cookie processing
-         (eval-after-load "w3m-cookie"
+      ;; functions for cookie processing
+      (eval-after-load "w3m-cookie"
 
-           ;; ask user whether accept bad cookies or not
-           (setq w3m-cookie-accept-bad-cookies 'ask)
+        ;; ask user whether accept bad cookies or not
+        (setq w3m-cookie-accept-bad-cookies 'ask)
 
-           ;; list of trusted domains
-           (setq w3m-cookie-accept-domains
-                 '("google.com" "google.be"
-                   "yahoo.com" ".yahoo.com" "groups.yahoo.com"
-                   "www.dyndns.org")))
+        ;; list of trusted domains
+        (setq w3m-cookie-accept-domains
+              '("google.com" "google.be"
+                "yahoo.com" ".yahoo.com" "groups.yahoo.com"
+                "www.dyndns.org")))
 
-         ;; enable cookies (mostly required to use sites such as Gmail)
-         (setq w3m-use-cookies t)
+      ;; enable cookies (mostly required to use sites such as Gmail)
+      (setq w3m-use-cookies t)
 
 ;;*** 5.14 Other Variables
 
-         ;; list of content types, regexps (matching a url or a file
-         ;; name), commands to view contents, and filters to override the
-         ;; content type specified at first
-         (setq w3m-content-type-alist
-               (append '(("text/html" "\\.xhtml\\'" nil nil))
-                       w3m-content-type-alist))
+      ;; list of content types, regexps (matching a url or a file
+      ;; name), commands to view contents, and filters to override the
+      ;; content type specified at first
+      (setq w3m-content-type-alist
+            (append '(("text/html" "\\.xhtml\\'" nil nil))
+                    w3m-content-type-alist))
 
-         ;; toggle a minor mode showing link numbers
-         (when (try-require 'w3m-lnum)
+      ;; toggle a minor mode showing link numbers
+      (when (try-require 'w3m-lnum)
 
-           (defun leuven-w3m-go-to-link-number ()
-             "Turn on link numbers and ask for one to go to."
-             (interactive)
-             (let ((active w3m-lnum-mode))
-               (when (not active) (w3m-lnum-mode))
-               (unwind-protect
-                   (w3m-move-numbered-anchor (read-number
-                                              "Anchor number: "))
-                 (when (not active) (w3m-lnum-mode))
-                 (w3m-view-this-url))))
+        (defun leuven-w3m-go-to-link-number ()
+          "Turn on link numbers and ask for one to go to."
+          (interactive)
+          (let ((active w3m-lnum-mode))
+            (when (not active) (w3m-lnum-mode))
+            (unwind-protect
+                (w3m-move-numbered-anchor (read-number
+                                           "Anchor number: "))
+              (when (not active) (w3m-lnum-mode))
+              (w3m-view-this-url))))
 
-           (define-key w3m-mode-map
-             (kbd "f") 'leuven-w3m-go-to-link-number)
+        (define-key w3m-mode-map
+          (kbd "f") 'leuven-w3m-go-to-link-number)
 
-           ;; enable link numbering mode by default
-           (add-hook 'w3m-mode-hook 'w3m-lnum-mode))
+        ;; enable link numbering mode by default
+        (add-hook 'w3m-mode-hook 'w3m-lnum-mode))
 
-         )))
+      ))
 
 ;;** Babel
 
@@ -9294,7 +9290,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130803.1056]--")
+(message "* --[ Loaded Emacs Leuven 20130803.1109]--")
 
 (provide 'emacs-leuven)
 
