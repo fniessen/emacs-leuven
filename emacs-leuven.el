@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130803.0008
+;; Version: 20130803.1056
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130803.0008]--")
+(message "* --[ Loading Emacs Leuven 20130803.1056]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -289,106 +289,90 @@
 
 (leuven--chapter leuven-chapter-0-loading-libraries "0 Loading Libraries"
 
-      ;; You have to put the `load-path' stuff as early as you can...
+  ;; You have to put the `load-path' stuff as early as you can...
 
-      ;; This is a list of directories where Emacs Lisp libraries (`.el' and
-      ;; `.elc' files) are installed.
+  ;; This is a list of directories where Emacs Lisp libraries (`.el' and
+  ;; `.elc' files) are installed.
 
-      ;; The most important directories are the last!
+  ;; The most important directories are the last!
 
-      ;; load-path enhancement
-      ;; TODO Check that added directories do have a trailing slash
-      ;; The GNU Emacs FAQ includes a trailing slash in the instructions
-      ;; on how to add directories to one's load path via .emacs [1]:
-      ;; (add-to-list 'load-path "/dir/subdir/")
-      ;; [1] See 5.17 here: http://www.gnu.org/software/emacs/emacs-faq.html
-      (defun leuven-add-to-load-path (this-directory
-                                   &optional add-subdirs recursive)
-        "Add THIS-DIRECTORY at the beginning of the load-path, if it exists.
-      Add all its subdirectories not starting with a '.' if the
-      optional argument ADD-SUBDIRS is not nil.
-      Do it recursively if the third argument is not nil."
-        (when (and this-directory
-                   (file-directory-p this-directory))
-          ;; TODO Add warning if directory does not exist
-          (let* ((this-directory (expand-file-name this-directory))
-                 (files (directory-files this-directory t "^[^\\.]"))
-                 (dir-or-file nil))
+  ;; load-path enhancement
+  ;; TODO Check that added directories do have a trailing slash
+  ;; The GNU Emacs FAQ includes a trailing slash in the instructions
+  ;; on how to add directories to one's load path via .emacs [1]:
+  ;; (add-to-list 'load-path "/dir/subdir/")
+  ;; [1] See 5.17 here: http://www.gnu.org/software/emacs/emacs-faq.html
+  (defun leuven-add-to-load-path (this-directory)
+    "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
+    (when (and this-directory
+               (file-directory-p this-directory))
+      ;; TODO Add warning if directory does not exist
+      (let* ((this-directory (expand-file-name this-directory)))
 
-            ;; directories containing a `.nosearch' file (such as
-            ;; `auctex-11.86\style') should not made part of `load-path'.
-            ;; TODO `RCS' and `CVS' directories should also be excluded.
-            (unless (file-exists-p (concat this-directory "/.nosearch"))
-              (add-to-list 'load-path this-directory)
-              (when leuven-load-verbose
-                (message "(info) Added `%s' to `load-path'" this-directory))
+        ;; directories containing a `.nosearch' file (such as
+        ;; `auctex-11.86\style') should not made part of `load-path'.
+        ;; TODO `RCS' and `CVS' directories should also be excluded.
+        (unless (file-exists-p (concat this-directory "/.nosearch"))
+          (add-to-list 'load-path this-directory)
+          (when leuven-load-verbose
+            (message "(info) Added `%s' to `load-path'" this-directory))))))
 
-              (when add-subdirs
-                (while files
-                  (setq dir-or-file (car files))
-                  (when (file-directory-p dir-or-file)
-                    (if recursive
-                        (leuven-add-to-load-path dir-or-file
-                                             'add-subdirs 'recursive)
-                      (leuven-add-to-load-path dir-or-file)))
-                  (setq files (cdr files))))))))
-
-;; wrapper around `eval-after-load' (added in GNU Emacs 24.4)
-(defmacro with-eval-after-load (mode &rest body)
-  "`eval-after-load' MODE evaluate BODY."
-  (declare (indent defun))
-  `(eval-after-load ,mode
-     '(progn ,@body)))
+  ;; wrapper around `eval-after-load' (added in GNU Emacs 24.4)
+  (defmacro with-eval-after-load (mode &rest body)
+    "`eval-after-load' MODE evaluate BODY."
+    (declare (indent defun))
+    `(eval-after-load ,mode
+       '(progn ,@body)))
 
 ;;*** Site-lisp
 
-      ;; 1.
-      (defvar leuven-local-site-lisp-directory "~/.emacs.d/site-lisp/"
-        "Directory containing additional Emacs Lisp packages (from the Internet).")
+  ;; 1.
+  (defvar leuven-local-site-lisp-directory "~/.emacs.d/site-lisp/"
+    "Directory containing additional Emacs Lisp packages (from the Internet).")
 
-      ;; (leuven-add-to-load-path leuven-local-site-lisp-directory
-      ;;                      'add-subdirs) ;; not recursive
+  ;; (leuven-add-to-load-path leuven-local-site-lisp-directory
+  ;;                      'add-subdirs) ;; not recursive
 
-      (leuven-add-to-load-path leuven-local-site-lisp-directory)
-      (XEmacs
-        (leuven-add-to-load-path (concat leuven-local-site-lisp-directory "color-theme-6.6.0")))
-      (leuven-add-to-load-path (concat leuven-local-site-lisp-directory "ecb-2.40"))
+  (leuven-add-to-load-path leuven-local-site-lisp-directory)
+  (XEmacs
+    (leuven-add-to-load-path (concat leuven-local-site-lisp-directory "color-theme-6.6.0")))
+  (leuven-add-to-load-path (concat leuven-local-site-lisp-directory "ecb-2.40"))
 
-      ;; 2.
-      (defvar leuven-site-lisp-directory "~/emacs/site-lisp/"
-        "Directory containing my personal additional Emacs Lisp packages.")
+  ;; 2.
+  (defvar leuven-site-lisp-directory "~/emacs/site-lisp/"
+    "Directory containing my personal additional Emacs Lisp packages.")
 
-      ;; (leuven-add-to-load-path leuven-site-lisp-directory
-      ;;                      'add-subdirs)
+  ;; (leuven-add-to-load-path leuven-site-lisp-directory
+  ;;                      'add-subdirs)
 
-      (leuven-add-to-load-path leuven-site-lisp-directory)
-      ;; (leuven-add-to-load-path (concat leuven-site-lisp-directory "mode-abbrevs"))
+  (leuven-add-to-load-path leuven-site-lisp-directory)
+  ;; (leuven-add-to-load-path (concat leuven-site-lisp-directory "mode-abbrevs"))
 
-      ;; remember this directory
-      (setq leuven--directory
-            (file-name-directory (or load-file-name (buffer-file-name))))
+  ;; remember this directory
+  (setq leuven--directory
+        (file-name-directory (or load-file-name (buffer-file-name))))
 
 ;;*** Development code
 
-      (defvar leuven-local-repos-directory "~/Public/Repositories/"
-        "Directory containing additional Emacs Lisp public repositories.")
+  (defvar leuven-local-repos-directory "~/Public/Repositories/"
+    "Directory containing additional Emacs Lisp public repositories.")
 
-      ;; No Gnus (unstable Gnus branch)
-      (leuven-add-to-load-path (concat leuven-local-repos-directory "gnus/lisp"))
-      ;; dev version currently necessary for BBDB mail splitting!  why?
+  ;; No Gnus (unstable Gnus branch)
+  (leuven-add-to-load-path (concat leuven-local-repos-directory "gnus/lisp"))
+  ;; dev version currently necessary for BBDB mail splitting!  why?
 
-      (leuven-add-to-load-path (concat leuven-local-repos-directory "babel"))
-      (leuven-add-to-load-path (concat leuven-local-repos-directory "emacs-bookmark-extension"))
+  (leuven-add-to-load-path (concat leuven-local-repos-directory "babel"))
+  (leuven-add-to-load-path (concat leuven-local-repos-directory "emacs-bookmark-extension"))
 
-      (defun leuven--file-exists-and-executable-p (file)
-        "Make sure the file FILE exists and is executable."
-        (if file
-            (if (file-executable-p file)
-                file
-              (message "(warning) Can't find executable `%s'" file)
-              ;; sleep 0.5 s so that you can see the warning
-              (sit-for 0.5))
-          (error "leuven--file-exists-and-executable-p: missing operand")))
+  (defun leuven--file-exists-and-executable-p (file)
+    "Make sure the file FILE exists and is executable."
+    (if file
+        (if (file-executable-p file)
+            file
+          (message "(warning) Can't find executable `%s'" file)
+          ;; sleep 0.5 s so that you can see the warning
+          (sit-for 0.5))
+      (error "leuven--file-exists-and-executable-p: missing operand")))
 
 ) ;; chapter 0-loading-libraries ends here
 
@@ -1372,8 +1356,8 @@
    ;; ;; load flyspell-guess every time you start Emacs.
    ;; (require 'flyspell-guess)
    ;;
-   ;; (eval-after-load "flyspell-guess"
-   ;;   '(flyspell-insinuate-guess-indicator))
+   ;; (with-eval-after-load "flyspell-guess"
+   ;;   (flyspell-insinuate-guess-indicator))
 
 ;;** 16.4 Checking and Correcting (info "(emacs)Spelling")
 
@@ -1452,7 +1436,7 @@
     ;; don't use `M-TAB' to auto-correct the current word (only use `C-.')
     (setq flyspell-use-meta-tab nil)
     ;; FIXME M-TAB is still bound to `flyspell-auto-correct-word' when this
-    ;; chunk of code is placed within (eval-after-load "flyspell"...)
+    ;; chunk of code is placed within (with-eval-after-load "flyspell"...)
 
     (with-eval-after-load "flyspell"
 
@@ -2559,8 +2543,10 @@
 
   ;; turn tool bar off
   (when (display-graphic-p)
-    (GNUEmacs (tool-bar-mode -1))
-    (XEmacs (set-specifier default-toolbar-visible-p nil)))
+    (GNUEmacs
+      (tool-bar-mode -1))
+    (XEmacs
+      (set-specifier default-toolbar-visible-p nil)))
 
 ;;** 21.16 Using (info "(emacs)Dialog Boxes")
 
@@ -4576,8 +4562,7 @@ From %c"
   ;; custom commands for the agenda -- start with a clean slate
   (setq org-agenda-custom-commands nil)
 
-  (eval-after-load "org-agenda"
-      '(progn
+  (with-eval-after-load "org-agenda"
 
   (add-to-list 'org-agenda-custom-commands
                '("f" "Like s, but with extra files"
@@ -5171,7 +5156,7 @@ From %c"
                   (org-agenda-write-buffer-name "List Review"))
                  "org-agenda-all-todo-entries.html") t)
 
-  )) ;; eval-after-load "org-agenda" ends here
+  ) ;; with-eval-after-load "org-agenda" ends here
 
 ;;** 10.7 (info "(org)Exporting Agenda Views")
 
@@ -6131,9 +6116,8 @@ From %c"
 
   ;; support for LaTeX documents
   (GNUEmacs
-   (eval-after-load "latex"
+   (with-eval-after-load "latex"
    ;; if "tex", error when loading the TeX-mode, because we add-to-list in a LaTeX variable (not loaded yet)
-     '(progn
 
         ;; ;; TEST ??
         ;; (add-hook 'tex-mode-hook 'imenu-add-menubar-index)
@@ -6308,7 +6292,7 @@ From %c"
           ;; menu generally comes up faster
           (setq reftex-use-multiple-selection-buffers t))
 
-        ))) ;; eval-after-load "latex" ends here
+        )) ;; with-eval-after-load "latex" ends here
 
 ) ;; chapter 25.10-tex-mode ends here
 
@@ -6826,9 +6810,9 @@ From %c"
   ;;          (not (looking-back "[-[:alnum:]_*+/=<>!?]+")))
   ;;     (call-interactively 'lisp-complete-symbol)))
   ;;
-  ;; (eval-after-load "lisp-mode"
-  ;;   '(define-key emacs-lisp-mode-map
-  ;;      (kbd "<tab>") 'elisp-indent-or-complete))
+  ;; (with-eval-after-load "lisp-mode"
+  ;;   (define-key emacs-lisp-mode-map
+  ;;     (kbd "<tab>") 'elisp-indent-or-complete))
 
   ;;;_  + paredit
 
@@ -7095,61 +7079,60 @@ From %c"
 
   (leuven--section "28.4 Emacs Development Environment")
 
-(unless (string< emacs-version "23.2")
-  ;; ;; enable global EDE (project management) features
-  ;; (global-ede-mode 1)
+  (unless (string< emacs-version "23.2")
+    ;; ;; enable global EDE (project management) features
+    ;; (global-ede-mode 1)
 
-  (setq semantic-default-submodes
-        '(
-          ;; turn Semantic DB mode on (Semantic parsers store the
-          ;; results of parsing source code in a database file, which can
-          ;; be saved for future Emacs sessions)
-          global-semanticdb-minor-mode
+    (setq semantic-default-submodes
+          '(
+            ;; turn Semantic DB mode on (Semantic parsers store the
+            ;; results of parsing source code in a database file, which can
+            ;; be saved for future Emacs sessions)
+            global-semanticdb-minor-mode
 
-          ;; the idle scheduler with automatically reparse buffers in idle
-          ;; time
-          global-semantic-idle-scheduler-mode ;; [minimum-features]
+            ;; the idle scheduler with automatically reparse buffers in idle
+            ;; time
+            global-semantic-idle-scheduler-mode ;; [minimum-features]
 
-          ;; display a summary of the symbol at point in the echo area
-          ;; (~ ElDoc)
-          global-semantic-idle-summary-mode ;; [code-helpers]
+            ;; display a summary of the symbol at point in the echo area
+            ;; (~ ElDoc)
+            global-semantic-idle-summary-mode ;; [code-helpers]
 
-          ;; display a tooltip with a list of possible completions near
-          ;; the cursor
-          global-semantic-idle-completions-mode ;; [gaudy-code-helpers]
+            ;; display a tooltip with a list of possible completions near
+            ;; the cursor
+            global-semantic-idle-completions-mode ;; [gaudy-code-helpers]
 
-          ;; turn Semantic MRU Bookmarks on (keep track of the Most
-          ;; Recently Used tags)
-          global-semantic-mru-bookmark-mode
+            ;; turn Semantic MRU Bookmarks on (keep track of the Most
+            ;; Recently Used tags)
+            global-semantic-mru-bookmark-mode
 
-          ;; enable Semantic-Stickyfunc mode (display a header line that
-          ;; shows the declaration line of the function or tag)
-          global-semantic-stickyfunc-mode ;; [gaudy-code-helpers]
+            ;; enable Semantic-Stickyfunc mode (display a header line that
+            ;; shows the declaration line of the function or tag)
+            global-semantic-stickyfunc-mode ;; [gaudy-code-helpers]
 
-          ;; enable Semantic-Highlight-Func mode
-          global-semantic-highlight-func-mode ;; [excessive-code-helpers]
+            ;; enable Semantic-Highlight-Func mode
+            global-semantic-highlight-func-mode ;; [excessive-code-helpers]
 
-          ;; turn on all active decorations
-          global-semantic-decoration-mode ;; [gaudy-code-helpers]
-          ))
+            ;; turn on all active decorations
+            global-semantic-decoration-mode ;; [gaudy-code-helpers]
+            ))
 
-  ;; XXX if prog-mode, then Semantic will be launched after Emacs init, as
-  ;; the scratch buffer is in Emacs Lisp...
-  (add-hook 'java-mode-hook
-            (lambda ()
-              ;; enable parser features (Semantic mode) and install a
-              ;; `Development' menu on the menu-bar
-              (semantic-mode 1)))
+    ;; XXX if prog-mode, then Semantic will be launched after Emacs init, as
+    ;; the scratch buffer is in Emacs Lisp...
+    (add-hook 'java-mode-hook
+              (lambda ()
+                ;; enable parser features (Semantic mode) and install a
+                ;; `Development' menu on the menu-bar
+                (semantic-mode 1)))
 
-  ;; ;; smart completion, and display of information for tags & classes
-  ;; (require 'semantic/ia)
-  ;;
-  ;; (require 'semantic/db)
+    ;; ;; smart completion, and display of information for tags & classes
+    ;; (require 'semantic/ia)
+    ;;
+    ;; (require 'semantic/db)
 
-  (eval-after-load "semantic"
-    '(progn
+    (with-eval-after-load "semantic"
 
-     (defun leuven--semantic ()
+      (defun leuven--semantic ()
         ;; automatically complete whatever symbol you are typing
         (local-set-key "\C-c?" 'semantic-ia-complete-symbol) ;; better binding: `M-/'?
 
@@ -7197,21 +7180,23 @@ From %c"
         (local-set-key ">" 'semantic-complete-self-insert)
         (local-set-key "\C-c\C-r" 'semantic-symref))
 
-      (add-hook 'c-mode-common-hook 'leuven--c-mode-semantic)))
+      (add-hook 'c-mode-common-hook 'leuven--c-mode-semantic))
 
-      ;; hooks, specific for Semantic
-      (defun leuven--semantic-imenu ()
-        (imenu-add-to-menubar "TAGS"))
+    ;; hooks, specific for Semantic
+    (defun leuven--semantic-imenu ()
+      (imenu-add-to-menubar "TAGS"))
 
-      (add-hook 'semantic-init-hooks 'leuven--semantic-imenu)
-)
+    (add-hook 'semantic-init-hooks 'leuven--semantic-imenu)
+
+    )
 
   ;; Emacs Code Browser
   (custom-set-variables '(ecb-options-version "2.40"))
   (when (try-require 'ecb-autoloads-XXX)
 
     ;; trick for starting ECB 2.40 (with CEDET merged in Emacs since 23.2)
-    (GNUEmacs (require 'semantic/analyze))
+    (GNUEmacs
+      (require 'semantic/analyze))
     (provide 'semantic-analyze)
     (provide 'semantic-ctxt)
     (provide 'semanticdb)
@@ -7699,8 +7684,10 @@ From %c"
 
     ;; turn appointment checking on (enable reminders)
     (when leuven-load-verbose (message "(info) Enable appointment reminders..."))
-    (GNUEmacs (appt-activate 1))
-    (XEmacs (appt-initialize))
+    (GNUEmacs
+      (appt-activate 1))
+    (XEmacs
+      (appt-initialize))
     (when leuven-load-verbose (message "(info) Enable appointment reminders... Done"))
 
     ;; enable appointment notification, several minutes beforehand
@@ -9307,7 +9294,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130803.0009]--")
+(message "* --[ Loaded Emacs Leuven 20130803.1056]--")
 
 (provide 'emacs-leuven)
 
