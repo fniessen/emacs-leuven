@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-03 Sat 11:08>
+# Time-stamp: <2013-08-03 Sat 11:24>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -939,8 +939,8 @@ You can ask what pertains to a given topic by typing =M-x apropos <RET> pattern
 
   (with-eval-after-load "apropos"
 
-   ;; check all variables and non-interactive functions as well
-   (setq apropos-do-all t))
+    ;; check all variables and non-interactive functions as well
+    (setq apropos-do-all t))
 
   ;; show variables whose name matches the pattern
   (GNUEmacs
@@ -996,31 +996,31 @@ In a manual, these key bindings will make your life easier:
     (kbd "<C-f1>") 'info-lookup-symbol)
 
   (with-eval-after-load "info"
-   ;; Don't play with `Info-directory-list', it's not intended to be
-   ;; settable by the user. When `info' is called, this variable is
-   ;; populated from:
-   ;; 1. the `INFOPATH' environment variable and/or
-   ;; 2. the `Info-default-directory-list' variable -- non-existent
-   ;;    directories will be removed when copied to `Info-directory-list'
+    ;; Don't play with `Info-directory-list', it's not intended to be
+    ;; settable by the user. When `info' is called, this variable is
+    ;; populated from:
+    ;; 1. the `INFOPATH' environment variable and/or
+    ;; 2. the `Info-default-directory-list' variable -- non-existent
+    ;;    directories will be removed when copied to `Info-directory-list'
 
-   ;; list of additional directories to search for Info documentation
-   ;; files (in the order they are listed)
-   (setq Info-default-directory-list
-         ;; FIXME `Info-additional-directory-list' does not work
-         (cond (running-ms-windows
-                ;; EmacsW32 doesn't see `INFOPATH'...
-                `(
-                  ,(expand-file-name
-                    (concat (file-name-directory (locate-library "org"))
-                            "../doc/"))
-                  ,(expand-file-name (concat leuven-local-repos-directory "gnus/texi/"))
-                  "c:/cygwin/usr/share/info/"
-                  ,@Info-default-directory-list))
-               (t
-                ;; best to set the `INFOPATH' environment variable
-                ;; (outside of Emacs, in the same shell from which you
-                ;; invoke Emacs)
-                nil)))
+    ;; list of additional directories to search for Info documentation
+    ;; files (in the order they are listed)
+    (setq Info-default-directory-list
+          ;; FIXME `Info-additional-directory-list' does not work
+          (cond (running-ms-windows
+                 ;; EmacsW32 doesn't see `INFOPATH'...
+                 `(
+                   ,(expand-file-name
+                     (concat (file-name-directory (locate-library "org"))
+                             "../doc/"))
+                   ,(expand-file-name (concat leuven-local-repos-directory "gnus/texi/"))
+                   "c:/cygwin/usr/share/info/"
+                   ,@Info-default-directory-list))
+                (t
+                 ;; best to set the `INFOPATH' environment variable
+                 ;; (outside of Emacs, in the same shell from which you
+                 ;; invoke Emacs)
+                 nil)))
 #+end_src
 
 ~Info+~ fontifies entries for reference items (functions, macros, commands,
@@ -1028,27 +1028,27 @@ special forms, constants, options, other variables), and that includes their
 parameters, even those on continuation lines.
 
 #+begin_src emacs-lisp
-   (GNUEmacs
-     ;; with `info+.el', you can merge an Info node with its subnodes
-     ;; into the same buffer, by calling `Info-merge-subnodes' (bound to
-     ;; `+')
-     (try-require 'info+-XXX))  ;; error finding dir file
+    (GNUEmacs
+      ;; with `info+.el', you can merge an Info node with its subnodes
+      ;; into the same buffer, by calling `Info-merge-subnodes' (bound to
+      ;; `+')
+      (try-require 'info+-XXX))  ;; error finding dir file
 #+end_src
 
 #+begin_src emacs-lisp
-   ;; some info related functions
-   ;; (to insert links such as `(info "(message)Insertion Variables")')
-   (when (locate-library "rs-info")
-     (autoload 'rs-info-insert-current-node "rs-info"
-       "Insert reference to current Info node using STYPE in buffer." t)
-     (autoload 'rs-info-boxquote "rs-info"
-       "Yank text (from an info node), box it and use current info node as title." t)
-     (autoload 'rs-info-reload "rs-info"
-       "Reload current info node." t)
-     (autoload 'rs-info-insert-node-for-variable "rs-info"
-       "Insert a custom style info node for the top level form at point." t)
-     (defalias 'boxquote-info 'rs-info-boxquote))
-   )
+    ;; some info related functions
+    ;; (to insert links such as `(info "(message)Insertion Variables")')
+    (when (locate-library "rs-info")
+      (autoload 'rs-info-insert-current-node "rs-info"
+        "Insert reference to current Info node using STYPE in buffer." t)
+      (autoload 'rs-info-boxquote "rs-info"
+        "Yank text (from an info node), box it and use current info node as title." t)
+      (autoload 'rs-info-reload "rs-info"
+        "Reload current info node." t)
+      (autoload 'rs-info-insert-node-for-variable "rs-info"
+        "Insert a custom style info node for the top level form at point." t)
+      (defalias 'boxquote-info 'rs-info-boxquote))
+    )
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1254,12 +1254,12 @@ directory.
 
   (with-eval-after-load "bookmark"
 
-   ;; where to save the bookmarks
-   (setq bookmark-default-file "~/.emacs.d/bookmarks.bmk")
-   ;;! a .txt extension would load Org at the time bookmark is required!
+    ;; where to save the bookmarks
+    (setq bookmark-default-file "~/.emacs.d/bookmarks.bmk")
+    ;;! a .txt extension would load Org at the time bookmark is required!
 
-   ;; each command that sets a bookmark will also save your bookmarks
-   (setq bookmark-save-flag 1))
+    ;; each command that sets a bookmark will also save your bookmarks
+    (setq bookmark-save-flag 1))
 #+end_src
 
 Visible bookmarks in buffer.
@@ -1270,14 +1270,14 @@ Visible bookmarks in buffer.
   ;; extensions to standard library `bookmark.el'
   (with-eval-after-load "bookmark-XXX" ;; XXX here does not work!?
 
-   (try-require 'bookmark+++XXX)
+    (try-require 'bookmark+++XXX)
 
-   ;; bookmarks to automatically highlight when jumped to
-   (setq bmkp-auto-light-when-jump 'any-bookmark)
+    ;; bookmarks to automatically highlight when jumped to
+    (setq bmkp-auto-light-when-jump 'any-bookmark)
 
-   ;; we will often be going back and forth between using Bookmark+ and
-   ;; using vanilla Emacs
-   (setq bmkp-propertize-bookmark-names-flag nil))
+    ;; we will often be going back and forth between using Bookmark+ and
+    ;; using vanilla Emacs
+    (setq bmkp-propertize-bookmark-names-flag nil))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8717,17 +8717,18 @@ aliases =(la)tex-mode= to =(La)TeX-mode=.
 
   ;; support for LaTeX documents
   (GNUEmacs
-   (with-eval-after-load "latex"
-   ;; if "tex", error when loading the TeX-mode, because we add-to-list in a LaTeX variable (not loaded yet)
+    (with-eval-after-load "latex"
+      ;; if "tex", error when loading the TeX-mode, because we add-to-list in a
+      ;; LaTeX variable (not loaded yet)
 
-        ;; ;; TEST ??
-        ;; (add-hook 'tex-mode-hook 'imenu-add-menubar-index)
+      ;; ;; TEST ??
+      ;; (add-hook 'tex-mode-hook 'imenu-add-menubar-index)
 
-        ;; ;; LaTeX-sensitive spell checking
-        ;; (add-hook 'tex-mode-hook
-        ;;           (lambda ()
-        ;;             (make-local-variable 'ispell-parser)
-        ;;             (setq ispell-parser 'tex)))
+      ;; ;; LaTeX-sensitive spell checking
+      ;; (add-hook 'tex-mode-hook
+      ;;           (lambda ()
+      ;;             (make-local-variable 'ispell-parser)
+      ;;             (setq ispell-parser 'tex)))
 #+end_src
 
 You can detect the *successful activation of AUCTeX*: after loading a LaTeX
@@ -8743,22 +8744,22 @@ file, AUCTeX gives you a ~Command~ menu.
 #+begin_src emacs-lisp
 ;;** 2.6 (info "(auctex)Completion")
 
-        (leuven--section "2.6 (auctex)Completion")
+      (leuven--section "2.6 (auctex)Completion")
 
-        ;; if this is non-nil when AUCTeX is loaded, the TeX escape
-        ;; character `\' will be bound to `TeX-electric-macro'
-        (setq TeX-electric-escape t)
+      ;; if this is non-nil when AUCTeX is loaded, the TeX escape
+      ;; character `\' will be bound to `TeX-electric-macro'
+      (setq TeX-electric-escape t)
 
 ;;** 2.8 (info "(auctex)Indenting")
 
-        (leuven--section "2.8 (auctex)Indenting")
+      (leuven--section "2.8 (auctex)Indenting")
 
-        ;; leave the `tikzpicture' code unfilled when doing `M-q'
-        (add-to-list 'LaTeX-indent-environment-list '("tikzpicture"))
+      ;; leave the `tikzpicture' code unfilled when doing `M-q'
+      (add-to-list 'LaTeX-indent-environment-list '("tikzpicture"))
 
-        ;; auto-indentation (suggested by the AUCTeX manual -- instead of
-        ;; adding a local key binding to `<RET>' in the `LaTeX-mode-hook')
-        (setq TeX-newline-function 'newline-and-indent)
+      ;; auto-indentation (suggested by the AUCTeX manual -- instead of
+      ;; adding a local key binding to `<RET>' in the `LaTeX-mode-hook')
+      (setq TeX-newline-function 'newline-and-indent)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8766,43 +8767,43 @@ file, AUCTeX gives you a ~Command~ menu.
 
 ;;** 3.1 (info "(auctex)Font Locking")
 
-        (leuven--section "3.1 (auctex)Font Locking")
+      (leuven--section "3.1 (auctex)Font Locking")
 
-        ;; (for Org mode) add the `comment' environment to the variable
-        ;; `LaTeX-verbatim-environments' so that, if the `#+TBLFM' line
-        ;; contains an odd number of dollar characters, this does not
-        ;; cause problems with font-lock in latex-mode
-        (add-to-list 'LaTeX-verbatim-environments "comment")
+      ;; (for Org mode) add the `comment' environment to the variable
+      ;; `LaTeX-verbatim-environments' so that, if the `#+TBLFM' line
+      ;; contains an odd number of dollar characters, this does not
+      ;; cause problems with font-lock in latex-mode
+      (add-to-list 'LaTeX-verbatim-environments "comment")
 #+end_src
 
 #+begin_src emacs-lisp
 ;;** 4.1 Executing (info "(auctex)Commands")
 
-        (leuven--section "4.1 Executing (auctex)Commands")
+      (leuven--section "4.1 Executing (auctex)Commands")
 
-        ;; add a command to execute on the LaTeX document
-        (add-to-list 'TeX-command-list
-                     '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+      ;; add a command to execute on the LaTeX document
+      (add-to-list 'TeX-command-list
+                   '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
 
-        (defun leuven--LaTeX-mode-hook ()
-          ;; default command to run in the LaTeX buffer
-          (setq TeX-command-default
-                (save-excursion
-                  (save-restriction
-                    (widen)
-                    (goto-char (point-min))
-                    (let ((re (concat
-                               "^\\s-*\\\\usepackage\\(?:\\[.*\\]\\)?"
-                               "{.*\\<\\(?:font\\|math\\)spec\\>.*}")))
-                      (save-match-data
-                        (if (re-search-forward re 3000 t)
-                            "XeLaTeX"
-                          "LaTeX")))))))
+      (defun leuven--LaTeX-mode-hook ()
+        ;; default command to run in the LaTeX buffer
+        (setq TeX-command-default
+              (save-excursion
+                (save-restriction
+                  (widen)
+                  (goto-char (point-min))
+                  (let ((re (concat
+                             "^\\s-*\\\\usepackage\\(?:\\[.*\\]\\)?"
+                             "{.*\\<\\(?:font\\|math\\)spec\\>.*}")))
+                    (save-match-data
+                      (if (re-search-forward re 3000 t)
+                          "XeLaTeX"
+                        "LaTeX")))))))
 
-        (add-hook 'LaTeX-mode-hook 'leuven--LaTeX-mode-hook)
+      (add-hook 'LaTeX-mode-hook 'leuven--LaTeX-mode-hook)
 
-        ;; use PDF mode by default (instead of DVI)
-        (setq-default TeX-PDF-mode t)
+      ;; use PDF mode by default (instead of DVI)
+      (setq-default TeX-PDF-mode t)
 #+end_src
 
 A decent viewer reloads the PDF automatically when the file has changed while
@@ -8816,77 +8817,77 @@ SumatraPDF as your PDF viewer.
 #+begin_src emacs-lisp
 ;;** 4.2 (info "(auctex)Viewing") the formatted output
 
-        (leuven--section "4.2 (auctex)Viewing the formatted output")
+      (leuven--section "4.2 (auctex)Viewing the formatted output")
 
-        (defvar sumatrapdf-command
-          (concat windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
-          "Path to the SumatraPDF executable.")
+      (defvar sumatrapdf-command
+        (concat windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
+        "Path to the SumatraPDF executable.")
 
-        ;; use a saner PDF viewer (evince, SumatraPDF)
-        (setcdr (assoc "^pdf$" TeX-output-view-style)
-                (cond (running-ms-windows
-                       `("." (concat "\"" ,sumatrapdf-command "\" %o")))
-                      ;; under Windows, we could open the PDF file with
-                      ;; `start "" xxx.pdf' (in a command prompt)
-                      (t
-                       '("." "evince %o"))))
+      ;; use a saner PDF viewer (evince, SumatraPDF)
+      (setcdr (assoc "^pdf$" TeX-output-view-style)
+              (cond (running-ms-windows
+                     `("." (concat "\"" ,sumatrapdf-command "\" %o")))
+                    ;; under Windows, we could open the PDF file with
+                    ;; `start "" xxx.pdf' (in a command prompt)
+                    (t
+                     '("." "evince %o"))))
 
-        ;; for AUCTeX 11.86
-        (when (boundp 'TeX-view-program-list)
-          (add-to-list 'TeX-view-program-list
-                       `("SumatraPDF"
-                         (concat "\"" ,sumatrapdf-command "\" %o"))))
+      ;; for AUCTeX 11.86
+      (when (boundp 'TeX-view-program-list)
+        (add-to-list 'TeX-view-program-list
+                     `("SumatraPDF"
+                       (concat "\"" ,sumatrapdf-command "\" %o"))))
 
-        (when running-ms-windows
-          (setcdr (assoc 'output-pdf TeX-view-program-selection)
-                  '("SumatraPDF")))
+      (when running-ms-windows
+        (setcdr (assoc 'output-pdf TeX-view-program-selection)
+                '("SumatraPDF")))
 #+end_src
 
 #+begin_src emacs-lisp
 ;;** 4.3 (info "(auctex)Debugging") Catching the errors
 
-        (leuven--section "4.3 (auctex)Debugging Catching the errors")
+      (leuven--section "4.3 (auctex)Debugging Catching the errors")
 
-        ;; don't show output of TeX compilation in other window
-        (setq TeX-show-compilation nil)
+      ;; don't show output of TeX compilation in other window
+      (setq TeX-show-compilation nil)
 #+end_src
 
 #+begin_src emacs-lisp
 ;;** 5.2 (info "(auctex)Multifile") Documents
 
-        ;; AUCTeX will will assume the file is a master file itself
-        (setq-default TeX-master t)
+      ;; AUCTeX will will assume the file is a master file itself
+      (setq-default TeX-master t)
 
 ;;** 5.3 Automatic (info "(auctex)Parsing Files")
 
-        ;; enable parse on load (if no style hook is found for the file)
-        (setq TeX-parse-self t)
+      ;; enable parse on load (if no style hook is found for the file)
+      (setq TeX-parse-self t)
 
-        ;; enable automatic save of parsed style information when saving
-        ;; the buffer
-        (setq TeX-auto-save t)
+      ;; enable automatic save of parsed style information when saving
+      ;; the buffer
+      (setq TeX-auto-save t)
 
 ;;** 5.5 (info "(auctex)Automatic") Customization
 
-        ;; TODO Add beamer.el to TeX-style-path
+      ;; TODO Add beamer.el to TeX-style-path
 
 ;;*** 5.5.1 (info "(auctex)Automatic Global") Customization for the Site
 
-        (leuven--section "5.5.1 (auctex)Automatic Global Customization for the Site")
+      (leuven--section "5.5.1 (auctex)Automatic Global Customization for the Site")
 
-        ;; directory containing automatically generated TeX information
-        (setq TeX-auto-global
-              ;; must end with a slash
-              "~/.emacs.d/auctex-auto-generated-info/")
+      ;; directory containing automatically generated TeX information
+      (setq TeX-auto-global
+            ;; must end with a slash
+            "~/.emacs.d/auctex-auto-generated-info/")
 
 ;;*** 5.5.3 (info "(auctex)Automatic Local") Customization for a Directory
 
-        (leuven--section "5.5.3 (auctex)Automatic Local Customization for a Directory")
+      (leuven--section "5.5.3 (auctex)Automatic Local Customization for a Directory")
 
-        ;; directory containing automatically generated TeX information
-        (setq TeX-auto-local
-              ;; must end with a slash
-              "~/.emacs.d/auctex-auto-generated-info/")
+      ;; directory containing automatically generated TeX information
+      (setq TeX-auto-local
+            ;; must end with a slash
+            "~/.emacs.d/auctex-auto-generated-info/")
 #+end_src
 
 ** Preview-LaTeX
@@ -8897,24 +8898,24 @@ LaTeX file, =preview-latex= gives you a ~Preview~ menu.
 #+begin_src emacs-lisp
 ;;** (info "(preview-latex)Top")
 
-        (leuven--section "(preview-latex)Top")
+      (leuven--section "(preview-latex)Top")
 
-        (when (locate-library "preview-latex")
-          (load "preview-latex.el") t)
+      (when (locate-library "preview-latex")
+        (load "preview-latex.el") t)
 
-        (with-eval-after-load "preview"
+      (with-eval-after-load "preview"
 
-          ;; path to `gs' command (for conversion from EPS)
-          (setq preview-gs-command
-            (cond (running-ms-windows
-                   (concat windows-program-files-dir
-                           "gs/gs9.01/bin/gswin32c.exe")) ;; XXX Not up-to-date!!!
-                  (t
-                   "/usr/bin/gs")))
-          (leuven--file-exists-and-executable-p preview-gs-command)
+        ;; path to `gs' command (for conversion from EPS)
+        (setq preview-gs-command
+          (cond (running-ms-windows
+                 (concat windows-program-files-dir
+                         "gs/gs9.01/bin/gswin32c.exe")) ;; XXX Not up-to-date!!!
+                (t
+                 "/usr/bin/gs")))
+        (leuven--file-exists-and-executable-p preview-gs-command)
 
-          ;; scale factor for included previews
-          (setq preview-scale-function 1.2))
+        ;; scale factor for included previews
+        (setq preview-scale-function 1.2))
 #+end_src
 
 ** RefTeX
@@ -8939,23 +8940,23 @@ current selection. More general index entries are created with =C-c <=.
 =C-c >= displays the compiled index.
 
 #+begin_src emacs-lisp
-        (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-                                   ;; with AUCTeX LaTeX mode
+      (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+                                 ;; with AUCTeX LaTeX mode
 
-        ;; minor mode with distinct support for `\label', `\ref', `\cite'
-        ;; and `\index' in LaTeX
-        (with-eval-after-load "reftex"
+      ;; minor mode with distinct support for `\label', `\ref', `\cite'
+      ;; and `\index' in LaTeX
+      (with-eval-after-load "reftex"
 
-          ;; turn all plug-ins on
-          (setq reftex-plug-into-AUCTeX t)
+        ;; turn all plug-ins on
+        (setq reftex-plug-into-AUCTeX t)
 
-          ;; use a separate selection buffer for each label type -- so the
-          ;; menu generally comes up faster
-          (setq reftex-use-multiple-selection-buffers t))
+        ;; use a separate selection buffer for each label type -- so the
+        ;; menu generally comes up faster
+        (setq reftex-use-multiple-selection-buffers t))
 #+end_src
 
 #+begin_src emacs-lisp
-        )) ;; with-eval-after-load "latex" ends here
+      )) ;; with-eval-after-load "latex" ends here
 #+end_src
 
 #+begin_src emacs-lisp
@@ -9831,13 +9832,13 @@ Show the diff we are about to commit: =C-c C-d=.
 #+begin_src emacs-lisp
 ;;*** 28.1.4 (info "(emacs)Log Buffer")
 
-    (defun leuven--vc-log-mode-setup ()
-      ;; check if `ispell-program-name' seems correct
-      (when (ispell-check-program-name)
-        (setq ispell-local-dictionary "american")
-        (flyspell-mode)))
+  (defun leuven--vc-log-mode-setup ()
+    ;; check if `ispell-program-name' seems correct
+    (when (ispell-check-program-name)
+      (setq ispell-local-dictionary "american")
+      (flyspell-mode)))
 
-    (add-hook 'vc-log-mode-hook 'leuven--vc-log-mode-setup)
+  (add-hook 'vc-log-mode-hook 'leuven--vc-log-mode-setup)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -9860,10 +9861,10 @@ Show the diff we are about to commit: =C-c C-d=.
 #+begin_src emacs-lisp
 ;;*** 28.1.6 (info "(emacs)Old Revisions")
 
-    (leuven--section "28.1.6 Examining And Comparing Old Revisions")
+  (leuven--section "28.1.6 Examining And Comparing Old Revisions")
 
-    ;; switches for diff under VC
-    (setq vc-diff-switches diff-switches)
+  ;; switches for diff under VC
+  (setq vc-diff-switches diff-switches)
 #+end_src
 
 *** VC Directory Mode
@@ -9871,73 +9872,73 @@ Show the diff we are about to commit: =C-c C-d=.
 #+begin_src emacs-lisp
 ;;*** 28.1.9 (info "(emacs)VC Directory Mode")
 
-    (leuven--section "28.1.9 VC Directory Mode")
+  (leuven--section "28.1.9 VC Directory Mode")
 
-    (defun leuven-vc-jump ()
-      "Jump to VC status buffer."
-      (interactive)
-      (let* ((fname (buffer-file-name))
-             (dname (if fname
-                        (if (file-directory-p fname)
-                            fname
-                          (file-name-directory fname))
-                      default-directory)))
-        (message "VC status for directory: %s" dname)
-        (vc-dir dname)))
+  (defun leuven-vc-jump ()
+    "Jump to VC status buffer."
+    (interactive)
+    (let* ((fname (buffer-file-name))
+           (dname (if fname
+                      (if (file-directory-p fname)
+                          fname
+                        (file-name-directory fname))
+                    default-directory)))
+      (message "VC status for directory: %s" dname)
+      (vc-dir dname)))
 
-    ;; vc status without asking for a directory
-    (global-set-key
-      (kbd "<C-f9>") 'leuven-vc-jump)
+  ;; vc status without asking for a directory
+  (global-set-key
+    (kbd "<C-f9>") 'leuven-vc-jump)
 
-    ;; hide up-to-date and unregistered files
-    (add-hook  'vc-dir-mode-hook
-               (lambda ()
-                 (define-key vc-dir-mode-map
-                   (kbd "x") 'leuven-vc-dir-hide-up-to-date-and-unregistered)
-                 (define-key vc-dir-mode-map
-                   (kbd "E") 'vc-ediff)
-                 (define-key vc-dir-mode-map
-                   (kbd "#") 'vc-ediff-ignore-whitespace)
-                 ))
+  ;; hide up-to-date and unregistered files
+  (add-hook  'vc-dir-mode-hook
+             (lambda ()
+               (define-key vc-dir-mode-map
+                 (kbd "x") 'leuven-vc-dir-hide-up-to-date-and-unregistered)
+               (define-key vc-dir-mode-map
+                 (kbd "E") 'vc-ediff)
+               (define-key vc-dir-mode-map
+                 (kbd "#") 'vc-ediff-ignore-whitespace)
+               ))
 
-    (defun leuven-vc-dir-hide-up-to-date-and-unregistered ()
-      (interactive)
-      (vc-dir-hide-up-to-date)
-      (vc-dir-hide-unregistered))
+  (defun leuven-vc-dir-hide-up-to-date-and-unregistered ()
+    (interactive)
+    (vc-dir-hide-up-to-date)
+    (vc-dir-hide-unregistered))
 
-    (defun vc-dir-hide-unregistered ()
-      "Hide unregistered items from display."
-      (interactive)
-      (let ((crt (ewoc-nth vc-ewoc -1))
-            (first (ewoc-nth vc-ewoc 0)))
-        ;; go over from the last item to the first and remove the
-        ;; unregistered files and directories with no child files
-        (while (not (eq crt first))
-          (let* ((data (ewoc-data crt))
-                 (dir (vc-dir-fileinfo->directory data))
-                 (next (ewoc-next vc-ewoc crt))
-                 (prev (ewoc-prev vc-ewoc crt))
-                 ;; ewoc-delete does not work without this...
-                 (inhibit-read-only t))
-            (when (or
-                   ;; remove directories with no child files
-                   (and dir
-                        (or
-                         ;; nothing follows this directory
-                         (not next)
-                         ;; next item is a directory
-                         (vc-dir-fileinfo->directory (ewoc-data next))))
-                   ;; remove files in the unregistered state
-                   (eq (vc-dir-fileinfo->state data) 'unregistered))
-              (ewoc-delete vc-ewoc crt))
-            (setq crt prev)))))
+  (defun vc-dir-hide-unregistered ()
+    "Hide unregistered items from display."
+    (interactive)
+    (let ((crt (ewoc-nth vc-ewoc -1))
+          (first (ewoc-nth vc-ewoc 0)))
+      ;; go over from the last item to the first and remove the
+      ;; unregistered files and directories with no child files
+      (while (not (eq crt first))
+        (let* ((data (ewoc-data crt))
+               (dir (vc-dir-fileinfo->directory data))
+               (next (ewoc-next vc-ewoc crt))
+               (prev (ewoc-prev vc-ewoc crt))
+               ;; ewoc-delete does not work without this...
+               (inhibit-read-only t))
+          (when (or
+                 ;; remove directories with no child files
+                 (and dir
+                      (or
+                       ;; nothing follows this directory
+                       (not next)
+                       ;; next item is a directory
+                       (vc-dir-fileinfo->directory (ewoc-data next))))
+                 ;; remove files in the unregistered state
+                 (eq (vc-dir-fileinfo->state data) 'unregistered))
+            (ewoc-delete vc-ewoc crt))
+          (setq crt prev)))))
 
-    (defun vc-ediff-ignore-whitespace (historic &optional not-urgent)
-      "Ignore regions that differ in white space & line breaks only."
-      (interactive (list current-prefix-arg t))
-      (require 'ediff)
-      (let ((ediff-ignore-similar-regions t))
-        (call-interactively 'vc-ediff))) ;; XXX does not work yet
+  (defun vc-ediff-ignore-whitespace (historic &optional not-urgent)
+    "Ignore regions that differ in white space & line breaks only."
+    (interactive (list current-prefix-arg t))
+    (require 'ediff)
+    (let ((ediff-ignore-similar-regions t))
+      (call-interactively 'vc-ediff))) ;; XXX does not work yet
 #+end_src
 
 *** Customizing VC
@@ -9945,52 +9946,52 @@ Show the diff we are about to commit: =C-c C-d=.
 #+begin_src emacs-lisp
 ;;*** 28.1.12 (info "(emacs)Customizing VC")
 
-    (leuven--section "28.1.12 Customizing VC")
+  (leuven--section "28.1.12 Customizing VC")
 
-    ;; ;; display run messages from back-end commands
-    ;; (setq vc-command-messages t) ;; [default: nil]
+  ;; ;; display run messages from back-end commands
+  ;; (setq vc-command-messages t) ;; [default: nil]
 
-    ;; http://www.emacswiki.org/emacs/VcTopDirectory
-    ;; For git
-    (defadvice vc-dir-prepare-status-buffer
-               (before leuven-vcs-goto-top-directory activate compile)
-      (let* ((backend (ad-get-arg 2))
-             (vcs-dir (ad-get-arg 1))
-             (vcs-top-dir (vc-call-backend backend 'responsible-p vcs-dir)))
-        (when (stringp vcs-top-dir)
-          (ad-set-arg 1 vcs-top-dir))))
+  ;; http://www.emacswiki.org/emacs/VcTopDirectory
+  ;; For git
+  (defadvice vc-dir-prepare-status-buffer
+             (before leuven-vcs-goto-top-directory activate compile)
+    (let* ((backend (ad-get-arg 2))
+           (vcs-dir (ad-get-arg 1))
+           (vcs-top-dir (vc-call-backend backend 'responsible-p vcs-dir)))
+      (when (stringp vcs-top-dir)
+        (ad-set-arg 1 vcs-top-dir))))
 
-    (GNUEmacs
-      (defun leuven--ediff-revision (file rev1 &optional rev2)
-        "Run Ediff by comparing 'master' against the 'current'."
-        (require 'ediff)
-        (find-file file)
-        (if (and (buffer-modified-p)
-                 (y-or-n-p (format "Buffer %s is modified. Save buffer? "
-                                   (buffer-name))))
-            (save-buffer (current-buffer)))
-        (ediff-load-version-control)
-        (funcall
-         (intern (format "ediff-%S-internal" ediff-version-control-package))
-         rev1 rev2 nil))
+  (GNUEmacs
+    (defun leuven--ediff-revision (file rev1 &optional rev2)
+      "Run Ediff by comparing 'master' against the 'current'."
+      (require 'ediff)
+      (find-file file)
+      (if (and (buffer-modified-p)
+               (y-or-n-p (format "Buffer %s is modified. Save buffer? "
+                                 (buffer-name))))
+          (save-buffer (current-buffer)))
+      (ediff-load-version-control)
+      (funcall
+       (intern (format "ediff-%S-internal" ediff-version-control-package))
+       rev1 rev2 nil))
 
-      (defun leuven-vc-diff (&optional arg)
-        (interactive "P")
-        (call-interactively
-         (cond (arg
-                (lambda ()
-                  (interactive)
-                  (vc-diff nil)))
-               (t
-                (lambda ()
-                  (interactive)
-                  (leuven--ediff-revision (buffer-file-name)
-                                          (read-string "revision? "
-                                                       "HEAD" nil "HEAD")
-                                          ""))))))
+    (defun leuven-vc-diff (&optional arg)
+      (interactive "P")
+      (call-interactively
+       (cond (arg
+              (lambda ()
+                (interactive)
+                (vc-diff nil)))
+             (t
+              (lambda ()
+                (interactive)
+                (leuven--ediff-revision (buffer-file-name)
+                                        (read-string "revision? "
+                                                     "HEAD" nil "HEAD")
+                                        ""))))))
 
-      (define-key vc-prefix-map
-        (kbd "=") 'leuven-vc-diff))
+    (define-key vc-prefix-map
+      (kbd "=") 'leuven-vc-diff))
 #+end_src
 
 ** Change Logs
