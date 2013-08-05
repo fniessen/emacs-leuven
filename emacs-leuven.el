@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130803.1127
+;; Version: 20130805.1259
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130803.1127]--")
+(message "* --[ Loading Emacs Leuven 20130805.1259]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6362,18 +6362,15 @@ From %c"
 
   (leuven--section "26.4 Commands for Editing with (emacs)Parentheses")
 
-  ;; find matching parenthesis (`%' command in vim)
+  ;; jump to matching parenthesis
   (defun match-paren (arg)
-    "Go to the matching parenthesis, if on a parenthesis; otherwise,
-  insert `%'."
+    "Go to the matching parenthesis, if on a parenthesis."
     (interactive "p")
     (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
-          ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
-          (t (insert "%"))))
+          ((looking-at "\\s\)") (forward-char 1) (backward-list 1))))
 
-  ;; go to matching paren
   (global-set-key
-    (kbd "C-%") 'match-paren)
+    (kbd "C-)") 'match-paren)
 
   ;; advanced highlighting of matching parentheses
   (if (try-require 'mic-paren)
@@ -9291,7 +9288,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130803.1128]--")
+(message "* --[ Loaded Emacs Leuven 20130805.1259]--")
 
 (provide 'emacs-leuven)
 
