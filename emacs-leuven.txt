@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-05 Mon 17:33>
+# Time-stamp: <2013-08-05 Mon 23:11>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -3883,23 +3883,6 @@ Instead of superseding the binding in =auto-mode-alist=, you can replace it
     (setq csv-separators '("," ";")))
 
   (autoload 'ssh-config-mode "ssh-config-mode" t)
-#+end_src
-
-=nxml= seems to be the most recommended mode to view and edit HTML.
-
-#+begin_src emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.s?html?\\'" . nxml-mode))
-
-  ;;     (add-to-list 'auto-mode-alist
-  ;;                  '("\\.\\(xml\\|xsl\\|svg\\)\\'" . nxml-mode))
-  ;;     (fset 'xml-mode 'nxml-mode)
-
-  (with-eval-after-load "nxml"
-    ;; remove the binding of `C-c C-x', used by Org timeclocking commands
-    (add-hook 'nxml-mode-hook
-              (lambda ()
-                (define-key nxml-mode-map
-                  (kbd "C-c C-x") nil))))
 #+end_src
 
 *** Choice based on the interpreter name
@@ -8964,6 +8947,23 @@ current selection. More general index entries are created with =C-c <=.
 #+end_src
 
 * SGML and HTML Modes
+
+=nxml= seems to be the most recommended mode to view and edit HTML.
+
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.s?html?\\'" . nxml-mode))
+
+  ;;     (add-to-list 'auto-mode-alist
+  ;;                  '("\\.\\(xml\\|xsl\\|svg\\)\\'" . nxml-mode))
+  ;;     (fset 'xml-mode 'nxml-mode)
+
+  (with-eval-after-load "nxml"
+    ;; remove the binding of `C-c C-x', used by Org timeclocking commands
+    (add-hook 'nxml-mode-hook
+              (lambda ()
+                (define-key nxml-mode-map
+                  (kbd "C-c C-x") nil))))
+#+end_src
 
 #+begin_src emacs-lisp
 (leuven--chapter leuven-chapter-25-text "25 Commands for Human Languages"

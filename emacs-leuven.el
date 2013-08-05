@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130805.1734
+;; Version: 20130805.2312
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130805.1734]--")
+(message "* --[ Loading Emacs Leuven 20130805.2312]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2652,19 +2652,6 @@
     (setq csv-separators '("," ";")))
 
   (autoload 'ssh-config-mode "ssh-config-mode" t)
-
-  (add-to-list 'auto-mode-alist '("\\.s?html?\\'" . nxml-mode))
-
-  ;;     (add-to-list 'auto-mode-alist
-  ;;                  '("\\.\\(xml\\|xsl\\|svg\\)\\'" . nxml-mode))
-  ;;     (fset 'xml-mode 'nxml-mode)
-
-  (with-eval-after-load "nxml"
-    ;; remove the binding of `C-c C-x', used by Org timeclocking commands
-    (add-hook 'nxml-mode-hook
-              (lambda ()
-                (define-key nxml-mode-map
-                  (kbd "C-c C-x") nil))))
 
   ;; list of interpreters specified in the first line (starts with `#!')
   (push '("expect" . tcl-mode) interpreter-mode-alist)
@@ -6297,6 +6284,19 @@ From %c"
 
 ) ;; chapter 25.10-tex-mode ends here
 
+  (add-to-list 'auto-mode-alist '("\\.s?html?\\'" . nxml-mode))
+
+  ;;     (add-to-list 'auto-mode-alist
+  ;;                  '("\\.\\(xml\\|xsl\\|svg\\)\\'" . nxml-mode))
+  ;;     (fset 'xml-mode 'nxml-mode)
+
+  (with-eval-after-load "nxml"
+    ;; remove the binding of `C-c C-x', used by Org timeclocking commands
+    (add-hook 'nxml-mode-hook
+              (lambda ()
+                (define-key nxml-mode-map
+                  (kbd "C-c C-x") nil))))
+
 (leuven--chapter leuven-chapter-25-text "25 Commands for Human Languages"
 
 ;;** 25.11 (info "(emacs)HTML Mode")
@@ -9296,7 +9296,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130805.1734]--")
+(message "* --[ Loaded Emacs Leuven 20130805.2313]--")
 
 (provide 'emacs-leuven)
 
