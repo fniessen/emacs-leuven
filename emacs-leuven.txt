@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-05 Mon 12:58>
+# Time-stamp: <2013-08-05 Mon 17:33>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -8963,6 +8963,49 @@ current selection. More general index entries are created with =C-c <=.
 ) ;; chapter 25.10-tex-mode ends here
 #+end_src
 
+* SGML and HTML Modes
+
+#+begin_src emacs-lisp
+(leuven--chapter leuven-chapter-25-text "25 Commands for Human Languages"
+
+;;** 25.11 (info "(emacs)HTML Mode")
+
+  (leuven--section "25.11 (emacs)HTML Mode")
+
+;;** HTML Tidy
+
+  (leuven--section "HTML Tidy")
+
+  (when (executable-find "tidy")
+    ;; interface to the HTML Tidy program
+    (autoload 'tidy-buffer "tidy"
+      "Run Tidy HTML parser on current buffer" t)
+    (autoload 'tidy-parse-config-file "tidy"
+      "Parse the `tidy-config-file'" t)
+    (autoload 'tidy-save-settings "tidy"
+      "Save settings to `tidy-config-file'" t)
+    (autoload 'tidy-build-menu  "tidy"
+      "Install an options menu for HTML Tidy." t)
+
+    (with-eval-after-load "nxml"
+
+      (defun leuven--nxml-mode-hook ()
+        "Customize my nxml-mode."
+        (tidy-build-menu nxml-mode-map)
+        (local-set-key
+          (kbd "C-c C-c") 'tidy-buffer)
+        (setq sgml-validate-command "tidy"))
+
+      (add-hook 'nxml-mode-hook 'leuven--nxml-mode-hook)))
+
+  ;; ;; shortcut to view the current file in browser
+  ;; (with-eval-after-load "nxml-mode"
+  ;;   (define-key nxml-mode-map
+  ;;     (kbd "C-c C-v") 'browse-url-of-buffer))
+
+) ;; chapter 25 ends here
+#+end_src
+
 * Editing Programs
 
 #+begin_src emacs-lisp
@@ -12398,34 +12441,6 @@ You may wish to set =ps-print-landscape= to =t=.
 #+end_src
 
 #+begin_src emacs-lisp
-;;** HTML Tidy
-
-  (leuven--section "HTML Tidy")
-
-  (when (executable-find "tidy")
-    ;; interface to the HTML Tidy program
-    (autoload 'tidy-buffer "tidy"
-      "Run Tidy HTML parser on current buffer" t)
-    (autoload 'tidy-parse-config-file "tidy"
-      "Parse the `tidy-config-file'" t)
-    (autoload 'tidy-save-settings "tidy"
-      "Save settings to `tidy-config-file'" t)
-    (autoload 'tidy-build-menu  "tidy"
-      "Install an options menu for HTML Tidy." t)
-
-    (with-eval-after-load "nxml"
-
-      (defun leuven--nxml-mode-hook ()
-        "Customize my nxml-mode."
-        (tidy-build-menu nxml-mode-map)
-        (local-set-key
-          (kbd "C-c C-c") 'tidy-buffer)
-        (setq sgml-validate-command "tidy"))
-
-      (add-hook 'nxml-mode-hook 'leuven--nxml-mode-hook)))
-#+end_src
-
-#+begin_src emacs-lisp
 ;;** pass a URL to a WWW browser
 
   (leuven--section "pass a URL to a WWW browser")
@@ -12450,11 +12465,6 @@ You may wish to set =ps-print-landscape= to =t=.
   ;;       (when (and (display-graphic-p)
   ;;                  (not running-ms-windows))
   ;;         (executable-find "firefox"))) ;; could be `google-chrome'
-
-  ;; ;; shortcut to view the current file in browser
-  ;; (with-eval-after-load "nxml-mode"
-  ;;   (define-key nxml-mode-map
-  ;;     (kbd "C-c v") 'browse-url-of-buffer))
 
   (defun leuven--browse (url)
     "If prefix is specified, use the system default browser else use the
@@ -13344,9 +13354,11 @@ Value: ((xpm "libxpm.dll" "xpm4.dll" "libXpm-nox4.dll")
 
 #+end_example
 
-Eventually, copy those DLLs (=libpng14-14.dll=, for example) from an old
-EmacsW32 installation to your Emacs =bin= directory, and restart Emacs for image
-support to be enabled.
+If you use compiled Emacs binaries (available on Gnu), eventually, copy those
+DLLs (=libpng14-14.dll=, for example) from an old EmacsW32 installation to your
+Emacs =bin= directory, and restart Emacs for image support to be enabled.
+
+If you use Cygwin Emacs, install =libpng= via Cygwin as well.
 
 You can do:
 

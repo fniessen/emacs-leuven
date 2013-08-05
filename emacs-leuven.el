@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130805.1259
+;; Version: 20130805.1734
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130805.1259]--")
+(message "* --[ Loading Emacs Leuven 20130805.1734]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6297,6 +6297,45 @@ From %c"
 
 ) ;; chapter 25.10-tex-mode ends here
 
+(leuven--chapter leuven-chapter-25-text "25 Commands for Human Languages"
+
+;;** 25.11 (info "(emacs)HTML Mode")
+
+  (leuven--section "25.11 (emacs)HTML Mode")
+
+;;** HTML Tidy
+
+  (leuven--section "HTML Tidy")
+
+  (when (executable-find "tidy")
+    ;; interface to the HTML Tidy program
+    (autoload 'tidy-buffer "tidy"
+      "Run Tidy HTML parser on current buffer" t)
+    (autoload 'tidy-parse-config-file "tidy"
+      "Parse the `tidy-config-file'" t)
+    (autoload 'tidy-save-settings "tidy"
+      "Save settings to `tidy-config-file'" t)
+    (autoload 'tidy-build-menu  "tidy"
+      "Install an options menu for HTML Tidy." t)
+
+    (with-eval-after-load "nxml"
+
+      (defun leuven--nxml-mode-hook ()
+        "Customize my nxml-mode."
+        (tidy-build-menu nxml-mode-map)
+        (local-set-key
+          (kbd "C-c C-c") 'tidy-buffer)
+        (setq sgml-validate-command "tidy"))
+
+      (add-hook 'nxml-mode-hook 'leuven--nxml-mode-hook)))
+
+  ;; ;; shortcut to view the current file in browser
+  ;; (with-eval-after-load "nxml-mode"
+  ;;   (define-key nxml-mode-map
+  ;;     (kbd "C-c C-v") 'browse-url-of-buffer))
+
+) ;; chapter 25 ends here
+
 ;;* 26 Editing (info "(emacs)Programs")
 
 (leuven--chapter leuven-chapter-26-programs "26 Editing Programs"
@@ -8528,32 +8567,6 @@ From %c"
 
 (leuven--chapter leuven-chapter-45-hyperlinking "45 Hyperlinking and Navigation Features"
 
-;;** HTML Tidy
-
-  (leuven--section "HTML Tidy")
-
-  (when (executable-find "tidy")
-    ;; interface to the HTML Tidy program
-    (autoload 'tidy-buffer "tidy"
-      "Run Tidy HTML parser on current buffer" t)
-    (autoload 'tidy-parse-config-file "tidy"
-      "Parse the `tidy-config-file'" t)
-    (autoload 'tidy-save-settings "tidy"
-      "Save settings to `tidy-config-file'" t)
-    (autoload 'tidy-build-menu  "tidy"
-      "Install an options menu for HTML Tidy." t)
-
-    (with-eval-after-load "nxml"
-
-      (defun leuven--nxml-mode-hook ()
-        "Customize my nxml-mode."
-        (tidy-build-menu nxml-mode-map)
-        (local-set-key
-          (kbd "C-c C-c") 'tidy-buffer)
-        (setq sgml-validate-command "tidy"))
-
-      (add-hook 'nxml-mode-hook 'leuven--nxml-mode-hook)))
-
 ;;** pass a URL to a WWW browser
 
   (leuven--section "pass a URL to a WWW browser")
@@ -8578,11 +8591,6 @@ From %c"
   ;;       (when (and (display-graphic-p)
   ;;                  (not running-ms-windows))
   ;;         (executable-find "firefox"))) ;; could be `google-chrome'
-
-  ;; ;; shortcut to view the current file in browser
-  ;; (with-eval-after-load "nxml-mode"
-  ;;   (define-key nxml-mode-map
-  ;;     (kbd "C-c v") 'browse-url-of-buffer))
 
   (defun leuven--browse (url)
     "If prefix is specified, use the system default browser else use the
@@ -9288,7 +9296,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130805.1259]--")
+(message "* --[ Loaded Emacs Leuven 20130805.1734]--")
 
 (provide 'emacs-leuven)
 

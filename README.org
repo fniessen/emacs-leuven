@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     fni@missioncriticalit.com
 #+DATE:      2012-06-22
-#+Time-stamp: <2013-07-30 Tue 16:34>
+#+Time-stamp: <2013-08-05 Mon 16:23>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en_US
@@ -112,7 +112,7 @@ git clone git://github.com/fniessen/emacs-leuven.git
 *** Others
 
 | <return> | newline-and-indent                             |
-| C-%      | match-paren                                    |
+| C-)      | match-paren                                    |
 | C-c @ h  | hs-hide-block                                  |
 | C-c @ s  | hs-show-block                                  |
 | x        | leuven-vc-dir-hide-up-to-date-and-unregistered |
