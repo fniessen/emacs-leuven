@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130805.2312
+;; Version: 20130806.1803
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130805.2312]--")
+(message "* --[ Loading Emacs Leuven 20130806.1803]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1440,8 +1440,9 @@
 
     (with-eval-after-load "flyspell"
 
-(message "flyspell has been loaded!!!")
-(sit-for 3)
+     ;; TEMP
+     (message "flyspell has been loaded!!!")
+     (sit-for 3)
 
      ;; don't consider that a word repeated twice is an error
      (setq flyspell-mark-duplications-flag nil)
@@ -1457,6 +1458,10 @@
      (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
      ;; '("francais" "deutsch8" "norsk")
 
+     ;; spell-check your XHTML (by adding `nxml-text-face' to the list of
+     ;; faces corresponding to text in programming-mode buffers)
+     (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)
+
      (defun leuven-flyspell-toggle-dictionary ()
        "Change the dictionary."
        (interactive)
@@ -1471,9 +1476,6 @@
            ;; if above is executed, the advised `org-mode-flyspell-verify'
            ;; won't work anymore
            (flyspell-buffer))))
-
-     ;; spell-check your XHTML
-     (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)
 
      ;; key binding
      (global-set-key
@@ -2738,6 +2740,12 @@
                      (not (eq (get-text-property (point) 'face)
                               'font-lock-comment-face))))))
 
+  (defun leuven-good-old-fill-paragraph ()
+    (interactive)
+    (let ((fill-paragraph-function nil)
+          (adaptive-fill-function nil))
+      (fill-paragraph)))
+
   ;; replace space by nobreak-space where it fits well
   (defun leuven--replace-space-before-colon ()
     "Replace space by nobreak-space in front of a colon."
@@ -3311,12 +3319,6 @@
     (if all-siblings
         (org-reveal t)
       (org-show-siblings)))
-
-  (defun my/good-ole-filling-fun ()
-    (interactive)
-    (let ((fill-paragraph-function nil)
-          (adaptive-fill-function nil))
-      (fill-paragraph)))
 
 ;;** (info "(org)Structure editing")
 
@@ -6284,24 +6286,31 @@ From %c"
 
 ) ;; chapter 25.10-tex-mode ends here
 
-  (add-to-list 'auto-mode-alist '("\\.s?html?\\'" . nxml-mode))
-
-  ;;     (add-to-list 'auto-mode-alist
-  ;;                  '("\\.\\(xml\\|xsl\\|svg\\)\\'" . nxml-mode))
-  ;;     (fset 'xml-mode 'nxml-mode)
-
-  (with-eval-after-load "nxml"
-    ;; remove the binding of `C-c C-x', used by Org timeclocking commands
-    (add-hook 'nxml-mode-hook
-              (lambda ()
-                (define-key nxml-mode-map
-                  (kbd "C-c C-x") nil))))
-
 (leuven--chapter leuven-chapter-25-text "25 Commands for Human Languages"
 
 ;;** 25.11 (info "(emacs)HTML Mode")
 
   (leuven--section "25.11 (emacs)HTML Mode")
+
+  (with-eval-after-load "nxml-mode"
+
+    ;; shortcut to view the current file in browser
+    (define-key nxml-mode-map
+      (kbd "C-c C-v") 'browse-url-of-buffer)
+
+    ;; remove the binding of `C-c C-x', used by Org timeclocking commands
+    ;; (add-hook 'nxml-mode-hook
+    ;;           (lambda ()
+                (define-key nxml-mode-map
+                  (kbd "C-c C-x") nil)
+    ;;             ))
+                )
+
+  (add-to-list 'auto-mode-alist '("\\.s?html?\\'" . nxml-mode))
+
+  ;;     (add-to-list 'auto-mode-alist
+  ;;                  '("\\.\\(xml\\|xsl\\|svg\\)\\'" . nxml-mode))
+  ;;     (fset 'xml-mode 'nxml-mode)
 
 ;;** HTML Tidy
 
@@ -6328,11 +6337,6 @@ From %c"
         (setq sgml-validate-command "tidy"))
 
       (add-hook 'nxml-mode-hook 'leuven--nxml-mode-hook)))
-
-  ;; ;; shortcut to view the current file in browser
-  ;; (with-eval-after-load "nxml-mode"
-  ;;   (define-key nxml-mode-map
-  ;;     (kbd "C-c C-v") 'browse-url-of-buffer))
 
 ) ;; chapter 25 ends here
 
@@ -6970,7 +6974,7 @@ From %c"
                (define-key vc-dir-mode-map
                  (kbd "E") 'vc-ediff)
                (define-key vc-dir-mode-map
-                 (kbd "#") 'vc-ediff-ignore-whitespace)
+                 (kbd "#") 'vc-ediff-ignore-whitespace) ;; ediff-windows-wordwise?
                ))
 
   (defun leuven-vc-dir-hide-up-to-date-and-unregistered ()
@@ -9296,7 +9300,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130805.2313]--")
+(message "* --[ Loaded Emacs Leuven 20130806.1803]--")
 
 (provide 'emacs-leuven)
 

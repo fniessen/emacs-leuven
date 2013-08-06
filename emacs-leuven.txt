@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-05 Mon 23:11>
+# Time-stamp: <2013-08-06 Tue 20:37>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -2163,8 +2163,9 @@ previously detected error.
 
     (with-eval-after-load "flyspell"
 
-(message "flyspell has been loaded!!!")
-(sit-for 3)
+     ;; TEMP
+     (message "flyspell has been loaded!!!")
+     (sit-for 3)
 
      ;; don't consider that a word repeated twice is an error
      (setq flyspell-mark-duplications-flag nil)
@@ -2180,6 +2181,10 @@ previously detected error.
      (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
      ;; '("francais" "deutsch8" "norsk")
 
+     ;; spell-check your XHTML (by adding `nxml-text-face' to the list of
+     ;; faces corresponding to text in programming-mode buffers)
+     (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)
+
      (defun leuven-flyspell-toggle-dictionary ()
        "Change the dictionary."
        (interactive)
@@ -2194,9 +2199,6 @@ previously detected error.
            ;; if above is executed, the advised `org-mode-flyspell-verify'
            ;; won't work anymore
            (flyspell-buffer))))
-
-     ;; spell-check your XHTML
-     (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)
 
      ;; key binding
      (global-set-key
@@ -4023,6 +4025,14 @@ See =sentence-end= and =(sentence-end)=.
                               'font-lock-comment-face))))))
 #+end_src
 
+#+begin_src emacs-lisp
+  (defun leuven-good-old-fill-paragraph ()
+    (interactive)
+    (let ((fill-paragraph-function nil)
+          (adaptive-fill-function nil))
+      (fill-paragraph)))
+#+end_src
+
 There are several *non-break space* characters:
 
 - *No-break space*, required for French punctuation (before =:=).
@@ -4836,14 +4846,6 @@ vs =C-u C-c C-j=
 See also [[*Sparse%20trees][Sparse trees]] for behavior when revealing a location.
 
 *** Structure editing
-
-#+begin_src emacs-lisp
-  (defun my/good-ole-filling-fun ()
-    (interactive)
-    (let ((fill-paragraph-function nil)
-          (adaptive-fill-function nil))
-      (fill-paragraph)))
-#+end_src
 
 #+begin_src emacs-lisp
 ;;** (info "(org)Structure editing")
@@ -6652,7 +6654,13 @@ Hide certain tasks that you don't want to be bothered with all the time:
                '("r^" "Calendar for current month"
                  (lambda (&rest ignore)
                    (cfw:open-org-calendar))) t)
+#+end_src
 
+=org-timeline= has weaknesses and although not officially deprecated, should be
+best avoided. See Carsten's comments in
+http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465
+
+#+begin_src emacs-lisp
   ;; show what happened today
   (add-to-list 'org-agenda-custom-commands
                '("rL" "Timeline (with clock) for today"
@@ -7971,6 +7979,10 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
     (kbd "C-c C-v C-d") 'org-babel-demarcate-block)
 #+end_src
 
+C-c TAB
+Toggle the visibility of existing tags in the buffer. This can be used as a
+cheap preview (sgml-tags-invisible).
+
 View just the source-code blocks within the current Babel file (something
 logically equivalent to "tangle", but without creating a separate file).
 
@@ -8948,7 +8960,54 @@ current selection. More general index entries are created with =C-c <=.
 
 * SGML and HTML Modes
 
+#+begin_src emacs-lisp
+(leuven--chapter leuven-chapter-25-text "25 Commands for Human Languages"
+
+;;** 25.11 (info "(emacs)HTML Mode")
+
+  (leuven--section "25.11 (emacs)HTML Mode")
+#+end_src
+
+** XML
+
+nXML mode does *validate against a schema in Relax-NG* (actually RNC, i.e. the
+"compact" notation).
+
+*Code completion* against the RNG schema is provided.
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "nxml-mode"
+
+    ;; shortcut to view the current file in browser
+    (define-key nxml-mode-map
+      (kbd "C-c C-v") 'browse-url-of-buffer)
+
+    ;; remove the binding of `C-c C-x', used by Org timeclocking commands
+    ;; (add-hook 'nxml-mode-hook
+    ;;           (lambda ()
+                (define-key nxml-mode-map
+                  (kbd "C-c C-x") nil)
+    ;;             ))
+                )
+#+end_src
+
+** HTML
+
+I've been using html-helper-mode for what must be ten years now. It has *syntax
+highlighting*, autocompletion, and auto-insertion of closing tags... and a lot
+more. When you open a buffer for html editing, a didactic menu appears, so you
+can use your mouse to invoke commands. I prefer the keyboard though. Using the
+prefix-arg (C-u) to relevant HTML tags, html-helper will put tags around a
+region you've specified.
+
 =nxml= seems to be the most recommended mode to view and edit HTML.
+
+highlighting of closing tag: http://img263.imageshack.us/img263/8581/npp2.png
+
+Is it a valid xhtml?
+
+: M-x nxml-mode
+: C-c C-n (assumming rng validation is on)
 
 #+begin_src emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.s?html?\\'" . nxml-mode))
@@ -8956,22 +9015,11 @@ current selection. More general index entries are created with =C-c <=.
   ;;     (add-to-list 'auto-mode-alist
   ;;                  '("\\.\\(xml\\|xsl\\|svg\\)\\'" . nxml-mode))
   ;;     (fset 'xml-mode 'nxml-mode)
-
-  (with-eval-after-load "nxml"
-    ;; remove the binding of `C-c C-x', used by Org timeclocking commands
-    (add-hook 'nxml-mode-hook
-              (lambda ()
-                (define-key nxml-mode-map
-                  (kbd "C-c C-x") nil))))
 #+end_src
 
+weblint?
+
 #+begin_src emacs-lisp
-(leuven--chapter leuven-chapter-25-text "25 Commands for Human Languages"
-
-;;** 25.11 (info "(emacs)HTML Mode")
-
-  (leuven--section "25.11 (emacs)HTML Mode")
-
 ;;** HTML Tidy
 
   (leuven--section "HTML Tidy")
@@ -8997,11 +9045,6 @@ current selection. More general index entries are created with =C-c <=.
         (setq sgml-validate-command "tidy"))
 
       (add-hook 'nxml-mode-hook 'leuven--nxml-mode-hook)))
-
-  ;; ;; shortcut to view the current file in browser
-  ;; (with-eval-after-load "nxml-mode"
-  ;;   (define-key nxml-mode-map
-  ;;     (kbd "C-c C-v") 'browse-url-of-buffer))
 
 ) ;; chapter 25 ends here
 #+end_src
@@ -9308,13 +9351,17 @@ distinguishes end-of-block.
 #+end_src
 
 It's more or less a convention that each language mode binds its symbol
-completion command (=completion-at-point=) to =<M-tab>= which is a reserved hot
-key under Windows and many other window managers. Ways to solve this:
+completion command (=completion-at-point=) to =<M-tab>=.
 
-- =(w32-register-hot-key [M-TAB])= lets you use =<M-tab>= normally in Emacs, or
+Note that =<M-tab>= is used by many window managers themselves (typically for
+switching between windows) and is not passed to applications.
 
-- arrange that, when you hit =<C-tab>=, the command normally bound to =<M-tab>=
-  will be called.
+In that case, you should:
+
+- type =C-M-i= (or =<escape> <tab>=) for completion, or
+
+- bind the command normally bound to =<M-tab>= to a key that is convenient for
+  you to hit, such as =<C-tab>=.
 
 #+begin_src emacs-lisp
   ;; when you hit `<C-tab>', call the command normally bound to `<M-tab>'
@@ -9938,7 +9985,7 @@ Show the diff we are about to commit: =C-c C-d=.
                (define-key vc-dir-mode-map
                  (kbd "E") 'vc-ediff)
                (define-key vc-dir-mode-map
-                 (kbd "#") 'vc-ediff-ignore-whitespace)
+                 (kbd "#") 'vc-ediff-ignore-whitespace) ;; ediff-windows-wordwise?
                ))
 
   (defun leuven-vc-dir-hide-up-to-date-and-unregistered ()
