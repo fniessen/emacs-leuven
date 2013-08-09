@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-06 Tue 20:37>
+# Time-stamp: <2013-08-06 Tue 22:51>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -8970,8 +8970,8 @@ current selection. More general index entries are created with =C-c <=.
 
 ** XML
 
-nXML mode does *validate against a schema in Relax-NG* (actually RNC, i.e. the
-"compact" notation).
+nXML mode does real-time *validation against a schema in RELAX NG* (actually
+RNC, i.e. the "compact" notation).
 
 *Code completion* against the RNG schema is provided.
 
@@ -8993,6 +8993,13 @@ nXML mode does *validate against a schema in Relax-NG* (actually RNC, i.e. the
 
 ** HTML
 
+Default: html-mode.
+
+Goal? Highlighting of closing tag:
+http://img263.imageshack.us/img263/8581/npp2.png
+
+*** html-helper-mode
+
 I've been using html-helper-mode for what must be ten years now. It has *syntax
 highlighting*, autocompletion, and auto-insertion of closing tags... and a lot
 more. When you open a buffer for html editing, a didactic menu appears, so you
@@ -9000,24 +9007,35 @@ can use your mouse to invoke commands. I prefer the keyboard though. Using the
 prefix-arg (C-u) to relevant HTML tags, html-helper will put tags around a
 region you've specified.
 
-=nxml= seems to be the most recommended mode to view and edit HTML.
+Plug tidy with tidy.el.
 
-highlighting of closing tag: http://img263.imageshack.us/img263/8581/npp2.png
+*** nXML
+
+=nxml= seems to be the most recommended mode to view and edit HTML.
 
 Is it a valid xhtml?
 
 : M-x nxml-mode
 : C-c C-n (assumming rng validation is on)
 
+*** nXhtml (+ MMM)
+
+http://ourcomments.org/Emacs/nXhtml/doc/nxhtml.html
+
+nXhtml mode is derived from nXML mode. It adds a lot of things useful for
+XHTML:
+
+- handling multiple modes,
+- folding,
+- improved interface to Tidy etc.
+
+*** web-mode
+
+*** Code
+
 #+begin_src emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.s?html?\\'" . nxml-mode))
-
-  ;;     (add-to-list 'auto-mode-alist
-  ;;                  '("\\.\\(xml\\|xsl\\|svg\\)\\'" . nxml-mode))
-  ;;     (fset 'xml-mode 'nxml-mode)
+  (add-to-list 'auto-mode-alist '("\\.s?html?\\'" . xml-mode)) ;; alias for `nxml-mode'
 #+end_src
-
-weblint?
 
 #+begin_src emacs-lisp
 ;;** HTML Tidy
@@ -9047,6 +9065,17 @@ weblint?
       (add-hook 'nxml-mode-hook 'leuven--nxml-mode-hook)))
 
 ) ;; chapter 25 ends here
+#+end_src
+
+CSSTidy?
+
+Weblint available for Windows?
+
+#+begin_src emacs-lisp
+;;** Weblint
+
+;; (setq load-path (cons "path_to_weblint_directory/" load-path))
+;; (autoload 'weblint "weblint" "Weblint syntax checker" t)
 #+end_src
 
 * Editing Programs
@@ -10869,7 +10898,7 @@ If =xdg-open= is not available, one can replace it with =gnome-open= or =kde-ope
 
 **** Ask a WWW browser to display file
 
-Ask a WWW browser to display the current file.
+Just ask a WWW browser to display the current file.
 
 #+begin_src emacs-lisp
     (define-key dired-mode-map
@@ -10884,6 +10913,8 @@ It opens the Windows explorer for:
 - the *parent directory* when invoked on =..=.
 
 *************** TODO Mapcar on the browse-url function
+See code of =w32-dired-open-files-externally=.
+*************** END
 
 *************** TODO =C-u <RET>= opens dired on Org link
 We should probably have the same type of key binding for opening Explorer from
@@ -12917,7 +12948,8 @@ Emacs 24 custom themes allow loading multiple themes simultaneously. If you
 don't want the previous theme to stay in effect, you will need to unload it
 first.
 
-Install Leuven Theme via the [[*Emacs%20Lisp%20Packages][Emacs Lisp Packages]].
+Install Leuven Theme via the [[*Emacs%20Lisp%20Packages][Emacs Lisp Packages]] (or use the one bundled in
+GNU Emacs 24.4)
 
 #+begin_src emacs-lisp
 ;;* 48 (info "(emacs)Customization")

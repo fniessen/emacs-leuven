@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130806.1803
+;; Version: 20130809.1036
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130806.1803]--")
+(message "* --[ Loading Emacs Leuven 20130809.1036]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6306,11 +6306,7 @@ From %c"
     ;;             ))
                 )
 
-  (add-to-list 'auto-mode-alist '("\\.s?html?\\'" . nxml-mode))
-
-  ;;     (add-to-list 'auto-mode-alist
-  ;;                  '("\\.\\(xml\\|xsl\\|svg\\)\\'" . nxml-mode))
-  ;;     (fset 'xml-mode 'nxml-mode)
+  (add-to-list 'auto-mode-alist '("\\.s?html?\\'" . xml-mode)) ;; alias for `nxml-mode'
 
 ;;** HTML Tidy
 
@@ -6339,6 +6335,11 @@ From %c"
       (add-hook 'nxml-mode-hook 'leuven--nxml-mode-hook)))
 
 ) ;; chapter 25 ends here
+
+;;** Weblint
+
+;; (setq load-path (cons "path_to_weblint_directory/" load-path))
+;; (autoload 'weblint "weblint" "Weblint syntax checker" t)
 
 ;;* 26 Editing (info "(emacs)Programs")
 
@@ -9300,7 +9301,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130806.1803]--")
+(message "* --[ Loaded Emacs Leuven 20130809.1036]--")
 
 (provide 'emacs-leuven)
 
