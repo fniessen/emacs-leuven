@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130809.1137
+;; Version: 20130809.1533
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130809.1137]--")
+(message "* --[ Loading Emacs Leuven 20130809.1533]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4241,7 +4241,7 @@ From %c"
   ;; ;; duration of an appointment will add to day effort
   ;; (setq org-agenda-columns-add-appointments-to-effort-sum t)
 
-  ;; show entries with a date in the global `todo' list
+  ;; show dated entries in the global `todo' list
   (setq org-agenda-todo-ignore-with-date nil) ;;!! tricky setting
 
   ;; show entries with a timestamp in the global `todo' list
@@ -4563,8 +4563,7 @@ From %c"
     ;;                ;; FIXME We don't see DEADLINE with `-1m' (or so)
     ;;                ;; specifications (if they are more than 1m ahead of now)!
     ;;                agenda ""
-    ;;                ((org-agenda-include-all-todo nil)
-    ;;                 (org-agenda-skip-function
+    ;;                ((org-agenda-skip-function
     ;;                  '(org-agenda-skip-entry-if 'notdeadline))
     ;;                 (org-agenda-span 'day)
     ;;                 (org-agenda-time-grid nil)
@@ -4629,22 +4628,18 @@ From %c"
                  '("rT" "List of unscheduled TODO entries (no DFRD/MAYB)"
                    tags-todo "TODO<>{DFRD\\|MAYB}"
                    ((org-agenda-overriding-header
-                     "Global list of unscheduled TODO items of all types but DFRD/MAYB")
+                     "Global list of undated TODO items of all types but DFRD/MAYB")
                     (org-agenda-skip-function
                      '(org-agenda-skip-entry-if 'scheduled 'deadline 'timestamp))
                     (org-agenda-sorting-strategy '(priority-down)))) t)
 
-    ;; only TODO entries
+    ;; show only TODO entries, ignoring entries that have time stamps (it also
+    ;; covers scheduled or deadline items)
     (add-to-list 'org-agenda-custom-commands
-                 '("rs" "TODO without SCHEDULED or DEADLINE"
-                   tags-todo "TODO=\"TODO\"+SCHEDULED=\"\"+DEADLINE=\"\"") t)
-    ;; identical entries? (diff for inherited tags; do C-x C-w of the buffers and compare)
-    (add-to-list 'org-agenda-custom-commands
-                 ;; show unscheduled TODO items as a TODO list
-                 '("rS"
+                 '("rs"
                    todo "TODO"
-                   ((org-agenda-todo-ignore-with-date t)
-                    (org-agenda-tags-todo-honor-ignore-options t))) t)
+                   ((org-agenda-overriding-header "Undated TODO items: ")
+                    (org-agenda-todo-ignore-with-date t))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("r^" "Calendar for current month"
@@ -4662,20 +4657,6 @@ From %c"
                     (org-agenda-span 'day))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("r$" "Cleanup"
-                   todo "DONE|CANX|DFRD"
-                   ((org-agenda-overriding-header "Old tasks to delete or archive")
-                    (org-agenda-todo-ignore-deadlines nil)
-                    (org-agenda-todo-ignore-scheduled nil)
-                    (org-agenda-todo-ignore-with-date nil))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("rp" "Projects"
-                   tags-todo "project-DONE-CANX"
-                   ((org-agenda-overriding-header "Projects (High Level)")
-                    (org-agenda-sorting-strategy nil))) t)
-
-    (add-to-list 'org-agenda-custom-commands
                  '("rC" "Clock Review"
                    agenda ""
                    ((org-agenda-archives-mode t)
@@ -4685,7 +4666,20 @@ From %c"
                     (org-agenda-span 'day))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("rn" "Now (unscheduled tasks in progress)"
+                 '("r$" "Cleanup"
+                   todo "DONE|CANX|DFRD"
+                   ((org-agenda-overriding-header "Old tasks to delete or archive")
+                    ;; also show deadlines and scheduled items
+                    (org-agenda-todo-ignore-with-date nil))) t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("rp" "Projects"
+                   tags-todo "project-DONE-CANX"
+                   ((org-agenda-overriding-header "Projects (High Level)")
+                    (org-agenda-sorting-strategy nil))) t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("rn" "Now (undated tasks in progress)"
                    todo "STRT"
                    ((org-agenda-todo-ignore-with-date t))) t)
 
@@ -4727,46 +4721,30 @@ From %c"
 
                     (todo "STRT"
                           ((org-agenda-overriding-header "In progress")
-                           (org-agenda-tags-todo-honor-ignore-options nil)
                            (org-agenda-todo-ignore-scheduled nil)))
 
                     (todo "TODO" ;; don't include items from Inbox! XXX
                           ((org-agenda-overriding-header "Action list")))
 
+                    ;; ignore scheduled and deadline entries, as they're
+                    ;; visible in the above agenda (for the past + for next
+                    ;; month) or scheduled/deadline'd for much later...
                     (todo "WAIT|DLGT"
                           ((org-agenda-format-date "")
                            (org-agenda-overriding-header "Waiting for")
-                           ;; (org-agenda-tags-todo-honor-ignore-options nil)
-                           ;; (org-agenda-todo-ignore-deadlines nil)
-                           ;; (org-agenda-todo-ignore-scheduled nil)))
-                           ;; (org-deadline-warning-days 7)
-                           ))
+                           (org-agenda-todo-ignore-deadlines 'all) ;; future?
+                           (org-agenda-todo-ignore-scheduled t)))
 
-                    (todo "WAIT|DLGT"
-                          ((org-agenda-include-all-todo nil)
-                           (org-agenda-time-grid nil)
-                           (org-agenda-todo-ignore-deadlines t)
-                           (org-agenda-todo-ignore-with-date t)
-                           (org-deadline-warning-days 360)))
-
-                    (todo "DFRD|MAYB"
+                    ;; same reasoning as for WAIT|DLGT
+                    (todo "DFRD|MAYB" ;; DFRD is NOT a completed state!
                           ((org-agenda-format-date "")
                            (org-agenda-overriding-header "Someday/maybe")
-                           ;; (org-deadline-warning-days 7)
-                           ))
-
-                    (todo "DFRD|MAYB"
-                          ((org-agenda-include-all-todo nil)
-                           (org-agenda-time-grid nil)
-                           (org-agenda-todo-ignore-deadlines t)
-                           (org-agenda-todo-ignore-with-date t)
-                           (org-deadline-warning-days 360)))
+                           (org-agenda-todo-ignore-deadlines 'all)
+                           (org-agenda-todo-ignore-scheduled t)))
 
                    ;; ((org-agenda-block-separator "\n")
                    ;;  (org-agenda-clockreport-mode nil)
                    ;;  (org-agenda-prefix-format " %i %?-12t% s")
-                   ;;  (org-agenda-span 'day)
-                   ;;  (org-agenda-use-time-grid nil)
                    ;;  (org-agenda-write-buffer-name "Weekly task review"))
                    ;; "~/org-weekly-review.html") t)
                     )) t)
@@ -4776,8 +4754,7 @@ From %c"
                    ((agenda ""
                             ((org-agenda-entry-types '(:timestamp :sexp))
                              (org-agenda-overriding-header "Calendar")
-                             (org-agenda-span 'day)
-                             (org-agenda-start-on-weekday nil)))
+                             (org-agenda-span 'day)))
                     (agenda ""
                             ((org-agenda-entry-types '(:deadline))
                              (org-agenda-overriding-header "Due Dates")
@@ -4802,32 +4779,19 @@ From %c"
                    ((org-agenda-format-date "%Y-%m-%d %a")
                     (org-agenda-start-with-clockreport-mode nil))) t)
 
-    (add-to-list 'org-agenda-custom-commands
-                 '("d" . "5. Do the work...") t)
-
 ;;*** Calendar style views
 
     (add-to-list 'org-agenda-custom-commands
-                 '("dc" "Calendar for current day"
+                 '("rc" "Calendar for current week"
                    agenda ""
                    ((org-agenda-entry-types '(:timestamp :sexp))
-                    (org-agenda-include-all-todo nil)
-                    (org-agenda-overriding-header "Calendar for today")
-                    (org-agenda-prefix-format " %i %-12:t ")
-                    (org-agenda-repeating-timestamp-show-all t)
-                    (org-agenda-span 'day)
-                    (org-agenda-use-time-grid t))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("dC" "Calendar for current week"
-                   agenda ""
-                   ((org-agenda-entry-types '(:timestamp :sexp))
-                    (org-agenda-include-all-todo nil)
                     (org-agenda-overriding-header "Calendar for this week")
-                    (org-agenda-prefix-format " %i %12:t ")
                     (org-agenda-repeating-timestamp-show-all t)
                     (org-agenda-span 'week)
                     (org-agenda-time-grid nil))) t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("d" . "5. Do the work...") t)
 
 ;;*** Other views
 
@@ -4838,11 +4802,7 @@ From %c"
 
     (add-to-list 'org-agenda-custom-commands
                  '("de" "Effort less than 1 hour"
-                   tags-todo "Effort<1") t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("dE" "Effort less than 1 hour"
-                   tags-todo "Effort<\"1:00\"") t)
+                   tags-todo "Effort<>\"\"+Effort<\"1:00\"") t)
 
     ;; checking tasks that are assigned to me
     (add-to-list 'org-agenda-custom-commands
@@ -4866,16 +4826,19 @@ From %c"
     (add-to-list 'org-agenda-custom-commands
                  '("Ea"
                    agenda ""
-                   nil ;; ((org-tag-faces nil))
+                   (;; (org-tag-faces nil)
+                    (ps-landscape-mode t)
+                    (ps-number-of-columns 1))
                    ("~/org-agenda.txt" "~/org-agenda.html" "~/org-agenda.pdf")) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("Ep" "Call list"
                    tags-todo "phone"
-                   ((org-agenda-prefix-format " %-20:c \u25A1 [ ] " )
+                   ((org-agenda-prefix-format " %-20:c [ ] " )
                     (org-agenda-remove-tags t)
-                    (org-agenda-with-colors nil)
-                    (org-agenda-write-buffer-name "Org -- My Call list")
+                    ;; (org-agenda-with-colors nil)
+                    (org-agenda-write-buffer-name
+                     "Phone calls that you need to make")
                     (ps-landscape-mode t)
                     (ps-number-of-columns 1))
                    ("~/org-calls.pdf")) t)
@@ -9296,7 +9259,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130809.1137]--")
+(message "* --[ Loaded Emacs Leuven 20130809.1533]--")
 
 (provide 'emacs-leuven)
 
