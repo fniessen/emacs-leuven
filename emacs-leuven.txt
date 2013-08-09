@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-09 Fri 15:33>
+# Time-stamp: <2013-08-09 Fri 15:56>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -6419,6 +6419,11 @@ Commands:
 - [[shell:ls -l]]
 - shell:pwd
 
+Vocabulary:
+- Undated items
+- Planned
+- Uncategorized
+
 #+begin_src emacs-lisp
   ;; make the block agenda more compact (no agenda span name, no week
   ;; number, no separator line)
@@ -6583,7 +6588,7 @@ Hide certain tasks that you don't want to be bothered with all the time:
                  '("p" . "2. Process/Clarify...") t)
 
     (add-to-list 'org-agenda-custom-commands
-                 `("ps" "Inbox"
+                 `("pu" "Uncategorized"
                    tags "CATEGORY=\"@Inbox\"&LEVEL=2"
                    ((org-agenda-overriding-header "Level 2 stuff in inbox"))) t)
 #+end_src
@@ -6623,7 +6628,7 @@ Hide certain tasks that you don't want to be bothered with all the time:
 
     ;; all TODO entries, but DFRD/MAYB
     (add-to-list 'org-agenda-custom-commands
-                 '("rT" "List of unscheduled TODO entries (no DFRD/MAYB)"
+                 '("rT" "List of undated TODO entries (no DFRD/MAYB)"
                    tags-todo "TODO<>{DFRD\\|MAYB}"
                    ((org-agenda-overriding-header
                      "Global list of undated TODO items of all types but DFRD/MAYB")
@@ -6634,7 +6639,7 @@ Hide certain tasks that you don't want to be bothered with all the time:
     ;; show only TODO entries, ignoring entries that have time stamps (it also
     ;; covers scheduled or deadline items)
     (add-to-list 'org-agenda-custom-commands
-                 '("rs"
+                 '("rs" "Undated TODO items"
                    todo "TODO"
                    ((org-agenda-overriding-header "Undated TODO items: ")
                     (org-agenda-todo-ignore-with-date t))) t)

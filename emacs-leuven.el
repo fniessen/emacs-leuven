@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130809.1533
+;; Version: 20130809.1551
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130809.1533]--")
+(message "* --[ Loading Emacs Leuven 20130809.1551]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4593,7 +4593,7 @@ From %c"
                  '("p" . "2. Process/Clarify...") t)
 
     (add-to-list 'org-agenda-custom-commands
-                 `("ps" "Inbox"
+                 `("pu" "Uncategorized"
                    tags "CATEGORY=\"@Inbox\"&LEVEL=2"
                    ((org-agenda-overriding-header "Level 2 stuff in inbox"))) t)
 
@@ -4625,7 +4625,7 @@ From %c"
 
     ;; all TODO entries, but DFRD/MAYB
     (add-to-list 'org-agenda-custom-commands
-                 '("rT" "List of unscheduled TODO entries (no DFRD/MAYB)"
+                 '("rT" "List of undated TODO entries (no DFRD/MAYB)"
                    tags-todo "TODO<>{DFRD\\|MAYB}"
                    ((org-agenda-overriding-header
                      "Global list of undated TODO items of all types but DFRD/MAYB")
@@ -4636,7 +4636,7 @@ From %c"
     ;; show only TODO entries, ignoring entries that have time stamps (it also
     ;; covers scheduled or deadline items)
     (add-to-list 'org-agenda-custom-commands
-                 '("rs"
+                 '("rs" "Undated TODO items"
                    todo "TODO"
                    ((org-agenda-overriding-header "Undated TODO items: ")
                     (org-agenda-todo-ignore-with-date t))) t)
@@ -9259,7 +9259,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130809.1533]--")
+(message "* --[ Loaded Emacs Leuven 20130809.1551]--")
 
 (provide 'emacs-leuven)
 
