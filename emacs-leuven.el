@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130809.1045
+;; Version: 20130809.1137
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130809.1045]--")
+(message "* --[ Loading Emacs Leuven 20130809.1137]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4621,7 +4621,7 @@ From %c"
     (add-to-list 'org-agenda-custom-commands
                  '("rt" "Unscheduled TODO entries"
                    alltodo ""
-                   ((org-agenda-entry-types '(:scheduled :deadline :timestamp))
+                   ((org-agenda-entry-types '(:timestamp :deadline :scheduled))
                     (org-agenda-overriding-header "Unscheduled TODO entries: "))) t)
 
     ;; all TODO entries, but DFRD/MAYB
@@ -9296,7 +9296,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130809.1045]--")
+(message "* --[ Loaded Emacs Leuven 20130809.1137]--")
 
 (provide 'emacs-leuven)
 

@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-09 Fri 10:45>
+# Time-stamp: <2013-08-09 Fri 11:36>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -6621,7 +6621,7 @@ Hide certain tasks that you don't want to be bothered with all the time:
     (add-to-list 'org-agenda-custom-commands
                  '("rt" "Unscheduled TODO entries"
                    alltodo ""
-                   ((org-agenda-entry-types '(:scheduled :deadline :timestamp))
+                   ((org-agenda-entry-types '(:timestamp :deadline :scheduled))
                     (org-agenda-overriding-header "Unscheduled TODO entries: "))) t)
 
     ;; all TODO entries, but DFRD/MAYB
