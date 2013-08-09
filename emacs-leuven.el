@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130809.1551
+;; Version: 20130809.164
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130809.1551]--")
+(message "* --[ Loading Emacs Leuven 20130809.164]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4795,9 +4795,19 @@ From %c"
 
 ;;*** Other views
 
+    ;; (add-to-list 'org-agenda-custom-commands
+    ;;              '("dh" "Hotlist"
+    ;;                tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY=\"A\"|FLAGGED"
+    ;;                ((org-agenda-todo-ignore-scheduled 'future))) t)
+
     (add-to-list 'org-agenda-custom-commands
                  '("dh" "Hotlist"
-                   tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY=\"A\"|FLAGGED"
+                   ((tags-todo "DEADLINE<=\"<+1w>\""
+                               ((org-agenda-overriding-header "Due in next 7 days")))
+                    (tags-todo "PRIORITY=\"A\"+DEADLINE=\"\"|PRIORITY=\"A\"+DEADLINE>\"<+1w>\""
+                               ((org-agenda-overriding-header "High priority")))
+                    (tags-todo "FLAGGED+PRIORITY=\"\"+DEADLINE=\"\"|FLAGGED+PRIORITY=\"\"+DEADLINE>\"<+1w>\"|FLAGGED+PRIORITY<>\"A\"+DEADLINE=\"\"|FLAGGED+PRIORITY<>\"A\"+DEADLINE>\"<+1w>\""
+                               ((org-agenda-overriding-header "Starred"))))
                    ((org-agenda-todo-ignore-scheduled 'future))) t)
 
     (add-to-list 'org-agenda-custom-commands
@@ -9259,7 +9269,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130809.1551]--")
+(message "* --[ Loaded Emacs Leuven 20130809.164]--")
 
 (provide 'emacs-leuven)
 
