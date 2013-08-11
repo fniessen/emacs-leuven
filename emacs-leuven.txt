@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-11 Sun 14:12>
+# Time-stamp: <2013-08-11 Sun 15:24>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -2590,38 +2590,40 @@ In Diff mode, I can *select a hunk and apply it (in reverse)*. Nice following
 
   (leuven--section "18.10 (emacs)Diff Mode")
 
-  ;; extensions to `diff-mode.el' ("*Diff*" buffer is highlighted differently)
+  ;; extensions to `diff-mode' ("*Diff*" buffer is highlighted differently)
   (try-require 'diff-mode-)
-  ;; this library should be loaded *before* library `diff-mode.el'
+  ;; this library should be loaded *before* library `diff-mode'
 
-  ;; highlight the changes with better granularity
-  (defun leuven--diff-make-fine-diffs ()
-    "Enable Diff Auto Refine mode."
-    (interactive)
-    (require 'diff-mode)
-    (let (diff-auto-refine-mode)
-      (condition-case nil
-          (save-excursion
-            (goto-char (point-min))
-            (while (not (eobp))
-              (diff-hunk-next)
-              (diff-refine-hunk)))
-        (error nil))
-      (run-at-time 0.0 nil
-                   (lambda ()
-                     (if (eq major-mode 'diff-mode)
-                         ;; put back the cursor only if still in a diff buffer
-                         ;; after the delay
-                         (goto-char (point-min)))))))
+  ;; mode for viewing/editing context diffs
+  (with-eval-after-load "diff-mode"
 
-  (defun leuven--diff-make-fine-diffs-if-necessary ()
-    "Auto-refine only the regions of 14,000 bytes or less."
-    ;; check for auto-refine limit
-    (unless (> (buffer-size) 14000)
-      (leuven--diff-make-fine-diffs)))
+    ;; highlight the changes with better granularity
+    (defun leuven--diff-make-fine-diffs ()
+      "Enable Diff Auto Refine mode."
+      (interactive)
+      (let (diff-auto-refine-mode)
+        (condition-case nil
+            (save-excursion
+              (goto-char (point-min))
+              (while (not (eobp))
+                (diff-hunk-next)
+                (diff-refine-hunk)))
+          (error nil))
+        (run-at-time 0.0 nil
+                     (lambda ()
+                       (if (eq major-mode 'diff-mode)
+                           ;; put back the cursor only if still in a diff buffer
+                           ;; after the delay
+                           (goto-char (point-min)))))))
 
-  (add-hook 'diff-mode-hook
-            'leuven--diff-make-fine-diffs-if-necessary)
+    (defun leuven--diff-make-fine-diffs-if-necessary ()
+      "Auto-refine only the regions of 14,000 bytes or less."
+      ;; check for auto-refine limit
+      (unless (> (buffer-size) 14000)
+        (leuven--diff-make-fine-diffs)))
+
+    (add-hook 'diff-mode-hook
+              'leuven--diff-make-fine-diffs-if-necessary))
 #+end_src
 
 To compare 2 text files, you can also use Ediff if the following command
@@ -3118,8 +3120,8 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
       ;; sources
       (setq helm-candidate-number-limit 100) ;; more than one screen page
 
-      ;;   ;; don't save history information to file
-      ;;   (remove-hook 'kill-emacs-hook 'helm-c-adaptive-save-history)
+      ;; ;; don't save history information to file
+      ;; (remove-hook 'kill-emacs-hook 'helm-c-adaptive-save-history)
 
       ;; don't show only basename of candidates in `helm-find-files'
       (setq helm-ff-transformer-show-only-basename nil)
@@ -3129,11 +3131,12 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
       ;; (setq helm-buffer-max-length nil) ;; don't truncate anymore
 
       (defun helm-toggle-debug ()
+        "Toggle Helm debug on/off."
         (interactive)
         (setq helm-debug (not helm-debug))
-        (message "Helm Debug is now %s" (if helm-debug
-                                            "enabled"
-                                          "disabled")))))
+        (message "Helm debug %s" (if helm-debug
+                                     "enabled"
+                                   "disabled")))))
 #+end_src
 
 *** Image mode
@@ -3879,6 +3882,9 @@ Instead of superseding the binding in =auto-mode-alist=, you can replace it
                   ("sshd?_config\\'" . ssh-config-mode)
                   ) auto-mode-alist))
 
+  ;; major mode for fontifiying ssh config files
+  (autoload 'ssh-config-mode "ssh-config-mode" t)
+
   ;; ledger
   (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
   (autoload 'ledger-mode "ledger"
@@ -3891,8 +3897,6 @@ Instead of superseding the binding in =auto-mode-alist=, you can replace it
   (with-eval-after-load "csv-mode"
     ;; field separators: a list of *single-character* strings
     (setq csv-separators '("," ";")))
-
-  (autoload 'ssh-config-mode "ssh-config-mode" t)
 #+end_src
 
 *** Choice based on the interpreter name
@@ -9093,9 +9097,21 @@ Also =who-calls.el=
 ;;** 26.1 Major Modes for (info "(emacs)Program Modes")
 
   (leuven--section "26.1 Major Modes for (emacs)Program Modes")
+#+end_src
 
+#+begin_src emacs-lisp
   (autoload 'graphviz-dot-mode "graphviz-dot-mode" nil t)
   (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.m\\'" . mercury-mode))
+
+  ;; major mode for editing and running Prolog (and Mercury) code
+  (with-eval-after-load "prolog"
+
+    ;; Prolog interpreter/compiler used
+    (setq prolog-system 'mercury))
 #+end_src
 
 ** Top-Level Definitions, or Defuns
@@ -9190,7 +9206,7 @@ things.
       ;; useful things)
       (paren-activate)
 
-    ;; enable Show Paren mode (highlight matching parenthesis)
+    ;; highlight matching paren
     (GNUEmacs
       (show-paren-mode 1)
       (setq show-paren-style 'mixed)
@@ -9612,29 +9628,22 @@ are somehow more user-friendly than the =M-x grep= command.
 
   (leuven--section "27.6 Running (emacs)Debuggers Under Emacs")
 
-  ;; Gdb integration works quite well already
-  ;; (the only important parameter for GDB)
-  (setq gdb-many-windows t)
+  (with-eval-after-load "gdb-mi"
+
+    ;; enable Gdb-Many-Windows mode
+    (setq gdb-many-windows t))
+    ;; the only important parameter for GDB
 #+end_src
 
-#+begin_src emacs-lisp
-  ;; Prolog[Mercury] mode
-  (autoload 'mercury-mode "prolog"
-    "Major mode for editing Mercury programs." t)
-
-  (setq prolog-system 'mercury)
-
-  (add-to-list 'auto-mode-alist '("\\.m\\'" . mercury-mode))
-#+end_src
-
-*** Debugging Mercury programs
+*** Debugging Mercury programs                                      :noexport:
 
 1. Put these lines in your ~.emacs~ file:
 
    #+begin_src emacs-lisp :tangle no
    (setq mercury-dir (file-name-as-directory (getenv "MERCURY_DIR")))
    (load-file (concat mercury-dir "/lib/mercury/elisp/gud.el"))
-   (setq mdb-command-name "bash.exe mdb ./mas_server.exe -c ../online/mas_server/mas_config_local.xml -d ../data")
+   (setq mdb-command-name
+         "bash.exe mdb ./mas_server.exe -c ../online/mas_server/mas_config_local.xml -d ../data")
    #+end_src
 
 2. To start the debugger, open a file in your build directory, e.g.
@@ -9649,7 +9658,7 @@ are somehow more user-friendly than the =M-x grep= command.
 
 ** Debugging Lisp programs
 
-Emacs has the basic debugger/stack trace, but it also has the =edebug= facility,
+Emacs has the basic debugger/stack trace, but it also has the Edebug facility,
 which is very powerful, for the more complex situation.
 
 With that source-level debugger for Emacs Lisp, you can:
@@ -9659,25 +9668,17 @@ With that source-level debugger for Emacs Lisp, you can:
 #+begin_src emacs-lisp
 ;;** Debugging Lisp programs
 
-  (add-hook 'cl-load-hook
-            (lambda ()
-              (add-hook 'edebug-setup-hook
-                        (lambda ()
-                          ;; edebug specs for cl.el
-                          (load-library "cl-specs.el")))))
-#+end_src
-
-#+begin_src emacs-lisp
+  ;; source-level debugger for Emacs Lisp
   (with-eval-after-load "edebug"
 
     (defadvice edebug-overlay-arrow (around leuven-highlight-line activate)
-      "Highlight line currently being edebugged."
+      "Highlight line currently being Edebug'ged."
       (require 'hl-line)
       (hl-line-mode)
       ad-do-it)
 
     (defun leuven-edebug-quit ()
-      "Stop edebugging and remove highlighting."
+      "Stop Edebug'ging and remove highlighting."
       (interactive)
       (hl-line-mode -1)
       (top-level))
@@ -11733,22 +11734,14 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
                                      "\\([ \t\n]+\\([^ \t\n]+\\)\\)?"
                                      "\\([ \t\n]+\\([^ \t\n]+\\)\\)?")
                              'face
-                             "\\1\\3\\5\\7"))))
+                             "\\1\\3\\5\\7")))))
 #+end_src
 
 *** Utilities
 
 BBDB 3 has a dial interface which allows you to call an external interface to
-make a call. This is done by modifying =bbdb-dial-function=.
-
-#+begin_src emacs-lisp
-;;* (info "(bbdb)Utilities")
-
-    ;; use BBDB to store PGP preferences
-    (when (try-require 'bbdb-pgp)
-      ;; what to do if the recipient is not in the BBDB
-      (setq bbdb/pgp-default-action nil)))
-#+end_src
+make a call. This is done by modifying =bbdb-dial-function=. There are examples
+which interface with Skype to make a phone call.
 
 #+begin_src emacs-lisp
 ) ;; chapter 34 ends here
@@ -12552,17 +12545,16 @@ You may wish to set =ps-print-landscape= to =t=.
       ;; open using your Emacs browser (whatever that is configured to)
       (if url (browse-url url) (call-interactively 'browse-url))))
 
-  (defun leuven--browse-url (&optional url)
-    "Browse the url passed in."
+  (defun leuven-browse-url (&optional url)
+    "Browse the URL passed in."
     (interactive)
     (require 'w3m)
     (require 'browse-url)
-    (require 'thingatpt+)
     (setq url (or url
                   (w3m-url-valid (w3m-anchor))
                   (browse-url-url-at-point)
-                  (region-or-word-at-point))) ;; see thingatpt+.el
-    (setq url (read-string (format "Url \"%s\" :" url) url nil url))
+                  (find-tag-default)))
+    (setq url (read-string (format "URL \"%s\" :" url) url nil url))
     (leuven--browse url))
 #+end_src
 
@@ -12711,11 +12703,11 @@ browser*: you can open the current page in your graphical browser by hitting =M=
   (when (executable-find "w3m")
 
     ;; name of the executable file of the `w3m' command
-    (setq w3m-command "w3m") ;; I don't want `/usr/bin/w3m' (which
-                             ;; requires `cygwin-mount')
+    (setq w3m-command "w3m")
+    ;; I don't want `/usr/bin/w3m' (which requires `cygwin-mount')
 
     ;; `w3m' slows down the startup process dramatically
-    (unless (try-require 'w3m-load)
+    (unless (try-require 'w3m-autoloads)
       (autoload 'w3m "w3m"
         "Visit the WWW page using w3m" t)
       (autoload 'w3m-find-file "w3m"
