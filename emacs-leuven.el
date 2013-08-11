@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130809.164
+;; Version: 20130811.1416
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130809.164]--")
+(message "* --[ Loading Emacs Leuven 20130811.1416]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -349,8 +349,9 @@
   ;; (leuven-add-to-load-path (concat leuven-site-lisp-directory "mode-abbrevs"))
 
   ;; remember this directory
-  (setq leuven--directory
-        (file-name-directory (or load-file-name (buffer-file-name))))
+  (defconst leuven--directory
+    (file-name-directory (or load-file-name (buffer-file-name)))
+    "Directory path of Emacs Leuven.")
 
 ;;*** Development code
 
@@ -1041,8 +1042,11 @@
                   ssh-config-mode-hook))
     (add-hook hook 'leuven--highlight-special-patterns))
 
-  ;; stealth fontification should show status messages
-  (setq jit-lock-stealth-verbose t)
+  ;; just-in-time fontification
+  (with-eval-after-load "jit-lock"
+
+    ;; stealth fontification should show status messages
+    (setq jit-lock-stealth-verbose t))
 
   ;; colorize color names in buffers
   (GNUEmacs
@@ -1343,8 +1347,12 @@
             occur-by-moccur
             isearch-moccur
             moccur-grep
-            moccur-grep-find))
+            moccur-grep-find)))
 
+  ;; multi-buffer occur (grep) mode
+  (with-eval-after-load "color-moccur"
+
+    ;; input word splited by space
     (setq moccur-split-word t))
 
 ) ;; chapter 15 ends here
@@ -2125,8 +2133,8 @@
         (interactive)
         (setq helm-debug (not helm-debug))
         (message "Helm Debug is now %s" (if helm-debug
-                                            "Enabled"
-                                          "Disabled")))))
+                                            "enabled"
+                                          "disabled")))))
 
   (leuven--section "Image mode")
 
@@ -4641,10 +4649,16 @@ From %c"
                    ((org-agenda-overriding-header "Undated TODO items: ")
                     (org-agenda-todo-ignore-with-date t))) t)
 
-    (add-to-list 'org-agenda-custom-commands
-                 '("r^" "Calendar for current month"
-                   (lambda (&rest ignore)
-                     (cfw:open-org-calendar))) t)
+    ;; calendar view for org-agenda
+    (when (locate-library "calfw-org")
+
+      (autoload 'cfw:open-org-calendar "calfw-org"
+        "Open an Org schedule calendar." t)
+
+      (add-to-list 'org-agenda-custom-commands
+                   '("r^" "Calendar for current month"
+                     (lambda (&rest ignore)
+                       (cfw:open-org-calendar))) t))
 
     ;; show what happened today
     (add-to-list 'org-agenda-custom-commands
@@ -7290,8 +7304,10 @@ From %c"
 
   (leuven--section "29.7 Dabbrev Customization")
 
-  ;; preserve case when expanding the abbreviation
-  (setq dabbrev-case-replace nil)
+  ;; (with-eval-after-load "dabbrev"
+  ;;
+  ;;   ;; preserve case when expanding the abbreviation
+  ;;   (setq dabbrev-case-replace nil))
 
   ;; expand text trying various ways to find its expansion
   (global-set-key
@@ -7557,19 +7573,22 @@ From %c"
 
   (leuven--section "G.4 (emacs)ls in Lisp")
 
-  ;; disable the case sensitive sort of file names
-  (setq ls-lisp-ignore-case t)
+  ;; emulate insert-directory completely in Emacs Lisp
+  (with-eval-after-load "ls-lisp"
 
-  ;; sort directories first
-  (setq ls-lisp-dirs-first t)
+    ;; disable the case sensitive sort of file names
+    (setq ls-lisp-ignore-case t)
 
-  ;; use ISO 8601 dates (on MS-Windows)
-  (setq ls-lisp-format-time-list
-        '("%Y-%m-%d %H:%M"
-          "%Y-%m-%d %H:%M"))
+    ;; sort directories first
+    (setq ls-lisp-dirs-first t)
 
-  ;; use localized date/time format
-  (setq ls-lisp-use-localized-time-format t)
+    ;; use ISO 8601 dates (on MS-Windows)
+    (setq ls-lisp-format-time-list
+          '("%Y-%m-%d %H:%M"
+            "%Y-%m-%d %H:%M"))
+
+    ;; use localized date/time format
+    (setq ls-lisp-use-localized-time-format t))
 
 ) ;; chapter 30 ends here
 
@@ -7761,8 +7780,8 @@ From %c"
 
 ;;* Calendar view framework on Emacs
 
-  ;; calendar view for org-agenda
-  (when (locate-library "calfw")
+  ;; calendar view framework on Emacs
+  (with-eval-after-load "calfw"
 
     ;; Unicode characters
     (setq cfw:fchar-junction ?╋
@@ -7772,37 +7791,35 @@ From %c"
           cfw:fchar-right-junction ?┫
           cfw:fchar-top-junction ?┯
           cfw:fchar-top-left-corner ?┏
-          cfw:fchar-top-right-corner ?┓)
+          cfw:fchar-top-right-corner ?┓))
 
-    (autoload 'cfw:open-org-calendar "calfw-org"
-      "Open an Org schedule calendar." t)
+  ;; calendar view for org-agenda
+  (with-eval-after-load "calfw-org"
 
-    (with-eval-after-load "calfw-org"
-
-      ;; remove some strings (tags and filenames) from item summary
-      (defun cfw:org-summary-format (item)
-        "Format an item. (How should be displayed?)"
-        (let* ((time (cfw:org-tp item 'time))
-               (time-of-day (cfw:org-tp item 'time-of-day))
-               (time-str (and time-of-day
-                              (format "%02i:%02i "
-                                      (/ time-of-day 100)
-                                      (% time-of-day 100))))
-               (category (cfw:org-tp item 'org-category))
-               (tags (cfw:org-tp item 'tags))
-               (marker (cfw:org-tp item 'org-marker))
-               (buffer (and marker (marker-buffer marker)))
-               (text (cfw:org-extract-summary item))
-               (props (cfw:extract-text-props item 'face 'keymap)))
-          (propertize
-           (concat
-            (if time-str (apply 'propertize time-str props)) text " "
-            ;; (and buffer (buffer-name buffer))
-            )
-           'keymap cfw:org-text-keymap
-           ;; Delete the display property, since displaying images will break our
-           ;; table layout.
-           'display nil)))))
+    ;; remove some strings (tags and filenames) from item summary
+    (defun cfw:org-summary-format (item)
+      "Format an item. (How should be displayed?)"
+      (let* ((time (cfw:org-tp item 'time))
+             (time-of-day (cfw:org-tp item 'time-of-day))
+             (time-str (and time-of-day
+                            (format "%02i:%02i "
+                                    (/ time-of-day 100)
+                                    (% time-of-day 100))))
+             (category (cfw:org-tp item 'org-category))
+             (tags (cfw:org-tp item 'tags))
+             (marker (cfw:org-tp item 'org-marker))
+             (buffer (and marker (marker-buffer marker)))
+             (text (cfw:org-extract-summary item))
+             (props (cfw:extract-text-props item 'face 'keymap)))
+        (propertize
+         (concat
+          (if time-str (apply 'propertize time-str props)) text " "
+          ;; (and buffer (buffer-name buffer))
+          )
+         'keymap cfw:org-text-keymap
+         ;; Delete the display property, since displaying images will break our
+         ;; table layout.
+         'display nil))))
 
 ) ;; chapter 31 ends here
 
@@ -8201,11 +8218,14 @@ From %c"
         (cond ((string-match "cmd.exe" shell-file-name) nil) ;; using a system shell
               (t t)))
 
-  ;; name of shell used to parse TeX commands
-  (setq TeX-shell shell-file-name) ;; ???
+  ;; external commands for AUCTeX
+  (with-eval-after-load "tex-buf"
 
-  ;; shell argument indicating that next argument is the command
-  (setq TeX-shell-command-option shell-command-switch) ;; ???
+    ;; name of shell used to parse TeX commands
+    (setq TeX-shell shell-file-name) ;; ???
+
+    ;; shell argument indicating that next argument is the command
+    (setq TeX-shell-command-option shell-command-switch)) ;; ???
 
 ;;** 36.2 Interactive Shell
 
@@ -8864,8 +8884,8 @@ From %c"
     (defun leuven-babel-translate ()
       "Translate using many online translators."
       (interactive)
+      (require 'babel)
       (let (source)
-        (autoload 'babel-work "babel" nil t)
         (switch-to-buffer "*leuven--translate*")
         (erase-buffer)
         (yank)
@@ -8886,7 +8906,9 @@ From %c"
 
 (leuven--chapter leuven-chapter-46-amusements "46 Other Amusements"
 
-  (GNUEmacs
+  ;; define a default menu bar
+  (with-eval-after-load "menu-bar"
+
     ;; get rid of the Games in the Tools menu
     (define-key menu-bar-tools-menu
       [games] nil))
@@ -9157,16 +9179,17 @@ From %c"
   ;; inside Org documents!
   (defun leuven--ess-start-R ()
     (interactive)
-    (if (not (member "*R*"
-                     (mapcar (function buffer-name) (buffer-list))))
-        (progn
-          (delete-other-windows)
-          (setq w1 (selected-window))
-          (setq w1name (buffer-name))
-          (setq w2 (split-window w1 nil t))
-          (R)
-          (set-window-buffer w2 "*R*")
-          (set-window-buffer w1 w1name))))
+    (let (w1 w1name w2)
+      (if (not (member "*R*"
+                       (mapcar (function buffer-name) (buffer-list))))
+          (progn
+            (delete-other-windows)
+            (setq w1 (selected-window))
+            (setq w1name (buffer-name))
+            (setq w2 (split-window w1 nil t))
+            (R)
+            (set-window-buffer w2 "*R*")
+            (set-window-buffer w1 w1name)))))
 
   (defun leuven-ess-eval ()
     (interactive)
@@ -9269,7 +9292,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130809.164]--")
+(message "* --[ Loaded Emacs Leuven 20130811.1416]--")
 
 (provide 'emacs-leuven)
 

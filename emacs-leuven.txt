@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-09 Fri 16:40>
+# Time-stamp: <2013-08-11 Sun 14:12>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -439,8 +439,9 @@ need to load a single file that define autoloaded functions.
 
 #+begin_src emacs-lisp
   ;; remember this directory
-  (setq leuven--directory
-        (file-name-directory (or load-file-name (buffer-file-name))))
+  (defconst leuven--directory
+    (file-name-directory (or load-file-name (buffer-file-name)))
+    "Directory path of Emacs Leuven.")
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1427,15 +1428,18 @@ modes run =prog-mode-hook=, prior to running their own mode hooks.
 For FIXME to be highlighted in Org tables as well, use:
 
 #+begin_src emacs-lisp :tangle no
-(defun fp-fontify-fixme ()
-  (font-lock-add-keywords
-   nil '(("\\<FIXME\\>" 0 font-lock-warning-face t)) t))
-                                                     ^!!!
+  (defun fp-fontify-fixme ()
+    (font-lock-add-keywords
+     nil '(("\\<FIXME\\>" 0 font-lock-warning-face t)) t))
+                                                       ^!!!
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; stealth fontification should show status messages
-  (setq jit-lock-stealth-verbose t)
+  ;; just-in-time fontification
+  (with-eval-after-load "jit-lock"
+
+    ;; stealth fontification should show status messages
+    (setq jit-lock-stealth-verbose t))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1946,8 +1950,12 @@ It is bound to =e= in Occur mode.
             occur-by-moccur
             isearch-moccur
             moccur-grep
-            moccur-grep-find))
+            moccur-grep-find)))
 
+  ;; multi-buffer occur (grep) mode
+  (with-eval-after-load "color-moccur"
+
+    ;; input word splited by space
     (setq moccur-split-word t))
 #+end_src
 
@@ -3124,8 +3132,8 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
         (interactive)
         (setq helm-debug (not helm-debug))
         (message "Helm Debug is now %s" (if helm-debug
-                                            "Enabled"
-                                          "Disabled")))))
+                                            "enabled"
+                                          "disabled")))))
 #+end_src
 
 *** Image mode
@@ -6648,10 +6656,16 @@ Recently done.
 #+end_src
 
 #+begin_src emacs-lisp
-    (add-to-list 'org-agenda-custom-commands
-                 '("r^" "Calendar for current month"
-                   (lambda (&rest ignore)
-                     (cfw:open-org-calendar))) t)
+    ;; calendar view for org-agenda
+    (when (locate-library "calfw-org")
+
+      (autoload 'cfw:open-org-calendar "calfw-org"
+        "Open an Org schedule calendar." t)
+
+      (add-to-list 'org-agenda-custom-commands
+                   '("r^" "Calendar for current month"
+                     (lambda (&rest ignore)
+                       (cfw:open-org-calendar))) t))
 #+end_src
 
 =org-timeline= has weaknesses and although not officially deprecated, should be
@@ -10646,8 +10660,10 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
 
   (leuven--section "29.7 Dabbrev Customization")
 
-  ;; preserve case when expanding the abbreviation
-  (setq dabbrev-case-replace nil)
+  ;; (with-eval-after-load "dabbrev"
+  ;;
+  ;;   ;; preserve case when expanding the abbreviation
+  ;;   (setq dabbrev-case-replace nil))
 #+end_src
 
 *** Hippie-expand
@@ -11130,19 +11146,22 @@ Extra Dired functionality
 
   (leuven--section "G.4 (emacs)ls in Lisp")
 
-  ;; disable the case sensitive sort of file names
-  (setq ls-lisp-ignore-case t)
+  ;; emulate insert-directory completely in Emacs Lisp
+  (with-eval-after-load "ls-lisp"
 
-  ;; sort directories first
-  (setq ls-lisp-dirs-first t)
+    ;; disable the case sensitive sort of file names
+    (setq ls-lisp-ignore-case t)
 
-  ;; use ISO 8601 dates (on MS-Windows)
-  (setq ls-lisp-format-time-list
-        '("%Y-%m-%d %H:%M"
-          "%Y-%m-%d %H:%M"))
+    ;; sort directories first
+    (setq ls-lisp-dirs-first t)
 
-  ;; use localized date/time format
-  (setq ls-lisp-use-localized-time-format t)
+    ;; use ISO 8601 dates (on MS-Windows)
+    (setq ls-lisp-format-time-list
+          '("%Y-%m-%d %H:%M"
+            "%Y-%m-%d %H:%M"))
+
+    ;; use localized date/time format
+    (setq ls-lisp-use-localized-time-format t))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -11399,8 +11418,8 @@ htmlfontify-buffer=.
 #+begin_src emacs-lisp
 ;;* Calendar view framework on Emacs
 
-  ;; calendar view for org-agenda
-  (when (locate-library "calfw")
+  ;; calendar view framework on Emacs
+  (with-eval-after-load "calfw"
 
     ;; Unicode characters
     (setq cfw:fchar-junction ?╋
@@ -11410,37 +11429,35 @@ htmlfontify-buffer=.
           cfw:fchar-right-junction ?┫
           cfw:fchar-top-junction ?┯
           cfw:fchar-top-left-corner ?┏
-          cfw:fchar-top-right-corner ?┓)
+          cfw:fchar-top-right-corner ?┓))
 
-    (autoload 'cfw:open-org-calendar "calfw-org"
-      "Open an Org schedule calendar." t)
+  ;; calendar view for org-agenda
+  (with-eval-after-load "calfw-org"
 
-    (with-eval-after-load "calfw-org"
-
-      ;; remove some strings (tags and filenames) from item summary
-      (defun cfw:org-summary-format (item)
-        "Format an item. (How should be displayed?)"
-        (let* ((time (cfw:org-tp item 'time))
-               (time-of-day (cfw:org-tp item 'time-of-day))
-               (time-str (and time-of-day
-                              (format "%02i:%02i "
-                                      (/ time-of-day 100)
-                                      (% time-of-day 100))))
-               (category (cfw:org-tp item 'org-category))
-               (tags (cfw:org-tp item 'tags))
-               (marker (cfw:org-tp item 'org-marker))
-               (buffer (and marker (marker-buffer marker)))
-               (text (cfw:org-extract-summary item))
-               (props (cfw:extract-text-props item 'face 'keymap)))
-          (propertize
-           (concat
-            (if time-str (apply 'propertize time-str props)) text " "
-            ;; (and buffer (buffer-name buffer))
-            )
-           'keymap cfw:org-text-keymap
-           ;; Delete the display property, since displaying images will break our
-           ;; table layout.
-           'display nil)))))
+    ;; remove some strings (tags and filenames) from item summary
+    (defun cfw:org-summary-format (item)
+      "Format an item. (How should be displayed?)"
+      (let* ((time (cfw:org-tp item 'time))
+             (time-of-day (cfw:org-tp item 'time-of-day))
+             (time-str (and time-of-day
+                            (format "%02i:%02i "
+                                    (/ time-of-day 100)
+                                    (% time-of-day 100))))
+             (category (cfw:org-tp item 'org-category))
+             (tags (cfw:org-tp item 'tags))
+             (marker (cfw:org-tp item 'org-marker))
+             (buffer (and marker (marker-buffer marker)))
+             (text (cfw:org-extract-summary item))
+             (props (cfw:extract-text-props item 'face 'keymap)))
+        (propertize
+         (concat
+          (if time-str (apply 'propertize time-str props)) text " "
+          ;; (and buffer (buffer-name buffer))
+          )
+         'keymap cfw:org-text-keymap
+         ;; Delete the display property, since displaying images will break our
+         ;; table layout.
+         'display nil))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -11925,12 +11942,17 @@ old region and *replaces* it with the output from the shell command.
   (setq w32-quote-process-args
         (cond ((string-match "cmd.exe" shell-file-name) nil) ;; using a system shell
               (t t)))
+#+end_src
 
-  ;; name of shell used to parse TeX commands
-  (setq TeX-shell shell-file-name) ;; ???
+#+begin_src emacs-lisp
+  ;; external commands for AUCTeX
+  (with-eval-after-load "tex-buf"
 
-  ;; shell argument indicating that next argument is the command
-  (setq TeX-shell-command-option shell-command-switch) ;; ???
+    ;; name of shell used to parse TeX commands
+    (setq TeX-shell shell-file-name) ;; ???
+
+    ;; shell argument indicating that next argument is the command
+    (setq TeX-shell-command-option shell-command-switch)) ;; ???
 #+end_src
 
 ** Interactive Shell
@@ -12884,8 +12906,8 @@ http://lars.ingebrigtsen.no/2013/06/eww.html.
     (defun leuven-babel-translate ()
       "Translate using many online translators."
       (interactive)
+      (require 'babel)
       (let (source)
-        (autoload 'babel-work "babel" nil t)
         (switch-to-buffer "*leuven--translate*")
         (erase-buffer)
         (yank)
@@ -12910,7 +12932,9 @@ http://lars.ingebrigtsen.no/2013/06/eww.html.
 
 (leuven--chapter leuven-chapter-46-amusements "46 Other Amusements"
 
-  (GNUEmacs
+  ;; define a default menu bar
+  (with-eval-after-load "menu-bar"
+
     ;; get rid of the Games in the Tools menu
     (define-key menu-bar-tools-menu
       [games] nil))
@@ -13627,16 +13651,17 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
   ;; inside Org documents!
   (defun leuven--ess-start-R ()
     (interactive)
-    (if (not (member "*R*"
-                     (mapcar (function buffer-name) (buffer-list))))
-        (progn
-          (delete-other-windows)
-          (setq w1 (selected-window))
-          (setq w1name (buffer-name))
-          (setq w2 (split-window w1 nil t))
-          (R)
-          (set-window-buffer w2 "*R*")
-          (set-window-buffer w1 w1name))))
+    (let (w1 w1name w2)
+      (if (not (member "*R*"
+                       (mapcar (function buffer-name) (buffer-list))))
+          (progn
+            (delete-other-windows)
+            (setq w1 (selected-window))
+            (setq w1name (buffer-name))
+            (setq w2 (split-window w1 nil t))
+            (R)
+            (set-window-buffer w2 "*R*")
+            (set-window-buffer w1 w1name)))))
 
   (defun leuven-ess-eval ()
     (interactive)
