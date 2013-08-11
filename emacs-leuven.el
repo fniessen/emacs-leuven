@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130811.1524
+;; Version: 20130811.1553
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130811.1524]--")
+(message "* --[ Loading Emacs Leuven 20130811.1553]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6338,14 +6338,6 @@ From %c"
   (autoload 'graphviz-dot-mode "graphviz-dot-mode" nil t)
   (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
 
-  (add-to-list 'auto-mode-alist '("\\.m\\'" . mercury-mode))
-
-  ;; major mode for editing and running Prolog (and Mercury) code
-  (with-eval-after-load "prolog"
-
-    ;; Prolog interpreter/compiler used
-    (setq prolog-system 'mercury))
-
 ;;** 26.2 Top-Level Definitions, or (info "(emacs)Defuns")
 
   (leuven--section "26.2 Top-Level Definitions, or (emacs)Defuns")
@@ -9284,7 +9276,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130811.1525]--")
+(message "* --[ Loaded Emacs Leuven 20130811.1553]--")
 
 (provide 'emacs-leuven)
 
