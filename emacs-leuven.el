@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130811.1553
+;; Version: 20130812.1632
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130811.1553]--")
+(message "* --[ Loading Emacs Leuven 20130812.1632]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2893,7 +2893,7 @@
 
     ;; bind the outline minor mode functions to an easy to remember prefix
     ;; key (more accessible than the horrible prefix `C-c @')
-    (setq outline-minor-mode-prefix (kbd "M-o"))
+    (setq outline-minor-mode-prefix (kbd "C-c C-o"))
 
     ;; ;; make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
     ;; ;; mode outline navigation (written by Carsten Dominik)
@@ -4794,7 +4794,7 @@ From %c"
                              (org-agenda-start-on-weekday nil)
                              (org-agenda-time-grid nil)))
                     )
-                   ((org-agenda-format-date "%Y-%m-%d %a")
+                   ((org-agenda-format-date "")
                     (org-agenda-start-with-clockreport-mode nil))) t)
 
 ;;*** Calendar style views
@@ -4813,24 +4813,24 @@ From %c"
 
 ;;*** Other views
 
-    ;; (add-to-list 'org-agenda-custom-commands
-    ;;              '("dh" "Hotlist"
-    ;;                tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY=\"A\"|FLAGGED"
-    ;;                ((org-agenda-todo-ignore-scheduled 'future))) t)
-
     (add-to-list 'org-agenda-custom-commands
                  '("dh" "Hotlist"
+                   ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY=\"A\"|FLAGGED"
                    ((tags-todo "DEADLINE<=\"<+1w>\""
                                ((org-agenda-overriding-header "Due in next 7 days")))
-                    (tags-todo "PRIORITY=\"A\"+DEADLINE=\"\"|PRIORITY=\"A\"+DEADLINE>\"<+1w>\""
+                    (tags-todo "DEADLINE=\"\"+PRIORITY=\"A\"|DEADLINE>\"<+1w>\"+PRIORITY=\"A\""
                                ((org-agenda-overriding-header "High priority")))
-                    (tags-todo "FLAGGED+PRIORITY=\"\"+DEADLINE=\"\"|FLAGGED+PRIORITY=\"\"+DEADLINE>\"<+1w>\"|FLAGGED+PRIORITY<>\"A\"+DEADLINE=\"\"|FLAGGED+PRIORITY<>\"A\"+DEADLINE>\"<+1w>\""
-                               ((org-agenda-overriding-header "Starred"))))
+                    (tags-todo "DEADLINE=\"\"+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
+                               ((org-agenda-overriding-header "Flagged")
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-when-regexp-matches))
+                                (org-agenda-skip-regexp "\\[#A\\]"))))
                    ((org-agenda-todo-ignore-scheduled 'future))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("de" "Effort less than 1 hour"
-                   tags-todo "Effort<>\"\"+Effort<\"1:00\"") t)
+                   tags-todo "Effort<>\"\"+Effort<\"1:00\""
+                   ((org-agenda-todo-ignore-scheduled 'future))) t)
 
     ;; checking tasks that are assigned to me
     (add-to-list 'org-agenda-custom-commands
@@ -9276,7 +9276,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130811.1553]--")
+(message "* --[ Loaded Emacs Leuven 20130812.1633]--")
 
 (provide 'emacs-leuven)
 

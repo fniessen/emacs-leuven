@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-11 Sun 15:53>
+# Time-stamp: <2013-08-12 Mon 16:32>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -4223,7 +4223,7 @@ You can use =org-cycle= in other modes, with =outline-minor-mode=.
 
     ;; bind the outline minor mode functions to an easy to remember prefix
     ;; key (more accessible than the horrible prefix `C-c @')
-    (setq outline-minor-mode-prefix (kbd "M-o"))
+    (setq outline-minor-mode-prefix (kbd "C-c C-o"))
 
     ;; ;; make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
     ;; ;; mode outline navigation (written by Carsten Dominik)
@@ -6833,7 +6833,7 @@ Cleanup:
                              (org-agenda-start-on-weekday nil)
                              (org-agenda-time-grid nil)))
                     )
-                   ((org-agenda-format-date "%Y-%m-%d %a")
+                   ((org-agenda-format-date "")
                     (org-agenda-start-with-clockreport-mode nil))) t)
 #+end_src
 
@@ -6878,19 +6878,18 @@ In other words, to be listed in the hotlist, tasks must have as well a
 *************** TODO Use option (org-agenda-todo-ignore-with-date t) = ignore SCHEDULED criteria?
 
 #+begin_src emacs-lisp
-    ;; (add-to-list 'org-agenda-custom-commands
-    ;;              '("dh" "Hotlist"
-    ;;                tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY=\"A\"|FLAGGED"
-    ;;                ((org-agenda-todo-ignore-scheduled 'future))) t)
-
     (add-to-list 'org-agenda-custom-commands
                  '("dh" "Hotlist"
+                   ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY=\"A\"|FLAGGED"
                    ((tags-todo "DEADLINE<=\"<+1w>\""
                                ((org-agenda-overriding-header "Due in next 7 days")))
-                    (tags-todo "PRIORITY=\"A\"+DEADLINE=\"\"|PRIORITY=\"A\"+DEADLINE>\"<+1w>\""
+                    (tags-todo "DEADLINE=\"\"+PRIORITY=\"A\"|DEADLINE>\"<+1w>\"+PRIORITY=\"A\""
                                ((org-agenda-overriding-header "High priority")))
-                    (tags-todo "FLAGGED+PRIORITY=\"\"+DEADLINE=\"\"|FLAGGED+PRIORITY=\"\"+DEADLINE>\"<+1w>\"|FLAGGED+PRIORITY<>\"A\"+DEADLINE=\"\"|FLAGGED+PRIORITY<>\"A\"+DEADLINE>\"<+1w>\""
-                               ((org-agenda-overriding-header "Starred"))))
+                    (tags-todo "DEADLINE=\"\"+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
+                               ((org-agenda-overriding-header "Flagged")
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-when-regexp-matches))
+                                (org-agenda-skip-regexp "\\[#A\\]"))))
                    ((org-agenda-todo-ignore-scheduled 'future))) t)
 #+end_src
 
@@ -6902,7 +6901,8 @@ to do each day.
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("de" "Effort less than 1 hour"
-                   tags-todo "Effort<>\"\"+Effort<\"1:00\"") t)
+                   tags-todo "Effort<>\"\"+Effort<\"1:00\""
+                   ((org-agenda-todo-ignore-scheduled 'future))) t)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8964,10 +8964,12 @@ current selection. More general index entries are created with =C-c <=.
 
 ** XML
 
-nXML mode does real-time *validation against a schema in RELAX NG* (actually
-RNC, i.e. the "compact" notation).
+nXML mode does:
 
-*Code completion* against the RNG schema is provided.
+- real-time *validation against a schema in RELAX NG* (actually RNC, i.e. the
+  "Compact" Syntax),
+
+- *code completion* against the RNG schema.
 
 #+begin_src emacs-lisp
   (with-eval-after-load "nxml-mode"
