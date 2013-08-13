@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-13 Tue 17:25>
+# Time-stamp: <2013-08-13 Tue 21:55>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -6888,7 +6888,9 @@ In other words, to be listed in the hotlist, tasks must have as well a
     (add-to-list 'org-agenda-custom-commands
                  '("dh" "Hotlist"
                    ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY=\"A\"|FLAGGED"
-                   ((tags-todo "DEADLINE<=\"<+1w>\""
+                   ((tags-todo "DEADLINE<\"<+0d>\""
+                               ((org-agenda-overriding-header "Past due")))
+                    (tags-todo "DEADLINE>=\"<+0d>\"+DEADLINE<=\"<+1w>\""
                                ((org-agenda-overriding-header "Due in next 7 days")))
                     (tags-todo "DEADLINE=\"\"+PRIORITY=\"A\"|DEADLINE>\"<+1w>\"+PRIORITY=\"A\""
                                ((org-agenda-overriding-header "High priority")))

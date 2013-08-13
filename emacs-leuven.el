@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130813.1726
+;; Version: 20130813.2155
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130813.1726]--")
+(message "* --[ Loading Emacs Leuven 20130813.2155]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4817,7 +4817,9 @@ From %c"
     (add-to-list 'org-agenda-custom-commands
                  '("dh" "Hotlist"
                    ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY=\"A\"|FLAGGED"
-                   ((tags-todo "DEADLINE<=\"<+1w>\""
+                   ((tags-todo "DEADLINE<\"<+0d>\""
+                               ((org-agenda-overriding-header "Past due")))
+                    (tags-todo "DEADLINE>=\"<+0d>\"+DEADLINE<=\"<+1w>\""
                                ((org-agenda-overriding-header "Due in next 7 days")))
                     (tags-todo "DEADLINE=\"\"+PRIORITY=\"A\"|DEADLINE>\"<+1w>\"+PRIORITY=\"A\""
                                ((org-agenda-overriding-header "High priority")))
@@ -9298,7 +9300,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130813.1726]--")
+(message "* --[ Loaded Emacs Leuven 20130813.2156]--")
 
 (provide 'emacs-leuven)
 
