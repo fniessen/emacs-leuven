@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-13 Tue 16:31>
+# Time-stamp: <2013-08-13 Tue 17:25>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -7539,13 +7539,13 @@ org-export-htmlize-generate-css= to extract class definitions.
 #+begin_src emacs-lisp
     ;; check that `tidy' is in PATH, and that configuration file exists
     (when (and (executable-find "tidy")
-               (file-exists-p "~/.tidyrc"))
+               (file-exists-p "~/.tidyrc")) ;; tidy-config
 
       (defun leuven--export-html-final-filter (contents backend info)
         (if (not (eq backend 'html)) contents
           (let* ((in-file "~/tidy-stdin.html")
                           ;; this filepath must be readable by Cygwin
-                 (err-file "~/tidy.log")
+                 (err-file "~/tidy-errors.log")
                  new-contents)
             (with-temp-file in-file
               (insert contents))
@@ -8989,6 +8989,9 @@ works quite well for editing HTML4 documents (whose tags don't have to close).
      Hide all of the angle-bracketed tags in the buffer (=sgml-tags-invisible=).
      This can be used as a cheap *preview* of *just the bare text*.
 
+- =C-c /= ::
+     =sgml-close-tag=
+
 - =C-M-i= ::
      =ispell-complete-word=
 
@@ -9007,16 +9010,22 @@ Plug [[http://tidy.sourceforge.net/][HTML Tidy]] with ~tidy.el~.
     (autoload 'tidy-build-menu  "tidy"
       "Install an options menu for HTML Tidy." t)
 
-    ;; set up a "tidy" menu in the menu bar and bind the key sequence
-    ;; `C-c C-c' to `tidy-buffer' in html-mode (normally a prefix key for
-    ;; inserting skeleton text)
     (defun leuven--html-mode-hook ()
-      "Customize html-mode."
-      (tidy-build-menu html-mode-map)
+      "Customize html(-helper)-mode."
+
+      ;; set up a "tidy" menu in the menu bar
+      (when (boundp 'html-mode-map)
+        (tidy-build-menu html-mode-map))
+      (when (boundp 'html-helper-mode-map)
+        (tidy-build-menu html-helper-mode-map))
+
+      ;; bind the key sequence `C-c C-c' to `tidy-buffer'
       (local-set-key
         (kbd "C-c C-c") 'tidy-buffer)
+
       (setq sgml-validate-command "tidy"))
 
+    ;; also run from `html-helper-mode'
     (add-hook 'html-mode-hook 'leuven--html-mode-hook))
 #+end_src
 
@@ -9048,21 +9057,7 @@ tags around a region you've specified.
     (add-to-list 'auto-mode-alist '("\\.asp\\'" . html-helper-mode))
 
     ;; invoke html-helper-mode automatically on .jsp files
-    (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode))
-
-    (when (and (locate-library "tidy")
-               (executable-find "tidy"))
-
-      ;; set up a "tidy" menu in the menu bar and bind the key sequence
-      ;; `C-c C-c' to `tidy-buffer' in html-helper-mode
-      (defun leuven--html-helper-mode-hook ()
-        "Customize html-helper-mode."
-        (tidy-build-menu html-helper-mode-map)
-        (local-set-key
-          (kbd "C-c C-c") 'tidy-buffer)
-        (setq sgml-validate-command "tidy"))
-
-      (add-hook 'html-helper-mode-hook 'leuven--html-helper-mode-hook)))
+    (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode)))
 #+end_src
 
 ** XHTML
@@ -9118,8 +9113,6 @@ Some key bindings:
 #+begin_src emacs-lisp
   (with-eval-after-load "nxml-mode"
 
-(message "nXML mode eval after load!!!") (sit-for 3)
-
     ;; remove the binding of `C-c C-x' (`nxml-insert-xml-declaration'), used
     ;; by Org timeclocking commands
     (define-key nxml-mode-map
@@ -9128,7 +9121,7 @@ Some key bindings:
     ;; view the buffer contents in a browser
     (define-key nxml-mode-map
       (kbd "C-c C-v") 'browse-url-of-buffer))
-      ;; (normally bound to `rng-validate-mode')
+      ;; XXX (normally bound to `rng-validate-mode')
 #+end_src
 
 ** Highlight the closing tag
@@ -9136,12 +9129,10 @@ Some key bindings:
 #+begin_src emacs-lisp
   (when (try-require 'hl-tags-mode)
 
-    (add-hook 'sgml-mode-hook
+    (add-hook 'html-mode-hook
               (lambda ()
-                (hl-tags-mode 1)))
-
-    (add-hook 'html-helper-mode-hook
-              (lambda ()
+                (require 'sgml-mode)
+                ;; when `html-mode-hook' is called from `html-helper-mode'
                 (hl-tags-mode 1)))
 
     (add-hook 'nxml-mode-hook

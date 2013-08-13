@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130813.1631
+;; Version: 20130813.1726
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130813.1631]--")
+(message "* --[ Loading Emacs Leuven 20130813.1726]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5337,13 +5337,13 @@ From %c"
 
     ;; check that `tidy' is in PATH, and that configuration file exists
     (when (and (executable-find "tidy")
-               (file-exists-p "~/.tidyrc"))
+               (file-exists-p "~/.tidyrc")) ;; tidy-config
 
       (defun leuven--export-html-final-filter (contents backend info)
         (if (not (eq backend 'html)) contents
           (let* ((in-file "~/tidy-stdin.html")
                           ;; this filepath must be readable by Cygwin
-                 (err-file "~/tidy.log")
+                 (err-file "~/tidy-errors.log")
                  new-contents)
             (with-temp-file in-file
               (insert contents))
@@ -6291,16 +6291,22 @@ From %c"
     (autoload 'tidy-build-menu  "tidy"
       "Install an options menu for HTML Tidy." t)
 
-    ;; set up a "tidy" menu in the menu bar and bind the key sequence
-    ;; `C-c C-c' to `tidy-buffer' in html-mode (normally a prefix key for
-    ;; inserting skeleton text)
     (defun leuven--html-mode-hook ()
-      "Customize html-mode."
-      (tidy-build-menu html-mode-map)
+      "Customize html(-helper)-mode."
+
+      ;; set up a "tidy" menu in the menu bar
+      (when (boundp 'html-mode-map)
+        (tidy-build-menu html-mode-map))
+      (when (boundp 'html-helper-mode-map)
+        (tidy-build-menu html-helper-mode-map))
+
+      ;; bind the key sequence `C-c C-c' to `tidy-buffer'
       (local-set-key
         (kbd "C-c C-c") 'tidy-buffer)
+
       (setq sgml-validate-command "tidy"))
 
+    ;; also run from `html-helper-mode'
     (add-hook 'html-mode-hook 'leuven--html-mode-hook))
 
   (when (locate-library "html-helper-mode")
@@ -6315,27 +6321,11 @@ From %c"
     (add-to-list 'auto-mode-alist '("\\.asp\\'" . html-helper-mode))
 
     ;; invoke html-helper-mode automatically on .jsp files
-    (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode))
-
-    (when (and (locate-library "tidy")
-               (executable-find "tidy"))
-
-      ;; set up a "tidy" menu in the menu bar and bind the key sequence
-      ;; `C-c C-c' to `tidy-buffer' in html-helper-mode
-      (defun leuven--html-helper-mode-hook ()
-        "Customize html-helper-mode."
-        (tidy-build-menu html-helper-mode-map)
-        (local-set-key
-          (kbd "C-c C-c") 'tidy-buffer)
-        (setq sgml-validate-command "tidy"))
-
-      (add-hook 'html-helper-mode-hook 'leuven--html-helper-mode-hook)))
+    (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode)))
 
   (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode)) ;; alias for `nxml-mode'
 
   (with-eval-after-load "nxml-mode"
-
-(message "nXML mode eval after load!!!") (sit-for 3)
 
     ;; remove the binding of `C-c C-x' (`nxml-insert-xml-declaration'), used
     ;; by Org timeclocking commands
@@ -6345,16 +6335,14 @@ From %c"
     ;; view the buffer contents in a browser
     (define-key nxml-mode-map
       (kbd "C-c C-v") 'browse-url-of-buffer))
-      ;; (normally bound to `rng-validate-mode')
+      ;; XXX (normally bound to `rng-validate-mode')
 
   (when (try-require 'hl-tags-mode)
 
-    (add-hook 'sgml-mode-hook
+    (add-hook 'html-mode-hook
               (lambda ()
-                (hl-tags-mode 1)))
-
-    (add-hook 'html-helper-mode-hook
-              (lambda ()
+                (require 'sgml-mode)
+                ;; when `html-mode-hook' is called from `html-helper-mode'
                 (hl-tags-mode 1)))
 
     (add-hook 'nxml-mode-hook
@@ -9310,7 +9298,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130813.1631]--")
+(message "* --[ Loaded Emacs Leuven 20130813.1726]--")
 
 (provide 'emacs-leuven)
 
