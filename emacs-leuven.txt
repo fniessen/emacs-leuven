@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-13 Tue 12:21>
+# Time-stamp: <2013-08-13 Tue 16:31>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -889,7 +889,7 @@ functions and documentation.
      Look up documentation on broad ELisp topics (in the indices of the Emacs
      Lisp Reference Manual).
 
-- info-lookup-symbol (=C-h S=, as well =C-f1= in Emacs Leuven) ::
+- info-lookup-symbol (=C-h S=, or =C-f1= in Emacs Leuven) ::
      *Bring the relevant section from the manual, which describes the topic in
      more detail.*
 
@@ -901,6 +901,11 @@ Try, for example =C-x C-h= or =C-c C-x C-h= to see what it does. I do use it to
 remind myself of rarely used rectangle commands: =C-x r C-h=.
 
 FYI, =catman= create the database files that are used by =apropos= or =man -k=.
+
+Note about PHP documentation lookup -- PHP Mode has a nice feature to lookup
+the function's definition in PHP's manual in your web browser (=M-x
+php-search-documentation= or =C-c C-f=). You can combine it with Emacs-w3m to get
+the relevant manual page without leaving Emacs.
 
 #+begin_src emacs-lisp
 ;;* 10 (info "(emacs)Help")
@@ -1838,7 +1843,7 @@ You can build regexps with visual feedback by using:
 Optimize regexps with =regexp-opt.el=.
 
 #+begin_src emacs-lisp
-;;** 15.4 (info "(emacs)Regexp Search")
+;;** 15.5 (info "(emacs)Regexp Search")
 
   (leuven--section "15.4 (emacs)Regexp Search")
 #+end_src
@@ -1887,7 +1892,7 @@ ELISP> (save-excursion (set-buffer "BUFFER")
 ** Search Case
 
 #+begin_src emacs-lisp
-;;** 15.8 (info "(emacs)Search Case")
+;;** 15.9 (info "(emacs)Search Case")
 
   (leuven--section "15.8 (emacs)Search Case")
 
@@ -1903,10 +1908,11 @@ it on the way, by pressing =M-%= while at the =I-search:= prompt.
 
 ** Other Search-and-Loop Commands
 
-=M-x flush-lines= deletes each line that contains a match for REGEXP.
+=M-x flush-lines= (or =delete-matching-lines=) deletes each line that contains a
+match for REGEXP.
 
 #+begin_src emacs-lisp
-;;** 15.10 (info "(emacs)Other Repeating Search") Commands
+;;** 15.11 (info "(emacs)Other Repeating Search") Commands
 
   (leuven--section "15.10 (emacs)Other Repeating Search Commands")
 
@@ -9019,8 +9025,7 @@ Plug [[http://tidy.sourceforge.net/][HTML Tidy]] with ~tidy.el~.
 You might also want to consider =html-helper-mode=, which has a lot more
 features than plain =html-mode=:
 
-- *syntax highlighting*,
-- autocompletion, and
+- autocompletion,
 - auto-insertion of closing tags... and
 - a lot more.
 
@@ -9072,14 +9077,17 @@ tags around a region you've specified.
 Alternatively, you can use [[http://ourcomments.org/Emacs/nXhtml/doc/nxhtml.html][nXhtml]] mode, derived from nXML mode. It adds a lot
 of things useful for *XHTML* files with mixed content:
 
-- handling *multiple major modes* (Mumamo) in one buffer, for CSS, JavaScript,
-  PHP and similar things: get the correct syntax highlighting and indentation
-  for each of them,
+- handling *multiple major modes* (Mumamo) in one buffer (for CSS, JS, PHP and
+  similar things): get the correct syntax highlighting and indentation for
+  each of them,
 - folding,
 - improved interface to Tidy (?),
 - etc.
 
 Though, it takes a while to load.
+
+web-mode could be another alternative for editing HTML documents embedding
+CSS/JS.
 
 ** XML
    :PROPERTIES:
@@ -9109,6 +9117,8 @@ Some key bindings:
 
 #+begin_src emacs-lisp
   (with-eval-after-load "nxml-mode"
+
+(message "nXML mode eval after load!!!") (sit-for 3)
 
     ;; remove the binding of `C-c C-x' (`nxml-insert-xml-declaration'), used
     ;; by Org timeclocking commands
@@ -10241,6 +10251,9 @@ Comparison of tools:
 
 - GNU Global (gtags) ::
      C, C++, Yacc, Java, and PHP4.
+
+     Global is a lot smarter about finding tags tables, and is fairly fast to
+     update.
 
 *Emacs TAGS* and *Exuberant Ctags* don't do fancy stuff, e.g. keeping an index of
 function references. They record only positions where a function (or variable

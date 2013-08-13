@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130813.1221
+;; Version: 20130813.1631
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130813.1221]--")
+(message "* --[ Loading Emacs Leuven 20130813.1631]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1288,7 +1288,7 @@
       (with-eval-after-load "fuzzy"
        (turn-on-fuzzy-isearch))))
 
-;;** 15.4 (info "(emacs)Regexp Search")
+;;** 15.5 (info "(emacs)Regexp Search")
 
   (leuven--section "15.4 (emacs)Regexp Search")
 
@@ -1304,7 +1304,7 @@
           "")
       nil))
 
-;;** 15.8 (info "(emacs)Search Case")
+;;** 15.9 (info "(emacs)Search Case")
 
   (leuven--section "15.8 (emacs)Search Case")
 
@@ -1312,7 +1312,7 @@
   ;; override this)
   (setq-default case-fold-search t)
 
-;;** 15.10 (info "(emacs)Other Repeating Search") Commands
+;;** 15.11 (info "(emacs)Other Repeating Search") Commands
 
   (leuven--section "15.10 (emacs)Other Repeating Search Commands")
 
@@ -6335,6 +6335,8 @@ From %c"
 
   (with-eval-after-load "nxml-mode"
 
+(message "nXML mode eval after load!!!") (sit-for 3)
+
     ;; remove the binding of `C-c C-x' (`nxml-insert-xml-declaration'), used
     ;; by Org timeclocking commands
     (define-key nxml-mode-map
@@ -9308,7 +9310,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130813.1222]--")
+(message "* --[ Loaded Emacs Leuven 20130813.1631]--")
 
 (provide 'emacs-leuven)
 
