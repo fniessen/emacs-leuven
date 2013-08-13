@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-12 Mon 16:32>
+# Time-stamp: <2013-08-13 Tue 12:21>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -544,6 +544,7 @@ by hit =y= (/Yes/) when asked.
           ;; paredit
           rainbow-mode
           redshank
+          tidy
           w3m
           yasnippet)
         "A list of packages to ensure are installed at Emacs startup."
@@ -2224,23 +2225,23 @@ previously detected error.
      ;; (load-library "dictionary-init")
 
      (autoload 'dictionary-search "dictionary"
-       "Ask for a word and search it in all dictionaries" t)
+       "Ask for a word and search it in all dictionaries." t)
      (autoload 'dictionary-match-words "dictionary"
-       "Ask for a word and search all matching words in the dictionaries" t)
+       "Ask for a word and search all matching words in the dictionaries." t)
      (autoload 'dictionary-lookup-definition "dictionary"
        "Unconditionally lookup the word at point." t)
 
      (autoload 'dictionary "dictionary"
-       "Create a new dictionary buffer" t)
+       "Create a new dictionary buffer." t)
      (autoload 'dictionary-mouse-popup-matching-words "dictionary"
-       "Display entries matching the word at the cursor" t)
+       "Display entries matching the word at the cursor." t)
      (autoload 'dictionary-popup-matching-words "dictionary"
-       "Display entries matching the word at the point" t)
+       "Display entries matching the word at the point." t)
      (autoload 'dictionary-tooltip-mode "dictionary"
-       "Display tooltips for the current word" t)
+       "Display tooltips for the current word." t)
      (unless (boundp 'running-xemacs)
        (autoload 'global-dictionary-tooltip-mode "dictionary"
-         "Enable/disable dictionary-tooltip-mode for all buffers" t))
+         "Enable/disable dictionary-tooltip-mode for all buffers." t))
 
      (global-set-key
        (kbd "C-c d l") 'dictionary-lookup-definition)
@@ -4223,7 +4224,7 @@ You can use =org-cycle= in other modes, with =outline-minor-mode=.
 
     ;; bind the outline minor mode functions to an easy to remember prefix
     ;; key (more accessible than the horrible prefix `C-c @')
-    (setq outline-minor-mode-prefix (kbd "C-c C-o"))
+    (setq outline-minor-mode-prefix (kbd "C-c C-o")) ;; like in nXML mode
 
     ;; ;; make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
     ;; ;; mode outline navigation (written by Carsten Dominik)
@@ -7546,7 +7547,7 @@ org-export-htmlize-generate-css= to extract class definitions.
                   (shell-command-to-string
                    (format "tidy -config ~/.tidyrc -f %s %s"
                            err-file in-file)))
-            (message "Buffer tidy'ed")
+            (message "HTML Tidy'ed")
             (message "%s" (org-file-contents err-file))
             new-contents)))
 
@@ -8962,116 +8963,184 @@ current selection. More general index entries are created with =C-c <=.
   (leuven--section "25.11 (emacs)HTML Mode")
 #+end_src
 
-** XML
-
-nXML mode does:
-
-- real-time *validation against a schema in RELAX NG* (actually RNC, i.e. the
-  "Compact" Syntax),
-
-- *code completion* against the RNG schema.
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "nxml-mode"
-
-    ;; shortcut to view the current file in browser
-    (define-key nxml-mode-map
-      (kbd "C-c C-v") 'browse-url-of-buffer)
-
-    ;; remove the binding of `C-c C-x', used by Org timeclocking commands
-    ;; (add-hook 'nxml-mode-hook
-    ;;           (lambda ()
-                (define-key nxml-mode-map
-                  (kbd "C-c C-x") nil)
-    ;;             ))
-                )
-#+end_src
-
 ** HTML
 
-Default: html-mode.
+*** html-mode
 
-Goal? Highlighting of closing tag:
-http://img263.imageshack.us/img263/8581/npp2.png
+The default HTML mode, derived from SGML mode (see the HTML and SGML menus),
+works quite well for editing HTML4 documents (whose tags don't have to close).
 
-*** html-helper-mode
+- =C-c C-v= ::
+     *View* your file *in your browser* (=browse-url-of-buffer=).
 
-I've been using html-helper-mode for what must be ten years now. It has *syntax
-highlighting*, autocompletion, and auto-insertion of closing tags... and a lot
-more. When you open a buffer for html editing, a didactic menu appears, so you
-can use your mouse to invoke commands. I prefer the keyboard though. Using the
-prefix-arg (C-u) to relevant HTML tags, html-helper will put tags around a
-region you've specified.
+- =C-c C-b= (or =C-c <left>=) ::
+     Jump to the opening HTML tag (=sgml-skip-tag-backward=)
 
-Plug tidy with tidy.el.
+- =C-c C-f= (or =C-c <right>=) ::
+     Jump to the closing HTML tag (=sgml-skip-tag-forward=)
 
-*** nXML
+- =C-c TAB= ::
+     Hide all of the angle-bracketed tags in the buffer (=sgml-tags-invisible=).
+     This can be used as a cheap *preview* of *just the bare text*.
 
-=nxml= seems to be the most recommended mode to view and edit HTML.
+- =C-M-i= ::
+     =ispell-complete-word=
 
-Is it a valid xhtml?
-
-: M-x nxml-mode
-: C-c C-n (assumming rng validation is on)
-
-*** nXhtml (+ MMM)
-
-http://ourcomments.org/Emacs/nXhtml/doc/nxhtml.html
-
-nXhtml mode is derived from nXML mode. It adds a lot of things useful for
-XHTML:
-
-- handling multiple modes,
-- folding,
-- improved interface to Tidy etc.
-
-*** web-mode
-
-*** Code
+Plug [[http://tidy.sourceforge.net/][HTML Tidy]] with ~tidy.el~.
 
 #+begin_src emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.s?html?\\'" . xml-mode)) ;; alias for `nxml-mode'
-#+end_src
+  (when (and (locate-library "tidy")
+             (executable-find "tidy"))
 
-#+begin_src emacs-lisp
-;;** HTML Tidy
-
-  (leuven--section "HTML Tidy")
-
-  (when (executable-find "tidy")
-    ;; interface to the HTML Tidy program
     (autoload 'tidy-buffer "tidy"
-      "Run Tidy HTML parser on current buffer" t)
+      "Run Tidy HTML parser on current buffer." t)
     (autoload 'tidy-parse-config-file "tidy"
-      "Parse the `tidy-config-file'" t)
+      "Parse the `tidy-config-file'." t)
     (autoload 'tidy-save-settings "tidy"
-      "Save settings to `tidy-config-file'" t)
+      "Save settings to `tidy-config-file'." t)
     (autoload 'tidy-build-menu  "tidy"
       "Install an options menu for HTML Tidy." t)
 
-    (with-eval-after-load "nxml"
+    ;; set up a "tidy" menu in the menu bar and bind the key sequence
+    ;; `C-c C-c' to `tidy-buffer' in html-mode (normally a prefix key for
+    ;; inserting skeleton text)
+    (defun leuven--html-mode-hook ()
+      "Customize html-mode."
+      (tidy-build-menu html-mode-map)
+      (local-set-key
+        (kbd "C-c C-c") 'tidy-buffer)
+      (setq sgml-validate-command "tidy"))
 
-      (defun leuven--nxml-mode-hook ()
-        "Customize my nxml-mode."
-        (tidy-build-menu nxml-mode-map)
+    (add-hook 'html-mode-hook 'leuven--html-mode-hook))
+#+end_src
+
+*** html-helper-mode
+
+You might also want to consider =html-helper-mode=, which has a lot more
+features than plain =html-mode=:
+
+- *syntax highlighting*,
+- autocompletion, and
+- auto-insertion of closing tags... and
+- a lot more.
+
+When you open a buffer for HTML editing, a didactic HTML menu appears, so you
+can use your mouse to invoke commands.
+
+Using the prefix-arg (=C-u=) to relevant HTML tags, =html-helper-mode= will put
+tags around a region you've specified.
+
+#+begin_src emacs-lisp
+  (when (locate-library "html-helper-mode")
+
+    (autoload 'html-helper-mode "html-helper-mode"
+      "Mode for editing HTML documents." t)
+
+    ;; invoke html-helper-mode automatically on .html files
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . html-helper-mode))
+
+    ;; invoke html-helper-mode automatically on .asp files
+    (add-to-list 'auto-mode-alist '("\\.asp\\'" . html-helper-mode))
+
+    ;; invoke html-helper-mode automatically on .jsp files
+    (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode))
+
+    (when (and (locate-library "tidy")
+               (executable-find "tidy"))
+
+      ;; set up a "tidy" menu in the menu bar and bind the key sequence
+      ;; `C-c C-c' to `tidy-buffer' in html-helper-mode
+      (defun leuven--html-helper-mode-hook ()
+        "Customize html-helper-mode."
+        (tidy-build-menu html-helper-mode-map)
         (local-set-key
           (kbd "C-c C-c") 'tidy-buffer)
         (setq sgml-validate-command "tidy"))
 
-      (add-hook 'nxml-mode-hook 'leuven--nxml-mode-hook)))
-
-) ;; chapter 25 ends here
+      (add-hook 'html-helper-mode-hook 'leuven--html-helper-mode-hook)))
 #+end_src
 
-CSSTidy?
+** XHTML
 
-Weblint available for Windows?
+[[id:786a2051-476a-4277-82df-d8ebf8ba0e99][nXML]] seems to be the most recommended mode to view and edit well-formed *XHTML*
+(reformulation of HTML as an XML application).
 
 #+begin_src emacs-lisp
-;;** Weblint
+  (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode)) ;; alias for `nxml-mode'
+#+end_src
 
-;; (setq load-path (cons "path_to_weblint_directory/" load-path))
-;; (autoload 'weblint "weblint" "Weblint syntax checker" t)
+Alternatively, you can use [[http://ourcomments.org/Emacs/nXhtml/doc/nxhtml.html][nXhtml]] mode, derived from nXML mode. It adds a lot
+of things useful for *XHTML* files with mixed content:
+
+- handling *multiple major modes* (Mumamo) in one buffer, for CSS, JavaScript,
+  PHP and similar things: get the correct syntax highlighting and indentation
+  for each of them,
+- folding,
+- improved interface to Tidy (?),
+- etc.
+
+Though, it takes a while to load.
+
+** XML
+   :PROPERTIES:
+   :ID:       786a2051-476a-4277-82df-d8ebf8ba0e99
+   :END:
+
+nXML mode (default for editing XML files, since GNU Emacs 23.2) does:
+
+- real-time *validation against a schema in RELAX NG* (actually RNC, i.e. the
+  "Compact" Syntax): =C-c C-n= (assuming RNG validation is on),
+
+- *code completion* against the RNG schema.
+
+Some key bindings:
+
+- =C-M-p= ::
+     Move backward over one element (=nxml-backward-element=).
+
+- =C-M-n= ::
+     Move forward over one element (=nxml-forward-element=).
+
+- =C-M-u= ::
+     Move up the element structure (=nxml-backward-up-element=).
+
+- =C-M-d= ::
+     Move down the element structure (=nxml-down-element=).
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "nxml-mode"
+
+    ;; remove the binding of `C-c C-x' (`nxml-insert-xml-declaration'), used
+    ;; by Org timeclocking commands
+    (define-key nxml-mode-map
+      (kbd "C-c C-x") nil)
+
+    ;; view the buffer contents in a browser
+    (define-key nxml-mode-map
+      (kbd "C-c C-v") 'browse-url-of-buffer))
+      ;; (normally bound to `rng-validate-mode')
+#+end_src
+
+** Highlight the closing tag
+
+#+begin_src emacs-lisp
+  (when (try-require 'hl-tags-mode)
+
+    (add-hook 'sgml-mode-hook
+              (lambda ()
+                (hl-tags-mode 1)))
+
+    (add-hook 'html-helper-mode-hook
+              (lambda ()
+                (hl-tags-mode 1)))
+
+    (add-hook 'nxml-mode-hook
+              (lambda ()
+                (hl-tags-mode 1))))
+#+end_src
+
+#+begin_src emacs-lisp
+) ;; chapter 25 ends here
 #+end_src
 
 * Editing Programs
@@ -9303,12 +9372,10 @@ distinguishes end-of-block.
   (when (and (display-graphic-p)
              (try-require 'hideshowvis-XXX))
 
-    (autoload 'hideshowvis-enable
-      "hideshowvis"
-      "Highlight foldable regions")
+    (autoload 'hideshowvis-enable "hideshowvis"
+      "Highlight foldable regions.")
 
-    (autoload 'hideshowvis-minor-mode
-      "hideshowvis"
+    (autoload 'hideshowvis-minor-mode "hideshowvis"
       "Will indicate regions foldable with hideshow in the fringe."
       'interactive)
 
@@ -11546,16 +11613,16 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
 ;;* (info "(bbdb)Installation")
 
   (unless (ignore-errors (load-library "bbdb-autoloads")) ;; "hand-made"
-    (autoload 'bbdb         "bbdb-com"
-      "Insidious Big Brother Database" t)
-    (autoload 'bbdb-name    "bbdb-com"
-      "Insidious Big Brother Database" t)
+    (autoload 'bbdb "bbdb-com"
+      "Insidious Big Brother Database." t)
+    (autoload 'bbdb-name "bbdb-com"
+      "Insidious Big Brother Database." t)
     (autoload 'bbdb-company "bbdb-com"
-      "Insidious Big Brother Database" t)
-    (autoload 'bbdb-net     "bbdb-com"
-      "Insidious Big Brother Database" t)
-    (autoload 'bbdb-notes   "bbdb-com"
-      "Insidious Big Brother Database" t)
+      "Insidious Big Brother Database." t)
+    (autoload 'bbdb-net "bbdb-com"
+      "Insidious Big Brother Database." t)
+    (autoload 'bbdb-notes "bbdb-com"
+      "Insidious Big Brother Database." t)
 
     (autoload 'bbdb-insinuate-gnus "bbdb-gnus"
       "Hook BBDB into Gnus.")
@@ -11784,7 +11851,7 @@ Another option, without =doc-view=, is =! pdtotext ? - <RET>=.
   ;; antiword will be run on every `.doc' file you open
   ;; TODO sudo aptitude install antiword (or via Cygwin setup)
   (autoload 'no-word "no-word"
-    "word to txt")
+    "Word to txt.")
   (add-to-list 'auto-mode-alist '("\\.doc\\'" . no-word))
 
 
@@ -12199,7 +12266,7 @@ Try using =top= in =multi-term=...
   ;; load ssh.el file
   (add-to-list 'same-window-regexps "^\\*ssh-.*\\*\\(\\|<[0-9]+>\\)")
   (autoload 'ssh "ssh"
-    "Open a network login connection via `ssh'" t)
+    "Open a network login connection via `ssh'." t)
     ;; this is to run ESS remotely on another computer in my own Emacs, or
     ;; just plain old reading remote files
 
@@ -12701,7 +12768,7 @@ browser*: you can open the current page in your graphical browser by hitting =M=
     ;; `w3m' slows down the startup process dramatically
     (unless (try-require 'w3m-autoloads)
       (autoload 'w3m "w3m"
-        "Visit the WWW page using w3m" t)
+        "Visit the WWW page using w3m." t)
       (autoload 'w3m-find-file "w3m"
         "Find a local file using emacs-w3m." t)
       (autoload 'w3m-browse-url "w3m"
@@ -13472,7 +13539,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 ;; Circe is advised by Tassilo (contributor)
 
   (autoload 'circe "circe"
-    "Connect to an IRC server" t)
+    "Connect to an IRC server." t)
 
   ;; connect to the Freenode network
   (defun leuven-irc-connect ()

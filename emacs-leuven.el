@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130812.1632
+;; Version: 20130813.1221
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130812.1632]--")
+(message "* --[ Loading Emacs Leuven 20130813.1221]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -429,6 +429,7 @@
           ;; paredit
           rainbow-mode
           redshank
+          tidy
           w3m
           yasnippet)
         "A list of packages to ensure are installed at Emacs startup."
@@ -1497,23 +1498,23 @@
      ;; (load-library "dictionary-init")
 
      (autoload 'dictionary-search "dictionary"
-       "Ask for a word and search it in all dictionaries" t)
+       "Ask for a word and search it in all dictionaries." t)
      (autoload 'dictionary-match-words "dictionary"
-       "Ask for a word and search all matching words in the dictionaries" t)
+       "Ask for a word and search all matching words in the dictionaries." t)
      (autoload 'dictionary-lookup-definition "dictionary"
        "Unconditionally lookup the word at point." t)
 
      (autoload 'dictionary "dictionary"
-       "Create a new dictionary buffer" t)
+       "Create a new dictionary buffer." t)
      (autoload 'dictionary-mouse-popup-matching-words "dictionary"
-       "Display entries matching the word at the cursor" t)
+       "Display entries matching the word at the cursor." t)
      (autoload 'dictionary-popup-matching-words "dictionary"
-       "Display entries matching the word at the point" t)
+       "Display entries matching the word at the point." t)
      (autoload 'dictionary-tooltip-mode "dictionary"
-       "Display tooltips for the current word" t)
+       "Display tooltips for the current word." t)
      (unless (boundp 'running-xemacs)
        (autoload 'global-dictionary-tooltip-mode "dictionary"
-         "Enable/disable dictionary-tooltip-mode for all buffers" t))
+         "Enable/disable dictionary-tooltip-mode for all buffers." t))
 
      (global-set-key
        (kbd "C-c d l") 'dictionary-lookup-definition)
@@ -2893,7 +2894,7 @@
 
     ;; bind the outline minor mode functions to an easy to remember prefix
     ;; key (more accessible than the horrible prefix `C-c @')
-    (setq outline-minor-mode-prefix (kbd "C-c C-o"))
+    (setq outline-minor-mode-prefix (kbd "C-c C-o")) ;; like in nXML mode
 
     ;; ;; make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
     ;; ;; mode outline navigation (written by Carsten Dominik)
@@ -5350,7 +5351,7 @@ From %c"
                   (shell-command-to-string
                    (format "tidy -config ~/.tidyrc -f %s %s"
                            err-file in-file)))
-            (message "Buffer tidy'ed")
+            (message "HTML Tidy'ed")
             (message "%s" (org-file-contents err-file))
             new-contents)))
 
@@ -6278,54 +6279,87 @@ From %c"
 
   (leuven--section "25.11 (emacs)HTML Mode")
 
-  (with-eval-after-load "nxml-mode"
+  (when (and (locate-library "tidy")
+             (executable-find "tidy"))
 
-    ;; shortcut to view the current file in browser
-    (define-key nxml-mode-map
-      (kbd "C-c C-v") 'browse-url-of-buffer)
-
-    ;; remove the binding of `C-c C-x', used by Org timeclocking commands
-    ;; (add-hook 'nxml-mode-hook
-    ;;           (lambda ()
-                (define-key nxml-mode-map
-                  (kbd "C-c C-x") nil)
-    ;;             ))
-                )
-
-  (add-to-list 'auto-mode-alist '("\\.s?html?\\'" . xml-mode)) ;; alias for `nxml-mode'
-
-;;** HTML Tidy
-
-  (leuven--section "HTML Tidy")
-
-  (when (executable-find "tidy")
-    ;; interface to the HTML Tidy program
     (autoload 'tidy-buffer "tidy"
-      "Run Tidy HTML parser on current buffer" t)
+      "Run Tidy HTML parser on current buffer." t)
     (autoload 'tidy-parse-config-file "tidy"
-      "Parse the `tidy-config-file'" t)
+      "Parse the `tidy-config-file'." t)
     (autoload 'tidy-save-settings "tidy"
-      "Save settings to `tidy-config-file'" t)
+      "Save settings to `tidy-config-file'." t)
     (autoload 'tidy-build-menu  "tidy"
       "Install an options menu for HTML Tidy." t)
 
-    (with-eval-after-load "nxml"
+    ;; set up a "tidy" menu in the menu bar and bind the key sequence
+    ;; `C-c C-c' to `tidy-buffer' in html-mode (normally a prefix key for
+    ;; inserting skeleton text)
+    (defun leuven--html-mode-hook ()
+      "Customize html-mode."
+      (tidy-build-menu html-mode-map)
+      (local-set-key
+        (kbd "C-c C-c") 'tidy-buffer)
+      (setq sgml-validate-command "tidy"))
 
-      (defun leuven--nxml-mode-hook ()
-        "Customize my nxml-mode."
-        (tidy-build-menu nxml-mode-map)
+    (add-hook 'html-mode-hook 'leuven--html-mode-hook))
+
+  (when (locate-library "html-helper-mode")
+
+    (autoload 'html-helper-mode "html-helper-mode"
+      "Mode for editing HTML documents." t)
+
+    ;; invoke html-helper-mode automatically on .html files
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . html-helper-mode))
+
+    ;; invoke html-helper-mode automatically on .asp files
+    (add-to-list 'auto-mode-alist '("\\.asp\\'" . html-helper-mode))
+
+    ;; invoke html-helper-mode automatically on .jsp files
+    (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode))
+
+    (when (and (locate-library "tidy")
+               (executable-find "tidy"))
+
+      ;; set up a "tidy" menu in the menu bar and bind the key sequence
+      ;; `C-c C-c' to `tidy-buffer' in html-helper-mode
+      (defun leuven--html-helper-mode-hook ()
+        "Customize html-helper-mode."
+        (tidy-build-menu html-helper-mode-map)
         (local-set-key
           (kbd "C-c C-c") 'tidy-buffer)
         (setq sgml-validate-command "tidy"))
 
-      (add-hook 'nxml-mode-hook 'leuven--nxml-mode-hook)))
+      (add-hook 'html-helper-mode-hook 'leuven--html-helper-mode-hook)))
+
+  (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode)) ;; alias for `nxml-mode'
+
+  (with-eval-after-load "nxml-mode"
+
+    ;; remove the binding of `C-c C-x' (`nxml-insert-xml-declaration'), used
+    ;; by Org timeclocking commands
+    (define-key nxml-mode-map
+      (kbd "C-c C-x") nil)
+
+    ;; view the buffer contents in a browser
+    (define-key nxml-mode-map
+      (kbd "C-c C-v") 'browse-url-of-buffer))
+      ;; (normally bound to `rng-validate-mode')
+
+  (when (try-require 'hl-tags-mode)
+
+    (add-hook 'sgml-mode-hook
+              (lambda ()
+                (hl-tags-mode 1)))
+
+    (add-hook 'html-helper-mode-hook
+              (lambda ()
+                (hl-tags-mode 1)))
+
+    (add-hook 'nxml-mode-hook
+              (lambda ()
+                (hl-tags-mode 1))))
 
 ) ;; chapter 25 ends here
-
-;;** Weblint
-
-;; (setq load-path (cons "path_to_weblint_directory/" load-path))
-;; (autoload 'weblint "weblint" "Weblint syntax checker" t)
 
 ;;* 26 Editing (info "(emacs)Programs")
 
@@ -6490,12 +6524,10 @@ From %c"
   (when (and (display-graphic-p)
              (try-require 'hideshowvis-XXX))
 
-    (autoload 'hideshowvis-enable
-      "hideshowvis"
-      "Highlight foldable regions")
+    (autoload 'hideshowvis-enable "hideshowvis"
+      "Highlight foldable regions.")
 
-    (autoload 'hideshowvis-minor-mode
-      "hideshowvis"
+    (autoload 'hideshowvis-minor-mode "hideshowvis"
       "Will indicate regions foldable with hideshow in the fringe."
       'interactive)
 
@@ -7889,16 +7921,16 @@ From %c"
 ;;* (info "(bbdb)Installation")
 
   (unless (ignore-errors (load-library "bbdb-autoloads")) ;; "hand-made"
-    (autoload 'bbdb         "bbdb-com"
-      "Insidious Big Brother Database" t)
-    (autoload 'bbdb-name    "bbdb-com"
-      "Insidious Big Brother Database" t)
+    (autoload 'bbdb "bbdb-com"
+      "Insidious Big Brother Database." t)
+    (autoload 'bbdb-name "bbdb-com"
+      "Insidious Big Brother Database." t)
     (autoload 'bbdb-company "bbdb-com"
-      "Insidious Big Brother Database" t)
-    (autoload 'bbdb-net     "bbdb-com"
-      "Insidious Big Brother Database" t)
-    (autoload 'bbdb-notes   "bbdb-com"
-      "Insidious Big Brother Database" t)
+      "Insidious Big Brother Database." t)
+    (autoload 'bbdb-net "bbdb-com"
+      "Insidious Big Brother Database." t)
+    (autoload 'bbdb-notes "bbdb-com"
+      "Insidious Big Brother Database." t)
 
     (autoload 'bbdb-insinuate-gnus "bbdb-gnus"
       "Hook BBDB into Gnus.")
@@ -8078,7 +8110,7 @@ From %c"
   ;; antiword will be run on every `.doc' file you open
   ;; TODO sudo aptitude install antiword (or via Cygwin setup)
   (autoload 'no-word "no-word"
-    "word to txt")
+    "Word to txt.")
   (add-to-list 'auto-mode-alist '("\\.doc\\'" . no-word))
 
 
@@ -8334,7 +8366,7 @@ From %c"
   ;; load ssh.el file
   (add-to-list 'same-window-regexps "^\\*ssh-.*\\*\\(\\|<[0-9]+>\\)")
   (autoload 'ssh "ssh"
-    "Open a network login connection via `ssh'" t)
+    "Open a network login connection via `ssh'." t)
     ;; this is to run ESS remotely on another computer in my own Emacs, or
     ;; just plain old reading remote files
 
@@ -8711,7 +8743,7 @@ From %c"
     ;; `w3m' slows down the startup process dramatically
     (unless (try-require 'w3m-autoloads)
       (autoload 'w3m "w3m"
-        "Visit the WWW page using w3m" t)
+        "Visit the WWW page using w3m." t)
       (autoload 'w3m-find-file "w3m"
         "Find a local file using emacs-w3m." t)
       (autoload 'w3m-browse-url "w3m"
@@ -9276,7 +9308,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130812.1633]--")
+(message "* --[ Loaded Emacs Leuven 20130813.1222]--")
 
 (provide 'emacs-leuven)
 
