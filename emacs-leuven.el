@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130813.2155
+;; Version: 20130814.1402
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130813.2155]--")
+(message "* --[ Loading Emacs Leuven 20130814.1402]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2260,6 +2260,10 @@
   (global-set-key
     (kbd "<f12>") 'bury-buffer)
 
+  ;; put the current buffer at the end of the list of all buffers
+  (global-set-key
+    (kbd "<S-f12>") 'bury-buffer) ;; TEMP Use this (instead of f12) when GDB'ing Emacs
+
 ;;** 19.7 (info "(emacs)Buffer Convenience") and Customization of Buffer Handling
 
   (leuven--section "19.7 (emacs)Buffer Convenience and Customization of Buffer Handling")
@@ -3107,7 +3111,7 @@
 
   (setq org-emphasis-alist
         '(("&" (:weight ultra-bold :foreground "#000000" :background "#FBFF00"))
-          ("?" (:box t))
+          ;; ("?" (:box t))
           ("^" (:weight ultra-bold :foreground "#393D90"))
           ("¶" (:height 1.3 :weight ultra-bold :underline t))
           ("¡" (:weight ultra-bold :foreground "#FFA500"))
@@ -3115,11 +3119,11 @@
           ("!" (:weight ultra-bold :foreground "#B40000")) ;; = alert in some Wikis
           ;; ("$" (:weight ultra-bold :foreground "#000000" :background "#DDDDFF"))
           ;; ("@" (:weight bold :foreground "#B40000" :background "#FFDDDD"))
-          ("*" bold)
-          ("/" italic)
-          ("_" underline)
-          ("=" org-code verbatim)
-          ("~" org-verbatim verbatim)))
+          ("*" bold "<b>" "</b>")
+          ("/" italic "<i>" "</i>")
+          ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
+          ("=" org-code "<code>" "</code>" verbatim)
+          ("~" org-verbatim "<code>" "</code>" verbatim)))
 
 
   ;; Unhiding edited areas
@@ -3656,26 +3660,21 @@
 
   ;; faces for specific tags
   ;; XXX This generates an error when C-x C-w'ing the agenda view
-  (setq org-tag-faces-XXX
+  (setq org-tag-faces
         '(("refile" .
            (:weight normal :slant italic
-            :box (:line-width 1 :color "#A0A1A4")
-            :foreground "#A0A1A4" :background "#444444'"))
+            :foreground "#A28747" :background "#FFE88E"))
           ("home" .
            (:weight normal :slant italic
-            :box (:line-width 1 :color "#4488BB")
             :foreground "#5C88D3" :background "#BBDDFF"))
           ("work" .
            (:weight normal :slant italic
-            :box (:line-width 1 :color "#44AA44")
-            :foreground "#44AA44" :background "#CCFFAA"))
+            :foreground "#5F7C43" :background "#C1D996"))
           ("blog" .
            (:weight normal :slant italic
-            :box (:line-width 1 :color "#A48CC4")
             :foreground "#FFFFFF" :background "#A48CC4"))
           ("note" .
            (:weight normal :slant italic
-            :box (:line-width 1 :color "#7F7F7F")
             :foreground "#FFFFFF" :background "#989898"))))
 
   ;; 6.2 exit fast tag selection after first change (toggle this with `C-c')
@@ -3759,7 +3758,7 @@
   (leuven--section "8.3 (org)Deadlines and scheduling")
 
   ;; information to record when the scheduling date is modified
-  (setq org-log-reschedule 'time)
+  (setq org-log-reschedule nil)
 
   ;; information to record when the deadline date is modified
   (setq org-log-redeadline 'time)
@@ -4817,9 +4816,9 @@ From %c"
     (add-to-list 'org-agenda-custom-commands
                  '("dh" "Hotlist"
                    ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY=\"A\"|FLAGGED"
-                   ((tags-todo "DEADLINE<\"<+0d>\""
-                               ((org-agenda-overriding-header "Past due")))
-                    (tags-todo "DEADLINE>=\"<+0d>\"+DEADLINE<=\"<+1w>\""
+                   ((tags-todo "DEADLINE<=\"<+0d>\""
+                               ((org-agenda-overriding-header "Late")))
+                    (tags-todo "DEADLINE>\"<+0d>\"+DEADLINE<=\"<+1w>\""
                                ((org-agenda-overriding-header "Due in next 7 days")))
                     (tags-todo "DEADLINE=\"\"+PRIORITY=\"A\"|DEADLINE>\"<+1w>\"+PRIORITY=\"A\""
                                ((org-agenda-overriding-header "High priority")))
@@ -5006,6 +5005,12 @@ From %c"
                               '(leuven--skip-entry-unless-deadline-in-n-days-or-more 2))
                              (org-deadline-warning-days 7)))
                     (agenda ""
+                            ((org-agenda-format-date "")
+                             (org-agenda-overriding-header "Next 3 weeks")
+                             (org-agenda-skip-function
+                              '(leuven--skip-entry-unless-deadline-in-n-days-or-more 7))
+                             (org-deadline-warning-days 28)))
+                    (agenda ""
                             ((org-agenda-entry-types '(:deadline))
                              (org-agenda-overriding-header
                               "Unscheduled upcoming due dates:")
@@ -5047,7 +5052,7 @@ From %c"
                  `("dt" "Agenda for upcoming TODO entries"
                    ((agenda ""
                             ((org-agenda-format-date "")
-                             (org-agenda-overriding-header "Overdue")
+                             (org-agenda-overriding-header "Past due")
                              (org-agenda-skip-function
                               'leuven--skip-entry-unless-overdue-deadline)
                              (org-deadline-warning-days 0)))
@@ -5101,19 +5106,22 @@ From %c"
     (add-to-list 'org-agenda-custom-commands
                  '("dT" "Agenda for all TODO entries"
                    ((agenda ""
-                            ((org-agenda-overriding-header "Overdue")
+                            ((org-agenda-format-date "")
+                             (org-agenda-overriding-header "Past due")
                              (org-agenda-skip-function
                               'leuven--skip-entry-unless-overdue-deadline)
                              (org-deadline-warning-days 0)))
                     (agenda ""
-                            ((org-agenda-overriding-header "Today/tomorrow")
+                            ((org-agenda-format-date "")
+                             (org-agenda-overriding-header "Today/tomorrow")
                              (org-agenda-skip-function
                               'leuven--skip-entry-if-past-deadline)
                              (org-agenda-span 2)
                              (org-agenda-use-time-grid t)
                              (org-deadline-warning-days 0)))
                     (agenda ""
-                            ((org-agenda-overriding-header "Next 12 days")
+                            ((org-agenda-format-date "")
+                             (org-agenda-overriding-header "Next 12 days")
                              (org-agenda-skip-function
                               '(leuven--skip-entry-unless-deadline-in-n-days-or-more 2))
                              (org-deadline-warning-days 14)))
@@ -9300,7 +9308,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130813.2156]--")
+(message "* --[ Loaded Emacs Leuven 20130814.1403]--")
 
 (provide 'emacs-leuven)
 
