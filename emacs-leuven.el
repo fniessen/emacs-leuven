@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130814.1402
+;; Version: 20130817.1039
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130814.1402]--")
+(message "* --[ Loading Emacs Leuven 20130817.104]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -394,7 +394,8 @@
             (append '(("org"       . "http://orgmode.org/elpa/")
                       ("melpa"     . "http://melpa.milkbox.net/packages/")
                       ("marmalade" . "http://marmalade-repo.org/packages/")
-                      ("ELPA"      . "http://tromey.com/elpa/"))
+                      ;; ("ELPA"      . "http://tromey.com/elpa/")
+                      )
                     package-archives))
 
       ;; ;; download the ELPA archive description if needed
@@ -2091,7 +2092,7 @@
       ;; prefix key for all Helm commands in the global map
       (setq helm-command-prefix-key "C-c C-f") ;; `C-x c'?
 
-      ;; use the current window (no popup) to show the candidates
+      ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
 
       (defface leuven-separator-face
@@ -3642,7 +3643,6 @@
                          ("work" . ?w)
                         (:endgroup . nil)
                         ("errands" . ?e)
-                        ;; ("computer" . ?c)
                         ("phone" . ?p)
                         ("mail" . ?m)
 
@@ -5015,7 +5015,6 @@ From %c"
                              (org-agenda-overriding-header
                               "Unscheduled upcoming due dates:")
                              (org-agenda-skip-entry-if 'scheduled)
-                             (org-agenda-sorting-strategy '(deadline-up))
                              (org-agenda-span 'day)
                              (org-agenda-time-grid nil)
                              (org-deadline-warning-days 365))))
@@ -5023,6 +5022,7 @@ From %c"
                     (org-agenda-clockreport-mode nil)
                     (org-agenda-format-date "")
                     (org-agenda-span 'day)
+                    (org-agenda-sorting-strategy '(deadline-up))
                     (org-agenda-use-time-grid nil)
                     (org-agenda-write-buffer-name "Reminders"))) t)
 
@@ -9308,7 +9308,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130814.1403]--")
+(message "* --[ Loaded Emacs Leuven 20130817.104]--")
 
 (provide 'emacs-leuven)
 

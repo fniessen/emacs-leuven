@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-14 Wed 15:58>
+# Time-stamp: <2013-08-17 Sat 10:39>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -495,6 +495,9 @@ by hit =y= (/Yes/) when asked.
 
 ** Package Installation
 
+In Marmalade the developers themselves do the packaging. In MELPA, packages
+are generated programmatically from upstream sources.
+
 #+begin_src emacs-lisp
 ;;** 47.2 Package Installation
 
@@ -509,7 +512,8 @@ by hit =y= (/Yes/) when asked.
             (append '(("org"       . "http://orgmode.org/elpa/")
                       ("melpa"     . "http://melpa.milkbox.net/packages/")
                       ("marmalade" . "http://marmalade-repo.org/packages/")
-                      ("ELPA"      . "http://tromey.com/elpa/"))
+                      ;; ("ELPA"      . "http://tromey.com/elpa/")
+                      )
                     package-archives))
 
       ;; ;; download the ELPA archive description if needed
@@ -3096,7 +3100,7 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
       ;; prefix key for all Helm commands in the global map
       (setq helm-command-prefix-key "C-c C-f") ;; `C-x c'?
 
-      ;; use the current window (no popup) to show the candidates
+      ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
 
       (defface leuven-separator-face
@@ -6322,10 +6326,16 @@ Agenda view: put related tasks together, then by priority.
           ((:weight bold
             :box (:line-width 1 :color "#BBDDFF")
             :foreground "black" :background "#D0EDFF"))))
+#+end_src
 
+*Show notes preview* with =E=.
+
+#+begin_src emacs-lisp
   ;; 10.5 text prepended to the entry text in agenda buffers
   (setq org-agenda-entry-text-leaders "               │ ")
+#+end_src
 
+#+begin_src emacs-lisp
   ;; 10.5 file to which to add new entries with the `i' key in agenda and
   ;; calendar (org.el)
   (setq org-agenda-diary-file "~/org/diary.org")
@@ -6451,9 +6461,34 @@ Commands:
 - shell:pwd
 
 Vocabulary:
+- SCHEDULED = start time
 - Undated items
 - Planned
 - Uncategorized
+
+Tasks views:
+- Active
+- Starred (= with an explicit priority)
+- Completed
+- Due today (only today)
+- Due this week (only for current week: from Monday to Sunday included)
+- Late (all overdue + today)
+- Assigned to me
+- Created by me
+- With files attached
+
+Sorted by:
+- Creation date
+- Last changed (= default)
+- Project
+- Creator
+- Deadline
+- Priority
+- Title
+
+Ordered by:
+- Asc
+- Desc (= default)
 
 #+begin_src emacs-lisp
   ;; make the block agenda more compact (no agenda span name, no week
@@ -7142,7 +7177,6 @@ All active *tasks*, filtered by due date:
                              (org-agenda-overriding-header
                               "Unscheduled upcoming due dates:")
                              (org-agenda-skip-entry-if 'scheduled)
-                             (org-agenda-sorting-strategy '(deadline-up))
                              (org-agenda-span 'day)
                              (org-agenda-time-grid nil)
                              (org-deadline-warning-days 365))))
@@ -7150,6 +7184,7 @@ All active *tasks*, filtered by due date:
                     (org-agenda-clockreport-mode nil)
                     (org-agenda-format-date "")
                     (org-agenda-span 'day)
+                    (org-agenda-sorting-strategy '(deadline-up))
                     (org-agenda-use-time-grid nil)
                     (org-agenda-write-buffer-name "Reminders"))) t)
 #+end_src
