@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     fni@missioncriticalit.com
 #+DATE:      2012-06-22
-#+Time-stamp: <2013-08-05 Mon 16:23>
+#+Time-stamp: <2013-08-19 Mon 09:32>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en_US
@@ -36,37 +36,45 @@ git clone git://github.com/fniessen/emacs-leuven.git
 
 ** Keyboard shortcuts
 
-*** Global key bindings
+Save time and boost your productivity with Emacs Leuven keyboard shortcuts.
 
-| <f1>    | info                                     |
-| <S-f1>  | man-follow                               |
-| <C-f1>  | info-lookup-symbol                       |
-| <f2>    | save-buffer                              |
-| <C-f2>  | (for interaction-log mode)               |
-| <f3>    | find-file (or helm-for-files)            |
-| <M-f4>  | save-buffers-kill-terminal               |
-| <f5>    | delete-other-windows                     |
-| <f6>    | other-window                             |
-| <C-f6>  | balance-windows                          |
-| <f7>    | leuven-babel-translate                   |
-| <f8>    | call-last-kbd-macro                      |
-| <S-f8>  | leuven-toggle-kbd-macro-recording-on/off |
-| <C-f8>  | name-last-kbd-macro                      |
-| <f9>    | recompile                                |
-| <S-f9>  | make-clean                               |
-| <C-f9>  | leuven-vc-jump                           |
-| <f10>   | next-error                               |
-| <S-f10> | previous-error                           |
-| <C-f10> | first-error                              |
-| <f11>   | undo                                     |
-| <S-f11> | redo                                     |
-| <C-f11> | bbdb                                     |
-| <f12>   | bury-buffer                              |
-| <S-f12> | leuven-kill-this-buffer-without-query    |
-| <C-f12> | leuven-revert-buffer-without-query       |
+*** General shortcuts
 
-*** For Org mode
+Global key bindings.
 
+| Shortcut | What it runs                             |
+|----------+------------------------------------------|
+| <f1>     | info                                     |
+| <S-f1>   | man-follow                               |
+| <C-f1>   | info-lookup-symbol                       |
+| <f2>     | save-buffer                              |
+| <C-f2>   | (for interaction-log mode)               |
+| <f3>     | find-file (or helm-for-files)            |
+| <M-f4>   | save-buffers-kill-terminal               |
+| <f5>     | delete-other-windows                     |
+| <f6>     | other-window                             |
+| <C-f6>   | balance-windows                          |
+| <f7>     | leuven-babel-translate                   |
+| <f8>     | call-last-kbd-macro                      |
+| <S-f8>   | leuven-toggle-kbd-macro-recording-on/off |
+| <C-f8>   | name-last-kbd-macro                      |
+| <f9>     | recompile                                |
+| <S-f9>   | make-clean                               |
+| <C-f9>   | leuven-vc-jump                           |
+| <f10>    | next-error                               |
+| <S-f10>  | previous-error                           |
+| <C-f10>  | first-error                              |
+| <f11>    | undo                                     |
+| <S-f11>  | redo                                     |
+| <C-f11>  | bbdb                                     |
+| <f12>    | bury-buffer                              |
+| <S-f12>  | leuven-kill-this-buffer-without-query    |
+| <C-f12>  | leuven-revert-buffer-without-query       |
+
+*** Shortcuts for Org mode
+
+| Shortcut    | What it runs                          |
+|-------------+---------------------------------------|
 | <f4>        | helm-org-headlines                    |
 | <M-f6>      | visible-mode                          |
 | C-M-]       | org-cycle-global ;; <S-tab>           |
@@ -98,8 +106,10 @@ git clone git://github.com/fniessen/emacs-leuven.git
 | C-c m       | org-mime-subtree                      |
 | C-c m       | leuven-mail-subtree                   |
 
-*** For Dired
+*** Shortcuts for Dired
 
+| Shortcut  | What it runs                    |
+|-----------+---------------------------------|
 | <return>  | joc-dired-single-buffer         |
 | <mouse-1> | joc-dired-single-buffer-mouse   |
 | ^         |                                 |
@@ -109,8 +119,10 @@ git clone git://github.com/fniessen/emacs-leuven.git
 | C-c 2     | find-grep-dired                 |
 | C-c 3     | rgrep                           |
 
-*** Others
+*** Other shortcuts
 
+| Shortcut | What it runs                                   |
+|----------+------------------------------------------------|
 | <return> | newline-and-indent                             |
 | C-)      | match-paren                                    |
 | C-c @ h  | hs-hide-block                                  |
@@ -123,10 +135,12 @@ git clone git://github.com/fniessen/emacs-leuven.git
 | M-/      | hippie-expand                                  |
 | <tab>    | ac-expand                                      |
 
-*** Others
+*** Other shortcuts
 
 I still have to sort them out, by mode (when applicable).
 
+| Shortcut            | What it runs                      |
+|---------------------+-----------------------------------|
 | M-g                 | goto-line                         |
 | M-G                 | what-line                         |
 | C-h E               | elisp-index-search                |
@@ -163,8 +177,10 @@ I still have to sort them out, by mode (when applicable).
 | <C-backspace>       | backward-kill-word                |
 | M-o                 |                                   |
 
-*** Others
+*** Other shortcuts
 
+| Shortcut   | What it runs                       |
+|------------+------------------------------------|
 | >          | scroll-calendar-left               |
 | <          | scroll-calendar-right              |
 | C-c .      | leuven-insert-current-date         |
