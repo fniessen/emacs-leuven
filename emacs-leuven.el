@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130817.1039
+;; Version: 20130820.1202
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130817.104]--")
+(message "* --[ Loading Emacs Leuven 20130820.1202]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3646,11 +3646,10 @@
                         ("phone" . ?p)
                         ("mail" . ?m)
 
-                        ("reading" . ?r)
-                        ;; ("finance" . ?f)
                         ("bank" . ?b)
-                        ("note" . ?n)
-                        ("blog" . ?B)
+                        ;; ("blog" . ?B)
+                        ;; ("note" . ?n)
+                        ;; ("reading" . ?r)
 
                         ("ARCHIVE" . ?A)
                         ("crypt" . ?C)
@@ -3662,20 +3661,21 @@
   ;; XXX This generates an error when C-x C-w'ing the agenda view
   (setq org-tag-faces
         '(("refile" .
-           (:weight normal :slant italic
+           (:slant italic
             :foreground "#A28747" :background "#FFE88E"))
           ("home" .
-           (:weight normal :slant italic
+           (:slant italic
             :foreground "#5C88D3" :background "#BBDDFF"))
           ("work" .
-           (:weight normal :slant italic
+           (:slant italic
             :foreground "#5F7C43" :background "#C1D996"))
-          ("blog" .
-           (:weight normal :slant italic
-            :foreground "#FFFFFF" :background "#A48CC4"))
-          ("note" .
-           (:weight normal :slant italic
-            :foreground "#FFFFFF" :background "#989898"))))
+          ;; ("blog" .
+          ;;  (:slant italic
+          ;;   :foreground "#FFFFFF" :background "#A48CC4"))
+          ;; ("note" .
+          ;;  (:slant italic
+          ;;   :foreground "#FFFFFF" :background "#989898"))
+          ))
 
   ;; 6.2 exit fast tag selection after first change (toggle this with `C-c')
   (setq org-fast-tag-selection-single-key t)
@@ -3762,6 +3762,9 @@
 
   ;; information to record when the deadline date is modified
   (setq org-log-redeadline 'time)
+
+  ;; number of days before expiration during which a deadline becomes active
+  (setq org-deadline-warning-days 7)
 
   ;; skip deadline prewarning (up to 7 days before the actual deadline)
   ;; when entry is also scheduled
@@ -3960,14 +3963,14 @@
                  `("m" "Mail to task" entry
                    (file+headline ,org-default-notes-file "Tasks")
                    "* TODO %:subject%? (from %:fromname) :mail:
-SCHEDULED: %t
-%:date-timestamp-inactive
+  SCHEDULED: %t
+  %:date-timestamp-inactive
 
-#+begin_verse
-%i
-#+end_verse
+  #+begin_verse
+  %i
+  #+end_verse
 
-From %a"
+  From %a"
                    :empty-lines 1 :immediate-finish t) t)
        ;; `immediate-finish' = immediately store note without
        ;; further prompt (skipping `C-c C-c'), which is very handy
@@ -4022,14 +4025,14 @@ SCHEDULED: %t
     (add-to-list 'org-capture-templates
                  `("j" "Journal" entry
                    (file+datetree ,(concat org-directory "/journal.org"))
-                   "* %T %?  :blog:
+                   "* %T %?
 
 %U
 
 %i
 
 From %a"
-                   ;; "* %^{Title}  :blog:\n  :PROPERTIES:\n  :on: %T\n  :END:\n  %?\n  %x"
+                   ;; "* %^{Title}\n  :PROPERTIES:\n  :on: %T\n  :END:\n  %?\n  %x"
                    :empty-lines 1) t)
 
     (add-to-list 'org-capture-templates
@@ -4587,7 +4590,7 @@ From %c"
                  '("b" . "All active tasks...") t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("b=" "List of all TODO entries (column view)"
+                 '("b=" "Edit (?) List of all TODO entries (column view)"
                    alltodo ""
                    ((org-agenda-overriding-columns-format
                      "%65ITEM(Task) %4TODO %PRIORITY %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)")
@@ -4959,20 +4962,14 @@ From %c"
                    tags-todo "mail") t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("v:r" "Reading context"
-                   tags-todo "reading") t)
-
-    (add-to-list 'org-agenda-custom-commands
                  '("v::" "Next/Started and Delegated/Waiting For Actions Grouped by Context"
                    (;; Next/Started Actions
                     (tags-todo "phone&TODO={TODO\\|STRT}")
                     (tags-todo "mail&TODO={TODO\\|STRT}")
-                    (tags-todo "reading&TODO={TODO\\|STRT}")
                     (tags-todo "errands&TODO={TODO\\|STRT}")
                     ;; Delegated/Waiting For Actions
                     (tags-todo "phone&TODO={WAIT\\|DLGT}")
                     (tags-todo "mail&TODO={WAIT\\|DLGT}")
-                    (tags-todo "reading&TODO={WAIT\\|DLGT}")
                     (tags-todo "errands&TODO={WAIT\\|DLGT}"))) t)
 
     (add-to-list 'org-agenda-custom-commands
@@ -9308,7 +9305,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130817.104]--")
+(message "* --[ Loaded Emacs Leuven 20130820.1203]--")
 
 (provide 'emacs-leuven)
 

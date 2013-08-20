@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-17 Sat 10:39>
+# Time-stamp: <2013-08-20 Tue 12:02>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -496,7 +496,7 @@ by hit =y= (/Yes/) when asked.
 ** Package Installation
 
 In Marmalade the developers themselves do the packaging. In MELPA, packages
-are generated programmatically from upstream sources.
+are generated programmatically from upstream Git-based sources.
 
 #+begin_src emacs-lisp
 ;;** 47.2 Package Installation
@@ -916,6 +916,8 @@ the relevant manual page without leaving Emacs.
 
 (leuven--chapter leuven-chapter-10-help "10 Help"
 #+end_src
+
+*Close* the help buffer by pressing =Q=.
 
 ** Help Summary
 
@@ -5267,11 +5269,10 @@ something best implemented with tags.
                         ("phone" . ?p)
                         ("mail" . ?m)
 
-                        ("reading" . ?r)
-                        ;; ("finance" . ?f)
                         ("bank" . ?b)
-                        ("note" . ?n)
-                        ("blog" . ?B)
+                        ;; ("blog" . ?B)
+                        ;; ("note" . ?n)
+                        ;; ("reading" . ?r)
 
                         ("ARCHIVE" . ?A)
                         ("crypt" . ?C)
@@ -5283,20 +5284,21 @@ something best implemented with tags.
   ;; XXX This generates an error when C-x C-w'ing the agenda view
   (setq org-tag-faces
         '(("refile" .
-           (:weight normal :slant italic
+           (:slant italic
             :foreground "#A28747" :background "#FFE88E"))
           ("home" .
-           (:weight normal :slant italic
+           (:slant italic
             :foreground "#5C88D3" :background "#BBDDFF"))
           ("work" .
-           (:weight normal :slant italic
+           (:slant italic
             :foreground "#5F7C43" :background "#C1D996"))
-          ("blog" .
-           (:weight normal :slant italic
-            :foreground "#FFFFFF" :background "#A48CC4"))
-          ("note" .
-           (:weight normal :slant italic
-            :foreground "#FFFFFF" :background "#989898"))))
+          ;; ("blog" .
+          ;;  (:slant italic
+          ;;   :foreground "#FFFFFF" :background "#A48CC4"))
+          ;; ("note" .
+          ;;  (:slant italic
+          ;;   :foreground "#FFFFFF" :background "#989898"))
+          ))
 
   ;; 6.2 exit fast tag selection after first change (toggle this with `C-c')
   (setq org-fast-tag-selection-single-key t)
@@ -5423,9 +5425,14 @@ Schedule it with =C-c C-s=:
      Next week.
 
 - +4w RET ::
-     Next month.
+     Next "month".
+
+Remove scheduling date with =C-u C-c C-s=.
 
 #+begin_src emacs-lisp
+  ;; number of days before expiration during which a deadline becomes active
+  (setq org-deadline-warning-days 7)
+
   ;; skip deadline prewarning (up to 7 days before the actual deadline)
   ;; when entry is also scheduled
   (setq org-agenda-skip-deadline-prewarning-if-scheduled 7)
@@ -5704,14 +5711,14 @@ Forward emails to Org and instantly create a task.
                  `("m" "Mail to task" entry
                    (file+headline ,org-default-notes-file "Tasks")
                    "* TODO %:subject%? (from %:fromname) :mail:
-SCHEDULED: %t
-%:date-timestamp-inactive
+  SCHEDULED: %t
+  %:date-timestamp-inactive
 
-,#+begin_verse
-%i
-,#+end_verse
+  ,#+begin_verse
+  %i
+  ,#+end_verse
 
-From %a"
+  From %a"
                    :empty-lines 1 :immediate-finish t) t)
        ;; `immediate-finish' = immediately store note without
        ;; further prompt (skipping `C-c C-c'), which is very handy
@@ -5775,14 +5782,14 @@ C-c=, it clocks out.
     (add-to-list 'org-capture-templates
                  `("j" "Journal" entry
                    (file+datetree ,(concat org-directory "/journal.org"))
-                   "* %T %?  :blog:
+                   "* %T %?
 
 %U
 
 %i
 
 From %a"
-                   ;; "* %^{Title}  :blog:\n  :PROPERTIES:\n  :on: %T\n  :END:\n  %?\n  %x"
+                   ;; "* %^{Title}\n  :PROPERTIES:\n  :on: %T\n  :END:\n  %?\n  %x"
                    :empty-lines 1) t)
 
     (add-to-list 'org-capture-templates
@@ -6357,7 +6364,7 @@ Agenda view: put related tasks together, then by priority.
 Contextual auto-exclusion for tags in the Agenda view. For example, I use the
 following tags for TODOs:
 
-- Call ::
+- Phone ::
      Needs a phone
 
 - Errands ::
@@ -6369,7 +6376,7 @@ following tags for TODOs:
 Now, it's quite easy for my computer to figure out which of these are
 possible, based on my location:
 
-- Call ::
+- Phone ::
      Am I outside of normal calling hours?
 
 - Errands ::
@@ -6623,7 +6630,7 @@ We should have two agenda views:
                  '("b" . "All active tasks...") t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("b=" "List of all TODO entries (column view)"
+                 '("b=" "Edit (?) List of all TODO entries (column view)"
                    alltodo ""
                    ((org-agenda-overriding-columns-format
                      "%65ITEM(Task) %4TODO %PRIORITY %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)")
@@ -7104,20 +7111,14 @@ special command to produce all specified files in one step: =C-c a e=.
                    tags-todo "mail") t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("v:r" "Reading context"
-                   tags-todo "reading") t)
-
-    (add-to-list 'org-agenda-custom-commands
                  '("v::" "Next/Started and Delegated/Waiting For Actions Grouped by Context"
                    (;; Next/Started Actions
                     (tags-todo "phone&TODO={TODO\\|STRT}")
                     (tags-todo "mail&TODO={TODO\\|STRT}")
-                    (tags-todo "reading&TODO={TODO\\|STRT}")
                     (tags-todo "errands&TODO={TODO\\|STRT}")
                     ;; Delegated/Waiting For Actions
                     (tags-todo "phone&TODO={WAIT\\|DLGT}")
                     (tags-todo "mail&TODO={WAIT\\|DLGT}")
-                    (tags-todo "reading&TODO={WAIT\\|DLGT}")
                     (tags-todo "errands&TODO={WAIT\\|DLGT}"))) t)
 #+end_src
 
