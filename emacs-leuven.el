@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130830.0012
+;; Version: 20130830.102
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130830.0012]--")
+(message "* --[ Loading Emacs Leuven 20130830.102]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3483,8 +3483,7 @@
                     "STRT(s!)"  ;; in progress
                     "WAIT(w!)"  ;; feedback
                     "DLGT(l!)"  ;; assigned
-                    "DFRD(f!)"  ;; future, someday
-                    ;; "MAYB(m!)"  ;; maybe, perhaps, wish, actions that may be undertaken in the future
+                    "DFRD(f!)"  ;; someday, maybe, perhaps, actions that may be undertaken in the future, wish
                     "|"
                     "DONE(d!)"  ;; resolved, closed
                     "CANX(x!)") ;; wontfix, rejected
@@ -3503,7 +3502,6 @@
             ("DLGT" . leuven-org-delegated-kwd-face)
             ("WAIT" . leuven-org-delegated-kwd-face)
             ("DFRD" . leuven-org-deferred-kwd-face)
-            ;; ("MAYB" . leuven-org-deferred-kwd-face)
             ("DONE" . org-done)
             ("CANX" . org-done)
 
@@ -3542,7 +3540,7 @@
     (defface leuven-org-deferred-kwd-face
       '((t (:weight bold :box (:line-width 1 :color "#9EB6D4")
             :foreground "#9EB6D4" :background "#E0EFFF")))
-      "Face used to display state DFRD or MAYB.")
+      "Face used to display state DFRD.")
 
     (defface leuven-org-quote-kwd-face
       '((t (:weight bold :box (:line-width 1 :color "#FC5158")
@@ -4607,9 +4605,9 @@ From %c"
 
     (add-to-list 'org-agenda-custom-commands
                  '("bT" "Filtered list of TODO entries"
-                   tags-todo "TODO<>{DFRD\\|MAYB\\|PROJ}"
+                   tags-todo "TODO<>{DFRD\\|PROJ}"
                    ((org-agenda-overriding-header
-                     "List of TODO items of all types but DFRD/MAYB/PROJ, and PRIORITY >= #B")
+                     "List of TODO items of all types but DFRD/PROJ, and PRIORITY >= #B")
                     (org-agenda-sorting-strategy
                      '(category-up priority-down todo-state-up alpha-up)))) t)
 
@@ -4647,12 +4645,12 @@ From %c"
                    ((org-agenda-entry-types '(:timestamp :deadline :scheduled))
                     (org-agenda-overriding-header "Unscheduled TODO entries: "))) t)
 
-    ;; all TODO entries, but DFRD/MAYB
+    ;; all TODO entries, but DFRD
     (add-to-list 'org-agenda-custom-commands
-                 '("rT" "List of undated TODO entries (no DFRD/MAYB)"
-                   tags-todo "TODO<>{DFRD\\|MAYB}"
+                 '("rT" "List of undated TODO entries (no DFRD)"
+                   tags-todo "TODO<>{DFRD}"
                    ((org-agenda-overriding-header
-                     "Global list of undated TODO items of all types but DFRD/MAYB")
+                     "Global list of undated TODO items of all types but DFRD")
                     (org-agenda-skip-function
                      '(org-agenda-skip-entry-if 'scheduled 'deadline 'timestamp))
                     (org-agenda-sorting-strategy '(priority-down)))) t)
@@ -4766,9 +4764,9 @@ From %c"
                            (org-agenda-todo-ignore-scheduled t)))
 
                     ;; same reasoning as for WAIT|DLGT
-                    (todo "DFRD|MAYB" ;; DFRD is NOT a completed state!
+                    (todo "DFRD"
                           ((org-agenda-format-date "")
-                           (org-agenda-overriding-header "Someday/maybe")
+                           (org-agenda-overriding-header "Someday")
                            (org-agenda-todo-ignore-deadlines 'all)
                            (org-agenda-todo-ignore-scheduled t)))
 
@@ -9315,7 +9313,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130830.0013]--")
+(message "* --[ Loaded Emacs Leuven 20130830.102]--")
 
 (provide 'emacs-leuven)
 
