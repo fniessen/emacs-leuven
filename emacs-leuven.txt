@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-20 Tue 12:02>
+# Time-stamp: <2013-08-30 Fri 09:01>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -468,14 +468,69 @@ files that shadow Emacs builtins (listing potential load path problems).
         (if (file-executable-p file)
             file
           (message "(warning) Can't find executable `%s'" file)
-          ;; sleep 0.5 s so that you can see the warning
-          (sit-for 0.5))
+          ;; sleep 1.5 s so that you can see the warning
+          (sit-for 1.5))
       (error "leuven--file-exists-and-executable-p: missing operand")))
 
 ) ;; chapter 0-loading-libraries ends here
 #+end_src
 
 * Emacs Lisp Packages
+
+** Try-require
+
+Ignore errors.
+
+#+begin_src emacs-lisp
+  (defvar leuven--missing-packages nil
+    "List of packages that `try-require' or `locate-library' can't find.")
+
+  (defadvice locate-library (around leuven-locate-library activate)
+    "Locate Emacs library named LIBRARY and report time spent."
+    (let ((filename (ad-get-arg 0))
+          (find-file-time-start (float-time)))
+      (when leuven-load-verbose
+        (message "(info) Locating library %s..." filename))
+      (if ad-do-it
+          (when leuven-load-verbose
+            (message "(info) Located library %s in %.3f s." filename
+                     (- (float-time) find-file-time-start)))
+        (add-to-list 'leuven--missing-packages filename 'append)
+        (when leuven-load-verbose
+          (message "(info) Locating library %s... missing" filename
+                   (- (float-time) find-file-time-start))))))
+
+  ;; require a feature/library if available; if not, fail silently
+  (defun try-require (feature)
+    "Attempt to load a library or module. Return true if the
+  library given as argument is successfully loaded. If not, instead
+  of an error, just add the package to a list of missing packages."
+    (let (time-start)
+      (condition-case err
+          ;; protected form
+          (progn
+            (when leuven-load-verbose
+              (message "(info) Checking for `%s'..." feature))
+            (if (stringp feature)
+                (load-library feature)
+              (setq time-start (float-time))
+              (require feature))
+            ;; (when leuven-load-verbose
+            ;;   (message "(info) Checking for `%s'... %s (loaded in %.3f s)"
+            ;;            feature
+            ;;            (locate-library (symbol-name feature))
+            ;;            (- (float-time) time-start)))
+            ;; return t (necessary for correct behavior in conditions,
+            ;; when leuven-load-verbose is nil)
+            t)
+        ;; error handler
+        (file-error ;; condition
+         (progn
+           (when leuven-load-verbose
+             (message "(info) Checking for `%s'... missing" feature))
+           (add-to-list 'leuven--missing-packages feature 'append))
+         nil))))
+#+end_src
 
 ** The Package Menu Buffer
 
@@ -505,7 +560,7 @@ are generated programmatically from upstream Git-based sources.
 
   ;; simple package system for GNU Emacs
   (GNUEmacs
-    (when (require 'package)
+    (when (try-require 'package)
 
       ;; archives from which to fetch
       (setq package-archives
@@ -647,57 +702,6 @@ are generated programmatically from upstream Git-based sources.
                    (message "(info) %sRequiring `%s'... loaded in %.3f s"
                             prefix feature
                             (- (float-time) time-start)))))))))
-#+end_src
-
-#+begin_src emacs-lisp
-  (defvar leuven--missing-packages nil
-    "List of packages that `try-require' or `locate-library' can't find.")
-
-  (defadvice locate-library (around leuven-locate-library activate)
-    "Locate Emacs library named LIBRARY and report time spent."
-    (let ((filename (ad-get-arg 0))
-          (find-file-time-start (float-time)))
-      (when leuven-load-verbose
-        (message "(info) Locating library %s..." filename))
-      (if ad-do-it
-          (when leuven-load-verbose
-            (message "(info) Located library %s in %.3f s." filename
-                     (- (float-time) find-file-time-start)))
-        (add-to-list 'leuven--missing-packages filename 'append)
-        (when leuven-load-verbose
-          (message "(info) Locating library %s... missing" filename
-                   (- (float-time) find-file-time-start))))))
-
-  ;; require a feature/library if available; if not, fail silently
-  (defun try-require (feature)
-    "Attempt to load a library or module. Return true if the
-  library given as argument is successfully loaded. If not, instead
-  of an error, just add the package to a list of missing packages."
-    (let (time-start)
-      (condition-case err
-          ;; protected form
-          (progn
-            (when leuven-load-verbose
-              (message "(info) Checking for `%s'..." feature))
-            (if (stringp feature)
-                (load-library feature)
-              (setq time-start (float-time))
-              (require feature))
-            ;; (when leuven-load-verbose
-            ;;   (message "(info) Checking for `%s'... %s (loaded in %.3f s)"
-            ;;            feature
-            ;;            (locate-library (symbol-name feature))
-            ;;            (- (float-time) time-start)))
-            ;; return t (necessary for correct behavior in conditions,
-            ;; when leuven-load-verbose is nil)
-            t)
-        ;; error handler
-        (file-error ;; condition
-         (progn
-           (when leuven-load-verbose
-             (message "(info) Checking for `%s'... missing" feature))
-           (add-to-list 'leuven--missing-packages feature 'append))
-         nil))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1569,13 +1573,13 @@ Comparison:
     (delete-trailing-whitespace)
     (untabify (point-min) (point-max)))
 
-  ;; ensure that your files have no trailing whitespace
-  (add-hook 'before-save-hook
-            (lambda ()
-              ;; except for Message mode where "-- " is the signature
-              ;; separator
-              (unless (eq major-mode 'message-mode)
-                (delete-trailing-whitespace))))
+  ;; ;; ensure that your files have no trailing whitespace
+  ;; (add-hook 'before-save-hook
+  ;;           (lambda ()
+  ;;             ;; except for Message mode where "-- " is the signature
+  ;;             ;; separator
+  ;;             (unless (eq major-mode 'message-mode)
+  ;;               (delete-trailing-whitespace))))
 
   ;; visually indicate empty lines after the buffer end
   (setq-default indicate-empty-lines t)
@@ -2186,7 +2190,7 @@ previously detected error.
 
      ;; TEMP
      (message "flyspell has been loaded!!!")
-     (sit-for 3)
+     (sit-for 0.5)
 
      ;; don't consider that a word repeated twice is an error
      (setq flyspell-mark-duplications-flag nil)
@@ -2280,6 +2284,8 @@ previously detected error.
 
       ;; use proxy
       (setq url-proxy-services
+            ;;! Emacs expects just hostname and port in `url-proxy-services',
+            ;;! NOT prefixed with "http://"
             `(("http"     . ,(getenv "http_proxy"))
               ("ftp"      . ,(getenv "http_proxy"))
               ("no_proxy" . "^.*example.com")))
@@ -3299,9 +3305,9 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
   (global-set-key
     (kbd "<f12>") 'bury-buffer)
 
-  ;; put the current buffer at the end of the list of all buffers
-  (global-set-key
-    (kbd "<S-f12>") 'bury-buffer) ;; TEMP Use this (instead of f12) when GDB'ing Emacs
+  ;; ;; put the current buffer at the end of the list of all buffers
+  ;; (global-set-key
+  ;;   (kbd "<S-f12>") 'bury-buffer) ;; TEMP Use this (instead of f12) when GDB'ing Emacs
 #+end_src
 
 ** Convenience Features and Customization of Buffer Handling
@@ -5084,10 +5090,7 @@ http://www.google.com/search?q=searchterms, you can just type
                     "WAIT(w!)"  ;; feedback
                     "DLGT(l!)"  ;; assigned
                     "DFRD(f!)"  ;; future, someday
-                    ;; DFRD is *not* a completion state (in order not to
-                    ;; be struck through)
-                    "MAYB(m!)"  ;; maybe, perhaps, wish
-                    ;; actions that may be undertaken in the future
+                    ;; "MAYB(m!)"  ;; maybe, perhaps, wish, actions that may be undertaken in the future
                     "|"
                     "DONE(d!)"  ;; resolved, closed
                     "CANX(x!)") ;; wontfix, rejected
@@ -5095,7 +5098,11 @@ http://www.google.com/search?q=searchterms, you can just type
                     "APP(A!)" "EXP(E!)" "REJ(R!)")
           (sequence "OPENPO(O!)" "|"
                     "CLSDPO(C!)")))
+#+end_src
 
+=DFRD= is *not* a completion state (in order not to be struck through).
+
+#+begin_src emacs-lisp
   ;; TODO Check coherence of the faces with the above defined states
   ;; faces for specific TODO keywords
   (GNUEmacs
@@ -5106,7 +5113,7 @@ http://www.google.com/search?q=searchterms, you can just type
             ("DLGT" . leuven-org-delegated-kwd-face)
             ("WAIT" . leuven-org-delegated-kwd-face)
             ("DFRD" . leuven-org-deferred-kwd-face)
-            ("MAYB" . leuven-org-deferred-kwd-face)
+            ;; ("MAYB" . leuven-org-deferred-kwd-face)
             ("DONE" . org-done)
             ("CANX" . org-done)
 
@@ -5274,6 +5281,8 @@ something best implemented with tags.
                         ;; ("note" . ?n)
                         ;; ("reading" . ?r)
 
+                        ("NOW" . ?N)
+
                         ("ARCHIVE" . ?A)
                         ("crypt" . ?C)
                         ("FLAGGED" . ??)))
@@ -5285,16 +5294,19 @@ something best implemented with tags.
   (setq org-tag-faces
         '(("refile" .
            (:slant italic
-            :foreground "#A28747" :background "#FFE88E"))
+            :foreground "#FFFFFF" :background "#A48CC4"))
           ("home" .
            (:slant italic
             :foreground "#5C88D3" :background "#BBDDFF"))
           ("work" .
            (:slant italic
             :foreground "#5F7C43" :background "#C1D996"))
-          ;; ("blog" .
-          ;;  (:slant italic
-          ;;   :foreground "#FFFFFF" :background "#A48CC4"))
+          ("FLAGGED" .
+           (:slant italic
+            :foreground "#A28747" :background "#FFE88E"))
+          ("NOW" .
+           (:slant italic
+            :foreground "#000000" :background "#FFEA80"))
           ;; ("note" .
           ;;  (:slant italic
           ;;   :foreground "#FFFFFF" :background "#989898"))
@@ -5690,7 +5702,7 @@ Use =:jump-to-captured= to tell capture to jump to the note after storing it.
                     (buffer-file-name (org-capture-get :original-buffer))
                     "Tasks")
                    "* TODO %?
-%U %a %n"
+  %U %a %n"
                    :prepend t) t)
 
     (add-to-list 'org-capture-templates
@@ -5706,19 +5718,32 @@ Use =:jump-to-captured= to tell capture to jump to the note after storing it.
 
 Forward emails to Org and instantly create a task.
 
+- Action/Due Date ::
+
+- Link to existing Project ::
+
+- Office 3Remind ::
+     Create an action, set context to =office=. Set reminder in 3 days.
+
+- N: Create waiting for ::
+     New email: create a "waiting for" item that will linked (based) on the
+     sent email.
+
 #+begin_src emacs-lisp
     (add-to-list 'org-capture-templates
-                 `("m" "Mail to task" entry
+                 `("m" "Email processing...") t)
+    (add-to-list 'org-capture-templates
+                 `("mt" "Create an Action" entry
                    (file+headline ,org-default-notes-file "Tasks")
                    "* TODO %:subject%? (from %:fromname) :mail:
   SCHEDULED: %t
   %:date-timestamp-inactive
 
-  ,#+begin_verse
-  %i
-  ,#+end_verse
+,#+begin_verse
+%i
+,#+end_verse
 
-  From %a"
+From %a"
                    :empty-lines 1 :immediate-finish t) t)
        ;; `immediate-finish' = immediately store note without
        ;; further prompt (skipping `C-c C-c'), which is very handy
@@ -5774,7 +5799,7 @@ C-c=, it clocks out.
                  `("c" "Clock sibling" entry
                    (clock)
                    "* %^{Title}
-%U
+  %U
 %a
 
 %i") t)
@@ -5784,7 +5809,7 @@ C-c=, it clocks out.
                    (file+datetree ,(concat org-directory "/journal.org"))
                    "* %T %?
 
-%U
+  %U
 
 %i
 
@@ -5805,13 +5830,13 @@ From %a"
       `(,keys ,description entry
               (file+headline ,file ,headline)
               "* %^{Title}
-:PROPERTIES:
-:Created: %:date-timestamp-inactive
-:END:
-%?
-%i
+   :PROPERTIES:
+   :Created: %:date-timestamp-inactive
+   :END:
+   %?
+   %i
 
-From %a"
+   From %a"
               :empty-lines 1))
 
     ;; notes
@@ -5884,7 +5909,7 @@ From %a"
                    ;; `org-protocol-default-template-key'
                    (file+headline ,(concat org-directory "/capture.org") "Notes")
                    "* %^{Title}%?
-%u
+  %u
 
 %i
 
@@ -5933,7 +5958,24 @@ From %c"
 emacsclient -n -e '(make-capture-frame)'
 #+end_src
 
-**** Open Org source (and Capture) from Firefox
+*** Attachments
+
+Use the following for conveniently accessing your data.
+
+#+begin_src emacs-lisp
+  ;; 4.6 shortcut links
+  (add-to-list 'org-link-abbrev-alist '(("att" . org-attach-expand-link)))
+#+end_src
+
+Instead of modifying =org-link-abbrev-alist=, you can also use
+
+: #+LINK: att %(org-attach-expand-link)
+
+in your Org buffers.
+
+*** Protocols for external access
+
+Open Org source (and Capture) from Firefox.
 
 Have a look at [[http://vimeo.com/5662410][Store links in Emacs Org using org-protocol.el]].
 
@@ -5952,7 +5994,7 @@ Have a look at [[http://vimeo.com/5662410][Store links in Emacs Org using org-pr
                    :working-directory "~/Public/Repositories/worg/") t))
 #+end_src
 
-*** Refile
+*** Refile and copy
 
 Once a date has been scheduled, move the task to the appropriate category, by
 using the refile note command =C-c C-w=. This lets me select (with completion)
@@ -5961,7 +6003,7 @@ the header under which the entry will be placed.
 #+begin_src emacs-lisp
   (with-eval-after-load "org"
 
-    ;; 9.1.4 any headline with level <= 2 is a target
+    ;; 9.5 any headline with level <= 2 is a target
     (defvar leuven-org-refile-extra-files
       (if (file-exists-p "~/org/notes/")
           (directory-files "~/org/notes/" t "^[^\\.#].*\\.\\(txt\\|org\\)$")
@@ -5971,11 +6013,11 @@ the header under which the entry will be placed.
     ;; cache refile targets to speed up the process
     (setq org-refile-use-cache t)
 
-    ;; 9.1.4 provide refile targets as paths, including the file name
+    ;; 9.5 provide refile targets as paths, including the file name
     ;; (without directory) as level 1 of the path
     (setq org-refile-use-outline-path 'file)
 
-    ;; 9.1.4 allow to create new nodes (must be confirmed by the user) as
+    ;; 9.5 allow to create new nodes (must be confirmed by the user) as
     ;; refile targets
     (setq org-refile-allow-creating-parent-nodes 'confirm)
 
@@ -5988,7 +6030,7 @@ the header under which the entry will be placed.
     ;; FIXME Add a smart key binding
   #+end_src
 
-*** Archive
+*** Archiving
 
 #+begin_src emacs-lisp
     (leuven--section "9.6 (org)Archiving")
@@ -6953,7 +6995,8 @@ In other words, to be listed in the hotlist, tasks must have as well a
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-when-regexp-matches))
                                 (org-agenda-skip-regexp "\\[#A\\]"))))
-                   ((org-agenda-todo-ignore-scheduled 'future))) t)
+                   ((org-agenda-todo-ignore-scheduled 'future)
+                    (org-agenda-sorting-strategy '(deadline-down)))) t)
 #+end_src
 
 The hotlist is the perfect thing to *review each morning* to know what you need
@@ -12929,7 +12972,7 @@ browser*: you can open the current page in your graphical browser by hitting =M=
 ;;*** 5.4 Cookie Variables
 
       ;; functions for cookie processing
-      (eval-after-load "w3m-cookie"
+      (with-eval-after-load "w3m-cookie"
 
         ;; ask user whether accept bad cookies or not
         (setq w3m-cookie-accept-bad-cookies 'ask)
