@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130830.102
+;; Version: 20130830.2336
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130830.102]--")
+(message "* --[ Loading Emacs Leuven 20130830.2336]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3904,7 +3904,7 @@
     (unless (org-entry-get (point) "Effort")
       (let ((effort
              (completing-read
-              "Time estimate (H:MM): "
+              "Estimated time (H:MM): "
               (org-entry-get-multivalued-property (point) "Effort"))))
         (unless (equal effort "")
           (org-set-property "Effort" effort)))))
@@ -4810,10 +4810,10 @@ From %c"
 ;;*** Calendar style views
 
     (add-to-list 'org-agenda-custom-commands
-                 '("rc" "Calendar for current week"
+                 '("rc" "Calendar for 7 days"
                    agenda ""
                    ((org-agenda-entry-types '(:timestamp :sexp))
-                    (org-agenda-overriding-header "Calendar for this week")
+                    (org-agenda-overriding-header "Calendar for 7 days")
                     (org-agenda-repeating-timestamp-show-all t)
                     (org-agenda-span 'week)
                     (org-agenda-time-grid nil))) t)
@@ -9313,7 +9313,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130830.102]--")
+(message "* --[ Loaded Emacs Leuven 20130830.2337]--")
 
 (provide 'emacs-leuven)
 
