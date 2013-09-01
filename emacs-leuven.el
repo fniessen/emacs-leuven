@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130830.2336
+;; Version: 20130901.1638
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130830.2336]--")
+(message "* --[ Loading Emacs Leuven 20130901.1638]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3479,13 +3479,13 @@
   ;; the different task states)
   (setq org-todo-keywords
         '((sequence "NEW(n!)"   ;; proposal
-                    "TODO(t!)"
+                    "TODO(t!)"  ;; open, not started
                     "STRT(s!)"  ;; in progress
-                    "WAIT(w!)"  ;; feedback
-                    "DLGT(l!)"  ;; assigned
-                    "DFRD(f!)"  ;; someday, maybe, perhaps, actions that may be undertaken in the future, wish
+                    "WAIT(w!)"  ;; on hold
+                    "DLGT(l!)"  ;; assigned, feedback
+                    "DFRD(f!)"  ;; someday, maybe, perhaps, may be undertaken in the future, wish
                     "|"
-                    "DONE(d!)"  ;; resolved, closed
+                    "DONE(d!)"  ;; completed, closed, resolved
                     "CANX(x!)") ;; wontfix, rejected
           (sequence "QTE(q!)" "QTD(Q!)" "|"
                     "APP(A!)" "EXP(E!)" "REJ(R!)")
@@ -9313,7 +9313,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130830.2337]--")
+(message "* --[ Loaded Emacs Leuven 20130901.1639]--")
 
 (provide 'emacs-leuven)
 

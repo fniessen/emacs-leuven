@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-08-30 Fri 23:36>
+# Time-stamp: <2013-09-01 Sun 16:38>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -5085,13 +5085,13 @@ http://www.google.com/search?q=searchterms, you can just type
   ;; the different task states)
   (setq org-todo-keywords
         '((sequence "NEW(n!)"   ;; proposal
-                    "TODO(t!)"
+                    "TODO(t!)"  ;; open, not started
                     "STRT(s!)"  ;; in progress
-                    "WAIT(w!)"  ;; feedback
-                    "DLGT(l!)"  ;; assigned
-                    "DFRD(f!)"  ;; someday, maybe, perhaps, actions that may be undertaken in the future, wish
+                    "WAIT(w!)"  ;; on hold
+                    "DLGT(l!)"  ;; assigned, feedback
+                    "DFRD(f!)"  ;; someday, maybe, perhaps, may be undertaken in the future, wish
                     "|"
-                    "DONE(d!)"  ;; resolved, closed
+                    "DONE(d!)"  ;; completed, closed, resolved
                     "CANX(x!)") ;; wontfix, rejected
           (sequence "QTE(q!)" "QTD(Q!)" "|"
                     "APP(A!)" "EXP(E!)" "REJ(R!)")
@@ -5580,8 +5580,8 @@ Remove scheduling date with =C-u C-c C-s=.
 
 *** Effort estimates
 
-If you have an =Effort= property defined, its value is also shown in the mode
-line.
+If you have an =Effort= property defined, the *estimated time* is also shown in
+the mode line, against the *actual time* spent (reported through *time clocking*).
 
 When clocking in, ask for a time estimate if the property is not yet defined.
 
@@ -5714,7 +5714,28 @@ Use =:jump-to-captured= to tell capture to jump to the note after storing it.
                    ;; TODO Prompt only for date, not time...
 #+end_src
 
-Forward emails to Org and instantly create a task.
+**** Email-to-Org
+
+Instantly *create tasks* and notes *from emails*.
+
+The following rules will apply:
+
+- Task creator ::
+     Sender's email.
+
+- Task assignee ::
+     Recipient(s)' email.
+
+- Task Name ::
+     Subject.
+
+- Files ::
+     Attachment(s).
+
+- Task Description ::
+     Email body (or selected region).
+
+Additional parameters can be included via the commands you use:
 
 - Action/Due Date ::
 
@@ -5737,9 +5758,9 @@ Forward emails to Org and instantly create a task.
   SCHEDULED: %t
   %:date-timestamp-inactive
 
-,#+begin_verse
+#+begin_verse
 %i
-,#+end_verse
+#+end_verse
 
 From %a"
                    :empty-lines 1 :immediate-finish t) t)
@@ -6375,7 +6396,7 @@ Agenda view: put related tasks together, then by priority.
             :foreground "black" :background "#D0EDFF"))))
 #+end_src
 
-*Show notes preview* with =E=.
+If you press =E=, it will *show* the *first notes* about the tasks.
 
 #+begin_src emacs-lisp
   ;; 10.5 text prepended to the entry text in agenda buffers
