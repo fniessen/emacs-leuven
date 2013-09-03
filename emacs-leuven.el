@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130901.1638
+;; Version: 20130903.1456
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130901.1638]--")
+(message "* --[ Loading Emacs Leuven 20130903.1456]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -392,8 +392,7 @@
                      (- (float-time) find-file-time-start)))
         (add-to-list 'leuven--missing-packages filename 'append)
         (when leuven-load-verbose
-          (message "(info) Locating library %s... missing" filename
-                   (- (float-time) find-file-time-start))))))
+          (message "(info) Locating library %s... missing" filename)))))
 
   ;; require a feature/library if available; if not, fail silently
   (defun try-require (feature)
@@ -4230,6 +4229,9 @@ From %c"
   ;; 10.0 restore the window configuration when exiting the agenda
   (setq org-agenda-restore-windows-after-quit t)
 
+  ;; XXX speed up agenda by allowing to turn of some drawer properties
+  (setq org-agenda-ignore-drawer-properties t)
+
 ;;** 10.1 (info "(org)Agenda files")
 
   (leuven--section "10.1 (org)Agenda files")
@@ -4317,10 +4319,10 @@ From %c"
   ;; 10.4 format specifications for the prefix of items in the agenda views
   (setq org-agenda-prefix-format
         '((agenda . " %-11s%i %?-12t") ;; agenda
-          (timeline . " % s") ;; timeline
-          (todo . " %i %-12:c") ;; todo, alltodo
-          (tags . " %i %-12:c") ;; tags, tags-todo, stuck
-          (search . " %i %-12:c"))) ;; search
+          (timeline . " % s")          ;; timeline
+          (todo . " %i %-12:c")        ;; todo, alltodo
+          (tags . " %i %-12:c")        ;; tags, tags-todo, stuck
+          (search . " %i %-12:c")))    ;; search
 
   ;; text preceding scheduled items in the agenda view
   (setq org-agenda-scheduled-leaders
@@ -9299,7 +9301,8 @@ From %c"
 (when leuven-load-verbose
   (message "| Chapter | Time |")
   (message "|---------+------|")
-  (mapcar (lambda (el) (message el))
+  (mapcar (lambda (el)
+            (message el))
           (nreverse leuven--load-times-list))
   (message "|---------+------|")
   (message "|         | =vsum(@-I..@-II) |"))
@@ -9313,7 +9316,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130901.1639]--")
+(message "* --[ Loaded Emacs Leuven 20130903.1457]--")
 
 (provide 'emacs-leuven)
 

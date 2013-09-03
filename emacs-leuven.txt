@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-01 Sun 16:38>
+# Time-stamp: <2013-09-03 Tue 14:56>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -497,8 +497,7 @@ Ignore errors.
                      (- (float-time) find-file-time-start)))
         (add-to-list 'leuven--missing-packages filename 'append)
         (when leuven-load-verbose
-          (message "(info) Locating library %s... missing" filename
-                   (- (float-time) find-file-time-start))))))
+          (message "(info) Locating library %s... missing" filename)))))
 
   ;; require a feature/library if available; if not, fail silently
   (defun try-require (feature)
@@ -6078,6 +6077,11 @@ the header under which the entry will be placed.
   (setq org-agenda-restore-windows-after-quit t)
 #+end_src
 
+#+begin_src emacs-lisp
+  ;; XXX speed up agenda by allowing to turn of some drawer properties
+  (setq org-agenda-ignore-drawer-properties t)
+#+end_src
+
 *** Agenda files
 
 *************** TODO Should I default `o-a-f' to "~/org/*.org" when not yet bound?
@@ -6210,10 +6214,10 @@ arrives -- at which point it will be in all lists.
   ;; 10.4 format specifications for the prefix of items in the agenda views
   (setq org-agenda-prefix-format
         '((agenda . " %-11s%i %?-12t") ;; agenda
-          (timeline . " % s") ;; timeline
-          (todo . " %i %-12:c") ;; todo, alltodo
-          (tags . " %i %-12:c") ;; tags, tags-todo, stuck
-          (search . " %i %-12:c"))) ;; search
+          (timeline . " % s")          ;; timeline
+          (todo . " %i %-12:c")        ;; todo, alltodo
+          (tags . " %i %-12:c")        ;; tags, tags-todo, stuck
+          (search . " %i %-12:c")))    ;; search
 
   ;; text preceding scheduled items in the agenda view
   (setq org-agenda-scheduled-leaders
@@ -13943,7 +13947,8 @@ To get a backtrace when a specific regexp is displayed in the echo area
 (when leuven-load-verbose
   (message "| Chapter | Time |")
   (message "|---------+------|")
-  (mapcar (lambda (el) (message el))
+  (mapcar (lambda (el)
+            (message el))
           (nreverse leuven--load-times-list))
   (message "|---------+------|")
   (message "|         | =vsum(@-I..@-II) |"))
