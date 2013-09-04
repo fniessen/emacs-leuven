@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-03 Tue 14:56>
+# Time-stamp: <2013-09-04 Wed 16:58>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -1572,13 +1572,15 @@ Comparison:
     (delete-trailing-whitespace)
     (untabify (point-min) (point-max)))
 
-  ;; ;; ensure that your files have no trailing whitespace
-  ;; (add-hook 'before-save-hook
-  ;;           (lambda ()
-  ;;             ;; except for Message mode where "-- " is the signature
-  ;;             ;; separator
-  ;;             (unless (eq major-mode 'message-mode)
-  ;;               (delete-trailing-whitespace))))
+  ;; ensure that your files have no trailing whitespace
+  (add-hook 'before-save-hook
+            (lambda ()
+              ;; ;; except for Message mode where "-- " is the signature
+              ;; ;; separator
+              ;; (unless (eq major-mode 'message-mode)
+                (delete-trailing-whitespace)
+                ;; )
+              ))
 
   ;; visually indicate empty lines after the buffer end
   (setq-default indicate-empty-lines t)
@@ -2689,7 +2691,18 @@ In Ediff, press:
                arg)))))
 #+end_src
 
-For *comparing two directories*, you can use [[http://meldmerge.org/][Meld]].
+For *comparing two directories*, you can use =ediff-directories= or [[http://meldmerge.org/][Meld]].
+
+=ediff-directories= combined with the key sequence "= h x" shows you only the
+files which differ.
+
+It is not recursive, but it gives you also subdirectory pairs to compare. Just
+hit =RET= on such a pair.
+
+As bonus, it even works for remote directories.
+
+CAUTION -- =ediff-directories= does not list files in one directory with no
+corresponding files in the other directory.
 
 ** Miscellaneous File Operations
 
@@ -5711,6 +5724,23 @@ Use =:jump-to-captured= to tell capture to jump to the note after storing it.
 %i"
                    :empty-lines 1) t)
                    ;; TODO Prompt only for date, not time...
+#+end_src
+
+Find a location for refiling on capture.
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-capture-templates
+                 `("Z" "Refile me!" entry
+                   (function leuven-find-location)
+                   "** TODO Put this in some other file\n\n"
+                   :prepend t) t)
+
+    (defun leuven-find-location ()
+      "Find my Inbox file and some headline in the current buffer."
+      (find-file "~/org/refile.org")
+      (goto-char (point-min))
+      (helm-org-headlines)
+      (org-forward-heading-same-level 1))
 #+end_src
 
 **** Email-to-Org
@@ -13813,7 +13843,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
   (global-set-key
     (kbd "M--") 'ess-smart-underscore)
 
-  ;; don't request the process directory each time R is run
+  ;;! don't request the process directory each time R is run
   (setq ess-ask-for-ess-directory nil)
 
   ;; name of the ESS process associated with the current buffer

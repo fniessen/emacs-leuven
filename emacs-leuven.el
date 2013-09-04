@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130903.1456
+;; Version: 20130904.1643
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130903.1456]--")
+(message "* --[ Loading Emacs Leuven 20130904.1643]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1104,13 +1104,15 @@
     (delete-trailing-whitespace)
     (untabify (point-min) (point-max)))
 
-  ;; ;; ensure that your files have no trailing whitespace
-  ;; (add-hook 'before-save-hook
-  ;;           (lambda ()
-  ;;             ;; except for Message mode where "-- " is the signature
-  ;;             ;; separator
-  ;;             (unless (eq major-mode 'message-mode)
-  ;;               (delete-trailing-whitespace))))
+  ;; ensure that your files have no trailing whitespace
+  (add-hook 'before-save-hook
+            (lambda ()
+              ;; ;; except for Message mode where "-- " is the signature
+              ;; ;; separator
+              ;; (unless (eq major-mode 'message-mode)
+                (delete-trailing-whitespace)
+                ;; )
+              ))
 
   ;; visually indicate empty lines after the buffer end
   (setq-default indicate-empty-lines t)
@@ -3959,6 +3961,19 @@
 %i"
                    :empty-lines 1) t)
                    ;; TODO Prompt only for date, not time...
+
+    (add-to-list 'org-capture-templates
+                 `("Z" "Refile me!" entry
+                   (function leuven-find-location)
+                   "** TODO Put this in some other file\n\n"
+                   :prepend t) t)
+
+    (defun leuven-find-location ()
+      "Find my Inbox file and some headline in the current buffer."
+      (find-file "~/org/refile.org")
+      (goto-char (point-min))
+      (helm-org-headlines)
+      (org-forward-heading-same-level 1))
 
     (add-to-list 'org-capture-templates
                  `("m" "Email processing...") t)
@@ -9184,7 +9199,7 @@ From %c"
   (global-set-key
     (kbd "M--") 'ess-smart-underscore)
 
-  ;; don't request the process directory each time R is run
+  ;;! don't request the process directory each time R is run
   (setq ess-ask-for-ess-directory nil)
 
   ;; name of the ESS process associated with the current buffer
@@ -9316,7 +9331,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130903.1457]--")
+(message "* --[ Loaded Emacs Leuven 20130904.1644]--")
 
 (provide 'emacs-leuven)
 
