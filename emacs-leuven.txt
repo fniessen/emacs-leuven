@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-04 Wed 16:58>
+# Time-stamp: <2013-09-05 Thu 11:45>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -3487,35 +3487,6 @@ See as well =split-window-preferred-function=.
 
   ;; minimum width for splitting windows horizontally
   (setq split-width-threshold 160)
-
-  ;; (GNUEmacs
-  ;;
-  ;;  (defun leuven--display-buffer (buffer force-other-window)
-  ;;    "If BUFFER is visible, select it.
-  ;;
-  ;;  If it's not visible and there's only one window, split the
-  ;;  current window and select BUFFER in the new window. If the
-  ;;  current window (before the split) is more than 160 columns wide,
-  ;;  split horizontally, else split vertically.
-  ;;
-  ;;  If the current buffer contains more than one window, select
-  ;;  BUFFER in the least recently used window.
-  ;;
-  ;;  This function returns the window which holds BUFFER.
-  ;;
-  ;;  FORCE-OTHER-WINDOW is ignored."
-  ;;    (or (get-buffer-window buffer)
-  ;;        (if (one-window-p)
-  ;;            (let ((new-win (if (> (window-width) 160)
-  ;;                               (split-window-horizontally)
-  ;;                             (split-window-vertically))))
-  ;;              (set-window-buffer new-win buffer)
-  ;;              new-win)
-  ;;          (let ((new-win (get-lru-window)))
-  ;;            (set-window-buffer new-win buffer)
-  ;;            new-win))))
-  ;;
-  ;;  (setq display-buffer-function 'leuven--display-buffer))
 #+end_src
 
 ** Window Handling Convenience Features and Customization
@@ -5279,25 +5250,22 @@ something best implemented with tags.
 
   ;; 6.2 list of tags ("contexts") allowed in Org mode files
   (setq org-tag-alist '((:startgroup . nil)
-                         ("home" . ?h)
-                         ("work" . ?w)
+                         ("home"       . ?h)
+                         ("work"       . ?w)
                         (:endgroup . nil)
-                        ("errands" . ?e)
-                        ("phone" . ?p)
-                        ("mail" . ?m)
+                        ("errands"     . ?e)
+                        ("phone"       . ?p)
+                        ("mail"        . ?m)
 
-                        ("bank" . ?b)
-                        ;; ("blog" . ?B)
-                        ;; ("note" . ?n)
+                        ("bank"        . ?b)
+                        ("notbillable" . ?B)
+                        ("NOW"         . ?N)
                         ;; ("reading" . ?r)
+                        ;; ("PROJ" . ?P)
 
-                        ("NOW" . ?N)
-
-                        ("ARCHIVE" . ?A)
-                        ("crypt" . ?C)
-                        ("FLAGGED" . ??)))
-
-  ;; ("PROJ" . ?P)v
+                        ("ARCHIVE"     . ?A)
+                        ("crypt"       . ?C)
+                        ("FLAGGED"     . ??)))
 
   ;; faces for specific tags
   ;; XXX This generates an error when C-x C-w'ing the agenda view
@@ -5317,10 +5285,9 @@ something best implemented with tags.
           ("NOW" .
            (:slant italic
             :foreground "#000000" :background "#FFEA80"))
-          ;; ("note" .
-          ;;  (:slant italic
-          ;;   :foreground "#FFFFFF" :background "#989898"))
-          ))
+          ("notbillable" .
+           (:slant italic
+            :foreground "#FFFFFF" :background "#989898"))))
 
   ;; 6.2 exit fast tag selection after first change (toggle this with `C-c')
   (setq org-fast-tag-selection-single-key t)
@@ -5776,6 +5743,9 @@ Additional parameters can be included via the commands you use:
 - N: Create waiting for ::
      New email: create a "waiting for" item that will linked (based) on the
      sent email.
+
+- R: Action ::
+     Reply or Forward: create an action (...) email that was replied to.
 
 #+begin_src emacs-lisp
     (add-to-list 'org-capture-templates

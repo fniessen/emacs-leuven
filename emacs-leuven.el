@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130904.1643
+;; Version: 20130905.1145
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130904.1643]--")
+(message "* --[ Loading Emacs Leuven 20130905.1145]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2401,35 +2401,6 @@
   ;; minimum width for splitting windows horizontally
   (setq split-width-threshold 160)
 
-  ;; (GNUEmacs
-  ;;
-  ;;  (defun leuven--display-buffer (buffer force-other-window)
-  ;;    "If BUFFER is visible, select it.
-  ;;
-  ;;  If it's not visible and there's only one window, split the
-  ;;  current window and select BUFFER in the new window. If the
-  ;;  current window (before the split) is more than 160 columns wide,
-  ;;  split horizontally, else split vertically.
-  ;;
-  ;;  If the current buffer contains more than one window, select
-  ;;  BUFFER in the least recently used window.
-  ;;
-  ;;  This function returns the window which holds BUFFER.
-  ;;
-  ;;  FORCE-OTHER-WINDOW is ignored."
-  ;;    (or (get-buffer-window buffer)
-  ;;        (if (one-window-p)
-  ;;            (let ((new-win (if (> (window-width) 160)
-  ;;                               (split-window-horizontally)
-  ;;                             (split-window-vertically))))
-  ;;              (set-window-buffer new-win buffer)
-  ;;              new-win)
-  ;;          (let ((new-win (get-lru-window)))
-  ;;            (set-window-buffer new-win buffer)
-  ;;            new-win))))
-  ;;
-  ;;  (setq display-buffer-function 'leuven--display-buffer))
-
 ) ;; chapter 20 ends here
 
 ;;* 21 (info "(emacs)Frames") and Graphical Displays
@@ -3637,25 +3608,22 @@
 
   ;; 6.2 list of tags ("contexts") allowed in Org mode files
   (setq org-tag-alist '((:startgroup . nil)
-                         ("home" . ?h)
-                         ("work" . ?w)
+                         ("home"       . ?h)
+                         ("work"       . ?w)
                         (:endgroup . nil)
-                        ("errands" . ?e)
-                        ("phone" . ?p)
-                        ("mail" . ?m)
+                        ("errands"     . ?e)
+                        ("phone"       . ?p)
+                        ("mail"        . ?m)
 
-                        ("bank" . ?b)
-                        ;; ("blog" . ?B)
-                        ;; ("note" . ?n)
+                        ("bank"        . ?b)
+                        ("notbillable" . ?B)
+                        ("NOW"         . ?N)
                         ;; ("reading" . ?r)
+                        ;; ("PROJ" . ?P)
 
-                        ("NOW" . ?N)
-
-                        ("ARCHIVE" . ?A)
-                        ("crypt" . ?C)
-                        ("FLAGGED" . ??)))
-
-  ;; ("PROJ" . ?P)v
+                        ("ARCHIVE"     . ?A)
+                        ("crypt"       . ?C)
+                        ("FLAGGED"     . ??)))
 
   ;; faces for specific tags
   ;; XXX This generates an error when C-x C-w'ing the agenda view
@@ -3675,10 +3643,9 @@
           ("NOW" .
            (:slant italic
             :foreground "#000000" :background "#FFEA80"))
-          ;; ("note" .
-          ;;  (:slant italic
-          ;;   :foreground "#FFFFFF" :background "#989898"))
-          ))
+          ("notbillable" .
+           (:slant italic
+            :foreground "#FFFFFF" :background "#989898"))))
 
   ;; 6.2 exit fast tag selection after first change (toggle this with `C-c')
   (setq org-fast-tag-selection-single-key t)
@@ -9331,7 +9298,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130904.1644]--")
+(message "* --[ Loaded Emacs Leuven 20130905.1145]--")
 
 (provide 'emacs-leuven)
 
