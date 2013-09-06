@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130905.1145
+;; Version: 20130906.1407
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130905.1145]--")
+(message "* --[ Loading Emacs Leuven 20130906.1407]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3166,6 +3166,13 @@
 
   ;; ellipsis to use in the Org mode outline
   (with-eval-after-load "org"
+
+    ;; improve display of the ellipsis
+    (set-face-attribute 'org-ellipsis nil
+                        :box '(:line-width 1 :color "#999999")
+                        :foreground "#999999" :background "#FFF8C0"
+                        :underline nil)
+
     (setq org-ellipsis
           (if (char-displayable-p ?\u25B7) ;; white right-pointing triangle
               ;; this test takes ~ 0.40s; hence, wrapped in eval-after-load
@@ -3944,12 +3951,26 @@
 
     (add-to-list 'org-capture-templates
                  `("m" "Email processing...") t)
+
     (add-to-list 'org-capture-templates
-                 `("mt" "Create an Action" entry
+                 `("mt" "Create a TODO Action + edit" entry
                    (file+headline ,org-default-notes-file "Tasks")
                    "* TODO %:subject%? (from %:fromname) :mail:
-  SCHEDULED: %t
-  %:date-timestamp-inactive
+   %:date-timestamp-inactive
+
+#+begin_verse
+%i
+#+end_verse
+
+From %a"
+                   :empty-lines 1) t)
+
+    (add-to-list 'org-capture-templates
+                 `("mr" "Create a TODO Action Remind 3" entry
+                   (file+headline ,org-default-notes-file "Tasks")
+                   "* TODO %:subject%? (from %:fromname) :mail:
+   DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \" -0d\")
+   %:date-timestamp-inactive
 
 #+begin_verse
 %i
@@ -3957,9 +3978,6 @@
 
 From %a"
                    :empty-lines 1 :immediate-finish t) t)
-       ;; `immediate-finish' = immediately store note without
-       ;; further prompt (skipping `C-c C-c'), which is very handy
-       ;; for quick storing of emails
 
     (add-to-list 'org-capture-templates
                  `("M" "mailtodo" entry (file+datetree "~/Personal/mails.org")
@@ -4685,7 +4703,7 @@ From %c"
                     (org-agenda-todo-ignore-with-date nil))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("rp" "Projects"
+                 '("rP" "Projects"
                    tags-todo "project-DONE-CANX"
                    ((org-agenda-overriding-header "Projects (High Level)")
                     (org-agenda-sorting-strategy nil))) t)
@@ -9298,7 +9316,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130905.1145]--")
+(message "* --[ Loaded Emacs Leuven 20130906.1407]--")
 
 (provide 'emacs-leuven)
 

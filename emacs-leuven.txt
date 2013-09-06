@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-05 Thu 11:45>
+# Time-stamp: <2013-09-06 Fri 14:22>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -4675,6 +4675,13 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 
   ;; ellipsis to use in the Org mode outline
   (with-eval-after-load "org"
+
+    ;; improve display of the ellipsis
+    (set-face-attribute 'org-ellipsis nil
+                        :box '(:line-width 1 :color "#999999")
+                        :foreground "#999999" :background "#FFF8C0"
+                        :underline nil)
+
     (setq org-ellipsis
           (if (char-displayable-p ?\u25B7) ;; white right-pointing triangle
               ;; this test takes ~ 0.40s; hence, wrapped in eval-after-load
@@ -5714,6 +5721,8 @@ Find a location for refiling on capture.
 
 Instantly *create tasks* and notes *from emails*.
 
+The items item will be linked back to the the emails.
+
 The following rules will apply:
 
 - Task creator ::
@@ -5733,29 +5742,50 @@ The following rules will apply:
 
 Additional parameters can be included via the commands you use:
 
-- Action/Due Date ::
+- Create a TODO Action ::
+     Create a new action.
 
-- Link to existing Project ::
+- Create a TODO Action Remind 3 ::
+     Create a new action. Set reminder in 3 days.
 
-- Office 3Remind ::
-     Create an action, set context to =office=. Set reminder in 3 days.
+- Create a TODO Action Due Date 7 ::
+     Create a new action. Set due date in 7 days.
 
-- N: Create waiting for ::
-     New email: create a "waiting for" item that will linked (based) on the
-     sent email.
+- Create a TODO Action of an existing Project ::
+     Attach it to something that we're already working on.
 
-- R: Action ::
-     Reply or Forward: create an action (...) email that was replied to.
+- Create a WAIT Item ::
+     Create a new "Waiting For" item.
+
+- Create a DLGT Item ::
+     Create a new "Assigned" item.
+
+- Create a DFRD Item ::
+     Create a new "Someday" item.
 
 #+begin_src emacs-lisp
     (add-to-list 'org-capture-templates
                  `("m" "Email processing...") t)
+
     (add-to-list 'org-capture-templates
-                 `("mt" "Create an Action" entry
+                 `("mt" "Create a TODO Action + edit" entry
                    (file+headline ,org-default-notes-file "Tasks")
                    "* TODO %:subject%? (from %:fromname) :mail:
-  SCHEDULED: %t
-  %:date-timestamp-inactive
+   %:date-timestamp-inactive
+
+#+begin_verse
+%i
+#+end_verse
+
+From %a"
+                   :empty-lines 1) t)
+
+    (add-to-list 'org-capture-templates
+                 `("mr" "Create a TODO Action Remind 3" entry
+                   (file+headline ,org-default-notes-file "Tasks")
+                   "* TODO %:subject%? (from %:fromname) :mail:
+   DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \" -0d\")
+   %:date-timestamp-inactive
 
 #+begin_verse
 %i
@@ -5763,10 +5793,10 @@ Additional parameters can be included via the commands you use:
 
 From %a"
                    :empty-lines 1 :immediate-finish t) t)
-       ;; `immediate-finish' = immediately store note without
-       ;; further prompt (skipping `C-c C-c'), which is very handy
-       ;; for quick storing of emails
 #+end_src
+
+The property =:immediate-finish=, when set, immediately files the item without
+further prompt (skipping =C-c C-c=); very handy for quick storing of emails.
 
 #+begin_src emacs-lisp
     (add-to-list 'org-capture-templates
@@ -6585,11 +6615,11 @@ week) on the =errands= tag.
           ((org-agenda-remove-tags t)
            (org-agenda-prefix-format "  ")
            (org-agenda-todo-keyword-format "")))
-    (todo "NEXT"
+    (todo "TODO"
           ((org-agenda-sorting-strategy '(tag-up))
            (org-agenda-show-inherited-tags nil)
            (org-agenda-todo-keyword-format "")))
-    (todo "PENDING"
+    (todo "STRT"
           ((org-agenda-todo-keyword-format "")))
     (stuck ""
            ((org-agenda-remove-tags t)))))
@@ -6635,7 +6665,7 @@ week) on the =errands= tag.
     (ps-landscape-mode t))
    ("~/org-agenda-storage.pdf"))
 
-  ("y" "Projects"
+  ("P" "Projects"
    ((agenda ""
             ((org-agenda-skip-function
               '(org-agenda-skip-entry-if 'notregexp "* PROJ"))
@@ -6840,7 +6870,7 @@ Cleanup:
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
-                 '("rp" "Projects"
+                 '("rP" "Projects"
                    tags-todo "project-DONE-CANX"
                    ((org-agenda-overriding-header "Projects (High Level)")
                     (org-agenda-sorting-strategy nil))) t)
