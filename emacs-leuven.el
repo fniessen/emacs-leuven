@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130906.1407
+;; Version: 20130907.1214
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130906.1407]--")
+(message "* --[ Loading Emacs Leuven 20130907.1214]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -479,7 +479,7 @@
           rainbow-mode
           redshank
           tidy
-          w3m
+          ;; w3m
           yasnippet)
         "A list of packages to ensure are installed at Emacs startup."
         :group 'emacs-leuven
@@ -3954,8 +3954,8 @@
 
     (add-to-list 'org-capture-templates
                  `("mt" "Create a TODO Action + edit" entry
-                   (file+headline ,org-default-notes-file "Tasks")
-                   "* TODO %:subject%? (from %:fromname) :mail:
+                   (file+headline "~/org/email.org" "Tasks") ;; #+FILETAGS: :mail:
+                   "* TODO %:subject%? (from %:fromname)
    %:date-timestamp-inactive
 
 #+begin_verse
@@ -3967,8 +3967,8 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("mr" "Create a TODO Action Remind 3" entry
-                   (file+headline ,org-default-notes-file "Tasks")
-                   "* TODO %:subject%? (from %:fromname) :mail:
+                   (file+headline "~/org/email.org" "Tasks") ;; #+FILETAGS: :mail:
+                   "* TODO %:subject%? (from %:fromname)
    DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \" -0d\")
    %:date-timestamp-inactive
 
@@ -3980,7 +3980,8 @@ From %a"
                    :empty-lines 1 :immediate-finish t) t)
 
     (add-to-list 'org-capture-templates
-                 `("M" "mailtodo" entry (file+datetree "~/Personal/mails.org")
+                 `("M" "mailtodo" entry
+                   (file+datetree "~/org/mails.org")
                    "* TODO %^{Task} %^G
 SCHEDULED: %t
 - From :: %:from
@@ -4207,6 +4208,13 @@ From %c"
       (let ((org-refile-targets '((nil :maxlevel . 8))))
         (org-refile)))
     ;; FIXME Add a smart key binding
+
+    ;; exclude DONE state tasks from refile targets
+    (defun bh/verify-refile-target ()
+      "Exclude todo keywords with a done state from refile targets"
+      (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+
+    (setq org-refile-target-verify-function 'bh/verify-refile-target)
 
     (leuven--section "9.6 (org)Archiving")
 
@@ -4742,6 +4750,7 @@ From %c"
                     (todo "PROJ"
                           ((org-agenda-overriding-header "Project list")))
 
+                    ;; XXX we should show which tasks (don't) have CLOCK lines: archived vs deleted
                     (todo "DONE|PROJDONE"
                           ((org-agenda-overriding-header
                             "Candidates to be archived")))
@@ -9316,7 +9325,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130906.1407]--")
+(message "* --[ Loaded Emacs Leuven 20130907.1214]--")
 
 (provide 'emacs-leuven)
 

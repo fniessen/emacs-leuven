@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-06 Fri 14:22>
+# Time-stamp: <2013-09-07 Sat 12:14>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -603,7 +603,7 @@ are generated programmatically from upstream Git-based sources.
           rainbow-mode
           redshank
           tidy
-          w3m
+          ;; w3m
           yasnippet)
         "A list of packages to ensure are installed at Emacs startup."
         :group 'emacs-leuven
@@ -5700,6 +5700,8 @@ Use =:jump-to-captured= to tell capture to jump to the note after storing it.
                    ;; TODO Prompt only for date, not time...
 #+end_src
 
+**** TODO Ask for refile location
+
 Find a location for refiling on capture.
 
 #+begin_src emacs-lisp
@@ -5769,8 +5771,8 @@ Additional parameters can be included via the commands you use:
 
     (add-to-list 'org-capture-templates
                  `("mt" "Create a TODO Action + edit" entry
-                   (file+headline ,org-default-notes-file "Tasks")
-                   "* TODO %:subject%? (from %:fromname) :mail:
+                   (file+headline "~/org/email.org" "Tasks") ;; #+FILETAGS: :mail:
+                   "* TODO %:subject%? (from %:fromname)
    %:date-timestamp-inactive
 
 #+begin_verse
@@ -5782,8 +5784,8 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("mr" "Create a TODO Action Remind 3" entry
-                   (file+headline ,org-default-notes-file "Tasks")
-                   "* TODO %:subject%? (from %:fromname) :mail:
+                   (file+headline "~/org/email.org" "Tasks") ;; #+FILETAGS: :mail:
+                   "* TODO %:subject%? (from %:fromname)
    DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \" -0d\")
    %:date-timestamp-inactive
 
@@ -5800,7 +5802,8 @@ further prompt (skipping =C-c C-c=); very handy for quick storing of emails.
 
 #+begin_src emacs-lisp
     (add-to-list 'org-capture-templates
-                 `("M" "mailtodo" entry (file+datetree "~/Personal/mails.org")
+                 `("M" "mailtodo" entry
+                   (file+datetree "~/org/mails.org")
                    "* TODO %^{Task} %^G
 SCHEDULED: %t
 - From :: %:from
@@ -6077,6 +6080,15 @@ the header under which the entry will be placed.
         (org-refile)))
     ;; FIXME Add a smart key binding
   #+end_src
+
+#+begin_src emacs-lisp
+    ;; exclude DONE state tasks from refile targets
+    (defun bh/verify-refile-target ()
+      "Exclude todo keywords with a done state from refile targets"
+      (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+
+    (setq org-refile-target-verify-function 'bh/verify-refile-target)
+#+end_src
 
 *** Archiving
 
@@ -6923,6 +6935,7 @@ Cleanup:
                     (todo "PROJ"
                           ((org-agenda-overriding-header "Project list")))
 
+                    ;; XXX we should show which tasks (don't) have CLOCK lines: archived vs deleted
                     (todo "DONE|PROJDONE"
                           ((org-agenda-overriding-header
                             "Candidates to be archived")))
