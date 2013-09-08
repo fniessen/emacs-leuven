@@ -4237,8 +4237,8 @@ From %c"
   ;; 10.0 restore the window configuration when exiting the agenda
   (setq org-agenda-restore-windows-after-quit t)
 
-  ;; XXX speed up agenda by allowing to turn of some drawer properties
-  (setq org-agenda-ignore-drawer-properties t)
+  ;; ;; XXX speed up agenda by allowing to turn of some drawer properties
+  ;; (setq org-agenda-ignore-drawer-properties t)
 
 ;;** 10.1 (info "(org)Agenda files")
 
