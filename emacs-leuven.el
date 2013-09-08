@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130907.1214
+;; Version: 20130908.1451
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130907.1214]--")
+(message "* --[ Loading Emacs Leuven 20130908.1451]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6806,16 +6806,6 @@ From %c"
     (define-key edebug-mode-map
       [remap top-level] 'leuven-edebug-quit))
 
-  (defun autocompile nil
-    "compile itself if ~/.emacs"
-    (interactive)
-    (require 'bytecomp)
-    (let ((dotemacs (expand-file-name "~/.emacs"))) ;; emacs-leuven.el
-      (if (string= (buffer-file-name) (file-chase-links dotemacs))
-        (byte-compile-file dotemacs))))
-
-  (add-hook 'after-save-hook 'autocompile)
-
 ;;** 27.9 (info "(emacs)Lisp Eval") Expressions
 
   (leuven--section "27.9 (emacs)Lisp Eval Expressions")
@@ -9325,7 +9315,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130907.1214]--")
+(message "* --[ Loaded Emacs Leuven 20130908.1452]--")
 
 (provide 'emacs-leuven)
 

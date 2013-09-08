@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-07 Sat 12:14>
+# Time-stamp: <2013-09-08 Sun 14:48>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -8720,6 +8720,9 @@ or =html=)
 
 ** A.3 Adding hyperlink types
 
+For more flexibility, you can use a URL-like syntax which could then export
+conditionally on the output format.
+
 See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 
 #+begin_src emacs-lisp
@@ -9931,22 +9934,6 @@ When you fix a bug in a C function, you have to recompile, relink, and reload
 your program before you can test the fix. You don't do that in Lisp. You make
 the fix and then go straight to testing it. This process can be even faster
 than fixing a bug in a scripting language like Perl.
-
-** Compile your .emacs file
-
-*************** TODO Autocompile .emacs after Org tangle!
-
-#+begin_src emacs-lisp
-  (defun autocompile nil
-    "compile itself if ~/.emacs"
-    (interactive)
-    (require 'bytecomp)
-    (let ((dotemacs (expand-file-name "~/.emacs"))) ;; emacs-leuven.el
-      (if (string= (buffer-file-name) (file-chase-links dotemacs))
-        (byte-compile-file dotemacs))))
-
-  (add-hook 'after-save-hook 'autocompile)
-#+end_src
 
 ** Evaluating Emacs Lisp Expressions
 
