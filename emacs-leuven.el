@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130908.1451
+;; Version: 20130909.1359
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130908.1451]--")
+(message "* --[ Loading Emacs Leuven 20130909.1359]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4237,8 +4237,8 @@ From %c"
   ;; 10.0 restore the window configuration when exiting the agenda
   (setq org-agenda-restore-windows-after-quit t)
 
-  ;; ;; XXX speed up agenda by allowing to turn of some drawer properties
-  ;; (setq org-agenda-ignore-drawer-properties t)
+  ;; speed up agenda by avoiding to update some text properties
+  (setq org-agenda-ignore-drawer-properties '(effort category))
 
 ;;** 10.1 (info "(org)Agenda files")
 
@@ -9315,7 +9315,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130908.1452]--")
+(message "* --[ Loaded Emacs Leuven 20130909.14]--")
 
 (provide 'emacs-leuven)
 
