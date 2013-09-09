@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-09 Mon 13:59>
+# Time-stamp: <2013-09-09 Mon 20:36>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -6014,8 +6014,9 @@ emacsclient -n -e '(make-capture-frame)'
 Use the following for conveniently accessing your data.
 
 #+begin_src emacs-lisp
-  ;; 4.6 shortcut links
-  (add-to-list 'org-link-abbrev-alist '(("att" . org-attach-expand-link)))
+;; bug when C-c C-l
+  ;; ;; 4.6 shortcut links
+  ;; (add-to-list 'org-link-abbrev-alist '(("att" . org-attach-expand-link)))
 #+end_src
 
 Instead of modifying =org-link-abbrev-alist=, you can also use
