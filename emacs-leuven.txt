@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-09 Mon 00:20>
+# Time-stamp: <2013-09-09 Mon 10:55>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -9975,6 +9975,10 @@ or Org specific stuff gets loaded at each startup time.
   ;; major mode command symbol to use for the initial `*scratch*' buffer
   (setq initial-major-mode 'fundamental-mode)
 #+end_src
+
+*That code must be used in the ~.emacs~ file (or libraries loaded from it).*
+Otherwise, =*scratch*= will already have been created, in the default major
+mode.
 
 To evaluate a non-interactive command, simply use =IELM=.
 
