@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130909.2036
+;; Version: 20130911.1056
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130909.2036]--")
+(message "* --[ Loading Emacs Leuven 20130911.1056]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3179,7 +3179,7 @@
               " \u25B7" ;; string
             'org-ellipsis))) ;; face
 
-  ;; <RET> follows links
+  ;; <RET> follows links (except in tables)
   (setq org-return-follows-link t)
 
   ;; blank lines
@@ -9316,7 +9316,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130909.2036]--")
+(message "* --[ Loaded Emacs Leuven 20130911.1057]--")
 
 (provide 'emacs-leuven)
 

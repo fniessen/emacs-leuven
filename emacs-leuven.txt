@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-09 Mon 20:36>
+# Time-stamp: <2013-09-11 Wed 10:55>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -4688,7 +4688,7 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
               " \u25B7" ;; string
             'org-ellipsis))) ;; face
 
-  ;; <RET> follows links
+  ;; <RET> follows links (except in tables)
   (setq org-return-follows-link t)
 
   ;; blank lines
@@ -5764,6 +5764,9 @@ Additional parameters can be included via the commands you use:
 
 - Create a DFRD Item ::
      Create a new "Someday" item.
+
+- Create a Reference Item ::
+     Create a new "Reference" item.
 
 #+begin_src emacs-lisp
     (add-to-list 'org-capture-templates
