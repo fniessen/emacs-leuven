@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130911.1327
+;; Version: 20130911.1547
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130911.1327]--")
+(message "* --[ Loading Emacs Leuven 20130911.1547]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2452,8 +2452,10 @@
   (setq frame-title-format "Emacs") ;; XXX for StumpWM?  Dunno anymore...
 
   (setq frame-title-format
-        (format "Emacs %s pid:%d"
-                emacs-version (emacs-pid)))
+        (format "Emacs %s rev:%s pid:%d"
+                emacs-version
+                (ignore-errors (replace-regexp-in-string " .*" "" emacs-bzr-version))
+                (emacs-pid)))
 
 ;;** 21.6 (info "(emacs)Frame Commands")
 
@@ -9315,7 +9317,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130911.1328]--")
+(message "* --[ Loaded Emacs Leuven 20130911.1548]--")
 
 (provide 'emacs-leuven)
 

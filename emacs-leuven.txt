@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-11 Wed 13:26>
+# Time-stamp: <2013-09-11 Wed 15:47>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -3570,8 +3570,10 @@ one.
   (setq frame-title-format "Emacs") ;; XXX for StumpWM?  Dunno anymore...
 
   (setq frame-title-format
-        (format "Emacs %s pid:%d"
-                emacs-version (emacs-pid)))
+        (format "Emacs %s rev:%s pid:%d"
+                emacs-version
+                (ignore-errors (replace-regexp-in-string " .*" "" emacs-bzr-version))
+                (emacs-pid)))
 #+end_src
 
 ** Frame Commands
