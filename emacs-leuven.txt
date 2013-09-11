@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-11 Wed 15:47>
+# Time-stamp: <2013-09-11 Wed 16:06>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -6427,9 +6427,9 @@ Agenda view: put related tasks together, then by priority.
 
   ;; 10.5 parameters for the clocktable in clockreport mode
   (setq org-agenda-clockreport-parameter-plist
-        '(:link t :maxlevel 3 :fileskip0 t))
-  (setq org-agenda-clockreport-parameter-plist
         '(:link nil :maxlevel 3 :fileskip0 t))
+  (setq org-agenda-clockreport-parameter-plist
+        '(:link t :maxlevel 3 :fileskip0 t))
 
   ;; 10.5 definition of what constitutes a clocking problem (overlapping
   ;; clock entries, clocking gaps)

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130911.1547
+;; Version: 20130911.1606
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130911.1547]--")
+(message "* --[ Loading Emacs Leuven 20130911.1606]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4471,9 +4471,9 @@ From %c"
 
   ;; 10.5 parameters for the clocktable in clockreport mode
   (setq org-agenda-clockreport-parameter-plist
-        '(:link t :maxlevel 3 :fileskip0 t))
-  (setq org-agenda-clockreport-parameter-plist
         '(:link nil :maxlevel 3 :fileskip0 t))
+  (setq org-agenda-clockreport-parameter-plist
+        '(:link t :maxlevel 3 :fileskip0 t))
 
   ;; 10.5 definition of what constitutes a clocking problem (overlapping
   ;; clock entries, clocking gaps)
@@ -9317,7 +9317,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130911.1548]--")
+(message "* --[ Loaded Emacs Leuven 20130911.1607]--")
 
 (provide 'emacs-leuven)
 
