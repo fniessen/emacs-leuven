@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130911.1233
+;; Version: 20130911.1327
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130911.1233]--")
+(message "* --[ Loading Emacs Leuven 20130911.1327]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4687,13 +4687,13 @@ From %c"
 
     ;; show what happened today
     (add-to-list 'org-agenda-custom-commands
-                 '("rL" "Timeline (with clock) for today"
-                   agenda ""
-                   ((org-agenda-clockreport-mode t)
-                    (org-agenda-entry-types '(:timestamp :sexp))
-                    (org-agenda-log-mode-items '(clock closed))
-                    (org-agenda-show-log t)
-                    (org-agenda-span 'day))) t)
+                 '("rL" "Timeline for today"
+                   ((agenda ""
+                            ((org-agenda-clockreport-mode t)
+                             (org-agenda-entry-types '(:timestamp))
+                             (org-agenda-log-mode-items '(clock closed))
+                             (org-agenda-show-log t)
+                             (org-agenda-span 'day))))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("rC" "Clock Review"
@@ -4701,7 +4701,7 @@ From %c"
                             ((org-agenda-clockreport-mode t)
                              (org-agenda-overriding-header "Clocking Review")
                              (org-agenda-show-log 'clockcheck)
-                             (org-agenda-span 'day))) t)))
+                             (org-agenda-span 'day))))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("r$" "Cleanup"
@@ -9315,7 +9315,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130911.1234]--")
+(message "* --[ Loaded Emacs Leuven 20130911.1328]--")
 
 (provide 'emacs-leuven)
 
