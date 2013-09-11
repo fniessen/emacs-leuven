@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-11 Wed 10:55>
+# Time-stamp: <2013-09-11 Wed 12:51>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -6861,12 +6861,11 @@ http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465
 
     (add-to-list 'org-agenda-custom-commands
                  '("rC" "Clock Review"
-                   agenda ""
-                   ((org-agenda-archives-mode t)
-                    (org-agenda-clockreport-mode t)
-                    (org-agenda-overriding-header "Clocking Review")
-                    (org-agenda-show-log 'clockcheck)
-                    (org-agenda-span 'day))) t)
+                   ((agenda ""
+                            ((org-agenda-clockreport-mode t)
+                             (org-agenda-overriding-header "Clocking Review")
+                             (org-agenda-show-log 'clockcheck)
+                             (org-agenda-span 'day))) t)))
 #+end_src
 
 Cleanup:

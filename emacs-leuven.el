@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130911.1056
+;; Version: 20130911.1233
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130911.1056]--")
+(message "* --[ Loading Emacs Leuven 20130911.1233]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4697,12 +4697,11 @@ From %c"
 
     (add-to-list 'org-agenda-custom-commands
                  '("rC" "Clock Review"
-                   agenda ""
-                   ((org-agenda-archives-mode t)
-                    (org-agenda-clockreport-mode t)
-                    (org-agenda-overriding-header "Clocking Review")
-                    (org-agenda-show-log 'clockcheck)
-                    (org-agenda-span 'day))) t)
+                   ((agenda ""
+                            ((org-agenda-clockreport-mode t)
+                             (org-agenda-overriding-header "Clocking Review")
+                             (org-agenda-show-log 'clockcheck)
+                             (org-agenda-span 'day))) t)))
 
     (add-to-list 'org-agenda-custom-commands
                  '("r$" "Cleanup"
@@ -9316,7 +9315,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130911.1057]--")
+(message "* --[ Loaded Emacs Leuven 20130911.1234]--")
 
 (provide 'emacs-leuven)
 
