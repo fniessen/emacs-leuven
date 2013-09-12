@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130911.1606
+;; Version: 20130912.1228
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130911.1606]--")
+(message "* --[ Loading Emacs Leuven 20130912.1228]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4827,7 +4827,7 @@ From %c"
                    agenda ""
                    ((org-agenda-entry-types '(:timestamp :sexp))
                     (org-agenda-overriding-header "Calendar for 7 days")
-                    (org-agenda-repeating-timestamp-show-all t)
+                    ;; (org-agenda-repeating-timestamp-show-all t)
                     (org-agenda-span 'week)
                     (org-agenda-time-grid nil))) t)
 
@@ -7678,28 +7678,6 @@ From %c"
     ;; longitude of `calendar-location-name'
     (setq calendar-longitude 4.70))
 
-  (defun leuven--diary-sunrise () ;; XXX
-    (let ((dss (diary-sunrise-sunset)))
-      (with-temp-buffer
-        (insert dss)
-        (goto-char (point-min))
-        (search-forward ",")
-        (buffer-substring (point-min) (match-beginning 0)))))
-
-  (defun leuven--diary-sunset ()
-    (let ((dss (diary-sunrise-sunset))
-          start end)
-      (with-temp-buffer
-        (insert dss)
-        (goto-char (point-min))
-        (search-forward ", ")
-        (setq start (match-end 0))
-        (search-forward " at")
-        (setq end (match-beginning 0))
-        (goto-char start)
-        (capitalize-word 1)
-        (buffer-substring start end))))
-
 ;;** 31.11 (info "(emacs)Appointments")
 
   (leuven--section "31.11 (emacs)Appointments")
@@ -9317,7 +9295,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130911.1607]--")
+(message "* --[ Loaded Emacs Leuven 20130912.1229]--")
 
 (provide 'emacs-leuven)
 
