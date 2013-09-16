@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-12 Thu 12:17>
+# Time-stamp: <2013-09-16 Mon 21:56>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -776,7 +776,7 @@ are generated programmatically from upstream Git-based sources.
 
   (leuven--section "7.1 (emacs)Inserting Text")
 
-  ;; enter characters by their code in octal (for `C-q xxx <RET>')
+  ;; enter characters by their code in octal (for `C-q NNN <RET>')
   (setq read-quoted-char-radix 8) ;; 16 for hexadecimal (for Unicode char)
 #+end_src
 
@@ -1760,8 +1760,8 @@ screencasts.
   ;; exhaustive log of interactions with Emacs (display keystrokes, etc.)
   (with-eval-after-load "interaction-log"
 
-    ;; maximum number of lines to keep in the *Emacs Log* buffer
-    (setq ilog-log-max 10)
+    ;; ;; maximum number of lines to keep in the *Emacs Log* buffer
+    ;; (setq ilog-log-max 10)
 
     ;; enable logging of keys, commands, file loads and messages
     (interaction-log-mode 1)
@@ -6126,8 +6126,8 @@ the header under which the entry will be placed.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; speed up agenda by avoiding to update some text properties
-  (setq org-agenda-ignore-drawer-properties '(effort category))
+  ;; ;; speed up agenda by avoiding to update some text properties
+  ;; (setq org-agenda-ignore-drawer-properties '(effort category))
 #+end_src
 
 *** Agenda files
@@ -6843,7 +6843,18 @@ Recently done.
       (add-to-list 'org-agenda-custom-commands
                    '("r^" "Calendar for current month"
                      (lambda (&rest ignore)
-                       (cfw:open-org-calendar))) t))
+                       (cfw:open-org-calendar))) t)
+
+      ;; (defun cfw:open-org-calendar-non-work (&args)
+      ;;   (interactive)
+      ;;   (let ((org-agenda-skip-function 'org-agenda-skip-work))
+      ;;     (cfw:open-org-calendar)))
+      ;;
+      ;; (add-to-list 'org-agenda-custom-commands
+      ;;              '("c" "Calendar (non-work) for current month"
+      ;;                cfw:open-org-calendar-non-work) t)
+
+      )
 #+end_src
 
 =org-timeline= has weaknesses and although not officially deprecated, should be
@@ -8066,6 +8077,18 @@ Literate programming and reproducible research.
     ;; make the images in the Emacs buffer automatically refresh after
     ;; execution
     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
+#+end_src
+
+#+begin_src emacs-lisp
+    (defadvice org-babel-next-src-block
+      (after leuven-org-babel-next-src-block activate)
+      "Recenter after jumping to the next source block."
+      (recenter))
+
+    (defadvice org-babel-previous-src-block
+      (after leuven-org-babel-previous-src-block activate)
+      "Recenter after jumping to the previous source block."
+      (recenter))
 #+end_src
 
 #+begin_src emacs-lisp

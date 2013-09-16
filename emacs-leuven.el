@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130912.1228
+;; Version: 20130916.2157
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130912.1228]--")
+(message "* --[ Loading Emacs Leuven 20130916.2157]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -618,7 +618,7 @@
 
   (leuven--section "7.1 (emacs)Inserting Text")
 
-  ;; enter characters by their code in octal (for `C-q xxx <RET>')
+  ;; enter characters by their code in octal (for `C-q NNN <RET>')
   (setq read-quoted-char-radix 8) ;; 16 for hexadecimal (for Unicode char)
 
 ;;** 7.2 (info "(emacs)Moving Point") Location
@@ -1238,8 +1238,8 @@
   ;; exhaustive log of interactions with Emacs (display keystrokes, etc.)
   (with-eval-after-load "interaction-log"
 
-    ;; maximum number of lines to keep in the *Emacs Log* buffer
-    (setq ilog-log-max 10)
+    ;; ;; maximum number of lines to keep in the *Emacs Log* buffer
+    ;; (setq ilog-log-max 10)
 
     ;; enable logging of keys, commands, file loads and messages
     (interaction-log-mode 1)
@@ -4240,8 +4240,8 @@ From %c"
   ;; 10.0 restore the window configuration when exiting the agenda
   (setq org-agenda-restore-windows-after-quit t)
 
-  ;; speed up agenda by avoiding to update some text properties
-  (setq org-agenda-ignore-drawer-properties '(effort category))
+  ;; ;; speed up agenda by avoiding to update some text properties
+  ;; (setq org-agenda-ignore-drawer-properties '(effort category))
 
 ;;** 10.1 (info "(org)Agenda files")
 
@@ -4685,7 +4685,18 @@ From %c"
       (add-to-list 'org-agenda-custom-commands
                    '("r^" "Calendar for current month"
                      (lambda (&rest ignore)
-                       (cfw:open-org-calendar))) t))
+                       (cfw:open-org-calendar))) t)
+
+      ;; (defun cfw:open-org-calendar-non-work (&args)
+      ;;   (interactive)
+      ;;   (let ((org-agenda-skip-function 'org-agenda-skip-work))
+      ;;     (cfw:open-org-calendar)))
+      ;;
+      ;; (add-to-list 'org-agenda-custom-commands
+      ;;              '("c" "Calendar (non-work) for current month"
+      ;;                cfw:open-org-calendar-non-work) t)
+
+      )
 
     ;; show what happened today
     (add-to-list 'org-agenda-custom-commands
@@ -5625,6 +5636,16 @@ From %c"
     ;; make the images in the Emacs buffer automatically refresh after
     ;; execution
     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
+
+    (defadvice org-babel-next-src-block
+      (after leuven-org-babel-next-src-block activate)
+      "Recenter after jumping to the next source block."
+      (recenter))
+
+    (defadvice org-babel-previous-src-block
+      (after leuven-org-babel-previous-src-block activate)
+      "Recenter after jumping to the previous source block."
+      (recenter))
 
   (with-eval-after-load "ob-sh"
 
@@ -9295,7 +9316,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130912.1229]--")
+(message "* --[ Loaded Emacs Leuven 20130916.2158]--")
 
 (provide 'emacs-leuven)
 
