@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130918.1102
+;; Version: 20130918.1116
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130918.1102]--")
+(message "* --[ Loading Emacs Leuven 20130918.1116]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5291,7 +5291,8 @@ From %c"
         (interactive)
         (if (fboundp 'org-export-dispatch)
             (org-export-dispatch)
-          (message "Please upgrade to Org 8...")
+          (message (concat "This version of Org mode is no longer supported. "
+                           "Please upgrade to 8 or later"))
           (sit-for 1.5)))))
 
 ;;** 12.2 (info "(org)Export options")
@@ -9310,7 +9311,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130918.1103]--")
+(message "* --[ Loaded Emacs Leuven 20130918.1117]--")
 
 (provide 'emacs-leuven)
 

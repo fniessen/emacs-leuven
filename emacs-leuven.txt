@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-18 Wed 11:02>
+# Time-stamp: <2013-09-18 Wed 11:16>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -654,7 +654,8 @@ Though, it does load the full Org mode right from the start...
              (sit-for 1.5))))
 
 (unless (string-match "^8" (org-version))
-  (message "Please upgrade to Org 8...")
+  (message (concat "This version of Org mode is no longer supported. "
+                   "Please upgrade to 8 or later"))
   (sit-for 1.5))
 #+end_src
 
@@ -7640,7 +7641,8 @@ To list all available entities, run =M-x org-entities-help=.
         (interactive)
         (if (fboundp 'org-export-dispatch)
             (org-export-dispatch)
-          (message "Please upgrade to Org 8...")
+          (message (concat "This version of Org mode is no longer supported. "
+                           "Please upgrade to 8 or later"))
           (sit-for 1.5)))))
 #+end_src
 
