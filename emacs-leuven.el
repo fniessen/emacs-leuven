@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130916.2157
+;; Version: 20130918.1002
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130916.2157]--")
+(message "* --[ Loading Emacs Leuven 20130918.1002]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1363,12 +1363,6 @@
 ;;* 16 Commands for (info "(emacs)Fixit") Typos
 
 (leuven--chapter leuven-chapter-16-fixit "16 Commands for Fixing Typos"
-
-   ;; ;; load flyspell-guess every time you start Emacs.
-   ;; (require 'flyspell-guess)
-   ;;
-   ;; (with-eval-after-load "flyspell-guess"
-   ;;   (flyspell-insinuate-guess-indicator))
 
 ;;** 16.4 Checking and Correcting (info "(emacs)Spelling")
 
@@ -5369,10 +5363,10 @@ From %c"
           "  <div id=\"copyright\">\n    &copy; %d %a\n  </div>")
 
     ;; 13.1.5 don't include the JavaScript snippets in exported HTML files
-    (setq org-html-style-include-scripts nil)
+    (setq org-html-head-include-scripts nil)
 
     ;; 12.5.9 turn inclusion of the default CSS style off
-    (setq org-html-style-include-default nil)
+    (setq org-html-head-include-default-style nil)
 
     ;; check that `tidy' is in PATH, and that configuration file exists
     (when (and (executable-find "tidy")
@@ -9316,7 +9310,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130916.2158]--")
+(message "* --[ Loaded Emacs Leuven 20130918.1003]--")
 
 (provide 'emacs-leuven)
 

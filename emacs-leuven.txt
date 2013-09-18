@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-16 Mon 21:56>
+# Time-stamp: <2013-09-18 Wed 10:02>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -2006,16 +2006,6 @@ Have a look at [[https://github.com/rolandwalker/flyspell-lazy][Flyspell-lazy]]?
 
 When spellchecking a buffer, the =A= command accepts an incorrect word, and adds
 it to the *file word list* (=ispell-add-per-file-word-list=).
-
-
-#+begin_src emacs-lisp
-   ;; ;; load flyspell-guess every time you start Emacs.
-   ;; (require 'flyspell-guess)
-   ;;
-   ;; (with-eval-after-load "flyspell-guess"
-   ;;   (flyspell-insinuate-guess-indicator))
-#+end_src
-
 
 #+begin_src emacs-lisp
 ;;** 16.4 Checking and Correcting (info "(emacs)Spelling")
@@ -7712,10 +7702,10 @@ org-export-htmlize-generate-css= to extract class definitions.
           "  <div id=\"copyright\">\n    &copy; %d %a\n  </div>")
 
     ;; 13.1.5 don't include the JavaScript snippets in exported HTML files
-    (setq org-html-style-include-scripts nil)
+    (setq org-html-head-include-scripts nil)
 
     ;; 12.5.9 turn inclusion of the default CSS style off
-    (setq org-html-style-include-default nil)
+    (setq org-html-head-include-default-style nil)
 #+end_src
 
 [[http://tidy.sourceforge.net/][HTML Tidy]] is a HTML linter. Please see [[http://www.htmlpedia.org/wiki/HTML_Tidy][List of the Tidy errors]].
