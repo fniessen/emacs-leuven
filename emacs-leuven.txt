@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-18 Wed 10:02>
+# Time-stamp: <2013-09-18 Wed 11:02>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -633,6 +633,29 @@ are generated programmatically from upstream Git-based sources.
 
 #+begin_src emacs-lisp
 ) ;; chapter 47 ends here
+#+end_src
+
+** Check Org mode version
+
+The following block checks for the Org mode version, and warns the user if not
+equal to 8 or more.
+
+Though, it does load the full Org mode right from the start...
+
+#+begin_src emacs-lisp :tangle no
+;; version info
+(let ((org-install-dir (file-name-directory (locate-library "org-loaddefs")))
+      (org-dir (file-name-directory (locate-library "org")))) ;; org.(el|elc)
+  (message "Org mode version %s (org @ %s)"
+           (org-version)
+           (if (string= org-dir org-install-dir)
+               org-install-dir
+             (concat "mixed installation! " org-install-dir " and " org-dir)
+             (sit-for 1.5))))
+
+(unless (string-match "^8" (org-version))
+  (message "Please upgrade to Org 8...")
+  (sit-for 1.5))
 #+end_src
 
 * Debugging
@@ -7618,7 +7641,7 @@ To list all available entities, run =M-x org-entities-help=.
         (if (fboundp 'org-export-dispatch)
             (org-export-dispatch)
           (message "Please upgrade to Org 8...")
-          (sit-for 1)))))
+          (sit-for 1.5)))))
 #+end_src
 
 *** Export options
