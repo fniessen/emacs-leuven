@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130918.1116
+;; Version: 20130918.12
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130918.1116]--")
+(message "* --[ Loading Emacs Leuven 20130918.12]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -452,8 +452,7 @@
 
       ;; load the latest version of all installed packages,
       ;; and activate them (= add to `load-path' and load `XXX-autoloads.el'?)
-      (package-initialize) ;; automatically called by Emacs 24 AFTER the init.el
-                           ;; is loaded???
+      (package-initialize)
 
       (defcustom leuven-packages
         '(auctex
@@ -1436,6 +1435,18 @@
        (setq ispell-really-aspell nil)
        (setq ispell-really-hunspell nil)))
 
+     (add-to-list 'mode-line-format
+                  '(:eval
+                    (let ((dict (and (featurep 'ispell)
+                                     (or ispell-local-dictionary
+                                         ispell-dictionary))))
+                      (and dict
+                           (concat " ["
+                                   (propertize (substring dict 0 2)
+                                               'face 'mode-line-shadow)
+                                   "]"))))
+                  t)
+
      )
 
     ;; don't use `M-TAB' to auto-correct the current word (only use `C-.')
@@ -1455,9 +1466,9 @@
      ;; fix the "enabling flyspell mode gave an error" bug
      (setq flyspell-issue-welcome-flag nil)
 
-     ;; ;; don't print messages for every word (when checking the
-     ;; ;; entire buffer) as it causes an enormous slowdown
-     ;; (setq flyspell-issue-message-flag nil)
+     ;; don't print messages for every word (when checking the entire buffer)
+     ;; as it causes an enormous slowdown
+     (setq flyspell-issue-message-flag nil)
 
      ;; dash character (`-') is considered as a word delimiter
      (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
@@ -1468,7 +1479,7 @@
      (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)
 
      (defun leuven-flyspell-toggle-dictionary ()
-       "Change the dictionary."
+       "Toggle the local dictionary between French and US English."
        (interactive)
        (let ((dict (or ispell-local-dictionary
                        ispell-dictionary)))
@@ -1476,6 +1487,7 @@
          (message "Switched to %S" dict)
          (sit-for 0.5)
          (ispell-change-dictionary dict)
+         (force-mode-line-update)
          (when flyspell-mode
            ;; (flyspell-delete-all-overlays)
            ;; if above is executed, the advised `org-mode-flyspell-verify'
@@ -4187,6 +4199,12 @@ From %c"
         nil)
       "List of extra files to be used as targets for refile commands.")
 
+    (setq org-refile-targets
+          `((nil
+             :maxlevel . 8) ;; current file
+            (,(append org-agenda-files leuven-org-refile-extra-files)
+             :maxlevel . 4)))
+
     ;; cache refile targets to speed up the process
     (setq org-refile-use-cache t)
 
@@ -4244,13 +4262,7 @@ From %c"
   (when (boundp 'org-agenda-files)
     (message "(info) Found %s entries in `org-agenda-files'"
              (length org-agenda-files))
-    (sit-for 0.5)
-
-    (setq org-refile-targets
-          `((nil
-             :maxlevel . 8) ;; current file
-            (,(append org-agenda-files leuven-org-refile-extra-files)
-             :maxlevel . 4))))
+    (sit-for 0.5))
 
 ;;** 10.2 (info "(org)Agenda dispatcher")
 
@@ -9311,7 +9323,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130918.1117]--")
+(message "* --[ Loaded Emacs Leuven 20130918.12]--")
 
 (provide 'emacs-leuven)
 
