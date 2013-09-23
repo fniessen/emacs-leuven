@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-18 Wed 13:42>
+# Time-stamp: <2013-09-23 Mon 15:01>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -4045,7 +4045,7 @@ See =sentence-end= and =(sentence-end)=.
   (leuven--section "25.5 (emacs)Filling Text")
 
   ;; line-wrapping beyond that column (when pressing `M-q')
-  (setq-default fill-column 78)
+  (setq-default fill-column 79)
 
   ;; ;; `M-q' runs the command `fill-paragraph'. `C-u M-q' runs
   ;; ;; "unfill-paragraph"
@@ -5285,7 +5285,8 @@ something best implemented with tags.
 #+begin_src emacs-lisp
 ;;* 6 (info "(org)Tags")
 
-  (setq org-tags-column -78)
+  ;; column to which tags should be indented in a headline
+  (setq org-tags-column -79)
 
   ;; 6.2 list of tags ("contexts") allowed in Org mode files
   (setq org-tag-alist '((:startgroup . nil)
@@ -13829,7 +13830,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
     (setq lui-max-buffer-size 30000)
 
     ;; column at which Lui should break output
-    (setq lui-fill-column 78)
+    (setq lui-fill-column 79)
 
     ) ;; eval-after-load "circe" ends here
 #+end_src
