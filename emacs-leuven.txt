@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-23 Mon 15:01>
+# Time-stamp: <2013-09-23 Mon 15:11>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -7943,6 +7943,13 @@ is not necessary to rebuild index and/or bibliography.
     (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
 #+end_src
 
+Add UTF-8 non-breaking space to export properly to LaTeX.
+
+#+begin_src emacs-lisp
+(add-to-list 'org-latex-packages-alist
+             "\\ifdefined\\DeclareUnicodeCharacter{\\DeclareUnicodeCharacter{00A0}{~}}\\fi")
+#+end_src
+
 The exporter will *add* a language option to the =babel= package according to the
 =#+LANGUAGE:= keyword (only) if:
 
@@ -8038,7 +8045,6 @@ What about =apacite= and =tikz= in =org-latex-packages-alist=?
 [PACKAGES]
 % extra (#+LaTeX_HEADER: lines) --------
 [EXTRA]
-\\ifdefined\\DeclareUnicodeCharacter{\\DeclareUnicodeCharacter{00A0}{~}}\\fi
 % end of `org-latex-classes' -------------------------------------------------"
               ("\\section{%s}" . "\\section*{%s}")
               ("\\subsection{%s}" . "\\subsection*{%s}")

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130920.1059
+;; Version: 20130923.1513
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130920.1059]--")
+(message "* --[ Loading Emacs Leuven 20130923.1513]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2711,7 +2711,7 @@
   (leuven--section "25.5 (emacs)Filling Text")
 
   ;; line-wrapping beyond that column (when pressing `M-q')
-  (setq-default fill-column 78)
+  (setq-default fill-column 79)
 
   ;; ;; `M-q' runs the command `fill-paragraph'. `C-u M-q' runs
   ;; ;; "unfill-paragraph"
@@ -3619,7 +3619,8 @@
 
 ;;* 6 (info "(org)Tags")
 
-  (setq org-tags-column -78)
+  ;; column to which tags should be indented in a headline
+  (setq org-tags-column -79)
 
   ;; 6.2 list of tags ("contexts") allowed in Org mode files
   (setq org-tag-alist '((:startgroup . nil)
@@ -5530,6 +5531,9 @@ From %c"
     ;; include the `xcolor' package for colored source code
     (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
 
+(add-to-list 'org-latex-packages-alist
+             "\\ifdefined\\DeclareUnicodeCharacter{\\DeclareUnicodeCharacter{00A0}{~}}\\fi")
+
     ;; include the `babel' package for language-specific hyphenation and
     ;; typography
     (add-to-list 'org-latex-packages-alist '("frenchb" "babel") t)
@@ -5604,7 +5608,6 @@ From %c"
 [PACKAGES]
 % extra (#+LaTeX_HEADER: lines) --------
 [EXTRA]
-\\ifdefined\\DeclareUnicodeCharacter{\\DeclareUnicodeCharacter{00A0}{~}}\\fi
 % end of `org-latex-classes' -------------------------------------------------"
               ("\\section{%s}" . "\\section*{%s}")
               ("\\subsection{%s}" . "\\subsection*{%s}")
@@ -9323,7 +9326,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130920.11]--")
+(message "* --[ Loaded Emacs Leuven 20130923.1514]--")
 
 (provide 'emacs-leuven)
 
