@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130923.1513
+;; Version: 20130924.1323
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130923.1513]--")
+(message "* --[ Loading Emacs Leuven 20130924.1323]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1402,20 +1402,16 @@
     ;; ;; if there is no local dictionary to use in the buffer)
     ;; (setq ispell-dictionary "american")
 
-    ;; enable on-the-fly spell checking when changing a buffer which was
-    ;; unmodified
-    (add-hook 'first-change-hook
+    ;; enable on-the-fly spell checking
+    (add-hook 'text-mode-hook
               (lambda ()
-                ;; skip temporary buffers
-                ;; (XXX another test could be skipping buffers not associated with a file)
-                (unless (eq (aref (buffer-name) 0) ?\s) ;; buffer starts with " "
-                  (cond ((derived-mode-p 'text-mode) ;; org-mode
-                         (flyspell-mode 1))
-                        ((derived-mode-p 'prog-mode)
-                         (flyspell-prog-mode)) ;; `ispell-comments-and-strings'
-                        ;; prevent flyspell from finding mistakes in the code,
-                        ;; which is pretty cool
-                        ))))
+                (flyspell-mode 1)))
+
+    ;; prevent flyspell from finding mistakes in the code, which is pretty cool
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                ;; `ispell-comments-and-strings'
+                (flyspell-prog-mode)))
 
     (with-eval-after-load "ispell"
 
@@ -9014,8 +9010,6 @@ From %c"
           (flyspell-mode . -1)
           (flyspell-mode . 1)
           (ispell-local-dictionary . "american")
-          (ispell-local-dictionary . "en_US")
-          (ispell-local-dictionary . "fr_FR")
           (ispell-local-dictionary . "francais")
           (ispell-mode . t)
           (org-tags-column . -80)))
@@ -9326,7 +9320,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130923.1514]--")
+(message "* --[ Loaded Emacs Leuven 20130924.1324]--")
 
 (provide 'emacs-leuven)
 

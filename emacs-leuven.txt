@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-23 Mon 15:11>
+# Time-stamp: <2013-09-24 Tue 13:23>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -1896,7 +1896,7 @@ Optimize regexps with =regexp-opt.el=.
     (kbd "C-M-r") 'isearch-backward)
 #+end_src
 
-*** IELM                                                            :noexport:
+*** IELM                                                             :noexport:
 
 In IELM, list the input line, followed by the first nine substrings matches,
 to debug regexp searches (in IELM)
@@ -2070,20 +2070,16 @@ it to the *file word list* (=ispell-add-per-file-word-list=).
     ;; ;; if there is no local dictionary to use in the buffer)
     ;; (setq ispell-dictionary "american")
 
-    ;; enable on-the-fly spell checking when changing a buffer which was
-    ;; unmodified
-    (add-hook 'first-change-hook
+    ;; enable on-the-fly spell checking
+    (add-hook 'text-mode-hook
               (lambda ()
-                ;; skip temporary buffers
-                ;; (XXX another test could be skipping buffers not associated with a file)
-                (unless (eq (aref (buffer-name) 0) ?\s) ;; buffer starts with " "
-                  (cond ((derived-mode-p 'text-mode) ;; org-mode
-                         (flyspell-mode 1))
-                        ((derived-mode-p 'prog-mode)
-                         (flyspell-prog-mode)) ;; `ispell-comments-and-strings'
-                        ;; prevent flyspell from finding mistakes in the code,
-                        ;; which is pretty cool
-                        ))))
+                (flyspell-mode 1)))
+
+    ;; prevent flyspell from finding mistakes in the code, which is pretty cool
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                ;; `ispell-comments-and-strings'
+                (flyspell-prog-mode)))
 
     (with-eval-after-load "ispell"
 
@@ -2122,56 +2118,6 @@ Use the =-C= option which will ConsiderCamelCaseToBeCorrect.
        (setq ispell-extra-args '())
        (setq ispell-really-aspell nil)
        (setq ispell-really-hunspell nil)))
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-     ;; redefine the list of installed dictionaries
-     ;; customize to ("-B" "-d" "spanish") or ("-C" "-d" "dutch") if
-     ;; aliases are needed for the file names
-     ;; FIXME This variable is reset once latter in this .emacs
-     ;; file!!!
-     (setq ispell-local-dictionary-alist
-           ;; dictionaries not in that list will result in "undefined dictionary"
-           '((nil ;; default
-              "[[:alpha:]]"
-              "[^[:alpha:]]"
-              "[']" nil ("-B") nil iso-8859-1) ;; or utf-8?
-              ;; otherchars, many-otherchars-p, ispell-args, character-set
-
-             ("en_US" ;; Yankee English
-              "[[:alpha:]]"
-              "[^[:alpha:]]"
-              "[']" nil ("-B") nil utf-8)))
-
-     ;; standard French
-     (when (or
-            (locate-file "fr_FR" '("/usr/lib/aspell"))
-            (locate-file "francais.alias" '("/usr/lib/aspell"))
-            (locate-file "francais.alias" `(,(concat windows-program-files-dir "Aspell/dict"))))
-       (add-to-list 'ispell-local-dictionary-alist
-                    '("fr_FR"
-                      "[[:alpha:]àâäéèêëîïôöùûüçÀÂÄÉÈÊËÎÏÔÖÙÛÜÇ]"
-                      "[^[:alpha:]àâäéèêëîïôöùûüçÀÂÄÉÈÊËÎÏÔÖÙÛÜÇ]"
-                      "[-']" t nil "~list" iso-8859-1)
-                    'append))
-
-     ;; Spanish (español)
-     (when (locate-file "es_ES" '("/usr/lib/aspell"))
-       (add-to-list 'ispell-local-dictionary-alist
-                    '("es_ES"
-                      "[[:alpha:]ñáàéèíìóòúùüÑÁÀÉÈÍÌÓÒÚÙÜ]"
-                      "[^[:alpha:]ñáàéèíìóòúùüÑÁÀÉÈÍÌÓÒÚÙÜ]"
-                      "[-]" nil ("-B") "~tex" iso-8859-1)
-                    'append))
-
-     ;; Dutch (Nederlands)
-     (when (locate-file "nl_NL" '("/usr/lib/aspell"))
-       (add-to-list 'ispell-local-dictionary-alist
-                    '("nl_NL"
-                      "[[:alpha:]àâçëîïôùûüÀÂÇËÎÏÔÙÛÜ]"
-                      "[^[:alpha:]àâçëîïôùûüÀÂÇËÎÏÔÙÛÜ]"
-                      "[']" t ("-C") nil iso-8859-1)
-                    'append))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -2753,7 +2699,7 @@ corresponding files in the other directory.
 Using the Emacs Dired utility, you can compress or uncompress a file by
 pressing =Z=.
 
-*** On Windows                                                      :noexport:
+*** On Windows                                                       :noexport:
 
 On Windows, if you are trying to use =gunzip= to uncompress a file under Dired,
 you will probably encounter errors.
@@ -3768,17 +3714,17 @@ mail buffer) under "Important settings" when you type
 =M-x report-emacs-bug <RET> foo <RET>=:
 
 *Important settings*:
-- value of $LC_ALL: nil
-- value of $LC_COLLATE: nil
-- value of $LC_CTYPE: nil
-- value of $LC_MESSAGES: nil
-- value of $LC_MONETARY: nil
-- value of $LC_NUMERIC: nil
-- value of $LC_TIME: nil
-- value of $LANG: en_US.UTF-8
-- value of $XMODIFIERS: nil
-- locale-coding-system: utf-8-unix
-- default-enable-multibyte-characters: t
+- value of =$LC_ALL=: =nil=
+- value of =$LC_COLLATE=: =nil=
+- value of =$LC_CTYPE=: =nil=
+- value of =$LC_MESSAGES=: =nil=
+- value of =$LC_MONETARY=: =nil=
+- value of =$LC_NUMERIC=: =nil=
+- value of =$LC_TIME=: =nil=
+- value of =$LANG=: =en_US.UTF-8=
+- value of =$XMODIFIERS=: =nil=
+- =locale-coding-system=: =utf-8-unix=
+- =default-enable-multibyte-characters=: =t=
 
 ** Language Environments
 
@@ -8070,7 +8016,7 @@ add it to =org-export-backends=.
 
 Publish related Org mode files as a website.
 
-*************** Publishing                                           :warning:
+*************** Publishing                                            :warning:
 It can be used for generating different PDF files from the same source file...
 See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-9-2][9.2 The Multiple Export Case]].
 *************** END
@@ -9932,7 +9878,7 @@ are somehow more user-friendly than the =M-x grep= command.
     ;; the only important parameter for GDB
 #+end_src
 
-*** Debugging Mercury programs                                      :noexport:
+*** Debugging Mercury programs                                       :noexport:
 
 1. Put these lines in your ~.emacs~ file:
 
@@ -13293,8 +13239,6 @@ particular color...
           (flyspell-mode . -1)
           (flyspell-mode . 1)
           (ispell-local-dictionary . "american")
-          (ispell-local-dictionary . "en_US")
-          (ispell-local-dictionary . "fr_FR")
           (ispell-local-dictionary . "francais")
           (ispell-mode . t)
           (org-tags-column . -80)))
