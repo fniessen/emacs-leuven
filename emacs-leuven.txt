@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-24 Tue 13:58>
+# Time-stamp: <2013-09-24 Tue 14:31>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -2174,9 +2174,9 @@ previously detected error.
      ;; fix the "enabling flyspell mode gave an error" bug
      (setq flyspell-issue-welcome-flag nil)
 
-     ;; don't print messages for every word (when checking the entire buffer)
-     ;; as it causes an enormous slowdown
-     (setq flyspell-issue-message-flag nil)
+     ;; ;; don't print messages for every word (when checking the entire buffer)
+     ;; ;; as it causes a (small) slowdown
+     ;; (setq flyspell-issue-message-flag nil)
 
      ;; dash character (`-') is considered as a word delimiter
      (setq-default flyspell-consider-dash-as-word-delimiter-flag t)

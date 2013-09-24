@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130924.1358
+;; Version: 20130924.1431
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130924.1358]--")
+(message "* --[ Loading Emacs Leuven 20130924.1431]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1462,9 +1462,9 @@
      ;; fix the "enabling flyspell mode gave an error" bug
      (setq flyspell-issue-welcome-flag nil)
 
-     ;; don't print messages for every word (when checking the entire buffer)
-     ;; as it causes an enormous slowdown
-     (setq flyspell-issue-message-flag nil)
+     ;; ;; don't print messages for every word (when checking the entire buffer)
+     ;; ;; as it causes a (small) slowdown
+     ;; (setq flyspell-issue-message-flag nil)
 
      ;; dash character (`-') is considered as a word delimiter
      (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
@@ -9325,7 +9325,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130924.1359]--")
+(message "* --[ Loaded Emacs Leuven 20130924.1432]--")
 
 (provide 'emacs-leuven)
 
