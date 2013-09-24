@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-24 Tue 13:23>
+# Time-stamp: <2013-09-24 Tue 13:58>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -8776,12 +8776,17 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
   (add-hook 'before-save-hook
             (lambda ()
               (when (eq major-mode 'org-mode)
-                (org-align-all-tags)
-                (org-update-all-dblocks)
-                (when (fboundp 'org-table-iterate-buffer-tables)
-                  (org-table-iterate-buffer-tables))
-                (when (file-exists-p (buffer-file-name (current-buffer)))
-                  (leuven--org-remove-redundant-tags)))))
+                (let ((flyspell-mode-before-save flyspell-mode))
+                  (flyspell-mode -1)    ; temporarily disable Flyspell to avoid
+                                        ; checking the following modifications
+                                        ; of the buffer
+                  (org-align-all-tags)
+                  (org-update-all-dblocks)
+                  (when (fboundp 'org-table-iterate-buffer-tables)
+                    (org-table-iterate-buffer-tables))
+                  (when (file-exists-p (buffer-file-name (current-buffer)))
+                    (leuven--org-remove-redundant-tags))
+                  (when flyspell-mode-before-save (flyspell-mode 1))))))
 #+end_src
 
 ** Org-contrib

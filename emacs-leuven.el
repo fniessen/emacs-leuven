@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130924.1323
+;; Version: 20130924.1358
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130924.1323]--")
+(message "* --[ Loading Emacs Leuven 20130924.1358]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6089,12 +6089,17 @@ From %c"
   (add-hook 'before-save-hook
             (lambda ()
               (when (eq major-mode 'org-mode)
-                (org-align-all-tags)
-                (org-update-all-dblocks)
-                (when (fboundp 'org-table-iterate-buffer-tables)
-                  (org-table-iterate-buffer-tables))
-                (when (file-exists-p (buffer-file-name (current-buffer)))
-                  (leuven--org-remove-redundant-tags)))))
+                (let ((flyspell-mode-before-save flyspell-mode))
+                  (flyspell-mode -1)    ; temporarily disable Flyspell to avoid
+                                        ; checking the following modifications
+                                        ; of the buffer
+                  (org-align-all-tags)
+                  (org-update-all-dblocks)
+                  (when (fboundp 'org-table-iterate-buffer-tables)
+                    (org-table-iterate-buffer-tables))
+                  (when (file-exists-p (buffer-file-name (current-buffer)))
+                    (leuven--org-remove-redundant-tags))
+                  (when flyspell-mode-before-save (flyspell-mode 1))))))
 
   (GNUEmacs
     ;; add weather forecast in your Org agenda
@@ -9320,7 +9325,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130924.1324]--")
+(message "* --[ Loaded Emacs Leuven 20130924.1359]--")
 
 (provide 'emacs-leuven)
 
