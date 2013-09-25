@@ -59,40 +59,41 @@
 
 (message "* Load Gnus Leuven")
 
-(defvar lvn/section-starting-gnus t)        ;; required
-(defvar lvn/section-group-buffer nil)
-(defvar lvn/section-summary-buffer nil)
-(defvar lvn/section-article-buffer nil)
-(defvar lvn/section-composing-messages t)   ;; required
-(defvar lvn/section-message t)              ;; required
-(defvar lvn/section-select-methods nil)
-(defvar lvn/section-scoring nil)
-(defvar lvn/section-various nil)
-(defvar lvn/section-appendices nil)
+(defvar leuven-section-starting-gnus t) ; required
+(defvar leuven-section-group-buffer nil)
+(defvar leuven-section-summary-buffer nil)
+(defvar leuven-section-article-buffer nil)
+(defvar leuven-section-composing-messages t)
+                                        ; required
+(defvar leuven-section-message t)       ; required
+(defvar leuven-section-select-methods nil)
+(defvar leuven-section-scoring nil)
+(defvar leuven-section-various nil)
+(defvar leuven-section-appendices nil)
 
-(setq lvn/section-group-buffer t)
-(setq lvn/section-summary-buffer t)
-(setq lvn/section-article-buffer t)
-(setq lvn/section-select-methods t)
-(setq lvn/section-scoring t)
-(setq lvn/section-various t)
-(setq lvn/section-appendices t)
+(setq leuven-section-group-buffer t)
+(setq leuven-section-summary-buffer t)
+(setq leuven-section-article-buffer t)
+(setq leuven-section-select-methods t)
+(setq leuven-section-scoring t)
+(setq leuven-section-various t)
+(setq leuven-section-appendices t)
 
 ;;* Loading
 
 ;; list of packages that `try-require' can't find
-(setq missing-packages-list nil)
+(setq leuven--missing-packages nil)
 
 ;;* 1 (info "(gnus)Starting Up") Gnus
 
-(when lvn/section-starting-gnus
+(when leuven-section-starting-gnus
       (message "1 Starting Gnus...")
 
       ;; support for `.authinfo' file
       (when (try-require 'auth-source)
 
         ;; `.netrc'-like file that holds authinfo passwords
-        (defvar lvn/authinfo-file
+        (defvar leuven-authinfo-file
               (if (file-exists-p "~/.hide/.authinfo.gpg")
                   "~/.hide/.authinfo.gpg"
                   ;; if you're running a recent Emacs, look into the EPA
@@ -105,7 +106,7 @@
         ;; for any host and any protocol, use just that one file that holds
         ;; passwords
         (setq auth-sources
-              `((:source ,lvn/authinfo-file :host t :protocol t)))
+              `((:source ,leuven-authinfo-file :host t :protocol t)))
 
         ;; log debug messages
         (setq auth-source-debug t))
@@ -190,34 +191,34 @@
 
 ;;* 2 (info "(gnus)The Group Buffer")
 
-(when lvn/section-group-buffer
+(when leuven-section-group-buffer
       (message "2 Group Buffer...")
 
 ;;** 2.1 (info "(gnus)Group Buffer Format")
 
       ;; create some faces
-      (defface lvn/gnus-ticked-face '((t (:weight bold :foreground "#CF5D60")))
+      (defface leuven-gnus-ticked-face '((t (:weight bold :foreground "#CF5D60")))
         "Face for count of ticked articles.")
-      (defface lvn/gnus-unseen-face '((t (:weight bold :foreground "blue")))
+      (defface leuven-gnus-unseen-face '((t (:weight bold :foreground "blue")))
         "Face for marker of new mail, and count of unseen articles.")
-      (defface lvn/gnus-unread-face '((t (:weight bold :foreground "black")))
+      (defface leuven-gnus-unread-face '((t (:weight bold :foreground "black")))
         "Face for count of unread articles.")
-      (defface lvn/gnus-linum '((t (:foreground "#AFB7BA")))
+      (defface leuven-gnus-linum '((t (:foreground "#AFB7BA")))
         "Face for markers in summary buffer.")
-      (defface lvn/gnus-score '((t (:weight bold :foreground "#2B7E2A" :background "#CCFFCC")))
+      (defface leuven-gnus-score '((t (:weight bold :foreground "#2B7E2A" :background "#CCFFCC")))
         "Face for scoring marker in summary buffer.")
-      (defface lvn/gnus-diredp-file-suffix '((t (:foreground "#2EAE2C")))
+      (defface leuven-gnus-diredp-file-suffix '((t (:foreground "#2EAE2C")))
         "Face for size of article in summary buffer.")
-      (defface lvn/gnus-org-date '((t (:foreground "purple")))
+      (defface leuven-gnus-org-date '((t (:foreground "purple")))
         "Face for date in summary buffer.")
 
-      (setq gnus-face-1 'lvn/gnus-ticked-face)
-      (setq gnus-face-3 'lvn/gnus-unseen-face)
-      (setq gnus-face-4 'lvn/gnus-unread-face)
-      (setq gnus-face-5 'lvn/gnus-linum)
-      (setq gnus-face-6 'lvn/gnus-score)
-      (setq gnus-face-7 'lvn/gnus-diredp-file-suffix)
-      (setq gnus-face-8 'lvn/gnus-org-date)
+      (setq gnus-face-1 'leuven-gnus-ticked-face)
+      (setq gnus-face-3 'leuven-gnus-unseen-face)
+      (setq gnus-face-4 'leuven-gnus-unread-face)
+      (setq gnus-face-5 'leuven-gnus-linum)
+      (setq gnus-face-6 'leuven-gnus-score)
+      (setq gnus-face-7 'leuven-gnus-diredp-file-suffix)
+      (setq gnus-face-8 'leuven-gnus-org-date)
 
       (defun gnus-user-format-function-y (headers)
         "Return string for count of unread articles."
@@ -311,7 +312,7 @@
 
 ;;* 3 (info "(gnus)The Summary Buffer")
 
-(when lvn/section-summary-buffer
+(when leuven-section-summary-buffer
       (message "3 Summary Buffer...")
 
 ;;** 3.1 (info "(gnus)Summary Buffer Format")
@@ -404,7 +405,7 @@
       (when (boundp 'nnmail-extra-headers)
         (add-to-list 'nnmail-extra-headers 'Cc))
 
-      (defun lvn/gnus-count-recipients (header)
+      (defun leuven-gnus-count-recipients (header)
         "Given a Gnus message header, returns priority mark.
       If I am the only recipient, return \"!\".
       If I am one of the recipients listed in To:, return \"T\".
@@ -428,7 +429,7 @@
               "*"))
            (t " "))))
 
-      (defalias 'gnus-user-format-function-r 'lvn/gnus-count-recipients)
+      (defalias 'gnus-user-format-function-r 'leuven-gnus-count-recipients)
 
       ;; format specification for the summary mode line
       (setq gnus-summary-mode-line-format "%V: %%b")
@@ -504,7 +505,7 @@
       (add-hook 'gnus-part-display-hook 'article-treat-dumbquotes)
 
       ;; full shampoo of messages you read
-      (defun lvn/gnus-wash-this-article ()
+      (defun leuven-gnus-wash-this-article ()
         "Wash an article."
         (interactive)
         (gnus-article-outlook-deuglify-article)
@@ -513,7 +514,7 @@
         (message "Washed this article"))
 
       (define-key gnus-summary-mode-map
-        (kbd "C-c w") 'lvn/gnus-wash-this-article)
+        (kbd "C-c w") 'leuven-gnus-wash-this-article)
 
       ;; what is to be considered a signature
       (setq gnus-signature-separator
@@ -524,7 +525,7 @@
       ;; limit (in lines, in floating point) to what is considered a signature
       (setq gnus-signature-limit 20.0)
 
-      (defun lvn/prefix-line ()
+      (defun leuven-prefix-line ()
         "Prefix the current line with `>'."
         (interactive)
         (beginning-of-line)
@@ -540,7 +541,7 @@
                ;; ...until blank line found
                (looking-at " *$")))))
 
-      (global-set-key (kbd "<S-f5>") 'lvn/prefix-line)
+      (global-set-key (kbd "<S-f5>") 'leuven-prefix-line)
 
       ;; banners to remove
       (setq gnus-article-address-banner-alist
@@ -582,7 +583,7 @@
       (setq gnus-group-posting-charset-alist
             '((message-this-is-news nil (iso-8859-15))))
 
-      (defun lvn/show-article-as-charset ()
+      (defun leuven-show-article-as-charset ()
         (interactive)
         (message "Display in: latin-[1], latin-[9]/15, [u]tf-8, [c]p1252")
         (let ((answer (read-char)))
@@ -601,10 +602,10 @@
 
       ;; highlight current line in summary buffer
       (GNUEmacs
-       (defun lvn/setup-highlight-line ()
+       (defun leuven-setup-highlight-line ()
          (hl-line-mode 1))
 
-       (add-hook 'gnus-summary-mode-hook 'lvn/setup-highlight-line))
+       (add-hook 'gnus-summary-mode-hook 'leuven-setup-highlight-line))
 
       ;; search forward for an article containing a given regexp
       (define-key gnus-summary-mode-map
@@ -676,7 +677,7 @@
 
 ;;* 4 (info "(gnus)The Article Buffer")
 
-(when lvn/section-article-buffer
+(when leuven-section-article-buffer
       (message "4 Article Buffer...")
 
 ;;** 4.1 Hiding headers
@@ -812,7 +813,7 @@
       (setq mm-inline-text-html-with-images t)
 
       ;; Remove HTML tags from a buffer
-      (defun lvn/wash-ugly-html ()
+      (defun leuven-wash-ugly-html ()
         "Remove ugly HTML tags."
         (interactive)
         (toggle-read-only -1)
@@ -838,8 +839,8 @@
       (setq mm-default-directory "~/Desktop/")
       (setq mm-default-directory "~/") ; FIXME Temp on temp pc
 
-      (when (fboundp 'lvn/make-directory-yes-or-no)
-        (lvn/make-directory-yes-or-no mm-default-directory))
+      (when (fboundp 'leuven-make-directory-yes-or-no)
+        (leuven-make-directory-yes-or-no mm-default-directory))
 
       ;; directory for storing temporary files (opened attachments as well)
       (setq mm-tmp-directory temporary-file-directory)
@@ -904,7 +905,7 @@
 
 ;;* 5 (info "(gnus)Composing Messages")
 
-(when lvn/section-composing-messages
+(when leuven-section-composing-messages
       (message "5 Composing Messages...")
 
 ;;** 5.1 (info "(gnus)Mail")
@@ -955,7 +956,7 @@
       ;; sent article
       ;; "Gcc:"-chooser, from Christoph Conrad
       (defvar header-gcc-history nil)
-      (defun lvn/choose-gcc()
+      (defun leuven-choose-gcc()
         (interactive)
         (let* (;; if this "group" is chosen the default "Gcc" remains
                (default "nnimap+mail:INBOX")
@@ -975,7 +976,7 @@
                 (if (not (equal delete group))
                     (message-add-header (concat "Gcc: " group)))))))
 
-      (add-hook 'message-send-hook 'lvn/choose-gcc)
+      (add-hook 'message-send-hook 'leuven-choose-gcc)
 
       ;; automatically mark Gcc articles (i.e., sent by myself) as read
       (setq gnus-gcc-mark-as-read t)
@@ -1050,7 +1051,7 @@
 
         ;; set message envelope to content of `From'
         ;; XXX see `mail-specify-envelope-from'
-        (defun lvn/set-msg-envelope-from()
+        (defun leuven-set-msg-envelope-from()
           "Set `mail-envelope-from' to the value in the \"From\" field."
           (let* ((from (message-fetch-field "From" t))
                  (first (1+ (string-match "<" from)))
@@ -1058,21 +1059,21 @@
             (setq mail-envelope-from (substring from first last))))
 
         ;; ;; alternative for FPZ??
-        ;; (defun lvn/set-msg-envelope-from ()
+        ;; (defun leuven-set-msg-envelope-from ()
         ;;   (let ((from (cadr
         ;;                (mail-extract-address-components
         ;;                 (message-field-value "from")))))
         ;;       (setq mail-envelope-from from)))
 
-        (add-hook 'message-setup-hook 'lvn/set-msg-envelope-from)
+        (add-hook 'message-setup-hook 'leuven-set-msg-envelope-from)
         ))
 
       ;; add certain headers before sending messages
-      (defun lvn/message-add-content ()
+      (defun leuven-message-add-content ()
         ;; for Gmane address obfuscation
         (message-add-header "X-Archive: encrypt"))
 
-      (add-hook 'message-send-hook 'lvn/message-add-content)
+      (add-hook 'message-send-hook 'leuven-message-add-content)
 
       (message "5 Composing Messages... Done"))
 
@@ -1081,7 +1082,7 @@
       ;; Message mode has become the default mail editing mode in Emacs 23.2+
       ;; (used by Gnus and RMail, at least)
 
-(when lvn/section-message
+(when leuven-section-message
       (message "Message...")
 
 ;;** 1 (info "(message)Interface")
@@ -1089,7 +1090,7 @@
 ;;*** 1.1 (info "(message)New Mail Message")
 
       ;; keyboard macro to prepare a mail from the current buffer
-      (fset 'lvn/mail-this-buffer ;; XXX does not work
+      (fset 'leuven-mail-this-buffer ;; XXX does not work
             "\C-xh\M-w\M-xmail\C-m\C-c\C-t\C-y\C-c\C-f\C-t")
 
 
@@ -1158,13 +1159,13 @@
 
 ;;*** 2.8 (info "(message)Various Commands")
 
-      (defun lvn/gnus-obfuscate-email (username)
+      (defun leuven-gnus-obfuscate-email (username)
         "Wrapper for email address obfuscation."
-        (apply 'lvn/mail-obfuscate-address
+        (apply 'leuven-mail-obfuscate-address
                (list username
-                     (cond ((string-equal lvn/system "slac")
+                     (cond ((string-equal leuven-system "slac")
                             "generic@slac.stanford.edu")
-                           ((string-equal lvn/system "gnu")
+                           ((string-equal leuven-system "gnu")
                             "generic@gnu.org")
                            (t
                             "generic@ast.cam.ac.uk")))))
@@ -1185,9 +1186,9 @@
 
 ;;*** 2.11 (info "(message)Spelling")
 
-     (defun lvn/message-setup-routine ()
+     (defun leuven-message-setup-routine ()
        (flyspell-mode 1))
-     (add-hook 'message-setup-hook 'lvn/message-setup-routine)
+     (add-hook 'message-setup-hook 'leuven-message-setup-routine)
 
 ;;** 3 (info "(message)Variables")
 
@@ -1241,7 +1242,7 @@
                             (concat author ",\n\n" author))
                           " wrote:\n"))))
 
-      (defun lvn/message-insert-citation-line ()
+      (defun leuven-message-insert-citation-line ()
         "Insert preferred citation line."
         (if message-reply-headers
             (let* ((from (mail-header-from message-reply-headers))
@@ -1261,7 +1262,7 @@
       ;; (setq message-directory "~/Mail/")
 
       ;; operates on messages you send
-      (defun lvn/message-mode-hook ()
+      (defun leuven-message-mode-hook ()
 
         ;; ;; prompt for and insert a mail alias
         ;; (local-set-key (kbd "M-a") 'mail-abbrev-insert-alias)
@@ -1300,7 +1301,7 @@
         (when (try-require 'auto-complete)
           (auto-complete-mode)))
 
-      (add-hook 'message-mode-hook 'lvn/message-mode-hook)
+      (add-hook 'message-mode-hook 'leuven-message-mode-hook)
 
       (when (try-require 'org-footnote)
         (add-hook 'message-send-hook 'org-footnote-normalize))
@@ -1321,7 +1322,7 @@
 
 ;;* 6 (info "(gnus)Select Methods")
 
-(when lvn/section-select-methods
+(when leuven-section-select-methods
       (message "6 Select Methods...")
 
 ;;** 6.3 (info "(gnus)Getting Mail")
@@ -1329,7 +1330,7 @@
 ;;*** 6.3.3 (info "(gnus)Splitting Mail") (in IMAP)
 
       ;; the registry should be installed
-      (setq gnus-registry-install t) ;; for `G G' searches
+      (setq gnus-registry-install t)    ; for `G G' searches
 
       ;; article registry for Gnus
       (when (try-require 'gnus-registry-XXX)
@@ -1540,7 +1541,7 @@
 
 ;;* 7 (info "(gnus)Scoring")
 
-(when lvn/section-scoring
+(when leuven-section-scoring
       (message "7 Scoring...")
 
       ;; ;; directory where kill and score files will be stored
@@ -1555,7 +1556,7 @@
 
 ;;* 9 (info "(gnus)Various")
 
-(when lvn/section-various
+(when leuven-section-various
       (message "8 Various...")
 
 ;;** 9.2 (info "(gnus)Interactive")
@@ -1605,7 +1606,7 @@
 
 ;;* 11 (info "(gnus)Appendices")
 
-(when lvn/section-appendices
+(when leuven-section-appendices
       (message "11 Appendices...")
 
 ;;** 11.2 (info "(gnus)History")
@@ -1622,11 +1623,9 @@
 
       (message "11 Appendices... Done"))
 
-
 ;; warn that some packages were missing
-(if missing-packages-list
-    (progn (message "Packages not found: %S"
-                    (nreverse missing-packages-list))))
+(dolist (pkg leuven--missing-packages)
+  (message "(warning) Package `%s' not found" pkg))
 
 (message "\n")
 
