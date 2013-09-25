@@ -136,9 +136,7 @@
                       (nnimap-address "mail")
                       ;; (nnimap-server-port 993)
                       ;; (nnimap-stream ssl)
-
-                      ;; XXX how mail is split
-                      (nnimap-split-methods default))
+                      )
 
               (nntp "gmane"
                     (nntp-address "news.gmane.org")
@@ -1345,26 +1343,23 @@
         (gnus-registry-initialize))
 
       ;; the first match in `nnmail-split-rule' found will be used
-      (setq nnimap-split-crosspost nil) ;; Gnus
-      (setq nnmail-crosspost nil) ;; NoGnus
+      (setq nnmail-crosspost nil)
 
       ;; name(s) of IMAP mailboxes to split mail from
-      (setq nnimap-split-inbox "INBOX") ;; Gnus
-      (setq nnimap-inbox '("INBOX")) ;; NoGnus
+      (setq nnimap-inbox '("INBOX"))
 
       ;; BBDB (Big Brother DataBase) is loaded from my `.emacs' file
       (when (try-require 'bbdb-gnus)
 
         ;; split function to use (sorting mails into groups using BBDB)
-        (setq nnimap-split-rule 'nnmail-split-fancy) ;; Gnus
-        (setq nnmail-split-methods 'nnmail-split-fancy) ;; NoGnus
+        (setq nnimap-split-methods 'nnimap-split-fancy)
 
         ;; for records which don't have gnus-private set, the following rules in
         ;; split--fancy are invoked
         (setq bbdb/gnus-split-default-group nil)
 
         ;; specify how to split mail
-        (setq nnmail-split-fancy
+        (setq nnimap-split-fancy
               ;; split to the first rule making a match
               `(| ;; invoke BBDB
                   (: (lambda ()
