@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
-#+EMAIL:     fni@missioncriticalit.com
+#+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DATE:      2012-06-22
-#+Time-stamp: <2013-08-19 Mon 09:32>
+#+Time-stamp: <2013-09-27 Fri 12:56>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en_US
