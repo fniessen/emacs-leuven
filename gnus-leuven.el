@@ -1346,7 +1346,8 @@
       (setq nnmail-crosspost nil)
 
       ;; name(s) of IMAP mailboxes to split mail from
-      (setq nnimap-inbox '("INBOX"))
+      (setq nnimap-inbox '("INBOX"))    ; Gnus v5.13
+      (setq nnimap-split-inbox '("INBOX")) ; Ma Gnus
 
       ;; BBDB (Big Brother DataBase) is loaded from my `.emacs' file
       (when (try-require 'bbdb-gnus)
