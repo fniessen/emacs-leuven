@@ -1,4 +1,3 @@
-
 ;;; gnus-leuven.el --- my Gnus config file
 
 ;; Copyright (C) 2004-2013 Fabrice Niessen
@@ -1272,29 +1271,27 @@
         (setq fill-column 79)
         (turn-on-auto-fill)
 
-        (when (locate-library "org.el")
+        ;; turn on the `org-mode' table editor
+        (turn-on-orgtbl)
 
-          ;; turn on the `org-mode' table editor
-          (turn-on-orgtbl)
+        ;; ;; turn on orgstruct-mode
+        ;; (turn-on-orgstruct)
 
-          ;; ;; turn on orgstruct-mode
-          ;; (turn-on-orgstruct)
+        ;; turn on (the enhanced version of) orgstruct-mode
+        (turn-on-orgstruct++)
 
-          ;; turn on (the enhanced version of) orgstruct-mode
-          (turn-on-orgstruct++)
+        ;; ;; make `orgstruct-hijacker-command-22' rebind `M-q' to a message
+        ;; ;; specific function to fill a paragraph
+        ;; (setq fill-paragraph-function 'org-fill-paragraph)
 
-          ;; ;; make `orgstruct-hijacker-command-22' rebind `M-q' to a message
-          ;; ;; specific function to fill a paragraph
-          ;; (setq fill-paragraph-function 'org-fill-paragraph)
+        (when (try-require 'org-footnote)
+          ;; default style used for footnoting is local to the Message being
+          ;; written
+          (set (make-local-variable 'org-footnote-auto-label) 'plain)
 
-          (when (try-require 'org-footnote)
-            ;; default style used for footnoting is local to the Message being
-            ;; written
-            (set (make-local-variable 'org-footnote-auto-label) 'plain)
-
-            ;; no tag marking the beginning of footnote section
-            (set (make-local-variable
-            'org-footnote-tag-for-non-org-mode-files) nil)))
+          ;; no tag marking the beginning of footnote section
+          (set (make-local-variable
+          'org-footnote-tag-for-non-org-mode-files) nil))
 
         (when (try-require 'auto-complete)
           (auto-complete-mode)))
