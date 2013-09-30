@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-25 Wed 16:06>
+# Time-stamp: <2013-09-30 Mon 10:44>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -10,6 +10,7 @@
 #+SEQ_TODO: TODO FIXME DOESN'T_WORK | WORKS
 
 #+PROPERTY:  tangle emacs-leuven.el
+#+PROPERTY:  padline yes
 
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="file:///D:/Users/fni/src/org-style/bigblow/css/bigblow.css"/>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="file:///D:/Users/fni/src/org-style/bigblow/css/htmlize.css"/>
@@ -22,7 +23,7 @@
 echo "$(date '+%Y%m%d.%H%M')"
 #+end_src
 
-#+begin_src emacs-lisp :noweb yes :padline no
+#+begin_src emacs-lisp :noweb yes
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
 ;; Copyright (C) 1999-2013 Fabrice Niessen
@@ -388,7 +389,10 @@ echo "$(date '+%Y%m%d.%H%M')"
     "`eval-after-load' MODE evaluate BODY."
     (declare (indent defun))
     `(eval-after-load ,mode
-       '(progn ,@body)))
+       '(progn
+          (message "(info) Running code specific to `%s'..." ,mode)
+          (sit-for 0.3)
+          ,@body)))
 #+end_src
 
 ** Site-lisp
@@ -567,8 +571,8 @@ are generated programmatically from upstream Git-based sources.
                       )
                     package-archives))
 
-      ;; load the latest version of all installed packages,
-      ;; and activate them (= add to `load-path' and load `XXX-autoloads.el'?)
+      ;; load the latest version of all installed packages, and activate them
+      ;; (= add ALL ELPA subdirs to `load-path' and load `<pkg>-autoloads.el'?)
       (package-initialize)
 
       ;; download the ELPA archive description if needed
@@ -581,19 +585,19 @@ are generated programmatically from upstream Git-based sources.
           bbdb
           calfw
           circe
-          dictionary
+          ;; dictionary
           ess
           fuzzy
           git-commit-mode
-          gnuplot-mode ;; or gnuplot?
+          ;; gnuplot-mode ;; or gnuplot?
           graphviz-dot-mode
           helm
           idle-require
           ;; jabber
           leuven-theme
           ;; htmlize
-          org
-          org-mime ;; (from contrib)
+          ;; org
+          ;; org-mime ;; (from contrib)
           pager
           ;; paredit
           rainbow-mode
@@ -2160,10 +2164,6 @@ previously detected error.
     ;; chunk of code is placed within (with-eval-after-load "flyspell"...)
 
     (with-eval-after-load "flyspell"
-
-     ;; TEMP
-     (message "flyspell has been loaded!!!")
-     (sit-for 0.5)
 
      ;; don't consider that a word repeated twice is an error
      (setq flyspell-mark-duplications-flag nil)
@@ -3786,12 +3786,8 @@ XXX Declare PDF files as binary
   ;; default coding system (for new files),
   ;; also moved to the front of the priority list for automatic detection
   (GNUEmacs
-    (cond (running-ms-windows
-           (prefer-coding-system 'utf-8-unix))
-          ;; XXX Unix flavor for script executing in Org-Babel
-          ;; FIXME Prefer ISO Latin 1 (temporarily, for PFlow)
-          (t
-           (prefer-coding-system 'utf-8))))
+   (prefer-coding-system 'utf-8-unix))  ; Unix flavor for code blocks executed
+                                        ; via Org-Babel
 #+end_src
 
 ** Specifying a File's Coding System
@@ -4650,6 +4646,7 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 
   ;; ellipsis to use in the Org mode outline
   (with-eval-after-load "org"
+    (message "... Org Document Structure")
 
     ;; improve display of the ellipsis
     (set-face-attribute 'org-ellipsis nil
@@ -4696,6 +4693,7 @@ installs the key binding =C-c C-x t= to insert a new *inline task*.
 
 #+begin_src emacs-lisp
   (with-eval-after-load "org"
+    (message "... Org Headlines")
 
     ;; insert an inline task (independent of outline hierarchy)
     (when (try-require 'org-inlinetask) ;; needed
@@ -5182,6 +5180,8 @@ http://www.google.com/search?q=searchterms, you can just type
 
   ;; ~5.3.2 heading for state change added to entries
   (with-eval-after-load "org"
+    (message "... Progress logging")
+
     (setcdr (assq 'state org-log-note-headings)
             "State %-12S  ->  %-12s %t"))
 #+end_src
@@ -5225,6 +5225,9 @@ on the format of these entries."
 Context (place, time or particular resources for doing a task) and people are
 something best implemented with tags.
 
+By convention, *user-defined tags are written in lowercase*; built-in tags with
+special meaning are written with all capitals.
+
 #+begin_src emacs-lisp
 ;;* 6 (info "(org)Tags")
 
@@ -5242,33 +5245,32 @@ something best implemented with tags.
 
                         ("bank"        . ?b)
                         ("notbillable" . ?B)
-                        ("NOW"         . ?N)
+                        ("now"         . ?N)
                         ;; ("reading" . ?r)
-                        ;; ("PROJ" . ?P)
+                        ;; ("proj" . ?P)
 
                         ("ARCHIVE"     . ?A)
                         ("crypt"       . ?C)
                         ("FLAGGED"     . ??)))
 
   ;; faces for specific tags
-  ;; XXX This generates an error when C-x C-w'ing the agenda view
   (setq org-tag-faces
-        '(("refile" .
+        '(("refile"
            (:slant italic
             :foreground "#FFFFFF" :background "#A48CC4"))
-          ("home" .
+          ("home"
            (:slant italic
             :foreground "#5C88D3" :background "#BBDDFF"))
-          ("work" .
+          ("work"
            (:slant italic
             :foreground "#5F7C43" :background "#C1D996"))
-          ("FLAGGED" .
+          ("FLAGGED"
            (:slant italic
             :foreground "#A28747" :background "#FFE88E"))
-          ("NOW" .
+          ("now"
            (:slant italic
             :foreground "#000000" :background "#FFEA80"))
-          ("notbillable" .
+          ("notbillable"
            (:slant italic
             :foreground "#FFFFFF" :background "#989898"))))
 
@@ -5308,6 +5310,9 @@ something best implemented with tags.
 
 ** Properties and Columns
 
+By convention, *user-defined properties are capitalized*; built-in properties
+with special meaning are written with all capitals.
+
 #+begin_src emacs-lisp
 ;;* 7 (info "(org)Properties and Columns")
 
@@ -5332,6 +5337,8 @@ something best implemented with tags.
 
   ;; insinuate appt if Org mode is loaded
   (with-eval-after-load "org"
+    (message "... Org Dates and Times")
+
     (try-require 'appt))
 #+end_src
 
@@ -6033,6 +6040,7 @@ the header under which the entry will be placed.
 
 #+begin_src emacs-lisp
   (with-eval-after-load "org"
+    (message "... Org Refile")
 
     ;; 9.5 any headline with level <= 2 is a target
     (defvar leuven-org-refile-extra-files
@@ -7493,6 +7501,7 @@ XXX Does this work?
     (setq org-fontify-quote-and-verse-blocks t))
 
   (with-eval-after-load "org"
+    (message "... Org Markup")
 
     ;;??? change the face of a headline (as an additional information) if
     ;; it is marked DONE (to face `org-headline-done')
@@ -7587,6 +7596,7 @@ To list all available entities, run =M-x org-entities-help=.
 
   ;; bind the exporter dispatcher to a key sequence
   (with-eval-after-load "org"
+    (message "... Org Exporting")
 
     ;; libraries in this list will be loaded once the export framework is needed
     (setq org-export-backends '(ascii html icalendar latex odt))
@@ -8057,7 +8067,7 @@ Literate programming and reproducible research.
 
     ;; make the images in the Emacs buffer automatically refresh after
     ;; execution
-    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
+    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8070,6 +8080,7 @@ Literate programming and reproducible research.
       (after leuven-org-babel-previous-src-block activate)
       "Recenter after jumping to the previous source block."
       (recenter))
+    )
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8129,6 +8140,7 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
 
 
   (with-eval-after-load "org"
+    (message "... Org Editing source code")
 
     ;; allow comment region in the code edit buffer (according to language)
     (defun leuven-org-comment-dwim (&optional arg)
@@ -8251,6 +8263,7 @@ languages which can be evaluated in Org mode buffers.
   ;; setting language to yes...
 
   (with-eval-after-load "org"
+    (message "... Org Languages")
 
     (org-babel-do-load-languages ;; loads org, gnus-sum, etc...
      'org-babel-load-languages
@@ -8341,6 +8354,7 @@ function is loaded (AFTER having been adviced).
   (leuven--section "15.2 (org)Easy Templates")
 
   (with-eval-after-load "org"
+    (message "... Org Easy Templates")
 
     ;; keep lower-case (easy templates)
     (setq org-structure-template-alist
@@ -8390,6 +8404,7 @@ For navigating blocks:
   (leuven--section "15.3 (org)Speed keys")
 
   (with-eval-after-load "org"
+    (message "... Org Speek keys")
 
     ;; activate single letter commands at beginning of a headline
     (setq org-use-speed-commands t))
@@ -8416,6 +8431,7 @@ For security reasons, evaluation is not turned on by default.
 ;;** 15.8 A (info "(org)Clean view")
 
   (with-eval-after-load "org"
+    (message "... Org Clean view")
 
     ;; 15.8 don't skip even levels for the outline
     (setq org-odd-levels-only nil))
@@ -8490,6 +8506,7 @@ C-r= (fits nicely with the meaning of "reveal").
   ;; keep my encrypted data (like account passwords) in my Org mode
   ;; files with a special tag instead
   (with-eval-after-load "org"
+    (message "... Org Crypt")
 
     (when (try-require 'org-crypt) ;; loads org, gnus-sum, etc...
 
@@ -8700,6 +8717,7 @@ or =html=)
 
 #+begin_src emacs-lisp
   (with-eval-after-load "org"
+    (message "... Org Mime")
 
     ;; using Org mode to send buffer/subtree per mail
     (when (try-require 'org-mime)
@@ -8749,6 +8767,7 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
   ;;      (format "\\%s{%s}" path desc)))))
 
   (with-eval-after-load "org"
+    (message "... Org Adding hyperlink types")
 
     ;; add background color by using custom links like [[bgcolor:red][Warning!]]
     (org-add-link-type
@@ -13236,14 +13255,15 @@ particular color...
         '((TeX-master . t)
           (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
           ;; (ac-user-dictionary-files . ("../dictionary.txt"))
-          (balloon-help-mode . -1)
-          (before-save-hook . nil)
           (flyspell-mode . -1)
           (flyspell-mode . 1)
           (ispell-local-dictionary . "american")
           (ispell-local-dictionary . "francais")
-          (ispell-mode . t)
-          (org-tags-column . -80)))
+          (outline-minor-mode)
+          (whitespace-style face tabs spaces trailing lines
+                            space-before-tab::space newline indentation::space
+                            empty space-after-tab::space space-mark tab-mark
+                            newline-mark)))
 #+end_src
 
 Have a look at (info "(emacs)Directory Variables").

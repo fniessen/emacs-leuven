@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130925.1607
+;; Version: 20130930.1044
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130925.1607]--")
+(message "* --[ Loading Emacs Leuven 20130930.1044]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -323,7 +323,10 @@
     "`eval-after-load' MODE evaluate BODY."
     (declare (indent defun))
     `(eval-after-load ,mode
-       '(progn ,@body)))
+       '(progn
+          (message "(info) Running code specific to `%s'..." ,mode)
+          (sit-for 0.3)
+          ,@body)))
 
 ;;*** Site-lisp
 
@@ -443,8 +446,8 @@
                       )
                     package-archives))
 
-      ;; load the latest version of all installed packages,
-      ;; and activate them (= add to `load-path' and load `XXX-autoloads.el'?)
+      ;; load the latest version of all installed packages, and activate them
+      ;; (= add ALL ELPA subdirs to `load-path' and load `<pkg>-autoloads.el'?)
       (package-initialize)
 
       ;; download the ELPA archive description if needed
@@ -457,19 +460,19 @@
           bbdb
           calfw
           circe
-          dictionary
+          ;; dictionary
           ess
           fuzzy
           git-commit-mode
-          gnuplot-mode ;; or gnuplot?
+          ;; gnuplot-mode ;; or gnuplot?
           graphviz-dot-mode
           helm
           idle-require
           ;; jabber
           leuven-theme
           ;; htmlize
-          org
-          org-mime ;; (from contrib)
+          ;; org
+          ;; org-mime ;; (from contrib)
           pager
           ;; paredit
           rainbow-mode
@@ -1448,10 +1451,6 @@
     ;; chunk of code is placed within (with-eval-after-load "flyspell"...)
 
     (with-eval-after-load "flyspell"
-
-     ;; TEMP
-     (message "flyspell has been loaded!!!")
-     (sit-for 0.5)
 
      ;; don't consider that a word repeated twice is an error
      (setq flyspell-mark-duplications-flag nil)
@@ -2592,12 +2591,8 @@
   ;; default coding system (for new files),
   ;; also moved to the front of the priority list for automatic detection
   (GNUEmacs
-    (cond (running-ms-windows
-           (prefer-coding-system 'utf-8-unix))
-          ;; XXX Unix flavor for script executing in Org-Babel
-          ;; FIXME Prefer ISO Latin 1 (temporarily, for PFlow)
-          (t
-           (prefer-coding-system 'utf-8))))
+   (prefer-coding-system 'utf-8-unix))  ; Unix flavor for code blocks executed
+                                        ; via Org-Babel
 
 ;;** 22.8 (info "(emacs)Specify Coding") System of a File
 
@@ -3167,6 +3162,7 @@
 
   ;; ellipsis to use in the Org mode outline
   (with-eval-after-load "org"
+    (message "... Org Document Structure")
 
     ;; improve display of the ellipsis
     (set-face-attribute 'org-ellipsis nil
@@ -3201,6 +3197,7 @@
   (setq org-special-ctrl-a/e 'reversed)
 
   (with-eval-after-load "org"
+    (message "... Org Headlines")
 
     ;; insert an inline task (independent of outline hierarchy)
     (when (try-require 'org-inlinetask) ;; needed
@@ -3583,6 +3580,8 @@
 
   ;; ~5.3.2 heading for state change added to entries
   (with-eval-after-load "org"
+    (message "... Progress logging")
+
     (setcdr (assq 'state org-log-note-headings)
             "State %-12S  ->  %-12s %t"))
 
@@ -3626,33 +3625,32 @@
 
                         ("bank"        . ?b)
                         ("notbillable" . ?B)
-                        ("NOW"         . ?N)
+                        ("now"         . ?N)
                         ;; ("reading" . ?r)
-                        ;; ("PROJ" . ?P)
+                        ;; ("proj" . ?P)
 
                         ("ARCHIVE"     . ?A)
                         ("crypt"       . ?C)
                         ("FLAGGED"     . ??)))
 
   ;; faces for specific tags
-  ;; XXX This generates an error when C-x C-w'ing the agenda view
   (setq org-tag-faces
-        '(("refile" .
+        '(("refile"
            (:slant italic
             :foreground "#FFFFFF" :background "#A48CC4"))
-          ("home" .
+          ("home"
            (:slant italic
             :foreground "#5C88D3" :background "#BBDDFF"))
-          ("work" .
+          ("work"
            (:slant italic
             :foreground "#5F7C43" :background "#C1D996"))
-          ("FLAGGED" .
+          ("FLAGGED"
            (:slant italic
             :foreground "#A28747" :background "#FFE88E"))
-          ("NOW" .
+          ("now"
            (:slant italic
             :foreground "#000000" :background "#FFEA80"))
-          ("notbillable" .
+          ("notbillable"
            (:slant italic
             :foreground "#FFFFFF" :background "#989898"))))
 
@@ -3702,6 +3700,8 @@
 
   ;; insinuate appt if Org mode is loaded
   (with-eval-after-load "org"
+    (message "... Org Dates and Times")
+
     (try-require 'appt))
 
 ;;** 8.2 (info "(org)Creating timestamps")
@@ -4185,6 +4185,7 @@ From %c"
                    :working-directory "~/Public/Repositories/worg/") t))
 
   (with-eval-after-load "org"
+    (message "... Org Refile")
 
     ;; 9.5 any headline with level <= 2 is a target
     (defvar leuven-org-refile-extra-files
@@ -5212,6 +5213,7 @@ From %c"
     (setq org-fontify-quote-and-verse-blocks t))
 
   (with-eval-after-load "org"
+    (message "... Org Markup")
 
     ;;??? change the face of a headline (as an additional information) if
     ;; it is marked DONE (to face `org-headline-done')
@@ -5283,6 +5285,7 @@ From %c"
 
   ;; bind the exporter dispatcher to a key sequence
   (with-eval-after-load "org"
+    (message "... Org Exporting")
 
     ;; libraries in this list will be loaded once the export framework is needed
     (setq org-export-backends '(ascii html icalendar latex odt))
@@ -5638,7 +5641,7 @@ From %c"
 
     ;; make the images in the Emacs buffer automatically refresh after
     ;; execution
-    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
+    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
     (defadvice org-babel-next-src-block
       (after leuven-org-babel-next-src-block activate)
@@ -5649,6 +5652,7 @@ From %c"
       (after leuven-org-babel-previous-src-block activate)
       "Recenter after jumping to the previous source block."
       (recenter))
+    )
 
   (with-eval-after-load "ob-sh"
 
@@ -5696,6 +5700,7 @@ From %c"
 
 
   (with-eval-after-load "org"
+    (message "... Org Editing source code")
 
     ;; allow comment region in the code edit buffer (according to language)
     (defun leuven-org-comment-dwim (&optional arg)
@@ -5792,6 +5797,7 @@ From %c"
   ;; setting language to yes...
 
   (with-eval-after-load "org"
+    (message "... Org Languages")
 
     (org-babel-do-load-languages ;; loads org, gnus-sum, etc...
      'org-babel-load-languages
@@ -5855,6 +5861,7 @@ From %c"
   (leuven--section "15.2 (org)Easy Templates")
 
   (with-eval-after-load "org"
+    (message "... Org Easy Templates")
 
     ;; keep lower-case (easy templates)
     (setq org-structure-template-alist
@@ -5877,6 +5884,7 @@ From %c"
   (leuven--section "15.3 (org)Speed keys")
 
   (with-eval-after-load "org"
+    (message "... Org Speek keys")
 
     ;; activate single letter commands at beginning of a headline
     (setq org-use-speed-commands t))
@@ -5893,6 +5901,7 @@ From %c"
 ;;** 15.8 A (info "(org)Clean view")
 
   (with-eval-after-load "org"
+    (message "... Org Clean view")
 
     ;; 15.8 don't skip even levels for the outline
     (setq org-odd-levels-only nil))
@@ -5952,6 +5961,7 @@ From %c"
   ;; keep my encrypted data (like account passwords) in my Org mode
   ;; files with a special tag instead
   (with-eval-after-load "org"
+    (message "... Org Crypt")
 
     (when (try-require 'org-crypt) ;; loads org, gnus-sum, etc...
 
@@ -6026,6 +6036,7 @@ From %c"
   ;;   (kbd "=") 'insert-one-equal-or-two)
 
   (with-eval-after-load "org"
+    (message "... Org Mime")
 
     ;; using Org mode to send buffer/subtree per mail
     (when (try-require 'org-mime)
@@ -6066,6 +6077,7 @@ From %c"
   ;;      (format "\\%s{%s}" path desc)))))
 
   (with-eval-after-load "org"
+    (message "... Org Adding hyperlink types")
 
     ;; add background color by using custom links like [[bgcolor:red][Warning!]]
     (org-add-link-type
@@ -9007,14 +9019,15 @@ From %c"
         '((TeX-master . t)
           (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
           ;; (ac-user-dictionary-files . ("../dictionary.txt"))
-          (balloon-help-mode . -1)
-          (before-save-hook . nil)
           (flyspell-mode . -1)
           (flyspell-mode . 1)
           (ispell-local-dictionary . "american")
           (ispell-local-dictionary . "francais")
-          (ispell-mode . t)
-          (org-tags-column . -80)))
+          (outline-minor-mode)
+          (whitespace-style face tabs spaces trailing lines
+                            space-before-tab::space newline indentation::space
+                            empty space-after-tab::space space-mark tab-mark
+                            newline-mark)))
 
 ;;** 48.4 Customizing (info "(emacs)Key Bindings")
 
@@ -9322,7 +9335,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130925.1607]--")
+(message "* --[ Loaded Emacs Leuven 20130930.1045]--")
 
 (provide 'emacs-leuven)
 
