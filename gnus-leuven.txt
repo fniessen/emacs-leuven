@@ -1,7 +1,7 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2013-09-30 Mon 10:41>
+#+Time-stamp: <2013-10-01 Tue 11:17>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1649,12 +1649,8 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
                   ;; catch spam
                   ("X-Spam-Status" "[Yy]es" "INBOX.Spam")
 
-                  ;; split to parent
-                  (: nnmail-split-fancy-with-parent)
-
                   ;; unmatched mail goes to the catch-all group (default mailbox)
-                  "INBOX"
-                )))
+                  "INBOX")))
 
 ;;*** 6.3.9 (info "(gnus)Expiring Mail")
 

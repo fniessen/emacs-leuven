@@ -1366,12 +1366,8 @@
                   ;; catch spam
                   ("X-Spam-Status" "[Yy]es" "INBOX.Spam")
 
-                  ;; split to parent
-                  (: nnmail-split-fancy-with-parent)
-
                   ;; unmatched mail goes to the catch-all group (default mailbox)
-                  "INBOX"
-                )))
+                  "INBOX")))
 
 ;;*** 6.3.9 (info "(gnus)Expiring Mail")
 
