@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-09-30 Mon 10:44>
+# Time-stamp: <2013-10-01 Tue 11:28>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -375,7 +375,7 @@ echo "$(date '+%Y%m%d.%H%M')"
       (let* ((this-directory (expand-file-name this-directory)))
 
         ;; directories containing a `.nosearch' file (such as
-        ;; `auctex-11.86\style') should not made part of `load-path'.
+        ;; `auctex-11.87\style') should not made part of `load-path'.
         ;; TODO `RCS' and `CVS' directories should also be excluded.
         (unless (file-exists-p (concat this-directory "/.nosearch"))
           (add-to-list 'load-path this-directory)
@@ -414,23 +414,17 @@ distro) without impacting on stuff you have added by hand.
   (defvar leuven-local-site-lisp-directory "~/.emacs.d/site-lisp/"
     "Directory containing additional Emacs Lisp packages (from the Internet).")
 
-  ;; (leuven-add-to-load-path leuven-local-site-lisp-directory
-  ;;                      'add-subdirs) ;; not recursive
-
   (leuven-add-to-load-path leuven-local-site-lisp-directory)
   (XEmacs
-    (leuven-add-to-load-path (concat leuven-local-site-lisp-directory "color-theme-6.6.0")))
+    (leuven-add-to-load-path
+     (concat leuven-local-site-lisp-directory "color-theme-6.6.0")))
   (leuven-add-to-load-path (concat leuven-local-site-lisp-directory "ecb-2.40"))
 
   ;; 2.
   (defvar leuven-site-lisp-directory "~/emacs/site-lisp/"
     "Directory containing my personal additional Emacs Lisp packages.")
 
-  ;; (leuven-add-to-load-path leuven-site-lisp-directory
-  ;;                      'add-subdirs)
-
   (leuven-add-to-load-path leuven-site-lisp-directory)
-  ;; (leuven-add-to-load-path (concat leuven-site-lisp-directory "mode-abbrevs"))
 #+end_src
 
 Adding the right Lisp directories to your =load-path= must be the very *first
@@ -455,8 +449,10 @@ need to load a single file that define autoloaded functions.
   (defvar leuven-local-repos-directory "~/Public/Repositories/"
     "Directory containing additional Emacs Lisp public repositories.")
 
-  (leuven-add-to-load-path (concat leuven-local-repos-directory "babel"))
-  (leuven-add-to-load-path (concat leuven-local-repos-directory "emacs-bookmark-extension"))
+  (leuven-add-to-load-path
+   (concat leuven-local-repos-directory "babel"))
+  (leuven-add-to-load-path
+   (concat leuven-local-repos-directory "emacs-bookmark-extension"))
 #+end_src
 
 Use =M-x list-load-path-shadows <RET>= to display a list of external Emacs Lisp
@@ -1275,6 +1271,19 @@ highlighting. Check out [[http://www.vimeo.com/1168225?pg=embed&sec=1168225][Ema
   ;; (global-set-key [f2] '(lambda () (interactive) (jump-to-register-here ?2)))
   ;; (global-set-key [f3] '(lambda () (interactive) (jump-to-register-here ?3)))
   ;; (global-set-key [f4] '(lambda () (interactive) (jump-to-register-here ?4)))
+#+end_src
+
+Jump between configuration files
+
+#+begin_src emacs-lisp :tangle no
+(global-set-key (kbd "C-j") 'jump-to-register)
+
+(set-register ?a (cons 'file "/sudo::/etc/apt/sources.list"))
+(set-register ?b (cons 'file "~/News/KILL"))
+(set-register ?C (cons 'file "/sudo::/etc/default/console-setup"))
+(set-register ?c (cons 'file "~/.irssi/config"))
+(set-register ?d (cons 'file "~/.emacs-dired"))
+; etc.
 #+end_src
 
 ** Bookmarks
@@ -2442,7 +2451,8 @@ If you have some keystroke you never use, then:
   (defun leuven-revert-buffer-without-query ()
     "Unconditionally revert current buffer."
     (interactive)
-    (revert-buffer t t))
+    (revert-buffer t t)                 ; ignore-auto(-save), noconfirm
+    (message "Buffer is up to date with file on disk"))
 
   ;; key binding
   (global-set-key
@@ -4477,6 +4487,10 @@ work and tasks with Org mode.
   (define-key global-map
     (kbd "C-c a") 'org-agenda)
 
+  ;; display the Org-mode manual in Info mode
+  (define-key global-map
+    (kbd "C-h o") 'org-info)
+
   ;; using links outside Org
   (global-set-key
     (kbd "C-c L") 'org-insert-link-global)
@@ -4893,6 +4907,9 @@ See also [[*Sparse%20trees][Sparse trees]] for behavior when revealing a locatio
 
   ;; an empty line does not end all plain list levels
   (setq org-empty-line-terminates-plain-lists nil)
+
+  ;; single character alphabetical bullets are allowed
+  (setq org-list-allow-alphabetical t)
 #+end_src
 
 *** Footnotes
@@ -8912,14 +8929,11 @@ aliases =(la)tex-mode= to =(La)TeX-mode=.
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
 
-  (ignore-errors
-    (load "auctex.el"))
+  (try-require 'tex-site)
 
   ;; support for LaTeX documents
   (GNUEmacs
-    (with-eval-after-load "latex"
-      ;; if "tex", error when loading the TeX-mode, because we add-to-list in a
-      ;; LaTeX variable (not loaded yet)
+    (with-eval-after-load "tex-site"
 
       ;; ;; TEST ??
       ;; (add-hook 'tex-mode-hook 'imenu-add-menubar-index)
@@ -9032,7 +9046,7 @@ SumatraPDF as your PDF viewer.
                     (t
                      '("." "evince %o"))))
 
-      ;; for AUCTeX 11.86
+      ;; for AUCTeX 11.86+
       (when (boundp 'TeX-view-program-list)
         (add-to-list 'TeX-view-program-list
                      `("SumatraPDF"
@@ -11209,6 +11223,15 @@ See news "Opening html-File in Dired with w3m" for extra info.
       ;; add a binding "W" -> `dired-find-w3m' to Dired
       (define-key dired-mode-map
         "W" 'dired-find-w3m))
+#+end_src
+
+** Dired Marks vs. Flags
+
+#+begin_src emacs-lisp
+    (defun leuven-make-executable ()
+      "Make a script executable, from the buffer in which you edit it"
+      (interactive)
+      (shell-command (concat "chmod +x " buffer-file-name)))
 #+end_src
 
 ** Operating on Files

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20130930.1044
+;; Version: 20131001.1121
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20130930.1044]--")
+(message "* --[ Loading Emacs Leuven 20131001.1121]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -311,7 +311,7 @@
       (let* ((this-directory (expand-file-name this-directory)))
 
         ;; directories containing a `.nosearch' file (such as
-        ;; `auctex-11.86\style') should not made part of `load-path'.
+        ;; `auctex-11.87\style') should not made part of `load-path'.
         ;; TODO `RCS' and `CVS' directories should also be excluded.
         (unless (file-exists-p (concat this-directory "/.nosearch"))
           (add-to-list 'load-path this-directory)
@@ -334,23 +334,17 @@
   (defvar leuven-local-site-lisp-directory "~/.emacs.d/site-lisp/"
     "Directory containing additional Emacs Lisp packages (from the Internet).")
 
-  ;; (leuven-add-to-load-path leuven-local-site-lisp-directory
-  ;;                      'add-subdirs) ;; not recursive
-
   (leuven-add-to-load-path leuven-local-site-lisp-directory)
   (XEmacs
-    (leuven-add-to-load-path (concat leuven-local-site-lisp-directory "color-theme-6.6.0")))
+    (leuven-add-to-load-path
+     (concat leuven-local-site-lisp-directory "color-theme-6.6.0")))
   (leuven-add-to-load-path (concat leuven-local-site-lisp-directory "ecb-2.40"))
 
   ;; 2.
   (defvar leuven-site-lisp-directory "~/emacs/site-lisp/"
     "Directory containing my personal additional Emacs Lisp packages.")
 
-  ;; (leuven-add-to-load-path leuven-site-lisp-directory
-  ;;                      'add-subdirs)
-
   (leuven-add-to-load-path leuven-site-lisp-directory)
-  ;; (leuven-add-to-load-path (concat leuven-site-lisp-directory "mode-abbrevs"))
 
   ;; remember this directory
   (defconst leuven--directory
@@ -362,8 +356,10 @@
   (defvar leuven-local-repos-directory "~/Public/Repositories/"
     "Directory containing additional Emacs Lisp public repositories.")
 
-  (leuven-add-to-load-path (concat leuven-local-repos-directory "babel"))
-  (leuven-add-to-load-path (concat leuven-local-repos-directory "emacs-bookmark-extension"))
+  (leuven-add-to-load-path
+   (concat leuven-local-repos-directory "babel"))
+  (leuven-add-to-load-path
+   (concat leuven-local-repos-directory "emacs-bookmark-extension"))
 
   (defun leuven--file-exists-and-executable-p (file)
     "Make sure the file FILE exists and is executable."
@@ -1670,7 +1666,8 @@
   (defun leuven-revert-buffer-without-query ()
     "Unconditionally revert current buffer."
     (interactive)
-    (revert-buffer t t))
+    (revert-buffer t t)                 ; ignore-auto(-save), noconfirm
+    (message "Buffer is up to date with file on disk"))
 
   ;; key binding
   (global-set-key
@@ -3052,6 +3049,10 @@
   (define-key global-map
     (kbd "C-c a") 'org-agenda)
 
+  ;; display the Org-mode manual in Info mode
+  (define-key global-map
+    (kbd "C-h o") 'org-info)
+
   ;; using links outside Org
   (global-set-key
     (kbd "C-c L") 'org-insert-link-global)
@@ -3353,6 +3354,9 @@
 
   ;; an empty line does not end all plain list levels
   (setq org-empty-line-terminates-plain-lists nil)
+
+  ;; single character alphabetical bullets are allowed
+  (setq org-list-allow-alphabetical t)
 
 ;;** (info "(org)Footnotes")
 
@@ -6156,14 +6160,11 @@ From %c"
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
 
-  (ignore-errors
-    (load "auctex.el"))
+  (try-require 'tex-site)
 
   ;; support for LaTeX documents
   (GNUEmacs
-    (with-eval-after-load "latex"
-      ;; if "tex", error when loading the TeX-mode, because we add-to-list in a
-      ;; LaTeX variable (not loaded yet)
+    (with-eval-after-load "tex-site"
 
       ;; ;; TEST ??
       ;; (add-hook 'tex-mode-hook 'imenu-add-menubar-index)
@@ -6250,7 +6251,7 @@ From %c"
                     (t
                      '("." "evince %o"))))
 
-      ;; for AUCTeX 11.86
+      ;; for AUCTeX 11.86+
       (when (boundp 'TeX-view-program-list)
         (add-to-list 'TeX-view-program-list
                      `("SumatraPDF"
@@ -7551,6 +7552,11 @@ From %c"
       ;; add a binding "W" -> `dired-find-w3m' to Dired
       (define-key dired-mode-map
         "W" 'dired-find-w3m))
+
+    (defun leuven-make-executable ()
+      "Make a script executable, from the buffer in which you edit it"
+      (interactive)
+      (shell-command (concat "chmod +x " buffer-file-name)))
 
 ;;** (info "(emacs)Operating on Files")
 
@@ -9335,7 +9341,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20130930.1045]--")
+(message "* --[ Loaded Emacs Leuven 20131001.1122]--")
 
 (provide 'emacs-leuven)
 
