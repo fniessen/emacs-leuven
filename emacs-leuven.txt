@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-01 Tue 11:28>
+# Time-stamp: <2013-10-01 Tue 14:58>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -296,9 +296,9 @@ echo "$(date '+%Y%m%d.%H%M')"
 ;;** MS Windows
 
   ;; FIXME The path is not correct under Cygwin Emacs (gsprint.exe not found)
-  (defconst windows-program-files-dir
+  (defconst windows-program-files-dir   ; sys-path
     (if running-ms-windows
-        (concat (file-name-as-directory (getenv "PROGRAMFILES")) "/") ;; double slash?
+        (file-name-as-directory (getenv "PROGRAMFILES"))
       "/usr/local/bin/")
     "Defines the default Windows Program Files folder.")
 
@@ -1700,7 +1700,7 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
   ;; show the column number in each mode line
   (column-number-mode 1)
 
-  ;; use inactive face for mode-line in non-selected windows
+  ;; use inactive face for mode line in non-selected windows
   (setq mode-line-in-non-selected-windows t)
 #+end_src
 
@@ -3140,9 +3140,8 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
       ;; don't show only basename of candidates in `helm-find-files'
       (setq helm-ff-transformer-show-only-basename nil)
 
-      ;; max length of buffer names before truncate
-      (setq helm-buffer-max-length 40)
-      ;; (setq helm-buffer-max-length nil) ;; don't truncate anymore
+      ;; don't truncate buffer names
+      (setq helm-buffer-max-length nil)
 
       (defun helm-toggle-debug ()
         "Toggle Helm debug on/off."
@@ -3550,12 +3549,11 @@ one.
     (set-frame-position (buffer-dedicated-frame) 0 0))
 
   ;; title bar display of visible frames
-  (setq frame-title-format "Emacs") ;; XXX for StumpWM?  Dunno anymore...
-
   (setq frame-title-format
         (format "Emacs %s rev:%s pid:%d"
                 emacs-version
-                (ignore-errors (replace-regexp-in-string " .*" "" emacs-bzr-version))
+                (ignore-errors
+                  (replace-regexp-in-string " .*" "" emacs-bzr-version))
                 (emacs-pid)))
 #+end_src
 
@@ -5525,7 +5523,7 @@ Remove scheduling date with =C-u C-c C-s=.
     ;; clock won't be stopped when the clocked entry is marked DONE
     (setq org-clock-out-when-done nil)
 
-    ;; time included for the modeline clock is all time clocked into this
+    ;; time included for the mode line clock is all time clocked into this
     ;; task today
     (setq org-clock-modeline-total 'today)
     (setq org-clock-modeline-total 'all)
@@ -8859,21 +8857,57 @@ Link emails from Org files.
 
 * TeX
 
-** TeX Emacs package
-
 #+begin_src emacs-lisp
 ;;** 25.10 (info "(emacs)TeX Mode")
 
 (leuven--chapter leuven-chapter-25.10-tex-mode "25.10 TeX Mode"
+#+end_src
 
+** Native TeX Mode
+
+- (la)tex-mode ::
+     Default Emacs built-in (La)TeX mode (menu =TeX=; text =LaTeX= displayed in the
+     mode line)
+
+#+begin_src emacs-lisp
   (leuven--section "25.10 (emacs)TeX Mode")
 #+end_src
 
-- (la)tex-mode ::
-     default Emacs built-in (La)TeX mode
+Under Windows, in the *native* TeX mode, =shell-file-name= must be =cmdproxy.exe= to
+avoid the error "comint-send-string: writing to process: invalid argument,
+tex-shell".
+
+#+begin_src emacs-lisp
+  ;; get colored PDFLaTeX output
+  (define-derived-mode latex-output-mode fundamental-mode "LaTeX-Output"
+    "Simple mode for colorizing LaTeX output."
+    (set (make-local-variable 'font-lock-defaults)
+         '((("^!.*" .
+             compilation-error-face) ;; LaTeX error
+            ("^-+$" .
+             compilation-info-face) ;; Latexmk separator
+            ("^Package .* Warning: .*" .
+             compilation-warning-face)
+            ("Reference .* undefined" .
+             compilation-warning-face)
+            ("^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" .
+             font-lock-string-face)
+            ("^LaTeX Font Warning:" .
+             font-lock-string-face)
+            ;; ...
+            ))))
+
+  (defadvice TeX-recenter-output-buffer
+    (after leuven-colorize-latex-output activate)
+    (with-selected-window (get-buffer-window (TeX-active-buffer))
+      (latex-output-mode)))
+#+end_src
+
+** AUCTeX
 
 - (La)TeX-mode ::
-     AUCTeX (=LaTeX/P= in the modeline?)
+     AUCTeX (menus =Preview=, =LaTeX=, =Command= and =Ref=; text =LaTeX/P= displayed in
+     the mode line)
 
 AUCTeX supports TeX and extensions such as LaTeX. For LaTeX, there is a
 (major) =LaTeX-mode= in AUCTeX which runs (in this order):
@@ -8893,38 +8927,6 @@ aliases =(la)tex-mode= to =(La)TeX-mode=.
 *************** TODO TeX Documentation via `C-c ?' (TeX-doc)
 
 #+begin_src emacs-lisp
-  ;; get colored PDFLaTeX output
-  (define-derived-mode latex-output-mode fundamental-mode "LaTeX-Output"
-    "Simple mode for colorizing LaTeX output."
-    (set (make-local-variable 'font-lock-defaults)
-         '((("^!.*" .
-             compilation-error-face) ;; LaTeX error
-            ("^-+$" .
-             compilation-info-face) ;; latexmk divider
-            ("^Package .* Warning: .*" .
-             compilation-warning-face)
-            ("Reference .* undefined" .
-             compilation-warning-face)
-            ("^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" .
-             font-lock-string-face)
-            ("^LaTeX Font Warning:" .
-             font-lock-string-face)
-            ;; .....
-            ))))
-
-  (defadvice TeX-recenter-output-buffer
-    (after leuven-colorize-latex-output activate)
-    (with-selected-window (get-buffer-window (TeX-active-buffer))
-      (latex-output-mode)))
-#+end_src
-
-** BibTeX
-
-** RefTeX
-
-** AUCTeX
-
-#+begin_src emacs-lisp
   (leuven--section "25.10 (emacs)AUCTeX Mode")
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
@@ -8933,8 +8935,20 @@ aliases =(la)tex-mode= to =(La)TeX-mode=.
 
   ;; support for LaTeX documents
   (GNUEmacs
-    (with-eval-after-load "tex-site"
+    (with-eval-after-load "latex"
+#+end_src
 
+You can detect the *successful activation of AUCTeX*: after loading a LaTeX
+file, AUCTeX gives you a =Command= menu.
+
+- Press =C-c C-c File <RET> <RET>= to run =dvips= (note that the command is =File= and
+  not =Dvips= as one might expect)
+
+- Press =C-c C-c Print <RET> <RET>= to run =GSview= (also somewhat misleading name)
+
+- If you want to print the document, do it from =GSview=.
+
+#+begin_src emacs-lisp
       ;; ;; TEST ??
       ;; (add-hook 'tex-mode-hook 'imenu-add-menubar-index)
 
@@ -8944,16 +8958,6 @@ aliases =(la)tex-mode= to =(La)TeX-mode=.
       ;;             (make-local-variable 'ispell-parser)
       ;;             (setq ispell-parser 'tex)))
 #+end_src
-
-You can detect the *successful activation of AUCTeX*: after loading a LaTeX
-file, AUCTeX gives you a ~Command~ menu.
-
-- Press =C-c C-c File <RET> <RET>= to run =dvips= (note that the command is =File= and
-  not =Dvips= as one might expect)
-
-- Press =C-c C-c Print <RET> <RET>= to run =GSview= (also somewhat misleading name)
-
-- If you want to print the document, do it from =GSview=.
 
 #+begin_src emacs-lisp
 ;;** 2.6 (info "(auctex)Completion")
@@ -8986,7 +8990,7 @@ file, AUCTeX gives you a ~Command~ menu.
       ;; (for Org mode) add the `comment' environment to the variable
       ;; `LaTeX-verbatim-environments' so that, if the `#+TBLFM' line
       ;; contains an odd number of dollar characters, this does not
-      ;; cause problems with font-lock in latex-mode
+      ;; cause problems with font-lock in LaTeX-mode
       (add-to-list 'LaTeX-verbatim-environments "comment")
 #+end_src
 
@@ -9099,9 +9103,8 @@ SumatraPDF as your PDF viewer.
       (leuven--section "5.5.3 (auctex)Automatic Local Customization for a Directory")
 
       ;; directory containing automatically generated TeX information
-      (setq TeX-auto-local
-            ;; must end with a slash
-            "~/.emacs.d/auctex-auto-generated-info/")
+      (setq TeX-auto-local "~/.emacs.d/auctex-auto-generated-info/")
+                                        ; must end with a slash
 #+end_src
 
 ** Preview-LaTeX
@@ -9123,7 +9126,7 @@ LaTeX file, =preview-latex= gives you a ~Preview~ menu.
         (setq preview-gs-command
           (cond (running-ms-windows
                  (concat windows-program-files-dir
-                         "gs/gs9.01/bin/gswin32c.exe")) ;; XXX Not up-to-date!!!
+                         "texlive/2012/tlpkg/tlgs/bin/gswin32c.exe")) ;; XXX Not up-to-date!!!
                 (t
                  "/usr/bin/gs")))
         (leuven--file-exists-and-executable-p preview-gs-command)
@@ -9168,6 +9171,8 @@ current selection. More general index entries are created with =C-c <=.
         ;; menu generally comes up faster
         (setq reftex-use-multiple-selection-buffers t))
 #+end_src
+
+** BibTeX
 
 #+begin_src emacs-lisp
       )) ;; with-eval-after-load "latex" ends here
@@ -9733,9 +9738,9 @@ flymake can compile in the background and colorize lines with errors/warnings
       (if (and (buffer-file-name) (file-writable-p buffer-file-name))
           (flymake-mode t)))
 
-    ;; add errors to modeline -- With this the error output of othe current
-    ;; line will appear right below in the modeline XXX
+    ;; XXX add errors to mode line
     (defun leuven--flymake-show-help ()
+      "Display the error output of the current line in the mode line"
       (when (get-char-property (point) 'flymake-overlay)
         (let ((help (get-char-property (point) 'help-echo)))
           (if help (message "%s" help)))))
@@ -12120,16 +12125,6 @@ See customizations at http://snarfed.org/why_i_run_shells_inside_emacs.
 
     (add-to-list 'sh-alias-alist '(sh . bash)))
 
-  (defun set-shell-cmdproxy()
-    (interactive)
-    (setq shell-file-name "cmdproxy")
-    (setq explicit-shell-file-name "cmdproxy")
-    (setenv "SHELL" explicit-shell-file-name)
-    (setq w32-quote-process-args t)
-    (setq shell-command-switch "/c"))
-
-  ;; (set-shell-cmdproxy)
-
   ;; XXX Test the following (added on 2011-08-03)
   ;; (when (eq system-type 'windows-nt)
   ;;   ;; Workaround for Cygwin shell, when set 'CYGWIN=noglob'. By default
@@ -12167,40 +12162,24 @@ old region and *replaces* it with the output from the shell command.
   ;;               (concat "source ~/.bashrc; shopt -s -q expand_aliases;\n "
   ;;                       (ad-get-arg 0))))
 
-  ;; for single shell commands
-  (setq shell-file-name ;; must be in the `PATH' (Windows users)
-        (or ;; (executable-find "zsh") ;; problems to compile with AUCTeX
-            (executable-find "bash")
-            (executable-find "cmdproxy.exe")
-            "cmd.exe")) ;; default (= system shell)
+  ;; for single shell commands (= "the" reference)
+  (setq shell-file-name                 ; must be in the `PATH'
+        (or (file-name-nondirectory (executable-find "zsh"))
+            (file-name-nondirectory (executable-find "bash"))
+            (when running-ms-windows "cmdproxy.exe")))
 
   ;; use `shell-file-name' as the default shell
   (setenv "SHELL" shell-file-name)
 
   ;; switch used to have the shell execute its command line argument
-  ;; (`/c' does not work with XEmacs)
-  (setq shell-command-switch
-        (cond
-         ;; using a system shell
-         ((string-match "cmd.exe" shell-file-name) "/c")
-         (t "-c")))
+  (setq shell-command-switch "-c")      ; `/c' does not work with XEmacs
 
   ;; quote process arguments to ensure correct parsing on Windows
-  (setq w32-quote-process-args
-        (cond ((string-match "cmd.exe" shell-file-name) nil) ;; using a system shell
-              (t t)))
+  (setq w32-quote-process-args t)
 #+end_src
 
-#+begin_src emacs-lisp
-  ;; external commands for AUCTeX
-  (with-eval-after-load "tex-buf"
-
-    ;; name of shell used to parse TeX commands
-    (setq TeX-shell shell-file-name) ;; ???
-
-    ;; shell argument indicating that next argument is the command
-    (setq TeX-shell-command-option shell-command-switch)) ;; ???
-#+end_src
+The above assignments may *NOT* be done *in an eval-after-load* as those variables
+are used by the (La)TeX modes (default + AUCTeX) among others.
 
 ** Interactive Shell
 

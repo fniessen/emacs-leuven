@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131001.1121
+;; Version: 20131001.1458
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131001.1121]--")
+(message "* --[ Loading Emacs Leuven 20131001.1458]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -238,9 +238,9 @@
 ;;** MS Windows
 
   ;; FIXME The path is not correct under Cygwin Emacs (gsprint.exe not found)
-  (defconst windows-program-files-dir
+  (defconst windows-program-files-dir   ; sys-path
     (if running-ms-windows
-        (concat (file-name-as-directory (getenv "PROGRAMFILES")) "/") ;; double slash?
+        (file-name-as-directory (getenv "PROGRAMFILES"))
       "/usr/local/bin/")
     "Defines the default Windows Program Files folder.")
 
@@ -1161,7 +1161,7 @@
   ;; show the column number in each mode line
   (column-number-mode 1)
 
-  ;; use inactive face for mode-line in non-selected windows
+  ;; use inactive face for mode line in non-selected windows
   (setq mode-line-in-non-selected-windows t)
 
 ;;** 14.19 How (info "(emacs)Text Display")ed
@@ -2127,9 +2127,8 @@
       ;; don't show only basename of candidates in `helm-find-files'
       (setq helm-ff-transformer-show-only-basename nil)
 
-      ;; max length of buffer names before truncate
-      (setq helm-buffer-max-length 40)
-      ;; (setq helm-buffer-max-length nil) ;; don't truncate anymore
+      ;; don't truncate buffer names
+      (setq helm-buffer-max-length nil)
 
       (defun helm-toggle-debug ()
         "Toggle Helm debug on/off."
@@ -2444,12 +2443,11 @@
     (set-frame-position (buffer-dedicated-frame) 0 0))
 
   ;; title bar display of visible frames
-  (setq frame-title-format "Emacs") ;; XXX for StumpWM?  Dunno anymore...
-
   (setq frame-title-format
         (format "Emacs %s rev:%s pid:%d"
                 emacs-version
-                (ignore-errors (replace-regexp-in-string " .*" "" emacs-bzr-version))
+                (ignore-errors
+                  (replace-regexp-in-string " .*" "" emacs-bzr-version))
                 (emacs-pid)))
 
 ;;** 21.6 (info "(emacs)Frame Commands")
@@ -3837,7 +3835,7 @@
     ;; clock won't be stopped when the clocked entry is marked DONE
     (setq org-clock-out-when-done nil)
 
-    ;; time included for the modeline clock is all time clocked into this
+    ;; time included for the mode line clock is all time clocked into this
     ;; task today
     (setq org-clock-modeline-total 'today)
     (setq org-clock-modeline-total 'all)
@@ -6139,7 +6137,7 @@ From %c"
          '((("^!.*" .
              compilation-error-face) ;; LaTeX error
             ("^-+$" .
-             compilation-info-face) ;; latexmk divider
+             compilation-info-face) ;; Latexmk separator
             ("^Package .* Warning: .*" .
              compilation-warning-face)
             ("Reference .* undefined" .
@@ -6148,7 +6146,7 @@ From %c"
              font-lock-string-face)
             ("^LaTeX Font Warning:" .
              font-lock-string-face)
-            ;; .....
+            ;; ...
             ))))
 
   (defadvice TeX-recenter-output-buffer
@@ -6164,7 +6162,7 @@ From %c"
 
   ;; support for LaTeX documents
   (GNUEmacs
-    (with-eval-after-load "tex-site"
+    (with-eval-after-load "latex"
 
       ;; ;; TEST ??
       ;; (add-hook 'tex-mode-hook 'imenu-add-menubar-index)
@@ -6203,7 +6201,7 @@ From %c"
       ;; (for Org mode) add the `comment' environment to the variable
       ;; `LaTeX-verbatim-environments' so that, if the `#+TBLFM' line
       ;; contains an odd number of dollar characters, this does not
-      ;; cause problems with font-lock in latex-mode
+      ;; cause problems with font-lock in LaTeX-mode
       (add-to-list 'LaTeX-verbatim-environments "comment")
 
 ;;** 4.1 Executing (info "(auctex)Commands")
@@ -6300,9 +6298,8 @@ From %c"
       (leuven--section "5.5.3 (auctex)Automatic Local Customization for a Directory")
 
       ;; directory containing automatically generated TeX information
-      (setq TeX-auto-local
-            ;; must end with a slash
-            "~/.emacs.d/auctex-auto-generated-info/")
+      (setq TeX-auto-local "~/.emacs.d/auctex-auto-generated-info/")
+                                        ; must end with a slash
 
 ;;** (info "(preview-latex)Top")
 
@@ -6317,7 +6314,7 @@ From %c"
         (setq preview-gs-command
           (cond (running-ms-windows
                  (concat windows-program-files-dir
-                         "gs/gs9.01/bin/gswin32c.exe")) ;; XXX Not up-to-date!!!
+                         "texlive/2012/tlpkg/tlgs/bin/gswin32c.exe")) ;; XXX Not up-to-date!!!
                 (t
                  "/usr/bin/gs")))
         (leuven--file-exists-and-executable-p preview-gs-command)
@@ -6684,9 +6681,9 @@ From %c"
       (if (and (buffer-file-name) (file-writable-p buffer-file-name))
           (flymake-mode t)))
 
-    ;; add errors to modeline -- With this the error output of othe current
-    ;; line will appear right below in the modeline XXX
+    ;; XXX add errors to mode line
     (defun leuven--flymake-show-help ()
+      "Display the error output of the current line in the mode line"
       (when (get-char-property (point) 'flymake-overlay)
         (let ((help (get-char-property (point) 'help-echo)))
           (if help (message "%s" help)))))
@@ -8209,16 +8206,6 @@ From %c"
 
     (add-to-list 'sh-alias-alist '(sh . bash)))
 
-  (defun set-shell-cmdproxy()
-    (interactive)
-    (setq shell-file-name "cmdproxy")
-    (setq explicit-shell-file-name "cmdproxy")
-    (setenv "SHELL" explicit-shell-file-name)
-    (setq w32-quote-process-args t)
-    (setq shell-command-switch "/c"))
-
-  ;; (set-shell-cmdproxy)
-
   ;; XXX Test the following (added on 2011-08-03)
   ;; (when (eq system-type 'windows-nt)
   ;;   ;; Workaround for Cygwin shell, when set 'CYGWIN=noglob'. By default
@@ -8245,37 +8232,20 @@ From %c"
   ;;               (concat "source ~/.bashrc; shopt -s -q expand_aliases;\n "
   ;;                       (ad-get-arg 0))))
 
-  ;; for single shell commands
-  (setq shell-file-name ;; must be in the `PATH' (Windows users)
-        (or ;; (executable-find "zsh") ;; problems to compile with AUCTeX
-            (executable-find "bash")
-            (executable-find "cmdproxy.exe")
-            "cmd.exe")) ;; default (= system shell)
+  ;; for single shell commands (= "the" reference)
+  (setq shell-file-name                 ; must be in the `PATH'
+        (or (file-name-nondirectory (executable-find "zsh"))
+            (file-name-nondirectory (executable-find "bash"))
+            (when running-ms-windows "cmdproxy.exe")))
 
   ;; use `shell-file-name' as the default shell
   (setenv "SHELL" shell-file-name)
 
   ;; switch used to have the shell execute its command line argument
-  ;; (`/c' does not work with XEmacs)
-  (setq shell-command-switch
-        (cond
-         ;; using a system shell
-         ((string-match "cmd.exe" shell-file-name) "/c")
-         (t "-c")))
+  (setq shell-command-switch "-c")      ; `/c' does not work with XEmacs
 
   ;; quote process arguments to ensure correct parsing on Windows
-  (setq w32-quote-process-args
-        (cond ((string-match "cmd.exe" shell-file-name) nil) ;; using a system shell
-              (t t)))
-
-  ;; external commands for AUCTeX
-  (with-eval-after-load "tex-buf"
-
-    ;; name of shell used to parse TeX commands
-    (setq TeX-shell shell-file-name) ;; ???
-
-    ;; shell argument indicating that next argument is the command
-    (setq TeX-shell-command-option shell-command-switch)) ;; ???
+  (setq w32-quote-process-args t)
 
 ;;** 36.2 Interactive Shell
 
@@ -9341,7 +9311,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131001.1122]--")
+(message "* --[ Loaded Emacs Leuven 20131001.1459]--")
 
 (provide 'emacs-leuven)
 
