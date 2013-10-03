@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131003.122
+;; Version: 20131003.1423
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131003.122]--")
+(message "* --[ Loading Emacs Leuven 20131003.1423]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4643,11 +4643,10 @@ From %c"
                    tags "refile|capture"
                    ((org-agenda-overriding-header "Refile stuff"))) t)
 
-    ;; XXX
     (add-to-list 'org-agenda-custom-commands
-                 `("oc" "XXX Tasks to refile (column view)"
+                 `("oc" "Tasks to refile (column view)"
                    tags-todo ""
-                   ((org-agenda-files ,org-default-notes-file)
+                   ((org-agenda-files ,(quote (list org-default-notes-file)))
                     (org-agenda-overriding-columns-format
                      "%65ITEM(Task) %4TODO %PRIORITY %20TAGS %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)")
                     (org-agenda-view-columns-initially t))) t)
@@ -9320,7 +9319,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131003.1221]--")
+(message "* --[ Loaded Emacs Leuven 20131003.1424]--")
 
 (provide 'emacs-leuven)
 

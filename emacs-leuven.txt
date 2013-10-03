@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-03 Thu 13:18>
+# Time-stamp: <2013-10-03 Thu 14:23>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -6790,11 +6790,10 @@ Hide certain tasks that you don't want to be bothered with all the time:
                    tags "refile|capture"
                    ((org-agenda-overriding-header "Refile stuff"))) t)
 
-    ;; XXX
     (add-to-list 'org-agenda-custom-commands
-                 `("oc" "XXX Tasks to refile (column view)"
+                 `("oc" "Tasks to refile (column view)"
                    tags-todo ""
-                   ((org-agenda-files ,org-default-notes-file)
+                   ((org-agenda-files ,(quote (list org-default-notes-file)))
                     (org-agenda-overriding-columns-format
                      "%65ITEM(Task) %4TODO %PRIORITY %20TAGS %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)")
                     (org-agenda-view-columns-initially t))) t)
