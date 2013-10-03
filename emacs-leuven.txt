@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-01 Tue 15:09>
+# Time-stamp: <2013-10-03 Thu 12:19>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -2315,57 +2315,62 @@ previously detected error.
 ** Basic Use
 
 - =<S-f8>= ::
-     Start recording
+     Start recording your keyboard macro.
 
 - =<S-f8>= again ::
-     Stop recording
+     Stop recording it.
 
 - =<f8>= ::
-     Call the keyboard macro
+     Call the keyboard macro.
 
-- =<C-f8>= ::
-     Name it
+If you want to check the result each time before repeating, type =<f8> e e...=.
 
-If you want to check the result each time before repeating, then
-=C-x e e e...=.
-If you want to repeat only <N> times, then =C-u <N> C-x e=.
-If you want to repeat forever or until error, then =C-u 0 C-x e=.
+If you want to repeat only N times, type =C-u N <f8>=.
 
-If you have some keystroke you never use, then:
-
-=C-x ( C-u - C-x 0 C-x ) M-x assign-kbd-macro-to-key <RET> <KEYSTROKE>=
+If you want to repeat forever or until error, type =C-u 0 <f8>=.
 
 #+begin_src emacs-lisp
 ;;** 17.1 (info "(emacs)Basic Keyboard Macro") Use
 
   (leuven--section "17.1 (emacs)Basic Keyboard Macro Use")
 
-  (defun leuven-toggle-kbd-macro-recording-on ()
+  (defun leuven-kmacro-turn-on-recording ()
     "Start recording a keyboard macro and toggle functionality of
   key binding."
     (interactive)
     (global-set-key
-      (kbd "<S-f8>") 'leuven-toggle-kbd-macro-recording-off)
-    (start-kbd-macro nil))
+      (kbd "<S-f8>") 'leuven-kmacro-turn-off-recording)
+    (kmacro-start-macro nil))
 
-  (defun leuven-toggle-kbd-macro-recording-off ()
+  (defun leuven-kmacro-turn-off-recording ()
     "Stop recording a keyboard macro and toggle functionality of
   key binding."
     (interactive)
     (global-set-key
-      (kbd "<S-f8>") 'leuven-toggle-kbd-macro-recording-on)
-    (end-kbd-macro))
+      (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
+    (kmacro-end-macro nil))
 
   ;; start/stop recording a keyboard macro
   (global-set-key
-    (kbd "<S-f8>") 'leuven-toggle-kbd-macro-recording-on)
+    (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
 
   ;; execute the most recent keyboard macro
   (global-set-key
-    (kbd "<f8>") 'call-last-kbd-macro)
+    (kbd "<f8>") 'kmacro-call-macro)
 #+end_src
 
 ** Naming and Saving Keyboard Macros
+
+- =<C-f8>= ::
+     Give the keyboard macro a name (to invoke it under that name).
+
+Assign the last macro to a free key binding of your choice with
+=kmacro-bind-to-key= (bound to =C-x C-k b=).
+
+To save a named keyboard macro (with its key binding) for future use, switch to
+your ~.emacs~ buffer, and run =C-u M-x insert-kbd-macro= (if you leave out the =C-u=,
+then it will just insert the macro definition without the =global-set-key=
+sequence).
 
 #+begin_src emacs-lisp
 ;;** 17.5 Name and (info "(emacs)Save Keyboard Macro")s
@@ -2374,7 +2379,7 @@ If you have some keystroke you never use, then:
 
   ;; assign a name to the last keyboard macro defined
   (global-set-key
-    (kbd "<C-f8>") 'name-last-kbd-macro)
+    (kbd "<C-f8>") 'kmacro-name-last-macro)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -7448,6 +7453,14 @@ Agenda:
 
 *************** TODO Show SCHEDULED items as well in "Next 12 Days"
 
+#+begin_src emacs-lisp
+    ;; emails
+    (add-to-list 'org-agenda-custom-commands
+                 '("@" "Emails"
+                   todo ""
+                   ((org-agenda-files '("~/org/email.org")))) t)
+#+end_src
+
 **** TODO Add a custom view which is some "bill" to send to your boss/client (table view)
 
 #+begin_src emacs-lisp
@@ -8386,6 +8399,9 @@ function is loaded (AFTER having been adviced).
             ("A" "#+ascii: ")
             ("i" "#+index: ?" "#+index: ?")
             ("I" "#+include: %file ?" "<include file=%file markup=\"?\">"))))
+
+    (add-to-list 'org-structure-template-alist
+                 '("C" "#+begin_comment\n?\n#+end_comment"))
 #+end_src
 
 *** Speed keys

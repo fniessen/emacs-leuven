@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131001.1458
+;; Version: 20131003.122
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131001.1458]--")
+(message "* --[ Loading Emacs Leuven 20131003.122]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1577,29 +1577,29 @@
 
   (leuven--section "17.1 (emacs)Basic Keyboard Macro Use")
 
-  (defun leuven-toggle-kbd-macro-recording-on ()
+  (defun leuven-kmacro-turn-on-recording ()
     "Start recording a keyboard macro and toggle functionality of
   key binding."
     (interactive)
     (global-set-key
-      (kbd "<S-f8>") 'leuven-toggle-kbd-macro-recording-off)
-    (start-kbd-macro nil))
+      (kbd "<S-f8>") 'leuven-kmacro-turn-off-recording)
+    (kmacro-start-macro nil))
 
-  (defun leuven-toggle-kbd-macro-recording-off ()
+  (defun leuven-kmacro-turn-off-recording ()
     "Stop recording a keyboard macro and toggle functionality of
   key binding."
     (interactive)
     (global-set-key
-      (kbd "<S-f8>") 'leuven-toggle-kbd-macro-recording-on)
-    (end-kbd-macro))
+      (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
+    (kmacro-end-macro nil))
 
   ;; start/stop recording a keyboard macro
   (global-set-key
-    (kbd "<S-f8>") 'leuven-toggle-kbd-macro-recording-on)
+    (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
 
   ;; execute the most recent keyboard macro
   (global-set-key
-    (kbd "<f8>") 'call-last-kbd-macro)
+    (kbd "<f8>") 'kmacro-call-macro)
 
 ;;** 17.5 Name and (info "(emacs)Save Keyboard Macro")s
 
@@ -1607,7 +1607,7 @@
 
   ;; assign a name to the last keyboard macro defined
   (global-set-key
-    (kbd "<C-f8>") 'name-last-kbd-macro)
+    (kbd "<C-f8>") 'kmacro-name-last-macro)
 
 ) ;; chapter 17 ends here
 
@@ -5174,6 +5174,12 @@ From %c"
                     (org-agenda-write-buffer-name "List Review"))
                    "org-agenda-all-todo-entries.html") t)
 
+    ;; emails
+    (add-to-list 'org-agenda-custom-commands
+                 '("@" "Emails"
+                   todo ""
+                   ((org-agenda-files '("~/org/email.org")))) t)
+
     ) ;; with-eval-after-load "org-agenda" ends here
 
 ;;** 10.7 (info "(org)Exporting Agenda Views")
@@ -5880,6 +5886,9 @@ From %c"
             ("A" "#+ascii: ")
             ("i" "#+index: ?" "#+index: ?")
             ("I" "#+include: %file ?" "<include file=%file markup=\"?\">"))))
+
+    (add-to-list 'org-structure-template-alist
+                 '("C" "#+begin_comment\n?\n#+end_comment"))
 
 ;;** 15.3 (info "(org)Speed keys")
 
@@ -9311,7 +9320,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131001.1459]--")
+(message "* --[ Loaded Emacs Leuven 20131003.1221]--")
 
 (provide 'emacs-leuven)
 
