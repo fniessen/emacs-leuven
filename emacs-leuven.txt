@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-03 Thu 12:19>
+# Time-stamp: <2013-10-03 Thu 13:18>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -8398,10 +8398,10 @@ function is loaded (AFTER having been adviced).
             ("a" "#+begin_ascii\n?\n#+end_ascii")
             ("A" "#+ascii: ")
             ("i" "#+index: ?" "#+index: ?")
-            ("I" "#+include: %file ?" "<include file=%file markup=\"?\">"))))
+            ("I" "#+include: %file ?" "<include file=%file markup=\"?\">")))
 
     (add-to-list 'org-structure-template-alist
-                 '("C" "#+begin_comment\n?\n#+end_comment"))
+                 '("C" "#+begin_comment\n?\n#+end_comment")))
 #+end_src
 
 *** Speed keys

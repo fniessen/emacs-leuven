@@ -5885,10 +5885,10 @@ From %c"
             ("a" "#+begin_ascii\n?\n#+end_ascii")
             ("A" "#+ascii: ")
             ("i" "#+index: ?" "#+index: ?")
-            ("I" "#+include: %file ?" "<include file=%file markup=\"?\">"))))
+            ("I" "#+include: %file ?" "<include file=%file markup=\"?\">")))
 
     (add-to-list 'org-structure-template-alist
-                 '("C" "#+begin_comment\n?\n#+end_comment"))
+                 '("C" "#+begin_comment\n?\n#+end_comment")))
 
 ;;** 15.3 (info "(org)Speed keys")
 
