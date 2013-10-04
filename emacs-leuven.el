@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131003.1423
+;; Version: 20131004.1005
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131003.1423]--")
+(message "* --[ Loading Emacs Leuven 20131004.1005]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -392,9 +392,10 @@
 
   ;; require a feature/library if available; if not, fail silently
   (defun try-require (feature)
-    "Attempt to load a library or module. Return true if the
-  library given as argument is successfully loaded. If not, instead
-  of an error, just add the package to a list of missing packages."
+    "Attempt to load a library or module.
+
+  Return true if the library given as argument is successfully loaded. If not,
+  instead of an error, just add the package to a list of missing packages."
     (let (time-start)
       (condition-case err
           ;; protected form
@@ -1553,7 +1554,8 @@
      (concat "http://www.answers.com/main/ntquery?s=" (find-tag-default))))
 
   (defun leuven-lookup-word-definition-in-w3m ()
-    "Look up the word's definition in a emacs-w3m.\n
+    "Look up the word's definition in a emacs-w3m.
+
   If a region is active (a phrase), lookup that phrase."
     (interactive)
     (let (word
@@ -1578,16 +1580,14 @@
   (leuven--section "17.1 (emacs)Basic Keyboard Macro Use")
 
   (defun leuven-kmacro-turn-on-recording ()
-    "Start recording a keyboard macro and toggle functionality of
-  key binding."
+    "Start recording a keyboard macro and toggle functionality of key binding."
     (interactive)
     (global-set-key
       (kbd "<S-f8>") 'leuven-kmacro-turn-off-recording)
     (kmacro-start-macro nil))
 
   (defun leuven-kmacro-turn-off-recording ()
-    "Stop recording a keyboard macro and toggle functionality of
-  key binding."
+    "Stop recording a keyboard macro and toggle functionality of key binding."
     (interactive)
     (global-set-key
       (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
@@ -2333,7 +2333,7 @@
 
   ;; swap 2 windows
   (defun leuven-swap-windows ()
-    "If you have 2 windows, it swaps them."
+    "If you have 2 windows, swap them."
     (interactive)
     (cond ((not (= (count-windows) 2))
            (message "You need exactly 2 windows to swap them."))
@@ -2353,9 +2353,10 @@
     (kbd "C-c ~") 'leuven-swap-windows)
 
   (defun leuven-toggle-window-split ()
-    "Vertical split shows more of each line, horizontal split shows
-  more lines. This code toggles between them. It only works for
-  frames with exactly two windows."
+    "Toggle between vertical and horizontal split.
+
+  Vertical split shows more of each line, horizontal split shows more lines.
+  This code only works for frames with exactly two windows."
     (interactive)
     (cond ((not (= (count-windows) 2))
            (message "You need exactly 2 windows to toggle the window split."))
@@ -2456,7 +2457,7 @@
 
   (XWindow
    (defun toggle-full-screen ()
-     "Toggle between full screen and partial screen display on X11"
+     "Toggle between full screen and partial screen display on X11."
      (interactive)
      ;; WM must support EWMH
      ;; http://standards.freedesktop.org/wm-spec/wm-spec-latest.html
@@ -3065,9 +3066,7 @@
   (global-set-key
     (kbd "C-c C-b") 'org-switch-to-agenda)
 
-
   ;; This must be set before loading Org...
-
 
   ;; face to be used by `font-lock' for highlighting in Org-mode Emacs
   ;; buffers, and tags to be used to convert emphasis fontifiers for HTML
@@ -3094,7 +3093,6 @@
           ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
           ("=" org-code "<code>" "</code>" verbatim)
           ("~" org-verbatim "<code>" "</code>" verbatim)))
-
 
   ;; Unhiding edited areas
   ;;??? I like the idea of clustering undo but find it disconcerting
@@ -3662,6 +3660,7 @@
   ;; remove redundant tags of headlines (from David Maus)
   (defun leuven--org-remove-redundant-tags ()
     "Remove redundant tags of headlines in current buffer.
+
   A tag is considered redundant if it is local to a headline and inherited by
   a parent headline."
     (interactive)
@@ -3856,6 +3855,7 @@
     ;; ask the user if they wish to clock out before killing Emacs
     (defun leuven--org-query-clock-out ()
       "Ask the user before clocking out.
+
     This is a useful function for adding to `kill-emacs-query-functions'."
       (if (and (featurep 'org-clock)
                (funcall 'org-clocking-p)
@@ -4223,7 +4223,7 @@ From %c"
 
     ;; exclude DONE state tasks from refile targets
     (defun bh/verify-refile-target ()
-      "Exclude todo keywords with a done state from refile targets"
+      "Exclude TODO keywords with a DONE state from refile targets."
       (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 
     (setq org-refile-target-verify-function 'bh/verify-refile-target)
@@ -4523,6 +4523,7 @@ From %c"
 
   (defun leuven--working-p ()
     "Return t if current time is inside normal working hours.
+
   Currently: 08:30-12:30 and 13:30-17:30."
     (let* ((time (decode-time))
            (hour (nth 2 time))
@@ -4537,6 +4538,7 @@ From %c"
 
   (defun leuven--calling-hours-p ()
     "Return t if current time is inside normal calling hours.
+
   Currently: 08:00-21:59."
     (let* ((hour (nth 2 (decode-time))))
       (and (<= 8 hour) (<= hour 21))))
@@ -5173,6 +5175,12 @@ From %c"
                     (org-agenda-write-buffer-name "List Review"))
                    "org-agenda-all-todo-entries.html") t)
 
+    ;; inbox
+    (add-to-list 'org-agenda-custom-commands
+                 '("I" "Inbox"
+                   todo ""
+                   ((org-agenda-files '("~/org/refile.org")))) t)
+
     ;; emails
     (add-to-list 'org-agenda-custom-commands
                  '("@" "Emails"
@@ -5231,6 +5239,7 @@ From %c"
 
     (defun leuven-org-insert-image-or-take-screenshot (name)
       "Insert a link to an already existing image, or else to a screenshot.
+
     The screenshot is either taken to the given non-existing file name,
     or added into the given directory, defaulting to the current one."
       ;; FIXME: Should limit to '("pdf" "jpeg" "jpg" "png" "ps" "eps")
@@ -5430,6 +5439,7 @@ From %c"
     ;; override output type `inline-css' used for htmlizing a region
     (defun htmlize-region-for-paste (beg end)
       "Htmlize the region and return just the HTML as a string.
+
   This forces the `css' style and only returns the HTML body, but
   without the BODY tag. This should make it useful for inserting
   the text to another HTML buffer."
@@ -5735,7 +5745,8 @@ From %c"
   (global-set-key
     (kbd "C-c C-v C-d") 'org-babel-demarcate-block)
 
-  (defvar only-code-overlays nil "Overlays hiding non-code blocks.")
+  (defvar only-code-overlays nil
+    "Overlays hiding non-code blocks.")
   (make-variable-buffer-local 'only-code-overlays)
 
   (defun hide-non-code ()
@@ -5853,8 +5864,7 @@ From %c"
   ;;                       'src-block)))))
 
   (defun leuven--org-switch-language ()
-    "Switch language for Org file, if a `#+LANGUAGE:' meta-tag is
-  on top 8 lines."
+    "Switch language if a `#+LANGUAGE:' Org meta-tag is on top 8 lines."
     (save-excursion
       (goto-line (1+ 8))
       (if (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
@@ -6685,13 +6695,14 @@ From %c"
 
     ;; set up `flymake'
     (defun activate-flymake ()
-      "Activates flymake when real buffer and you have write access"
-      (if (and (buffer-file-name) (file-writable-p buffer-file-name))
-          (flymake-mode t)))
+      "Activate Flymake when real buffer and you have write access."
+      (when (and (buffer-file-name)
+                 (file-writable-p buffer-file-name))
+        (flymake-mode t)))
 
     ;; XXX add errors to mode line
     (defun leuven--flymake-show-help ()
-      "Display the error output of the current line in the mode line"
+      "Display the error output of the current line in the mode line."
       (when (get-char-property (point) 'flymake-overlay)
         (let ((help (get-char-property (point) 'help-echo)))
           (if help (message "%s" help)))))
@@ -6816,6 +6827,7 @@ From %c"
   ;; 10.3.5 Org keyword search
   (defun leuven-org-grep (regexp &optional context)
     "Recursively search for REGEXP in Org files in directory tree rooted at `org-directory'.
+
   Prefix argument determines number of lines of output context."
     (interactive "sSearch regexp: \nP")
     (let ((grep-find-ignored-files '("#*" ".#*"))
@@ -6960,8 +6972,7 @@ From %c"
       (when (image-type-available-p 'png)
         ;; http://www.emacswiki.org/emacs/VcIcon
         (defun vc-icon ()
-          "Display a colored icon indicating the vc status of the current
-        file."
+          "Display a colored icon indicating the vc status of the current file."
           (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name))
                           (concat leuven--directory
                                   "Pictures/NormalIcon.png")
@@ -7559,7 +7570,7 @@ From %c"
         "W" 'dired-find-w3m))
 
     (defun leuven-make-executable ()
-      "Make a script executable, from the buffer in which you edit it"
+      "Make a script executable, from the buffer in which you edit it."
       (interactive)
       (shell-command (concat "chmod +x " buffer-file-name)))
 
@@ -7860,7 +7871,7 @@ From %c"
 
     ;; remove some strings (tags and filenames) from item summary
     (defun cfw:org-summary-format (item)
-      "Format an item. (How should be displayed?)"
+      "Format an item (How should it be displayed?)."
       (let* ((time (cfw:org-tp item 'time))
              (time-of-day (cfw:org-tp item 'time-of-day))
              (time-str (and time-of-day
@@ -7922,7 +7933,7 @@ From %c"
 
   (defun switch-or-start (function buffer)
     "If the buffer is current, bury it. If there is a buffer with that
-    name, switch to it; otherwise invoke the function."
+  name, switch to it; otherwise, invoke the function."
     (if (equal (buffer-name (current-buffer)) buffer)
         (bury-buffer)
       (if (get-buffer buffer)
@@ -8166,10 +8177,10 @@ From %c"
   (add-to-list 'auto-mode-alist '("\\.xls\\'" . no-xls))
   (defun no-xls (&optional filename)
     "Run xlhtml and w3m -dump on the entire buffer.
-  Optional FILENAME says what filename to use.
-  This is only necessary for buffers without
-  proper `buffer-file-name'.  FILENAME should
-  be a real filename, not a path."
+
+  Optional FILENAME says what filename to use. This is only necessary for
+  buffers without proper `buffer-file-name'. FILENAME should be a real filename,
+  not a path."
     (interactive "fExcel File: ")
     (when (and filename
                (not (buffer-file-name)))
@@ -8187,10 +8198,10 @@ From %c"
   ;; FIXME Not that good! (some text repeated multiple times)
   (defun no-ppt (&optional filename)
     "Run ppthtml and w3m -dump on the entire buffer.
-  Optional FILENAME says what filename to use.
-  This is only necessary for buffers without
-  proper `buffer-file-name'.  FILENAME should
-  be a real filename, not a path."
+
+  Optional FILENAME says what filename to use. This is only necessary for
+  buffers without proper `buffer-file-name'.  FILENAME should be a real filename,
+  not a path."
     (interactive "fPowerPoint File: ")
     (when (and filename
                (not (buffer-file-name)))
@@ -8614,8 +8625,8 @@ From %c"
   ;;         (executable-find "firefox"))) ;; could be `google-chrome'
 
   (defun leuven--browse (url)
-    "If prefix is specified, use the system default browser else use the
-  configured emacs one."
+    "If prefix is specified, use the system default browser, else use the
+  configured Emacs one."
     (require 'browse-url)
     (if current-prefix-arg
         ;; open in your desktop browser (firefox here)
@@ -8693,7 +8704,7 @@ From %c"
 
 
          (defun google (what)
-           "Use google to search for WHAT."
+           "Use Google to search for WHAT."
            (interactive "sSearch: ")
            (save-window-excursion
              (delete-other-windows)
@@ -8707,6 +8718,7 @@ From %c"
 
   (defun pm/region-or-word (prompt)
     "Read a string from the minibuffer, prompting with PROMPT.
+
   If `transient-mark-mode' is non-nil and the mark is active,
   it defaults to the current region, else to the word at or before
   point. This function returns a list (string) for use in `interactive'."
@@ -8716,8 +8728,9 @@ From %c"
                                   (current-word)))))
 
   (defun pm/google (string)
-    "Ask a WWW browser to google string.
-  Prompts for a string, defaulting to the active region or the current word at
+    "Ask a WWW browser to Google STRING.
+
+  Prompt for a string, defaulting to the active region or the current word at
   or before point."
     (interactive (pm/region-or-word "Google: "))
     (browse-url (concat "http://google.com/search?num=100&q=" string)))
@@ -8766,8 +8779,7 @@ From %c"
 
       ;; go ahead, just try it
       (defun leuven-w3m-goto-url ()
-        "Type in directly the URL I would like to visit (avoiding to
-      hit `C-k')."
+        "Type in directly the URL to visit (avoiding to hit `C-k')."
         (interactive)
         (let ((w3m-current-url ""))
           (call-interactively 'w3m-goto-url)))
@@ -9319,7 +9331,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131003.1424]--")
+(message "* --[ Loaded Emacs Leuven 20131004.1006]--")
 
 (provide 'emacs-leuven)
 
