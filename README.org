@@ -1,10 +1,12 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DATE:      2012-06-22
-#+Time-stamp: <2013-09-27 Fri 12:56>
+#+Time-stamp: <2013-10-05 Sat 15:16>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en_US
+
+#+PROPERTY:  eval no
 
 * Emacs-leuven
 
@@ -48,6 +50,7 @@ Global key bindings.
 | <S-f1>   | man-follow                               |
 | <C-f1>   | info-lookup-symbol                       |
 | <f2>     | save-buffer                              |
+| <S-f2>   | org-save-buffer-and-do-related           |
 | <C-f2>   | (for interaction-log mode)               |
 | <f3>     | find-file (or helm-for-files)            |
 | <M-f4>   | save-buffers-kill-terminal               |
