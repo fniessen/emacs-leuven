@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131005.1039
+;; Version: 20131005.1512
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131005.1039]--")
+(message "* --[ Loading Emacs Leuven 20131005.1512]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1659,7 +1659,7 @@
     (add-hook 'before-save-hook 'copyright-update))
 
   (defun org-save-buffer-and-do-related ()
-    "Save buffer, execute code blocks, tangle code blocks, and export to HTML/PDF."
+    "Save buffer, execute/tangle code blocks, and export to HTML/PDF."
     (interactive)
     (let* ((orgfile (buffer-file-name))
            (htmlfile (concat (file-name-base orgfile) ".html"))
@@ -9358,7 +9358,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131005.104]--")
+(message "* --[ Loaded Emacs Leuven 20131005.1513]--")
 
 (provide 'emacs-leuven)
 

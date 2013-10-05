@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-05 Sat 10:38>
+# Time-stamp: <2013-10-05 Sat 15:11>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -2464,7 +2464,7 @@ launched from Dired?
 
 #+begin_src emacs-lisp
   (defun org-save-buffer-and-do-related ()
-    "Save buffer, execute code blocks, tangle code blocks, and export to HTML/PDF."
+    "Save buffer, execute/tangle code blocks, and export to HTML/PDF."
     (interactive)
     (let* ((orgfile (buffer-file-name))
            (htmlfile (concat (file-name-base orgfile) ".html"))
