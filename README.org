@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DATE:      2012-06-22
-#+Time-stamp: <2013-10-05 Sat 15:16>
+#+Time-stamp: <2013-10-05 Sat 15:17>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en_US
@@ -78,6 +78,7 @@ Global key bindings.
 
 | Shortcut    | What it runs                          |
 |-------------+---------------------------------------|
+| C-x C-S-s   | org-save-buffer-and-do-related        |
 | <f4>        | helm-org-headlines                    |
 | <M-f6>      | visible-mode                          |
 | C-M-]       | org-cycle-global ;; <S-tab>           |
