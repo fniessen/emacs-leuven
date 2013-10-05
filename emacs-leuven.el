@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131004.1005
+;; Version: 20131005.1039
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131004.1005]--")
+(message "* --[ Loading Emacs Leuven 20131005.1039]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -995,11 +995,11 @@
     (font-lock-mode))
 
   ;; highlight FIXME notes
-  (defvar leuven-highlight-regexps
+  (defvar leuven-highlight-keywords
     "\\(TODO\\|FIXME\\|BUG\\|XXX\\|[Ee]rror\\|ERROR\\|[Ww]arning\\|WARNING\\)"
     "Patterns to highlight.")
 
-  (defvar leuven-highlight-org-regexps
+  (defvar leuven-highlight-keywords-in-org
     "\\(FIXME\\|BUG\\|XXX\\|[Ee]rror\\|[Ww]arning\\|WARNING\\)"
     "Patterns to highlight (for Org mode only, to ensure no conflict with the
   Org mode TODO keyword).")
@@ -1014,19 +1014,19 @@
   (dolist (mode '(fundamental-mode
                   text-mode))
     (font-lock-add-keywords mode
-     `((,leuven-highlight-regexps 1 'leuven-highlight-face prepend))))
+     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))))
 
   ;; set up highlighting of special patterns for Org mode only
   (dolist (mode '(org-mode))
     (font-lock-add-keywords mode
-     `((,leuven-highlight-org-regexps 1 'leuven-highlight-face prepend))))
+     `((,leuven-highlight-keywords-in-org 1 'leuven-highlight-face prepend))))
 
   ;; add fontification patterns (even in comments) to a selected major
   ;; mode *and* all major modes derived from it
   (defun leuven--highlight-special-patterns ()
     (interactive)
     (font-lock-add-keywords nil ;; in the current buffer
-     `((,leuven-highlight-regexps 1 'leuven-highlight-face prepend))))
+     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))))
   ;; FIXME                    0                    t
 
   ;; set up highlighting of special patterns for selected major modes *and*
@@ -1657,6 +1657,31 @@
   (GNUEmacs
     ;; update the copyright notice in current buffer
     (add-hook 'before-save-hook 'copyright-update))
+
+  (defun org-save-buffer-and-do-related ()
+    "Save buffer, execute code blocks, tangle code blocks, and export to HTML/PDF."
+    (interactive)
+    (let* ((orgfile (buffer-file-name))
+           (htmlfile (concat (file-name-base orgfile) ".html"))
+           (pdffile (concat (file-name-base orgfile) ".pdf")))
+      (save-buffer)                     ; see other commands in `before-save-hook':
+                                        ; `org-update-all-dblocks'
+                                        ; `org-table-iterate-buffer-tables'
+      (when (derived-mode-p 'org-mode)
+        (org-babel-execute-buffer)
+        (let ((before-save-hook nil))
+          (save-buffer))
+        (org-babel-tangle)
+        (when (file-exists-p htmlfile)
+          (org-html-export-to-html))
+        (when (file-exists-p pdffile)
+          (org-latex-export-to-pdf)))))
+
+  (global-set-key
+    (kbd "<S-f2>") 'org-save-buffer-and-do-related)
+
+  (global-set-key
+    (kbd "C-x C-S-s") 'org-save-buffer-and-do-related)
 
 ;;** 18.4 (info "(emacs)Reverting") a Buffer
 
@@ -3094,6 +3119,9 @@
           ("=" org-code "<code>" "</code>" verbatim)
           ("~" org-verbatim "<code>" "</code>" verbatim)))
 
+  ;; single character alphabetical bullets are allowed
+  (setq org-list-allow-alphabetical t)
+
   ;; Unhiding edited areas
   ;;??? I like the idea of clustering undo but find it disconcerting
   (setf org-self-insert-cluster-for-undo nil) ;; XXX undefined
@@ -3350,9 +3378,6 @@
 
   ;; an empty line does not end all plain list levels
   (setq org-empty-line-terminates-plain-lists nil)
-
-  ;; single character alphabetical bullets are allowed
-  (setq org-list-allow-alphabetical t)
 
 ;;** (info "(org)Footnotes")
 
@@ -6124,8 +6149,9 @@ From %c"
                                         ; of the buffer
                   (org-align-all-tags)
                   (org-update-all-dblocks)
-                  (when (fboundp 'org-table-iterate-buffer-tables)
-                    (org-table-iterate-buffer-tables))
+                  ;; (when (fboundp 'org-table-iterate-buffer-tables)
+                    (org-table-iterate-buffer-tables)
+                    ;; )
                   (when (file-exists-p (buffer-file-name (current-buffer)))
                     (leuven--org-remove-redundant-tags))
                   (when flyspell-mode-before-save (flyspell-mode 1))))))
@@ -9323,15 +9349,16 @@ From %c"
   (message "|         | =vsum(@-I..@-II) |"))
 
 ;; warn that some packages were missing
-(dolist (pkg leuven--missing-packages)
-  (message "(warning) Package `%s' not found" pkg))
+(when leuven-load-verbose
+  (dolist (pkg leuven--missing-packages)
+    (message "(warning) Package `%s' not found" pkg)))
 
 (message "Loading `%s'...done (in %.3f s)"
          load-file-name
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131004.1006]--")
+(message "* --[ Loaded Emacs Leuven 20131005.104]--")
 
 (provide 'emacs-leuven)
 

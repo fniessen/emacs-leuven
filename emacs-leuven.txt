@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-04 Fri 10:05>
+# Time-stamp: <2013-10-05 Sat 10:38>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -11,6 +11,7 @@
 
 #+PROPERTY:  tangle emacs-leuven.el
 #+PROPERTY:  padline yes
+#+PROPERTY:  eval no
 
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="file:///D:/Users/fni/src/org-style/bigblow/css/bigblow.css"/>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="file:///D:/Users/fni/src/org-style/bigblow/css/htmlize.css"/>
@@ -19,7 +20,7 @@
 * Header
 
 #+name: time-stamp
-#+begin_src sh :tangle no
+#+begin_src sh :eval yes :results silent :tangle no
 echo "$(date '+%Y%m%d.%H%M')"
 #+end_src
 
@@ -1429,11 +1430,11 @@ modes run =prog-mode-hook=, prior to running their own mode hooks.
 
 #+begin_src emacs-lisp
   ;; highlight FIXME notes
-  (defvar leuven-highlight-regexps
+  (defvar leuven-highlight-keywords
     "\\(TODO\\|FIXME\\|BUG\\|XXX\\|[Ee]rror\\|ERROR\\|[Ww]arning\\|WARNING\\)"
     "Patterns to highlight.")
 
-  (defvar leuven-highlight-org-regexps
+  (defvar leuven-highlight-keywords-in-org
     "\\(FIXME\\|BUG\\|XXX\\|[Ee]rror\\|[Ww]arning\\|WARNING\\)"
     "Patterns to highlight (for Org mode only, to ensure no conflict with the
   Org mode TODO keyword).")
@@ -1448,19 +1449,19 @@ modes run =prog-mode-hook=, prior to running their own mode hooks.
   (dolist (mode '(fundamental-mode
                   text-mode))
     (font-lock-add-keywords mode
-     `((,leuven-highlight-regexps 1 'leuven-highlight-face prepend))))
+     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))))
 
   ;; set up highlighting of special patterns for Org mode only
   (dolist (mode '(org-mode))
     (font-lock-add-keywords mode
-     `((,leuven-highlight-org-regexps 1 'leuven-highlight-face prepend))))
+     `((,leuven-highlight-keywords-in-org 1 'leuven-highlight-face prepend))))
 
   ;; add fontification patterns (even in comments) to a selected major
   ;; mode *and* all major modes derived from it
   (defun leuven--highlight-special-patterns ()
     (interactive)
     (font-lock-add-keywords nil ;; in the current buffer
-     `((,leuven-highlight-regexps 1 'leuven-highlight-face prepend))))
+     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))))
   ;; FIXME                    0                    t
 
   ;; set up highlighting of special patterns for selected major modes *and*
@@ -2443,6 +2444,49 @@ sequence).
   (GNUEmacs
     ;; update the copyright notice in current buffer
     (add-hook 'before-save-hook 'copyright-update))
+#+end_src
+
+For Org buffers, add an enhanced version of =save-buffer= which does:
+
+1. Save buffer (updating dynamic blocks and tables)
+2. Execute the code blocks, and save another time
+3. Tangle code blocks, if any to be tangled
+4. Export to HTML and PDF, if such files already exist
+5. Call =send-patch=?
+
+Notes:
+- Use the asynchronous export (if possible, so that I don't loose time, or let
+  it open to the value of that var)?
+- Different behaviors can be obtained with =C-u= (or =C-u C-u=)
+
+Why not adding a recursive functionality as well (in Emacs Lisp too), to be
+launched from Dired?
+
+#+begin_src emacs-lisp
+  (defun org-save-buffer-and-do-related ()
+    "Save buffer, execute code blocks, tangle code blocks, and export to HTML/PDF."
+    (interactive)
+    (let* ((orgfile (buffer-file-name))
+           (htmlfile (concat (file-name-base orgfile) ".html"))
+           (pdffile (concat (file-name-base orgfile) ".pdf")))
+      (save-buffer)                     ; see other commands in `before-save-hook':
+                                        ; `org-update-all-dblocks'
+                                        ; `org-table-iterate-buffer-tables'
+      (when (derived-mode-p 'org-mode)
+        (org-babel-execute-buffer)
+        (let ((before-save-hook nil))
+          (save-buffer))
+        (org-babel-tangle)
+        (when (file-exists-p htmlfile)
+          (org-html-export-to-html))
+        (when (file-exists-p pdffile)
+          (org-latex-export-to-pdf)))))
+
+  (global-set-key
+    (kbd "<S-f2>") 'org-save-buffer-and-do-related)
+
+  (global-set-key
+    (kbd "C-x C-S-s") 'org-save-buffer-and-do-related)
 #+end_src
 
 ** Reverting a Buffer
@@ -4510,6 +4554,8 @@ work and tasks with Org mode.
     (kbd "C-c C-b") 'org-switch-to-agenda)
 #+end_src
 
+These variables need to be set before =org.el= is loaded.
+
 #+begin_src emacs-lisp
   ;; This must be set before loading Org...
 
@@ -4538,6 +4584,9 @@ work and tasks with Org mode.
           ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
           ("=" org-code "<code>" "</code>" verbatim)
           ("~" org-verbatim "<code>" "</code>" verbatim)))
+
+  ;; single character alphabetical bullets are allowed
+  (setq org-list-allow-alphabetical t)
 #+end_src
 
 If you use =org-emphasis-alist= to do simple highlighting, you should better use
@@ -4915,9 +4964,6 @@ See also [[*Sparse%20trees][Sparse trees]] for behavior when revealing a locatio
 
   ;; an empty line does not end all plain list levels
   (setq org-empty-line-terminates-plain-lists nil)
-
-  ;; single character alphabetical bullets are allowed
-  (setq org-list-allow-alphabetical t)
 #+end_src
 
 *** Footnotes
@@ -8836,8 +8882,9 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
                                         ; of the buffer
                   (org-align-all-tags)
                   (org-update-all-dblocks)
-                  (when (fboundp 'org-table-iterate-buffer-tables)
-                    (org-table-iterate-buffer-tables))
+                  ;; (when (fboundp 'org-table-iterate-buffer-tables)
+                    (org-table-iterate-buffer-tables)
+                    ;; )
                   (when (file-exists-p (buffer-file-name (current-buffer)))
                     (leuven--org-remove-redundant-tags))
                   (when flyspell-mode-before-save (flyspell-mode 1))))))
@@ -14028,8 +14075,9 @@ To get a backtrace when a specific regexp is displayed in the echo area
 
 #+begin_src emacs-lisp
 ;; warn that some packages were missing
-(dolist (pkg leuven--missing-packages)
-  (message "(warning) Package `%s' not found" pkg))
+(when leuven-load-verbose
+  (dolist (pkg leuven--missing-packages)
+    (message "(warning) Package `%s' not found" pkg)))
 
 (message "Loading `%s'...done (in %.3f s)"
          load-file-name
