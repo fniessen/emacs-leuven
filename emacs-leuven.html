@@ -36,7 +36,7 @@
             <a href="#sec-4">Loading Libraries of Lisp Code for Emacs</a>
 
             <ul>
-              <li><a href="#sec-4-1">Site-lisp</a></li>
+              <li><a href="#sec-4-1">Library Search</a></li>
             </ul>
           </li>
 
@@ -641,9 +641,11 @@
                 <a href="#sec-26-20">Org-contrib</a>
 
                 <ul>
-                  <li><a href="#sec-26-20-1">Org-notmuch</a></li>
+                  <li><a href="#sec-26-20-1">Org-effectiveness</a></li>
 
-                  <li><a href="#sec-26-20-2">Google Weather</a></li>
+                  <li><a href="#sec-26-20-2">Org-notmuch</a></li>
+
+                  <li><a href="#sec-26-20-3">Google Weather</a></li>
                 </ul>
               </li>
             </ul>
@@ -1096,7 +1098,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131005.1513</span>
+"color: #008200; font-style: italic;">Version: 20131007.095</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1218,7 +1220,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131005.1513]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131007.095]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -1733,14 +1735,24 @@
       </div>
 
       <div id="outline-container-sec-4-1" class="outline-3">
-        <h3 id="sec-4-1">Site-lisp</h3>
+        <h3 id="sec-4-1">Library Search</h3>
 
         <div class="outline-text-3" id="text-4-1">
-          <p><code>leuven-local-site-lisp-directory</code> is there so that you
-          have an easy way of installing your own (possibly not distro
-          packaged) Emacs add-ons which are specific to the version of Emacs
-          your running. This keeps your local add-ons apart from distro
-          supplied ones.</p>
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">remember this directory</span>
+  (<span style="color: #0000FF;">defconst</span> <span style=
+"color: #BA36A5;">leuven--directory</span>
+    (file-name-directory (or load-file-name (buffer-file-name)))
+    <span style="color: #008000;">"Directory path of Emacs Leuven."</span>)
+</pre>
+          </div>
+
+          <p><code>leuven-user-lisp-directory</code> is there so that you have
+          an easy way of installing your own Emacs add-ons (which may be
+          specific to the version of Emacs you're running). This keeps your
+          local add-ons apart from distro supplied ones.</p>
 
           <p>It also means you can do a complete re-install of Emacs (or even
           your Linux distro) without impacting on stuff you have added by
@@ -1754,33 +1766,13 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-<span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">*** Site-lisp</span>
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">1.</span>
   (<span style="color: #0000FF;">defvar</span> <span style=
-"color: #BA36A5;">leuven-local-site-lisp-directory</span> <span style=
-"color: #FF4700;">"~/.emacs.d/site-lisp/"</span>
+"color: #BA36A5;">leuven-user-lisp-directory</span> <span style=
+"color: #FF4700;">"~/.emacs.d/lisp/"</span>
     <span style=
-"color: #008000;">"Directory containing additional Emacs Lisp packages (from the Internet)."</span>)
+"color: #008000;">"Directory containing personal additional Emacs Lisp packages."</span>)
 
-  (leuven-add-to-load-path leuven-local-site-lisp-directory)
-  (XEmacs
-    (leuven-add-to-load-path
-     (concat leuven-local-site-lisp-directory <span style=
-"color: #FF4700;">"color-theme-6.6.0"</span>)))
-  (leuven-add-to-load-path (concat leuven-local-site-lisp-directory <span style="color: #FF4700;">"ecb-2.40"</span>))
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">2.</span>
-  (<span style="color: #0000FF;">defvar</span> <span style=
-"color: #BA36A5;">leuven-site-lisp-directory</span> <span style=
-"color: #FF4700;">"~/emacs/site-lisp/"</span>
-    <span style=
-"color: #008000;">"Directory containing my personal additional Emacs Lisp packages."</span>)
-
-  (leuven-add-to-load-path leuven-site-lisp-directory)
+  (leuven-add-to-load-path leuven-user-lisp-directory)
 </pre>
           </div>
 
@@ -1795,17 +1787,6 @@
           CEDET). Many packages (e.g. Org, Gnus) make use of the
           <code>autoload</code> feature, so that you only need to load a single
           file that define autoloaded functions.</p>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">remember this directory</span>
-  (<span style="color: #0000FF;">defconst</span> <span style=
-"color: #BA36A5;">leuven--directory</span>
-    (file-name-directory (or load-file-name (buffer-file-name)))
-    <span style="color: #008000;">"Directory path of Emacs Leuven."</span>)
-</pre>
-          </div>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -1903,7 +1884,7 @@
 "color: #008200; font-style: italic;">require a feature/library if available; if not, fail silently</span>
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">try-require</span> (feature)
-    <span style="color: #008000;">"Attempt to load a library or module.</span>
+    <span style="color: #008000;">"Attempt to load a feature or library.</span>
 
 <span style=
 "color: #008000;">  Return true if the library given as argument is successfully loaded. If not,</span>
@@ -16050,17 +16031,34 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
         <div class="outline-text-3" id="text-26-20"></div>
 
         <div id="outline-container-sec-26-20-1" class="outline-4">
-          <h4 id="sec-26-20-1">Org-notmuch</h4>
+          <h4 id="sec-26-20-1">Org-effectiveness</h4>
 
           <div class="outline-text-4" id="text-26-20-1">
-            <p>Link emails from Org files.</p>
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  (<span style="color: #0000FF;">when</span> (try-require 'org-effectiveness)
+
+    (add-hook 'org-mode-hook
+              (<span style="color: #0000FF;">lambda</span> ()
+                (org-effectiveness-count-todo)
+                (sit-for 0.2))))
+</pre>
+            </div>
           </div>
         </div>
 
         <div id="outline-container-sec-26-20-2" class="outline-4">
-          <h4 id="sec-26-20-2">Google Weather</h4>
+          <h4 id="sec-26-20-2">Org-notmuch</h4>
 
           <div class="outline-text-4" id="text-26-20-2">
+            <p>Link emails from Org files.</p>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-26-20-3" class="outline-4">
+          <h4 id="sec-26-20-3">Google Weather</h4>
+
+          <div class="outline-text-4" id="text-26-20-3">
             <pre class="example">
 * Weather
   :PROPERTIES:
@@ -24664,7 +24662,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131005.1514]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131007.0951]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

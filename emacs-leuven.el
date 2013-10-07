@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131005.1512
+;; Version: 20131007.0949
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131005.1512]--")
+(message "* --[ Loading Emacs Leuven 20131007.0949]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -328,28 +328,15 @@
           (sit-for 0.3)
           ,@body)))
 
-;;*** Site-lisp
-
-  ;; 1.
-  (defvar leuven-local-site-lisp-directory "~/.emacs.d/site-lisp/"
-    "Directory containing additional Emacs Lisp packages (from the Internet).")
-
-  (leuven-add-to-load-path leuven-local-site-lisp-directory)
-  (XEmacs
-    (leuven-add-to-load-path
-     (concat leuven-local-site-lisp-directory "color-theme-6.6.0")))
-  (leuven-add-to-load-path (concat leuven-local-site-lisp-directory "ecb-2.40"))
-
-  ;; 2.
-  (defvar leuven-site-lisp-directory "~/emacs/site-lisp/"
-    "Directory containing my personal additional Emacs Lisp packages.")
-
-  (leuven-add-to-load-path leuven-site-lisp-directory)
-
   ;; remember this directory
   (defconst leuven--directory
     (file-name-directory (or load-file-name (buffer-file-name)))
     "Directory path of Emacs Leuven.")
+
+  (defvar leuven-user-lisp-directory "~/.emacs.d/lisp/"
+    "Directory containing personal additional Emacs Lisp packages.")
+
+  (leuven-add-to-load-path leuven-user-lisp-directory)
 
 ;;*** Development code
 
@@ -392,7 +379,7 @@
 
   ;; require a feature/library if available; if not, fail silently
   (defun try-require (feature)
-    "Attempt to load a library or module.
+    "Attempt to load a feature or library.
 
   Return true if the library given as argument is successfully loaded. If not,
   instead of an error, just add the package to a list of missing packages."
@@ -6156,6 +6143,13 @@ From %c"
                     (leuven--org-remove-redundant-tags))
                   (when flyspell-mode-before-save (flyspell-mode 1))))))
 
+  (when (try-require 'org-effectiveness)
+
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (org-effectiveness-count-todo)
+                (sit-for 0.2))))
+
   (GNUEmacs
     ;; add weather forecast in your Org agenda
     (autoload 'org-google-weather "org-google-weather" nil t)
@@ -9358,7 +9352,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131005.1513]--")
+(message "* --[ Loaded Emacs Leuven 20131007.095]--")
 
 (provide 'emacs-leuven)
 

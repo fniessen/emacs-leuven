@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-05 Sat 15:11>
+# Time-stamp: <2013-10-07 Mon 09:48>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -396,12 +396,18 @@ echo "$(date '+%Y%m%d.%H%M')"
           ,@body)))
 #+end_src
 
-** Site-lisp
+** Library Search
 
-=leuven-local-site-lisp-directory= is there so that you have an easy way of
-installing your own (possibly not distro packaged) Emacs add-ons which are
-specific to the version of Emacs your running. This keeps your local add-ons
-apart from distro supplied ones.
+#+begin_src emacs-lisp
+  ;; remember this directory
+  (defconst leuven--directory
+    (file-name-directory (or load-file-name (buffer-file-name)))
+    "Directory path of Emacs Leuven.")
+#+end_src
+
+=leuven-user-lisp-directory= is there so that you have an easy way of installing
+your own Emacs add-ons (which may be specific to the version of Emacs you're
+running). This keeps your local add-ons apart from distro supplied ones.
 
 It also means you can do a complete re-install of Emacs (or even your Linux
 distro) without impacting on stuff you have added by hand.
@@ -409,23 +415,10 @@ distro) without impacting on stuff you have added by hand.
 *************** TODO Specify variables using `defcustom'
 
 #+begin_src emacs-lisp
-;;*** Site-lisp
+  (defvar leuven-user-lisp-directory "~/.emacs.d/lisp/"
+    "Directory containing personal additional Emacs Lisp packages.")
 
-  ;; 1.
-  (defvar leuven-local-site-lisp-directory "~/.emacs.d/site-lisp/"
-    "Directory containing additional Emacs Lisp packages (from the Internet).")
-
-  (leuven-add-to-load-path leuven-local-site-lisp-directory)
-  (XEmacs
-    (leuven-add-to-load-path
-     (concat leuven-local-site-lisp-directory "color-theme-6.6.0")))
-  (leuven-add-to-load-path (concat leuven-local-site-lisp-directory "ecb-2.40"))
-
-  ;; 2.
-  (defvar leuven-site-lisp-directory "~/emacs/site-lisp/"
-    "Directory containing my personal additional Emacs Lisp packages.")
-
-  (leuven-add-to-load-path leuven-site-lisp-directory)
+  (leuven-add-to-load-path leuven-user-lisp-directory)
 #+end_src
 
 Adding the right Lisp directories to your =load-path= must be the very *first
@@ -436,13 +429,6 @@ with Emacs, and loaded before the path to the *newest* versions are set).
 Some Emacs modes are over 10K lines of code (e.g. nxml-mode, CEDET). Many
 packages (e.g. Org, Gnus) make use of the =autoload= feature, so that you only
 need to load a single file that define autoloaded functions.
-
-#+begin_src emacs-lisp
-  ;; remember this directory
-  (defconst leuven--directory
-    (file-name-directory (or load-file-name (buffer-file-name)))
-    "Directory path of Emacs Leuven.")
-#+end_src
 
 #+begin_src emacs-lisp
 ;;*** Development code
@@ -499,7 +485,7 @@ Ignore errors.
 
   ;; require a feature/library if available; if not, fail silently
   (defun try-require (feature)
-    "Attempt to load a library or module.
+    "Attempt to load a feature or library.
 
   Return true if the library given as argument is successfully loaded. If not,
   instead of an error, just add the package to a list of missing packages."
@@ -8891,6 +8877,17 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 #+end_src
 
 ** Org-contrib
+
+*** Org-effectiveness
+
+#+begin_src emacs-lisp
+  (when (try-require 'org-effectiveness)
+
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (org-effectiveness-count-todo)
+                (sit-for 0.2))))
+#+end_src
 
 *** Org-notmuch
 
