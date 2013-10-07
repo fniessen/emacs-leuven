@@ -1098,7 +1098,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131007.095</span>
+"color: #008200; font-style: italic;">Version: 20131007.112</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1220,7 +1220,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131007.095]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131007.112]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -1728,7 +1728,8 @@
           (message <span style=
 "color: #FF4700;">"(info) Running code specific to `</span><span style=
 "color: #FF4700;">%s</span><span style="color: #FF4700;">'..."</span> ,mode)
-          (sit-for 0.3)
+          <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(sit-for 0.3)</span>
           ,@body)))
 </pre>
         </div>
@@ -5183,7 +5184,8 @@
         (<span style="color: #0000FF;">when</span> (file-exists-p htmlfile)
           (org-html-export-to-html))
         (<span style="color: #0000FF;">when</span> (file-exists-p pdffile)
-          (org-latex-export-to-pdf)))))
+          (org-latex-export-to-pdf))
+        (beep))))
 
   (global-set-key
     (kbd <span style=
@@ -16036,12 +16038,16 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           <div class="outline-text-4" id="text-26-20-1">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span style="color: #0000FF;">when</span> (try-require 'org-effectiveness)
+  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #FF4700;">"org"</span>
+    (message <span style="color: #FF4700;">"... Org Effectiveness"</span>)
 
-    (add-hook 'org-mode-hook
-              (<span style="color: #0000FF;">lambda</span> ()
-                (org-effectiveness-count-todo)
-                (sit-for 0.2))))
+    (<span style="color: #0000FF;">when</span> (try-require 'org-effectiveness)
+
+      (add-hook 'org-mode-hook
+                (<span style="color: #0000FF;">lambda</span> ()
+                  (org-effectiveness-count-todo)
+                  (sit-for 0.2)))))
 </pre>
             </div>
           </div>
@@ -21659,10 +21665,14 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200; font-style: italic;">must be in the `</span><span style=
 "color: #008200; font-style: italic;">PATH</span><span style=
 "color: #008200; font-style: italic;">'</span>
-        (or (file-name-nondirectory (executable-find <span style=
-"color: #FF4700;">"zsh"</span>))
-            (file-name-nondirectory (executable-find <span style=
-"color: #FF4700;">"bash"</span>))
+        (or (ignore-<span style=
+"color: #CC0000; background-color: #FFFF88;">error</span>s
+              (file-name-nondirectory (or (executable-find <span style=
+"color: #FF4700;">"zsh"</span>)
+                                          (executable-find <span style=
+"color: #FF4700;">"bash"</span>)
+                                          (executable-find <span style=
+"color: #FF4700;">"sh"</span>))))
             (<span style=
 "color: #0000FF;">when</span> running-ms-windows <span style=
 "color: #FF4700;">"cmdproxy.exe"</span>)))
@@ -24662,7 +24672,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131007.0951]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131007.1121]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

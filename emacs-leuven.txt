@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-07 Mon 09:48>
+# Time-stamp: <2013-10-07 Mon 10:54>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -392,7 +392,7 @@ echo "$(date '+%Y%m%d.%H%M')"
     `(eval-after-load ,mode
        '(progn
           (message "(info) Running code specific to `%s'..." ,mode)
-          (sit-for 0.3)
+          ;; (sit-for 0.3)
           ,@body)))
 #+end_src
 
@@ -2466,7 +2466,8 @@ launched from Dired?
         (when (file-exists-p htmlfile)
           (org-html-export-to-html))
         (when (file-exists-p pdffile)
-          (org-latex-export-to-pdf)))))
+          (org-latex-export-to-pdf))
+        (beep))))
 
   (global-set-key
     (kbd "<S-f2>") 'org-save-buffer-and-do-related)
@@ -8881,12 +8882,15 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 *** Org-effectiveness
 
 #+begin_src emacs-lisp
-  (when (try-require 'org-effectiveness)
+  (with-eval-after-load "org"
+    (message "... Org Effectiveness")
 
-    (add-hook 'org-mode-hook
-              (lambda ()
-                (org-effectiveness-count-todo)
-                (sit-for 0.2))))
+    (when (try-require 'org-effectiveness)
+
+      (add-hook 'org-mode-hook
+                (lambda ()
+                  (org-effectiveness-count-todo)
+                  (sit-for 0.2)))))
 #+end_src
 
 *** Org-notmuch
@@ -12235,8 +12239,10 @@ old region and *replaces* it with the output from the shell command.
 
   ;; for single shell commands (= "the" reference)
   (setq shell-file-name                 ; must be in the `PATH'
-        (or (file-name-nondirectory (executable-find "zsh"))
-            (file-name-nondirectory (executable-find "bash"))
+        (or (ignore-errors
+              (file-name-nondirectory (or (executable-find "zsh")
+                                          (executable-find "bash")
+                                          (executable-find "sh"))))
             (when running-ms-windows "cmdproxy.exe")))
 
   ;; use `shell-file-name' as the default shell

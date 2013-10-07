@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131007.0949
+;; Version: 20131007.1119
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131007.0949]--")
+(message "* --[ Loading Emacs Leuven 20131007.1119]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -325,7 +325,7 @@
     `(eval-after-load ,mode
        '(progn
           (message "(info) Running code specific to `%s'..." ,mode)
-          (sit-for 0.3)
+          ;; (sit-for 0.3)
           ,@body)))
 
   ;; remember this directory
@@ -1662,7 +1662,8 @@
         (when (file-exists-p htmlfile)
           (org-html-export-to-html))
         (when (file-exists-p pdffile)
-          (org-latex-export-to-pdf)))))
+          (org-latex-export-to-pdf))
+        (beep))))
 
   (global-set-key
     (kbd "<S-f2>") 'org-save-buffer-and-do-related)
@@ -6143,12 +6144,15 @@ From %c"
                     (leuven--org-remove-redundant-tags))
                   (when flyspell-mode-before-save (flyspell-mode 1))))))
 
-  (when (try-require 'org-effectiveness)
+  (with-eval-after-load "org"
+    (message "... Org Effectiveness")
 
-    (add-hook 'org-mode-hook
-              (lambda ()
-                (org-effectiveness-count-todo)
-                (sit-for 0.2))))
+    (when (try-require 'org-effectiveness)
+
+      (add-hook 'org-mode-hook
+                (lambda ()
+                  (org-effectiveness-count-todo)
+                  (sit-for 0.2)))))
 
   (GNUEmacs
     ;; add weather forecast in your Org agenda
@@ -8273,8 +8277,10 @@ From %c"
 
   ;; for single shell commands (= "the" reference)
   (setq shell-file-name                 ; must be in the `PATH'
-        (or (file-name-nondirectory (executable-find "zsh"))
-            (file-name-nondirectory (executable-find "bash"))
+        (or (ignore-errors
+              (file-name-nondirectory (or (executable-find "zsh")
+                                          (executable-find "bash")
+                                          (executable-find "sh"))))
             (when running-ms-windows "cmdproxy.exe")))
 
   ;; use `shell-file-name' as the default shell
@@ -9352,7 +9358,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131007.095]--")
+(message "* --[ Loaded Emacs Leuven 20131007.112]--")
 
 (provide 'emacs-leuven)
 
