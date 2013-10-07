@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131007.1119
+;; Version: 20131007.1343
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131007.1119]--")
+(message "* --[ Loading Emacs Leuven 20131007.1343]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4647,7 +4647,7 @@ From %c"
 
     (add-to-list 'org-agenda-custom-commands
                  `("pu" "Uncategorized"
-                   tags "CATEGORY=\"@Inbox\"&LEVEL=2"
+                   tags "CATEGORY={@Inbox}&LEVEL=2"
                    ((org-agenda-overriding-header "Level 2 stuff in inbox"))) t)
 
     (add-to-list 'org-agenda-custom-commands
@@ -4754,7 +4754,7 @@ From %c"
     (add-to-list 'org-agenda-custom-commands
                  '("rw" "Weekly review"
                    (
-                    (tags "CATEGORY=\"@Inbox\"&LEVEL=2|TODO=\"NEW\""
+                    (tags "CATEGORY={@Inbox}&LEVEL=2|TODO={NEW}"
                           ((org-agenda-overriding-header "Inbox")))
 
                     (agenda ""
@@ -4866,14 +4866,14 @@ From %c"
 
     (add-to-list 'org-agenda-custom-commands
                  '("dh" "Hotlist"
-                   ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY=\"A\"|FLAGGED"
+                   ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
                    ((tags-todo "DEADLINE<=\"<+0d>\""
                                ((org-agenda-overriding-header "Late")))
                     (tags-todo "DEADLINE>\"<+0d>\"+DEADLINE<=\"<+1w>\""
                                ((org-agenda-overriding-header "Due in next 7 days")))
-                    (tags-todo "DEADLINE=\"\"+PRIORITY=\"A\"|DEADLINE>\"<+1w>\"+PRIORITY=\"A\""
+                    (tags-todo "DEADLINE={}+PRIORITY={A}|DEADLINE>\"<+1w>\"+PRIORITY={A}"
                                ((org-agenda-overriding-header "High priority")))
-                    (tags-todo "DEADLINE=\"\"+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
+                    (tags-todo "DEADLINE={}+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
                                ((org-agenda-overriding-header "Flagged")
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-when-regexp-matches))
@@ -4883,13 +4883,13 @@ From %c"
 
     (add-to-list 'org-agenda-custom-commands
                  '("de" "Effort less than 1 hour"
-                   tags-todo "Effort<>\"\"+Effort<\"1:00\""
+                   tags-todo "Effort<>{}+Effort<\"1:00\""
                    ((org-agenda-todo-ignore-scheduled 'future))) t)
 
     ;; checking tasks that are assigned to me
     (add-to-list 'org-agenda-custom-commands
                  `("dm" "Tasks assigned to me"
-                   tags ,(concat "Assignee=\"" user-login-name "\"")
+                   tags ,(concat "Assignee={" user-login-name "}")
                    ((org-agenda-overriding-header
                      ,(concat "Tasks assigned to " user-login-name)))) t)
 
@@ -4959,11 +4959,11 @@ From %c"
     (add-to-list 'org-agenda-custom-commands
                  '("v,," "Actions Grouped by Priority"
                    (;; important things to do
-                    (tags-todo "+PRIORITY=\"A\"")
+                    (tags-todo "+PRIORITY={A}")
                     ;; medium important things to do
-                    (tags-todo "+PRIORITY=\"B\"")
+                    (tags-todo "+PRIORITY={B}")
                     ;; other things to do
-                    (tags-todo "+PRIORITY=\"C\""))) t)
+                    (tags-todo "+PRIORITY={C}"))) t)
 
     ;; list only priority A tasks for the current day
     (add-to-list 'org-agenda-custom-commands
@@ -9358,7 +9358,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131007.112]--")
+(message "* --[ Loaded Emacs Leuven 20131007.1344]--")
 
 (provide 'emacs-leuven)
 

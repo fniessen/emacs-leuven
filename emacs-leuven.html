@@ -1098,7 +1098,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131007.112</span>
+"color: #008200; font-style: italic;">Version: 20131007.1344</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1220,7 +1220,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131007.112]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131007.1344]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -6334,6 +6334,18 @@ M-: (executable-find "diff") RET
 "color: #FF4700;">"disabled"</span>)))))
 </pre>
             </div>
+
+            <ul class="org-ul">
+              <li><code>volatile</code> means your candidates are recomputed
+              each time you enter a character in pattern (cached candidates are
+              not reused). Async sources are by essence volatile.</li>
+
+              <li><code>delayed</code> means your candidates are computed after
+              <code>helm-input-idle-delay</code> seconds.</li>
+
+              <li><code>no-matchplugin</code> means to not use the multi regexp
+              matching provided by <code>helm-match-plugin.el</code>.</li>
+            </ul>
           </div>
         </div>
 
@@ -12516,7 +12528,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
                  `(<span style="color: #FF4700;">"pu"</span> <span style=
 "color: #FF4700;">"Uncategorized"</span>
                    tags <span style=
-"color: #FF4700;">"CATEGORY=\"@Inbox\"&amp;LEVEL=2"</span>
+"color: #FF4700;">"CATEGORY={@Inbox}&amp;LEVEL=2"</span>
                    ((org-agenda-overriding-header <span style=
 "color: #FF4700;">"Level 2 stuff in inbox"</span>))) t)
 </pre>
@@ -12768,9 +12780,9 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #FF4700;">"Weekly review"</span>
                    (
                     (tags <span style=
-"color: #FF4700;">"CATEGORY=\"@Inbox\"&amp;LEVEL=2|</span><span style=
+"color: #FF4700;">"CATEGORY={@Inbox}&amp;LEVEL=2|</span><span style=
 "color: #FF4700; background-color: #FFFF88;">TODO</span><span style=
-"color: #FF4700;">=\"NEW\""</span>
+"color: #FF4700;">={NEW}"</span>
                           ((org-agenda-overriding-header <span style=
 "color: #FF4700;">"Inbox"</span>)))
 
@@ -12991,7 +13003,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
                  '(<span style="color: #FF4700;">"dh"</span> <span style=
 "color: #FF4700;">"Hotlist"</span>
                    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">tags-todo "DEADLINE&lt;=\"&lt;+1w&gt;\"|PRIORITY=\"A\"|FLAGGED"</span>
+"color: #008200; font-style: italic;">tags-todo "DEADLINE&lt;=\"&lt;+1w&gt;\"|PRIORITY={A}|FLAGGED"</span>
                    ((tags-todo <span style=
 "color: #FF4700;">"DEADLINE&lt;=\"&lt;+0d&gt;\""</span>
                                ((org-agenda-overriding-header <span style=
@@ -13001,11 +13013,11 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
                                ((org-agenda-overriding-header <span style=
 "color: #FF4700;">"Due in next 7 days"</span>)))
                     (tags-todo <span style=
-"color: #FF4700;">"DEADLINE=\"\"+PRIORITY=\"A\"|DEADLINE&gt;\"&lt;+1w&gt;\"+PRIORITY=\"A\""</span>
+"color: #FF4700;">"DEADLINE={}+PRIORITY={A}|DEADLINE&gt;\"&lt;+1w&gt;\"+PRIORITY={A}"</span>
                                ((org-agenda-overriding-header <span style=
 "color: #FF4700;">"High priority"</span>)))
                     (tags-todo <span style=
-"color: #FF4700;">"DEADLINE=\"\"+FLAGGED|DEADLINE&gt;\"&lt;+1w&gt;\"+FLAGGED"</span>
+"color: #FF4700;">"DEADLINE={}+FLAGGED|DEADLINE&gt;\"&lt;+1w&gt;\"+FLAGGED"</span>
                                ((org-agenda-overriding-header <span style=
 "color: #FF4700;">"Flagged"</span>)
                                 (org-agenda-skip-function
@@ -13032,7 +13044,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
                  '(<span style="color: #FF4700;">"de"</span> <span style=
 "color: #FF4700;">"Effort less than 1 hour"</span>
                    tags-todo <span style=
-"color: #FF4700;">"Effort&lt;&gt;\"\"+Effort&lt;\"1:00\""</span>
+"color: #FF4700;">"Effort&lt;&gt;{}+Effort&lt;\"1:00\""</span>
                    ((org-agenda-todo-ignore-scheduled 'future))) t)
 </pre>
               </div>
@@ -13045,8 +13057,8 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
                  `(<span style="color: #FF4700;">"dm"</span> <span style=
 "color: #FF4700;">"Tasks assigned to me"</span>
                    tags ,(concat <span style=
-"color: #FF4700;">"Assignee=\""</span> user-login-name <span style=
-"color: #FF4700;">"\""</span>)
+"color: #FF4700;">"Assignee={"</span> user-login-name <span style=
+"color: #FF4700;">"}"</span>)
                    ((org-agenda-overriding-header
                      ,(concat <span style=
 "color: #FF4700;">"Tasks assigned to "</span> user-login-name)))) t)
@@ -13187,15 +13199,15 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
                    (<span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">important things to do</span>
                     (tags-todo <span style=
-"color: #FF4700;">"+PRIORITY=\"A\""</span>)
+"color: #FF4700;">"+PRIORITY={A}"</span>)
                     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">medium important things to do</span>
                     (tags-todo <span style=
-"color: #FF4700;">"+PRIORITY=\"B\""</span>)
+"color: #FF4700;">"+PRIORITY={B}"</span>)
                     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">other things to do</span>
                     (tags-todo <span style=
-"color: #FF4700;">"+PRIORITY=\"C\""</span>))) t)
+"color: #FF4700;">"+PRIORITY={C}"</span>))) t)
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">list only priority A tasks for the current day</span>
@@ -24672,7 +24684,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131007.1121]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131007.1345]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
