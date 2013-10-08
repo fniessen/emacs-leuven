@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-08 Tue 11:02>
+# Time-stamp: <2013-10-08 Tue 11:32>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -11382,7 +11382,7 @@ Check this out as well: http://www.emacswiki.org/emacs/DiredSortMenu
     ;; add-on for sorting
     (try-require 'dired-sort-map)
     ;; press `s' then `s', `x', `t', `n' or `d' to sort by
-    ;;  Size, eXtension, Time, Name or name grouping Dirs
+    ;; Size, eXtension, Time, Name or name grouping Dirs
 #+end_src
 
 ** Dired and =find=
@@ -12532,14 +12532,23 @@ I said they're details.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; run an inferior shell, with I/O through buffer `*shell*'
+  ;; ;; run an inferior shell, with I/O through buffer `*shell*'
+  ;; (global-set-key
+  ;;   (kbd "C-c !")
+  ;;   (cond (running-ms-windows 'shell)
+  ;;         (t 'term)))
+
+  ;; toggle to and from the `*shell*' buffer
   (global-set-key
-    (kbd "C-c !")
-    (cond (running-ms-windows 'shell)
-          (t 'term)))
+    (kbd "C-!")
+    (lambda ()
+      (interactive)
+      (switch-or-start 'shell "*shell*")))
 #+end_src
 
-Try using =top= in =multi-term=...
+*************** TODO Terminal in Emacs in Windows - Error message: "Spawning child process; invalid argument"
+
+*************** TODO Try /visual/ commands (like =top= or =less=) in =multi-term=
 
 ** Paging in Term
 

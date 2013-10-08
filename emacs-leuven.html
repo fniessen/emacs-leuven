@@ -1097,7 +1097,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131008.1104</span>
+"color: #008200; font-style: italic;">Version: 20131008.122</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1219,7 +1219,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131008.1104]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131008.122]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -20166,7 +20166,7 @@ TAGS:
     (try-require 'dired-sort-map)
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">press `s' then `s', `x', `t', `n' or `d' to sort by</span>
-    <span style="color: #008200;">;;  </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Size, eXtension, Time, Name or name grouping Dirs</span>
 </pre>
           </div>
@@ -22124,15 +22124,39 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">run an inferior shell, with I/O through buffer `</span><span style="color: #008200; font-style: italic;">*shell*</span><span style="color: #008200; font-style: italic;">'</span>
+"color: #008200; font-style: italic;">;; run an inferior shell, with I/O through buffer `</span><span style="color: #008200; font-style: italic;">*shell*</span><span style="color: #008200; font-style: italic;">'</span>
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(global-set-key</span>
+  <span style="color: #008200;">;;   </span><span style=
+"color: #008200; font-style: italic;">(kbd "C-c !")</span>
+  <span style="color: #008200;">;;   </span><span style=
+"color: #008200; font-style: italic;">(cond (running-ms-windows 'shell)</span>
+  <span style="color: #008200;">;;         </span><span style=
+"color: #008200; font-style: italic;">(t 'term)))</span>
+
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">toggle to and from the `</span><span style="color: #008200; font-style: italic;">*shell*</span><span style="color: #008200; font-style: italic;">' buffer</span>
   (global-set-key
-    (kbd <span style="color: #FF4700;">"C-c !"</span>)
-    (<span style="color: #0000FF;">cond</span> (running-ms-windows 'shell)
-          (t 'term)))
+    (kbd <span style="color: #FF4700;">"C-!"</span>)
+    (<span style="color: #0000FF;">lambda</span> ()
+      (interactive)
+      (switch-or-start 'shell <span style="color: #FF4700;">"*shell*"</span>)))
 </pre>
           </div>
 
-          <p>Try using <code>top</code> in <code>multi-term</code>…</p>
+          <div class="inlinetask">
+            <b><span class="todo TODO">TODO</span> Terminal in Emacs in Windows
+            - Error message: "Spawning child process; invalid
+            argument"</b><br />
+            nil
+          </div>
+
+          <div class="inlinetask">
+            <b><span class="todo TODO">TODO</span> Try <i>visual</i> commands
+            (like <code>top</code> or <code>less</code>) in
+            <code>multi-term</code></b><br />
+            nil
+          </div>
         </div>
       </div>
 
@@ -24734,7 +24758,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131008.1105]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131008.122]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

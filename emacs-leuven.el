@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131008.1103
+;; Version: 20131008.1218
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131008.1103]--")
+(message "* --[ Loading Emacs Leuven 20131008.1218]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -7639,7 +7639,7 @@ From %c"
     ;; add-on for sorting
     (try-require 'dired-sort-map)
     ;; press `s' then `s', `x', `t', `n' or `d' to sort by
-    ;;  Size, eXtension, Time, Name or name grouping Dirs
+    ;; Size, eXtension, Time, Name or name grouping Dirs
 
 ;;** (info "(emacs)Dired and Find")
 
@@ -8421,11 +8421,18 @@ From %c"
     (global-set-key
       (kbd "C-c T") 'multi-term)) ;; create a new one
 
-  ;; run an inferior shell, with I/O through buffer `*shell*'
+  ;; ;; run an inferior shell, with I/O through buffer `*shell*'
+  ;; (global-set-key
+  ;;   (kbd "C-c !")
+  ;;   (cond (running-ms-windows 'shell)
+  ;;         (t 'term)))
+
+  ;; toggle to and from the `*shell*' buffer
   (global-set-key
-    (kbd "C-c !")
-    (cond (running-ms-windows 'shell)
-          (t 'term)))
+    (kbd "C-!")
+    (lambda ()
+      (interactive)
+      (switch-or-start 'shell "*shell*")))
 
 ;;** 36.10 Paging in Term
 
@@ -9382,7 +9389,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131008.1104]--")
+(message "* --[ Loaded Emacs Leuven 20131008.1219]--")
 
 (provide 'emacs-leuven)
 
