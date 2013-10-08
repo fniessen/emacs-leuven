@@ -1099,7 +1099,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131008.1415</span>
+"color: #008200; font-style: italic;">Version: 20131008.2112</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1221,7 +1221,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131008.1415]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131008.2112]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -8682,58 +8682,26 @@ M-: (executable-find "diff") RET
 "color: #FF4700;">"&lt;code&gt;"</span> <span style=
 "color: #FF4700;">"&lt;/code&gt;"</span> verbatim)))
 
-  (setq org-emphasis-alist
-        '((<span style="color: #FF4700;">"&amp;"</span> (<span style=
-"color: #006FE0;">:weight</span> ultra-bold <span style=
-"color: #006FE0;">:foreground</span> <span style=
-"color: #FF4700;">"#000000"</span> <span style=
-"color: #006FE0;">:background</span> <span style=
-"color: #FF4700;">"#FBFF00"</span>))
-          <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">("?" (:box t))</span>
-          (<span style="color: #FF4700;">"^"</span> (<span style=
-"color: #006FE0;">:weight</span> ultra-bold <span style=
-"color: #006FE0;">:foreground</span> <span style=
-"color: #FF4700;">"#393D90"</span>))
-          (<span style="color: #FF4700;">"¶"</span> (<span style=
-"color: #006FE0;">:height</span> 1.3 <span style=
-"color: #006FE0;">:weight</span> ultra-bold <span style=
-"color: #006FE0;">:underline</span> t))
-          (<span style="color: #FF4700;">"¡"</span> (<span style=
-"color: #006FE0;">:weight</span> ultra-bold <span style=
-"color: #006FE0;">:foreground</span> <span style=
-"color: #FF4700;">"#FFA500"</span>))
-          (<span style="color: #FF4700;">"`"</span> (<span style=
-"color: #006FE0;">:weight</span> bold <span style=
-"color: #006FE0;">:slant</span> italic <span style=
-"color: #006FE0;">:foreground</span> <span style=
-"color: #FF4700;">"#155640"</span> <span style=
-"color: #006FE0;">:background</span> <span style=
-"color: #FF4700;">"#E2FFE8"</span>))
-          (<span style="color: #FF4700;">"!"</span> (<span style=
-"color: #006FE0;">:weight</span> ultra-bold <span style=
-"color: #006FE0;">:foreground</span> <span style=
-"color: #FF4700;">"#B40000"</span>)) <span style=
-"color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">= alert in some Wikis</span>
-          <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">("$" (:weight ultra-bold :foreground "#000000" :background "#DDDDFF"))</span>
-          <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">("@" (:weight bold :foreground "#B40000" :background "#FFDDDD"))</span>
-          (<span style="color: #FF4700;">"*"</span> bold <span style=
-"color: #FF4700;">"&lt;b&gt;"</span> <span style=
-"color: #FF4700;">"&lt;/b&gt;"</span>)
-          (<span style="color: #FF4700;">"/"</span> italic <span style=
-"color: #FF4700;">"&lt;i&gt;"</span> <span style=
-"color: #FF4700;">"&lt;/i&gt;"</span>)
-          (<span style="color: #FF4700;">"_"</span> underline <span style=
-"color: #FF4700;">"&lt;span style=\"text-decoration:underline;\"&gt;"</span> <span style="color: #FF4700;">"&lt;/span&gt;"</span>)
-          (<span style="color: #FF4700;">"="</span> org-code <span style=
-"color: #FF4700;">"&lt;code&gt;"</span> <span style=
-"color: #FF4700;">"&lt;/code&gt;"</span> verbatim)
-          (<span style="color: #FF4700;">"~"</span> org-verbatim <span style=
-"color: #FF4700;">"&lt;code&gt;"</span> <span style=
-"color: #FF4700;">"&lt;/code&gt;"</span> verbatim)))
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(setq org-emphasis-alist</span>
+  <span style="color: #008200;">;;       </span><span style=
+"color: #008200; font-style: italic;">'(("&amp;" (:weight ultra-bold :foreground "#000000" :background "#FBFF00"))</span>
+  <span style="color: #008200;">;;         </span><span style=
+"color: #008200; font-style: italic;">;; ("?" (:box t))</span>
+  <span style="color: #008200;">;;         </span><span style=
+"color: #008200; font-style: italic;">("^" (:weight ultra-bold :foreground "#393D90"))</span>
+  <span style="color: #008200;">;;         </span><span style=
+"color: #008200; font-style: italic;">("!" (:weight ultra-bold :foreground "#B40000")) ;; = alert in some Wikis</span>
+  <span style="color: #008200;">;;         </span><span style=
+"color: #008200; font-style: italic;">("*" bold "&lt;b&gt;" "&lt;/b&gt;")</span>
+  <span style="color: #008200;">;;         </span><span style=
+"color: #008200; font-style: italic;">("/" italic "&lt;i&gt;" "&lt;/i&gt;")</span>
+  <span style="color: #008200;">;;         </span><span style=
+"color: #008200; font-style: italic;">("_" underline "&lt;span style=\"text-decoration:underline;\"&gt;" "&lt;/span&gt;")</span>
+  <span style="color: #008200;">;;         </span><span style=
+"color: #008200; font-style: italic;">("=" org-code "&lt;code&gt;" "&lt;/code&gt;" verbatim)</span>
+  <span style="color: #008200;">;;         </span><span style=
+"color: #008200; font-style: italic;">("~" org-verbatim "&lt;code&gt;" "&lt;/code&gt;" verbatim)))</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">single character alphabetical bullets are allowed</span>
@@ -24788,7 +24756,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131008.1415]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131008.2112]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

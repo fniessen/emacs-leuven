@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131008.1414
+;; Version: 20131008.2111
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131008.1414]--")
+(message "* --[ Loading Emacs Leuven 20131008.2111]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3115,21 +3115,16 @@
           ("=" org-code "<code>" "</code>" verbatim)
           ("~" org-verbatim "<code>" "</code>" verbatim)))
 
-  (setq org-emphasis-alist
-        '(("&" (:weight ultra-bold :foreground "#000000" :background "#FBFF00"))
-          ;; ("?" (:box t))
-          ("^" (:weight ultra-bold :foreground "#393D90"))
-          ("¶" (:height 1.3 :weight ultra-bold :underline t))
-          ("¡" (:weight ultra-bold :foreground "#FFA500"))
-          ("`" (:weight bold :slant italic :foreground "#155640" :background "#E2FFE8"))
-          ("!" (:weight ultra-bold :foreground "#B40000")) ;; = alert in some Wikis
-          ;; ("$" (:weight ultra-bold :foreground "#000000" :background "#DDDDFF"))
-          ;; ("@" (:weight bold :foreground "#B40000" :background "#FFDDDD"))
-          ("*" bold "<b>" "</b>")
-          ("/" italic "<i>" "</i>")
-          ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
-          ("=" org-code "<code>" "</code>" verbatim)
-          ("~" org-verbatim "<code>" "</code>" verbatim)))
+  ;; (setq org-emphasis-alist
+  ;;       '(("&" (:weight ultra-bold :foreground "#000000" :background "#FBFF00"))
+  ;;         ;; ("?" (:box t))
+  ;;         ("^" (:weight ultra-bold :foreground "#393D90"))
+  ;;         ("!" (:weight ultra-bold :foreground "#B40000")) ;; = alert in some Wikis
+  ;;         ("*" bold "<b>" "</b>")
+  ;;         ("/" italic "<i>" "</i>")
+  ;;         ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
+  ;;         ("=" org-code "<code>" "</code>" verbatim)
+  ;;         ("~" org-verbatim "<code>" "</code>" verbatim)))
 
   ;; single character alphabetical bullets are allowed
   (setq org-list-allow-alphabetical t)
@@ -9403,7 +9398,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131008.1415]--")
+(message "* --[ Loaded Emacs Leuven 20131008.2111]--")
 
 (provide 'emacs-leuven)
 
