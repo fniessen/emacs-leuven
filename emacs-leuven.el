@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131007.1343
+;; Version: 20131008.1018
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131007.1343]--")
+(message "* --[ Loading Emacs Leuven 20131008.1018]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3504,8 +3504,8 @@
             ("OPENPO" . leuven-org-openpo-kwd-face)
             ("CLSDPO" . leuven-org-closedpo-kwd-face))))
 
-  ;; Org standard faces
   (with-eval-after-load "org-faces"
+    ;; Org standard faces
     (set-face-attribute 'org-todo nil
                         :weight 'bold :box '(:line-width 1 :color "#D8ABA7")
                         :foreground "#D8ABA7" :background "#FFE6E4")
@@ -4605,8 +4605,8 @@ From %c"
                  '("f" "Like s, but with extra files"
                    search ""
                    ((org-agenda-text-search-extra-files
+                     ;; FIXME Add `agenda-archives'
                      leuven-org-search-extra-files))) t)
-                 ;; FIXME Add (agenda-archives)
 
     ;; (add-to-list 'org-agenda-custom-commands
     ;;              '("A" . "0. Agenda...") t)
@@ -5199,6 +5199,27 @@ From %c"
                  '("@" "Emails"
                    todo ""
                    ((org-agenda-files '("~/org/email.org")))) t)
+
+  (defun leuven-org-current-dir ()
+    "Produce a view from all Org files in the current directory."
+    (interactive)
+    (let* ((fname (buffer-file-name))
+           (dname (if fname
+                      (if (file-directory-p fname)
+                          fname
+                        (file-name-directory fname))
+                    default-directory))
+           (org-agenda-files
+            (append (file-expand-wildcards (concat dname "*.org"))
+                    (file-expand-wildcards (concat dname "*.txt"))))
+           (org-agenda-overriding-header
+            (format "TODO list for directory %s" dname))
+           (org-agenda-sticky nil))
+      (org-todo-list)))
+
+  ;; "TODO list" without asking for a directory
+  (global-set-key
+    (kbd "<C-f3>") 'leuven-org-current-dir)
 
     ) ;; with-eval-after-load "org-agenda" ends here
 
@@ -9358,7 +9379,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131007.1344]--")
+(message "* --[ Loaded Emacs Leuven 20131008.1019]--")
 
 (provide 'emacs-leuven)
 

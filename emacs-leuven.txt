@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-07 Mon 13:43>
+# Time-stamp: <2013-10-08 Tue 10:17>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -2774,8 +2774,8 @@ History:
 
 3. EasyPG (= epg) is a GnuPG interface for Emacs.
 
-   It allows you to encrypt/decrypt files within Emacs. When you use =C-x C-f=
-   to access an encrypted file, Emacs prompts you for the passphrase and then
+   It allows you to encrypt/decrypt files within Emacs. When you use =C-x C-f= to
+   access an encrypted file, Emacs prompts you for the passphrase and then
    decrypts the file before displaying it. When you save the file, Emacs
    automatically encrypts it again with that same key.
 
@@ -5105,8 +5105,6 @@ http://www.google.com/search?q=searchterms, you can just type
 
 *** Extended use of TODO keywords
 
-*************** TODO Add correct settings HERE (not only in color theme) for org-todo and org-done
-
 #+begin_src emacs-lisp
 ;;** 5.2 Use of (info "(org)TODO extensions")
 
@@ -5155,8 +5153,8 @@ http://www.google.com/search?q=searchterms, you can just type
             ("OPENPO" . leuven-org-openpo-kwd-face)
             ("CLSDPO" . leuven-org-closedpo-kwd-face))))
 
-  ;; Org standard faces
   (with-eval-after-load "org-faces"
+    ;; Org standard faces
     (set-face-attribute 'org-todo nil
                         :weight 'bold :box '(:line-width 1 :color "#D8ABA7")
                         :foreground "#D8ABA7" :background "#FFE6E4")
@@ -6190,8 +6188,6 @@ the header under which the entry will be placed.
 
 *** Agenda files
 
-*************** TODO Should I default `o-a-f' to "~/org/*.org" when not yet bound?
-
 #+begin_src emacs-lisp
 ;;** 10.1 (info "(org)Agenda files")
 
@@ -6766,9 +6762,11 @@ Search any word or regexp within your task name or in the note field:
                  '("f" "Like s, but with extra files"
                    search ""
                    ((org-agenda-text-search-extra-files
+                     ;; FIXME Add `agenda-archives'
                      leuven-org-search-extra-files))) t)
-                 ;; FIXME Add (agenda-archives)
 #+end_src
+
+*************** TODO Add =F= to search in all files, but not into DONE tasks
 
 We should have two agenda views:
 - sorted by priority (C-c a a, for example)
@@ -7518,7 +7516,37 @@ Agenda:
                    ((org-agenda-files '("~/org/email.org")))) t)
 #+end_src
 
-**** TODO Add a custom view which is some "bill" to send to your boss/client (table view)
+*************** TODO Add a custom view which is some "bill" to send to your boss/client (table view)
+
+**** Display all active tasks from the current directory
+
+The function =leuven-org-current-dir= will display your tasks from the current
+directory (including from local files ~TODO.org~ and ~BUGS.org~, for example).
+
+*************** TODO Add recursive option to show all tasks from subdir
+
+#+begin_src emacs-lisp
+  (defun leuven-org-current-dir ()
+    "Produce a view from all Org files in the current directory."
+    (interactive)
+    (let* ((fname (buffer-file-name))
+           (dname (if fname
+                      (if (file-directory-p fname)
+                          fname
+                        (file-name-directory fname))
+                    default-directory))
+           (org-agenda-files
+            (append (file-expand-wildcards (concat dname "*.org"))
+                    (file-expand-wildcards (concat dname "*.txt"))))
+           (org-agenda-overriding-header
+            (format "TODO list for directory %s" dname))
+           (org-agenda-sticky nil))
+      (org-todo-list)))
+
+  ;; "TODO list" without asking for a directory
+  (global-set-key
+    (kbd "<C-f3>") 'leuven-org-current-dir)
+#+end_src
 
 #+begin_src emacs-lisp
     ) ;; with-eval-after-load "org-agenda" ends here

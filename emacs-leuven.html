@@ -525,9 +525,8 @@
 
                       <li><a href="#sec-26-9-6-2">Organize view</a></li>
 
-                      <li><a href="#sec-26-9-6-3">Add a custom view which is
-                      some "bill" to send to your boss/client (table
-                      view)</a></li>
+                      <li><a href="#sec-26-9-6-3">Display all active tasks from
+                      the current directory</a></li>
                     </ul>
                   </li>
 
@@ -1098,7 +1097,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131007.1344</span>
+"color: #008200; font-style: italic;">Version: 20131008.1019</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1220,7 +1219,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131007.1344]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131008.1019]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -9569,12 +9568,6 @@ M-: (executable-find "diff") RET
           <h4 id="sec-26-4-2">Extended use of TODO keywords</h4>
 
           <div class="outline-text-4" id="text-26-4-2">
-            <div class="inlinetask">
-              <b><span class="todo TODO">TODO</span> Add correct settings HERE
-              (not only in color theme) for org-todo and org-done</b><br />
-              nil
-            </div>
-
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
 <span style="color: #008200;">;;</span><span style=
@@ -9680,10 +9673,10 @@ M-: (executable-find "diff") RET
             (<span style=
 "color: #FF4700;">"CLSDPO"</span> . leuven-org-closedpo-kwd-face))))
 
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Org standard faces</span>
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #FF4700;">"org-faces"</span>
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">Org standard faces</span>
     (set-face-attribute 'org-todo nil
                         <span style=
 "color: #006FE0;">:weight</span> 'bold <span style=
@@ -11455,12 +11448,6 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           <h4 id="sec-26-9-1">Agenda files</h4>
 
           <div class="outline-text-4" id="text-26-9-1">
-            <div class="inlinetask">
-              <b><span class="todo TODO">TODO</span> Should I default `o-a-f'
-              to "~/org/*.org" when not yet bound?</b><br />
-              nil
-            </div>
-
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
 <span style="color: #008200;">;;</span><span style=
@@ -12405,22 +12392,28 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #FF4700;">"Like s, but with extra files"</span>
                    search <span style="color: #FF4700;">""</span>
                    ((org-agenda-text-search-extra-files
+                     <span style="color: #008200;">;; </span><span style=
+"color: #008200; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #008200; font-style: italic;"> Add `</span><span style="color: #008200; font-style: italic;">agenda-archives</span><span style="color: #008200; font-style: italic;">'</span>
                      leuven-org-search-extra-files))) t)
-                 <span style="color: #008200;">;; </span><span style=
-"color: #008200; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #008200; font-style: italic;"> Add (agenda-archives)</span>
 </pre>
             </div>
 
-            <p>We should have two agenda views:</p>
+            <div class="inlinetask">
+              <b><span class="todo TODO">TODO</span> Add <code>F</code> to
+              search in all files, but not into DONE tasks</b><br />
 
-            <ul class="org-ul">
-              <li>sorted by priority (C-c a a, for example)</li>
+              <div class="figure"></div>
 
-              <li>sorted by effort</li>
-            </ul>
+              <p>We should have two agenda views:</p>
 
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
+              <ul class="org-ul">
+                <li>sorted by priority (C-c a a, for example)</li>
+
+                <li>sorted by effort</li>
+              </ul>
+
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(add-to-list 'org-agenda-custom-commands</span>
     <span style="color: #008200;">;;              </span><span style=
@@ -12453,10 +12446,10 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
     <span style="color: #008200;">;;              </span><span style=
 "color: #008200; font-style: italic;">;; scheduled in the past or for today)</span>
 </pre>
-            </div>
+              </div>
 
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
     (add-to-list 'org-agenda-custom-commands
                  '(<span style="color: #FF4700;">"b"</span> . <span style=
 "color: #FF4700;">"All active tasks..."</span>) t)
@@ -12474,30 +12467,30 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #FF4700;"> %PRIORITY %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)"</span>)
                     (org-agenda-view-columns-initially t))) t)
 </pre>
-            </div>
+              </div>
 
-            <p>Hide certain tasks that you don't want to be bothered with all
-            the time:</p>
+              <p>Hide certain tasks that you don't want to be bothered with all
+              the time:</p>
 
-            <ul class="org-ul">
-              <li>Hide low priority</li>
+              <ul class="org-ul">
+                <li>Hide low priority</li>
 
-              <li>Hide <code>DFRD</code> tasks</li>
+                <li>Hide <code>DFRD</code> tasks</li>
 
-              <li>Hide future tasks?</li>
+                <li>Hide future tasks?</li>
 
-              <li>Hide subtasks?
+                <li>Hide subtasks?
 
-                <div class="inlinetask">
-                  <b><span class="todo TODO">TODO</span> Add extra filters
-                  (described above)</b><br />
-                  nil
-                </div>
-              </li>
-            </ul>
+                  <div class="inlinetask">
+                    <b><span class="todo TODO">TODO</span> Add extra filters
+                    (described above)</b><br />
+                    nil
+                  </div>
+                </li>
+              </ul>
 
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
     (add-to-list 'org-agenda-custom-commands
                  '(<span style="color: #FF4700;">"bT"</span> <span style=
 "color: #FF4700;">"Filtered list of </span><span style=
@@ -12516,10 +12509,10 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
                     (org-agenda-sorting-strategy
                      '(category-up priority-down todo-state-up alpha-up)))) t)
 </pre>
-            </div>
+              </div>
 
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
     (add-to-list 'org-agenda-custom-commands
                  '(<span style="color: #FF4700;">"p"</span> . <span style=
 "color: #FF4700;">"2. Process/Clarify..."</span>) t)
@@ -12532,10 +12525,10 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
                    ((org-agenda-overriding-header <span style=
 "color: #FF4700;">"Level 2 stuff in inbox"</span>))) t)
 </pre>
-            </div>
+              </div>
 
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
     (add-to-list 'org-agenda-custom-commands
                  '(<span style="color: #FF4700;">"o"</span> . <span style=
 "color: #FF4700;">"3. Organize..."</span>) t)
@@ -12559,19 +12552,21 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #FF4700;"> %PRIORITY %20TAGS %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)"</span>)
                     (org-agenda-view-columns-initially t))) t)
 </pre>
-            </div>
+              </div>
 
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
     (add-to-list 'org-agenda-custom-commands
                  '(<span style="color: #FF4700;">"r"</span> . <span style=
 "color: #FF4700;">"4. Review..."</span>) t)
 </pre>
-            </div>
+              </div>
 
-            <div class="inlinetask">
-              <b><span class="todo TODO">TODO</span> Add report "Recently
-              added/completed/modified"</b><br />
+              <div class="inlinetask">
+                <b><span class="todo TODO">TODO</span> Add report "Recently
+                added/completed/modified"</b><br />
+                nil
+              </div>
 
               <p>Recently done.</p>
             </div>
@@ -13688,15 +13683,67 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #FF4700;">"~/org/email.org"</span>)))) t)
 </pre>
               </div>
+
+              <div class="inlinetask">
+                <b><span class="todo TODO">TODO</span> Add a custom view which
+                is some "bill" to send to your boss/client (table
+                view)</b><br />
+                nil
+              </div>
             </div>
           </div>
 
           <div id="outline-container-sec-26-9-6-3" class="outline-5">
-            <h5 id="sec-26-9-6-3"><span class="todo TODO">TODO</span> Add a
-            custom view which is some "bill" to send to your boss/client (table
-            view)</h5>
+            <h5 id="sec-26-9-6-3">Display all active tasks from the current
+            directory</h5>
 
             <div class="outline-text-5" id="text-26-9-6-3">
+              <p>The function <code>leuven-org-current-dir</code> will display
+              your tasks from the current directory (including from local files
+              <code>TODO.org</code> and <code>BUGS.org</code>, for
+              example).</p>
+
+              <div class="inlinetask">
+                <b><span class="todo TODO">TODO</span> Add recursive option to
+                show all tasks from subdir</b><br />
+                nil
+              </div>
+
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
+  (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven-org-current-dir</span> ()
+    <span style=
+"color: #008000;">"Produce a view from all Org files in the current directory."</span>
+    (interactive)
+    (<span style="color: #0000FF;">let*</span> ((fname (buffer-file-name))
+           (dname (<span style="color: #0000FF;">if</span> fname
+                      (<span style=
+"color: #0000FF;">if</span> (file-directory-p fname)
+                          fname
+                        (file-name-directory fname))
+                    default-directory))
+           (org-agenda-files
+            (append (file-expand-wildcards (concat dname <span style=
+"color: #FF4700;">"*.org"</span>))
+                    (file-expand-wildcards (concat dname <span style=
+"color: #FF4700;">"*.txt"</span>))))
+           (org-agenda-overriding-header
+            (format <span style="color: #FF4700;">"</span><span style=
+"color: #FF4700; background-color: #FFFF88;">TODO</span><span style=
+"color: #FF4700;"> list for directory %s"</span> dname))
+           (org-agenda-sticky nil))
+      (org-todo-list)))
+
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">"</span><span style=
+"color: #008200; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #008200; font-style: italic;"> list" without asking for a directory</span>
+  (global-set-key
+    (kbd <span style=
+"color: #FF4700;">"&lt;C-f3&gt;"</span>) 'leuven-org-current-dir)
+</pre>
+              </div>
+
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
     ) <span style="color: #008200;">;; </span><span style=
@@ -24684,7 +24731,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131007.1345]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131008.102]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
