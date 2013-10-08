@@ -257,13 +257,15 @@
             <a href="#sec-19">Using Multiple Buffers</a>
 
             <ul>
-              <li><a href="#sec-19-1">Listing Existing Buffers</a></li>
+              <li><a href="#sec-19-1">Creating and Selecting Buffers</a></li>
 
-              <li><a href="#sec-19-2">Killing Buffers</a></li>
+              <li><a href="#sec-19-2">Listing Existing Buffers</a></li>
 
-              <li><a href="#sec-19-3">Operating on Several Buffers</a></li>
+              <li><a href="#sec-19-3">Killing Buffers</a></li>
 
-              <li><a href="#sec-19-4">Convenience Features and Customization of
+              <li><a href="#sec-19-4">Operating on Several Buffers</a></li>
+
+              <li><a href="#sec-19-5">Convenience Features and Customization of
               Buffer Handling</a></li>
             </ul>
           </li>
@@ -1097,7 +1099,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131008.122</span>
+"color: #008200; font-style: italic;">Version: 20131008.1415</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1219,7 +1221,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131008.122]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131008.1415]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -6398,9 +6400,50 @@ M-: (executable-find "diff") RET
       </div>
 
       <div id="outline-container-sec-19-1" class="outline-3">
-        <h3 id="sec-19-1">Listing Existing Buffers</h3>
+        <h3 id="sec-19-1">Creating and Selecting Buffers</h3>
 
         <div class="outline-text-3" id="text-19-1">
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+<span style="color: #008200;">;;</span><span style=
+"color: #008200; font-style: italic;">** 19.1 Creating and (info "(emacs)Select Buffer")</span>
+
+  (leuven--section <span style=
+"color: #FF4700;">"19.1 (emacs)Select Buffer"</span>)
+
+  (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">switch-or-start</span> (function buffer)
+    <span style=
+"color: #008000;">"If the BUFFER is current, bury it. If there is a buffer with that</span>
+<span style=
+"color: #008000;">  name, switch to it; otherwise, invoke the FUNCTION."</span>
+    (<span style=
+"color: #0000FF;">if</span> (equal (buffer-name (current-buffer)) buffer)
+        (bury-buffer)
+      (<span style="color: #0000FF;">if</span> (get-buffer buffer)
+          (switch-to-buffer buffer)
+        (funcall function))))
+
+  (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">switch-or-find-file</span> (file)
+    <span style=
+"color: #008000;">"If the FILE is current, bury it. If there is a buffer with that</span>
+<span style="color: #008000;">  name, switch to it; otherwise, open it."</span>
+    (<span style="color: #0000FF;">when</span> (file-exists-p file)
+      (<span style="color: #0000FF;">if</span> (and (buffer-file-name)
+               (string= (expand-file-name file)
+                        (expand-file-name (buffer-file-name))))
+          (bury-buffer)
+        (find-file file))))
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="outline-container-sec-19-2" class="outline-3">
+        <h3 id="sec-19-2">Listing Existing Buffers</h3>
+
+        <div class="outline-text-3" id="text-19-2">
           <ul class="org-ul">
             <li>The <code>C</code> (current) column has a <code>.</code> for
             the buffer from which you came.</li>
@@ -6563,10 +6606,10 @@ M-: (executable-find "diff") RET
         </div>
       </div>
 
-      <div id="outline-container-sec-19-2" class="outline-3">
-        <h3 id="sec-19-2">Killing Buffers</h3>
+      <div id="outline-container-sec-19-3" class="outline-3">
+        <h3 id="sec-19-3">Killing Buffers</h3>
 
-        <div class="outline-text-3" id="text-19-2">
+        <div class="outline-text-3" id="text-19-3">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span style="color: #008200;">;;</span><span style=
@@ -6594,10 +6637,10 @@ M-: (executable-find "diff") RET
         </div>
       </div>
 
-      <div id="outline-container-sec-19-3" class="outline-3">
-        <h3 id="sec-19-3">Operating on Several Buffers</h3>
+      <div id="outline-container-sec-19-4" class="outline-3">
+        <h3 id="sec-19-4">Operating on Several Buffers</h3>
 
-        <div class="outline-text-3" id="text-19-3">
+        <div class="outline-text-3" id="text-19-4">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span style="color: #008200;">;;</span><span style=
@@ -6622,11 +6665,11 @@ M-: (executable-find "diff") RET
         </div>
       </div>
 
-      <div id="outline-container-sec-19-4" class="outline-3">
-        <h3 id="sec-19-4">Convenience Features and Customization of Buffer
+      <div id="outline-container-sec-19-5" class="outline-3">
+        <h3 id="sec-19-5">Convenience Features and Customization of Buffer
         Handling</h3>
 
-        <div class="outline-text-3" id="text-19-4">
+        <div class="outline-text-3" id="text-19-5">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span style="color: #008200;">;;</span><span style=
@@ -21021,19 +21064,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200; font-style: italic;">make</span><span style=
 "color: #008200; font-style: italic;">'</span>
 
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">switch-or-start</span> (function buffer)
-    <span style=
-"color: #008000;">"If the buffer is current, bury it. If there is a buffer with that</span>
-<span style=
-"color: #008000;">  name, switch to it; otherwise, invoke the function."</span>
-    (<span style=
-"color: #0000FF;">if</span> (equal (buffer-name (current-buffer)) buffer)
-        (bury-buffer)
-      (<span style="color: #0000FF;">if</span> (get-buffer buffer)
-          (switch-to-buffer buffer)
-        (funcall function))))
-
   (global-set-key
     (kbd <span style="color: #FF4700;">"C-c n"</span>)
     (<span style="color: #0000FF;">lambda</span> ()
@@ -24758,7 +24788,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131008.122]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131008.1415]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
