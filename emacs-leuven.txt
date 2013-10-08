@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-08 Tue 10:17>
+# Time-stamp: <2013-10-08 Tue 10:39>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -138,7 +138,7 @@ echo "$(date '+%Y%m%d.%H%M')"
 (when (and (string-match "GNU Emacs" (version))
            leuven-load-verbose)
   (defadvice message (before leuven-when-was-that activate)
-    "Add timestamps to `message' output."
+    "Add time stamps to `message' output."
     (ad-set-arg 0 (concat (format-time-string "[%Y-%m-%d %T.")
                           (substring (format-time-string "%N") 0 3)
                           (format-time-string "] ")
@@ -3780,22 +3780,18 @@ mail buffer) under "Important settings" when you type
 
 ** Language Environments
 
-*************** TODO Check the weekday abbreviations in both:
-- Org timestamps
-- Org agenda
-*************** END
-
 #+begin_src emacs-lisp
 ;;** 22.3 (info "(emacs)Language Environments")
 
   (leuven--section "22.3 (emacs)Language Environments")
 
   ;; specify your character-set locale
-  (setenv "LANG" "en_US.utf8") ;; for svn not to report warnings
+  (setenv "LANG" "en_US.utf8")          ; for svn not to report warnings
 
   ;; system locale to use for formatting time values
-  (setq system-time-locale "C") ;; make sure that timestamps in your Org mode
-                                ;; files appear in English
+  (setq system-time-locale "C")         ; make sure that the weekdays in the
+                                        ; time stamps of your Org mode files
+                                        ; and in the agenda appear in English
 #+end_src
 
 One could use:
@@ -5409,12 +5405,12 @@ with special meaning are written with all capitals.
     (try-require 'appt))
 #+end_src
 
-*** Creating timestamps
+*** Creating time stamps
 
 #+begin_src emacs-lisp
 ;;** 8.2 (info "(org)Creating timestamps")
 
-  (leuven--section "8.2 (org)Creating timestamps")
+  (leuven--section "8.2 (org)Creating time stamps")
 
   ;; prefer the future for incomplete dates
   (setq org-read-date-prefer-future 'time)
@@ -5492,7 +5488,7 @@ Remove scheduling date with =C-u C-c C-s=.
   ;; don't show scheduled items in agenda when they are done
   (setq org-agenda-skip-scheduled-if-done t)
 
-  ;; ~8.3 don't select item by timestamp or -range if it is DONE
+  ;; ~8.3 don't select item by time stamp or -range if it is DONE
   (setq org-agenda-skip-timestamp-if-done t)
 
   ;; ;; show all days between the first and the last date
@@ -5648,7 +5644,7 @@ When clocking in, ask for a time estimate if the property is not yet defined.
 
 The ultimate capture tool.
 
-*************** TODO Look at =:kill-buffer=.
+*************** TODO Look at =:kill-buffer=
 
 #+begin_src emacs-lisp
 ;;* 9 (info "(org)Capture - Refile - Archive")
@@ -5686,31 +5682,31 @@ The ultimate capture tool.
 %-escapes:
 
 - %a ::
-     annotation (link)
+     Annotation (link)
 
 - %i ::
-     initial content (selected text)
+     Initial content (selected text)
 
 - %? ::
-     cursor position
+     Cursor position
 
 - %^T ::
-     prompt for a date and time
+     Prompt for a date and time
 
 - %^G ::
-     prompt for tags with completion on tags in all agenda files
+     Prompt for tags with completion on tags in all agenda files
 
 - %t ::
-     time stamp (date only)
+     Time stamp (date only)
 
 - %^{prompt} ::
-     prompt the user for a string
+     Prompt the user for a string
 
 - %[file] ::
-     insert the contents of the file
+     Insert the contents of the file
 
 - %U ::
-     inactive time stamp with date and time
+     Inactive time stamp with date and time
 
 Use =:jump-to-captured= to tell capture to jump to the note after storing it.
 
@@ -6170,7 +6166,7 @@ the header under which the entry will be placed.
 
 ;;* 10 (info "(org)Agenda Views")
 
-  ;; multiple same-day timestamps in entry make multiple agenda lines
+  ;; multiple same-day time stamps in entry make multiple agenda lines
   (setq org-agenda-skip-additional-timestamps-same-entry nil)
 
   ;; show outline path in echo area after line motion (though, may bring
@@ -6237,7 +6233,7 @@ Press =C-c a a= to jump you to this week's task page from anywhere.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; show entries with a timestamp in the global `todo' list
+  ;; show entries with a time stamp in the global `todo' list
   (setq org-agenda-todo-ignore-timestamp nil)
 #+end_src
 
@@ -6402,9 +6398,9 @@ for today's date:
   (setq org-agenda-current-time-string "now")
 #+end_src
 
-=time-up= will only be applied to those items have a date-stamp for the day in
-question, so that other sorting parameters will not be outranked by =time-up=
-for the rest of the entries.
+=time-up= will only be applied to those items have a time stamp for the day in
+question, so that other sorting parameters will not be outranked by =time-up= for
+the rest of the entries.
 
 *************** TODO refile.org should come first
 Current workaround: added =#+CATEGORY: @refile= at the end of that file (the =@=
@@ -8158,7 +8154,7 @@ See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-9-2][9.2 T
 
 #+begin_src emacs-lisp
     ;; ;; 13.2 always publish all files
-    ;; ;; (do not use timestamp checking for skipping unmodified files)
+    ;; ;; (do not use time stamp checking for skipping unmodified files)
     ;; (setq org-publish-use-timestamps-flag nil)
 #+end_src
 
@@ -12073,7 +12069,7 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
     ;; default display layout pop-up BBDB buffers
     (setq bbdb-pop-up-display-layout 'one-line)
 
-    ;; omit creation-date and timestamp from BBDB display
+    ;; omit creation-date and time stamp from BBDB display
     (setq bbdb-display-layout-alist
           '((one-line          (order     . (phones notes))
                                (name-end  . 24)

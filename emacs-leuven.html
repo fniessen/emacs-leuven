@@ -449,7 +449,7 @@
                 <a href="#sec-26-7">Dates and Times</a>
 
                 <ul>
-                  <li><a href="#sec-26-7-1">Creating timestamps</a></li>
+                  <li><a href="#sec-26-7-1">Creating time stamps</a></li>
 
                   <li>
                     <a href="#sec-26-7-2">Deadlines and scheduling</a>
@@ -1097,7 +1097,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131008.1019</span>
+"color: #008200; font-style: italic;">Version: 20131008.1041</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1219,7 +1219,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131008.1019]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131008.1041]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -1281,7 +1281,7 @@
            leuven-load-verbose)
   (<span style="color: #0000FF;">defadvice</span> <span style=
 "color: #006699;">message</span> (before leuven-when-was-that activate)
-    <span style="color: #008000;">"Add timestamps to `</span><span style=
+    <span style="color: #008000;">"Add time stamps to `</span><span style=
 "color: #008000;">message</span><span style="color: #008000;">' output."</span>
     (ad-set-arg 0 (concat (format-time-string <span style=
 "color: #FF4700;">"[%Y-%m-%d %T."</span>)
@@ -7318,17 +7318,6 @@ M-: (executable-find "diff") RET
         <h3 id="sec-22-1">Language Environments</h3>
 
         <div class="outline-text-3" id="text-22-1">
-          <div class="inlinetask">
-            <b><span class="todo TODO">TODO</span> Check the weekday
-            abbreviations in both:</b><br />
-
-            <ul class="org-ul">
-              <li>Org timestamps</li>
-
-              <li>Org agenda</li>
-            </ul>
-          </div>
-
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span style="color: #008200;">;;</span><span style=
@@ -7340,20 +7329,23 @@ M-: (executable-find "diff") RET
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">specify your character-set locale</span>
   (setenv <span style="color: #FF4700;">"LANG"</span> <span style=
-"color: #FF4700;">"en_US.utf8"</span>) <span style=
-"color: #008200;">;; </span><span style=
+"color: #FF4700;">"en_US.utf8"</span>)          <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">for svn not to report </span><span style=
 "color: #008200; background-color: #FFFF88; font-style: italic;">warning</span><span style="color: #008200; font-style: italic;">s</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">system locale to use for formatting time values</span>
   (setq system-time-locale <span style=
-"color: #FF4700;">"C"</span>) <span style=
-"color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">make sure that timestamps in your Org mode</span>
-                                <span style=
-"color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">files appear in English</span>
+"color: #FF4700;">"C"</span>)         <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">make sure that the weekdays in the</span>
+                                        <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">time stamps of your Org mode files</span>
+                                        <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">and in the agenda appear in English</span>
 </pre>
           </div>
 
@@ -10174,7 +10166,7 @@ M-: (executable-find "diff") RET
         </div>
 
         <div id="outline-container-sec-26-7-1" class="outline-4">
-          <h4 id="sec-26-7-1">Creating timestamps</h4>
+          <h4 id="sec-26-7-1">Creating time stamps</h4>
 
           <div class="outline-text-4" id="text-26-7-1">
             <div class="org-src-container">
@@ -10183,7 +10175,7 @@ M-: (executable-find "diff") RET
 "color: #008200; font-style: italic;">** 8.2 (info "(org)Creating timestamps")</span>
 
   (leuven--section <span style=
-"color: #FF4700;">"8.2 (org)Creating timestamps"</span>)
+"color: #FF4700;">"8.2 (org)Creating time stamps"</span>)
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">prefer the future for incomplete dates</span>
@@ -10315,7 +10307,7 @@ M-: (executable-find "diff") RET
   (setq org-agenda-skip-scheduled-if-done t)
 
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">~8.3 don't select item by timestamp or -range if it is DONE</span>
+"color: #008200; font-style: italic;">~8.3 don't select item by time stamp or -range if it is DONE</span>
   (setq org-agenda-skip-timestamp-if-done t)
 
   <span style="color: #008200;">;; </span><span style=
@@ -10566,7 +10558,7 @@ M-: (executable-find "diff") RET
 
             <div class="inlinetask">
               <b><span class="todo TODO">TODO</span> Look at
-              <code>:kill-buffer</code>.</b><br />
+              <code>:kill-buffer</code></b><br />
               nil
             </div>
 
@@ -10636,40 +10628,40 @@ M-: (executable-find "diff") RET
             <dl class="org-dl">
               <dt>%a</dt>
 
-              <dd>annotation (link)</dd>
+              <dd>Annotation (link)</dd>
 
               <dt>%i</dt>
 
-              <dd>initial content (selected text)</dd>
+              <dd>Initial content (selected text)</dd>
 
               <dt>%?</dt>
 
-              <dd>cursor position</dd>
+              <dd>Cursor position</dd>
 
               <dt>%^T</dt>
 
-              <dd>prompt for a date and time</dd>
+              <dd>Prompt for a date and time</dd>
 
               <dt>%^G</dt>
 
-              <dd>prompt for tags with completion on tags in all agenda
+              <dd>Prompt for tags with completion on tags in all agenda
               files</dd>
 
               <dt>%t</dt>
 
-              <dd>time stamp (date only)</dd>
+              <dd>Time stamp (date only)</dd>
 
               <dt>%<sup>prompt</sup></dt>
 
-              <dd>prompt the user for a string</dd>
+              <dd>Prompt the user for a string</dd>
 
               <dt>%[file]</dt>
 
-              <dd>insert the contents of the file</dd>
+              <dd>Insert the contents of the file</dd>
 
               <dt>%U</dt>
 
-              <dd>inactive time stamp with date and time</dd>
+              <dd>Inactive time stamp with date and time</dd>
             </dl>
 
             <p>Use <code>:jump-to-captured</code> to tell capture to jump to
@@ -11419,7 +11411,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008200; font-style: italic;">* 10 (info "(org)Agenda Views")</span>
 
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">multiple same-day timestamps in entry make multiple agenda lines</span>
+"color: #008200; font-style: italic;">multiple same-day time stamps in entry make multiple agenda lines</span>
   (setq org-agenda-skip-additional-timestamps-same-entry nil)
 
   <span style="color: #008200;">;; </span><span style=
@@ -11536,7 +11528,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">show entries with a timestamp in the global `</span><span style="color: #008200; font-style: italic;">todo</span><span style="color: #008200; font-style: italic;">' list</span>
+"color: #008200; font-style: italic;">show entries with a time stamp in the global `</span><span style="color: #008200; font-style: italic;">todo</span><span style="color: #008200; font-style: italic;">' list</span>
   (setq org-agenda-todo-ignore-timestamp nil)
 </pre>
             </div>
@@ -11825,7 +11817,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             </div>
 
             <p><code>time-up</code> will only be applied to those items have a
-            date-stamp for the day in question, so that other sorting
+            time stamp for the day in question, so that other sorting
             parameters will not be outranked by <code>time-up</code> for the
             rest of the entries.</p>
 
@@ -14768,7 +14760,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; 13.2 always publish all files</span>
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; (do not use timestamp checking for skipping unmodified files)</span>
+"color: #008200; font-style: italic;">;; (do not use time stamp checking for skipping unmodified files)</span>
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(setq org-publish-use-timestamps-flag nil)</span>
 </pre>
@@ -21333,7 +21325,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (setq bbdb-pop-up-display-layout 'one-line)
 
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">omit creation-date and timestamp from BBDB display</span>
+"color: #008200; font-style: italic;">omit creation-date and time stamp from BBDB display</span>
     (setq bbdb-display-layout-alist
           '((one-line          (order     . (phones notes))
                                (name-end  . 24)
@@ -24731,7 +24723,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131008.102]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131008.1042]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

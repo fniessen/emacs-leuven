@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131008.1018
+;; Version: 20131008.104
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131008.1018]--")
+(message "* --[ Loading Emacs Leuven 20131008.104]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -103,7 +103,7 @@
 (when (and (string-match "GNU Emacs" (version))
            leuven-load-verbose)
   (defadvice message (before leuven-when-was-that activate)
-    "Add timestamps to `message' output."
+    "Add time stamps to `message' output."
     (ad-set-arg 0 (concat (format-time-string "[%Y-%m-%d %T.")
                           (substring (format-time-string "%N") 0 3)
                           (format-time-string "] ")
@@ -2578,11 +2578,12 @@
   (leuven--section "22.3 (emacs)Language Environments")
 
   ;; specify your character-set locale
-  (setenv "LANG" "en_US.utf8") ;; for svn not to report warnings
+  (setenv "LANG" "en_US.utf8")          ; for svn not to report warnings
 
   ;; system locale to use for formatting time values
-  (setq system-time-locale "C") ;; make sure that timestamps in your Org mode
-                                ;; files appear in English
+  (setq system-time-locale "C")         ; make sure that the weekdays in the
+                                        ; time stamps of your Org mode files
+                                        ; and in the agenda appear in English
 
 ;;** 22.4 (info "(emacs)Input Methods")
 
@@ -3720,7 +3721,7 @@
 
 ;;** 8.2 (info "(org)Creating timestamps")
 
-  (leuven--section "8.2 (org)Creating timestamps")
+  (leuven--section "8.2 (org)Creating time stamps")
 
   ;; prefer the future for incomplete dates
   (setq org-read-date-prefer-future 'time)
@@ -3772,7 +3773,7 @@
   ;; don't show scheduled items in agenda when they are done
   (setq org-agenda-skip-scheduled-if-done t)
 
-  ;; ~8.3 don't select item by timestamp or -range if it is DONE
+  ;; ~8.3 don't select item by time stamp or -range if it is DONE
   (setq org-agenda-skip-timestamp-if-done t)
 
   ;; ;; show all days between the first and the last date
@@ -4252,7 +4253,7 @@ From %c"
 
 ;;* 10 (info "(org)Agenda Views")
 
-  ;; multiple same-day timestamps in entry make multiple agenda lines
+  ;; multiple same-day time stamps in entry make multiple agenda lines
   (setq org-agenda-skip-additional-timestamps-same-entry nil)
 
   ;; show outline path in echo area after line motion (though, may bring
@@ -4295,7 +4296,7 @@ From %c"
   ;; show dated entries in the global `todo' list
   (setq org-agenda-todo-ignore-with-date nil) ;;!! tricky setting
 
-  ;; show entries with a timestamp in the global `todo' list
+  ;; show entries with a time stamp in the global `todo' list
   (setq org-agenda-todo-ignore-timestamp nil)
 
   ;; 10.3.2 don't show scheduled entries in the global `todo' list
@@ -5678,7 +5679,7 @@ From %c"
     (setq org-publish-list-skipped-files nil)
 
     ;; ;; 13.2 always publish all files
-    ;; ;; (do not use timestamp checking for skipping unmodified files)
+    ;; ;; (do not use time stamp checking for skipping unmodified files)
     ;; (setq org-publish-use-timestamps-flag nil)
 
     ;; 13.4 force publishing all files
@@ -8150,7 +8151,7 @@ From %c"
     ;; default display layout pop-up BBDB buffers
     (setq bbdb-pop-up-display-layout 'one-line)
 
-    ;; omit creation-date and timestamp from BBDB display
+    ;; omit creation-date and time stamp from BBDB display
     (setq bbdb-display-layout-alist
           '((one-line          (order     . (phones notes))
                                (name-end  . 24)
@@ -9379,7 +9380,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131008.1019]--")
+(message "* --[ Loaded Emacs Leuven 20131008.1041]--")
 
 (provide 'emacs-leuven)
 
