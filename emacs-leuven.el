@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131008.104
+;; Version: 20131008.1103
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131008.104]--")
+(message "* --[ Loading Emacs Leuven 20131008.1103]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6330,9 +6330,11 @@ From %c"
       ;; don't show output of TeX compilation in other window
       (setq TeX-show-compilation nil)
 
+;;** 4.7 (info "(auctex)Documentation")
+
 ;;** 5.2 (info "(auctex)Multifile") Documents
 
-      ;; AUCTeX will will assume the file is a master file itself
+      ;; assume that the file is a master file itself
       (setq-default TeX-master t)
 
 ;;** 5.3 Automatic (info "(auctex)Parsing Files")
@@ -9380,7 +9382,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131008.1041]--")
+(message "* --[ Loaded Emacs Leuven 20131008.1104]--")
 
 (provide 'emacs-leuven)
 

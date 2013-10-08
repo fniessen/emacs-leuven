@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-08 Tue 10:39>
+# Time-stamp: <2013-10-08 Tue 11:02>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -9032,8 +9032,6 @@ it to =text-mode-hook=.
 AUCTeX defines the ~tex-mode.el~ mode names as alias of its own modes: it
 aliases =(la)tex-mode= to =(La)TeX-mode=.
 
-*************** TODO TeX Documentation via `C-c ?' (TeX-doc)
-
 #+begin_src emacs-lisp
   (leuven--section "25.10 (emacs)AUCTeX Mode")
 
@@ -9179,9 +9177,19 @@ SumatraPDF as your PDF viewer.
 #+end_src
 
 #+begin_src emacs-lisp
+;;** 4.7 (info "(auctex)Documentation")
+#+end_src
+
+=C-c ?= (or =M-x TeX-doc=) displays documentation for a package.
+
+*************** TODO TeX-doc does not provide a list of available keywords for completion
+Nor a default when point is on a command name...
+*************** END
+
+#+begin_src emacs-lisp
 ;;** 5.2 (info "(auctex)Multifile") Documents
 
-      ;; AUCTeX will will assume the file is a master file itself
+      ;; assume that the file is a master file itself
       (setq-default TeX-master t)
 
 ;;** 5.3 Automatic (info "(auctex)Parsing Files")
