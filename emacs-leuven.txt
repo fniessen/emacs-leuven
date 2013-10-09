@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-09 Wed 15:17>
+# Time-stamp: <2013-10-09 Wed 19:17>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -8900,23 +8900,25 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 #+begin_src emacs-lisp
 ;;** A.6 (info "(org)Dynamic blocks")
 
-  ;; make sure that all dynamic blocks and all tables are always
-  ;; up-to-date
-  (add-hook 'before-save-hook
-            (lambda ()
-              (when (eq major-mode 'org-mode)
-                (let ((flyspell-mode-before-save flyspell-mode))
-                  (flyspell-mode -1)    ; temporarily disable Flyspell to avoid
+  (defun leuven--org-update-buffer ()
+    "Update all dynamic blocks and all tables in the buffer."
+    (when (eq major-mode 'org-mode)
+      (let ((flyspell-mode-before-save flyspell-mode))
+        (flyspell-mode -1)              ; temporarily disable Flyspell to avoid
                                         ; checking the following modifications
                                         ; of the buffer
-                  (org-align-all-tags)
-                  (org-update-all-dblocks)
-                  ;; (when (fboundp 'org-table-iterate-buffer-tables)
-                    (org-table-iterate-buffer-tables)
-                    ;; )
-                  (when (file-exists-p (buffer-file-name (current-buffer)))
-                    (leuven--org-remove-redundant-tags))
-                  (when flyspell-mode-before-save (flyspell-mode 1))))))
+        (org-align-all-tags)
+        (org-update-all-dblocks)
+        ;; (when (fboundp 'org-table-iterate-buffer-tables)
+        (org-table-iterate-buffer-tables)
+        ;; )
+        (when (file-exists-p (buffer-file-name (current-buffer)))
+          (leuven--org-remove-redundant-tags))
+        (when flyspell-mode-before-save (flyspell-mode 1)))))
+
+  ;; make sure that all dynamic blocks and all tables are always
+  ;; up-to-date
+  (add-hook 'before-save-hook 'leuven--org-update-buffer)
 #+end_src
 
 ** Org-contrib
@@ -13392,6 +13394,7 @@ particular color...
           (flyspell-mode . 1)
           (ispell-local-dictionary . "american")
           (ispell-local-dictionary . "francais")
+          (org-tags-column . -80)       ; org-issues.org
           (outline-minor-mode)
           (whitespace-style face tabs spaces trailing lines
                             space-before-tab::space newline indentation::space

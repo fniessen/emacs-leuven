@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title>
+  <title>Emacs Leuven</title><!-- 2013-10-09 Wed 22:00 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1099,7 +1099,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131009.1521</span>
+"color: #008200; font-style: italic;">Version: 20131009.2159</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1221,7 +1221,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131009.1521]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131009.2159]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -16036,17 +16036,14 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 <span style="color: #008200;">;;</span><span style=
 "color: #008200; font-style: italic;">** A.6 (info "(org)Dynamic blocks")</span>
 
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">make sure that all dynamic blocks and all tables are always</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">up-to-date</span>
-  (add-hook 'before-save-hook
-            (<span style="color: #0000FF;">lambda</span> ()
-              (<span style=
-"color: #0000FF;">when</span> (eq major-mode 'org-mode)
-                (<span style=
+  (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven--org-update-buffer</span> ()
+    <span style=
+"color: #008000;">"Update all dynamic blocks and all tables in the buffer."</span>
+    (<span style="color: #0000FF;">when</span> (eq major-mode 'org-mode)
+      (<span style=
 "color: #0000FF;">let</span> ((flyspell-mode-before-save flyspell-mode))
-                  (flyspell-mode -1)    <span style=
+        (flyspell-mode -1)              <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">temporarily disable Flyspell to avoid</span>
                                         <span style=
@@ -16055,18 +16052,24 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
                                         <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">of the buffer</span>
-                  (org-align-all-tags)
-                  (org-update-all-dblocks)
-                  <span style="color: #008200;">;; </span><span style=
+        (org-align-all-tags)
+        (org-update-all-dblocks)
+        <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(when (fboundp 'org-table-iterate-buffer-tables)</span>
-                    (org-table-iterate-buffer-tables)
-                    <span style="color: #008200;">;; </span><span style=
+        (org-table-iterate-buffer-tables)
+        <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">)</span>
-                  (<span style=
+        (<span style=
 "color: #0000FF;">when</span> (file-exists-p (buffer-file-name (current-buffer)))
-                    (leuven--org-remove-redundant-tags))
-                  (<span style=
-"color: #0000FF;">when</span> flyspell-mode-before-save (flyspell-mode 1))))))
+          (leuven--org-remove-redundant-tags))
+        (<span style=
+"color: #0000FF;">when</span> flyspell-mode-before-save (flyspell-mode 1)))))
+
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">make sure that all dynamic blocks and all tables are always</span>
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">up-to-date</span>
+  (add-hook 'before-save-hook 'leuven--org-update-buffer)
 </pre>
           </div>
         </div>
@@ -23503,6 +23506,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #FF4700;">"american"</span>)
           (ispell-local-dictionary . <span style=
 "color: #FF4700;">"francais"</span>)
+          (org-tags-column . -80)       <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">org-issues.org</span>
           (outline-minor-mode)
           (whitespace-style face tabs spaces trailing lines
                             space-before-tab::space newline indentation::space
@@ -24744,7 +24750,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131009.1521]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131009.22]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

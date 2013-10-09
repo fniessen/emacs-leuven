@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131009.152
+;; Version: 20131009.2158
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131009.152]--")
+(message "* --[ Loading Emacs Leuven 20131009.2158]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6154,23 +6154,25 @@ From %c"
 
 ;;** A.6 (info "(org)Dynamic blocks")
 
-  ;; make sure that all dynamic blocks and all tables are always
-  ;; up-to-date
-  (add-hook 'before-save-hook
-            (lambda ()
-              (when (eq major-mode 'org-mode)
-                (let ((flyspell-mode-before-save flyspell-mode))
-                  (flyspell-mode -1)    ; temporarily disable Flyspell to avoid
+  (defun leuven--org-update-buffer ()
+    "Update all dynamic blocks and all tables in the buffer."
+    (when (eq major-mode 'org-mode)
+      (let ((flyspell-mode-before-save flyspell-mode))
+        (flyspell-mode -1)              ; temporarily disable Flyspell to avoid
                                         ; checking the following modifications
                                         ; of the buffer
-                  (org-align-all-tags)
-                  (org-update-all-dblocks)
-                  ;; (when (fboundp 'org-table-iterate-buffer-tables)
-                    (org-table-iterate-buffer-tables)
-                    ;; )
-                  (when (file-exists-p (buffer-file-name (current-buffer)))
-                    (leuven--org-remove-redundant-tags))
-                  (when flyspell-mode-before-save (flyspell-mode 1))))))
+        (org-align-all-tags)
+        (org-update-all-dblocks)
+        ;; (when (fboundp 'org-table-iterate-buffer-tables)
+        (org-table-iterate-buffer-tables)
+        ;; )
+        (when (file-exists-p (buffer-file-name (current-buffer)))
+          (leuven--org-remove-redundant-tags))
+        (when flyspell-mode-before-save (flyspell-mode 1)))))
+
+  ;; make sure that all dynamic blocks and all tables are always
+  ;; up-to-date
+  (add-hook 'before-save-hook 'leuven--org-update-buffer)
 
   (with-eval-after-load "org"
     (message "... Org Effectiveness")
@@ -9073,6 +9075,7 @@ From %c"
           (flyspell-mode . 1)
           (ispell-local-dictionary . "american")
           (ispell-local-dictionary . "francais")
+          (org-tags-column . -80)       ; org-issues.org
           (outline-minor-mode)
           (whitespace-style face tabs spaces trailing lines
                             space-before-tab::space newline indentation::space
@@ -9386,7 +9389,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131009.1521]--")
+(message "* --[ Loaded Emacs Leuven 20131009.2159]--")
 
 (provide 'emacs-leuven)
 
