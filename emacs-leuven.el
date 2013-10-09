@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131008.2111
+;; Version: 20131009.1237
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131008.2111]--")
+(message "* --[ Loading Emacs Leuven 20131009.1237]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1648,9 +1648,9 @@
   (defun org-save-buffer-and-do-related ()
     "Save buffer, execute/tangle code blocks, and export to HTML/PDF."
     (interactive)
-    (let* ((orgfile (buffer-file-name))
-           (htmlfile (concat (file-name-base orgfile) ".html"))
-           (pdffile (concat (file-name-base orgfile) ".pdf")))
+    (let* ((base-name (file-name-base (buffer-file-name)))
+           (htmlfile (concat base-name ".html"))
+           (pdffile (concat base-name ".pdf")))
       (save-buffer)                     ; see other commands in `before-save-hook':
                                         ; `org-update-all-dblocks'
                                         ; `org-table-iterate-buffer-tables'
@@ -3757,14 +3757,6 @@
   ;; number of minutes to round time stamps to
   (setq org-time-stamp-rounding-minutes '(1 1))
 
-
-  ;; (setq org-time-clocksum-use-fractional t)
-
-  ;; format string used when creating CLOCKSUM lines and when generating a
-  ;; time duration (avoid showing days)
-  (setq org-time-clocksum-format
-        '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
-
 ;;** 8.3 (info "(org)Deadlines and scheduling")
 
   (leuven--section "8.3 (org)Deadlines and scheduling")
@@ -3834,6 +3826,20 @@
     ;; 8.4.2 include the current clocking task time in clock reports
     (setq org-clock-report-include-clocking-task t)
 
+    ;; 8.4.2 format string used when creating CLOCKSUM lines and when generating a
+    ;; time duration (avoid showing days)
+    (setq org-time-clocksum-format
+          '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
+
+    ;; ;; 8.4.2 use fractional times
+    ;; (setq org-time-clocksum-use-fractional t)
+
+    ;; format string for the total time cells
+    (setq org-clock-total-time-cell-format "%s")
+
+    ;; format string for the file time cells
+    (setq org-clock-file-time-cell-format "%s")
+
     (defun leuven-org-clock-in-interrupted-task ()
       "Clock back into the task that has been interrupted, if there is one."
       (interactive)
@@ -3896,12 +3902,6 @@
         t)) ;; only fails on keyboard quit or error
 
     (add-hook 'kill-emacs-query-functions 'leuven--org-query-clock-out)
-
-    ;; format string for the total time cells
-    (setq org-clock-total-time-cell-format "%s")
-
-    ;; format string for the file time cells
-    (setq org-clock-file-time-cell-format "%s")
 
     ) ;; with-eval-after-load "org-clock" ends here
 
@@ -5644,17 +5644,6 @@ From %c"
     ;; hook run before parsing an export buffer
     (add-hook 'org-export-before-parsing-hook
               'leuven--change-pdflatex-packages)
-
-      ;; (setq org-latex-inputenc-alist '(("utf8" . "utf8x")))
-
-      (defun leuven--latex-filter-nbsp (text backend info)
-        "Ensure that non-breaking spaces are properly handled in LaTeX/Beamer export."
-        (when (memq backend '(latex beamer))
-          (replace-regexp-in-string " " "~" text)))
-
-      ;; check that it's defined (in org-export.el)
-      (add-to-list 'org-export-filter-plain-text-functions
-                   'leuven--latex-filter-nbsp)
 
     ;; 12.6.5 default position for LaTeX figures
     (setq org-latex-default-figure-position "!htbp")
@@ -9398,7 +9387,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131008.2111]--")
+(message "* --[ Loaded Emacs Leuven 20131009.1238]--")
 
 (provide 'emacs-leuven)
 

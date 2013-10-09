@@ -1099,7 +1099,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131008.2112</span>
+"color: #008200; font-style: italic;">Version: 20131009.1239</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1221,7 +1221,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131008.2112]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131009.1239]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -5160,10 +5160,11 @@
     <span style=
 "color: #008000;">"Save buffer, execute/tangle code blocks, and export to HTML/PDF."</span>
     (interactive)
-    (<span style="color: #0000FF;">let*</span> ((orgfile (buffer-file-name))
-           (htmlfile (concat (file-name-base orgfile) <span style=
+    (<span style=
+"color: #0000FF;">let*</span> ((base-name (file-name-base (buffer-file-name)))
+           (htmlfile (concat base-name <span style=
 "color: #FF4700;">".html"</span>))
-           (pdffile (concat (file-name-base orgfile) <span style=
+           (pdffile (concat base-name <span style=
 "color: #FF4700;">".pdf"</span>)))
       (save-buffer)                     <span style=
 "color: #008200;">; </span><span style=
@@ -10216,22 +10217,6 @@ M-: (executable-find "diff") RET
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">number of minutes to round time stamps to</span>
   (setq org-time-stamp-rounding-minutes '(1 1))
-
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(setq org-time-clocksum-use-fractional t)</span>
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">format string used when creating CLOCKSUM lines and when generating a</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">time duration (avoid showing days)</span>
-  (setq org-time-clocksum-format
-        '(<span style="color: #006FE0;">:hours</span> <span style=
-"color: #FF4700;">"%d"</span> <span style=
-"color: #006FE0;">:require-hours</span> t <span style=
-"color: #006FE0;">:minutes</span> <span style=
-"color: #FF4700;">":%02d"</span> <span style=
-"color: #006FE0;">:require-minutes</span> t))
 </pre>
             </div>
           </div>
@@ -10401,6 +10386,33 @@ M-: (executable-find "diff") RET
 "color: #008200; font-style: italic;">8.4.2 include the current clocking task time in clock reports</span>
     (setq org-clock-report-include-clocking-task t)
 
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">8.4.2 format string used when creating CLOCKSUM lines and when generating a</span>
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">time duration (avoid showing days)</span>
+    (setq org-time-clocksum-format
+          '(<span style="color: #006FE0;">:hours</span> <span style=
+"color: #FF4700;">"%d"</span> <span style=
+"color: #006FE0;">:require-hours</span> t <span style=
+"color: #006FE0;">:minutes</span> <span style=
+"color: #FF4700;">":%02d"</span> <span style=
+"color: #006FE0;">:require-minutes</span> t))
+
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">;; 8.4.2 use fractional times</span>
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(setq org-time-clocksum-use-fractional t)</span>
+
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">format string for the total time cells</span>
+    (setq org-clock-total-time-cell-format <span style=
+"color: #FF4700;">"%s"</span>)
+
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">format string for the file time cells</span>
+    (setq org-clock-file-time-cell-format <span style=
+"color: #FF4700;">"%s"</span>)
+
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-org-clock-in-interrupted-task</span> ()
       <span style=
@@ -10491,16 +10503,6 @@ M-: (executable-find "diff") RET
 "color: #008200; font-style: italic;">only fails on keyboard quit or </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">error</span>
 
     (add-hook 'kill-emacs-query-functions 'leuven--org-query-clock-out)
-
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">format string for the total time cells</span>
-    (setq org-clock-total-time-cell-format <span style=
-"color: #FF4700;">"%s"</span>)
-
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">format string for the file time cells</span>
-    (setq org-clock-file-time-cell-format <span style=
-"color: #FF4700;">"%s"</span>)
 
     ) <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">with-eval-after-load "org-clock" ends here</span>
@@ -14617,27 +14619,6 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008200; font-style: italic;">hook run before parsing an export buffer</span>
     (add-hook 'org-export-before-parsing-hook
               'leuven--change-pdflatex-packages)
-</pre>
-            </div>
-
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-      <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(setq org-latex-inputenc-alist '(("utf8" . "utf8x")))</span>
-
-      (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--latex-filter-nbsp</span> (text backend info)
-        <span style=
-"color: #008000;">"Ensure that non-breaking spaces are properly handled in LaTeX/Beamer export."</span>
-        (<span style=
-"color: #0000FF;">when</span> (memq backend '(latex beamer))
-          (replace-regexp-in-string <span style=
-"color: #FF4700;">" "</span> <span style="color: #FF4700;">"~"</span> text)))
-
-      <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">check that it's defined (in org-export.el)</span>
-      (add-to-list 'org-export-filter-plain-text-functions
-                   'leuven--latex-filter-nbsp)
 </pre>
             </div>
 
@@ -21517,15 +21498,20 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         <h3 id="sec-37-2">Conversion</h3>
 
         <div class="outline-text-3" id="text-37-2">
-          <p>You can open the <b>text</b> of the current doc in a new buffer,
-          by pressing <code>C-c C-t</code> in <code>doc-view-mode</code>.</p>
+          <p>In <code>doc-view-mode</code>, you can use <code>C-s</code> to do
+          regexp search on the page images.</p>
+
+          <p>In addition, by pressing <code>C-c C-t</code>, you can open the
+          <b>text</b>-only representation (actually, the output of the command
+          <code>pdftotext</code>) of the current doc in a new buffer, which is
+          more suitable for heavy manipulation of the text of the PDF.</p>
+
+          <p>Another option, without <code>doc-view</code>, is <code>! pdtotext
+          ? - &lt;RET&gt;</code>.</p>
 
           <p><code>doc-view-enlarge</code> (<code>+</code>) and
           <code>doc-view-shrink</code> (<code>-</code>) work fine to zoom in or
           out.</p>
-
-          <p>Another option, without <code>doc-view</code>, is <code>! pdtotext
-          ? - &lt;RET&gt;</code>.</p>
         </div>
       </div>
 
@@ -24756,7 +24742,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131008.2112]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131009.1239]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
