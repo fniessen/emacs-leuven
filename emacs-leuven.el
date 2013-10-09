@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131009.1237
+;; Version: 20131009.152
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131009.1237]--")
+(message "* --[ Loading Emacs Leuven 20131009.152]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5380,8 +5380,8 @@ From %c"
   ;; Org generic export engine
   (with-eval-after-load "ox"
 
-    ;; 12.3 don't insert a time stamp into the exported file
-    (setq org-export-time-stamp-file nil)
+    ;; ;; 12.3 don't insert a time stamp into the exported file
+    ;; (setq org-export-time-stamp-file nil)
 
     ;; 13.1.5 export all drawers (including properties)
     ;; (setq org-export-with-drawers t)
@@ -5403,10 +5403,6 @@ From %c"
 
     ;; ;; export and publishing commands will run in background
     ;; (setq org-export-in-background t)
-
-    ;; file used to initialize external export process
-    (setq org-export-async-init-file
-          (expand-file-name "~/src/org-batch/bin/org-batch-init.el"))
 
     ;; ;; use a non-intrusive export dispatcher
     ;; (setq org-export-dispatch-use-expert-ui t)
@@ -5597,12 +5593,15 @@ From %c"
     ;; include the `xcolor' package for colored source code
     (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
 
-(add-to-list 'org-latex-packages-alist
-             "\\ifdefined\\DeclareUnicodeCharacter{\\DeclareUnicodeCharacter{00A0}{~}}\\fi")
+    ;; convert `nbsp' to its LaTeX equivalent
+    (add-to-list 'org-latex-packages-alist
+                 (concat "\\ifdefined\\DeclareUnicodeCharacter{"
+                         "\\DeclareUnicodeCharacter{00A0}{~}"
+                         "}\\fi") t)
 
     ;; include the `babel' package for language-specific hyphenation and
     ;; typography
-    (add-to-list 'org-latex-packages-alist '("frenchb" "babel") t)
+    (add-to-list 'org-latex-packages-alist '("french" "babel") t)
 
     (defun leuven--change-pdflatex-packages (backend)
       "When exporting an Org document to LaTeX, automatically select the
@@ -9387,7 +9386,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131009.1238]--")
+(message "* --[ Loaded Emacs Leuven 20131009.1521]--")
 
 (provide 'emacs-leuven)
 

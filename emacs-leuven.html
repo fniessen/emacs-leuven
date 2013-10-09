@@ -1099,7 +1099,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131009.1239</span>
+"color: #008200; font-style: italic;">Version: 20131009.1521</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1221,7 +1221,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131009.1239]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131009.1521]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -14075,8 +14075,9 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #FF4700;">"ox"</span>
 
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">12.3 don't insert a time stamp into the exported file</span>
-    (setq org-export-time-stamp-file nil)
+"color: #008200; font-style: italic;">;; 12.3 don't insert a time stamp into the exported file</span>
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(setq org-export-time-stamp-file nil)</span>
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">13.1.5 export all drawers (including properties)</span>
@@ -14108,12 +14109,6 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008200; font-style: italic;">;; export and publishing commands will run in background</span>
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(setq org-export-in-background t)</span>
-
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">file used to initialize external export process</span>
-    (setq org-export-async-init-file
-          (expand-file-name <span style=
-"color: #FF4700;">"~/src/org-batch/bin/org-batch-init.el"</span>))
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; use a non-intrusive export dispatcher</span>
@@ -14522,9 +14517,16 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-(add-to-list 'org-latex-packages-alist
-             <span style=
-"color: #FF4700;">"\\ifdefined\\DeclareUnicodeCharacter{\\DeclareUnicodeCharacter{00A0}{~}}\\fi"</span>)
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">convert `</span><span style=
+"color: #008200; font-style: italic;">nbsp</span><span style=
+"color: #008200; font-style: italic;">' to its LaTeX equivalent</span>
+    (add-to-list 'org-latex-packages-alist
+                 (concat <span style=
+"color: #FF4700;">"\\ifdefined\\DeclareUnicodeCharacter{"</span>
+                         <span style=
+"color: #FF4700;">"\\DeclareUnicodeCharacter{00A0}{~}"</span>
+                         <span style="color: #FF4700;">"}\\fi"</span>) t)
 </pre>
             </div>
 
@@ -14548,7 +14550,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">typography</span>
     (add-to-list 'org-latex-packages-alist '(<span style=
-"color: #FF4700;">"frenchb"</span> <span style=
+"color: #FF4700;">"french"</span> <span style=
 "color: #FF4700;">"babel"</span>) t)
 </pre>
             </div>
@@ -24742,7 +24744,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131009.1239]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131009.1521]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

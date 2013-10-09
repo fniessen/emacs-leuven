@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-09 Wed 12:37>
+# Time-stamp: <2013-10-09 Wed 15:17>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -7758,8 +7758,8 @@ To list all available entities, run =M-x org-entities-help=.
   ;; Org generic export engine
   (with-eval-after-load "ox"
 
-    ;; 12.3 don't insert a time stamp into the exported file
-    (setq org-export-time-stamp-file nil)
+    ;; ;; 12.3 don't insert a time stamp into the exported file
+    ;; (setq org-export-time-stamp-file nil)
 
     ;; 13.1.5 export all drawers (including properties)
     ;; (setq org-export-with-drawers t)
@@ -7781,10 +7781,6 @@ To list all available entities, run =M-x org-entities-help=.
 
     ;; ;; export and publishing commands will run in background
     ;; (setq org-export-in-background t)
-
-    ;; file used to initialize external export process
-    (setq org-export-async-init-file
-          (expand-file-name "~/src/org-batch/bin/org-batch-init.el"))
 
     ;; ;; use a non-intrusive export dispatcher
     ;; (setq org-export-dispatch-use-expert-ui t)
@@ -8032,8 +8028,11 @@ is not necessary to rebuild index and/or bibliography.
 Add UTF-8 non-breaking space to export properly to LaTeX.
 
 #+begin_src emacs-lisp
-(add-to-list 'org-latex-packages-alist
-             "\\ifdefined\\DeclareUnicodeCharacter{\\DeclareUnicodeCharacter{00A0}{~}}\\fi")
+    ;; convert `nbsp' to its LaTeX equivalent
+    (add-to-list 'org-latex-packages-alist
+                 (concat "\\ifdefined\\DeclareUnicodeCharacter{"
+                         "\\DeclareUnicodeCharacter{00A0}{~}"
+                         "}\\fi") t)
 #+end_src
 
 The exporter will *add* a language option to the =babel= package according to the
@@ -8045,7 +8044,7 @@ The exporter will *add* a language option to the =babel= package according to th
 #+begin_src emacs-lisp
     ;; include the `babel' package for language-specific hyphenation and
     ;; typography
-    (add-to-list 'org-latex-packages-alist '("frenchb" "babel") t)
+    (add-to-list 'org-latex-packages-alist '("french" "babel") t)
 #+end_src
 
 What about =apacite= and =tikz= in =org-latex-packages-alist=?
