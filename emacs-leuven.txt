@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-09 Wed 19:17>
+# Time-stamp: <2013-10-09 Wed 22:09>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -7559,6 +7559,7 @@ directory (including from local files ~TODO.org~ and ~BUGS.org~, for example).
            (org-agenda-overriding-header
             (format "TODO list for directory %s" dname))
            (org-agenda-sticky nil))
+      (message "%s..." org-agenda-overriding-header)
       (org-todo-list)))
 
   ;; "TODO list" without asking for a directory
