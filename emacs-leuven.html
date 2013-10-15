@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-10-15 Tue 14:58 -->
+  <title>Emacs Leuven</title><!-- 2013-10-15 Tue 18:31 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1099,7 +1099,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131015.1457</span>
+"color: #008200; font-style: italic;">Version: 20131015.183</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1221,7 +1221,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131015.1457]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131015.183]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -6503,25 +6503,28 @@ M-: (executable-find "diff") RET
 "color: #008200; font-style: italic;">filtering groups</span>
     (setq ibuffer-saved-filter-groups
           '((<span style="color: #FF4700;">"default"</span>
-             (<span style="color: #FF4700;">"Chat"</span> (mode . circe-mode))
-             (<span style="color: #FF4700;">"Org"</span> (or
-                     (mode . diary-mode)
-                     (mode . org-mode)
-                     (mode . org-agenda-mode)))
-             (<span style=
-"color: #FF4700;">"LaTeX"</span> (or (mode . latex-mode)
-                          (mode . LaTeX-mode)
-                          (mode . bibtex-mode)
-                          (mode . reftex-mode)))
-             (<span style="color: #FF4700;">"Gnus &amp; News"</span> (or
-                             (mode . message-mode)
-                             (mode . bbdb-mode)
-                             (mode . mail-mode)
-                             (mode . gnus-group-mode)
-                             (mode . gnus-summary-mode)
-                             (mode . gnus-article-mode)
-                             (name . <span style=
-"color: #FF4700;">"^</span><span style=
+             (<span style="color: #FF4700;">"Chat"</span>
+              (mode . circe-mode))
+             (<span style="color: #FF4700;">"Org"</span>
+              (or
+               (mode . diary-mode)
+               (mode . org-mode)
+               (mode . org-agenda-mode)))
+             (<span style="color: #FF4700;">"LaTeX"</span>
+              (or
+               (mode . latex-mode)
+               (mode . LaTeX-mode)
+               (mode . bibtex-mode)
+               (mode . reftex-mode)))
+             (<span style="color: #FF4700;">"Gnus &amp; News"</span>
+              (or
+               (mode . message-mode)
+               (mode . bbdb-mode)
+               (mode . mail-mode)
+               (mode . gnus-group-mode)
+               (mode . gnus-summary-mode)
+               (mode . gnus-article-mode)
+               (name . <span style="color: #FF4700;">"^</span><span style=
 "color: #FF4700; font-weight: bold;">\\</span><span style=
 "color: #FF4700; font-weight: bold;">(</span><span style=
 "color: #FF4700;">\\.bbdb</span><span style=
@@ -6531,68 +6534,60 @@ M-: (executable-find "diff") RET
 "color: #FF4700; font-weight: bold;">\\</span><span style=
 "color: #FF4700; font-weight: bold;">)</span><span style=
 "color: #FF4700;">$"</span>)
-                             (name . <span style=
+               (name . <span style=
 "color: #FF4700;">"^\\.newsrc-dribble$"</span>)
-                             (mode . newsticker-mode)))
-             (<span style=
-"color: #FF4700;">"Files"</span> (filename . <span style=
-"color: #FF4700;">".*"</span>))
-             (<span style="color: #FF4700;">"Dired"</span> (mode . dired-mode))
-             (<span style="color: #FF4700;">"Shell"</span> (mode . shell-mode))
-             (<span style=
-"color: #FF4700;">"Version Control"</span> (or (mode . svn-status-mode)
-                                    (mode . svn-log-edit-mode)
-                                    (name . <span style=
-"color: #FF4700;">"^\\*svn-"</span>)
-                                    (name . <span style=
-"color: #FF4700;">"^\\*vc\\*$"</span>)
-                                    (name . <span style=
-"color: #FF4700;">"^\\*Annotate"</span>)
-                                    (name . <span style=
-"color: #FF4700;">"^\\*git-"</span>)
-                                    (name . <span style=
-"color: #FF4700;">"^\\*vc-"</span>)))
-             (<span style=
-"color: #FF4700;">"Emacs"</span> (or (name . <span style=
-"color: #FF4700;">"^\\*scratch\\*$"</span>)
-                          (name . <span style=
-"color: #FF4700;">"^\\*Messages\\*$"</span>)
-                          (name . <span style=
-"color: #FF4700;">"^TAGS</span><span style=
+               (mode . newsticker-mode)))
+             (<span style="color: #FF4700;">"Files"</span>
+              (filename . <span style="color: #FF4700;">".*"</span>))
+             (<span style="color: #FF4700;">"Dired"</span>
+              (mode . dired-mode))
+             (<span style="color: #FF4700;">"Shell"</span>
+              (mode . shell-mode))
+             (<span style="color: #FF4700;">"Version Control"</span>
+              (or
+               (mode . svn-status-mode)
+               (mode . svn-log-edit-mode)
+               (name . <span style="color: #FF4700;">"^\\*svn-"</span>)
+               (name . <span style="color: #FF4700;">"^\\*vc\\*$"</span>)
+               (name . <span style="color: #FF4700;">"^\\*Annotate"</span>)
+               (name . <span style="color: #FF4700;">"^\\*git-"</span>)
+               (name . <span style="color: #FF4700;">"^\\*vc-"</span>)))
+             (<span style="color: #FF4700;">"Emacs"</span>
+              (or
+               (name . <span style="color: #FF4700;">"^\\*scratch\\*$"</span>)
+               (name . <span style="color: #FF4700;">"^\\*Messages\\*$"</span>)
+               (name . <span style="color: #FF4700;">"^TAGS</span><span style=
 "color: #FF4700; font-weight: bold;">\\</span><span style=
 "color: #FF4700; font-weight: bold;">(</span><span style=
 "color: #FF4700;">&lt;[0-9]+&gt;</span><span style=
 "color: #FF4700; font-weight: bold;">\\</span><span style=
 "color: #FF4700; font-weight: bold;">)</span><span style=
 "color: #FF4700;">?$"</span>)
-                          (name . <span style=
-"color: #FF4700;">"^\\*Occur\\*$"</span>)
-                          (name . <span style=
-"color: #FF4700;">"^\\*grep\\*$"</span>)
-                          (name . <span style=
+               (name . <span style="color: #FF4700;">"^\\*Occur\\*$"</span>)
+               (name . <span style="color: #FF4700;">"^\\*grep\\*$"</span>)
+               (name . <span style=
 "color: #FF4700;">"^\\*Compile-Log\\*$"</span>)
-                          (name . <span style=
+               (name . <span style=
 "color: #FF4700;">"^\\*Backtrace\\*$"</span>)
-                          (name . <span style=
+               (name . <span style=
 "color: #FF4700;">"^\\*Process List\\*$"</span>)
-                          (name . <span style=
-"color: #FF4700;">"^\\*gud\\*$"</span>)
-                          (name . <span style=
+               (name . <span style="color: #FF4700;">"^\\*gud\\*$"</span>)
+               (name . <span style=
 "color: #FF4700;">"^\\*Kill Ring\\*$"</span>)
-                          (name . <span style=
+               (name . <span style=
 "color: #FF4700;">"^\\*Completions\\*$"</span>)
-                          (name . <span style=
-"color: #FF4700;">"^\\*tramp"</span>)
-                          (name . <span style=
+               (name . <span style="color: #FF4700;">"^\\*tramp"</span>)
+               (name . <span style=
 "color: #FF4700;">"^\\*compilation\\*$"</span>)))
-             (<span style=
-"color: #FF4700;">"Emacs Source"</span> (mode . emacs-lisp-mode))
-             (<span style="color: #FF4700;">"Documentation"</span> (or
-                               (mode . Info-mode)
-                               (mode . apropos-mode)
-                               (mode . woman-mode)
-                               (mode . help-mode)
-                               (mode . Man-mode))))))
+             (<span style="color: #FF4700;">"Emacs Source"</span>
+              (mode . emacs-lisp-mode))
+             (<span style="color: #FF4700;">"Documentation"</span>
+              (or
+               (mode . Info-mode)
+               (mode . apropos-mode)
+               (mode . woman-mode)
+               (mode . help-mode)
+               (mode . Man-mode))))))
 
     (add-hook 'ibuffer-mode-hook
               (<span style="color: #0000FF;">lambda</span> ()
@@ -17338,6 +17333,13 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008200; font-style: italic;">(let ((indent-tabs-mode nil))</span>
     <span style="color: #008200;">;;     </span><span style=
 "color: #008200; font-style: italic;">(align beg end)))</span>
+
+    (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #FF4700;">"sh-script"</span>
+
+      <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">use the SMIE code for navigation and indentation</span>
+      (setq sh-use-smie t))
 </pre>
           </div>
         </div>
@@ -24874,7 +24876,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131015.1457]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131015.1831]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

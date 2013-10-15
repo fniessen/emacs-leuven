@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131015.1653
+;; Version: 20131015.1829
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131015.1653]--")
+(message "* --[ Loading Emacs Leuven 20131015.1829]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2217,55 +2217,69 @@
     ;; filtering groups
     (setq ibuffer-saved-filter-groups
           '(("default"
-             ("Chat" (mode . circe-mode))
-             ("Org" (or
-                     (mode . diary-mode)
-                     (mode . org-mode)
-                     (mode . org-agenda-mode)))
-             ("LaTeX" (or (mode . latex-mode)
-                          (mode . LaTeX-mode)
-                          (mode . bibtex-mode)
-                          (mode . reftex-mode)))
-             ("Gnus & News" (or
-                             (mode . message-mode)
-                             (mode . bbdb-mode)
-                             (mode . mail-mode)
-                             (mode . gnus-group-mode)
-                             (mode . gnus-summary-mode)
-                             (mode . gnus-article-mode)
-                             (name . "^\\(\\.bbdb\\|dot-bbdb\\)$")
-                             (name . "^\\.newsrc-dribble$")
-                             (mode . newsticker-mode)))
-             ("Files" (filename . ".*"))
-             ("Dired" (mode . dired-mode))
-             ("Shell" (mode . shell-mode))
-             ("Version Control" (or (mode . svn-status-mode)
-                                    (mode . svn-log-edit-mode)
-                                    (name . "^\\*svn-")
-                                    (name . "^\\*vc\\*$")
-                                    (name . "^\\*Annotate")
-                                    (name . "^\\*git-")
-                                    (name . "^\\*vc-")))
-             ("Emacs" (or (name . "^\\*scratch\\*$")
-                          (name . "^\\*Messages\\*$")
-                          (name . "^TAGS\\(<[0-9]+>\\)?$")
-                          (name . "^\\*Occur\\*$")
-                          (name . "^\\*grep\\*$")
-                          (name . "^\\*Compile-Log\\*$")
-                          (name . "^\\*Backtrace\\*$")
-                          (name . "^\\*Process List\\*$")
-                          (name . "^\\*gud\\*$")
-                          (name . "^\\*Kill Ring\\*$")
-                          (name . "^\\*Completions\\*$")
-                          (name . "^\\*tramp")
-                          (name . "^\\*compilation\\*$")))
-             ("Emacs Source" (mode . emacs-lisp-mode))
-             ("Documentation" (or
-                               (mode . Info-mode)
-                               (mode . apropos-mode)
-                               (mode . woman-mode)
-                               (mode . help-mode)
-                               (mode . Man-mode))))))
+             ("Chat"
+              (mode . circe-mode))
+             ("Org"
+              (or
+               (mode . diary-mode)
+               (mode . org-mode)
+               (mode . org-agenda-mode)))
+             ("LaTeX"
+              (or
+               (mode . latex-mode)
+               (mode . LaTeX-mode)
+               (mode . bibtex-mode)
+               (mode . reftex-mode)))
+             ("Gnus & News"
+              (or
+               (mode . message-mode)
+               (mode . bbdb-mode)
+               (mode . mail-mode)
+               (mode . gnus-group-mode)
+               (mode . gnus-summary-mode)
+               (mode . gnus-article-mode)
+               (name . "^\\(\\.bbdb\\|dot-bbdb\\)$")
+               (name . "^\\.newsrc-dribble$")
+               (mode . newsticker-mode)))
+             ("Files"
+              (filename . ".*"))
+             ("Dired"
+              (mode . dired-mode))
+             ("Shell"
+              (mode . shell-mode))
+             ("Version Control"
+              (or
+               (mode . svn-status-mode)
+               (mode . svn-log-edit-mode)
+               (name . "^\\*svn-")
+               (name . "^\\*vc\\*$")
+               (name . "^\\*Annotate")
+               (name . "^\\*git-")
+               (name . "^\\*vc-")))
+             ("Emacs"
+              (or
+               (name . "^\\*scratch\\*$")
+               (name . "^\\*Messages\\*$")
+               (name . "^TAGS\\(<[0-9]+>\\)?$")
+               (name . "^\\*Occur\\*$")
+               (name . "^\\*grep\\*$")
+               (name . "^\\*Compile-Log\\*$")
+               (name . "^\\*Backtrace\\*$")
+               (name . "^\\*Process List\\*$")
+               (name . "^\\*gud\\*$")
+               (name . "^\\*Kill Ring\\*$")
+               (name . "^\\*Completions\\*$")
+               (name . "^\\*tramp")
+               (name . "^\\*compilation\\*$")))
+             ("Emacs Source"
+              (mode . emacs-lisp-mode))
+             ("Documentation"
+              (or
+               (mode . Info-mode)
+               (mode . apropos-mode)
+               (mode . woman-mode)
+               (mode . help-mode)
+               (mode . Man-mode))))))
 
     (add-hook 'ibuffer-mode-hook
               (lambda ()
@@ -6573,6 +6587,11 @@ From %c"
     ;;   (let ((indent-tabs-mode nil))
     ;;     (align beg end)))
 
+    (with-eval-after-load "sh-script"
+
+      ;; use the SMIE code for navigation and indentation
+      (setq sh-use-smie t))
+
 ;;** 26.4 Commands for Editing with (info "(emacs)Parentheses")
 
   (leuven--section "26.4 Commands for Editing with (emacs)Parentheses")
@@ -9409,7 +9428,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131015.1654]--")
+(message "* --[ Loaded Emacs Leuven 20131015.183]--")
 
 (provide 'emacs-leuven)
 
