@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-09 Wed 22:09>
+# Time-stamp: <2013-10-15 Tue 14:54>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -573,15 +573,15 @@ are generated programmatically from upstream Git-based sources.
           ess
           fuzzy
           git-commit-mode
-          ;; gnuplot-mode ;; or gnuplot?
+          ;; gnuplot-mode                  ; or gnuplot?
           graphviz-dot-mode
           helm
           idle-require
           ;; jabber
           leuven-theme
-          ;; htmlize
+          htmlize                       ; works with Org
           ;; org
-          ;; org-mime ;; (from contrib)
+          ;; org-mime                      ; from contrib
           pager
           ;; paredit
           rainbow-mode
@@ -1426,8 +1426,7 @@ modes run =prog-mode-hook=, prior to running their own mode hooks.
   Org mode TODO keyword).")
 
   (defface leuven-highlight-face
-    '((t (:weight normal :slant normal :box '(:line-width 1 :color "#CC0000")
-          :foreground "#CC0000" :background "#FFFF88")))
+    '((t (:foreground "#CC0000" :background "#FFFF88")))
     "Face for making FIXME and other warnings stand out.")
 
   ;; set up highlighting of special patterns for proper selected major modes
@@ -2452,7 +2451,8 @@ launched from Dired?
   (defun org-save-buffer-and-do-related ()
     "Save buffer, execute/tangle code blocks, and export to HTML/PDF."
     (interactive)
-    (let* ((base-name (file-name-base (buffer-file-name)))
+    (let* ((orgfile (buffer-file-name))
+           (base-name (file-name-base orgfile))
            (htmlfile (concat base-name ".html"))
            (pdffile (concat base-name ".pdf")))
       (save-buffer)                     ; see other commands in `before-save-hook':
@@ -2464,9 +2464,13 @@ launched from Dired?
           (save-buffer))
         (org-babel-tangle)
         (when (file-exists-p htmlfile)
-          (org-html-export-to-html))
+          (if (file-newer-than-file-p orgfile htmlfile)
+              (org-html-export-to-html)
+            (message "HTML is up to date with Org file")))
         (when (file-exists-p pdffile)
-          (org-latex-export-to-pdf))
+          (if (file-newer-than-file-p orgfile pdffile)
+              (org-latex-export-to-pdf)
+            (message "PDF is up to date with Org file")))
         (beep))))
 
   (global-set-key
@@ -5123,6 +5127,28 @@ http://www.google.com/search?q=searchterms, you can just type
 
 *** Extended use of TODO keywords
 
+We use statuses to *create a workflow* for tasks.
+
+The statuses we use are a simple as possible to work well in the context of
+work.
+
+We use the following 4-letter status keywords:
+
+- TODO :: Approved task, to be done.
+- STRT :: Some progress has already been done on the task.
+- DLGT :: Task delegated to someone else.
+- WAIT :: Waiting for some external event to be able to work on the task.
+- DFRD :: Task to be approved (and eventually done) in the future.
+- DONE :: Task is completed.
+- CANX :: Task is declined (but kept documented, instead of being deleted).
+
+There is just 1 exception (made on purpose) to the 4-letter scheme:
+
+- NEW :: Proposed task, idea or wish, *not approved yet*. Draft.
+
+One could add a =CLSD= or =VRFD= state for bug fixes, for example, which need to be
+verified before really closing the task.
+
 #+begin_src emacs-lisp
 ;;** 5.2 Use of (info "(org)TODO extensions")
 
@@ -7106,6 +7132,22 @@ Cleanup:
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
+                 '("rr" "Recent items (past 7 days)"
+                   ;; faster than tags
+                   agenda ""
+                   ((org-agenda-start-day "-7d")
+                    (org-agenda-span 7)
+                    (org-agenda-repeating-timestamp-show-all nil)
+                    ;; %s is only for agenda views
+                    ;; (org-agenda-prefix-format "%s")
+                    ;; maybe not make much difference ka
+                    ;; (org-agenda-use-tag-inheritance nil)
+                    (org-agenda-inactive-leader "Inactive:  ")
+                    (org-agenda-include-inactive-timestamps t))) t)
+#+end_src
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
                  '("d" . "5. Do the work...") t)
 #+end_src
 
@@ -7538,13 +7580,14 @@ Agenda:
 
 **** Display all active tasks from the current directory
 
-The function =leuven-org-current-dir= will display your tasks from the current
-directory (including from local files ~TODO.org~ and ~BUGS.org~, for example).
+The function =leuven-org-todo-list-current-dir= will display your tasks from the
+current directory (including from local files ~TODO.org~ and ~BUGS.org~, for
+example).
 
 *************** TODO Add recursive option to show all tasks from subdir
 
 #+begin_src emacs-lisp
-  (defun leuven-org-current-dir ()
+  (defun leuven-org-todo-list-current-dir ()
     "Produce a view from all Org files in the current directory."
     (interactive)
     (let* ((fname (buffer-file-name))
@@ -7553,9 +7596,8 @@ directory (including from local files ~TODO.org~ and ~BUGS.org~, for example).
                           fname
                         (file-name-directory fname))
                     default-directory))
-           (org-agenda-files
-            (append (file-expand-wildcards (concat dname "*.org"))
-                    (file-expand-wildcards (concat dname "*.txt"))))
+           (org-agenda-files (directory-files dname t "\\.\\(org\\|txt\\)$"))
+           (org-agenda-sorting-strategy '(priority-down))
            (org-agenda-overriding-header
             (format "TODO list for directory %s" dname))
            (org-agenda-sticky nil))
@@ -7564,7 +7606,7 @@ directory (including from local files ~TODO.org~ and ~BUGS.org~, for example).
 
   ;; "TODO list" without asking for a directory
   (global-set-key
-    (kbd "<C-f3>") 'leuven-org-current-dir)
+    (kbd "<C-f3>") 'leuven-org-todo-list-current-dir)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -7984,7 +8026,9 @@ of the files produced by LaTeX (=org-latex-logfiles-extensions=) are removed.
       ;; default (in Windows binary)
       (setq org-latex-pdf-process
             (if (executable-find "latexmk")
-                '("latexmk -pdf %f && rm -f %b.fdb_latexmk %b.fls %b.ilg %b.ind %b.*.vrb")
+                '("latexmk -CF -pdf %f && latexmk -c")
+                                        ; must clean .fdb_latexmk, .fls, .ilg,
+                                        ; .ind, etc.
               '("pdflatex -interaction=nonstopmode -output-directory=%o %f"
                 "pdflatex -interaction=nonstopmode -output-directory=%o %f"
                 "pdflatex -interaction=nonstopmode -output-directory=%o %f")))
@@ -7992,7 +8036,7 @@ of the files produced by LaTeX (=org-latex-logfiles-extensions=) are removed.
       (when (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
         (setq org-latex-pdf-process
               (if (executable-find "latexmk")
-                  '("latexmk -pdf -pdflatex=xelatex %f && rm -f %b.fdb_latexmk %b.fls %b.ilg %b.ind %b.*.vrb")
+                  '("latexmk -CF -pdf -pdflatex=xelatex %f && latexmk -c")
                 '("xelatex -interaction=nonstopmode -output-directory=%o %f"
                   "xelatex -interaction=nonstopmode -output-directory=%o %f"
                   "xelatex -interaction=nonstopmode -output-directory=%o %f")))))
@@ -8026,7 +8070,24 @@ is not necessary to rebuild index and/or bibliography.
     (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
 #+end_src
 
-Add UTF-8 non-breaking space to export properly to LaTeX.
+When using the =utf8= option to =inputenc= (and not =utf8x= which should be avoided,
+as it uses =ucs= which is no longer maintained), we have 2 solutions to support
+the UTF-8 *non-breaking space*:
+
+- Convert it in Org mode, when exporting (via a filter), or
+
+#+begin_src emacs-lisp :tangle no
+    (defun leuven--latex-filter-nbsp (text backend info)
+      "Ensure that non-breaking spaces are properly handled in LaTeX/Beamer export."
+      (when (memq backend '(latex beamer))
+        (replace-regexp-in-string " " "~" text)))
+
+    ;; check that it's defined (in org-export.el)
+    (add-to-list 'org-export-filter-plain-text-functions
+                 'leuven--latex-filter-nbsp)
+#+end_src
+
+- Convert it in LaTeX:
 
 #+begin_src emacs-lisp
     ;; convert `nbsp' to its LaTeX equivalent

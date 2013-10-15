@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131009.2209
+;; Version: 20131015.1653
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131009.2209]--")
+(message "* --[ Loading Emacs Leuven 20131015.1653]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -448,15 +448,15 @@
           ess
           fuzzy
           git-commit-mode
-          ;; gnuplot-mode ;; or gnuplot?
+          ;; gnuplot-mode                  ; or gnuplot?
           graphviz-dot-mode
           helm
           idle-require
           ;; jabber
           leuven-theme
-          ;; htmlize
+          htmlize                       ; works with Org
           ;; org
-          ;; org-mime ;; (from contrib)
+          ;; org-mime                      ; from contrib
           pager
           ;; paredit
           rainbow-mode
@@ -992,8 +992,7 @@
   Org mode TODO keyword).")
 
   (defface leuven-highlight-face
-    '((t (:weight normal :slant normal :box '(:line-width 1 :color "#CC0000")
-          :foreground "#CC0000" :background "#FFFF88")))
+    '((t (:foreground "#CC0000" :background "#FFFF88")))
     "Face for making FIXME and other warnings stand out.")
 
   ;; set up highlighting of special patterns for proper selected major modes
@@ -1648,7 +1647,8 @@
   (defun org-save-buffer-and-do-related ()
     "Save buffer, execute/tangle code blocks, and export to HTML/PDF."
     (interactive)
-    (let* ((base-name (file-name-base (buffer-file-name)))
+    (let* ((orgfile (buffer-file-name))
+           (base-name (file-name-base orgfile))
            (htmlfile (concat base-name ".html"))
            (pdffile (concat base-name ".pdf")))
       (save-buffer)                     ; see other commands in `before-save-hook':
@@ -1660,9 +1660,13 @@
           (save-buffer))
         (org-babel-tangle)
         (when (file-exists-p htmlfile)
-          (org-html-export-to-html))
+          (if (file-newer-than-file-p orgfile htmlfile)
+              (org-html-export-to-html)
+            (message "HTML is up to date with Org file")))
         (when (file-exists-p pdffile)
-          (org-latex-export-to-pdf))
+          (if (file-newer-than-file-p orgfile pdffile)
+              (org-latex-export-to-pdf)
+            (message "PDF is up to date with Org file")))
         (beep))))
 
   (global-set-key
@@ -4879,6 +4883,20 @@ From %c"
                     (org-agenda-time-grid nil))) t)
 
     (add-to-list 'org-agenda-custom-commands
+                 '("rr" "Recent items (past 7 days)"
+                   ;; faster than tags
+                   agenda ""
+                   ((org-agenda-start-day "-7d")
+                    (org-agenda-span 7)
+                    (org-agenda-repeating-timestamp-show-all nil)
+                    ;; %s is only for agenda views
+                    ;; (org-agenda-prefix-format "%s")
+                    ;; maybe not make much difference ka
+                    ;; (org-agenda-use-tag-inheritance nil)
+                    (org-agenda-inactive-leader "Inactive:  ")
+                    (org-agenda-include-inactive-timestamps t))) t)
+
+    (add-to-list 'org-agenda-custom-commands
                  '("d" . "5. Do the work...") t)
 
 ;;*** Other views
@@ -5219,7 +5237,7 @@ From %c"
                    todo ""
                    ((org-agenda-files '("~/org/email.org")))) t)
 
-  (defun leuven-org-current-dir ()
+  (defun leuven-org-todo-list-current-dir ()
     "Produce a view from all Org files in the current directory."
     (interactive)
     (let* ((fname (buffer-file-name))
@@ -5228,9 +5246,8 @@ From %c"
                           fname
                         (file-name-directory fname))
                     default-directory))
-           (org-agenda-files
-            (append (file-expand-wildcards (concat dname "*.org"))
-                    (file-expand-wildcards (concat dname "*.txt"))))
+           (org-agenda-files (directory-files dname t "\\.\\(org\\|txt\\)$"))
+           (org-agenda-sorting-strategy '(priority-down))
            (org-agenda-overriding-header
             (format "TODO list for directory %s" dname))
            (org-agenda-sticky nil))
@@ -5239,7 +5256,7 @@ From %c"
 
   ;; "TODO list" without asking for a directory
   (global-set-key
-    (kbd "<C-f3>") 'leuven-org-current-dir)
+    (kbd "<C-f3>") 'leuven-org-todo-list-current-dir)
 
     ) ;; with-eval-after-load "org-agenda" ends here
 
@@ -5567,7 +5584,9 @@ From %c"
       ;; default (in Windows binary)
       (setq org-latex-pdf-process
             (if (executable-find "latexmk")
-                '("latexmk -pdf %f && rm -f %b.fdb_latexmk %b.fls %b.ilg %b.ind %b.*.vrb")
+                '("latexmk -CF -pdf %f && latexmk -c")
+                                        ; must clean .fdb_latexmk, .fls, .ilg,
+                                        ; .ind, etc.
               '("pdflatex -interaction=nonstopmode -output-directory=%o %f"
                 "pdflatex -interaction=nonstopmode -output-directory=%o %f"
                 "pdflatex -interaction=nonstopmode -output-directory=%o %f")))
@@ -5575,7 +5594,7 @@ From %c"
       (when (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
         (setq org-latex-pdf-process
               (if (executable-find "latexmk")
-                  '("latexmk -pdf -pdflatex=xelatex %f && rm -f %b.fdb_latexmk %b.fls %b.ilg %b.ind %b.*.vrb")
+                  '("latexmk -CF -pdf -pdflatex=xelatex %f && latexmk -c")
                 '("xelatex -interaction=nonstopmode -output-directory=%o %f"
                   "xelatex -interaction=nonstopmode -output-directory=%o %f"
                   "xelatex -interaction=nonstopmode -output-directory=%o %f")))))
@@ -9390,7 +9409,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131009.221]--")
+(message "* --[ Loaded Emacs Leuven 20131015.1654]--")
 
 (provide 'emacs-leuven)
 

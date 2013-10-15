@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-10-09 Wed 22:12 -->
+  <title>Emacs Leuven</title><!-- 2013-10-15 Tue 14:58 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1099,7 +1099,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131009.2211</span>
+"color: #008200; font-style: italic;">Version: 20131015.1457</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1221,7 +1221,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131009.2211]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131015.1457]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -1236,8 +1236,7 @@
     <span style="color: #008000;">"Convert `</span><span style=
 "color: #008000;">current-time</span><span style=
 "color: #008000;">' to a floating point number."</span>
-    (<span style=
-"color: #0000FF;">multiple-value-bind</span> (s0 s1 s2) (current-time)
+    (multiple-value-bind (s0 s1 s2) (current-time)
       (+ (* (float (ash 1 16)) s0) (float s1) (* 0.0000001 s2)))))
 
 (<span style="color: #0000FF;">defconst</span> <span style=
@@ -1724,7 +1723,7 @@
 "color: #008000;">eval-after-load</span><span style=
 "color: #008000;">' MODE evaluate BODY."</span>
     (<span style="color: #0000FF;">declare</span> (indent defun))
-    `(<span style="color: #0000FF;">eval-after-load</span> ,mode
+    `(eval-after-load ,mode
        '(<span style="color: #0000FF;">progn</span>
           (message <span style=
 "color: #FF4700;">"(info) Running code specific to `</span><span style=
@@ -2032,19 +2031,20 @@
           fuzzy
           git-commit-mode
           <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">gnuplot-mode ;; or gnuplot?</span>
+"color: #008200; font-style: italic;">gnuplot-mode                  ; or gnuplot?</span>
           graphviz-dot-mode
           helm
           idle-require
           <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">jabber</span>
           leuven-theme
-          <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">htmlize</span>
+          htmlize                       <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">works with Org</span>
           <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">org</span>
           <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">org-mime ;; (from contrib)</span>
+"color: #008200; font-style: italic;">org-mime                      ; from contrib</span>
           pager
           <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">paredit</span>
@@ -3532,12 +3532,7 @@
 
   (<span style="color: #0000FF;">defface</span> <span style=
 "color: #BA36A5;">leuven-highlight-face</span>
-    '((t (<span style="color: #006FE0;">:weight</span> normal <span style=
-"color: #006FE0;">:slant</span> normal <span style=
-"color: #006FE0;">:box</span> '(<span style=
-"color: #006FE0;">:line-width</span> 1 <span style=
-"color: #006FE0;">:color</span> <span style="color: #FF4700;">"#CC0000"</span>)
-          <span style="color: #006FE0;">:foreground</span> <span style=
+    '((t (<span style="color: #006FE0;">:foreground</span> <span style=
 "color: #FF4700;">"#CC0000"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
 "color: #FF4700;">"#FFFF88"</span>)))
@@ -5160,8 +5155,8 @@
     <span style=
 "color: #008000;">"Save buffer, execute/tangle code blocks, and export to HTML/PDF."</span>
     (interactive)
-    (<span style=
-"color: #0000FF;">let*</span> ((base-name (file-name-base (buffer-file-name)))
+    (<span style="color: #0000FF;">let*</span> ((orgfile (buffer-file-name))
+           (base-name (file-name-base orgfile))
            (htmlfile (concat base-name <span style=
 "color: #FF4700;">".html"</span>))
            (pdffile (concat base-name <span style=
@@ -5184,9 +5179,17 @@
           (save-buffer))
         (org-babel-tangle)
         (<span style="color: #0000FF;">when</span> (file-exists-p htmlfile)
-          (org-html-export-to-html))
+          (<span style=
+"color: #0000FF;">if</span> (file-newer-than-file-p orgfile htmlfile)
+              (org-html-export-to-html)
+            (message <span style=
+"color: #FF4700;">"HTML is up to date with Org file"</span>)))
         (<span style="color: #0000FF;">when</span> (file-exists-p pdffile)
-          (org-latex-export-to-pdf))
+          (<span style=
+"color: #0000FF;">if</span> (file-newer-than-file-p orgfile pdffile)
+              (org-latex-export-to-pdf)
+            (message <span style=
+"color: #FF4700;">"PDF is up to date with Org file"</span>)))
         (beep))))
 
   (global-set-key
@@ -9572,6 +9575,59 @@ M-: (executable-find "diff") RET
           <h4 id="sec-26-4-2">Extended use of TODO keywords</h4>
 
           <div class="outline-text-4" id="text-26-4-2">
+            <p>We use statuses to <b>create a workflow</b> for tasks.</p>
+
+            <p>The statuses we use are a simple as possible to work well in the
+            context of work.</p>
+
+            <p>We use the following 4-letter status keywords:</p>
+
+            <dl class="org-dl">
+              <dt>TODO</dt>
+
+              <dd>Approved task, to be done.</dd>
+
+              <dt>STRT</dt>
+
+              <dd>Some progress has already been done on the task.</dd>
+
+              <dt>DLGT</dt>
+
+              <dd>Task delegated to someone else.</dd>
+
+              <dt>WAIT</dt>
+
+              <dd>Waiting for some external event to be able to work on the
+              task.</dd>
+
+              <dt>DFRD</dt>
+
+              <dd>Task to be approved (and eventually done) in the future.</dd>
+
+              <dt>DONE</dt>
+
+              <dd>Task is completed.</dd>
+
+              <dt>CANX</dt>
+
+              <dd>Task is declined (but kept documented, instead of being
+              deleted).</dd>
+            </dl>
+
+            <p>There is just 1 exception (made on purpose) to the 4-letter
+            scheme:</p>
+
+            <dl class="org-dl">
+              <dt>NEW</dt>
+
+              <dd>Proposed task, idea or wish, <b>not approved yet</b>.
+              Draft.</dd>
+            </dl>
+
+            <p>One could add a <code>CLSD</code> or <code>VRFD</code> state for
+            bug fixes, for example, which need to be verified before really
+            closing the task.</p>
+
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
 <span style="color: #008200;">;;</span><span style=
@@ -12951,6 +13007,32 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
     (add-to-list 'org-agenda-custom-commands
+                 '(<span style="color: #FF4700;">"rr"</span> <span style=
+"color: #FF4700;">"Recent items (past 7 days)"</span>
+                   <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">faster than tags</span>
+                   agenda <span style="color: #FF4700;">""</span>
+                   ((org-agenda-start-day <span style=
+"color: #FF4700;">"-7d"</span>)
+                    (org-agenda-span 7)
+                    (org-agenda-repeating-timestamp-show-all nil)
+                    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">%s is only for agenda views</span>
+                    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(org-agenda-prefix-format "%s")</span>
+                    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">maybe not make much difference ka</span>
+                    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(org-agenda-use-tag-inheritance nil)</span>
+                    (org-agenda-inactive-leader <span style=
+"color: #FF4700;">"Inactive:  "</span>)
+                    (org-agenda-include-inactive-timestamps t))) t)
+</pre>
+              </div>
+
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
+    (add-to-list 'org-agenda-custom-commands
                  '(<span style="color: #FF4700;">"d"</span> . <span style=
 "color: #FF4700;">"5. Do the work..."</span>) t)
 </pre>
@@ -13703,10 +13785,10 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             directory</h5>
 
             <div class="outline-text-5" id="text-26-9-6-3">
-              <p>The function <code>leuven-org-current-dir</code> will display
-              your tasks from the current directory (including from local files
-              <code>TODO.org</code> and <code>BUGS.org</code>, for
-              example).</p>
+              <p>The function <code>leuven-org-todo-list-current-dir</code>
+              will display your tasks from the current directory (including
+              from local files <code>TODO.org</code> and <code>BUGS.org</code>,
+              for example).</p>
 
               <div class="inlinetask">
                 <b><span class="todo TODO">TODO</span> Add recursive option to
@@ -13717,7 +13799,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-org-current-dir</span> ()
+"color: #006699;">leuven-org-todo-list-current-dir</span> ()
     <span style=
 "color: #008000;">"Produce a view from all Org files in the current directory."</span>
     (interactive)
@@ -13728,11 +13810,18 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
                           fname
                         (file-name-directory fname))
                     default-directory))
-           (org-agenda-files
-            (append (file-expand-wildcards (concat dname <span style=
-"color: #FF4700;">"*.org"</span>))
-                    (file-expand-wildcards (concat dname <span style=
-"color: #FF4700;">"*.txt"</span>))))
+           (org-agenda-files (directory-files dname t <span style=
+"color: #FF4700;">"\\.</span><span style=
+"color: #FF4700; font-weight: bold;">\\</span><span style=
+"color: #FF4700; font-weight: bold;">(</span><span style=
+"color: #FF4700;">org</span><span style=
+"color: #FF4700; font-weight: bold;">\\</span><span style=
+"color: #FF4700; font-weight: bold;">|</span><span style=
+"color: #FF4700;">txt</span><span style=
+"color: #FF4700; font-weight: bold;">\\</span><span style=
+"color: #FF4700; font-weight: bold;">)</span><span style=
+"color: #FF4700;">$"</span>))
+           (org-agenda-sorting-strategy '(priority-down))
            (org-agenda-overriding-header
             (format <span style="color: #FF4700;">"</span><span style=
 "color: #FF4700; background-color: #FFFF88;">TODO</span><span style=
@@ -13747,7 +13836,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008200; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #008200; font-style: italic;"> list" without asking for a directory</span>
   (global-set-key
     (kbd <span style=
-"color: #FF4700;">"&lt;C-f3&gt;"</span>) 'leuven-org-current-dir)
+"color: #FF4700;">"&lt;C-f3&gt;"</span>) 'leuven-org-todo-list-current-dir)
 </pre>
               </div>
 
@@ -14444,7 +14533,13 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #0000FF;">if</span> (executable-find <span style=
 "color: #FF4700;">"latexmk"</span>)
                 '(<span style=
-"color: #FF4700;">"latexmk -pdf %f &amp;&amp; rm -f %b.fdb_latexmk %b.fls %b.ilg %b.ind %b.*.vrb"</span>)
+"color: #FF4700;">"latexmk -CF -pdf %f &amp;&amp; latexmk -c"</span>)
+                                        <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">must clean .fdb_latexmk, .fls, .ilg,</span>
+                                        <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">.ind, etc.</span>
               '(<span style=
 "color: #FF4700;">"pdflatex -interaction=nonstopmode -output-directory=%o %f"</span>
                 <span style=
@@ -14459,7 +14554,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #0000FF;">if</span> (executable-find <span style=
 "color: #FF4700;">"latexmk"</span>)
                   '(<span style=
-"color: #FF4700;">"latexmk -pdf -pdflatex=xelatex %f &amp;&amp; rm -f %b.fdb_latexmk %b.fls %b.ilg %b.ind %b.*.vrb"</span>)
+"color: #FF4700;">"latexmk -CF -pdf -pdflatex=xelatex %f &amp;&amp; latexmk -c"</span>)
                 '(<span style=
 "color: #FF4700;">"xelatex -interaction=nonstopmode -output-directory=%o %f"</span>
                   <span style=
@@ -14515,7 +14610,36 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 </pre>
             </div>
 
-            <p>Add UTF-8 non-breaking space to export properly to LaTeX.</p>
+            <p>When using the <code>utf8</code> option to <code>inputenc</code>
+            (and not <code>utf8x</code> which should be avoided, as it uses
+            <code>ucs</code> which is no longer maintained), we have 2
+            solutions to support the UTF-8 <b>non-breaking space</b>:</p>
+
+            <ul class="org-ul">
+              <li>Convert it in Org mode, when exporting (via a filter),
+              or</li>
+            </ul>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+    (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven--latex-filter-nbsp</span> (text backend info)
+      <span style=
+"color: #008000;">"Ensure that non-breaking spaces are properly handled in LaTeX/Beamer export."</span>
+      (<span style="color: #0000FF;">when</span> (memq backend '(latex beamer))
+        (replace-regexp-in-string <span style=
+"color: #FF4700;">" "</span> <span style="color: #FF4700;">"~"</span> text)))
+
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">check that it's defined (in org-export.el)</span>
+    (add-to-list 'org-export-filter-plain-text-functions
+                 'leuven--latex-filter-nbsp)
+</pre>
+            </div>
+
+            <ul class="org-ul">
+              <li>Convert it in LaTeX:</li>
+            </ul>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -15707,8 +15831,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008000;">"Update an Org-mode buffer to the new data, code block and call line syntax."</span>
     (interactive)
     (<span style="color: #0000FF;">save-excursion</span>
-      (<span style=
-"color: #0000FF;">flet</span> ((to-re (lst) (concat <span style=
+      (flet ((to-re (lst) (concat <span style=
 "color: #FF4700;">"^[ \t]*#\\+"</span> (regexp-opt lst t)
                                   <span style=
 "color: #FF4700;">"</span><span style=
@@ -19546,8 +19669,8 @@ TAGS:
           "https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-configuration.el">
           https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-configuration.el</a>
           ;; <a href=
-          "https://earthserver.com/Setting_up_a_C%2B%2B11_development_environment_on_Linux_with_Clang_and_Emacs">
-          https://earthserver.com/Setting_up_a_C%2B%2B11_development_environment_on_Linux_with_Clang_and_Emacs</a></p>
+          "https://earthserver.com/Setting_up_a_C++11_development_environment_on_Linux_with_Clang_and_Emacs">
+          https://earthserver.com/Setting_up_a_C++11_development_environment_on_Linux_with_Clang_and_Emacs</a></p>
 
           <p>Automatically reload snippets after saving.</p>
 
@@ -19965,7 +20088,7 @@ TAGS:
 "color: #006699;">dired-launch-command</span> ()
  (interactive)
  (dired-do-shell-command
-  (<span style="color: #0000FF;">case</span> system-type
+  (case system-type
     (gnu/linux <span style="color: #FF4700;">"gnome-open"</span>) <span style=
 "color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">right for gnome (ubuntu), not for other systems</span>
@@ -23730,8 +23853,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
 "color: #666666;">&amp;rest</span> body)
     (<span style="color: #0000FF;">if</span> (null clauses)
         `(<span style="color: #0000FF;">progn</span> ,@body)
-      `(<span style=
-"color: #0000FF;">loop</span> ,@(car clauses) do (rloop ,(cdr clauses) ,@body))))
+      `(loop ,@(car clauses) do (rloop ,(cdr clauses) ,@body))))
 
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-all-bindings</span> ()
@@ -24752,7 +24874,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131009.2211]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131015.1457]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
