@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131015.1829
+;; Version: 20131021.1232
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131015.1829]--")
+(message "* --[ Loading Emacs Leuven 20131021.1232]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -452,6 +452,7 @@
           graphviz-dot-mode
           helm
           idle-require
+          interaction-log
           ;; jabber
           leuven-theme
           htmlize                       ; works with Org
@@ -1228,7 +1229,7 @@
 
     ;; hotkey for showing the log buffer
     (global-set-key
-      (kbd "<C-f2>")
+      (kbd "C-h C-l")
       (lambda ()
         (interactive)
         (display-buffer ilog-buffer-name))))
@@ -2110,6 +2111,9 @@
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
 
+      ;; always display `helm-buffer' in current window
+      (setq helm-split-window-default-side 'same)
+
       (defface leuven-separator-face
         '((t (:weight bold :foreground "slate gray")))
         "Face used to display state NEW.")
@@ -2626,6 +2630,9 @@
                                         ; time stamps of your Org mode files
                                         ; and in the agenda appear in English
 
+  ;; (setq system-time-locale (getenv "LANG"))
+  ;;                                       ; for weekdays in your locale settings
+
 ;;** 22.4 (info "(emacs)Input Methods")
 
   (leuven--section "22.4 (emacs)Input Methods")
@@ -2994,6 +3001,11 @@
     ;; segments such as `;; SHORTCUTS' and `;; VARIABLES', this will do
     ;; that, but not too much more.
     )
+
+    (add-hook 'outline-minor-mode-hook
+              (lambda ()
+                (when (and outline-minor-mode (derived-mode-p 'emacs-lisp-mode))
+                  (hide-sublevels 1000))))
 
   ;; (add-hook 'outline-minor-mode-hook
   ;;   (lambda ()
@@ -6188,25 +6200,32 @@ From %c"
 
 ;;** A.6 (info "(org)Dynamic blocks")
 
-  (defun leuven--org-update-buffer ()
-    "Update all dynamic blocks and all tables in the buffer."
-    (when (eq major-mode 'org-mode)
-      (let ((flyspell-mode-before-save flyspell-mode))
-        (flyspell-mode -1)              ; temporarily disable Flyspell to avoid
-                                        ; checking the following modifications
-                                        ; of the buffer
-        (org-align-all-tags)
-        (org-update-all-dblocks)
-        ;; (when (fboundp 'org-table-iterate-buffer-tables)
-        (org-table-iterate-buffer-tables)
-        ;; )
-        (when (file-exists-p (buffer-file-name (current-buffer)))
-          (leuven--org-remove-redundant-tags))
-        (when flyspell-mode-before-save (flyspell-mode 1)))))
+  (with-eval-after-load "org"
+    (message "... Org Update dynamic blocks and tables")
 
-  ;; make sure that all dynamic blocks and all tables are always
-  ;; up-to-date
-  (add-hook 'before-save-hook 'leuven--org-update-buffer)
+    (defun leuven--org-update-buffer ()
+      "Update all dynamic blocks and all tables in the buffer."
+      (when (eq major-mode 'org-mode)
+        (message "(info) Update Org buffer %s"
+                 (file-name-nondirectory (buffer-file-name)))
+        (sit-for 1.5)
+        (let ((flyspell-mode-before-save flyspell-mode))
+          (flyspell-mode -1)              ; temporarily disable Flyspell to avoid
+                                          ; checking the following modifications
+                                          ; of the buffer
+          (org-align-all-tags)
+          (org-update-all-dblocks)
+          ;; (when (fboundp 'org-table-iterate-buffer-tables)
+          (org-table-iterate-buffer-tables)
+          ;; )
+          (when (file-exists-p (buffer-file-name (current-buffer)))
+            (leuven--org-remove-redundant-tags))
+          (when flyspell-mode-before-save (flyspell-mode 1)))))
+
+    ;; make sure that all dynamic blocks and all tables are always
+    ;; up-to-date
+    (add-hook 'before-save-hook 'leuven--org-update-buffer)
+    (message "Add leuven--org-update-buffer to before-save-hook") (sit-for 1.5))
 
   (with-eval-after-load "org"
     (message "... Org Effectiveness")
@@ -6413,16 +6432,16 @@ From %c"
 
       (leuven--section "(preview-latex)Top")
 
-      (when (locate-library "preview-latex")
-        (load "preview-latex.el") t)
-
       (with-eval-after-load "preview"
 
-        ;; path to `gs' command (for conversion from EPS)
+        (sit-for 3)
+
+        ;; path to `gs' command (for format conversions)
         (setq preview-gs-command
           (cond (running-ms-windows
-                 (concat windows-program-files-dir
-                         "texlive/2012/tlpkg/tlgs/bin/gswin32c.exe")) ;; XXX Not up-to-date!!!
+                 (or (executable-find "gswin32c.exe")
+                     "C:/texlive/2012/tlpkg/tlgs/bin/gswin32c.exe"))
+                                        ; default value
                 (t
                  "/usr/bin/gs")))
         (leuven--file-exists-and-executable-p preview-gs-command)
@@ -9428,7 +9447,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131015.183]--")
+(message "* --[ Loaded Emacs Leuven 20131021.1233]--")
 
 (provide 'emacs-leuven)
 

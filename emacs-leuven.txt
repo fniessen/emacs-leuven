@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-15 Tue 18:27>
+# Time-stamp: <2013-10-21 Mon 12:30>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -577,6 +577,7 @@ are generated programmatically from upstream Git-based sources.
           graphviz-dot-mode
           helm
           idle-require
+          interaction-log
           ;; jabber
           leuven-theme
           htmlize                       ; works with Org
@@ -1788,7 +1789,7 @@ screencasts.
 
     ;; hotkey for showing the log buffer
     (global-set-key
-      (kbd "<C-f2>")
+      (kbd "C-h C-l")
       (lambda ()
         (interactive)
         (display-buffer ilog-buffer-name))))
@@ -2152,6 +2153,9 @@ suggestions.
 
 =flyspell-goto-next-error= is bound to "C-,". Press it to go to the next
 previously detected error.
+
+=flyspell-correct-word-before-point= is bound to =C-c $=. Press it to *pop up a menu*
+of possible corrections for misspelled word before point.
 
 #+begin_src emacs-lisp
     ;; don't use `M-TAB' to auto-correct the current word (only use `C-.')
@@ -3146,6 +3150,9 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
 
+      ;; always display `helm-buffer' in current window
+      (setq helm-split-window-default-side 'same)
+
       (defface leuven-separator-face
         '((t (:weight bold :foreground "slate gray")))
         "Face used to display state NEW.")
@@ -3837,6 +3844,9 @@ mail buffer) under "Important settings" when you type
   (setq system-time-locale "C")         ; make sure that the weekdays in the
                                         ; time stamps of your Org mode files
                                         ; and in the agenda appear in English
+
+  ;; (setq system-time-locale (getenv "LANG"))
+  ;;                                       ; for weekdays in your locale settings
 #+end_src
 
 One could use:
@@ -4371,6 +4381,20 @@ You can use =org-cycle= in other modes, with =outline-minor-mode=.
     ;; that, but not too much more.
     )
 #+end_src
+
+For Elisp, Stefan Monnier additionally uses:
+
+#+begin_src emacs-lisp
+    (add-hook 'outline-minor-mode-hook
+              (lambda ()
+                (when (and outline-minor-mode (derived-mode-p 'emacs-lisp-mode))
+                  (hide-sublevels 1000))))
+#+end_src
+
+which starts outline-minor-mode by hiding all the bodies of functions. He also
+uses =reveal-mode= which automatically unhides the bodies when you try to move
+the cursor into them (so you don't need to remember the key sequences to use
+for opening/closing elements).
 
 *** org-global-cycle + outline-magic
 
@@ -8976,25 +9000,32 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 #+begin_src emacs-lisp
 ;;** A.6 (info "(org)Dynamic blocks")
 
-  (defun leuven--org-update-buffer ()
-    "Update all dynamic blocks and all tables in the buffer."
-    (when (eq major-mode 'org-mode)
-      (let ((flyspell-mode-before-save flyspell-mode))
-        (flyspell-mode -1)              ; temporarily disable Flyspell to avoid
-                                        ; checking the following modifications
-                                        ; of the buffer
-        (org-align-all-tags)
-        (org-update-all-dblocks)
-        ;; (when (fboundp 'org-table-iterate-buffer-tables)
-        (org-table-iterate-buffer-tables)
-        ;; )
-        (when (file-exists-p (buffer-file-name (current-buffer)))
-          (leuven--org-remove-redundant-tags))
-        (when flyspell-mode-before-save (flyspell-mode 1)))))
+  (with-eval-after-load "org"
+    (message "... Org Update dynamic blocks and tables")
 
-  ;; make sure that all dynamic blocks and all tables are always
-  ;; up-to-date
-  (add-hook 'before-save-hook 'leuven--org-update-buffer)
+    (defun leuven--org-update-buffer ()
+      "Update all dynamic blocks and all tables in the buffer."
+      (when (eq major-mode 'org-mode)
+        (message "(info) Update Org buffer %s"
+                 (file-name-nondirectory (buffer-file-name)))
+        (sit-for 1.5)
+        (let ((flyspell-mode-before-save flyspell-mode))
+          (flyspell-mode -1)              ; temporarily disable Flyspell to avoid
+                                          ; checking the following modifications
+                                          ; of the buffer
+          (org-align-all-tags)
+          (org-update-all-dblocks)
+          ;; (when (fboundp 'org-table-iterate-buffer-tables)
+          (org-table-iterate-buffer-tables)
+          ;; )
+          (when (file-exists-p (buffer-file-name (current-buffer)))
+            (leuven--org-remove-redundant-tags))
+          (when flyspell-mode-before-save (flyspell-mode 1)))))
+
+    ;; make sure that all dynamic blocks and all tables are always
+    ;; up-to-date
+    (add-hook 'before-save-hook 'leuven--org-update-buffer)
+    (message "Add leuven--org-update-buffer to before-save-hook") (sit-for 1.5))
 #+end_src
 
 ** Org-contrib
@@ -9319,16 +9350,16 @@ LaTeX file, =preview-latex= gives you a ~Preview~ menu.
 
       (leuven--section "(preview-latex)Top")
 
-      (when (locate-library "preview-latex")
-        (load "preview-latex.el") t)
-
       (with-eval-after-load "preview"
 
-        ;; path to `gs' command (for conversion from EPS)
+        (sit-for 3)
+
+        ;; path to `gs' command (for format conversions)
         (setq preview-gs-command
           (cond (running-ms-windows
-                 (concat windows-program-files-dir
-                         "texlive/2012/tlpkg/tlgs/bin/gswin32c.exe")) ;; XXX Not up-to-date!!!
+                 (or (executable-find "gswin32c.exe")
+                     "C:/texlive/2012/tlpkg/tlgs/bin/gswin32c.exe"))
+                                        ; default value
                 (t
                  "/usr/bin/gs")))
         (leuven--file-exists-and-executable-p preview-gs-command)
@@ -9339,8 +9370,10 @@ LaTeX file, =preview-latex= gives you a ~Preview~ menu.
 
 ** RefTeX
 
-AUCTeX is fantastic, and RefTeX just makes things better. then to fill in
-=\ref{}= and =\cite{}= commands, you can use =C-c &= (=reftex-view-crossref=).
+AUCTeX is fantastic, and RefTeX just makes things better.
+
+To fill in =\ref{}= and =\cite{}= commands, you can use =C-c &=
+(=reftex-view-crossref=).
 
 A Table of Contents of the entire (multifile) document with browsing
 capabilities is available with =C-c ==. Hitting =l= there will show all the
@@ -10752,7 +10785,7 @@ To continue searching for *next definition*, use =C-u M-.=.
     (find-tag nil t))
 #+end_src
 
-To *jump back* to where you previously invoked =M-.=, use =M-*=.
+Use =M-*= (=M-x pop-tag-mark=) to *jump back* to where you last invoked =M-.=.
 
 *** Select from multiple TAGS files
 

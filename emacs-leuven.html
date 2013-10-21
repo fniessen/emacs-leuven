@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-10-15 Tue 18:31 -->
+  <title>Emacs Leuven</title><!-- 2013-10-21 Mon 12:34 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1099,7 +1099,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131015.183</span>
+"color: #008200; font-style: italic;">Version: 20131021.1233</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1221,7 +1221,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131015.183]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131021.1233]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -2035,6 +2035,7 @@
           graphviz-dot-mode
           helm
           idle-require
+          interaction-log
           <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">jabber</span>
           leuven-theme
@@ -4116,7 +4117,7 @@
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">hotkey for showing the log buffer</span>
     (global-set-key
-      (kbd <span style="color: #FF4700;">"&lt;C-f2&gt;"</span>)
+      (kbd <span style="color: #FF4700;">"C-h C-l"</span>)
       (<span style="color: #0000FF;">lambda</span> ()
         (interactive)
         (display-buffer ilog-buffer-name))))
@@ -4662,6 +4663,10 @@
 
           <p><code>flyspell-goto-next-error</code> is bound to "C-,". Press it
           to go to the next previously detected error.</p>
+
+          <p><code>flyspell-correct-word-before-point</code> is bound to
+          <code>C-c $</code>. Press it to <b>pop up a menu</b> of possible
+          corrections for misspelled word before point.</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -6264,6 +6269,12 @@ M-: (executable-find "diff") RET
 "color: #008200; font-style: italic;">use the *current window* (no popup) to show the candidates</span>
       (setq helm-full-frame nil)
 
+      <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">always display `</span><span style=
+"color: #008200; font-style: italic;">helm-buffer</span><span style=
+"color: #008200; font-style: italic;">' in current window</span>
+      (setq helm-split-window-default-side 'same)
+
       (<span style="color: #0000FF;">defface</span> <span style=
 "color: #BA36A5;">leuven-separator-face</span>
         '((t (<span style="color: #006FE0;">:weight</span> bold <span style=
@@ -7388,6 +7399,12 @@ M-: (executable-find "diff") RET
                                         <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">and in the agenda appear in English</span>
+
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(setq system-time-locale (getenv "LANG"))</span>
+  <span style=
+"color: #008200;">;;                                       </span><span style=
+"color: #008200; font-style: italic;">; for weekdays in your locale settings</span>
 </pre>
           </div>
 
@@ -8305,6 +8322,24 @@ M-: (executable-find "diff") RET
     )
 </pre>
             </div>
+
+            <p>For Elisp, Stefan Monnier additionally uses:</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+    (add-hook 'outline-minor-mode-hook
+              (<span style="color: #0000FF;">lambda</span> ()
+                (<span style=
+"color: #0000FF;">when</span> (and outline-minor-mode (derived-mode-p 'emacs-lisp-mode))
+                  (hide-sublevels 1000))))
+</pre>
+            </div>
+
+            <p>which starts outline-minor-mode by hiding all the bodies of
+            functions. He also uses <code>reveal-mode</code> which
+            automatically unhides the bodies when you try to move the cursor
+            into them (so you don't need to remember the key sequences to use
+            for opening/closing elements).</p>
           </div>
         </div>
 
@@ -16156,40 +16191,51 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 <span style="color: #008200;">;;</span><span style=
 "color: #008200; font-style: italic;">** A.6 (info "(org)Dynamic blocks")</span>
 
-  (<span style="color: #0000FF;">defun</span> <span style=
+  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #FF4700;">"org"</span>
+    (message <span style=
+"color: #FF4700;">"... Org Update dynamic blocks and tables"</span>)
+
+    (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--org-update-buffer</span> ()
-    <span style=
+      <span style=
 "color: #008000;">"Update all dynamic blocks and all tables in the buffer."</span>
-    (<span style="color: #0000FF;">when</span> (eq major-mode 'org-mode)
-      (<span style=
+      (<span style="color: #0000FF;">when</span> (eq major-mode 'org-mode)
+        (message <span style=
+"color: #FF4700;">"(info) Update Org buffer %s"</span>
+                 (file-name-nondirectory (buffer-file-name)))
+        (sit-for 1.5)
+        (<span style=
 "color: #0000FF;">let</span> ((flyspell-mode-before-save flyspell-mode))
-        (flyspell-mode -1)              <span style=
+          (flyspell-mode -1)              <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">temporarily disable Flyspell to avoid</span>
-                                        <span style=
+                                          <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">checking the following modifications</span>
-                                        <span style=
+                                          <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">of the buffer</span>
-        (org-align-all-tags)
-        (org-update-all-dblocks)
-        <span style="color: #008200;">;; </span><span style=
+          (org-align-all-tags)
+          (org-update-all-dblocks)
+          <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(when (fboundp 'org-table-iterate-buffer-tables)</span>
-        (org-table-iterate-buffer-tables)
-        <span style="color: #008200;">;; </span><span style=
+          (org-table-iterate-buffer-tables)
+          <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">)</span>
-        (<span style=
+          (<span style=
 "color: #0000FF;">when</span> (file-exists-p (buffer-file-name (current-buffer)))
-          (leuven--org-remove-redundant-tags))
-        (<span style=
+            (leuven--org-remove-redundant-tags))
+          (<span style=
 "color: #0000FF;">when</span> flyspell-mode-before-save (flyspell-mode 1)))))
 
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">make sure that all dynamic blocks and all tables are always</span>
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">up-to-date</span>
-  (add-hook 'before-save-hook 'leuven--org-update-buffer)
+    (add-hook 'before-save-hook 'leuven--org-update-buffer)
+    (message <span style=
+"color: #FF4700;">"Add leuven--org-update-buffer to before-save-hook"</span>) (sit-for 1.5))
 </pre>
           </div>
         </div>
@@ -16753,22 +16799,24 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
       (leuven--section <span style=
 "color: #FF4700;">"(preview-latex)Top"</span>)
 
-      (<span style="color: #0000FF;">when</span> (locate-library <span style=
-"color: #FF4700;">"preview-latex"</span>)
-        (load <span style="color: #FF4700;">"preview-latex.el"</span>) t)
-
       (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #FF4700;">"preview"</span>
+
+        (sit-for 3)
 
         <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">path to `</span><span style=
 "color: #008200; font-style: italic;">gs</span><span style=
-"color: #008200; font-style: italic;">' command (for conversion from EPS)</span>
+"color: #008200; font-style: italic;">' command (for format conversions)</span>
         (setq preview-gs-command
           (<span style="color: #0000FF;">cond</span> (running-ms-windows
-                 (concat windows-program-files-dir
-                         <span style=
-"color: #FF4700;">"texlive/2012/tlpkg/tlgs/bin/gswin32c.exe"</span>)) <span style="color: #008200;">;; </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> Not up-to-date!!!</span>
+                 (or (executable-find <span style=
+"color: #FF4700;">"gswin32c.exe"</span>)
+                     <span style=
+"color: #FF4700;">"C:/texlive/2012/tlpkg/tlgs/bin/gswin32c.exe"</span>))
+                                        <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">default value</span>
                 (t
                  <span style="color: #FF4700;">"/usr/bin/gs"</span>)))
         (leuven--file-exists-and-executable-p preview-gs-command)
@@ -16785,9 +16833,10 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
         <h3 id="sec-27-4">RefTeX</h3>
 
         <div class="outline-text-3" id="text-27-4">
-          <p>AUCTeX is fantastic, and RefTeX just makes things better. then to
-          fill in <code>\ref{}</code> and <code>\cite{}</code> commands, you
-          can use <code>C-c &amp;</code>
+          <p>AUCTeX is fantastic, and RefTeX just makes things better.</p>
+
+          <p>To fill in <code>\ref{}</code> and <code>\cite{}</code> commands,
+          you can use <code>C-c &amp;</code>
           (<code>reftex-view-crossref</code>).</p>
 
           <p>A Table of Contents of the entire (multifile) document with
@@ -19091,8 +19140,8 @@ TAGS:
 </pre>
             </div>
 
-            <p>To <b>jump back</b> to where you previously invoked
-            <code>M-.</code>, use <code>M-*</code>.</p>
+            <p>Use <code>M-*</code> (<code>M-x pop-tag-mark</code>) to <b>jump
+            back</b> to where you last invoked <code>M-.</code>.</p>
           </div>
         </div>
 
@@ -24876,7 +24925,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131015.1831]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131021.1233]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
