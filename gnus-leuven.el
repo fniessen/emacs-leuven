@@ -91,21 +91,12 @@
       ;; support for `.authinfo' file
       (when (try-require 'auth-source)
 
-        ;; `.netrc'-like file that holds authinfo passwords
-        (defvar leuven-authinfo-file
-              (if (file-exists-p "~/.hide/.authinfo.gpg")
-                  "~/.hide/.authinfo.gpg"
-                  ;; if you're running a recent Emacs, look into the EPA
-                  ;; library to encrypt your `.authinfo' file.
-                  ;; See http://www.emacswiki.org/emacs/GnusEncryptedAuthInfo
-
-                "~/.authinfo")
-              "`.netrc'-like file that holds authinfo passwords")
-
-        ;; for any host and any protocol, use just that one file that holds
-        ;; passwords
+        ;; for any host and any protocol, use just one .netrc-like file that
+        ;; holds authinfo passwords
         (setq auth-sources
-              `((:source ,leuven-authinfo-file :host t :protocol t)))
+              (if (file-exists-p "~/.authinfo.gpg")
+                  '("~/.authinfo.gpg")
+                '("~/.authinfo")))
 
         ;; log debug messages
         (setq auth-source-debug t))
