@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-22 Tue 15:55>
+# Time-stamp: <2013-10-22 Tue 21:00>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -3195,6 +3195,9 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
       ;; don't truncate buffer names
       (setq helm-buffer-max-length nil)
 
+      ;; allow to call M-x R with helm-M-x without waiting for 2+ chars
+      (setq helm-M-x-requires-pattern 0)
+
       (defun helm-toggle-debug ()
         "Toggle Helm debug on/off."
         (interactive)
@@ -5385,7 +5388,11 @@ By convention, *user-defined tags are written in lowercase*; built-in tags with
 special meaning are written with all capitals.
 
 =org-use-tag-inheritance= can be setup to a regular expression, for example so
-that all tags starting with =@= or =#= will be excluded from inheritance.
+that all tags starting with =@= or =#= will be excluded from inheritance with:
+
+#+begin_example
+(setq org-use-tag-inheritance "^[^@#]")
+#+end_example
 
 #+begin_src emacs-lisp
 ;;* 6 (info "(org)Tags")
@@ -14098,37 +14105,44 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 
 ** Emacs Speaks Statistics (ESS)
 
-Install R on your machine.
+http://ess.r-project.org/Manual/ess.html
 
-You can create ~R-current~ or ~R-newest~ symbolic links to point to the lastest
-installed version.
+To run statistical processes under ESS, Windows users will need to make sure
+that the directories for =R= and =Rterm= are in their =PATH= environment variable.
+
+Start an R session with =M-x R=.
 
 #+begin_src emacs-lisp
   (leuven--section "Utilities -- ESS")
 
   (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
 
+  (autoload 'R "ess-site"
+    "Call 'R', the 'GNU S' system from the R Foundation." t)
+
   (autoload 'R-mode "ess-site"
     "Major mode for editing R source." t)
 #+end_src
 
-Customize variables for ESS (needs to be done before loading ~ess-site~):
+Customize variables for ESS (set these variables *before* loading ~ess-site~).
 
 #+begin_src emacs-lisp
   ;; don't request the process directory each time R is run
   (setq ess-ask-for-ess-directory nil)
-#+end_src
 
-#+begin_src emacs-lisp
   ;; ;; add to list of prefixes recognized by ESS
   ;; (setq ess-r-versions '("R-2.15.2"))   ; R-current
   ;; ;; matching versions will appear after doing M-x R <tab> <tab>
+#+end_src
 
+#+begin_src emacs-lisp
   ;; ESS: Emacs Speaks Statistics
   (with-eval-after-load "ess-site"
 
     ;; use eldoc to report R function names
-    (require 'ess-eldoc))
+    (require 'ess-eldoc)
+    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
+)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -14177,12 +14191,14 @@ Customize variables for ESS (needs to be done before loading ~ess-site~):
                 (kbd "<C-up>") 'comint-previous-input)
               (local-set-key
                 (kbd "<C-down>") 'comint-next-input)))
-
-  ;; tooltip with some information about the R object at point
-  ;; (invoked by `C-c C-g'). See
-  ;; http://www.kieranhealy.org/blog/archives/2010/02/16/easily-display-information-about-r-objects-in-emacsess/
-  (try-require 'ess-R-object-tooltip-XXX) ;; or popup?
 #+end_src
+
+Get info for object at point, and display it in an electric buffer with the
+command =ess-describe-object-at-point= (bound to =C-c C-d C-e=, repeat =C-e= or =e= to
+cycle between =str()=, =head()=, =tail()= and =summary()=). Use =other-window= to switch
+to =*ess-describe*= window.
+
+It was inspired by Erik Iverson's =ess-R-object-tooltip=.
 
 * Emacs and Microsoft Windows/MS-DOS
 

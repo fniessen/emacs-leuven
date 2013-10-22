@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-10-22 Tue 15:57 -->
+  <title>Emacs Leuven</title><!-- 2013-10-22 Tue 21:12 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1099,7 +1099,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131022.1557</span>
+"color: #008200; font-style: italic;">Version: 20131022.2112</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1221,7 +1221,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131022.1557]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131022.2112]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -6344,6 +6344,10 @@ M-: (executable-find "diff") RET
 "color: #008200; font-style: italic;">don't truncate buffer names</span>
       (setq helm-buffer-max-length nil)
 
+      <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">allow to call M-x R with helm-M-x without waiting for 2+ chars</span>
+      (setq helm-M-x-requires-pattern 0)
+
       (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">helm-toggle-debug</span> ()
         <span style="color: #008000;">"Toggle Helm debug on/off."</span>
@@ -10080,7 +10084,10 @@ M-: (executable-find "diff") RET
 
           <p><code>org-use-tag-inheritance</code> can be setup to a regular
           expression, for example so that all tags starting with <code>@</code>
-          or <code>#</code> will be excluded from inheritance.</p>
+          or <code>#</code> will be excluded from inheritance with:</p>
+          <pre class="example">
+(setq org-use-tag-inheritance "^[^@#]")
+</pre>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -24656,10 +24663,15 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <h3 id="sec-49-1">Emacs Speaks Statistics (ESS)</h3>
 
         <div class="outline-text-3" id="text-49-1">
-          <p>Install R on your machine.</p>
+          <p><a href=
+          "http://ess.r-project.org/Manual/ess.html">http://ess.r-project.org/Manual/ess.html</a></p>
 
-          <p>You can create <code>R-current</code> or <code>R-newest</code>
-          symbolic links to point to the lastest installed version.</p>
+          <p>To run statistical processes under ESS, Windows users will need to
+          make sure that the directories for <code>R</code> and
+          <code>Rterm</code> are in their <code>PATH</code> environment
+          variable.</p>
+
+          <p>Start an R session with <code>M-x R</code>.</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -24668,31 +24680,35 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
   (add-to-list 'auto-mode-alist '(<span style=
 "color: #FF4700;">"\\.[rR]\\'"</span> . R-mode))
 
+  (autoload 'R <span style="color: #FF4700;">"ess-site"</span>
+    <span style=
+"color: #008000;">"Call 'R', the 'GNU S' system from the R Foundation."</span> t)
+
   (autoload 'R-mode <span style="color: #FF4700;">"ess-site"</span>
     <span style="color: #008000;">"Major mode for editing R source."</span> t)
 </pre>
           </div>
 
-          <p>Customize variables for ESS (needs to be done before loading
-          <code>ess-site</code>):</p>
+          <p>Customize variables for ESS (set these variables <b>before</b>
+          loading <code>ess-site</code>).</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">don't request the process directory each time R is run</span>
   (setq ess-ask-for-ess-directory nil)
-</pre>
-          </div>
 
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; add to list of prefixes recognized by ESS</span>
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(setq ess-r-versions '("R-2.15.2"))   ; R-current</span>
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; matching versions will appear after doing M-x R &lt;tab&gt; &lt;tab&gt;</span>
+</pre>
+          </div>
 
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">ESS: Emacs Speaks Statistics</span>
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
@@ -24701,7 +24717,9 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">use eldoc to report R function names</span>
     (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">ess-eldoc</span>))
+"color: #6434A3;">ess-eldoc</span>)
+    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
+)
 </pre>
           </div>
 
@@ -24768,19 +24786,19 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
               (local-set-key
                 (kbd <span style=
 "color: #FF4700;">"&lt;C-down&gt;"</span>) 'comint-next-input)))
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">tooltip with some information about the R object at point</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(invoked by `C-c C-g'). See</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">http://www.kieranhealy.org/blog/archives/2010/02/16/easily-display-information-about-r-objects-in-emacsess/</span>
-  (try-require 'ess-R-object-tooltip-<span style=
-"color: #CC0000; background-color: #FFFF88;">XXX</span>) <span style=
-"color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">or popup?</span>
 </pre>
           </div>
+
+          <p>Get info for object at point, and display it in an electric buffer
+          with the command <code>ess-describe-object-at-point</code> (bound to
+          <code>C-c C-d C-e</code>, repeat <code>C-e</code> or <code>e</code>
+          to cycle between <code>str()</code>, <code>head()</code>,
+          <code>tail()</code> and <code>summary()</code>). Use
+          <code>other-window</code> to switch to <code>*ess-describe*</code>
+          window.</p>
+
+          <p>It was inspired by Erik Iverson's
+          <code>ess-R-object-tooltip</code>.</p>
         </div>
       </div>
     </div>
@@ -24955,7 +24973,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131022.1557]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131022.2112]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

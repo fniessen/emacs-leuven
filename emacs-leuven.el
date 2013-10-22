@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131022.1555
+;; Version: 20131022.211
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131022.1555]--")
+(message "* --[ Loading Emacs Leuven 20131022.211]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2155,6 +2155,9 @@
 
       ;; don't truncate buffer names
       (setq helm-buffer-max-length nil)
+
+      ;; allow to call M-x R with helm-M-x without waiting for 2+ chars
+      (setq helm-M-x-requires-pattern 0)
 
       (defun helm-toggle-debug ()
         "Toggle Helm debug on/off."
@@ -9311,6 +9314,9 @@ From %c"
 
   (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
 
+  (autoload 'R "ess-site"
+    "Call 'R', the 'GNU S' system from the R Foundation." t)
+
   (autoload 'R-mode "ess-site"
     "Major mode for editing R source." t)
 
@@ -9325,7 +9331,9 @@ From %c"
   (with-eval-after-load "ess-site"
 
     ;; use eldoc to report R function names
-    (require 'ess-eldoc))
+    (require 'ess-eldoc)
+    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
+)
 
 ;;* App G Emacs and (info "(emacs)Microsoft Windows/MS-DOS")
 
@@ -9406,7 +9414,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131022.1556]--")
+(message "* --[ Loaded Emacs Leuven 20131022.2111]--")
 
 (provide 'emacs-leuven)
 
