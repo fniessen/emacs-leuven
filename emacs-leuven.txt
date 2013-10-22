@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-21 Mon 13:32>
+# Time-stamp: <2013-10-22 Tue 15:55>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -826,7 +826,7 @@ Though, it does load the full Org mode right from the start...
 
   ;; redo the most recent undo
   (when (locate-library "redo")
-    (autoload 'redo "redo" nil t)
+    (autoload 'redo "redo" "Redo the the most recent undo." t)
     (global-set-key
       (kbd "<S-f11>") 'redo))
 #+end_src
@@ -940,7 +940,8 @@ the relevant manual page without leaving Emacs.
   (leuven--section "10.1 (emacs)Help Summary")
 
   ;; find convenient unbound keystrokes (undefined key bindings)
-  (autoload 'describe-unbound-keys "unbound" nil t)
+  (autoload 'describe-unbound-keys "unbound"
+    "Display a list of unbound keystrokes of complexity no greater than MAX." t)
 
   ;; avoid the description of all minor modes
   (defun describe-major-mode ()
@@ -1344,8 +1345,10 @@ Visible bookmarks in buffer.
   ;; better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
   ;; place the point at the same place)
   (when (locate-library "pager")
-    (autoload 'pager-page-up "pager" nil t)
-    (autoload 'pager-page-down "pager" nil t)
+    (autoload 'pager-page-up "pager"
+      "Like scroll-down, but moves a fixed amount of lines." t)
+    (autoload 'pager-page-down "pager"
+      "Like scroll-up, but moves a fixed amount of lines." t)
 
     (global-set-key
       (kbd "<prior>") 'pager-page-up)
@@ -1483,7 +1486,8 @@ For FIXME to be highlighted in Org tables as well, use:
   ;; colorize color names in buffers
   (GNUEmacs
     (when (locate-library "rainbow-mode")
-      (autoload 'rainbow-mode "rainbow-mode" nil t)))
+      (autoload 'rainbow-mode "rainbow-mode"
+        "Colorize strings that represent colors." t)))
 #+end_src
 
 ** Interactive Highlighting
@@ -3967,7 +3971,8 @@ Instead of superseding the binding in =auto-mode-alist=, you can replace it
                   ) auto-mode-alist))
 
   ;; major mode for fontifiying ssh config files
-  (autoload 'ssh-config-mode "ssh-config-mode" t)
+  (autoload 'ssh-config-mode "ssh-config-mode"
+    "Major mode for fontifiying ssh config files." t)
 
   ;; ledger
   (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
@@ -4513,7 +4518,8 @@ Use Unicode characters.
   (when (locate-library "boxquote")
 
     ;; quote text with a semi-box
-    (autoload 'boxquote-region "boxquote" nil t)
+    (autoload 'boxquote-region "boxquote"
+      "Draw a box around the left hand side of a region bounding START and END." t)
 
     (with-eval-after-load "boxquote"
       (setq boxquote-top-and-tail "────")
@@ -4544,7 +4550,8 @@ Region Marked>=.
 
   ;; phonetic spelling
   (when (locate-library "phonetic")
-    (autoload 'phonetize-region "phonetic" nil t))
+    (autoload 'phonetize-region "phonetic"
+      "Translate the region according to the phonetic alphabet." t))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -5376,6 +5383,9 @@ something best implemented with tags.
 
 By convention, *user-defined tags are written in lowercase*; built-in tags with
 special meaning are written with all capitals.
+
+=org-use-tag-inheritance= can be setup to a regular expression, for example so
+that all tags starting with =@= or =#= will be excluded from inheritance.
 
 #+begin_src emacs-lisp
 ;;* 6 (info "(org)Tags")
@@ -8001,7 +8011,8 @@ This adds a Quick Print option to your menu bar (under File).
 #+begin_src emacs-lisp
   ;; quick print preview (to Web browser) with `htmlize-view-buffer'
   (GNUEmacs
-    (autoload 'htmlize-view-buffer "htmlize-view" nil t)
+    (autoload 'htmlize-view-buffer "htmlize-view"
+      "Convert buffer to html preserving faces and view in web browser." t)
 
     ;; same key binding as Org export to HTML (open in browser)
     (global-set-key
@@ -9065,7 +9076,8 @@ Link emails from Org files.
 #+begin_src emacs-lisp
   (GNUEmacs
     ;; add weather forecast in your Org agenda
-    (autoload 'org-google-weather "org-google-weather" nil t)
+    (autoload 'org-google-weather "org-google-weather"
+      "Return Org entry with the weather for LOCATION in LANGUAGE." t)
 
     (with-eval-after-load "org-google-weather"
       ;; (try-require 'url)
@@ -9631,7 +9643,8 @@ Also =who-calls.el=
 #+end_src
 
 #+begin_src emacs-lisp
-  (autoload 'graphviz-dot-mode "graphviz-dot-mode" nil t)
+  (autoload 'graphviz-dot-mode "graphviz-dot-mode"
+    "Major mode for the dot language." t)
   (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
 #+end_src
 
@@ -9742,7 +9755,8 @@ things.
 
   ;; highlight surrounding parentheses
   (GNUEmacs
-    (autoload 'highlight-parentheses-mode "highlight-parentheses")
+    (autoload 'highlight-parentheses-mode "highlight-parentheses"
+      "Minor mode to highlight the surrounding parentheses." t)
 
     ;; (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
 
@@ -9838,11 +9852,10 @@ distinguishes end-of-block.
              (try-require 'hideshowvis-XXX))
 
     (autoload 'hideshowvis-enable "hideshowvis"
-      "Highlight foldable regions.")
+      "Highlight foldable regions." t)
 
     (autoload 'hideshowvis-minor-mode "hideshowvis"
-      "Will indicate regions foldable with hideshow in the fringe."
-      'interactive)
+      "Will indicate regions foldable with hideshow in the fringe." t)
 
     ;; enable hideshowvis for programming modes
     (add-hook 'prog-mode-hook
@@ -9969,7 +9982,8 @@ flymake can compile in the background and colorize lines with errors/warnings
 
 (leuven--chapter leuven-chapter-27-building "27 Compiling and Testing Programs"
 
-  (autoload 'flymake-mode "flymake" nil t)
+  (autoload 'flymake-mode "flymake"
+    "Toggle on-the-fly syntax checking." t)
 
   (with-eval-after-load "flymake"
 
@@ -10019,7 +10033,8 @@ without a =Makefile=.
 
   ;; invoke a compiler with the same command as in the last invocation of
   ;; `compile'
-  (autoload 'recompile "compile" nil t)
+  (autoload 'recompile "compile"
+    "Re-compile the program including the current buffer." t)
   (global-set-key
     (kbd "<f9>") 'recompile)
 
@@ -12640,8 +12655,10 @@ I said they're details.
 
   (when (locate-library "multi-term")
 
-    (autoload 'multi-term "multi-term" nil t)
-    (autoload 'multi-term-next "multi-term" nil t)
+    (autoload 'multi-term "multi-term"
+      "Create new term buffer." t)
+    (autoload 'multi-term-next "multi-term"
+      "Go to the next term buffer." t)
 
     (setq multi-term-program shell-file-name)
 
@@ -14081,36 +14098,42 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 
 ** Emacs Speaks Statistics (ESS)
 
-*************** TODO Install R
+Install R on your machine.
+
+You can create ~R-current~ or ~R-newest~ symbolic links to point to the lastest
+installed version.
 
 #+begin_src emacs-lisp
   (leuven--section "Utilities -- ESS")
 
-  ;; (setq-default inferior-ess-program "R") ;; XXX undefined
+  (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
 
-  ;;
-  (setq ess-directory-containing-R "C:/Program Files")
-  ;; needs to be done before loading `ess-site'
+  (autoload 'R-mode "ess-site"
+    "Major mode for editing R source." t)
+#+end_src
 
-  ;; add to list of prefixes recognized by ESS
-  (setq ess-r-versions '("R-2.15.2")) ;; R-current
-  ;; matching versions will appear after doing M-x R <tab> <tab>
+Customize variables for ESS (needs to be done before loading ~ess-site~):
+
+#+begin_src emacs-lisp
+  ;; don't request the process directory each time R is run
+  (setq ess-ask-for-ess-directory nil)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; ;; add to list of prefixes recognized by ESS
+  ;; (setq ess-r-versions '("R-2.15.2"))   ; R-current
+  ;; ;; matching versions will appear after doing M-x R <tab> <tab>
 
   ;; ESS: Emacs Speaks Statistics
-  (try-require 'ess-site-XXX)
+  (with-eval-after-load "ess-site"
 
-  ;; set default R version, (i.e. the one launched by typing M-x R <RET>)
-  (setq inferior-R-program-name ;; R-current
-        "C:/Program Files/R/R-2.15.2/bin/x64/Rterm.exe")
+    ;; use eldoc to report R function names
+    (require 'ess-eldoc))
+#+end_src
 
+#+begin_src emacs-lisp :tangle no
   (global-set-key
     (kbd "M--") 'ess-smart-underscore)
-
-  ;;! don't request the process directory each time R is run
-  (setq ess-ask-for-ess-directory nil)
-
-  ;; name of the ESS process associated with the current buffer
-  (setq ess-local-process-name "R")
 
   ;; Use `<S-RET>' to split window & launch R (if not running), execute
   ;; highlighted region (if R running & area highlighted), or execute current

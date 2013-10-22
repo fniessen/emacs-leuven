@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-10-21 Mon 13:35 -->
+  <title>Emacs Leuven</title><!-- 2013-10-22 Tue 15:57 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1099,7 +1099,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131021.1335</span>
+"color: #008200; font-style: italic;">Version: 20131022.1557</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1221,7 +1221,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131021.1335]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131022.1557]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -2463,7 +2463,8 @@
 "color: #008200; font-style: italic;">redo the most recent undo</span>
   (<span style="color: #0000FF;">when</span> (locate-library <span style=
 "color: #FF4700;">"redo"</span>)
-    (autoload 'redo <span style="color: #FF4700;">"redo"</span> nil t)
+    (autoload 'redo <span style="color: #FF4700;">"redo"</span> <span style=
+"color: #008000;">"Redo the the most recent undo."</span> t)
     (global-set-key
       (kbd <span style="color: #FF4700;">"&lt;S-f11&gt;"</span>) 'redo))
 </pre>
@@ -2648,7 +2649,9 @@
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">find convenient unbound keystrokes (undefined key bindings)</span>
   (autoload 'describe-unbound-keys <span style=
-"color: #FF4700;">"unbound"</span> nil t)
+"color: #FF4700;">"unbound"</span>
+    <span style=
+"color: #008000;">"Display a list of unbound keystrokes of complexity no greater than MAX."</span> t)
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">avoid the description of all minor modes</span>
@@ -3347,10 +3350,12 @@
 "color: #008200; font-style: italic;">place the point at the same place)</span>
   (<span style="color: #0000FF;">when</span> (locate-library <span style=
 "color: #FF4700;">"pager"</span>)
-    (autoload 'pager-page-up <span style=
-"color: #FF4700;">"pager"</span> nil t)
-    (autoload 'pager-page-down <span style=
-"color: #FF4700;">"pager"</span> nil t)
+    (autoload 'pager-page-up <span style="color: #FF4700;">"pager"</span>
+      <span style=
+"color: #008000;">"Like scroll-down, but moves a fixed amount of lines."</span> t)
+    (autoload 'pager-page-down <span style="color: #FF4700;">"pager"</span>
+      <span style=
+"color: #008000;">"Like scroll-up, but moves a fixed amount of lines."</span> t)
 
     (global-set-key
       (kbd <span style=
@@ -3628,7 +3633,9 @@
     (<span style="color: #0000FF;">when</span> (locate-library <span style=
 "color: #FF4700;">"rainbow-mode"</span>)
       (autoload 'rainbow-mode <span style=
-"color: #FF4700;">"rainbow-mode"</span> nil t)))
+"color: #FF4700;">"rainbow-mode"</span>
+        <span style=
+"color: #008000;">"Colorize strings that represent colors."</span> t)))
 </pre>
           </div>
         </div>
@@ -7617,7 +7624,9 @@ M-: (executable-find "diff") RET
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">major mode for fontifiying ssh config files</span>
   (autoload 'ssh-config-mode <span style=
-"color: #FF4700;">"ssh-config-mode"</span> t)
+"color: #FF4700;">"ssh-config-mode"</span>
+    <span style=
+"color: #008000;">"Major mode for fontifiying ssh config files."</span> t)
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">ledger</span>
@@ -8536,8 +8545,9 @@ M-: (executable-find "diff") RET
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">quote text with a semi-box</span>
-    (autoload 'boxquote-region <span style=
-"color: #FF4700;">"boxquote"</span> nil t)
+    (autoload 'boxquote-region <span style="color: #FF4700;">"boxquote"</span>
+      <span style=
+"color: #008000;">"Draw a box around the left hand side of a region bounding START and END."</span> t)
 
     (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #FF4700;">"boxquote"</span>
@@ -8579,8 +8589,9 @@ M-: (executable-find "diff") RET
 "color: #008200; font-style: italic;">phonetic spelling</span>
   (<span style="color: #0000FF;">when</span> (locate-library <span style=
 "color: #FF4700;">"phonetic"</span>)
-    (autoload 'phonetize-region <span style=
-"color: #FF4700;">"phonetic"</span> nil t))
+    (autoload 'phonetize-region <span style="color: #FF4700;">"phonetic"</span>
+      <span style=
+"color: #008000;">"Translate the region according to the phonetic alphabet."</span> t))
 </pre>
           </div>
 
@@ -10066,6 +10077,10 @@ M-: (executable-find "diff") RET
 
           <p>By convention, <b>user-defined tags are written in lowercase</b>;
           built-in tags with special meaning are written with all capitals.</p>
+
+          <p><code>org-use-tag-inheritance</code> can be setup to a regular
+          expression, for example so that all tags starting with <code>@</code>
+          or <code>#</code> will be excluded from inheritance.</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -14458,7 +14473,9 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008200; font-style: italic;">quick print preview (to Web browser) with `</span><span style="color: #008200; font-style: italic;">htmlize-view-buffer</span><span style="color: #008200; font-style: italic;">'</span>
   (GNUEmacs
     (autoload 'htmlize-view-buffer <span style=
-"color: #FF4700;">"htmlize-view"</span> nil t)
+"color: #FF4700;">"htmlize-view"</span>
+      <span style=
+"color: #008000;">"Convert buffer to html preserving faces and view in web browser."</span> t)
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">same key binding as Org export to HTML (open in browser)</span>
@@ -16295,7 +16312,9 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">add weather forecast in your Org agenda</span>
     (autoload 'org-google-weather <span style=
-"color: #FF4700;">"org-google-weather"</span> nil t)
+"color: #FF4700;">"org-google-weather"</span>
+      <span style=
+"color: #008000;">"Return Org entry with the weather for LOCATION in LANGUAGE."</span> t)
 
     (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #FF4700;">"org-google-weather"</span>
@@ -17270,7 +17289,8 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (autoload 'graphviz-dot-mode <span style=
-"color: #FF4700;">"graphviz-dot-mode"</span> nil t)
+"color: #FF4700;">"graphviz-dot-mode"</span>
+    <span style="color: #008000;">"Major mode for the dot language."</span> t)
   (add-to-list 'auto-mode-alist '(<span style=
 "color: #FF4700;">"\\.dot\\'"</span> . graphviz-dot-mode))
 </pre>
@@ -17449,7 +17469,9 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008200; font-style: italic;">highlight surrounding parentheses</span>
   (GNUEmacs
     (autoload 'highlight-parentheses-mode <span style=
-"color: #FF4700;">"highlight-parentheses"</span>)
+"color: #FF4700;">"highlight-parentheses"</span>
+      <span style=
+"color: #008000;">"Minor mode to highlight the surrounding parentheses."</span> t)
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)</span>
@@ -17605,13 +17627,12 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
     (autoload 'hideshowvis-enable <span style=
 "color: #FF4700;">"hideshowvis"</span>
-      <span style="color: #008000;">"Highlight foldable regions."</span>)
+      <span style="color: #008000;">"Highlight foldable regions."</span> t)
 
     (autoload 'hideshowvis-minor-mode <span style=
 "color: #FF4700;">"hideshowvis"</span>
       <span style=
-"color: #008000;">"Will indicate regions foldable with hideshow in the fringe."</span>
-      'interactive)
+"color: #008000;">"Will indicate regions foldable with hideshow in the fringe."</span> t)
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">enable hideshowvis for programming modes</span>
@@ -17817,7 +17838,9 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 (leuven--chapter leuven-chapter-27-building <span style=
 "color: #FF4700;">"27 Compiling and Testing Programs"</span>
 
-  (autoload 'flymake-mode <span style="color: #FF4700;">"flymake"</span> nil t)
+  (autoload 'flymake-mode <span style="color: #FF4700;">"flymake"</span>
+    <span style=
+"color: #008000;">"Toggle on-the-fly syntax checking."</span> t)
 
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #FF4700;">"flymake"</span>
@@ -17904,7 +17927,9 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008200; font-style: italic;">`</span><span style=
 "color: #008200; font-style: italic;">compile</span><span style=
 "color: #008200; font-style: italic;">'</span>
-  (autoload 'recompile <span style="color: #FF4700;">"compile"</span> nil t)
+  (autoload 'recompile <span style="color: #FF4700;">"compile"</span>
+    <span style=
+"color: #008000;">"Re-compile the program including the current buffer."</span> t)
   (global-set-key
     (kbd <span style="color: #FF4700;">"&lt;f9&gt;"</span>) 'recompile)
 
@@ -22270,10 +22295,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (<span style="color: #0000FF;">when</span> (locate-library <span style=
 "color: #FF4700;">"multi-term"</span>)
 
-    (autoload 'multi-term <span style=
-"color: #FF4700;">"multi-term"</span> nil t)
+    (autoload 'multi-term <span style="color: #FF4700;">"multi-term"</span>
+      <span style="color: #008000;">"Create new term buffer."</span> t)
     (autoload 'multi-term-next <span style=
-"color: #FF4700;">"multi-term"</span> nil t)
+"color: #FF4700;">"multi-term"</span>
+      <span style="color: #008000;">"Go to the next term buffer."</span> t)
 
     (setq multi-term-program shell-file-name)
 
@@ -24630,56 +24656,59 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <h3 id="sec-49-1">Emacs Speaks Statistics (ESS)</h3>
 
         <div class="outline-text-3" id="text-49-1">
-          <div class="inlinetask">
-            <b><span class="todo TODO">TODO</span> Install R</b><br />
-            nil
-          </div>
+          <p>Install R on your machine.</p>
+
+          <p>You can create <code>R-current</code> or <code>R-newest</code>
+          symbolic links to point to the lastest installed version.</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (leuven--section <span style="color: #FF4700;">"Utilities -- ESS"</span>)
 
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(setq-default inferior-ess-program "R") ;; </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> undefined</span>
+  (add-to-list 'auto-mode-alist '(<span style=
+"color: #FF4700;">"\\.[rR]\\'"</span> . R-mode))
 
-  <span style="color: #008200;">;;</span>
-  (setq ess-directory-containing-R <span style=
-"color: #FF4700;">"C:/Program Files"</span>)
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">needs to be done before loading `</span><span style="color: #008200; font-style: italic;">ess-site</span><span style="color: #008200; font-style: italic;">'</span>
+  (autoload 'R-mode <span style="color: #FF4700;">"ess-site"</span>
+    <span style="color: #008000;">"Major mode for editing R source."</span> t)
+</pre>
+          </div>
 
+          <p>Customize variables for ESS (needs to be done before loading
+          <code>ess-site</code>):</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">add to list of prefixes recognized by ESS</span>
-  (setq ess-r-versions '(<span style=
-"color: #FF4700;">"R-2.15.2"</span>)) <span style=
-"color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">R-current</span>
+"color: #008200; font-style: italic;">don't request the process directory each time R is run</span>
+  (setq ess-ask-for-ess-directory nil)
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">matching versions will appear after doing M-x R &lt;tab&gt; &lt;tab&gt;</span>
+"color: #008200; font-style: italic;">;; add to list of prefixes recognized by ESS</span>
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(setq ess-r-versions '("R-2.15.2"))   ; R-current</span>
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">;; matching versions will appear after doing M-x R &lt;tab&gt; &lt;tab&gt;</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">ESS: Emacs Speaks Statistics</span>
-  (try-require 'ess-site-<span style=
-"color: #CC0000; background-color: #FFFF88;">XXX</span>)
+  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #FF4700;">"ess-site"</span>
 
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">set default R version, (i.e. the one launched by typing M-x R &lt;RET&gt;)</span>
-  (setq inferior-R-program-name <span style=
-"color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">R-current</span>
-        <span style=
-"color: #FF4700;">"C:/Program Files/R/R-2.15.2/bin/x64/Rterm.exe"</span>)
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">use eldoc to report R function names</span>
+    (<span style="color: #0000FF;">require</span> '<span style=
+"color: #6434A3;">ess-eldoc</span>))
+</pre>
+          </div>
 
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   (global-set-key
     (kbd <span style="color: #FF4700;">"M--"</span>) 'ess-smart-underscore)
-
-  <span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">! don't request the process directory each time R is run</span>
-  (setq ess-ask-for-ess-directory nil)
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">name of the ESS process associated with the current buffer</span>
-  (setq ess-local-process-name <span style="color: #FF4700;">"R"</span>)
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Use `</span><span style=
@@ -24926,7 +24955,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131021.1335]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131022.1557]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

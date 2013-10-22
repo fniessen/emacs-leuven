@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131021.1333
+;; Version: 20131022.1555
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131021.1333]--")
+(message "* --[ Loading Emacs Leuven 20131022.1555]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -632,7 +632,7 @@
 
   ;; redo the most recent undo
   (when (locate-library "redo")
-    (autoload 'redo "redo" nil t)
+    (autoload 'redo "redo" "Redo the the most recent undo." t)
     (global-set-key
       (kbd "<S-f11>") 'redo))
 
@@ -683,7 +683,8 @@
   (leuven--section "10.1 (emacs)Help Summary")
 
   ;; find convenient unbound keystrokes (undefined key bindings)
-  (autoload 'describe-unbound-keys "unbound" nil t)
+  (autoload 'describe-unbound-keys "unbound"
+    "Display a list of unbound keystrokes of complexity no greater than MAX." t)
 
   ;; avoid the description of all minor modes
   (defun describe-major-mode ()
@@ -938,8 +939,10 @@
   ;; better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
   ;; place the point at the same place)
   (when (locate-library "pager")
-    (autoload 'pager-page-up "pager" nil t)
-    (autoload 'pager-page-down "pager" nil t)
+    (autoload 'pager-page-up "pager"
+      "Like scroll-down, but moves a fixed amount of lines." t)
+    (autoload 'pager-page-down "pager"
+      "Like scroll-up, but moves a fixed amount of lines." t)
 
     (global-set-key
       (kbd "<prior>") 'pager-page-up)
@@ -1036,7 +1039,8 @@
   ;; colorize color names in buffers
   (GNUEmacs
     (when (locate-library "rainbow-mode")
-      (autoload 'rainbow-mode "rainbow-mode" nil t)))
+      (autoload 'rainbow-mode "rainbow-mode"
+        "Colorize strings that represent colors." t)))
 
 ;;** 14.13 (info "(emacs)Highlight Interactively") by Matching
 
@@ -2687,7 +2691,8 @@
                   ) auto-mode-alist))
 
   ;; major mode for fontifiying ssh config files
-  (autoload 'ssh-config-mode "ssh-config-mode" t)
+  (autoload 'ssh-config-mode "ssh-config-mode"
+    "Major mode for fontifiying ssh config files." t)
 
   ;; ledger
   (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
@@ -3067,7 +3072,8 @@
   (when (locate-library "boxquote")
 
     ;; quote text with a semi-box
-    (autoload 'boxquote-region "boxquote" nil t)
+    (autoload 'boxquote-region "boxquote"
+      "Draw a box around the left hand side of a region bounding START and END." t)
 
     (with-eval-after-load "boxquote"
       (setq boxquote-top-and-tail "────")
@@ -3082,7 +3088,8 @@
 
   ;; phonetic spelling
   (when (locate-library "phonetic")
-    (autoload 'phonetize-region "phonetic" nil t))
+    (autoload 'phonetize-region "phonetic"
+      "Translate the region according to the phonetic alphabet." t))
 
 ) ;; chapter 25 ends here
 
@@ -5561,7 +5568,8 @@ From %c"
 
   ;; quick print preview (to Web browser) with `htmlize-view-buffer'
   (GNUEmacs
-    (autoload 'htmlize-view-buffer "htmlize-view" nil t)
+    (autoload 'htmlize-view-buffer "htmlize-view"
+      "Convert buffer to html preserving faces and view in web browser." t)
 
     ;; same key binding as Org export to HTML (open in browser)
     (global-set-key
@@ -6240,7 +6248,8 @@ From %c"
 
   (GNUEmacs
     ;; add weather forecast in your Org agenda
-    (autoload 'org-google-weather "org-google-weather" nil t)
+    (autoload 'org-google-weather "org-google-weather"
+      "Return Org entry with the weather for LOCATION in LANGUAGE." t)
 
     (with-eval-after-load "org-google-weather"
       ;; (try-require 'url)
@@ -6554,7 +6563,8 @@ From %c"
 
   (leuven--section "26.1 Major Modes for (emacs)Program Modes")
 
-  (autoload 'graphviz-dot-mode "graphviz-dot-mode" nil t)
+  (autoload 'graphviz-dot-mode "graphviz-dot-mode"
+    "Major mode for the dot language." t)
   (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
 
 ;;** 26.2 Top-Level Definitions, or (info "(emacs)Defuns")
@@ -6644,7 +6654,8 @@ From %c"
 
   ;; highlight surrounding parentheses
   (GNUEmacs
-    (autoload 'highlight-parentheses-mode "highlight-parentheses")
+    (autoload 'highlight-parentheses-mode "highlight-parentheses"
+      "Minor mode to highlight the surrounding parentheses." t)
 
     ;; (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
 
@@ -6715,11 +6726,10 @@ From %c"
              (try-require 'hideshowvis-XXX))
 
     (autoload 'hideshowvis-enable "hideshowvis"
-      "Highlight foldable regions.")
+      "Highlight foldable regions." t)
 
     (autoload 'hideshowvis-minor-mode "hideshowvis"
-      "Will indicate regions foldable with hideshow in the fringe."
-      'interactive)
+      "Will indicate regions foldable with hideshow in the fringe." t)
 
     ;; enable hideshowvis for programming modes
     (add-hook 'prog-mode-hook
@@ -6804,7 +6814,8 @@ From %c"
 
 (leuven--chapter leuven-chapter-27-building "27 Compiling and Testing Programs"
 
-  (autoload 'flymake-mode "flymake" nil t)
+  (autoload 'flymake-mode "flymake"
+    "Toggle on-the-fly syntax checking." t)
 
   (with-eval-after-load "flymake"
 
@@ -6843,7 +6854,8 @@ From %c"
 
   ;; invoke a compiler with the same command as in the last invocation of
   ;; `compile'
-  (autoload 'recompile "compile" nil t)
+  (autoload 'recompile "compile"
+    "Re-compile the program including the current buffer." t)
   (global-set-key
     (kbd "<f9>") 'recompile)
 
@@ -8470,8 +8482,10 @@ From %c"
 
   (when (locate-library "multi-term")
 
-    (autoload 'multi-term "multi-term" nil t)
-    (autoload 'multi-term-next "multi-term" nil t)
+    (autoload 'multi-term "multi-term"
+      "Create new term buffer." t)
+    (autoload 'multi-term-next "multi-term"
+      "Go to the next term buffer." t)
 
     (setq multi-term-program shell-file-name)
 
@@ -9295,79 +9309,23 @@ From %c"
 
   (leuven--section "Utilities -- ESS")
 
-  ;; (setq-default inferior-ess-program "R") ;; XXX undefined
+  (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
 
-  ;;
-  (setq ess-directory-containing-R "C:/Program Files")
-  ;; needs to be done before loading `ess-site'
+  (autoload 'R-mode "ess-site"
+    "Major mode for editing R source." t)
 
-  ;; add to list of prefixes recognized by ESS
-  (setq ess-r-versions '("R-2.15.2")) ;; R-current
-  ;; matching versions will appear after doing M-x R <tab> <tab>
-
-  ;; ESS: Emacs Speaks Statistics
-  (try-require 'ess-site-XXX)
-
-  ;; set default R version, (i.e. the one launched by typing M-x R <RET>)
-  (setq inferior-R-program-name ;; R-current
-        "C:/Program Files/R/R-2.15.2/bin/x64/Rterm.exe")
-
-  (global-set-key
-    (kbd "M--") 'ess-smart-underscore)
-
-  ;;! don't request the process directory each time R is run
+  ;; don't request the process directory each time R is run
   (setq ess-ask-for-ess-directory nil)
 
-  ;; name of the ESS process associated with the current buffer
-  (setq ess-local-process-name "R")
+  ;; ;; add to list of prefixes recognized by ESS
+  ;; (setq ess-r-versions '("R-2.15.2"))   ; R-current
+  ;; ;; matching versions will appear after doing M-x R <tab> <tab>
 
-  ;; Use `<S-RET>' to split window & launch R (if not running), execute
-  ;; highlighted region (if R running & area highlighted), or execute current
-  ;; line (and move to next line, skipping comments). Nice.
-  ;;
-  ;; See http://www.emacswiki.org/emacs/EmacsSpeaksStatistics,
-  ;; FelipeCsaszar. Adapted to split vertically instead of
-  ;; horizontally.
+  ;; ESS: Emacs Speaks Statistics
+  (with-eval-after-load "ess-site"
 
-  ;; XXX This should be useless, at least if R code is well written
-  ;; inside Org documents!
-  (defun leuven--ess-start-R ()
-    (interactive)
-    (let (w1 w1name w2)
-      (if (not (member "*R*"
-                       (mapcar (function buffer-name) (buffer-list))))
-          (progn
-            (delete-other-windows)
-            (setq w1 (selected-window))
-            (setq w1name (buffer-name))
-            (setq w2 (split-window w1 nil t))
-            (R)
-            (set-window-buffer w2 "*R*")
-            (set-window-buffer w1 w1name)))))
-
-  (defun leuven-ess-eval ()
-    (interactive)
-    (leuven--ess-start-R)
-    (if (use-region-p)
-        (call-interactively 'ess-eval-region)
-      (call-interactively 'ess-eval-line-and-step)))
-
-  (add-hook 'ess-mode-hook
-            (lambda ()
-              (local-set-key
-                (kbd "<S-return>") 'leuven-ess-eval)))
-
-  (add-hook 'inferior-ess-mode-hook
-            (lambda ()
-              (local-set-key
-                (kbd "<C-up>") 'comint-previous-input)
-              (local-set-key
-                (kbd "<C-down>") 'comint-next-input)))
-
-  ;; tooltip with some information about the R object at point
-  ;; (invoked by `C-c C-g'). See
-  ;; http://www.kieranhealy.org/blog/archives/2010/02/16/easily-display-information-about-r-objects-in-emacsess/
-  (try-require 'ess-R-object-tooltip-XXX) ;; or popup?
+    ;; use eldoc to report R function names
+    (require 'ess-eldoc))
 
 ;;* App G Emacs and (info "(emacs)Microsoft Windows/MS-DOS")
 
@@ -9448,7 +9406,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131021.1334]--")
+(message "* --[ Loaded Emacs Leuven 20131022.1556]--")
 
 (provide 'emacs-leuven)
 
