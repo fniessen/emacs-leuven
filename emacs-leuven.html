@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-10-22 Tue 21:12 -->
+  <title>Emacs Leuven</title><!-- 2013-10-26 Sat 09:47 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1099,7 +1099,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131022.2112</span>
+"color: #008200; font-style: italic;">Version: 20131026.0946</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1221,7 +1221,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131022.2112]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131026.0946]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -3486,10 +3486,10 @@
 "color: #FF4700; background-color: #FFFF88;">FIXME</span><span style=
 "color: #FF4700; font-weight: bold;">\\</span><span style=
 "color: #FF4700; font-weight: bold;">|</span><span style=
-"color: #FF4700; background-color: #FFFF88;">BUG</span><span style=
+"color: #FF4700; background-color: #FFFF88;">XXX</span><span style=
 "color: #FF4700; font-weight: bold;">\\</span><span style=
 "color: #FF4700; font-weight: bold;">|</span><span style=
-"color: #FF4700; background-color: #FFFF88;">XXX</span><span style=
+"color: #FF4700; background-color: #FFFF88;">BUG</span><span style=
 "color: #FF4700; font-weight: bold;">\\</span><span style=
 "color: #FF4700; font-weight: bold;">|</span><span style=
 "color: #FF4700;">[Ee]rror</span><span style=
@@ -3515,10 +3515,10 @@
 "color: #FF4700; background-color: #FFFF88;">FIXME</span><span style=
 "color: #FF4700; font-weight: bold;">\\</span><span style=
 "color: #FF4700; font-weight: bold;">|</span><span style=
-"color: #FF4700; background-color: #FFFF88;">BUG</span><span style=
+"color: #FF4700; background-color: #FFFF88;">XXX</span><span style=
 "color: #FF4700; font-weight: bold;">\\</span><span style=
 "color: #FF4700; font-weight: bold;">|</span><span style=
-"color: #FF4700; background-color: #FFFF88;">XXX</span><span style=
+"color: #FF4700; background-color: #FFFF88;">BUG</span><span style=
 "color: #FF4700; font-weight: bold;">\\</span><span style=
 "color: #FF4700; font-weight: bold;">|</span><span style=
 "color: #FF4700;">[Ee]rror</span><span style=
@@ -3820,15 +3820,12 @@
   (add-hook 'before-save-hook
             (<span style="color: #0000FF;">lambda</span> ()
               <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; except for Message mode where "-- " is the signature</span>
+"color: #008200; font-style: italic;">except for Message mode where "-- " is the signature separator</span>
               <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; separator</span>
-              <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(unless (eq major-mode 'message-mode)</span>
-                (delete-trailing-whitespace)
-                <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">)</span>
-              ))
+"color: #008200; font-style: italic;">(for when using emacsclient to compose emails and doing C-x #)</span>
+              (<span style=
+"color: #0000FF;">unless</span> (eq major-mode 'message-mode)
+                (delete-trailing-whitespace))))
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">visually indicate empty lines after the buffer end</span>
@@ -8363,7 +8360,7 @@ M-: (executable-find "diff") RET
           <div class="outline-text-4" id="text-25-5-2">
             <p>The visibility-cycling features are written in a way that they
             are independent of the outline setup. The following setup provides
-            standard Org-mode functionality (headline folding and unfolding) in
+            standard Org mode functionality (headline folding and unfolding) in
             <code>outline-minor-mode</code> on <code>&lt;C-tab&gt;</code> and
             <code>&lt;S-tab&gt;</code>. We use <code>&lt;C-tab&gt;</code>
             instead of <code>&lt;tab&gt;</code>, because
@@ -8651,8 +8648,8 @@ M-: (executable-find "diff") RET
 "color: #008200; font-style: italic;">autoload functions</span>
   (GNUEmacs
     (<span style="color: #0000FF;">unless</span> (try-require 'org-loaddefs)
-      (try-require 'org-install))) <span style=
-"color: #008200;">;; </span><span style=
+      (try-require 'org-install)))      <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">obsolete since Emacs 24.3</span>
 
   <span style="color: #008200;">;; </span><span style=
@@ -8675,11 +8672,6 @@ M-: (executable-find "diff") RET
     (kbd <span style="color: #FF4700;">"C-c a"</span>) 'org-agenda)
 
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">display the Org-mode manual in Info mode</span>
-  (define-key global-map
-    (kbd <span style="color: #FF4700;">"C-h o"</span>) 'org-info)
-
-  <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">using links outside Org</span>
   (global-set-key
     (kbd <span style="color: #FF4700;">"C-c L"</span>) 'org-insert-link-global)
@@ -8687,15 +8679,10 @@ M-: (executable-find "diff") RET
     (kbd <span style=
 "color: #FF4700;">"C-c o"</span>) 'org-open-at-point-global)
 
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">org-switch-to-agenda</span> ()
-    (interactive)
-    (<span style="color: #0000FF;">let</span> ((buffer (get-buffer <span style=
-"color: #FF4700;">"*Org Agenda*"</span>)))
-      (<span style="color: #0000FF;">if</span> buffer
-          (switch-to-buffer buffer))))
-  (global-set-key
-    (kbd <span style="color: #FF4700;">"C-c C-b"</span>) 'org-switch-to-agenda)
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">display the Org mode manual in Info mode</span>
+  (define-key global-map
+    (kbd <span style="color: #FF4700;">"C-h o"</span>) 'org-info)
 </pre>
         </div>
 
@@ -8710,7 +8697,7 @@ M-: (executable-find "diff") RET
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">face to be used by `</span><span style=
 "color: #008200; font-style: italic;">font-lock</span><span style=
-"color: #008200; font-style: italic;">' for highlighting in Org-mode Emacs</span>
+"color: #008200; font-style: italic;">' for highlighting in Org mode Emacs</span>
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">buffers, and tags to be used to convert emphasis fontifiers for HTML</span>
   <span style="color: #008200;">;; </span><span style=
@@ -8892,7 +8879,7 @@ M-: (executable-find "diff") RET
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">globally unique ID for Org-mode entries (see `</span><span style="color: #008200; font-style: italic;">org-store-link</span><span style="color: #008200; font-style: italic;">')</span>
+"color: #008200; font-style: italic;">globally unique ID for Org mode entries (see `</span><span style="color: #008200; font-style: italic;">org-store-link</span><span style="color: #008200; font-style: italic;">')</span>
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(takes care of automatically creating unique targets for internal</span>
     <span style="color: #008200;">;; </span><span style=
@@ -8904,7 +8891,7 @@ M-: (executable-find "diff") RET
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">support for links to Gnus groups and messages from within Org-mode</span>
+"color: #008200; font-style: italic;">support for links to Gnus groups and messages from within Org mode</span>
     (add-to-list 'org-modules 'org-gnus)
 </pre>
           </div>
@@ -8912,7 +8899,7 @@ M-: (executable-find "diff") RET
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">habit tracking code for Org-mode</span>
+"color: #008200; font-style: italic;">habit tracking code for Org mode</span>
     (add-to-list 'org-modules 'org-habit)
 </pre>
           </div>
@@ -14868,6 +14855,19 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #FF4700;">"Plan"</span>))
 </pre>
             </div>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">export snippet translations</span>
+  (add-to-list 'org-export-snippet-translation-alist
+               '(<span style="color: #FF4700;">"l"</span> . <span style=
+"color: #FF4700;">"latex"</span>))
+  (add-to-list 'org-export-snippet-translation-alist
+               '(<span style="color: #FF4700;">"b"</span> . <span style=
+"color: #FF4700;">"beamer"</span>))
+</pre>
+            </div>
           </div>
         </div>
 
@@ -14999,6 +14999,17 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008000;">"Recenter after jumping to the previous source block."</span>
       (recenter))
     )
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+    (<span style="color: #0000FF;">defadvice</span> <span style=
+"color: #006699;">org-agenda-switch-to</span>
+      (after leuven-org-agenda-switch-to activate)
+      <span style=
+"color: #008000;">"Recenter after jumping to the file which contains the item at point."</span>
+      (recenter))
 </pre>
           </div>
 
@@ -15161,7 +15172,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">hide-non-code</span> ()
     <span style=
-"color: #008000;">"Hide non-code-block content of the current Org-mode buffer."</span>
+"color: #008000;">"Hide non-code-block content of the current Org mode buffer."</span>
     (interactive)
     (add-to-invisibility-spec '(non-code))
     (<span style="color: #0000FF;">let</span> (begs ends)
@@ -15182,7 +15193,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">show-non-code</span> ()
     <span style=
-"color: #008000;">"Show non-code-block content of the current Org-mode buffer."</span>
+"color: #008000;">"Show non-code-block content of the current Org mode buffer."</span>
     (interactive)
     (mapc 'delete-overlay only-code-overlays))
 </pre>
@@ -15239,7 +15250,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #FF4700;">"ob-lob"</span>
 
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">load the NAMED code blocks defined in Org-mode files into the</span>
+"color: #008200; font-style: italic;">load the NAMED code blocks defined in Org mode files into the</span>
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">library of Babel (global `</span><span style="color: #008200; font-style: italic;">org-babel-library-of-babel</span><span style="color: #008200; font-style: italic;">' variable)</span>
     (<span style=
@@ -15877,13 +15888,13 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #CC0000; background-color: #FFFF88;">warning</span>))))))
 
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">function to update Org-mode buffers to use the new code block</span>
+"color: #008200; font-style: italic;">function to update Org mode buffers to use the new code block</span>
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">syntax (switch between versions 7.7 and 7.8)</span>
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">update-org-buffer</span> ()
     <span style=
-"color: #008000;">"Update an Org-mode buffer to the new data, code block and call line syntax."</span>
+"color: #008000;">"Update an Org mode buffer to the new data, code block and call line syntax."</span>
     (interactive)
     (<span style="color: #0000FF;">save-excursion</span>
       (flet ((to-re (lst) (concat <span style=
@@ -20846,7 +20857,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (message <span style=
 "color: #FF4700;">"Appointment reminders library `</span><span style=
 "color: #FF4700;">appt</span><span style=
-"color: #FF4700;">' not required (no diary file found)"</span>))
+"color: #FF4700;">' not loaded (no diary file found)"</span>))
 
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #FF4700;">"appt"</span>
@@ -24973,7 +24984,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131022.2112]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131026.0946]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

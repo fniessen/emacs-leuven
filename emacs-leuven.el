@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131022.211
+;; Version: 20131026.0944
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131022.211]--")
+(message "* --[ Loading Emacs Leuven 20131026.0944]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -988,11 +988,11 @@
 
   ;; highlight FIXME notes
   (defvar leuven-highlight-keywords
-    "\\(TODO\\|FIXME\\|BUG\\|XXX\\|[Ee]rror\\|ERROR\\|[Ww]arning\\|WARNING\\)"
+    "\\(TODO\\|FIXME\\|XXX\\|BUG\\|[Ee]rror\\|ERROR\\|[Ww]arning\\|WARNING\\)"
     "Patterns to highlight.")
 
   (defvar leuven-highlight-keywords-in-org
-    "\\(FIXME\\|BUG\\|XXX\\|[Ee]rror\\|[Ww]arning\\|WARNING\\)"
+    "\\(FIXME\\|XXX\\|BUG\\|[Ee]rror\\|[Ww]arning\\|WARNING\\)"
     "Patterns to highlight (for Org mode only, to ensure no conflict with the
   Org mode TODO keyword).")
 
@@ -1095,12 +1095,10 @@
   ;; ensure that your files have no trailing whitespace
   (add-hook 'before-save-hook
             (lambda ()
-              ;; ;; except for Message mode where "-- " is the signature
-              ;; ;; separator
-              ;; (unless (eq major-mode 'message-mode)
-                (delete-trailing-whitespace)
-                ;; )
-              ))
+              ;; except for Message mode where "-- " is the signature separator
+              ;; (for when using emacsclient to compose emails and doing C-x #)
+              (unless (eq major-mode 'message-mode)
+                (delete-trailing-whitespace))))
 
   ;; visually indicate empty lines after the buffer end
   (setq-default indicate-empty-lines t)
@@ -3109,7 +3107,7 @@
   ;; autoload functions
   (GNUEmacs
     (unless (try-require 'org-loaddefs)
-      (try-require 'org-install))) ;; obsolete since Emacs 24.3
+      (try-require 'org-install)))      ; obsolete since Emacs 24.3
 
   ;; getting started
   (GNUEmacs
@@ -3126,27 +3124,19 @@
   (define-key global-map
     (kbd "C-c a") 'org-agenda)
 
-  ;; display the Org-mode manual in Info mode
-  (define-key global-map
-    (kbd "C-h o") 'org-info)
-
   ;; using links outside Org
   (global-set-key
     (kbd "C-c L") 'org-insert-link-global)
   (global-set-key
     (kbd "C-c o") 'org-open-at-point-global)
 
-  (defun org-switch-to-agenda ()
-    (interactive)
-    (let ((buffer (get-buffer "*Org Agenda*")))
-      (if buffer
-          (switch-to-buffer buffer))))
-  (global-set-key
-    (kbd "C-c C-b") 'org-switch-to-agenda)
+  ;; display the Org mode manual in Info mode
+  (define-key global-map
+    (kbd "C-h o") 'org-info)
 
   ;; This must be set before loading Org...
 
-  ;; face to be used by `font-lock' for highlighting in Org-mode Emacs
+  ;; face to be used by `font-lock' for highlighting in Org mode Emacs
   ;; buffers, and tags to be used to convert emphasis fontifiers for HTML
   ;; export
   (setq org-emphasis-alist ;; remove the strike-through emphasis
@@ -3211,15 +3201,15 @@
 
     (setq org-modules nil)
 
-    ;; globally unique ID for Org-mode entries (see `org-store-link')
+    ;; globally unique ID for Org mode entries (see `org-store-link')
     ;; (takes care of automatically creating unique targets for internal
     ;; links, see `C-h v org-id-link-to-org-use-id <RET>')
     (add-to-list 'org-modules 'org-id)
 
-    ;; support for links to Gnus groups and messages from within Org-mode
+    ;; support for links to Gnus groups and messages from within Org mode
     (add-to-list 'org-modules 'org-gnus)
 
-    ;; habit tracking code for Org-mode
+    ;; habit tracking code for Org mode
     (add-to-list 'org-modules 'org-habit)
 
     ;; make sure to turn `org-info' on in order to link to info nodes
@@ -5728,6 +5718,12 @@ From %c"
     ;; default title of a frame containing an outline
     (setq org-beamer-outline-frame-title "Plan"))
 
+  ;; export snippet translations
+  (add-to-list 'org-export-snippet-translation-alist
+               '("l" . "latex"))
+  (add-to-list 'org-export-snippet-translation-alist
+               '("b" . "beamer"))
+
   (with-eval-after-load "ox-odt"
 
     ;; convert "odt" format to "doc" format
@@ -5769,6 +5765,11 @@ From %c"
       "Recenter after jumping to the previous source block."
       (recenter))
     )
+
+    (defadvice org-agenda-switch-to
+      (after leuven-org-agenda-switch-to activate)
+      "Recenter after jumping to the file which contains the item at point."
+      (recenter))
 
   (with-eval-after-load "ob-sh"
 
@@ -5849,7 +5850,7 @@ From %c"
   (make-variable-buffer-local 'only-code-overlays)
 
   (defun hide-non-code ()
-    "Hide non-code-block content of the current Org-mode buffer."
+    "Hide non-code-block content of the current Org mode buffer."
     (interactive)
     (add-to-invisibility-spec '(non-code))
     (let (begs ends)
@@ -5866,7 +5867,7 @@ From %c"
              (append (reverse begs) (list (point-max)))))))
 
   (defun show-non-code ()
-    "Show non-code-block content of the current Org-mode buffer."
+    "Show non-code-block content of the current Org mode buffer."
     (interactive)
     (mapc 'delete-overlay only-code-overlays))
 
@@ -5890,7 +5891,7 @@ From %c"
 
   (with-eval-after-load "ob-lob"
 
-    ;; load the NAMED code blocks defined in Org-mode files into the
+    ;; load the NAMED code blocks defined in Org mode files into the
     ;; library of Babel (global `org-babel-library-of-babel' variable)
     (let ((lob-file (concat (file-name-directory (locate-library "org"))
                             "../doc/library-of-babel.org")))
@@ -7878,7 +7879,7 @@ From %c"
   ;; insinuate appt if `diary-file' exists
   (if (file-readable-p "~/diary")
       (try-require 'appt) ;; requires `diary-lib', which requires `diary-loaddefs'
-    (message "Appointment reminders library `appt' not required (no diary file found)"))
+    (message "Appointment reminders library `appt' not loaded (no diary file found)"))
 
   (with-eval-after-load "appt"
 
@@ -9414,7 +9415,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131022.2111]--")
+(message "* --[ Loaded Emacs Leuven 20131026.0945]--")
 
 (provide 'emacs-leuven)
 

@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-22 Tue 21:00>
+# Time-stamp: <2013-10-26 Sat 09:42>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -1422,11 +1422,11 @@ modes run =prog-mode-hook=, prior to running their own mode hooks.
 #+begin_src emacs-lisp
   ;; highlight FIXME notes
   (defvar leuven-highlight-keywords
-    "\\(TODO\\|FIXME\\|BUG\\|XXX\\|[Ee]rror\\|ERROR\\|[Ww]arning\\|WARNING\\)"
+    "\\(TODO\\|FIXME\\|XXX\\|BUG\\|[Ee]rror\\|ERROR\\|[Ww]arning\\|WARNING\\)"
     "Patterns to highlight.")
 
   (defvar leuven-highlight-keywords-in-org
-    "\\(FIXME\\|BUG\\|XXX\\|[Ee]rror\\|[Ww]arning\\|WARNING\\)"
+    "\\(FIXME\\|XXX\\|BUG\\|[Ee]rror\\|[Ww]arning\\|WARNING\\)"
     "Patterns to highlight (for Org mode only, to ensure no conflict with the
   Org mode TODO keyword).")
 
@@ -1601,12 +1601,10 @@ Comparison:
   ;; ensure that your files have no trailing whitespace
   (add-hook 'before-save-hook
             (lambda ()
-              ;; ;; except for Message mode where "-- " is the signature
-              ;; ;; separator
-              ;; (unless (eq major-mode 'message-mode)
-                (delete-trailing-whitespace)
-                ;; )
-              ))
+              ;; except for Message mode where "-- " is the signature separator
+              ;; (for when using emacsclient to compose emails and doing C-x #)
+              (unless (eq major-mode 'message-mode)
+                (delete-trailing-whitespace))))
 
   ;; visually indicate empty lines after the buffer end
   (setq-default indicate-empty-lines t)
@@ -4408,7 +4406,7 @@ for opening/closing elements).
 *** org-global-cycle + outline-magic
 
 The visibility-cycling features are written in a way that they are independent
-of the outline setup. The following setup provides standard Org-mode
+of the outline setup. The following setup provides standard Org mode
 functionality (headline folding and unfolding) in =outline-minor-mode= on
 =<C-tab>= and =<S-tab>=. We use =<C-tab>= instead of =<tab>=, because =<tab>= usually
 has mode-specific tasks.
@@ -4591,7 +4589,7 @@ work and tasks with Org mode.
   ;; autoload functions
   (GNUEmacs
     (unless (try-require 'org-loaddefs)
-      (try-require 'org-install))) ;; obsolete since Emacs 24.3
+      (try-require 'org-install)))      ; obsolete since Emacs 24.3
 
   ;; getting started
   (GNUEmacs
@@ -4608,23 +4606,15 @@ work and tasks with Org mode.
   (define-key global-map
     (kbd "C-c a") 'org-agenda)
 
-  ;; display the Org-mode manual in Info mode
-  (define-key global-map
-    (kbd "C-h o") 'org-info)
-
   ;; using links outside Org
   (global-set-key
     (kbd "C-c L") 'org-insert-link-global)
   (global-set-key
     (kbd "C-c o") 'org-open-at-point-global)
 
-  (defun org-switch-to-agenda ()
-    (interactive)
-    (let ((buffer (get-buffer "*Org Agenda*")))
-      (if buffer
-          (switch-to-buffer buffer))))
-  (global-set-key
-    (kbd "C-c C-b") 'org-switch-to-agenda)
+  ;; display the Org mode manual in Info mode
+  (define-key global-map
+    (kbd "C-h o") 'org-info)
 #+end_src
 
 These variables need to be set before =org.el= is loaded.
@@ -4632,7 +4622,7 @@ These variables need to be set before =org.el= is loaded.
 #+begin_src emacs-lisp
   ;; This must be set before loading Org...
 
-  ;; face to be used by `font-lock' for highlighting in Org-mode Emacs
+  ;; face to be used by `font-lock' for highlighting in Org mode Emacs
   ;; buffers, and tags to be used to convert emphasis fontifiers for HTML
   ;; export
   (setq org-emphasis-alist ;; remove the strike-through emphasis
@@ -4737,19 +4727,19 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 =org-id-locations-file=).
 
 #+begin_src emacs-lisp
-    ;; globally unique ID for Org-mode entries (see `org-store-link')
+    ;; globally unique ID for Org mode entries (see `org-store-link')
     ;; (takes care of automatically creating unique targets for internal
     ;; links, see `C-h v org-id-link-to-org-use-id <RET>')
     (add-to-list 'org-modules 'org-id)
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; support for links to Gnus groups and messages from within Org-mode
+    ;; support for links to Gnus groups and messages from within Org mode
     (add-to-list 'org-modules 'org-gnus)
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; habit tracking code for Org-mode
+    ;; habit tracking code for Org mode
     (add-to-list 'org-modules 'org-habit)
 #+end_src
 
@@ -8245,6 +8235,14 @@ What about =apacite= and =tikz= in =org-latex-packages-alist=?
     (setq org-beamer-outline-frame-title "Plan"))
 #+end_src
 
+#+begin_src emacs-lisp
+  ;; export snippet translations
+  (add-to-list 'org-export-snippet-translation-alist
+               '("l" . "latex"))
+  (add-to-list 'org-export-snippet-translation-alist
+               '("b" . "beamer"))
+#+end_src
+
 *** OpenDocument Text (ODT)
 
 ODT export is not loaded by default. You will have to load it explicitly or to
@@ -8319,6 +8317,13 @@ Literate programming and reproducible research.
       "Recenter after jumping to the previous source block."
       (recenter))
     )
+#+end_src
+
+#+begin_src emacs-lisp
+    (defadvice org-agenda-switch-to
+      (after leuven-org-agenda-switch-to activate)
+      "Recenter after jumping to the file which contains the item at point."
+      (recenter))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8420,7 +8425,7 @@ logically equivalent to "tangle", but without creating a separate file).
   (make-variable-buffer-local 'only-code-overlays)
 
   (defun hide-non-code ()
-    "Hide non-code-block content of the current Org-mode buffer."
+    "Hide non-code-block content of the current Org mode buffer."
     (interactive)
     (add-to-invisibility-spec '(non-code))
     (let (begs ends)
@@ -8437,7 +8442,7 @@ logically equivalent to "tangle", but without creating a separate file).
              (append (reverse begs) (list (point-max)))))))
 
   (defun show-non-code ()
-    "Show non-code-block content of the current Org-mode buffer."
+    "Show non-code-block content of the current Org mode buffer."
     (interactive)
     (mapc 'delete-overlay only-code-overlays))
 #+end_src
@@ -8469,7 +8474,7 @@ logically equivalent to "tangle", but without creating a separate file).
 
   (with-eval-after-load "ob-lob"
 
-    ;; load the NAMED code blocks defined in Org-mode files into the
+    ;; load the NAMED code blocks defined in Org mode files into the
     ;; library of Babel (global `org-babel-library-of-babel' variable)
     (let ((lob-file (concat (file-name-directory (locate-library "org"))
                             "../doc/library-of-babel.org")))
@@ -8824,10 +8829,10 @@ performance reasons)!
                                              n)
                                      :warning))))))
 
-  ;; function to update Org-mode buffers to use the new code block
+  ;; function to update Org mode buffers to use the new code block
   ;; syntax (switch between versions 7.7 and 7.8)
   (defun update-org-buffer ()
-    "Update an Org-mode buffer to the new data, code block and call line syntax."
+    "Update an Org mode buffer to the new data, code block and call line syntax."
     (interactive)
     (save-excursion
       (flet ((to-re (lst) (concat "^[ \t]*#\\+" (regexp-opt lst t)
@@ -11804,7 +11809,7 @@ But [[id:737b836b-ac1f-4120-94ca-c9e0282268f0][Org]] outperforms it!
   ;; insinuate appt if `diary-file' exists
   (if (file-readable-p "~/diary")
       (try-require 'appt) ;; requires `diary-lib', which requires `diary-loaddefs'
-    (message "Appointment reminders library `appt' not required (no diary file found)"))
+    (message "Appointment reminders library `appt' not loaded (no diary file found)"))
 
   (with-eval-after-load "appt"
 
