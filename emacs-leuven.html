@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-10-26 Sat 09:47 -->
+  <title>Emacs Leuven</title><!-- 2013-10-26 Sat 10:19 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1099,7 +1099,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131026.0946</span>
+"color: #008200; font-style: italic;">Version: 20131026.1018</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1221,7 +1221,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131026.0946]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131026.1018]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -14246,6 +14246,15 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(setq org-export-dispatch-use-expert-ui t)</span>
 
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">export snippet translations</span>
+    (add-to-list 'org-export-snippet-translation-alist
+                 '(<span style="color: #FF4700;">"l"</span> . <span style=
+"color: #FF4700;">"latex"</span>))
+    (add-to-list 'org-export-snippet-translation-alist
+                 '(<span style="color: #FF4700;">"b"</span> . <span style=
+"color: #FF4700;">"beamer"</span>))
+
     ) <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">with-eval-after-load "ox" ends here</span>
 </pre>
@@ -14853,19 +14862,6 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008200; font-style: italic;">default title of a frame containing an outline</span>
     (setq org-beamer-outline-frame-title <span style=
 "color: #FF4700;">"Plan"</span>))
-</pre>
-            </div>
-
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">export snippet translations</span>
-  (add-to-list 'org-export-snippet-translation-alist
-               '(<span style="color: #FF4700;">"l"</span> . <span style=
-"color: #FF4700;">"latex"</span>))
-  (add-to-list 'org-export-snippet-translation-alist
-               '(<span style="color: #FF4700;">"b"</span> . <span style=
-"color: #FF4700;">"beamer"</span>))
 </pre>
             </div>
           </div>
@@ -24984,7 +24980,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131026.0946]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131026.1019]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

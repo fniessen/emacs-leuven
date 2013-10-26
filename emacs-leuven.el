@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131026.0944
+;; Version: 20131026.1017
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131026.0944]--")
+(message "* --[ Loading Emacs Leuven 20131026.1017]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5452,6 +5452,12 @@ From %c"
     ;; ;; use a non-intrusive export dispatcher
     ;; (setq org-export-dispatch-use-expert-ui t)
 
+    ;; export snippet translations
+    (add-to-list 'org-export-snippet-translation-alist
+                 '("l" . "latex"))
+    (add-to-list 'org-export-snippet-translation-alist
+                 '("b" . "beamer"))
+
     ) ;; with-eval-after-load "ox" ends here
 
   ;; execute buffer when exporting it (see some thread with Eric Schulte,
@@ -5717,12 +5723,6 @@ From %c"
 
     ;; default title of a frame containing an outline
     (setq org-beamer-outline-frame-title "Plan"))
-
-  ;; export snippet translations
-  (add-to-list 'org-export-snippet-translation-alist
-               '("l" . "latex"))
-  (add-to-list 'org-export-snippet-translation-alist
-               '("b" . "beamer"))
 
   (with-eval-after-load "ox-odt"
 
@@ -9415,7 +9415,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131026.0945]--")
+(message "* --[ Loaded Emacs Leuven 20131026.1018]--")
 
 (provide 'emacs-leuven)
 
