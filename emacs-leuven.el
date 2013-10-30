@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131026.1017
+;; Version: 20131030.1429
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131026.1017]--")
+(message "* --[ Loading Emacs Leuven 20131030.1429]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -878,10 +878,10 @@
 
   ;; ;; Enable position saving through shortcuts.
   ;; ;; Save current position with  Ctrl-F1 Ctrl-F2 Ctrl-F3 and Ctrl-F4
-  ;; (global-set-key [C-f1] '(lambda () (interactive) (point-to-register ?1)))
-  ;; (global-set-key [C-f2] '(lambda () (interactive) (point-to-register ?2)))
-  ;; (global-set-key [C-f3] '(lambda () (interactive) (point-to-register ?3)))
-  ;; (global-set-key [C-f4] '(lambda () (interactive) (point-to-register ?4)))
+  ;; (global-set-key [C-f1] (lambda () (interactive) (point-to-register ?1)))
+  ;; (global-set-key [C-f2] (lambda () (interactive) (point-to-register ?2)))
+  ;; (global-set-key [C-f3] (lambda () (interactive) (point-to-register ?3)))
+  ;; (global-set-key [C-f4] (lambda () (interactive) (point-to-register ?4)))
 
   ;; (defun jump-to-register-other (reg)
   ;; (other-window 1)
@@ -893,10 +893,10 @@
   ;; (hilit-recenter (/ (window-height) 2)))
 
   ;; ;; Move to saved position with F1 F2 F3 and F4
-  ;; (global-set-key [f1] '(lambda () (interactive) (jump-to-register-here ?1)))
-  ;; (global-set-key [f2] '(lambda () (interactive) (jump-to-register-here ?2)))
-  ;; (global-set-key [f3] '(lambda () (interactive) (jump-to-register-here ?3)))
-  ;; (global-set-key [f4] '(lambda () (interactive) (jump-to-register-here ?4)))
+  ;; (global-set-key [f1] (lambda () (interactive) (jump-to-register-here ?1)))
+  ;; (global-set-key [f2] (lambda () (interactive) (jump-to-register-here ?2)))
+  ;; (global-set-key [f3] (lambda () (interactive) (jump-to-register-here ?3)))
+  ;; (global-set-key [f4] (lambda () (interactive) (jump-to-register-here ?4)))
 
 ;;** 13.7 (info "(emacs)Bookmarks")
 
@@ -3341,8 +3341,10 @@
 
   ;; ;; create a binding for `org-show-subtree'
   ;; must be in eval-after-load "org"?
-  ;; (org-defkey org-mode-map (kbd "C-c C-S-s") 'org-show-subtree)
-  ;; (org-defkey org-mode-map (kbd "C-c s") 'org-show-subtree)
+  ;; (org-defkey org-mode-map
+  ;;             (kbd "C-c C-S-s") 'org-show-subtree)
+  ;; (org-defkey org-mode-map
+  ;;             (kbd "C-c s") 'org-show-subtree)
 
   ;; (add-hook 'org-mode-hook
   ;;           (lambda()
@@ -3360,9 +3362,12 @@
   ;; Lisp files
   (add-hook 'org-mode-hook
             (lambda ()
-              (local-set-key (kbd "\C-\M-n") 'outline-next-visible-heading)
-              (local-set-key (kbd "\C-\M-p") 'outline-previous-visible-heading)
-              (local-set-key (kbd "\C-\M-u") 'outline-up-heading)))
+              (local-set-key
+               (kbd "\C-\M-n") 'outline-next-visible-heading)
+              (local-set-key
+               (kbd "\C-\M-p") 'outline-previous-visible-heading)
+              (local-set-key
+               (kbd "\C-\M-u") 'outline-up-heading)))
 
   ;; headlines in the current buffer are offered via completion
   ;; (interface also used by the `refile' command)
@@ -6448,8 +6453,6 @@ From %c"
 
       (with-eval-after-load "preview"
 
-        (sit-for 3)
-
         ;; path to `gs' command (for format conversions)
         (setq preview-gs-command
           (cond (running-ms-windows
@@ -7681,8 +7684,8 @@ From %c"
         Windows tool."
           (interactive "P")
           (mapcar
-           #'(lambda (file)
-               (w32-shell-execute "open" (convert-standard-filename file)))
+           (lambda (file)
+             (w32-shell-execute "open" (convert-standard-filename file)))
            (dired-get-marked-files nil arg)))
 
         ;; bind it to `E' in Dired mode
@@ -9415,7 +9418,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131026.1018]--")
+(message "* --[ Loaded Emacs Leuven 20131030.1429]--")
 
 (provide 'emacs-leuven)
 

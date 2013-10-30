@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-10-26 Sat 10:19 -->
+  <title>Emacs Leuven</title><!-- 2013-10-30 Wed 14:31 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1099,7 +1099,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131026.1018</span>
+"color: #008200; font-style: italic;">Version: 20131030.143</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1221,7 +1221,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131026.1018]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131030.143]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -3177,13 +3177,13 @@
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; Save current position with  Ctrl-F1 Ctrl-F2 Ctrl-F3 and Ctrl-F4</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(global-set-key [C-f1] '(lambda () (interactive) (point-to-register ?1)))</span>
+"color: #008200; font-style: italic;">(global-set-key [C-f1] (lambda () (interactive) (point-to-register ?1)))</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(global-set-key [C-f2] '(lambda () (interactive) (point-to-register ?2)))</span>
+"color: #008200; font-style: italic;">(global-set-key [C-f2] (lambda () (interactive) (point-to-register ?2)))</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(global-set-key [C-f3] '(lambda () (interactive) (point-to-register ?3)))</span>
+"color: #008200; font-style: italic;">(global-set-key [C-f3] (lambda () (interactive) (point-to-register ?3)))</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(global-set-key [C-f4] '(lambda () (interactive) (point-to-register ?4)))</span>
+"color: #008200; font-style: italic;">(global-set-key [C-f4] (lambda () (interactive) (point-to-register ?4)))</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(defun jump-to-register-other (reg)</span>
@@ -3204,13 +3204,13 @@
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; Move to saved position with F1 F2 F3 and F4</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(global-set-key [f1] '(lambda () (interactive) (jump-to-register-here ?1)))</span>
+"color: #008200; font-style: italic;">(global-set-key [f1] (lambda () (interactive) (jump-to-register-here ?1)))</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(global-set-key [f2] '(lambda () (interactive) (jump-to-register-here ?2)))</span>
+"color: #008200; font-style: italic;">(global-set-key [f2] (lambda () (interactive) (jump-to-register-here ?2)))</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(global-set-key [f3] '(lambda () (interactive) (jump-to-register-here ?3)))</span>
+"color: #008200; font-style: italic;">(global-set-key [f3] (lambda () (interactive) (jump-to-register-here ?3)))</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(global-set-key [f4] '(lambda () (interactive) (jump-to-register-here ?4)))</span>
+"color: #008200; font-style: italic;">(global-set-key [f4] (lambda () (interactive) (jump-to-register-here ?4)))</span>
 </pre>
         </div>
 
@@ -9204,9 +9204,13 @@ M-: (executable-find "diff") RET
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">must be in eval-after-load "org"?</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(org-defkey org-mode-map (kbd "C-c C-S-s") 'org-show-subtree)</span>
+"color: #008200; font-style: italic;">(org-defkey org-mode-map</span>
+  <span style="color: #008200;">;;             </span><span style=
+"color: #008200; font-style: italic;">(kbd "C-c C-S-s") 'org-show-subtree)</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(org-defkey org-mode-map (kbd "C-c s") 'org-show-subtree)</span>
+"color: #008200; font-style: italic;">(org-defkey org-mode-map</span>
+  <span style="color: #008200;">;;             </span><span style=
+"color: #008200; font-style: italic;">(kbd "C-c s") 'org-show-subtree)</span>
 </pre>
             </div>
 
@@ -9262,11 +9266,14 @@ M-: (executable-find "diff") RET
 "color: #008200; font-style: italic;">Lisp files</span>
   (add-hook 'org-mode-hook
             (<span style="color: #0000FF;">lambda</span> ()
-              (local-set-key (kbd <span style=
+              (local-set-key
+               (kbd <span style=
 "color: #FF4700;">"\C-\M-n"</span>) 'outline-next-visible-heading)
-              (local-set-key (kbd <span style=
+              (local-set-key
+               (kbd <span style=
 "color: #FF4700;">"\C-\M-p"</span>) 'outline-previous-visible-heading)
-              (local-set-key (kbd <span style=
+              (local-set-key
+               (kbd <span style=
 "color: #FF4700;">"\C-\M-u"</span>) 'outline-up-heading)))
 </pre>
             </div>
@@ -9509,6 +9516,10 @@ M-: (executable-find "diff") RET
   (setq org-image-actual-width nil)
 </pre>
           </div>
+
+          <p>PDF viewer? See <code>org-file-apps</code>. Just change to your
+          favorite viewer. And make sure that you're calling `org-return' to
+          open (it's bound to <code>C-m</code>).</p>
         </div>
 
         <div id="outline-container-sec-26-3-1" class="outline-4">
@@ -11566,6 +11577,18 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
     (sit-for 0.5))
 </pre>
             </div>
+
+            <p>Avoid any possibility of getting a customized version of
+            <code>org-agenda-files</code> added at the end of your
+            <code>.emacs</code> file.</p>
+            <pre class="example">
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (org-defkey org-mode-map
+                          (kbd "C-c [") 'undefined)
+              (org-defkey org-mode-map
+                          (kbd "C-c ]") 'undefined)))
+</pre>
           </div>
         </div>
 
@@ -16836,8 +16859,6 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
       (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #FF4700;">"preview"</span>
 
-        (sit-for 3)
-
         <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">path to `</span><span style=
 "color: #008200; font-style: italic;">gs</span><span style=
@@ -20267,8 +20288,8 @@ TAGS:
 <span style="color: #008000;">        Windows tool."</span>
           (interactive <span style="color: #FF4700;">"P"</span>)
           (mapcar
-           #'(<span style="color: #0000FF;">lambda</span> (file)
-               (w32-shell-execute <span style=
+           (<span style="color: #0000FF;">lambda</span> (file)
+             (w32-shell-execute <span style=
 "color: #FF4700;">"open"</span> (convert-standard-filename file)))
            (dired-get-marked-files nil arg)))
 
@@ -24980,7 +25001,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131026.1019]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131030.143]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

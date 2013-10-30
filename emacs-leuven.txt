@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-26 Sat 10:16>
+# Time-stamp: <2013-10-30 Wed 14:19>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -1243,10 +1243,10 @@ highlighting. Check out [[http://www.vimeo.com/1168225?pg=embed&sec=1168225][Ema
 
   ;; ;; Enable position saving through shortcuts.
   ;; ;; Save current position with  Ctrl-F1 Ctrl-F2 Ctrl-F3 and Ctrl-F4
-  ;; (global-set-key [C-f1] '(lambda () (interactive) (point-to-register ?1)))
-  ;; (global-set-key [C-f2] '(lambda () (interactive) (point-to-register ?2)))
-  ;; (global-set-key [C-f3] '(lambda () (interactive) (point-to-register ?3)))
-  ;; (global-set-key [C-f4] '(lambda () (interactive) (point-to-register ?4)))
+  ;; (global-set-key [C-f1] (lambda () (interactive) (point-to-register ?1)))
+  ;; (global-set-key [C-f2] (lambda () (interactive) (point-to-register ?2)))
+  ;; (global-set-key [C-f3] (lambda () (interactive) (point-to-register ?3)))
+  ;; (global-set-key [C-f4] (lambda () (interactive) (point-to-register ?4)))
 
   ;; (defun jump-to-register-other (reg)
   ;; (other-window 1)
@@ -1258,10 +1258,10 @@ highlighting. Check out [[http://www.vimeo.com/1168225?pg=embed&sec=1168225][Ema
   ;; (hilit-recenter (/ (window-height) 2)))
 
   ;; ;; Move to saved position with F1 F2 F3 and F4
-  ;; (global-set-key [f1] '(lambda () (interactive) (jump-to-register-here ?1)))
-  ;; (global-set-key [f2] '(lambda () (interactive) (jump-to-register-here ?2)))
-  ;; (global-set-key [f3] '(lambda () (interactive) (jump-to-register-here ?3)))
-  ;; (global-set-key [f4] '(lambda () (interactive) (jump-to-register-here ?4)))
+  ;; (global-set-key [f1] (lambda () (interactive) (jump-to-register-here ?1)))
+  ;; (global-set-key [f2] (lambda () (interactive) (jump-to-register-here ?2)))
+  ;; (global-set-key [f3] (lambda () (interactive) (jump-to-register-here ?3)))
+  ;; (global-set-key [f4] (lambda () (interactive) (jump-to-register-here ?4)))
 #+end_src
 
 Jump between configuration files
@@ -4909,8 +4909,10 @@ installs the key binding =C-c C-x t= to insert a new *inline task*.
 
   ;; ;; create a binding for `org-show-subtree'
   ;; must be in eval-after-load "org"?
-  ;; (org-defkey org-mode-map (kbd "C-c C-S-s") 'org-show-subtree)
-  ;; (org-defkey org-mode-map (kbd "C-c s") 'org-show-subtree)
+  ;; (org-defkey org-mode-map
+  ;;             (kbd "C-c C-S-s") 'org-show-subtree)
+  ;; (org-defkey org-mode-map
+  ;;             (kbd "C-c s") 'org-show-subtree)
 #+end_src
 
 Display outline path in mode line:
@@ -4940,9 +4942,12 @@ Display outline path in mode line:
   ;; Lisp files
   (add-hook 'org-mode-hook
             (lambda ()
-              (local-set-key (kbd "\C-\M-n") 'outline-next-visible-heading)
-              (local-set-key (kbd "\C-\M-p") 'outline-previous-visible-heading)
-              (local-set-key (kbd "\C-\M-u") 'outline-up-heading)))
+              (local-set-key
+               (kbd "\C-\M-n") 'outline-next-visible-heading)
+              (local-set-key
+               (kbd "\C-\M-p") 'outline-previous-visible-heading)
+              (local-set-key
+               (kbd "\C-\M-u") 'outline-up-heading)))
 #+end_src
 
 Move through an Org file like =cd= on a file system with =org-goto=:
@@ -5108,6 +5113,9 @@ and resize it to a specific width.
   ;; original width if none is found
   (setq org-image-actual-width nil)
 #+end_src
+
+PDF viewer? See =org-file-apps=. Just change to your favorite viewer. And make
+sure that you're calling `org-return' to open (it's bound to =C-m=).
 
 *** Link abbreviations
 
@@ -6288,6 +6296,18 @@ the header under which the entry will be placed.
              (length org-agenda-files))
     (sit-for 0.5))
 #+end_src
+
+Avoid any possibility of getting a customized version of =org-agenda-files= added
+at the end of your ~.emacs~ file.
+
+#+begin_example
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (org-defkey org-mode-map
+                          (kbd "C-c [") 'undefined)
+              (org-defkey org-mode-map
+                          (kbd "C-c ]") 'undefined)))
+#+end_example
 
 *** The agenda dispatcher
 
@@ -9375,8 +9395,6 @@ LaTeX file, =preview-latex= gives you a ~Preview~ menu.
 
       (with-eval-after-load "preview"
 
-        (sit-for 3)
-
         ;; path to `gs' command (for format conversions)
         (setq preview-gs-command
           (cond (running-ms-windows
@@ -11468,8 +11486,8 @@ For those under Windows:
         Windows tool."
           (interactive "P")
           (mapcar
-           #'(lambda (file)
-               (w32-shell-execute "open" (convert-standard-filename file)))
+           (lambda (file)
+             (w32-shell-execute "open" (convert-standard-filename file)))
            (dired-get-marked-files nil arg)))
 
         ;; bind it to `E' in Dired mode
