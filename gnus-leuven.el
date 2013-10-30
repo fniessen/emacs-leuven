@@ -355,7 +355,9 @@
 
       ;; strings indicating that the current article has the same subject as
       ;; the previous
-      (if (char-displayable-p ?\u25A1) ;; white square
+      (if (and (char-displayable-p ?\u25A3)
+                                        ; white square containg black small square
+               (char-displayable-p ?\u2570))
           ;; See http://www.santagata.us/characters/CharacterEntities.html
 
           (progn ;; using ASCII tree layout with Unicode chars
