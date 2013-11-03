@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131030.1429
+;; Version: 20131103.2239
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131030.1429]--")
+(message "* --[ Loading Emacs Leuven 20131103.2239]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3134,7 +3134,7 @@
   (define-key global-map
     (kbd "C-h o") 'org-info)
 
-  ;; This must be set before loading Org...
+  ;; These variables need to be set before org.el is loaded...
 
   ;; face to be used by `font-lock' for highlighting in Org mode Emacs
   ;; buffers, and tags to be used to convert emphasis fontifiers for HTML
@@ -3160,6 +3160,24 @@
   ;; single character alphabetical bullets are allowed
   (setq org-list-allow-alphabetical t)
 
+  ;; libraries that should (always) be loaded along with `org.el'
+  ;; (loaded when opening the first Org file)
+  (setq org-modules nil)
+
+  ;; globally unique ID for Org mode entries (see `org-store-link')
+  ;; (takes care of automatically creating unique targets for internal
+  ;; links, see `C-h v org-id-link-to-org-use-id <RET>')
+  (add-to-list 'org-modules 'org-id)
+
+  ;; support for links to Gnus groups and messages from within Org mode
+  (add-to-list 'org-modules 'org-gnus)
+
+  ;; habit tracking code for Org mode
+  (add-to-list 'org-modules 'org-habit)
+
+  ;; make sure to turn `org-info' on in order to link to info nodes
+  (add-to-list 'org-modules 'org-info)
+
   ;; Unhiding edited areas
   ;;??? I like the idea of clustering undo but find it disconcerting
   (setf org-self-insert-cluster-for-undo nil) ;; XXX undefined
@@ -3173,53 +3191,39 @@
          (org-reveal)))
   ;;(ad-unadvise 'undo)
 
-
   (add-hook 'org-mode-hook
             (lambda ()
-              ;; (local-set-key "\M-n" 'outline-next-visible-heading)
-              ;; (local-set-key "\M-p" 'outline-previous-visible-heading)
+              ;; (local-set-key
+              ;;  (kbd "M-n") 'outline-next-visible-heading)
+              ;; (local-set-key
+              ;;  (kbd "M-p") 'outline-previous-visible-heading)
+
+              ;; ;; create a binding for `org-show-subtree'
+              ;; (org-defkey org-mode-map
+              ;;             (kbd "C-c C-S-s") 'org-show-subtree)
+              ;; (org-defkey org-mode-map
+              ;;             (kbd "C-c s") 'org-show-subtree)
 
               (local-set-key
-                (kbd "C-c h")
-                'hide-other)
+                (kbd "C-c h") 'hide-other)
 
               ;; table
-              (local-set-key "\M-\C-w" 'org-table-copy-region)
-              (local-set-key "\M-\C-y" 'org-table-paste-rectangle)
-              (local-set-key "\M-\C-l" 'org-table-sort-lines)))
+              (local-set-key
+               (kbd "C-M-w") 'org-table-copy-region)
+              (local-set-key
+               (kbd "C-M-y") 'org-table-paste-rectangle)
+              (local-set-key
+               (kbd "C-M-l") 'org-table-sort-lines)))
+
+  (with-eval-after-load "org"
+    (message "... Org Introduction")
 
 ;;** 1.3 (info "(org)Activation")
 
-  (leuven--section "1.3 (org)Activation")
+    (leuven--section "1.3 (org)Activation")
 
-  ;; insert the first line setting Org mode in empty files
-  (setq org-insert-mode-line-in-empty-file t)
-
-  ;; libraries that should (always) be loaded along with `org.el'
-  ;; (loaded when opening the first Org file)
-  (when (boundp 'org-modules)
-
-    (setq org-modules nil)
-
-    ;; globally unique ID for Org mode entries (see `org-store-link')
-    ;; (takes care of automatically creating unique targets for internal
-    ;; links, see `C-h v org-id-link-to-org-use-id <RET>')
-    (add-to-list 'org-modules 'org-id)
-
-    ;; support for links to Gnus groups and messages from within Org mode
-    (add-to-list 'org-modules 'org-gnus)
-
-    ;; habit tracking code for Org mode
-    (add-to-list 'org-modules 'org-habit)
-
-    ;; make sure to turn `org-info' on in order to link to info nodes
-    (add-to-list 'org-modules 'org-info))
-
-  (with-eval-after-load "org-id"
-
-    ;; storing a link to an Org file will use entry IDs
-    (setq org-id-link-to-org-use-id
-          'create-if-interactive-and-no-custom-id))
+    ;; insert the first line setting Org mode in empty files
+    (setq org-insert-mode-line-in-empty-file t))
 
 ;;* 2 (info "(org)Document Structure")
 
@@ -3339,12 +3343,8 @@
   ;; do not switch to OVERVIEW at startup
   (setq org-startup-folded nil)
 
-  ;; ;; create a binding for `org-show-subtree'
-  ;; must be in eval-after-load "org"?
-  ;; (org-defkey org-mode-map
-  ;;             (kbd "C-c C-S-s") 'org-show-subtree)
-  ;; (org-defkey org-mode-map
-  ;;             (kbd "C-c s") 'org-show-subtree)
+  ;; inhibit startup when preparing agenda buffers -- agenda optimization
+  (setq org-agenda-inhibit-startup t)
 
   ;; (add-hook 'org-mode-hook
   ;;           (lambda()
@@ -3458,51 +3458,59 @@
 
 ;;* 4 (info "(org)Hyperlinks")
 
-  ;; create web links to Google groups or Gmane (instead of Gnus
-  ;; messages)
-  (setq org-gnus-prefer-web-links t)
+  (with-eval-after-load "org"
+    (message "... Hyperlinks")
 
-  ;; open non-existing files
-  (setq org-open-non-existing-files t)
+    ;; open non-existing files
+    (setq org-open-non-existing-files t)
 
-  ;; 4.3 function and arguments to call for following `mailto' links
-  (setq org-link-mailto-program '(compose-mail "%a" "%s"))
+    ;; function and arguments to call for following `mailto' links
+    (setq org-link-mailto-program '(compose-mail "%a" "%s")))
 
-  ;; setup the frame configuration for following links
-  (setq org-link-frame-setup
-        '((vm   . vm-visit-folder)
-          (gnus . org-gnus-no-new-news)
-          (file . find-file-other-window))) ;; open link in other window
+  ;; support for links to Gnus groups and messages from within Org mode
+  (with-eval-after-load "org-gnus"
 
-  ;; 4.4 show inline images when loading a new Org file
-  (setq org-startup-with-inline-images t)
+    ;; create web links to Google groups or Gmane (instead of Gnus
+    ;; messages)
+    (setq org-gnus-prefer-web-links t))
 
-  ;; 4.4 try to get the width from an #+ATTR.* keyword and fall back on the
-  ;; original width if none is found
-  (setq org-image-actual-width nil)
+  ;; global identifiers for Org-mode entries
+  (with-eval-after-load "org-id"
 
-;;** 4.6 (info "(org)Link abbreviations")
+    ;; storing a link to an Org file will use entry IDs
+    (setq org-id-link-to-org-use-id
+          'create-if-interactive-and-no-custom-id))
 
-  ;; 4.6 shortcut links
-  (setq org-link-abbrev-alist
-        '(("cache" .
-           "http://www.google.com/search?q=cache:%s")
-          ("dictionary" .
-           "http://www.dict.org/bin/Dict?Database=*&Form=Dict1&Strategy=*&Query=%s")
-          ("google" .
-           "http://www.google.com/search?q=%s")
-          ("googlegroups" .
-           "http://groups.google.com/groups?q=%s")
-          ("googlemaps" .
-           "http://maps.google.com/maps?q=%s")
-          ("imdb" .
-           "http://us.imdb.com/Title?%s")
-          ("openstreetmap" .
-           "http://nominatim.openstreetmap.org/search?q=%s&polygon=1")
-          ("wpen" .
-           "http://en.wikipedia.org/wiki/%s")
-          ("wpfr" .
-           "http://fr.wikipedia.org/wiki/%s")))
+  (with-eval-after-load "org"
+    (message "... Handling links")
+
+    ;; 4.4 show inline images when loading a new Org file
+    (setq org-startup-with-inline-images t)
+
+    ;; 4.4 try to get the width from an #+ATTR.* keyword and fall back on the
+    ;; original width if none is found
+    (setq org-image-actual-width nil)
+
+    ;; shortcut links
+    (setq org-link-abbrev-alist
+          '(("cache" .
+             "http://www.google.com/search?q=cache:%s")
+            ("dictionary" .
+             "http://www.dict.org/bin/Dict?Database=*&Form=Dict1&Strategy=*&Query=%s")
+            ("google" .
+             "http://www.google.com/search?q=%s")
+            ("googlegroups" .
+             "http://groups.google.com/groups?q=%s")
+            ("googlemaps" .
+             "http://maps.google.com/maps?q=%s")
+            ("imdb" .
+             "http://us.imdb.com/Title?%s")
+            ("openstreetmap" .
+             "http://nominatim.openstreetmap.org/search?q=%s&polygon=1")
+            ("wpen" .
+             "http://en.wikipedia.org/wiki/%s")
+            ("wpfr" .
+             "http://fr.wikipedia.org/wiki/%s"))))
 
 ;;* 5 (info "(org)TODO Items")
 
@@ -3537,9 +3545,9 @@
           (sequence "OPENPO(O!)" "|"
                     "CLSDPO(C!)")))
 
-  ;; TODO Check coherence of the faces with the above defined states
-  ;; faces for specific TODO keywords
-  (GNUEmacs
+  (with-eval-after-load "org-faces"
+
+    ;; faces for specific TODO keywords
     (setq org-todo-keyword-faces
           '(("NEW"  . leuven-org-created-kwd-face)
             ("TODO" . org-todo)
@@ -3557,9 +3565,8 @@
             ("REJ" . leuven-org-rejected-kwd-face)
 
             ("OPENPO" . leuven-org-openpo-kwd-face)
-            ("CLSDPO" . leuven-org-closedpo-kwd-face))))
+            ("CLSDPO" . leuven-org-closedpo-kwd-face)))
 
-  (with-eval-after-load "org-faces"
     ;; Org standard faces
     (set-face-attribute 'org-todo nil
                         :weight 'bold :box '(:line-width 1 :color "#D8ABA7")
@@ -3623,11 +3630,8 @@
   ;;    siblings not yet done
   (setq org-enforce-todo-dependencies t)
 
-  ;; don't dim blocked tasks in the agenda display -- agenda optimization
+  ;; 5.2.7 don't dim blocked tasks in the agenda display -- agenda optimization
   (setq org-agenda-dim-blocked-tasks nil) ; XXX not sure about this one
-
-  ;; inhibit startup when preparing agenda buffers -- agenda optimization
-  (setq org-agenda-inhibit-startup t)
 
   ;; block switching the parent to DONE if
   ;; there are unchecked checkboxes
@@ -9418,7 +9422,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131030.1429]--")
+(message "* --[ Loaded Emacs Leuven 20131103.224]--")
 
 (provide 'emacs-leuven)
 

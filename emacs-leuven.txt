@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-10-30 Wed 14:19>
+# Time-stamp: <2013-11-03 Sun 22:39>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -4617,10 +4617,10 @@ work and tasks with Org mode.
     (kbd "C-h o") 'org-info)
 #+end_src
 
-These variables need to be set before =org.el= is loaded.
+These variables need to be set before Org mode is loaded.
 
 #+begin_src emacs-lisp
-  ;; This must be set before loading Org...
+  ;; These variables need to be set before org.el is loaded...
 
   ;; face to be used by `font-lock' for highlighting in Org mode Emacs
   ;; buffers, and tags to be used to convert emphasis fontifiers for HTML
@@ -4651,57 +4651,9 @@ If you use =org-emphasis-alist= to do simple highlighting, you should better use
 [[http://www.emacswiki.org/emacs/AddKeywords][font-lock-add-keywords]].
 
 #+begin_src emacs-lisp
-  ;; Unhiding edited areas
-  ;;??? I like the idea of clustering undo but find it disconcerting
-  (setf org-self-insert-cluster-for-undo nil) ;; XXX undefined
-  ;; somebody, I think Carsten, suggested this, and it might work for
-  ;; you, but for some reason I commented it out. I don't remember what
-  ;; the reason was. Maybe speed.
-  (defadvice undo (after leuven-org-undo-reveal activate)
-    "Make point and context visible after an undo command in Org mode."
-    (message "Using adviced undo") (sit-for 1)
-    (and (derived-mode-p 'org-mode)
-         (org-reveal)))
-  ;;(ad-unadvise 'undo)
-
-
-  (add-hook 'org-mode-hook
-            (lambda ()
-              ;; (local-set-key "\M-n" 'outline-next-visible-heading)
-              ;; (local-set-key "\M-p" 'outline-previous-visible-heading)
-
-              (local-set-key
-                (kbd "C-c h")
-                'hide-other)
-
-              ;; table
-              (local-set-key "\M-\C-w" 'org-table-copy-region)
-              (local-set-key "\M-\C-y" 'org-table-paste-rectangle)
-              (local-set-key "\M-\C-l" 'org-table-sort-lines)))
-#+end_src
-
-*** Activation
-
-*************** TODO Modules got to be set _before_ org is loaded
-*************** END
-
-#+begin_src emacs-lisp
-;;** 1.3 (info "(org)Activation")
-
-  (leuven--section "1.3 (org)Activation")
-
-  ;; insert the first line setting Org mode in empty files
-  (setq org-insert-mode-line-in-empty-file t)
-#+end_src
-
-XXX The following does NOT work (executed before Org is loaded)!
-
-#+begin_src emacs-lisp
   ;; libraries that should (always) be loaded along with `org.el'
   ;; (loaded when opening the first Org file)
-  (when (boundp 'org-modules)
-
-    (setq org-modules nil)
+  (setq org-modules nil)
 #+end_src
 
 Original value was:
@@ -4727,33 +4679,25 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 =org-id-locations-file=).
 
 #+begin_src emacs-lisp
-    ;; globally unique ID for Org mode entries (see `org-store-link')
-    ;; (takes care of automatically creating unique targets for internal
-    ;; links, see `C-h v org-id-link-to-org-use-id <RET>')
-    (add-to-list 'org-modules 'org-id)
+  ;; globally unique ID for Org mode entries (see `org-store-link')
+  ;; (takes care of automatically creating unique targets for internal
+  ;; links, see `C-h v org-id-link-to-org-use-id <RET>')
+  (add-to-list 'org-modules 'org-id)
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; support for links to Gnus groups and messages from within Org mode
-    (add-to-list 'org-modules 'org-gnus)
+  ;; support for links to Gnus groups and messages from within Org mode
+  (add-to-list 'org-modules 'org-gnus)
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; habit tracking code for Org mode
-    (add-to-list 'org-modules 'org-habit)
+  ;; habit tracking code for Org mode
+  (add-to-list 'org-modules 'org-habit)
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; make sure to turn `org-info' on in order to link to info nodes
-    (add-to-list 'org-modules 'org-info))
-#+end_src
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "org-id"
-
-    ;; storing a link to an Org file will use entry IDs
-    (setq org-id-link-to-org-use-id
-          'create-if-interactive-and-no-custom-id))
+  ;; make sure to turn `org-info' on in order to link to info nodes
+  (add-to-list 'org-modules 'org-info)
 #+end_src
 
 *************** TODO Look at other modules
@@ -4767,6 +4711,61 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 - =org-panel=
 - =org-R=
 *************** END
+
+#+begin_src emacs-lisp
+  ;; Unhiding edited areas
+  ;;??? I like the idea of clustering undo but find it disconcerting
+  (setf org-self-insert-cluster-for-undo nil) ;; XXX undefined
+  ;; somebody, I think Carsten, suggested this, and it might work for
+  ;; you, but for some reason I commented it out. I don't remember what
+  ;; the reason was. Maybe speed.
+  (defadvice undo (after leuven-org-undo-reveal activate)
+    "Make point and context visible after an undo command in Org mode."
+    (message "Using adviced undo") (sit-for 1)
+    (and (derived-mode-p 'org-mode)
+         (org-reveal)))
+  ;;(ad-unadvise 'undo)
+#+end_src
+
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook
+            (lambda ()
+              ;; (local-set-key
+              ;;  (kbd "M-n") 'outline-next-visible-heading)
+              ;; (local-set-key
+              ;;  (kbd "M-p") 'outline-previous-visible-heading)
+
+              ;; ;; create a binding for `org-show-subtree'
+              ;; (org-defkey org-mode-map
+              ;;             (kbd "C-c C-S-s") 'org-show-subtree)
+              ;; (org-defkey org-mode-map
+              ;;             (kbd "C-c s") 'org-show-subtree)
+
+              (local-set-key
+                (kbd "C-c h") 'hide-other)
+
+              ;; table
+              (local-set-key
+               (kbd "C-M-w") 'org-table-copy-region)
+              (local-set-key
+               (kbd "C-M-y") 'org-table-paste-rectangle)
+              (local-set-key
+               (kbd "C-M-l") 'org-table-sort-lines)))
+#+end_src
+
+*** Activation
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "org"
+    (message "... Org Introduction")
+
+;;** 1.3 (info "(org)Activation")
+
+    (leuven--section "1.3 (org)Activation")
+
+    ;; insert the first line setting Org mode in empty files
+    (setq org-insert-mode-line-in-empty-file t))
+#+end_src
 
 ** Document Structure
 
@@ -4907,12 +4906,8 @@ installs the key binding =C-c C-x t= to insert a new *inline task*.
   ;; do not switch to OVERVIEW at startup
   (setq org-startup-folded nil)
 
-  ;; ;; create a binding for `org-show-subtree'
-  ;; must be in eval-after-load "org"?
-  ;; (org-defkey org-mode-map
-  ;;             (kbd "C-c C-S-s") 'org-show-subtree)
-  ;; (org-defkey org-mode-map
-  ;;             (kbd "C-c s") 'org-show-subtree)
+  ;; inhibit startup when preparing agenda buffers -- agenda optimization
+  (setq org-agenda-inhibit-startup t)
 #+end_src
 
 Display outline path in mode line:
@@ -5084,38 +5079,58 @@ in order to converge table-to-table dependencies, use
 
 #+begin_src emacs-lisp
 ;;* 4 (info "(org)Hyperlinks")
-
-  ;; create web links to Google groups or Gmane (instead of Gnus
-  ;; messages)
-  (setq org-gnus-prefer-web-links t)
-
-  ;; open non-existing files
-  (setq org-open-non-existing-files t)
-
-  ;; 4.3 function and arguments to call for following `mailto' links
-  (setq org-link-mailto-program '(compose-mail "%a" "%s"))
-
-  ;; setup the frame configuration for following links
-  (setq org-link-frame-setup
-        '((vm   . vm-visit-folder)
-          (gnus . org-gnus-no-new-news)
-          (file . find-file-other-window))) ;; open link in other window
 #+end_src
+
+*** External links
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "org"
+    (message "... Hyperlinks")
+
+    ;; open non-existing files
+    (setq org-open-non-existing-files t)
+
+    ;; function and arguments to call for following `mailto' links
+    (setq org-link-mailto-program '(compose-mail "%a" "%s")))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; support for links to Gnus groups and messages from within Org mode
+  (with-eval-after-load "org-gnus"
+
+    ;; create web links to Google groups or Gmane (instead of Gnus
+    ;; messages)
+    (setq org-gnus-prefer-web-links t))
+#+end_src
+
+*** Handling links
+
+#+begin_src emacs-lisp
+  ;; global identifiers for Org-mode entries
+  (with-eval-after-load "org-id"
+
+    ;; storing a link to an Org file will use entry IDs
+    (setq org-id-link-to-org-use-id
+          'create-if-interactive-and-no-custom-id))
+#+end_src
+
+PDF viewer? See =org-file-apps=. Just change to your favorite viewer. And make
+sure that you're calling =org-return= to open (it's bound to =C-m=).
 
 If I inline an image in an Org file, I can toggle its display with =C-c C-x C-v=
 and resize it to a specific width.
 
 #+begin_src emacs-lisp
-  ;; 4.4 show inline images when loading a new Org file
-  (setq org-startup-with-inline-images t)
+  (with-eval-after-load "org"
+    (message "... Handling links")
 
-  ;; 4.4 try to get the width from an #+ATTR.* keyword and fall back on the
-  ;; original width if none is found
-  (setq org-image-actual-width nil)
+    ;; 4.4 show inline images when loading a new Org file
+    (setq org-startup-with-inline-images t)
+
+    ;; 4.4 try to get the width from an #+ATTR.* keyword and fall back on the
+    ;; original width if none is found
+    (setq org-image-actual-width nil)
 #+end_src
-
-PDF viewer? See =org-file-apps=. Just change to your favorite viewer. And make
-sure that you're calling `org-return' to open (it's bound to =C-m=).
 
 *** Link abbreviations
 
@@ -5128,28 +5143,26 @@ http://www.google.com/search?q=searchterms, you can just type
 =[[google:searchterms]]= or =[[google:searchterms][description]]= instead.
 
 #+begin_src emacs-lisp
-;;** 4.6 (info "(org)Link abbreviations")
-
-  ;; 4.6 shortcut links
-  (setq org-link-abbrev-alist
-        '(("cache" .
-           "http://www.google.com/search?q=cache:%s")
-          ("dictionary" .
-           "http://www.dict.org/bin/Dict?Database=*&Form=Dict1&Strategy=*&Query=%s")
-          ("google" .
-           "http://www.google.com/search?q=%s")
-          ("googlegroups" .
-           "http://groups.google.com/groups?q=%s")
-          ("googlemaps" .
-           "http://maps.google.com/maps?q=%s")
-          ("imdb" .
-           "http://us.imdb.com/Title?%s")
-          ("openstreetmap" .
-           "http://nominatim.openstreetmap.org/search?q=%s&polygon=1")
-          ("wpen" .
-           "http://en.wikipedia.org/wiki/%s")
-          ("wpfr" .
-           "http://fr.wikipedia.org/wiki/%s")))
+    ;; shortcut links
+    (setq org-link-abbrev-alist
+          '(("cache" .
+             "http://www.google.com/search?q=cache:%s")
+            ("dictionary" .
+             "http://www.dict.org/bin/Dict?Database=*&Form=Dict1&Strategy=*&Query=%s")
+            ("google" .
+             "http://www.google.com/search?q=%s")
+            ("googlegroups" .
+             "http://groups.google.com/groups?q=%s")
+            ("googlemaps" .
+             "http://maps.google.com/maps?q=%s")
+            ("imdb" .
+             "http://us.imdb.com/Title?%s")
+            ("openstreetmap" .
+             "http://nominatim.openstreetmap.org/search?q=%s&polygon=1")
+            ("wpen" .
+             "http://en.wikipedia.org/wiki/%s")
+            ("wpfr" .
+             "http://fr.wikipedia.org/wiki/%s"))))
 #+end_src
 
 ** "TODO" Items
@@ -5222,9 +5235,9 @@ verified before really closing the task.
 =DFRD= is *not* a completion state (in order not to be struck through).
 
 #+begin_src emacs-lisp
-  ;; TODO Check coherence of the faces with the above defined states
-  ;; faces for specific TODO keywords
-  (GNUEmacs
+  (with-eval-after-load "org-faces"
+
+    ;; faces for specific TODO keywords
     (setq org-todo-keyword-faces
           '(("NEW"  . leuven-org-created-kwd-face)
             ("TODO" . org-todo)
@@ -5242,9 +5255,8 @@ verified before really closing the task.
             ("REJ" . leuven-org-rejected-kwd-face)
 
             ("OPENPO" . leuven-org-openpo-kwd-face)
-            ("CLSDPO" . leuven-org-closedpo-kwd-face))))
+            ("CLSDPO" . leuven-org-closedpo-kwd-face)))
 
-  (with-eval-after-load "org-faces"
     ;; Org standard faces
     (set-face-attribute 'org-todo nil
                         :weight 'bold :box '(:line-width 1 :color "#D8ABA7")
@@ -5301,19 +5313,22 @@ verified before really closing the task.
       '((t (:weight bold :box (:line-width 1 :color "#969696")
             :foreground "#969696" :background "#F2F2EE")))
       "Face used to display CLOSED purchase order."))
+#+end_src
 
+#+begin_src emacs-lisp
   ;; block switching entries to DONE if
   ;; 1) there are undone child entries, or
   ;; 2) the parent has an `:ORDERED:' property and there are prior
   ;;    siblings not yet done
   (setq org-enforce-todo-dependencies t)
+#+end_src
 
-  ;; don't dim blocked tasks in the agenda display -- agenda optimization
+#+begin_src emacs-lisp
+  ;; 5.2.7 don't dim blocked tasks in the agenda display -- agenda optimization
   (setq org-agenda-dim-blocked-tasks nil) ; XXX not sure about this one
+#+end_src
 
-  ;; inhibit startup when preparing agenda buffers -- agenda optimization
-  (setq org-agenda-inhibit-startup t)
-
+#+begin_src emacs-lisp
   ;; block switching the parent to DONE if
   ;; there are unchecked checkboxes
   (setq org-enforce-todo-checkbox-dependencies t)
