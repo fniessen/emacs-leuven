@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-07 Thu 12:30>
+# Time-stamp: <2013-11-07 Thu 14:19>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -1366,14 +1366,14 @@ Visible bookmarks in buffer.
 
   (leuven--section "14.3 (emacs)Auto Scrolling")
 
+  ;; redisplay will never recenter point
+  (setq scroll-conservatively 10000)    ; always scroll a line at a time
+
   ;; ;; scroll one line at a time
   ;; (setq scroll-step 1) ;; should be on?
 
-  ;; redisplay will never recenter point
-  (setq scroll-conservatively 10000)
-
-  ;; ;; number of lines of margin at the top and bottom of a window
-  ;; (setq scroll-margin 1)
+  ;; number of lines of margin at the top and bottom of a window
+  (setq scroll-margin 3)                ; also for `isearch-forward'
 
   ;; scrolling down looks much better
   (setq auto-window-vscroll nil)

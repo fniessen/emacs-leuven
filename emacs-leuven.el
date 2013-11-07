@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131107.1232
+;; Version: 20131107.142
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131107.1232]--")
+(message "* --[ Loading Emacs Leuven 20131107.142]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -954,14 +954,14 @@
 
   (leuven--section "14.3 (emacs)Auto Scrolling")
 
+  ;; redisplay will never recenter point
+  (setq scroll-conservatively 10000)    ; always scroll a line at a time
+
   ;; ;; scroll one line at a time
   ;; (setq scroll-step 1) ;; should be on?
 
-  ;; redisplay will never recenter point
-  (setq scroll-conservatively 10000)
-
-  ;; ;; number of lines of margin at the top and bottom of a window
-  ;; (setq scroll-margin 1)
+  ;; number of lines of margin at the top and bottom of a window
+  (setq scroll-margin 3)                ; also for `isearch-forward'
 
   ;; scrolling down looks much better
   (setq auto-window-vscroll nil)
@@ -9415,7 +9415,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131107.1233]--")
+(message "* --[ Loaded Emacs Leuven 20131107.1421]--")
 
 (provide 'emacs-leuven)
 
