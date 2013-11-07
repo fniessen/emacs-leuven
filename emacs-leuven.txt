@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-03 Sun 22:39>
+# Time-stamp: <2013-11-07 Thu 12:30>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -579,6 +579,7 @@ are generated programmatically from upstream Git-based sources.
           idle-require
           interaction-log
           ;; jabber
+          ledger-mode
           leuven-theme
           htmlize                       ; works with Org
           ;; org
@@ -3662,6 +3663,16 @@ one.
                 (emacs-pid)))
 #+end_src
 
+#+begin_src emacs-lisp
+  (defun detach-window ()
+    "Close current window and re-open it in new frame."
+    (interactive)
+    (let ((current-buffer (window-buffer)))
+      (delete-window)
+      (select-frame (make-frame))
+      (set-window-buffer (selected-window) current-buffer)))
+#+end_src
+
 ** Frame Commands
 
 #+begin_src emacs-lisp
@@ -3977,8 +3988,6 @@ Instead of superseding the binding in =auto-mode-alist=, you can replace it
 
   ;; ledger
   (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
-  (autoload 'ledger-mode "ledger"
-    "A mode for editing ledger data files.")
 
   ;; major mode for editing comma-separated value files
   (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
@@ -8140,7 +8149,7 @@ Org file that needs =bibtex=, simply put in the following line (or a variation
 thereof):
 
 #+begin_src org :tangle no
-#+BIND: org-latex-pdf-process ("pdflatex %b" "bibtex %b" "pdflatex %b" "pdflatex %b")
+,#+BIND: org-latex-pdf-process ("pdflatex %b" "bibtex %b" "pdflatex %b" "pdflatex %b")
 #+end_src
 
 Also, you can use =latexmk= (in TeX Live) which can save you some time when it
@@ -8255,22 +8264,8 @@ What about =apacite= and =tikz= in =org-latex-packages-alist=?
 
 #+begin_src emacs-lisp
   ;; 12.6.6 Beamer class export
+  ;; (require 'ox-beamer)
   (with-eval-after-load "ox-beamer"
-
-    (add-to-list 'org-latex-classes
-                 '("beamer"
-                   "\\documentclass[presentation,t]{beamer}
-\\usepackage{etex}% avoid `too many packages' (for PDFTeX)
-% default packages ---------------------
-[DEFAULT-PACKAGES]
-% packages -----------------------------
-[PACKAGES]
-% extra (#+LaTeX_HEADER: lines) --------
-[EXTRA]
-% end of `org-latex-classes' -------------------------------------------------"
-              ("\\section{%s}" . "\\section*{%s}")
-              ("\\subsection{%s}" . "\\subsection*{%s}")
-              ("\\subsubsection{%s}" . "\\subsubsection*{%s}")) t)
 
     ;; default title of a frame containing an outline
     (setq org-beamer-outline-frame-title "Plan"))

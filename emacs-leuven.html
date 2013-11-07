@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-10-30 Wed 14:31 -->
+  <title>Emacs Leuven</title><!-- 2013-11-07 Thu 12:35 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -424,7 +424,11 @@
                 <a href="#sec-26-3">Hyperlinks</a>
 
                 <ul>
-                  <li><a href="#sec-26-3-1">Link abbreviations</a></li>
+                  <li><a href="#sec-26-3-1">External links</a></li>
+
+                  <li><a href="#sec-26-3-2">Handling links</a></li>
+
+                  <li><a href="#sec-26-3-3">Link abbreviations</a></li>
                 </ul>
               </li>
 
@@ -1099,7 +1103,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131030.143</span>
+"color: #008200; font-style: italic;">Version: 20131107.1234</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1221,7 +1225,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131030.143]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131107.1234]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -2038,6 +2042,7 @@
           interaction-log
           <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">jabber</span>
+          ledger-mode
           leuven-theme
           htmlize                       <span style=
 "color: #008200;">; </span><span style=
@@ -7080,6 +7085,21 @@ M-: (executable-find "diff") RET
                 (emacs-pid)))
 </pre>
           </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">detach-window</span> ()
+    <span style=
+"color: #008000;">"Close current window and re-open it in new frame."</span>
+    (interactive)
+    (<span style=
+"color: #0000FF;">let</span> ((current-buffer (window-buffer)))
+      (delete-window)
+      (select-frame (make-frame))
+      (set-window-buffer (selected-window) current-buffer)))
+</pre>
+          </div>
         </div>
       </div>
 
@@ -7633,9 +7653,6 @@ M-: (executable-find "diff") RET
 "color: #008200; font-style: italic;">ledger</span>
   (add-to-list 'auto-mode-alist '(<span style=
 "color: #FF4700;">"\\.dat\\'"</span> . ledger-mode))
-  (autoload 'ledger-mode <span style="color: #FF4700;">"ledger"</span>
-    <span style=
-"color: #008000;">"A mode for editing ledger data files."</span>)
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">major mode for editing comma-separated value files</span>
@@ -8686,13 +8703,12 @@ M-: (executable-find "diff") RET
 </pre>
         </div>
 
-        <p>These variables need to be set before <code>org.el</code> is
-        loaded.</p>
+        <p>These variables need to be set before Org mode is loaded.</p>
 
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">This must be set before loading Org...</span>
+"color: #008200; font-style: italic;">These variables need to be set before org.el is loaded...</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">face to be used by `</span><span style=
@@ -8753,6 +8769,118 @@ M-: (executable-find "diff") RET
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">libraries that should (always) be loaded along with `</span><span style="color: #008200; font-style: italic;">org.el</span><span style="color: #008200; font-style: italic;">'</span>
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(loaded when opening the first Org file)</span>
+  (setq org-modules nil)
+</pre>
+        </div>
+
+        <p>Original value was:</p>
+
+        <ul class="org-ul">
+          <li><code>org-bbdb</code></li>
+
+          <li><code>org-bibtex</code></li>
+
+          <li><code>org-docview</code></li>
+
+          <li><code>org-gnus</code></li>
+
+          <li><code>org-info</code></li>
+
+          <li><code>org-jsinfo</code></li>
+
+          <li><code>org-irc</code></li>
+
+          <li><code>org-mew</code></li>
+
+          <li><code>org-mhe</code></li>
+
+          <li><code>org-rmail</code></li>
+
+          <li><code>org-vm</code></li>
+
+          <li><code>org-w3m</code></li>
+
+          <li><code>org-wl</code></li>
+        </ul>
+
+        <p>When you have <code>org-id</code> in <code>org-modules</code>,
+        unique <b>ID's</b> are generated when you link to a task (using
+        <code>org-id-get-create</code>) — instead of links containing
+        <b>headline text</b>.</p>
+
+        <p>ID's are saved in <code>~/.emacs.d/.org-id-locations</code> on my
+        system (see <code>org-id-locations-file</code>).</p>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">globally unique ID for Org mode entries (see `</span><span style="color: #008200; font-style: italic;">org-store-link</span><span style="color: #008200; font-style: italic;">')</span>
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(takes care of automatically creating unique targets for internal</span>
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">links, see `C-h v org-id-link-to-org-use-id &lt;RET&gt;')</span>
+  (add-to-list 'org-modules 'org-id)
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">support for links to Gnus groups and messages from within Org mode</span>
+  (add-to-list 'org-modules 'org-gnus)
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">habit tracking code for Org mode</span>
+  (add-to-list 'org-modules 'org-habit)
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">make sure to turn `</span><span style=
+"color: #008200; font-style: italic;">org-info</span><span style=
+"color: #008200; font-style: italic;">' on in order to link to info nodes</span>
+  (add-to-list 'org-modules 'org-info)
+</pre>
+        </div>
+
+        <div class="inlinetask">
+          <b><span class="todo TODO">TODO</span> Look at other
+          modules</b><br />
+
+          <ul class="org-ul">
+            <li><code>org-eval</code></li>
+
+            <li><code>org-eval-light</code></li>
+
+            <li><code>org-exp-bibtex</code></li>
+
+            <li><code>org-exp-blocks</code> (supported by the new exporter out
+            of the box)</li>
+
+            <li><code>org-man</code></li>
+
+            <li><code>org-mouse</code></li>
+
+            <li><code>org-mtags</code></li>
+
+            <li><code>org-panel</code></li>
+
+            <li><code>org-R</code></li>
+          </ul>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+  <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Unhiding edited areas</span>
   <span style="color: #008200;">;;</span><span style=
 "color: #008200; font-style: italic;">??? I like the idea of clustering undo but find it disconcerting</span>
@@ -8775,27 +8903,47 @@ M-: (executable-find "diff") RET
          (org-reveal)))
   <span style="color: #008200;">;;</span><span style=
 "color: #008200; font-style: italic;">(ad-unadvise 'undo)</span>
+</pre>
+        </div>
 
-
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
   (add-hook 'org-mode-hook
             (<span style="color: #0000FF;">lambda</span> ()
               <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(local-set-key "\M-n" 'outline-next-visible-heading)</span>
+"color: #008200; font-style: italic;">(local-set-key</span>
+              <span style="color: #008200;">;;  </span><span style=
+"color: #008200; font-style: italic;">(kbd "M-n") 'outline-next-visible-heading)</span>
               <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(local-set-key "\M-p" 'outline-previous-visible-heading)</span>
+"color: #008200; font-style: italic;">(local-set-key</span>
+              <span style="color: #008200;">;;  </span><span style=
+"color: #008200; font-style: italic;">(kbd "M-p") 'outline-previous-visible-heading)</span>
+
+              <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">;; create a binding for `</span><span style="color: #008200; font-style: italic;">org-show-subtree</span><span style="color: #008200; font-style: italic;">'</span>
+              <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(org-defkey org-mode-map</span>
+              <span style="color: #008200;">;;             </span><span style=
+"color: #008200; font-style: italic;">(kbd "C-c C-S-s") 'org-show-subtree)</span>
+              <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(org-defkey org-mode-map</span>
+              <span style="color: #008200;">;;             </span><span style=
+"color: #008200; font-style: italic;">(kbd "C-c s") 'org-show-subtree)</span>
 
               (local-set-key
-                (kbd <span style="color: #FF4700;">"C-c h"</span>)
-                'hide-other)
+                (kbd <span style="color: #FF4700;">"C-c h"</span>) 'hide-other)
 
               <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">table</span>
-              (local-set-key <span style=
-"color: #FF4700;">"\M-\C-w"</span> 'org-table-copy-region)
-              (local-set-key <span style=
-"color: #FF4700;">"\M-\C-y"</span> 'org-table-paste-rectangle)
-              (local-set-key <span style=
-"color: #FF4700;">"\M-\C-l"</span> 'org-table-sort-lines)))
+              (local-set-key
+               (kbd <span style=
+"color: #FF4700;">"C-M-w"</span>) 'org-table-copy-region)
+              (local-set-key
+               (kbd <span style=
+"color: #FF4700;">"C-M-y"</span>) 'org-table-paste-rectangle)
+              (local-set-key
+               (kbd <span style=
+"color: #FF4700;">"C-M-l"</span>) 'org-table-sort-lines)))
 </pre>
         </div>
       </div>
@@ -8804,152 +8952,22 @@ M-: (executable-find "diff") RET
         <h4 id="sec-26-0-1">Activation</h4>
 
         <div class="outline-text-4" id="text-26-0-1">
-          <div class="inlinetask">
-            <b><span class="todo TODO">TODO</span> Modules got to be set
-            <span class="underline">before</span> org is loaded</b><br />
-            nil
-          </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-<span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">** 1.3 (info "(org)Activation")</span>
-
-  (leuven--section <span style="color: #FF4700;">"1.3 (org)Activation"</span>)
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">insert the first line setting Org mode in empty files</span>
-  (setq org-insert-mode-line-in-empty-file t)
-</pre>
-          </div>
-
-          <p>XXX The following does NOT work (executed before Org is
-          loaded)!</p>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">libraries that should (always) be loaded along with `</span><span style="color: #008200; font-style: italic;">org.el</span><span style="color: #008200; font-style: italic;">'</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(loaded when opening the first Org file)</span>
-  (<span style="color: #0000FF;">when</span> (boundp 'org-modules)
-
-    (setq org-modules nil)
-</pre>
-          </div>
-
-          <p>Original value was:</p>
-
-          <ul class="org-ul">
-            <li><code>org-bbdb</code></li>
-
-            <li><code>org-bibtex</code></li>
-
-            <li><code>org-docview</code></li>
-
-            <li><code>org-gnus</code></li>
-
-            <li><code>org-info</code></li>
-
-            <li><code>org-jsinfo</code></li>
-
-            <li><code>org-irc</code></li>
-
-            <li><code>org-mew</code></li>
-
-            <li><code>org-mhe</code></li>
-
-            <li><code>org-rmail</code></li>
-
-            <li><code>org-vm</code></li>
-
-            <li><code>org-w3m</code></li>
-
-            <li><code>org-wl</code></li>
-          </ul>
-
-          <p>When you have <code>org-id</code> in <code>org-modules</code>,
-          unique <b>ID's</b> are generated when you link to a task (using
-          <code>org-id-get-create</code>) — instead of links containing
-          <b>headline text</b>.</p>
-
-          <p>ID's are saved in <code>~/.emacs.d/.org-id-locations</code> on my
-          system (see <code>org-id-locations-file</code>).</p>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">globally unique ID for Org mode entries (see `</span><span style="color: #008200; font-style: italic;">org-store-link</span><span style="color: #008200; font-style: italic;">')</span>
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(takes care of automatically creating unique targets for internal</span>
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">links, see `C-h v org-id-link-to-org-use-id &lt;RET&gt;')</span>
-    (add-to-list 'org-modules 'org-id)
-</pre>
-          </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">support for links to Gnus groups and messages from within Org mode</span>
-    (add-to-list 'org-modules 'org-gnus)
-</pre>
-          </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">habit tracking code for Org mode</span>
-    (add-to-list 'org-modules 'org-habit)
-</pre>
-          </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">make sure to turn `</span><span style=
-"color: #008200; font-style: italic;">org-info</span><span style=
-"color: #008200; font-style: italic;">' on in order to link to info nodes</span>
-    (add-to-list 'org-modules 'org-info))
-</pre>
-          </div>
-
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
-"color: #FF4700;">"org-id"</span>
+"color: #FF4700;">"org"</span>
+    (message <span style="color: #FF4700;">"... Org Introduction"</span>)
+
+<span style="color: #008200;">;;</span><span style=
+"color: #008200; font-style: italic;">** 1.3 (info "(org)Activation")</span>
+
+    (leuven--section <span style=
+"color: #FF4700;">"1.3 (org)Activation"</span>)
 
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">storing a link to an Org file will use entry IDs</span>
-    (setq org-id-link-to-org-use-id
-          'create-if-interactive-and-no-custom-id))
+"color: #008200; font-style: italic;">insert the first line setting Org mode in empty files</span>
+    (setq org-insert-mode-line-in-empty-file t))
 </pre>
-          </div>
-
-          <div class="inlinetask">
-            <b><span class="todo TODO">TODO</span> Look at other
-            modules</b><br />
-
-            <ul class="org-ul">
-              <li><code>org-eval</code></li>
-
-              <li><code>org-eval-light</code></li>
-
-              <li><code>org-exp-bibtex</code></li>
-
-              <li><code>org-exp-blocks</code> (supported by the new exporter
-              out of the box)</li>
-
-              <li><code>org-man</code></li>
-
-              <li><code>org-mouse</code></li>
-
-              <li><code>org-mtags</code></li>
-
-              <li><code>org-panel</code></li>
-
-              <li><code>org-R</code></li>
-            </ul>
           </div>
         </div>
       </div>
@@ -9200,17 +9218,8 @@ M-: (executable-find "diff") RET
   (setq org-startup-folded nil)
 
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; create a binding for `</span><span style="color: #008200; font-style: italic;">org-show-subtree</span><span style="color: #008200; font-style: italic;">'</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">must be in eval-after-load "org"?</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(org-defkey org-mode-map</span>
-  <span style="color: #008200;">;;             </span><span style=
-"color: #008200; font-style: italic;">(kbd "C-c C-S-s") 'org-show-subtree)</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(org-defkey org-mode-map</span>
-  <span style="color: #008200;">;;             </span><span style=
-"color: #008200; font-style: italic;">(kbd "C-c s") 'org-show-subtree)</span>
+"color: #008200; font-style: italic;">inhibit startup when preparing agenda buffers -- agenda optimization</span>
+  (setq org-agenda-inhibit-startup t)
 </pre>
             </div>
 
@@ -9473,59 +9482,99 @@ M-: (executable-find "diff") RET
             <pre class="src src-emacs-lisp">
 <span style="color: #008200;">;;</span><span style=
 "color: #008200; font-style: italic;">* 4 (info "(org)Hyperlinks")</span>
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">create web links to Google groups or Gmane (instead of Gnus</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">messages)</span>
-  (setq org-gnus-prefer-web-links t)
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">open non-existing files</span>
-  (setq org-open-non-existing-files t)
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">4.3 function and arguments to call for following `</span><span style="color: #008200; font-style: italic;">mailto</span><span style="color: #008200; font-style: italic;">' links</span>
-  (setq org-link-mailto-program '(compose-mail <span style=
-"color: #FF4700;">"%a"</span> <span style="color: #FF4700;">"%s"</span>))
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">setup the frame configuration for following links</span>
-  (setq org-link-frame-setup
-        '((vm   . vm-visit-folder)
-          (gnus . org-gnus-no-new-news)
-          (file . find-file-other-window))) <span style=
-"color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">open link in other window</span>
 </pre>
           </div>
-
-          <p>If I inline an image in an Org file, I can toggle its display with
-          <code>C-c C-x C-v</code> and resize it to a specific width.</p>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">4.4 show inline images when loading a new Org file</span>
-  (setq org-startup-with-inline-images t)
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">4.4 try to get the width from an #+ATTR.* keyword and fall back on the</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">original width if none is found</span>
-  (setq org-image-actual-width nil)
-</pre>
-          </div>
-
-          <p>PDF viewer? See <code>org-file-apps</code>. Just change to your
-          favorite viewer. And make sure that you're calling `org-return' to
-          open (it's bound to <code>C-m</code>).</p>
         </div>
 
         <div id="outline-container-sec-26-3-1" class="outline-4">
-          <h4 id="sec-26-3-1">Link abbreviations</h4>
+          <h4 id="sec-26-3-1">External links</h4>
 
           <div class="outline-text-4" id="text-26-3-1">
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #FF4700;">"org"</span>
+    (message <span style="color: #FF4700;">"... Hyperlinks"</span>)
+
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">open non-existing files</span>
+    (setq org-open-non-existing-files t)
+
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">function and arguments to call for following `</span><span style="color: #008200; font-style: italic;">mailto</span><span style="color: #008200; font-style: italic;">' links</span>
+    (setq org-link-mailto-program '(compose-mail <span style=
+"color: #FF4700;">"%a"</span> <span style="color: #FF4700;">"%s"</span>)))
+</pre>
+            </div>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">support for links to Gnus groups and messages from within Org mode</span>
+  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #FF4700;">"org-gnus"</span>
+
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">create web links to Google groups or Gmane (instead of Gnus</span>
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">messages)</span>
+    (setq org-gnus-prefer-web-links t))
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-26-3-2" class="outline-4">
+          <h4 id="sec-26-3-2">Handling links</h4>
+
+          <div class="outline-text-4" id="text-26-3-2">
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">global identifiers for Org-mode entries</span>
+  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #FF4700;">"org-id"</span>
+
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">storing a link to an Org file will use entry IDs</span>
+    (setq org-id-link-to-org-use-id
+          'create-if-interactive-and-no-custom-id))
+</pre>
+            </div>
+
+            <p>PDF viewer? See <code>org-file-apps</code>. Just change to your
+            favorite viewer. And make sure that you're calling
+            <code>org-return</code> to open (it's bound to
+            <code>C-m</code>).</p>
+
+            <p>If I inline an image in an Org file, I can toggle its display
+            with <code>C-c C-x C-v</code> and resize it to a specific
+            width.</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #FF4700;">"org"</span>
+    (message <span style="color: #FF4700;">"... Handling links"</span>)
+
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">4.4 show inline images when loading a new Org file</span>
+    (setq org-startup-with-inline-images t)
+
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">4.4 try to get the width from an #+ATTR.* keyword and fall back on the</span>
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">original width if none is found</span>
+    (setq org-image-actual-width nil)
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-26-3-3" class="outline-4">
+          <h4 id="sec-26-3-3">Link abbreviations</h4>
+
+          <div class="outline-text-4" id="text-26-3-3">
             <p>Link abbreviations provide a quick way of linking to resources
             that are frequently referenced, so that you can type just the key
             term instead of the complete URL.</p>
@@ -9537,38 +9586,36 @@ M-: (executable-find "diff") RET
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-<span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">** 4.6 (info "(org)Link abbreviations")</span>
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">4.6 shortcut links</span>
-  (setq org-link-abbrev-alist
-        '((<span style="color: #FF4700;">"cache"</span> .
-           <span style=
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">shortcut links</span>
+    (setq org-link-abbrev-alist
+          '((<span style="color: #FF4700;">"cache"</span> .
+             <span style=
 "color: #FF4700;">"http://www.google.com/search?q=cache:%s"</span>)
-          (<span style="color: #FF4700;">"dictionary"</span> .
-           <span style=
+            (<span style="color: #FF4700;">"dictionary"</span> .
+             <span style=
 "color: #FF4700;">"http://www.dict.org/bin/Dict?Database=*&amp;Form=Dict1&amp;Strategy=*&amp;Query=%s"</span>)
-          (<span style="color: #FF4700;">"google"</span> .
-           <span style=
+            (<span style="color: #FF4700;">"google"</span> .
+             <span style=
 "color: #FF4700;">"http://www.google.com/search?q=%s"</span>)
-          (<span style="color: #FF4700;">"googlegroups"</span> .
-           <span style=
+            (<span style="color: #FF4700;">"googlegroups"</span> .
+             <span style=
 "color: #FF4700;">"http://groups.google.com/groups?q=%s"</span>)
-          (<span style="color: #FF4700;">"googlemaps"</span> .
-           <span style=
+            (<span style="color: #FF4700;">"googlemaps"</span> .
+             <span style=
 "color: #FF4700;">"http://maps.google.com/maps?q=%s"</span>)
-          (<span style="color: #FF4700;">"imdb"</span> .
-           <span style="color: #FF4700;">"http://us.imdb.com/Title?%s"</span>)
-          (<span style="color: #FF4700;">"openstreetmap"</span> .
-           <span style=
+            (<span style="color: #FF4700;">"imdb"</span> .
+             <span style=
+"color: #FF4700;">"http://us.imdb.com/Title?%s"</span>)
+            (<span style="color: #FF4700;">"openstreetmap"</span> .
+             <span style=
 "color: #FF4700;">"http://nominatim.openstreetmap.org/search?q=%s&amp;polygon=1"</span>)
-          (<span style="color: #FF4700;">"wpen"</span> .
-           <span style=
+            (<span style="color: #FF4700;">"wpen"</span> .
+             <span style=
 "color: #FF4700;">"http://en.wikipedia.org/wiki/%s"</span>)
-          (<span style="color: #FF4700;">"wpfr"</span> .
-           <span style=
-"color: #FF4700;">"http://fr.wikipedia.org/wiki/%s"</span>)))
+            (<span style="color: #FF4700;">"wpfr"</span> .
+             <span style=
+"color: #FF4700;">"http://fr.wikipedia.org/wiki/%s"</span>))))
 </pre>
             </div>
           </div>
@@ -9738,12 +9785,12 @@ M-: (executable-find "diff") RET
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #008200; font-style: italic;"> Check coherence of the faces with the above defined states</span>
-  <span style="color: #008200;">;; </span><span style=
+  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #FF4700;">"org-faces"</span>
+
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">faces for specific </span><span style=
 "color: #008200; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #008200; font-style: italic;"> keywords</span>
-  (GNUEmacs
     (setq org-todo-keyword-faces
           '((<span style=
 "color: #FF4700;">"NEW"</span>  . leuven-org-created-kwd-face)
@@ -9775,10 +9822,8 @@ M-: (executable-find "diff") RET
             (<span style=
 "color: #FF4700;">"OPENPO"</span> . leuven-org-openpo-kwd-face)
             (<span style=
-"color: #FF4700;">"CLSDPO"</span> . leuven-org-closedpo-kwd-face))))
+"color: #FF4700;">"CLSDPO"</span> . leuven-org-closedpo-kwd-face)))
 
-  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
-"color: #FF4700;">"org-faces"</span>
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Org standard faces</span>
     (set-face-attribute 'org-todo nil
@@ -9935,7 +9980,11 @@ M-: (executable-find "diff") RET
 "color: #FF4700;">"#F2F2EE"</span>)))
       <span style=
 "color: #008000;">"Face used to display CLOSED purchase order."</span>))
+</pre>
+            </div>
 
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">block switching entries to DONE if</span>
   <span style="color: #008200;">;; </span><span style=
@@ -9947,17 +9996,21 @@ M-: (executable-find "diff") RET
   <span style="color: #008200;">;;    </span><span style=
 "color: #008200; font-style: italic;">siblings not yet done</span>
   (setq org-enforce-todo-dependencies t)
+</pre>
+            </div>
 
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">don't dim blocked tasks in the agenda display -- agenda optimization</span>
+"color: #008200; font-style: italic;">5.2.7 don't dim blocked tasks in the agenda display -- agenda optimization</span>
   (setq org-agenda-dim-blocked-tasks nil) <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> not sure about this one</span>
+</pre>
+            </div>
 
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">inhibit startup when preparing agenda buffers -- agenda optimization</span>
-  (setq org-agenda-inhibit-startup t)
-
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">block switching the parent to DONE if</span>
   <span style="color: #008200;">;; </span><span style=
@@ -14850,36 +14903,10 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
               <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">12.6.6 Beamer class export</span>
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(require 'ox-beamer)</span>
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #FF4700;">"ox-beamer"</span>
-
-    (add-to-list 'org-latex-classes
-                 '(<span style="color: #FF4700;">"beamer"</span>
-                   <span style=
-"color: #FF4700;">"\\documentclass[presentation,t]{beamer}</span>
-<span style=
-"color: #FF4700;">\\usepackage{etex}% avoid `too many packages' (for PDFTeX)</span>
-<span style="color: #FF4700;">% default packages ---------------------</span>
-<span style="color: #FF4700; font-weight: bold;">[</span><span style=
-"color: #FF4700;">DEFAULT-PACKAGES]</span>
-<span style="color: #FF4700;">% packages -----------------------------</span>
-<span style="color: #FF4700; font-weight: bold;">[</span><span style=
-"color: #FF4700;">PACKAGES]</span>
-<span style="color: #FF4700;">% extra (#+LaTeX_HEADER: lines) --------</span>
-<span style="color: #FF4700; font-weight: bold;">[</span><span style=
-"color: #FF4700;">EXTRA]</span>
-<span style="color: #FF4700;">% end of `</span><span style=
-"color: #FF4700;">org-latex-classes</span><span style=
-"color: #FF4700;">' -------------------------------------------------"</span>
-              (<span style=
-"color: #FF4700;">"\\section{%s}"</span> . <span style=
-"color: #FF4700;">"\\section*{%s}"</span>)
-              (<span style=
-"color: #FF4700;">"\\subsection{%s}"</span> . <span style=
-"color: #FF4700;">"\\subsection*{%s}"</span>)
-              (<span style=
-"color: #FF4700;">"\\subsubsection{%s}"</span> . <span style=
-"color: #FF4700;">"\\subsubsection*{%s}"</span>)) t)
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">default title of a frame containing an outline</span>
@@ -19039,7 +19066,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
               <div class="org-src-container">
                 <pre class="src src-sh">
-etags --langdef=shell --regex-shell=<span style=
+     etags --langdef=shell --regex-shell=<span style=
 "color: #FF4700;">'/function [_[:alnum:]]+/[_[:alnum:]]+/'</span> --language-force=shell
 </pre>
               </div>
@@ -25001,7 +25028,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131030.143]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131107.1234]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

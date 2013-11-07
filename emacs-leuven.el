@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131103.2239
+;; Version: 20131107.1232
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131103.2239]--")
+(message "* --[ Loading Emacs Leuven 20131107.1232]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -454,6 +454,7 @@
           idle-require
           interaction-log
           ;; jabber
+          ledger-mode
           leuven-theme
           htmlize                       ; works with Org
           ;; org
@@ -2515,6 +2516,14 @@
                   (replace-regexp-in-string " .*" "" emacs-bzr-version))
                 (emacs-pid)))
 
+  (defun detach-window ()
+    "Close current window and re-open it in new frame."
+    (interactive)
+    (let ((current-buffer (window-buffer)))
+      (delete-window)
+      (select-frame (make-frame))
+      (set-window-buffer (selected-window) current-buffer)))
+
 ;;** 21.6 (info "(emacs)Frame Commands")
 
   (leuven--section "21.6 (emacs)Frame Commands")
@@ -2697,8 +2706,6 @@
 
   ;; ledger
   (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
-  (autoload 'ledger-mode "ledger"
-    "A mode for editing ledger data files.")
 
   ;; major mode for editing comma-separated value files
   (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
@@ -5713,22 +5720,8 @@ From %c"
     ) ;; with-eval-after-load "ox-latex" ends here
 
   ;; 12.6.6 Beamer class export
+  ;; (require 'ox-beamer)
   (with-eval-after-load "ox-beamer"
-
-    (add-to-list 'org-latex-classes
-                 '("beamer"
-                   "\\documentclass[presentation,t]{beamer}
-\\usepackage{etex}% avoid `too many packages' (for PDFTeX)
-% default packages ---------------------
-[DEFAULT-PACKAGES]
-% packages -----------------------------
-[PACKAGES]
-% extra (#+LaTeX_HEADER: lines) --------
-[EXTRA]
-% end of `org-latex-classes' -------------------------------------------------"
-              ("\\section{%s}" . "\\section*{%s}")
-              ("\\subsection{%s}" . "\\subsection*{%s}")
-              ("\\subsubsection{%s}" . "\\subsubsection*{%s}")) t)
 
     ;; default title of a frame containing an outline
     (setq org-beamer-outline-frame-title "Plan"))
@@ -9422,7 +9415,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131103.224]--")
+(message "* --[ Loaded Emacs Leuven 20131107.1233]--")
 
 (provide 'emacs-leuven)
 
