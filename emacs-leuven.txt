@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-08 Fri 14:23>
+# Time-stamp: <2013-11-08 Fri 17:14>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -1964,7 +1964,7 @@ match for REGEXP.
 
   ;; activate `occur' easily globally
   (global-set-key
-    (kbd "C-o") 'occur) ;; [default: "M-s o"]
+    (kbd "C-o") 'occur)                 ; [default: "M-s o"]
 #+end_src
 
 Occur Edit mode applies edits made in =*Occur*= buffers to the original buffers.
@@ -2038,7 +2038,7 @@ it to the *file word list* (=ispell-add-per-file-word-list=).
   (setq ispell-program-name ;; XXX undefined
         (or (executable-find "aspell")
             (executable-find "ispell")
-            ;; nil [default: "ispell"]
+            ;; nil                         ; [default: "ispell"]
             ))
 
   ;; check if `ispell-program-name' seems correct
@@ -2890,7 +2890,7 @@ machine editing your cron file on the remote.
 ;;** 4.6 Selecting a (info "(tramp)Default Method")
 
     ;; default transfer method
-    (setq tramp-default-method ;; [default: "scp"]
+    (setq tramp-default-method          ; [default: "scp"]
           (cond (running-ms-windows
                  ;; (issues with Cygwin `ssh' which does not cooperate
                  ;; with Emacs processes -> use `plink' from PuTTY, it
@@ -2931,12 +2931,12 @@ machine editing your cron file on the remote.
 ;;** 4.12 (info "(tramp)Password handling") for several connections
 
     ;; how many seconds passwords are cached
-    (setq password-cache-expiry 60) ;; [default: 16]
+    (setq password-cache-expiry 60)     ; [default: 16]
 
 ;;** 4.15 (info "(tramp)Remote shell setup") hints
 
     ;; string used for end of line in rsh connections
-    (setq tramp-rsh-end-of-line ;; [default: "\n"]
+    (setq tramp-rsh-end-of-line         ; [default: "\n"]
           (cond (running-ms-windows "\n")
                 (t "\r")))
 
@@ -8264,6 +8264,8 @@ What about =apacite= and =tikz= in =org-latex-packages-alist=?
   ;; (require 'ox-beamer)
   (with-eval-after-load "ox-beamer"
 
+    (message "ox-beamer LOADED!") (sit-for 5)
+
     ;; default title of a frame containing an outline
     (setq org-beamer-outline-frame-title "Plan"))
 #+end_src
@@ -9042,8 +9044,9 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
   (with-eval-after-load "org"
     (message "... Org Update dynamic blocks and tables")
 
-    (defun leuven--org-update-buffer ()
+    (defun leuven-org-update-buffer ()
       "Update all dynamic blocks and all tables in the buffer."
+      (interactive)
       (when (eq major-mode 'org-mode)
         (message "(Info) Update Org buffer %s"
                  (file-name-nondirectory (buffer-file-name)))
@@ -9063,8 +9066,8 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 
     ;; make sure that all dynamic blocks and all tables are always
     ;; up-to-date
-    (add-hook 'before-save-hook 'leuven--org-update-buffer)
-    (message "Add leuven--org-update-buffer to before-save-hook") (sit-for 1.5))
+    (add-hook 'before-save-hook 'leuven-org-update-buffer)
+    (message "Add leuven-org-update-buffer to before-save-hook") (sit-for 1.5))
 #+end_src
 
 ** Org-contrib
@@ -10609,7 +10612,7 @@ Show the diff we are about to commit: =C-c C-d=.
   (leuven--section "28.1.12 Customizing VC")
 
   ;; ;; display run messages from back-end commands
-  ;; (setq vc-command-messages t) ;; [default: nil]
+  ;; (setq vc-command-messages t)          ; [default: nil]
 
   ;; http://www.emacswiki.org/emacs/VcTopDirectory
   ;; For git
@@ -11756,7 +11759,7 @@ Extra Dired functionality
 
   ;; set the style of calendar and diary dates to ISO (how to interpret
   ;; the dates)
-  (setq calendar-date-style 'iso) ;; or 'european
+  (setq calendar-date-style 'iso)
 
   ;; week in the calendar begins on Monday
   (setq calendar-week-start-day 1)
@@ -11829,10 +11832,10 @@ But [[id:737b836b-ac1f-4120-94ca-c9e0282268f0][Org]] outperforms it!
   (with-eval-after-load "appt"
 
     ;; send the first warning 60 minutes before an appointment
-    (setq appt-message-warning-time 60) ;; [default: 12]
+    (setq appt-message-warning-time 60) ; [default: 12]
 
     ;; warn every 15 minutes
-    (setq appt-display-interval 15) ;; [default: 3]
+    (setq appt-display-interval 15)     ; [default: 3]
 #+end_src
 
 Send notifications using =notifications-notify= (which was added in Emacs 24).
@@ -12056,14 +12059,13 @@ Minimal configuration for sending a bug report, for example.
 
   ;; directory beneath which additional per-user Gnus-specific files are
   ;; placed
-  (setq gnus-directory "~/.gnus.d/")
-  ;; note that this should end with a directory separator
+  (setq gnus-directory "~/.gnus.d/")    ; this should end with a directory
+                                        ; separator
 
   ;; a newsreader for GNU Emacs
   (with-eval-after-load "gnus"
 
-    ;; package to compose an outgoing mail (Message, with Gnus
-    ;; paraphernalia)
+    ;; package to compose an outgoing mail (Message, with Gnus paraphernalia)
     (setq mail-user-agent 'gnus-user-agent)
     (XEmacs
       (setq toolbar-mail-reader 'gnus))
@@ -12083,7 +12085,7 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
 
 ;;* (info "(bbdb)Installation")
 
-  (unless (ignore-errors (load-library "bbdb-autoloads")) ;; "hand-made"
+  (unless (ignore-errors (load-library "bbdb-autoloads")) ; "hand-made"
     (autoload 'bbdb "bbdb-com"
       "Insidious Big Brother Database." t)
     (autoload 'bbdb-name "bbdb-com"
@@ -12156,13 +12158,13 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
 ;;* (info "(bbdb)Interfaces")
 
     ;; mail aliases (local mailing lists)
-    ;; (add-hook 'message-setup-hook 'bbdb-define-all-aliases) ;; BBDB 2.35
-    (add-hook 'message-setup-hook 'bbdb-get-mail-aliases) ;; BBDB 3
+    ;; (add-hook 'message-setup-hook 'bbdb-define-all-aliases) ; BBDB 2.35
+    (add-hook 'message-setup-hook 'bbdb-get-mail-aliases) ; BBDB 3
 
     ;; always use full name when sending mail
     ;; (even if User Name has an address of the form <user.name@domain>)
-    (setq bbdb-dwim-net-address-allow-redundancy t) ;; BBDB 2.35
-    (setq bbdb-mail-avoid-redundancy nil) ;; BBDB 3
+    (setq bbdb-dwim-net-address-allow-redundancy t) ; BBDB 2.35
+    (setq bbdb-mail-avoid-redundancy nil) ; BBDB 3
 
     ;; no popup on auto-complete
     (setq bbdb-completion-display-record nil)
@@ -12210,20 +12212,20 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
     (setq bbdb-default-country "")
 
     ;; disable syntax-checking of telephone numbers
-    (setq bbdb-north-american-phone-numbers-p nil) ;; BBDB 2.35
-    (setq bbdb-phone-style nil) ;; BBDB 3
+    (setq bbdb-north-american-phone-numbers-p nil) ; BBDB 2.35
+    (setq bbdb-phone-style nil)         ; BBDB 3
 
     ;; restoration of the window configuration
-    (setq bbdb-electric-p t) ;; BBDB 2.35
-    (setq bbdb-electric t) ;; BBDB 3
+    (setq bbdb-electric-p t)            ; BBDB 2.35
+    (setq bbdb-electric t)              ; BBDB 3
 
     ;; don't display a continuously-updating BBDB window while in GNUS
-    ;; (setq bbdb-use-pop-up nil) ;; BBDB 2.35
-    ;; (setq bbdb-pop-up-layout nil) ;; BBDB 3
+    ;; (setq bbdb-use-pop-up nil)       ; BBDB 2.35
+    ;; (setq bbdb-pop-up-layout nil)    ; BBDB 3
 
     ;; desired number of lines in a GNUS pop-up BBDB window
-    (setq bbdb-pop-up-target-lines 1) ;; BBDB 2.35
-    (setq bbdb-pop-up-window-size 1) ;; BBDB 3
+    (setq bbdb-pop-up-target-lines 1)   ; BBDB 2.35
+    (setq bbdb-pop-up-window-size 1)    ; BBDB 3
 
     ;; default display layout
     (setq bbdb-display-layout 'multi-line)
@@ -12244,8 +12246,8 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
             (pop-up-multi-line (indention . 14))))
 
     ;; allow cycling of email addresses while completing them
-    (setq bbdb-complete-name-allow-cycling t) ;; BBDB 2.35
-    (setq bbdb-complete-mail-allow-cycling t) ;; BBDB 3
+    (setq bbdb-complete-name-allow-cycling t) ; BBDB 2.35
+    (setq bbdb-complete-mail-allow-cycling t) ; BBDB 3
 
     ;; save the database without asking (any time it would ask)
     (setq bbdb-offer-save 'auto)

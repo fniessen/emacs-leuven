@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131108.1429
+;; Version: 20131108.1716
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131108.1429]--")
+(message "* --[ Loading Emacs Leuven 20131108.1716]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1311,7 +1311,7 @@
 
   ;; activate `occur' easily globally
   (global-set-key
-    (kbd "C-o") 'occur) ;; [default: "M-s o"]
+    (kbd "C-o") 'occur)                 ; [default: "M-s o"]
 
   (when (locate-library "color-moccur")
 
@@ -1350,7 +1350,7 @@
   (setq ispell-program-name ;; XXX undefined
         (or (executable-find "aspell")
             (executable-find "ispell")
-            ;; nil [default: "ispell"]
+            ;; nil                         ; [default: "ispell"]
             ))
 
   ;; check if `ispell-program-name' seems correct
@@ -1902,7 +1902,7 @@
 ;;** 4.6 Selecting a (info "(tramp)Default Method")
 
     ;; default transfer method
-    (setq tramp-default-method ;; [default: "scp"]
+    (setq tramp-default-method          ; [default: "scp"]
           (cond (running-ms-windows
                  ;; (issues with Cygwin `ssh' which does not cooperate
                  ;; with Emacs processes -> use `plink' from PuTTY, it
@@ -1943,12 +1943,12 @@
 ;;** 4.12 (info "(tramp)Password handling") for several connections
 
     ;; how many seconds passwords are cached
-    (setq password-cache-expiry 60) ;; [default: 16]
+    (setq password-cache-expiry 60)     ; [default: 16]
 
 ;;** 4.15 (info "(tramp)Remote shell setup") hints
 
     ;; string used for end of line in rsh connections
-    (setq tramp-rsh-end-of-line ;; [default: "\n"]
+    (setq tramp-rsh-end-of-line         ; [default: "\n"]
           (cond (running-ms-windows "\n")
                 (t "\r")))
 
@@ -5714,6 +5714,8 @@ From %c"
   ;; (require 'ox-beamer)
   (with-eval-after-load "ox-beamer"
 
+    (message "ox-beamer LOADED!") (sit-for 5)
+
     ;; default title of a frame containing an outline
     (setq org-beamer-outline-frame-title "Plan"))
 
@@ -6199,8 +6201,9 @@ From %c"
   (with-eval-after-load "org"
     (message "... Org Update dynamic blocks and tables")
 
-    (defun leuven--org-update-buffer ()
+    (defun leuven-org-update-buffer ()
       "Update all dynamic blocks and all tables in the buffer."
+      (interactive)
       (when (eq major-mode 'org-mode)
         (message "(Info) Update Org buffer %s"
                  (file-name-nondirectory (buffer-file-name)))
@@ -6220,8 +6223,8 @@ From %c"
 
     ;; make sure that all dynamic blocks and all tables are always
     ;; up-to-date
-    (add-hook 'before-save-hook 'leuven--org-update-buffer)
-    (message "Add leuven--org-update-buffer to before-save-hook") (sit-for 1.5))
+    (add-hook 'before-save-hook 'leuven-org-update-buffer)
+    (message "Add leuven-org-update-buffer to before-save-hook") (sit-for 1.5))
 
   (with-eval-after-load "org"
     (message "... Org Effectiveness")
@@ -7206,7 +7209,7 @@ From %c"
   (leuven--section "28.1.12 Customizing VC")
 
   ;; ;; display run messages from back-end commands
-  ;; (setq vc-command-messages t) ;; [default: nil]
+  ;; (setq vc-command-messages t)          ; [default: nil]
 
   ;; http://www.emacswiki.org/emacs/VcTopDirectory
   ;; For git
@@ -7812,7 +7815,7 @@ From %c"
 
   ;; set the style of calendar and diary dates to ISO (how to interpret
   ;; the dates)
-  (setq calendar-date-style 'iso) ;; or 'european
+  (setq calendar-date-style 'iso)
 
   ;; week in the calendar begins on Monday
   (setq calendar-week-start-day 1)
@@ -7865,10 +7868,10 @@ From %c"
   (with-eval-after-load "appt"
 
     ;; send the first warning 60 minutes before an appointment
-    (setq appt-message-warning-time 60) ;; [default: 12]
+    (setq appt-message-warning-time 60) ; [default: 12]
 
     ;; warn every 15 minutes
-    (setq appt-display-interval 15) ;; [default: 3]
+    (setq appt-display-interval 15)     ; [default: 3]
 
     ;; use a separate window to display appointment reminders
     (setq appt-display-format 'window)
@@ -8047,14 +8050,13 @@ From %c"
 
   ;; directory beneath which additional per-user Gnus-specific files are
   ;; placed
-  (setq gnus-directory "~/.gnus.d/")
-  ;; note that this should end with a directory separator
+  (setq gnus-directory "~/.gnus.d/")    ; this should end with a directory
+                                        ; separator
 
   ;; a newsreader for GNU Emacs
   (with-eval-after-load "gnus"
 
-    ;; package to compose an outgoing mail (Message, with Gnus
-    ;; paraphernalia)
+    ;; package to compose an outgoing mail (Message, with Gnus paraphernalia)
     (setq mail-user-agent 'gnus-user-agent)
     (XEmacs
       (setq toolbar-mail-reader 'gnus))
@@ -8068,7 +8070,7 @@ From %c"
 
 ;;* (info "(bbdb)Installation")
 
-  (unless (ignore-errors (load-library "bbdb-autoloads")) ;; "hand-made"
+  (unless (ignore-errors (load-library "bbdb-autoloads")) ; "hand-made"
     (autoload 'bbdb "bbdb-com"
       "Insidious Big Brother Database." t)
     (autoload 'bbdb-name "bbdb-com"
@@ -8137,13 +8139,13 @@ From %c"
 ;;* (info "(bbdb)Interfaces")
 
     ;; mail aliases (local mailing lists)
-    ;; (add-hook 'message-setup-hook 'bbdb-define-all-aliases) ;; BBDB 2.35
-    (add-hook 'message-setup-hook 'bbdb-get-mail-aliases) ;; BBDB 3
+    ;; (add-hook 'message-setup-hook 'bbdb-define-all-aliases) ; BBDB 2.35
+    (add-hook 'message-setup-hook 'bbdb-get-mail-aliases) ; BBDB 3
 
     ;; always use full name when sending mail
     ;; (even if User Name has an address of the form <user.name@domain>)
-    (setq bbdb-dwim-net-address-allow-redundancy t) ;; BBDB 2.35
-    (setq bbdb-mail-avoid-redundancy nil) ;; BBDB 3
+    (setq bbdb-dwim-net-address-allow-redundancy t) ; BBDB 2.35
+    (setq bbdb-mail-avoid-redundancy nil) ; BBDB 3
 
     ;; no popup on auto-complete
     (setq bbdb-completion-display-record nil)
@@ -8183,20 +8185,20 @@ From %c"
     (setq bbdb-default-country "")
 
     ;; disable syntax-checking of telephone numbers
-    (setq bbdb-north-american-phone-numbers-p nil) ;; BBDB 2.35
-    (setq bbdb-phone-style nil) ;; BBDB 3
+    (setq bbdb-north-american-phone-numbers-p nil) ; BBDB 2.35
+    (setq bbdb-phone-style nil)         ; BBDB 3
 
     ;; restoration of the window configuration
-    (setq bbdb-electric-p t) ;; BBDB 2.35
-    (setq bbdb-electric t) ;; BBDB 3
+    (setq bbdb-electric-p t)            ; BBDB 2.35
+    (setq bbdb-electric t)              ; BBDB 3
 
     ;; don't display a continuously-updating BBDB window while in GNUS
-    ;; (setq bbdb-use-pop-up nil) ;; BBDB 2.35
-    ;; (setq bbdb-pop-up-layout nil) ;; BBDB 3
+    ;; (setq bbdb-use-pop-up nil)       ; BBDB 2.35
+    ;; (setq bbdb-pop-up-layout nil)    ; BBDB 3
 
     ;; desired number of lines in a GNUS pop-up BBDB window
-    (setq bbdb-pop-up-target-lines 1) ;; BBDB 2.35
-    (setq bbdb-pop-up-window-size 1) ;; BBDB 3
+    (setq bbdb-pop-up-target-lines 1)   ; BBDB 2.35
+    (setq bbdb-pop-up-window-size 1)    ; BBDB 3
 
     ;; default display layout
     (setq bbdb-display-layout 'multi-line)
@@ -8217,8 +8219,8 @@ From %c"
             (pop-up-multi-line (indention . 14))))
 
     ;; allow cycling of email addresses while completing them
-    (setq bbdb-complete-name-allow-cycling t) ;; BBDB 2.35
-    (setq bbdb-complete-mail-allow-cycling t) ;; BBDB 3
+    (setq bbdb-complete-name-allow-cycling t) ; BBDB 2.35
+    (setq bbdb-complete-mail-allow-cycling t) ; BBDB 3
 
     ;; save the database without asking (any time it would ask)
     (setq bbdb-offer-save 'auto)
@@ -9395,7 +9397,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131108.143]--")
+(message "* --[ Loaded Emacs Leuven 20131108.1717]--")
 
 (provide 'emacs-leuven)
 

@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-08 Fri 14:32 -->
+  <title>Emacs Leuven</title><!-- 2013-11-08 Fri 17:19 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131108.1431</span>
+"color: #008200; font-style: italic;">Version: 20131108.1717</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131108.1431]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131108.1717]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -4365,8 +4365,9 @@
 "color: #008200; font-style: italic;">occur</span><span style=
 "color: #008200; font-style: italic;">' easily globally</span>
   (global-set-key
-    (kbd <span style="color: #FF4700;">"C-o"</span>) 'occur) <span style=
-"color: #008200;">;; </span><span style=
+    (kbd <span style=
+"color: #FF4700;">"C-o"</span>) 'occur)                 <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">[default: "M-s o"]</span>
 </pre>
           </div>
@@ -4497,7 +4498,7 @@
         (or (executable-find <span style="color: #FF4700;">"aspell"</span>)
             (executable-find <span style="color: #FF4700;">"ispell"</span>)
             <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">nil [default: "ispell"]</span>
+"color: #008200; font-style: italic;">nil                         ; [default: "ispell"]</span>
             ))
 
   <span style="color: #008200;">;; </span><span style=
@@ -5827,8 +5828,8 @@ M-: (executable-find "diff") RET
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">default transfer method</span>
-    (setq tramp-default-method <span style=
-"color: #008200;">;; </span><span style=
+    (setq tramp-default-method          <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">[default: "scp"]</span>
           (<span style="color: #0000FF;">cond</span> (running-ms-windows
                  <span style="color: #008200;">;; </span><span style=
@@ -5905,8 +5906,8 @@ M-: (executable-find "diff") RET
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">how many seconds passwords are cached</span>
-    (setq password-cache-expiry 60) <span style=
-"color: #008200;">;; </span><span style=
+    (setq password-cache-expiry 60)     <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">[default: 16]</span>
 
 <span style="color: #008200;">;;</span><span style=
@@ -5914,8 +5915,8 @@ M-: (executable-find "diff") RET
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">string used for end of line in rsh connections</span>
-    (setq tramp-rsh-end-of-line <span style=
-"color: #008200;">;; </span><span style=
+    (setq tramp-rsh-end-of-line         <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">[default: "\n"]</span>
           (<span style=
 "color: #0000FF;">cond</span> (running-ms-windows <span style=
@@ -14900,6 +14901,9 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #FF4700;">"ox-beamer"</span>
 
+    (message <span style=
+"color: #FF4700;">"ox-beamer LOADED!"</span>) (sit-for 5)
+
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">default title of a frame containing an outline</span>
     (setq org-beamer-outline-frame-title <span style=
@@ -16255,9 +16259,10 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #FF4700;">"... Org Update dynamic blocks and tables"</span>)
 
     (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--org-update-buffer</span> ()
+"color: #006699;">leuven-org-update-buffer</span> ()
       <span style=
 "color: #008000;">"Update all dynamic blocks and all tables in the buffer."</span>
+      (interactive)
       (<span style="color: #0000FF;">when</span> (eq major-mode 'org-mode)
         (message <span style=
 "color: #FF4700;">"(Info) Update Org buffer %s"</span>
@@ -16291,9 +16296,9 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008200; font-style: italic;">make sure that all dynamic blocks and all tables are always</span>
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">up-to-date</span>
-    (add-hook 'before-save-hook 'leuven--org-update-buffer)
+    (add-hook 'before-save-hook 'leuven-org-update-buffer)
     (message <span style=
-"color: #FF4700;">"Add leuven--org-update-buffer to before-save-hook"</span>) (sit-for 1.5))
+"color: #FF4700;">"Add leuven-org-update-buffer to before-save-hook"</span>) (sit-for 1.5))
 </pre>
           </div>
         </div>
@@ -18845,7 +18850,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; display run messages from back-end commands</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(setq vc-command-messages t) ;; [default: nil]</span>
+"color: #008200; font-style: italic;">(setq vc-command-messages t)          ; [default: nil]</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">http://www.emacswiki.org/emacs/VcTopDirectory</span>
@@ -20752,9 +20757,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200; font-style: italic;">set the style of calendar and diary dates to ISO (how to interpret</span>
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">the dates)</span>
-  (setq calendar-date-style 'iso) <span style=
-"color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">or 'european</span>
+  (setq calendar-date-style 'iso)
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">week in the calendar begins on Monday</span>
@@ -20890,12 +20893,12 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200; font-style: italic;">send the first </span><span style=
 "color: #008200; background-color: #FFFF88; font-style: italic;">warning</span><span style="color: #008200; font-style: italic;"> 60 minutes before an appointment</span>
     (setq appt-message-<span style=
-"color: #CC0000; background-color: #FFFF88;">warning</span>-time 60) <span style="color: #008200;">;; </span><span style="color: #008200; font-style: italic;">[default: 12]</span>
+"color: #CC0000; background-color: #FFFF88;">warning</span>-time 60) <span style="color: #008200;">; </span><span style="color: #008200; font-style: italic;">[default: 12]</span>
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">warn every 15 minutes</span>
-    (setq appt-display-interval 15) <span style=
-"color: #008200;">;; </span><span style=
+    (setq appt-display-interval 15)     <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">[default: 3]</span>
 </pre>
           </div>
@@ -21263,9 +21266,13 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200; font-style: italic;">directory beneath which additional per-user Gnus-specific files are</span>
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">placed</span>
-  (setq gnus-directory <span style="color: #FF4700;">"~/.gnus.d/"</span>)
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">note that this should end with a directory separator</span>
+  (setq gnus-directory <span style=
+"color: #FF4700;">"~/.gnus.d/"</span>)    <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">this should end with a directory</span>
+                                        <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">separator</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">a newsreader for GNU Emacs</span>
@@ -21273,9 +21280,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #FF4700;">"gnus"</span>
 
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">package to compose an outgoing mail (Message, with Gnus</span>
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">paraphernalia)</span>
+"color: #008200; font-style: italic;">package to compose an outgoing mail (Message, with Gnus paraphernalia)</span>
     (setq mail-user-agent 'gnus-user-agent)
     (XEmacs
       (setq toolbar-mail-reader 'gnus))
@@ -21305,7 +21310,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200; font-style: italic;">* (info "(bbdb)Installation")</span>
 
   (<span style="color: #0000FF;">unless</span> (ignore-<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span>s (load-library <span style="color: #FF4700;">"bbdb-autoloads"</span>)) <span style="color: #008200;">;; </span><span style="color: #008200; font-style: italic;">"hand-made"</span>
+"color: #CC0000; background-color: #FFFF88;">error</span>s (load-library <span style="color: #FF4700;">"bbdb-autoloads"</span>)) <span style="color: #008200;">; </span><span style="color: #008200; font-style: italic;">"hand-made"</span>
     (autoload 'bbdb <span style="color: #FF4700;">"bbdb-com"</span>
       <span style="color: #008000;">"Insidious Big Brother Database."</span> t)
     (autoload 'bbdb-name <span style="color: #FF4700;">"bbdb-com"</span>
@@ -21425,9 +21430,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">mail aliases (local mailing lists)</span>
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(add-hook 'message-setup-hook 'bbdb-define-all-aliases) ;; BBDB 2.35</span>
+"color: #008200; font-style: italic;">(add-hook 'message-setup-hook 'bbdb-define-all-aliases) ; BBDB 2.35</span>
     (add-hook 'message-setup-hook 'bbdb-get-mail-aliases) <span style=
-"color: #008200;">;; </span><span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">BBDB 3</span>
 
     <span style="color: #008200;">;; </span><span style=
@@ -21435,10 +21440,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(even if User Name has an address of the form <a href="mailto:user.name%40domain">&lt;user.name@domain&gt;</a>)</span>
     (setq bbdb-dwim-net-address-allow-redundancy t) <span style=
-"color: #008200;">;; </span><span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">BBDB 2.35</span>
     (setq bbdb-mail-avoid-redundancy nil) <span style=
-"color: #008200;">;; </span><span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">BBDB 3</span>
 
     <span style="color: #008200;">;; </span><span style=
@@ -21516,34 +21521,35 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">disable syntax-checking of telephone numbers</span>
     (setq bbdb-north-american-phone-numbers-p nil) <span style=
-"color: #008200;">;; </span><span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">BBDB 2.35</span>
-    (setq bbdb-phone-style nil) <span style=
-"color: #008200;">;; </span><span style=
+    (setq bbdb-phone-style nil)         <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">BBDB 3</span>
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">restoration of the window configuration</span>
-    (setq bbdb-electric-p t) <span style=
-"color: #008200;">;; </span><span style=
+    (setq bbdb-electric-p t)            <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">BBDB 2.35</span>
-    (setq bbdb-electric t) <span style="color: #008200;">;; </span><span style=
+    (setq bbdb-electric t)              <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">BBDB 3</span>
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">don't display a continuously-updating BBDB window while in GNUS</span>
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(setq bbdb-use-pop-up nil) ;; BBDB 2.35</span>
+"color: #008200; font-style: italic;">(setq bbdb-use-pop-up nil)       ; BBDB 2.35</span>
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(setq bbdb-pop-up-layout nil) ;; BBDB 3</span>
+"color: #008200; font-style: italic;">(setq bbdb-pop-up-layout nil)    ; BBDB 3</span>
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">desired number of lines in a GNUS pop-up BBDB window</span>
-    (setq bbdb-pop-up-target-lines 1) <span style=
-"color: #008200;">;; </span><span style=
+    (setq bbdb-pop-up-target-lines 1)   <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">BBDB 2.35</span>
-    (setq bbdb-pop-up-window-size 1) <span style=
-"color: #008200;">;; </span><span style=
+    (setq bbdb-pop-up-window-size 1)    <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">BBDB 3</span>
 
     <span style="color: #008200;">;; </span><span style=
@@ -21570,10 +21576,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">allow cycling of email addresses while completing them</span>
     (setq bbdb-complete-name-allow-cycling t) <span style=
-"color: #008200;">;; </span><span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">BBDB 2.35</span>
     (setq bbdb-complete-mail-allow-cycling t) <span style=
-"color: #008200;">;; </span><span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">BBDB 3</span>
 
     <span style="color: #008200;">;; </span><span style=
@@ -25004,7 +25010,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131108.1432]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131108.1718]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
