@@ -2,12 +2,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="american" xml:lang="american">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-08 Fri 22:50 -->
+  <title>Emacs Leuven</title><!-- 2013-11-08 Fri 23:39 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -317,7 +317,7 @@
 
               <li><a href="#sec-22-3">Recognizing Coding Systems</a></li>
 
-              <li><a href="#sec-22-4">Specifying a File's Coding
+              <li><a href="#sec-22-4">Specifying a File’s Coding
               System</a></li>
 
               <li><a href="#sec-22-5">Bidirectional Editing</a></li>
@@ -433,7 +433,7 @@
               </li>
 
               <li>
-                <a href="#sec-26-4">"TODO" Items</a>
+                <a href="#sec-26-4">“TODO” Items</a>
 
                 <ul>
                   <li><a href="#sec-26-4-1">Basic TODO functionality</a></li>
@@ -545,7 +545,7 @@
                     <a href="#sec-26-9-9">Not sorted</a>
 
                     <ul>
-                      <li><a href="#sec-26-9-9-1">Mouse cursor doesn't
+                      <li><a href="#sec-26-9-9-1">Mouse cursor doesn’t
                       highlight agenda lines</a></li>
                     </ul>
                   </li>
@@ -1046,7 +1046,7 @@
                 <ul>
                   <li><a href="#sec-47-1-1">Basic Commands</a></li>
 
-                  <li><a href="#sec-47-1-2">"Quick Calculator" Mode</a></li>
+                  <li><a href="#sec-47-1-2">“Quick Calculator” Mode</a></li>
                 </ul>
               </li>
 
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131108.2249</span>
+"color: #008200; font-style: italic;">Version: 20131108.2338</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131108.2249]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131108.2338]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -1755,7 +1755,7 @@
 
           <p><code>leuven-user-lisp-directory</code> is there so that you have
           an easy way of installing your own Emacs add-ons (which may be
-          specific to the version of Emacs you're running). This keeps your
+          specific to the version of Emacs you’re running). This keeps your
           local add-ons apart from distro supplied ones.</p>
 
           <p>It also means you can do a complete re-install of Emacs (or even
@@ -1764,7 +1764,7 @@
 
           <div class="inlinetask">
             <b><span class="todo TODO">TODO</span> Specify variables using
-            `defcustom'</b><br />
+            `defcustom’</b><br />
             nil
           </div>
 
@@ -1782,7 +1782,7 @@
 
           <p>Adding the right Lisp directories to your <code>load-path</code>
           must be the very <b>first thing</b> in your <code>.emacs</code> file,
-          before the first time packages are required, to make sure that you're
+          before the first time packages are required, to make sure that you’re
           not picking up bits and pieces from older files (bundled with Emacs,
           and loaded before the path to the <b>newest</b> versions are
           set).</p>
@@ -1952,7 +1952,7 @@
             deletions</i>).</li>
           </ul>
 
-          <p>When it's done installing all the packages, you delete the
+          <p>When it’s done installing all the packages, you delete the
           obsolete packages by hit <code>y</code> (<i>Yes</i>) when asked.</p>
         </div>
       </div>
@@ -2605,7 +2605,7 @@
         <code>apropos</code> or <code>man -k</code>.</p>
 
         <p>Note about PHP documentation lookup – PHP Mode has a nice feature to
-        lookup the function's definition in PHP's manual in your web browser
+        lookup the function’s definition in PHP’s manual in your web browser
         (<code>M-x php-search-documentation</code> or <code>C-c C-f</code>).
         You can combine it with Emacs-w3m to get the relevant manual page
         without leaving Emacs.</p>
@@ -2696,7 +2696,7 @@
 
         <div class="outline-text-3" id="text-11-3">
           <p>The <code>*Messages*</code> buffer is called the "
-          <b>Message-Log</b>" on XEmacs (note the initial space). To display
+          <b>Message-Log</b>” on XEmacs (note the initial space). To display
           the message log, execute the command <code>M-x
           show-message-log</code>.</p>
 
@@ -2713,7 +2713,7 @@
           <dl class="org-dl">
             <dt><code>^</code></dt>
 
-            <dd>Move "up" from this node.</dd>
+            <dd>Move “up” from this node.</dd>
 
             <dt><code>]</code></dt>
 
@@ -2730,12 +2730,12 @@
 
             <dt><code>i</code></dt>
 
-            <dd><b>Search for a topic in this manual's Index</b> and go to
+            <dd><b>Search for a topic in this manual’s Index</b> and go to
             index entry.</dd>
 
             <dt>s</dt>
 
-            <dd><b>Search for a regexp</b> and select node it's found in.</dd>
+            <dd><b>Search for a regexp</b> and select node it’s found in.</dd>
           </dl>
 
           <div class="org-src-container">
@@ -3241,7 +3241,7 @@
           (found) if they move slightly because of text changes.</p>
 
           <p>To navigate to a bookmark (linking to a file or directory), just
-          press <code>C-x r b</code>. You'll be prompted for the bookmark name,
+          press <code>C-x r b</code>. You’ll be prompted for the bookmark name,
           and it will open that file or directory.</p>
 
           <div class="org-src-container">
@@ -3367,7 +3367,7 @@
         <h3 id="sec-14-2">Automatic Scrolling</h3>
 
         <div class="outline-text-3" id="text-14-2">
-          <p>"Smooth" (civilized) scrolling.</p>
+          <p>“Smooth” (civilized) scrolling.</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -4153,12 +4153,12 @@
         <h3 id="sec-15-1">Incremental Search</h3>
 
         <div class="outline-text-3" id="text-15-1">
-          <p>Have a look at the "Standard Isearch Keys" on <a href=
+          <p>Have a look at the “Standard Isearch Keys” on <a href=
           "http://www.emacswiki.org/emacs/IncrementalSearch">http://www.emacswiki.org/emacs/IncrementalSearch</a></p>
 
           <p>Isearch has a binding which deletes all the non-matching
           characters from the search string: <code>C-g</code> (not a very
-          intuitive binding, because it's usually associated with aborting
+          intuitive binding, because it’s usually associated with aborting
           operations, not with correcting things).</p>
 
           <p>If you hit <code>M-e</code> (to edit the search string), the
@@ -4318,7 +4318,7 @@
 
         <div class="outline-text-3" id="text-15-4">
           <p>Pass the string or the regexp directly to
-          <code>query-replace</code>, so you can't mangle it on the way, by
+          <code>query-replace</code>, so you can’t mangle it on the way, by
           pressing <code>M-%</code> while at the <code>I-search:</code>
           prompt.</p>
         </div>
@@ -4470,14 +4470,16 @@
           <p>GNU <b>Aspell</b> is better than <b>Ispell</b>:</p>
 
           <ul class="org-ul">
-            <li>It does recognize words with apostrophes (l'avion)… but it is
+            <li>It does recognize words with apostrophes (l’avion)… but it is
             slower.</li>
 
             <li>It can handle UTF-8 documents far better than Ispell can.</li>
           </ul>
 
-          <p>Have a look at <a href=
-          "https://github.com/rolandwalker/flyspell-lazy">Flyspell-lazy</a>?</p>
+          <p>See <a href=
+          "https://github.com/rolandwalker/flyspell-lazy">Flyspell-lazy</a> if
+          you are experiencing performance issues with Emacs’ built-in
+          <code>flyspell-mode</code>.</p>
 
           <p>When spellchecking a buffer, the <code>A</code> command accepts an
           incorrect word, and adds it to the <b>file word list</b>
@@ -4580,15 +4582,15 @@
           documentation:</p>
 
           <ul class="org-ul">
-            <li>"ultra" is the fastest suggestion mode, which is still twice as
+            <li>“ultra” is the fastest suggestion mode, which is still twice as
             slow as <code>ispell</code>.</li>
 
             <li>If your machine is fast enough, a better option might be to try
-            "fast" mode, which is twice as slow as "ultra", but more
+            “fast” mode, which is twice as slow as “ultra”, but more
             accurate.</li>
 
-            <li>The "normal" mode, which is the <code>aspell</code> default, is
-            even more accurate, but is reportedly 10 times slower than "fast"
+            <li>The “normal” mode, which is the <code>aspell</code> default, is
+            even more accurate, but is reportedly 10 times slower than “fast”
             mode.</li>
           </ul>
 
@@ -4665,7 +4667,7 @@
           minibuffer. Just keep hitting <code>C-.</code> to replace the word
           with the successive suggestions.</p>
 
-          <p><code>flyspell-goto-next-error</code> is bound to "C-,". Press it
+          <p><code>flyspell-goto-next-error</code> is bound to “C-,”. Press it
           to go to the next previously detected error.</p>
 
           <p><code>flyspell-correct-word-before-point</code> is bound to
@@ -4751,7 +4753,7 @@
           </div>
 
           <div class="inlinetask">
-            <b><span class="todo TODO">TODO</span> Have a look at `diction'
+            <b><span class="todo TODO">TODO</span> Have a look at `diction’
             (style and grammar for English)</b><br />
             nil
           </div>
@@ -5147,7 +5149,7 @@
           <p>Notes:</p>
 
           <ul class="org-ul">
-            <li>Use the asynchronous export (if possible, so that I don't loose
+            <li>Use the asynchronous export (if possible, so that I don’t loose
             time, or let it open to the value of that var)?</li>
 
             <li>Different behaviors can be obtained with <code>C-u</code> (or
@@ -5367,7 +5369,7 @@
 </pre>
           </div>
 
-          <p>Make the message "<i>FILENAME has auto save data</i>"
+          <p>Make the message “<i>FILENAME has auto save data</i>”
           unmissable:</p>
 
           <div class="org-src-container">
@@ -5447,7 +5449,7 @@
 
         <div class="outline-text-3" id="text-18-6">
           <p>In Diff mode, I can <b>select a hunk and apply it (in
-          reverse)</b>. Nice following <code>C-x v =</code> to show what's
+          reverse)</b>. Nice following <code>C-x v =</code> to show what’s
           changed, and decide to reverse a change.</p>
 
           <div class="org-src-container">
@@ -5579,8 +5581,8 @@ M-: (executable-find "diff") RET
           <code>ediff-directories</code> or <a href=
           "http://meldmerge.org/">Meld</a>.</p>
 
-          <p><code>ediff-directories</code> combined with the key sequence "= h
-          x" shows you only the files which differ.</p>
+          <p><code>ediff-directories</code> combined with the key sequence “= h
+          x” shows you only the files which differ.</p>
 
           <p>It is not recursive, but it gives you also subdirectory pairs to
           compare. Just hit <code>RET</code> on such a pair.</p>
@@ -5742,7 +5744,7 @@ M-: (executable-find "diff") RET
           <div class="outline-text-4" id="text-18-10-1">
             <div class="inlinetask">
               <b><span class="todo TODO">TODO</span> Check out why network
-              share aren't accessible</b><br />
+              share aren’t accessible</b><br />
 
               <p>I should be able to open <i>/CAUCHY/fsd</i>…</p>
             </div>
@@ -5792,12 +5794,12 @@ M-: (executable-find "diff") RET
             <code>lgrep</code>, <code>compile -</code> properly work with TRAMP
             (run on remote server and show result in your Emacs).</p>
 
-            <p>Note – `sshfs' can give me the same functionality as TRAMP: it
+            <p>Note – `sshfs’ can give me the same functionality as TRAMP: it
             is like a personal NFS (another mounted file system) over SSH. If
-            you can SSH to a server, you can probably do `sshfs'.</p>
+            you can SSH to a server, you can probably do `sshfs’.</p>
 
-            <p>&gt; I'm in shell mode, logged in on another machine over ssh,
-            and I want to do &gt; some 'crontab -e' editing on that machine.
+            <p>&gt; I’m in shell mode, logged in on another machine over ssh,
+            and I want to do &gt; some ‘crontab -e’ editing on that machine.
             But that will bring up a new &gt; editor, which is whatever you set
             in your EDITOR env variable, and both vi &gt; and emacs cannot be
             used in this dumb shell. How can I edit the crontab in &gt; my
@@ -5999,8 +6001,8 @@ M-: (executable-find "diff") RET
             <p>You can just do <code>C-x C-f
             /sudo:user@localhost:/foo/bar/baz.txt &lt;RET&gt;</code>.</p>
 
-            <p>Because I'm lazy, I have a hack (from Tassilo Horn): if I try to
-            open a file for which I don't have permissions for, I'm queried if
+            <p>Because I’m lazy, I have a hack (from Tassilo Horn): if I try to
+            open a file for which I don’t have permissions for, I’m queried if
             I want to open it as root using the <code>sudo</code> tramp
             method.</p>
 
@@ -7359,7 +7361,7 @@ M-: (executable-find "diff") RET
         sequences, you can use <code>C-u C-s [^[:ascii:]]</code>.</p>
 
         <p>To check your locale settings, you can have a look to what Emacs
-        produce (in a mail buffer) under "Important settings" when you type
+        produce (in a mail buffer) under “Important settings” when you type
         <code>M-x report-emacs-bug &lt;RET&gt; foo &lt;RET&gt;</code>:</p>
 
         <p><b>Important settings</b>:</p>
@@ -7446,7 +7448,7 @@ M-: (executable-find "diff") RET
             <li><code>LANG</code></li>
           </ul>
 
-          <p>but this won't work for a Windows binary (well for the Cygwin
+          <p>but this won’t work for a Windows binary (well for the Cygwin
           version of Emacs).</p>
         </div>
       </div>
@@ -7513,7 +7515,7 @@ M-: (executable-find "diff") RET
       </div>
 
       <div id="outline-container-sec-22-4" class="outline-3">
-        <h3 id="sec-22-4">Specifying a File's Coding System</h3>
+        <h3 id="sec-22-4">Specifying a File’s Coding System</h3>
 
         <div class="outline-text-3" id="text-22-4">
           <div class="org-src-container">
@@ -7587,10 +7589,10 @@ M-: (executable-find "diff") RET
         <h3 id="sec-23-1">How Major Modes are Chosen</h3>
 
         <div class="outline-text-3" id="text-23-1">
-          <p>See "Syntax of Regexps":</p>
+          <p>See “Syntax of Regexps”:</p>
 
           <ul class="org-ul">
-            <li>\' matches end of string</li>
+            <li>\’ matches end of string</li>
 
             <li><code>$</code> matches end of line</li>
           </ul>
@@ -7931,8 +7933,8 @@ M-: (executable-find "diff") RET
             <li><b>No-break space</b>, required for French punctuation (before
             <code>:</code>).</li>
 
-            <li><b>No-break thin space</b>, known in Unicode as "Narrow
-            No-Break Space", required for French punctuation (before
+            <li><b>No-break thin space</b>, known in Unicode as “Narrow
+            No-Break Space”, required for French punctuation (before
             <code>?</code>, <code>!</code> or <code>;</code>).</li>
           </ul>
 
@@ -8360,7 +8362,7 @@ M-: (executable-find "diff") RET
             <p>which starts outline-minor-mode by hiding all the bodies of
             functions. He also uses <code>reveal-mode</code> which
             automatically unhides the bodies when you try to move the cursor
-            into them (so you don't need to remember the key sequences to use
+            into them (so you don’t need to remember the key sequences to use
             for opening/closing elements).</p>
           </div>
         </div>
@@ -8446,7 +8448,7 @@ M-: (executable-find "diff") RET
             <p><code>org-global-cycle</code> (!= <code>org-cycle-global</code>)
             now works fine in buffers using <code>orgstruct-mode</code>.</p>
 
-            <p>As for handling "large" files, I use this:</p>
+            <p>As for handling “large” files, I use this:</p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -8801,11 +8803,11 @@ M-: (executable-find "diff") RET
         </ul>
 
         <p>When you have <code>org-id</code> in <code>org-modules</code>,
-        unique <b>ID's</b> are generated when you link to a task (using
+        unique <b>ID’s</b> are generated when you link to a task (using
         <code>org-id-get-create</code>) — instead of links containing
         <b>headline text</b>.</p>
 
-        <p>ID's are saved in <code>~/.emacs.d/.org-id-locations</code> on my
+        <p>ID’s are saved in <code>~/.emacs.d/.org-id-locations</code> on my
         system (see <code>org-id-locations-file</code>).</p>
 
         <div class="org-src-container">
@@ -9247,7 +9249,7 @@ M-: (executable-find "diff") RET
 
               <p>(eval (org-propertize (org-display-outline-path nil t " / " t)
               (quote face) (quote mode-line-emphasis) (quote help-echo)
-              "Outline path")) signaled (wrong-type-argument stringp nil)</p>
+              “Outline path”)) signaled (wrong-type-argument stringp nil)</p>
             </div>
           </div>
         </div>
@@ -9537,8 +9539,8 @@ M-: (executable-find "diff") RET
             </div>
 
             <p>PDF viewer? See <code>org-file-apps</code>. Just change to your
-            favorite viewer. And make sure that you're calling
-            <code>org-return</code> to open (it's bound to
+            favorite viewer. And make sure that you’re calling
+            <code>org-return</code> to open (it’s bound to
             <code>C-m</code>).</p>
 
             <p>If I inline an image in an Org file, I can toggle its display
@@ -9617,7 +9619,7 @@ M-: (executable-find "diff") RET
       </div>
 
       <div id="outline-container-sec-26-4" class="outline-3">
-        <h3 id="sec-26-4">"TODO" Items</h3>
+        <h3 id="sec-26-4">“TODO” Items</h3>
 
         <div class="outline-text-3" id="text-26-4">
           <div class="org-src-container">
@@ -10054,9 +10056,9 @@ M-: (executable-find "diff") RET
             </div>
 
             <p>Warning! The docstring of <code>org-log-note-headings</code>
-            mentions that "in fact, it is <b>not a good idea to change the
-            `state' entry</b>, because agenda log mode depends on the format of
-            these entries."</p>
+            mentions that “in fact, it is <b>not a good idea to change the
+            `state’ entry</b>, because agenda log mode depends on the format of
+            these entries.”</p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -10424,7 +10426,7 @@ M-: (executable-find "diff") RET
 
                 <dt>+4w RET</dt>
 
-                <dd>Next "month".</dd>
+                <dd>Next “month”.</dd>
               </dl>
 
               <p>Remove scheduling date with <code>C-u C-c C-s</code>.</p>
@@ -10933,7 +10935,7 @@ M-: (executable-find "diff") RET
               <dl class="org-dl">
                 <dt>Task creator</dt>
 
-                <dd>Sender's email.</dd>
+                <dd>Sender’s email.</dd>
 
                 <dt>Task assignee</dt>
 
@@ -10970,23 +10972,23 @@ M-: (executable-find "diff") RET
 
                 <dt>Create a TODO Action of an existing Project</dt>
 
-                <dd>Attach it to something that we're already working on.</dd>
+                <dd>Attach it to something that we’re already working on.</dd>
 
                 <dt>Create a WAIT Item</dt>
 
-                <dd>Create a new "Waiting For" item.</dd>
+                <dd>Create a new “Waiting For” item.</dd>
 
                 <dt>Create a DLGT Item</dt>
 
-                <dd>Create a new "Assigned" item.</dd>
+                <dd>Create a new “Assigned” item.</dd>
 
                 <dt>Create a DFRD Item</dt>
 
-                <dd>Create a new "Someday" item.</dd>
+                <dd>Create a new “Someday” item.</dd>
 
                 <dt>Create a Reference Item</dt>
 
-                <dd>Create a new "Reference" item.</dd>
+                <dd>Create a new “Reference” item.</dd>
               </dl>
 
               <div class="org-src-container">
@@ -11675,7 +11677,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 </pre>
             </div>
 
-            <p>Press <code>C-c a a</code> to jump you to this week's task page
+            <p>Press <code>C-c a a</code> to jump you to this week’s task page
             from anywhere.</p>
 
             <div class="org-src-container">
@@ -11712,7 +11714,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 </pre>
             </div>
 
-            <p>Don't tell me about stuff that isn't due yet: tasks scheduled in
+            <p>Don’t tell me about stuff that isn’t due yet: tasks scheduled in
             the future should no longer show up in global todo or tags searches
             until that date arrives – at which point it will be in all
             lists.</p>
@@ -11978,7 +11980,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             </div>
 
             <p>Show the time grid in the daily agenda but not in the weekly
-            agenda, except for today's date:</p>
+            agenda, except for today’s date:</p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -12217,7 +12219,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
               <dd>Done at home</dd>
             </dl>
 
-            <p>Now, it's quite easy for my computer to figure out which of
+            <p>Now, it’s quite easy for my computer to figure out which of
             these are possible, based on my location:</p>
 
             <dl class="org-dl">
@@ -12239,7 +12241,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             based on this type of context information.</p>
 
             <p>All I have to do is type <code>/ &lt;RET&gt;</code> in the
-            agenda view now, and it excludes based on my machine's current
+            agenda view now, and it excludes based on my machine’s current
             temporal and physical context.</p>
 
             <div class="org-src-container">
@@ -12320,7 +12322,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
             <div class="inlinetask">
               <b><span class="todo TODO">TODO</span> We should ensure that
-              appointments don't disappear when filtering late at
+              appointments don’t disappear when filtering late at
               nite</b><br />
 
               <ul class="org-ul">
@@ -12328,7 +12330,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
                 <li>Filter at 23:00 with <code>/ &lt;RET&gt;</code></li>
 
-                <li>Appointments such as "going to the doctor" will be removed
+                <li>Appointments such as “going to the doctor” will be removed
                 from the agenda view…</li>
               </ul>
             </div>
@@ -12640,7 +12642,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 </pre>
               </div>
 
-              <p>Hide certain tasks that you don't want to be bothered with all
+              <p>Hide certain tasks that you don’t want to be bothered with all
               the time:</p>
 
               <ul class="org-ul">
@@ -12734,8 +12736,8 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
               </div>
 
               <div class="inlinetask">
-                <b><span class="todo TODO">TODO</span> Add report "Recently
-                added/completed/modified"</b><br />
+                <b><span class="todo TODO">TODO</span> Add report “Recently
+                added/completed/modified”</b><br />
                 nil
               </div>
 
@@ -12840,7 +12842,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             </div>
 
             <p><code>org-timeline</code> has weaknesses and although not
-            officially deprecated, should be best avoided. See Carsten's
+            officially deprecated, should be best avoided. See Carsten’s
             comments in <a href=
             "http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465">http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465</a></p>
 
@@ -13855,7 +13857,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
               <div class="inlinetask">
                 <b><span class="todo TODO">TODO</span> Show SCHEDULED items as
-                well in "Next 12 Days"</b><br />
+                well in “Next 12 Days”</b><br />
                 nil
               </div>
 
@@ -13883,7 +13885,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
               <div class="inlinetask">
                 <b><span class="todo TODO">TODO</span> Add a custom view which
-                is some "bill" to send to your boss/client (table
+                is some “bill” to send to your boss/client (table
                 view)</b><br />
                 nil
               </div>
@@ -14030,7 +14032,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           <div class="outline-text-4" id="text-26-9-9"></div>
 
           <div id="outline-container-sec-26-9-9-1" class="outline-5">
-            <h5 id="sec-26-9-9-1">Mouse cursor doesn't highlight agenda
+            <h5 id="sec-26-9-9-1">Mouse cursor doesn’t highlight agenda
             lines</h5>
 
             <div class="outline-text-5" id="text-26-9-9-1">
@@ -14046,7 +14048,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
               </div>
 
               <div class="inlinetask">
-                <b><span class="todo TODO">TODO</span> Adding ":tangle yes" on
+                <b><span class="todo TODO">TODO</span> Adding “:tangle yes” on
                 the above code block results in partial tangling!</b><br />
                 nil
               </div>
@@ -14454,7 +14456,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 </pre>
             </div>
 
-            <p>Emacs 23+ users: in order to avoid "Invalid face" errors, you
+            <p>Emacs 23+ users: in order to avoid “Invalid face” errors, you
             need to use the version made available by Carsten Dominik in
             <code>org-mode/contrib/lisp</code> directory.</p>
 
@@ -14568,7 +14570,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             </div>
 
             <p>Now, you can print from the browser in (complete) Unicode, using
-            your system's capabilities.</p>
+            your system’s capabilities.</p>
           </div>
         </div>
 
@@ -15186,7 +15188,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             This can be used as a cheap preview (sgml-tags-invisible).</p>
 
             <p>View just the source-code blocks within the current Babel file
-            (something logically equivalent to "tangle", but without creating a
+            (something logically equivalent to “tangle”, but without creating a
             separate file).</p>
 
             <div class="org-src-container">
@@ -15410,7 +15412,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           <div class="outline-text-4" id="text-26-14-1">
             <div class="inlinetask">
               <b><span class="todo TODO">TODO</span> ad-handle-definition:
-              `org-mode-flyspell-verify' got redefined</b><br />
+              `org-mode-flyspell-verify’ got redefined</b><br />
 
               <p>IIUC, this message appears when the original definition of the
               adviced function is loaded (AFTER having been adviced).</p>
@@ -15447,7 +15449,15 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008000;">"Switch language if a `#+LANGUAGE:' Org meta-tag is on top 8 lines."</span>
     (<span style="color: #0000FF;">save-excursion</span>
       (goto-line (1+ 8))
-      (<span style="color: #0000FF;">if</span> (re-search-backward <span style=
+      (<span style="color: #0000FF;">let</span> (lang
+            (dico-alist '((<span style=
+"color: #FF4700;">"fr"</span> . <span style=
+"color: #FF4700;">"francais"</span>)
+                          (<span style=
+"color: #FF4700;">"en"</span> . <span style=
+"color: #FF4700;">"american"</span>))))
+        (<span style=
+"color: #0000FF;">when</span> (re-search-backward <span style=
 "color: #FF4700;">"#\\+LANGUAGE: +</span><span style=
 "color: #FF4700; font-weight: bold;">\\</span><span style=
 "color: #FF4700; font-weight: bold;">(</span><span style=
@@ -15455,12 +15465,12 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #FF4700; font-weight: bold;">\\</span><span style=
 "color: #FF4700; font-weight: bold;">)</span><span style=
 "color: #FF4700;">"</span> 1 t)
-          (ispell-change-dictionary (match-string 1)))))
+          (setq lang (match-string 1))
+          (ispell-change-dictionary (cdr (assoc lang dico-alist)))))))
 
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; guess language</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(add-hook 'org-mode-hook 'leuven--org-switch-language)</span>
+"color: #008200; font-style: italic;">guess language</span>
+  (add-hook 'org-mode-hook 'leuven--org-switch-language)
 </pre>
             </div>
           </div>
@@ -15737,9 +15747,9 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           <h4 id="sec-26-14-7">Org-crypt</h4>
 
           <div class="outline-text-4" id="text-26-14-7">
-            <p>To later decrypt an entry that's encrypted, use <code>M-x
+            <p>To later decrypt an entry that’s encrypted, use <code>M-x
             org-decrypt-entry</code> or <code>C-c C-r</code> (fits nicely with
-            the meaning of "reveal").</p>
+            the meaning of “reveal”).</p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -16123,13 +16133,13 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
           <ul class="org-ul">
             <li><code>MAIL_SUBJECT</code> or subtree heading -&gt;
-            "Subject"</li>
+            “Subject”</li>
 
-            <li><code>MAIL_TO</code> -&gt; "To"</li>
+            <li><code>MAIL_TO</code> -&gt; “To”</li>
 
-            <li><code>MAIL_CC</code> -&gt; "Cc</li>
+            <li><code>MAIL_CC</code> -&gt; “Cc</li>
 
-            <li><code>MAIL_BCC</code> -&gt; "BCc"</li>
+            <li><code>MAIL_BCC</code> -&gt; “BCc”</li>
 
             <li><code>MAIL_FMT</code> -&gt; determines the format of the email
             (e.g., <code>org</code> by default, <code>ascii</code></li>
@@ -16423,8 +16433,8 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           to:</p>
 
           <ul class="org-ul">
-            <li>avoid the error "comint-send-string: writing to process:
-            invalid argument, tex-shell", and</li>
+            <li>avoid the error “comint-send-string: writing to process:
+            invalid argument, tex-shell”, and</li>
 
             <li>properly quote <code>tex-start-commands</code>.</li>
           </ul>
@@ -17000,7 +17010,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           <div class="outline-text-4" id="text-28-1-1">
             <p>The default HTML mode, derived from SGML mode (see the HTML and
             SGML menus), works quite well for editing HTML4 documents (whose
-            tags don't have to close).</p>
+            tags don’t have to close).</p>
 
             <dl class="org-dl">
               <dt><code>C-c C-v</code></dt>
@@ -17106,7 +17116,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             appears, so you can use your mouse to invoke commands.</p>
 
             <p>Using the prefix-arg (<code>C-u</code>) to relevant HTML tags,
-            <code>html-helper-mode</code> will put tags around a region you've
+            <code>html-helper-mode</code> will put tags around a region you’ve
             specified.</p>
 
             <div class="org-src-container">
@@ -17192,7 +17202,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
           <ul class="org-ul">
             <li>real-time <b>validation against a schema in RELAX NG</b>
-            (actually RNC, i.e. the "Compact" Syntax): <code>C-c C-n</code>
+            (actually RNC, i.e. the “Compact” Syntax): <code>C-c C-n</code>
             (assuming RNG validation is on),</li>
 
             <li><b>code completion</b> against the RNG schema.</li>
@@ -17348,7 +17358,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
         <div class="outline-text-3" id="text-29-2">
           <p>Imenu is a great tool allowing you to go to a function definition,
           but only if the definition is in the buffer you are currently editing
-          (it won't jump and open another file).</p>
+          (it won’t jump and open another file).</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -17393,8 +17403,8 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
         <h3 id="sec-29-3">Indentation for Programs</h3>
 
         <div class="outline-text-3" id="text-29-3">
-          <p>Changing the "hanginess" of a brace and then reindenting, will not
-          move the brace to a different line. For this, you're better off
+          <p>Changing the “hanginess” of a brace and then reindenting, will not
+          move the brace to a different line. For this, you’re better off
           getting an external program like GNU <code>indent</code>, which will
           rearrange brace location, among other things.</p>
 
@@ -17779,7 +17789,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 </pre>
           </div>
 
-          <p>It's more or less a convention that each language mode binds its
+          <p>It’s more or less a convention that each language mode binds its
           symbol completion command (<code>completion-at-point</code>) to
           <code>&lt;M-tab&gt;</code>.</p>
 
@@ -17813,7 +17823,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 </pre>
           </div>
 
-          <p>See also <a href="#sec-32-2">Dabbrev</a>, Emacs' standard
+          <p>See also <a href="#sec-32-2">Dabbrev</a>, Emacs’ standard
           autocompletion (on by default).</p>
         </div>
       </div>
@@ -17860,7 +17870,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
       <div class="outline-text-2" id="text-30">
         <p>It is possible to see a warning, while we are programming, if we did
-        a mistake: there's a CWarn mode for C and C++, but I don't know about
+        a mistake: there’s a CWarn mode for C and C++, but I don’t know about
         similar features for Java.</p>
 
         <p>flymake can compile in the background and colorize lines with
@@ -17927,7 +17937,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           <p>My build command: <code>cd /path/to/Makefile &amp;&amp; make -f
           Makefile</code>.</p>
 
-          <p>You don't need a <code>Makefile</code> to perform simple tasks,
+          <p>You don’t need a <code>Makefile</code> to perform simple tasks,
           because <code>make</code> knows a lot of built in rules out of the
           box. For example, to compile a <code>.c</code> source file
           <code>foo.c</code> into a program <code>foo</code>, all you need is
@@ -18296,7 +18306,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           <p>Just as in C, C++, Java, Perl, Python, etc, Lisp code is kept in
           files. All the normal editing operations are performed on files. In
           this respect, hacking in Lisp is like hacking in any other language
-          that you are used to. What's different is that what you are hacking
+          that you are used to. What’s different is that what you are hacking
           is a running Lisp program. When you edit a function definition or add
           a new one, you compile it into a running program. There is no
           compile, link, run, debug cycle as you know it from C or Java.</p>
@@ -18304,7 +18314,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           <p>Ponder that for a minute.</p>
 
           <p>When you fix a bug in a C function, you have to recompile, relink,
-          and reload your program before you can test the fix. You don't do
+          and reload your program before you can test the fix. You don’t do
           that in Lisp. You make the fix and then go straight to testing it.
           This process can be even faster than fixing a bug in a scripting
           language like Perl.</p>
@@ -18369,7 +18379,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 </pre>
           </div>
 
-          <p>Don't use any specific mode for the initial buffer. That ensure
+          <p>Don’t use any specific mode for the initial buffer. That ensure
           that no Lisp or Org specific stuff gets loaded at each startup
           time.</p>
 
@@ -18504,7 +18514,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
         <div class="outline-text-3" id="text-30-10">
           <p>Seems good, except that it changes the behavior of TAB when done
           in a word. Instead of indenting, it completes the word at point,
-          changing the buffer's contents!</p>
+          changing the buffer’s contents!</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -18584,7 +18594,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           <h4 id="sec-31-1-1">Version Control and the Mode Line</h4>
 
           <div class="outline-text-4" id="text-31-1-1">
-            <p>"Unmodified-according-to-VC" buffers use <code>-</code> as a
+            <p>“Unmodified-according-to-VC” buffers use <code>-</code> as a
             separator in their VC indicator, and modified buffers have
             <code>:</code> (e.g., <code>CVS-1.2</code> vs.
             <code>CVS:1.2</code>). The tooltip over the VC indicator also says
@@ -18640,7 +18650,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             <code>jpeg</code> (<b>NOT</b> <code>jpg</code>) in
             <code>find-image</code>.</p>
 
-            <p>But don't forget that JPEG images can't have <i>transparent
+            <p>But don’t forget that JPEG images can’t have <i>transparent
             backgrounds</i>…</p>
 
             <p>If PNG images are not correctly supported, see <a href=
@@ -18653,7 +18663,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
               <code>mode-line-format</code> are those documented in the manual,
               and nothing else. In particular, the <code>:eval</code> part must
               appear explicitly, and any symbol stands for its value (which is
-              not eval'ed). IOW, a full-blown Lisp evaluation there is not
+              not eval’ed). IOW, a full-blown Lisp evaluation there is not
               implemented…</p>
             </div>
           </div>
@@ -18998,10 +19008,10 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
         <div class="outline-text-3" id="text-31-3">
           <p>Using tags tables is the most generic approach to setup code
-          navigation. A "tag" signifies a language object for which an index
+          navigation. A “tag” signifies a language object for which an index
           entry is available.</p>
 
-          <p>Once you've built a <code>TAGS</code> file
+          <p>Once you’ve built a <code>TAGS</code> file
           (<code>ctags=/=etags</code>), you can find all commands that match a
           regexp.</p>
 
@@ -19057,13 +19067,13 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             <dt>Cscope</dt>
 
             <dd>C, but flexible enough to support C++ and Java, and to be used
-            as a generalized "grep database".</dd>
+            as a generalized “grep database”.</dd>
 
             <dt>ebrowse</dt>
 
             <dd>For C++, you will be better off with ebrowse, a program that
             also comes with Emacs. It understands C++ much better than etags
-            does, and provides similar commands (so you don't lose anything).
+            does, and provides similar commands (so you don’t lose anything).
             Check out the Ebrowse manual, which is part of the Emacs
             distribution, for details.</dd>
 
@@ -19079,14 +19089,14 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             </dd>
           </dl>
 
-          <p><b>Emacs TAGS</b> and <b>Exuberant Ctags</b> don't do fancy stuff,
+          <p><b>Emacs TAGS</b> and <b>Exuberant Ctags</b> don’t do fancy stuff,
           e.g. keeping an index of function references. They record only
           positions where a function (or variable etc.) is <b>defined</b>.</p>
 
           <p>Recording positions where a function is <b>called</b> (finding all
           <b>symbol references</b>) is the kind of thing external tools such as
           <b>GNU Global</b>, <b>GNU Idutils</b> and <b>Cscope</b> can do for
-          you, if you're working with a language that they support. <b>Grep</b>
+          you, if you’re working with a language that they support. <b>Grep</b>
           would be the fallback method.</p>
 
           <p>Please also see <a href=
@@ -19154,7 +19164,7 @@ TAGS:
             </div>
 
             <p>will make sure that <code>TAGS</code> file exists (and builds it
-            if it doesn't), allowing you to</p>
+            if it doesn’t), allowing you to</p>
 
             <ul class="org-ul">
               <li>first rebuild the <code>TAGS</code> file or</li>
@@ -19309,7 +19319,7 @@ TAGS:
               "http://www.gnu.org/software/emacs/manual/semantic.html">Semantic</a></dt>
 
               <dd>a <b>parser</b> and code analyzer which provides <b>smart
-              completion</b> ("Intellisense")</dd>
+              completion</b> (“Intellisense”)</dd>
 
               <dt>EDE</dt>
 
@@ -19631,7 +19641,7 @@ TAGS:
 </pre>
             </div>
 
-            <p>If you've installed CEDET and ECB, EmacsAssist is worth trying
+            <p>If you’ve installed CEDET and ECB, EmacsAssist is worth trying
             out: <a href=
             "http://www.mail-archive.com/gnu-emacs-sources@gnu.org/msg00292.html">
             http://www.mail-archive.com/gnu-emacs-sources@gnu.org/msg00292.html</a></p>
@@ -19672,8 +19682,8 @@ TAGS:
       <h2 id="sec-32">Abbrevs</h2>
 
       <div class="outline-text-2" id="text-32">
-        <p>An "abbrev" is a <b>word</b> which has been defined (in a fixed
-        list) to "expand" into a specified <b>expansion</b>.</p>
+        <p>An “abbrev” is a <b>word</b> which has been defined (in a fixed
+        list) to “expand” into a specified <b>expansion</b>.</p>
 
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
@@ -19694,7 +19704,7 @@ TAGS:
 
         <div class="outline-text-3" id="text-32-1">
           <p>For complex templates, I use <code>YASnippet</code>. For example,
-          new file templates (where it's lisp evaluation is handy), class and
+          new file templates (where it’s lisp evaluation is handy), class and
           function templates with docblocks, etc. I use it to reduce the
           repetitious parts of programming, and let me focus on getting things
           done.</p>
@@ -19702,7 +19712,7 @@ TAGS:
           <p><code>YASnippet</code> does support mirror fields and
           transformations. It also does support multiple snippet with same
           name. It will also expand snippets containing non-word-constituent
-          characters, which <code>abbrev</code> can't. So I can't have
+          characters, which <code>abbrev</code> can’t. So I can’t have
           <code>@p</code> expand to <code>@param</code> with
           <code>abbrev</code>, but I can with <code>YASnippet</code>.</p>
 
@@ -19825,12 +19835,12 @@ TAGS:
         Expansion</h3>
 
         <div class="outline-text-3" id="text-32-2">
-          <p>"Dynamic abbrevs" allow the meanings of abbreviations (expansions)
+          <p>“Dynamic abbrevs” allow the meanings of abbreviations (expansions)
           to be <b>determined automatically from the contents of the
           buffer</b>. It is completely independent of Abbrev mode.</p>
 
           <p><code>M-/</code> runs the command <code>dabbrev-expand</code> by
-          default. Expand previous word "dynamically". <b>Expands to the most
+          default. Expand previous word “dynamically”. <b>Expands to the most
           recent, preceding word</b> for which this is a prefix.</p>
 
           <p><code>C-M-/</code> runs the command
@@ -20321,7 +20331,7 @@ TAGS:
           <h4 id="sec-33-3-3">Open file with w3m</h4>
 
           <div class="outline-text-4" id="text-33-3-3">
-            <p>See news "Opening html-File in Dired with w3m" for extra
+            <p>See news “Opening html-File in Dired with w3m” for extra
             info.</p>
 
             <div class="org-src-container">
@@ -20429,7 +20439,7 @@ TAGS:
 
             <li>Stops when a match is found</li>
 
-            <li>To continue searching for next match, use command "M-,"</li>
+            <li>To continue searching for next match, use command “M-,”</li>
           </ul>
 
           <div class="org-src-container">
@@ -20582,7 +20592,7 @@ TAGS:
           </div>
 
           <p>The following code block is currently disabled, because it causes
-          problems with Org and PDF LaTeX: when we've opened the TeX file, to
+          problems with Org and PDF LaTeX: when we’ve opened the TeX file, to
           compile it from LaTeX because an error has been reported (with no
           details), then the TeX file blocks the next automatic exports
           (<code>C-u C-c C-e</code>), asking for confirmation because the TeX
@@ -20613,17 +20623,17 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           <p>Extra Dired functionality</p>
 
           <ul class="org-ul">
-            <li><code>dired-x</code> has a feature to "guess" the right shell
+            <li><code>dired-x</code> has a feature to “guess” the right shell
             command and the right external viewer for documents (see
             <code>dired-guess-shell-alist-user</code>)</li>
 
             <li>You can also jump to the Dired buffer corresponding to the
             current buffer by pressing <code>C-x C-j</code>
             (<code>dired-jump</code>). If in Dired already, pop up a level and
-            goto old directory's line.
+            goto old directory’s line.
 
               <p><b>Standard</b> alternative: <code>C-x d &lt;RET&gt;</code>,
-              though it doesn't set point on the right file.</p>
+              though it doesn’t set point on the right file.</p>
             </li>
           </ul>
 
@@ -20851,7 +20861,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         <div class="outline-text-3" id="text-34-4">
           <p>The Emacs diary keeps track of appointments or other events on a
           daily basis, in conjunction with the calendar. To use the diary
-          feature, you must first create a "diary file" containing a list of
+          feature, you must first create a “diary file” containing a list of
           events and their dates.</p>
 
           <p>But <a href="#sec-26">Org</a> outperforms it!</p>
@@ -20910,7 +20920,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
           <div class="inlinetask">
             <b><span class="todo TODO">TODO</span> For Windows users: use
-            `todochicku.el' and the snarl notifier</b><br />
+            `todochicku.el’ and the snarl notifier</b><br />
             nil
           </div>
 
@@ -22132,7 +22142,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
           <p>If you ever tried to run a program like <code>git</code> under
           <code>M-x shell</code>, you will have come across the warning
-          "terminal is not fully functional" followed by unusable behavior.
+          “terminal is not fully functional” followed by unusable behavior.
           This is because <code>git</code> sends its output through a pager
           (probably <code>less</code>), which requires a real terminal
           emulator.</p>
@@ -22242,7 +22252,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           to switch between Term-mode and Shell-mode, in the same buffer.</p>
 
           <p>Mplayer commands do not work when I launch it in the Emacs shell.
-          Use <code>term</code> for "/" and "*" to decrease / increase
+          Use <code>term</code> for “/” and “*” to decrease / increase
           volume.</p>
 
           <div class="org-src-container">
@@ -22258,74 +22268,74 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           defeats the purpose of running inside Emacs.</p>
 
           <p>I had similar gripes initially, but Term mode seems to do the job.
-          Switching between line-mode (`C-c C-j') and char-mode (`C-c C-k'),
+          Switching between line-mode (`C-c C-j’) and char-mode (`C-c C-k’),
           you have a terminal emulator which you can treat as a Shell mode
           buffer when you need to.</p>
 
-          <p>You can switch between term modes. Using `C-c c-j' will put you in
+          <p>You can switch between term modes. Using `C-c c-j’ will put you in
           line mode where term is behaves like a buffer , then u can use `C-c
-          c-k' to switch back to char mode.</p>
+          c-k’ to switch back to char mode.</p>
 
-          <p>Emacs shell is a "dump" terminal which doesn't support (all)
-          terminal control codes. You need to use `M-x term' if you want a
+          <p>Emacs shell is a “dump” terminal which doesn’t support (all)
+          terminal control codes. You need to use `M-x term’ if you want a
           proper terminal (but even that is not as good as the good old
           XTerm).</p>
 
-          <p>(term "bash") If you do `M-x term', `bash' is offered as the
+          <p>(term “bash”) If you do `M-x term’, `bash’ is offered as the
           default as well.</p>
 
           <p>Need a good terminal emulation for applications that are
-          interactive with your terminal, in the same way `top' is working or
-          `man' … or `less' … or `unison'</p>
+          interactive with your terminal, in the same way `top’ is working or
+          `man’ … or `less’ … or `unison’</p>
 
-          <p>"less" needs a <span class="underline">terminal</span>. Emacs's
-          shell-mode is not a terminal so "less" doesn't work. If the programs
+          <p>“less” needs a <span class="underline">terminal</span>. Emacs’s
+          shell-mode is not a terminal so “less” doesn’t work. If the programs
           you use needs terminal features then you must use a terminal, such as
-          "M-x term".</p>
+          “M-x term”.</p>
 
-          <p>This "page-at-a-time" feature comes with terminal emulation.
-          There's no need to make "M-x shell" a real terminal because there
-          already is one: "M-x term".</p>
+          <p>This “page-at-a-time” feature comes with terminal emulation.
+          There’s no need to make “M-x shell” a real terminal because there
+          already is one: “M-x term”.</p>
 
-          <p>Try also to use `M-x ansi-term' that is much better than `term':
-          with M-x term, you can run only one shell; with `ansi-term' you can
+          <p>Try also to use `M-x ansi-term’ that is much better than `term’:
+          with M-x term, you can run only one shell; with `ansi-term’ you can
           start more than one (*ansi-term*&lt;2&gt;, *ansi-term*&lt;3&gt;).</p>
 
-          <p>One weird thing, is that 'M-x term' is a term emulation where
-          less(1) works and it has the 'C-c C-q' one-page-at-a-time thing as
+          <p>One weird thing, is that ‘M-x term’ is a term emulation where
+          less(1) works and it has the ‘C-c C-q’ one-page-at-a-time thing as
           well…</p>
 
           <p>M-x shell, has neither.</p>
 
-          <p>&gt;&gt; Or are there some things `M-x term' can't do while `M-x
-          shell' &gt;&gt; can?</p>
+          <p>&gt;&gt; Or are there some things `M-x term’ can’t do while `M-x
+          shell’ &gt;&gt; can?</p>
 
-          <p>&gt; With M-x shell you're using emacs to construct the command to
-          pass &gt; to the shell. This is an advantage if you shell doesn't
+          <p>&gt; With M-x shell you’re using emacs to construct the command to
+          pass &gt; to the shell. This is an advantage if you shell doesn’t
           keep a &gt; history or offers no completion mechanism. Also, you can
           use &gt; isearch to search through the command output, copy stuff
           into the &gt; kill ring or use the rectangle functions. Or you might
-          just prefer &gt; the emacs key bindings over the one's your shell
+          just prefer &gt; the emacs key bindings over the one’s your shell
           offers. 8-)</p>
 
-          <p>I'd like to point out that term-mode has also the so called "line
-          mode" (`C-c C-j') in which user can wander around the buffer pretty
+          <p>I’d like to point out that term-mode has also the so called “line
+          mode” (`C-c C-j’) in which user can wander around the buffer pretty
           much like anywhere else in Emacs. Kill-ring commands, isearch etc.
-          work. Then there is "char mode" (`C-c C-k'), the default, which is
+          work. Then there is “char mode” (`C-c C-k’), the default, which is
           like your normal terminal emulator except the escape key.</p>
 
-          <p>Actually you can read this in the emacs info pages: "In line mode,
-          Term basically acts like Shell mode".</p>
+          <p>Actually you can read this in the emacs info pages: “In line mode,
+          Term basically acts like Shell mode”.</p>
 
-          <p>The problem here is the word 'basically' which probably means
-          'almost'. So they differ in the details.</p>
+          <p>The problem here is the word ‘basically’ which probably means
+          ‘almost’. So they differ in the details.</p>
 
-          <p>In my case, I started to use `M-x shell', and like it since I
+          <p>In my case, I started to use `M-x shell’, and like it since I
           almost never have to use applications that need a real term
           emulation. But if you look at them (M-x term and M-x shell)
-          carefully, then `M-x term' has some weird behaviours when using the
-          shell mode key bindings; try for instance: `C-c C-e', `C-c C-a', `C-c
-          C-o'… but as I said they're details.</p>
+          carefully, then `M-x term’ has some weird behaviours when using the
+          shell mode key bindings; try for instance: `C-c C-e’, `C-c C-a’, `C-c
+          C-o’… but as I said they’re details.</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -22387,8 +22397,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
           <div class="inlinetask">
             <b><span class="todo TODO">TODO</span> Terminal in Emacs in Windows
-            - Error message: "Spawning child process; invalid
-            argument"</b><br />
+            - Error message: “Spawning child process; invalid
+            argument”</b><br />
             nil
           </div>
 
@@ -22469,7 +22479,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         <h3 id="sec-38-12">Serial Terminal</h3>
 
         <div class="outline-text-3" id="text-38-12">
-          <p>Since GNU Emacs 23, there's now support for serial port access.
+          <p>Since GNU Emacs 23, there’s now support for serial port access.
           The new command <code>serial-term</code> starts an interactive
           terminal on a serial port.</p>
         </div>
@@ -22512,7 +22522,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         <h3 id="sec-38-14">XXX</h3>
 
         <div class="outline-text-3" id="text-38-14">
-          <p>You're debugging bash code? I normally use
+          <p>You’re debugging bash code? I normally use
           <code>mode-compile.el</code> for this. Basically, it runs bash with
           lots of debug output.</p>
 
@@ -22554,18 +22564,18 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       <h2 id="sec-39">Using Emacs Server</h2>
 
       <div class="outline-text-2" id="text-39">
-        <p>The Emacs version you're using and the <code>emacsclient</code>
-        version you're using must be from the <b>same Emacs version</b>… If the
+        <p>The Emacs version you’re using and the <code>emacsclient</code>
+        version you’re using must be from the <b>same Emacs version</b>… If the
         latter is not the cause of a refused connection, re-try <code>M-x
         server-start</code> in Emacs.</p>
 
-        <p><code>emacsclient</code> is waiting for Emacs to tell it it's done
-        editing that file. That's important if you use <code>emacsclient</code>
+        <p><code>emacsclient</code> is waiting for Emacs to tell it it’s done
+        editing that file. That’s important if you use <code>emacsclient</code>
         as your <code>EDITOR</code>. If you want <code>emacsclient</code> to
         return immediately, use the <code>-n</code> option.</p>
 
         <p>Do you use <code>emacsclient</code> in terminals? If not, just use
-        parameter <code>-c -n</code>, which creates an X Window and doesn't
+        parameter <code>-c -n</code>, which creates an X Window and doesn’t
         wait for <code>(server-edit)</code>.</p>
 
         <div class="org-src-container">
@@ -23215,11 +23225,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
           <p><code>w3m-browse-url</code> asks Emacs-w3m to browse a URL.</p>
 
-          <p>When JavaScript is needed or the "design" is just too bad, use an
+          <p>When JavaScript is needed or the “design” is just too bad, use an
           <b>external browser</b>: you can open the current page in your
           graphical browser by hitting <code>M</code> (bound to
           <code>w3m-view-url-with-external-browser</code>) – at your own risk.
-          For what "risk" means, please see: <code>(info
+          For what “risk” means, please see: <code>(info
           "(emacs-w3m)Gnus")</code>.</p>
 
           <div class="org-src-container">
@@ -23473,7 +23483,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
             <p><code>Nnshimbun</code> allows you to turn Gnus into an
             exceptionally useful web browser. You can skim through the articles
-            on a newspaper's web server without having to see all the
+            on a newspaper’s web server without having to see all the
             advertisement. You can read articles in mailing list archives as if
             you were subscribed to the list. You can also read submissions in
             bulletin boards, etc…</p>
@@ -23603,7 +23613,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
       <div class="outline-text-2" id="text-45">
         <p>Emacs 24 custom themes allow loading multiple themes simultaneously.
-        If you don't want the previous theme to stay in effect, you will need
+        If you don’t want the previous theme to stay in effect, you will need
         to unload it first.</p>
 
         <p>Install Leuven Theme via the <i>Emacs Lisp Packages</i> (or use the
@@ -23769,7 +23779,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 </pre>
           </div>
 
-          <p>Have a look at (info "(emacs)Directory Variables").</p>
+          <p>Have a look at (info "(emacs)Directory Variables”).</p>
         </div>
       </div>
 
@@ -24223,7 +24233,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
             <dd>
               horiz resolution in dpi
 
-              <p>I think these numbers represent the "design resolution" of the
+              <p>I think these numbers represent the “design resolution” of the
               font - on X, fonts are typically designed for 75dpi or 100dpi
               screens (under Windows,most monitors are assumed to be 96dpi I
               believe). NT-Emacs ignores these values.</p>
@@ -24234,7 +24244,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
             <dd>
               vertical resolution in dpi
 
-              <p>I think these numbers represent the "design resolution" of the
+              <p>I think these numbers represent the “design resolution” of the
               font - on X, fonts are typically designed for 75dpi or 100dpi
               screens (under Windows,most monitors are assumed to be 96dpi I
               believe). NT-Emacs ignores these values.</p>
@@ -24293,12 +24303,12 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
 
           <p>Rather than using <code>(set-default-font ...)</code> in
           <code>.emacs</code>, stick the font definition in your
-          <code>.Xresources</code> file (key 'Emacs*font') and then use
+          <code>.Xresources</code> file (key ‘Emacs*font’) and then use
           <code>xrdb -load</code> to activate it. You will find that startup
           time is greatly improved!</p>
 
           <p>Edit your <code>~/.Xresources</code> file to have a line with
-          "Emacs.font". Then do a <code>xrdb -merge ~/.Xresources</code> or
+          “Emacs.font”. Then do a <code>xrdb -merge ~/.Xresources</code> or
           restart your X11 to validate the modification. I let Emacs do this
           for me:</p>
 
@@ -24458,7 +24468,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         </div>
 
         <div id="outline-container-sec-47-1-2" class="outline-4">
-          <h4 id="sec-47-1-2">"Quick Calculator" Mode</h4>
+          <h4 id="sec-47-1-2">“Quick Calculator” Mode</h4>
 
           <div class="outline-text-4" id="text-47-1-2">
             <p>Run the Calculator in the minibuffer: <code>C-x * q</code>
@@ -24479,7 +24489,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
           <dl class="org-dl">
             <dt><code>w</code></dt>
 
-            <dd>start Embedded mode on the current "word".</dd>
+            <dd>start Embedded mode on the current “word”.</dd>
 
             <dt><code>j</code></dt>
 
@@ -24839,7 +24849,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
           <code>other-window</code> to switch to <code>*ess-describe*</code>
           window.</p>
 
-          <p>It was inspired by Erik Iverson's
+          <p>It was inspired by Erik Iverson’s
           <code>ess-R-object-tooltip</code>.</p>
         </div>
       </div>
@@ -25015,7 +25025,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131108.225]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131108.2339]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

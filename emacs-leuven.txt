@@ -2,10 +2,10 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-08 Fri 22:46>
+# Time-stamp: <2013-11-08 Fri 23:40>
 #+DESCRIPTION:
 #+KEYWORDS:
-#+LANGUAGE:  american
+#+LANGUAGE:  en
 
 #+SEQ_TODO: TODO FIXME DOESN'T_WORK | WORKS
 
@@ -2024,7 +2024,8 @@ GNU *Aspell* is better than *Ispell*:
 
 - It can handle UTF-8 documents far better than Ispell can.
 
-Have a look at [[https://github.com/rolandwalker/flyspell-lazy][Flyspell-lazy]]?
+See [[https://github.com/rolandwalker/flyspell-lazy][Flyspell-lazy]] if you are experiencing performance issues with Emacs'
+built-in =flyspell-mode=.
 
 When spellchecking a buffer, the =A= command accepts an incorrect word, and adds
 it to the *file word list* (=ispell-add-per-file-word-list=).
@@ -8598,11 +8599,15 @@ function is loaded (AFTER having been adviced).
     "Switch language if a `#+LANGUAGE:' Org meta-tag is on top 8 lines."
     (save-excursion
       (goto-line (1+ 8))
-      (if (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
-          (ispell-change-dictionary (match-string 1)))))
+      (let (lang
+            (dico-alist '(("fr" . "francais")
+                          ("en" . "american"))))
+        (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
+          (setq lang (match-string 1))
+          (ispell-change-dictionary (cdr (assoc lang dico-alist)))))))
 
-  ;; ;; guess language
-  ;; (add-hook 'org-mode-hook 'leuven--org-switch-language)
+  ;; guess language
+  (add-hook 'org-mode-hook 'leuven--org-switch-language)
 #+end_src
 
 *** Easy templates
@@ -14413,7 +14418,6 @@ tests.
 # This is for the sake of Emacs.
 # Local Variables:
 # coding-system-for-write: utf-8-unix
-# ispell-local-dictionary: "american"
 # End:
 
 # emacs-leuven.txt ends here

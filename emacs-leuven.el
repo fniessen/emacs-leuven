@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131108.2248
+;; Version: 20131108.2336
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131108.2248]--")
+(message "* --[ Loading Emacs Leuven 20131108.2336]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5951,11 +5951,15 @@ From %c"
     "Switch language if a `#+LANGUAGE:' Org meta-tag is on top 8 lines."
     (save-excursion
       (goto-line (1+ 8))
-      (if (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
-          (ispell-change-dictionary (match-string 1)))))
+      (let (lang
+            (dico-alist '(("fr" . "francais")
+                          ("en" . "american"))))
+        (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
+          (setq lang (match-string 1))
+          (ispell-change-dictionary (cdr (assoc lang dico-alist)))))))
 
-  ;; ;; guess language
-  ;; (add-hook 'org-mode-hook 'leuven--org-switch-language)
+  ;; guess language
+  (add-hook 'org-mode-hook 'leuven--org-switch-language)
 
 ;;** 15.2 (info "(org)Easy Templates")
 
@@ -9398,7 +9402,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131108.2249]--")
+(message "* --[ Loaded Emacs Leuven 20131108.2337]--")
 
 (provide 'emacs-leuven)
 
