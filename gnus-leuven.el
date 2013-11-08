@@ -1251,8 +1251,14 @@
       ;; ;; directory from which all other mail file variables are derived
       ;; (setq message-directory "~/Mail/")
 
+      ;; remove the binding of `C-c C-v', used by Org-Babel commands
+      (add-hook 'message-mode-hook
+                (lambda ()
+                  (define-key message-mode-map
+                    (kbd "C-c C-v") nil)))
+
       ;; operates on messages you send
-      (defun leuven-message-mode-hook ()
+      (defun leuven--message-mode-hook ()
 
         ;; ;; prompt for and insert a mail alias
         ;; (local-set-key (kbd "M-a") 'mail-abbrev-insert-alias)
@@ -1289,16 +1295,9 @@
         (when (try-require 'auto-complete)
           (auto-complete-mode)))
 
-      (add-hook 'message-mode-hook 'leuven-message-mode-hook)
+      (add-hook 'message-mode-hook 'leuven--message-mode-hook)
 
-      (when (try-require 'org-footnote)
-        (add-hook 'message-send-hook 'org-footnote-normalize))
-
-      ;; remove the binding of `C-c C-v', used by Org-Babel commands
-      (add-hook 'message-mode-hook
-                (lambda ()
-                  (define-key message-mode-map
-                    (kbd "C-c C-v") nil)))
+      (add-hook 'message-send-hook 'org-footnote-normalize)
 
 
 ;;*** 3.9 (info "(message)Message Buffers")

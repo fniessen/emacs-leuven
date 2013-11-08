@@ -1,12 +1,13 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2013-10-30 Wed 11:21>
+#+Time-stamp: <2013-11-08 Fri 11:34>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
 #+OPTIONS:   H:3 num:nil
 
+#+PROPERTY:  eval no
 #+PROPERTY:  tangle yes
 #+SETUPFILE: ~/src/org-style/bigblow.setup
 
@@ -1534,8 +1535,14 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
       ;; ;; directory from which all other mail file variables are derived
       ;; (setq message-directory "~/Mail/")
 
+      ;; remove the binding of `C-c C-v', used by Org-Babel commands
+      (add-hook 'message-mode-hook
+                (lambda ()
+                  (define-key message-mode-map
+                    (kbd "C-c C-v") nil)))
+
       ;; operates on messages you send
-      (defun leuven-message-mode-hook ()
+      (defun leuven--message-mode-hook ()
 
         ;; ;; prompt for and insert a mail alias
         ;; (local-set-key (kbd "M-a") 'mail-abbrev-insert-alias)
@@ -1572,16 +1579,9 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
         (when (try-require 'auto-complete)
           (auto-complete-mode)))
 
-      (add-hook 'message-mode-hook 'leuven-message-mode-hook)
+      (add-hook 'message-mode-hook 'leuven--message-mode-hook)
 
-      (when (try-require 'org-footnote)
-        (add-hook 'message-send-hook 'org-footnote-normalize))
-
-      ;; remove the binding of `C-c C-v', used by Org-Babel commands
-      (add-hook 'message-mode-hook
-                (lambda ()
-                  (define-key message-mode-map
-                    (kbd "C-c C-v") nil)))
+      (add-hook 'message-send-hook 'org-footnote-normalize)
 
 
 ;;*** 3.9 (info "(message)Message Buffers")
