@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-07 Thu 14:23 -->
+  <title>Emacs Leuven</title><!-- 2013-11-08 Fri 14:32 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -482,8 +482,8 @@
                     <a href="#sec-26-8-1">Capture</a>
 
                     <ul>
-                      <li><a href="#sec-26-8-1-1">Ask for refile
-                      location</a></li>
+                      <li><a href="#sec-26-8-1-1"><span class=
+                      "todo TODO">TODO</span> Ask for refile location</a></li>
 
                       <li><a href="#sec-26-8-1-2">Email-to-Org</a></li>
 
@@ -529,7 +529,8 @@
                     <ul>
                       <li><a href="#sec-26-9-6-1">Weekly task review</a></li>
 
-                      <li><a href="#sec-26-9-6-2">Organize view</a></li>
+                      <li><a href="#sec-26-9-6-2"><span class=
+                      "todo TODO">TODO</span> Organize view</a></li>
 
                       <li><a href="#sec-26-9-6-3">Display all active tasks from
                       the current directory</a></li>
@@ -743,7 +744,8 @@
 
               <li><a href="#sec-30-9">Other</a></li>
 
-              <li><a href="#sec-30-10">From Thierry Volpiatto</a></li>
+              <li><a href="#sec-30-10"><span class="todo TODO">TODO</span> From
+              Thierry Volpiatto</a></li>
             </ul>
           </li>
 
@@ -1103,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131107.1422</span>
+"color: #008200; font-style: italic;">Version: 20131108.1431</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1225,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131107.1422]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131108.1431]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -1706,7 +1708,7 @@
           (add-to-list 'load-path this-directory)
           (<span style="color: #0000FF;">when</span> leuven-load-verbose
             (message <span style=
-"color: #FF4700;">"(info) Added `</span><span style=
+"color: #FF4700;">"(Info) Added `</span><span style=
 "color: #FF4700;">%s</span><span style=
 "color: #FF4700;">' to `</span><span style=
 "color: #FF4700;">load-path</span><span style=
@@ -1730,10 +1732,7 @@
     `(eval-after-load ,mode
        '(<span style="color: #0000FF;">progn</span>
           (message <span style=
-"color: #FF4700;">"(info) Running code specific to `</span><span style=
-"color: #FF4700;">%s</span><span style="color: #FF4700;">'..."</span> ,mode)
-          <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(sit-for 0.3)</span>
+"color: #FF4700;">"(Info)                                  Running code specific to `</span><span style="color: #FF4700;">%s</span><span style="color: #FF4700;">'..."</span> ,mode)
           ,@body)))
 </pre>
         </div>
@@ -1872,18 +1871,16 @@
 "color: #008000;">"Locate Emacs library named LIBRARY and report time spent."</span>
     (<span style="color: #0000FF;">let</span> ((filename (ad-get-arg 0))
           (find-file-time-start (float-time)))
-      (<span style="color: #0000FF;">when</span> leuven-load-verbose
-        (message <span style=
-"color: #FF4700;">"(info) Locating library %s..."</span> filename))
       (<span style="color: #0000FF;">if</span> ad-do-it
           (<span style="color: #0000FF;">when</span> leuven-load-verbose
             (message <span style=
-"color: #FF4700;">"(info) Located library %s in %.3f s."</span> filename
+"color: #FF4700;">"(Info)                                  Locating library %s... located (in %.3f s.)"</span> filename
                      (- (float-time) find-file-time-start)))
         (add-to-list 'leuven--missing-packages filename 'append)
         (<span style="color: #0000FF;">when</span> leuven-load-verbose
           (message <span style=
-"color: #FF4700;">"(info) Locating library %s... missing"</span> filename)))))
+"color: #FF4700;">"(Info)                                  Locating library %s... missing (in %.3f s.)"</span> filename
+                     (- (float-time) find-file-time-start))))))
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">require a feature/library if available; if not, fail silently</span>
@@ -1903,23 +1900,12 @@
           (<span style="color: #0000FF;">progn</span>
             (<span style="color: #0000FF;">when</span> leuven-load-verbose
               (message <span style=
-"color: #FF4700;">"(info) Checking for `</span><span style=
-"color: #FF4700;">%s</span><span style="color: #FF4700;">'..."</span> feature))
+"color: #FF4700;">"(Info)                                  Trying to require `</span><span style="color: #FF4700;">%s</span><span style="color: #FF4700;">'..."</span> feature))
             (<span style="color: #0000FF;">if</span> (stringp feature)
                 (load-library feature)
               (setq time-start (float-time))
               (<span style="color: #0000FF;">require</span> <span style=
 "color: #6434A3;">feature</span>))
-            <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(when leuven-load-verbose</span>
-            <span style="color: #008200;">;;   </span><span style=
-"color: #008200; font-style: italic;">(message "(info) Checking for `</span><span style="color: #008200; font-style: italic;">%s</span><span style="color: #008200; font-style: italic;">'... %s (loaded in %.3f s)"</span>
-            <span style="color: #008200;">;;            </span><span style=
-"color: #008200; font-style: italic;">feature</span>
-            <span style="color: #008200;">;;            </span><span style=
-"color: #008200; font-style: italic;">(locate-library (symbol-name feature))</span>
-            <span style="color: #008200;">;;            </span><span style=
-"color: #008200; font-style: italic;">(- (float-time) time-start)))</span>
             <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">return t (necessary for correct behavior in conditions,</span>
             <span style="color: #008200;">;; </span><span style=
@@ -1934,9 +1920,7 @@
          (<span style="color: #0000FF;">progn</span>
            (<span style="color: #0000FF;">when</span> leuven-load-verbose
              (message <span style=
-"color: #FF4700;">"(info) Checking for `</span><span style=
-"color: #FF4700;">%s</span><span style=
-"color: #FF4700;">'... missing"</span> feature))
+"color: #FF4700;">"(Info)                                  Trying to require `</span><span style="color: #FF4700;">%s</span><span style="color: #FF4700;">'... missing"</span> feature))
            (add-to-list 'leuven--missing-packages feature 'append))
          nil))))
 </pre>
@@ -2073,7 +2057,7 @@
         (<span style="color: #0000FF;">if</span> (or (package-installed-p pkg)
                 (locate-library (symbol-name pkg)))
             (message <span style=
-"color: #FF4700;">"(info) Package `</span><span style=
+"color: #FF4700;">"(Info) Package `</span><span style=
 "color: #FF4700;">%s</span><span style=
 "color: #FF4700;">' built-in or already installed..."</span> pkg)
           (<span style=
@@ -2201,10 +2185,10 @@
     (<span style="color: #0000FF;">let</span> ((filename (ad-get-arg 0))
           (find-file-time-start (float-time)))
       (message <span style=
-"color: #FF4700;">"(info) Finding file %s..."</span> filename)
+"color: #FF4700;">"(Info) Finding file %s..."</span> filename)
       ad-do-it
       (message <span style=
-"color: #FF4700;">"(info) Found file %s in %.2f s."</span> filename
+"color: #FF4700;">"(Info) Found file %s in %.2f s."</span> filename
                (- (float-time) find-file-time-start))))
 </pre>
         </div>
@@ -2222,10 +2206,10 @@
         (<span style="color: #0000FF;">let</span> ((filename (ad-get-arg 0))
               (find-file-time-start (float-time)))
           (message <span style=
-"color: #FF4700;">"(info) Loading %s..."</span> filename)
+"color: #FF4700;">"(Info)                                  Loading %s..."</span> filename)
           ad-do-it
           (message <span style=
-"color: #FF4700;">"(info) Loaded %s in %.3f s."</span> filename
+"color: #FF4700;">"(Info)                                  Loaded %s in %.3f s."</span> filename
                    (- (float-time) find-file-time-start))))
 
       (<span style="color: #0000FF;">defadvice</span> <span style=
@@ -2239,7 +2223,7 @@
           (<span style="color: #0000FF;">cond</span> ((<span style=
 "color: #0000FF;">featurep</span> <span style="color: #6434A3;">feature</span>)
                  (message <span style=
-"color: #FF4700;">"(info) %sRequiring `</span><span style=
+"color: #FF4700;">"(Info) %sRequiring `</span><span style=
 "color: #FF4700;">%s</span><span style=
 "color: #FF4700;">'... already loaded"</span>
                           prefix feature)
@@ -2253,7 +2237,7 @@
                 (t
                  (<span style="color: #0000FF;">let</span> ((time-start))
                    (message <span style=
-"color: #FF4700;">"(info) %sRequiring `</span><span style=
+"color: #FF4700;">"(Info) %sRequiring `</span><span style=
 "color: #FF4700;">%s</span><span style="color: #FF4700;">'... %s"</span>
                             prefix feature
                             (locate-library (symbol-name feature)))
@@ -2262,7 +2246,7 @@
 "color: #0000FF;">let</span> ((require-depth (1+ require-depth)))
                      ad-do-it)
                    (message <span style=
-"color: #FF4700;">"(info) %sRequiring `</span><span style=
+"color: #FF4700;">"(Info) %sRequiring `</span><span style=
 "color: #FF4700;">%s</span><span style=
 "color: #FF4700;">'... loaded in %.3f s"</span>
                             prefix feature
@@ -3103,9 +3087,15 @@
         <h3 id="sec-12-4">Rectangles</h3>
 
         <div class="outline-text-3" id="text-12-4">
-          <p><code>kill-rectangle</code> (<code>C-x r k</code>) and
-          <code>yank-rectangle</code> (<code>C-x r y</code>) can be very useful
-          for shifting cells up/down within a column while leaving remaining
+          <p>Use <code>C-x r t STRING &lt;RET&gt;</code> to replace each line
+          of a region-rectangle with a given string.</p>
+
+          <p>To kill the text of the region-rectangle, use <code>C-x r k</code>
+          (<code>kill-rectangle</code>).</p>
+
+          <p><code>kill-rectangle</code> and <code>yank-rectangle</code>
+          (<code>C-x r y</code>) can also be very useful for shifting cells
+          up/down within a column of an Org table while leaving remaining
           columns intact.</p>
         </div>
       </div>
@@ -3396,7 +3386,7 @@
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; scroll one line at a time</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(setq scroll-step 1) ;; should be on?</span>
+"color: #008200; font-style: italic;">(setq scroll-step 1)                  ; </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> should be on?</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">number of lines of margin at the top and bottom of a window</span>
@@ -3409,11 +3399,6 @@
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">scrolling down looks much better</span>
   (setq auto-window-vscroll nil)
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; display update isn't paused when input is detected</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(setq redisplay-dont-pause t) ;; default value</span>
 </pre>
           </div>
         </div>
@@ -4227,7 +4212,9 @@
 "color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span>
 
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">scrolling commands are allowed during incremental search</span>
+"color: #008200; font-style: italic;">scrolling commands are allowed during incremental search (without</span>
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">canceling Isearch mode)</span>
   (setq isearch-allow-scroll t)
 
   (GNUEmacs
@@ -4658,7 +4645,7 @@
                       (and dict
                            (concat <span style="color: #FF4700;">" ["</span>
                                    (propertize (substring dict 0 2)
-                                               'face 'mode-line-shadow)
+                                               'face 'mode-line-highlight)
                                    <span style="color: #FF4700;">"]"</span>))))
                   t)
 </pre>
@@ -11628,7 +11615,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
   (<span style="color: #0000FF;">when</span> (boundp 'org-agenda-files)
     (message <span style=
-"color: #FF4700;">"(info) Found %s entries in `</span><span style=
+"color: #FF4700;">"(Info) Found %s entries in `</span><span style=
 "color: #FF4700;">org-agenda-files</span><span style=
 "color: #FF4700;">'"</span>
              (length org-agenda-files))
@@ -15165,22 +15152,6 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #FF4700;">"... Org Editing source code"</span>)
 
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">allow comment region in the code edit buffer (according to language)</span>
-    (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-org-comment-dwim</span> (<span style=
-"color: #666666;">&amp;optional</span> arg)
-      (interactive <span style="color: #FF4700;">"P"</span>)
-      (or (org-babel-do-key-sequence-in-edit-buffer (kbd <span style=
-"color: #FF4700;">"M-;"</span>))
-          (comment-dwim arg)))
-
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">make `C-c C-v C-x M-;' more convenient</span>
-    (define-key org-mode-map
-      (kbd <span style=
-"color: #FF4700;">"M-;"</span>) 'leuven-org-comment-dwim)
-
-    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">allow indent region in the code edit buffer (according to language)</span>
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-org-indent-region</span> (<span style=
@@ -16289,7 +16260,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008000;">"Update all dynamic blocks and all tables in the buffer."</span>
       (<span style="color: #0000FF;">when</span> (eq major-mode 'org-mode)
         (message <span style=
-"color: #FF4700;">"(info) Update Org buffer %s"</span>
+"color: #FF4700;">"(Info) Update Org buffer %s"</span>
                  (file-name-nondirectory (buffer-file-name)))
         (sit-for 1.5)
         (<span style=
@@ -20666,7 +20637,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (add-hook 'dired-load-hook
               (<span style="color: #0000FF;">lambda</span> ()
                 (load <span style="color: #FF4700;">"dired-x"</span>)))
+</pre>
+          </div>
 
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
     ) <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">with-eval-after-load "dired" ends here</span>
 </pre>
@@ -20988,14 +20963,14 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200; font-style: italic;">turn appointment checking on (enable reminders)</span>
     (<span style=
 "color: #0000FF;">when</span> leuven-load-verbose (message <span style=
-"color: #FF4700;">"(info) Enable appointment reminders..."</span>))
+"color: #FF4700;">"(Info) Enable appointment reminders..."</span>))
     (GNUEmacs
       (appt-activate 1))
     (XEmacs
       (appt-initialize))
     (<span style=
 "color: #0000FF;">when</span> leuven-load-verbose (message <span style=
-"color: #FF4700;">"(info) Enable appointment reminders... Done"</span>))
+"color: #FF4700;">"(Info) Enable appointment reminders... Done"</span>))
 </pre>
           </div>
 
@@ -21277,15 +21252,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
 (leuven--chapter leuven-chapter-34-gnus <span style=
 "color: #FF4700;">"34 Gnus"</span>
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">from NoGnus</span>
-  (GNUEmacs
-    (try-require 'gnus-load))           <span style=
-"color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">generated by `</span><span style=
-"color: #008200; font-style: italic;">make</span><span style=
-"color: #008200; font-style: italic;">'</span>
 
   (global-set-key
     (kbd <span style="color: #FF4700;">"C-c n"</span>)
@@ -22230,6 +22196,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200; font-style: italic;">** 36.7 Options</span>
 
   (leuven--section <span style="color: #FF4700;">"36.7 Options"</span>)
+
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">;; disable command echoing</span>
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(setq-default comint-process-echoes t)</span>
 </pre>
           </div>
         </div>
@@ -25033,7 +25004,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131107.1422]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131108.1432]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

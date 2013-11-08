@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131107.142
+;; Version: 20131108.1429
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131107.142]--")
+(message "* --[ Loading Emacs Leuven 20131108.1429]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -316,7 +316,7 @@
         (unless (file-exists-p (concat this-directory "/.nosearch"))
           (add-to-list 'load-path this-directory)
           (when leuven-load-verbose
-            (message "(info) Added `%s' to `load-path'" this-directory))))))
+            (message "(Info) Added `%s' to `load-path'" this-directory))))))
 
   ;; wrapper around `eval-after-load' (added in GNU Emacs 24.4)
   (defmacro with-eval-after-load (mode &rest body)
@@ -324,8 +324,7 @@
     (declare (indent defun))
     `(eval-after-load ,mode
        '(progn
-          (message "(info) Running code specific to `%s'..." ,mode)
-          ;; (sit-for 0.3)
+          (message "(Info)                                  Running code specific to `%s'..." ,mode)
           ,@body)))
 
   ;; remember this directory
@@ -367,15 +366,14 @@
     "Locate Emacs library named LIBRARY and report time spent."
     (let ((filename (ad-get-arg 0))
           (find-file-time-start (float-time)))
-      (when leuven-load-verbose
-        (message "(info) Locating library %s..." filename))
       (if ad-do-it
           (when leuven-load-verbose
-            (message "(info) Located library %s in %.3f s." filename
+            (message "(Info)                                  Locating library %s... located (in %.3f s.)" filename
                      (- (float-time) find-file-time-start)))
         (add-to-list 'leuven--missing-packages filename 'append)
         (when leuven-load-verbose
-          (message "(info) Locating library %s... missing" filename)))))
+          (message "(Info)                                  Locating library %s... missing (in %.3f s.)" filename
+                     (- (float-time) find-file-time-start))))))
 
   ;; require a feature/library if available; if not, fail silently
   (defun try-require (feature)
@@ -388,16 +386,11 @@
           ;; protected form
           (progn
             (when leuven-load-verbose
-              (message "(info) Checking for `%s'..." feature))
+              (message "(Info)                                  Trying to require `%s'..." feature))
             (if (stringp feature)
                 (load-library feature)
               (setq time-start (float-time))
               (require feature))
-            ;; (when leuven-load-verbose
-            ;;   (message "(info) Checking for `%s'... %s (loaded in %.3f s)"
-            ;;            feature
-            ;;            (locate-library (symbol-name feature))
-            ;;            (- (float-time) time-start)))
             ;; return t (necessary for correct behavior in conditions,
             ;; when leuven-load-verbose is nil)
             t)
@@ -405,7 +398,7 @@
         (file-error ;; condition
          (progn
            (when leuven-load-verbose
-             (message "(info) Checking for `%s'... missing" feature))
+             (message "(Info)                                  Trying to require `%s'... missing" feature))
            (add-to-list 'leuven--missing-packages feature 'append))
          nil))))
 
@@ -475,7 +468,7 @@
       (dolist (pkg leuven-packages)
         (if (or (package-installed-p pkg)
                 (locate-library (symbol-name pkg)))
-            (message "(info) Package `%s' built-in or already installed..." pkg)
+            (message "(Info) Package `%s' built-in or already installed..." pkg)
           (if (yes-or-no-p (format "Install package `%s'? " pkg))
               (ignore-errors
                 (package-install pkg))
@@ -513,9 +506,9 @@
     "Open the file named FILENAME and report time spent."
     (let ((filename (ad-get-arg 0))
           (find-file-time-start (float-time)))
-      (message "(info) Finding file %s..." filename)
+      (message "(Info) Finding file %s..." filename)
       ad-do-it
-      (message "(info) Found file %s in %.2f s." filename
+      (message "(Info) Found file %s in %.2f s." filename
                (- (float-time) find-file-time-start))))
 
   ;; make loaded files give a message
@@ -525,9 +518,9 @@
         "Execute a file of Lisp code named FILE and report time spent."
         (let ((filename (ad-get-arg 0))
               (find-file-time-start (float-time)))
-          (message "(info) Loading %s..." filename)
+          (message "(Info)                                  Loading %s..." filename)
           ad-do-it
-          (message "(info) Loaded %s in %.3f s." filename
+          (message "(Info)                                  Loaded %s in %.3f s." filename
                    (- (float-time) find-file-time-start))))
 
       (defadvice require (around leuven-require activate)
@@ -537,20 +530,20 @@
                                   0))
                (prefix (concat (make-string (* 2 require-depth) ? ) "+-> ")))
           (cond ((featurep feature)
-                 (message "(info) %sRequiring `%s'... already loaded"
+                 (message "(Info) %sRequiring `%s'... already loaded"
                           prefix feature)
                  ;; in the case `ad-do-it' is not called, you have to set the
                  ;; return value yourself!
                  (setq ad-return-value feature))
                 (t
                  (let ((time-start))
-                   (message "(info) %sRequiring `%s'... %s"
+                   (message "(Info) %sRequiring `%s'... %s"
                             prefix feature
                             (locate-library (symbol-name feature)))
                    (setq time-start (float-time))
                    (let ((require-depth (1+ require-depth)))
                      ad-do-it)
-                   (message "(info) %sRequiring `%s'... loaded in %.3f s"
+                   (message "(Info) %sRequiring `%s'... loaded in %.3f s"
                             prefix feature
                             (- (float-time) time-start)))))))))
 
@@ -958,16 +951,13 @@
   (setq scroll-conservatively 10000)    ; always scroll a line at a time
 
   ;; ;; scroll one line at a time
-  ;; (setq scroll-step 1) ;; should be on?
+  ;; (setq scroll-step 1)                  ; XXX should be on?
 
   ;; number of lines of margin at the top and bottom of a window
   (setq scroll-margin 3)                ; also for `isearch-forward'
 
   ;; scrolling down looks much better
   (setq auto-window-vscroll nil)
-
-  ;; ;; display update isn't paused when input is detected
-  ;; (setq redisplay-dont-pause t) ;; default value
 
 ;;** 14.5 (info "(emacs)Narrowing")
 
@@ -1263,7 +1253,8 @@
     ;; re-hide an invisible match right away
     (setq isearch-hide-immediately nil)) ;; XXX
 
-  ;; scrolling commands are allowed during incremental search
+  ;; scrolling commands are allowed during incremental search (without
+  ;; canceling Isearch mode)
   (setq isearch-allow-scroll t)
 
   (GNUEmacs
@@ -1427,7 +1418,7 @@
                       (and dict
                            (concat " ["
                                    (propertize (substring dict 0 2)
-                                               'face 'mode-line-shadow)
+                                               'face 'mode-line-highlight)
                                    "]"))))
                   t)
 
@@ -4336,7 +4327,7 @@ From %c"
   (leuven--section "10.1 (org)Agenda files")
 
   (when (boundp 'org-agenda-files)
-    (message "(info) Found %s entries in `org-agenda-files'"
+    (message "(Info) Found %s entries in `org-agenda-files'"
              (length org-agenda-files))
     (sit-for 0.5))
 
@@ -5821,16 +5812,6 @@ From %c"
   (with-eval-after-load "org"
     (message "... Org Editing source code")
 
-    ;; allow comment region in the code edit buffer (according to language)
-    (defun leuven-org-comment-dwim (&optional arg)
-      (interactive "P")
-      (or (org-babel-do-key-sequence-in-edit-buffer (kbd "M-;"))
-          (comment-dwim arg)))
-
-    ;; make `C-c C-v C-x M-;' more convenient
-    (define-key org-mode-map
-      (kbd "M-;") 'leuven-org-comment-dwim)
-
     ;; allow indent region in the code edit buffer (according to language)
     (defun leuven-org-indent-region (&optional arg)
       (interactive "P")
@@ -6221,7 +6202,7 @@ From %c"
     (defun leuven--org-update-buffer ()
       "Update all dynamic blocks and all tables in the buffer."
       (when (eq major-mode 'org-mode)
-        (message "(info) Update Org buffer %s"
+        (message "(Info) Update Org buffer %s"
                  (file-name-nondirectory (buffer-file-name)))
         (sit-for 1.5)
         (let ((flyspell-mode-before-save flyspell-mode))
@@ -7916,12 +7897,12 @@ From %c"
                (sit-for 1)))))
 
     ;; turn appointment checking on (enable reminders)
-    (when leuven-load-verbose (message "(info) Enable appointment reminders..."))
+    (when leuven-load-verbose (message "(Info) Enable appointment reminders..."))
     (GNUEmacs
       (appt-activate 1))
     (XEmacs
       (appt-initialize))
-    (when leuven-load-verbose (message "(info) Enable appointment reminders... Done"))
+    (when leuven-load-verbose (message "(Info) Enable appointment reminders... Done"))
 
     ;; enable appointment notification, several minutes beforehand
     (add-hook 'diary-hook 'appt-make-list)
@@ -8057,10 +8038,6 @@ From %c"
 ;;* 34 (info "(emacs)Gnus")
 
 (leuven--chapter leuven-chapter-34-gnus "34 Gnus"
-
-  ;; from NoGnus
-  (GNUEmacs
-    (try-require 'gnus-load))           ; generated by `make'
 
   (global-set-key
     (kbd "C-c n")
@@ -8468,6 +8445,9 @@ From %c"
 ;;** 36.7 Options
 
   (leuven--section "36.7 Options")
+
+  ;; ;; disable command echoing
+  ;; (setq-default comint-process-echoes t)
 
 ;;** 36.8 Terminal emulator
 
@@ -9415,7 +9395,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131107.1421]--")
+(message "* --[ Loaded Emacs Leuven 20131108.143]--")
 
 (provide 'emacs-leuven)
 
