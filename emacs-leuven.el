@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131108.2336
+;; Version: 20131109.0022
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131108.2336]--")
+(message "* --[ Loading Emacs Leuven 20131109.0022]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5947,19 +5947,24 @@ From %c"
   ;;              (not (eq (org-element-type (org-element-at-point))
   ;;                       'src-block)))))
 
-  (defun leuven--org-switch-language ()
+  (defun leuven--org-switch-dictionary ()
     "Switch language if a `#+LANGUAGE:' Org meta-tag is on top 8 lines."
     (save-excursion
       (goto-line (1+ 8))
-      (let (lang
-            (dico-alist '(("fr" . "francais")
-                          ("en" . "american"))))
+      (let (lang dict
+            (dict-alist '(("en" . "american")
+                          ("fr" . "francais"))))
         (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
           (setq lang (match-string 1))
-          (ispell-change-dictionary (cdr (assoc lang dico-alist)))))))
+          (setq dict (cdr (assoc lang dict-alist)))
+          (if dict
+              (ispell-change-dictionary dict)
+            (message "Ispell dictionary for language `%s' is unknown" lang)
+            (sit-for 3))
+          (force-mode-line-update)))))
 
-  ;; guess language
-  (add-hook 'org-mode-hook 'leuven--org-switch-language)
+  ;; guess dictionary
+  (add-hook 'org-mode-hook 'leuven--org-switch-dictionary)
 
 ;;** 15.2 (info "(org)Easy Templates")
 
@@ -9402,7 +9407,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131108.2337]--")
+(message "* --[ Loaded Emacs Leuven 20131109.0023]--")
 
 (provide 'emacs-leuven)
 

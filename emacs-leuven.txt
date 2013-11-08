@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-08 Fri 23:40>
+# Time-stamp: <2013-11-09 Sat 00:20>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -890,17 +890,18 @@ in echo area.
 In general, the following functions are very interesting for finding useful
 functions and documentation.
 
-- apropos-documentation (=C-h d=) ::
+- =apropos-documentation= (=C-h d=) ::
      *Show symbols whose documentation contains matches for PATTERN.*
+     For example, =C-h d yank properties <RET>=.
 
-- describe-function (=C-h f=) ::
+- =describe-function= (=C-h f=) ::
      Used with TAB completion to show documentation of functions.
 
-- elisp-index-search (=C-h E= in Emacs Leuven) ::
+- =elisp-index-search= (=C-h E= in Emacs Leuven) ::
      Look up documentation on broad ELisp topics (in the indices of the Emacs
      Lisp Reference Manual).
 
-- info-lookup-symbol (=C-h S=, or =C-f1= in Emacs Leuven) ::
+- =info-lookup-symbol= (=C-h S=, or =C-f1= in Emacs Leuven) ::
      *Bring the relevant section from the manual, which describes the topic in
      more detail.*
 
@@ -8595,19 +8596,24 @@ function is loaded (AFTER having been adviced).
 #+end_src
 
 #+begin_src emacs-lisp
-  (defun leuven--org-switch-language ()
+  (defun leuven--org-switch-dictionary ()
     "Switch language if a `#+LANGUAGE:' Org meta-tag is on top 8 lines."
     (save-excursion
       (goto-line (1+ 8))
-      (let (lang
-            (dico-alist '(("fr" . "francais")
-                          ("en" . "american"))))
+      (let (lang dict
+            (dict-alist '(("en" . "american")
+                          ("fr" . "francais"))))
         (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
           (setq lang (match-string 1))
-          (ispell-change-dictionary (cdr (assoc lang dico-alist)))))))
+          (setq dict (cdr (assoc lang dict-alist)))
+          (if dict
+              (ispell-change-dictionary dict)
+            (message "Ispell dictionary for language `%s' is unknown" lang)
+            (sit-for 3))
+          (force-mode-line-update)))))
 
-  ;; guess language
-  (add-hook 'org-mode-hook 'leuven--org-switch-language)
+  ;; guess dictionary
+  (add-hook 'org-mode-hook 'leuven--org-switch-dictionary)
 #+end_src
 
 *** Easy templates

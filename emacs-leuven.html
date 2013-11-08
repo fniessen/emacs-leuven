@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-08 Fri 23:39 -->
+  <title>Emacs Leuven</title><!-- 2013-11-09 Sat 00:25 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131108.2338</span>
+"color: #008200; font-style: italic;">Version: 20131109.0024</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131108.2338]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131109.0024]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -2571,22 +2571,24 @@
         useful functions and documentation.</p>
 
         <dl class="org-dl">
-          <dt>apropos-documentation (<code>C-h d</code>)</dt>
+          <dt><code>apropos-documentation</code> (<code>C-h d</code>)</dt>
 
           <dd><b>Show symbols whose documentation contains matches for
-          PATTERN.</b></dd>
+          PATTERN.</b> For example, <code>C-h d yank properties
+          &lt;RET&gt;</code>.</dd>
 
-          <dt>describe-function (<code>C-h f</code>)</dt>
+          <dt><code>describe-function</code> (<code>C-h f</code>)</dt>
 
           <dd>Used with TAB completion to show documentation of functions.</dd>
 
-          <dt>elisp-index-search (<code>C-h E</code> in Emacs Leuven)</dt>
+          <dt><code>elisp-index-search</code> (<code>C-h E</code> in Emacs
+          Leuven)</dt>
 
           <dd>Look up documentation on broad ELisp topics (in the indices of
           the Emacs Lisp Reference Manual).</dd>
 
-          <dt>info-lookup-symbol (<code>C-h S</code>, or <code>C-f1</code> in
-          Emacs Leuven)</dt>
+          <dt><code>info-lookup-symbol</code> (<code>C-h S</code>, or
+          <code>C-f1</code> in Emacs Leuven)</dt>
 
           <dd><b>Bring the relevant section from the manual, which describes
           the topic in more detail.</b></dd>
@@ -15444,18 +15446,18 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--org-switch-language</span> ()
+"color: #006699;">leuven--org-switch-dictionary</span> ()
     <span style=
 "color: #008000;">"Switch language if a `#+LANGUAGE:' Org meta-tag is on top 8 lines."</span>
     (<span style="color: #0000FF;">save-excursion</span>
       (goto-line (1+ 8))
-      (<span style="color: #0000FF;">let</span> (lang
-            (dico-alist '((<span style=
-"color: #FF4700;">"fr"</span> . <span style=
-"color: #FF4700;">"francais"</span>)
-                          (<span style=
+      (<span style="color: #0000FF;">let</span> (lang dict
+            (dict-alist '((<span style=
 "color: #FF4700;">"en"</span> . <span style=
-"color: #FF4700;">"american"</span>))))
+"color: #FF4700;">"american"</span>)
+                          (<span style=
+"color: #FF4700;">"fr"</span> . <span style=
+"color: #FF4700;">"francais"</span>))))
         (<span style=
 "color: #0000FF;">when</span> (re-search-backward <span style=
 "color: #FF4700;">"#\\+LANGUAGE: +</span><span style=
@@ -15466,11 +15468,19 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #FF4700; font-weight: bold;">)</span><span style=
 "color: #FF4700;">"</span> 1 t)
           (setq lang (match-string 1))
-          (ispell-change-dictionary (cdr (assoc lang dico-alist)))))))
+          (setq dict (cdr (assoc lang dict-alist)))
+          (<span style="color: #0000FF;">if</span> dict
+              (ispell-change-dictionary dict)
+            (message <span style=
+"color: #FF4700;">"Ispell dictionary for language `</span><span style=
+"color: #FF4700;">%s</span><span style=
+"color: #FF4700;">' is unknown"</span> lang)
+            (sit-for 3))
+          (force-mode-line-update)))))
 
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">guess language</span>
-  (add-hook 'org-mode-hook 'leuven--org-switch-language)
+"color: #008200; font-style: italic;">guess dictionary</span>
+  (add-hook 'org-mode-hook 'leuven--org-switch-dictionary)
 </pre>
             </div>
           </div>
@@ -25025,7 +25035,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131108.2339]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131109.0025]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
