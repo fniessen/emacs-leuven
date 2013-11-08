@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131108.222
+;; Version: 20131108.2248
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131108.222]--")
+(message "* --[ Loading Emacs Leuven 20131108.2248]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1410,17 +1410,16 @@
        (setq ispell-really-aspell nil)
        (setq ispell-really-hunspell nil)))
 
-     (add-to-list 'mode-line-format
-                  '(:eval
-                    (let ((dict (and (featurep 'ispell)
-                                     (or ispell-local-dictionary
-                                         ispell-dictionary))))
-                      (and dict
-                           (concat " ["
-                                   (propertize (substring dict 0 2)
-                                               'face 'mode-line-highlight)
-                                   "]"))))
-                  t)
+     (setq-default mode-line-format
+                   (cons
+                    '(:eval
+                      (let ((dict (and (featurep 'ispell)
+                                       (or ispell-local-dictionary
+                                           ispell-dictionary))))
+                        (and dict
+                             (propertize (concat " [" (substring dict 0 2) "]")
+                                         'face 'mode-line-highlight))))
+                    (default-value 'mode-line-format)))
 
      )
 
@@ -9399,7 +9398,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131108.2221]--")
+(message "* --[ Loaded Emacs Leuven 20131108.2249]--")
 
 (provide 'emacs-leuven)
 

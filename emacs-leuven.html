@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-08 Fri 22:23 -->
+  <title>Emacs Leuven</title><!-- 2013-11-08 Fri 22:50 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131108.2222</span>
+"color: #008200; font-style: italic;">Version: 20131108.2249</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131108.2222]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131108.2249]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -4636,19 +4636,20 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-     (add-to-list 'mode-line-format
-                  '(<span style="color: #006FE0;">:eval</span>
-                    (<span style=
+     (setq-default mode-line-format
+                   (cons
+                    '(<span style="color: #006FE0;">:eval</span>
+                      (<span style=
 "color: #0000FF;">let</span> ((dict (and (<span style=
 "color: #0000FF;">featurep</span> '<span style="color: #6434A3;">ispell</span>)
-                                     (or ispell-local-dictionary
-                                         ispell-dictionary))))
-                      (and dict
-                           (concat <span style="color: #FF4700;">" ["</span>
-                                   (propertize (substring dict 0 2)
-                                               'face 'mode-line-highlight)
-                                   <span style="color: #FF4700;">"]"</span>))))
-                  t)
+                                       (or ispell-local-dictionary
+                                           ispell-dictionary))))
+                        (and dict
+                             (propertize (concat <span style=
+"color: #FF4700;">" ["</span> (substring dict 0 2) <span style=
+"color: #FF4700;">"]"</span>)
+                                         'face 'mode-line-highlight))))
+                    (default-value 'mode-line-format)))
 </pre>
           </div>
 
@@ -25014,7 +25015,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131108.2223]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131108.225]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
