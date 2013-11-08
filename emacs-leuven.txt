@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-08 Fri 17:14>
+# Time-stamp: <2013-11-08 Fri 22:20>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  american
@@ -12511,23 +12511,25 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
     ;; output to interpreter causes windows showing the buffer to scroll
     (setq-default comint-move-point-for-output t)
 
-    ;; remove the `^M' characters
-    (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m nil t)
-    ;; XXX [2011-11-23 Wed] Added `nil t'!???
+    ;; strip `^M' characters
+    (add-to-list 'process-coding-system-alist
+                 '("bash" . (undecided-dos . undecided-unix)))
+    (add-to-list 'process-coding-system-alist
+                 '("zsh" . (undecided-dos . undecided-unix)))
 
     ;; show completion list when ambiguous
     (setq comint-completion-autolist t)
 
     ;; use the `up' and `down' arrow keys to traverse through the previous
     ;; commands
-    (defun leuven-up-down-keys ()
+    (defun leuven--up-down-keys ()
       "Customize my shell-mode."
       (local-set-key
         (kbd "<up>") 'comint-previous-input)
       (local-set-key
         (kbd "<down>") 'comint-next-input))
 
-    (add-hook 'shell-mode-hook 'leuven-up-down-keys)
+    (add-hook 'shell-mode-hook 'leuven--up-down-keys)
 ;; )
 
   ;; translate ANSI escape sequences into faces (within shell mode)
@@ -12577,8 +12579,8 @@ solves this problem:
 
   (leuven--section "36.7 Options")
 
-  ;; ;; disable command echoing
-  ;; (setq-default comint-process-echoes t)
+  ;; disable command echoing
+  (setq-default comint-process-echoes t) ; for Linux (not needed for Cygwin)
 #+end_src
 
 ** Terminal emulator

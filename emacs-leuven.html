@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-08 Fri 17:19 -->
+  <title>Emacs Leuven</title><!-- 2013-11-08 Fri 22:23 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131108.1717</span>
+"color: #008200; font-style: italic;">Version: 20131108.2222</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131108.1717]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131108.2222]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -22087,12 +22087,15 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (setq-default comint-move-point-for-output t)
 
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">remove the `</span><span style=
+"color: #008200; font-style: italic;">strip `</span><span style=
 "color: #008200; font-style: italic;">^M</span><span style=
 "color: #008200; font-style: italic;">' characters</span>
-    (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m nil t)
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> [2011-11-23 Wed] Added `nil t'!???</span>
+    (add-to-list 'process-coding-system-alist
+                 '(<span style=
+"color: #FF4700;">"bash"</span> . (undecided-dos . undecided-unix)))
+    (add-to-list 'process-coding-system-alist
+                 '(<span style=
+"color: #FF4700;">"zsh"</span> . (undecided-dos . undecided-unix)))
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">show completion list when ambiguous</span>
@@ -22107,7 +22110,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">commands</span>
     (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-up-down-keys</span> ()
+"color: #006699;">leuven--up-down-keys</span> ()
       <span style="color: #008000;">"Customize my shell-mode."</span>
       (local-set-key
         (kbd <span style=
@@ -22116,7 +22119,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         (kbd <span style=
 "color: #FF4700;">"&lt;down&gt;"</span>) 'comint-next-input))
 
-    (add-hook 'shell-mode-hook 'leuven-up-down-keys)
+    (add-hook 'shell-mode-hook 'leuven--up-down-keys)
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">)</span>
 
@@ -22204,9 +22207,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (leuven--section <span style="color: #FF4700;">"36.7 Options"</span>)
 
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; disable command echoing</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(setq-default comint-process-echoes t)</span>
+"color: #008200; font-style: italic;">disable command echoing</span>
+  (setq-default comint-process-echoes t) <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">for Linux (not needed for Cygwin)</span>
 </pre>
           </div>
         </div>
@@ -25010,7 +25014,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131108.1718]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131108.2223]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131108.1716
+;; Version: 20131108.222
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131108.1716]--")
+(message "* --[ Loading Emacs Leuven 20131108.222]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -8408,23 +8408,25 @@ From %c"
     ;; output to interpreter causes windows showing the buffer to scroll
     (setq-default comint-move-point-for-output t)
 
-    ;; remove the `^M' characters
-    (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m nil t)
-    ;; XXX [2011-11-23 Wed] Added `nil t'!???
+    ;; strip `^M' characters
+    (add-to-list 'process-coding-system-alist
+                 '("bash" . (undecided-dos . undecided-unix)))
+    (add-to-list 'process-coding-system-alist
+                 '("zsh" . (undecided-dos . undecided-unix)))
 
     ;; show completion list when ambiguous
     (setq comint-completion-autolist t)
 
     ;; use the `up' and `down' arrow keys to traverse through the previous
     ;; commands
-    (defun leuven-up-down-keys ()
+    (defun leuven--up-down-keys ()
       "Customize my shell-mode."
       (local-set-key
         (kbd "<up>") 'comint-previous-input)
       (local-set-key
         (kbd "<down>") 'comint-next-input))
 
-    (add-hook 'shell-mode-hook 'leuven-up-down-keys)
+    (add-hook 'shell-mode-hook 'leuven--up-down-keys)
 ;; )
 
   ;; translate ANSI escape sequences into faces (within shell mode)
@@ -8448,8 +8450,8 @@ From %c"
 
   (leuven--section "36.7 Options")
 
-  ;; ;; disable command echoing
-  ;; (setq-default comint-process-echoes t)
+  ;; disable command echoing
+  (setq-default comint-process-echoes t) ; for Linux (not needed for Cygwin)
 
 ;;** 36.8 Terminal emulator
 
@@ -9397,7 +9399,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131108.1717]--")
+(message "* --[ Loaded Emacs Leuven 20131108.2221]--")
 
 (provide 'emacs-leuven)
 
