@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-09 Sat 00:25 -->
+  <title>Emacs Leuven</title><!-- 2013-11-09 Sat 18:21 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131109.0024</span>
+"color: #008200; font-style: italic;">Version: 20131109.182</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131109.0024]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131109.182]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -2219,14 +2219,15 @@
         (<span style="color: #0000FF;">let*</span> ((feature (ad-get-arg 0))
                (require-depth (or (and (boundp 'require-depth) require-depth)
                                   0))
-               (prefix (concat (make-string (* 2 require-depth) ? ) <span style="color: #FF4700;">"+-&gt; "</span>)))
+               (prefix-open (concat (make-string (* 4 require-depth) ? ) <span style="color: #FF4700;">"└── "</span>))
+               (prefix-close (concat (make-string (* 4 require-depth) ? ) <span style="color: #FF4700;">"    "</span>)))
           (<span style="color: #0000FF;">cond</span> ((<span style=
 "color: #0000FF;">featurep</span> <span style="color: #6434A3;">feature</span>)
                  (message <span style=
 "color: #FF4700;">"(Info) %sRequiring `</span><span style=
 "color: #FF4700;">%s</span><span style=
 "color: #FF4700;">'... already loaded"</span>
-                          prefix feature)
+                          prefix-open feature)
                  <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">in the case `</span><span style=
 "color: #008200; font-style: italic;">ad-do-it</span><span style=
@@ -2239,7 +2240,7 @@
                    (message <span style=
 "color: #FF4700;">"(Info) %sRequiring `</span><span style=
 "color: #FF4700;">%s</span><span style="color: #FF4700;">'... %s"</span>
-                            prefix feature
+                            prefix-open feature
                             (locate-library (symbol-name feature)))
                    (setq time-start (float-time))
                    (<span style=
@@ -2249,7 +2250,7 @@
 "color: #FF4700;">"(Info) %sRequiring `</span><span style=
 "color: #FF4700;">%s</span><span style=
 "color: #FF4700;">'... loaded in %.3f s"</span>
-                            prefix feature
+                            prefix-close feature
                             (- (float-time) time-start)))))))))
 </pre>
         </div>
@@ -15719,10 +15720,17 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">allow YASnippet to do its thing in Org files</span>
   <span style="color: #008200;">;;</span><span style=
 "color: #008200; font-style: italic;">! make sure you initialise YASnippet *before* Org mode</span>
+  (<span style="color: #0000FF;">when</span> (<span style=
+"color: #0000FF;">featurep</span> '<span style="color: #6434A3;">org</span>)
+    (message <span style="color: #FF4700;">"(</span><span style=
+"color: #FF4700; background-color: #FFFF88;">Error</span><span style=
+"color: #FF4700;">) Org is already loaded -&gt; Can't initialize YASnippet!"</span>)
+    (sit-for 3))
+
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">allow YASnippet to do its thing in Org files</span>
   (<span style="color: #0000FF;">when</span> (try-require 'yasnippet)
 
     (<span style="color: #0000FF;">defun</span> <span style=
@@ -25035,7 +25043,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131109.0025]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131109.1821]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

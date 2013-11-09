@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131109.0022
+;; Version: 20131109.1819
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131109.0022]--")
+(message "* --[ Loading Emacs Leuven 20131109.1819]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -528,23 +528,24 @@
         (let* ((feature (ad-get-arg 0))
                (require-depth (or (and (boundp 'require-depth) require-depth)
                                   0))
-               (prefix (concat (make-string (* 2 require-depth) ? ) "+-> ")))
+               (prefix-open (concat (make-string (* 4 require-depth) ? ) "└── "))
+               (prefix-close (concat (make-string (* 4 require-depth) ? ) "    ")))
           (cond ((featurep feature)
                  (message "(Info) %sRequiring `%s'... already loaded"
-                          prefix feature)
+                          prefix-open feature)
                  ;; in the case `ad-do-it' is not called, you have to set the
                  ;; return value yourself!
                  (setq ad-return-value feature))
                 (t
                  (let ((time-start))
                    (message "(Info) %sRequiring `%s'... %s"
-                            prefix feature
+                            prefix-open feature
                             (locate-library (symbol-name feature)))
                    (setq time-start (float-time))
                    (let ((require-depth (1+ require-depth)))
                      ad-do-it)
                    (message "(Info) %sRequiring `%s'... loaded in %.3f s"
-                            prefix feature
+                            prefix-close feature
                             (- (float-time) time-start)))))))))
 
   (if (try-require 'idle-require)
@@ -6053,8 +6054,12 @@ From %c"
          (completing-read "Find: " (mapcar #'car targets)) targets)))
       (other-window 1)))
 
-  ;; allow YASnippet to do its thing in Org files
   ;;! make sure you initialise YASnippet *before* Org mode
+  (when (featurep 'org)
+    (message "(Error) Org is already loaded -> Can't initialize YASnippet!")
+    (sit-for 3))
+
+  ;; allow YASnippet to do its thing in Org files
   (when (try-require 'yasnippet)
 
     (defun yas/org-very-safe-expand ()
@@ -9407,7 +9412,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131109.0023]--")
+(message "* --[ Loaded Emacs Leuven 20131109.182]--")
 
 (provide 'emacs-leuven)
 

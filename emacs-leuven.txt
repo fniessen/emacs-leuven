@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-09 Sat 00:20>
+# Time-stamp: <2013-11-09 Sat 18:13>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -687,23 +687,24 @@ Though, it does load the full Org mode right from the start...
         (let* ((feature (ad-get-arg 0))
                (require-depth (or (and (boundp 'require-depth) require-depth)
                                   0))
-               (prefix (concat (make-string (* 2 require-depth) ? ) "+-> ")))
+               (prefix-open (concat (make-string (* 4 require-depth) ? ) "└── "))
+               (prefix-close (concat (make-string (* 4 require-depth) ? ) "    ")))
           (cond ((featurep feature)
                  (message "(Info) %sRequiring `%s'... already loaded"
-                          prefix feature)
+                          prefix-open feature)
                  ;; in the case `ad-do-it' is not called, you have to set the
                  ;; return value yourself!
                  (setq ad-return-value feature))
                 (t
                  (let ((time-start))
                    (message "(Info) %sRequiring `%s'... %s"
-                            prefix feature
+                            prefix-open feature
                             (locate-library (symbol-name feature)))
                    (setq time-start (float-time))
                    (let ((require-depth (1+ require-depth)))
                      ad-do-it)
                    (message "(Info) %sRequiring `%s'... loaded in %.3f s"
-                            prefix feature
+                            prefix-close feature
                             (- (float-time) time-start)))))))))
 #+end_src
 
@@ -8751,8 +8752,12 @@ For security reasons, evaluation is not turned on by default.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; allow YASnippet to do its thing in Org files
   ;;! make sure you initialise YASnippet *before* Org mode
+  (when (featurep 'org)
+    (message "(Error) Org is already loaded -> Can't initialize YASnippet!")
+    (sit-for 3))
+
+  ;; allow YASnippet to do its thing in Org files
   (when (try-require 'yasnippet)
 
     (defun yas/org-very-safe-expand ()
