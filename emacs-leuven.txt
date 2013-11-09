@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-09 Sat 22:24>
+# Time-stamp: <2013-11-09 Sat 23:49>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -487,8 +487,6 @@ Ignore errors.
       (condition-case err
           ;; protected form
           (progn
-            (when leuven-load-verbose
-              (message "(Info) %sTrying to require `%s'..." prefix feature))
             (if (stringp feature)
                 (load-library feature)
               (setq time-start (float-time))
@@ -500,7 +498,9 @@ Ignore errors.
         (file-error ;; condition
          (progn
            (when leuven-load-verbose
-             (message "(Info) %sTrying to require `%s'... missing" prefix feature))
+             (message "(Info) %sRequiring `%s' <from `%s'>... missing"
+                      prefix feature
+                      (ignore-errors (file-name-base load-file-name))))
            (add-to-list 'leuven--missing-packages feature 'append))
          nil))))
 #+end_src
@@ -513,11 +513,12 @@ Ignore errors.
         "Execute a file of Lisp code named FILE and report time spent."
         (let ((filename (ad-get-arg 0))
               (find-file-time-start (float-time))
-              (prefix (concat (make-string (* 8 require-depth) ? ) "    ")))
-          (message "(Info) %sLoading %s <from `%s'>..." prefix filename
+              (prefix-open (concat (make-string (* 8 require-depth) ? ) "└── "))
+              (prefix-close (concat (make-string (* 8 require-depth) ? ) "    ")))
+          (message "(Info) %sLoading `%s' <from `%s'>..." prefix-open filename
                    (ignore-errors (file-name-base load-file-name)))
           ad-do-it
-          (message "(Info) %sLoaded %s <from `%s'> in %.3f s." prefix filename
+          (message "(Info) %sLoaded `%s' <from `%s'> in %.3f s." prefix-close filename
                    (ignore-errors (file-name-base load-file-name))
                    (- (float-time) find-file-time-start))))
 
@@ -534,10 +535,12 @@ Ignore errors.
                  (setq ad-return-value feature))
                 (t
                  (let ((time-start))
+                   (ad-disable-advice 'locate-library 'around 'leuven-locate-library)
                    (message "(Info) %sRequiring `%s' <from `%s'>... %s"
                             prefix-open feature
                             (ignore-errors (file-name-base load-file-name))
                             (locate-library (symbol-name feature)))
+                   (ad-activate 'locate-library)
                    (setq time-start (float-time))
                    (let ((require-depth (1+ require-depth)))
                      ad-do-it)
@@ -554,9 +557,11 @@ Ignore errors.
     (declare (indent defun))
     `(eval-after-load ,mode
        '(progn
-          (message "(Info) Running code specific to `%s'... <<<<<<<"
+          (message "(Info) {{{ Running code block specific to `%s'..."
                    ,mode)
-          ,@body)))
+          ,@body
+          (message "(Info) }}} Running code block specific to `%s'... Done"
+                   ,mode))))
 #+end_src
 
 ** The Package Menu Buffer

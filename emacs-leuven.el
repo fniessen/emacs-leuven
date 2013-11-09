@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131109.2224
+;; Version: 20131109.235
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131109.2224]--")
+(message "* --[ Loading Emacs Leuven 20131109.235]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -383,8 +383,6 @@
       (condition-case err
           ;; protected form
           (progn
-            (when leuven-load-verbose
-              (message "(Info) %sTrying to require `%s'..." prefix feature))
             (if (stringp feature)
                 (load-library feature)
               (setq time-start (float-time))
@@ -396,7 +394,9 @@
         (file-error ;; condition
          (progn
            (when leuven-load-verbose
-             (message "(Info) %sTrying to require `%s'... missing" prefix feature))
+             (message "(Info) %sRequiring `%s' <from `%s'>... missing"
+                      prefix feature
+                      (ignore-errors (file-name-base load-file-name))))
            (add-to-list 'leuven--missing-packages feature 'append))
          nil))))
 
@@ -407,11 +407,12 @@
         "Execute a file of Lisp code named FILE and report time spent."
         (let ((filename (ad-get-arg 0))
               (find-file-time-start (float-time))
-              (prefix (concat (make-string (* 8 require-depth) ? ) "    ")))
-          (message "(Info) %sLoading %s <from `%s'>..." prefix filename
+              (prefix-open (concat (make-string (* 8 require-depth) ? ) "└── "))
+              (prefix-close (concat (make-string (* 8 require-depth) ? ) "    ")))
+          (message "(Info) %sLoading `%s' <from `%s'>..." prefix-open filename
                    (ignore-errors (file-name-base load-file-name)))
           ad-do-it
-          (message "(Info) %sLoaded %s <from `%s'> in %.3f s." prefix filename
+          (message "(Info) %sLoaded `%s' <from `%s'> in %.3f s." prefix-close filename
                    (ignore-errors (file-name-base load-file-name))
                    (- (float-time) find-file-time-start))))
 
@@ -428,10 +429,12 @@
                  (setq ad-return-value feature))
                 (t
                  (let ((time-start))
+                   (ad-disable-advice 'locate-library 'around 'leuven-locate-library)
                    (message "(Info) %sRequiring `%s' <from `%s'>... %s"
                             prefix-open feature
                             (ignore-errors (file-name-base load-file-name))
                             (locate-library (symbol-name feature)))
+                   (ad-activate 'locate-library)
                    (setq time-start (float-time))
                    (let ((require-depth (1+ require-depth)))
                      ad-do-it)
@@ -446,9 +449,11 @@
     (declare (indent defun))
     `(eval-after-load ,mode
        '(progn
-          (message "(Info) Running code specific to `%s'... <<<<<<<"
+          (message "(Info) {{{ Running code block specific to `%s'..."
                    ,mode)
-          ,@body)))
+          ,@body
+          (message "(Info) }}} Running code block specific to `%s'... Done"
+                   ,mode))))
 
 ;;* 47 Emacs Lisp (info "(emacs)Packages")
 
@@ -9423,7 +9428,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131109.2226]--")
+(message "* --[ Loaded Emacs Leuven 20131109.2351]--")
 
 (provide 'emacs-leuven)
 
