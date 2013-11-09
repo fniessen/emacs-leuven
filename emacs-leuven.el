@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131109.1819
+;; Version: 20131109.2224
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131109.1819]--")
+(message "* --[ Loading Emacs Leuven 20131109.2224]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -318,15 +318,6 @@
           (when leuven-load-verbose
             (message "(Info) Added `%s' to `load-path'" this-directory))))))
 
-  ;; wrapper around `eval-after-load' (added in GNU Emacs 24.4)
-  (defmacro with-eval-after-load (mode &rest body)
-    "`eval-after-load' MODE evaluate BODY."
-    (declare (indent defun))
-    `(eval-after-load ,mode
-       '(progn
-          (message "(Info)                                  Running code specific to `%s'..." ,mode)
-          ,@body)))
-
   ;; remember this directory
   (defconst leuven--directory
     (file-name-directory (or load-file-name (buffer-file-name)))
@@ -359,21 +350,27 @@
 
 ) ;; chapter 0-loading-libraries ends here
 
+  (defconst require-depth 0
+    "Starting depth for load tree.")
+
   (defvar leuven--missing-packages nil
     "List of packages that `try-require' or `locate-library' can't find.")
 
   (defadvice locate-library (around leuven-locate-library activate)
     "Locate Emacs library named LIBRARY and report time spent."
     (let ((filename (ad-get-arg 0))
-          (find-file-time-start (float-time)))
+          (find-file-time-start (float-time))
+          (prefix (concat (make-string (* 8 require-depth) ? ) "    ")))
       (if ad-do-it
           (when leuven-load-verbose
-            (message "(Info)                                  Locating library %s... located (in %.3f s.)" filename
+            (message "(Info) %sLocating library `%s'... located (in %.3f s.)"
+                     prefix filename
                      (- (float-time) find-file-time-start)))
         (add-to-list 'leuven--missing-packages filename 'append)
         (when leuven-load-verbose
-          (message "(Info)                                  Locating library %s... missing (in %.3f s.)" filename
-                     (- (float-time) find-file-time-start))))))
+          (message "(Info) %sLocating library `%s'... missing (in %.3f s.)"
+                   prefix filename
+                   (- (float-time) find-file-time-start))))))
 
   ;; require a feature/library if available; if not, fail silently
   (defun try-require (feature)
@@ -381,12 +378,13 @@
 
   Return true if the library given as argument is successfully loaded. If not,
   instead of an error, just add the package to a list of missing packages."
-    (let (time-start)
+    (let ((prefix (concat (make-string (* 8 require-depth) ? ) "    "))
+          time-start)
       (condition-case err
           ;; protected form
           (progn
             (when leuven-load-verbose
-              (message "(Info)                                  Trying to require `%s'..." feature))
+              (message "(Info) %sTrying to require `%s'..." prefix feature))
             (if (stringp feature)
                 (load-library feature)
               (setq time-start (float-time))
@@ -398,9 +396,59 @@
         (file-error ;; condition
          (progn
            (when leuven-load-verbose
-             (message "(Info)                                  Trying to require `%s'... missing" feature))
+             (message "(Info) %sTrying to require `%s'... missing" prefix feature))
            (add-to-list 'leuven--missing-packages feature 'append))
          nil))))
+
+  ;; make loaded files give a message
+  (when leuven-load-verbose
+    (GNUEmacs
+      (defadvice load (around leuven-load activate)
+        "Execute a file of Lisp code named FILE and report time spent."
+        (let ((filename (ad-get-arg 0))
+              (find-file-time-start (float-time))
+              (prefix (concat (make-string (* 8 require-depth) ? ) "    ")))
+          (message "(Info) %sLoading %s <from `%s'>..." prefix filename
+                   (ignore-errors (file-name-base load-file-name)))
+          ad-do-it
+          (message "(Info) %sLoaded %s <from `%s'> in %.3f s." prefix filename
+                   (ignore-errors (file-name-base load-file-name))
+                   (- (float-time) find-file-time-start))))
+
+      (defadvice require (around leuven-require activate)
+        "Leave a trace of packages being loaded."
+        (let* ((feature (ad-get-arg 0))
+               (prefix-open (concat (make-string (* 8 require-depth) ? ) "└── "))
+               (prefix-close (concat (make-string (* 8 require-depth) ? ) "    ")))
+          (cond ((featurep feature)
+                 (message "(Info) %sRequiring `%s' <from `%s'>... already loaded"
+                          prefix-open feature (ignore-errors (file-name-base load-file-name)))
+                 ;; in the case `ad-do-it' is not called, you have to set the
+                 ;; return value yourself!
+                 (setq ad-return-value feature))
+                (t
+                 (let ((time-start))
+                   (message "(Info) %sRequiring `%s' <from `%s'>... %s"
+                            prefix-open feature
+                            (ignore-errors (file-name-base load-file-name))
+                            (locate-library (symbol-name feature)))
+                   (setq time-start (float-time))
+                   (let ((require-depth (1+ require-depth)))
+                     ad-do-it)
+                   (message "(Info) %sRequiring `%s' <from `%s'>... loaded in %.3f s"
+                            prefix-close feature
+                            (ignore-errors (file-name-base load-file-name))
+                            (- (float-time) time-start)))))))))
+
+  ;; wrapper around `eval-after-load' (added in GNU Emacs 24.4)
+  (defmacro with-eval-after-load (mode &rest body)
+    "`eval-after-load' MODE evaluate BODY."
+    (declare (indent defun))
+    `(eval-after-load ,mode
+       '(progn
+          (message "(Info) Running code specific to `%s'... <<<<<<<"
+                   ,mode)
+          ,@body)))
 
 ;;* 47 Emacs Lisp (info "(emacs)Packages")
 
@@ -510,43 +558,6 @@
       ad-do-it
       (message "(Info) Found file %s in %.2f s." filename
                (- (float-time) find-file-time-start))))
-
-  ;; make loaded files give a message
-  (when leuven-load-verbose
-    (GNUEmacs
-      (defadvice load (around leuven-load activate)
-        "Execute a file of Lisp code named FILE and report time spent."
-        (let ((filename (ad-get-arg 0))
-              (find-file-time-start (float-time)))
-          (message "(Info)                                  Loading %s..." filename)
-          ad-do-it
-          (message "(Info)                                  Loaded %s in %.3f s." filename
-                   (- (float-time) find-file-time-start))))
-
-      (defadvice require (around leuven-require activate)
-        "Leave a trace of packages being loaded."
-        (let* ((feature (ad-get-arg 0))
-               (require-depth (or (and (boundp 'require-depth) require-depth)
-                                  0))
-               (prefix-open (concat (make-string (* 4 require-depth) ? ) "└── "))
-               (prefix-close (concat (make-string (* 4 require-depth) ? ) "    ")))
-          (cond ((featurep feature)
-                 (message "(Info) %sRequiring `%s'... already loaded"
-                          prefix-open feature)
-                 ;; in the case `ad-do-it' is not called, you have to set the
-                 ;; return value yourself!
-                 (setq ad-return-value feature))
-                (t
-                 (let ((time-start))
-                   (message "(Info) %sRequiring `%s'... %s"
-                            prefix-open feature
-                            (locate-library (symbol-name feature)))
-                   (setq time-start (float-time))
-                   (let ((require-depth (1+ require-depth)))
-                     ad-do-it)
-                   (message "(Info) %sRequiring `%s'... loaded in %.3f s"
-                            prefix-close feature
-                            (- (float-time) time-start)))))))))
 
   (if (try-require 'idle-require)
 
@@ -9412,7 +9423,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131109.182]--")
+(message "* --[ Loaded Emacs Leuven 20131109.2226]--")
 
 (provide 'emacs-leuven)
 

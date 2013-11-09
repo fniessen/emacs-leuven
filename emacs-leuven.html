@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-09 Sat 18:21 -->
+  <title>Emacs Leuven</title><!-- 2013-11-09 Sat 22:27 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131109.182</span>
+"color: #008200; font-style: italic;">Version: 20131109.2226</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131109.182]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131109.2226]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -1715,27 +1715,6 @@
 "color: #FF4700;">'"</span> this-directory))))))
 </pre>
         </div>
-
-        <div class="org-src-container">
-          <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">wrapper around `</span><span style=
-"color: #008200; font-style: italic;">eval-after-load</span><span style=
-"color: #008200; font-style: italic;">' (added in GNU Emacs 24.4)</span>
-  (<span style="color: #0000FF;">defmacro</span> <span style=
-"color: #006699;">with-eval-after-load</span> (mode <span style=
-"color: #666666;">&amp;rest</span> body)
-    <span style="color: #008000;">"`</span><span style=
-"color: #008000;">eval-after-load</span><span style=
-"color: #008000;">' MODE evaluate BODY."</span>
-    (<span style="color: #0000FF;">declare</span> (indent defun))
-    `(eval-after-load ,mode
-       '(<span style="color: #0000FF;">progn</span>
-          (message <span style=
-"color: #FF4700;">"(Info)                                  Running code specific to `</span><span style="color: #FF4700;">%s</span><span style="color: #FF4700;">'..."</span> ,mode)
-          ,@body)))
-</pre>
-        </div>
       </div>
 
       <div id="outline-container-sec-4-1" class="outline-3">
@@ -1857,6 +1836,10 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
+  (<span style="color: #0000FF;">defconst</span> <span style=
+"color: #BA36A5;">require-depth</span> 0
+    <span style="color: #008000;">"Starting depth for load tree."</span>)
+
   (<span style="color: #0000FF;">defvar</span> <span style=
 "color: #BA36A5;">leuven--missing-packages</span> nil
     <span style="color: #008000;">"List of packages that `</span><span style=
@@ -1870,17 +1853,25 @@
     <span style=
 "color: #008000;">"Locate Emacs library named LIBRARY and report time spent."</span>
     (<span style="color: #0000FF;">let</span> ((filename (ad-get-arg 0))
-          (find-file-time-start (float-time)))
+          (find-file-time-start (float-time))
+          (prefix (concat (make-string (* 8 require-depth) ? ) <span style=
+"color: #FF4700;">"    "</span>)))
       (<span style="color: #0000FF;">if</span> ad-do-it
           (<span style="color: #0000FF;">when</span> leuven-load-verbose
             (message <span style=
-"color: #FF4700;">"(Info)                                  Locating library %s... located (in %.3f s.)"</span> filename
+"color: #FF4700;">"(Info) %sLocating library `</span><span style=
+"color: #FF4700;">%s</span><span style=
+"color: #FF4700;">'... located (in %.3f s.)"</span>
+                     prefix filename
                      (- (float-time) find-file-time-start)))
         (add-to-list 'leuven--missing-packages filename 'append)
         (<span style="color: #0000FF;">when</span> leuven-load-verbose
           (message <span style=
-"color: #FF4700;">"(Info)                                  Locating library %s... missing (in %.3f s.)"</span> filename
-                     (- (float-time) find-file-time-start))))))
+"color: #FF4700;">"(Info) %sLocating library `</span><span style=
+"color: #FF4700;">%s</span><span style=
+"color: #FF4700;">'... missing (in %.3f s.)"</span>
+                   prefix filename
+                   (- (float-time) find-file-time-start))))))
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">require a feature/library if available; if not, fail silently</span>
@@ -1893,14 +1884,18 @@
 <span style="color: #008000;">  instead of an </span><span style=
 "color: #008000; background-color: #FFFF88;">error</span><span style=
 "color: #008000;">, just add the package to a list of missing packages."</span>
-    (<span style="color: #0000FF;">let</span> (time-start)
+    (<span style=
+"color: #0000FF;">let</span> ((prefix (concat (make-string (* 8 require-depth) ? ) <span style="color: #FF4700;">"    "</span>))
+          time-start)
       (<span style="color: #0000FF;">condition-case</span> err
           <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">protected form</span>
           (<span style="color: #0000FF;">progn</span>
             (<span style="color: #0000FF;">when</span> leuven-load-verbose
               (message <span style=
-"color: #FF4700;">"(Info)                                  Trying to require `</span><span style="color: #FF4700;">%s</span><span style="color: #FF4700;">'..."</span> feature))
+"color: #FF4700;">"(Info) %sTrying to require `</span><span style=
+"color: #FF4700;">%s</span><span style=
+"color: #FF4700;">'..."</span> prefix feature))
             (<span style="color: #0000FF;">if</span> (stringp feature)
                 (load-library feature)
               (setq time-start (float-time))
@@ -1920,9 +1915,116 @@
          (<span style="color: #0000FF;">progn</span>
            (<span style="color: #0000FF;">when</span> leuven-load-verbose
              (message <span style=
-"color: #FF4700;">"(Info)                                  Trying to require `</span><span style="color: #FF4700;">%s</span><span style="color: #FF4700;">'... missing"</span> feature))
+"color: #FF4700;">"(Info) %sTrying to require `</span><span style=
+"color: #FF4700;">%s</span><span style=
+"color: #FF4700;">'... missing"</span> prefix feature))
            (add-to-list 'leuven--missing-packages feature 'append))
          nil))))
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">make loaded files give a message</span>
+  (<span style="color: #0000FF;">when</span> leuven-load-verbose
+    (GNUEmacs
+      (<span style="color: #0000FF;">defadvice</span> <span style=
+"color: #006699;">load</span> (around leuven-load activate)
+        <span style=
+"color: #008000;">"Execute a file of Lisp code named FILE and report time spent."</span>
+        (<span style="color: #0000FF;">let</span> ((filename (ad-get-arg 0))
+              (find-file-time-start (float-time))
+              (prefix (concat (make-string (* 8 require-depth) ? ) <span style=
+"color: #FF4700;">"    "</span>)))
+          (message <span style=
+"color: #FF4700;">"(Info) %sLoading %s &lt;from `</span><span style=
+"color: #FF4700;">%s</span><span style=
+"color: #FF4700;">'&gt;..."</span> prefix filename
+                   (ignore-<span style=
+"color: #CC0000; background-color: #FFFF88;">error</span>s (file-name-base load-file-name)))
+          ad-do-it
+          (message <span style=
+"color: #FF4700;">"(Info) %sLoaded %s &lt;from `</span><span style=
+"color: #FF4700;">%s</span><span style=
+"color: #FF4700;">'&gt; in %.3f s."</span> prefix filename
+                   (ignore-<span style=
+"color: #CC0000; background-color: #FFFF88;">error</span>s (file-name-base load-file-name))
+                   (- (float-time) find-file-time-start))))
+
+      (<span style="color: #0000FF;">defadvice</span> <span style=
+"color: #006699;">require</span> (around leuven-require activate)
+        <span style=
+"color: #008000;">"Leave a trace of packages being loaded."</span>
+        (<span style="color: #0000FF;">let*</span> ((feature (ad-get-arg 0))
+               (prefix-open (concat (make-string (* 8 require-depth) ? ) <span style="color: #FF4700;">"└── "</span>))
+               (prefix-close (concat (make-string (* 8 require-depth) ? ) <span style="color: #FF4700;">"    "</span>)))
+          (<span style="color: #0000FF;">cond</span> ((<span style=
+"color: #0000FF;">featurep</span> <span style="color: #6434A3;">feature</span>)
+                 (message <span style=
+"color: #FF4700;">"(Info) %sRequiring `</span><span style=
+"color: #FF4700;">%s</span><span style=
+"color: #FF4700;">' &lt;from `</span><span style=
+"color: #FF4700;">%s</span><span style=
+"color: #FF4700;">'&gt;... already loaded"</span>
+                          prefix-open feature (ignore-<span style=
+"color: #CC0000; background-color: #FFFF88;">error</span>s (file-name-base load-file-name)))
+                 <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">in the case `</span><span style=
+"color: #008200; font-style: italic;">ad-do-it</span><span style=
+"color: #008200; font-style: italic;">' is not called, you have to set the</span>
+                 <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">return value yourself!</span>
+                 (setq ad-return-value feature))
+                (t
+                 (<span style="color: #0000FF;">let</span> ((time-start))
+                   (message <span style=
+"color: #FF4700;">"(Info) %sRequiring `</span><span style=
+"color: #FF4700;">%s</span><span style=
+"color: #FF4700;">' &lt;from `</span><span style=
+"color: #FF4700;">%s</span><span style="color: #FF4700;">'&gt;... %s"</span>
+                            prefix-open feature
+                            (ignore-<span style=
+"color: #CC0000; background-color: #FFFF88;">error</span>s (file-name-base load-file-name))
+                            (locate-library (symbol-name feature)))
+                   (setq time-start (float-time))
+                   (<span style=
+"color: #0000FF;">let</span> ((require-depth (1+ require-depth)))
+                     ad-do-it)
+                   (message <span style=
+"color: #FF4700;">"(Info) %sRequiring `</span><span style=
+"color: #FF4700;">%s</span><span style=
+"color: #FF4700;">' &lt;from `</span><span style=
+"color: #FF4700;">%s</span><span style=
+"color: #FF4700;">'&gt;... loaded in %.3f s"</span>
+                            prefix-close feature
+                            (ignore-<span style=
+"color: #CC0000; background-color: #FFFF88;">error</span>s (file-name-base load-file-name))
+                            (- (float-time) time-start)))))))))
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">wrapper around `</span><span style=
+"color: #008200; font-style: italic;">eval-after-load</span><span style=
+"color: #008200; font-style: italic;">' (added in GNU Emacs 24.4)</span>
+  (<span style="color: #0000FF;">defmacro</span> <span style=
+"color: #006699;">with-eval-after-load</span> (mode <span style=
+"color: #666666;">&amp;rest</span> body)
+    <span style="color: #008000;">"`</span><span style=
+"color: #008000;">eval-after-load</span><span style=
+"color: #008000;">' MODE evaluate BODY."</span>
+    (<span style="color: #0000FF;">declare</span> (indent defun))
+    `(eval-after-load ,mode
+       '(<span style="color: #0000FF;">progn</span>
+          (message <span style=
+"color: #FF4700;">"(Info) Running code specific to `</span><span style=
+"color: #FF4700;">%s</span><span style=
+"color: #FF4700;">'... &lt;&lt;&lt;&lt;&lt;&lt;&lt;"</span>
+                   ,mode)
+          ,@body)))
 </pre>
           </div>
         </div>
@@ -2190,68 +2292,6 @@
       (message <span style=
 "color: #FF4700;">"(Info) Found file %s in %.2f s."</span> filename
                (- (float-time) find-file-time-start))))
-</pre>
-        </div>
-
-        <div class="org-src-container">
-          <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">make loaded files give a message</span>
-  (<span style="color: #0000FF;">when</span> leuven-load-verbose
-    (GNUEmacs
-      (<span style="color: #0000FF;">defadvice</span> <span style=
-"color: #006699;">load</span> (around leuven-load activate)
-        <span style=
-"color: #008000;">"Execute a file of Lisp code named FILE and report time spent."</span>
-        (<span style="color: #0000FF;">let</span> ((filename (ad-get-arg 0))
-              (find-file-time-start (float-time)))
-          (message <span style=
-"color: #FF4700;">"(Info)                                  Loading %s..."</span> filename)
-          ad-do-it
-          (message <span style=
-"color: #FF4700;">"(Info)                                  Loaded %s in %.3f s."</span> filename
-                   (- (float-time) find-file-time-start))))
-
-      (<span style="color: #0000FF;">defadvice</span> <span style=
-"color: #006699;">require</span> (around leuven-require activate)
-        <span style=
-"color: #008000;">"Leave a trace of packages being loaded."</span>
-        (<span style="color: #0000FF;">let*</span> ((feature (ad-get-arg 0))
-               (require-depth (or (and (boundp 'require-depth) require-depth)
-                                  0))
-               (prefix-open (concat (make-string (* 4 require-depth) ? ) <span style="color: #FF4700;">"└── "</span>))
-               (prefix-close (concat (make-string (* 4 require-depth) ? ) <span style="color: #FF4700;">"    "</span>)))
-          (<span style="color: #0000FF;">cond</span> ((<span style=
-"color: #0000FF;">featurep</span> <span style="color: #6434A3;">feature</span>)
-                 (message <span style=
-"color: #FF4700;">"(Info) %sRequiring `</span><span style=
-"color: #FF4700;">%s</span><span style=
-"color: #FF4700;">'... already loaded"</span>
-                          prefix-open feature)
-                 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">in the case `</span><span style=
-"color: #008200; font-style: italic;">ad-do-it</span><span style=
-"color: #008200; font-style: italic;">' is not called, you have to set the</span>
-                 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">return value yourself!</span>
-                 (setq ad-return-value feature))
-                (t
-                 (<span style="color: #0000FF;">let</span> ((time-start))
-                   (message <span style=
-"color: #FF4700;">"(Info) %sRequiring `</span><span style=
-"color: #FF4700;">%s</span><span style="color: #FF4700;">'... %s"</span>
-                            prefix-open feature
-                            (locate-library (symbol-name feature)))
-                   (setq time-start (float-time))
-                   (<span style=
-"color: #0000FF;">let</span> ((require-depth (1+ require-depth)))
-                     ad-do-it)
-                   (message <span style=
-"color: #FF4700;">"(Info) %sRequiring `</span><span style=
-"color: #FF4700;">%s</span><span style=
-"color: #FF4700;">'... loaded in %.3f s"</span>
-                            prefix-close feature
-                            (- (float-time) time-start)))))))))
 </pre>
         </div>
 
@@ -25043,7 +25083,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131109.1821]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131109.2227]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
