@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-10 Sun 15:03 -->
+  <title>Emacs Leuven</title><!-- 2013-11-10 Sun 15:16 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131110.1501</span>
+"color: #008200; font-style: italic;">Version: 20131110.1515</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131110.1501]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131110.1515]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -1731,7 +1731,7 @@
             (message <span style=
 "color: #FF4700;">"(Info) %sLocating library `</span><span style=
 "color: #FF4700;">%s</span><span style=
-"color: #FF4700;">'... located (in %.3f s.)"</span>
+"color: #FF4700;">'... located (in %.3f s)"</span>
                      prefix filename
                      (- (float-time) find-file-time-start)))
         (add-to-list 'leuven--missing-packages filename 'append)
@@ -1739,7 +1739,7 @@
           (message <span style=
 "color: #FF4700;">"(Info) %sLocating library `</span><span style=
 "color: #FF4700;">%s</span><span style=
-"color: #FF4700;">'... missing (in %.3f s.)"</span>
+"color: #FF4700;">'... missing (in %.3f s)"</span>
                    prefix filename
                    (- (float-time) find-file-time-start))))))
 
@@ -1821,7 +1821,7 @@
 "color: #FF4700;">%s</span><span style=
 "color: #FF4700;">' &lt;from `</span><span style=
 "color: #FF4700;">%s</span><span style=
-"color: #FF4700;">'&gt; in %.3f s."</span> prefix-close filename
+"color: #FF4700;">'&gt; in %.3f s"</span> prefix-close filename
                    (ignore-<span style=
 "color: #CC0000; background-color: #FFFF88;">error</span>s (file-name-base load-file-name))
                    (- (float-time) find-file-time-start))))
@@ -1898,10 +1898,12 @@
           (message <span style=
 "color: #FF4700;">"(Info) {{{ Running code block specific to `</span><span style="color: #FF4700;">%s</span><span style="color: #FF4700;">'..."</span>
                    ,mode)
+          (setq time-start (float-time))
           ,@body
           (message <span style=
-"color: #FF4700;">"(Info) }}} Running code block specific to `</span><span style="color: #FF4700;">%s</span><span style="color: #FF4700;">'... Done"</span>
-                   ,mode))))
+"color: #FF4700;">"(Info) }}} Running code block specific to `</span><span style="color: #FF4700;">%s</span><span style="color: #FF4700;">'... done in %.3f s"</span>
+                   ,mode
+                   (- (float-time) time-start)))))
 </pre>
           </div>
 
@@ -1953,9 +1955,9 @@
         <h3 id="sec-5-2">Package Installation</h3>
 
         <div class="outline-text-3" id="text-5-2">
-          <p>In Marmalade the developers themselves do the packaging. In MELPA,
-          packages are generated programmatically from upstream Git-based
-          sources.</p>
+          <p>In Marmalade, the developers themselves do the packaging. In
+          MELPA, packages are generated programmatically from upstream
+          Git-based sources.</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -5088,7 +5090,7 @@
 "color: #FF4700;">"(Info) Finding file %s..."</span> filename)
       ad-do-it
       (message <span style=
-"color: #FF4700;">"(Info) Found file %s in %.2f s."</span> filename
+"color: #FF4700;">"(Info) Found file %s in %.2f s"</span> filename
                (- (float-time) find-file-time-start))))
 
   <span style="color: #008200;">;; </span><span style=
@@ -25072,7 +25074,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131110.1502]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131110.1516]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131110.15
+;; Version: 20131110.1514
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131110.15]--")
+(message "* --[ Loading Emacs Leuven 20131110.1514]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -324,12 +324,12 @@
           (prefix (concat (make-string (* 8 require-depth) ? ) "    ")))
       (if ad-do-it
           (when leuven-load-verbose
-            (message "(Info) %sLocating library `%s'... located (in %.3f s.)"
+            (message "(Info) %sLocating library `%s'... located (in %.3f s)"
                      prefix filename
                      (- (float-time) find-file-time-start)))
         (add-to-list 'leuven--missing-packages filename 'append)
         (when leuven-load-verbose
-          (message "(Info) %sLocating library `%s'... missing (in %.3f s.)"
+          (message "(Info) %sLocating library `%s'... missing (in %.3f s)"
                    prefix filename
                    (- (float-time) find-file-time-start))))))
 
@@ -373,7 +373,7 @@
           (message "(Info) %sLoading `%s' <from `%s'>..." prefix-open filename
                    (ignore-errors (file-name-base load-file-name)))
           ad-do-it
-          (message "(Info) %sLoaded `%s' <from `%s'> in %.3f s." prefix-close filename
+          (message "(Info) %sLoaded `%s' <from `%s'> in %.3f s" prefix-close filename
                    (ignore-errors (file-name-base load-file-name))
                    (- (float-time) find-file-time-start))))
 
@@ -412,9 +412,11 @@
        '(progn
           (message "(Info) {{{ Running code block specific to `%s'..."
                    ,mode)
+          (setq time-start (float-time))
           ,@body
-          (message "(Info) }}} Running code block specific to `%s'... Done"
-                   ,mode))))
+          (message "(Info) }}} Running code block specific to `%s'... done in %.3f s"
+                   ,mode
+                   (- (float-time) time-start)))))
 
 ) ;; chapter 0 ends here
 
@@ -1602,7 +1604,7 @@
           (find-file-time-start (float-time)))
       (message "(Info) Finding file %s..." filename)
       ad-do-it
-      (message "(Info) Found file %s in %.2f s." filename
+      (message "(Info) Found file %s in %.2f s" filename
                (- (float-time) find-file-time-start))))
 
   ;; visit a file
@@ -9414,7 +9416,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131110.1501]--")
+(message "* --[ Loaded Emacs Leuven 20131110.1515]--")
 
 (provide 'emacs-leuven)
 
