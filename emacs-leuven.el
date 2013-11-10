@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131110.1414
+;; Version: 20131110.15
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131110.1414]--")
+(message "* --[ Loading Emacs Leuven 20131110.15]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -418,65 +418,6 @@
 
 ) ;; chapter 0 ends here
 
-;;* Loading Libraries of Lisp Code for Emacs
-
-(leuven--chapter leuven-chapter-0-loading-libraries "0 Loading Libraries"
-
-  ;; remember this directory
-  (defconst leuven--directory
-    (file-name-directory (or load-file-name (buffer-file-name)))
-    "Directory path of Emacs Leuven.")
-
-  ;; load-path enhancement
-  (defun leuven-add-to-load-path (this-directory)
-    "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
-    (when (and this-directory
-               (file-directory-p this-directory))
-      ;; TODO Add warning if directory does not exist
-      (let* ((this-directory (expand-file-name this-directory)))
-
-        ;; directories containing a `.nosearch' file (such as
-        ;; `auctex-11.87\style') should not made part of `load-path'.
-        ;; TODO `RCS' and `CVS' directories should also be excluded.
-        (unless (file-exists-p (concat this-directory "/.nosearch"))
-          (add-to-list 'load-path this-directory)
-          (when leuven-load-verbose
-            (message "(Info) Added `%s' to `load-path'" this-directory))))))
-
-  (defvar leuven-local-repos-directory "~/Public/Repositories/"
-    "Directory containing additional Emacs Lisp public repositories.")
-
-  (leuven-add-to-load-path
-   (concat leuven-local-repos-directory "babel"))
-  (leuven-add-to-load-path
-   (concat leuven-local-repos-directory "emacs-bookmark-extension"))
-
-  (defvar leuven-user-lisp-directory "~/.emacs.d/lisp/"
-    "Directory containing personal additional Emacs Lisp packages.")
-
-  (leuven-add-to-load-path leuven-user-lisp-directory)
-
-  (if (try-require 'idle-require)
-
-      (progn
-        ;; idle time in seconds after which autoload functions will be loaded
-        (setq idle-require-idle-delay 5)
-
-        ;; time in seconds between automatically loaded functions
-        (setq idle-require-load-break 2))
-
-    ;; fail-safe for `idle-require'
-    (defun idle-require (feature &optional file noerror)
-      (try-require feature)))
-
-  (add-hook 'after-init-hook
-            (lambda ()
-              (when (fboundp 'idle-require-mode)
-                ;; starts loading
-                (idle-require-mode 1))))
-
-) ;; chapter 0-loading-libraries ends here
-
 ;;* 47 Emacs Lisp (info "(emacs)Packages")
 
 (leuven--chapter leuven-chapter-47-packages "47 Emacs Lisp Packages"
@@ -561,6 +502,65 @@
                   (tabulated-list-init-header)))))
 
 ) ;; chapter 47 ends here
+
+;;* Loading Libraries of Lisp Code for Emacs
+
+(leuven--chapter leuven-chapter-0-loading-libraries "0 Loading Libraries"
+
+  ;; remember this directory
+  (defconst leuven--directory
+    (file-name-directory (or load-file-name (buffer-file-name)))
+    "Directory path of Emacs Leuven.")
+
+  ;; load-path enhancement
+  (defun leuven-add-to-load-path (this-directory)
+    "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
+    (when (and this-directory
+               (file-directory-p this-directory))
+      ;; TODO Add warning if directory does not exist
+      (let* ((this-directory (expand-file-name this-directory)))
+
+        ;; directories containing a `.nosearch' file (such as
+        ;; `auctex-11.87\style') should not made part of `load-path'.
+        ;; TODO `RCS' and `CVS' directories should also be excluded.
+        (unless (file-exists-p (concat this-directory "/.nosearch"))
+          (add-to-list 'load-path this-directory)
+          (when leuven-load-verbose
+            (message "(Info) Added `%s' to `load-path'" this-directory))))))
+
+  (defvar leuven-local-repos-directory "~/Public/Repositories/"
+    "Directory containing additional Emacs Lisp public repositories.")
+
+  (leuven-add-to-load-path
+   (concat leuven-local-repos-directory "babel"))
+  (leuven-add-to-load-path
+   (concat leuven-local-repos-directory "emacs-bookmark-extension"))
+
+  (defvar leuven-user-lisp-directory "~/.emacs.d/lisp/"
+    "Directory containing personal additional Emacs Lisp packages.")
+
+  (leuven-add-to-load-path leuven-user-lisp-directory)
+
+  (if (try-require 'idle-require)
+
+      (progn
+        ;; idle time in seconds after which autoload functions will be loaded
+        (setq idle-require-idle-delay 5)
+
+        ;; time in seconds between automatically loaded functions
+        (setq idle-require-load-break 2))
+
+    ;; fail-safe for `idle-require'
+    (defun idle-require (feature &optional file noerror)
+      (try-require feature)))
+
+  (add-hook 'after-init-hook
+            (lambda ()
+              (when (fboundp 'idle-require-mode)
+                ;; starts loading
+                (idle-require-mode 1))))
+
+) ;; chapter 0-loading-libraries ends here
 
 ;;* 1 The Organization of the (info "(emacs)Screen")
 
@@ -6058,28 +6058,6 @@ From %c"
          (completing-read "Find: " (mapcar #'car targets)) targets)))
       (other-window 1)))
 
-  ;;! make sure you initialise YASnippet *before* Org mode
-  (when (featurep 'org)
-    (message "(Error) Org is already loaded -> Can't initialize YASnippet!")
-    (sit-for 3))
-
-  ;; allow YASnippet to do its thing in Org files
-  (when (try-require 'yasnippet)
-
-    (defun yas/org-very-safe-expand ()
-      (let ((yas/fallback-behavior 'return-nil))
-        (yas/expand)))
-
-    (add-hook 'org-mode-hook
-              (lambda ()
-                ;; YASnippet (using the new org-cycle hooks)
-                (set (make-local-variable 'yas/trigger-key) (kbd "tab")) ;; needed?
-                (add-to-list 'org-tab-first-hook
-                             'yas/org-very-safe-expand)
-                (define-key yas/keymap
-                  (kbd "tab") 'yas/next-field) ;; `yas/next-field-or-maybe-expand'?
-                )))
-
   ;; keep my encrypted data (like account passwords) in my Org mode
   ;; files with a special tag instead
   (with-eval-after-load "org"
@@ -7480,6 +7458,26 @@ From %c"
   (GNUEmacs
     ;; use the "standard" package (NOT `yasnippet-bundle'!)
     (when (try-require 'yasnippet)
+
+      ;;! make sure you initialise YASnippet *before* Org mode
+      (when (featurep 'org)
+        (message "(Error) Org is already loaded -> Too late to initialize YASnippet!")
+        (sit-for 3))
+
+      (defun yas/org-very-safe-expand ()
+        (let ((yas/fallback-behavior 'return-nil))
+          (yas/expand)))
+
+      ;; allow YASnippet to do its thing in Org files
+      (add-hook 'org-mode-hook
+                (lambda ()
+                  ;; YASnippet (using the new org-cycle hooks)
+                  (set (make-local-variable 'yas/trigger-key) (kbd "tab")) ;; needed?
+                  (add-to-list 'org-tab-first-hook
+                               'yas/org-very-safe-expand)
+                  (define-key yas/keymap
+                    (kbd "tab") 'yas/next-field) ;; `yas/next-field-or-maybe-expand'?
+                  ))
 
       (defvar leuven-yasnippet-my-snippets-dir
         "~/src/yasnippet/snippets"
@@ -9416,7 +9414,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131110.1416]--")
+(message "* --[ Loaded Emacs Leuven 20131110.1501]--")
 
 (provide 'emacs-leuven)
 
