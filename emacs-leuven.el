@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131109.235
+;; Version: 20131110.1414
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131109.235]--")
+(message "* --[ Loading Emacs Leuven 20131110.1414]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -244,7 +244,7 @@
       "/usr/local/bin/")
     "Defines the default Windows Program Files folder.")
 
-;;** Emacs version
+;;** Testing Emacs versions
 
   (leuven--section "Emacs version")
 
@@ -270,6 +270,18 @@
     (list 'if running-xemacs
           (cons 'progn body)))
 
+;;** Testing file accessibility
+
+  (defun leuven--file-exists-and-executable-p (file)
+    "Make sure the file FILE exists and is executable."
+    (if file
+        (if (file-executable-p file)
+            file
+          (message "(warning) Can't find executable `%s'" file)
+          ;; sleep 1.5 s so that you can see the warning
+          (sit-for 1.5))
+      (error "leuven--file-exists-and-executable-p: missing operand")))
+
 ;;** Init
 
   (leuven--section "Init")
@@ -286,69 +298,18 @@
 
 ) ;; chapter 0 ends here
 
-;;* Loading Libraries of Lisp Code for Emacs
+;;* Debugging
 
-(leuven--chapter leuven-chapter-0-loading-libraries "0 Loading Libraries"
+(leuven--chapter leuven-chapter-0-debugging "0 Debugging"
 
-  ;; You have to put the `load-path' stuff as early as you can...
+  ;; get the backtrace when uncaught errors occur
+  (setq debug-on-error t) ;; will be unset at the end
 
-  ;; This is a list of directories where Emacs Lisp libraries (`.el' and
-  ;; `.elc' files) are installed.
+  (XEmacs
+    (setq stack-trace-on-error t))
 
-  ;; The most important directories are the last!
-
-  ;; load-path enhancement
-  ;; TODO Check that added directories do have a trailing slash
-  ;; The GNU Emacs FAQ includes a trailing slash in the instructions
-  ;; on how to add directories to one's load path via .emacs [1]:
-  ;; (add-to-list 'load-path "/dir/subdir/")
-  ;; [1] See 5.17 here: http://www.gnu.org/software/emacs/emacs-faq.html
-  (defun leuven-add-to-load-path (this-directory)
-    "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
-    (when (and this-directory
-               (file-directory-p this-directory))
-      ;; TODO Add warning if directory does not exist
-      (let* ((this-directory (expand-file-name this-directory)))
-
-        ;; directories containing a `.nosearch' file (such as
-        ;; `auctex-11.87\style') should not made part of `load-path'.
-        ;; TODO `RCS' and `CVS' directories should also be excluded.
-        (unless (file-exists-p (concat this-directory "/.nosearch"))
-          (add-to-list 'load-path this-directory)
-          (when leuven-load-verbose
-            (message "(Info) Added `%s' to `load-path'" this-directory))))))
-
-  ;; remember this directory
-  (defconst leuven--directory
-    (file-name-directory (or load-file-name (buffer-file-name)))
-    "Directory path of Emacs Leuven.")
-
-  (defvar leuven-user-lisp-directory "~/.emacs.d/lisp/"
-    "Directory containing personal additional Emacs Lisp packages.")
-
-  (leuven-add-to-load-path leuven-user-lisp-directory)
-
-;;*** Development code
-
-  (defvar leuven-local-repos-directory "~/Public/Repositories/"
-    "Directory containing additional Emacs Lisp public repositories.")
-
-  (leuven-add-to-load-path
-   (concat leuven-local-repos-directory "babel"))
-  (leuven-add-to-load-path
-   (concat leuven-local-repos-directory "emacs-bookmark-extension"))
-
-  (defun leuven--file-exists-and-executable-p (file)
-    "Make sure the file FILE exists and is executable."
-    (if file
-        (if (file-executable-p file)
-            file
-          (message "(warning) Can't find executable `%s'" file)
-          ;; sleep 1.5 s so that you can see the warning
-          (sit-for 1.5))
-      (error "leuven--file-exists-and-executable-p: missing operand")))
-
-) ;; chapter 0-loading-libraries ends here
+  ;; hit `C-g' while it's frozen to get an ELisp backtrace
+  (setq debug-on-quit nil)
 
   (defconst require-depth 0
     "Starting depth for load tree.")
@@ -455,6 +416,67 @@
           (message "(Info) }}} Running code block specific to `%s'... Done"
                    ,mode))))
 
+) ;; chapter 0 ends here
+
+;;* Loading Libraries of Lisp Code for Emacs
+
+(leuven--chapter leuven-chapter-0-loading-libraries "0 Loading Libraries"
+
+  ;; remember this directory
+  (defconst leuven--directory
+    (file-name-directory (or load-file-name (buffer-file-name)))
+    "Directory path of Emacs Leuven.")
+
+  ;; load-path enhancement
+  (defun leuven-add-to-load-path (this-directory)
+    "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
+    (when (and this-directory
+               (file-directory-p this-directory))
+      ;; TODO Add warning if directory does not exist
+      (let* ((this-directory (expand-file-name this-directory)))
+
+        ;; directories containing a `.nosearch' file (such as
+        ;; `auctex-11.87\style') should not made part of `load-path'.
+        ;; TODO `RCS' and `CVS' directories should also be excluded.
+        (unless (file-exists-p (concat this-directory "/.nosearch"))
+          (add-to-list 'load-path this-directory)
+          (when leuven-load-verbose
+            (message "(Info) Added `%s' to `load-path'" this-directory))))))
+
+  (defvar leuven-local-repos-directory "~/Public/Repositories/"
+    "Directory containing additional Emacs Lisp public repositories.")
+
+  (leuven-add-to-load-path
+   (concat leuven-local-repos-directory "babel"))
+  (leuven-add-to-load-path
+   (concat leuven-local-repos-directory "emacs-bookmark-extension"))
+
+  (defvar leuven-user-lisp-directory "~/.emacs.d/lisp/"
+    "Directory containing personal additional Emacs Lisp packages.")
+
+  (leuven-add-to-load-path leuven-user-lisp-directory)
+
+  (if (try-require 'idle-require)
+
+      (progn
+        ;; idle time in seconds after which autoload functions will be loaded
+        (setq idle-require-idle-delay 5)
+
+        ;; time in seconds between automatically loaded functions
+        (setq idle-require-load-break 2))
+
+    ;; fail-safe for `idle-require'
+    (defun idle-require (feature &optional file noerror)
+      (try-require feature)))
+
+  (add-hook 'after-init-hook
+            (lambda ()
+              (when (fboundp 'idle-require-mode)
+                ;; starts loading
+                (idle-require-mode 1))))
+
+) ;; chapter 0-loading-libraries ends here
+
 ;;* 47 Emacs Lisp (info "(emacs)Packages")
 
 (leuven--chapter leuven-chapter-47-packages "47 Emacs Lisp Packages"
@@ -539,49 +561,6 @@
                   (tabulated-list-init-header)))))
 
 ) ;; chapter 47 ends here
-
-;;* Debugging
-
-(leuven--chapter leuven-chapter-0-debugging "0 Debugging"
-
-  ;; get the backtrace when uncaught errors occur
-  (setq debug-on-error t) ;; will be unset at the end
-
-  (XEmacs
-    (setq stack-trace-on-error t))
-
-  ;; hit `C-g' while it's frozen to get an ELisp backtrace
-  (setq debug-on-quit nil)
-
-) ;; chapter 0 ends here
-
-  (defadvice find-file (around leuven-find-file activate)
-    "Open the file named FILENAME and report time spent."
-    (let ((filename (ad-get-arg 0))
-          (find-file-time-start (float-time)))
-      (message "(Info) Finding file %s..." filename)
-      ad-do-it
-      (message "(Info) Found file %s in %.2f s." filename
-               (- (float-time) find-file-time-start))))
-
-  (if (try-require 'idle-require)
-
-      (progn
-        ;; idle time in seconds after which autoload functions will be loaded
-        (setq idle-require-idle-delay 5)
-
-        ;; time in seconds between automatically loaded functions
-        (setq idle-require-load-break 2))
-
-    ;; fail-safe for `idle-require'
-    (defun idle-require (feature &optional file noerror)
-      (try-require feature)))
-
-  (add-hook 'after-init-hook
-            (lambda ()
-              (when (fboundp 'idle-require-mode)
-                ;; starts loading
-                (idle-require-mode 1))))
 
 ;;* 1 The Organization of the (info "(emacs)Screen")
 
@@ -1616,6 +1595,15 @@
 ;;** 18.2 (info "(emacs)Visiting") Files
 
   (leuven--section "18.2 (emacs)Visiting Files")
+
+  (defadvice find-file (around leuven-find-file activate)
+    "Open the file named FILENAME and report time spent."
+    (let ((filename (ad-get-arg 0))
+          (find-file-time-start (float-time)))
+      (message "(Info) Finding file %s..." filename)
+      ad-do-it
+      (message "(Info) Found file %s in %.2f s." filename
+               (- (float-time) find-file-time-start))))
 
   ;; visit a file
   (global-set-key
@@ -9428,7 +9416,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131109.2351]--")
+(message "* --[ Loaded Emacs Leuven 20131110.1416]--")
 
 (provide 'emacs-leuven)
 

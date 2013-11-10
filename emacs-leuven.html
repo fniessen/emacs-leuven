@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-09 Sat 23:52 -->
+  <title>Emacs Leuven</title><!-- 2013-11-10 Sun 14:17 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -33,28 +33,28 @@
           <li><a href="#sec-3">Environment</a></li>
 
           <li>
-            <a href="#sec-4">Loading Libraries of Lisp Code for Emacs</a>
+            <a href="#sec-4">Debugging</a>
 
             <ul>
-              <li><a href="#sec-4-1">Library Search</a></li>
+              <li><a href="#sec-4-1">Tree of all of the “require”
+              dependencies</a></li>
             </ul>
           </li>
+
+          <li><a href="#sec-5">Loading Libraries of Lisp Code for
+          Emacs</a></li>
 
           <li>
-            <a href="#sec-5">Emacs Lisp Packages</a>
+            <a href="#sec-6">Emacs Lisp Packages</a>
 
             <ul>
-              <li><a href="#sec-5-1">Try-require</a></li>
+              <li><a href="#sec-6-1">The Package Menu Buffer</a></li>
 
-              <li><a href="#sec-5-2">The Package Menu Buffer</a></li>
+              <li><a href="#sec-6-2">Package Installation</a></li>
 
-              <li><a href="#sec-5-3">Package Installation</a></li>
-
-              <li><a href="#sec-5-4">Check Org mode version</a></li>
+              <li><a href="#sec-6-3">Check Org mode version</a></li>
             </ul>
           </li>
-
-          <li><a href="#sec-6">Debugging</a></li>
 
           <li>
             <a href="#sec-7">The Organization of the Screen</a>
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131109.2351</span>
+"color: #008200; font-style: italic;">Version: 20131110.1416</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131109.2351]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131110.1416]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -1580,7 +1580,7 @@
 "color: #008000;">"Defines the default Windows Program Files folder."</span>)
 
 <span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">** Emacs version</span>
+"color: #008200; font-style: italic;">** Testing Emacs versions</span>
 
   (leuven--section <span style="color: #FF4700;">"Emacs version"</span>)
 
@@ -1616,11 +1616,28 @@
 "color: #008000;">"Execute any number of forms if running XEmacs."</span>
     (list 'if running-xemacs
           (cons 'progn body)))
-</pre>
-        </div>
 
-        <div class="org-src-container">
-          <pre class="src src-emacs-lisp">
+<span style="color: #008200;">;;</span><span style=
+"color: #008200; font-style: italic;">** Testing file accessibility</span>
+
+  (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven--file-exists-and-executable-p</span> (file)
+    <span style=
+"color: #008000;">"Make sure the file FILE exists and is executable."</span>
+    (<span style="color: #0000FF;">if</span> file
+        (<span style="color: #0000FF;">if</span> (file-executable-p file)
+            file
+          (message <span style="color: #FF4700;">"(</span><span style=
+"color: #FF4700; background-color: #FFFF88;">warning</span><span style=
+"color: #FF4700;">) Can't find executable `</span><span style=
+"color: #FF4700;">%s</span><span style="color: #FF4700;">'"</span> file)
+          <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">sleep 1.5 s so that you can see the </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">warning</span>
+          (sit-for 1.5))
+      (<span style=
+"color: #CC0000; background-color: #FFFF88;">error</span> <span style=
+"color: #FF4700;">"leuven--file-exists-and-executable-p: missing operand"</span>)))
+
 <span style="color: #008200;">;;</span><span style=
 "color: #008200; font-style: italic;">** Init</span>
 
@@ -1648,192 +1665,45 @@
     </div>
 
     <div id="outline-container-sec-4" class="outline-2">
-      <h2 id="sec-4">Loading Libraries of Lisp Code for Emacs</h2>
+      <h2 id="sec-4">Debugging</h2>
 
       <div class="outline-text-2" id="text-4">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">* Loading Libraries of Lisp Code for Emacs</span>
+"color: #008200; font-style: italic;">* Debugging</span>
 
-(leuven--chapter leuven-chapter-0-loading-libraries <span style=
-"color: #FF4700;">"0 Loading Libraries"</span>
+(leuven--chapter leuven-chapter-0-debugging <span style=
+"color: #FF4700;">"0 Debugging"</span>
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">get the backtrace when uncaught </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">error</span><span style="color: #008200; font-style: italic;">s occur</span>
+  (setq debug-on-<span style=
+"color: #CC0000; background-color: #FFFF88;">error</span> t) <span style=
+"color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">will be unset at the end</span>
+
+  (XEmacs
+    (setq stack-trace-on-<span style=
+"color: #CC0000; background-color: #FFFF88;">error</span> t))
 
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">You have to put the `</span><span style=
-"color: #008200; font-style: italic;">load-path</span><span style=
-"color: #008200; font-style: italic;">' stuff as early as you can...</span>
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">This is a list of directories where Emacs Lisp libraries (`</span><span style="color: #008200; font-style: italic;">.el</span><span style="color: #008200; font-style: italic;">' and</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">`</span><span style=
-"color: #008200; font-style: italic;">.elc</span><span style=
-"color: #008200; font-style: italic;">' files) are installed.</span>
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">The most important directories are the last!</span>
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">load-path enhancement</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #008200; font-style: italic;"> Check that added directories do have a trailing slash</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">The GNU Emacs FAQ includes a trailing slash in the instructions</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">on how to add directories to one's load path via .emacs [1]:</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(add-to-list 'load-path "/dir/subdir/")</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">[1] See 5.17 here: http://www.gnu.org/software/emacs/emacs-faq.html</span>
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-add-to-load-path</span> (this-directory)
-    <span style=
-"color: #008000;">"Add THIS-DIRECTORY at the beginning of the load-path, if it exists."</span>
-    (<span style="color: #0000FF;">when</span> (and this-directory
-               (file-directory-p this-directory))
-      <span style="color: #008200;">;; </span><span style=
-"color: #008200; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #008200; font-style: italic;"> Add </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">warning</span><span style="color: #008200; font-style: italic;"> if directory does not exist</span>
-      (<span style=
-"color: #0000FF;">let*</span> ((this-directory (expand-file-name this-directory)))
-
-        <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">directories containing a `</span><span style="color: #008200; font-style: italic;">.nosearch</span><span style="color: #008200; font-style: italic;">' file (such as</span>
-        <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">`auctex-11.87\style') should not made part of `</span><span style="color: #008200; font-style: italic;">load-path</span><span style="color: #008200; font-style: italic;">'.</span>
-        <span style="color: #008200;">;; </span><span style=
-"color: #008200; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #008200; font-style: italic;"> `</span><span style="color: #008200; font-style: italic;">RCS</span><span style="color: #008200; font-style: italic;">' and `</span><span style="color: #008200; font-style: italic;">CVS</span><span style="color: #008200; font-style: italic;">' directories should also be excluded.</span>
-        (<span style=
-"color: #0000FF;">unless</span> (file-exists-p (concat this-directory <span style="color: #FF4700;">"/.nosearch"</span>))
-          (add-to-list 'load-path this-directory)
-          (<span style="color: #0000FF;">when</span> leuven-load-verbose
-            (message <span style=
-"color: #FF4700;">"(Info) Added `</span><span style=
-"color: #FF4700;">%s</span><span style=
-"color: #FF4700;">' to `</span><span style=
-"color: #FF4700;">load-path</span><span style=
-"color: #FF4700;">'"</span> this-directory))))))
+"color: #008200; font-style: italic;">hit `</span><span style=
+"color: #008200; font-style: italic;">C-g</span><span style=
+"color: #008200; font-style: italic;">' while it's frozen to get an ELisp backtrace</span>
+  (setq debug-on-quit nil)
 </pre>
         </div>
       </div>
 
       <div id="outline-container-sec-4-1" class="outline-3">
-        <h3 id="sec-4-1">Library Search</h3>
+        <h3 id="sec-4-1">Tree of all of the “require” dependencies</h3>
 
         <div class="outline-text-3" id="text-4-1">
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">remember this directory</span>
-  (<span style="color: #0000FF;">defconst</span> <span style=
-"color: #BA36A5;">leuven--directory</span>
-    (file-name-directory (or load-file-name (buffer-file-name)))
-    <span style="color: #008000;">"Directory path of Emacs Leuven."</span>)
-</pre>
-          </div>
-
-          <p><code>leuven-user-lisp-directory</code> is there so that you have
-          an easy way of installing your own Emacs add-ons (which may be
-          specific to the version of Emacs you’re running). This keeps your
-          local add-ons apart from distro supplied ones.</p>
-
-          <p>It also means you can do a complete re-install of Emacs (or even
-          your Linux distro) without impacting on stuff you have added by
-          hand.</p>
-
-          <div class="inlinetask">
-            <b><span class="todo TODO">TODO</span> Specify variables using
-            `defcustom’</b><br />
-            nil
-          </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  (<span style="color: #0000FF;">defvar</span> <span style=
-"color: #BA36A5;">leuven-user-lisp-directory</span> <span style=
-"color: #FF4700;">"~/.emacs.d/lisp/"</span>
-    <span style=
-"color: #008000;">"Directory containing personal additional Emacs Lisp packages."</span>)
-
-  (leuven-add-to-load-path leuven-user-lisp-directory)
-</pre>
-          </div>
-
-          <p>Adding the right Lisp directories to your <code>load-path</code>
-          must be the very <b>first thing</b> in your <code>.emacs</code> file,
-          before the first time packages are required, to make sure that you’re
-          not picking up bits and pieces from older files (bundled with Emacs,
-          and loaded before the path to the <b>newest</b> versions are
-          set).</p>
-
-          <p>Some Emacs modes are over 10K lines of code (e.g. nxml-mode,
-          CEDET). Many packages (e.g. Org, Gnus) make use of the
-          <code>autoload</code> feature, so that you only need to load a single
-          file that define autoloaded functions.</p>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-<span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">*** Development code</span>
-
-  (<span style="color: #0000FF;">defvar</span> <span style=
-"color: #BA36A5;">leuven-local-repos-directory</span> <span style=
-"color: #FF4700;">"~/Public/Repositories/"</span>
-    <span style=
-"color: #008000;">"Directory containing additional Emacs Lisp public repositories."</span>)
-
-  (leuven-add-to-load-path
-   (concat leuven-local-repos-directory <span style=
-"color: #FF4700;">"babel"</span>))
-  (leuven-add-to-load-path
-   (concat leuven-local-repos-directory <span style=
-"color: #FF4700;">"emacs-bookmark-extension"</span>))
-</pre>
-          </div>
-
-          <p>Use <code>M-x list-load-path-shadows &lt;RET&gt;</code> to display
-          a list of external Emacs Lisp files that shadow Emacs builtins
-          (listing potential load path problems).</p>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--file-exists-and-executable-p</span> (file)
-    <span style=
-"color: #008000;">"Make sure the file FILE exists and is executable."</span>
-    (<span style="color: #0000FF;">if</span> file
-        (<span style="color: #0000FF;">if</span> (file-executable-p file)
-            file
-          (message <span style="color: #FF4700;">"(</span><span style=
-"color: #FF4700; background-color: #FFFF88;">warning</span><span style=
-"color: #FF4700;">) Can't find executable `</span><span style=
-"color: #FF4700;">%s</span><span style="color: #FF4700;">'"</span> file)
-          <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">sleep 1.5 s so that you can see the </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">warning</span>
-          (sit-for 1.5))
-      (<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span> <span style=
-"color: #FF4700;">"leuven--file-exists-and-executable-p: missing operand"</span>)))
-
-) <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">chapter 0-loading-libraries ends here</span>
-</pre>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="outline-container-sec-5" class="outline-2">
-      <h2 id="sec-5">Emacs Lisp Packages</h2>
-
-      <div class="outline-text-2" id="text-5"></div>
-
-      <div id="outline-container-sec-5-1" class="outline-3">
-        <h3 id="sec-5-1">Try-require</h3>
-
-        <div class="outline-text-3" id="text-5-1">
-          <p>Ignore errors.</p>
-
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (<span style="color: #0000FF;">defconst</span> <span style=
@@ -2034,13 +1904,195 @@
                    ,mode))))
 </pre>
           </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+) <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">chapter 0 ends here</span>
+</pre>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div id="outline-container-sec-5-2" class="outline-3">
-        <h3 id="sec-5-2">The Package Menu Buffer</h3>
+    <div id="outline-container-sec-5" class="outline-2">
+      <h2 id="sec-5">Loading Libraries of Lisp Code for Emacs</h2>
 
-        <div class="outline-text-3" id="text-5-2">
+      <div class="outline-text-2" id="text-5">
+        <p>Adding the right Lisp directories to your <code>load-path</code>
+        (list of directories where Emacs Lisp libraries – <code>.el</code> and
+        <code>.elc</code> files – are installed) must be the very <b>first
+        thing</b> in your <code>.emacs</code> file, before the first time
+        packages are required, to make sure that you’re not picking up bits and
+        pieces from older files (bundled with Emacs, and loaded before the path
+        to the <b>newest</b> versions are set).</p>
+
+        <p>The most important directories are the last to be added to
+        <code>load-path</code> (so that they become the first of the list)!</p>
+
+        <p>Use <code>M-x list-load-path-shadows &lt;RET&gt;</code> to display a
+        list of external Emacs Lisp files that shadow Emacs builtins (listing
+        potential load path problems).</p>
+
+        <p>Some Emacs modes are over 10K lines of code (e.g.
+        <code>nxml-mode</code>, <code>CEDET</code>). Many packages (e.g.
+        <code>Org</code>, <code>Gnus</code>) make use of the
+        <code>autoload</code> feature, so that you only need to load a single
+        file that define autoloaded functions.</p>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+<span style="color: #008200;">;;</span><span style=
+"color: #008200; font-style: italic;">* Loading Libraries of Lisp Code for Emacs</span>
+
+(leuven--chapter leuven-chapter-0-loading-libraries <span style=
+"color: #FF4700;">"0 Loading Libraries"</span>
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">remember this directory</span>
+  (<span style="color: #0000FF;">defconst</span> <span style=
+"color: #BA36A5;">leuven--directory</span>
+    (file-name-directory (or load-file-name (buffer-file-name)))
+    <span style="color: #008000;">"Directory path of Emacs Leuven."</span>)
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">load-path enhancement</span>
+  (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven-add-to-load-path</span> (this-directory)
+    <span style=
+"color: #008000;">"Add THIS-DIRECTORY at the beginning of the load-path, if it exists."</span>
+    (<span style="color: #0000FF;">when</span> (and this-directory
+               (file-directory-p this-directory))
+      <span style="color: #008200;">;; </span><span style=
+"color: #008200; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #008200; font-style: italic;"> Add </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">warning</span><span style="color: #008200; font-style: italic;"> if directory does not exist</span>
+      (<span style=
+"color: #0000FF;">let*</span> ((this-directory (expand-file-name this-directory)))
+
+        <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">directories containing a `</span><span style="color: #008200; font-style: italic;">.nosearch</span><span style="color: #008200; font-style: italic;">' file (such as</span>
+        <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">`auctex-11.87\style') should not made part of `</span><span style="color: #008200; font-style: italic;">load-path</span><span style="color: #008200; font-style: italic;">'.</span>
+        <span style="color: #008200;">;; </span><span style=
+"color: #008200; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #008200; font-style: italic;"> `</span><span style="color: #008200; font-style: italic;">RCS</span><span style="color: #008200; font-style: italic;">' and `</span><span style="color: #008200; font-style: italic;">CVS</span><span style="color: #008200; font-style: italic;">' directories should also be excluded.</span>
+        (<span style=
+"color: #0000FF;">unless</span> (file-exists-p (concat this-directory <span style="color: #FF4700;">"/.nosearch"</span>))
+          (add-to-list 'load-path this-directory)
+          (<span style="color: #0000FF;">when</span> leuven-load-verbose
+            (message <span style=
+"color: #FF4700;">"(Info) Added `</span><span style=
+"color: #FF4700;">%s</span><span style=
+"color: #FF4700;">' to `</span><span style=
+"color: #FF4700;">load-path</span><span style=
+"color: #FF4700;">'"</span> this-directory))))))
+</pre>
+        </div>
+
+        <p><code>leuven-local-repos-directory</code> is where you put Emacs
+        Git/SVN/CSV repositories.</p>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+  (<span style="color: #0000FF;">defvar</span> <span style=
+"color: #BA36A5;">leuven-local-repos-directory</span> <span style=
+"color: #FF4700;">"~/Public/Repositories/"</span>
+    <span style=
+"color: #008000;">"Directory containing additional Emacs Lisp public repositories."</span>)
+
+  (leuven-add-to-load-path
+   (concat leuven-local-repos-directory <span style=
+"color: #FF4700;">"babel"</span>))
+  (leuven-add-to-load-path
+   (concat leuven-local-repos-directory <span style=
+"color: #FF4700;">"emacs-bookmark-extension"</span>))
+</pre>
+        </div>
+
+        <div class="inlinetask">
+          <b><span class="todo TODO">TODO</span> Specify variables using
+          `defcustom’</b><br />
+          nil
+        </div>
+
+        <p><code>leuven-user-lisp-directory</code> is there so that you have an
+        easy way of installing your <b>own Emacs add-ons</b> (which may be
+        specific to the version of Emacs you’re running). This keeps your local
+        add-ons apart from distro supplied ones.</p>
+
+        <p>It also means you can do a complete re-install of Emacs (or even
+        your Linux distro) without impacting on stuff you have added by
+        hand.</p>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+  (<span style="color: #0000FF;">defvar</span> <span style=
+"color: #BA36A5;">leuven-user-lisp-directory</span> <span style=
+"color: #FF4700;">"~/.emacs.d/lisp/"</span>
+    <span style=
+"color: #008000;">"Directory containing personal additional Emacs Lisp packages."</span>)
+
+  (leuven-add-to-load-path leuven-user-lisp-directory)
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+  (<span style="color: #0000FF;">if</span> (try-require 'idle-require)
+
+      (<span style="color: #0000FF;">progn</span>
+        <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">idle time in seconds after which autoload functions will be loaded</span>
+        (setq idle-require-idle-delay 5)
+
+        <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">time in seconds between automatically loaded functions</span>
+        (setq idle-require-load-break 2))
+
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">fail-safe for `</span><span style=
+"color: #008200; font-style: italic;">idle-require</span><span style=
+"color: #008200; font-style: italic;">'</span>
+    (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">idle-require</span> (feature <span style=
+"color: #666666;">&amp;optional</span> file no<span style=
+"color: #CC0000; background-color: #FFFF88;">error</span>)
+      (try-require feature)))
+
+  (add-hook 'after-init-hook
+            (<span style="color: #0000FF;">lambda</span> ()
+              (<span style=
+"color: #0000FF;">when</span> (fboundp 'idle-require-mode)
+                <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">starts loading</span>
+                (idle-require-mode 1))))
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+) <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">chapter 0-loading-libraries ends here</span>
+</pre>
+        </div>
+      </div>
+    </div>
+
+    <div id="outline-container-sec-6" class="outline-2">
+      <h2 id="sec-6">Emacs Lisp Packages</h2>
+
+      <div class="outline-text-2" id="text-6"></div>
+
+      <div id="outline-container-sec-6-1" class="outline-3">
+        <h3 id="sec-6-1">The Package Menu Buffer</h3>
+
+        <div class="outline-text-3" id="text-6-1">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span style="color: #008200;">;;</span><span style=
@@ -2066,10 +2118,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-5-3" class="outline-3">
-        <h3 id="sec-5-3">Package Installation</h3>
+      <div id="outline-container-sec-6-2" class="outline-3">
+        <h3 id="sec-6-2">Package Installation</h3>
 
-        <div class="outline-text-3" id="text-5-3">
+        <div class="outline-text-3" id="text-6-2">
           <p>In Marmalade the developers themselves do the packaging. In MELPA,
           packages are generated programmatically from upstream Git-based
           sources.</p>
@@ -2208,10 +2260,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-5-4" class="outline-3">
-        <h3 id="sec-5-4">Check Org mode version</h3>
+      <div id="outline-container-sec-6-3" class="outline-3">
+        <h3 id="sec-6-3">Check Org mode version</h3>
 
-        <div class="outline-text-3" id="text-5-4">
+        <div class="outline-text-3" id="text-6-3">
           <p>The following block checks for the Org mode version, and warns the
           user if not equal to 8 or more.</p>
 
@@ -2247,92 +2299,6 @@
   (sit-for 1.5))
 </pre>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="outline-container-sec-6" class="outline-2">
-      <h2 id="sec-6">Debugging</h2>
-
-      <div class="outline-text-2" id="text-6">
-        <div class="org-src-container">
-          <pre class="src src-emacs-lisp">
-<span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">* Debugging</span>
-
-(leuven--chapter leuven-chapter-0-debugging <span style=
-"color: #FF4700;">"0 Debugging"</span>
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">get the backtrace when uncaught </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">error</span><span style="color: #008200; font-style: italic;">s occur</span>
-  (setq debug-on-<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span> t) <span style=
-"color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">will be unset at the end</span>
-
-  (XEmacs
-    (setq stack-trace-on-<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span> t))
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">hit `</span><span style=
-"color: #008200; font-style: italic;">C-g</span><span style=
-"color: #008200; font-style: italic;">' while it's frozen to get an ELisp backtrace</span>
-  (setq debug-on-quit nil)
-
-) <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">chapter 0 ends here</span>
-</pre>
-        </div>
-
-        <div class="org-src-container">
-          <pre class="src src-emacs-lisp">
-  (<span style="color: #0000FF;">defadvice</span> <span style=
-"color: #006699;">find-file</span> (around leuven-find-file activate)
-    <span style=
-"color: #008000;">"Open the file named FILENAME and report time spent."</span>
-    (<span style="color: #0000FF;">let</span> ((filename (ad-get-arg 0))
-          (find-file-time-start (float-time)))
-      (message <span style=
-"color: #FF4700;">"(Info) Finding file %s..."</span> filename)
-      ad-do-it
-      (message <span style=
-"color: #FF4700;">"(Info) Found file %s in %.2f s."</span> filename
-               (- (float-time) find-file-time-start))))
-</pre>
-        </div>
-
-        <div class="org-src-container">
-          <pre class="src src-emacs-lisp">
-  (<span style="color: #0000FF;">if</span> (try-require 'idle-require)
-
-      (<span style="color: #0000FF;">progn</span>
-        <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">idle time in seconds after which autoload functions will be loaded</span>
-        (setq idle-require-idle-delay 5)
-
-        <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">time in seconds between automatically loaded functions</span>
-        (setq idle-require-load-break 2))
-
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">fail-safe for `</span><span style=
-"color: #008200; font-style: italic;">idle-require</span><span style=
-"color: #008200; font-style: italic;">'</span>
-    (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">idle-require</span> (feature <span style=
-"color: #666666;">&amp;optional</span> file no<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span>)
-      (try-require feature)))
-
-  (add-hook 'after-init-hook
-            (<span style="color: #0000FF;">lambda</span> ()
-              (<span style=
-"color: #0000FF;">when</span> (fboundp 'idle-require-mode)
-                <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">starts loading</span>
-                (idle-require-mode 1))))
-</pre>
         </div>
       </div>
     </div>
@@ -5111,6 +5077,19 @@
 
   (leuven--section <span style=
 "color: #FF4700;">"18.2 (emacs)Visiting Files"</span>)
+
+  (<span style="color: #0000FF;">defadvice</span> <span style=
+"color: #006699;">find-file</span> (around leuven-find-file activate)
+    <span style=
+"color: #008000;">"Open the file named FILENAME and report time spent."</span>
+    (<span style="color: #0000FF;">let</span> ((filename (ad-get-arg 0))
+          (find-file-time-start (float-time)))
+      (message <span style=
+"color: #FF4700;">"(Info) Finding file %s..."</span> filename)
+      ad-do-it
+      (message <span style=
+"color: #FF4700;">"(Info) Found file %s in %.2f s."</span> filename
+               (- (float-time) find-file-time-start))))
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">visit a file</span>
@@ -25090,7 +25069,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131109.2352]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131110.1417]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
