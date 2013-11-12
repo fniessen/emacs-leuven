@@ -364,10 +364,10 @@
             (setq gnus-sum-thread-tree-root "■ ")
             (setq gnus-sum-thread-tree-false-root "▣ ")
             (setq gnus-sum-thread-tree-single-indent "□ ")
-            (setq gnus-sum-thread-tree-vertical "│")
-            (setq gnus-sum-thread-tree-indent "  ")
-            (setq gnus-sum-thread-tree-leaf-with-other "├─ ")
-            (setq gnus-sum-thread-tree-single-leaf "╰─ "))
+            (setq gnus-sum-thread-tree-vertical "│   ")
+            (setq gnus-sum-thread-tree-indent "    ")
+            (setq gnus-sum-thread-tree-leaf-with-other "├── ")
+            (setq gnus-sum-thread-tree-single-leaf "└── "))
 
         (progn ;; using ASCII tree layout
           (setq gnus-sum-thread-tree-root "* ")

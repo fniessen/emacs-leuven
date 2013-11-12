@@ -1,7 +1,7 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2013-11-08 Fri 11:34>
+#+Time-stamp: <2013-11-12 Tue 16:04>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -473,10 +473,10 @@ Cleanup all Gnus buffers on exit.
             (setq gnus-sum-thread-tree-root "■ ")
             (setq gnus-sum-thread-tree-false-root "▣ ")
             (setq gnus-sum-thread-tree-single-indent "□ ")
-            (setq gnus-sum-thread-tree-vertical "│")
-            (setq gnus-sum-thread-tree-indent "  ")
-            (setq gnus-sum-thread-tree-leaf-with-other "├─ ")
-            (setq gnus-sum-thread-tree-single-leaf "╰─ "))
+            (setq gnus-sum-thread-tree-vertical "│   ")
+            (setq gnus-sum-thread-tree-indent "    ")
+            (setq gnus-sum-thread-tree-leaf-with-other "├── ")
+            (setq gnus-sum-thread-tree-single-leaf "└── "))
 
         (progn ;; using ASCII tree layout
           (setq gnus-sum-thread-tree-root "* ")
