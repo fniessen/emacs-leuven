@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131110.1514
+;; Version: 20131113.1442
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131110.1514]--")
+(message "* --[ Loading Emacs Leuven 20131113.1442]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -462,12 +462,12 @@
           ;; gnuplot-mode                  ; or gnuplot?
           graphviz-dot-mode
           helm
+          htmlize                       ; works with Org
           idle-require
           interaction-log
           ;; jabber
           ledger-mode
           leuven-theme
-          htmlize                       ; works with Org
           ;; org
           ;; org-mime                      ; from contrib
           pager
@@ -2507,10 +2507,11 @@
 
   ;; title bar display of visible frames
   (setq frame-title-format
-        (format "Emacs %s rev:%s pid:%d"
+        (format "Emacs %s rev:%s of %s    PID:%d"
                 emacs-version
                 (ignore-errors
                   (replace-regexp-in-string " .*" "" emacs-bzr-version))
+                (format-time-string "%Y-%m-%d" emacs-build-time)
                 (emacs-pid)))
 
   (defun detach-window ()
@@ -5423,10 +5424,10 @@ From %c"
     ;; XXX temporary (until Org 8 is bundled within Emacs)
     (define-key org-mode-map
       (kbd "C-c C-e")
-      (lambda ()
-        (interactive)
+      (lambda (&optional arg)
+        (interactive "P")
         (if (fboundp 'org-export-dispatch)
-            (org-export-dispatch)
+            (funcall 'org-export-dispatch arg)
           (message (concat "This version of Org mode is no longer supported. "
                            "Please upgrade to 8 or later"))
           (sit-for 1.5)))))
@@ -5966,7 +5967,8 @@ From %c"
           (setq dict (cdr (assoc lang dict-alist)))
           (if dict
               (ispell-change-dictionary dict)
-            (message "Ispell dictionary for language `%s' is unknown" lang)
+            (message "Ispell dictionary for language `%s' is unknown in %s"
+                     lang (file-name-base))
             (sit-for 3))
           (force-mode-line-update)))))
 
@@ -9416,7 +9418,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131110.1515]--")
+(message "* --[ Loaded Emacs Leuven 20131113.1443]--")
 
 (provide 'emacs-leuven)
 

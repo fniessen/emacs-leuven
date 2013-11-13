@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-10 Sun 15:13>
+# Time-stamp: <2013-11-13 Wed 14:41>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -558,12 +558,12 @@ are generated programmatically from upstream Git-based sources.
           ;; gnuplot-mode                  ; or gnuplot?
           graphviz-dot-mode
           helm
+          htmlize                       ; works with Org
           idle-require
           interaction-log
           ;; jabber
           ledger-mode
           leuven-theme
-          htmlize                       ; works with Org
           ;; org
           ;; org-mime                      ; from contrib
           pager
@@ -1204,6 +1204,10 @@ Use =C-x r t STRING <RET>= to replace each line of a region-rectangle with a
 given string.
 
 To kill the text of the region-rectangle, use =C-x r k= (=kill-rectangle=).
+Or just "delete" the rectangle (without "killing" it) with =C-x r d=.
+
+On the Emacs trunk, you can do: =C-x SPC= <..move..around..> =DEL= to delete the
+rectangle and =C-x SPC= <..move..around..> =C-t= to invoke =string-rectangle=.
 
 =kill-rectangle= and =yank-rectangle= (=C-x r y=) can also be very useful for
 shifting cells up/down within a column of an Org table while leaving remaining
@@ -3666,10 +3670,11 @@ one.
 
   ;; title bar display of visible frames
   (setq frame-title-format
-        (format "Emacs %s rev:%s pid:%d"
+        (format "Emacs %s rev:%s of %s    PID:%d"
                 emacs-version
                 (ignore-errors
                   (replace-regexp-in-string " .*" "" emacs-bzr-version))
+                (format-time-string "%Y-%m-%d" emacs-build-time)
                 (emacs-pid)))
 #+end_src
 
@@ -7882,10 +7887,10 @@ To list all available entities, run =M-x org-entities-help=.
     ;; XXX temporary (until Org 8 is bundled within Emacs)
     (define-key org-mode-map
       (kbd "C-c C-e")
-      (lambda ()
-        (interactive)
+      (lambda (&optional arg)
+        (interactive "P")
         (if (fboundp 'org-export-dispatch)
-            (org-export-dispatch)
+            (funcall 'org-export-dispatch arg)
           (message (concat "This version of Org mode is no longer supported. "
                            "Please upgrade to 8 or later"))
           (sit-for 1.5)))))
@@ -8620,7 +8625,8 @@ function is loaded (AFTER having been adviced).
           (setq dict (cdr (assoc lang dict-alist)))
           (if dict
               (ispell-change-dictionary dict)
-            (message "Ispell dictionary for language `%s' is unknown" lang)
+            (message "Ispell dictionary for language `%s' is unknown in %s"
+                     lang (file-name-base))
             (sit-for 3))
           (force-mode-line-update)))))
 

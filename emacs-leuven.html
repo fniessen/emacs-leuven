@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-10 Sun 15:16 -->
+  <title>Emacs Leuven</title><!-- 2013-11-13 Wed 14:45 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131110.1515</span>
+"color: #008200; font-style: italic;">Version: 20131113.1443</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131110.1515]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131113.1443]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -2016,15 +2016,15 @@
 "color: #008200; font-style: italic;">gnuplot-mode                  ; or gnuplot?</span>
           graphviz-dot-mode
           helm
+          htmlize                       <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">works with Org</span>
           idle-require
           interaction-log
           <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">jabber</span>
           ledger-mode
           leuven-theme
-          htmlize                       <span style=
-"color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">works with Org</span>
           <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">org</span>
           <span style="color: #008200;">;; </span><span style=
@@ -3109,7 +3109,13 @@
           of a region-rectangle with a given string.</p>
 
           <p>To kill the text of the region-rectangle, use <code>C-x r k</code>
-          (<code>kill-rectangle</code>).</p>
+          (<code>kill-rectangle</code>). Or just “delete” the rectangle
+          (without “killing” it) with <code>C-x r d</code>.</p>
+
+          <p>On the Emacs trunk, you can do: <code>C-x SPC</code>
+          &lt;..move..around..&gt; <code>DEL</code> to delete the rectangle and
+          <code>C-x SPC</code> &lt;..move..around..&gt; <code>C-t</code> to
+          invoke <code>string-rectangle</code>.</p>
 
           <p><code>kill-rectangle</code> and <code>yank-rectangle</code>
           (<code>C-x r y</code>) can also be very useful for shifting cells
@@ -7102,13 +7108,16 @@ M-: (executable-find "diff") RET
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">title bar display of visible frames</span>
   (setq frame-title-format
-        (format <span style="color: #FF4700;">"Emacs %s rev:%s pid:%d"</span>
+        (format <span style=
+"color: #FF4700;">"Emacs %s rev:%s of %s    PID:%d"</span>
                 emacs-version
                 (ignore-<span style=
 "color: #CC0000; background-color: #FFFF88;">error</span>s
                   (replace-regexp-in-string <span style=
 "color: #FF4700;">" .*"</span> <span style=
 "color: #FF4700;">""</span> emacs-bzr-version))
+                (format-time-string <span style=
+"color: #FF4700;">"%Y-%m-%d"</span> emacs-build-time)
                 (emacs-pid)))
 </pre>
           </div>
@@ -14278,10 +14287,11 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> temporary (until Org 8 is bundled within Emacs)</span>
     (define-key org-mode-map
       (kbd <span style="color: #FF4700;">"C-c C-e"</span>)
-      (<span style="color: #0000FF;">lambda</span> ()
-        (interactive)
+      (<span style="color: #0000FF;">lambda</span> (<span style=
+"color: #666666;">&amp;optional</span> arg)
+        (interactive <span style="color: #FF4700;">"P"</span>)
         (<span style="color: #0000FF;">if</span> (fboundp 'org-export-dispatch)
-            (org-export-dispatch)
+            (funcall 'org-export-dispatch arg)
           (message (concat <span style=
 "color: #FF4700;">"This version of Org mode is no longer supported. "</span>
                            <span style=
@@ -15503,7 +15513,8 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             (message <span style=
 "color: #FF4700;">"Ispell dictionary for language `</span><span style=
 "color: #FF4700;">%s</span><span style=
-"color: #FF4700;">' is unknown"</span> lang)
+"color: #FF4700;">' is unknown in %s"</span>
+                     lang (file-name-base))
             (sit-for 3))
           (force-mode-line-update)))))
 
@@ -25074,7 +25085,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131110.1516]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131113.1444]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
