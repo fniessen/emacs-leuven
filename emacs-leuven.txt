@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-14 Thu 14:46>
+# Time-stamp: <2013-11-14 Thu 15:10>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -117,7 +117,7 @@ echo "$(date '+%Y%m%d.%H%M')"
   "Value of `float-time' before loading the Emacs Leuven library.")
 
 ;; turn on Common Lisp support
-(eval-when-compile (require 'cl)) ;; provide useful things like `loop' and `setf'
+(eval-when-compile (require 'cl))       ; provide useful things like `loop' and `setf'
 #+end_src
 
 #+begin_src emacs-lisp
@@ -209,9 +209,10 @@ echo "$(date '+%Y%m%d.%H%M')"
        (when leuven-load-verbose
          (message "** %s" ,chaptername))
        (setq before-chapter-time (float-time))
-       (setq leuven--before-section-time (float-time)) ;; init section time
+       (setq leuven--before-section-time (float-time)) ; init section time
        (progn ,@body)
-       (leuven--section (concat "[" ,chaptername " ends here]") 'end-of-chapter) ;; add fake closing section
+       (leuven--section (concat "[" ,chaptername " ends here]") 'end-of-chapter)
+                                        ; add fake closing section
        (setq this-chapter-time
              (format "%.3f" (- (float-time) before-chapter-time)))
        (add-to-list 'leuven--load-times-list
@@ -355,7 +356,7 @@ echo "$(date '+%Y%m%d.%H%M')"
   (modify-all-frames-parameters
    '((height . 32)))
 
-) ;; chapter 0 ends here
+)                                       ; chapter 0 ends here
 #+end_src
 
 * Debugging
@@ -368,7 +369,7 @@ echo "$(date '+%Y%m%d.%H%M')"
 
 #+begin_src emacs-lisp
   ;; get the backtrace when uncaught errors occur
-  (setq debug-on-error t) ;; will be unset at the end
+  (setq debug-on-error t)               ; will be unset at the end
 
   (XEmacs
     (setq stack-trace-on-error t))
@@ -421,7 +422,7 @@ echo "$(date '+%Y%m%d.%H%M')"
             ;; when leuven-load-verbose is nil)
             t)
         ;; error handler
-        (file-error ;; condition
+        (file-error                     ; condition
          (progn
            (when leuven-load-verbose
              (message "(Info) %sRequiring `%s' <from `%s'>... missing"
@@ -493,7 +494,7 @@ echo "$(date '+%Y%m%d.%H%M')"
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 0 ends here
+)                                       ; chapter 0 ends here
 #+end_src
 
 * Emacs Lisp Packages
@@ -601,7 +602,7 @@ are generated programmatically from upstream Git-based sources.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 47 ends here
+)                                       ; chapter 47 ends here
 #+end_src
 
 ** Check Org mode version
@@ -614,7 +615,7 @@ Though, it does load the full Org mode right from the start...
 #+begin_src emacs-lisp :tangle no
 ;; version info
 (let ((org-install-dir (file-name-directory (locate-library "org-loaddefs")))
-      (org-dir (file-name-directory (locate-library "org")))) ;; org.(el|elc)
+      (org-dir (file-name-directory (locate-library "org")))) ; org.(el|elc)
   (message "Org mode version %s (org @ %s)"
            (org-version)
            (if (string= org-dir org-install-dir)
@@ -728,7 +729,7 @@ distro) without impacting on stuff you have added by hand.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 0-loading-libraries ends here
+)                                       ; chapter 0-loading-libraries ends here
 #+end_src
 
 * The Organization of the Screen
@@ -751,7 +752,7 @@ distro) without impacting on stuff you have added by hand.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 1 ends here
+)                                       ; chapter 1 ends here
 #+end_src
 
 * Exiting Emacs
@@ -765,7 +766,7 @@ distro) without impacting on stuff you have added by hand.
   (global-set-key
     (kbd "<M-f4>") 'save-buffers-kill-terminal)
 
-) ;; chapter 6 ends here
+)                                       ; chapter 6 ends here
 #+end_src
 
 * Basic Editing Commands
@@ -784,7 +785,7 @@ distro) without impacting on stuff you have added by hand.
   (leuven--section "7.1 (emacs)Inserting Text")
 
   ;; enter characters by their code in octal (for `C-q NNN <RET>')
-  (setq read-quoted-char-radix 8) ;; 16 for hexadecimal (for Unicode char)
+  (setq read-quoted-char-radix 8)       ; 16 for hexadecimal (for Unicode char)
 #+end_src
 
 ** Moving Point Location
@@ -829,7 +830,7 @@ distro) without impacting on stuff you have added by hand.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 7 ends here
+)                                       ; chapter 7 ends here
 #+end_src
 
 * The Minibuffer
@@ -885,7 +886,7 @@ in echo area.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 8 ends here
+)                                       ; chapter 8 ends here
 #+end_src
 
 * Help
@@ -1092,7 +1093,7 @@ parameters, even those on continuation lines.
   (with-eval-after-load "woman"
     (defalias 'man 'woman))
 
-) ;; chapter 10 ends here
+)                                       ; chapter 10 ends here
 #+end_src
 
 * Killing and Moving Text
@@ -1192,7 +1193,7 @@ Interactively insert items from kill ring with =M-x helm-show-kill-ring= (see
   ;; copy/paste with Gnome desktop
   (GNUEmacs
     ;; ;; cutting and pasting uses the clipboard
-    ;; (setq x-select-enable-clipboard t) ;; default in Emacs 24
+    ;; (setq x-select-enable-clipboard t) ; default in Emacs 24
 
     ;; make cut, copy and paste (keys and menu bar items) use the clipboard
     (menu-bar-enable-clipboard))
@@ -1239,7 +1240,7 @@ highlighting. Check out [[http://www.vimeo.com/1168225?pg=embed&sec=1168225][Ema
 - =M-n= runs the command =cua-sequence-rectangle=
 
 #+begin_src emacs-lisp
-) ;; chapter 12 ends here
+)                                       ; chapter 12 ends here
 #+end_src
 
 * Registers
@@ -1316,7 +1317,7 @@ Visible bookmarks in buffer.
 
 #+begin_src emacs-lisp
   ;; extensions to standard library `bookmark.el'
-  (with-eval-after-load "bookmark-XXX" ;; XXX here does not work!?
+  (with-eval-after-load "bookmark-XXX"  ; XXX here does not work!?
 
     (try-require 'bookmark+++XXX)
 
@@ -1329,7 +1330,7 @@ Visible bookmarks in buffer.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 13 ends here
+)                                       ; chapter 13 ends here
 #+end_src
 
 * Controlling the Display
@@ -1606,7 +1607,7 @@ much easier to follow some key variables through a block of code.
 
   ;; ;; control highlighting of non-ASCII space and hyphen chars, using the
   ;; ;; `nobreak-space' or `escape-glyph' face respectively
-  ;; (setq nobreak-char-display t) ;; default
+  ;; (setq nobreak-char-display t)      ; default
 #+end_src
 
 When Whitespace mode is on, it takes care of highlighting some special
@@ -1637,8 +1638,8 @@ characters over the default mechanism of =nobreak-char-display= and
 
       ;; mappings for displaying characters
       (setq whitespace-display-mappings
-            '((space-mark ?\xA0 [?\u00B7] [?.]) ;; hard space - centered dot
-              (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) ;; tab - left quote mark
+            '((space-mark ?\xA0 [?\u00B7] [?.]) ; hard space - centered dot
+              (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) ; tab - left quote mark
       ))
 #+end_src
 
@@ -1794,7 +1795,7 @@ screencasts.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 14 ends here
+)                                       ; chapter 14 ends here
 #+end_src
 
 * Searching and Replacement
@@ -1837,10 +1838,10 @@ Since Emacs 24.3:
 
   (GNUEmacs
     ;; incremental search will open the contents
-    (setq search-invisible 'open) ;; XXX
+    (setq search-invisible 'open)       ; XXX
 
     ;; re-hide an invisible match right away
-    (setq isearch-hide-immediately nil)) ;; XXX
+    (setq isearch-hide-immediately nil)) ; XXX
 
   ;; scrolling commands are allowed during incremental search (without
   ;; canceling Isearch mode)
@@ -1998,7 +1999,7 @@ It is bound to =e= in Occur mode.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 15 ends here
+)                                       ; chapter 15 ends here
 #+end_src
 
 * Commands for Fixing Typos
@@ -2034,7 +2035,7 @@ it to the *file word list* (=ispell-add-per-file-word-list=).
   (leuven--section "16.4 (emacs)Checking and Correcting Spelling")
 
   ;; spelling checker program
-  (setq ispell-program-name ;; XXX undefined
+  (setq ispell-program-name             ; XXX undefined
         (or (executable-find "aspell")
             (executable-find "ispell")
             ;; nil                         ; [default: "ispell"]
@@ -2293,7 +2294,7 @@ of possible corrections for misspelled word before point.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 16 ends here
+)                                       ; chapter 16 ends here
 #+end_src
 
 * Keyboard Macros
@@ -2373,7 +2374,7 @@ sequence).
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 17 ends here
+)                                       ; chapter 17 ends here
 #+end_src
 
 * Files Handling
@@ -2534,7 +2535,7 @@ How to get Emacs to auto-save to your local disk (=#file#=).
     ;; directory
     (setq backup-directory-alist
           ;; Emacs will `make-directory' it, if necessary
-          '((".*" . "~/.emacs.d/backups/")))) ;; regexp => directory mappings
+          '((".*" . "~/.emacs.d/backups/")))) ; regexp => directory mappings
 
   (XEmacs
     (when (try-require 'backup-dir)
@@ -2550,10 +2551,10 @@ How to get Emacs to auto-save to your local disk (=#file#=).
   (setq version-control t)
 
   ;; ;; number of oldest versions to keep when a new numbered backup is made
-  ;; (setq kept-old-versions 0) ;; 2
+  ;; (setq kept-old-versions 0)         ; 2
 
   ;; number of newest versions to keep when a new numbered backup is made
-  (setq kept-new-versions 20) ;; 2
+  (setq kept-new-versions 20)           ; 2
 
   ;; delete excess backup versions silently
   (setq delete-old-versions t)
@@ -2570,9 +2571,9 @@ sensitive-mode=:
   With no argument, this command toggles the mode. Non-null
   prefix argument turns on the mode. Null prefix argument
   turns off the mode."
-    nil ;; initial value
-    " Sensitive" ;; indicator for the mode line
-    nil ;; minor mode bindings
+    nil                                 ; initial value
+    " Sensitive"                        ; indicator for the mode line
+    nil                                 ; minor mode bindings
     (if (symbol-value sensitive-mode)
         (progn
           ;; disable backups
@@ -2854,7 +2855,7 @@ I should be able to open //CAUCHY/fsd/...
   (with-eval-after-load "ange-ftp"
 
     ;; try to use passive mode in ftp, if the client program supports it
-    (setq ange-ftp-try-passive-mode t)) ;; needed for Ubuntu
+    (setq ange-ftp-try-passive-mode t)) ; needed for Ubuntu
 #+end_src
 
 *** TRAMP
@@ -2891,7 +2892,7 @@ machine editing your cron file on the remote.
 
   (leuven--section "TRAMP")
 
-  (with-eval-after-load "tramp" ;; the autoloads are predefined
+  (with-eval-after-load "tramp"         ; the autoloads are predefined
 
 ;;* 4 (info "(tramp)Configuration") of TRAMP for use
 
@@ -2964,7 +2965,7 @@ email, including several trace information for analysis.
 ;;* 9 How to Customize (info "(tramp)Traces and Profiles")
 
     ;; debugging Tramp
-    (setq tramp-verbose 6) ;; [maximum: 10]
+    (setq tramp-verbose 6)              ; [maximum: 10]
 
     ;; "turn off" the effect of `backup-directory-alist' for TRAMP
     ;; files
@@ -2972,13 +2973,13 @@ email, including several trace information for analysis.
                  (cons tramp-file-name-regexp nil))
 
     ;; make Emacs beep after reading from or writing to the remote host
-    (defadvice tramp-handle-write-region ;; XXX
+    (defadvice tramp-handle-write-region ; XXX
       (after leuven-tramp-write-beep-advice activate)
       "Make Tramp beep after writing a file."
       (interactive)
       (beep))
 
-    (defadvice tramp-handle-do-copy-or-rename-file ;; XXX
+    (defadvice tramp-handle-do-copy-or-rename-file ; XXX
       (after leuven-tramp-copy-beep-advice activate)
       "Make Tramp beep after copying a file."
       (interactive)
@@ -3041,10 +3042,10 @@ root using the =sudo= tramp method.
   ;;! has to be set before your require recentf
   (setq recentf-exclude
         '(
-          "~$" ;; Emacs (and others) backup
-          "\\.log$" ;; LaTeX
-          "\\.toc$" ;; LaTeX
-          "\\.aux$" ;; LaTeX
+          "~$"                          ; Emacs (and others) backup
+          "\\.log$"                     ; LaTeX
+          "\\.toc$"                     ; LaTeX
+          "\\.aux$"                     ; LaTeX
           "/tmp/"
           ))
 
@@ -3061,7 +3062,7 @@ root using the =sudo= tramp method.
     (setq recentf-save-file "~/.emacs.d/.recentf")
 
     ;; (when using Tramp) turn off the cleanup feature of `recentf'
-    (setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
+    (setq recentf-auto-cleanup 'never)  ; disable before we start recentf!
 
     ;; save file names relative to my current home directory
     (setq recentf-filename-handlers '(abbreviate-file-name))
@@ -3154,7 +3155,7 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
         (kbd "C-x r b") 'helm-bookmark-ext)
 
       ;; prefix key for all Helm commands in the global map
-      (setq helm-command-prefix-key "C-c C-f") ;; `C-x c'?
+      (setq helm-command-prefix-key "C-c C-f") ; `C-x c'?
 
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
@@ -3188,7 +3189,7 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
 
       ;; do not show more candidates than this limit from individual
       ;; sources
-      (setq helm-candidate-number-limit 100) ;; more than one screen page
+      (setq helm-candidate-number-limit 100) ; more than one screen page
 
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-c-adaptive-save-history)
@@ -3236,7 +3237,7 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 18 ends here
+)                                       ; chapter 18 ends here
 #+end_src
 
 * Using Multiple Buffers
@@ -3411,7 +3412,7 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
 
   ;; ;; put the current buffer at the end of the list of all buffers
   ;; (global-set-key
-  ;;   (kbd "<S-f12>") 'bury-buffer) ;; TEMP Use this (instead of f12) when GDB'ing Emacs
+  ;;   (kbd "<S-f12>") 'bury-buffer)    ; TEMP Use this (instead of f12) when GDB'ing Emacs
 #+end_src
 
 ** Convenience Features and Customization of Buffer Handling
@@ -3435,7 +3436,7 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 19 ends here
+)                                       ; chapter 19 ends here
 #+end_src
 
 * Multiple Windows
@@ -3587,7 +3588,7 @@ See as well =split-window-preferred-function=.
 Use =M-x scroll-all-mode= to scroll all visible windows together in parallel.
 
 #+begin_src emacs-lisp
-) ;; chapter 20 ends here
+)                                       ; chapter 20 ends here
 #+end_src
 
 * Frames and Graphical Displays
@@ -3815,7 +3816,7 @@ See =(display-pixel-width)=:
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 21 ends here
+)                                       ; chapter 21 ends here
 #+end_src
 
 * International Character Set Support
@@ -3948,7 +3949,7 @@ XXX Declare PDF files as binary
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 22 ends here
+)                                       ; chapter 22 ends here
 #+end_src
 
 * Major and Minor Modes
@@ -4021,7 +4022,7 @@ For a list of buffer beginnings, see =magic-mode-alist=.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 23 ends here
+)                                       ; chapter 23 ends here
 #+end_src
 
 * Indentation
@@ -4065,7 +4066,7 @@ For a list of buffer beginnings, see =magic-mode-alist=.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 24 ends here
+)                                       ; chapter 24 ends here
 #+end_src
 
 * Commands for Human Languages
@@ -4163,7 +4164,7 @@ There are several *non-break space* characters:
     "Replace space by nobreak-space in front of a colon."
     (interactive)
     (require 'org-element)
-    (cond ((eq (char-before) ?\ ) ;; normal space
+    (cond ((eq (char-before) ?\ )       ; normal space
            (backward-delete-char 1)
            (cond ((equal mode-name "PDFLaTeX")
                   (insert "~:"))
@@ -4174,14 +4175,14 @@ There are several *non-break space* characters:
                       (insert " :")
                     (insert " :")))
                  (t
-                  (insert " :")))) ;; non-breaking space
+                  (insert " :"))))      ; non-breaking space
 
           ;; remove nobreak-space if two colons are put one after the
           ;; other (for terms and definitions in Org)
           ((and (eq (char-before) ?\:)
                 (eq (char-before (- (point) 1)) ?\ ))
            (backward-delete-char 2)
-           (insert " ::")) ;; normal space
+           (insert " ::"))              ; normal space
 
           (t
            (insert ":"))))
@@ -4328,7 +4329,7 @@ You can use =org-cycle= in other modes, with =outline-minor-mode=.
 
     ;; bind the outline minor mode functions to an easy to remember prefix
     ;; key (more accessible than the horrible prefix `C-c @')
-    (setq outline-minor-mode-prefix (kbd "C-c C-o")) ;; like in nXML mode
+    (setq outline-minor-mode-prefix (kbd "C-c C-o")) ; like in nXML mode
 
     ;; ;; make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
     ;; ;; mode outline navigation (written by Carsten Dominik)
@@ -4433,7 +4434,7 @@ where the ellipsis shows).
   ;; (add-hook 'outline-minor-mode-hook
   ;;   (lambda ()
   ;;     (define-key outline-minor-mode-map [(control tab)] 'org-cycle)
-  ;;     (define-key outline-minor-mode-map [(shift tab)] 'org-global-cycle))) ;; backtab?
+  ;;     (define-key outline-minor-mode-map [(shift tab)] 'org-global-cycle))) ; backtab?
 #+end_src
 
 Now doing
@@ -4481,8 +4482,8 @@ As for handling "large" files, I use this:
     (interactive)
     (org-cycle t))
 
-  (global-set-key ;; ok on Elisp, not on LaTeX
-    (kbd "C-M-]") 'org-cycle-global) ;; <S-tab>?
+  (global-set-key                       ; XXX ok on Elisp, not on LaTeX
+    (kbd "C-M-]") 'org-cycle-global)    ; <S-tab>?
 
   ;; (defun org-cycle-local ()
   ;;   (interactive)
@@ -4497,7 +4498,7 @@ As for handling "large" files, I use this:
       (beginning-of-defun))
     (org-cycle))
 
-  (global-set-key ;; ok on Elisp, not on LaTeX
+  (global-set-key                       ; XXX ok on Elisp, not on LaTeX
     (kbd "M-]") 'org-cycle-local)
 
 ;; C-M-] and M-] fold the whole buffer or the current defun.
@@ -4571,7 +4572,7 @@ Region Marked>=.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 25 ends here
+)                                       ; chapter 25 ends here
 #+end_src
 
 * Org Mode (Getting Things Done)
@@ -4640,7 +4641,7 @@ These variables need to be set before Org mode is loaded.
   ;; face to be used by `font-lock' for highlighting in Org mode Emacs
   ;; buffers, and tags to be used to convert emphasis fontifiers for HTML
   ;; export
-  (setq org-emphasis-alist ;; remove the strike-through emphasis
+  (setq org-emphasis-alist              ; remove the strike-through emphasis
         '(("*" bold "<b>" "</b>")
           ("/" italic "<i>" "</i>")
           ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
@@ -4651,7 +4652,7 @@ These variables need to be set before Org mode is loaded.
   ;;       '(("&" (:weight ultra-bold :foreground "#000000" :background "#FBFF00"))
   ;;         ;; ("?" (:box t))
   ;;         ("^" (:weight ultra-bold :foreground "#393D90"))
-  ;;         ("!" (:weight ultra-bold :foreground "#B40000")) ;; = alert in some Wikis
+  ;;         ("!" (:weight ultra-bold :foreground "#B40000")) ; = alert in some Wikis
   ;;         ("*" bold "<b>" "</b>")
   ;;         ("/" italic "<i>" "</i>")
   ;;         ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
@@ -4730,7 +4731,7 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 #+begin_src emacs-lisp
   ;; Unhiding edited areas
   ;;??? I like the idea of clustering undo but find it disconcerting
-  (setf org-self-insert-cluster-for-undo nil) ;; XXX undefined
+  (setf org-self-insert-cluster-for-undo nil) ; XXX undefined
   ;; somebody, I think Carsten, suggested this, and it might work for
   ;; you, but for some reason I commented it out. I don't remember what
   ;; the reason was. Maybe speed.
@@ -4798,10 +4799,10 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
                         :underline nil)
 
     (setq org-ellipsis
-          (if (char-displayable-p ?\u25B7) ;; white right-pointing triangle
+          (if (char-displayable-p ?\u25B7) ; white right-pointing triangle
               ;; this test takes ~ 0.40s; hence, wrapped in eval-after-load
-              " \u25B7" ;; string
-            'org-ellipsis))) ;; face
+              " \u25B7"                 ; string
+            'org-ellipsis)))            ; face
 
   ;; <RET> follows links (except in tables)
   (setq org-return-follows-link t)
@@ -4839,7 +4840,7 @@ installs the key binding =C-c C-x t= to insert a new *inline task*.
     (message "... Org Headlines")
 
     ;; insert an inline task (independent of outline hierarchy)
-    (when (try-require 'org-inlinetask) ;; needed
+    (when (try-require 'org-inlinetask) ; needed
 
       ;; initial state (TODO keyword) of inline tasks
       (setq org-inlinetask-default-state "TODO")
@@ -4906,7 +4907,7 @@ installs the key binding =C-c C-x t= to insert a new *inline task*.
       (setq org-latex-format-inlinetask-function
             'org-latex-format-inlinetask))
 
-    ) ;; eval-after-load "org" ends here
+    )                                   ; with-eval-after-load "org" ends here
 #+end_src
 
 *************** TODO Have a solution for base article, report, book (w/o todonotes)
@@ -5246,15 +5247,15 @@ verified before really closing the task.
   ;; list of TODO entry keyword sequences and their interpretation (for
   ;; the different task states)
   (setq org-todo-keywords
-        '((sequence "NEW(n!)"   ;; proposal
-                    "TODO(t!)"  ;; open, not started
-                    "STRT(s!)"  ;; in progress
-                    "WAIT(w!)"  ;; on hold
-                    "DLGT(l!)"  ;; assigned, feedback
-                    "DFRD(f!)"  ;; someday, maybe, perhaps, may be undertaken in the future, wish
+        '((sequence "NEW(n!)"           ; proposal
+                    "TODO(t!)"          ; open, not started
+                    "STRT(s!)"          ; in progress
+                    "WAIT(w!)"          ; on hold
+                    "DLGT(l!)"          ; assigned, feedback
+                    "DFRD(f!)"          ; someday, maybe, perhaps, may be undertaken in the future, wish
                     "|"
-                    "DONE(d!)"  ;; completed, closed, resolved
-                    "CANX(x!)") ;; wontfix, rejected
+                    "DONE(d!)"          ; completed, closed, resolved
+                    "CANX(x!)")         ; wontfix, rejected
           (sequence "QTE(q!)" "QTD(Q!)" "|"
                     "APP(A!)" "EXP(E!)" "REJ(R!)")
           (sequence "OPENPO(O!)" "|"
@@ -5377,7 +5378,7 @@ verified before really closing the task.
   (setq org-log-states-order-reversed nil)
 
   ;; 5.3.2 insert state change notes and time stamps into a LOGBOOK drawer
-  (setq org-log-into-drawer t) ;; should be the default
+  (setq org-log-into-drawer t)          ; should be the default
 
   ;; ~5.3.2 heading for state change added to entries
   (with-eval-after-load "org"
@@ -5415,7 +5416,7 @@ on the format of these entries."
   ;; automatically change a TODO entry to DONE when all children are done
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
-    (let (org-log-done org-log-states) ;; turn off logging
+    (let (org-log-done org-log-states)  ; turn off logging
       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
 
   (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
@@ -5750,11 +5751,11 @@ Remove scheduling date with =C-u C-c C-s=.
                (funcall 'org-clocking-p)
                (y-or-n-p "You are currently clocking time, clock out? "))
           (org-clock-out)
-        t)) ;; only fails on keyboard quit or error
+        t))                             ; only fails on keyboard quit or error
 
     (add-hook 'kill-emacs-query-functions 'leuven--org-query-clock-out)
 
-    ) ;; with-eval-after-load "org-clock" ends here
+    )                                   ; with-eval-after-load "org-clock" ends here
 #+end_src
 
 *** Effort estimates
@@ -5799,13 +5800,13 @@ The ultimate capture tool.
 
   ;; 9.1.2 directory with Org files
   (setq org-directory
-        (directory-file-name ;; this function removes the final slash
+        (directory-file-name            ; this function removes the final slash
          (cond ((file-directory-p "~/org/") "~/org/")
                (t "~/"))))
 
   ;; 9.1.2 default target for storing notes
   (setq org-default-notes-file
-        (concat org-directory "/refile.org")) ;; Inbox for collecting
+        (concat org-directory "/refile.org")) ; Inbox for collecting
 #+end_src
 
 - Contacts
@@ -5967,7 +5968,7 @@ Additional parameters can be included via the commands you use:
 
     (add-to-list 'org-capture-templates
                  `("mt" "Create a TODO Action + edit" entry
-                   (file+headline "~/org/email.org" "Tasks") ;; #+FILETAGS: :mail:
+                   (file+headline "~/org/email.org" "Tasks") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
    %:date-timestamp-inactive
 
@@ -5980,7 +5981,7 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("mr" "Create a TODO Action Remind 3" entry
-                   (file+headline "~/org/email.org" "Tasks") ;; #+FILETAGS: :mail:
+                   (file+headline "~/org/email.org" "Tasks") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
    DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \" -0d\")
    %:date-timestamp-inactive
@@ -6192,13 +6193,13 @@ From %c"
       (if (equal "capture" (frame-parameter nil 'name))
           (delete-frame)))
 
-    (defadvice org-capture-destroy ;; XXX
+    (defadvice org-capture-destroy      ; XXX
       (after leuven-delete-capture-destroy-frame activate)
       "Advise capture-destroy to close the frame (if it is the capture frame)."
       (if (equal "capture" (frame-parameter nil 'name))
           (delete-frame)))
 
-    ) ;; with-eval-after-load "org-capture" ends here
+    )                                   ; with-eval-after-load "org-capture" ends here
 #+end_src
 
 #+begin_src sh :tangle ~/bin/capture :shebang #!bin/sh
@@ -6261,7 +6262,7 @@ the header under which the entry will be placed.
 
     (setq org-refile-targets
           `((nil
-             :maxlevel . 8) ;; current file
+             :maxlevel . 8)             ; current file
             (,(append org-agenda-files leuven-org-refile-extra-files)
              :maxlevel . 4)))
 
@@ -6387,7 +6388,7 @@ Press =C-c a a= to jump you to this week's task page from anywhere.
 
 #+begin_src emacs-lisp
   ;; show dated entries in the global `todo' list
-  (setq org-agenda-todo-ignore-with-date nil) ;;!! tricky setting
+  (setq org-agenda-todo-ignore-with-date nil) ;!! tricky setting
 #+end_src
 
 #+begin_src emacs-lisp
@@ -6401,14 +6402,14 @@ arrives -- at which point it will be in all lists.
 
 #+begin_src emacs-lisp
   ;; 10.3.2 don't show scheduled entries in the global `todo' list
-  (setq org-agenda-todo-ignore-scheduled 'future) ;;!! tricky setting
+  (setq org-agenda-todo-ignore-scheduled 'future) ;!! tricky setting
   (setq org-agenda-todo-ignore-scheduled nil)
 #+end_src
 
 #+begin_src emacs-lisp
   ;; 10.3.2 don't show entries scheduled in the future in the global
   ;; `todo' list (until they are within the warning period)
-  (setq org-agenda-todo-ignore-deadlines 'near) ;;!! tricky setting
+  (setq org-agenda-todo-ignore-deadlines 'near) ;!! tricky setting
   (setq org-agenda-todo-ignore-deadlines nil)
 #+end_src
 
@@ -6449,9 +6450,9 @@ arrives -- at which point it will be in all lists.
 #+begin_src emacs-lisp
   ;; 10.3.6 how to identify stuck projects
   (setq org-stuck-projects
-        '("+LEVEL=2/-DONE" ;; identify a project
-          ("TODO" "STRT") ;; TODO keywords
-          nil "")) ;; tags, regexp
+        '("+LEVEL=2/-DONE"              ; identify a project
+          ("TODO" "STRT")               ; TODO keywords
+          nil ""))                      ; tags, regexp
 #+end_src
 
 *** Presentation and sorting
@@ -6463,11 +6464,11 @@ arrives -- at which point it will be in all lists.
 
   ;; 10.4 format specifications for the prefix of items in the agenda views
   (setq org-agenda-prefix-format
-        '((agenda . " %-11s%i %?-12t") ;; agenda
-          (timeline . " % s")          ;; timeline
-          (todo . " %i %-12:c")        ;; todo, alltodo
-          (tags . " %i %-12:c")        ;; tags, tags-todo, stuck
-          (search . " %i %-12:c")))    ;; search
+        '((agenda . " %-11s%i %?-12t")  ; agenda
+          (timeline . " % s")           ; timeline
+          (todo . " %i %-12:c")         ; todo, alltodo
+          (tags . " %i %-12:c")         ; tags, tags-todo, stuck
+          (search . " %i %-12:c")))     ; search
 
   ;; text preceding scheduled items in the agenda view
   (setq org-agenda-scheduled-leaders
@@ -6480,7 +6481,7 @@ arrives -- at which point it will be in all lists.
   ;; text preceding deadline items in the agenda view
   (setq org-agenda-deadline-leaders
         '("Deadline   "
-          "In %d d" ;; or "%d d left"
+          "In %d d"                     ; or "%d d left"
           "%d d ago"))
 
   ;; faces for showing deadlines in the agenda
@@ -7143,14 +7144,14 @@ Cleanup:
                              (org-agenda-prefix-format " %?-11t %i %-12:c% s")
                              (org-agenda-show-log 'clockcheck)
                              (org-agenda-span 7)
-                             (org-agenda-start-day "-1w") ;; recently done
+                             (org-agenda-start-day "-1w") ; recently done
                              (org-deadline-warning-days 0)))
 
                     (agenda ""
                             ((org-agenda-overriding-header "Next month")
                              (org-agenda-span 'month)
                              (org-agenda-start-day "+0d")
-                             (org-deadline-warning-days 0) ;; XXX
+                             (org-deadline-warning-days 0) ; XXX
                              ))
 
                     (todo "PROJ"
@@ -7168,7 +7169,7 @@ Cleanup:
                           ((org-agenda-overriding-header "In progress")
                            (org-agenda-todo-ignore-scheduled nil)))
 
-                    (todo "TODO" ;; don't include items from Inbox! XXX
+                    (todo "TODO"        ; don't include items from Inbox! XXX
                           ((org-agenda-overriding-header "Action list")))
 
                     ;; ignore scheduled and deadline entries, as they're
@@ -7177,7 +7178,7 @@ Cleanup:
                     (todo "WAIT|DLGT"
                           ((org-agenda-format-date "")
                            (org-agenda-overriding-header "Waiting for")
-                           (org-agenda-todo-ignore-deadlines 'all) ;; future?
+                           (org-agenda-todo-ignore-deadlines 'all) ; future?
                            (org-agenda-todo-ignore-scheduled t)))
 
                     ;; same reasoning as for WAIT|DLGT
@@ -7624,9 +7625,9 @@ Agenda:
                 (and sd
                      (not (equal sd ""))
                      (org-time< sd (+ (org-time-today) (* n2 86400))))
-                (and (or (not dl) ;; no deadline
+                (and (or (not dl)       ; no deadline
                          (equal dl ""))
-                     (or (not sd) ;; nor scheduled
+                     (or (not sd)       ; nor scheduled
                          (equal sd ""))))
             (progn (outline-next-heading) (point)))))
 
@@ -7720,7 +7721,7 @@ example).
 #+end_src
 
 #+begin_src emacs-lisp
-    ) ;; with-eval-after-load "org-agenda" ends here
+    )                                   ; with-eval-after-load "org-agenda" ends here
 #+end_src
 
 *** Exporting Agenda Views
@@ -7792,7 +7793,7 @@ XXX Does this work?
     (setq org-fontify-done-headline t)
 
     ;; 11.1 hide the emphasis marker characters
-    (setq org-hide-emphasis-markers t) ;; impact on table alignment!
+    (setq org-hide-emphasis-markers t)  ; impact on table alignment!
 #+end_src
 
 *** Images and Tables
@@ -7863,7 +7864,7 @@ To list all available entities, run =M-x org-entities-help=.
   (setq org-export-with-sub-superscripts '{})
 
   ;; 11.7 convert LaTeX fragments to images when exporting to HTML (using MathJax)
-  (setq org-export-with-LaTeX-fragments t) ;; XXX undefined?
+  (setq org-export-with-LaTeX-fragments t) ; XXX undefined?
 #+end_src
 
 #+begin_src emacs-lisp
@@ -7944,7 +7945,7 @@ To list all available entities, run =M-x org-entities-help=.
     (add-to-list 'org-export-snippet-translation-alist
                  '("b" . "beamer"))
 
-    ) ;; with-eval-after-load "ox" ends here
+    )                                   ; with-eval-after-load "ox" ends here
 #+end_src
 
 #+begin_src emacs-lisp
@@ -7965,7 +7966,7 @@ org-export-htmlize-generate-css= to extract class definitions.
   (with-eval-after-load "ox-html"
 
     ;; output type to be used by htmlize when formatting code snippets
-    (setq org-export-htmlize-output-type 'css) ;; XXX
+    (setq org-export-htmlize-output-type 'css) ; XXX
 
     ;; ;; URL pointing to a CSS file defining text colors for htmlized Emacs buffers
     ;; (setq org-export-htmlized-org-css-url "style.css")
@@ -7995,7 +7996,7 @@ org-export-htmlize-generate-css= to extract class definitions.
 #+begin_src emacs-lisp
     ;; check that `tidy' is in PATH, and that configuration file exists
     (when (and (executable-find "tidy")
-               (file-exists-p "~/.tidyrc")) ;; tidy-config
+               (file-exists-p "~/.tidyrc")) ; tidy-config
 
       (defun leuven--export-html-final-filter (contents backend info)
         (if (not (eq backend 'html)) contents
@@ -8016,7 +8017,7 @@ org-export-htmlize-generate-css= to extract class definitions.
       (add-to-list 'org-export-filter-final-output-functions
                    'leuven--export-html-final-filter))
 
-    ) ;; eval-after-load "ox-html" ends here
+    )                                   ; with-eval-after-load "ox-html" ends here
 #+end_src
 
 Emacs 23+ users: in order to avoid "Invalid face" errors, you need to use the
@@ -8067,7 +8068,7 @@ version made available by Carsten Dominik in =org-mode/contrib/lisp= directory.
     (global-set-key
       (kbd "M-P") 'htmlize-buffer)
 
-    ) ;; with-eval-after-load "htmlize" ends here
+    )                                   ; with-eval-after-load "htmlize" ends here
 #+end_src
 
 To get around PostScript problems, you can write the buffer to your browser
@@ -8277,7 +8278,7 @@ What about =apacite= and =tikz= in =org-latex-packages-alist=?
 #+end_src
 
 #+begin_src emacs-lisp
-    ) ;; with-eval-after-load "ox-latex" ends here
+    )                                   ; with-eval-after-load "ox-latex" ends here
 #+end_src
 
 *** LaTeX Beamer and PDF export
@@ -8549,19 +8550,19 @@ languages which can be evaluated in Org mode buffers.
   (with-eval-after-load "org"
     (message "... Org Languages")
 
-    (org-babel-do-load-languages ;; loads org, gnus-sum, etc...
+    (org-babel-do-load-languages        ; loads org, gnus-sum, etc...
      'org-babel-load-languages
      '((C . nil)
-       (R . t) ;; requires R and ess-mode
+       (R . t)                          ; requires R and ess-mode
        (awk . t)
        (calc . t)
-       (ditaa . t) ;; sudo aptitude install openjdk-6-jre
+       (ditaa . t)                      ; sudo aptitude install openjdk-6-jre
        (dot . t)
        (emacs-lisp . t)
-       (gnuplot . t) ;; requires gnuplot-mode
+       (gnuplot . t)                    ; requires gnuplot-mode
        (haskell . nil)
        (latex . t)
-       (ledger . t) ;; requires ledger
+       (ledger . t)                     ; requires ledger
        (ocaml . nil)
        (octave . nil)
        (org . t)
@@ -8746,11 +8747,8 @@ For security reasons, evaluation is not turned on by default.
 
 #+begin_src emacs-lisp
   ;; extension of Imenu
-  (when (and ;; `org-babel' has been loaded
-             (fboundp 'org-babel-execute-src-block)
-
-             ;; `imenu' has been loaded
-             (fboundp 'try-to-add-imenu))
+  (when (and (fboundp 'org-babel-execute-src-block) ; `org-babel' has been loaded
+             (fboundp 'try-to-add-imenu)) ; `imenu' has been loaded
 
     (try-require 'imenu+)
 
@@ -8787,7 +8785,7 @@ C-r= (fits nicely with the meaning of "reveal").
   (with-eval-after-load "org"
     (message "... Org Crypt")
 
-    (when (try-require 'org-crypt) ;; loads org, gnus-sum, etc...
+    (when (try-require 'org-crypt)      ; loads org, gnus-sum, etc...
 
       ;; encrypt all entries before saving
       (org-crypt-use-before-save-magic)
@@ -8842,10 +8840,9 @@ performance reasons)!
                                    (format (concat "The file `%s' contains %s \"#+src"
                                                    "name:\" or \"#+"
                                                    "source:\" lines.")
-                                           ;; trick to avoid srcname to
-                                           ;; be found in the Org file
-                                           ;; itself which tangles
-                                           ;; `.emacs' file
+                                        ; trick to avoid srcname to be found in
+                                        ; the Org file itself which tangles
+                                        ; `.emacs' file
                                            (buffer-name (current-buffer))
                                            n)
                                    :warning))))))
@@ -9133,7 +9130,7 @@ Link emails from Org files.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 25.9-org-mode ends here
+)                                       ; chapter 25.9-org-mode ends here
 #+end_src
 
 * TeX
@@ -9167,9 +9164,9 @@ Under Windows, in the *native* TeX mode, =shell-file-name= must be =cmdproxy.exe
     "Simple mode for colorizing LaTeX output."
     (set (make-local-variable 'font-lock-defaults)
          '((("^!.*" .
-             compilation-error-face) ;; LaTeX error
+             compilation-error-face)    ; LaTeX error
             ("^-+$" .
-             compilation-info-face) ;; Latexmk separator
+             compilation-info-face)     ; Latexmk separator
             ("^Package .* Warning: .*" .
              compilation-warning-face)
             ("Reference .* undefined" .
@@ -9449,8 +9446,7 @@ current selection. More general index entries are created with =C-c <=.
 =C-c >= displays the compiled index.
 
 #+begin_src emacs-lisp
-      (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-                                 ;; with AUCTeX LaTeX mode
+      (add-hook 'LaTeX-mode-hook 'turn-on-reftex) ; with AUCTeX LaTeX mode
 
       ;; minor mode with distinct support for `\label', `\ref', `\cite'
       ;; and `\index' in LaTeX
@@ -9467,11 +9463,11 @@ current selection. More general index entries are created with =C-c <=.
 ** BibTeX
 
 #+begin_src emacs-lisp
-      )) ;; with-eval-after-load "latex" ends here
+      ))                                ; with-eval-after-load "latex" ends here
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 25.10-tex-mode ends here
+)                                       ; chapter 25.10-tex-mode ends here
 #+end_src
 
 * SGML and HTML Modes
@@ -9581,7 +9577,7 @@ tags around a region you've specified.
 (reformulation of HTML as an XML application).
 
 #+begin_src emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode)) ;; alias for `nxml-mode'
+  (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode)) ; alias for `nxml-mode'
 #+end_src
 
 Alternatively, you can use [[http://ourcomments.org/Emacs/nXhtml/doc/nxhtml.html][nXhtml]] mode, derived from nXML mode. It adds a lot
@@ -9656,7 +9652,7 @@ Some key bindings:
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 25 ends here
+)                                       ; chapter 25 ends here
 #+end_src
 
 * Editing Programs
@@ -9718,7 +9714,7 @@ open another file).
       (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
       ;; show current function in mode line (based on Imenu)
-      (which-func-mode 1))) ;; ~ Stickyfunc mode (in header line)
+      (which-func-mode 1)))             ; ~ Stickyfunc mode (in header line)
 #+end_src
 
 ** Indentation for Programs
@@ -10004,7 +10000,7 @@ See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard a
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 26 ends here
+)                                       ; chapter 26 ends here
 #+end_src
 
 * Compiling and Testing Programs
@@ -10116,7 +10112,7 @@ without a =Makefile=.
   (defun make-clean (&optional arg)
     "Run a make clean."
     (interactive "P")
-    (require 'compile) ;; needed for compile-internal
+    (require 'compile)                  ; needed for compile-internal
     (if arg
         (setq make-clean-command
               (read-string "Command: " make-clean-command)))
@@ -10299,11 +10295,11 @@ To (attempt to) cleanly reevaluate a buffer of elisp code, use =nuke-and-eval=.
 
   ;; maximum depth of lists to print in the result of the evaluation
   ;; commands before abbreviating them
-  (setq eval-expression-print-level nil) ;; no limit
+  (setq eval-expression-print-level nil) ; no limit
 
   ;; maximum length of lists to print in the result of the evaluation
   ;; commands before abbreviating them
-  (setq eval-expression-print-length nil) ;; no limit
+  (setq eval-expression-print-length nil) ; no limit
 #+end_src
 
 ** Lisp Interaction Buffers
@@ -10422,7 +10418,7 @@ contents!
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 27 ends here
+)                                       ; chapter 27 ends here
 #+end_src
 
 * Maintaining Programs
@@ -10448,7 +10444,7 @@ Version control systems that interact with Emacs in a generic way.
 
   (leuven--section "28.1 (emacs)Version Control")
 
-  ;; (try-require 'vc) ;; for defining function `vc-switches' (XXX autoload?)
+  ;; (try-require 'vc)                  ; for defining function `vc-switches' (XXX autoload?)
 #+end_src
 
 *** Version Control and the Mode Line
@@ -10573,7 +10569,7 @@ Show the diff we are about to commit: =C-c C-d=.
                (define-key vc-dir-mode-map
                  (kbd "E") 'vc-ediff)
                (define-key vc-dir-mode-map
-                 (kbd "#") 'vc-ediff-ignore-whitespace) ;; ediff-windows-wordwise?
+                 (kbd "#") 'vc-ediff-ignore-whitespace) ; ediff-windows-wordwise?
                ))
 
   (defun leuven-vc-dir-hide-up-to-date-and-unregistered ()
@@ -10613,7 +10609,7 @@ Show the diff we are about to commit: =C-c C-d=.
     (interactive (list current-prefix-arg t))
     (require 'ediff)
     (let ((ediff-ignore-similar-regions t))
-      (call-interactively 'vc-ediff))) ;; XXX does not work yet
+      (call-interactively 'vc-ediff)))  ; XXX does not work yet
 #+end_src
 
 *** Customizing VC
@@ -10936,15 +10932,15 @@ The commands to display *symbol references* are:
 
             ;; the idle scheduler with automatically reparse buffers in idle
             ;; time
-            global-semantic-idle-scheduler-mode ;; [minimum-features]
+            global-semantic-idle-scheduler-mode ; [minimum-features]
 
             ;; display a summary of the symbol at point in the echo area
             ;; (~ ElDoc)
-            global-semantic-idle-summary-mode ;; [code-helpers]
+            global-semantic-idle-summary-mode ; [code-helpers]
 
             ;; display a tooltip with a list of possible completions near
             ;; the cursor
-            global-semantic-idle-completions-mode ;; [gaudy-code-helpers]
+            global-semantic-idle-completions-mode ; [gaudy-code-helpers]
 
             ;; turn Semantic MRU Bookmarks on (keep track of the Most
             ;; Recently Used tags)
@@ -10952,13 +10948,13 @@ The commands to display *symbol references* are:
 
             ;; enable Semantic-Stickyfunc mode (display a header line that
             ;; shows the declaration line of the function or tag)
-            global-semantic-stickyfunc-mode ;; [gaudy-code-helpers]
+            global-semantic-stickyfunc-mode ; [gaudy-code-helpers]
 
             ;; enable Semantic-Highlight-Func mode
-            global-semantic-highlight-func-mode ;; [excessive-code-helpers]
+            global-semantic-highlight-func-mode ; [excessive-code-helpers]
 
             ;; turn on all active decorations
-            global-semantic-decoration-mode ;; [gaudy-code-helpers]
+            global-semantic-decoration-mode ; [gaudy-code-helpers]
             ))
 
     ;; XXX if prog-mode, then Semantic will be launched after Emacs init, as
@@ -11123,7 +11119,7 @@ really like this.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 28 ends here
+)                                       ; chapter 28 ends here
 #+end_src
 
 * Abbrevs
@@ -11178,11 +11174,11 @@ See [[id:366386cb-9c4f-4d61-b676-e742e6277587][Interaction between Org and other
       (add-hook 'org-mode-hook
                 (lambda ()
                   ;; YASnippet (using the new org-cycle hooks)
-                  (set (make-local-variable 'yas/trigger-key) (kbd "tab")) ;; needed?
+                  (set (make-local-variable 'yas/trigger-key) (kbd "tab")) ; needed?
                   (add-to-list 'org-tab-first-hook
                                'yas/org-very-safe-expand)
                   (define-key yas/keymap
-                    (kbd "tab") 'yas/next-field) ;; `yas/next-field-or-maybe-expand'?
+                    (kbd "tab") 'yas/next-field) ; `yas/next-field-or-maybe-expand'?
                   ))
 #+end_src
 
@@ -11288,13 +11284,13 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
     ;; list of expansion functions tried (in order) by `hippie-expand'
     ;; (completion strategy)
     (setq hippie-expand-try-functions-list
-          '(try-expand-dabbrev ;; current buffer
-            try-expand-dabbrev-visible ;; visible (parts of all) buffers
-            try-expand-dabbrev-all-buffers ;; all opened buffers
-            try-expand-dabbrev-from-kill ;; kill ring
-            try-complete-file-name-partially ;; file names
+          '(try-expand-dabbrev          ; current buffer
+            try-expand-dabbrev-visible  ; visible (parts of all) buffers
+            try-expand-dabbrev-all-buffers ; all opened buffers
+            try-expand-dabbrev-from-kill ; kill ring
+            try-complete-file-name-partially ; file names
             try-complete-file-name
-            try-expand-all-abbrevs ;; abbreviations
+            try-expand-all-abbrevs      ; abbreviations
             try-expand-list
             try-expand-line
             try-complete-lisp-symbol-partially
@@ -11302,12 +11298,12 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
             try-expand-whole-kill))
 
     (setq hippie-expand-try-functions-list
-          '(try-complete-file-name-partially
+          '(try-complete-file-name-partially ; file names
             try-complete-file-name
-            try-expand-all-abbrevs
-            try-expand-dabbrev
-            try-expand-dabbrev-all-buffers
-            try-expand-dabbrev-from-kill))
+            try-expand-all-abbrevs      ; abbreviations
+            try-expand-dabbrev          ; current buffer
+            try-expand-dabbrev-all-buffers ; all opened buffers
+            try-expand-dabbrev-from-kill)) ; kill ring
 
     ;; integrate YASnippet with `hippie-expand'
     (with-eval-after-load "yasnippet"
@@ -11370,7 +11366,7 @@ Auto start vs M-/
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 29 ends here
+)                                       ; chapter 29 ends here
 #+end_src
 
 * Dired, the Directory Editor
@@ -11476,8 +11472,8 @@ Emacs free for continued used.
                        nil
                        (cond ((eq system-type 'gnu/linux)
                               "xdg-open")
-                             ((or (eq system-type 'darwin) ;; Mac OS X
-                                  (eq system-type 'macos)) ;; Mac OS 9
+                             ((or (eq system-type 'darwin) ; Mac OS X
+                                  (eq system-type 'macos)) ; Mac OS 9
                               "open"))
                        file))))
 #+end_src
@@ -11489,7 +11485,7 @@ If =xdg-open= is not available, one can replace it with =gnome-open= or =kde-ope
  (interactive)
  (dired-do-shell-command
   (case system-type
-    (gnu/linux "gnome-open") ;; right for gnome (ubuntu), not for other systems
+    (gnu/linux "gnome-open")            ; right for gnome (ubuntu), not for other systems
     (darwin "open"))
   nil
   (dired-get-marked-files t current-prefix-arg)))
@@ -11504,7 +11500,7 @@ Just ask a WWW browser to display the current file.
 
 #+begin_src emacs-lisp
     (define-key dired-mode-map
-      (kbd "e") 'browse-url-of-dired-file) ;; <C-RET>?
+      (kbd "e") 'browse-url-of-dired-file) ; <C-RET>?
 #+end_src
 
 It works for files as well as for directories.
@@ -11744,7 +11740,7 @@ Extra Dired functionality
 #+end_src
 
 #+begin_src emacs-lisp
-    ) ;; with-eval-after-load "dired" ends here
+    )                                   ; with-eval-after-load "dired" ends here
 #+end_src
 
 ** Dired+
@@ -11786,7 +11782,7 @@ Extra Dired functionality
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 30 ends here
+)                                       ; chapter 30 ends here
 #+end_src
 
 * The Calendar and the Diary
@@ -11876,7 +11872,7 @@ But [[id:737b836b-ac1f-4120-94ca-c9e0282268f0][Org]] outperforms it!
 
   ;; insinuate appt if `diary-file' exists
   (if (file-readable-p "~/diary")
-      (try-require 'appt) ;; requires `diary-lib', which requires `diary-loaddefs'
+      (try-require 'appt)               ; requires `diary-lib', which requires `diary-loaddefs'
     (message "Appointment reminders library `appt' not loaded (no diary file found)"))
 
   (with-eval-after-load "appt"
@@ -11967,7 +11963,7 @@ It uses =notify-send= (if the =libnotify-bin= Ubuntu package is installed).
 #+end_src
 
 #+begin_src emacs-lisp
-    ) ;; with-eval-after-load "appt" ends here
+    )                                   ; with-eval-after-load "appt" ends here
 #+end_src
 
 ** Advanced Calendar/Diary Usage
@@ -11978,12 +11974,12 @@ It uses =notify-send= (if the =libnotify-bin= Ubuntu package is installed).
   (leuven--section "31.15 (emacs)Advanced Calendar/Diary Usage")
 
   ;; get rid of some holidays
-  (setq holiday-general-holidays nil) ;; too U.S.-centric holidays
-  (setq holiday-oriental-holidays nil) ;; Oriental holidays
-  (setq holiday-hebrew-holidays nil) ;; religious holidays
-  (setq holiday-islamic-holidays nil) ;; religious holidays
-  (setq holiday-bahai-holidays nil) ;; Baha'i holidays
-  (setq holiday-solar-holidays nil) ;; sun-related holidays
+  (setq holiday-general-holidays nil)   ; too U.S.-centric holidays
+  (setq holiday-oriental-holidays nil)  ; Oriental holidays
+  (setq holiday-hebrew-holidays nil)    ; religious holidays
+  (setq holiday-islamic-holidays nil)   ; religious holidays
+  (setq holiday-bahai-holidays nil)     ; Baha'i holidays
+  (setq holiday-solar-holidays nil)     ; sun-related holidays
 
   ;; mark dates of holidays in the calendar window
   (setq calendar-mark-holidays-flag t)
@@ -12058,7 +12054,7 @@ htmlfontify-buffer=.
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 31 ends here
+)                                       ; chapter 31 ends here
 #+end_src
 
 * Sending Mail
@@ -12091,7 +12087,7 @@ Minimal configuration for sending a bug report, for example.
     ;; SMTP service port number
     (setq smtpmail-smtp-service 25))
 
-) ;; chapter 32 ends here
+)                                       ; chapter 32 ends here
 #+end_src
 
 * Gnus
@@ -12150,7 +12146,7 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
     (autoload 'bbdb-insinuate-gnus "bbdb-gnus"
       "Hook BBDB into Gnus.")
     ;; (autoload 'bbdb-insinuate-message "bbdb"
-    ;;   "Hook BBDB into `message-mode'.") ;; BBDB 2.35
+    ;;   "Hook BBDB into `message-mode'.") ; BBDB 2.35
     (autoload 'bbdb-insinuate-message "bbdb-message"
       "Hook BBDB into `message-mode'."))
 
@@ -12326,7 +12322,7 @@ make a call. This is done by modifying =bbdb-dial-function=. There are examples
 which interface with Skype to make a phone call.
 
 #+begin_src emacs-lisp
-) ;; chapter 34 ends here
+)                                       ; chapter 34 ends here
 #+end_src
 
 * Document Viewing
@@ -12432,7 +12428,7 @@ Another option, without =doc-view=, is =! pdtotext ? - <RET>=.
     (set-buffer-modified-p nil))
   (add-to-list 'auto-mode-alist '("\\.ppt\\'" . no-ppt))
 
-) ;; chapter 35 ends here
+)                                       ; chapter 35 ends here
 #+end_src
 
 * Running Shell Commands from Emacs
@@ -12744,7 +12740,7 @@ I said they're details.
 
     ;; (global-set-key (kbd "C-c t") 'multi-term-next)
     (global-set-key
-      (kbd "C-c T") 'multi-term)) ;; create a new one
+      (kbd "C-c T") 'multi-term))       ; create a new one
 #+end_src
 
 #+begin_src emacs-lisp
@@ -12810,7 +12806,7 @@ with Gnus...*
 #+begin_src emacs-lisp
     ;; ;; let Emacs recognize Cygwin paths (e.g. /usr/local/lib)
     ;; (when (and running-ms-windows
-    ;;            (executable-find "mount")) ;; Cygwin bin directory found
+    ;;            (executable-find "mount")) ; Cygwin bin directory found
     ;;   (when (try-require 'cygwin-mount)
     ;;     (cygwin-mount-activate)))
 #+end_src
@@ -12865,7 +12861,7 @@ creates an X Window and doesn't wait for =(server-edit)=.
 
   ;; use Emacs as a server (with the `emacsclient' program)
   (GNUEmacs
-    (idle-require 'server) ;; after init
+    (idle-require 'server)              ; after init
     (with-eval-after-load "server"
 
       ;; test whether server is (definitely) running, avoiding the message of
@@ -12873,9 +12869,9 @@ creates an X Window and doesn't wait for =(server-edit)=.
       (or (equal (server-running-p) t)
 
           ;; start the Emacs server
-          (server-start)))) ;; ~ 0.20 s
+          (server-start))))             ; ~ 0.20 s
 
-) ;; chapter 37 ends here
+)                                       ; chapter 37 ends here
 #+end_src
 
 Since GNU Emacs 23, there is also a =--daemon= flag to start the server in a
@@ -12975,7 +12971,7 @@ You may wish to set =ps-print-landscape= to =t=.
 
           ;; list of extra switches to pass to `ps-lpr-command'
           ;; tell Ghostscript to query which printer to use
-          (setq ps-lpr-switches '("-query"))) ;; '("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2")
+          (setq ps-lpr-switches '("-query"))) ; '("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2")
 
       (setq ps-printer-name "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
       (setq ps-lpr-command "")
@@ -13001,7 +12997,7 @@ You may wish to set =ps-print-landscape= to =t=.
     (setq ps-top-margin 32)
 
     ;; Page layout: Header [file-name     2001-06-18 Mon]
-    (setq ps-print-header-frame nil) ;; no box around the header
+    (setq ps-print-header-frame nil)    ; no box around the header
     ;; see http://www.emacswiki.org/emacs/PsPrintPackage-23
     (setq ps-header-frame-alist '((fore-color . "#CCCCCC")))
     (setq ps-header-lines 1)
@@ -13017,15 +13013,15 @@ You may wish to set =ps-print-landscape= to =t=.
     (setq ps-footer-offset 14)
     (setq ps-footer-line-pad .50)
     (setq ps-print-footer t)
-    (setq ps-print-footer-frame nil) ;; no box around the footer
+    (setq ps-print-footer-frame nil)    ; no box around the footer
     (setq ps-footer-frame-alist '((fore-color . "#666666")))
     (setq ps-footer-lines 1)
     (setq ps-footer-font-family 'Helvetica)
     (setq ps-footer-font-size 8)
     (setq ps-left-footer nil)
-    (setq ps-right-footer (list "/pagenumberstring load")) ;; Page n of m
+    (setq ps-right-footer (list "/pagenumberstring load")) ; Page n of m
 
-    (setq ps-font-family 'Courier) ;; see `ps-font-info-database'
+    (setq ps-font-family 'Courier)      ; see `ps-font-info-database'
     ;; legitimate values include Courier, Helvetica, NewCenturySchlbk,
     ;; Palatino and Times
     (setq ps-font-size 9.1)
@@ -13034,7 +13030,7 @@ You may wish to set =ps-print-landscape= to =t=.
 
     (setq ps-line-spacing 3))
 
-) ;; chapter 38 ends here
+)                                       ; chapter 38 ends here
 #+end_src
 
 * Sorting Text
@@ -13048,7 +13044,7 @@ You may wish to set =ps-print-landscape= to =t=.
   (global-set-key
     (kbd "C-c ^") 'sort-lines)
 
-) ;; chapter 39 ends here
+)                                       ; chapter 39 ends here
 #+end_src
 
 * Saving Emacs Sessions
@@ -13064,7 +13060,7 @@ You may wish to set =ps-print-landscape= to =t=.
   (with-eval-after-load "saveplace"
 
     ;; automatically save place in each file
-    (setq-default save-place t) ;; default value for all buffers
+    (setq-default save-place t)         ; default value for all buffers
 
     ;; name of the file that records `save-place-alist' value
     (setq save-place-file
@@ -13075,7 +13071,7 @@ You may wish to set =ps-print-landscape= to =t=.
     ;; do not make backups of master save-place file
     (setq save-place-version-control "never"))
 
-) ;; chapter 42 ends here
+)                                       ; chapter 42 ends here
 #+end_src
 
 * Hyperlinking and Navigation Features
@@ -13110,7 +13106,7 @@ You may wish to set =ps-print-landscape= to =t=.
   ;; (setq browse-url-generic-program
   ;;       (when (and (display-graphic-p)
   ;;                  (not running-ms-windows))
-  ;;         (executable-find "firefox"))) ;; could be `google-chrome'
+  ;;         (executable-find "firefox"))) ; could be `google-chrome'
 
   (defun leuven--browse (url)
     "If prefix is specified, use the system default browser, else use the
@@ -13140,7 +13136,7 @@ You may wish to set =ps-print-landscape= to =t=.
 
   (leuven--section "Web search")
 
-  (when t ;; (try-require 'browse-url)
+  (when t                               ; (try-require 'browse-url)
 
     (defconst leuven--google-maxlen (* 32 7)
       "Maximum length of search string to send. This prevents you from
@@ -13509,7 +13505,7 @@ http://lars.ingebrigtsen.no/2013/06/eww.html.
     (define-key menu-bar-tools-menu
       [games] nil))
 
-) ;; chapter 46 ends here
+)                                       ; chapter 46 ends here
 #+end_src
 
 * Customization
@@ -13569,13 +13565,13 @@ particular color...
 #+begin_src emacs-lisp
   ;; ;; limit serving to catch infinite recursions for you before they
   ;; ;; cause actual stack overflow in C, which would be fatal for Emacs
-  ;; (setq max-lisp-eval-depth 600) ;; 1000?
+  ;; (setq max-lisp-eval-depth 600)     ; 1000?
 
   ;; limit on number of Lisp variable bindings & unwind-protects
-  (setq max-specpdl-size 3000) ;; XEmacs 21.5.29
+  (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
 
   ;; speed up things by preventing garbage collections
-  (setq gc-cons-threshold 3500000) ;; make Gnus fast
+  (setq gc-cons-threshold 3500000)      ; make Gnus fast
   ;; from (info "(gnus)FAQ 9-2")
 
   ;; don't display messages at start and end of garbage collection (as it
@@ -13712,12 +13708,12 @@ See as well Print keybindings (pkb).
     (let ((data
            (with-output-to-string
              (let ((bindings '()))
-               (rloop ((for C in '("" "C-")) ;; Control
-                       (for M in '("" "M-")) ;; Meta
-                       (for A in '("" "A-")) ;; Alt
-                       (for S in '("" "S-")) ;; Shift
-                       (for H in '("" "H-")) ;; Hyper
-                       (for s in '("" "s-")) ;; super
+               (rloop ((for C in '("" "C-")) ; Control
+                       (for M in '("" "M-")) ; Meta
+                       (for A in '("" "A-")) ; Alt
+                       (for S in '("" "S-")) ; Shift
+                       (for H in '("" "H-")) ; Hyper
+                       (for s in '("" "s-")) ; super
                        (for x from 32 to 127))
                       (let* ((k (format "%s%s%s%s%s%s%c" C M A S H s x))
                              (key (ignore-errors (read-kbd-macro k))))
@@ -13773,7 +13769,7 @@ considered part of the word (depending on the current major mode).
 #+end_src
 
 #+begin_src emacs-lisp
-) ;; chapter 48 ends here
+)                                       ; chapter 48 ends here
 #+end_src
 
 * Emacs Display
@@ -14152,7 +14148,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
     ;; column at which Lui should break output
     (setq lui-fill-column 79)
 
-    ) ;; eval-after-load "circe" ends here
+    )                                   ; with-eval-after-load "circe" ends here
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -14322,7 +14318,7 @@ Eventually have a look as well at =input-decode-map=.
     (define-key key-translation-map [kp-insert] [insert])
     (define-key key-translation-map [kp-delete] [delete]))
 
-) ;; chapter G ends here
+)                                       ; chapter G ends here
 #+end_src
 
 * Reporting Bugs

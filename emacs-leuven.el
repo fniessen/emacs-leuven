@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131114.144
+;; Version: 20131114.1511
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131114.144]--")
+(message "* --[ Loading Emacs Leuven 20131114.1511]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -86,7 +86,7 @@
   "Value of `float-time' before loading the Emacs Leuven library.")
 
 ;; turn on Common Lisp support
-(eval-when-compile (require 'cl)) ;; provide useful things like `loop' and `setf'
+(eval-when-compile (require 'cl))       ; provide useful things like `loop' and `setf'
 
 ;;; User Customizable Internal Variables
 
@@ -170,9 +170,10 @@
        (when leuven-load-verbose
          (message "** %s" ,chaptername))
        (setq before-chapter-time (float-time))
-       (setq leuven--before-section-time (float-time)) ;; init section time
+       (setq leuven--before-section-time (float-time)) ; init section time
        (progn ,@body)
-       (leuven--section (concat "[" ,chaptername " ends here]") 'end-of-chapter) ;; add fake closing section
+       (leuven--section (concat "[" ,chaptername " ends here]") 'end-of-chapter)
+                                        ; add fake closing section
        (setq this-chapter-time
              (format "%.3f" (- (float-time) before-chapter-time)))
        (add-to-list 'leuven--load-times-list
@@ -296,14 +297,14 @@
   (modify-all-frames-parameters
    '((height . 32)))
 
-) ;; chapter 0 ends here
+)                                       ; chapter 0 ends here
 
 ;;* Debugging
 
 (leuven--chapter leuven-chapter-0-debugging "0 Debugging"
 
   ;; get the backtrace when uncaught errors occur
-  (setq debug-on-error t) ;; will be unset at the end
+  (setq debug-on-error t)               ; will be unset at the end
 
   (XEmacs
     (setq stack-trace-on-error t))
@@ -352,7 +353,7 @@
             ;; when leuven-load-verbose is nil)
             t)
         ;; error handler
-        (file-error ;; condition
+        (file-error                     ; condition
          (progn
            (when leuven-load-verbose
              (message "(Info) %sRequiring `%s' <from `%s'>... missing"
@@ -418,7 +419,7 @@
                    ,mode
                    (- (float-time) time-start)))))
 
-) ;; chapter 0 ends here
+)                                       ; chapter 0 ends here
 
 ;;* 47 Emacs Lisp (info "(emacs)Packages")
 
@@ -503,7 +504,7 @@
                          ("Description" 0 nil)])
                   (tabulated-list-init-header)))))
 
-) ;; chapter 47 ends here
+)                                       ; chapter 47 ends here
 
 ;;* Loading Libraries of Lisp Code for Emacs
 
@@ -562,7 +563,7 @@
                 ;; starts loading
                 (idle-require-mode 1))))
 
-) ;; chapter 0-loading-libraries ends here
+)                                       ; chapter 0-loading-libraries ends here
 
 ;;* 1 The Organization of the (info "(emacs)Screen")
 
@@ -575,7 +576,7 @@
   ;; don't truncate the message log buffer when it becomes large
   (setq message-log-max t)
 
-) ;; chapter 1 ends here
+)                                       ; chapter 1 ends here
 
 ;;* 6 (info "(emacs)Exiting") Emacs
 
@@ -585,7 +586,7 @@
   (global-set-key
     (kbd "<M-f4>") 'save-buffers-kill-terminal)
 
-) ;; chapter 6 ends here
+)                                       ; chapter 6 ends here
 
 ;;* 7 (info "(emacs)Basic") Editing Commands
 
@@ -596,7 +597,7 @@
   (leuven--section "7.1 (emacs)Inserting Text")
 
   ;; enter characters by their code in octal (for `C-q NNN <RET>')
-  (setq read-quoted-char-radix 8) ;; 16 for hexadecimal (for Unicode char)
+  (setq read-quoted-char-radix 8)       ; 16 for hexadecimal (for Unicode char)
 
 ;;** 7.2 (info "(emacs)Moving Point") Location
 
@@ -628,7 +629,7 @@
     (global-set-key
       (kbd "<S-f11>") 'redo))
 
-) ;; chapter 7 ends here
+)                                       ; chapter 7 ends here
 
 ;;* 8 The (info "(emacs)Minibuffer")
 
@@ -664,7 +665,7 @@
     (autoload 'dircolors "dircolors" nil t)
     (add-hook 'completion-list-mode-hook 'dircolors))
 
-) ;; chapter 8 ends here
+)                                       ; chapter 8 ends here
 
 ;;* 10 (info "(emacs)Help")
 
@@ -778,7 +779,7 @@
   (with-eval-after-load "woman"
     (defalias 'man 'woman))
 
-) ;; chapter 10 ends here
+)                                       ; chapter 10 ends here
 
 ;;* 12 (info "(emacs)Killing") and Moving Text
 
@@ -857,12 +858,12 @@
   ;; copy/paste with Gnome desktop
   (GNUEmacs
     ;; ;; cutting and pasting uses the clipboard
-    ;; (setq x-select-enable-clipboard t) ;; default in Emacs 24
+    ;; (setq x-select-enable-clipboard t) ; default in Emacs 24
 
     ;; make cut, copy and paste (keys and menu bar items) use the clipboard
     (menu-bar-enable-clipboard))
 
-) ;; chapter 12 ends here
+)                                       ; chapter 12 ends here
 
 ;;* 13 (info "(emacs)Registers")
 
@@ -904,7 +905,7 @@
     (setq bookmark-save-flag 1))
 
   ;; extensions to standard library `bookmark.el'
-  (with-eval-after-load "bookmark-XXX" ;; XXX here does not work!?
+  (with-eval-after-load "bookmark-XXX"  ; XXX here does not work!?
 
     (try-require 'bookmark+++XXX)
 
@@ -915,7 +916,7 @@
     ;; using vanilla Emacs
     (setq bmkp-propertize-bookmark-names-flag nil))
 
-) ;; chapter 13 ends here
+)                                       ; chapter 13 ends here
 
 ;;* 14 Controlling the (info "(emacs)Display")
 
@@ -1090,7 +1091,7 @@
 
   ;; ;; control highlighting of non-ASCII space and hyphen chars, using the
   ;; ;; `nobreak-space' or `escape-glyph' face respectively
-  ;; (setq nobreak-char-display t) ;; default
+  ;; (setq nobreak-char-display t)      ; default
 
   (GNUEmacs
     ;; whitespace mode
@@ -1115,8 +1116,8 @@
 
       ;; mappings for displaying characters
       (setq whitespace-display-mappings
-            '((space-mark ?\xA0 [?\u00B7] [?.]) ;; hard space - centered dot
-              (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) ;; tab - left quote mark
+            '((space-mark ?\xA0 [?\u00B7] [?.]) ; hard space - centered dot
+              (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) ; tab - left quote mark
       ))
 
   ;; ;; show zero-width spaces
@@ -1222,7 +1223,7 @@
         (interactive)
         (display-buffer ilog-buffer-name))))
 
-) ;; chapter 14 ends here
+)                                       ; chapter 14 ends here
 
 ;;* 15 (info "(emacs)Search")ing and Replacement
 
@@ -1242,10 +1243,10 @@
 
   (GNUEmacs
     ;; incremental search will open the contents
-    (setq search-invisible 'open) ;; XXX
+    (setq search-invisible 'open)       ; XXX
 
     ;; re-hide an invisible match right away
-    (setq isearch-hide-immediately nil)) ;; XXX
+    (setq isearch-hide-immediately nil)) ; XXX
 
   ;; scrolling commands are allowed during incremental search (without
   ;; canceling Isearch mode)
@@ -1330,7 +1331,7 @@
     ;; input word splited by space
     (setq moccur-split-word t))
 
-) ;; chapter 15 ends here
+)                                       ; chapter 15 ends here
 
 ;;* 16 Commands for (info "(emacs)Fixit") Typos
 
@@ -1341,7 +1342,7 @@
   (leuven--section "16.4 (emacs)Checking and Correcting Spelling")
 
   ;; spelling checker program
-  (setq ispell-program-name ;; XXX undefined
+  (setq ispell-program-name             ; XXX undefined
         (or (executable-find "aspell")
             (executable-find "ispell")
             ;; nil                         ; [default: "ispell"]
@@ -1545,7 +1546,7 @@
       (setq url (concat "http://www.answers.com/main/ntquery?s=" word))
       (w3m-browse-url url)))
 
-) ;; chapter 16 ends here
+)                                       ; chapter 16 ends here
 
 ;;* 17 (info "(emacs)Keyboard Macros")
 
@@ -1585,7 +1586,7 @@
   (global-set-key
     (kbd "<C-f8>") 'kmacro-name-last-macro)
 
-) ;; chapter 17 ends here
+)                                       ; chapter 17 ends here
 
 ;;* 18 (info "(emacs)Files") Handling
 
@@ -1706,7 +1707,7 @@
     ;; directory
     (setq backup-directory-alist
           ;; Emacs will `make-directory' it, if necessary
-          '((".*" . "~/.emacs.d/backups/")))) ;; regexp => directory mappings
+          '((".*" . "~/.emacs.d/backups/")))) ; regexp => directory mappings
 
   (XEmacs
     (when (try-require 'backup-dir)
@@ -1722,10 +1723,10 @@
   (setq version-control t)
 
   ;; ;; number of oldest versions to keep when a new numbered backup is made
-  ;; (setq kept-old-versions 0) ;; 2
+  ;; (setq kept-old-versions 0)         ; 2
 
   ;; number of newest versions to keep when a new numbered backup is made
-  (setq kept-new-versions 20) ;; 2
+  (setq kept-new-versions 20)           ; 2
 
   ;; delete excess backup versions silently
   (setq delete-old-versions t)
@@ -1737,9 +1738,9 @@
   With no argument, this command toggles the mode. Non-null
   prefix argument turns on the mode. Null prefix argument
   turns off the mode."
-    nil ;; initial value
-    " Sensitive" ;; indicator for the mode line
-    nil ;; minor mode bindings
+    nil                                 ; initial value
+    " Sensitive"                        ; indicator for the mode line
+    nil                                 ; minor mode bindings
     (if (symbol-value sensitive-mode)
         (progn
           ;; disable backups
@@ -1892,13 +1893,13 @@
   (with-eval-after-load "ange-ftp"
 
     ;; try to use passive mode in ftp, if the client program supports it
-    (setq ange-ftp-try-passive-mode t)) ;; needed for Ubuntu
+    (setq ange-ftp-try-passive-mode t)) ; needed for Ubuntu
 
 ;;*** TRAMP - Transparent Remote Access, Multiple Protocols
 
   (leuven--section "TRAMP")
 
-  (with-eval-after-load "tramp" ;; the autoloads are predefined
+  (with-eval-after-load "tramp"         ; the autoloads are predefined
 
 ;;* 4 (info "(tramp)Configuration") of TRAMP for use
 
@@ -1963,7 +1964,7 @@
 ;;* 9 How to Customize (info "(tramp)Traces and Profiles")
 
     ;; debugging Tramp
-    (setq tramp-verbose 6) ;; [maximum: 10]
+    (setq tramp-verbose 6)              ; [maximum: 10]
 
     ;; "turn off" the effect of `backup-directory-alist' for TRAMP
     ;; files
@@ -1971,13 +1972,13 @@
                  (cons tramp-file-name-regexp nil))
 
     ;; make Emacs beep after reading from or writing to the remote host
-    (defadvice tramp-handle-write-region ;; XXX
+    (defadvice tramp-handle-write-region ; XXX
       (after leuven-tramp-write-beep-advice activate)
       "Make Tramp beep after writing a file."
       (interactive)
       (beep))
 
-    (defadvice tramp-handle-do-copy-or-rename-file ;; XXX
+    (defadvice tramp-handle-do-copy-or-rename-file ; XXX
       (after leuven-tramp-copy-beep-advice activate)
       "Make Tramp beep after copying a file."
       (interactive)
@@ -2026,10 +2027,10 @@
   ;;! has to be set before your require recentf
   (setq recentf-exclude
         '(
-          "~$" ;; Emacs (and others) backup
-          "\\.log$" ;; LaTeX
-          "\\.toc$" ;; LaTeX
-          "\\.aux$" ;; LaTeX
+          "~$"                          ; Emacs (and others) backup
+          "\\.log$"                     ; LaTeX
+          "\\.toc$"                     ; LaTeX
+          "\\.aux$"                     ; LaTeX
           "/tmp/"
           ))
 
@@ -2046,7 +2047,7 @@
     (setq recentf-save-file "~/.emacs.d/.recentf")
 
     ;; (when using Tramp) turn off the cleanup feature of `recentf'
-    (setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
+    (setq recentf-auto-cleanup 'never)  ; disable before we start recentf!
 
     ;; save file names relative to my current home directory
     (setq recentf-filename-handlers '(abbreviate-file-name))
@@ -2104,7 +2105,7 @@
         (kbd "C-x r b") 'helm-bookmark-ext)
 
       ;; prefix key for all Helm commands in the global map
-      (setq helm-command-prefix-key "C-c C-f") ;; `C-x c'?
+      (setq helm-command-prefix-key "C-c C-f") ; `C-x c'?
 
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
@@ -2138,7 +2139,7 @@
 
       ;; do not show more candidates than this limit from individual
       ;; sources
-      (setq helm-candidate-number-limit 100) ;; more than one screen page
+      (setq helm-candidate-number-limit 100) ; more than one screen page
 
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-c-adaptive-save-history)
@@ -2168,7 +2169,7 @@
               (lambda ()
                 (auto-image-file-mode 1))))
 
-) ;; chapter 18 ends here
+)                                       ; chapter 18 ends here
 
 ;;* 19 Using Multiple (info "(emacs)Buffers")
 
@@ -2319,7 +2320,7 @@
 
   ;; ;; put the current buffer at the end of the list of all buffers
   ;; (global-set-key
-  ;;   (kbd "<S-f12>") 'bury-buffer) ;; TEMP Use this (instead of f12) when GDB'ing Emacs
+  ;;   (kbd "<S-f12>") 'bury-buffer)    ; TEMP Use this (instead of f12) when GDB'ing Emacs
 
 ;;** 19.7 (info "(emacs)Buffer Convenience") and Customization of Buffer Handling
 
@@ -2337,7 +2338,7 @@
     ;; distinguish directories by adding extra separator
     (setq uniquify-trailing-separator-p t))
 
-) ;; chapter 19 ends here
+)                                       ; chapter 19 ends here
 
 ;;* 20 Multiple (info "(emacs)Windows")
 
@@ -2455,7 +2456,7 @@
   ;; minimum width for splitting windows horizontally
   (setq split-width-threshold 160)
 
-) ;; chapter 20 ends here
+)                                       ; chapter 20 ends here
 
 ;;* 21 (info "(emacs)Frames") and Graphical Displays
 
@@ -2622,7 +2623,7 @@
   ;; use the echo area for help and GUD tooltips
   (setq tooltip-use-echo-area t)
 
-) ;; chapter 21 ends here
+)                                       ; chapter 21 ends here
 
 ;;* 22 (info "(emacs)International") Character Set Support
 
@@ -2674,7 +2675,7 @@
           (t
            (set-selection-coding-system 'utf-8))))
 
-) ;; chapter 22 ends here
+)                                       ; chapter 22 ends here
 
 ;;* 23 (info "(emacs)Modes")
 
@@ -2716,7 +2717,7 @@
   ;; ;; load generic modes which support e.g. batch files
   ;; (try-require 'generic-x)
 
-) ;; chapter 23 ends here
+)                                       ; chapter 23 ends here
 
 ;;* 24 (info "(emacs)Indentation")
 
@@ -2739,7 +2740,7 @@
   ;; indentation can't insert TABs
   (setq-default indent-tabs-mode nil)
 
-) ;; chapter 24 ends here
+)                                       ; chapter 24 ends here
 
 ;;* 25 Commands for (info "(emacs)Text") Human Languages
 
@@ -2806,7 +2807,7 @@
     "Replace space by nobreak-space in front of a colon."
     (interactive)
     (require 'org-element)
-    (cond ((eq (char-before) ?\ ) ;; normal space
+    (cond ((eq (char-before) ?\ )       ; normal space
            (backward-delete-char 1)
            (cond ((equal mode-name "PDFLaTeX")
                   (insert "~:"))
@@ -2817,14 +2818,14 @@
                       (insert " :")
                     (insert " :")))
                  (t
-                  (insert " :")))) ;; non-breaking space
+                  (insert " :"))))      ; non-breaking space
 
           ;; remove nobreak-space if two colons are put one after the
           ;; other (for terms and definitions in Org)
           ((and (eq (char-before) ?\:)
                 (eq (char-before (- (point) 1)) ?\ ))
            (backward-delete-char 2)
-           (insert " ::")) ;; normal space
+           (insert " ::"))              ; normal space
 
           (t
            (insert ":"))))
@@ -2936,7 +2937,7 @@
 
     ;; bind the outline minor mode functions to an easy to remember prefix
     ;; key (more accessible than the horrible prefix `C-c @')
-    (setq outline-minor-mode-prefix (kbd "C-c C-o")) ;; like in nXML mode
+    (setq outline-minor-mode-prefix (kbd "C-c C-o")) ; like in nXML mode
 
     ;; ;; make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
     ;; ;; mode outline navigation (written by Carsten Dominik)
@@ -3019,7 +3020,7 @@
   ;; (add-hook 'outline-minor-mode-hook
   ;;   (lambda ()
   ;;     (define-key outline-minor-mode-map [(control tab)] 'org-cycle)
-  ;;     (define-key outline-minor-mode-map [(shift tab)] 'org-global-cycle))) ;; backtab?
+  ;;     (define-key outline-minor-mode-map [(shift tab)] 'org-global-cycle))) ; backtab?
 
   (global-set-key
     (kbd "<S-tab>") 'org-cycle) ; that works (but on level 1+)
@@ -3038,8 +3039,8 @@
     (interactive)
     (org-cycle t))
 
-  (global-set-key ;; ok on Elisp, not on LaTeX
-    (kbd "C-M-]") 'org-cycle-global) ;; <S-tab>?
+  (global-set-key                       ; XXX ok on Elisp, not on LaTeX
+    (kbd "C-M-]") 'org-cycle-global)    ; <S-tab>?
 
   ;; (defun org-cycle-local ()
   ;;   (interactive)
@@ -3054,7 +3055,7 @@
       (beginning-of-defun))
     (org-cycle))
 
-  (global-set-key ;; ok on Elisp, not on LaTeX
+  (global-set-key                       ; XXX ok on Elisp, not on LaTeX
     (kbd "M-]") 'org-cycle-local)
 
 ;; C-M-] and M-] fold the whole buffer or the current defun.
@@ -3094,7 +3095,7 @@
     (autoload 'phonetize-region "phonetic"
       "Translate the region according to the phonetic alphabet." t))
 
-) ;; chapter 25 ends here
+)                                       ; chapter 25 ends here
 
 ;;* 25.9 Org Mode
 
@@ -3141,7 +3142,7 @@
   ;; face to be used by `font-lock' for highlighting in Org mode Emacs
   ;; buffers, and tags to be used to convert emphasis fontifiers for HTML
   ;; export
-  (setq org-emphasis-alist ;; remove the strike-through emphasis
+  (setq org-emphasis-alist              ; remove the strike-through emphasis
         '(("*" bold "<b>" "</b>")
           ("/" italic "<i>" "</i>")
           ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
@@ -3152,7 +3153,7 @@
   ;;       '(("&" (:weight ultra-bold :foreground "#000000" :background "#FBFF00"))
   ;;         ;; ("?" (:box t))
   ;;         ("^" (:weight ultra-bold :foreground "#393D90"))
-  ;;         ("!" (:weight ultra-bold :foreground "#B40000")) ;; = alert in some Wikis
+  ;;         ("!" (:weight ultra-bold :foreground "#B40000")) ; = alert in some Wikis
   ;;         ("*" bold "<b>" "</b>")
   ;;         ("/" italic "<i>" "</i>")
   ;;         ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
@@ -3182,7 +3183,7 @@
 
   ;; Unhiding edited areas
   ;;??? I like the idea of clustering undo but find it disconcerting
-  (setf org-self-insert-cluster-for-undo nil) ;; XXX undefined
+  (setf org-self-insert-cluster-for-undo nil) ; XXX undefined
   ;; somebody, I think Carsten, suggested this, and it might work for
   ;; you, but for some reason I commented it out. I don't remember what
   ;; the reason was. Maybe speed.
@@ -3240,10 +3241,10 @@
                         :underline nil)
 
     (setq org-ellipsis
-          (if (char-displayable-p ?\u25B7) ;; white right-pointing triangle
+          (if (char-displayable-p ?\u25B7) ; white right-pointing triangle
               ;; this test takes ~ 0.40s; hence, wrapped in eval-after-load
-              " \u25B7" ;; string
-            'org-ellipsis))) ;; face
+              " \u25B7"                 ; string
+            'org-ellipsis)))            ; face
 
   ;; <RET> follows links (except in tables)
   (setq org-return-follows-link t)
@@ -3269,7 +3270,7 @@
     (message "... Org Headlines")
 
     ;; insert an inline task (independent of outline hierarchy)
-    (when (try-require 'org-inlinetask) ;; needed
+    (when (try-require 'org-inlinetask) ; needed
 
       ;; initial state (TODO keyword) of inline tasks
       (setq org-inlinetask-default-state "TODO")
@@ -3336,7 +3337,7 @@
       (setq org-latex-format-inlinetask-function
             'org-latex-format-inlinetask))
 
-    ) ;; eval-after-load "org" ends here
+    )                                   ; with-eval-after-load "org" ends here
 
 ;;** (info "(org)Visibility cycling")
 
@@ -3533,15 +3534,15 @@
   ;; list of TODO entry keyword sequences and their interpretation (for
   ;; the different task states)
   (setq org-todo-keywords
-        '((sequence "NEW(n!)"   ;; proposal
-                    "TODO(t!)"  ;; open, not started
-                    "STRT(s!)"  ;; in progress
-                    "WAIT(w!)"  ;; on hold
-                    "DLGT(l!)"  ;; assigned, feedback
-                    "DFRD(f!)"  ;; someday, maybe, perhaps, may be undertaken in the future, wish
+        '((sequence "NEW(n!)"           ; proposal
+                    "TODO(t!)"          ; open, not started
+                    "STRT(s!)"          ; in progress
+                    "WAIT(w!)"          ; on hold
+                    "DLGT(l!)"          ; assigned, feedback
+                    "DFRD(f!)"          ; someday, maybe, perhaps, may be undertaken in the future, wish
                     "|"
-                    "DONE(d!)"  ;; completed, closed, resolved
-                    "CANX(x!)") ;; wontfix, rejected
+                    "DONE(d!)"          ; completed, closed, resolved
+                    "CANX(x!)")         ; wontfix, rejected
           (sequence "QTE(q!)" "QTD(Q!)" "|"
                     "APP(A!)" "EXP(E!)" "REJ(R!)")
           (sequence "OPENPO(O!)" "|"
@@ -3650,7 +3651,7 @@
   (setq org-log-states-order-reversed nil)
 
   ;; 5.3.2 insert state change notes and time stamps into a LOGBOOK drawer
-  (setq org-log-into-drawer t) ;; should be the default
+  (setq org-log-into-drawer t)          ; should be the default
 
   ;; ~5.3.2 heading for state change added to entries
   (with-eval-after-load "org"
@@ -3678,7 +3679,7 @@
   ;; automatically change a TODO entry to DONE when all children are done
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
-    (let (org-log-done org-log-states) ;; turn off logging
+    (let (org-log-done org-log-states)  ; turn off logging
       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
 
   (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
@@ -3941,11 +3942,11 @@
                (funcall 'org-clocking-p)
                (y-or-n-p "You are currently clocking time, clock out? "))
           (org-clock-out)
-        t)) ;; only fails on keyboard quit or error
+        t))                             ; only fails on keyboard quit or error
 
     (add-hook 'kill-emacs-query-functions 'leuven--org-query-clock-out)
 
-    ) ;; with-eval-after-load "org-clock" ends here
+    )                                   ; with-eval-after-load "org-clock" ends here
 
 ;;** 8.5 (info "(org)Effort estimates")
 
@@ -3971,13 +3972,13 @@
 
   ;; 9.1.2 directory with Org files
   (setq org-directory
-        (directory-file-name ;; this function removes the final slash
+        (directory-file-name            ; this function removes the final slash
          (cond ((file-directory-p "~/org/") "~/org/")
                (t "~/"))))
 
   ;; 9.1.2 default target for storing notes
   (setq org-default-notes-file
-        (concat org-directory "/refile.org")) ;; Inbox for collecting
+        (concat org-directory "/refile.org")) ; Inbox for collecting
 
   ;; 9.1.2 templates for the creation of capture buffers
 
@@ -4032,7 +4033,7 @@
 
     (add-to-list 'org-capture-templates
                  `("mt" "Create a TODO Action + edit" entry
-                   (file+headline "~/org/email.org" "Tasks") ;; #+FILETAGS: :mail:
+                   (file+headline "~/org/email.org" "Tasks") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
    %:date-timestamp-inactive
 
@@ -4045,7 +4046,7 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("mr" "Create a TODO Action Remind 3" entry
-                   (file+headline "~/org/email.org" "Tasks") ;; #+FILETAGS: :mail:
+                   (file+headline "~/org/email.org" "Tasks") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
    DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \" -0d\")
    %:date-timestamp-inactive
@@ -4235,13 +4236,13 @@ From %c"
       (if (equal "capture" (frame-parameter nil 'name))
           (delete-frame)))
 
-    (defadvice org-capture-destroy ;; XXX
+    (defadvice org-capture-destroy      ; XXX
       (after leuven-delete-capture-destroy-frame activate)
       "Advise capture-destroy to close the frame (if it is the capture frame)."
       (if (equal "capture" (frame-parameter nil 'name))
           (delete-frame)))
 
-    ) ;; with-eval-after-load "org-capture" ends here
+    )                                   ; with-eval-after-load "org-capture" ends here
 
 ;; bug when C-c C-l
   ;; ;; 4.6 shortcut links
@@ -4272,7 +4273,7 @@ From %c"
 
     (setq org-refile-targets
           `((nil
-             :maxlevel . 8) ;; current file
+             :maxlevel . 8)             ; current file
             (,(append org-agenda-files leuven-org-refile-extra-files)
              :maxlevel . 4)))
 
@@ -4354,18 +4355,18 @@ From %c"
   ;; (setq org-agenda-columns-add-appointments-to-effort-sum t)
 
   ;; show dated entries in the global `todo' list
-  (setq org-agenda-todo-ignore-with-date nil) ;;!! tricky setting
+  (setq org-agenda-todo-ignore-with-date nil) ;!! tricky setting
 
   ;; show entries with a time stamp in the global `todo' list
   (setq org-agenda-todo-ignore-timestamp nil)
 
   ;; 10.3.2 don't show scheduled entries in the global `todo' list
-  (setq org-agenda-todo-ignore-scheduled 'future) ;;!! tricky setting
+  (setq org-agenda-todo-ignore-scheduled 'future) ;!! tricky setting
   (setq org-agenda-todo-ignore-scheduled nil)
 
   ;; 10.3.2 don't show entries scheduled in the future in the global
   ;; `todo' list (until they are within the warning period)
-  (setq org-agenda-todo-ignore-deadlines 'near) ;;!! tricky setting
+  (setq org-agenda-todo-ignore-deadlines 'near) ;!! tricky setting
   (setq org-agenda-todo-ignore-deadlines nil)
 
   ;; 10.3.2 check also the sublevels of a TODO entry for TODO entries,
@@ -4396,9 +4397,9 @@ From %c"
 
   ;; 10.3.6 how to identify stuck projects
   (setq org-stuck-projects
-        '("+LEVEL=2/-DONE" ;; identify a project
-          ("TODO" "STRT") ;; TODO keywords
-          nil "")) ;; tags, regexp
+        '("+LEVEL=2/-DONE"              ; identify a project
+          ("TODO" "STRT")               ; TODO keywords
+          nil ""))                      ; tags, regexp
 
 ;;** 10.4 (info "(org)Presentation and sorting")
 
@@ -4406,11 +4407,11 @@ From %c"
 
   ;; 10.4 format specifications for the prefix of items in the agenda views
   (setq org-agenda-prefix-format
-        '((agenda . " %-11s%i %?-12t") ;; agenda
-          (timeline . " % s")          ;; timeline
-          (todo . " %i %-12:c")        ;; todo, alltodo
-          (tags . " %i %-12:c")        ;; tags, tags-todo, stuck
-          (search . " %i %-12:c")))    ;; search
+        '((agenda . " %-11s%i %?-12t")  ; agenda
+          (timeline . " % s")           ; timeline
+          (todo . " %i %-12:c")         ; todo, alltodo
+          (tags . " %i %-12:c")         ; tags, tags-todo, stuck
+          (search . " %i %-12:c")))     ; search
 
   ;; text preceding scheduled items in the agenda view
   (setq org-agenda-scheduled-leaders
@@ -4423,7 +4424,7 @@ From %c"
   ;; text preceding deadline items in the agenda view
   (setq org-agenda-deadline-leaders
         '("Deadline   "
-          "In %d d" ;; or "%d d left"
+          "In %d d"                     ; or "%d d left"
           "%d d ago"))
 
   ;; faces for showing deadlines in the agenda
@@ -4828,14 +4829,14 @@ From %c"
                              (org-agenda-prefix-format " %?-11t %i %-12:c% s")
                              (org-agenda-show-log 'clockcheck)
                              (org-agenda-span 7)
-                             (org-agenda-start-day "-1w") ;; recently done
+                             (org-agenda-start-day "-1w") ; recently done
                              (org-deadline-warning-days 0)))
 
                     (agenda ""
                             ((org-agenda-overriding-header "Next month")
                              (org-agenda-span 'month)
                              (org-agenda-start-day "+0d")
-                             (org-deadline-warning-days 0) ;; XXX
+                             (org-deadline-warning-days 0) ; XXX
                              ))
 
                     (todo "PROJ"
@@ -4853,7 +4854,7 @@ From %c"
                           ((org-agenda-overriding-header "In progress")
                            (org-agenda-todo-ignore-scheduled nil)))
 
-                    (todo "TODO" ;; don't include items from Inbox! XXX
+                    (todo "TODO"        ; don't include items from Inbox! XXX
                           ((org-agenda-overriding-header "Action list")))
 
                     ;; ignore scheduled and deadline entries, as they're
@@ -4862,7 +4863,7 @@ From %c"
                     (todo "WAIT|DLGT"
                           ((org-agenda-format-date "")
                            (org-agenda-overriding-header "Waiting for")
-                           (org-agenda-todo-ignore-deadlines 'all) ;; future?
+                           (org-agenda-todo-ignore-deadlines 'all) ; future?
                            (org-agenda-todo-ignore-scheduled t)))
 
                     ;; same reasoning as for WAIT|DLGT
@@ -5218,9 +5219,9 @@ From %c"
                 (and sd
                      (not (equal sd ""))
                      (org-time< sd (+ (org-time-today) (* n2 86400))))
-                (and (or (not dl) ;; no deadline
+                (and (or (not dl)       ; no deadline
                          (equal dl ""))
-                     (or (not sd) ;; nor scheduled
+                     (or (not sd)       ; nor scheduled
                          (equal sd ""))))
             (progn (outline-next-heading) (point)))))
 
@@ -5296,7 +5297,7 @@ From %c"
   (global-set-key
     (kbd "<C-f3>") 'leuven-org-todo-list-current-dir)
 
-    ) ;; with-eval-after-load "org-agenda" ends here
+    )                                   ; with-eval-after-load "org-agenda" ends here
 
 ;;** 10.7 (info "(org)Exporting Agenda Views")
 
@@ -5344,7 +5345,7 @@ From %c"
     (setq org-fontify-done-headline t)
 
     ;; 11.1 hide the emphasis marker characters
-    (setq org-hide-emphasis-markers t) ;; impact on table alignment!
+    (setq org-hide-emphasis-markers t)  ; impact on table alignment!
 
     (defun leuven-org-insert-image-or-take-screenshot (name)
       "Insert a link to an already existing image, or else to a screenshot.
@@ -5398,7 +5399,7 @@ From %c"
   (setq org-export-with-sub-superscripts '{})
 
   ;; 11.7 convert LaTeX fragments to images when exporting to HTML (using MathJax)
-  (setq org-export-with-LaTeX-fragments t) ;; XXX undefined?
+  (setq org-export-with-LaTeX-fragments t) ; XXX undefined?
 
   ;; highlight LaTeX and related syntax
   (setq org-highlight-latex-and-related
@@ -5469,7 +5470,7 @@ From %c"
     (add-to-list 'org-export-snippet-translation-alist
                  '("b" . "beamer"))
 
-    ) ;; with-eval-after-load "ox" ends here
+    )                                   ; with-eval-after-load "ox" ends here
 
   ;; execute buffer when exporting it (see some thread with Eric Schulte,
   ;; end of December 2010)
@@ -5481,7 +5482,7 @@ From %c"
   (with-eval-after-load "ox-html"
 
     ;; output type to be used by htmlize when formatting code snippets
-    (setq org-export-htmlize-output-type 'css) ;; XXX
+    (setq org-export-htmlize-output-type 'css) ; XXX
 
     ;; ;; URL pointing to a CSS file defining text colors for htmlized Emacs buffers
     ;; (setq org-export-htmlized-org-css-url "style.css")
@@ -5507,7 +5508,7 @@ From %c"
 
     ;; check that `tidy' is in PATH, and that configuration file exists
     (when (and (executable-find "tidy")
-               (file-exists-p "~/.tidyrc")) ;; tidy-config
+               (file-exists-p "~/.tidyrc")) ; tidy-config
 
       (defun leuven--export-html-final-filter (contents backend info)
         (if (not (eq backend 'html)) contents
@@ -5528,7 +5529,7 @@ From %c"
       (add-to-list 'org-export-filter-final-output-functions
                    'leuven--export-html-final-filter))
 
-    ) ;; eval-after-load "ox-html" ends here
+    )                                   ; with-eval-after-load "ox-html" ends here
 
 ;;** (info "(emacs-goodies-el)htmlize")
 
@@ -5574,7 +5575,7 @@ From %c"
     (global-set-key
       (kbd "M-P") 'htmlize-buffer)
 
-    ) ;; with-eval-after-load "htmlize" ends here
+    )                                   ; with-eval-after-load "htmlize" ends here
 
   ;; quick print preview (to Web browser) with `htmlize-view-buffer'
   (GNUEmacs
@@ -5712,7 +5713,7 @@ From %c"
     ;; 12.6.5 default position for LaTeX figures
     (setq org-latex-default-figure-position "!htbp")
 
-    ) ;; with-eval-after-load "ox-latex" ends here
+    )                                   ; with-eval-after-load "ox-latex" ends here
 
   ;; 12.6.6 Beamer class export
   ;; (require 'ox-beamer)
@@ -5906,19 +5907,19 @@ From %c"
   (with-eval-after-load "org"
     (message "... Org Languages")
 
-    (org-babel-do-load-languages ;; loads org, gnus-sum, etc...
+    (org-babel-do-load-languages        ; loads org, gnus-sum, etc...
      'org-babel-load-languages
      '((C . nil)
-       (R . t) ;; requires R and ess-mode
+       (R . t)                          ; requires R and ess-mode
        (awk . t)
        (calc . t)
-       (ditaa . t) ;; sudo aptitude install openjdk-6-jre
+       (ditaa . t)                      ; sudo aptitude install openjdk-6-jre
        (dot . t)
        (emacs-lisp . t)
-       (gnuplot . t) ;; requires gnuplot-mode
+       (gnuplot . t)                    ; requires gnuplot-mode
        (haskell . nil)
        (latex . t)
-       (ledger . t) ;; requires ledger
+       (ledger . t)                     ; requires ledger
        (ocaml . nil)
        (octave . nil)
        (org . t)
@@ -6030,11 +6031,8 @@ From %c"
   (leuven--section "15.10 (org)Interaction")
 
   ;; extension of Imenu
-  (when (and ;; `org-babel' has been loaded
-             (fboundp 'org-babel-execute-src-block)
-
-             ;; `imenu' has been loaded
-             (fboundp 'try-to-add-imenu))
+  (when (and (fboundp 'org-babel-execute-src-block) ; `org-babel' has been loaded
+             (fboundp 'try-to-add-imenu)) ; `imenu' has been loaded
 
     (try-require 'imenu+)
 
@@ -6064,7 +6062,7 @@ From %c"
   (with-eval-after-load "org"
     (message "... Org Crypt")
 
-    (when (try-require 'org-crypt) ;; loads org, gnus-sum, etc...
+    (when (try-require 'org-crypt)      ; loads org, gnus-sum, etc...
 
       ;; encrypt all entries before saving
       (org-crypt-use-before-save-magic)
@@ -6243,7 +6241,7 @@ From %c"
       ;; add the city
       (setq org-google-weather-format "%C %i %c, %l°-%h°")))
 
-) ;; chapter 25.9-org-mode ends here
+)                                       ; chapter 25.9-org-mode ends here
 
 ;;** 25.10 (info "(emacs)TeX Mode")
 
@@ -6256,9 +6254,9 @@ From %c"
     "Simple mode for colorizing LaTeX output."
     (set (make-local-variable 'font-lock-defaults)
          '((("^!.*" .
-             compilation-error-face) ;; LaTeX error
+             compilation-error-face)    ; LaTeX error
             ("^-+$" .
-             compilation-info-face) ;; Latexmk separator
+             compilation-info-face)     ; Latexmk separator
             ("^Package .* Warning: .*" .
              compilation-warning-face)
             ("Reference .* undefined" .
@@ -6443,8 +6441,7 @@ From %c"
         ;; scale factor for included previews
         (setq preview-scale-function 1.2))
 
-      (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-                                 ;; with AUCTeX LaTeX mode
+      (add-hook 'LaTeX-mode-hook 'turn-on-reftex) ; with AUCTeX LaTeX mode
 
       ;; minor mode with distinct support for `\label', `\ref', `\cite'
       ;; and `\index' in LaTeX
@@ -6457,9 +6454,9 @@ From %c"
         ;; menu generally comes up faster
         (setq reftex-use-multiple-selection-buffers t))
 
-      )) ;; with-eval-after-load "latex" ends here
+      ))                                ; with-eval-after-load "latex" ends here
 
-) ;; chapter 25.10-tex-mode ends here
+)                                       ; chapter 25.10-tex-mode ends here
 
 (leuven--chapter leuven-chapter-25-text "25 Commands for Human Languages"
 
@@ -6511,7 +6508,7 @@ From %c"
     ;; invoke html-helper-mode automatically on .jsp files
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode)))
 
-  (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode)) ;; alias for `nxml-mode'
+  (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode)) ; alias for `nxml-mode'
 
   (with-eval-after-load "nxml-mode"
 
@@ -6537,7 +6534,7 @@ From %c"
               (lambda ()
                 (hl-tags-mode 1))))
 
-) ;; chapter 25 ends here
+)                                       ; chapter 25 ends here
 
 ;;* 26 Editing (info "(emacs)Programs")
 
@@ -6570,7 +6567,7 @@ From %c"
       (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
       ;; show current function in mode line (based on Imenu)
-      (which-func-mode 1))) ;; ~ Stickyfunc mode (in header line)
+      (which-func-mode 1)))             ; ~ Stickyfunc mode (in header line)
 
 ;;** 26.3 (info "(emacs)Program Indent")ation
 
@@ -6788,7 +6785,7 @@ From %c"
     ;; identifiers
     (setq glasses-separator ""))
 
-) ;; chapter 26 ends here
+)                                       ; chapter 26 ends here
 
 ;;* 27 (info "(emacs)Building") Compiling and Testing Programs
 
@@ -6877,7 +6874,7 @@ From %c"
   (defun make-clean (&optional arg)
     "Run a make clean."
     (interactive "P")
-    (require 'compile) ;; needed for compile-internal
+    (require 'compile)                  ; needed for compile-internal
     (if arg
         (setq make-clean-command
               (read-string "Command: " make-clean-command)))
@@ -6983,11 +6980,11 @@ From %c"
 
   ;; maximum depth of lists to print in the result of the evaluation
   ;; commands before abbreviating them
-  (setq eval-expression-print-level nil) ;; no limit
+  (setq eval-expression-print-level nil) ; no limit
 
   ;; maximum length of lists to print in the result of the evaluation
   ;; commands before abbreviating them
-  (setq eval-expression-print-length nil) ;; no limit
+  (setq eval-expression-print-length nil) ; no limit
 
 ;;** 27.10 Lisp Interaction Buffers
 
@@ -7057,7 +7054,7 @@ From %c"
 
   ;; lang-emacs-lisp.el ends here
 
-) ;; chapter 27 ends here
+)                                       ; chapter 27 ends here
 
 ;;* 28 (info "(emacs)Maintaining") Programs
 
@@ -7067,7 +7064,7 @@ From %c"
 
   (leuven--section "28.1 (emacs)Version Control")
 
-  ;; (try-require 'vc) ;; for defining function `vc-switches' (XXX autoload?)
+  ;; (try-require 'vc)                  ; for defining function `vc-switches' (XXX autoload?)
 
 ;;*** 28.1.2 (info "(emacs)VC Mode Line")
 
@@ -7154,7 +7151,7 @@ From %c"
                (define-key vc-dir-mode-map
                  (kbd "E") 'vc-ediff)
                (define-key vc-dir-mode-map
-                 (kbd "#") 'vc-ediff-ignore-whitespace) ;; ediff-windows-wordwise?
+                 (kbd "#") 'vc-ediff-ignore-whitespace) ; ediff-windows-wordwise?
                ))
 
   (defun leuven-vc-dir-hide-up-to-date-and-unregistered ()
@@ -7194,7 +7191,7 @@ From %c"
     (interactive (list current-prefix-arg t))
     (require 'ediff)
     (let ((ediff-ignore-similar-regions t))
-      (call-interactively 'vc-ediff))) ;; XXX does not work yet
+      (call-interactively 'vc-ediff)))  ; XXX does not work yet
 
 ;;*** 28.1.12 (info "(emacs)Customizing VC")
 
@@ -7313,15 +7310,15 @@ From %c"
 
             ;; the idle scheduler with automatically reparse buffers in idle
             ;; time
-            global-semantic-idle-scheduler-mode ;; [minimum-features]
+            global-semantic-idle-scheduler-mode ; [minimum-features]
 
             ;; display a summary of the symbol at point in the echo area
             ;; (~ ElDoc)
-            global-semantic-idle-summary-mode ;; [code-helpers]
+            global-semantic-idle-summary-mode ; [code-helpers]
 
             ;; display a tooltip with a list of possible completions near
             ;; the cursor
-            global-semantic-idle-completions-mode ;; [gaudy-code-helpers]
+            global-semantic-idle-completions-mode ; [gaudy-code-helpers]
 
             ;; turn Semantic MRU Bookmarks on (keep track of the Most
             ;; Recently Used tags)
@@ -7329,13 +7326,13 @@ From %c"
 
             ;; enable Semantic-Stickyfunc mode (display a header line that
             ;; shows the declaration line of the function or tag)
-            global-semantic-stickyfunc-mode ;; [gaudy-code-helpers]
+            global-semantic-stickyfunc-mode ; [gaudy-code-helpers]
 
             ;; enable Semantic-Highlight-Func mode
-            global-semantic-highlight-func-mode ;; [excessive-code-helpers]
+            global-semantic-highlight-func-mode ; [excessive-code-helpers]
 
             ;; turn on all active decorations
-            global-semantic-decoration-mode ;; [gaudy-code-helpers]
+            global-semantic-decoration-mode ; [gaudy-code-helpers]
             ))
 
     ;; XXX if prog-mode, then Semantic will be launched after Emacs init, as
@@ -7450,7 +7447,7 @@ From %c"
     ;; (global-set-key (kbd "<M-right>") 'ecb-goto-window-edit1)
     )
 
-) ;; chapter 28 ends here
+)                                       ; chapter 28 ends here
 
 ;;* 29 (info "(emacs)Abbrevs")
 
@@ -7480,11 +7477,11 @@ From %c"
       (add-hook 'org-mode-hook
                 (lambda ()
                   ;; YASnippet (using the new org-cycle hooks)
-                  (set (make-local-variable 'yas/trigger-key) (kbd "tab")) ;; needed?
+                  (set (make-local-variable 'yas/trigger-key) (kbd "tab")) ; needed?
                   (add-to-list 'org-tab-first-hook
                                'yas/org-very-safe-expand)
                   (define-key yas/keymap
-                    (kbd "tab") 'yas/next-field) ;; `yas/next-field-or-maybe-expand'?
+                    (kbd "tab") 'yas/next-field) ; `yas/next-field-or-maybe-expand'?
                   ))
 
       (defvar leuven-yasnippet-my-snippets-dir
@@ -7546,13 +7543,13 @@ From %c"
     ;; list of expansion functions tried (in order) by `hippie-expand'
     ;; (completion strategy)
     (setq hippie-expand-try-functions-list
-          '(try-expand-dabbrev ;; current buffer
-            try-expand-dabbrev-visible ;; visible (parts of all) buffers
-            try-expand-dabbrev-all-buffers ;; all opened buffers
-            try-expand-dabbrev-from-kill ;; kill ring
-            try-complete-file-name-partially ;; file names
+          '(try-expand-dabbrev          ; current buffer
+            try-expand-dabbrev-visible  ; visible (parts of all) buffers
+            try-expand-dabbrev-all-buffers ; all opened buffers
+            try-expand-dabbrev-from-kill ; kill ring
+            try-complete-file-name-partially ; file names
             try-complete-file-name
-            try-expand-all-abbrevs ;; abbreviations
+            try-expand-all-abbrevs      ; abbreviations
             try-expand-list
             try-expand-line
             try-complete-lisp-symbol-partially
@@ -7560,12 +7557,12 @@ From %c"
             try-expand-whole-kill))
 
     (setq hippie-expand-try-functions-list
-          '(try-complete-file-name-partially
+          '(try-complete-file-name-partially ; file names
             try-complete-file-name
-            try-expand-all-abbrevs
-            try-expand-dabbrev
-            try-expand-dabbrev-all-buffers
-            try-expand-dabbrev-from-kill))
+            try-expand-all-abbrevs      ; abbreviations
+            try-expand-dabbrev          ; current buffer
+            try-expand-dabbrev-all-buffers ; all opened buffers
+            try-expand-dabbrev-from-kill)) ; kill ring
 
     ;; integrate YASnippet with `hippie-expand'
     (with-eval-after-load "yasnippet"
@@ -7618,7 +7615,7 @@ From %c"
         (define-key ac-complete-mode-map
           (kbd "<tab>") 'ac-expand))))
 
-) ;; chapter 29 ends here
+)                                       ; chapter 29 ends here
 
 ;;* 30 (info "(emacs)Dired"), the Directory Editor
 
@@ -7678,7 +7675,7 @@ From %c"
       )
 
     (define-key dired-mode-map
-      (kbd "e") 'browse-url-of-dired-file) ;; <C-RET>?
+      (kbd "e") 'browse-url-of-dired-file) ; <C-RET>?
 
     ;; open files using Windows associations
     (GNUEmacs
@@ -7791,7 +7788,7 @@ From %c"
               (lambda ()
                 (load "dired-x")))
 
-    ) ;; with-eval-after-load "dired" ends here
+    )                                   ; with-eval-after-load "dired" ends here
 
 ;;** Dired+
 
@@ -7823,7 +7820,7 @@ From %c"
     ;; use localized date/time format
     (setq ls-lisp-use-localized-time-format t))
 
-) ;; chapter 30 ends here
+)                                       ; chapter 30 ends here
 
 ;;* 31 The (info "(emacs)Calendar/Diary")
 
@@ -7885,7 +7882,7 @@ From %c"
 
   ;; insinuate appt if `diary-file' exists
   (if (file-readable-p "~/diary")
-      (try-require 'appt) ;; requires `diary-lib', which requires `diary-loaddefs'
+      (try-require 'appt)               ; requires `diary-lib', which requires `diary-loaddefs'
     (message "Appointment reminders library `appt' not loaded (no diary file found)"))
 
   (with-eval-after-load "appt"
@@ -7959,19 +7956,19 @@ From %c"
                              (org-agenda-file-p))
                     (org-agenda-to-appt)))))
 
-    ) ;; with-eval-after-load "appt" ends here
+    )                                   ; with-eval-after-load "appt" ends here
 
 ;;** 31.15 (info "(emacs)Advanced Calendar/Diary Usage")
 
   (leuven--section "31.15 (emacs)Advanced Calendar/Diary Usage")
 
   ;; get rid of some holidays
-  (setq holiday-general-holidays nil) ;; too U.S.-centric holidays
-  (setq holiday-oriental-holidays nil) ;; Oriental holidays
-  (setq holiday-hebrew-holidays nil) ;; religious holidays
-  (setq holiday-islamic-holidays nil) ;; religious holidays
-  (setq holiday-bahai-holidays nil) ;; Baha'i holidays
-  (setq holiday-solar-holidays nil) ;; sun-related holidays
+  (setq holiday-general-holidays nil)   ; too U.S.-centric holidays
+  (setq holiday-oriental-holidays nil)  ; Oriental holidays
+  (setq holiday-hebrew-holidays nil)    ; religious holidays
+  (setq holiday-islamic-holidays nil)   ; religious holidays
+  (setq holiday-bahai-holidays nil)     ; Baha'i holidays
+  (setq holiday-solar-holidays nil)     ; sun-related holidays
 
   ;; mark dates of holidays in the calendar window
   (setq calendar-mark-holidays-flag t)
@@ -8032,7 +8029,7 @@ From %c"
          ;; table layout.
          'display nil))))
 
-) ;; chapter 31 ends here
+)                                       ; chapter 31 ends here
 
 ;;* 32 (info "(emacs)Sending Mail")
 
@@ -8059,7 +8056,7 @@ From %c"
     ;; SMTP service port number
     (setq smtpmail-smtp-service 25))
 
-) ;; chapter 32 ends here
+)                                       ; chapter 32 ends here
 
 ;;* 34 (info "(emacs)Gnus")
 
@@ -8108,7 +8105,7 @@ From %c"
     (autoload 'bbdb-insinuate-gnus "bbdb-gnus"
       "Hook BBDB into Gnus.")
     ;; (autoload 'bbdb-insinuate-message "bbdb"
-    ;;   "Hook BBDB into `message-mode'.") ;; BBDB 2.35
+    ;;   "Hook BBDB into `message-mode'.") ; BBDB 2.35
     (autoload 'bbdb-insinuate-message "bbdb-message"
       "Hook BBDB into `message-mode'."))
 
@@ -8264,7 +8261,7 @@ From %c"
                              'face
                              "\\1\\3\\5\\7")))))
 
-) ;; chapter 34 ends here
+)                                       ; chapter 34 ends here
 
 ;;* 35 (info "(emacs)Document View")
 
@@ -8338,7 +8335,7 @@ From %c"
     (set-buffer-modified-p nil))
   (add-to-list 'auto-mode-alist '("\\.ppt\\'" . no-ppt))
 
-) ;; chapter 35 ends here
+)                                       ; chapter 35 ends here
 
 ;;* 36 Running (info "(emacs)Shell") Commands from Emacs
 
@@ -8502,7 +8499,7 @@ From %c"
 
     ;; (global-set-key (kbd "C-c t") 'multi-term-next)
     (global-set-key
-      (kbd "C-c T") 'multi-term)) ;; create a new one
+      (kbd "C-c T") 'multi-term))       ; create a new one
 
   ;; ;; run an inferior shell, with I/O through buffer `*shell*'
   ;; (global-set-key
@@ -8540,7 +8537,7 @@ From %c"
 
     ;; ;; let Emacs recognize Cygwin paths (e.g. /usr/local/lib)
     ;; (when (and running-ms-windows
-    ;;            (executable-find "mount")) ;; Cygwin bin directory found
+    ;;            (executable-find "mount")) ; Cygwin bin directory found
     ;;   (when (try-require 'cygwin-mount)
     ;;     (cygwin-mount-activate)))
 
@@ -8566,7 +8563,7 @@ From %c"
 
   ;; use Emacs as a server (with the `emacsclient' program)
   (GNUEmacs
-    (idle-require 'server) ;; after init
+    (idle-require 'server)              ; after init
     (with-eval-after-load "server"
 
       ;; test whether server is (definitely) running, avoiding the message of
@@ -8574,9 +8571,9 @@ From %c"
       (or (equal (server-running-p) t)
 
           ;; start the Emacs server
-          (server-start)))) ;; ~ 0.20 s
+          (server-start))))             ; ~ 0.20 s
 
-) ;; chapter 37 ends here
+)                                       ; chapter 37 ends here
 
 ;;* 38 (info "(emacs)Printing")
 
@@ -8643,7 +8640,7 @@ From %c"
 
           ;; list of extra switches to pass to `ps-lpr-command'
           ;; tell Ghostscript to query which printer to use
-          (setq ps-lpr-switches '("-query"))) ;; '("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2")
+          (setq ps-lpr-switches '("-query"))) ; '("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2")
 
       (setq ps-printer-name "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
       (setq ps-lpr-command "")
@@ -8669,7 +8666,7 @@ From %c"
     (setq ps-top-margin 32)
 
     ;; Page layout: Header [file-name     2001-06-18 Mon]
-    (setq ps-print-header-frame nil) ;; no box around the header
+    (setq ps-print-header-frame nil)    ; no box around the header
     ;; see http://www.emacswiki.org/emacs/PsPrintPackage-23
     (setq ps-header-frame-alist '((fore-color . "#CCCCCC")))
     (setq ps-header-lines 1)
@@ -8685,15 +8682,15 @@ From %c"
     (setq ps-footer-offset 14)
     (setq ps-footer-line-pad .50)
     (setq ps-print-footer t)
-    (setq ps-print-footer-frame nil) ;; no box around the footer
+    (setq ps-print-footer-frame nil)    ; no box around the footer
     (setq ps-footer-frame-alist '((fore-color . "#666666")))
     (setq ps-footer-lines 1)
     (setq ps-footer-font-family 'Helvetica)
     (setq ps-footer-font-size 8)
     (setq ps-left-footer nil)
-    (setq ps-right-footer (list "/pagenumberstring load")) ;; Page n of m
+    (setq ps-right-footer (list "/pagenumberstring load")) ; Page n of m
 
-    (setq ps-font-family 'Courier) ;; see `ps-font-info-database'
+    (setq ps-font-family 'Courier)      ; see `ps-font-info-database'
     ;; legitimate values include Courier, Helvetica, NewCenturySchlbk,
     ;; Palatino and Times
     (setq ps-font-size 9.1)
@@ -8702,7 +8699,7 @@ From %c"
 
     (setq ps-line-spacing 3))
 
-) ;; chapter 38 ends here
+)                                       ; chapter 38 ends here
 
 ;;* 39 (info "(emacs)Sorting") Text
 
@@ -8712,7 +8709,7 @@ From %c"
   (global-set-key
     (kbd "C-c ^") 'sort-lines)
 
-) ;; chapter 39 ends here
+)                                       ; chapter 39 ends here
 
 ;;* 42 (info "(emacs)Saving Emacs Sessions")
 
@@ -8722,7 +8719,7 @@ From %c"
   (with-eval-after-load "saveplace"
 
     ;; automatically save place in each file
-    (setq-default save-place t) ;; default value for all buffers
+    (setq-default save-place t)         ; default value for all buffers
 
     ;; name of the file that records `save-place-alist' value
     (setq save-place-file
@@ -8733,7 +8730,7 @@ From %c"
     ;; do not make backups of master save-place file
     (setq save-place-version-control "never"))
 
-) ;; chapter 42 ends here
+)                                       ; chapter 42 ends here
 
 ;;* 45 (info "(emacs)Hyperlinking")
 
@@ -8762,7 +8759,7 @@ From %c"
   ;; (setq browse-url-generic-program
   ;;       (when (and (display-graphic-p)
   ;;                  (not running-ms-windows))
-  ;;         (executable-find "firefox"))) ;; could be `google-chrome'
+  ;;         (executable-find "firefox"))) ; could be `google-chrome'
 
   (defun leuven--browse (url)
     "If prefix is specified, use the system default browser, else use the
@@ -8790,7 +8787,7 @@ From %c"
 
   (leuven--section "Web search")
 
-  (when t ;; (try-require 'browse-url)
+  (when t                               ; (try-require 'browse-url)
 
     (defconst leuven--google-maxlen (* 32 7)
       "Maximum length of search string to send. This prevents you from
@@ -9092,7 +9089,7 @@ From %c"
     (define-key menu-bar-tools-menu
       [games] nil))
 
-) ;; chapter 46 ends here
+)                                       ; chapter 46 ends here
 
 ;;* 48 (info "(emacs)Customization")
 
@@ -9126,13 +9123,13 @@ From %c"
 
   ;; ;; limit serving to catch infinite recursions for you before they
   ;; ;; cause actual stack overflow in C, which would be fatal for Emacs
-  ;; (setq max-lisp-eval-depth 600) ;; 1000?
+  ;; (setq max-lisp-eval-depth 600)     ; 1000?
 
   ;; limit on number of Lisp variable bindings & unwind-protects
-  (setq max-specpdl-size 3000) ;; XEmacs 21.5.29
+  (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
 
   ;; speed up things by preventing garbage collections
-  (setq gc-cons-threshold 3500000) ;; make Gnus fast
+  (setq gc-cons-threshold 3500000)      ; make Gnus fast
   ;; from (info "(gnus)FAQ 9-2")
 
   ;; don't display messages at start and end of garbage collection (as it
@@ -9245,12 +9242,12 @@ From %c"
     (let ((data
            (with-output-to-string
              (let ((bindings '()))
-               (rloop ((for C in '("" "C-")) ;; Control
-                       (for M in '("" "M-")) ;; Meta
-                       (for A in '("" "A-")) ;; Alt
-                       (for S in '("" "S-")) ;; Shift
-                       (for H in '("" "H-")) ;; Hyper
-                       (for s in '("" "s-")) ;; super
+               (rloop ((for C in '("" "C-")) ; Control
+                       (for M in '("" "M-")) ; Meta
+                       (for A in '("" "A-")) ; Alt
+                       (for S in '("" "S-")) ; Shift
+                       (for H in '("" "H-")) ; Hyper
+                       (for s in '("" "s-")) ; super
                        (for x from 32 to 127))
                       (let* ((k (format "%s%s%s%s%s%s%c" C M A S H s x))
                              (key (ignore-errors (read-kbd-macro k))))
@@ -9288,7 +9285,7 @@ From %c"
   ;;           (lambda ()
   ;;             (modify-syntax-entry ?- "w")))
 
-) ;; chapter 48 ends here
+)                                       ; chapter 48 ends here
 
 ;;* Emacs Display
 
@@ -9387,7 +9384,7 @@ From %c"
     (define-key key-translation-map [kp-insert] [insert])
     (define-key key-translation-map [kp-delete] [delete]))
 
-) ;; chapter G ends here
+)                                       ; chapter G ends here
 
 ;; Recovery from Problems
 
@@ -9422,7 +9419,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131114.1441]--")
+(message "* --[ Loaded Emacs Leuven 20131114.1513]--")
 
 (provide 'emacs-leuven)
 
