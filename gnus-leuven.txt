@@ -1,7 +1,7 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2013-11-12 Tue 16:04>
+#+Time-stamp: <2013-11-14 Thu 15:30>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1557,9 +1557,6 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
         ;; turn on the `org-mode' table editor
         (turn-on-orgtbl)
 
-        ;; ;; turn on orgstruct-mode
-        ;; (turn-on-orgstruct)
-
         ;; turn on (the enhanced version of) orgstruct-mode
         (turn-on-orgstruct++)
 
@@ -1786,7 +1783,7 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
       (setq mm-url-arguments '("-q" "-O" "-"))
 
       ;; how to find the parent article
-      (when (try-require 'nnweb-XXX) ;; not sure it really works!?
+      (when (try-require 'nnweb-XXX)    ; not sure it really works!?
         (setq gnus-refer-article-method
               '(
                 ;; first try the current method

@@ -1273,9 +1273,6 @@
         ;; turn on the `org-mode' table editor
         (turn-on-orgtbl)
 
-        ;; ;; turn on orgstruct-mode
-        ;; (turn-on-orgstruct)
-
         ;; turn on (the enhanced version of) orgstruct-mode
         (turn-on-orgstruct++)
 
@@ -1490,7 +1487,7 @@
       (setq mm-url-arguments '("-q" "-O" "-"))
 
       ;; how to find the parent article
-      (when (try-require 'nnweb-XXX) ;; not sure it really works!?
+      (when (try-require 'nnweb-XXX)    ; not sure it really works!?
         (setq gnus-refer-article-method
               '(
                 ;; first try the current method
