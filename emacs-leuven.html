@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-14 Thu 16:46 -->
+  <title>Emacs Leuven</title><!-- 2013-11-14 Thu 19:05 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131114.1645</span>
+"color: #008200; font-style: italic;">Version: 20131114.1903</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131114.1645]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131114.1903]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -1885,22 +1885,20 @@
 "color: #008200; font-style: italic;">eval-after-load</span><span style=
 "color: #008200; font-style: italic;">' (added in GNU Emacs 24.4)</span>
   (<span style="color: #0000FF;">defmacro</span> <span style=
-"color: #006699;">with-eval-after-load</span> (mode <span style=
+"color: #006699;">with-eval-after-load</span> (file <span style=
 "color: #666666;">&amp;rest</span> body)
-    <span style="color: #008000;">"`</span><span style=
-"color: #008000;">eval-after-load</span><span style=
-"color: #008000;">' MODE evaluate BODY."</span>
-    (<span style="color: #0000FF;">declare</span> (indent defun))
-    `(eval-after-load ,mode
+    <span style="color: #008000;">"Execute BODY after FILE is loaded."</span>
+    (<span style="color: #0000FF;">declare</span> (indent 1) (debug t))
+    `(eval-after-load ,file
        '(<span style="color: #0000FF;">progn</span>
           (message <span style=
 "color: #FF4700;">"(Info) {{{ Running code block specific to `</span><span style="color: #FF4700;">%s</span><span style="color: #FF4700;">'..."</span>
-                   ,mode)
+                   ,file)
           (setq time-start (float-time))
           ,@body
           (message <span style=
 "color: #FF4700;">"(Info) }}} Running code block specific to `</span><span style="color: #FF4700;">%s</span><span style="color: #FF4700;">'... done in %.3f s"</span>
-                   ,mode
+                   ,file
                    (- (float-time) time-start)))))
 </pre>
           </div>
@@ -22223,7 +22221,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200; font-style: italic;">(when (try-require 'comint)</span>
 
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">regexp to recognize prompts in the inferior process</span>
+"color: #008200; font-style: italic;">regexp to recognize prompts in the inferior process </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> R prompt different from sh prompt...</span>
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(set it for Org-babel sh session to work!)</span>
     <span style="color: #008200;">;; </span><span style=
@@ -24998,7 +24996,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131114.1646]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131114.1904]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-14 Thu 16:42>
+# Time-stamp: <2013-11-14 Thu 17:03>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -479,17 +479,17 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
 #+begin_src emacs-lisp
   ;; wrapper around `eval-after-load' (added in GNU Emacs 24.4)
-  (defmacro with-eval-after-load (mode &rest body)
-    "`eval-after-load' MODE evaluate BODY."
-    (declare (indent defun))
-    `(eval-after-load ,mode
+  (defmacro with-eval-after-load (file &rest body)
+    "Execute BODY after FILE is loaded."
+    (declare (indent 1) (debug t))
+    `(eval-after-load ,file
        '(progn
           (message "(Info) {{{ Running code block specific to `%s'..."
-                   ,mode)
+                   ,file)
           (setq time-start (float-time))
           ,@body
           (message "(Info) }}} Running code block specific to `%s'... done in %.3f s"
-                   ,mode
+                   ,file
                    (- (float-time) time-start)))))
 #+end_src
 
@@ -12541,7 +12541,7 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
   ;; general command-interpreter-in-a-buffer stuff (lisp, shell, R, ...)
   ;; (when (try-require 'comint)
 
-    ;; regexp to recognize prompts in the inferior process
+    ;; regexp to recognize prompts in the inferior process XXX R prompt different from sh prompt...
     ;; (set it for Org-babel sh session to work!)
     ;; (defun set-shell-prompt-regexp ()
       (setq comint-prompt-regexp shell-prompt-pattern)

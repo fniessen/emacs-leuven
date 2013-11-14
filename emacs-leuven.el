@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131114.1643
+;; Version: 20131114.1902
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131114.1643]--")
+(message "* --[ Loading Emacs Leuven 20131114.1902]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -406,17 +406,17 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                             (- (float-time) time-start)))))))))
 
   ;; wrapper around `eval-after-load' (added in GNU Emacs 24.4)
-  (defmacro with-eval-after-load (mode &rest body)
-    "`eval-after-load' MODE evaluate BODY."
-    (declare (indent defun))
-    `(eval-after-load ,mode
+  (defmacro with-eval-after-load (file &rest body)
+    "Execute BODY after FILE is loaded."
+    (declare (indent 1) (debug t))
+    `(eval-after-load ,file
        '(progn
           (message "(Info) {{{ Running code block specific to `%s'..."
-                   ,mode)
+                   ,file)
           (setq time-start (float-time))
           ,@body
           (message "(Info) }}} Running code block specific to `%s'... done in %.3f s"
-                   ,mode
+                   ,file
                    (- (float-time) time-start)))))
 
 )                                       ; chapter 0 ends here
@@ -8412,7 +8412,7 @@ From %c"
   ;; general command-interpreter-in-a-buffer stuff (lisp, shell, R, ...)
   ;; (when (try-require 'comint)
 
-    ;; regexp to recognize prompts in the inferior process
+    ;; regexp to recognize prompts in the inferior process XXX R prompt different from sh prompt...
     ;; (set it for Org-babel sh session to work!)
     ;; (defun set-shell-prompt-regexp ()
       (setq comint-prompt-regexp shell-prompt-pattern)
@@ -9375,7 +9375,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131114.1645]--")
+(message "* --[ Loaded Emacs Leuven 20131114.1903]--")
 
 (provide 'emacs-leuven)
 
