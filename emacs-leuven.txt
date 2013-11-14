@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-14 Thu 15:45>
+# Time-stamp: <2013-11-14 Thu 16:42>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1305,7 +1305,8 @@ directory.
 
     ;; where to save the bookmarks
     (setq bookmark-default-file "~/.emacs.d/bookmarks.bmk")
-    ;;! a .txt extension would load Org at the time bookmark is required!
+                                        ;! a .txt extension would load Org at
+                                        ;! the time `bookmark' is required!
 
     ;; each command that sets a bookmark will also save your bookmarks
     (setq bookmark-save-flag 1))
@@ -2258,9 +2259,9 @@ of possible corrections for misspelled word before point.
       ;; (setq dictionary-proxy-port 8080) ; XXX
 
       ;; use proxy
-      (setq url-proxy-services
-            ;;! Emacs expects just hostname and port in `url-proxy-services',
-            ;;! NOT prefixed with "http://"
+      (setq url-proxy-services          ;! Emacs expects just hostname and port
+                                        ;! in `url-proxy-services',
+                                        ;! NOT prefixed with "http://"
             `(("http"     . ,(getenv "http_proxy"))
               ("ftp"      . ,(getenv "http_proxy"))
               ("no_proxy" . "^.*example.com")))
@@ -3039,8 +3040,8 @@ root using the =sudo= tramp method.
   (leuven--section "18.17 (emacs)File Conveniences")
 
   ;; filenames excluded from the recent list
-  ;;! has to be set before your require recentf
-  (setq recentf-exclude
+  (setq recentf-exclude                 ;! has to be set before your require `recentf'
+
         '(
           "~$"                          ; Emacs (and others) backup
           "\\.log$"                     ; LaTeX
@@ -3663,6 +3664,7 @@ one.
   ;; title bar display of visible frames
   (setq frame-title-format
         (format "Emacs %s rev:%s of %s    PID:%d"
+                ;; (capitalize (symbol-name system-type))
                 emacs-version
                 (ignore-errors
                   (replace-regexp-in-string " .*" "" emacs-bzr-version))
@@ -8422,9 +8424,9 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
   (setq org-edit-src-content-indentation 2)
 
   ;; fontify code in code blocks (highlight syntax in the org-buffer)
-  (setq org-src-fontify-natively t)
-  ;;! create overlay `org-block-background' and remove text property
-  ;;! `org-block'
+  (setq org-src-fontify-natively t)     ;! create overlay
+                                        ;! `org-block-background' and remove
+                                        ;! text property `org-block'
 
   ;; preserve spaces and `tab' characters in source code blocks
   (setq org-src-preserve-indentation t)
@@ -11942,12 +11944,15 @@ It uses =notify-send= (if the =libnotify-bin= Ubuntu package is installed).
       ;; add today's appointments (found in `org-agenda-files') each time the
       ;; agenda buffer is (re)built
       (add-hook 'org-finalize-agenda-hook
-                'org-agenda-to-appt)
-      ;;! don't use the `org-agenda-mode-hook' because the Org agenda files
-      ;;! would be opened once by `org-agenda-to-appt', and then killed by
-      ;;! `org-release-buffers' (because `org-agenda-to-appt' closes all the
-      ;;! files it opened itself -- as they weren't already opened), to be
-      ;;! finally re-opened!
+                'org-agenda-to-appt)    ;! don't use the `org-agenda-mode-hook'
+                                        ;! because the Org agenda files would
+                                        ;! be opened once by
+                                        ;! `org-agenda-to-appt', and then
+                                        ;! killed by `org-release-buffers'
+                                        ;! (because `org-agenda-to-appt' closes
+                                        ;! all the files it opened itself -- as
+                                        ;! they weren't already opened), to be
+                                        ;! finally re-opened!
 
       ;; add today's appointments (found in `org-agenda-files') each time such a
       ;; file is saved
@@ -13061,8 +13066,9 @@ You may wish to set =ps-print-landscape= to =t=.
     ;; name of the file that records `save-place-alist' value
     (setq save-place-file
           (convert-standard-filename "~/.emacs.d/.places"))
-    ;;! a .txt extension would load Org at the time Emacs is killed (if not
-    ;;! already loaded)!
+                                        ;! a .txt extension would load `org' at
+                                        ;! the time Emacs is killed (if not
+                                        ;! already loaded)!
 
     ;; do not make backups of master save-place file
     (setq save-place-version-control "never"))

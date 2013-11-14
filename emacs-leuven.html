@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-14 Thu 15:50 -->
+  <title>Emacs Leuven</title><!-- 2013-11-14 Thu 16:46 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131114.1549</span>
+"color: #008200; font-style: italic;">Version: 20131114.1645</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131114.1549]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131114.1645]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -3290,8 +3290,14 @@
 "color: #008200; font-style: italic;">where to save the bookmarks</span>
     (setq bookmark-default-file <span style=
 "color: #FF4700;">"~/.emacs.d/bookmarks.bmk"</span>)
-    <span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">! a .txt extension would load Org at the time bookmark is required!</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! a .txt extension would load Org at</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! the time `</span><span style=
+"color: #008200; font-style: italic;">bookmark</span><span style=
+"color: #008200; font-style: italic;">' is required!</span>
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">each command that sets a bookmark will also save your bookmarks</span>
@@ -4854,10 +4860,16 @@
 
       <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">use proxy</span>
-      (setq url-proxy-services
-            <span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">! Emacs expects just hostname and port in `</span><span style="color: #008200; font-style: italic;">url-proxy-services</span><span style="color: #008200; font-style: italic;">',</span>
-            <span style="color: #008200;">;;</span><span style=
+      (setq url-proxy-services          <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! Emacs expects just hostname and port</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! in `</span><span style=
+"color: #008200; font-style: italic;">url-proxy-services</span><span style=
+"color: #008200; font-style: italic;">',</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
 "color: #008200; font-style: italic;">! NOT prefixed with "http://"</span>
             `((<span style=
 "color: #FF4700;">"http"</span>     . ,(getenv <span style=
@@ -6120,9 +6132,10 @@ M-: (executable-find "diff") RET
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">filenames excluded from the recent list</span>
-  <span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">! has to be set before your require recentf</span>
-  (setq recentf-exclude
+  (setq recentf-exclude                 <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! has to be set before your require `</span><span style="color: #008200; font-style: italic;">recentf</span><span style="color: #008200; font-style: italic;">'</span>
+
         '(
           <span style=
 "color: #FF4700;">"~$"</span>                          <span style=
@@ -7115,6 +7128,8 @@ M-: (executable-find "diff") RET
   (setq frame-title-format
         (format <span style=
 "color: #FF4700;">"Emacs %s rev:%s of %s    PID:%d"</span>
+                <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(capitalize (symbol-name system-type))</span>
                 emacs-version
                 (ignore-<span style=
 "color: #CC0000; background-color: #FFFF88;">error</span>s
@@ -15200,13 +15215,17 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">fontify code in code blocks (highlight syntax in the org-buffer)</span>
-  (setq org-src-fontify-natively t)
-  <span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">! create overlay `</span><span style=
-"color: #008200; font-style: italic;">org-block-background</span><span style=
-"color: #008200; font-style: italic;">' and remove text property</span>
-  <span style="color: #008200;">;;</span><span style=
+  (setq org-src-fontify-natively t)     <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! create overlay</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
 "color: #008200; font-style: italic;">! `</span><span style=
+"color: #008200; font-style: italic;">org-block-background</span><span style=
+"color: #008200; font-style: italic;">' and remove</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! text property `</span><span style=
 "color: #008200; font-style: italic;">org-block</span><span style=
 "color: #008200; font-style: italic;">'</span>
 
@@ -21125,22 +21144,40 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">agenda buffer is (re)built</span>
       (add-hook 'org-finalize-agenda-hook
-                'org-agenda-to-appt)
-      <span style="color: #008200;">;;</span><span style=
+                'org-agenda-to-appt)    <span style=
+"color: #008200;">;</span><span style=
 "color: #008200; font-style: italic;">! don't use the `</span><span style=
 "color: #008200; font-style: italic;">org-agenda-mode-hook</span><span style=
-"color: #008200; font-style: italic;">' because the Org agenda files</span>
-      <span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">! would be opened once by `</span><span style="color: #008200; font-style: italic;">org-agenda-to-appt</span><span style="color: #008200; font-style: italic;">', and then killed by</span>
-      <span style="color: #008200;">;;</span><span style=
+"color: #008200; font-style: italic;">'</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! because the Org agenda files would</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! be opened once by</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
 "color: #008200; font-style: italic;">! `</span><span style=
-"color: #008200; font-style: italic;">org-release-buffers</span><span style=
-"color: #008200; font-style: italic;">' (because `</span><span style=
 "color: #008200; font-style: italic;">org-agenda-to-appt</span><span style=
-"color: #008200; font-style: italic;">' closes all the</span>
-      <span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">! files it opened itself -- as they weren't already opened), to be</span>
-      <span style="color: #008200;">;;</span><span style=
+"color: #008200; font-style: italic;">', and then</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! killed by `</span><span style=
+"color: #008200; font-style: italic;">org-release-buffers</span><span style=
+"color: #008200; font-style: italic;">'</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! (because `</span><span style=
+"color: #008200; font-style: italic;">org-agenda-to-appt</span><span style=
+"color: #008200; font-style: italic;">' closes</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! all the files it opened itself -- as</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! they weren't already opened), to be</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
 "color: #008200; font-style: italic;">! finally re-opened!</span>
 
       <span style="color: #008200;">;; </span><span style=
@@ -23037,9 +23074,14 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (setq save-place-file
           (convert-standard-filename <span style=
 "color: #FF4700;">"~/.emacs.d/.places"</span>))
-    <span style="color: #008200;">;;</span><span style=
-"color: #008200; font-style: italic;">! a .txt extension would load Org at the time Emacs is killed (if not</span>
-    <span style="color: #008200;">;;</span><span style=
+                                        <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! a .txt extension would load `</span><span style="color: #008200; font-style: italic;">org</span><span style="color: #008200; font-style: italic;">' at</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! the time Emacs is killed (if not</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
 "color: #008200; font-style: italic;">! already loaded)!</span>
 
     <span style="color: #008200;">;; </span><span style=
@@ -24956,7 +24998,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131114.1549]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131114.1646]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

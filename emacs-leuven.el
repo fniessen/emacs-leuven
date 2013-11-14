@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131114.1546
+;; Version: 20131114.1643
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131114.1546]--")
+(message "* --[ Loading Emacs Leuven 20131114.1643]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -899,7 +899,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
     ;; where to save the bookmarks
     (setq bookmark-default-file "~/.emacs.d/bookmarks.bmk")
-    ;;! a .txt extension would load Org at the time bookmark is required!
+                                        ;! a .txt extension would load Org at
+                                        ;! the time `bookmark' is required!
 
     ;; each command that sets a bookmark will also save your bookmarks
     (setq bookmark-save-flag 1))
@@ -1514,9 +1515,9 @@ nil. Save execution times in the global list `leuven--load-times-list'."
       ;; (setq dictionary-proxy-port 8080) ; XXX
 
       ;; use proxy
-      (setq url-proxy-services
-            ;;! Emacs expects just hostname and port in `url-proxy-services',
-            ;;! NOT prefixed with "http://"
+      (setq url-proxy-services          ;! Emacs expects just hostname and port
+                                        ;! in `url-proxy-services',
+                                        ;! NOT prefixed with "http://"
             `(("http"     . ,(getenv "http_proxy"))
               ("ftp"      . ,(getenv "http_proxy"))
               ("no_proxy" . "^.*example.com")))
@@ -2024,8 +2025,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (leuven--section "18.17 (emacs)File Conveniences")
 
   ;; filenames excluded from the recent list
-  ;;! has to be set before your require recentf
-  (setq recentf-exclude
+  (setq recentf-exclude                 ;! has to be set before your require `recentf'
+
         '(
           "~$"                          ; Emacs (and others) backup
           "\\.log$"                     ; LaTeX
@@ -2506,6 +2507,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   ;; title bar display of visible frames
   (setq frame-title-format
         (format "Emacs %s rev:%s of %s    PID:%d"
+                ;; (capitalize (symbol-name system-type))
                 emacs-version
                 (ignore-errors
                   (replace-regexp-in-string " .*" "" emacs-bzr-version))
@@ -5805,9 +5807,9 @@ From %c"
   (setq org-edit-src-content-indentation 2)
 
   ;; fontify code in code blocks (highlight syntax in the org-buffer)
-  (setq org-src-fontify-natively t)
-  ;;! create overlay `org-block-background' and remove text property
-  ;;! `org-block'
+  (setq org-src-fontify-natively t)     ;! create overlay
+                                        ;! `org-block-background' and remove
+                                        ;! text property `org-block'
 
   ;; preserve spaces and `tab' characters in source code blocks
   (setq org-src-preserve-indentation t)
@@ -7937,12 +7939,15 @@ From %c"
       ;; add today's appointments (found in `org-agenda-files') each time the
       ;; agenda buffer is (re)built
       (add-hook 'org-finalize-agenda-hook
-                'org-agenda-to-appt)
-      ;;! don't use the `org-agenda-mode-hook' because the Org agenda files
-      ;;! would be opened once by `org-agenda-to-appt', and then killed by
-      ;;! `org-release-buffers' (because `org-agenda-to-appt' closes all the
-      ;;! files it opened itself -- as they weren't already opened), to be
-      ;;! finally re-opened!
+                'org-agenda-to-appt)    ;! don't use the `org-agenda-mode-hook'
+                                        ;! because the Org agenda files would
+                                        ;! be opened once by
+                                        ;! `org-agenda-to-appt', and then
+                                        ;! killed by `org-release-buffers'
+                                        ;! (because `org-agenda-to-appt' closes
+                                        ;! all the files it opened itself -- as
+                                        ;! they weren't already opened), to be
+                                        ;! finally re-opened!
 
       ;; add today's appointments (found in `org-agenda-files') each time such a
       ;; file is saved
@@ -8720,8 +8725,9 @@ From %c"
     ;; name of the file that records `save-place-alist' value
     (setq save-place-file
           (convert-standard-filename "~/.emacs.d/.places"))
-    ;;! a .txt extension would load Org at the time Emacs is killed (if not
-    ;;! already loaded)!
+                                        ;! a .txt extension would load `org' at
+                                        ;! the time Emacs is killed (if not
+                                        ;! already loaded)!
 
     ;; do not make backups of master save-place file
     (setq save-place-version-control "never"))
@@ -9369,7 +9375,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131114.1548]--")
+(message "* --[ Loaded Emacs Leuven 20131114.1645]--")
 
 (provide 'emacs-leuven)
 
