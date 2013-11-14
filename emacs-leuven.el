@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131114.1511
+;; Version: 20131114.1546
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131114.1511]--")
+(message "* --[ Loading Emacs Leuven 20131114.1546]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -163,7 +163,7 @@
 
 (defmacro leuven--chapter (chapterid chaptername &rest body)
   "Wrap Lisp expressions as CHAPTERNAME, evaluated only when CHAPTERID is not
-  nil. Save execution times in the global list `leuven--load-times-list'."
+nil. Save execution times in the global list `leuven--load-times-list'."
   `(when ,chapterid
      (let (before-chapter-time
            this-chapter-time)
@@ -185,7 +185,7 @@
 
 (defun leuven--section (sectionname &optional end-of-chapter)
   "Output time taken since last saved time (in global variable
-  `leuven--before-section-time')."
+`leuven--before-section-time')."
   (let ((this-section-time (- (float-time)
                               leuven--before-section-time)))
     (when leuven-load-verbose
@@ -7197,9 +7197,6 @@ From %c"
 
   (leuven--section "28.1.12 Customizing VC")
 
-  ;; ;; display run messages from back-end commands
-  ;; (setq vc-command-messages t)          ; [default: nil]
-
   ;; http://www.emacswiki.org/emacs/VcTopDirectory
   ;; For git
   (defadvice vc-dir-prepare-status-buffer
@@ -7667,12 +7664,11 @@ From %c"
           (interactive)
           (joc-dired-single-buffer "..")))
 
-      ;; (define-key dired-mode-map
-      ;;   (kbd "C-x C-j")
-      ;;   (lambda ()
-      ;;     (interactive)
-      ;;     (joc-dired-single-buffer "..")))
-      )
+      (define-key dired-mode-map
+        (kbd "C-x C-j")
+        (lambda ()
+          (interactive)
+          (joc-dired-single-buffer ".."))))
 
     (define-key dired-mode-map
       (kbd "e") 'browse-url-of-dired-file) ; <C-RET>?
@@ -9123,14 +9119,13 @@ From %c"
 
   ;; ;; limit serving to catch infinite recursions for you before they
   ;; ;; cause actual stack overflow in C, which would be fatal for Emacs
-  ;; (setq max-lisp-eval-depth 600)     ; 1000?
+  ;; (setq max-lisp-eval-depth 600)        ; 1000?
 
   ;; limit on number of Lisp variable bindings & unwind-protects
   (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
 
   ;; speed up things by preventing garbage collections
-  (setq gc-cons-threshold 3500000)      ; make Gnus fast
-  ;; from (info "(gnus)FAQ 9-2")
+  (setq gc-cons-threshold 3500000)      ; make Gnus fast, from (info "(gnus)FAQ 9-2")
 
   ;; don't display messages at start and end of garbage collection (as it
   ;; hides too many interesting messages)
@@ -9230,51 +9225,6 @@ From %c"
              (setq j (1+ j))))))
      (delete-window)
      (setq truncate-lines t)))
-
-  (defmacro rloop (clauses &rest body)
-    (if (null clauses)
-        `(progn ,@body)
-      `(loop ,@(car clauses) do (rloop ,(cdr clauses) ,@body))))
-
-  (defun leuven-all-bindings ()
-    (interactive)
-    (message "leuven-all-bindings: wait a few seconds please...")
-    (let ((data
-           (with-output-to-string
-             (let ((bindings '()))
-               (rloop ((for C in '("" "C-")) ; Control
-                       (for M in '("" "M-")) ; Meta
-                       (for A in '("" "A-")) ; Alt
-                       (for S in '("" "S-")) ; Shift
-                       (for H in '("" "H-")) ; Hyper
-                       (for s in '("" "s-")) ; super
-                       (for x from 32 to 127))
-                      (let* ((k (format "%s%s%s%s%s%s%c" C M A S H s x))
-                             (key (ignore-errors (read-kbd-macro k))))
-                        (when key
-                          (push
-                           (list k
-                                 (format "%-12s  %-12s  %S\n" k key
-                                         (or
-                                          ;; (string-key-binding key)
-                                          ;; What is this string-key-binding?
-                                          (key-binding key))))
-                           bindings))))
-               (dolist (item
-                        (sort bindings
-                              (lambda (a b)
-                                (or (< (length (first a))
-                                       (length (first b)))
-                                    (and (= (length (first a))
-                                            (length (first b)))
-                                         (string< (first a)
-                                                  (first b)))))))
-                 (princ (second item)))))))
-      (switch-to-buffer (format "Key bindings in %s" (buffer-name)))
-      (erase-buffer)
-      (insert data)
-      (goto-char (point-min))
-      (values)))
 
 ;;** 48.5 The (info "(emacs)Syntax") Table
 
@@ -9419,7 +9369,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131114.1513]--")
+(message "* --[ Loaded Emacs Leuven 20131114.1548]--")
 
 (provide 'emacs-leuven)
 

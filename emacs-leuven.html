@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-14 Thu 15:15 -->
+  <title>Emacs Leuven</title><!-- 2013-11-14 Thu 15:50 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131114.1514</span>
+"color: #008200; font-style: italic;">Version: 20131114.1549</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131114.1514]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131114.1549]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -1417,7 +1417,7 @@
   <span style=
 "color: #008000;">"Wrap Lisp expressions as CHAPTERNAME, evaluated only when CHAPTERID is not</span>
 <span style=
-"color: #008000;">  nil. Save execution times in the global list `</span><span style="color: #008000;">leuven--load-times-list</span><span style="color: #008000;">'."</span>
+"color: #008000;">nil. Save execution times in the global list `</span><span style="color: #008000;">leuven--load-times-list</span><span style="color: #008000;">'."</span>
   `(<span style="color: #0000FF;">when</span> ,chapterid
      (<span style="color: #0000FF;">let</span> (before-chapter-time
            this-chapter-time)
@@ -1456,7 +1456,7 @@
 "color: #666666;">&amp;optional</span> end-of-chapter)
   <span style=
 "color: #008000;">"Output time taken since last saved time (in global variable</span>
-<span style="color: #008000;">  `</span><span style=
+<span style="color: #008000;">`</span><span style=
 "color: #008000;">leuven--before-section-time</span><span style=
 "color: #008000;">')."</span>
   (<span style="color: #0000FF;">let</span> ((this-section-time (- (float-time)
@@ -1491,17 +1491,17 @@
           <dt><code>system-type</code></dt>
 
           <dd><code>darwin</code>, <code>gnu/linux</code>,
-          <code>cygwin</code></dd>
+          <code>cygwin</code>.</dd>
 
           <dt><code>system-configuration</code></dt>
 
-          <dd><code>i686-pc-linux-gnu</code>, <code>i686-pc-cygwin</code></dd>
+          <dd><code>i686-pc-linux-gnu</code>, <code>i686-pc-cygwin</code>.</dd>
 
           <dt><code>window-system</code></dt>
 
           <dd><code>nil</code>, <code>w32</code>, <code>x</code>,
           <code>mac</code>. Use <code>(display-graphic-p)</code> in
-          conditions</dd>
+          conditions.</dd>
         </dl>
 
         <div class="org-src-container">
@@ -2420,7 +2420,7 @@
           <dl class="org-dl">
             <dt>M-r</dt>
 
-            <dd><code>move-to-window-line</code></dd>
+            <dd><code>move-to-window-line</code>.</dd>
           </dl>
 
           <div class="org-src-container">
@@ -3443,15 +3443,15 @@
           <dl class="org-dl">
             <dt><code>C-x n n</code></dt>
 
-            <dd>Narrow down to between point and mark</dd>
+            <dd>Narrow down to between point and mark.</dd>
 
             <dt><code>C-x n w</code></dt>
 
-            <dd>Widen to make the entire buffer accessible again</dd>
+            <dd>Widen to make the entire buffer accessible again.</dd>
 
             <dt><code>C-x n d</code></dt>
 
-            <dd>Narrow down to the current <i>defun</i></dd>
+            <dd>Narrow down to the current <i>defun</i>.</dd>
           </dl>
 
           <div class="org-src-container">
@@ -7781,13 +7781,13 @@ M-: (executable-find "diff") RET
           <dl class="org-dl">
             <dt><code>M-m</code></dt>
 
-            <dd><code>back-to-indentation</code></dd>
+            <dd><code>back-to-indentation</code>.</dd>
 
             <dt><code>C-M-\</code></dt>
 
             <dd>runs the command <code>indent-region</code> (which does the job
             of the imaginary command <code>unsuck-html-layout</code> in
-            <code>html-mode</code>)</dd>
+            <code>html-mode</code>).</dd>
           </dl>
 
           <div class="org-src-container">
@@ -10855,40 +10855,40 @@ M-: (executable-find "diff") RET
             <dl class="org-dl">
               <dt>%a</dt>
 
-              <dd>Annotation (link)</dd>
+              <dd>Annotation (link).</dd>
 
               <dt>%i</dt>
 
-              <dd>Initial content (selected text)</dd>
+              <dd>Initial content (selected text).</dd>
 
               <dt>%?</dt>
 
-              <dd>Cursor position</dd>
+              <dd>Cursor position.</dd>
 
               <dt>%^T</dt>
 
-              <dd>Prompt for a date and time</dd>
+              <dd>Prompt for a date and time.</dd>
 
               <dt>%^G</dt>
 
               <dd>Prompt for tags with completion on tags in all agenda
-              files</dd>
+              files.</dd>
 
               <dt>%t</dt>
 
-              <dd>Time stamp (date only)</dd>
+              <dd>Time stamp (date only).</dd>
 
               <dt>%<sup>prompt</sup></dt>
 
-              <dd>Prompt the user for a string</dd>
+              <dd>Prompt the user for a string.</dd>
 
               <dt>%[file]</dt>
 
-              <dd>Insert the contents of the file</dd>
+              <dd>Insert the contents of the file.</dd>
 
               <dt>%U</dt>
 
-              <dd>Inactive time stamp with date and time</dd>
+              <dd>Inactive time stamp with date and time.</dd>
             </dl>
 
             <p>Use <code>:jump-to-captured</code> to tell capture to jump to
@@ -12271,15 +12271,15 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             <dl class="org-dl">
               <dt>Phone</dt>
 
-              <dd>Needs a phone</dd>
+              <dd>Needs a phone.</dd>
 
               <dt>Errands</dt>
 
-              <dd>Done in town</dd>
+              <dd>Done in town.</dd>
 
               <dt>Home</dt>
 
-              <dd>Done at home</dd>
+              <dd>Done at home.</dd>
             </dl>
 
             <p>Now, it’s quite easy for my computer to figure out which of
@@ -15635,19 +15635,19 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             <dl class="org-dl">
               <dt><code>f</code></dt>
 
-              <dd><code>org-forward-same-level</code></dd>
+              <dd><code>org-forward-same-level</code>.</dd>
 
               <dt><code>b</code></dt>
 
-              <dd><code>org-backward-same-level</code></dd>
+              <dd><code>org-backward-same-level</code>.</dd>
 
               <dt><code>n</code></dt>
 
-              <dd><code>outline-next-visible-heading</code></dd>
+              <dd><code>outline-next-visible-heading</code>.</dd>
 
               <dt><code>p</code></dt>
 
-              <dd><code>outline-previous-visible-heading</code></dd>
+              <dd><code>outline-previous-visible-heading</code>.</dd>
             </dl>
 
             <p>For navigating blocks:</p>
@@ -15655,11 +15655,11 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             <dl class="org-dl">
               <dt>F</dt>
 
-              <dd><code>org-next-block</code></dd>
+              <dd><code>org-next-block</code>.</dd>
 
               <dt>B</dt>
 
-              <dd><code>org-previous-block</code></dd>
+              <dd><code>org-previous-block</code>.</dd>
             </dl>
 
             <div class="org-src-container">
@@ -16468,7 +16468,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             <dt>(la)tex-mode</dt>
 
             <dd>Default Emacs built-in (La)TeX mode (menu <code>TeX</code>;
-            text <code>LaTeX</code> displayed in the mode line)</dd>
+            text <code>LaTeX</code> displayed in the mode line).</dd>
           </dl>
 
           <div class="org-src-container">
@@ -16562,7 +16562,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
             <dd>AUCTeX (menus <code>Preview</code>, <code>LaTeX</code>,
             <code>Command</code> and <code>Ref</code>; text
-            <code>LaTeX/P</code> displayed in the mode line)</dd>
+            <code>LaTeX/P</code> displayed in the mode line).</dd>
           </dl>
 
           <p>AUCTeX supports TeX and extensions such as LaTeX. For LaTeX, there
@@ -17072,12 +17072,12 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
               <dt><code>C-c C-b</code> (or <code>C-c &lt;left&gt;</code>)</dt>
 
               <dd>Jump to the opening HTML tag
-              (<code>sgml-skip-tag-backward</code>)</dd>
+              (<code>sgml-skip-tag-backward</code>).</dd>
 
               <dt><code>C-c C-f</code> (or <code>C-c &lt;right&gt;</code>)</dt>
 
               <dd>Jump to the closing HTML tag
-              (<code>sgml-skip-tag-forward</code>)</dd>
+              (<code>sgml-skip-tag-forward</code>).</dd>
 
               <dt><code>C-c TAB</code></dt>
 
@@ -17087,11 +17087,11 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
               <dt><code>C-c /</code></dt>
 
-              <dd><code>sgml-close-tag</code></dd>
+              <dd><code>sgml-close-tag</code>.</dd>
 
               <dt><code>C-M-i</code></dt>
 
-              <dd><code>ispell-complete-word</code></dd>
+              <dd><code>ispell-complete-word</code>.</dd>
             </dl>
 
             <p>Plug <a href="http://tidy.sourceforge.net/">HTML Tidy</a> with
@@ -18613,11 +18613,11 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           <dl class="org-dl">
             <dt><code>C-x v d</code></dt>
 
-            <dd>Open dired buffer in VC-mode</dd>
+            <dd>Open Dired buffer in VC-mode.</dd>
 
             <dt><code>C-x v v</code></dt>
 
-            <dd>Take appropriate action (add, commit)</dd>
+            <dd>Take appropriate action (add, commit).</dd>
           </dl>
 
           <div class="org-src-container">
@@ -18901,11 +18901,6 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
   (leuven--section <span style=
 "color: #FF4700;">"28.1.12 Customizing VC"</span>)
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; display run messages from back-end commands</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(setq vc-command-messages t)          ; [default: nil]</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">http://www.emacswiki.org/emacs/VcTopDirectory</span>
@@ -19310,15 +19305,15 @@ TAGS:
             <dl class="org-dl">
               <dt><code>C-x F</code></dt>
 
-              <dd>find <b>function</b></dd>
+              <dd>Find <b>function</b>.</dd>
 
               <dt><code>C-x V</code></dt>
 
-              <dd>find <b>variable</b></dd>
+              <dd>Find <b>variable</b>.</dd>
 
               <dt><code>C-x K</code></dt>
 
-              <dd>find function <b>bound to key</b> sequence</dd>
+              <dd>Find function <b>bound to key</b> sequence.</dd>
             </dl>
 
             <p>Use <code>C-x 4</code> for displaying in another window, and
@@ -19363,22 +19358,22 @@ TAGS:
               <dt><a href=
               "http://www.gnu.org/software/emacs/manual/semantic.html">Semantic</a></dt>
 
-              <dd>a <b>parser</b> and code analyzer which provides <b>smart
-              completion</b> (“Intellisense”)</dd>
+              <dd>A <b>parser</b> and code analyzer which provides <b>smart
+              completion</b> (“Intellisense”).</dd>
 
               <dt>EDE</dt>
 
-              <dd>a <b>project management</b> system which can <b>generate
-              Makefiles</b> to compile your code for you</dd>
+              <dd>A <b>project management</b> system which can <b>generate
+              Makefiles</b> to compile your code for you.</dd>
 
               <dt>SRecode</dt>
 
-              <dd>a template / <b>code generation</b> system which can convert
-              tags from semantic back into code</dd>
+              <dd>A template / <b>code generation</b> system which can convert
+              tags from semantic back into code.</dd>
 
               <dt>COGRE (COnnected GRaph Editor)</dt>
 
-              <dd>a <b>UML diagram editor</b> which can generate code from a
+              <dd>A <b>UML diagram editor</b> which can generate code from a
               class diagram that you draw in Emacs.</dd>
             </dl>
 
@@ -19391,7 +19386,7 @@ TAGS:
             <dl class="org-dl">
               <dt><code>C-c , g</code></dt>
 
-              <dd><code>semantic-symref-symbol</code> and</dd>
+              <dd><code>semantic-symref-symbol</code>.</dd>
 
               <dt><code>C-c , G</code></dt>
 
@@ -19628,23 +19623,23 @@ TAGS:
             <dl class="org-dl">
               <dt><code>C-c . g d</code></dt>
 
-              <dd>Go to directories</dd>
+              <dd>Go to directories.</dd>
 
               <dt><code>C-c . g s</code></dt>
 
-              <dd>Go to sources</dd>
+              <dd>Go to sources.</dd>
 
               <dt><code>C-c . g m</code></dt>
 
-              <dd>Go to methods</dd>
+              <dd>Go to methods.</dd>
 
               <dt><code>C-c . g h</code></dt>
 
-              <dd>Go to history</dd>
+              <dd>Go to history.</dd>
 
               <dt><code>C-c . g 1</code></dt>
 
-              <dd>Go to edit buffer</dd>
+              <dd>Go to edit buffer.</dd>
             </dl>
 
             <div class="org-src-container">
@@ -20212,7 +20207,7 @@ TAGS:
           <dl class="org-dl">
             <dt><code>^</code></dt>
 
-            <dd><code>dired-up-directory</code></dd>
+            <dd><code>dired-up-directory</code>.</dd>
           </dl>
 
           <div class="org-src-container">
@@ -20261,17 +20256,12 @@ TAGS:
           (interactive)
           (joc-dired-single-buffer <span style="color: #FF4700;">".."</span>)))
 
-      <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(define-key dired-mode-map</span>
-      <span style="color: #008200;">;;   </span><span style=
-"color: #008200; font-style: italic;">(kbd "C-x C-j")</span>
-      <span style="color: #008200;">;;   </span><span style=
-"color: #008200; font-style: italic;">(lambda ()</span>
-      <span style="color: #008200;">;;     </span><span style=
-"color: #008200; font-style: italic;">(interactive)</span>
-      <span style="color: #008200;">;;     </span><span style=
-"color: #008200; font-style: italic;">(joc-dired-single-buffer "..")))</span>
-      )
+      (define-key dired-mode-map
+        (kbd <span style="color: #FF4700;">"C-x C-j"</span>)
+        (<span style="color: #0000FF;">lambda</span> ()
+          (interactive)
+          (joc-dired-single-buffer <span style=
+"color: #FF4700;">".."</span>))))
 </pre>
             </div>
           </div>
@@ -20663,11 +20653,11 @@ TAGS:
           <dl class="org-dl">
             <dt>C-t d</dt>
 
-            <dd><code>image-dired-display-thumbs</code> (on marked files)</dd>
+            <dd><code>image-dired-display-thumbs</code> (on marked files).</dd>
 
             <dt>C-t e</dt>
 
-            <dd><code>image-dired-dired-edit-comment-and-tags</code></dd>
+            <dd><code>image-dired-dired-edit-comment-and-tags</code>.</dd>
           </dl>
 
           <p>For more information, see:</p>
@@ -22175,12 +22165,12 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             <dt><code>M-p</code> (or <code>&lt;C-up&gt;</code>, or
             <code>&lt;up&gt;</code> in Emacs Leuven)</dt>
 
-            <dd><code>comint-previous-input</code></dd>
+            <dd><code>comint-previous-input</code>.</dd>
 
             <dt><code>M-n</code> (or <code>&lt;down&gt;</code> in Emacs
             Leuven)</dt>
 
-            <dd><code>comint-next-input</code></dd>
+            <dd><code>comint-next-input</code>.</dd>
           </dl>
 
           <div class="org-src-container">
@@ -23609,7 +23599,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           <h4 id="sec-43-1-1">9.1 Turning Gnus into a web browser!</h4>
 
           <div class="outline-text-4" id="text-43-1-1">
-            <p><code>nnshimbun</code> is a Gnus back end, but it is distributed
+            <p><code>Nnshimbun</code> is a Gnus back end, but it is distributed
             with emacs-w3m, not Gnus, exceptionally.</p>
 
             <p><code>Nnshimbun</code> allows you to turn Gnus into an
@@ -23837,7 +23827,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; cause actual stack overflow in C, which would be fatal for Emacs</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(setq max-lisp-eval-depth 600)     ; 1000?</span>
+"color: #008200; font-style: italic;">(setq max-lisp-eval-depth 600)        ; 1000?</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">limit on number of Lisp variable bindings &amp; unwind-protects</span>
@@ -23849,9 +23839,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200; font-style: italic;">speed up things by preventing garbage collections</span>
   (setq gc-cons-threshold 3500000)      <span style=
 "color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">make Gnus fast</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">from (info "(gnus)FAQ 9-2")</span>
+"color: #008200; font-style: italic;">make Gnus fast, from (info "(gnus)FAQ 9-2")</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">don't display messages at start and end of garbage collection (as it</span>
@@ -24114,93 +24102,6 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
      (setq truncate-lines t)))
 </pre>
           </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  (<span style="color: #0000FF;">defmacro</span> <span style=
-"color: #006699;">rloop</span> (clauses <span style=
-"color: #666666;">&amp;rest</span> body)
-    (<span style="color: #0000FF;">if</span> (null clauses)
-        `(<span style="color: #0000FF;">progn</span> ,@body)
-      `(loop ,@(car clauses) do (rloop ,(cdr clauses) ,@body))))
-
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-all-bindings</span> ()
-    (interactive)
-    (message <span style=
-"color: #FF4700;">"leuven-all-bindings: wait a few seconds please..."</span>)
-    (<span style="color: #0000FF;">let</span> ((data
-           (<span style="color: #0000FF;">with-output-to-string</span>
-             (<span style="color: #0000FF;">let</span> ((bindings '()))
-               (rloop ((for C in '(<span style=
-"color: #FF4700;">""</span> <span style=
-"color: #FF4700;">"C-"</span>)) <span style=
-"color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">Control</span>
-                       (for M in '(<span style=
-"color: #FF4700;">""</span> <span style=
-"color: #FF4700;">"M-"</span>)) <span style=
-"color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">Meta</span>
-                       (for A in '(<span style=
-"color: #FF4700;">""</span> <span style=
-"color: #FF4700;">"A-"</span>)) <span style=
-"color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">Alt</span>
-                       (for S in '(<span style=
-"color: #FF4700;">""</span> <span style=
-"color: #FF4700;">"S-"</span>)) <span style=
-"color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">Shift</span>
-                       (for H in '(<span style=
-"color: #FF4700;">""</span> <span style=
-"color: #FF4700;">"H-"</span>)) <span style=
-"color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">Hyper</span>
-                       (for s in '(<span style=
-"color: #FF4700;">""</span> <span style=
-"color: #FF4700;">"s-"</span>)) <span style=
-"color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">super</span>
-                       (for x from 32 to 127))
-                      (<span style=
-"color: #0000FF;">let*</span> ((k (format <span style=
-"color: #FF4700;">"%s%s%s%s%s%s%c"</span> C M A S H s x))
-                             (key (ignore-<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span>s (read-kbd-macro k))))
-                        (<span style="color: #0000FF;">when</span> key
-                          (push
-                           (list k
-                                 (format <span style=
-"color: #FF4700;">"%-12s  %-12s  %S\n"</span> k key
-                                         (or
-                                          <span style=
-"color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(string-key-binding key)</span>
-                                          <span style=
-"color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">What is this string-key-binding?</span>
-                                          (key-binding key))))
-                           bindings))))
-               (<span style="color: #0000FF;">dolist</span> (item
-                        (sort bindings
-                              (<span style=
-"color: #0000FF;">lambda</span> (a b)
-                                (or (&lt; (length (first a))
-                                       (length (first b)))
-                                    (and (= (length (first a))
-                                            (length (first b)))
-                                         (string&lt; (first a)
-                                                  (first b)))))))
-                 (princ (second item)))))))
-      (switch-to-buffer (format <span style=
-"color: #FF4700;">"Key bindings in %s"</span> (buffer-name)))
-      (erase-buffer)
-      (insert data)
-      (goto-char (point-min))
-      (values)))
-</pre>
-          </div>
         </div>
       </div>
 
@@ -24304,111 +24205,6 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
             (x-list-fonts "*"))</code> or <code>(dolist (i (x-list-fonts "*"))
             (princ i) (terpri))</code> for a better output.</li>
           </ol>
-
-          <p>Format is <code>-a-b-c-d-e-f-g-h-i-j-k-l-</code> where:</p>
-
-          <dl class="org-dl">
-            <dt>a</dt>
-
-            <dd>foundry</dd>
-
-            <dt>b</dt>
-
-            <dd>font family &lt;&lt;&lt;</dd>
-
-            <dt>c</dt>
-
-            <dd>
-              weight
-
-              <p>Valid options: <code>bold</code>, <code>demibold</code>,
-              <code>light</code>, <code>medium</code>, <code>normal</code>.</p>
-            </dd>
-
-            <dt>d</dt>
-
-            <dd>
-              slant
-
-              <p>Valid options: <code>i</code> for italic and <code>r</code>
-              for roman.</p>
-            </dd>
-
-            <dt>e</dt>
-
-            <dd>
-              set width
-
-              <p>Ignored by NT-Emacs.</p>
-            </dd>
-
-            <dt>f</dt>
-
-            <dd>
-              pixels
-
-              <p>Nominal font height in pixels. (Eg. 13 pixels roughly
-              corresponds to 10 points (a point is 1/72 of an inch) on a 96dpi
-              monitor, so the font spec above is selecting a 10 point bold
-              Courier font)</p>
-            </dd>
-
-            <dt>g</dt>
-
-            <dd>
-              points in tenths of a point
-
-              <p>10 point is 100</p>
-            </dd>
-
-            <dt>h</dt>
-
-            <dd>
-              horiz resolution in dpi
-
-              <p>I think these numbers represent the “design resolution” of the
-              font - on X, fonts are typically designed for 75dpi or 100dpi
-              screens (under Windows,most monitors are assumed to be 96dpi I
-              believe). NT-Emacs ignores these values.</p>
-            </dd>
-
-            <dt>i</dt>
-
-            <dd>
-              vertical resolution in dpi
-
-              <p>I think these numbers represent the “design resolution” of the
-              font - on X, fonts are typically designed for 75dpi or 100dpi
-              screens (under Windows,most monitors are assumed to be 96dpi I
-              believe). NT-Emacs ignores these values.</p>
-            </dd>
-
-            <dt>j</dt>
-
-            <dd>
-              spacing
-
-              <p>Spacing as in mono-spaced or proportionally spaced. Values are
-              <code>c</code> (constant) or <code>m</code> (monospace) to mean
-              fixed-width or <code>p</code> for proportionally spaced.</p>
-            </dd>
-
-            <dt>k</dt>
-
-            <dd>average width in tenths of a pixel</dd>
-
-            <dt>l</dt>
-
-            <dd>
-              character set
-
-              <p>NT-Emacs understands: <code>ansi</code>, <code>oem</code>,
-              <code>symbol</code> to refer to the standard Windows character
-              sets (the first two, at least, are locale dependant).
-              <code>iso8859</code> and <code>iso8859-1</code> are accepted as
-              synonyms for ansi.</p>
-            </dd>
-          </dl>
 
           <p>Under Linux, use the <code>xfontsel</code> utility (or the
           command-line <code>xlsfonts</code>) to try out different fonts. After
@@ -24516,15 +24312,15 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
             <dl class="org-dl">
               <dt><code>C-x C-+</code></dt>
 
-              <dd>Increase the default face height by one step</dd>
+              <dd>Increase the default face height by one step.</dd>
 
               <dt><code>C-x C--</code></dt>
 
-              <dd>Decrease the default face height by one step</dd>
+              <dd>Decrease the default face height by one step.</dd>
 
               <dt><code>C-x C-0</code></dt>
 
-              <dd>Resets to defaults</dd>
+              <dd>Resets to defaults.</dd>
             </dl>
 
             <div class="org-src-container">
@@ -24622,11 +24418,11 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
           <dl class="org-dl">
             <dt><code>w</code></dt>
 
-            <dd>start Embedded mode on the current “word”.</dd>
+            <dd>Start Embedded mode on the current “word”.</dd>
 
             <dt><code>j</code></dt>
 
-            <dd>operate on <b>assignments</b>.</dd>
+            <dd>Operate on <b>assignments</b>.</dd>
           </dl>
 
           <p>You need to type <code>C-x * e</code> again to exit the Embedded
@@ -25160,7 +24956,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131114.1515]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131114.1549]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

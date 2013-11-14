@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-14 Thu 15:10>
+# Time-stamp: <2013-11-14 Thu 15:45>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -202,7 +202,7 @@ echo "$(date '+%Y%m%d.%H%M')"
 
 (defmacro leuven--chapter (chapterid chaptername &rest body)
   "Wrap Lisp expressions as CHAPTERNAME, evaluated only when CHAPTERID is not
-  nil. Save execution times in the global list `leuven--load-times-list'."
+nil. Save execution times in the global list `leuven--load-times-list'."
   `(when ,chapterid
      (let (before-chapter-time
            this-chapter-time)
@@ -224,7 +224,7 @@ echo "$(date '+%Y%m%d.%H%M')"
 
 (defun leuven--section (sectionname &optional end-of-chapter)
   "Output time taken since last saved time (in global variable
-  `leuven--before-section-time')."
+`leuven--before-section-time')."
   (let ((this-section-time (- (float-time)
                               leuven--before-section-time)))
     (when leuven-load-verbose
@@ -245,13 +245,13 @@ echo "$(date '+%Y%m%d.%H%M')"
 | i386-mingw-nt5.1.2600 | windows-nt | w32 |
 
 - =system-type= ::
-     =darwin=, =gnu/linux=, =cygwin=
+     =darwin=, =gnu/linux=, =cygwin=.
 
 - =system-configuration= ::
-     =i686-pc-linux-gnu=, =i686-pc-cygwin=
+     =i686-pc-linux-gnu=, =i686-pc-cygwin=.
 
 - =window-system= ::
-     =nil=, =w32=, =x=, =mac=. Use =(display-graphic-p)= in conditions
+     =nil=, =w32=, =x=, =mac=. Use =(display-graphic-p)= in conditions.
 
 #+begin_src emacs-lisp
 ;;* Environment
@@ -791,7 +791,7 @@ distro) without impacting on stuff you have added by hand.
 ** Moving Point Location
 
 - M-r ::
-     =move-to-window-line=
+     =move-to-window-line=.
 
 #+begin_src emacs-lisp
 ;;** 7.2 (info "(emacs)Moving Point") Location
@@ -1390,13 +1390,13 @@ Visible bookmarks in buffer.
 ** Narrowing
 
 - =C-x n n= ::
-     Narrow down to between point and mark
+     Narrow down to between point and mark.
 
 - =C-x n w= ::
-     Widen to make the entire buffer accessible again
+     Widen to make the entire buffer accessible again.
 
 - =C-x n d= ::
-     Narrow down to the current /defun/
+     Narrow down to the current /defun/.
 
 #+begin_src emacs-lisp
 ;;** 14.5 (info "(emacs)Narrowing")
@@ -4036,11 +4036,11 @@ For a list of buffer beginnings, see =magic-mode-alist=.
 ** Indentation Commands
 
 - =M-m= ::
-     =back-to-indentation=
+     =back-to-indentation=.
 
 - =C-M-\= ::
      runs the command =indent-region= (which does the job of the imaginary
-     command =unsuck-html-layout= in =html-mode=)
+     command =unsuck-html-layout= in =html-mode=).
 
 #+begin_src emacs-lisp
 ;;** 24.1 (info "(emacs)Indentation Commands") and Techniques
@@ -5829,31 +5829,31 @@ The ultimate capture tool.
 %-escapes:
 
 - %a ::
-     Annotation (link)
+     Annotation (link).
 
 - %i ::
-     Initial content (selected text)
+     Initial content (selected text).
 
 - %? ::
-     Cursor position
+     Cursor position.
 
 - %^T ::
-     Prompt for a date and time
+     Prompt for a date and time.
 
 - %^G ::
-     Prompt for tags with completion on tags in all agenda files
+     Prompt for tags with completion on tags in all agenda files.
 
 - %t ::
-     Time stamp (date only)
+     Time stamp (date only).
 
 - %^{prompt} ::
-     Prompt the user for a string
+     Prompt the user for a string.
 
 - %[file] ::
-     Insert the contents of the file
+     Insert the contents of the file.
 
 - %U ::
-     Inactive time stamp with date and time
+     Inactive time stamp with date and time.
 
 Use =:jump-to-captured= to tell capture to jump to the note after storing it.
 
@@ -6681,13 +6681,13 @@ Contextual auto-exclusion for tags in the Agenda view. For example, I use the
 following tags for TODOs:
 
 - Phone ::
-     Needs a phone
+     Needs a phone.
 
 - Errands ::
-     Done in town
+     Done in town.
 
 - Home ::
-     Done at home
+     Done at home.
 
 Now, it's quite easy for my computer to figure out which of these are
 possible, based on my location:
@@ -8676,24 +8676,24 @@ Activate single letter commands (for example, outline navigation with =f=, =b=, 
 and =p=) at beginning of a headline:
 
 - =f= ::
-     =org-forward-same-level=
+     =org-forward-same-level=.
 
 - =b= ::
-     =org-backward-same-level=
+     =org-backward-same-level=.
 
 - =n= ::
-     =outline-next-visible-heading=
+     =outline-next-visible-heading=.
 
 - =p= ::
-     =outline-previous-visible-heading=
+     =outline-previous-visible-heading=.
 
 For navigating blocks:
 
 - F ::
-     =org-next-block=
+     =org-next-block=.
 
 - B ::
-     =org-previous-block=
+     =org-previous-block=.
 
 #+begin_src emacs-lisp
 ;;** 15.3 (info "(org)Speed keys")
@@ -9145,7 +9145,7 @@ Link emails from Org files.
 
 - (la)tex-mode ::
      Default Emacs built-in (La)TeX mode (menu =TeX=; text =LaTeX= displayed in the
-     mode line)
+     mode line).
 
 #+begin_src emacs-lisp
   (leuven--section "25.10 (emacs)TeX Mode")
@@ -9188,7 +9188,7 @@ Under Windows, in the *native* TeX mode, =shell-file-name= must be =cmdproxy.exe
 
 - (La)TeX-mode ::
      AUCTeX (menus =Preview=, =LaTeX=, =Command= and =Ref=; text =LaTeX/P= displayed in
-     the mode line)
+     the mode line).
 
 AUCTeX supports TeX and extensions such as LaTeX. For LaTeX, there is a
 (major) =LaTeX-mode= in AUCTeX which runs (in this order):
@@ -9491,20 +9491,20 @@ works quite well for editing HTML4 documents (whose tags don't have to close).
      *View* your file *in your browser* (=browse-url-of-buffer=).
 
 - =C-c C-b= (or =C-c <left>=) ::
-     Jump to the opening HTML tag (=sgml-skip-tag-backward=)
+     Jump to the opening HTML tag (=sgml-skip-tag-backward=).
 
 - =C-c C-f= (or =C-c <right>=) ::
-     Jump to the closing HTML tag (=sgml-skip-tag-forward=)
+     Jump to the closing HTML tag (=sgml-skip-tag-forward=).
 
 - =C-c TAB= ::
      Hide all of the angle-bracketed tags in the buffer (=sgml-tags-invisible=).
      This can be used as a cheap *preview* of *just the bare text*.
 
 - =C-c /= ::
-     =sgml-close-tag=
+     =sgml-close-tag=.
 
 - =C-M-i= ::
-     =ispell-complete-word=
+     =ispell-complete-word=.
 
 Plug [[http://tidy.sourceforge.net/][HTML Tidy]] with ~tidy.el~.
 
@@ -10434,10 +10434,10 @@ contents!
 Version control systems that interact with Emacs in a generic way.
 
 - =C-x v d= ::
-     Open dired buffer in VC-mode
+     Open Dired buffer in VC-mode.
 
 - =C-x v v= ::
-     Take appropriate action (add, commit)
+     Take appropriate action (add, commit).
 
 #+begin_src emacs-lisp
 ;;** 28.1 (info "(emacs)Version Control")
@@ -10618,9 +10618,6 @@ Show the diff we are about to commit: =C-c C-d=.
 ;;*** 28.1.12 (info "(emacs)Customizing VC")
 
   (leuven--section "28.1.12 Customizing VC")
-
-  ;; ;; display run messages from back-end commands
-  ;; (setq vc-command-messages t)          ; [default: nil]
 
   ;; http://www.emacswiki.org/emacs/VcTopDirectory
   ;; For git
@@ -10862,13 +10859,13 @@ To continue searching for next match, use =M-,=.
 Find the definition of the Emacs Lisp symbol near point:
 
 - =C-x F= ::
-     find *function*
+     Find *function*.
 
 - =C-x V= ::
-     find *variable*
+     Find *variable*.
 
 - =C-x K= ::
-     find function *bound to key* sequence
+     Find function *bound to key* sequence.
 
 Use =C-x 4= for displaying in another window, and =C-x 5= for displaying in
 another frame.
@@ -10893,19 +10890,19 @@ CEDET (integrated into Emacs 23.2) brings improvements over a plain TAGS file.
 It provides:
 
 - [[http://www.gnu.org/software/emacs/manual/semantic.html][Semantic]] ::
-     a *parser* and code analyzer which provides *smart completion*
-     ("Intellisense")
+     A *parser* and code analyzer which provides *smart completion*
+     ("Intellisense").
 
 - EDE ::
-     a *project management* system which can *generate Makefiles* to compile your
-     code for you
+     A *project management* system which can *generate Makefiles* to compile your
+     code for you.
 
 - SRecode ::
-     a template / *code generation* system which can convert tags from semantic
-     back into code
+     A template / *code generation* system which can convert tags from semantic
+     back into code.
 
 - COGRE (COnnected GRaph Editor) ::
-     a *UML diagram editor* which can generate code from a class diagram that
+     A *UML diagram editor* which can generate code from a class diagram that
      you draw in Emacs.
 
 See [[http://cedet.sourceforge.net/languagesupport.shtml][supported languages]].
@@ -10913,7 +10910,7 @@ See [[http://cedet.sourceforge.net/languagesupport.shtml][supported languages]].
 The commands to display *symbol references* are:
 
 - =C-c , g= ::
-     =semantic-symref-symbol= and
+     =semantic-symref-symbol=.
 
 - =C-c , G= ::
      =semantic-symref= (current tag).
@@ -11053,19 +11050,19 @@ provides views of directories and files.
 Keyboard navigation:
 
 - =C-c . g d= ::
-     Go to directories
+     Go to directories.
 
 - =C-c . g s= ::
-     Go to sources
+     Go to sources.
 
 - =C-c . g m= ::
-     Go to methods
+     Go to methods.
 
 - =C-c . g h= ::
-     Go to history
+     Go to history.
 
 - =C-c . g 1= ::
-     Go to edit buffer
+     Go to edit buffer.
 
 #+begin_src emacs-lisp
   ;; Emacs Code Browser
@@ -11410,7 +11407,7 @@ Auto start vs M-/
 ** Visiting Files in Dired
 
 - =^= ::
-     =dired-up-directory=
+     =dired-up-directory=.
 
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Dired Visiting")
@@ -11443,12 +11440,11 @@ Single Dired buffer.
           (interactive)
           (joc-dired-single-buffer "..")))
 
-      ;; (define-key dired-mode-map
-      ;;   (kbd "C-x C-j")
-      ;;   (lambda ()
-      ;;     (interactive)
-      ;;     (joc-dired-single-buffer "..")))
-      )
+      (define-key dired-mode-map
+        (kbd "C-x C-j")
+        (lambda ()
+          (interactive)
+          (joc-dired-single-buffer ".."))))
 #+end_src
 
 *** Open file with default tool (open directory with Windows Explorer)
@@ -11666,10 +11662,10 @@ Prerequisites:
 Key bindings:
 
 - C-t d ::
-     =image-dired-display-thumbs= (on marked files)
+     =image-dired-display-thumbs= (on marked files).
 
 - C-t e ::
-     =image-dired-dired-edit-comment-and-tags=
+     =image-dired-dired-edit-comment-and-tags=.
 
 For more information, see:
 - http://www.emacswiki.org/Tumme
@@ -12527,10 +12523,10 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 ** Shell Mode
 
 - =M-p= (or =<C-up>=, or =<up>= in Emacs Leuven) ::
-     =comint-previous-input=
+     =comint-previous-input=.
 
 - =M-n= (or =<down>= in Emacs Leuven) ::
-     =comint-next-input=
+     =comint-next-input=.
 
 #+begin_src emacs-lisp
 ;;** 36.3 Shell Mode
@@ -13429,7 +13425,7 @@ browser*: you can open the current page in your graphical browser by hitting =M=
 
 *** 9.1 Turning Gnus into a web browser!
 
-=nnshimbun= is a Gnus back end, but it is distributed with emacs-w3m, not Gnus,
+=Nnshimbun= is a Gnus back end, but it is distributed with emacs-w3m, not Gnus,
 exceptionally.
 
 =Nnshimbun= allows you to turn Gnus into an exceptionally useful web browser.
@@ -13565,14 +13561,13 @@ particular color...
 #+begin_src emacs-lisp
   ;; ;; limit serving to catch infinite recursions for you before they
   ;; ;; cause actual stack overflow in C, which would be fatal for Emacs
-  ;; (setq max-lisp-eval-depth 600)     ; 1000?
+  ;; (setq max-lisp-eval-depth 600)        ; 1000?
 
   ;; limit on number of Lisp variable bindings & unwind-protects
   (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
 
   ;; speed up things by preventing garbage collections
-  (setq gc-cons-threshold 3500000)      ; make Gnus fast
-  ;; from (info "(gnus)FAQ 9-2")
+  (setq gc-cons-threshold 3500000)      ; make Gnus fast, from (info "(gnus)FAQ 9-2")
 
   ;; don't display messages at start and end of garbage collection (as it
   ;; hides too many interesting messages)
@@ -13696,53 +13691,6 @@ See as well Print keybindings (pkb).
      (setq truncate-lines t)))
 #+end_src
 
-#+begin_src emacs-lisp
-  (defmacro rloop (clauses &rest body)
-    (if (null clauses)
-        `(progn ,@body)
-      `(loop ,@(car clauses) do (rloop ,(cdr clauses) ,@body))))
-
-  (defun leuven-all-bindings ()
-    (interactive)
-    (message "leuven-all-bindings: wait a few seconds please...")
-    (let ((data
-           (with-output-to-string
-             (let ((bindings '()))
-               (rloop ((for C in '("" "C-")) ; Control
-                       (for M in '("" "M-")) ; Meta
-                       (for A in '("" "A-")) ; Alt
-                       (for S in '("" "S-")) ; Shift
-                       (for H in '("" "H-")) ; Hyper
-                       (for s in '("" "s-")) ; super
-                       (for x from 32 to 127))
-                      (let* ((k (format "%s%s%s%s%s%s%c" C M A S H s x))
-                             (key (ignore-errors (read-kbd-macro k))))
-                        (when key
-                          (push
-                           (list k
-                                 (format "%-12s  %-12s  %S\n" k key
-                                         (or
-                                          ;; (string-key-binding key)
-                                          ;; What is this string-key-binding?
-                                          (key-binding key))))
-                           bindings))))
-               (dolist (item
-                        (sort bindings
-                              (lambda (a b)
-                                (or (< (length (first a))
-                                       (length (first b)))
-                                    (and (= (length (first a))
-                                            (length (first b)))
-                                         (string< (first a)
-                                                  (first b)))))))
-                 (princ (second item)))))))
-      (switch-to-buffer (format "Key bindings in %s" (buffer-name)))
-      (erase-buffer)
-      (insert data)
-      (goto-char (point-min))
-      (values)))
-#+end_src
-
 ** Syntax Table
 
 The syntax table contains information that tells Emacs how to operate on text,
@@ -13806,74 +13754,6 @@ To check if some font is available in Emacs do following:
    or
    =(dolist (i (x-list-fonts "*")) (princ i) (terpri))=
    for a better output.
-
-Format is =-a-b-c-d-e-f-g-h-i-j-k-l-= where:
-
-- a ::
-     foundry
-
-- b ::
-     font family <<<
-
-- c ::
-     weight
-
-     Valid options: =bold=, =demibold=, =light=, =medium=, =normal=.
-
-- d ::
-     slant
-
-     Valid options: =i= for italic and =r= for roman.
-
-- e ::
-     set width
-
-     Ignored by NT-Emacs.
-
-- f ::
-     pixels
-
-     Nominal font height in pixels. (Eg. 13 pixels roughly corresponds to 10
-     points (a point is 1/72 of an inch) on a 96dpi monitor, so the font spec
-     above is selecting a 10 point bold Courier font)
-
-- g ::
-     points in tenths of a point
-
-     10 point is 100
-
-- h ::
-     horiz resolution in dpi
-
-     I think these numbers represent the "design resolution" of the font - on
-     X, fonts are typically designed for 75dpi or 100dpi screens (under
-     Windows,most monitors are assumed to be 96dpi I believe). NT-Emacs
-     ignores these values.
-
-- i ::
-     vertical resolution in dpi
-
-     I think these numbers represent the "design resolution" of the font - on
-     X, fonts are typically designed for 75dpi or 100dpi screens (under
-     Windows,most monitors are assumed to be 96dpi I believe). NT-Emacs
-     ignores these values.
-
-- j ::
-     spacing
-
-     Spacing as in mono-spaced or proportionally spaced. Values are =c=
-     (constant) or =m= (monospace) to mean fixed-width or =p= for proportionally
-     spaced.
-
-- k ::
-     average width in tenths of a pixel
-
-- l ::
-     character set
-
-     NT-Emacs understands: =ansi=, =oem=, =symbol= to refer to the standard Windows
-     character sets (the first two, at least, are locale dependant). =iso8859=
-     and =iso8859-1= are accepted as synonyms for ansi.
 
 Under Linux, use the =xfontsel= utility (or the command-line =xlsfonts=) to try
 out different fonts. After choosing a font, click the select button in
@@ -13940,13 +13820,13 @@ magnifier applications. The fonts should have gray edges.
 There are a few commands to adjust the font sizes:
 
 - =C-x C-+= ::
-     Increase the default face height by one step
+     Increase the default face height by one step.
 
 - =C-x C--= ::
-     Decrease the default face height by one step
+     Decrease the default face height by one step.
 
 - =C-x C-0= ::
-     Resets to defaults
+     Resets to defaults.
 
 #+begin_src emacs-lisp
 )
@@ -14034,10 +13914,10 @@ Try the Embedded mode of Calc: =C-x * e= (no need to mark the region).
 Similar commands: in place of =e=,
 
 - =w= ::
-     start Embedded mode on the current "word".
+     Start Embedded mode on the current "word".
 
 - =j= ::
-     operate on *assignments*.
+     Operate on *assignments*.
 
 You need to type =C-x * e= again to exit the Embedded mode.
 
