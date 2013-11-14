@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-14 Thu 10:19>
+# Time-stamp: <2013-11-14 Thu 10:31>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -2143,6 +2143,7 @@ Add language indicator.
                    (cons
                     '(:eval
                       (let ((dict (and (featurep 'ispell)
+                                       (not buffer-read-only)
                                        (or ispell-local-dictionary
                                            ispell-dictionary))))
                         (and dict
