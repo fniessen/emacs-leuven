@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131114.1419
+;; Version: 20131114.144
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131114.1419]--")
+(message "* --[ Loading Emacs Leuven 20131114.144]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3365,11 +3365,11 @@
   (add-hook 'org-mode-hook
             (lambda ()
               (local-set-key
-               (kbd "\C-\M-n") 'outline-next-visible-heading)
+               (kbd "C-M-n") 'outline-next-visible-heading)
               (local-set-key
-               (kbd "\C-\M-p") 'outline-previous-visible-heading)
+               (kbd "C-M-p") 'outline-previous-visible-heading)
               (local-set-key
-               (kbd "\C-\M-u") 'outline-up-heading)))
+               (kbd "C-M-u") 'outline-up-heading)))
 
   ;; headlines in the current buffer are offered via completion
   ;; (interface also used by the `refile' command)
@@ -6652,12 +6652,10 @@ From %c"
       (global-highlight-parentheses-mode t)
 
       (setq hl-paren-background-colors
-            '("#FF993F" "#FFF33F" "#B0FF3F" "#4BFF4B"
-              "#3FFFB0" "#3FF3FF" "#3F99FF" "#3F3FFF"))
+            '("#FF993F" "#B0FF3F" "#3FFFB0" "#3F99FF"))
 
       (setq hl-paren-colors
-            '("black" "black" "black" "black" "black"
-              "black" "black" "white"))))
+            '("black" "black" "black" "black"))))
 
 ;;** 26.5 (info "(emacs)Comments")
 
@@ -6691,10 +6689,8 @@ From %c"
   ;;           C-c @ c-h  to C-c h  (hs-hide-block)
   ;; Seems not to collide with anything when in cperl-mode at least.
 
-  ;; (define-key hs-minor-mode-map
-  ;;   [?\C-c ?\C-\M-h] 'hs-hide-all)
-  ;; (define-key hs-minor-mode-map
-  ;;   [?\C-c ?\C-\M-s] 'hs-show-all)
+  ;; (define-key hs-minor-mode-map (kbd "C-c C-M-h") 'hs-hide-all)
+  ;; (define-key hs-minor-mode-map (kbd "C-c C-M-s") 'hs-show-all)
 
   ;; (global-set-key (kbd "C-c @ @") 'hs-hide-all)
   ;; (global-set-key (kbd "C-c @ @") 'hs-show-all)
@@ -7279,7 +7275,7 @@ From %c"
   (setq tags-table-list
         '(
           "~/TAGS"
-          "/usr/local/lib/emacs/src/TAGS"
+          ;; "/usr/local/lib/emacs/src/TAGS"
           ;; "/usr/share/texmf-texlive/tex/latex/TAGS"
           ))
 
@@ -7359,51 +7355,62 @@ From %c"
 
       (defun leuven--semantic ()
         ;; automatically complete whatever symbol you are typing
-        (local-set-key "\C-c?" 'semantic-ia-complete-symbol) ;; better binding: `M-/'?
+        (local-set-key
+          (kbd "C-c ?") 'semantic-ia-complete-symbol) ; better binding: `M-/'?
 
         ;; jump to the definition of the symbol under cursor
-        (local-set-key "\C-cj" 'semantic-ia-fast-jump) ;; where a symbol is declared
+        (local-set-key
+          (kbd "C-c j") 'semantic-ia-fast-jump) ; where a symbol is declared
 
         ;; show the documentation of the symbol under cursor
-        (local-set-key "\C-cq" 'semantic-ia-show-doc) ;; show javadoc of the right method
+        (local-set-key
+          (kbd "C-c q") 'semantic-ia-show-doc) ; show javadoc of the right method
 
         ;; show a summary about the symbol under cursor
-        (local-set-key "\C-cs" 'semantic-ia-show-summary)
+        (local-set-key
+          (kbd "C-c s") 'semantic-ia-show-summary)
 
 
         ;; show possible public member functions or data members (when at `.'
         ;; or `->' after an object name)
-        (local-set-key "\C-c>" 'semantic-complete-analyze-inline)
+        (local-set-key
+          (kbd "C-c >") 'semantic-complete-analyze-inline)
 
         ;; toggle between the implementation and a prototype of symbol under
         ;; cursor
-        (local-set-key "\C-cp" 'semantic-analyze-proto-impl-toggle)
+        (local-set-key
+          (kbd "C-c p") 'semantic-analyze-proto-impl-toggle)
 
         ;; visit the header file under cursor
-        (local-set-key "\C-c=" 'semantic-decoration-include-visit)
+        (local-set-key
+          (kbd "C-c =") 'semantic-decoration-include-visit)
 
 
         ;; unfold the block under cursor
-        (local-set-key "\C-c+" 'semantic-tag-folding-show-block)
+        (local-set-key
+          (kbd "C-c +") 'semantic-tag-folding-show-block)
 
         ;; fold the block under cursor
-        (local-set-key "\C-c-" 'semantic-tag-folding-fold-block)
+        (local-set-key
+          (kbd "C-c -") 'semantic-tag-folding-fold-block)
 
         ;; C-c C-c is not a prefix key!
         ;; ;; unfold all
-        ;; (local-set-key "\C-c\C-c+" 'semantic-tag-folding-show-all)
+        ;; (local-set-key
+        ;;   (kbd "C-c C-c +") 'semantic-tag-folding-show-all)
         ;;
         ;; ;; fold all
-        ;; (local-set-key "\C-c\C-c-" 'semantic-tag-folding-fold-all)
+        ;; (local-set-key
+        ;;   (kbd "C-c C-c -") 'semantic-tag-folding-fold-all)
         )
 
       (add-hook 'prog-mode-hook 'leuven--semantic)
 
       (defun leuven--c-mode-semantic ()
         "Completion on `.' or `->'."
-        (local-set-key "." 'semantic-complete-self-insert)
-        (local-set-key ">" 'semantic-complete-self-insert)
-        (local-set-key "\C-c\C-r" 'semantic-symref))
+        (local-set-key (kbd ".") 'semantic-complete-self-insert)
+        (local-set-key (kbd ">") 'semantic-complete-self-insert)
+        (local-set-key (kbd "C-c C-r") 'semantic-symref))
 
       (add-hook 'c-mode-common-hook 'leuven--c-mode-semantic))
 
@@ -9415,7 +9422,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131114.142]--")
+(message "* --[ Loaded Emacs Leuven 20131114.1441]--")
 
 (provide 'emacs-leuven)
 

@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-14 Thu 14:18>
+# Time-stamp: <2013-11-14 Thu 14:46>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4953,11 +4953,11 @@ Display outline path in mode line:
   (add-hook 'org-mode-hook
             (lambda ()
               (local-set-key
-               (kbd "\C-\M-n") 'outline-next-visible-heading)
+               (kbd "C-M-n") 'outline-next-visible-heading)
               (local-set-key
-               (kbd "\C-\M-p") 'outline-previous-visible-heading)
+               (kbd "C-M-p") 'outline-previous-visible-heading)
               (local-set-key
-               (kbd "\C-\M-u") 'outline-up-heading)))
+               (kbd "C-M-u") 'outline-up-heading)))
 #+end_src
 
 Move through an Org file like =cd= on a file system with =org-goto=:
@@ -5209,17 +5209,31 @@ work.
 
 We use the following 4-letter status keywords:
 
-- TODO :: Approved task, to be done.
-- STRT :: Some progress has already been done on the task.
-- DLGT :: Task delegated to someone else.
-- WAIT :: Waiting for some external event to be able to work on the task.
-- DFRD :: Task to be approved (and eventually done) in the future.
-- DONE :: Task is completed.
-- CANX :: Task is declined (but kept documented, instead of being deleted).
+- TODO ::
+     Approved task, to be done.
+
+- STRT ::
+     Some progress has already been done on the task.
+
+- DLGT ::
+     Task delegated to someone else.
+
+- WAIT ::
+     Waiting for some external event to be able to work on the task.
+
+- DFRD ::
+     Task to be approved (and eventually done) in the future.
+
+- DONE ::
+     Task is completed.
+
+- CANX ::
+     Task is declined (but kept documented, instead of being deleted).
 
 There is just 1 exception (made on purpose) to the 4-letter scheme:
 
-- NEW :: Proposed task, idea or wish, *not approved yet*. Draft.
+- NEW ::
+     Proposed task, idea or wish, *not approved yet*. Draft.
 
 One could add a =CLSD= or =VRFD= state for bug fixes, for example, which need to be
 verified before really closing the task.
@@ -6684,7 +6698,7 @@ possible, based on my location:
      Am I outside of business hours?
 
 - Home ::
-     Does my IP address begin with 192.168.9?
+     Does my IP address begin with 192.168?
 
 I can now define the function =leuven--org-auto-exclude-function= to auto-exclude
 based on this type of context information.
@@ -9799,12 +9813,10 @@ things.
       (global-highlight-parentheses-mode t)
 
       (setq hl-paren-background-colors
-            '("#FF993F" "#FFF33F" "#B0FF3F" "#4BFF4B"
-              "#3FFFB0" "#3FF3FF" "#3F99FF" "#3F3FFF"))
+            '("#FF993F" "#B0FF3F" "#3FFFB0" "#3F99FF"))
 
       (setq hl-paren-colors
-            '("black" "black" "black" "black" "black"
-              "black" "black" "white"))))
+            '("black" "black" "black" "black"))))
 #+end_src
 
 ** Manipulating Comments
@@ -9861,10 +9873,8 @@ distinguishes end-of-block.
   ;;           C-c @ c-h  to C-c h  (hs-hide-block)
   ;; Seems not to collide with anything when in cperl-mode at least.
 
-  ;; (define-key hs-minor-mode-map
-  ;;   [?\C-c ?\C-\M-h] 'hs-hide-all)
-  ;; (define-key hs-minor-mode-map
-  ;;   [?\C-c ?\C-\M-s] 'hs-show-all)
+  ;; (define-key hs-minor-mode-map (kbd "C-c C-M-h") 'hs-hide-all)
+  ;; (define-key hs-minor-mode-map (kbd "C-c C-M-s") 'hs-show-all)
 
   ;; (global-set-key (kbd "C-c @ @") 'hs-hide-all)
   ;; (global-set-key (kbd "C-c @ @") 'hs-show-all)
@@ -10428,10 +10438,10 @@ contents!
 Version control systems that interact with Emacs in a generic way.
 
 - =C-x v d= ::
-     open dired buffer in VC-mode
+     Open dired buffer in VC-mode
 
 - =C-x v v= ::
-     take appropriate action (add, commit)
+     Take appropriate action (add, commit)
 
 #+begin_src emacs-lisp
 ;;** 28.1 (info "(emacs)Version Control")
@@ -10812,7 +10822,7 @@ After this, you can select the tag file to use with the command
   (setq tags-table-list
         '(
           "~/TAGS"
-          "/usr/local/lib/emacs/src/TAGS"
+          ;; "/usr/local/lib/emacs/src/TAGS"
           ;; "/usr/share/texmf-texlive/tex/latex/TAGS"
           ))
 #+end_src
@@ -10968,51 +10978,62 @@ The commands to display *symbol references* are:
 
       (defun leuven--semantic ()
         ;; automatically complete whatever symbol you are typing
-        (local-set-key "\C-c?" 'semantic-ia-complete-symbol) ;; better binding: `M-/'?
+        (local-set-key
+          (kbd "C-c ?") 'semantic-ia-complete-symbol) ; better binding: `M-/'?
 
         ;; jump to the definition of the symbol under cursor
-        (local-set-key "\C-cj" 'semantic-ia-fast-jump) ;; where a symbol is declared
+        (local-set-key
+          (kbd "C-c j") 'semantic-ia-fast-jump) ; where a symbol is declared
 
         ;; show the documentation of the symbol under cursor
-        (local-set-key "\C-cq" 'semantic-ia-show-doc) ;; show javadoc of the right method
+        (local-set-key
+          (kbd "C-c q") 'semantic-ia-show-doc) ; show javadoc of the right method
 
         ;; show a summary about the symbol under cursor
-        (local-set-key "\C-cs" 'semantic-ia-show-summary)
+        (local-set-key
+          (kbd "C-c s") 'semantic-ia-show-summary)
 
 
         ;; show possible public member functions or data members (when at `.'
         ;; or `->' after an object name)
-        (local-set-key "\C-c>" 'semantic-complete-analyze-inline)
+        (local-set-key
+          (kbd "C-c >") 'semantic-complete-analyze-inline)
 
         ;; toggle between the implementation and a prototype of symbol under
         ;; cursor
-        (local-set-key "\C-cp" 'semantic-analyze-proto-impl-toggle)
+        (local-set-key
+          (kbd "C-c p") 'semantic-analyze-proto-impl-toggle)
 
         ;; visit the header file under cursor
-        (local-set-key "\C-c=" 'semantic-decoration-include-visit)
+        (local-set-key
+          (kbd "C-c =") 'semantic-decoration-include-visit)
 
 
         ;; unfold the block under cursor
-        (local-set-key "\C-c+" 'semantic-tag-folding-show-block)
+        (local-set-key
+          (kbd "C-c +") 'semantic-tag-folding-show-block)
 
         ;; fold the block under cursor
-        (local-set-key "\C-c-" 'semantic-tag-folding-fold-block)
+        (local-set-key
+          (kbd "C-c -") 'semantic-tag-folding-fold-block)
 
         ;; C-c C-c is not a prefix key!
         ;; ;; unfold all
-        ;; (local-set-key "\C-c\C-c+" 'semantic-tag-folding-show-all)
+        ;; (local-set-key
+        ;;   (kbd "C-c C-c +") 'semantic-tag-folding-show-all)
         ;;
         ;; ;; fold all
-        ;; (local-set-key "\C-c\C-c-" 'semantic-tag-folding-fold-all)
+        ;; (local-set-key
+        ;;   (kbd "C-c C-c -") 'semantic-tag-folding-fold-all)
         )
 
       (add-hook 'prog-mode-hook 'leuven--semantic)
 
       (defun leuven--c-mode-semantic ()
         "Completion on `.' or `->'."
-        (local-set-key "." 'semantic-complete-self-insert)
-        (local-set-key ">" 'semantic-complete-self-insert)
-        (local-set-key "\C-c\C-r" 'semantic-symref))
+        (local-set-key (kbd ".") 'semantic-complete-self-insert)
+        (local-set-key (kbd ">") 'semantic-complete-self-insert)
+        (local-set-key (kbd "C-c C-r") 'semantic-symref))
 
       (add-hook 'c-mode-common-hook 'leuven--c-mode-semantic))
 
@@ -11091,9 +11112,12 @@ really like this.
    (when (try-require 'eassist)
 
      (defun leuven--c-mode-eassist ()
-       (local-set-key "\C-ct" 'eassist-switch-h-cpp)
-       (local-set-key "\C-xt" 'eassist-switch-h-cpp)
-       (local-set-key "\C-ce" 'eassist-list-methods))
+       (local-set-key
+         (kbd "C-c t") 'eassist-switch-h-cpp)
+       (local-set-key
+         (kbd "C-x t") 'eassist-switch-h-cpp)
+       (local-set-key
+         (kbd "C-c e") 'eassist-list-methods))
 
      (add-hook 'c-mode-common-hook 'leuven--c-mode-eassist))
 #+end_src

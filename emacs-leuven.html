@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-14 Thu 14:21 -->
+  <title>Emacs Leuven</title><!-- 2013-11-14 Thu 14:43 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131114.142</span>
+"color: #008200; font-style: italic;">Version: 20131114.1442</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131114.142]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131114.1442]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -9294,13 +9294,13 @@ M-: (executable-find "diff") RET
             (<span style="color: #0000FF;">lambda</span> ()
               (local-set-key
                (kbd <span style=
-"color: #FF4700;">"\C-\M-n"</span>) 'outline-next-visible-heading)
+"color: #FF4700;">"C-M-n"</span>) 'outline-next-visible-heading)
               (local-set-key
                (kbd <span style=
-"color: #FF4700;">"\C-\M-p"</span>) 'outline-previous-visible-heading)
+"color: #FF4700;">"C-M-p"</span>) 'outline-previous-visible-heading)
               (local-set-key
                (kbd <span style=
-"color: #FF4700;">"\C-\M-u"</span>) 'outline-up-heading)))
+"color: #FF4700;">"C-M-u"</span>) 'outline-up-heading)))
 </pre>
             </div>
 
@@ -17548,22 +17548,15 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
       (setq hl-paren-background-colors
             '(<span style="color: #FF4700;">"#FF993F"</span> <span style=
-"color: #FF4700;">"#FFF33F"</span> <span style=
 "color: #FF4700;">"#B0FF3F"</span> <span style=
-"color: #FF4700;">"#4BFF4B"</span>
-              <span style="color: #FF4700;">"#3FFFB0"</span> <span style=
-"color: #FF4700;">"#3FF3FF"</span> <span style=
-"color: #FF4700;">"#3F99FF"</span> <span style=
-"color: #FF4700;">"#3F3FFF"</span>))
+"color: #FF4700;">"#3FFFB0"</span> <span style=
+"color: #FF4700;">"#3F99FF"</span>))
 
       (setq hl-paren-colors
             '(<span style="color: #FF4700;">"black"</span> <span style=
 "color: #FF4700;">"black"</span> <span style=
 "color: #FF4700;">"black"</span> <span style=
-"color: #FF4700;">"black"</span> <span style="color: #FF4700;">"black"</span>
-              <span style="color: #FF4700;">"black"</span> <span style=
-"color: #FF4700;">"black"</span> <span style=
-"color: #FF4700;">"white"</span>))))
+"color: #FF4700;">"black"</span>))))
 </pre>
           </div>
         </div>
@@ -17653,13 +17646,9 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008200; font-style: italic;">Seems not to collide with anything when in cperl-mode at least.</span>
 
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(define-key hs-minor-mode-map</span>
-  <span style="color: #008200;">;;   </span><span style=
-"color: #008200; font-style: italic;">[?\C-c ?\C-\M-h] 'hs-hide-all)</span>
+"color: #008200; font-style: italic;">(define-key hs-minor-mode-map (kbd "C-c C-M-h") 'hs-hide-all)</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(define-key hs-minor-mode-map</span>
-  <span style="color: #008200;">;;   </span><span style=
-"color: #008200; font-style: italic;">[?\C-c ?\C-\M-s] 'hs-show-all)</span>
+"color: #008200; font-style: italic;">(define-key hs-minor-mode-map (kbd "C-c C-M-s") 'hs-show-all)</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(global-set-key (kbd "C-c @ @") 'hs-hide-all)</span>
@@ -18574,11 +18563,11 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           <dl class="org-dl">
             <dt><code>C-x v d</code></dt>
 
-            <dd>open dired buffer in VC-mode</dd>
+            <dd>Open dired buffer in VC-mode</dd>
 
             <dt><code>C-x v v</code></dt>
 
-            <dd>take appropriate action (add, commit)</dd>
+            <dd>Take appropriate action (add, commit)</dd>
           </dl>
 
           <div class="org-src-container">
@@ -19195,7 +19184,8 @@ TAGS:
   (setq tags-table-list
         '(
           <span style="color: #FF4700;">"~/TAGS"</span>
-          <span style="color: #FF4700;">"/usr/local/lib/emacs/src/TAGS"</span>
+          <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">"/usr/local/lib/emacs/src/TAGS"</span>
           <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">"/usr/share/texmf-texlive/tex/latex/TAGS"</span>
           ))
@@ -19458,31 +19448,35 @@ TAGS:
 "color: #006699;">leuven--semantic</span> ()
         <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">automatically complete whatever symbol you are typing</span>
-        (local-set-key <span style=
-"color: #FF4700;">"\C-c?"</span> 'semantic-ia-complete-symbol) <span style=
-"color: #008200;">;; </span><span style=
+        (local-set-key
+          (kbd <span style=
+"color: #FF4700;">"C-c ?"</span>) 'semantic-ia-complete-symbol) <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">better binding: `</span><span style=
 "color: #008200; font-style: italic;">M-/</span><span style=
 "color: #008200; font-style: italic;">'?</span>
 
         <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">jump to the definition of the symbol under cursor</span>
-        (local-set-key <span style=
-"color: #FF4700;">"\C-cj"</span> 'semantic-ia-fast-jump) <span style=
-"color: #008200;">;; </span><span style=
+        (local-set-key
+          (kbd <span style=
+"color: #FF4700;">"C-c j"</span>) 'semantic-ia-fast-jump) <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">where a symbol is declared</span>
 
         <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">show the documentation of the symbol under cursor</span>
-        (local-set-key <span style=
-"color: #FF4700;">"\C-cq"</span> 'semantic-ia-show-doc) <span style=
-"color: #008200;">;; </span><span style=
+        (local-set-key
+          (kbd <span style=
+"color: #FF4700;">"C-c q"</span>) 'semantic-ia-show-doc) <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">show javadoc of the right method</span>
 
         <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">show a summary about the symbol under cursor</span>
-        (local-set-key <span style=
-"color: #FF4700;">"\C-cs"</span> 'semantic-ia-show-summary)
+        (local-set-key
+          (kbd <span style=
+"color: #FF4700;">"C-c s"</span>) 'semantic-ia-show-summary)
 
 
         <span style="color: #008200;">;; </span><span style=
@@ -19491,43 +19485,52 @@ TAGS:
 "color: #008200; font-style: italic;">or `</span><span style=
 "color: #008200; font-style: italic;">-&gt;</span><span style=
 "color: #008200; font-style: italic;">' after an object name)</span>
-        (local-set-key <span style=
-"color: #FF4700;">"\C-c&gt;"</span> 'semantic-complete-analyze-inline)
+        (local-set-key
+          (kbd <span style=
+"color: #FF4700;">"C-c &gt;"</span>) 'semantic-complete-analyze-inline)
 
         <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">toggle between the implementation and a prototype of symbol under</span>
         <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">cursor</span>
-        (local-set-key <span style=
-"color: #FF4700;">"\C-cp"</span> 'semantic-analyze-proto-impl-toggle)
+        (local-set-key
+          (kbd <span style=
+"color: #FF4700;">"C-c p"</span>) 'semantic-analyze-proto-impl-toggle)
 
         <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">visit the header file under cursor</span>
-        (local-set-key <span style=
-"color: #FF4700;">"\C-c="</span> 'semantic-decoration-include-visit)
+        (local-set-key
+          (kbd <span style=
+"color: #FF4700;">"C-c ="</span>) 'semantic-decoration-include-visit)
 
 
         <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">unfold the block under cursor</span>
-        (local-set-key <span style=
-"color: #FF4700;">"\C-c+"</span> 'semantic-tag-folding-show-block)
+        (local-set-key
+          (kbd <span style=
+"color: #FF4700;">"C-c +"</span>) 'semantic-tag-folding-show-block)
 
         <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">fold the block under cursor</span>
-        (local-set-key <span style=
-"color: #FF4700;">"\C-c-"</span> 'semantic-tag-folding-fold-block)
+        (local-set-key
+          (kbd <span style=
+"color: #FF4700;">"C-c -"</span>) 'semantic-tag-folding-fold-block)
 
         <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">C-c C-c is not a prefix key!</span>
         <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; unfold all</span>
         <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(local-set-key "\C-c\C-c+" 'semantic-tag-folding-show-all)</span>
+"color: #008200; font-style: italic;">(local-set-key</span>
+        <span style="color: #008200;">;;   </span><span style=
+"color: #008200; font-style: italic;">(kbd "C-c C-c +") 'semantic-tag-folding-show-all)</span>
         <span style="color: #008200;">;;</span>
         <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; fold all</span>
         <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(local-set-key "\C-c\C-c-" 'semantic-tag-folding-fold-all)</span>
+"color: #008200; font-style: italic;">(local-set-key</span>
+        <span style="color: #008200;">;;   </span><span style=
+"color: #008200; font-style: italic;">(kbd "C-c C-c -") 'semantic-tag-folding-fold-all)</span>
         )
 
       (add-hook 'prog-mode-hook 'leuven--semantic)
@@ -19536,12 +19539,12 @@ TAGS:
 "color: #006699;">leuven--c-mode-semantic</span> ()
         <span style=
 "color: #008000;">"Completion on `.' or `</span><span style="color: #008000;">-&gt;</span><span style="color: #008000;">'."</span>
-        (local-set-key <span style=
-"color: #FF4700;">"."</span> 'semantic-complete-self-insert)
-        (local-set-key <span style=
-"color: #FF4700;">"&gt;"</span> 'semantic-complete-self-insert)
-        (local-set-key <span style=
-"color: #FF4700;">"\C-c\C-r"</span> 'semantic-symref))
+        (local-set-key (kbd <span style=
+"color: #FF4700;">"."</span>) 'semantic-complete-self-insert)
+        (local-set-key (kbd <span style=
+"color: #FF4700;">"&gt;"</span>) 'semantic-complete-self-insert)
+        (local-set-key (kbd <span style=
+"color: #FF4700;">"C-c C-r"</span>) 'semantic-symref))
 
       (add-hook 'c-mode-common-hook 'leuven--c-mode-semantic))
 
@@ -19661,12 +19664,15 @@ TAGS:
 
      (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--c-mode-eassist</span> ()
-       (local-set-key <span style=
-"color: #FF4700;">"\C-ct"</span> 'eassist-switch-h-cpp)
-       (local-set-key <span style=
-"color: #FF4700;">"\C-xt"</span> 'eassist-switch-h-cpp)
-       (local-set-key <span style=
-"color: #FF4700;">"\C-ce"</span> 'eassist-list-methods))
+       (local-set-key
+         (kbd <span style=
+"color: #FF4700;">"C-c t"</span>) 'eassist-switch-h-cpp)
+       (local-set-key
+         (kbd <span style=
+"color: #FF4700;">"C-x t"</span>) 'eassist-switch-h-cpp)
+       (local-set-key
+         (kbd <span style=
+"color: #FF4700;">"C-c e"</span>) 'eassist-list-methods))
 
      (add-hook 'c-mode-common-hook 'leuven--c-mode-eassist))
 </pre>
@@ -25072,7 +25078,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131114.1421]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131114.1442]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
