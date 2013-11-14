@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-13 Wed 14:41>
+# Time-stamp: <2013-11-14 Thu 10:19>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -9086,15 +9086,15 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 *** Org-effectiveness
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "org"
-    (message "... Org Effectiveness")
-
-    (when (try-require 'org-effectiveness)
-
-      (add-hook 'org-mode-hook
-                (lambda ()
-                  (org-effectiveness-count-todo)
-                  (sit-for 0.2)))))
+  ;; (with-eval-after-load "org"
+  ;;   (message "... Org Effectiveness")
+  ;;
+  ;;   (when (try-require 'org-effectiveness)
+  ;;
+  ;;     (add-hook 'org-mode-hook
+  ;;               (lambda ()
+  ;;                 (org-effectiveness-count-todo)
+  ;;                 (sit-for 0.2)))))
 #+end_src
 
 *** Org-notmuch

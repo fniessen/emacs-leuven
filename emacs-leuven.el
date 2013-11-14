@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131113.1442
+;; Version: 20131114.1019
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131113.1442]--")
+(message "* --[ Loading Emacs Leuven 20131114.1019]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6225,15 +6225,15 @@ From %c"
     (add-hook 'before-save-hook 'leuven-org-update-buffer)
     (message "Add leuven-org-update-buffer to before-save-hook") (sit-for 1.5))
 
-  (with-eval-after-load "org"
-    (message "... Org Effectiveness")
-
-    (when (try-require 'org-effectiveness)
-
-      (add-hook 'org-mode-hook
-                (lambda ()
-                  (org-effectiveness-count-todo)
-                  (sit-for 0.2)))))
+  ;; (with-eval-after-load "org"
+  ;;   (message "... Org Effectiveness")
+  ;;
+  ;;   (when (try-require 'org-effectiveness)
+  ;;
+  ;;     (add-hook 'org-mode-hook
+  ;;               (lambda ()
+  ;;                 (org-effectiveness-count-todo)
+  ;;                 (sit-for 0.2)))))
 
   (GNUEmacs
     ;; add weather forecast in your Org agenda
@@ -9418,7 +9418,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131113.1443]--")
+(message "* --[ Loaded Emacs Leuven 20131114.102]--")
 
 (provide 'emacs-leuven)
 
