@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-14 Thu 10:34 -->
+  <title>Emacs Leuven</title><!-- 2013-11-14 Thu 14:21 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131114.1033</span>
+"color: #008200; font-style: italic;">Version: 20131114.142</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131114.1033]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131114.142]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -3696,7 +3696,7 @@
           </dl>
 
           <p>It is complementary to the features of the library
-          <b>Highlight</b>:</p>
+          <b>Highlight</b> (from Drew Adams):</p>
 
           <dl class="org-dl">
             <dt><code>hlt-highlight-regexp-region</code></dt>
@@ -3719,52 +3719,37 @@
             <li>Hi Lock highlights new text as you type it.</li>
 
             <li>Highlight lets you navigate among highlights:
-
-              <dl class="org-dl">
-                <dt><code>C-S-n</code></dt>
-
-                <dd><code>hlt-next-highlight</code>.</dd>
-
-                <dt><code>C-S-p</code></dt>
-
-                <dd><code>hlt-previous-highlight</code>.</dd>
-              </dl>
-            </li>
+            <code>hlt-next-highlight</code>,
+            <code>hlt-previous-highlight</code>.</li>
           </ul>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (GNUEmacs
-    (autoload 'hlt-highlight-regexp-region <span style=
-"color: #FF4700;">"highlight"</span>
-      <span style=
-"color: #008000;">"Highlight regular expression REGEXP in region."</span> t)
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">enable Hi Lock mode for all buffers</span>
+    (global-hi-lock-mode 1)
 
     (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-hlt-highlight-current-word</span> ()
+"color: #006699;">leuven-highlight-current-word</span> ()
       <span style=
-"color: #008000;">"Highlight the word that point is on throughout the buffer."</span>
+"color: #008000;">"Highlight the word that point is on throughout the buffer.</span>
+
+<span style=
+"color: #008000;">    If already highlighted, unhighlight the word at point."</span>
       (interactive)
       (<span style="color: #0000FF;">let</span> ((cword (current-word t)))
         (<span style="color: #0000FF;">when</span> cword
-          (<span style="color: #0000FF;">save-excursion</span>
-            (hlt-highlight-regexp-region (point-min) (point-max)
-                                         (regexp-quote cword))))))
+          (<span style=
+"color: #0000FF;">if</span> (not (equal (get-text-property (point) 'face) 'highlight))
+              (highlight-regexp (regexp-quote cword) 'highlight)
+            (unhighlight-regexp (regexp-quote cword))))))
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">emulation of Vim's `*' search</span>
     (global-set-key
       (kbd <span style=
-"color: #FF4700;">"C-*"</span>) 'leuven-hlt-highlight-current-word)
-
-    (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
-"color: #FF4700;">"highlight"</span>
-      (global-set-key
-        (kbd <span style=
-"color: #FF4700;">"C-S-p"</span>) 'hlt-previous-highlight)
-      (global-set-key
-        (kbd <span style=
-"color: #FF4700;">"C-S-n"</span>) 'hlt-next-highlight)))
+"color: #FF4700;">"C-*"</span>) 'leuven-highlight-current-word))
 </pre>
           </div>
 
@@ -3772,14 +3757,9 @@
             <b><span class="todo TODO">TODO</span> Improve word
             highlighting</b><br />
 
-            <ul class="org-ul">
-              <li>Use <code>highlight-symbol</code> which chooses rainbow
-              colors automatically and makes it much easier to follow some key
-              variables through a block of code.</li>
-
-              <li>Use <code>C-*</code> to <b>unlight</b> if already
-              highlighted.</li>
-            </ul>
+            <p>Use <code>highlight-symbol</code> which chooses rainbow colors
+            automatically and makes it much easier to follow some key variables
+            through a block of code.</p>
           </div>
         </div>
       </div>
@@ -25092,7 +25072,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131114.1033]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131114.1421]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

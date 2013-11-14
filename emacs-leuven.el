@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131114.1031
+;; Version: 20131114.1419
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131114.1031]--")
+(message "* --[ Loading Emacs Leuven 20131114.1419]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1036,27 +1036,23 @@
   (leuven--section "14.13 (emacs)Highlight Interactively by Matching")
 
   (GNUEmacs
-    (autoload 'hlt-highlight-regexp-region "highlight"
-      "Highlight regular expression REGEXP in region." t)
+    ;; enable Hi Lock mode for all buffers
+    (global-hi-lock-mode 1)
 
-    (defun leuven-hlt-highlight-current-word ()
-      "Highlight the word that point is on throughout the buffer."
+    (defun leuven-highlight-current-word ()
+      "Highlight the word that point is on throughout the buffer.
+
+    If already highlighted, unhighlight the word at point."
       (interactive)
       (let ((cword (current-word t)))
         (when cword
-          (save-excursion
-            (hlt-highlight-regexp-region (point-min) (point-max)
-                                         (regexp-quote cword))))))
+          (if (not (equal (get-text-property (point) 'face) 'highlight))
+              (highlight-regexp (regexp-quote cword) 'highlight)
+            (unhighlight-regexp (regexp-quote cword))))))
 
     ;; emulation of Vim's `*' search
     (global-set-key
-      (kbd "C-*") 'leuven-hlt-highlight-current-word)
-
-    (with-eval-after-load "highlight"
-      (global-set-key
-        (kbd "C-S-p") 'hlt-previous-highlight)
-      (global-set-key
-        (kbd "C-S-n") 'hlt-next-highlight)))
+      (kbd "C-*") 'leuven-highlight-current-word))
 
 ;;** 14.15 (info "(emacs)Displaying Boundaries")
 
@@ -9419,7 +9415,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131114.1032]--")
+(message "* --[ Loaded Emacs Leuven 20131114.142]--")
 
 (provide 'emacs-leuven)
 

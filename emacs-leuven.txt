@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-14 Thu 10:31>
+# Time-stamp: <2013-11-14 Thu 14:18>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1518,7 +1518,7 @@ You can use *Hi Lock* (part of Emacs since version 21) to highlight a regexp
 - =C-x w r REGEXP <RET>= ::
      Unhighlight REGEXP.
 
-It is complementary to the features of the library *Highlight*:
+It is complementary to the features of the library *Highlight* (from Drew Adams):
 
 - =hlt-highlight-regexp-region= ::
      Highlight a REGEXP throughout the region.
@@ -1534,43 +1534,33 @@ Comparison:
 
 - Hi Lock highlights new text as you type it.
 
-- Highlight lets you navigate among highlights:
-
-  + =C-S-n= ::
-       =hlt-next-highlight=.
-
-  + =C-S-p= ::
-       =hlt-previous-highlight=.
+- Highlight lets you navigate among highlights: =hlt-next-highlight=,
+  =hlt-previous-highlight=.
 
 #+begin_src emacs-lisp
   (GNUEmacs
-    (autoload 'hlt-highlight-regexp-region "highlight"
-      "Highlight regular expression REGEXP in region." t)
+    ;; enable Hi Lock mode for all buffers
+    (global-hi-lock-mode 1)
 
-    (defun leuven-hlt-highlight-current-word ()
-      "Highlight the word that point is on throughout the buffer."
+    (defun leuven-highlight-current-word ()
+      "Highlight the word that point is on throughout the buffer.
+
+    If already highlighted, unhighlight the word at point."
       (interactive)
       (let ((cword (current-word t)))
         (when cword
-          (save-excursion
-            (hlt-highlight-regexp-region (point-min) (point-max)
-                                         (regexp-quote cword))))))
+          (if (not (equal (get-text-property (point) 'face) 'highlight))
+              (highlight-regexp (regexp-quote cword) 'highlight)
+            (unhighlight-regexp (regexp-quote cword))))))
 
     ;; emulation of Vim's `*' search
     (global-set-key
-      (kbd "C-*") 'leuven-hlt-highlight-current-word)
-
-    (with-eval-after-load "highlight"
-      (global-set-key
-        (kbd "C-S-p") 'hlt-previous-highlight)
-      (global-set-key
-        (kbd "C-S-n") 'hlt-next-highlight)))
+      (kbd "C-*") 'leuven-highlight-current-word))
 #+end_src
 
 *************** TODO Improve word highlighting
-- Use =highlight-symbol= which chooses rainbow colors automatically and makes it
-  much easier to follow some key variables through a block of code.
-- Use =C-*= to *unlight* if already highlighted.
+Use =highlight-symbol= which chooses rainbow colors automatically and makes it
+much easier to follow some key variables through a block of code.
 *************** END
 
 ** Displaying Boundaries
