@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-14 Thu 17:03>
+# Time-stamp: <2013-11-19 Tue 23:02>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -9024,19 +9024,19 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 #+begin_src emacs-lisp
 ;;** A.3 (info "(org)Adding hyperlink types")
 
-  ;; ;; define a new link type (`latex') whose path argument can hold the name of
-  ;; ;; any LaTeX command
-  ;; (org-add-link-type
-  ;;  "latex" nil
-  ;;  (lambda (path desc format)
-  ;;    (cond
-  ;;     ((eq format 'html)
-  ;;      (format "<span class=\"%s\">%s</span>" path desc))
-  ;;     ((eq format 'latex)
-  ;;      (format "\\%s{%s}" path desc)))))
-
   (with-eval-after-load "org"
     (message "... Org Adding hyperlink types")
+
+    ;; define a new link type (`latex') whose path argument can hold the name of
+    ;; any LaTeX command
+    (org-add-link-type
+     "latex" nil
+     (lambda (path desc format)
+       (cond
+        ((eq format 'html)
+         (format "<span class=\"%s\">%s</span>" path desc))
+        ((eq format 'latex)
+         (format "\\%s{%s}" path desc)))))
 
     ;; add background color by using custom links like [[bgcolor:red][Warning!]]
     (org-add-link-type

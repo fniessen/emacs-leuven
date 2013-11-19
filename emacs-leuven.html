@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-14 Thu 19:05 -->
+  <title>Emacs Leuven</title><!-- 2013-11-19 Tue 23:06 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131114.1903</span>
+"color: #008200; font-style: italic;">Version: 20131119.2305</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131114.1903]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131119.2305]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -16269,31 +16269,24 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 <span style="color: #008200;">;;</span><span style=
 "color: #008200; font-style: italic;">** A.3 (info "(org)Adding hyperlink types")</span>
 
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; define a new link type (`</span><span style="color: #008200; font-style: italic;">latex</span><span style="color: #008200; font-style: italic;">') whose path argument can hold the name of</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; any LaTeX command</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(org-add-link-type</span>
-  <span style="color: #008200;">;;  </span><span style=
-"color: #008200; font-style: italic;">"latex" nil</span>
-  <span style="color: #008200;">;;  </span><span style=
-"color: #008200; font-style: italic;">(lambda (path desc format)</span>
-  <span style="color: #008200;">;;    </span><span style=
-"color: #008200; font-style: italic;">(cond</span>
-  <span style="color: #008200;">;;     </span><span style=
-"color: #008200; font-style: italic;">((eq format 'html)</span>
-  <span style="color: #008200;">;;      </span><span style=
-"color: #008200; font-style: italic;">(format "&lt;span class=\"%s\"&gt;%s&lt;/span&gt;" path desc))</span>
-  <span style="color: #008200;">;;     </span><span style=
-"color: #008200; font-style: italic;">((eq format 'latex)</span>
-  <span style="color: #008200;">;;      </span><span style=
-"color: #008200; font-style: italic;">(format "\\%s{%s}" path desc)))))</span>
-
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #FF4700;">"org"</span>
     (message <span style=
 "color: #FF4700;">"... Org Adding hyperlink types"</span>)
+
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">define a new link type (`</span><span style="color: #008200; font-style: italic;">latex</span><span style="color: #008200; font-style: italic;">') whose path argument can hold the name of</span>
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">any LaTeX command</span>
+    (org-add-link-type
+     <span style="color: #FF4700;">"latex"</span> nil
+     (<span style="color: #0000FF;">lambda</span> (path desc format)
+       (<span style="color: #0000FF;">cond</span>
+        ((eq format 'html)
+         (format <span style=
+"color: #FF4700;">"&lt;span class=\"%s\"&gt;%s&lt;/span&gt;"</span> path desc))
+        ((eq format 'latex)
+         (format <span style="color: #FF4700;">"\\%s{%s}"</span> path desc)))))
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">add background color by using custom links like [[bgcolor:red][</span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">Warning</span><span style="color: #008200; font-style: italic;">!]]</span>
@@ -24996,7 +24989,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131114.1904]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131119.2305]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

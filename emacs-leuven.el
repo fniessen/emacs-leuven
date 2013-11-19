@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131114.1902
+;; Version: 20131119.2303
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131114.1902]--")
+(message "* --[ Loading Emacs Leuven 20131119.2303]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6166,19 +6166,19 @@ From %c"
 
 ;;** A.3 (info "(org)Adding hyperlink types")
 
-  ;; ;; define a new link type (`latex') whose path argument can hold the name of
-  ;; ;; any LaTeX command
-  ;; (org-add-link-type
-  ;;  "latex" nil
-  ;;  (lambda (path desc format)
-  ;;    (cond
-  ;;     ((eq format 'html)
-  ;;      (format "<span class=\"%s\">%s</span>" path desc))
-  ;;     ((eq format 'latex)
-  ;;      (format "\\%s{%s}" path desc)))))
-
   (with-eval-after-load "org"
     (message "... Org Adding hyperlink types")
+
+    ;; define a new link type (`latex') whose path argument can hold the name of
+    ;; any LaTeX command
+    (org-add-link-type
+     "latex" nil
+     (lambda (path desc format)
+       (cond
+        ((eq format 'html)
+         (format "<span class=\"%s\">%s</span>" path desc))
+        ((eq format 'latex)
+         (format "\\%s{%s}" path desc)))))
 
     ;; add background color by using custom links like [[bgcolor:red][Warning!]]
     (org-add-link-type
@@ -9375,7 +9375,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131114.1903]--")
+(message "* --[ Loaded Emacs Leuven 20131119.2304]--")
 
 (provide 'emacs-leuven)
 
