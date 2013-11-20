@@ -2,10 +2,11 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-19 Tue 23:02>
+# Time-stamp: <2013-11-20 Wed 09:33>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
+#+OPTIONS:   H:4 num:nil
 
 #+SEQ_TODO: TODO FIXME DOESN'T_WORK | WORKS
 
@@ -15,7 +16,6 @@
 
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="file:///D:/Users/fni/src/org-style/bigblow/css/bigblow.css"/>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="file:///D:/Users/fni/src/org-style/bigblow/css/htmlize.css"/>
-#+OPTIONS:   H:4 num:nil
 
 * Header
 
