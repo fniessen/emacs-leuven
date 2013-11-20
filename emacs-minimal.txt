@@ -1,0 +1,328 @@
+#+TITLE:     Minimal .emacs
+#+AUTHOR:    Fabrice Niessen
+#+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
+#+Time-stamp: <2013-11-20 Wed 09:37>
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:4 num:nil
+
+#+PROPERTY:  eval no
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="file:///D:/Users/fni/src/org-style/bigblow/css/bigblow.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="file:///D:/Users/fni/src/org-style/bigblow/css/htmlize.css"/>
+
+* Example
+  :PROPERTIES:
+  :tangle:   .emacs-minimal.el
+  :END:
+
+The usual method to find a problem while avoiding to disturb a running Emacs
+instance is to run a separate Emacs in batch mode: that will avoid any
+conflicts with the running instance.
+
+But =batch= implies =-q=, so you will have to provide a minimal =.emacs= file that
+sets up enough structure to enable you to do what you want, *without any of
+your customizations*.
+
+Here is a minimal Emacs config file.
+
+** Constant part
+
+#+begin_src emacs-lisp
+(message "Loading Minimal Emacs...")
+
+(defconst em/emacs-load-time-start (float-time))
+
+;;* --[ Constant part ]-------------------------------------------------------
+
+;; activate debugging
+(setq debug-on-error t)
+(setq debug-on-quit t)
+
+;; no limit when printing values
+(setq eval-expression-print-length nil)
+(setq eval-expression-print-level nil)
+
+;; allow input of accented characters (for terminals that use 8-bit charsets)
+(set-input-mode nil nil 1)
+
+;; enable visualization of matching parens
+(show-paren-mode 1)
+(setq show-paren-style 'mixed)
+(setq show-paren-ring-bell-on-mismatch t)
+
+;; Org-mode (reverse order, so that the Org lisp directory will be found
+;; before the Org contrib lisp directory)
+(add-to-list 'load-path (expand-file-name "~/Public/Repositories/org-mode/testing"))
+(add-to-list 'load-path (expand-file-name "~/Public/Repositories/org-mode/contrib/lisp"))
+(add-to-list 'load-path (expand-file-name "~/Public/Repositories/org-mode/lisp"))
+                                        ; change the pathnames appropriately!
+
+;; getting started
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)\\'" . org-mode))
+(if (locate-library "org-loaddefs")
+    (require 'org-loaddefs)
+  (require 'org-install))               ; obsolete since Emacs 24.3
+
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c c") 'org-capture)
+#+end_src
+
+** Variable part
+   :PROPERTIES:
+   :tangle:   no
+   :END:
+
+#+begin_src emacs-lisp :tangle .emacs-minimal.el
+;;* --[ Variable part Under Test ]--------------------------------------------
+#+end_src
+
+*** Eval-after-load eval'ed twice
+
+You can see the problem by running the following code:
+
+#+begin_src emacs-lisp
+(with-eval-after-load "org"
+  (message "LOADED org.el")
+  (sit-for 3)
+  (message ""))
+#+end_src
+
+You can *get backtraces* at each stopping point by edebugging =foobar= and =C-x C-f
+foo.org=:
+
+#+begin_src emacs-lisp
+(defun foobar ()
+  (message "LOADED org.el")
+  (sit-for 3)
+  (message ""))
+
+(setq org-load-hook (function foobar))
+#+end_src
+
+*** ELP
+
+#+begin_src emacs-lisp
+;; ;; (setq org-babel-load-languages '((emacs-lisp . t) (latex . t)))
+;; ;; (setq org-confirm-babel-evaluate nil)
+
+(require 'org)
+(require 'org-agenda)
+(require 'outline)
+(require 'font-lock)
+(require 'flyspell)
+(require 'ispell)
+(require 'calendar)
+(require 'cal-iso)
+(require 'diary-lib)
+
+;; profile some times... CAUTION: require the packages first (to get results)!
+;; (elp-instrument-list '(org-agenda-next-line next-line line-move))
+(when (require 'elp)
+  ;; the most important ones
+  (elp-instrument-package "org")
+  (elp-instrument-package "org-agenda")
+  (elp-instrument-package "outline")
+  (elp-instrument-package "font-lock")
+  (elp-instrument-package "flyspell")
+  (elp-instrument-package "ispell")
+  (elp-instrument-package "emacs-leuven")
+  (elp-instrument-package "calendar")
+  (elp-instrument-package "cal-iso")
+  (elp-instrument-package "diary-lib")
+
+  (global-set-key "\C-ce" 'elp-results))
+
+;; improve readability of profile results, give milliseconds
+(defun elp-pack-number (number width)
+  (format (concat "%" (number-to-string (- width 3)) ".2f")
+          (* 100 (string-to-number number))))
+
+(setq org-agenda-files '("~/org/tests/org-test.txt"))
+#+end_src
+
+*** Org-mode tests
+
+#+begin_src emacs-lisp
+;; change the pathname appropriately!
+(add-to-list 'load-path (expand-file-name "~/Public/Repositories/org-mode/testing"))
+(load-library "org-test")
+
+;; change the pathname appropriately!
+(add-to-list 'load-path (expand-file-name "~/Public/Repositories/org-mode/testing/lisp"))
+(load-library "test-org")
+(ert-run-tests-batch-and-exit 'test-org/end-of-line)
+#+end_src
+
+*** Org agenda
+
+#+begin_src emacs-lisp
+(setq org-agenda-files
+      '("~/org/refile.org"))
+
+(org-agenda-list "a")
+#+end_src
+
+*** One specific test
+
+#+begin_src emacs-lisp
+;; change the pathname appropriately!
+(add-to-list 'load-path (expand-file-name "~/Public/Repositories/emacs/org/org-mode/testing"))
+(load-library "org-test")
+
+(ert-deftest test-org/end-of-line ()
+  "Test `org-end-of-line' specifications."
+  ;; At an headline without special movement.
+  (should
+   (org-test-with-temp-text "* Headline2 :tag:\n"
+     (let ((org-special-ctrl-a/e nil))
+       (and (progn (message "FOO") (org-end-of-line) (message (format "%d" (point))) (eolp))
+            (progn (org-end-of-line) (eolp)))))))
+
+(ert 'test-org/end-of-line)
+#+end_src
+
+*** Export test
+
+#+begin_src emacs-lisp
+(let ((org-confirm-babel-evaluate nil)) ;; preference over the explicit setq
+  (find-file "file-to-export.org")
+  (org-export-as-html 3))
+#+end_src
+
+*** Message
+
+#+begin_src emacs-lisp
+(message "Loading Minimal Emacs... Done (in %.2f s)"
+         (- (float-time) em/emacs-load-time-start))
+#+end_src
+
+* Test
+
+#+begin_src sh
+    $  emacs --batch --eval '(message "defined? %S" (functionp (quote org-babel-do-load-languages)))'
+    defined? t
+#+end_src
+
+* Script
+
+** From the man page
+
+- =-q=, =--no-init-file= ::
+     Do not load an init file.
+
+- =--no-site-file= ::
+     Do not load the site-wide startup file.
+
+- =-Q=, =--quick= ::
+     Similar to =-q --no-site-file --no-splash=. Also, avoid processing X
+     resources.
+
+** Ideal
+
+*Some code must be used in the ~.emacs~ file (or libraries loaded FROM it).*
+
+For example:
+
+#+begin_src emacs-lisp
+  ;; major mode command symbol to use for the initial `*scratch*' buffer
+  (setq initial-major-mode 'fundamental-mode)
+#+end_src
+
+Otherwise, =*scratch*= will already have been created, in the default major
+mode.
+
+So, ideally, when testing a minimal Emacs configuration file, we should
+replace the ~.emacs~ file.
+
+What we *could* do, is set =HOME= to a different value just for Emacs, but that's
+not recommended, because it could mess up external programs that Emacs calls.
+And _because_ Emacs relies so much on external programs, notably the shell,
+changing =HOME= for Emacs is a very bad idea. WE DON'T DO THAT!!
+
+** Emacs-helm.sh
+
+> I was too lazy to test with emacs -Q before.
+
+=emacs-helm.sh= is for that, I am too lazy too to use emacs -Q ;-)
+
+#+begin_src sh :tangle emacs-helm.sh
+#!/bin/bash
+
+
+## Copyright (C) 2012 Thierry Volpiatto <thierry.volpiatto@gmail.com>
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+## Commentary:
+
+# Preconfigured Emacs with a basic helm configuration.
+# Useful to start quickly an emacs -Q with helm.
+# Run it from this directory.
+
+TMP="/tmp/helm-cfg.el"
+LOADPATH=`dirname $0`
+cat > $TMP <<EOF
+(setq default-frame-alist '((vertical-scroll-bars . nil)
+                            (tool-bar-lines . 0)
+                            (menu-bar-lines . 0)
+                            (fullscreen . nil)))
+(blink-cursor-mode -1)
+(add-to-list 'load-path (expand-file-name "$LOADPATH"))
+(require 'helm-config)
+(helm-mode 1)
+(define-key global-map [remap find-file] 'helm-find-files)
+(define-key global-map [remap occur] 'helm-occur)
+(define-key global-map [remap list-buffers] 'helm-buffers-list)
+(define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
+(define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)
+(add-hook 'kill-emacs-hook #'(lambda () (delete-file "$TMP")))
+(cd "~/")
+EOF
+emacs -Q -l $TMP
+#+end_src
+
+** Code
+
+*Call this script emacs-q?*
+
+#+begin_src sh :tangle emacs-minimal :var workingDir=(file-name-directory (buffer-file-name)) :padline no :shebang #!/bin/sh
+TESTEL=
+TESTFILE=~/test.el
+if test -e $TESTFILE # file exists
+then
+    TESTEL="-l $TESTFILE"
+fi
+
+# no init file
+cmd="emacs -batch -l ${workingDir}.emacs-minimal.el $TESTEL"
+cmd="/cygdrive/c/Program\ Files\ \(x86\)/emacs-24.2.91/bin/emacs -q -l ${workingDir}.emacs-minimal.el $TESTEL"
+
+echo "Launching '$cmd'..."
+eval "$cmd"
+
+echo "Exit status: $?"
+#+end_src
+
+#+begin_src sh
+alias em=emacs-minimal
+#+end_src
+
+Install it, by symlinking the file.
+
+#+begin_src sh :results silent :var workingDir=(file-name-directory (buffer-file-name))
+ln -f -s $workingDir/emacs-minimal ~/bin/emacs-minimal
+#+end_src
