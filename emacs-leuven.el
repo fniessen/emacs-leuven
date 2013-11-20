@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131119.2303
+;; Version: 20131120.1105
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131119.2303]--")
+(message "* --[ Loading Emacs Leuven 20131120.1105]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6619,21 +6619,13 @@ From %c"
   (global-set-key
     (kbd "C-)") 'match-paren)
 
-  ;; advanced highlighting of matching parentheses
-  (if (try-require 'mic-paren)
-
-      ;; activate `mic-paren' parenthesis highlighting (if the matching paren
-      ;; is offscreen, show the matching line in the echo area + many other
-      ;; useful things)
-      (paren-activate)
-
-    ;; highlight matching paren
-    (GNUEmacs
-      (show-paren-mode 1)
-      (setq show-paren-style 'mixed)
-      (setq show-paren-ring-bell-on-mismatch t))
-    (XEmacs
-      (paren-set-mode 'paren)))
+  ;; highlight matching paren
+  (GNUEmacs
+    (show-paren-mode 1)
+    (setq show-paren-style 'mixed)
+    (setq show-paren-ring-bell-on-mismatch t))
+  (XEmacs
+    (paren-set-mode 'paren))
 
   ;; highlight surrounding parentheses
   (GNUEmacs
@@ -9375,7 +9367,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131119.2304]--")
+(message "* --[ Loaded Emacs Leuven 20131120.1106]--")
 
 (provide 'emacs-leuven)
 

@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-19 Tue 23:06 -->
+  <title>Emacs Leuven</title><!-- 2013-11-20 Wed 11:07 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131119.2305</span>
+"color: #008200; font-style: italic;">Version: 20131120.1106</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131119.2305]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131120.1106]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -17560,27 +17560,13 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
     (kbd <span style="color: #FF4700;">"C-)"</span>) 'match-paren)
 
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">advanced highlighting of matching parentheses</span>
-  (<span style="color: #0000FF;">if</span> (try-require 'mic-paren)
-
-      <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">activate `</span><span style=
-"color: #008200; font-style: italic;">mic-paren</span><span style=
-"color: #008200; font-style: italic;">' parenthesis highlighting (if the matching paren</span>
-      <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">is offscreen, show the matching line in the echo area + many other</span>
-      <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">useful things)</span>
-      (paren-activate)
-
-    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">highlight matching paren</span>
-    (GNUEmacs
-      (show-paren-mode 1)
-      (setq show-paren-style 'mixed)
-      (setq show-paren-ring-bell-on-mismatch t))
-    (XEmacs
-      (paren-set-mode 'paren)))
+  (GNUEmacs
+    (show-paren-mode 1)
+    (setq show-paren-style 'mixed)
+    (setq show-paren-ring-bell-on-mismatch t))
+  (XEmacs
+    (paren-set-mode 'paren))
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">highlight surrounding parentheses</span>
@@ -24989,7 +24975,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131119.2305]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131120.1107]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
