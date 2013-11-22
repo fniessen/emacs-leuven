@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Gnus Leuven</title><!-- 2013-11-14 Thu 15:58 -->
+  <title>Gnus Leuven</title><!-- 2013-11-20 Wed 21:05 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -3612,12 +3612,25 @@
 
       <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">attach all marked files from Dired to a new Gnus message</span>
-      (<span style="color: #0000FF;">when</span> (try-require 'gnus-dired)
+      (autoload 'turn-on-gnus-dired-mode <span style=
+"color: #FF4700;">"gnus-dired"</span>
+        <span style=
+"color: #008000;">"Attach dired's marked files to a gnus message composition."</span> t)
+
+      (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #FF4700;">"dired"</span>
+
         (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+
         (define-key dired-mode-map
-          (kbd <span style="color: #FF4700;">"a"</span>) 'gnus-dired-attach))
-      <span style="color: #008200;">;; </span><span style=
-"color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> conflict with `</span><span style="color: #008200; font-style: italic;">dired-find-alternate-file</span><span style="color: #008200; font-style: italic;">' bound to `a'</span>
+          (kbd <span style=
+"color: #FF4700;">"a"</span>) 'gnus-dired-attach)) <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> conflict with</span>
+                                         <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">`</span><span style=
+"color: #008200; font-style: italic;">dired-find-alternate-file</span><span style="color: #008200; font-style: italic;">'</span>
 </pre>
           </div>
         </div>

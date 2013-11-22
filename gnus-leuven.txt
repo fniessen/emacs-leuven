@@ -1,7 +1,7 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2013-11-14 Thu 15:30>
+#+Time-stamp: <2013-11-20 Wed 21:05>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1905,11 +1905,16 @@ searching *IMAP* and *Gmane* groups.
 ;;** 9.20 Interaction with (info "(gnus)Other modes")
 
       ;; attach all marked files from Dired to a new Gnus message
-      (when (try-require 'gnus-dired)
+      (autoload 'turn-on-gnus-dired-mode "gnus-dired"
+        "Attach dired's marked files to a gnus message composition." t)
+
+      (with-eval-after-load "dired"
+
         (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+
         (define-key dired-mode-map
-          (kbd "a") 'gnus-dired-attach))
-      ;; XXX conflict with `dired-find-alternate-file' bound to `a'
+          (kbd "a") 'gnus-dired-attach)) ; XXX conflict with
+                                         ; `dired-find-alternate-file'
 #+end_src
 
 ** Various Various

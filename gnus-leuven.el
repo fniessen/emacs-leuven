@@ -307,7 +307,7 @@
 
       ;; auxiliary summary mode commands for Gnus
       ;; http://theotp1.physik.uni-ulm.de/~ste/comp/emacs/gnus/rs-gnus-summary.el
-      (when (try-require 'rs-gnus-summary-XXX)
+      (when (try-require 'rs-gnus-summary)
 
         ;; summary line indicators
         (setq rs-gnus-summary-line-content-type-alist
@@ -1566,11 +1566,16 @@
 ;;** 9.20 Interaction with (info "(gnus)Other modes")
 
       ;; attach all marked files from Dired to a new Gnus message
-      (when (try-require 'gnus-dired)
+      (autoload 'turn-on-gnus-dired-mode "gnus-dired"
+        "Attach dired's marked files to a gnus message composition." t)
+
+      (with-eval-after-load "dired"
+
         (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+
         (define-key dired-mode-map
-          (kbd "a") 'gnus-dired-attach))
-      ;; XXX conflict with `dired-find-alternate-file' bound to `a'
+          (kbd "a") 'gnus-dired-attach)) ; XXX conflict with
+                                         ; `dired-find-alternate-file'
 
 ;;** 9.21 (info "(gnus)Various Various")
 
