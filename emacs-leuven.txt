@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-21 Thu 20:15>
+# Time-stamp: <2013-11-22 Fri 11:12>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -117,7 +117,8 @@ echo "$(date '+%Y%m%d.%H%M')"
   "Value of `float-time' before loading the Emacs Leuven library.")
 
 ;; turn on Common Lisp support
-(eval-when-compile (require 'cl))       ; provide useful things like `loop' and `setf'
+(eval-when-compile (require 'cl))       ; provide useful things like `loop' and
+                                        ; `setf'
 #+end_src
 
 #+begin_src emacs-lisp
@@ -446,10 +447,13 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           (message "(Info) %sLoading `%s' <from `%s'>...%s"
                    prefix-open filename
                    (ignore-errors (file-name-base load-file-name))
-                   (ignore-errors (if (not (string-match-p (concat "^" filename "\\.?e?l?c?")
-                                                           (locate-library filename)))
-                                      (concat " " (locate-library filename))
-                                    ""))) ; don't print full file name once again!
+                   (ignore-errors
+                     (if (not (string-match-p
+                               (concat "^" (expand-file-name filename)
+                                       "\\.?e?l?c?")
+                               (locate-library filename)))
+                         (concat " " (locate-library filename))
+                       "")))            ; don't print full file name once again!
           (ad-activate 'locate-library)
           ad-do-it
           (message "(Info) %sLoading `%s' <from `%s'>... loaded in %.3f s"
@@ -464,7 +468,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                (prefix-close (concat (make-string (* 8 require-depth) ? ) "    ")))
           (cond ((featurep feature)
                  (message "(Info) %sRequiring `%s' <from `%s'>... already loaded"
-                          prefix-open feature (ignore-errors (file-name-base load-file-name)))
+                          prefix-open feature
+                          (ignore-errors (file-name-base load-file-name)))
                  ;; in the case `ad-do-it' is not called, you have to set the
                  ;; return value yourself!
                  (setq ad-return-value feature))
@@ -558,6 +563,7 @@ are generated programmatically from upstream Git-based sources.
         '(auctex
           auto-complete
           bbdb
+          boxquote
           calfw
           circe
           ;; dictionary
@@ -586,8 +592,9 @@ are generated programmatically from upstream Git-based sources.
         :group 'emacs-leuven
         :type '(repeat (string)))
 
-      ;; install all packages specified in `leuven-packages' which are not built-in nor
-      ;; already installed (must be run after initializing `package-initialize')
+      ;; install all packages specified in `leuven-packages' which are not
+      ;; built-in nor already installed (must be run after initializing
+      ;; `package-initialize')
       (dolist (pkg leuven-packages)
         (if (or (package-installed-p pkg)
                 (locate-library (symbol-name pkg)))
@@ -1047,7 +1054,8 @@ In a manual, these key bindings will make your life easier:
                    ,(expand-file-name
                      (concat (file-name-directory (locate-library "org"))
                              "../doc/"))
-                   ,(expand-file-name (concat leuven-local-repos-directory "gnus/texi/"))
+                   ,(expand-file-name
+                     (concat leuven-local-repos-directory "gnus/texi/"))
                    "c:/cygwin/usr/share/info/"
                    ,@Info-default-directory-list))
                 (t
@@ -1472,10 +1480,11 @@ modes run =prog-mode-hook=, prior to running their own mode hooks.
   ;; set up highlighting of special patterns for selected major modes *and*
   ;; all major modes derived from them
   (dolist (hook '(prog-mode-hook
-                  ;; text-mode-hook ;; avoid Org
-                  css-mode-hook ;; [parent: fundamental]
+                  ;; text-mode-hook        ; avoid Org
+                  css-mode-hook         ; [parent: fundamental]
                   latex-mode-hook
-                  shell-mode-hook ;; [parent: fundamental] (works in *shell* buffers!)
+                  shell-mode-hook       ; [parent: fundamental]
+                                        ; (works in *shell* buffers!)
                   ssh-config-mode-hook))
     (add-hook hook 'leuven--highlight-special-patterns))
 #+end_src
@@ -2074,8 +2083,8 @@ it to the *file word list* (=ispell-add-per-file-word-list=).
     (global-set-key
       (kbd "C-M-$") 'ispell-change-dictionary)
 
-    ;; ;; default dictionary to use (if `ispell-local-dictionary' is nil, that is
-    ;; ;; if there is no local dictionary to use in the buffer)
+    ;; ;; default dictionary to use (if `ispell-local-dictionary' is nil, that
+    ;; ;; is if there is no local dictionary to use in the buffer)
     ;; (setq ispell-dictionary "american")
 
     ;; enable on-the-fly spell checking
@@ -2478,7 +2487,8 @@ launched from Dired?
            (base-name (file-name-base orgfile))
            (htmlfile (concat base-name ".html"))
            (pdffile (concat base-name ".pdf")))
-      (save-buffer)                     ; see other commands in `before-save-hook':
+      (save-buffer)                     ; see other commands in
+                                        ; `before-save-hook':
                                         ; `org-update-all-dblocks'
                                         ; `org-table-iterate-buffer-tables'
       (when (derived-mode-p 'org-mode)
@@ -3048,7 +3058,8 @@ root using the =sudo= tramp method.
   (leuven--section "18.17 (emacs)File Conveniences")
 
   ;; filenames excluded from the recent list
-  (setq recentf-exclude                 ;! has to be set before your require `recentf'
+  (setq recentf-exclude                 ;! has to be set before your require
+                                        ;! `recentf'
 
         '(
           "~$"                          ; Emacs (and others) backup
@@ -3417,11 +3428,8 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
 
   ;; put the current buffer at the end of the list of all buffers
   (global-set-key
-    (kbd "<f12>") 'bury-buffer)
-
-  ;; ;; put the current buffer at the end of the list of all buffers
-  ;; (global-set-key
-  ;;   (kbd "<S-f12>") 'bury-buffer)    ; TEMP Use this (instead of f12) when GDB'ing Emacs
+    (kbd "<f12>") 'bury-buffer)         ; conflict when GDB'ing Emacs under
+                                        ; Win32
 #+end_src
 
 ** Convenience Features and Customization of Buffer Handling
@@ -3780,7 +3788,8 @@ See =(display-pixel-width)=:
     ;; speedbar in the current frame (vs in a new frame)
     (when (locate-library "sr-speedbar")
       (autoload 'sr-speedbar-toggle "sr-speedbar" nil t)
-      ;; TODO don't bind F4 if already bound to helm... If helm not there, OK do it.
+      ;; ;; TODO don't bind F4 if already bound to helm... If helm not there,
+      ;; ;; OK do it.
       ;; (global-set-key (kbd "<f4>") 'sr-speedbar-toggle)
       ))
 #+end_src
@@ -4889,7 +4898,8 @@ installs the key binding =C-c C-x t= to insert a new *inline task*.
                (full-title
                 (concat
                  (when todo
-                   (format "{\\color{red}\\textbf{\\textsf{\\textsc{%s}}}} " todo))
+                   (format "{\\color{red}\\textbf{\\textsf{\\textsc{%s}}}} "
+                           todo))
                  (when priority
                    (format "\\textsf{\\framebox{\\#%c}} " priority))
                  title
@@ -6600,8 +6610,9 @@ Agenda view: put related tasks together, then by priority.
   (leuven--section "10.5 (org)Agenda commands")
 
   ;; ;; enable Follow mode
-  ;; (setq org-agenda-start-with-follow-mode t)
-  ;; ;; XXX Seems nice, but first solve problem with decrypt question (auto-save)
+  ;; (setq org-agenda-start-with-follow-mode t) ; XXX Seems nice, but first solve
+  ;;                                            ; problem with decrypt question
+  ;;                                            ; (auto-save)
 
   ;; get a compact view during follow mode in the agenda
   (defun leuven--compact-follow ()
@@ -7978,7 +7989,8 @@ org-export-htmlize-generate-css= to extract class definitions.
     ;; output type to be used by htmlize when formatting code snippets
     (setq org-export-htmlize-output-type 'css) ; XXX
 
-    ;; ;; URL pointing to a CSS file defining text colors for htmlized Emacs buffers
+    ;; ;; URL pointing to a CSS file defining text colors for htmlized Emacs
+    ;; ;; buffers
     ;; (setq org-export-htmlized-org-css-url "style.css")
 
     ;; XML declaration
@@ -8206,7 +8218,8 @@ the UTF-8 *non-breaking space*:
 
 #+begin_src emacs-lisp :tangle no
     (defun leuven--latex-filter-nbsp (text backend info)
-      "Ensure that non-breaking spaces are properly handled in LaTeX/Beamer export."
+      "Ensure that non-breaking spaces are properly handled in LaTeX/Beamer
+    export."
       (when (memq backend '(latex beamer))
         (replace-regexp-in-string " " "~" text)))
 
@@ -8757,7 +8770,8 @@ For security reasons, evaluation is not turned on by default.
 
 #+begin_src emacs-lisp
   ;; extension of Imenu
-  (when (and (fboundp 'org-babel-execute-src-block) ; `org-babel' has been loaded
+  (when (and (fboundp 'org-babel-execute-src-block) ; `org-babel' has been
+                                                    ; loaded
              (fboundp 'try-to-add-imenu)) ; `imenu' has been loaded
 
     (try-require 'imenu+)
@@ -8804,71 +8818,9 @@ C-r= (fits nicely with the meaning of "reveal").
       (setq org-tags-exclude-from-inheritance '("crypt"))))
 #+end_src
 
-** Consistency check
+** Obsoleted syntax (since Org 7.8)
 
 #+begin_src emacs-lisp :tangle no
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (save-excursion
-                (goto-char (point-min))
-                (if (search-forward "#+AUTHOR:" nil t)
-                    (unless (search-forward "#+Time-stamp:" nil t)
-                      (display-warning 'org
-                                       (format "The file `%s' does not contain a \"#+Time-stamp:\" line -- while #+AUTHOR found."
-                                               (buffer-name (current-buffer)))
-                                       :warning))))))
-#+end_src
-
-** Obsoleted syntax
-
-The following syntax checks should be made just *before exporting*
-documents, *not when opening* the files for the agenda, for example (for
-performance reasons)!
-
-*** Org 7.8
-
-#+begin_src emacs-lisp :tangle no
-  ;; warn about deprecated features since version 7.8
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (save-excursion
-                (goto-char (point-min))
-                (when (re-search-forward (org-make-options-regexp
-                                          '("BABEL")) nil t)
-                  (display-warning 'org-babel
-                                   (format "The file `%s' contains a \"#+BABEL:\" line."
-                                           (buffer-name (current-buffer)))
-                                   :warning)))))
-
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (save-excursion
-                (goto-char (point-min))
-                (let ((n (count-matches "#\\+\\(srcname\\|source\\):")))
-                (when (> n 0)
-                  (display-warning 'org-babel
-                                   (format (concat "The file `%s' contains %s \"#+src"
-                                                   "name:\" or \"#+"
-                                                   "source:\" lines.")
-                                        ; trick to avoid srcname to be found in
-                                        ; the Org file itself which tangles
-                                        ; `.emacs' file
-                                           (buffer-name (current-buffer))
-                                           n)
-                                   :warning))))))
-
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (save-excursion
-                (goto-char (point-min))
-                (let ((n (count-matches "#\\+\\(\\(src\\)?name\\|source\\):.+=")))
-                  (when (> n 0)
-                    (display-warning 'org-babel
-                                     (format "The file `%s' contains %s deprecated variable assignments."
-                                             (buffer-name (current-buffer))
-                                             n)
-                                     :warning))))))
-
   ;; function to update Org mode buffers to use the new code block
   ;; syntax (switch between versions 7.7 and 7.8)
   (defun update-org-buffer ()
@@ -8887,26 +8839,6 @@ performance reasons)!
           (update old-re "name")
           (update lob-re "call")))))
 #+end_src
-
-#+begin_src emacs-lisp :tangle no
-  (defun leuven--org-check-property-line ()
-    "Check the syntax of #+PROPERTY lines."
-    (interactive)
-    (goto-char (point-min))
-    (search-forward "#+PROPERTY:" nil t)
-    (if (looking-at " *:")
-        (display-warning 'org-babel
-                         (format "The file `%s' contains a syntax error on #+PROPERTY line: abusive colon."
-                                 (buffer-name (current-buffer)))
-                         :warning)))
-
-  (add-hook 'org-mode-hook 'leuven--org-check-property-line)
-#+end_src
-
-*** Org 8
-
-- =#+SETUPFILE:= must be followed by a path enclosed by double quotes
-- So does =#+INCLUDE:=...
 
 ** Other
 
@@ -9075,9 +9007,9 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
                  (file-name-nondirectory (buffer-file-name)))
         (sit-for 1.5)
         (let ((flyspell-mode-before-save flyspell-mode))
-          (flyspell-mode -1)              ; temporarily disable Flyspell to avoid
-                                          ; checking the following modifications
-                                          ; of the buffer
+          (flyspell-mode -1)              ; temporarily disable Flyspell to
+                                          ; avoid checking the following
+                                          ; modifications of the buffer
           (org-align-all-tags)
           (org-update-all-dblocks)
           ;; (when (fboundp 'org-table-iterate-buffer-tables)
@@ -10446,7 +10378,8 @@ Version control systems that interact with Emacs in a generic way.
 
   (leuven--section "28.1 (emacs)Version Control")
 
-  ;; (try-require 'vc)                  ; for defining function `vc-switches' (XXX autoload?)
+  ;; (try-require 'vc)                     ; for defining function `vc-switches'
+  ;;                                       ; (XXX autoload?)
 #+end_src
 
 *** Version Control and the Mode Line
@@ -10571,7 +10504,8 @@ Show the diff we are about to commit: =C-c C-d=.
                (define-key vc-dir-mode-map
                  (kbd "E") 'vc-ediff)
                (define-key vc-dir-mode-map
-                 (kbd "#") 'vc-ediff-ignore-whitespace) ; ediff-windows-wordwise?
+                 (kbd "#") 'vc-ediff-ignore-whitespace)
+                                         ; ediff-windows-wordwise?
                ))
 
   (defun leuven-vc-dir-hide-up-to-date-and-unregistered ()
@@ -11870,7 +11804,8 @@ But [[id:737b836b-ac1f-4120-94ca-c9e0282268f0][Org]] outperforms it!
 
   ;; insinuate appt if `diary-file' exists
   (if (file-readable-p "~/diary")
-      (try-require 'appt)               ; requires `diary-lib', which requires `diary-loaddefs'
+      (try-require 'appt)               ; requires `diary-lib', which requires
+                                        ; `diary-loaddefs'
     (message "Appointment reminders library `appt' not loaded (no diary file found)"))
 
   (with-eval-after-load "appt"
@@ -11919,12 +11854,14 @@ It uses =notify-send= (if the =libnotify-bin= Ubuntu package is installed).
 
 #+begin_src emacs-lisp
     ;; turn appointment checking on (enable reminders)
-    (when leuven-load-verbose (message "(Info) Enable appointment reminders..."))
+    (when leuven-load-verbose
+      (message "(Info) Enable appointment reminders..."))
     (GNUEmacs
       (appt-activate 1))
     (XEmacs
       (appt-initialize))
-    (when leuven-load-verbose (message "(Info) Enable appointment reminders... Done"))
+    (when leuven-load-verbose
+      (message "(Info) Enable appointment reminders... Done"))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -12050,7 +11987,7 @@ htmlfontify-buffer=.
           )
          'keymap cfw:org-text-keymap
          ;; Delete the display property, since displaying images will break our
-         ;; table layout.
+         ;; table layout
          'display nil))))
 #+end_src
 
@@ -12071,8 +12008,7 @@ Minimal configuration for sending a bug report, for example.
   (setq user-full-name "John Doe")
 
   ;; full mailing address of this user
-  ;; (used in MAIL envelope FROM, and to select the default personality
-  ;; ID)
+  ;; (used in MAIL envelope FROM, and to select the default personality ID)
   (setq user-mail-address "john@doe.com")
 
   ;; sending mail
@@ -12393,9 +12329,9 @@ Another option, without =doc-view=, is =! pdtotext ? - <RET>=.
   (defun no-xls (&optional filename)
     "Run xlhtml and w3m -dump on the entire buffer.
 
-  Optional FILENAME says what filename to use. This is only necessary for
-  buffers without proper `buffer-file-name'. FILENAME should be a real filename,
-  not a path."
+  Optional FILENAME says what filename to use.  This is only necessary for
+  buffers without proper `buffer-file-name'.  FILENAME should be a real
+  filename, not a path."
     (interactive "fExcel File: ")
     (when (and filename
                (not (buffer-file-name)))
@@ -12414,9 +12350,9 @@ Another option, without =doc-view=, is =! pdtotext ? - <RET>=.
   (defun no-ppt (&optional filename)
     "Run ppthtml and w3m -dump on the entire buffer.
 
-  Optional FILENAME says what filename to use. This is only necessary for
-  buffers without proper `buffer-file-name'.  FILENAME should be a real filename,
-  not a path."
+  Optional FILENAME says what filename to use.  This is only necessary for
+  buffers without proper `buffer-file-name'.  FILENAME should be a real
+  filename, not a path."
     (interactive "fPowerPoint File: ")
     (when (and filename
                (not (buffer-file-name)))
@@ -12541,7 +12477,8 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
   ;; general command-interpreter-in-a-buffer stuff (lisp, shell, R, ...)
   ;; (when (try-require 'comint)
 
-    ;; regexp to recognize prompts in the inferior process XXX R prompt different from sh prompt...
+    ;; regexp to recognize prompts in the inferior process
+    ;; XXX R prompt different from sh prompt...
     ;; (set it for Org-babel sh session to work!)
     ;; (defun set-shell-prompt-regexp ()
       (setq comint-prompt-regexp shell-prompt-pattern)
@@ -12972,7 +12909,8 @@ You may wish to set =ps-print-landscape= to =t=.
 
           ;; list of extra switches to pass to `ps-lpr-command'
           ;; tell Ghostscript to query which printer to use
-          (setq ps-lpr-switches '("-query"))) ; '("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2")
+          (setq ps-lpr-switches '("-query")))
+                                        ; '("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2")
 
       (setq ps-printer-name "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
       (setq ps-lpr-command "")
@@ -13184,7 +13122,8 @@ You may wish to set =ps-print-landscape= to =t=.
     ;;           (setq start (region-beginning)
     ;;                 end   (region-end))
     ;;           (if (> (- start end) leuven--google-maxlen)
-    ;;               (setq term (buffer-substring start (+ start leuven--google-maxlen)))
+    ;;               (setq term (buffer-substring
+    ;;                           start (+ start leuven--google-maxlen)))
     ;;             (setq term (buffer-substring start end)))
     ;;           (google-it term))
     ;;       (beep)
@@ -13573,7 +13512,8 @@ particular color...
   (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
 
   ;; speed up things by preventing garbage collections
-  (setq gc-cons-threshold 3500000)      ; make Gnus fast, from (info "(gnus)FAQ 9-2")
+  (setq gc-cons-threshold 3500000)      ; make Gnus fast
+                                        ; from (info "(gnus)FAQ 9-2")
 
   ;; don't display messages at start and end of garbage collection (as it
   ;; hides too many interesting messages)

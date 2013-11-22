@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131121.2016
+;; Version: 20131122.1113
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131121.2016]--")
+(message "* --[ Loading Emacs Leuven 20131122.1113]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -86,7 +86,8 @@
   "Value of `float-time' before loading the Emacs Leuven library.")
 
 ;; turn on Common Lisp support
-(eval-when-compile (require 'cl))       ; provide useful things like `loop' and `setf'
+(eval-when-compile (require 'cl))       ; provide useful things like `loop' and
+                                        ; `setf'
 
 ;;; User Customizable Internal Variables
 
@@ -375,10 +376,13 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           (message "(Info) %sLoading `%s' <from `%s'>...%s"
                    prefix-open filename
                    (ignore-errors (file-name-base load-file-name))
-                   (ignore-errors (if (not (string-match-p (concat "^" filename "\\.?e?l?c?")
-                                                           (locate-library filename)))
-                                      (concat " " (locate-library filename))
-                                    ""))) ; don't print full file name once again!
+                   (ignore-errors
+                     (if (not (string-match-p
+                               (concat "^" (expand-file-name filename)
+                                       "\\.?e?l?c?")
+                               (locate-library filename)))
+                         (concat " " (locate-library filename))
+                       "")))            ; don't print full file name once again!
           (ad-activate 'locate-library)
           ad-do-it
           (message "(Info) %sLoading `%s' <from `%s'>... loaded in %.3f s"
@@ -393,7 +397,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                (prefix-close (concat (make-string (* 8 require-depth) ? ) "    ")))
           (cond ((featurep feature)
                  (message "(Info) %sRequiring `%s' <from `%s'>... already loaded"
-                          prefix-open feature (ignore-errors (file-name-base load-file-name)))
+                          prefix-open feature
+                          (ignore-errors (file-name-base load-file-name)))
                  ;; in the case `ad-do-it' is not called, you have to set the
                  ;; return value yourself!
                  (setq ad-return-value feature))
@@ -462,6 +467,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
         '(auctex
           auto-complete
           bbdb
+          boxquote
           calfw
           circe
           ;; dictionary
@@ -490,8 +496,9 @@ nil. Save execution times in the global list `leuven--load-times-list'."
         :group 'emacs-leuven
         :type '(repeat (string)))
 
-      ;; install all packages specified in `leuven-packages' which are not built-in nor
-      ;; already installed (must be run after initializing `package-initialize')
+      ;; install all packages specified in `leuven-packages' which are not
+      ;; built-in nor already installed (must be run after initializing
+      ;; `package-initialize')
       (dolist (pkg leuven-packages)
         (if (or (package-installed-p pkg)
                 (locate-library (symbol-name pkg)))
@@ -743,7 +750,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                    ,(expand-file-name
                      (concat (file-name-directory (locate-library "org"))
                              "../doc/"))
-                   ,(expand-file-name (concat leuven-local-repos-directory "gnus/texi/"))
+                   ,(expand-file-name
+                     (concat leuven-local-repos-directory "gnus/texi/"))
                    "c:/cygwin/usr/share/info/"
                    ,@Info-default-directory-list))
                 (t
@@ -1022,10 +1030,11 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   ;; set up highlighting of special patterns for selected major modes *and*
   ;; all major modes derived from them
   (dolist (hook '(prog-mode-hook
-                  ;; text-mode-hook ;; avoid Org
-                  css-mode-hook ;; [parent: fundamental]
+                  ;; text-mode-hook        ; avoid Org
+                  css-mode-hook         ; [parent: fundamental]
                   latex-mode-hook
-                  shell-mode-hook ;; [parent: fundamental] (works in *shell* buffers!)
+                  shell-mode-hook       ; [parent: fundamental]
+                                        ; (works in *shell* buffers!)
                   ssh-config-mode-hook))
     (add-hook hook 'leuven--highlight-special-patterns))
 
@@ -1381,8 +1390,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     (global-set-key
       (kbd "C-M-$") 'ispell-change-dictionary)
 
-    ;; ;; default dictionary to use (if `ispell-local-dictionary' is nil, that is
-    ;; ;; if there is no local dictionary to use in the buffer)
+    ;; ;; default dictionary to use (if `ispell-local-dictionary' is nil, that
+    ;; ;; is if there is no local dictionary to use in the buffer)
     ;; (setq ispell-dictionary "american")
 
     ;; enable on-the-fly spell checking
@@ -1660,7 +1669,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
            (base-name (file-name-base orgfile))
            (htmlfile (concat base-name ".html"))
            (pdffile (concat base-name ".pdf")))
-      (save-buffer)                     ; see other commands in `before-save-hook':
+      (save-buffer)                     ; see other commands in
+                                        ; `before-save-hook':
                                         ; `org-update-all-dblocks'
                                         ; `org-table-iterate-buffer-tables'
       (when (derived-mode-p 'org-mode)
@@ -2033,7 +2043,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (leuven--section "18.17 (emacs)File Conveniences")
 
   ;; filenames excluded from the recent list
-  (setq recentf-exclude                 ;! has to be set before your require `recentf'
+  (setq recentf-exclude                 ;! has to be set before your require
+                                        ;! `recentf'
 
         '(
           "~$"                          ; Emacs (and others) backup
@@ -2325,11 +2336,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
   ;; put the current buffer at the end of the list of all buffers
   (global-set-key
-    (kbd "<f12>") 'bury-buffer)
-
-  ;; ;; put the current buffer at the end of the list of all buffers
-  ;; (global-set-key
-  ;;   (kbd "<S-f12>") 'bury-buffer)    ; TEMP Use this (instead of f12) when GDB'ing Emacs
+    (kbd "<f12>") 'bury-buffer)         ; conflict when GDB'ing Emacs under
+                                        ; Win32
 
 ;;** 19.7 (info "(emacs)Buffer Convenience") and Customization of Buffer Handling
 
@@ -2601,7 +2609,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     ;; speedbar in the current frame (vs in a new frame)
     (when (locate-library "sr-speedbar")
       (autoload 'sr-speedbar-toggle "sr-speedbar" nil t)
-      ;; TODO don't bind F4 if already bound to helm... If helm not there, OK do it.
+      ;; ;; TODO don't bind F4 if already bound to helm... If helm not there,
+      ;; ;; OK do it.
       ;; (global-set-key (kbd "<f4>") 'sr-speedbar-toggle)
       ))
 
@@ -3319,7 +3328,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                (full-title
                 (concat
                  (when todo
-                   (format "{\\color{red}\\textbf{\\textsf{\\textsc{%s}}}} " todo))
+                   (format "{\\color{red}\\textbf{\\textsf{\\textsc{%s}}}} "
+                           todo))
                  (when priority
                    (format "\\textsf{\\framebox{\\#%c}} " priority))
                  title
@@ -4519,8 +4529,9 @@ From %c"
   (leuven--section "10.5 (org)Agenda commands")
 
   ;; ;; enable Follow mode
-  ;; (setq org-agenda-start-with-follow-mode t)
-  ;; ;; XXX Seems nice, but first solve problem with decrypt question (auto-save)
+  ;; (setq org-agenda-start-with-follow-mode t) ; XXX Seems nice, but first solve
+  ;;                                            ; problem with decrypt question
+  ;;                                            ; (auto-save)
 
   ;; get a compact view during follow mode in the agenda
   (defun leuven--compact-follow ()
@@ -5494,7 +5505,8 @@ From %c"
     ;; output type to be used by htmlize when formatting code snippets
     (setq org-export-htmlize-output-type 'css) ; XXX
 
-    ;; ;; URL pointing to a CSS file defining text colors for htmlized Emacs buffers
+    ;; ;; URL pointing to a CSS file defining text colors for htmlized Emacs
+    ;; ;; buffers
     ;; (setq org-export-htmlized-org-css-url "style.css")
 
     ;; XML declaration
@@ -6041,7 +6053,8 @@ From %c"
   (leuven--section "15.10 (org)Interaction")
 
   ;; extension of Imenu
-  (when (and (fboundp 'org-babel-execute-src-block) ; `org-babel' has been loaded
+  (when (and (fboundp 'org-babel-execute-src-block) ; `org-babel' has been
+                                                    ; loaded
              (fboundp 'try-to-add-imenu)) ; `imenu' has been loaded
 
     (try-require 'imenu+)
@@ -6213,9 +6226,9 @@ From %c"
                  (file-name-nondirectory (buffer-file-name)))
         (sit-for 1.5)
         (let ((flyspell-mode-before-save flyspell-mode))
-          (flyspell-mode -1)              ; temporarily disable Flyspell to avoid
-                                          ; checking the following modifications
-                                          ; of the buffer
+          (flyspell-mode -1)              ; temporarily disable Flyspell to
+                                          ; avoid checking the following
+                                          ; modifications of the buffer
           (org-align-all-tags)
           (org-update-all-dblocks)
           ;; (when (fboundp 'org-table-iterate-buffer-tables)
@@ -7066,7 +7079,8 @@ From %c"
 
   (leuven--section "28.1 (emacs)Version Control")
 
-  ;; (try-require 'vc)                  ; for defining function `vc-switches' (XXX autoload?)
+  ;; (try-require 'vc)                     ; for defining function `vc-switches'
+  ;;                                       ; (XXX autoload?)
 
 ;;*** 28.1.2 (info "(emacs)VC Mode Line")
 
@@ -7153,7 +7167,8 @@ From %c"
                (define-key vc-dir-mode-map
                  (kbd "E") 'vc-ediff)
                (define-key vc-dir-mode-map
-                 (kbd "#") 'vc-ediff-ignore-whitespace) ; ediff-windows-wordwise?
+                 (kbd "#") 'vc-ediff-ignore-whitespace)
+                                         ; ediff-windows-wordwise?
                ))
 
   (defun leuven-vc-dir-hide-up-to-date-and-unregistered ()
@@ -7880,7 +7895,8 @@ From %c"
 
   ;; insinuate appt if `diary-file' exists
   (if (file-readable-p "~/diary")
-      (try-require 'appt)               ; requires `diary-lib', which requires `diary-loaddefs'
+      (try-require 'appt)               ; requires `diary-lib', which requires
+                                        ; `diary-loaddefs'
     (message "Appointment reminders library `appt' not loaded (no diary file found)"))
 
   (with-eval-after-load "appt"
@@ -7918,12 +7934,14 @@ From %c"
                (sit-for 1)))))
 
     ;; turn appointment checking on (enable reminders)
-    (when leuven-load-verbose (message "(Info) Enable appointment reminders..."))
+    (when leuven-load-verbose
+      (message "(Info) Enable appointment reminders..."))
     (GNUEmacs
       (appt-activate 1))
     (XEmacs
       (appt-initialize))
-    (when leuven-load-verbose (message "(Info) Enable appointment reminders... Done"))
+    (when leuven-load-verbose
+      (message "(Info) Enable appointment reminders... Done"))
 
     ;; enable appointment notification, several minutes beforehand
     (add-hook 'diary-hook 'appt-make-list)
@@ -8027,7 +8045,7 @@ From %c"
           )
          'keymap cfw:org-text-keymap
          ;; Delete the display property, since displaying images will break our
-         ;; table layout.
+         ;; table layout
          'display nil))))
 
 )                                       ; chapter 31 ends here
@@ -8040,8 +8058,7 @@ From %c"
   (setq user-full-name "John Doe")
 
   ;; full mailing address of this user
-  ;; (used in MAIL envelope FROM, and to select the default personality
-  ;; ID)
+  ;; (used in MAIL envelope FROM, and to select the default personality ID)
   (setq user-mail-address "john@doe.com")
 
   ;; sending mail
@@ -8300,9 +8317,9 @@ From %c"
   (defun no-xls (&optional filename)
     "Run xlhtml and w3m -dump on the entire buffer.
 
-  Optional FILENAME says what filename to use. This is only necessary for
-  buffers without proper `buffer-file-name'. FILENAME should be a real filename,
-  not a path."
+  Optional FILENAME says what filename to use.  This is only necessary for
+  buffers without proper `buffer-file-name'.  FILENAME should be a real
+  filename, not a path."
     (interactive "fExcel File: ")
     (when (and filename
                (not (buffer-file-name)))
@@ -8321,9 +8338,9 @@ From %c"
   (defun no-ppt (&optional filename)
     "Run ppthtml and w3m -dump on the entire buffer.
 
-  Optional FILENAME says what filename to use. This is only necessary for
-  buffers without proper `buffer-file-name'.  FILENAME should be a real filename,
-  not a path."
+  Optional FILENAME says what filename to use.  This is only necessary for
+  buffers without proper `buffer-file-name'.  FILENAME should be a real
+  filename, not a path."
     (interactive "fPowerPoint File: ")
     (when (and filename
                (not (buffer-file-name)))
@@ -8412,7 +8429,8 @@ From %c"
   ;; general command-interpreter-in-a-buffer stuff (lisp, shell, R, ...)
   ;; (when (try-require 'comint)
 
-    ;; regexp to recognize prompts in the inferior process XXX R prompt different from sh prompt...
+    ;; regexp to recognize prompts in the inferior process
+    ;; XXX R prompt different from sh prompt...
     ;; (set it for Org-babel sh session to work!)
     ;; (defun set-shell-prompt-regexp ()
       (setq comint-prompt-regexp shell-prompt-pattern)
@@ -8641,7 +8659,8 @@ From %c"
 
           ;; list of extra switches to pass to `ps-lpr-command'
           ;; tell Ghostscript to query which printer to use
-          (setq ps-lpr-switches '("-query"))) ; '("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2")
+          (setq ps-lpr-switches '("-query")))
+                                        ; '("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2")
 
       (setq ps-printer-name "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
       (setq ps-lpr-command "")
@@ -8835,7 +8854,8 @@ From %c"
     ;;           (setq start (region-beginning)
     ;;                 end   (region-end))
     ;;           (if (> (- start end) leuven--google-maxlen)
-    ;;               (setq term (buffer-substring start (+ start leuven--google-maxlen)))
+    ;;               (setq term (buffer-substring
+    ;;                           start (+ start leuven--google-maxlen)))
     ;;             (setq term (buffer-substring start end)))
     ;;           (google-it term))
     ;;       (beep)
@@ -9131,7 +9151,8 @@ From %c"
   (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
 
   ;; speed up things by preventing garbage collections
-  (setq gc-cons-threshold 3500000)      ; make Gnus fast, from (info "(gnus)FAQ 9-2")
+  (setq gc-cons-threshold 3500000)      ; make Gnus fast
+                                        ; from (info "(gnus)FAQ 9-2")
 
   ;; don't display messages at start and end of garbage collection (as it
   ;; hides too many interesting messages)
@@ -9375,7 +9396,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131121.2017]--")
+(message "* --[ Loaded Emacs Leuven 20131122.1116]--")
 
 (provide 'emacs-leuven)
 

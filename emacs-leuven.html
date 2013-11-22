@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-21 Thu 20:18 -->
+  <title>Emacs Leuven</title><!-- 2013-11-22 Fri 11:17 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -625,33 +625,24 @@
                 </ul>
               </li>
 
-              <li><a href="#sec-26-15">Consistency check</a></li>
+              <li><a href="#sec-26-15">Obsoleted syntax (since Org
+              7.8)</a></li>
+
+              <li><a href="#sec-26-16">Other</a></li>
+
+              <li><a href="#sec-26-17">A.3 Adding hyperlink types</a></li>
+
+              <li><a href="#sec-26-18">A.6 Dynamic blocks</a></li>
 
               <li>
-                <a href="#sec-26-16">Obsoleted syntax</a>
+                <a href="#sec-26-19">Org-contrib</a>
 
                 <ul>
-                  <li><a href="#sec-26-16-1">Org 7.8</a></li>
+                  <li><a href="#sec-26-19-1">Org-effectiveness</a></li>
 
-                  <li><a href="#sec-26-16-2">Org 8</a></li>
-                </ul>
-              </li>
+                  <li><a href="#sec-26-19-2">Org-notmuch</a></li>
 
-              <li><a href="#sec-26-17">Other</a></li>
-
-              <li><a href="#sec-26-18">A.3 Adding hyperlink types</a></li>
-
-              <li><a href="#sec-26-19">A.6 Dynamic blocks</a></li>
-
-              <li>
-                <a href="#sec-26-20">Org-contrib</a>
-
-                <ul>
-                  <li><a href="#sec-26-20-1">Org-effectiveness</a></li>
-
-                  <li><a href="#sec-26-20-2">Org-notmuch</a></li>
-
-                  <li><a href="#sec-26-20-3">Google Weather</a></li>
+                  <li><a href="#sec-26-19-3">Google Weather</a></li>
                 </ul>
               </li>
             </ul>
@@ -1105,7 +1096,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131121.2017</span>
+"color: #008200; font-style: italic;">Version: 20131122.1116</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1218,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131121.2017]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131122.1116]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -1257,7 +1248,12 @@
 "color: #0000FF;">require</span> '<span style=
 "color: #6434A3;">cl</span>))       <span style=
 "color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">provide useful things like `</span><span style="color: #008200; font-style: italic;">loop</span><span style="color: #008200; font-style: italic;">' and `</span><span style="color: #008200; font-style: italic;">setf</span><span style="color: #008200; font-style: italic;">'</span>
+"color: #008200; font-style: italic;">provide useful things like `</span><span style="color: #008200; font-style: italic;">loop</span><span style="color: #008200; font-style: italic;">' and</span>
+                                        <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">`</span><span style=
+"color: #008200; font-style: italic;">setf</span><span style=
+"color: #008200; font-style: italic;">'</span>
 </pre>
         </div>
 
@@ -1815,15 +1811,18 @@
                    (ignore-<span style=
 "color: #CC0000; background-color: #FFFF88;">error</span>s (file-name-base load-file-name))
                    (ignore-<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span>s (<span style=
-"color: #0000FF;">if</span> (not (string-match-p (concat <span style=
-"color: #FF4700;">"^"</span> filename <span style=
+"color: #CC0000; background-color: #FFFF88;">error</span>s
+                     (<span style=
+"color: #0000FF;">if</span> (not (string-match-p
+                               (concat <span style=
+"color: #FF4700;">"^"</span> (expand-file-name filename)
+                                       <span style=
 "color: #FF4700;">"\\.?e?l?c?"</span>)
-                                                           (locate-library filename)))
-                                      (concat <span style=
+                               (locate-library filename)))
+                         (concat <span style=
 "color: #FF4700;">" "</span> (locate-library filename))
-                                    <span style=
-"color: #FF4700;">""</span>))) <span style=
+                       <span style=
+"color: #FF4700;">""</span>)))            <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">don't print full file name once again!</span>
           (ad-activate 'locate-library)
@@ -1854,7 +1853,8 @@
 "color: #FF4700;">' &lt;from `</span><span style=
 "color: #FF4700;">%s</span><span style=
 "color: #FF4700;">'&gt;... already loaded"</span>
-                          prefix-open feature (ignore-<span style=
+                          prefix-open feature
+                          (ignore-<span style=
 "color: #CC0000; background-color: #FFFF88;">error</span>s (file-name-base load-file-name)))
                  <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">in the case `</span><span style=
@@ -2017,6 +2017,7 @@
         '(auctex
           auto-complete
           bbdb
+          boxquote
           calfw
           circe
           <span style="color: #008200;">;; </span><span style=
@@ -2056,9 +2057,13 @@
         <span style="color: #006FE0;">:type</span> '(repeat (string)))
 
       <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">install all packages specified in `</span><span style="color: #008200; font-style: italic;">leuven-packages</span><span style="color: #008200; font-style: italic;">' which are not built-in nor</span>
+"color: #008200; font-style: italic;">install all packages specified in `</span><span style="color: #008200; font-style: italic;">leuven-packages</span><span style="color: #008200; font-style: italic;">' which are not</span>
       <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">already installed (must be run after initializing `</span><span style="color: #008200; font-style: italic;">package-initialize</span><span style="color: #008200; font-style: italic;">')</span>
+"color: #008200; font-style: italic;">built-in nor already installed (must be run after initializing</span>
+      <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">`</span><span style=
+"color: #008200; font-style: italic;">package-initialize</span><span style=
+"color: #008200; font-style: italic;">')</span>
       (<span style="color: #0000FF;">dolist</span> (pkg leuven-packages)
         (<span style="color: #0000FF;">if</span> (or (package-installed-p pkg)
                 (locate-library (symbol-name pkg)))
@@ -2834,7 +2839,9 @@
                      (concat (file-name-directory (locate-library <span style=
 "color: #FF4700;">"org"</span>))
                              <span style="color: #FF4700;">"../doc/"</span>))
-                   ,(expand-file-name (concat leuven-local-repos-directory <span style="color: #FF4700;">"gnus/texi/"</span>))
+                   ,(expand-file-name
+                     (concat leuven-local-repos-directory <span style=
+"color: #FF4700;">"gnus/texi/"</span>))
                    <span style=
 "color: #FF4700;">"c:/cygwin/usr/share/info/"</span>
                    ,@Info-default-directory-list))
@@ -3630,14 +3637,17 @@
 "color: #008200; font-style: italic;">all major modes derived from them</span>
   (<span style="color: #0000FF;">dolist</span> (hook '(prog-mode-hook
                   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">text-mode-hook ;; avoid Org</span>
-                  css-mode-hook <span style=
-"color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">text-mode-hook        ; avoid Org</span>
+                  css-mode-hook         <span style=
+"color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">[parent: fundamental]</span>
                   latex-mode-hook
-                  shell-mode-hook <span style=
-"color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">[parent: fundamental] (works in *shell* buffers!)</span>
+                  shell-mode-hook       <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">[parent: fundamental]</span>
+                                        <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">(works in *shell* buffers!)</span>
                   ssh-config-mode-hook))
     (add-hook hook 'leuven--highlight-special-patterns))
 </pre>
@@ -4573,9 +4583,9 @@
 "color: #FF4700;">"C-M-$"</span>) 'ispell-change-dictionary)
 
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; default dictionary to use (if `</span><span style="color: #008200; font-style: italic;">ispell-local-dictionary</span><span style="color: #008200; font-style: italic;">' is nil, that is</span>
+"color: #008200; font-style: italic;">;; default dictionary to use (if `</span><span style="color: #008200; font-style: italic;">ispell-local-dictionary</span><span style="color: #008200; font-style: italic;">' is nil, that</span>
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; if there is no local dictionary to use in the buffer)</span>
+"color: #008200; font-style: italic;">;; is if there is no local dictionary to use in the buffer)</span>
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(setq ispell-dictionary "american")</span>
 
@@ -5230,7 +5240,12 @@
 "color: #FF4700;">".pdf"</span>)))
       (save-buffer)                     <span style=
 "color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">see other commands in `</span><span style="color: #008200; font-style: italic;">before-save-hook</span><span style="color: #008200; font-style: italic;">':</span>
+"color: #008200; font-style: italic;">see other commands in</span>
+                                        <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">`</span><span style=
+"color: #008200; font-style: italic;">before-save-hook</span><span style=
+"color: #008200; font-style: italic;">':</span>
                                         <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">`</span><span style=
@@ -6147,7 +6162,12 @@ M-: (executable-find "diff") RET
 "color: #008200; font-style: italic;">filenames excluded from the recent list</span>
   (setq recentf-exclude                 <span style=
 "color: #008200;">;</span><span style=
-"color: #008200; font-style: italic;">! has to be set before your require `</span><span style="color: #008200; font-style: italic;">recentf</span><span style="color: #008200; font-style: italic;">'</span>
+"color: #008200; font-style: italic;">! has to be set before your require</span>
+                                        <span style=
+"color: #008200;">;</span><span style=
+"color: #008200; font-style: italic;">! `</span><span style=
+"color: #008200; font-style: italic;">recentf</span><span style=
+"color: #008200; font-style: italic;">'</span>
 
         '(
           <span style=
@@ -6738,14 +6758,13 @@ M-: (executable-find "diff") RET
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">put the current buffer at the end of the list of all buffers</span>
   (global-set-key
-    (kbd <span style="color: #FF4700;">"&lt;f12&gt;"</span>) 'bury-buffer)
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; put the current buffer at the end of the list of all buffers</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(global-set-key</span>
-  <span style="color: #008200;">;;   </span><span style=
-"color: #008200; font-style: italic;">(kbd "&lt;S-f12&gt;") 'bury-buffer)    ; TEMP Use this (instead of f12) when GDB'ing Emacs</span>
+    (kbd <span style=
+"color: #FF4700;">"&lt;f12&gt;"</span>) 'bury-buffer)         <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">conflict when GDB'ing Emacs under</span>
+                                        <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">Win32</span>
 </pre>
           </div>
         </div>
@@ -7321,7 +7340,10 @@ M-: (executable-find "diff") RET
       (autoload 'sr-speedbar-toggle <span style=
 "color: #FF4700;">"sr-speedbar"</span> nil t)
       <span style="color: #008200;">;; </span><span style=
-"color: #008200; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #008200; font-style: italic;"> don't bind F4 if already bound to helm... If helm not there, OK do it.</span>
+"color: #008200; font-style: italic;">;; </span><span style=
+"color: #008200; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #008200; font-style: italic;"> don't bind F4 if already bound to helm... If helm not there,</span>
+      <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">;; OK do it.</span>
       <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(global-set-key (kbd "&lt;f4&gt;") 'sr-speedbar-toggle)</span>
       ))
@@ -9231,7 +9253,8 @@ M-: (executable-find "diff") RET
                 (concat
                  (<span style="color: #0000FF;">when</span> todo
                    (format <span style=
-"color: #FF4700;">"{\\color{red}\\textbf{\\textsf{\\textsc{%s}}}} "</span> todo))
+"color: #FF4700;">"{\\color{red}\\textbf{\\textsf{\\textsc{%s}}}} "</span>
+                           todo))
                  (<span style="color: #0000FF;">when</span> priority
                    (format <span style=
 "color: #FF4700;">"\\textsf{\\framebox{\\#%c}} "</span> priority))
@@ -12142,10 +12165,11 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; enable Follow mode</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(setq org-agenda-start-with-follow-mode t)</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; </span><span style=
-"color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> Seems nice, but first solve problem with decrypt question (auto-save)</span>
+"color: #008200; font-style: italic;">(setq org-agenda-start-with-follow-mode t) ; </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> Seems nice, but first solve</span>
+  <span style=
+"color: #008200;">;;                                            </span><span style="color: #008200; font-style: italic;">; problem with decrypt question</span>
+  <span style=
+"color: #008200;">;;                                            </span><span style="color: #008200; font-style: italic;">; (auto-save)</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">get a compact view during follow mode in the agenda</span>
@@ -14465,7 +14489,9 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span>
 
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; URL pointing to a CSS file defining text colors for htmlized Emacs buffers</span>
+"color: #008200; font-style: italic;">;; URL pointing to a CSS file defining text colors for htmlized Emacs</span>
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">;; buffers</span>
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(setq org-export-htmlized-org-css-url "style.css")</span>
 
@@ -14845,7 +14871,8 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--latex-filter-nbsp</span> (text backend info)
       <span style=
-"color: #008000;">"Ensure that non-breaking spaces are properly handled in LaTeX/Beamer export."</span>
+"color: #008000;">"Ensure that non-breaking spaces are properly handled in LaTeX/Beamer</span>
+<span style="color: #008000;">    export."</span>
       (<span style="color: #0000FF;">when</span> (memq backend '(latex beamer))
         (replace-regexp-in-string <span style=
 "color: #FF4700;">" "</span> <span style="color: #FF4700;">"~"</span> text)))
@@ -15781,7 +15808,10 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">extension of Imenu</span>
   (<span style=
-"color: #0000FF;">when</span> (and (fboundp 'org-babel-execute-src-block) <span style="color: #008200;">; </span><span style="color: #008200; font-style: italic;">`</span><span style="color: #008200; font-style: italic;">org-babel</span><span style="color: #008200; font-style: italic;">' has been loaded</span>
+"color: #0000FF;">when</span> (and (fboundp 'org-babel-execute-src-block) <span style="color: #008200;">; </span><span style="color: #008200; font-style: italic;">`</span><span style="color: #008200; font-style: italic;">org-babel</span><span style="color: #008200; font-style: italic;">' has been</span>
+                                                    <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">loaded</span>
              (fboundp 'try-to-add-imenu)) <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">`</span><span style=
@@ -15859,146 +15889,11 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
       </div>
 
       <div id="outline-container-sec-26-15" class="outline-3">
-        <h3 id="sec-26-15">Consistency check</h3>
+        <h3 id="sec-26-15">Obsoleted syntax (since Org 7.8)</h3>
 
         <div class="outline-text-3" id="text-26-15">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (add-hook 'org-mode-hook
-            (<span style="color: #0000FF;">lambda</span> ()
-              (<span style="color: #0000FF;">save-excursion</span>
-                (goto-char (point-min))
-                (<span style=
-"color: #0000FF;">if</span> (search-forward <span style=
-"color: #FF4700;">"#+AUTHOR:"</span> nil t)
-                    (<span style=
-"color: #0000FF;">unless</span> (search-forward <span style=
-"color: #FF4700;">"#+Time-stamp:"</span> nil t)
-                      (display-<span style=
-"color: #CC0000; background-color: #FFFF88;">warning</span> 'org
-                                       (format <span style=
-"color: #FF4700;">"The file `</span><span style=
-"color: #FF4700;">%s</span><span style=
-"color: #FF4700;">' does not contain a \"#+Time-stamp:\" line -- while #+AUTHOR found."</span>
-                                               (buffer-name (current-buffer)))
-                                       :<span style=
-"color: #CC0000; background-color: #FFFF88;">warning</span>))))))
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="outline-container-sec-26-16" class="outline-3">
-        <h3 id="sec-26-16">Obsoleted syntax</h3>
-
-        <div class="outline-text-3" id="text-26-16">
-          <p>The following syntax checks should be made just <b>before
-          exporting</b> documents, <b>not when opening</b> the files for the
-          agenda, for example (for performance reasons)!</p>
-        </div>
-
-        <div id="outline-container-sec-26-16-1" class="outline-4">
-          <h4 id="sec-26-16-1">Org 7.8</h4>
-
-          <div class="outline-text-4" id="text-26-16-1">
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">warn about deprecated features since version 7.8</span>
-  (add-hook 'org-mode-hook
-            (<span style="color: #0000FF;">lambda</span> ()
-              (<span style="color: #0000FF;">save-excursion</span>
-                (goto-char (point-min))
-                (<span style=
-"color: #0000FF;">when</span> (re-search-forward (org-make-options-regexp
-                                          '(<span style=
-"color: #FF4700;">"BABEL"</span>)) nil t)
-                  (display-<span style=
-"color: #CC0000; background-color: #FFFF88;">warning</span> 'org-babel
-                                   (format <span style=
-"color: #FF4700;">"The file `</span><span style=
-"color: #FF4700;">%s</span><span style=
-"color: #FF4700;">' contains a \"#+BABEL:\" line."</span>
-                                           (buffer-name (current-buffer)))
-                                   :<span style=
-"color: #CC0000; background-color: #FFFF88;">warning</span>)))))
-
-  (add-hook 'org-mode-hook
-            (<span style="color: #0000FF;">lambda</span> ()
-              (<span style="color: #0000FF;">save-excursion</span>
-                (goto-char (point-min))
-                (<span style=
-"color: #0000FF;">let</span> ((n (count-matches <span style=
-"color: #FF4700;">"#\\+</span><span style=
-"color: #FF4700; font-weight: bold;">\\</span><span style=
-"color: #FF4700; font-weight: bold;">(</span><span style=
-"color: #FF4700;">srcname</span><span style=
-"color: #FF4700; font-weight: bold;">\\</span><span style=
-"color: #FF4700; font-weight: bold;">|</span><span style=
-"color: #FF4700;">source</span><span style=
-"color: #FF4700; font-weight: bold;">\\</span><span style=
-"color: #FF4700; font-weight: bold;">)</span><span style=
-"color: #FF4700;">:"</span>)))
-                (<span style="color: #0000FF;">when</span> (&gt; n 0)
-                  (display-<span style=
-"color: #CC0000; background-color: #FFFF88;">warning</span> 'org-babel
-                                   (format (concat <span style=
-"color: #FF4700;">"The file `</span><span style=
-"color: #FF4700;">%s</span><span style=
-"color: #FF4700;">' contains %s \"#+src"</span>
-                                                   <span style=
-"color: #FF4700;">"name:\" or \"#+"</span>
-                                                   <span style=
-"color: #FF4700;">"source:\" lines."</span>)
-                                        <span style=
-"color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">trick to avoid srcname to be found in</span>
-                                        <span style=
-"color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">the Org file itself which tangles</span>
-                                        <span style=
-"color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">`</span><span style=
-"color: #008200; font-style: italic;">.emacs</span><span style=
-"color: #008200; font-style: italic;">' file</span>
-                                           (buffer-name (current-buffer))
-                                           n)
-                                   :<span style=
-"color: #CC0000; background-color: #FFFF88;">warning</span>))))))
-
-  (add-hook 'org-mode-hook
-            (<span style="color: #0000FF;">lambda</span> ()
-              (<span style="color: #0000FF;">save-excursion</span>
-                (goto-char (point-min))
-                (<span style=
-"color: #0000FF;">let</span> ((n (count-matches <span style=
-"color: #FF4700;">"#\\+</span><span style=
-"color: #FF4700; font-weight: bold;">\\</span><span style=
-"color: #FF4700; font-weight: bold;">(</span><span style=
-"color: #FF4700; font-weight: bold;">\\</span><span style=
-"color: #FF4700; font-weight: bold;">(</span><span style=
-"color: #FF4700;">src</span><span style=
-"color: #FF4700; font-weight: bold;">\\</span><span style=
-"color: #FF4700; font-weight: bold;">)</span><span style=
-"color: #FF4700;">?name</span><span style=
-"color: #FF4700; font-weight: bold;">\\</span><span style=
-"color: #FF4700; font-weight: bold;">|</span><span style=
-"color: #FF4700;">source</span><span style=
-"color: #FF4700; font-weight: bold;">\\</span><span style=
-"color: #FF4700; font-weight: bold;">)</span><span style=
-"color: #FF4700;">:.+="</span>)))
-                  (<span style="color: #0000FF;">when</span> (&gt; n 0)
-                    (display-<span style=
-"color: #CC0000; background-color: #FFFF88;">warning</span> 'org-babel
-                                     (format <span style=
-"color: #FF4700;">"The file `</span><span style=
-"color: #FF4700;">%s</span><span style=
-"color: #FF4700;">' contains %s deprecated variable assignments."</span>
-                                             (buffer-name (current-buffer))
-                                             n)
-                                     :<span style=
-"color: #CC0000; background-color: #FFFF88;">warning</span>))))))
-
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">function to update Org mode buffers to use the new code block</span>
   <span style="color: #008200;">;; </span><span style=
@@ -16037,55 +15932,14 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           (update old-re <span style="color: #FF4700;">"name"</span>)
           (update lob-re <span style="color: #FF4700;">"call"</span>)))))
 </pre>
-            </div>
-
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--org-check-property-line</span> ()
-    <span style=
-"color: #008000;">"Check the syntax of #+PROPERTY lines."</span>
-    (interactive)
-    (goto-char (point-min))
-    (search-forward <span style="color: #FF4700;">"#+PROPERTY:"</span> nil t)
-    (<span style="color: #0000FF;">if</span> (looking-at <span style=
-"color: #FF4700;">" *:"</span>)
-        (display-<span style=
-"color: #CC0000; background-color: #FFFF88;">warning</span> 'org-babel
-                         (format <span style=
-"color: #FF4700;">"The file `</span><span style=
-"color: #FF4700;">%s</span><span style=
-"color: #FF4700;">' contains a syntax </span><span style=
-"color: #FF4700; background-color: #FFFF88;">error</span><span style=
-"color: #FF4700;"> on #+PROPERTY line: abusive colon."</span>
-                                 (buffer-name (current-buffer)))
-                         :<span style=
-"color: #CC0000; background-color: #FFFF88;">warning</span>)))
-
-  (add-hook 'org-mode-hook 'leuven--org-check-property-line)
-</pre>
-            </div>
-          </div>
-        </div>
-
-        <div id="outline-container-sec-26-16-2" class="outline-4">
-          <h4 id="sec-26-16-2">Org 8</h4>
-
-          <div class="outline-text-4" id="text-26-16-2">
-            <ul class="org-ul">
-              <li><code>#+SETUPFILE:</code> must be followed by a path enclosed
-              by double quotes</li>
-
-              <li>So does <code>#+INCLUDE:</code>…</li>
-            </ul>
           </div>
         </div>
       </div>
 
-      <div id="outline-container-sec-26-17" class="outline-3">
-        <h3 id="sec-26-17">Other</h3>
+      <div id="outline-container-sec-26-16" class="outline-3">
+        <h3 id="sec-26-16">Other</h3>
 
-        <div class="outline-text-3" id="text-26-17">
+        <div class="outline-text-3" id="text-26-16">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
@@ -16268,10 +16122,10 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
         </div>
       </div>
 
-      <div id="outline-container-sec-26-18" class="outline-3">
-        <h3 id="sec-26-18">A.3 Adding hyperlink types</h3>
+      <div id="outline-container-sec-26-17" class="outline-3">
+        <h3 id="sec-26-17">A.3 Adding hyperlink types</h3>
 
-        <div class="outline-text-3" id="text-26-18">
+        <div class="outline-text-3" id="text-26-17">
           <p>For more flexibility, you can use a URL-like syntax which could
           then export conditionally on the output format.</p>
 
@@ -16323,10 +16177,10 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
         </div>
       </div>
 
-      <div id="outline-container-sec-26-19" class="outline-3">
-        <h3 id="sec-26-19">A.6 Dynamic blocks</h3>
+      <div id="outline-container-sec-26-18" class="outline-3">
+        <h3 id="sec-26-18">A.6 Dynamic blocks</h3>
 
-        <div class="outline-text-3" id="text-26-19">
+        <div class="outline-text-3" id="text-26-18">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span style="color: #008200;">;;</span><span style=
@@ -16351,13 +16205,13 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #0000FF;">let</span> ((flyspell-mode-before-save flyspell-mode))
           (flyspell-mode -1)              <span style=
 "color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">temporarily disable Flyspell to avoid</span>
+"color: #008200; font-style: italic;">temporarily disable Flyspell to</span>
                                           <span style=
 "color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">checking the following modifications</span>
+"color: #008200; font-style: italic;">avoid checking the following</span>
                                           <span style=
 "color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">of the buffer</span>
+"color: #008200; font-style: italic;">modifications of the buffer</span>
           (org-align-all-tags)
           (org-update-all-dblocks)
           <span style="color: #008200;">;; </span><span style=
@@ -16383,15 +16237,15 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
         </div>
       </div>
 
-      <div id="outline-container-sec-26-20" class="outline-3">
-        <h3 id="sec-26-20">Org-contrib</h3>
+      <div id="outline-container-sec-26-19" class="outline-3">
+        <h3 id="sec-26-19">Org-contrib</h3>
 
-        <div class="outline-text-3" id="text-26-20"></div>
+        <div class="outline-text-3" id="text-26-19"></div>
 
-        <div id="outline-container-sec-26-20-1" class="outline-4">
-          <h4 id="sec-26-20-1">Org-effectiveness</h4>
+        <div id="outline-container-sec-26-19-1" class="outline-4">
+          <h4 id="sec-26-19-1">Org-effectiveness</h4>
 
-          <div class="outline-text-4" id="text-26-20-1">
+          <div class="outline-text-4" id="text-26-19-1">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span style="color: #008200;">;; </span><span style=
@@ -16415,18 +16269,18 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
           </div>
         </div>
 
-        <div id="outline-container-sec-26-20-2" class="outline-4">
-          <h4 id="sec-26-20-2">Org-notmuch</h4>
+        <div id="outline-container-sec-26-19-2" class="outline-4">
+          <h4 id="sec-26-19-2">Org-notmuch</h4>
 
-          <div class="outline-text-4" id="text-26-20-2">
+          <div class="outline-text-4" id="text-26-19-2">
             <p>Link emails from Org files.</p>
           </div>
         </div>
 
-        <div id="outline-container-sec-26-20-3" class="outline-4">
-          <h4 id="sec-26-20-3">Google Weather</h4>
+        <div id="outline-container-sec-26-19-3" class="outline-4">
+          <h4 id="sec-26-19-3">Google Weather</h4>
 
-          <div class="outline-text-4" id="text-26-20-3">
+          <div class="outline-text-4" id="text-26-19-3">
             <pre class="example">
 * Weather
   :PROPERTIES:
@@ -18640,7 +18494,11 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 "color: #FF4700;">"28.1 (emacs)Version Control"</span>)
 
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(try-require 'vc)                  ; for defining function `</span><span style="color: #008200; font-style: italic;">vc-switches</span><span style="color: #008200; font-style: italic;">' (</span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> autoload?)</span>
+"color: #008200; font-style: italic;">(try-require 'vc)                     ; for defining function `</span><span style="color: #008200; font-style: italic;">vc-switches</span><span style="color: #008200; font-style: italic;">'</span>
+  <span style=
+"color: #008200;">;;                                       </span><span style=
+"color: #008200; font-style: italic;">; (</span><span style=
+"color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> autoload?)</span>
 </pre>
           </div>
         </div>
@@ -18836,7 +18694,8 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
                  (kbd <span style="color: #FF4700;">"E"</span>) 'vc-ediff)
                (define-key vc-dir-mode-map
                  (kbd <span style=
-"color: #FF4700;">"#"</span>) 'vc-ediff-ignore-whitespace) <span style=
+"color: #FF4700;">"#"</span>) 'vc-ediff-ignore-whitespace)
+                                         <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">ediff-windows-wordwise?</span>
                ))
@@ -21009,7 +20868,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">requires `</span><span style=
 "color: #008200; font-style: italic;">diary-lib</span><span style=
-"color: #008200; font-style: italic;">', which requires `</span><span style=
+"color: #008200; font-style: italic;">', which requires</span>
+                                        <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">`</span><span style=
 "color: #008200; font-style: italic;">diary-loaddefs</span><span style=
 "color: #008200; font-style: italic;">'</span>
     (message <span style=
@@ -21095,15 +20957,15 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             <pre class="src src-emacs-lisp">
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">turn appointment checking on (enable reminders)</span>
-    (<span style=
-"color: #0000FF;">when</span> leuven-load-verbose (message <span style=
+    (<span style="color: #0000FF;">when</span> leuven-load-verbose
+      (message <span style=
 "color: #FF4700;">"(Info) Enable appointment reminders..."</span>))
     (GNUEmacs
       (appt-activate 1))
     (XEmacs
       (appt-initialize))
-    (<span style=
-"color: #0000FF;">when</span> leuven-load-verbose (message <span style=
+    (<span style="color: #0000FF;">when</span> leuven-load-verbose
+      (message <span style=
 "color: #FF4700;">"(Info) Enable appointment reminders... Done"</span>))
 </pre>
           </div>
@@ -21329,7 +21191,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
          <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Delete the display property, since displaying images will break our</span>
          <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">table layout.</span>
+"color: #008200; font-style: italic;">table layout</span>
          'display nil))))
 </pre>
           </div>
@@ -21366,9 +21228,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">full mailing address of this user</span>
   <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(used in MAIL envelope FROM, and to select the default personality</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">ID)</span>
+"color: #008200; font-style: italic;">(used in MAIL envelope FROM, and to select the default personality ID)</span>
   (setq user-mail-address <span style="color: #FF4700;">"john@doe.com"</span>)
 
   <span style="color: #008200;">;; </span><span style=
@@ -21955,11 +21815,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008000;">"Run xlhtml and w3m -dump on the entire buffer.</span>
 
 <span style=
-"color: #008000;">  Optional FILENAME says what filename to use. This is only necessary for</span>
+"color: #008000;">  Optional FILENAME says what filename to use.  This is only necessary for</span>
 <span style="color: #008000;">  buffers without proper `</span><span style=
 "color: #008000;">buffer-file-name</span><span style=
-"color: #008000;">'. FILENAME should be a real filename,</span>
-<span style="color: #008000;">  not a path."</span>
+"color: #008000;">'.  FILENAME should be a real</span>
+<span style="color: #008000;">  filename, not a path."</span>
     (interactive <span style="color: #FF4700;">"fExcel File: "</span>)
     (<span style="color: #0000FF;">when</span> (and filename
                (not (buffer-file-name)))
@@ -21986,11 +21846,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008000;">"Run ppthtml and w3m -dump on the entire buffer.</span>
 
 <span style=
-"color: #008000;">  Optional FILENAME says what filename to use. This is only necessary for</span>
+"color: #008000;">  Optional FILENAME says what filename to use.  This is only necessary for</span>
 <span style="color: #008000;">  buffers without proper `</span><span style=
 "color: #008000;">buffer-file-name</span><span style=
-"color: #008000;">'.  FILENAME should be a real filename,</span>
-<span style="color: #008000;">  not a path."</span>
+"color: #008000;">'.  FILENAME should be a real</span>
+<span style="color: #008000;">  filename, not a path."</span>
     (interactive <span style="color: #FF4700;">"fPowerPoint File: "</span>)
     (<span style="color: #0000FF;">when</span> (and filename
                (not (buffer-file-name)))
@@ -22215,7 +22075,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200; font-style: italic;">(when (try-require 'comint)</span>
 
     <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">regexp to recognize prompts in the inferior process </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> R prompt different from sh prompt...</span>
+"color: #008200; font-style: italic;">regexp to recognize prompts in the inferior process</span>
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> R prompt different from sh prompt...</span>
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(set it for Org-babel sh session to work!)</span>
     <span style="color: #008200;">;; </span><span style=
@@ -22909,7 +22771,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">tell Ghostscript to query which printer to use</span>
           (setq ps-lpr-switches '(<span style=
-"color: #FF4700;">"-query"</span>))) <span style=
+"color: #FF4700;">"-query"</span>)))
+                                        <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">'("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2")</span>
 
@@ -23271,7 +23134,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span style="color: #008200;">;;           </span><span style=
 "color: #008200; font-style: italic;">(if (&gt; (- start end) leuven--google-maxlen)</span>
     <span style="color: #008200;">;;               </span><span style=
-"color: #008200; font-style: italic;">(setq term (buffer-substring start (+ start leuven--google-maxlen)))</span>
+"color: #008200; font-style: italic;">(setq term (buffer-substring</span>
+    <span style=
+"color: #008200;">;;                           </span><span style=
+"color: #008200; font-style: italic;">start (+ start leuven--google-maxlen)))</span>
     <span style="color: #008200;">;;             </span><span style=
 "color: #008200; font-style: italic;">(setq term (buffer-substring start end)))</span>
     <span style="color: #008200;">;;           </span><span style=
@@ -23873,7 +23739,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200; font-style: italic;">speed up things by preventing garbage collections</span>
   (setq gc-cons-threshold 3500000)      <span style=
 "color: #008200;">; </span><span style=
-"color: #008200; font-style: italic;">make Gnus fast, from (info "(gnus)FAQ 9-2")</span>
+"color: #008200; font-style: italic;">make Gnus fast</span>
+                                        <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">from (info "(gnus)FAQ 9-2")</span>
 
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">don't display messages at start and end of garbage collection (as it</span>
@@ -24990,7 +24859,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131121.2018]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131122.1117]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
