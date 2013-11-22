@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-20 Wed 11:04>
+# Time-stamp: <2013-11-21 Thu 20:15>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -442,10 +442,18 @@ nil. Save execution times in the global list `leuven--load-times-list'."
               (find-file-time-start (float-time))
               (prefix-open (concat (make-string (* 8 require-depth) ? ) "└── "))
               (prefix-close (concat (make-string (* 8 require-depth) ? ) "    ")))
-          (message "(Info) %sLoading `%s' <from `%s'>..." prefix-open filename
-                   (ignore-errors (file-name-base load-file-name)))
+          (ad-disable-advice 'locate-library 'around 'leuven-locate-library)
+          (message "(Info) %sLoading `%s' <from `%s'>...%s"
+                   prefix-open filename
+                   (ignore-errors (file-name-base load-file-name))
+                   (ignore-errors (if (not (string-match-p (concat "^" filename "\\.?e?l?c?")
+                                                           (locate-library filename)))
+                                      (concat " " (locate-library filename))
+                                    ""))) ; don't print full file name once again!
+          (ad-activate 'locate-library)
           ad-do-it
-          (message "(Info) %sLoaded `%s' <from `%s'> in %.3f s" prefix-close filename
+          (message "(Info) %sLoading `%s' <from `%s'>... loaded in %.3f s"
+                   prefix-close filename
                    (ignore-errors (file-name-base load-file-name))
                    (- (float-time) find-file-time-start))))
 
@@ -14248,7 +14256,7 @@ To get a backtrace when a specific regexp is displayed in the echo area
 #+begin_src emacs-lisp :tangle no
 (let ((elapsed (float-time (time-subtract (current-time)
                                           emacs-start-time))))
-  (message "Loading `%s'...done (%.3fs)" load-file-name elapsed))
+  (message "Loading `%s'... loaded in %.3f s" load-file-name elapsed))
 
 (add-hook 'after-init-hook
           `(lambda ()

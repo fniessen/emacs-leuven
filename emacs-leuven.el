@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131120.1105
+;; Version: 20131121.2016
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131120.1105]--")
+(message "* --[ Loading Emacs Leuven 20131121.2016]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -371,10 +371,18 @@ nil. Save execution times in the global list `leuven--load-times-list'."
               (find-file-time-start (float-time))
               (prefix-open (concat (make-string (* 8 require-depth) ? ) "└── "))
               (prefix-close (concat (make-string (* 8 require-depth) ? ) "    ")))
-          (message "(Info) %sLoading `%s' <from `%s'>..." prefix-open filename
-                   (ignore-errors (file-name-base load-file-name)))
+          (ad-disable-advice 'locate-library 'around 'leuven-locate-library)
+          (message "(Info) %sLoading `%s' <from `%s'>...%s"
+                   prefix-open filename
+                   (ignore-errors (file-name-base load-file-name))
+                   (ignore-errors (if (not (string-match-p (concat "^" filename "\\.?e?l?c?")
+                                                           (locate-library filename)))
+                                      (concat " " (locate-library filename))
+                                    ""))) ; don't print full file name once again!
+          (ad-activate 'locate-library)
           ad-do-it
-          (message "(Info) %sLoaded `%s' <from `%s'> in %.3f s" prefix-close filename
+          (message "(Info) %sLoading `%s' <from `%s'>... loaded in %.3f s"
+                   prefix-close filename
                    (ignore-errors (file-name-base load-file-name))
                    (- (float-time) find-file-time-start))))
 
@@ -9367,7 +9375,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131120.1106]--")
+(message "* --[ Loaded Emacs Leuven 20131121.2017]--")
 
 (provide 'emacs-leuven)
 
