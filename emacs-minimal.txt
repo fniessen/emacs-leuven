@@ -1,7 +1,7 @@
 #+TITLE:     Minimal .emacs
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2013-11-20 Wed 09:37>
+#+Time-stamp: <2013-11-20 Wed 22:17>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -51,6 +51,16 @@ Here is a minimal Emacs config file.
 (show-paren-mode 1)
 (setq show-paren-style 'mixed)
 (setq show-paren-ring-bell-on-mismatch t)
+
+;; title bar display of visible frames
+(setq frame-title-format
+      (format "Emacs %s rev:%s of %s    PID:%d"
+              ;; (capitalize (symbol-name system-type))
+              emacs-version
+              (ignore-errors
+                (replace-regexp-in-string " .*" "" emacs-bzr-version))
+              (format-time-string "%Y-%m-%d" emacs-build-time)
+              (emacs-pid)))
 
 ;; Org-mode (reverse order, so that the Org lisp directory will be found
 ;; before the Org contrib lisp directory)

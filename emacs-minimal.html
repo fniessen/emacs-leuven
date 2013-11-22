@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Minimal .emacs</title><!-- 2013-11-20 Wed 09:38 -->
+  <title>Minimal .emacs</title><!-- 2013-11-22 Fri 10:17 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -124,6 +124,23 @@
 (show-paren-mode 1)
 (setq show-paren-style 'mixed)
 (setq show-paren-ring-bell-on-mismatch t)
+
+<span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">title bar display of visible frames</span>
+(setq frame-title-format
+      (format <span style=
+"color: #FF4700;">"Emacs %s rev:%s of %s    PID:%d"</span>
+              <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(capitalize (symbol-name system-type))</span>
+              emacs-version
+              (ignore-<span style=
+"color: #CC0000; background-color: #FFFF88;">error</span>s
+                (replace-regexp-in-string <span style=
+"color: #FF4700;">" .*"</span> <span style=
+"color: #FF4700;">""</span> emacs-bzr-version))
+              (format-time-string <span style=
+"color: #FF4700;">"%Y-%m-%d"</span> emacs-build-time)
+              (emacs-pid)))
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Org-mode (reverse order, so that the Org lisp directory will be found</span>
