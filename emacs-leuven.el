@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131123.0114
+;; Version: 20131123.1028
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131123.0114]--")
+(message "* --[ Loading Emacs Leuven 20131123.1028]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -8451,7 +8451,14 @@ From %c"
       (local-set-key
         (kbd "<up>") 'comint-previous-input)
       (local-set-key
-        (kbd "<down>") 'comint-next-input))
+        (kbd "<down>") 'comint-next-input)
+      (local-set-key
+        (kbd "<C-up>") 'comint-previous-matching-input-from-input)
+      (local-set-key
+        (kbd "<C-down>") 'comint-next-matching-input-from-input)
+      ;; (local-set-key
+      ;;   (kbd "C-x TAB") 'comint-dynamic-complete-filename) ; or a better one?
+      )
 
     (add-hook 'comint-mode-hook 'leuven--up-down-keys)
 ;; )
@@ -8558,6 +8565,29 @@ From %c"
     ;;   (when (try-require 'cygwin-mount)
     ;;     (cygwin-mount-activate)))
 
+  (leuven--section "Utilities -- ESS")
+
+  (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
+
+  (autoload 'R "ess-site"
+    "Call 'R', the 'GNU S' system from the R Foundation." t)
+
+  (autoload 'R-mode "ess-site"
+    "Major mode for editing R source." t)
+
+  ;; don't request the process directory each time R is run
+  (setq ess-ask-for-ess-directory nil)
+
+  ;; ;; add to list of prefixes recognized by ESS
+  ;; (setq ess-r-versions '("R-2.15.2"))   ; R-current
+  ;; ;; matching versions will appear after doing M-x R <tab> <tab>
+
+  ;; ESS: Emacs Speaks Statistics
+  (with-eval-after-load "ess-site"
+
+    ;; use eldoc to report R function names
+    (require 'ess-eldoc)
+    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
 )
 
 ;;* Proced
@@ -8573,6 +8603,8 @@ From %c"
 
     ;; display of Proced buffer as process tree
     (setq-default proced-tree-flag t))
+
+)
 
 ;;* 37 (info "(emacs)Emacs Server")
 
@@ -9290,31 +9322,6 @@ From %c"
 
 ;;** 38.16 (info "(elisp)Images")
 
-  (leuven--section "Utilities -- ESS")
-
-  (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
-
-  (autoload 'R "ess-site"
-    "Call 'R', the 'GNU S' system from the R Foundation." t)
-
-  (autoload 'R-mode "ess-site"
-    "Major mode for editing R source." t)
-
-  ;; don't request the process directory each time R is run
-  (setq ess-ask-for-ess-directory nil)
-
-  ;; ;; add to list of prefixes recognized by ESS
-  ;; (setq ess-r-versions '("R-2.15.2"))   ; R-current
-  ;; ;; matching versions will appear after doing M-x R <tab> <tab>
-
-  ;; ESS: Emacs Speaks Statistics
-  (with-eval-after-load "ess-site"
-
-    ;; use eldoc to report R function names
-    (require 'ess-eldoc)
-    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
-)
-
 ;;* App G Emacs and (info "(emacs)Microsoft Windows/MS-DOS")
 
 (leuven--chapter leuven-chapter-AppG-ms-dos "Appendix G Emacs and MS-DOS"
@@ -9394,7 +9401,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131123.0115]--")
+(message "* --[ Loaded Emacs Leuven 20131123.1029]--")
 
 (provide 'emacs-leuven)
 

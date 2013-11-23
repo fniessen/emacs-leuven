@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-22 Fri 22:18>
+# Time-stamp: <2013-11-23 Sat 10:31>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -10061,6 +10061,9 @@ without a =Makefile=.
     (kbd "<S-f9>") 'make-clean)
 #+end_src
 
+You're debugging Bash code? I normally use =mode-compile.el= for this. Basically,
+it runs Bash with lots of debug output.
+
 ** Compilation Mode
 
 #+begin_src emacs-lisp
@@ -12502,7 +12505,14 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
       (local-set-key
         (kbd "<up>") 'comint-previous-input)
       (local-set-key
-        (kbd "<down>") 'comint-next-input))
+        (kbd "<down>") 'comint-next-input)
+      (local-set-key
+        (kbd "<C-up>") 'comint-previous-matching-input-from-input)
+      (local-set-key
+        (kbd "<C-down>") 'comint-next-matching-input-from-input)
+      ;; (local-set-key
+      ;;   (kbd "C-x TAB") 'comint-dynamic-complete-filename) ; or a better one?
+      )
 
     (add-hook 'comint-mode-hook 'leuven--up-down-keys)
 ;; )
@@ -12750,16 +12760,104 @@ with Gnus...*
     ;;     (cygwin-mount-activate)))
 #+end_src
 
+See =w32-settings.el= for more!
+
+** Emacs Speaks Statistics (ESS)
+
+http://ess.r-project.org/Manual/ess.html
+
+To run statistical processes under ESS, Windows users will need to make sure
+that the directories for =R= and =Rterm= are in their =PATH= environment variable.
+
+Start an R session with =M-x R=.
+
 #+begin_src emacs-lisp
+  (leuven--section "Utilities -- ESS")
+
+  (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
+
+  (autoload 'R "ess-site"
+    "Call 'R', the 'GNU S' system from the R Foundation." t)
+
+  (autoload 'R-mode "ess-site"
+    "Major mode for editing R source." t)
+#+end_src
+
+Customize variables for ESS (set these variables *before* loading ~ess-site~).
+
+#+begin_src emacs-lisp
+  ;; don't request the process directory each time R is run
+  (setq ess-ask-for-ess-directory nil)
+
+  ;; ;; add to list of prefixes recognized by ESS
+  ;; (setq ess-r-versions '("R-2.15.2"))   ; R-current
+  ;; ;; matching versions will appear after doing M-x R <tab> <tab>
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; ESS: Emacs Speaks Statistics
+  (with-eval-after-load "ess-site"
+
+    ;; use eldoc to report R function names
+    (require 'ess-eldoc)
+    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
 )
 #+end_src
 
-** XXX
+#+begin_src emacs-lisp :tangle no
+  (global-set-key
+    (kbd "M--") 'ess-smart-underscore)
 
-You're debugging bash code? I normally use =mode-compile.el= for this.
-Basically, it runs bash with lots of debug output.
+  ;; Use `<S-RET>' to split window & launch R (if not running), execute
+  ;; highlighted region (if R running & area highlighted), or execute current
+  ;; line (and move to next line, skipping comments). Nice.
+  ;;
+  ;; See http://www.emacswiki.org/emacs/EmacsSpeaksStatistics,
+  ;; FelipeCsaszar. Adapted to split vertically instead of
+  ;; horizontally.
 
-See =w32-settings.el= for more!
+  ;; XXX This should be useless, at least if R code is well written
+  ;; inside Org documents!
+  (defun leuven--ess-start-R ()
+    (interactive)
+    (let (w1 w1name w2)
+      (if (not (member "*R*"
+                       (mapcar (function buffer-name) (buffer-list))))
+          (progn
+            (delete-other-windows)
+            (setq w1 (selected-window))
+            (setq w1name (buffer-name))
+            (setq w2 (split-window w1 nil t))
+            (R)
+            (set-window-buffer w2 "*R*")
+            (set-window-buffer w1 w1name)))))
+
+  (defun leuven-ess-eval ()
+    (interactive)
+    (leuven--ess-start-R)
+    (if (use-region-p)
+        (call-interactively 'ess-eval-region)
+      (call-interactively 'ess-eval-line-and-step)))
+
+  (add-hook 'ess-mode-hook
+            (lambda ()
+              (local-set-key
+                (kbd "<S-return>") 'leuven-ess-eval)))
+
+  (add-hook 'inferior-ess-mode-hook
+            (lambda ()
+              (local-set-key
+                (kbd "<C-up>") 'comint-previous-input)
+              (local-set-key
+                (kbd "<C-down>") 'comint-next-input)))
+#+end_src
+
+Get info for object at point, and display it in an electric buffer with the
+command =ess-describe-object-at-point= (bound to =C-c C-d C-e=, repeat =C-e= or =e= to
+cycle between =str()=, =head()=, =tail()= and =summary()=). Use =other-window= to switch
+to =*ess-describe*= window.
+
+It was inspired by Erik Iverson's =ess-R-object-tooltip=.
 
 ** Proced
 
@@ -12777,6 +12875,10 @@ See =w32-settings.el= for more!
 
     ;; display of Proced buffer as process tree
     (setq-default proced-tree-flag t))
+#+end_src
+
+#+begin_src emacs-lisp
+)
 #+end_src
 
 * Using Emacs Server
@@ -13782,6 +13884,7 @@ There are a few commands to adjust the font sizes:
 ** Images
    :PROPERTIES:
    :ID:       9432da83-fa9d-4466-a4da-57f33d662bbd
+   :tangle:   no
    :END:
 
 #+begin_src emacs-lisp
@@ -13791,7 +13894,7 @@ There are a few commands to adjust the font sizes:
 How do I get image support? See =image-library-alist=, a list of image types vs
 external libraries needed to display them.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (describe-variable 'image-library-alist)
 #+end_src
 
@@ -13834,7 +13937,7 @@ If you use Cygwin Emacs, install =libpng= via Cygwin as well.
 
 You can do:
 
-#+begin_src emacs-lisp :results silent :tangle no
+#+begin_src emacs-lisp :results silent
 (image-type-available-p 'png)
 #+end_src
 
@@ -13996,105 +14099,6 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 
     (setq jabber-chat-buffer-show-avatar nil))
 #+end_src
-
-* Utilities
-
-** Emacs Speaks Statistics (ESS)
-
-http://ess.r-project.org/Manual/ess.html
-
-To run statistical processes under ESS, Windows users will need to make sure
-that the directories for =R= and =Rterm= are in their =PATH= environment variable.
-
-Start an R session with =M-x R=.
-
-#+begin_src emacs-lisp
-  (leuven--section "Utilities -- ESS")
-
-  (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
-
-  (autoload 'R "ess-site"
-    "Call 'R', the 'GNU S' system from the R Foundation." t)
-
-  (autoload 'R-mode "ess-site"
-    "Major mode for editing R source." t)
-#+end_src
-
-Customize variables for ESS (set these variables *before* loading ~ess-site~).
-
-#+begin_src emacs-lisp
-  ;; don't request the process directory each time R is run
-  (setq ess-ask-for-ess-directory nil)
-
-  ;; ;; add to list of prefixes recognized by ESS
-  ;; (setq ess-r-versions '("R-2.15.2"))   ; R-current
-  ;; ;; matching versions will appear after doing M-x R <tab> <tab>
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; ESS: Emacs Speaks Statistics
-  (with-eval-after-load "ess-site"
-
-    ;; use eldoc to report R function names
-    (require 'ess-eldoc)
-    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
-)
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-  (global-set-key
-    (kbd "M--") 'ess-smart-underscore)
-
-  ;; Use `<S-RET>' to split window & launch R (if not running), execute
-  ;; highlighted region (if R running & area highlighted), or execute current
-  ;; line (and move to next line, skipping comments). Nice.
-  ;;
-  ;; See http://www.emacswiki.org/emacs/EmacsSpeaksStatistics,
-  ;; FelipeCsaszar. Adapted to split vertically instead of
-  ;; horizontally.
-
-  ;; XXX This should be useless, at least if R code is well written
-  ;; inside Org documents!
-  (defun leuven--ess-start-R ()
-    (interactive)
-    (let (w1 w1name w2)
-      (if (not (member "*R*"
-                       (mapcar (function buffer-name) (buffer-list))))
-          (progn
-            (delete-other-windows)
-            (setq w1 (selected-window))
-            (setq w1name (buffer-name))
-            (setq w2 (split-window w1 nil t))
-            (R)
-            (set-window-buffer w2 "*R*")
-            (set-window-buffer w1 w1name)))))
-
-  (defun leuven-ess-eval ()
-    (interactive)
-    (leuven--ess-start-R)
-    (if (use-region-p)
-        (call-interactively 'ess-eval-region)
-      (call-interactively 'ess-eval-line-and-step)))
-
-  (add-hook 'ess-mode-hook
-            (lambda ()
-              (local-set-key
-                (kbd "<S-return>") 'leuven-ess-eval)))
-
-  (add-hook 'inferior-ess-mode-hook
-            (lambda ()
-              (local-set-key
-                (kbd "<C-up>") 'comint-previous-input)
-              (local-set-key
-                (kbd "<C-down>") 'comint-next-input)))
-#+end_src
-
-Get info for object at point, and display it in an electric buffer with the
-command =ess-describe-object-at-point= (bound to =C-c C-d C-e=, repeat =C-e= or =e= to
-cycle between =str()=, =head()=, =tail()= and =summary()=). Use =other-window= to switch
-to =*ess-describe*= window.
-
-It was inspired by Erik Iverson's =ess-R-object-tooltip=.
 
 * Emacs and Microsoft Windows/MS-DOS
 
