@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-22 Fri 11:17 -->
+  <title>Emacs Leuven</title><!-- 2013-11-23 Sat 01:17 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1096,7 +1096,7 @@
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">Version: 20131122.1116</span>
+"color: #008200; font-style: italic;">Version: 20131123.0115</span>
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1218,7 +1218,7 @@
 "color: #008200; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #FF4700;">"* --[ Loading Emacs Leuven 20131122.1116]--"</span>)
+"color: #FF4700;">"* --[ Loading Emacs Leuven 20131123.0115]--"</span>)
 
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">uptimes</span>
@@ -11690,28 +11690,31 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 <span style="color: #008200;">;;</span><span style=
 "color: #008200; font-style: italic;">* 10 (info "(org)Agenda Views")</span>
 
-  <span style="color: #008200;">;; </span><span style=
+  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #FF4700;">"org-agenda"</span>
+
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">multiple same-day time stamps in entry make multiple agenda lines</span>
-  (setq org-agenda-skip-additional-timestamps-same-entry nil)
+    (setq org-agenda-skip-additional-timestamps-same-entry nil)
 
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">show outline path in echo area after line motion (though, may bring</span>
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">some slowness)</span>
-  (setq org-agenda-show-outline-path t)
+    (setq org-agenda-show-outline-path t)
 
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">10.0 restore the window configuration when exiting the agenda</span>
-  (setq org-agenda-restore-windows-after-quit t)
+    (setq org-agenda-restore-windows-after-quit t)
 </pre>
           </div>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; speed up agenda by avoiding to update some text properties</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(setq org-agenda-ignore-drawer-properties '(effort category))</span>
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(setq org-agenda-ignore-drawer-properties '(effort category)) ; org.el</span>
 </pre>
           </div>
         </div>
@@ -11725,16 +11728,16 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 <span style="color: #008200;">;;</span><span style=
 "color: #008200; font-style: italic;">** 10.1 (info "(org)Agenda files")</span>
 
-  (leuven--section <span style=
+    (leuven--section <span style=
 "color: #FF4700;">"10.1 (org)Agenda files"</span>)
 
-  (<span style="color: #0000FF;">when</span> (boundp 'org-agenda-files)
-    (message <span style=
+    (<span style="color: #0000FF;">when</span> (boundp 'org-agenda-files)
+      (message <span style=
 "color: #FF4700;">"(Info) Found %s entries in `</span><span style=
 "color: #FF4700;">org-agenda-files</span><span style=
 "color: #FF4700;">'"</span>
-             (length org-agenda-files))
-    (sit-for 0.5))
+               (length org-agenda-files))
+      (sit-for 0.5))
 </pre>
             </div>
 
@@ -11761,14 +11764,14 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 <span style="color: #008200;">;;</span><span style=
 "color: #008200; font-style: italic;">** 10.2 (info "(org)Agenda dispatcher")</span>
 
-  (leuven--section <span style=
+    (leuven--section <span style=
 "color: #FF4700;">"10.2 (org)Agenda dispatcher"</span>)
 
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">enable sticky agenda: `q' key will bury agenda buffers (instead of</span>
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">killing)</span>
-  (setq org-agenda-sticky t)
+    (setq org-agenda-sticky t)
 </pre>
             </div>
           </div>
@@ -11783,7 +11786,7 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 <span style="color: #008200;">;;</span><span style=
 "color: #008200; font-style: italic;">** 10.3 The (info "(org)Built-in agenda views")</span>
 
-  (leuven--section <span style=
+    (leuven--section <span style=
 "color: #FF4700;">"10.3 (org)Built-in agenda views"</span>)
 </pre>
             </div>
@@ -11793,13 +11796,13 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">default duration for appointments that only have a starting time</span>
-  (setq org-agenda-default-appointment-duration nil)
+    (setq org-agenda-default-appointment-duration nil)
 
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; duration of an appointment will add to day effort</span>
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(setq org-agenda-columns-add-appointments-to-effort-sum t)</span>
 </pre>
             </div>
@@ -11809,9 +11812,9 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">show dated entries in the global `</span><span style="color: #008200; font-style: italic;">todo</span><span style="color: #008200; font-style: italic;">' list</span>
-  (setq org-agenda-todo-ignore-with-date nil) <span style=
+    (setq org-agenda-todo-ignore-with-date nil) <span style=
 "color: #008200;">;</span><span style=
 "color: #008200; font-style: italic;">!! tricky setting</span>
 </pre>
@@ -11819,9 +11822,9 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">show entries with a time stamp in the global `</span><span style="color: #008200; font-style: italic;">todo</span><span style="color: #008200; font-style: italic;">' list</span>
-  (setq org-agenda-todo-ignore-timestamp nil)
+    (setq org-agenda-todo-ignore-timestamp nil)
 </pre>
             </div>
 
@@ -11832,56 +11835,56 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">10.3.2 don't show scheduled entries in the global `</span><span style="color: #008200; font-style: italic;">todo</span><span style="color: #008200; font-style: italic;">' list</span>
-  (setq org-agenda-todo-ignore-scheduled 'future) <span style=
+    (setq org-agenda-todo-ignore-scheduled 'future) <span style=
 "color: #008200;">;</span><span style=
 "color: #008200; font-style: italic;">!! tricky setting</span>
-  (setq org-agenda-todo-ignore-scheduled nil)
+    (setq org-agenda-todo-ignore-scheduled nil)
 </pre>
             </div>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">10.3.2 don't show entries scheduled in the future in the global</span>
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">`</span><span style=
 "color: #008200; font-style: italic;">todo</span><span style=
 "color: #008200; font-style: italic;">' list (until they are within the </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">warning</span><span style="color: #008200; font-style: italic;"> period)</span>
-  (setq org-agenda-todo-ignore-deadlines 'near) <span style=
+    (setq org-agenda-todo-ignore-deadlines 'near) <span style=
 "color: #008200;">;</span><span style=
 "color: #008200; font-style: italic;">!! tricky setting</span>
-  (setq org-agenda-todo-ignore-deadlines nil)
+    (setq org-agenda-todo-ignore-deadlines nil)
 </pre>
             </div>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">10.3.2 check also the sublevels of a </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #008200; font-style: italic;"> entry for </span><span style="color: #008200; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #008200; font-style: italic;"> entries,</span>
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">resulting in potentially much longer `</span><span style="color: #008200; font-style: italic;">todo</span><span style="color: #008200; font-style: italic;">' lists</span>
-  (setq org-agenda-todo-list-sublevels t)
+    (setq org-agenda-todo-list-sublevels t)
 
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">10.3.3 honor `</span><span style=
 "color: #008200; font-style: italic;">todo</span><span style=
 "color: #008200; font-style: italic;">' list `</span><span style=
 "color: #008200; font-style: italic;">org-agenda-todo-ignore...</span><span style="color: #008200; font-style: italic;">' options also</span>
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">in the `</span><span style=
 "color: #008200; font-style: italic;">tags-todo</span><span style=
 "color: #008200; font-style: italic;">' list</span>
-  (setq org-agenda-tags-todo-honor-ignore-options t)
+    (setq org-agenda-tags-todo-honor-ignore-options t)
 </pre>
             </div>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">;; highlight current line (may bring some slowness)</span>
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(add-hook 'org-agenda-mode-hook 'hl-line-mode)</span>
 </pre>
             </div>
@@ -11893,45 +11896,47 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
             <div class="outline-text-5" id="text-26-9-3-1">
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">10.3.5 list of extra files to be searched by text search commands</span>
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(C-c a s)</span>
-  (setq org-agenda-text-search-extra-files nil)
-  <span style="color: #008200;">;; </span><span style=
+    (setq org-agenda-text-search-extra-files nil) <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">org.el</span>
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(setq leuven-org-search-extra-files ...) to list extra files to be searched</span>
 
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">turn on individual word search (for Google addicts)</span>
-  (setq org-agenda-search-view-always-boolean t
-        org-agenda-search-view-search-words-only t)
+    (setq org-agenda-search-view-always-boolean t
+          org-agenda-search-view-search-words-only t)
 
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">match part of a word</span>
-  (setq org-agenda-search-view-force-full-words nil)
+    (setq org-agenda-search-view-force-full-words nil)
 
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">don't search headline for a time-of-day</span>
-  (setq org-agenda-search-headline-for-time nil)
+    (setq org-agenda-search-headline-for-time nil)
 </pre>
               </div>
 
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">10.3.6 how to identify stuck projects</span>
-  (setq org-stuck-projects
-        '(<span style=
+    (setq org-stuck-projects
+          '(<span style=
 "color: #FF4700;">"+LEVEL=2/-DONE"</span>              <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">identify a project</span>
-          (<span style="color: #FF4700;">"</span><span style=
+            (<span style="color: #FF4700;">"</span><span style=
 "color: #FF4700; background-color: #FFFF88;">TODO</span><span style=
 "color: #FF4700;">"</span> <span style=
 "color: #FF4700;">"STRT"</span>)               <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #008200; font-style: italic;"> keywords</span>
-          nil <span style=
+            nil <span style=
 "color: #FF4700;">""</span>))                      <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">tags, regexp</span>
@@ -11950,62 +11955,66 @@ emacsclient -n -e <span style="color: #FF4700;">'(make-capture-frame)'</span>
 <span style="color: #008200;">;;</span><span style=
 "color: #008200; font-style: italic;">** 10.4 (info "(org)Presentation and sorting")</span>
 
-  (leuven--section <span style=
+    (leuven--section <span style=
 "color: #FF4700;">"10.4 (org)Presentation and sorting"</span>)
 
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">10.4 format specifications for the prefix of items in the agenda views</span>
-  (setq org-agenda-prefix-format
-        '((agenda . <span style=
+    (setq org-agenda-prefix-format
+          '((agenda . <span style=
 "color: #FF4700;">" %-11s%i %?-12t"</span>)  <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">agenda</span>
-          (timeline . <span style=
+            (timeline . <span style=
 "color: #FF4700;">" % s"</span>)           <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">timeline</span>
-          (todo . <span style=
+            (todo . <span style=
 "color: #FF4700;">" %i %-12:c"</span>)         <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">todo, alltodo</span>
-          (tags . <span style=
+            (tags . <span style=
 "color: #FF4700;">" %i %-12:c"</span>)         <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">tags, tags-todo, stuck</span>
-          (search . <span style=
+            (search . <span style=
 "color: #FF4700;">" %i %-12:c"</span>)))     <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">search</span>
 
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">text preceding scheduled items in the agenda view</span>
-  (setq org-agenda-scheduled-leaders
-        '(<span style="color: #FF4700;">"Today      "</span>
-          <span style="color: #FF4700;">"           "</span>))
+    (setq org-agenda-scheduled-leaders
+          '(<span style="color: #FF4700;">"Today      "</span>
+            <span style="color: #FF4700;">"           "</span>))
 
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">text preceding item pulled into the agenda by inactive time stamps</span>
-  (setq org-agenda-inactive-leader <span style="color: #FF4700;">"["</span>)
+    (setq org-agenda-inactive-leader <span style="color: #FF4700;">"["</span>)
 
-  <span style="color: #008200;">;; </span><span style=
+    <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">text preceding deadline items in the agenda view</span>
-  (setq org-agenda-deadline-leaders
-        '(<span style="color: #FF4700;">"Deadline   "</span>
-          <span style=
+    (setq org-agenda-deadline-leaders
+          '(<span style="color: #FF4700;">"Deadline   "</span>
+            <span style=
 "color: #FF4700;">"In %d d"</span>                     <span style=
 "color: #008200;">; </span><span style=
 "color: #008200; font-style: italic;">or "%d d left"</span>
-          <span style="color: #FF4700;">"%d d ago"</span>))
+            <span style="color: #FF4700;">"%d d ago"</span>))
 
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">faces for showing deadlines in the agenda</span>
-  (setq org-agenda-deadline-faces
-        '((1.0001 . leuven-org-deadline-yesterday-or-before-face)
-          (0.9999 . leuven-org-deadline-today-face)
-          (0.0000 . leuven-org-deadline-tomorrow-or-later-face)))
+    )                                   <span style=
+"color: #008200;">; </span><span style=
+"color: #008200; font-style: italic;">with-eval-after-load "org-agenda" ends here</span>
 
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #FF4700;">"org-faces"</span>
+
+    <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">faces for showing deadlines in the agenda</span>
+    (setq org-agenda-deadline-faces
+          '((1.0001 . leuven-org-deadline-yesterday-or-before-face)
+            (0.9999 . leuven-org-deadline-today-face)
+            (0.0000 . leuven-org-deadline-tomorrow-or-later-face)))
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">Org non-standard faces</span>
@@ -22025,22 +22034,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">for the interactive (sub)shell (and AUCTeX compilation?)</span>
   (setq explicit-shell-file-name shell-file-name)
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; args passed to inferior shell by `M-x shell', if the shell is bash</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(setq explicit-bash-args '("--noediting" "--login"))</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; </span><span style=
-"color: #008200; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #008200; font-style: italic;"> This ensures that /etc/profile gets read (at least for Cygwin).</span>
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">;; Is this good?</span>
-
-  <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">regexp to match prompts in the inferior shell</span>
-  (setq shell-prompt-pattern <span style=
-"color: #FF4700;">"^[</span><span style="color: #FF4700;">^</span><span style=
-"color: #FF4700;">#$%&gt;\n]*[#$%&gt;] *"</span>)
 </pre>
           </div>
         </div>
@@ -22054,12 +22047,18 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             <dt><code>M-p</code> (or <code>&lt;C-up&gt;</code>, or
             <code>&lt;up&gt;</code> in Emacs Leuven)</dt>
 
-            <dd><code>comint-previous-input</code>.</dd>
+            <dd>Fetch the next earlier old shell command
+            (<code>comint-previous-input)</code>.</dd>
 
-            <dt><code>M-n</code> (or <code>&lt;down&gt;</code> in Emacs
-            Leuven)</dt>
+            <dt><code>M-n</code> (or <code>&lt;C-down&gt;</code>, or
+            <code>&lt;down&gt;</code> in Emacs Leuven)</dt>
 
-            <dd><code>comint-next-input</code>.</dd>
+            <dd>Fetch the next later old shell command
+            (<code>comint-next-input</code>).</dd>
+
+            <dt><code>M-r</code></dt>
+
+            <dd>Begin an incremental regexp search of old shell commands.</dd>
           </dl>
 
           <div class="org-src-container">
@@ -22073,20 +22072,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200; font-style: italic;">general command-interpreter-in-a-buffer stuff (lisp, shell, R, ...)</span>
   <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">(when (try-require 'comint)</span>
-
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">regexp to recognize prompts in the inferior process</span>
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #008200; font-style: italic;"> R prompt different from sh prompt...</span>
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(set it for Org-babel sh session to work!)</span>
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(defun set-shell-prompt-regexp ()</span>
-      (setq comint-prompt-regexp shell-prompt-pattern)
-    <span style="color: #008200;">;;   </span><span style=
-"color: #008200; font-style: italic;">)</span>
-    <span style="color: #008200;">;; </span><span style=
-"color: #008200; font-style: italic;">(add-hook 'shell-mode-hook 'set-shell-prompt-regexp)</span>
 
     <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">no duplicates in command history</span>
@@ -22135,7 +22120,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         (kbd <span style=
 "color: #FF4700;">"&lt;down&gt;"</span>) 'comint-next-input))
 
-    (add-hook 'shell-mode-hook 'leuven--up-down-keys)
+    (add-hook 'comint-mode-hook 'leuven--up-down-keys)
 <span style="color: #008200;">;; </span><span style=
 "color: #008200; font-style: italic;">)</span>
 
@@ -22175,6 +22160,25 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008200; font-style: italic;">** 36.4 Shell Prompts</span>
 
   (leuven--section <span style="color: #FF4700;">"36.4 Shell Prompts"</span>)
+
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">regexp to match prompts in the inferior shell</span>
+  (setq shell-prompt-pattern <span style=
+"color: #FF4700;">"^[</span><span style="color: #FF4700;">^</span><span style=
+"color: #FF4700;">#$%&gt;\n]*[#$%&gt;] *"</span>)
+
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">regexp to recognize prompts in the inferior process (only used if the</span>
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">variable `</span><span style=
+"color: #008200; font-style: italic;">comint-use-prompt-regexp</span><span style="color: #008200; font-style: italic;">' is non-nil)</span>
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(defun set-shell-prompt-regexp ()</span>
+    (setq comint-prompt-regexp shell-prompt-pattern)
+  <span style="color: #008200;">;;   </span><span style=
+"color: #008200; font-style: italic;">)</span>
+  <span style="color: #008200;">;; </span><span style=
+"color: #008200; font-style: italic;">(add-hook 'comint-mode-hook 'set-shell-prompt-regexp)</span>
 </pre>
           </div>
         </div>
@@ -24859,7 +24863,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131122.1117]--"</span>)
+"color: #FF4700;">"* --[ Loaded Emacs Leuven 20131123.0116]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

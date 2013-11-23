@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131122.1113
+;; Version: 20131123.0114
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131122.1113]--")
+(message "* --[ Loading Emacs Leuven 20131123.0114]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4334,126 +4334,130 @@ From %c"
 
 ;;* 10 (info "(org)Agenda Views")
 
-  ;; multiple same-day time stamps in entry make multiple agenda lines
-  (setq org-agenda-skip-additional-timestamps-same-entry nil)
+  (with-eval-after-load "org-agenda"
 
-  ;; show outline path in echo area after line motion (though, may bring
-  ;; some slowness)
-  (setq org-agenda-show-outline-path t)
+    ;; multiple same-day time stamps in entry make multiple agenda lines
+    (setq org-agenda-skip-additional-timestamps-same-entry nil)
 
-  ;; 10.0 restore the window configuration when exiting the agenda
-  (setq org-agenda-restore-windows-after-quit t)
+    ;; show outline path in echo area after line motion (though, may bring
+    ;; some slowness)
+    (setq org-agenda-show-outline-path t)
 
-  ;; ;; speed up agenda by avoiding to update some text properties
-  ;; (setq org-agenda-ignore-drawer-properties '(effort category))
+    ;; 10.0 restore the window configuration when exiting the agenda
+    (setq org-agenda-restore-windows-after-quit t)
+
+    ;; ;; speed up agenda by avoiding to update some text properties
+    ;; (setq org-agenda-ignore-drawer-properties '(effort category)) ; org.el
 
 ;;** 10.1 (info "(org)Agenda files")
 
-  (leuven--section "10.1 (org)Agenda files")
+    (leuven--section "10.1 (org)Agenda files")
 
-  (when (boundp 'org-agenda-files)
-    (message "(Info) Found %s entries in `org-agenda-files'"
-             (length org-agenda-files))
-    (sit-for 0.5))
+    (when (boundp 'org-agenda-files)
+      (message "(Info) Found %s entries in `org-agenda-files'"
+               (length org-agenda-files))
+      (sit-for 0.5))
 
 ;;** 10.2 (info "(org)Agenda dispatcher")
 
-  (leuven--section "10.2 (org)Agenda dispatcher")
+    (leuven--section "10.2 (org)Agenda dispatcher")
 
-  ;; enable sticky agenda: `q' key will bury agenda buffers (instead of
-  ;; killing)
-  (setq org-agenda-sticky t)
+    ;; enable sticky agenda: `q' key will bury agenda buffers (instead of
+    ;; killing)
+    (setq org-agenda-sticky t)
 
 ;;** 10.3 The (info "(org)Built-in agenda views")
 
-  (leuven--section "10.3 (org)Built-in agenda views")
+    (leuven--section "10.3 (org)Built-in agenda views")
 
-  ;; default duration for appointments that only have a starting time
-  (setq org-agenda-default-appointment-duration nil)
+    ;; default duration for appointments that only have a starting time
+    (setq org-agenda-default-appointment-duration nil)
 
-  ;; ;; duration of an appointment will add to day effort
-  ;; (setq org-agenda-columns-add-appointments-to-effort-sum t)
+    ;; ;; duration of an appointment will add to day effort
+    ;; (setq org-agenda-columns-add-appointments-to-effort-sum t)
 
-  ;; show dated entries in the global `todo' list
-  (setq org-agenda-todo-ignore-with-date nil) ;!! tricky setting
+    ;; show dated entries in the global `todo' list
+    (setq org-agenda-todo-ignore-with-date nil) ;!! tricky setting
 
-  ;; show entries with a time stamp in the global `todo' list
-  (setq org-agenda-todo-ignore-timestamp nil)
+    ;; show entries with a time stamp in the global `todo' list
+    (setq org-agenda-todo-ignore-timestamp nil)
 
-  ;; 10.3.2 don't show scheduled entries in the global `todo' list
-  (setq org-agenda-todo-ignore-scheduled 'future) ;!! tricky setting
-  (setq org-agenda-todo-ignore-scheduled nil)
+    ;; 10.3.2 don't show scheduled entries in the global `todo' list
+    (setq org-agenda-todo-ignore-scheduled 'future) ;!! tricky setting
+    (setq org-agenda-todo-ignore-scheduled nil)
 
-  ;; 10.3.2 don't show entries scheduled in the future in the global
-  ;; `todo' list (until they are within the warning period)
-  (setq org-agenda-todo-ignore-deadlines 'near) ;!! tricky setting
-  (setq org-agenda-todo-ignore-deadlines nil)
+    ;; 10.3.2 don't show entries scheduled in the future in the global
+    ;; `todo' list (until they are within the warning period)
+    (setq org-agenda-todo-ignore-deadlines 'near) ;!! tricky setting
+    (setq org-agenda-todo-ignore-deadlines nil)
 
-  ;; 10.3.2 check also the sublevels of a TODO entry for TODO entries,
-  ;; resulting in potentially much longer `todo' lists
-  (setq org-agenda-todo-list-sublevels t)
+    ;; 10.3.2 check also the sublevels of a TODO entry for TODO entries,
+    ;; resulting in potentially much longer `todo' lists
+    (setq org-agenda-todo-list-sublevels t)
 
-  ;; 10.3.3 honor `todo' list `org-agenda-todo-ignore...' options also
-  ;; in the `tags-todo' list
-  (setq org-agenda-tags-todo-honor-ignore-options t)
+    ;; 10.3.3 honor `todo' list `org-agenda-todo-ignore...' options also
+    ;; in the `tags-todo' list
+    (setq org-agenda-tags-todo-honor-ignore-options t)
 
-  ;; ;; highlight current line (may bring some slowness)
-  ;; (add-hook 'org-agenda-mode-hook 'hl-line-mode)
+    ;; ;; highlight current line (may bring some slowness)
+    ;; (add-hook 'org-agenda-mode-hook 'hl-line-mode)
 
-  ;; 10.3.5 list of extra files to be searched by text search commands
-  ;; (C-c a s)
-  (setq org-agenda-text-search-extra-files nil)
-  ;; (setq leuven-org-search-extra-files ...) to list extra files to be searched
+    ;; 10.3.5 list of extra files to be searched by text search commands
+    ;; (C-c a s)
+    (setq org-agenda-text-search-extra-files nil) ; org.el
+    ;; (setq leuven-org-search-extra-files ...) to list extra files to be searched
 
-  ;; turn on individual word search (for Google addicts)
-  (setq org-agenda-search-view-always-boolean t
-        org-agenda-search-view-search-words-only t)
+    ;; turn on individual word search (for Google addicts)
+    (setq org-agenda-search-view-always-boolean t
+          org-agenda-search-view-search-words-only t)
 
-  ;; match part of a word
-  (setq org-agenda-search-view-force-full-words nil)
+    ;; match part of a word
+    (setq org-agenda-search-view-force-full-words nil)
 
-  ;; don't search headline for a time-of-day
-  (setq org-agenda-search-headline-for-time nil)
+    ;; don't search headline for a time-of-day
+    (setq org-agenda-search-headline-for-time nil)
 
-  ;; 10.3.6 how to identify stuck projects
-  (setq org-stuck-projects
-        '("+LEVEL=2/-DONE"              ; identify a project
-          ("TODO" "STRT")               ; TODO keywords
-          nil ""))                      ; tags, regexp
+    ;; 10.3.6 how to identify stuck projects
+    (setq org-stuck-projects
+          '("+LEVEL=2/-DONE"              ; identify a project
+            ("TODO" "STRT")               ; TODO keywords
+            nil ""))                      ; tags, regexp
 
 ;;** 10.4 (info "(org)Presentation and sorting")
 
-  (leuven--section "10.4 (org)Presentation and sorting")
+    (leuven--section "10.4 (org)Presentation and sorting")
 
-  ;; 10.4 format specifications for the prefix of items in the agenda views
-  (setq org-agenda-prefix-format
-        '((agenda . " %-11s%i %?-12t")  ; agenda
-          (timeline . " % s")           ; timeline
-          (todo . " %i %-12:c")         ; todo, alltodo
-          (tags . " %i %-12:c")         ; tags, tags-todo, stuck
-          (search . " %i %-12:c")))     ; search
+    ;; 10.4 format specifications for the prefix of items in the agenda views
+    (setq org-agenda-prefix-format
+          '((agenda . " %-11s%i %?-12t")  ; agenda
+            (timeline . " % s")           ; timeline
+            (todo . " %i %-12:c")         ; todo, alltodo
+            (tags . " %i %-12:c")         ; tags, tags-todo, stuck
+            (search . " %i %-12:c")))     ; search
 
-  ;; text preceding scheduled items in the agenda view
-  (setq org-agenda-scheduled-leaders
-        '("Today      "
-          "           "))
+    ;; text preceding scheduled items in the agenda view
+    (setq org-agenda-scheduled-leaders
+          '("Today      "
+            "           "))
 
-  ;; text preceding item pulled into the agenda by inactive time stamps
-  (setq org-agenda-inactive-leader "[")
+    ;; text preceding item pulled into the agenda by inactive time stamps
+    (setq org-agenda-inactive-leader "[")
 
-  ;; text preceding deadline items in the agenda view
-  (setq org-agenda-deadline-leaders
-        '("Deadline   "
-          "In %d d"                     ; or "%d d left"
-          "%d d ago"))
+    ;; text preceding deadline items in the agenda view
+    (setq org-agenda-deadline-leaders
+          '("Deadline   "
+            "In %d d"                     ; or "%d d left"
+            "%d d ago"))
 
-  ;; faces for showing deadlines in the agenda
-  (setq org-agenda-deadline-faces
-        '((1.0001 . leuven-org-deadline-yesterday-or-before-face)
-          (0.9999 . leuven-org-deadline-today-face)
-          (0.0000 . leuven-org-deadline-tomorrow-or-later-face)))
+    )                                   ; with-eval-after-load "org-agenda" ends here
 
   (with-eval-after-load "org-faces"
+
+    ;; faces for showing deadlines in the agenda
+    (setq org-agenda-deadline-faces
+          '((1.0001 . leuven-org-deadline-yesterday-or-before-face)
+            (0.9999 . leuven-org-deadline-today-face)
+            (0.0000 . leuven-org-deadline-tomorrow-or-later-face)))
 
     ;; Org non-standard faces
     (defface leuven-org-deadline-yesterday-or-before-face
@@ -8414,28 +8418,12 @@ From %c"
   ;; for the interactive (sub)shell (and AUCTeX compilation?)
   (setq explicit-shell-file-name shell-file-name)
 
-  ;; ;; args passed to inferior shell by `M-x shell', if the shell is bash
-  ;; (setq explicit-bash-args '("--noediting" "--login"))
-  ;; ;; FIXME This ensures that /etc/profile gets read (at least for Cygwin).
-  ;; ;; Is this good?
-
-  ;; regexp to match prompts in the inferior shell
-  (setq shell-prompt-pattern "^[^#$%>\n]*[#$%>] *")
-
 ;;** 36.3 Shell Mode
 
   (leuven--section "36.3 Shell Mode")
 
   ;; general command-interpreter-in-a-buffer stuff (lisp, shell, R, ...)
   ;; (when (try-require 'comint)
-
-    ;; regexp to recognize prompts in the inferior process
-    ;; XXX R prompt different from sh prompt...
-    ;; (set it for Org-babel sh session to work!)
-    ;; (defun set-shell-prompt-regexp ()
-      (setq comint-prompt-regexp shell-prompt-pattern)
-    ;;   )
-    ;; (add-hook 'shell-mode-hook 'set-shell-prompt-regexp)
 
     ;; no duplicates in command history
     (setq-default comint-input-ignoredups t)
@@ -8465,7 +8453,7 @@ From %c"
       (local-set-key
         (kbd "<down>") 'comint-next-input))
 
-    (add-hook 'shell-mode-hook 'leuven--up-down-keys)
+    (add-hook 'comint-mode-hook 'leuven--up-down-keys)
 ;; )
 
   ;; translate ANSI escape sequences into faces (within shell mode)
@@ -8476,6 +8464,16 @@ From %c"
 ;;** 36.4 Shell Prompts
 
   (leuven--section "36.4 Shell Prompts")
+
+  ;; regexp to match prompts in the inferior shell
+  (setq shell-prompt-pattern "^[^#$%>\n]*[#$%>] *")
+
+  ;; regexp to recognize prompts in the inferior process (only used if the
+  ;; variable `comint-use-prompt-regexp' is non-nil)
+  ;; (defun set-shell-prompt-regexp ()
+    (setq comint-prompt-regexp shell-prompt-pattern)
+  ;;   )
+  ;; (add-hook 'comint-mode-hook 'set-shell-prompt-regexp)
 
 ;;** 36.5 History
 
@@ -9396,7 +9394,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131122.1116]--")
+(message "* --[ Loaded Emacs Leuven 20131123.0115]--")
 
 (provide 'emacs-leuven)
 
