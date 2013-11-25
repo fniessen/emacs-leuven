@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-23 Sat 10:31>
+# Time-stamp: <2013-11-25 Mon 21:51>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1112,6 +1112,20 @@ parameters, even those on continuation lines.
 )                                       ; chapter 10 ends here
 #+end_src
 
+* The Mark and the Region
+
+#+begin_src emacs-lisp
+;;* 11 The (info "(emacs)Mark") and the Region
+
+(leuven--chapter leuven-chapter-11-mark "12 Killing and Moving Text"
+
+  ;; inserting text while the mark is active causes the text in the region to
+  ;; be deleted first
+  (delete-selection-mode 1)
+
+)                                       ; chapter 11 ends here
+#+end_src
+
 * Killing and Moving Text
 
 #+begin_src emacs-lisp
@@ -1391,8 +1405,8 @@ Visible bookmarks in buffer.
 
   (leuven--section "14.3 (emacs)Auto Scrolling")
 
-  ;; redisplay will never recenter point
-  (setq scroll-conservatively 10000)    ; always scroll a line at a time
+  ;; scroll only one line at a time (redisplay will never recenter point)
+  (setq scroll-conservatively 10000)    ; or `most-positive-fixnum'
 
   ;; ;; scroll one line at a time
   ;; (setq scroll-step 1)                  ; XXX should be on?
@@ -1603,16 +1617,7 @@ much easier to follow some key variables through a block of code.
   ;; highlight trailing whitespaces in all modes
   (setq-default show-trailing-whitespace t)
 
-  ;; delete all the trailing whitespaces and TABs across the current
-  ;; buffer
-  (defun leuven-delete-trailing-whitespaces-and-untabify ()
-    "Delete all the trailing white spaces, and convert all TABs
-  to multiple spaces across the current buffer."
-    (interactive "*")
-    (delete-trailing-whitespace)
-    (untabify (point-min) (point-max)))
-
-  ;; ensure that your files have no trailing whitespace
+  ;; nuke all trailing whitespace in the buffer
   (add-hook 'before-save-hook
             (lambda ()
               ;; except for Message mode where "-- " is the signature separator
@@ -3131,6 +3136,8 @@ friend.
   session.
 
 To go back to the *previous element* of the minibuffer history, use =M-p=.
+
+To mark all candidates in a helm buffer, use =M-a= or =M-m=.
 
 Locate for *Windows* users: you have to install [[http://www.voidtools.com/download.php][Everything]] with his command line
 interface.
@@ -9776,6 +9783,13 @@ things.
     (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
     (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
     (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode))
+
+  ;; highlight the arguments in `font-lock-variable-name-face'
+  (defun leuven--frob-eldoc-argument-list (string)
+    "Upcase and fontify STRING for use with `eldoc-mode'."
+    (propertize (upcase string)
+                'face 'font-lock-variable-name-face))
+  (setq eldoc-argument-case 'leuven--frob-eldoc-argument-list)
 #+end_src
 
 ** Hideshow minor mode
@@ -12786,7 +12800,7 @@ Start an R session with =M-x R=.
 Customize variables for ESS (set these variables *before* loading ~ess-site~).
 
 #+begin_src emacs-lisp
-  ;; don't request the process directory each time R is run
+  ;; start R in current working directory, don't ask user
   (setq ess-ask-for-ess-directory nil)
 
   ;; ;; add to list of prefixes recognized by ESS
@@ -12801,7 +12815,12 @@ Customize variables for ESS (set these variables *before* loading ~ess-site~).
     ;; use eldoc to report R function names
     (require 'ess-eldoc)
     (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
-)
+
+    )
+#+end_src
+
+#+begin_src emacs-lisp
+  (setq inferior-ess-same-window nil)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no

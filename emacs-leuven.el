@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131123.1028
+;; Version: 20131125.2151
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131123.1028]--")
+(message "* --[ Loading Emacs Leuven 20131125.2151]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -797,6 +797,16 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
 )                                       ; chapter 10 ends here
 
+;;* 11 The (info "(emacs)Mark") and the Region
+
+(leuven--chapter leuven-chapter-11-mark "12 Killing and Moving Text"
+
+  ;; inserting text while the mark is active causes the text in the region to
+  ;; be deleted first
+  (delete-selection-mode 1)
+
+)                                       ; chapter 11 ends here
+
 ;;* 12 (info "(emacs)Killing") and Moving Text
 
 (leuven--chapter leuven-chapter-12-killing "12 Killing and Moving Text"
@@ -963,8 +973,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
   (leuven--section "14.3 (emacs)Auto Scrolling")
 
-  ;; redisplay will never recenter point
-  (setq scroll-conservatively 10000)    ; always scroll a line at a time
+  ;; scroll only one line at a time (redisplay will never recenter point)
+  (setq scroll-conservatively 10000)    ; or `most-positive-fixnum'
 
   ;; ;; scroll one line at a time
   ;; (setq scroll-step 1)                  ; XXX should be on?
@@ -1087,16 +1097,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   ;; highlight trailing whitespaces in all modes
   (setq-default show-trailing-whitespace t)
 
-  ;; delete all the trailing whitespaces and TABs across the current
-  ;; buffer
-  (defun leuven-delete-trailing-whitespaces-and-untabify ()
-    "Delete all the trailing white spaces, and convert all TABs
-  to multiple spaces across the current buffer."
-    (interactive "*")
-    (delete-trailing-whitespace)
-    (untabify (point-min) (point-max)))
-
-  ;; ensure that your files have no trailing whitespace
+  ;; nuke all trailing whitespace in the buffer
   (add-hook 'before-save-hook
             (lambda ()
               ;; except for Message mode where "-- " is the signature separator
@@ -6690,6 +6691,13 @@ From %c"
     (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
     (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode))
 
+  ;; highlight the arguments in `font-lock-variable-name-face'
+  (defun leuven--frob-eldoc-argument-list (string)
+    "Upcase and fontify STRING for use with `eldoc-mode'."
+    (propertize (upcase string)
+                'face 'font-lock-variable-name-face))
+  (setq eldoc-argument-case 'leuven--frob-eldoc-argument-list)
+
 ;;** 26.7 (info "(emacs)Hideshow") minor mode
 
   (leuven--section "26.7 (emacs)Hideshow minor mode")
@@ -8575,7 +8583,7 @@ From %c"
   (autoload 'R-mode "ess-site"
     "Major mode for editing R source." t)
 
-  ;; don't request the process directory each time R is run
+  ;; start R in current working directory, don't ask user
   (setq ess-ask-for-ess-directory nil)
 
   ;; ;; add to list of prefixes recognized by ESS
@@ -8588,7 +8596,10 @@ From %c"
     ;; use eldoc to report R function names
     (require 'ess-eldoc)
     (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
-)
+
+    )
+
+  (setq inferior-ess-same-window nil)
 
 ;;* Proced
 
@@ -9320,8 +9331,6 @@ From %c"
 
 )
 
-;;** 38.16 (info "(elisp)Images")
-
 ;;* App G Emacs and (info "(emacs)Microsoft Windows/MS-DOS")
 
 (leuven--chapter leuven-chapter-AppG-ms-dos "Appendix G Emacs and MS-DOS"
@@ -9401,7 +9410,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131123.1029]--")
+(message "* --[ Loaded Emacs Leuven 20131125.2152]--")
 
 (provide 'emacs-leuven)
 
