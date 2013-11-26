@@ -1,7 +1,7 @@
 #+TITLE:     Minimal .emacs
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2013-11-20 Wed 22:17>
+#+Time-stamp: <2013-11-26 Tue 06:15>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -54,7 +54,7 @@ Here is a minimal Emacs config file.
 
 ;; title bar display of visible frames
 (setq frame-title-format
-      (format "Emacs %s rev:%s of %s    PID:%d"
+      (format "Minimal Emacs %s rev:%s of %s    PID:%d"
               ;; (capitalize (symbol-name system-type))
               emacs-version
               (ignore-errors
