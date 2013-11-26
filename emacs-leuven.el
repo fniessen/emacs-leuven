@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131125.2151
+;; Version: 20131126.2119
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131125.2151]--")
+(message "* --[ Loading Emacs Leuven 20131126.2119]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -195,6 +195,46 @@ nil. Save execution times in the global list `leuven--load-times-list'."
       (unless end-of-chapter (message "*** %s" sectionname)))
     ;; for next one
     (setq leuven--before-section-time (float-time))))
+
+;;* Loading Libraries of Lisp Code for Emacs
+
+(leuven--chapter leuven-chapter-0-loading-libraries "0 Loading Libraries"
+
+  ;; remember this directory
+  (defconst leuven--directory
+    (file-name-directory (or load-file-name (buffer-file-name)))
+    "Directory path of Emacs Leuven.")
+
+  ;; load-path enhancement
+  (defun leuven-add-to-load-path (this-directory)
+    "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
+    (when (and this-directory
+               (file-directory-p this-directory))
+      ;; TODO Add warning if directory does not exist
+      (let* ((this-directory (expand-file-name this-directory)))
+
+        ;; directories containing a `.nosearch' file (such as
+        ;; `auctex-11.87\style') should not made part of `load-path'.
+        ;; TODO `RCS' and `CVS' directories should also be excluded.
+        (unless (file-exists-p (concat this-directory "/.nosearch"))
+          (add-to-list 'load-path this-directory)
+          (when leuven-load-verbose
+            (message "(Info) Added `%s' to `load-path'" this-directory))))))
+
+  (defvar leuven-local-repos-directory "~/Public/Repositories/"
+    "Directory containing additional Emacs Lisp public repositories.")
+
+  (leuven-add-to-load-path
+   (concat leuven-local-repos-directory "babel"))
+  (leuven-add-to-load-path
+   (concat leuven-local-repos-directory "emacs-bookmark-extension"))
+
+  (defvar leuven-user-lisp-directory "~/.emacs.d/lisp/"
+    "Directory containing personal additional Emacs Lisp packages.")
+
+  (leuven-add-to-load-path leuven-user-lisp-directory)
+
+)                                       ; chapter 0-loading-libraries ends here
 
 ;;* Environment
 
@@ -519,46 +559,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                          ("Description" 0 nil)])
                   (tabulated-list-init-header)))))
 
-)                                       ; chapter 47 ends here
-
-;;* Loading Libraries of Lisp Code for Emacs
-
-(leuven--chapter leuven-chapter-0-loading-libraries "0 Loading Libraries"
-
-  ;; remember this directory
-  (defconst leuven--directory
-    (file-name-directory (or load-file-name (buffer-file-name)))
-    "Directory path of Emacs Leuven.")
-
-  ;; load-path enhancement
-  (defun leuven-add-to-load-path (this-directory)
-    "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
-    (when (and this-directory
-               (file-directory-p this-directory))
-      ;; TODO Add warning if directory does not exist
-      (let* ((this-directory (expand-file-name this-directory)))
-
-        ;; directories containing a `.nosearch' file (such as
-        ;; `auctex-11.87\style') should not made part of `load-path'.
-        ;; TODO `RCS' and `CVS' directories should also be excluded.
-        (unless (file-exists-p (concat this-directory "/.nosearch"))
-          (add-to-list 'load-path this-directory)
-          (when leuven-load-verbose
-            (message "(Info) Added `%s' to `load-path'" this-directory))))))
-
-  (defvar leuven-local-repos-directory "~/Public/Repositories/"
-    "Directory containing additional Emacs Lisp public repositories.")
-
-  (leuven-add-to-load-path
-   (concat leuven-local-repos-directory "babel"))
-  (leuven-add-to-load-path
-   (concat leuven-local-repos-directory "emacs-bookmark-extension"))
-
-  (defvar leuven-user-lisp-directory "~/.emacs.d/lisp/"
-    "Directory containing personal additional Emacs Lisp packages.")
-
-  (leuven-add-to-load-path leuven-user-lisp-directory)
-
   (if (try-require 'idle-require)
 
       (progn
@@ -578,7 +578,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                 ;; starts loading
                 (idle-require-mode 1))))
 
-)                                       ; chapter 0-loading-libraries ends here
+)                                       ; chapter 47 ends here
 
 ;;* 1 The Organization of the (info "(emacs)Screen")
 
@@ -975,9 +975,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
   ;; scroll only one line at a time (redisplay will never recenter point)
   (setq scroll-conservatively 10000)    ; or `most-positive-fixnum'
-
-  ;; ;; scroll one line at a time
-  ;; (setq scroll-step 1)                  ; XXX should be on?
 
   ;; number of lines of margin at the top and bottom of a window
   (setq scroll-margin 3)                ; also for `isearch-forward'
@@ -3186,6 +3183,10 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   ;; libraries that should (always) be loaded along with `org.el'
   ;; (loaded when opening the first Org file)
   (setq org-modules nil)
+
+  ;; set the RESET_CHECK_BOXES and LIST_EXPORT_BASENAME properties in items as
+  ;; needed
+  (add-to-list 'org-modules 'org-checklist)
 
   ;; globally unique ID for Org mode entries (see `org-store-link')
   ;; (takes care of automatically creating unique targets for internal
@@ -5901,6 +5902,16 @@ From %c"
 
   (with-eval-after-load "ob-core"
     (add-to-list 'org-babel-noweb-error-langs "emacs-lisp"))
+
+  ;; debugging sbe calls
+  (defadvice sbe (around get-err-msg activate)
+    "Issue messages at errors."
+    (condition-case err
+        (progn
+      ad-do-it)
+      (error
+       (message "Error in sbe: %S" err)
+       (signal (car err) (cdr err)))))
 
 ;;** 14.6 (info "(org)Library of Babel")
 
@@ -9410,7 +9421,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131125.2152]--")
+(message "* --[ Loaded Emacs Leuven 20131126.212]--")
 
 (provide 'emacs-leuven)
 
