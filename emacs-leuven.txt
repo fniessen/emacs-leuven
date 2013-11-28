@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-28 Thu 12:18>
+# Time-stamp: <2013-11-28 Thu 19:30>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -12845,8 +12845,11 @@ Customize variables for ESS (set these variables *before* loading ~ess-site~).
   ;; start R in current working directory, don't ask user
   (setq ess-ask-for-ess-directory nil)
 
+  ;; new inferior ESS process appears in another window in the current frame
+  (setq inferior-ess-same-window nil)
+
   ;; ;; add to list of prefixes recognized by ESS
-  ;; (setq ess-r-versions '("R-2.15.2"))   ; R-current
+  ;; (setq ess-r-versions '("R-3.0.2"))    ; R-current
   ;; ;; matching versions will appear after doing M-x R <tab> <tab>
 #+end_src
 
@@ -12862,55 +12865,19 @@ Customize variables for ESS (set these variables *before* loading ~ess-site~).
 #+end_src
 
 #+begin_src emacs-lisp
-  (setq inferior-ess-same-window nil)
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-  (global-set-key
-    (kbd "M--") 'ess-smart-underscore)
-
-  ;; Use `<S-RET>' to split window & launch R (if not running), execute
-  ;; highlighted region (if R running & area highlighted), or execute current
-  ;; line (and move to next line, skipping comments). Nice.
-  ;;
-  ;; See http://www.emacswiki.org/emacs/EmacsSpeaksStatistics,
-  ;; FelipeCsaszar. Adapted to split vertically instead of
-  ;; horizontally.
-
-  ;; XXX This should be useless, at least if R code is well written
-  ;; inside Org documents!
-  (defun leuven--ess-start-R ()
-    (interactive)
-    (let (w1 w1name w2)
-      (if (not (member "*R*"
-                       (mapcar (function buffer-name) (buffer-list))))
-          (progn
-            (delete-other-windows)
-            (setq w1 (selected-window))
-            (setq w1name (buffer-name))
-            (setq w2 (split-window w1 nil t))
-            (R)
-            (set-window-buffer w2 "*R*")
-            (set-window-buffer w1 w1name)))))
-
-  (defun leuven-ess-eval ()
-    (interactive)
-    (leuven--ess-start-R)
-    (if (use-region-p)
-        (call-interactively 'ess-eval-region)
-      (call-interactively 'ess-eval-line-and-step)))
-
   (add-hook 'ess-mode-hook
             (lambda ()
-              (local-set-key
-                (kbd "<S-return>") 'leuven-ess-eval)))
+              (ess-set-style 'DEFAULT)))
+#+end_src
 
-  (add-hook 'inferior-ess-mode-hook
-            (lambda ()
-              (local-set-key
-                (kbd "<C-up>") 'comint-previous-input)
-              (local-set-key
-                (kbd "<C-down>") 'comint-next-input)))
+See http://www.emacswiki.org/emacs/EmacsSpeaksStatistics.
+
+#+begin_src emacs-lisp :tangle no
+  ;; ESS[BUGS] dialect
+  (require 'ess-bugs-d)
+
+  ;; avoid Emacs hanging on large evaluations
+  (setq ess-eval-visibly 'nowait)
 #+end_src
 
 Get info for object at point, and display it in an electric buffer with the

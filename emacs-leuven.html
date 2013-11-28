@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-28 Thu 12:22 -->
+  <title>Emacs Leuven</title><!-- 2013-11-28 Thu 19:33 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1102,7 +1102,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131128.1221</span>
+"color: #4C886B; font-style: italic;">Version: 20131128.1932</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1224,7 +1224,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131128.1221]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131128.1932]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -22673,9 +22673,13 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (setq ess-ask-for-ess-directory nil)
 
   <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">new inferior ESS process appears in another window in the current frame</span>
+  (setq inferior-ess-same-window nil)
+
+  <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">;; add to list of prefixes recognized by ESS</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(setq ess-r-versions '("R-2.15.2"))   ; R-current</span>
+"color: #4C886B; font-style: italic;">(setq ess-r-versions '("R-3.0.2"))    ; R-current</span>
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">;; matching versions will appear after doing M-x R &lt;tab&gt; &lt;tab&gt;</span>
 </pre>
@@ -22700,73 +22704,26 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (setq inferior-ess-same-window nil)
+  (add-hook 'ess-mode-hook
+            (<span style="color: #0000FF;">lambda</span> ()
+              (ess-set-style 'DEFAULT)))
 </pre>
           </div>
 
+          <p>See <a href=
+          "http://www.emacswiki.org/emacs/EmacsSpeaksStatistics">http://www.emacswiki.org/emacs/EmacsSpeaksStatistics</a>.</p>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (global-set-key
-    (kbd <span style="color: #036A07;">"M--"</span>) 'ess-smart-underscore)
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">ESS[</span><span style=
+"color: #4C886B; background-color: #FFFF88; font-style: italic;">BUG</span><span style="color: #4C886B; font-style: italic;">S] dialect</span>
+  (<span style="color: #0000FF;">require</span> '<span style=
+"color: #6434A3;">ess-bugs-d</span>)
 
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Use `</span><span style=
-"color: #4C886B; font-style: italic;">&lt;S-RET&gt;</span><span style=
-"color: #4C886B; font-style: italic;">' to split window &amp; launch R (if not running), execute</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">highlighted region (if R running &amp; area highlighted), or execute current</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">line (and move to next line, skipping comments). Nice.</span>
-  <span style="color: #4C886B;">;;</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">See http://www.emacswiki.org/emacs/EmacsSpeaksStatistics,</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">FelipeCsaszar. Adapted to split vertically instead of</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">horizontally.</span>
-
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #4C886B; font-style: italic;"> This should be useless, at least if R code is well written</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">inside Org documents!</span>
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--ess-start-R</span> ()
-    (interactive)
-    (<span style="color: #0000FF;">let</span> (w1 w1name w2)
-      (<span style="color: #0000FF;">if</span> (not (member <span style=
-"color: #036A07;">"*R*"</span>
-                       (mapcar (function buffer-name) (buffer-list))))
-          (<span style="color: #0000FF;">progn</span>
-            (delete-other-windows)
-            (setq w1 (selected-window))
-            (setq w1name (buffer-name))
-            (setq w2 (split-window w1 nil t))
-            (R)
-            (set-window-buffer w2 <span style="color: #036A07;">"*R*"</span>)
-            (set-window-buffer w1 w1name)))))
-
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-ess-eval</span> ()
-    (interactive)
-    (leuven--ess-start-R)
-    (<span style="color: #0000FF;">if</span> (use-region-p)
-        (call-interactively 'ess-eval-region)
-      (call-interactively 'ess-eval-line-and-step)))
-
-  (add-hook 'ess-mode-hook
-            (<span style="color: #0000FF;">lambda</span> ()
-              (local-set-key
-                (kbd <span style=
-"color: #036A07;">"&lt;S-return&gt;"</span>) 'leuven-ess-eval)))
-
-  (add-hook 'inferior-ess-mode-hook
-            (<span style="color: #0000FF;">lambda</span> ()
-              (local-set-key
-                (kbd <span style=
-"color: #036A07;">"&lt;C-up&gt;"</span>) 'comint-previous-input)
-              (local-set-key
-                (kbd <span style=
-"color: #036A07;">"&lt;C-down&gt;"</span>) 'comint-next-input)))
+"color: #4C886B; font-style: italic;">avoid Emacs hanging on large evaluations</span>
+  (setq ess-eval-visibly 'nowait)
 </pre>
           </div>
 
@@ -24964,7 +24921,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131128.1221]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131128.1933]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)

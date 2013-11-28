@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131128.1219
+;; Version: 20131128.193
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131128.1219]--")
+(message "* --[ Loading Emacs Leuven 20131128.193]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -8607,8 +8607,11 @@ From %c"
   ;; start R in current working directory, don't ask user
   (setq ess-ask-for-ess-directory nil)
 
+  ;; new inferior ESS process appears in another window in the current frame
+  (setq inferior-ess-same-window nil)
+
   ;; ;; add to list of prefixes recognized by ESS
-  ;; (setq ess-r-versions '("R-2.15.2"))   ; R-current
+  ;; (setq ess-r-versions '("R-3.0.2"))    ; R-current
   ;; ;; matching versions will appear after doing M-x R <tab> <tab>
 
   ;; ESS: Emacs Speaks Statistics
@@ -8620,7 +8623,9 @@ From %c"
 
     )
 
-  (setq inferior-ess-same-window nil)
+  (add-hook 'ess-mode-hook
+            (lambda ()
+              (ess-set-style 'DEFAULT)))
 
 ;;* Proced
 
@@ -9431,7 +9436,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131128.122]--")
+(message "* --[ Loaded Emacs Leuven 20131128.1931]--")
 
 (provide 'emacs-leuven)
 
