@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131126.2119
+;; Version: 20131128.1219
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131126.2119]--")
+(message "* --[ Loading Emacs Leuven 20131128.1219]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -523,6 +523,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           ;; jabber
           ledger-mode
           leuven-theme
+          multi-term
           ;; org
           ;; org-mime                      ; from contrib
           pager
@@ -2107,10 +2108,18 @@ nil. Save execution times in the global list `leuven--load-times-list'."
       (global-set-key
         (kbd "C-x b") 'helm-buffers-list)
 
-      ;; awesome wearing a hat
+      (defun leuven-helm-org-prog-menu ()
+        "Jump to a place in the buffer using an index menu.
+
+      For Org mode buffers, show Org headlines.
+      For programming mode buffers, show functions, variables, etc."
+        (interactive)
+        (if (derived-mode-p 'org-mode)
+            (helm-org-headlines)
+          (helm-imenu)))
+
       (global-set-key
-        (kbd "<f4>") 'helm-org-headlines)
-      ;; (or `helm-imenu', better than `org-toc')
+        (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
 
       (global-set-key
         (kbd "C-c o") 'helm-occur)
@@ -2122,8 +2131,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
       (global-set-key
         (kbd "C-x r b") 'helm-bookmark-ext)
 
-      ;; prefix key for all Helm commands in the global map
-      (setq helm-command-prefix-key "C-c C-f") ; `C-x c'?
+      ;; ;; prefix key for all Helm commands in the global map
+      ;; (setq helm-command-prefix-key "C-c C-f") ; [default: "C-x c"]
 
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
@@ -2575,9 +2584,10 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
   (leuven--section "21.8 (emacs)Speedbar Frames")
 
-  ;; TODO don't bind F4 if already bound to helm... If helm not there, OK do it.
-  ;; ;; jump to speedbar frame
-  ;; (global-set-key (kbd "<f4>") 'speedbar-get-focus)
+  (unless (locate-library "helm-config") ; helm is better than speedbar!
+
+    ;; jump to speedbar frame
+    (global-set-key (kbd "<f4>") 'speedbar-get-focus))
 
   ;; everything browser (into individual source files), or Dired on
   ;; steroids
@@ -2589,7 +2599,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     ;; add new extensions for speedbar tagging (allow to expand/collapse
     ;; sections, etc.) -- do this BEFORE firing up speedbar?
     (speedbar-add-supported-extension
-     '(".bib" ".css" ".jpg" ".js" ".nw" ".org" ".php" ".png" ".tex" ".txt"
+     '(".bib" ".css" ".jpg" ".js" ".nw" ".org" ".php" ".png" ".R" ".tex" ".txt"
        ".w" "README"))
 
     ;; bind the arrow keys in the speedbar tree
@@ -2605,12 +2615,12 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                                       (background-color . "white")))
 
     ;; speedbar in the current frame (vs in a new frame)
-    (when (locate-library "sr-speedbar")
+    (when (and (not (locate-library "helm-config"))
+                                        ; helm is better than speedbar!
+               (locate-library "sr-speedbar"))
+
       (autoload 'sr-speedbar-toggle "sr-speedbar" nil t)
-      ;; ;; TODO don't bind F4 if already bound to helm... If helm not there,
-      ;; ;; OK do it.
-      ;; (global-set-key (kbd "<f4>") 'sr-speedbar-toggle)
-      ))
+      (global-set-key (kbd "<f4>") 'sr-speedbar-toggle)))
 
 ;;** 21.15 (info "(emacs)Tool Bars")
 
@@ -9421,7 +9431,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131126.212]--")
+(message "* --[ Loaded Emacs Leuven 20131128.122]--")
 
 (provide 'emacs-leuven)
 
