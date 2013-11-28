@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-28 Thu 19:30>
+# Time-stamp: <2013-11-28 Thu 19:59>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4202,7 +4202,7 @@ There are several *non-break space* characters:
 
 #+begin_src emacs-lisp
   ;; replace space by nobreak-space where it fits well
-  (defun leuven--replace-space-before-colon ()
+  (defun leuven--smart-punctuation-colon ()
     "Replace space by nobreak-space in front of a colon."
     (interactive)
     (require 'org-element)
@@ -4229,7 +4229,7 @@ There are several *non-break space* characters:
           (t
            (insert ":"))))
 
-  (defun leuven--replace-space-before-question-mark ()
+  (defun leuven--smart-punctuation-question-mark ()
     "If any, replace space by nobreak-space in front of a question mark."
     (interactive)
     (if (eq (char-before) ?\ ) ; normal space
@@ -4240,7 +4240,7 @@ There are several *non-break space* characters:
             (insert " ?"))) ; non-breaking space
       (insert "?")))
 
-  (defun leuven--replace-space-before-exclamation-mark ()
+  (defun leuven--smart-punctuation-exclamation-mark ()
     "If any, replace space by nobreak-space in front of an exclamation
   mark."
     (interactive)
@@ -4252,7 +4252,7 @@ There are several *non-break space* characters:
             (insert " !"))) ; non-breaking space
       (insert "!")))
 
-  (defun leuven--replace-space-before-semi-colon ()
+  (defun leuven--smart-punctuation-semicolon ()
     "If any, replace space by nobreak-space in front of a semi-colon."
     (interactive)
     (require 'org-element)
@@ -4271,33 +4271,7 @@ There are several *non-break space* characters:
                  (insert " ;")))) ; non-breaking space
       (insert ";")))
 
-  (defun leuven--replace-double-double-quote ()
-    "Replace two following double quotes by French quotes with nobreak-spaces."
-    (interactive)
-    (if (eq (char-before) ?\")
-        (progn
-          (backward-delete-char 1)
-          (insert "«  »")
-          (backward-char 2))
-      (insert "\"")))
-
-  ;; French typography
-  (defun leuven--nobreak-keys ()
-    "If any, replace space in front of colons, question marks, exclamation
-  marks, etc. to avoid line break problems."
-    (interactive)
-    (local-set-key ":" 'leuven--replace-space-before-colon)
-    (local-set-key "?" 'leuven--replace-space-before-question-mark)
-    (local-set-key "!" 'leuven--replace-space-before-exclamation-mark)
-    (local-set-key ";" 'leuven--replace-space-before-semi-colon)
-    (local-set-key "\"" 'leuven--replace-double-double-quote))
-
-  (add-hook 'text-mode-hook 'leuven--nobreak-keys)
-  (add-hook 'message-mode-hook 'leuven--nobreak-keys)
-#+end_src
-
-#+begin_src emacs-lisp
-  (defun insert-one-quote-or-two ()
+  (defun leuven--smart-punctuation-apostrophe ()
     (interactive)
     (cond
      ((or (bolp) (not (looking-back "'")))
@@ -4317,8 +4291,32 @@ There are several *non-break space* characters:
         (skip-syntax-forward "w_")
         (unless (looking-at "'") (insert-and-inherit "'"))))))
 
-  (global-set-key
-   [39] 'insert-one-quote-or-two)
+  (defun leuven--smart-punctuation-quotation-mark ()
+    "Replace two following double quotes by French quotes with nobreak-spaces."
+    (interactive)
+    (if (and (eq (char-before) ?\")
+             (or (not (equal mode-name "Org"))
+                 (not (member (org-element-type (org-element-at-point))
+                              '(src-block keyword table dynamic-block)))))
+        (progn
+          (backward-delete-char 1)
+          (insert "«  »")
+          (backward-char 2))
+      (insert "\"")))
+
+  (defun leuven--smart-punctuation ()
+    "If any, replace space in front of colons, question marks, exclamation
+  marks, etc. to avoid line break problems."
+    (interactive)
+    (local-set-key ":" 'leuven--smart-punctuation-colon)
+    (local-set-key "?" 'leuven--smart-punctuation-question-mark)
+    (local-set-key "!" 'leuven--smart-punctuation-exclamation-mark)
+    (local-set-key ";" 'leuven--smart-punctuation-semicolon)
+    (local-set-key [39] 'leuven--smart-punctuation-apostrophe)
+    (local-set-key "\"" 'leuven--smart-punctuation-quotation-mark))
+
+  (add-hook 'text-mode-hook 'leuven--smart-punctuation)
+  (add-hook 'message-mode-hook 'leuven--smart-punctuation)
 #+end_src
 
 ** Case Conversion Commands

@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-28 Thu 19:33 -->
+  <title>Emacs Leuven</title><!-- 2013-11-28 Thu 20:02 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1102,7 +1102,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131128.1932</span>
+"color: #4C886B; font-style: italic;">Version: 20131128.2001</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1224,7 +1224,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131128.1932]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131128.2001]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -8082,7 +8082,7 @@ M-: (executable-find "diff") RET
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">replace space by nobreak-space where it fits well</span>
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--replace-space-before-colon</span> ()
+"color: #006699;">leuven--smart-punctuation-colon</span> ()
     <span style=
 "color: #008000;">"Replace space by nobreak-space in front of a colon."</span>
     (interactive)
@@ -8128,7 +8128,7 @@ M-: (executable-find "diff") RET
            (insert <span style="color: #036A07;">":"</span>))))
 
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--replace-space-before-question-mark</span> ()
+"color: #006699;">leuven--smart-punctuation-question-mark</span> ()
     <span style=
 "color: #008000;">"If any, replace space by nobreak-space in front of a question mark."</span>
     (interactive)
@@ -8145,7 +8145,7 @@ M-: (executable-find "diff") RET
       (insert <span style="color: #036A07;">"?"</span>)))
 
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--replace-space-before-exclamation-mark</span> ()
+"color: #006699;">leuven--smart-punctuation-exclamation-mark</span> ()
     <span style=
 "color: #008000;">"If any, replace space by nobreak-space in front of an exclamation</span>
 <span style="color: #008000;">  mark."</span>
@@ -8163,7 +8163,7 @@ M-: (executable-find "diff") RET
       (insert <span style="color: #036A07;">"!"</span>)))
 
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--replace-space-before-semi-colon</span> ()
+"color: #006699;">leuven--smart-punctuation-semicolon</span> ()
     <span style=
 "color: #008000;">"If any, replace space by nobreak-space in front of a semi-colon."</span>
     (interactive)
@@ -8194,46 +8194,7 @@ M-: (executable-find "diff") RET
       (insert <span style="color: #036A07;">";"</span>)))
 
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--replace-double-double-quote</span> ()
-    <span style=
-"color: #008000;">"Replace two following double quotes by French quotes with nobreak-spaces."</span>
-    (interactive)
-    (<span style="color: #0000FF;">if</span> (eq (char-before) ?\")
-        (<span style="color: #0000FF;">progn</span>
-          (backward-delete-char 1)
-          (insert <span style="color: #036A07;">"«  »"</span>)
-          (backward-char 2))
-      (insert <span style="color: #036A07;">"\""</span>)))
-
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">French typography</span>
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--nobreak-keys</span> ()
-    <span style=
-"color: #008000;">"If any, replace space in front of colons, question marks, exclamation</span>
-<span style=
-"color: #008000;">  marks, etc. to avoid line break problems."</span>
-    (interactive)
-    (local-set-key <span style=
-"color: #036A07;">":"</span> 'leuven--replace-space-before-colon)
-    (local-set-key <span style=
-"color: #036A07;">"?"</span> 'leuven--replace-space-before-question-mark)
-    (local-set-key <span style=
-"color: #036A07;">"!"</span> 'leuven--replace-space-before-exclamation-mark)
-    (local-set-key <span style=
-"color: #036A07;">";"</span> 'leuven--replace-space-before-semi-colon)
-    (local-set-key <span style=
-"color: #036A07;">"\""</span> 'leuven--replace-double-double-quote))
-
-  (add-hook 'text-mode-hook 'leuven--nobreak-keys)
-  (add-hook 'message-mode-hook 'leuven--nobreak-keys)
-</pre>
-          </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">insert-one-quote-or-two</span> ()
+"color: #006699;">leuven--smart-punctuation-apostrophe</span> ()
     (interactive)
     (<span style="color: #0000FF;">cond</span>
      ((or (bolp) (not (looking-back <span style="color: #036A07;">"'"</span>)))
@@ -8262,8 +8223,43 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"'"</span>) (insert-and-inherit <span style=
 "color: #036A07;">"'"</span>))))))
 
-  (global-set-key
-   [39] 'insert-one-quote-or-two)
+  (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven--smart-punctuation-quotation-mark</span> ()
+    <span style=
+"color: #008000;">"Replace two following double quotes by French quotes with nobreak-spaces."</span>
+    (interactive)
+    (<span style="color: #0000FF;">if</span> (and (eq (char-before) ?\")
+             (or (not (equal mode-name <span style=
+"color: #036A07;">"Org"</span>))
+                 (not (member (org-element-type (org-element-at-point))
+                              '(src-block keyword table dynamic-block)))))
+        (<span style="color: #0000FF;">progn</span>
+          (backward-delete-char 1)
+          (insert <span style="color: #036A07;">"«  »"</span>)
+          (backward-char 2))
+      (insert <span style="color: #036A07;">"\""</span>)))
+
+  (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven--smart-punctuation</span> ()
+    <span style=
+"color: #008000;">"If any, replace space in front of colons, question marks, exclamation</span>
+<span style=
+"color: #008000;">  marks, etc. to avoid line break problems."</span>
+    (interactive)
+    (local-set-key <span style=
+"color: #036A07;">":"</span> 'leuven--smart-punctuation-colon)
+    (local-set-key <span style=
+"color: #036A07;">"?"</span> 'leuven--smart-punctuation-question-mark)
+    (local-set-key <span style=
+"color: #036A07;">"!"</span> 'leuven--smart-punctuation-exclamation-mark)
+    (local-set-key <span style=
+"color: #036A07;">";"</span> 'leuven--smart-punctuation-semicolon)
+    (local-set-key [39] 'leuven--smart-punctuation-apostrophe)
+    (local-set-key <span style=
+"color: #036A07;">"\""</span> 'leuven--smart-punctuation-quotation-mark))
+
+  (add-hook 'text-mode-hook 'leuven--smart-punctuation)
+  (add-hook 'message-mode-hook 'leuven--smart-punctuation)
 </pre>
           </div>
         </div>
@@ -24921,7 +24917,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131128.1933]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131128.2001]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #6434A3;">emacs-leuven</span>)
