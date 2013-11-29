@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-28 Thu 19:59>
+# Time-stamp: <2013-11-29 Fri 13:22>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -12510,10 +12510,10 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 
 ** Shell Mode
 
-- =M-p= (or =<C-up>=, or =<up>= in Emacs Leuven) ::
+- =M-p= (or =<C-up>=) ::
      Fetch the next earlier old shell command (=comint-previous-input)=.
 
-- =M-n= (or =<C-down>=, or =<down>= in Emacs Leuven) ::
+- =M-n= (or =<C-down>=) ::
      Fetch the next later old shell command (=comint-next-input=).
 
 - =M-r= ::
@@ -12527,6 +12527,9 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
   ;; general command-interpreter-in-a-buffer stuff (lisp, shell, R, ...)
   ;; (when (try-require 'comint)
 
+    ;; comint prompt is read only
+    (setq comint-prompt-read-only t)
+
     ;; no duplicates in command history
     (setq-default comint-input-ignoredups t)
 
@@ -12536,6 +12539,13 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 
     ;; output to interpreter causes windows showing the buffer to scroll
     (setq-default comint-move-point-for-output t)
+
+    ;; maximum size in lines for Comint buffers (if the function
+    ;; `comint-truncate-buffer' is on `comint-output-filter-functions')
+    (setq comint-buffer-maximum-size (* 5 1024))
+
+    ;; size of the input history ring
+    (setq comint-input-ring-size 1000)
 
     ;; strip `^M' characters
     (add-to-list 'process-coding-system-alist
@@ -12550,19 +12560,29 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
     ;; commands
     (defun leuven--up-down-keys ()
       "Customize my shell-mode."
-      (local-set-key
-        (kbd "<up>") 'comint-previous-input)
-      (local-set-key
-        (kbd "<down>") 'comint-next-input)
-      (local-set-key
-        (kbd "<C-up>") 'comint-previous-matching-input-from-input)
-      (local-set-key
-        (kbd "<C-down>") 'comint-next-matching-input-from-input)
       ;; (local-set-key
-      ;;   (kbd "C-x TAB") 'comint-dynamic-complete-filename) ; or a better one?
-      )
+      ;;   (kbd "<up>") 'comint-previous-input)
+      ;; (local-set-key
+      ;;   (kbd "<down>") 'comint-next-input)
+      ;; (local-set-key
+      ;;   (kbd "<C-up>") 'comint-previous-matching-input-from-input)
+      ;; (local-set-key
+      ;;   (kbd "<C-down>") 'comint-next-matching-input-from-input)
+      (local-set-key
+        (kbd "<up>") 'comint-previous-matching-input-from-input)
+      (local-set-key
+        (kbd "<down>") 'comint-next-matching-input-from-input))
 
     (add-hook 'comint-mode-hook 'leuven--up-down-keys)
+
+    (defun leuven-comint-clear ()
+      "Clear the Comint buffer."
+      (interactive)
+      (let ((comint-buffer-maximum-size 0))
+        (comint-truncate-buffer)))
+
+    (global-set-key (kbd "C-x ! c") 'leuven-comint-clear)
+
 ;; )
 
   ;; translate ANSI escape sequences into faces (within shell mode)
@@ -12843,6 +12863,9 @@ Customize variables for ESS (set these variables *before* loading ~ess-site~).
   ;; start R in current working directory, don't ask user
   (setq ess-ask-for-ess-directory nil)
 
+  ;; default ESS indentation style
+  (setq ess-default-style 'DEFAULT)
+
   ;; new inferior ESS process appears in another window in the current frame
   (setq inferior-ess-same-window nil)
 
@@ -12860,12 +12883,6 @@ Customize variables for ESS (set these variables *before* loading ~ess-site~).
     (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
 
     )
-#+end_src
-
-#+begin_src emacs-lisp
-  (add-hook 'ess-mode-hook
-            (lambda ()
-              (ess-set-style 'DEFAULT)))
 #+end_src
 
 See http://www.emacswiki.org/emacs/EmacsSpeaksStatistics.

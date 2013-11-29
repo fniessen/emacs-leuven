@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-28 Thu 20:02 -->
+  <title>Emacs Leuven</title><!-- 2013-11-29 Fri 13:26 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1102,7 +1102,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131128.2001</span>
+"color: #4C886B; font-style: italic;">Version: 20131129.1324</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1224,7 +1224,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131128.2001]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131129.1324]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -1252,7 +1252,7 @@
 "color: #4C886B; font-style: italic;">turn on Common Lisp support</span>
 (<span style="color: #0000FF;">eval-when-compile</span> (<span style=
 "color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">cl</span>))       <span style=
+"color: #D0372D;">cl</span>))       <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">provide useful things like `</span><span style="color: #4C886B; font-style: italic;">loop</span><span style="color: #4C886B; font-style: italic;">' and</span>
                                         <span style=
@@ -1269,7 +1269,7 @@
 "color: #4C886B; font-style: italic;">User Customizable Internal Variables</span>
 
 (<span style="color: #0000FF;">defgroup</span> <span style=
-"color: #666666;">emacs-leuven</span> nil
+"color: #6434A3;">emacs-leuven</span> nil
   <span style="color: #008000;">"Emacs Leuven."</span>
   <span style="color: #006FE0;">:group</span> 'files
   <span style="color: #006FE0;">:group</span> 'comm)
@@ -1415,7 +1415,7 @@
 
 (<span style="color: #0000FF;">defmacro</span> <span style=
 "color: #006699;">leuven--chapter</span> (chapterid chaptername <span style=
-"color: #666666;">&amp;rest</span> body)
+"color: #6434A3;">&amp;rest</span> body)
   <span style=
 "color: #008000;">"Wrap Lisp expressions as CHAPTERNAME, evaluated only when CHAPTERID is not</span>
 <span style=
@@ -1455,7 +1455,7 @@
 
 (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--section</span> (sectionname <span style=
-"color: #666666;">&amp;optional</span> end-of-chapter)
+"color: #6434A3;">&amp;optional</span> end-of-chapter)
   <span style=
 "color: #008000;">"Output time taken since last saved time (in global variable</span>
 <span style="color: #008000;">`</span><span style=
@@ -1675,13 +1675,13 @@
 
   (<span style="color: #0000FF;">defmacro</span> <span style=
 "color: #006699;">MSWindows</span> (<span style=
-"color: #666666;">&amp;rest</span> body)
+"color: #6434A3;">&amp;rest</span> body)
     (list 'if running-ms-windows
           (cons 'progn body)))
 
   (<span style="color: #0000FF;">defmacro</span> <span style=
 "color: #006699;">GNULinux</span> (<span style=
-"color: #666666;">&amp;rest</span> body)
+"color: #6434A3;">&amp;rest</span> body)
     (list 'if running-gnu-linux
           (cons 'progn body)))
 
@@ -1697,7 +1697,7 @@
 
   (<span style="color: #0000FF;">defmacro</span> <span style=
 "color: #006699;">XWindow</span> (<span style=
-"color: #666666;">&amp;rest</span> body)
+"color: #6434A3;">&amp;rest</span> body)
     <span style=
 "color: #008000;">"Execute any number of forms if running X Window System."</span>
     (list 'if running-x-window
@@ -1736,7 +1736,7 @@
 
   (<span style="color: #0000FF;">defmacro</span> <span style=
 "color: #006699;">GNUEmacs</span> (<span style=
-"color: #666666;">&amp;rest</span> body)
+"color: #6434A3;">&amp;rest</span> body)
     <span style=
 "color: #008000;">"Execute any number of forms if running GNU Emacs."</span>
     (list 'if running-gnu-emacs
@@ -1744,14 +1744,14 @@
 
   (<span style="color: #0000FF;">defmacro</span> <span style=
 "color: #006699;">GNUEmacs24</span> (<span style=
-"color: #666666;">&amp;rest</span> body)
+"color: #6434A3;">&amp;rest</span> body)
     (list 'if (string-match <span style=
 "color: #036A07;">"GNU Emacs 24"</span> (version))
           (cons 'progn body)))
 
   (<span style="color: #0000FF;">defmacro</span> <span style=
 "color: #006699;">XEmacs</span> (<span style=
-"color: #666666;">&amp;rest</span> body)
+"color: #6434A3;">&amp;rest</span> body)
     <span style=
 "color: #008000;">"Execute any number of forms if running XEmacs."</span>
     (list 'if running-xemacs
@@ -1904,7 +1904,7 @@
                 (load-library feature)
               (setq time-start (float-time))
               (<span style="color: #0000FF;">require</span> <span style=
-"color: #6434A3;">feature</span>))
+"color: #D0372D;">feature</span>))
             <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">return t (necessary for correct behavior in conditions,</span>
             <span style="color: #4C886B;">;; </span><span style=
@@ -1989,7 +1989,7 @@
                (prefix-open (concat (make-string (* 8 require-depth) ? ) <span style="color: #036A07;">"└── "</span>))
                (prefix-close (concat (make-string (* 8 require-depth) ? ) <span style="color: #036A07;">"    "</span>)))
           (<span style="color: #0000FF;">cond</span> ((<span style=
-"color: #0000FF;">featurep</span> <span style="color: #6434A3;">feature</span>)
+"color: #0000FF;">featurep</span> <span style="color: #D0372D;">feature</span>)
                  (message <span style=
 "color: #036A07;">"(Info) %sRequiring `</span><span style=
 "color: #036A07;">%s</span><span style=
@@ -2044,7 +2044,7 @@
 "color: #4C886B; font-style: italic;">' (added in GNU Emacs 24.4)</span>
   (<span style="color: #0000FF;">defmacro</span> <span style=
 "color: #006699;">with-eval-after-load</span> (file <span style=
-"color: #666666;">&amp;rest</span> body)
+"color: #6434A3;">&amp;rest</span> body)
     <span style="color: #008000;">"Execute BODY after FILE is loaded."</span>
     (<span style="color: #0000FF;">declare</span> (indent 1) (debug t))
     `(eval-after-load ,file
@@ -2264,7 +2264,7 @@
 "color: #4C886B; font-style: italic;">'</span>
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">idle-require</span> (feature <span style=
-"color: #666666;">&amp;optional</span> file no<span style=
+"color: #6434A3;">&amp;optional</span> file no<span style=
 "color: #CC0000; background-color: #FFFF88;">error</span>)
       (try-require feature)))
 
@@ -4294,7 +4294,7 @@
       (add-hook 'isearch-mode-hook
                 (<span style="color: #0000FF;">lambda</span> ()
                   (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">fuzzy</span>)))
+"color: #D0372D;">fuzzy</span>)))
 
       (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #036A07;">"fuzzy"</span>
@@ -4713,7 +4713,7 @@
                     '(<span style="color: #006FE0;">:eval</span>
                       (<span style=
 "color: #0000FF;">let</span> ((dict (and (<span style=
-"color: #0000FF;">featurep</span> '<span style="color: #6434A3;">ispell</span>)
+"color: #0000FF;">featurep</span> '<span style="color: #D0372D;">ispell</span>)
                                        (not buffer-read-only)
                                        (or ispell-local-dictionary
                                            ispell-dictionary))))
@@ -5669,7 +5669,7 @@ M-: (executable-find "diff") RET
 "color: #4C886B; font-style: italic;">width</span>
     (setq ediff-split-window-function
           (<span style="color: #0000FF;">lambda</span> (<span style=
-"color: #666666;">&amp;optional</span> arg)
+"color: #6434A3;">&amp;optional</span> arg)
             (<span style="color: #0000FF;">if</span> (&gt; (frame-width) 160)
                 (split-window-horizontally arg)
               (split-window-vertically
@@ -8087,7 +8087,7 @@ M-: (executable-find "diff") RET
 "color: #008000;">"Replace space by nobreak-space in front of a colon."</span>
     (interactive)
     (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">org-element</span>)
+"color: #D0372D;">org-element</span>)
     (<span style=
 "color: #0000FF;">cond</span> ((eq (char-before) ?\ )       <span style=
 "color: #4C886B;">; </span><span style=
@@ -8168,7 +8168,7 @@ M-: (executable-find "diff") RET
 "color: #008000;">"If any, replace space by nobreak-space in front of a semi-colon."</span>
     (interactive)
     (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">org-element</span>)
+"color: #D0372D;">org-element</span>)
     (<span style=
 "color: #0000FF;">if</span> (eq (char-before) ?\ ) <span style="color: #4C886B;">; </span><span style="color: #4C886B; font-style: italic;">normal space</span>
         (<span style="color: #0000FF;">progn</span>
@@ -9463,7 +9463,7 @@ M-: (executable-find "diff") RET
 
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-org-reveal</span> (<span style=
-"color: #666666;">&amp;optional</span> all-siblings)
+"color: #6434A3;">&amp;optional</span> all-siblings)
     <span style=
 "color: #008000;">"For `C-u C-c C-r', it does the same as default org-mode --- shows all</span>
 <span style=
@@ -10803,7 +10803,7 @@ M-: (executable-find "diff") RET
 "color: #008000;">    This is a useful function for adding to `</span><span style="color: #008000;">kill-emacs-query-functions</span><span style="color: #008000;">'."</span>
       (<span style="color: #0000FF;">if</span> (and (<span style=
 "color: #0000FF;">featurep</span> '<span style=
-"color: #6434A3;">org-clock</span>)
+"color: #D0372D;">org-clock</span>)
                (funcall 'org-clocking-p)
                (y-or-n-p <span style=
 "color: #036A07;">"You are currently clocking time, clock out? "</span>))
@@ -12988,7 +12988,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                    '(<span style="color: #036A07;">"r^"</span> <span style=
 "color: #036A07;">"Calendar for current month"</span>
                      (<span style="color: #0000FF;">lambda</span> (<span style=
-"color: #666666;">&amp;rest</span> ignore)
+"color: #6434A3;">&amp;rest</span> ignore)
                        (cfw:open-org-calendar))) t)
 
       <span style="color: #4C886B;">;; </span><span style=
@@ -14420,7 +14420,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (define-key org-mode-map
       (kbd <span style="color: #036A07;">"C-c C-e"</span>)
       (<span style="color: #0000FF;">lambda</span> (<span style=
-"color: #666666;">&amp;optional</span> arg)
+"color: #6434A3;">&amp;optional</span> arg)
         (interactive <span style="color: #036A07;">"P"</span>)
         (<span style="color: #0000FF;">if</span> (fboundp 'org-export-dispatch)
             (funcall 'org-export-dispatch arg)
@@ -15346,7 +15346,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #4C886B; font-style: italic;">allow indent region in the code edit buffer (according to language)</span>
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-org-indent-region</span> (<span style=
-"color: #666666;">&amp;optional</span> arg)
+"color: #6434A3;">&amp;optional</span> arg)
       (interactive <span style="color: #036A07;">"P"</span>)
       (or (org-babel-do-key-sequence-in-edit-buffer (kbd <span style=
 "color: #036A07;">"C-M-\\"</span>))
@@ -17276,7 +17276,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (add-hook 'html-mode-hook
               (<span style="color: #0000FF;">lambda</span> ()
                 (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">sgml-mode</span>)
+"color: #D0372D;">sgml-mode</span>)
                 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">when `</span><span style=
 "color: #4C886B; font-style: italic;">html-mode-hook</span><span style=
@@ -17692,7 +17692,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">more syntax definitions</span>
                 (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">fold-dwim</span>)
+"color: #D0372D;">fold-dwim</span>)
                 (hideshowvis-enable)))
 
     <span style="color: #4C886B;">;; </span><span style=
@@ -18051,11 +18051,11 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">make-clean</span> (<span style=
-"color: #666666;">&amp;optional</span> arg)
+"color: #6434A3;">&amp;optional</span> arg)
     <span style="color: #008000;">"Run a make clean."</span>
     (interactive <span style="color: #036A07;">"P"</span>)
     (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">compile</span>)                  <span style=
+"color: #D0372D;">compile</span>)                  <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">needed for compile-internal</span>
     (<span style="color: #0000FF;">if</span> arg
@@ -18200,7 +18200,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #4C886B; font-style: italic;">10.3.5 Org keyword search</span>
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-org-grep</span> (regexp <span style=
-"color: #666666;">&amp;optional</span> context)
+"color: #6434A3;">&amp;optional</span> context)
     <span style=
 "color: #008000;">"Recursively search for REGEXP in Org files in directory tree rooted at `</span><span style="color: #008000;">org-directory</span><span style="color: #008000;">'.</span>
 
@@ -18282,7 +18282,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
       <span style=
 "color: #008000;">"Highlight line currently being Edebug'ged."</span>
       (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">hl-line</span>)
+"color: #D0372D;">hl-line</span>)
       (hl-line-mode)
       ad-do-it)
 
@@ -18414,7 +18414,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   (add-hook 'emacs-lisp-mode-hook
             (<span style="color: #0000FF;">lambda</span> ()
               (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">edebug</span>)))
+"color: #D0372D;">edebug</span>)))
 </pre>
           </div>
 
@@ -18838,12 +18838,12 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">vc-ediff-ignore-whitespace</span> (historic <span style=
-"color: #666666;">&amp;optional</span> not-urgent)
+"color: #6434A3;">&amp;optional</span> not-urgent)
     <span style=
 "color: #008000;">"Ignore regions that differ in white space &amp; line breaks only."</span>
     (interactive (list current-prefix-arg t))
     (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">ediff</span>)
+"color: #D0372D;">ediff</span>)
     (<span style=
 "color: #0000FF;">let</span> ((ediff-ignore-similar-regions t))
       (call-interactively 'vc-ediff)))  <span style=
@@ -18882,11 +18882,11 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   (GNUEmacs
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--ediff-revision</span> (file rev1 <span style=
-"color: #666666;">&amp;optional</span> rev2)
+"color: #6434A3;">&amp;optional</span> rev2)
       <span style=
 "color: #008000;">"Run Ediff by comparing 'master' against the 'current'."</span>
       (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">ediff</span>)
+"color: #D0372D;">ediff</span>)
       (find-file file)
       (<span style="color: #0000FF;">if</span> (and (buffer-modified-p)
                (y-or-n-p (format <span style=
@@ -18901,7 +18901,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-vc-diff</span> (<span style=
-"color: #666666;">&amp;optional</span> arg)
+"color: #6434A3;">&amp;optional</span> arg)
       (interactive <span style="color: #036A07;">"P"</span>)
       (call-interactively
        (<span style="color: #0000FF;">cond</span> (arg
@@ -19620,19 +19620,19 @@ TAGS:
 "color: #4C886B; font-style: italic;">trick for starting ECB 2.40 (with CEDET merged in Emacs since 23.2)</span>
     (GNUEmacs
       (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">semantic/analyze</span>))
+"color: #D0372D;">semantic/analyze</span>))
     (<span style="color: #0000FF;">provide</span> '<span style=
-"color: #6434A3;">semantic-analyze</span>)
+"color: #D0372D;">semantic-analyze</span>)
     (<span style="color: #0000FF;">provide</span> '<span style=
-"color: #6434A3;">semantic-ctxt</span>)
+"color: #D0372D;">semantic-ctxt</span>)
     (<span style="color: #0000FF;">provide</span> '<span style=
-"color: #6434A3;">semanticdb</span>)
+"color: #D0372D;">semanticdb</span>)
     (<span style="color: #0000FF;">provide</span> '<span style=
-"color: #6434A3;">semanticdb-find</span>)
+"color: #D0372D;">semanticdb-find</span>)
     (<span style="color: #0000FF;">provide</span> '<span style=
-"color: #6434A3;">semanticdb-mode</span>)
+"color: #D0372D;">semanticdb-mode</span>)
     (<span style="color: #0000FF;">provide</span> '<span style=
-"color: #6434A3;">semantic-load</span>)
+"color: #D0372D;">semantic-load</span>)
 
     (setq stack-trace-on-<span style=
 "color: #CC0000; background-color: #FFFF88;">error</span> t)
@@ -19762,7 +19762,7 @@ TAGS:
       <span style="color: #4C886B;">;;</span><span style=
 "color: #4C886B; font-style: italic;">! make sure you initialise YASnippet *before* Org mode</span>
       (<span style="color: #0000FF;">when</span> (<span style=
-"color: #0000FF;">featurep</span> '<span style="color: #6434A3;">org</span>)
+"color: #0000FF;">featurep</span> '<span style="color: #D0372D;">org</span>)
         (message <span style="color: #036A07;">"(</span><span style=
 "color: #036A07; background-color: #FFFF88;">Error</span><span style=
 "color: #036A07;">) Org is already loaded -&gt; Too late to initialize YASnippet!"</span>)
@@ -20371,7 +20371,7 @@ TAGS:
       (<span style="color: #0000FF;">when</span> running-ms-windows
         (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">w32-dired-open-files-externally</span> (<span style=
-"color: #666666;">&amp;optional</span> arg)
+"color: #6434A3;">&amp;optional</span> arg)
           <span style=
 "color: #008000;">"In Dired, open the marked files (or directories) with the default</span>
 <span style="color: #008000;">        Windows tool."</span>
@@ -21904,7 +21904,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #036A07;">"\\.xls\\'"</span> . no-xls))
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">no-xls</span> (<span style=
-"color: #666666;">&amp;optional</span> filename)
+"color: #6434A3;">&amp;optional</span> filename)
     <span style=
 "color: #008000;">"Run xlhtml and w3m -dump on the entire buffer.</span>
 
@@ -21935,7 +21935,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #4C886B; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #4C886B; font-style: italic;"> Not that good! (some text repeated multiple times)</span>
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">no-ppt</span> (<span style=
-"color: #666666;">&amp;optional</span> filename)
+"color: #6434A3;">&amp;optional</span> filename)
     <span style=
 "color: #008000;">"Run ppthtml and w3m -dump on the entire buffer.</span>
 
@@ -22129,14 +22129,12 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
         <div class="outline-text-3" id="text-40-3">
           <dl class="org-dl">
-            <dt><code>M-p</code> (or <code>&lt;C-up&gt;</code>, or
-            <code>&lt;up&gt;</code> in Emacs Leuven)</dt>
+            <dt><code>M-p</code> (or <code>&lt;C-up&gt;</code>)</dt>
 
             <dd>Fetch the next earlier old shell command
             (<code>comint-previous-input)</code>.</dd>
 
-            <dt><code>M-n</code> (or <code>&lt;C-down&gt;</code>, or
-            <code>&lt;down&gt;</code> in Emacs Leuven)</dt>
+            <dt><code>M-n</code> (or <code>&lt;C-down&gt;</code>)</dt>
 
             <dd>Fetch the next later old shell command
             (<code>comint-next-input</code>).</dd>
@@ -22159,6 +22157,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #4C886B; font-style: italic;">(when (try-require 'comint)</span>
 
     <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">comint prompt is read only</span>
+    (setq comint-prompt-read-only t)
+
+    <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">no duplicates in command history</span>
     (setq-default comint-input-ignoredups t)
 
@@ -22171,6 +22173,19 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">output to interpreter causes windows showing the buffer to scroll</span>
     (setq-default comint-move-point-for-output t)
+
+    <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">maximum size in lines for Comint buffers (if the function</span>
+    <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">`</span><span style=
+"color: #4C886B; font-style: italic;">comint-truncate-buffer</span><span style=
+"color: #4C886B; font-style: italic;">' is on `</span><span style=
+"color: #4C886B; font-style: italic;">comint-output-filter-functions</span><span style="color: #4C886B; font-style: italic;">')</span>
+    (setq comint-buffer-maximum-size (* 5 1024))
+
+    <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">size of the input history ring</span>
+    (setq comint-input-ring-size 1000)
 
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">strip `</span><span style=
@@ -22198,25 +22213,42 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--up-down-keys</span> ()
       <span style="color: #008000;">"Customize my shell-mode."</span>
-      (local-set-key
-        (kbd <span style=
-"color: #036A07;">"&lt;up&gt;"</span>) 'comint-previous-input)
-      (local-set-key
-        (kbd <span style=
-"color: #036A07;">"&lt;down&gt;"</span>) 'comint-next-input)
-      (local-set-key
-        (kbd <span style=
-"color: #036A07;">"&lt;C-up&gt;"</span>) 'comint-previous-matching-input-from-input)
-      (local-set-key
-        (kbd <span style=
-"color: #036A07;">"&lt;C-down&gt;"</span>) 'comint-next-matching-input-from-input)
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(local-set-key</span>
       <span style="color: #4C886B;">;;   </span><span style=
-"color: #4C886B; font-style: italic;">(kbd "C-x TAB") 'comint-dynamic-complete-filename) ; or a better one?</span>
-      )
+"color: #4C886B; font-style: italic;">(kbd "&lt;up&gt;") 'comint-previous-input)</span>
+      <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(local-set-key</span>
+      <span style="color: #4C886B;">;;   </span><span style=
+"color: #4C886B; font-style: italic;">(kbd "&lt;down&gt;") 'comint-next-input)</span>
+      <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(local-set-key</span>
+      <span style="color: #4C886B;">;;   </span><span style=
+"color: #4C886B; font-style: italic;">(kbd "&lt;C-up&gt;") 'comint-previous-matching-input-from-input)</span>
+      <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(local-set-key</span>
+      <span style="color: #4C886B;">;;   </span><span style=
+"color: #4C886B; font-style: italic;">(kbd "&lt;C-down&gt;") 'comint-next-matching-input-from-input)</span>
+      (local-set-key
+        (kbd <span style=
+"color: #036A07;">"&lt;up&gt;"</span>) 'comint-previous-matching-input-from-input)
+      (local-set-key
+        (kbd <span style=
+"color: #036A07;">"&lt;down&gt;"</span>) 'comint-next-matching-input-from-input))
 
     (add-hook 'comint-mode-hook 'leuven--up-down-keys)
+
+    (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven-comint-clear</span> ()
+      <span style="color: #008000;">"Clear the Comint buffer."</span>
+      (interactive)
+      (<span style=
+"color: #0000FF;">let</span> ((comint-buffer-maximum-size 0))
+        (comint-truncate-buffer)))
+
+    (global-set-key (kbd <span style=
+"color: #036A07;">"C-x ! c"</span>) 'leuven-comint-clear)
+
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">)</span>
 
@@ -22669,6 +22701,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (setq ess-ask-for-ess-directory nil)
 
   <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">default ESS indentation style</span>
+  (setq ess-default-style 'DEFAULT)
+
+  <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">new inferior ESS process appears in another window in the current frame</span>
   (setq inferior-ess-same-window nil)
 
@@ -22691,18 +22727,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">use eldoc to report R function names</span>
     (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">ess-eldoc</span>)
+"color: #D0372D;">ess-eldoc</span>)
     (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
 
     )
-</pre>
-          </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  (add-hook 'ess-mode-hook
-            (<span style="color: #0000FF;">lambda</span> ()
-              (ess-set-style 'DEFAULT)))
 </pre>
           </div>
 
@@ -22715,7 +22743,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #4C886B; font-style: italic;">ESS[</span><span style=
 "color: #4C886B; background-color: #FFFF88; font-style: italic;">BUG</span><span style="color: #4C886B; font-style: italic;">S] dialect</span>
   (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">ess-bugs-d</span>)
+"color: #D0372D;">ess-bugs-d</span>)
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">avoid Emacs hanging on large evaluations</span>
@@ -23223,7 +23251,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008000;">"If prefix is specified, use the system default browser, else use the</span>
 <span style="color: #008000;">  configured Emacs one."</span>
     (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">browse-url</span>)
+"color: #D0372D;">browse-url</span>)
     (<span style="color: #0000FF;">if</span> current-prefix-arg
         <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">open in your desktop browser (firefox here)</span>
@@ -23236,13 +23264,13 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-browse-url</span> (<span style=
-"color: #666666;">&amp;optional</span> url)
+"color: #6434A3;">&amp;optional</span> url)
     <span style="color: #008000;">"Browse the URL passed in."</span>
     (interactive)
     (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">w3m</span>)
+"color: #D0372D;">w3m</span>)
     (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">browse-url</span>)
+"color: #D0372D;">browse-url</span>)
     (setq url (or url
                   (w3m-url-valid (w3m-anchor))
                   (browse-url-url-at-point)
@@ -23776,7 +23804,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008000;">"Translate using many online translators."</span>
       (interactive)
       (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">babel</span>)
+"color: #D0372D;">babel</span>)
       (<span style="color: #0000FF;">let</span> (source)
         (switch-to-buffer <span style=
 "color: #036A07;">"*leuven--translate*"</span>)
@@ -24917,10 +24945,10 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131128.2001]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131129.1325]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
-"color: #6434A3;">emacs-leuven</span>)
+"color: #D0372D;">emacs-leuven</span>)
 
 
 <span style="color: #4C886B;">;; </span><span style=
@@ -24960,7 +24988,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
             <pre class="src src-emacs-lisp">
 (benchmark-run
   (<span style="color: #0000FF;">require</span> '<span style=
-"color: #6434A3;">some-package</span>))
+"color: #D0372D;">some-package</span>))
 </pre>
           </div>
 

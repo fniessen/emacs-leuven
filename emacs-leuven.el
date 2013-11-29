@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131128.1959
+;; Version: 20131129.1323
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131128.1959]--")
+(message "* --[ Loading Emacs Leuven 20131129.1323]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -8454,6 +8454,9 @@ From %c"
   ;; general command-interpreter-in-a-buffer stuff (lisp, shell, R, ...)
   ;; (when (try-require 'comint)
 
+    ;; comint prompt is read only
+    (setq comint-prompt-read-only t)
+
     ;; no duplicates in command history
     (setq-default comint-input-ignoredups t)
 
@@ -8463,6 +8466,13 @@ From %c"
 
     ;; output to interpreter causes windows showing the buffer to scroll
     (setq-default comint-move-point-for-output t)
+
+    ;; maximum size in lines for Comint buffers (if the function
+    ;; `comint-truncate-buffer' is on `comint-output-filter-functions')
+    (setq comint-buffer-maximum-size (* 5 1024))
+
+    ;; size of the input history ring
+    (setq comint-input-ring-size 1000)
 
     ;; strip `^M' characters
     (add-to-list 'process-coding-system-alist
@@ -8477,19 +8487,29 @@ From %c"
     ;; commands
     (defun leuven--up-down-keys ()
       "Customize my shell-mode."
-      (local-set-key
-        (kbd "<up>") 'comint-previous-input)
-      (local-set-key
-        (kbd "<down>") 'comint-next-input)
-      (local-set-key
-        (kbd "<C-up>") 'comint-previous-matching-input-from-input)
-      (local-set-key
-        (kbd "<C-down>") 'comint-next-matching-input-from-input)
       ;; (local-set-key
-      ;;   (kbd "C-x TAB") 'comint-dynamic-complete-filename) ; or a better one?
-      )
+      ;;   (kbd "<up>") 'comint-previous-input)
+      ;; (local-set-key
+      ;;   (kbd "<down>") 'comint-next-input)
+      ;; (local-set-key
+      ;;   (kbd "<C-up>") 'comint-previous-matching-input-from-input)
+      ;; (local-set-key
+      ;;   (kbd "<C-down>") 'comint-next-matching-input-from-input)
+      (local-set-key
+        (kbd "<up>") 'comint-previous-matching-input-from-input)
+      (local-set-key
+        (kbd "<down>") 'comint-next-matching-input-from-input))
 
     (add-hook 'comint-mode-hook 'leuven--up-down-keys)
+
+    (defun leuven-comint-clear ()
+      "Clear the Comint buffer."
+      (interactive)
+      (let ((comint-buffer-maximum-size 0))
+        (comint-truncate-buffer)))
+
+    (global-set-key (kbd "C-x ! c") 'leuven-comint-clear)
+
 ;; )
 
   ;; translate ANSI escape sequences into faces (within shell mode)
@@ -8607,6 +8627,9 @@ From %c"
   ;; start R in current working directory, don't ask user
   (setq ess-ask-for-ess-directory nil)
 
+  ;; default ESS indentation style
+  (setq ess-default-style 'DEFAULT)
+
   ;; new inferior ESS process appears in another window in the current frame
   (setq inferior-ess-same-window nil)
 
@@ -8622,10 +8645,6 @@ From %c"
     (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
 
     )
-
-  (add-hook 'ess-mode-hook
-            (lambda ()
-              (ess-set-style 'DEFAULT)))
 
 ;;* Proced
 
@@ -9436,7 +9455,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131128.2]--")
+(message "* --[ Loaded Emacs Leuven 20131129.1324]--")
 
 (provide 'emacs-leuven)
 
