@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-29 Fri 13:22>
+# Time-stamp: <2013-11-29 Fri 14:14>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -12510,14 +12510,34 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 
 ** Shell Mode
 
-- =M-p= (or =<C-up>=) ::
-     Fetch the next earlier old shell command (=comint-previous-input)=.
+- =RET= ::
+     *Execute* the *command on* the *current line*.
 
-- =M-n= (or =<C-down>=) ::
-     Fetch the next later old shell command (=comint-next-input=).
+- =TAB= ::
+     *Complete* current command, file name or variable name.
 
-- =M-r= ::
-     Begin an incremental regexp search of old shell commands.
+- =C-c C-d= ::
+     Send =EOF= character.
+
+- =C-c C-u= ::
+     Erase current line (equivalent to =C-u= in Unix shells).
+
+- =C-c C-c= ::
+     Interrupt current job (equivalent to =C-c= in Unix shells, =BREAK= signal).
+
+- =C-c C-z= ::
+     Suspend or stop current job (equivalent to =C-z= in Unix shells, =STOP=
+     signal).
+
+- =C-c C-o= ::
+     *Delete output* (only) *from last command*.
+
+- =C-c C-r= ::
+     Move *first line of output* from your last command *to top of window*.
+
+- =C-c C-e= ::
+     Move *last line of output* from your last command *to bottom of window*,
+     showing the maximum of the output.
 
 #+begin_src emacs-lisp
 ;;** 36.3 Shell Mode
@@ -12620,6 +12640,26 @@ solves this problem:
 #+end_src
 
 ** History
+
+- =M-p= (or =<C-up>=) ::
+     Fetch the next *earlier* old command (=comint-previous-input)=, but doesn't
+     execute it.
+
+- =M-n= (or =<C-down>=) ::
+     Fetch the next *later* old command (=comint-next-input=), but doesn't execute
+     it.
+
+- =M-r= ::
+     Begin an incremental *regexp search of old commands*.
+
+- =C-c C-l= ::
+     Display the current buffer's *history* of shell commands.
+
+- =C-c C-p= ::
+     Move to *previous command prompt*.
+
+- =C-c C-n= ::
+     Move to *next command prompt*.
 
 #+begin_src emacs-lisp
 ;;** 36.5 History
@@ -12739,6 +12779,18 @@ if you look at them (M-x term and M-x shell) carefully, then `M-x
 term' has some weird behaviours when using the shell mode key
 bindings; try for instance: `C-c C-e', `C-c C-a', `C-c C-o'... but as
 I said they're details.
+
+
+Emacs =shell-mode= buffers are not terminals (i.e., they do not use ptys
+(pseudo-terminals)), so no program running in such a buffer (the shell, the
+programs run by the shell, etc.) can perform character-at-a-time input. Each
+line is typed in full and only sent when =ENTER= is pressed. To see proof, run
+the tty command in a =shell-mode= buffer, and it's output will be =not a tty=.
+
+FYI, while it may seem that this is not true because you can perform
+command-line editing with =Ctrl-B=, =Ctrl-F=, etc., this is only because shell-mode
+itself simulates the typical command-line editing features of shell's like
+Bash, Zsh, Korn shell, etc. using Emacs own internal editing capabilities.
 
 #+begin_src emacs-lisp
   ;; managing multiple terminal buffers in Emacs
