@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131129.1323
+;; Version: 20131202.222
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131129.1323]--")
+(message "* --[ Loading Emacs Leuven 20131202.222]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1718,7 +1718,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   ;; auto-save after 10 seconds idle time
   (setq auto-save-timeout 10)
 
-  ;; save backup files (i.e., `foo~' or `foo.~i~') in one common directory
+  ;; save backup files (i.e., `foo~' or `foo.~i~') in one central location
   ;; (instead of in the local directory)
   (GNUEmacs
     ;; filenames matching a regexp are backed up in the corresponding
@@ -1741,12 +1741,12 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (setq version-control t)
 
   ;; ;; number of oldest versions to keep when a new numbered backup is made
-  ;; (setq kept-old-versions 0)         ; 2
+  ;; (setq kept-old-versions 0)            ; [default: 2]
 
   ;; number of newest versions to keep when a new numbered backup is made
-  (setq kept-new-versions 20)           ; 2
+  (setq kept-new-versions 20)           ; [default: 2]
 
-  ;; delete excess backup versions silently
+  ;; don't ask me about deleting excess backup versions
   (setq delete-old-versions t)
 
   (define-minor-mode sensitive-mode
@@ -5913,16 +5913,6 @@ From %c"
   (with-eval-after-load "ob-core"
     (add-to-list 'org-babel-noweb-error-langs "emacs-lisp"))
 
-  ;; debugging sbe calls
-  (defadvice sbe (around get-err-msg activate)
-    "Issue messages at errors."
-    (condition-case err
-        (progn
-      ad-do-it)
-      (error
-       (message "Error in sbe: %S" err)
-       (signal (car err) (cdr err)))))
-
 ;;** 14.6 (info "(org)Library of Babel")
 
   (leuven--section "14.6 (org)Library of Babel")
@@ -7243,9 +7233,12 @@ From %c"
     (let ((ediff-ignore-similar-regions t))
       (call-interactively 'vc-ediff)))  ; XXX does not work yet
 
-;;*** 28.1.12 (info "(emacs)Customizing VC")
+;;*** 28.1.13 (info "(emacs)Customizing VC")
 
-  (leuven--section "28.1.12 Customizing VC")
+  (leuven--section "28.1.13 Customizing VC")
+
+  ;; files covered by VC get backups (as with other files)
+  (setq vc-make-backup-files t)
 
   ;; http://www.emacswiki.org/emacs/VcTopDirectory
   ;; For git
@@ -9455,7 +9448,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131129.1324]--")
+(message "* --[ Loaded Emacs Leuven 20131202.2221]--")
 
 (provide 'emacs-leuven)
 

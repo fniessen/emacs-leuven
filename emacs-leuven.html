@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-11-29 Fri 13:26 -->
+  <title>Emacs Leuven</title><!-- 2013-12-02 Mon 22:22 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1102,7 +1102,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131129.1324</span>
+"color: #4C886B; font-style: italic;">Version: 20131202.2221</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1224,7 +1224,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131129.1324]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131202.2221]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -5371,7 +5371,7 @@
   (setq auto-save-timeout 10)
 
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">save backup files (i.e., `</span><span style="color: #4C886B; font-style: italic;">foo~</span><span style="color: #4C886B; font-style: italic;">' or `</span><span style="color: #4C886B; font-style: italic;">foo.~i~</span><span style="color: #4C886B; font-style: italic;">') in one common directory</span>
+"color: #4C886B; font-style: italic;">save backup files (i.e., `</span><span style="color: #4C886B; font-style: italic;">foo~</span><span style="color: #4C886B; font-style: italic;">' or `</span><span style="color: #4C886B; font-style: italic;">foo.~i~</span><span style="color: #4C886B; font-style: italic;">') in one central location</span>
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(instead of in the local directory)</span>
   (GNUEmacs
@@ -5409,16 +5409,16 @@
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">;; number of oldest versions to keep when a new numbered backup is made</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(setq kept-old-versions 0)         ; 2</span>
+"color: #4C886B; font-style: italic;">(setq kept-old-versions 0)            ; [default: 2]</span>
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">number of newest versions to keep when a new numbered backup is made</span>
   (setq kept-new-versions 20)           <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">2</span>
+"color: #4C886B; font-style: italic;">[default: 2]</span>
 
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">delete excess backup versions silently</span>
+"color: #4C886B; font-style: italic;">don't ask me about deleting excess backup versions</span>
   (setq delete-old-versions t)
 </pre>
           </div>
@@ -18861,10 +18861,14 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
 <span style="color: #4C886B;">;;</span><span style=
-"color: #4C886B; font-style: italic;">*** 28.1.12 (info "(emacs)Customizing VC")</span>
+"color: #4C886B; font-style: italic;">*** 28.1.13 (info "(emacs)Customizing VC")</span>
 
   (leuven--section <span style=
-"color: #036A07;">"28.1.12 Customizing VC"</span>)
+"color: #036A07;">"28.1.13 Customizing VC"</span>)
+
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">files covered by VC get backups (as with other files)</span>
+  (setq vc-make-backup-files t)
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">http://www.emacswiki.org/emacs/VcTopDirectory</span>
@@ -22129,19 +22133,48 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
         <div class="outline-text-3" id="text-40-3">
           <dl class="org-dl">
-            <dt><code>M-p</code> (or <code>&lt;C-up&gt;</code>)</dt>
+            <dt><code>RET</code></dt>
 
-            <dd>Fetch the next earlier old shell command
-            (<code>comint-previous-input)</code>.</dd>
+            <dd><b>Execute</b> the <b>command on</b> the <b>current
+            line</b>.</dd>
 
-            <dt><code>M-n</code> (or <code>&lt;C-down&gt;</code>)</dt>
+            <dt><code>TAB</code></dt>
 
-            <dd>Fetch the next later old shell command
-            (<code>comint-next-input</code>).</dd>
+            <dd><b>Complete</b> current command, file name or variable
+            name.</dd>
 
-            <dt><code>M-r</code></dt>
+            <dt><code>C-c C-d</code></dt>
 
-            <dd>Begin an incremental regexp search of old shell commands.</dd>
+            <dd>Send <code>EOF</code> character.</dd>
+
+            <dt><code>C-c C-u</code></dt>
+
+            <dd>Erase current line (equivalent to <code>C-u</code> in Unix
+            shells).</dd>
+
+            <dt><code>C-c C-c</code></dt>
+
+            <dd>Interrupt current job (equivalent to <code>C-c</code> in Unix
+            shells, <code>BREAK</code> signal).</dd>
+
+            <dt><code>C-c C-z</code></dt>
+
+            <dd>Suspend or stop current job (equivalent to <code>C-z</code> in
+            Unix shells, <code>STOP</code> signal).</dd>
+
+            <dt><code>C-c C-o</code></dt>
+
+            <dd><b>Delete output</b> (only) <b>from last command</b>.</dd>
+
+            <dt><code>C-c C-r</code></dt>
+
+            <dd>Move <b>first line of output</b> from your last command <b>to
+            top of window</b>.</dd>
+
+            <dt><code>C-c C-e</code></dt>
+
+            <dd>Move <b>last line of output</b> from your last command <b>to
+            bottom of window</b>, showing the maximum of the output.</dd>
           </dl>
 
           <div class="org-src-container">
@@ -22316,6 +22349,35 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         <h3 id="sec-40-5">History</h3>
 
         <div class="outline-text-3" id="text-40-5">
+          <dl class="org-dl">
+            <dt><code>M-p</code> (or <code>&lt;C-up&gt;</code>)</dt>
+
+            <dd>Fetch the next <b>earlier</b> old command
+            (<code>comint-previous-input)</code>, but doesn’t execute it.</dd>
+
+            <dt><code>M-n</code> (or <code>&lt;C-down&gt;</code>)</dt>
+
+            <dd>Fetch the next <b>later</b> old command
+            (<code>comint-next-input</code>), but doesn’t execute it.</dd>
+
+            <dt><code>M-r</code></dt>
+
+            <dd>Begin an incremental <b>regexp search of old commands</b>.</dd>
+
+            <dt><code>C-c C-l</code></dt>
+
+            <dd>Display the current buffer’s <b>history</b> of shell
+            commands.</dd>
+
+            <dt><code>C-c C-p</code></dt>
+
+            <dd>Move to <b>previous command prompt</b>.</dd>
+
+            <dt><code>C-c C-n</code></dt>
+
+            <dd>Move to <b>next command prompt</b>.</dd>
+          </dl>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span style="color: #4C886B;">;;</span><span style=
@@ -22475,6 +22537,31 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           carefully, then `M-x term’ has some weird behaviours when using the
           shell mode key bindings; try for instance: `C-c C-e’, `C-c C-a’, `C-c
           C-o’… but as I said they’re details.</p>
+
+          <p>Emacs <code>shell-mode</code> buffers are not terminals (i.e.,
+          they do not use ptys (pseudo-terminals)), so no program running in
+          such a buffer (the shell, the programs run by the shell, etc.) can
+          perform character-at-a-time input. Each line is typed in full and
+          only sent when <code>ENTER</code> is pressed. To see proof, run the
+          tty command in a <code>shell-mode</code> buffer, and it’s output will
+          be <code>not a tty</code>.</p>
+
+          <p>FYI, while it may seem that this is not true because you can
+          perform command-line editing with <code>Ctrl-B</code>,
+          <code>Ctrl-F</code>, etc., this is only because shell-mode itself
+          simulates the typical command-line editing features of shell’s like
+          Bash, Zsh, Korn shell, etc. using Emacs own internal editing
+          capabilities.</p>
+
+          <p>&gt; I don’t have M-x terminal-emulator in my emacs-24.3.50.1, but
+          I guess &gt; it’s the same as M-x term. &gt; &gt; M-x term captures
+          everything it seems, so it kind of defeats the purpose &gt; of
+          running this inside emacs.</p>
+
+          <p>You misunderstand. In term mode C-c is the key prefix when in the
+          default character mode. And you can toggle between character mode and
+          line mode easily with C-c C-j and C-c C-k. When in line mode C-c C-j
+          then you don’t need a prefix. I use term quite a bit.</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -24945,7 +25032,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131129.1325]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131202.2221]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

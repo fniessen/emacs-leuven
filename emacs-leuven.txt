@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-11-29 Fri 14:14>
+# Time-stamp: <2013-12-02 Mon 16:57>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -2559,7 +2559,7 @@ How to get Emacs to auto-save to your local disk (=#file#=).
   ;; auto-save after 10 seconds idle time
   (setq auto-save-timeout 10)
 
-  ;; save backup files (i.e., `foo~' or `foo.~i~') in one common directory
+  ;; save backup files (i.e., `foo~' or `foo.~i~') in one central location
   ;; (instead of in the local directory)
   (GNUEmacs
     ;; filenames matching a regexp are backed up in the corresponding
@@ -2582,12 +2582,12 @@ How to get Emacs to auto-save to your local disk (=#file#=).
   (setq version-control t)
 
   ;; ;; number of oldest versions to keep when a new numbered backup is made
-  ;; (setq kept-old-versions 0)         ; 2
+  ;; (setq kept-old-versions 0)            ; [default: 2]
 
   ;; number of newest versions to keep when a new numbered backup is made
-  (setq kept-new-versions 20)           ; 2
+  (setq kept-new-versions 20)           ; [default: 2]
 
-  ;; delete excess backup versions silently
+  ;; don't ask me about deleting excess backup versions
   (setq delete-old-versions t)
 #+end_src
 
@@ -8562,7 +8562,7 @@ logically equivalent to "tangle", but without creating a separate file).
 
 Write error messages to the Messages buffer for invalid =sbe= calls.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; debugging sbe calls
   (defadvice sbe (around get-err-msg activate)
     "Issue messages at errors."
@@ -10606,9 +10606,12 @@ Show the diff we are about to commit: =C-c C-d=.
 *** Customizing VC
 
 #+begin_src emacs-lisp
-;;*** 28.1.12 (info "(emacs)Customizing VC")
+;;*** 28.1.13 (info "(emacs)Customizing VC")
 
-  (leuven--section "28.1.12 Customizing VC")
+  (leuven--section "28.1.13 Customizing VC")
+
+  ;; files covered by VC get backups (as with other files)
+  (setq vc-make-backup-files t)
 
   ;; http://www.emacswiki.org/emacs/VcTopDirectory
   ;; For git
@@ -12791,6 +12794,19 @@ FYI, while it may seem that this is not true because you can perform
 command-line editing with =Ctrl-B=, =Ctrl-F=, etc., this is only because shell-mode
 itself simulates the typical command-line editing features of shell's like
 Bash, Zsh, Korn shell, etc. using Emacs own internal editing capabilities.
+
+
+> I don't have M-x terminal-emulator in my emacs-24.3.50.1, but I guess
+> it's the same as M-x term.
+>
+> M-x term captures everything it seems, so it kind of defeats the purpose
+> of running this inside emacs.
+
+You misunderstand.  In term mode C-c is the key prefix when in the
+default character mode.  And you can toggle between character mode and
+line mode easily with C-c C-j and C-c C-k.  When in line mode C-c C-j
+then you don't need a prefix.  I use term quite a bit.
+
 
 #+begin_src emacs-lisp
   ;; managing multiple terminal buffers in Emacs
