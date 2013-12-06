@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-06 Fri 14:24>
+# Time-stamp: <2013-12-06 Fri 14:34>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -8644,11 +8644,11 @@ languages which can be evaluated in Org mode buffers.
        (screen . nil)
        (sh . t)
        (sql . t)
-       (sqlite . nil))))
+       (sqlite . nil)))
 
-  ;; accented characters on graphics
-  (setq org-babel-R-command
-        (concat org-babel-R-command " --encoding=UTF-8"))
+    ;; accented characters on graphics
+    (setq org-babel-R-command
+          (concat org-babel-R-command " --encoding=UTF-8")))
 #+end_src
 
 =screen= offers support for interactive terminals. Mostly shell scripts. Heavily
