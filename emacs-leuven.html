@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-02 Mon 22:22 -->
+  <title>Emacs Leuven</title><!-- 2013-12-06 Fri 14:17 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -638,17 +638,20 @@
 
               <li><a href="#sec-28-17">A.3 Adding hyperlink types</a></li>
 
-              <li><a href="#sec-28-18">A.6 Dynamic blocks</a></li>
+              <li><a href="#sec-28-18">A.5 Tables and lists in arbitrary
+              syntax</a></li>
+
+              <li><a href="#sec-28-19">A.6 Dynamic blocks</a></li>
 
               <li>
-                <a href="#sec-28-19">Org-contrib</a>
+                <a href="#sec-28-20">Org-contrib</a>
 
                 <ul>
-                  <li><a href="#sec-28-19-1">Org-effectiveness</a></li>
+                  <li><a href="#sec-28-20-1">Org-effectiveness</a></li>
 
-                  <li><a href="#sec-28-19-2">Org-notmuch</a></li>
+                  <li><a href="#sec-28-20-2">Org-notmuch</a></li>
 
-                  <li><a href="#sec-28-19-3">Google Weather</a></li>
+                  <li><a href="#sec-28-20-3">Google Weather</a></li>
                 </ul>
               </li>
             </ul>
@@ -1102,7 +1105,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131202.2221</span>
+"color: #4C886B; font-style: italic;">Version: 20131206.1416</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1224,7 +1227,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131202.2221]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131206.1416]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -1801,6 +1804,14 @@
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">chapter 0 ends here</span>
 </pre>
+        </div>
+
+        <div class="inlinetask">
+          <b><span class="todo TODO">TODO</span> Function for finding
+          executables</b><br />
+
+          <p>See function <code>--find-program</code> at <a href=
+          "http://www.visualco.de/src/elisp/.emacs.el.html">http://www.visualco.de/src/elisp/.emacs.el.html</a>.</p>
         </div>
       </div>
     </div>
@@ -4719,8 +4730,7 @@
                                            ispell-dictionary))))
                         (and dict
                              (propertize (concat <span style=
-"color: #036A07;">" ["</span> (substring dict 0 2) <span style=
-"color: #036A07;">"]"</span>)
+"color: #036A07;">" "</span> (substring dict 0 2))
                                          'face 'mode-line-highlight))))
                     (default-value 'mode-line-format)))
 </pre>
@@ -15484,7 +15494,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"14.6 (org)Library of Babel"</span>)
 
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
-"color: #036A07;">"ob-lob"</span>
+"color: #036A07;">"org"</span>
 
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">load the NAMED code blocks defined in Org mode files into the</span>
@@ -15577,6 +15587,12 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
        (sh . t)
        (sql . t)
        (sqlite . nil))))
+
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">accented characters on graphics</span>
+  (setq org-babel-R-command
+        (concat org-babel-R-command <span style=
+"color: #036A07;">" --encoding=UTF-8"</span>))
 </pre>
             </div>
 
@@ -16243,13 +16259,13 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
       (<span style="color: #0000FF;">lambda</span> (path desc format)
        (<span style="color: #0000FF;">cond</span>
         ((eq format 'html)
-         (format<span style=
+         (format <span style=
 "color: #036A07;">"&lt;span style=\"background-color:%s;\"&gt;%s&lt;/span&gt;"</span> path desc))
         ((eq format 'latex)
-         (format<span style=
+         (format <span style=
 "color: #036A07;">"\\colorbox{%s}{%s}"</span> path desc))
         (t
-         (format<span style=
+         (format <span style=
 "color: #036A07;">"BGCOLOR LINK (%s): {%s}{%s}"</span> format path desc))))))
 </pre>
           </div>
@@ -16257,9 +16273,28 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
       </div>
 
       <div id="outline-container-sec-28-18" class="outline-3">
-        <h3 id="sec-28-18">A.6 Dynamic blocks</h3>
+        <h3 id="sec-28-18">A.5 Tables and lists in arbitrary syntax</h3>
 
         <div class="outline-text-3" id="text-28-18">
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven-org-send-all-buffer-tables</span> ()
+    <span style=
+"color: #008000;">"Export all Org tables of the LaTeX document to their corresponding LaTeX tables."</span>
+     (interactive)
+     (org-table-map-tables
+        (<span style=
+"color: #0000FF;">lambda</span> () (orgtbl-send-table 'maybe))))
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="outline-container-sec-28-19" class="outline-3">
+        <h3 id="sec-28-19">A.6 Dynamic blocks</h3>
+
+        <div class="outline-text-3" id="text-28-19">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span style="color: #4C886B;">;;</span><span style=
@@ -16316,15 +16351,15 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
         </div>
       </div>
 
-      <div id="outline-container-sec-28-19" class="outline-3">
-        <h3 id="sec-28-19">Org-contrib</h3>
+      <div id="outline-container-sec-28-20" class="outline-3">
+        <h3 id="sec-28-20">Org-contrib</h3>
 
-        <div class="outline-text-3" id="text-28-19"></div>
+        <div class="outline-text-3" id="text-28-20"></div>
 
-        <div id="outline-container-sec-28-19-1" class="outline-4">
-          <h4 id="sec-28-19-1">Org-effectiveness</h4>
+        <div id="outline-container-sec-28-20-1" class="outline-4">
+          <h4 id="sec-28-20-1">Org-effectiveness</h4>
 
-          <div class="outline-text-4" id="text-28-19-1">
+          <div class="outline-text-4" id="text-28-20-1">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span style="color: #4C886B;">;; </span><span style=
@@ -16348,18 +16383,18 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
           </div>
         </div>
 
-        <div id="outline-container-sec-28-19-2" class="outline-4">
-          <h4 id="sec-28-19-2">Org-notmuch</h4>
+        <div id="outline-container-sec-28-20-2" class="outline-4">
+          <h4 id="sec-28-20-2">Org-notmuch</h4>
 
-          <div class="outline-text-4" id="text-28-19-2">
+          <div class="outline-text-4" id="text-28-20-2">
             <p>Link emails from Org files.</p>
           </div>
         </div>
 
-        <div id="outline-container-sec-28-19-3" class="outline-4">
-          <h4 id="sec-28-19-3">Google Weather</h4>
+        <div id="outline-container-sec-28-20-3" class="outline-4">
+          <h4 id="sec-28-20-3">Google Weather</h4>
 
-          <div class="outline-text-4" id="text-28-19-3">
+          <div class="outline-text-4" id="text-28-20-3">
             <pre class="example">
 * Weather
   :PROPERTIES:
@@ -22286,7 +22321,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #4C886B; font-style: italic;">)</span>
 
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">translate ANSI escape sequences into faces (within shell mode)</span>
+"color: #4C886B; font-style: italic;">translate ANSI escape sequences into faces (within Shell mode)</span>
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 </pre>
           </div>
@@ -22295,8 +22330,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           <code>M-x shell</code>, you will have come across the warning
           “terminal is not fully functional” followed by unusable behavior.
           This is because <code>git</code> sends its output through a pager
-          (probably <code>less</code>), which requires a real terminal
-          emulator.</p>
+          (probably <code>less</code>), which requires a real <a href=
+          "#sec-40-8">terminal emulator</a>.</p>
 
           <p>Setting the <code>PAGER</code> environment variable to
           <code>/bin/cat</code> (but only inside Emacs) solves this
@@ -22427,7 +22462,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       </div>
 
       <div id="outline-container-sec-40-8" class="outline-3">
-        <h3 id="sec-40-8">Terminal emulator</h3>
+        <h3 id="sec-40-8"><a id="ID-d12c2e1e-8147-4b39-8128-aaa70fbf4657" name=
+        "ID-d12c2e1e-8147-4b39-8128-aaa70fbf4657"></a>Terminal emulator</h3>
 
         <div class="outline-text-3" id="text-40-8">
           <div class="org-src-container">
@@ -22439,6 +22475,15 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #036A07;">"36.8 Terminal emulator"</span>)
 </pre>
           </div>
+
+          <p>From my experience, none of the terminal emulators in Emacs
+          (<code>term</code>, <code>ansi-term</code>, <code>multi-term</code>)
+          is supported under Windows. It looks like the main reason is all of
+          them rely on low-level support for terminals (<code>stty</code>,
+          etc.) which is not provided by Windows.</p>
+
+          <p>Though, <code>term</code>, <code>ansi-term</code>, and
+          <code>multi-term</code> do <b>work in Cygwin Emacs</b>.</p>
         </div>
       </div>
 
@@ -22446,16 +22491,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         <h3 id="sec-40-9">Term Mode</h3>
 
         <div class="outline-text-3" id="text-40-9">
-          <p>Ansi-Term?</p>
-
-          <p>See <a href=
-          "http://www.emacswiki.org/emacs/ShellMode#toc12">http://www.emacswiki.org/emacs/ShellMode#toc12</a>
-          to switch between Term-mode and Shell-mode, in the same buffer.</p>
-
-          <p>Mplayer commands do not work when I launch it in the Emacs shell.
-          Use <code>term</code> for “/” and “*” to decrease / increase
-          volume.</p>
-
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span style="color: #4C886B;">;;</span><span style=
@@ -22465,103 +22500,88 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 </pre>
           </div>
 
-          <p>I could use Term mode, which provides a full terminal, but that
-          defeats the purpose of running inside Emacs.</p>
+          <p>Emacs <b>Shell mode</b> doesn’t support (all) terminal control
+          codes, so <code>less</code> doesn’t work (“page-at-a-time”
+          feature).</p>
 
-          <p>I had similar gripes initially, but Term mode seems to do the job.
-          Switching between line-mode (`C-c C-j’) and char-mode (`C-c C-k’),
-          you have a terminal emulator which you can treat as a Shell mode
-          buffer when you need to.</p>
+          <p>Shell mode buffers do not use ptys (pseudo-terminals), so programs
+          running in such a buffer (the shell, the programs run by the shell,
+          etc.) can’t perform character-at-a-time input. Each line is typed in
+          full and only sent when <code>&lt;RET&gt;</code> is pressed. To see
+          proof, run the <code>tty</code> command in a Shell mode buffer, and
+          its output will be <code>not a tty</code>.</p>
 
-          <p>You can switch between term modes. Using `C-c c-j’ will put you in
-          line mode where term is behaves like a buffer , then u can use `C-c
-          c-k’ to switch back to char mode.</p>
+          <p>Note that it may seem that this is not true because you can
+          perform command-line editing with <code>C-b</code>, <code>C-f</code>,
+          etc. But this is only because <code>shell-mode</code> itself
+          simulates the typical command-line editing features of shells like
+          Bash, Zsh, etc. using Emacs own internal editing capabilities.</p>
 
-          <p>Emacs shell is a “dump” terminal which doesn’t support (all)
-          terminal control codes. You need to use `M-x term’ if you want a
-          proper terminal (but even that is not as good as the good old
-          XTerm).</p>
+          <p>Anyway, you can:</p>
 
-          <p>(term “bash”) If you do `M-x term’, `bash’ is offered as the
-          default as well.</p>
+          <ul class="org-ul">
+            <li>use <code>isearch</code> to search through the command
+            output,</li>
 
-          <p>Need a good terminal emulation for applications that are
-          interactive with your terminal, in the same way `top’ is working or
-          `man’ … or `less’ … or `unison’</p>
+            <li>copy stuff into the kill ring or</li>
 
-          <p>“less” needs a <span class="underline">terminal</span>. Emacs’s
-          shell-mode is not a terminal so “less” doesn’t work. If the programs
-          you use needs terminal features then you must use a terminal, such as
-          “M-x term”.</p>
+            <li>use the rectangle functions.</li>
+          </ul>
 
-          <p>This “page-at-a-time” feature comes with terminal emulation.
-          There’s no need to make “M-x shell” a real terminal because there
-          already is one: “M-x term”.</p>
+          <p>Or you might just prefer the Emacs key bindings over the ones your
+          shell offers.</p>
 
-          <p>Try also to use `M-x ansi-term’ that is much better than `term’:
-          with M-x term, you can run only one shell; with `ansi-term’ you can
-          start more than one (*ansi-term*&lt;2&gt;, *ansi-term*&lt;3&gt;).</p>
+          <p>On the other hand, <b>Term mode</b> provides a proper <b>terminal
+          emulator</b> (though not as good as the good old <code>xterm</code>).
+          You must use it for applications that are interactive with your
+          terminal (such as the command <code>top</code>).</p>
 
-          <p>One weird thing, is that ‘M-x term’ is a term emulation where
-          less(1) works and it has the ‘C-c C-q’ one-page-at-a-time thing as
-          well…</p>
+          <p>Note – In Shell mode, use <code>M-x proced</code> instead of
+          <code>top</code>.</p>
 
-          <p>M-x shell, has neither.</p>
+          <p>Note – <code>MPlayer</code> commands do not work in the Emacs
+          shell. Use <code>term</code> for <code>/</code> and <code>*</code> to
+          decrease / increase volume.</p>
 
-          <p>&gt;&gt; Or are there some things `M-x term’ can’t do while `M-x
-          shell’ &gt;&gt; can?</p>
+          <p>You can switch to <b>line mode</b> (<code>C-c C-j</code>) when you
+          need Term to <i>basically</i> act like a Shell mode buffer, and
+          wander around the buffer pretty much like anywhere else in Emacs.
+          Kill-ring commands, <code>isearch</code>, etc. do work.</p>
 
-          <p>&gt; With M-x shell you’re using emacs to construct the command to
-          pass &gt; to the shell. This is an advantage if you shell doesn’t
-          keep a &gt; history or offers no completion mechanism. Also, you can
-          use &gt; isearch to search through the command output, copy stuff
-          into the &gt; kill ring or use the rectangle functions. Or you might
-          just prefer &gt; the emacs key bindings over the one’s your shell
-          offers. 8-)</p>
+          <p>Then, you can use <code>C-c C-k</code> to switch back to
+          <b>character mode</b>, the default, which is like your normal
+          terminal emulator except the escape key.</p>
 
-          <p>I’d like to point out that term-mode has also the so called “line
-          mode” (`C-c C-j’) in which user can wander around the buffer pretty
-          much like anywhere else in Emacs. Kill-ring commands, isearch etc.
-          work. Then there is “char mode” (`C-c C-k’), the default, which is
-          like your normal terminal emulator except the escape key.</p>
+          <p>It’s wrong to think that <code>M-x term</code> captures everything
+          it seems (which would defeat the purpose of running it inside
+          Emacs):</p>
 
-          <p>Actually you can read this in the emacs info pages: “In line mode,
-          Term basically acts like Shell mode”.</p>
+          <ul class="org-ul">
+            <li>In the default character mode, <code>C-c</code> is the key
+            prefix.</li>
 
-          <p>The problem here is the word ‘basically’ which probably means
-          ‘almost’. So they differ in the details.</p>
+            <li>In line mode, you don’t need a prefix.</li>
+          </ul>
 
-          <p>In my case, I started to use `M-x shell’, and like it since I
-          almost never have to use applications that need a real term
-          emulation. But if you look at them (M-x term and M-x shell)
-          carefully, then `M-x term’ has some weird behaviours when using the
-          shell mode key bindings; try for instance: `C-c C-e’, `C-c C-a’, `C-c
-          C-o’… but as I said they’re details.</p>
+          <p>Try also to use <code>M-x ansi-term</code> that is much better
+          than <code>term</code>:</p>
 
-          <p>Emacs <code>shell-mode</code> buffers are not terminals (i.e.,
-          they do not use ptys (pseudo-terminals)), so no program running in
-          such a buffer (the shell, the programs run by the shell, etc.) can
-          perform character-at-a-time input. Each line is typed in full and
-          only sent when <code>ENTER</code> is pressed. To see proof, run the
-          tty command in a <code>shell-mode</code> buffer, and it’s output will
-          be <code>not a tty</code>.</p>
+          <ul class="org-ul">
+            <li>with <code>M-x term</code>, you can run <b>only one
+            shell</b>;</li>
 
-          <p>FYI, while it may seem that this is not true because you can
-          perform command-line editing with <code>Ctrl-B</code>,
-          <code>Ctrl-F</code>, etc., this is only because shell-mode itself
-          simulates the typical command-line editing features of shell’s like
-          Bash, Zsh, Korn shell, etc. using Emacs own internal editing
-          capabilities.</p>
+            <li>with <code>M-x ansi-term</code>, you can start more than one
+            (<code>*ansi-term*&lt;2&gt;</code>,
+            <code>*ansi-term*&lt;3&gt;</code>).</li>
+          </ul>
 
-          <p>&gt; I don’t have M-x terminal-emulator in my emacs-24.3.50.1, but
-          I guess &gt; it’s the same as M-x term. &gt; &gt; M-x term captures
-          everything it seems, so it kind of defeats the purpose &gt; of
-          running this inside emacs.</p>
+          <p>Note that <code>TERM</code> is different in both environments:</p>
 
-          <p>You misunderstand. In term mode C-c is the key prefix when in the
-          default character mode. And you can toggle between character mode and
-          line mode easily with C-c C-j and C-c C-k. When in line mode C-c C-j
-          then you don’t need a prefix. I use term quite a bit.</p>
+          <ul class="org-ul">
+            <li>In <code>M-x shell</code>, <code>TERM=emacs</code></li>
+
+            <li>In <code>M-x term</code>, <code>TERM=eterm-color</code></li>
+          </ul>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -22598,6 +22618,13 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 </pre>
           </div>
 
+          <div class="inlinetask">
+            <b><span class="todo TODO">TODO</span> Try <i>visual</i> commands
+            (like <code>top</code> or <code>less</code>) in
+            <code>multi-term</code></b><br />
+            nil
+          </div>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span style="color: #4C886B;">;; </span><span style=
@@ -22619,20 +22646,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       (interactive)
       (switch-or-start 'shell <span style="color: #036A07;">"*shell*"</span>)))
 </pre>
-          </div>
-
-          <div class="inlinetask">
-            <b><span class="todo TODO">TODO</span> Terminal in Emacs in Windows
-            - Error message: “Spawning child process; invalid
-            argument”</b><br />
-            nil
-          </div>
-
-          <div class="inlinetask">
-            <b><span class="todo TODO">TODO</span> Try <i>visual</i> commands
-            (like <code>top</code> or <code>less</code>) in
-            <code>multi-term</code></b><br />
-            nil
           </div>
         </div>
       </div>
@@ -22764,6 +22777,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">accented characters on graphics</span>
+  (add-to-list 'process-coding-system-alist
+               '(<span style="color: #036A07;">"R.*"</span> . iso-latin-1))
+
   (leuven--section <span style="color: #036A07;">"Utilities -- ESS"</span>)
 
   (add-to-list 'auto-mode-alist '(<span style=
@@ -22973,10 +22991,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       <h2 id="sec-42">Printing Hard Copies</h2>
 
       <div class="outline-text-2" id="text-42">
-        <p>See function <code>--find-program</code> at <a href=
-        "http://www.visualco.de/src/elisp/.emacs.el.html">http://www.visualco.de/src/elisp/.emacs.el.html</a>
-        for finding executables.</p>
-
         <p>You can print any buffer with <code>C-u M-x
         ps-print-buffer-with-faces &lt;RET&gt;</code>. Because of the
         <code>C-u</code>, it will prompt for a file to place the PostScript
@@ -22987,6 +23001,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
         <p>You may wish to set <code>ps-print-landscape</code> to
         <code>t</code>.</p>
+
+        <p>See (info "(emacs)Windows Printing”) for several methods of
+        correctly setting up printing on Windows.</p>
 
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
@@ -25032,7 +25049,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131202.2221]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131206.1416]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

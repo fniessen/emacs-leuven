@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-02 Mon 16:57>
+# Time-stamp: <2013-12-06 Fri 14:24>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -445,6 +445,10 @@ distro) without impacting on stuff you have added by hand.
 
 )                                       ; chapter 0 ends here
 #+end_src
+
+*************** TODO Function for finding executables
+See function =--find-program= at http://www.visualco.de/src/elisp/.emacs.el.html.
+*************** END
 
 * Debugging
 
@@ -2168,7 +2172,7 @@ Add language indicator.
                                        (or ispell-local-dictionary
                                            ispell-dictionary))))
                         (and dict
-                             (propertize (concat " [" (substring dict 0 2) "]")
+                             (propertize (concat " " (substring dict 0 2))
                                          'face 'mode-line-highlight))))
                     (default-value 'mode-line-format)))
 #+end_src
@@ -8581,7 +8585,7 @@ Write error messages to the Messages buffer for invalid =sbe= calls.
 
   (leuven--section "14.6 (org)Library of Babel")
 
-  (with-eval-after-load "ob-lob"
+  (with-eval-after-load "org"
 
     ;; load the NAMED code blocks defined in Org mode files into the
     ;; library of Babel (global `org-babel-library-of-babel' variable)
@@ -8641,13 +8645,17 @@ languages which can be evaluated in Org mode buffers.
        (sh . t)
        (sql . t)
        (sqlite . nil))))
+
+  ;; accented characters on graphics
+  (setq org-babel-R-command
+        (concat org-babel-R-command " --encoding=UTF-8"))
 #+end_src
 
 =screen= offers support for interactive terminals. Mostly shell scripts. Heavily
 inspired by =eev=.
 
 Eric Schulte believes screen has more of a focus on sustained interaction with
-an interactive terminal
+an interactive terminal.
 
 ** Miscellaneous
 
@@ -9029,11 +9037,21 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
       (lambda (path desc format)
        (cond
         ((eq format 'html)
-         (format"<span style=\"background-color:%s;\">%s</span>" path desc))
+         (format "<span style=\"background-color:%s;\">%s</span>" path desc))
         ((eq format 'latex)
-         (format"\\colorbox{%s}{%s}" path desc))
+         (format "\\colorbox{%s}{%s}" path desc))
         (t
-         (format"BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
+         (format "BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
+#+end_src
+
+** A.5 Tables and lists in arbitrary syntax
+
+#+begin_src emacs-lisp
+  (defun leuven-org-send-all-buffer-tables ()
+    "Export all Org tables of the LaTeX document to their corresponding LaTeX tables."
+     (interactive)
+     (org-table-map-tables
+        (lambda () (orgtbl-send-table 'maybe))))
 #+end_src
 
 ** A.6 Dynamic blocks
@@ -12608,14 +12626,14 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 
 ;; )
 
-  ;; translate ANSI escape sequences into faces (within shell mode)
+  ;; translate ANSI escape sequences into faces (within Shell mode)
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 #+end_src
 
-If you ever tried to run a program like =git= under =M-x shell=, you will have
-come across the warning "terminal is not fully functional" followed by
-unusable behavior. This is because =git= sends its output through a pager
-(probably =less=), which requires a real terminal emulator.
+If you ever tried to run a program like =git= under =M-x shell=, you will have come
+across the warning "terminal is not fully functional" followed by unusable
+behavior. This is because =git= sends its output through a pager (probably =less=),
+which requires a real [[id:d12c2e1e-8147-4b39-8128-aaa70fbf4657][terminal emulator]].
 
 Setting the =PAGER= environment variable to =/bin/cat= (but only inside Emacs)
 solves this problem:
@@ -12690,6 +12708,9 @@ solves this problem:
 #+end_src
 
 ** Terminal emulator
+   :PROPERTIES:
+   :ID:       d12c2e1e-8147-4b39-8128-aaa70fbf4657
+   :END:
 
 #+begin_src emacs-lisp
 ;;** 36.8 Terminal emulator
@@ -12697,15 +12718,14 @@ solves this problem:
   (leuven--section "36.8 Terminal emulator")
 #+end_src
 
+From my experience, none of the terminal emulators in Emacs (=term=, =ansi-term=,
+=multi-term=) is supported under Windows. It looks like the main reason is all of
+them rely on low-level support for terminals (=stty=, etc.) which is not provided
+by Windows.
+
+Though, =term=, =ansi-term=, and =multi-term= do *work in Cygwin Emacs*.
+
 ** Term Mode
-
-Ansi-Term?
-
-See http://www.emacswiki.org/emacs/ShellMode#toc12 to switch between Term-mode
-and Shell-mode, in the same buffer.
-
-Mplayer commands do not work when I launch it in the Emacs shell. Use =term= for
-"/" and "*" to decrease / increase volume.
 
 #+begin_src emacs-lisp
 ;;** 36.9 Term Mode
@@ -12713,100 +12733,59 @@ Mplayer commands do not work when I launch it in the Emacs shell. Use =term= for
   (leuven--section "36.9 Term Mode")
 #+end_src
 
-I could use Term mode, which provides a full terminal, but that
-defeats the purpose of running inside Emacs.
+Emacs *Shell mode* doesn't support (all) terminal control codes, so =less= doesn't
+work ("page-at-a-time" feature).
 
-I had similar gripes initially, but Term mode seems to do the job.
-Switching between line-mode (`C-c C-j') and char-mode (`C-c C-k'),
-you have a terminal emulator which you can treat as a Shell mode
-buffer when you need to.
+Shell mode buffers do not use ptys (pseudo-terminals), so programs running in
+such a buffer (the shell, the programs run by the shell, etc.) can't perform
+character-at-a-time input. Each line is typed in full and only sent when =<RET>=
+is pressed. To see proof, run the =tty= command in a Shell mode buffer, and its
+output will be =not a tty=.
 
-You can switch between term modes. Using `C-c c-j' will put you
-in line mode where term is behaves like a buffer , then u can use
-`C-c c-k' to switch back to char mode.
+Note that it may seem that this is not true because you can perform
+command-line editing with =C-b=, =C-f=, etc. But this is only because =shell-mode=
+itself simulates the typical command-line editing features of shells like Bash,
+Zsh, etc. using Emacs own internal editing capabilities.
 
+Anyway, you can:
 
-Emacs shell is a "dump" terminal which doesn't support (all) terminal
-control codes. You need to use `M-x term' if you want a proper
-terminal (but even that is not as good as the good old XTerm).
+- use =isearch= to search through the command output,
+- copy stuff into the kill ring or
+- use the rectangle functions.
 
-(term "bash")
-If you do `M-x term', `bash' is offered as the default as well.
+Or you might just prefer the Emacs key bindings over the ones your shell
+offers.
 
-Need a good terminal emulation for applications that are interactive
-with your terminal, in the same way `top' is working or `man' ... or
-`less' ... or `unison'
+On the other hand, *Term mode* provides a proper *terminal emulator* (though not as
+good as the good old =xterm=). You must use it for applications that are
+interactive with your terminal (such as the command =top=).
 
-"less" needs a _terminal_. Emacs's shell-mode is not a terminal so
-"less" doesn't work. If the programs you use needs terminal features
-then you must use a terminal, such as "M-x term".
+  Note -- In Shell mode, use =M-x proced= instead of =top=.
 
-This "page-at-a-time" feature comes with terminal emulation. There's
-no need to make "M-x shell" a real terminal because there already is
-one: "M-x term".
+  Note -- =MPlayer= commands do not work in the Emacs shell. Use =term= for =/= and =*=
+  to decrease / increase volume.
 
-Try also to use `M-x ansi-term' that is much better than `term': with
-M-x term, you can run only one shell; with `ansi-term' you can start
-more than one (*ansi-term*<2>, *ansi-term*<3>).
+You can switch to *line mode* (=C-c C-j=) when you need Term to /basically/ act like
+a Shell mode buffer, and wander around the buffer pretty much like anywhere
+else in Emacs. Kill-ring commands, =isearch=, etc. do work.
 
-One weird thing, is that 'M-x term' is a term emulation where less(1)
-works and it has the 'C-c C-q' one-page-at-a-time thing as well...
+Then, you can use =C-c C-k= to switch back to *character mode*, the default, which
+is like your normal terminal emulator except the escape key.
 
-M-x shell, has neither.
+It's wrong to think that =M-x term= captures everything it seems (which would
+defeat the purpose of running it inside Emacs):
 
->> Or are there some things `M-x term' can't do while `M-x shell'
->> can?
+- In the default character mode, =C-c= is the key prefix.
+- In line mode, you don't need a prefix.
 
-> With M-x shell you're using emacs to construct the command to pass
-> to the shell. This is an advantage if you shell doesn't keep a
-> history or offers no completion mechanism. Also, you can use
-> isearch to search through the command output, copy stuff into the
-> kill ring or use the rectangle functions. Or you might just prefer
-> the emacs key bindings over the one's your shell offers. 8-)
+Try also to use =M-x ansi-term= that is much better than =term=:
+- with =M-x term=, you can run *only one shell*;
+- with =M-x ansi-term=, you can start more than one (=*ansi-term*<2>=,
+  =*ansi-term*<3>=).
 
-I'd like to point out that term-mode has also the so called "line
-mode" (`C-c C-j') in which user can wander around the buffer pretty
-much like anywhere else in Emacs. Kill-ring commands, isearch etc.
-work. Then there is "char mode" (`C-c C-k'), the default, which is
-like your normal terminal emulator except the escape key.
-
-Actually you can read this in the emacs info pages: "In line mode,
-Term basically acts like Shell mode".
-
-The problem here is the word 'basically' which probably means
-'almost'. So they differ in the details.
-
-In my case, I started to use `M-x shell', and like it since I almost
-never have to use applications that need a real term emulation. But
-if you look at them (M-x term and M-x shell) carefully, then `M-x
-term' has some weird behaviours when using the shell mode key
-bindings; try for instance: `C-c C-e', `C-c C-a', `C-c C-o'... but as
-I said they're details.
-
-
-Emacs =shell-mode= buffers are not terminals (i.e., they do not use ptys
-(pseudo-terminals)), so no program running in such a buffer (the shell, the
-programs run by the shell, etc.) can perform character-at-a-time input. Each
-line is typed in full and only sent when =ENTER= is pressed. To see proof, run
-the tty command in a =shell-mode= buffer, and it's output will be =not a tty=.
-
-FYI, while it may seem that this is not true because you can perform
-command-line editing with =Ctrl-B=, =Ctrl-F=, etc., this is only because shell-mode
-itself simulates the typical command-line editing features of shell's like
-Bash, Zsh, Korn shell, etc. using Emacs own internal editing capabilities.
-
-
-> I don't have M-x terminal-emulator in my emacs-24.3.50.1, but I guess
-> it's the same as M-x term.
->
-> M-x term captures everything it seems, so it kind of defeats the purpose
-> of running this inside emacs.
-
-You misunderstand.  In term mode C-c is the key prefix when in the
-default character mode.  And you can toggle between character mode and
-line mode easily with C-c C-j and C-c C-k.  When in line mode C-c C-j
-then you don't need a prefix.  I use term quite a bit.
-
+Note that =TERM= is different in both environments:
+- In =M-x shell=, =TERM=emacs=
+- In =M-x term=,  =TERM=eterm-color=
 
 #+begin_src emacs-lisp
   ;; managing multiple terminal buffers in Emacs
@@ -12830,6 +12809,8 @@ then you don't need a prefix.  I use term quite a bit.
       (kbd "C-c T") 'multi-term))       ; create a new one
 #+end_src
 
+*************** TODO Try /visual/ commands (like =top= or =less=) in =multi-term=
+
 #+begin_src emacs-lisp
   ;; ;; run an inferior shell, with I/O through buffer `*shell*'
   ;; (global-set-key
@@ -12844,10 +12825,6 @@ then you don't need a prefix.  I use term quite a bit.
       (interactive)
       (switch-or-start 'shell "*shell*")))
 #+end_src
-
-*************** TODO Terminal in Emacs in Windows - Error message: "Spawning child process; invalid argument"
-
-*************** TODO Try /visual/ commands (like =top= or =less=) in =multi-term=
 
 ** Paging in Term
 
@@ -12914,6 +12891,10 @@ Magic underscore (=_=):
 - Pressing underscore twice inserts a literal underscore.
 
 #+begin_src emacs-lisp
+  ;; accented characters on graphics
+  (add-to-list 'process-coding-system-alist
+               '("R.*" . iso-latin-1))
+
   (leuven--section "Utilities -- ESS")
 
   (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
@@ -13046,9 +13027,6 @@ server.
 
 * Printing Hard Copies
 
-See function =--find-program= at http://www.visualco.de/src/elisp/.emacs.el.html
-for finding executables.
-
 You can print any buffer with =C-u M-x ps-print-buffer-with-faces <RET>=. Because
 of the =C-u=, it will prompt for a file to place the PostScript into. You can
 then convert PS to PDF, if so desired.
@@ -13056,6 +13034,9 @@ then convert PS to PDF, if so desired.
 You can print without faces (i.e. no colour) with =ps-print-buffer=.
 
 You may wish to set =ps-print-landscape= to =t=.
+
+See (info "(emacs)Windows Printing") for several methods of correctly setting
+up printing on Windows.
 
 #+begin_src emacs-lisp
 ;;* 38 (info "(emacs)Printing")

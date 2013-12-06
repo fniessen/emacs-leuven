@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131202.222
+;; Version: 20131206.1414
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131202.222]--")
+(message "* --[ Loading Emacs Leuven 20131206.1414]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1430,7 +1430,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                                        (or ispell-local-dictionary
                                            ispell-dictionary))))
                         (and dict
-                             (propertize (concat " [" (substring dict 0 2) "]")
+                             (propertize (concat " " (substring dict 0 2))
                                          'face 'mode-line-highlight))))
                     (default-value 'mode-line-format)))
 
@@ -5917,7 +5917,7 @@ From %c"
 
   (leuven--section "14.6 (org)Library of Babel")
 
-  (with-eval-after-load "ob-lob"
+  (with-eval-after-load "org"
 
     ;; load the NAMED code blocks defined in Org mode files into the
     ;; library of Babel (global `org-babel-library-of-babel' variable)
@@ -5968,6 +5968,10 @@ From %c"
        (sh . t)
        (sql . t)
        (sqlite . nil))))
+
+  ;; accented characters on graphics
+  (setq org-babel-R-command
+        (concat org-babel-R-command " --encoding=UTF-8"))
 
 ;;* 15 (info "(org)Miscellaneous")
 
@@ -6223,11 +6227,17 @@ From %c"
       (lambda (path desc format)
        (cond
         ((eq format 'html)
-         (format"<span style=\"background-color:%s;\">%s</span>" path desc))
+         (format "<span style=\"background-color:%s;\">%s</span>" path desc))
         ((eq format 'latex)
-         (format"\\colorbox{%s}{%s}" path desc))
+         (format "\\colorbox{%s}{%s}" path desc))
         (t
-         (format"BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
+         (format "BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
+
+  (defun leuven-org-send-all-buffer-tables ()
+    "Export all Org tables of the LaTeX document to their corresponding LaTeX tables."
+     (interactive)
+     (org-table-map-tables
+        (lambda () (orgtbl-send-table 'maybe))))
 
 ;;** A.6 (info "(org)Dynamic blocks")
 
@@ -8505,7 +8515,7 @@ From %c"
 
 ;; )
 
-  ;; translate ANSI escape sequences into faces (within shell mode)
+  ;; translate ANSI escape sequences into faces (within Shell mode)
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
   (setenv "PAGER" "/usr/bin/cat")
@@ -8606,6 +8616,10 @@ From %c"
     ;;            (executable-find "mount")) ; Cygwin bin directory found
     ;;   (when (try-require 'cygwin-mount)
     ;;     (cygwin-mount-activate)))
+
+  ;; accented characters on graphics
+  (add-to-list 'process-coding-system-alist
+               '("R.*" . iso-latin-1))
 
   (leuven--section "Utilities -- ESS")
 
@@ -9448,7 +9462,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131202.2221]--")
+(message "* --[ Loaded Emacs Leuven 20131206.1415]--")
 
 (provide 'emacs-leuven)
 
