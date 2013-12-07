@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-06 Fri 14:34>
+# Time-stamp: <2013-12-07 Sat 12:05>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1772,7 +1772,7 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
                        "purple1"
                      (if overwrite-mode
                          "red"
-                       ;; insert mode
+                       ;; normal insert mode
                        leuven-default-cursor-color))))
         (set-cursor-color color)))
 
@@ -8070,9 +8070,23 @@ org-export-htmlize-generate-css= to extract class definitions.
             (message "HTML Tidy'ed")
             (message "%s" (org-file-contents err-file))
             new-contents)))
-
       (add-to-list 'org-export-filter-final-output-functions
                    'leuven--export-html-final-filter))
+
+      ;; HTML checkbox output
+      (defun leuven--checkbox-filter (item backend info)
+        (when (org-export-derived-backend-p backend 'html)
+          (replace-regexp-in-string
+           "\\`.*\\(<code>\\[\\(X\\|&#xa0;\\|-\\)\\]</code>\\).*$"
+           (lambda (rep)
+             (let ((check (match-string 2 rep)))
+               (cond ((equal check "X") "&#x2611;")
+                     ((equal check "-") "&#x2610;")
+                     (t "&#x2610;"))))
+           item
+           nil nil 1)))
+      (add-to-list 'org-export-filter-item-functions
+                   'leuven--checkbox-filter)
 
     )                                   ; with-eval-after-load "ox-html" ends here
 #+end_src
@@ -8627,11 +8641,11 @@ languages which can be evaluated in Org mode buffers.
      '((C . nil)
        (R . t)                          ; requires R and ess-mode
        (awk . t)
-       (calc . t)
+       ;; (calc . t)
        (ditaa . t)                      ; sudo aptitude install openjdk-6-jre
        (dot . t)
        (emacs-lisp . t)
-       (gnuplot . t)                    ; requires gnuplot-mode
+       ;; (gnuplot . t)                    ; requires gnuplot-mode
        (haskell . nil)
        (latex . t)
        (ledger . t)                     ; requires ledger
@@ -8639,7 +8653,7 @@ languages which can be evaluated in Org mode buffers.
        (octave . nil)
        (org . t)
        (perl . nil)
-       (python . t)
+       ;; (python . t)
        (ruby . nil)
        (screen . nil)
        (sh . t)

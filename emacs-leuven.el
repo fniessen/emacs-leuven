@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131206.1434
+;; Version: 20131207.1207
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131206.1434]--")
+(message "* --[ Loading Emacs Leuven 20131207.1207]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1198,7 +1198,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                        "purple1"
                      (if overwrite-mode
                          "red"
-                       ;; insert mode
+                       ;; normal insert mode
                        leuven-default-cursor-color))))
         (set-cursor-color color)))
 
@@ -5563,9 +5563,23 @@ From %c"
             (message "HTML Tidy'ed")
             (message "%s" (org-file-contents err-file))
             new-contents)))
-
       (add-to-list 'org-export-filter-final-output-functions
                    'leuven--export-html-final-filter))
+
+      ;; HTML checkbox output
+      (defun leuven--checkbox-filter (item backend info)
+        (when (org-export-derived-backend-p backend 'html)
+          (replace-regexp-in-string
+           "\\`.*\\(<code>\\[\\(X\\|&#xa0;\\|-\\)\\]</code>\\).*$"
+           (lambda (rep)
+             (let ((check (match-string 2 rep)))
+               (cond ((equal check "X") "&#x2611;")
+                     ((equal check "-") "&#x2610;")
+                     (t "&#x2610;"))))
+           item
+           nil nil 1)))
+      (add-to-list 'org-export-filter-item-functions
+                   'leuven--checkbox-filter)
 
     )                                   ; with-eval-after-load "ox-html" ends here
 
@@ -5950,11 +5964,11 @@ From %c"
      '((C . nil)
        (R . t)                          ; requires R and ess-mode
        (awk . t)
-       (calc . t)
+       ;; (calc . t)
        (ditaa . t)                      ; sudo aptitude install openjdk-6-jre
        (dot . t)
        (emacs-lisp . t)
-       (gnuplot . t)                    ; requires gnuplot-mode
+       ;; (gnuplot . t)                    ; requires gnuplot-mode
        (haskell . nil)
        (latex . t)
        (ledger . t)                     ; requires ledger
@@ -5962,7 +5976,7 @@ From %c"
        (octave . nil)
        (org . t)
        (perl . nil)
-       (python . t)
+       ;; (python . t)
        (ruby . nil)
        (screen . nil)
        (sh . t)
@@ -9462,7 +9476,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131206.1435]--")
+(message "* --[ Loaded Emacs Leuven 20131207.1208]--")
 
 (provide 'emacs-leuven)
 

@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-06 Fri 14:36 -->
+  <title>Emacs Leuven</title><!-- 2013-12-07 Sat 12:09 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131206.1435</span>
+"color: #4C886B; font-style: italic;">Version: 20131207.1208</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131206.1435]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131207.1208]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -4114,7 +4114,7 @@
                      (<span style="color: #0000FF;">if</span> overwrite-mode
                          <span style="color: #036A07;">"red"</span>
                        <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">insert mode</span>
+"color: #4C886B; font-style: italic;">normal insert mode</span>
                        leuven-default-cursor-color))))
         (set-cursor-color color)))
 
@@ -14633,9 +14633,50 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
             (message <span style=
 "color: #036A07;">"%s"</span> (org-file-contents err-file))
             new-contents)))
-
       (add-to-list 'org-export-filter-final-output-functions
                    'leuven--export-html-final-filter))
+
+      <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">HTML checkbox output</span>
+      (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven--checkbox-filter</span> (item backend info)
+        (<span style=
+"color: #0000FF;">when</span> (org-export-derived-backend-p backend 'html)
+          (replace-regexp-in-string
+           <span style="color: #036A07;">"\\`.*</span><span style=
+"color: #036A07; font-weight: bold;">\\</span><span style=
+"color: #036A07; font-weight: bold;">(</span><span style=
+"color: #036A07;">&lt;code&gt;\\[</span><span style=
+"color: #036A07; font-weight: bold;">\\</span><span style=
+"color: #036A07; font-weight: bold;">(</span><span style=
+"color: #036A07;">X</span><span style=
+"color: #036A07; font-weight: bold;">\\</span><span style=
+"color: #036A07; font-weight: bold;">|</span><span style=
+"color: #036A07;">&amp;#xa0;</span><span style=
+"color: #036A07; font-weight: bold;">\\</span><span style=
+"color: #036A07; font-weight: bold;">|</span><span style=
+"color: #036A07;">-</span><span style=
+"color: #036A07; font-weight: bold;">\\</span><span style=
+"color: #036A07; font-weight: bold;">)</span><span style=
+"color: #036A07;">\\]&lt;/code&gt;</span><span style=
+"color: #036A07; font-weight: bold;">\\</span><span style=
+"color: #036A07; font-weight: bold;">)</span><span style=
+"color: #036A07;">.*$"</span>
+           (<span style="color: #0000FF;">lambda</span> (rep)
+             (<span style=
+"color: #0000FF;">let</span> ((check (match-string 2 rep)))
+               (<span style=
+"color: #0000FF;">cond</span> ((equal check <span style=
+"color: #036A07;">"X"</span>) <span style=
+"color: #036A07;">"&amp;#x2611;"</span>)
+                     ((equal check <span style=
+"color: #036A07;">"-"</span>) <span style=
+"color: #036A07;">"&amp;#x2610;"</span>)
+                     (t <span style="color: #036A07;">"&amp;#x2610;"</span>))))
+           item
+           nil nil 1)))
+      (add-to-list 'org-export-filter-item-functions
+                   'leuven--checkbox-filter)
 
     )                                   <span style=
 "color: #4C886B;">; </span><span style=
@@ -15563,15 +15604,15 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">requires R and ess-mode</span>
        (awk . t)
-       (calc . t)
+       <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(calc . t)</span>
        (ditaa . t)                      <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">sudo aptitude install openjdk-6-jre</span>
        (dot . t)
        (emacs-lisp . t)
-       (gnuplot . t)                    <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">requires gnuplot-mode</span>
+       <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(gnuplot . t)                    ; requires gnuplot-mode</span>
        (haskell . nil)
        (latex . t)
        (ledger . t)                     <span style=
@@ -15581,7 +15622,8 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
        (octave . nil)
        (org . t)
        (perl . nil)
-       (python . t)
+       <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(python . t)</span>
        (ruby . nil)
        (screen . nil)
        (sh . t)
@@ -25049,7 +25091,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131206.1436]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131207.1208]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
