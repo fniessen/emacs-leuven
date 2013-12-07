@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-07 Sat 21:53 -->
+  <title>Emacs Leuven</title><!-- 2013-12-07 Sat 22:38 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131207.2152</span>
+"color: #4C886B; font-style: italic;">Version: 20131207.2237</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131207.2152]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131207.2237]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -11794,7 +11794,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">org-agenda-files</span><span style=
 "color: #036A07;">'"</span>
                (length org-agenda-files))
-      (sit-for 0.5))
+      <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(sit-for 0.5)</span>
+      )
 </pre>
             </div>
 
@@ -15745,7 +15747,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">%s</span><span style=
 "color: #036A07;">' is unknown in %s"</span>
                      lang (file-name-base))
-            (sit-for 3))
+            (sit-for 1.5))
           (force-mode-line-update)))))
 
   <span style="color: #4C886B;">;; </span><span style=
@@ -16388,7 +16390,10 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #4C886B; font-style: italic;">up-to-date</span>
     (add-hook 'before-save-hook 'leuven-org-update-buffer)
     (message <span style=
-"color: #036A07;">"Add leuven-org-update-buffer to before-save-hook"</span>) (sit-for 1.5))
+"color: #036A07;">"Add leuven-org-update-buffer to before-save-hook  &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;"</span>)
+    <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(sit-for 1.5)</span>
+    )
 </pre>
           </div>
         </div>
@@ -25092,7 +25097,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131207.2152]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131207.2238]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

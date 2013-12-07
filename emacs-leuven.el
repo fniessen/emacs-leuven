@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131207.215
+;; Version: 20131207.2236
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131207.215]--")
+(message "* --[ Loading Emacs Leuven 20131207.2236]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4369,7 +4369,8 @@ From %c"
     (when (boundp 'org-agenda-files)
       (message "(Info) Found %s entries in `org-agenda-files'"
                (length org-agenda-files))
-      (sit-for 0.5))
+      ;; (sit-for 0.5)
+      )
 
 ;;** 10.2 (info "(org)Agenda dispatcher")
 
@@ -6024,7 +6025,7 @@ From %c"
               (ispell-change-dictionary dict)
             (message "Ispell dictionary for language `%s' is unknown in %s"
                      lang (file-name-base))
-            (sit-for 3))
+            (sit-for 1.5))
           (force-mode-line-update)))))
 
   ;; guess dictionary
@@ -6282,7 +6283,9 @@ From %c"
     ;; make sure that all dynamic blocks and all tables are always
     ;; up-to-date
     (add-hook 'before-save-hook 'leuven-org-update-buffer)
-    (message "Add leuven-org-update-buffer to before-save-hook") (sit-for 1.5))
+    (message "Add leuven-org-update-buffer to before-save-hook  <<<<<<<<<<<<<<")
+    ;; (sit-for 1.5)
+    )
 
   ;; (with-eval-after-load "org"
   ;;   (message "... Org Effectiveness")
@@ -9477,7 +9480,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131207.2151]--")
+(message "* --[ Loaded Emacs Leuven 20131207.2237]--")
 
 (provide 'emacs-leuven)
 

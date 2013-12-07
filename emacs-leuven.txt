@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-07 Sat 21:50>
+# Time-stamp: <2013-12-07 Sat 22:35>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -6393,7 +6393,8 @@ the header under which the entry will be placed.
     (when (boundp 'org-agenda-files)
       (message "(Info) Found %s entries in `org-agenda-files'"
                (length org-agenda-files))
-      (sit-for 0.5))
+      ;; (sit-for 0.5)
+      )
 #+end_src
 
 Avoid any possibility of getting a customized version of =org-agenda-files= added
@@ -8724,7 +8725,7 @@ function is loaded (AFTER having been adviced).
               (ispell-change-dictionary dict)
             (message "Ispell dictionary for language `%s' is unknown in %s"
                      lang (file-name-base))
-            (sit-for 3))
+            (sit-for 1.5))
           (force-mode-line-update)))))
 
   ;; guess dictionary
@@ -9100,7 +9101,9 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
     ;; make sure that all dynamic blocks and all tables are always
     ;; up-to-date
     (add-hook 'before-save-hook 'leuven-org-update-buffer)
-    (message "Add leuven-org-update-buffer to before-save-hook") (sit-for 1.5))
+    (message "Add leuven-org-update-buffer to before-save-hook  <<<<<<<<<<<<<<")
+    ;; (sit-for 1.5)
+    )
 #+end_src
 
 ** Org-contrib
