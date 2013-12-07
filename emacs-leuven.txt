@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-07 Sat 22:35>
+# Time-stamp: <2013-12-08 Sun 00:25>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -658,6 +658,7 @@ are generated programmatically from upstream Git-based sources.
           calfw
           circe
           ;; dictionary
+          dired+
           ess
           fuzzy
           git-commit-mode
@@ -670,7 +671,7 @@ are generated programmatically from upstream Git-based sources.
           ;; jabber
           ledger-mode
           leuven-theme
-          multi-term
+          ;; multi-term
           ;; org
           ;; org-mime                      ; from contrib
           pager
@@ -4207,7 +4208,7 @@ There are several *non-break space* characters:
 
 #+begin_src emacs-lisp
   ;; replace space by nobreak-space where it fits well
-  (defun leuven--smart-punctuation-colon ()
+  (defun leuven-smart-punctuation-colon ()
     "Replace space by nobreak-space in front of a colon."
     (interactive)
     (require 'org-element)
@@ -4234,7 +4235,7 @@ There are several *non-break space* characters:
           (t
            (insert ":"))))
 
-  (defun leuven--smart-punctuation-question-mark ()
+  (defun leuven-smart-punctuation-question-mark ()
     "If any, replace space by nobreak-space in front of a question mark."
     (interactive)
     (if (eq (char-before) ?\ ) ; normal space
@@ -4245,7 +4246,7 @@ There are several *non-break space* characters:
             (insert " ?"))) ; non-breaking space
       (insert "?")))
 
-  (defun leuven--smart-punctuation-exclamation-mark ()
+  (defun leuven-smart-punctuation-exclamation-mark ()
     "If any, replace space by nobreak-space in front of an exclamation
   mark."
     (interactive)
@@ -4257,7 +4258,7 @@ There are several *non-break space* characters:
             (insert " !"))) ; non-breaking space
       (insert "!")))
 
-  (defun leuven--smart-punctuation-semicolon ()
+  (defun leuven-smart-punctuation-semicolon ()
     "If any, replace space by nobreak-space in front of a semi-colon."
     (interactive)
     (require 'org-element)
@@ -4276,7 +4277,7 @@ There are several *non-break space* characters:
                  (insert " ;")))) ; non-breaking space
       (insert ";")))
 
-  (defun leuven--smart-punctuation-apostrophe ()
+  (defun leuven-smart-punctuation-apostrophe ()
     (interactive)
     (cond
      ((or (bolp) (not (looking-back "'")))
@@ -4296,7 +4297,7 @@ There are several *non-break space* characters:
         (skip-syntax-forward "w_")
         (unless (looking-at "'") (insert-and-inherit "'"))))))
 
-  (defun leuven--smart-punctuation-quotation-mark ()
+  (defun leuven-smart-punctuation-quotation-mark ()
     "Replace two following double quotes by French quotes with nobreak-spaces."
     (interactive)
     (if (and (eq (char-before) ?\")
@@ -4309,19 +4310,19 @@ There are several *non-break space* characters:
           (backward-char 2))
       (insert "\"")))
 
-  (defun leuven--smart-punctuation ()
+  (defun leuven-smart-punctuation ()
     "If any, replace space in front of colons, question marks, exclamation
   marks, etc. to avoid line break problems."
     (interactive)
-    (local-set-key ":" 'leuven--smart-punctuation-colon)
-    (local-set-key "?" 'leuven--smart-punctuation-question-mark)
-    (local-set-key "!" 'leuven--smart-punctuation-exclamation-mark)
-    (local-set-key ";" 'leuven--smart-punctuation-semicolon)
-    (local-set-key [39] 'leuven--smart-punctuation-apostrophe)
-    (local-set-key "\"" 'leuven--smart-punctuation-quotation-mark))
+    (local-set-key ":" 'leuven-smart-punctuation-colon)
+    (local-set-key "?" 'leuven-smart-punctuation-question-mark)
+    (local-set-key "!" 'leuven-smart-punctuation-exclamation-mark)
+    (local-set-key ";" 'leuven-smart-punctuation-semicolon)
+    (local-set-key [39] 'leuven-smart-punctuation-apostrophe)
+    (local-set-key "\"" 'leuven-smart-punctuation-quotation-mark))
 
-  (add-hook 'text-mode-hook 'leuven--smart-punctuation)
-  (add-hook 'message-mode-hook 'leuven--smart-punctuation)
+  (add-hook 'text-mode-hook 'leuven-smart-punctuation)
+  (add-hook 'message-mode-hook 'leuven-smart-punctuation)
 #+end_src
 
 ** Case Conversion Commands
@@ -4993,6 +4994,8 @@ Display outline path in mode line:
 *************** TODO Fix Error during redisplay
 (eval (org-propertize (org-display-outline-path nil t " / " t) (quote face) (quote mode-line-emphasis) (quote help-echo) "Outline path")) signaled (wrong-type-argument stringp nil)
 *************** END
+
+Note that *Imenu* does display the current Org subtree in the mode line.
 
 *** 2.4 Motion
 
@@ -8843,8 +8846,6 @@ For security reasons, evaluation is not turned on by default.
                                                     ; loaded
              (fboundp 'try-to-add-imenu)) ; `imenu' has been loaded
 
-    (try-require 'imenu+)
-
     (setq org-src-blocks-imenu-generic-expression
           `(("Snippets" ,org-babel-src-name-w-name-regexp 2)))
 
@@ -9251,9 +9252,6 @@ file, AUCTeX gives you a =Command= menu.
 - If you want to print the document, do it from =GSview=.
 
 #+begin_src emacs-lisp
-      ;; ;; TEST ??
-      ;; (add-hook 'tex-mode-hook 'imenu-add-menubar-index)
-
       ;; ;; LaTeX-sensitive spell checking
       ;; (add-hook 'tex-mode-hook
       ;;           (lambda ()
@@ -9723,13 +9721,10 @@ open another file).
   (leuven--section "26.2 Top-Level Definitions, or (emacs)Defuns")
 
   (GNUEmacs
-    ;; making buffer indexes as menus (awesome!)
-    (when (try-require 'imenu-XXX)
-      ;; imenu-add-to-menubar: Command attempted to use minibuffer while in
-      ;; minibuffer
+    ;; making buffer indexes as menus
+    (when (try-require 'imenu)          ; awesome!
 
-      ;; automatically add Imenu to the menu bar in /any/ mode that supports
-      ;; it
+      ;; automatically add Imenu to the menu bar in /any/ mode that supports it
       (defun try-to-add-imenu ()
         (condition-case nil
             (imenu-add-to-menubar "Imenu")
@@ -9738,6 +9733,8 @@ open another file).
 
       ;; show current function in mode line (based on Imenu)
       (which-func-mode 1)))             ; ~ Stickyfunc mode (in header line)
+
+    ;; (try-require 'imenu+)
 #+end_src
 
 ** Indentation for Programs
@@ -12648,6 +12645,15 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 #+end_src
 
+#+begin_src emacs-lisp
+  (defun add-mode-line-dirtrack (&optional _string)
+    (rename-buffer (concat "*shell " default-directory "*")))
+
+  (add-hook 'shell-mode-hook 'add-mode-line-dirtrack)
+
+  (add-hook 'comint-output-filter-functions 'add-mode-line-dirtrack nil t)
+#+end_src
+
 If you ever tried to run a program like =git= under =M-x shell=, you will have come
 across the warning "terminal is not fully functional" followed by unusable
 behavior. This is because =git= sends its output through a pager (probably =less=),
@@ -13768,12 +13774,13 @@ Have a look at (info "(emacs)Directory Variables").
 
 ** Key Bindings
 
-The keys =C-c LETTER= are reserved for user functions.
+The keys =C-c LETTER= are [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html
+][reserved for user functions]].
 
 You can get a list of all the disabled functions by typing:
 
 #+begin_src emacs-lisp :tangle no
-M-: (let(lst)(mapatoms(lambda(x)(if(get x 'disabled)(push x lst))))lst) <RET>
+M-: (let (lst) (mapatoms (lambda (x) (if (get x 'disabled) (push x lst)))) lst) <RET>
 #+end_src
 
 #+begin_src emacs-lisp

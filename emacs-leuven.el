@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131207.2236
+;; Version: 20131208.0015
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131207.2236]--")
+(message "* --[ Loading Emacs Leuven 20131208.0015]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -512,6 +512,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           calfw
           circe
           ;; dictionary
+          dired+
           ess
           fuzzy
           git-commit-mode
@@ -524,7 +525,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           ;; jabber
           ledger-mode
           leuven-theme
-          multi-term
+          ;; multi-term
           ;; org
           ;; org-mime                      ; from contrib
           pager
@@ -2831,7 +2832,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
       (fill-paragraph)))
 
   ;; replace space by nobreak-space where it fits well
-  (defun leuven--smart-punctuation-colon ()
+  (defun leuven-smart-punctuation-colon ()
     "Replace space by nobreak-space in front of a colon."
     (interactive)
     (require 'org-element)
@@ -2858,7 +2859,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           (t
            (insert ":"))))
 
-  (defun leuven--smart-punctuation-question-mark ()
+  (defun leuven-smart-punctuation-question-mark ()
     "If any, replace space by nobreak-space in front of a question mark."
     (interactive)
     (if (eq (char-before) ?\ ) ; normal space
@@ -2869,7 +2870,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
             (insert " ?"))) ; non-breaking space
       (insert "?")))
 
-  (defun leuven--smart-punctuation-exclamation-mark ()
+  (defun leuven-smart-punctuation-exclamation-mark ()
     "If any, replace space by nobreak-space in front of an exclamation
   mark."
     (interactive)
@@ -2881,7 +2882,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
             (insert " !"))) ; non-breaking space
       (insert "!")))
 
-  (defun leuven--smart-punctuation-semicolon ()
+  (defun leuven-smart-punctuation-semicolon ()
     "If any, replace space by nobreak-space in front of a semi-colon."
     (interactive)
     (require 'org-element)
@@ -2900,7 +2901,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                  (insert " ;")))) ; non-breaking space
       (insert ";")))
 
-  (defun leuven--smart-punctuation-apostrophe ()
+  (defun leuven-smart-punctuation-apostrophe ()
     (interactive)
     (cond
      ((or (bolp) (not (looking-back "'")))
@@ -2920,7 +2921,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
         (skip-syntax-forward "w_")
         (unless (looking-at "'") (insert-and-inherit "'"))))))
 
-  (defun leuven--smart-punctuation-quotation-mark ()
+  (defun leuven-smart-punctuation-quotation-mark ()
     "Replace two following double quotes by French quotes with nobreak-spaces."
     (interactive)
     (if (and (eq (char-before) ?\")
@@ -2933,19 +2934,19 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           (backward-char 2))
       (insert "\"")))
 
-  (defun leuven--smart-punctuation ()
+  (defun leuven-smart-punctuation ()
     "If any, replace space in front of colons, question marks, exclamation
   marks, etc. to avoid line break problems."
     (interactive)
-    (local-set-key ":" 'leuven--smart-punctuation-colon)
-    (local-set-key "?" 'leuven--smart-punctuation-question-mark)
-    (local-set-key "!" 'leuven--smart-punctuation-exclamation-mark)
-    (local-set-key ";" 'leuven--smart-punctuation-semicolon)
-    (local-set-key [39] 'leuven--smart-punctuation-apostrophe)
-    (local-set-key "\"" 'leuven--smart-punctuation-quotation-mark))
+    (local-set-key ":" 'leuven-smart-punctuation-colon)
+    (local-set-key "?" 'leuven-smart-punctuation-question-mark)
+    (local-set-key "!" 'leuven-smart-punctuation-exclamation-mark)
+    (local-set-key ";" 'leuven-smart-punctuation-semicolon)
+    (local-set-key [39] 'leuven-smart-punctuation-apostrophe)
+    (local-set-key "\"" 'leuven-smart-punctuation-quotation-mark))
 
-  (add-hook 'text-mode-hook 'leuven--smart-punctuation)
-  (add-hook 'message-mode-hook 'leuven--smart-punctuation)
+  (add-hook 'text-mode-hook 'leuven-smart-punctuation)
+  (add-hook 'message-mode-hook 'leuven-smart-punctuation)
 
 ;;** 25.6 (info "(emacs)Case") Conversion Commands
 
@@ -6093,8 +6094,6 @@ From %c"
                                                     ; loaded
              (fboundp 'try-to-add-imenu)) ; `imenu' has been loaded
 
-    (try-require 'imenu+)
-
     (setq org-src-blocks-imenu-generic-expression
           `(("Snippets" ,org-babel-src-name-w-name-regexp 2)))
 
@@ -6349,9 +6348,6 @@ From %c"
   ;; support for LaTeX documents
   (GNUEmacs
     (with-eval-after-load "latex"
-
-      ;; ;; TEST ??
-      ;; (add-hook 'tex-mode-hook 'imenu-add-menubar-index)
 
       ;; ;; LaTeX-sensitive spell checking
       ;; (add-hook 'tex-mode-hook
@@ -6620,13 +6616,10 @@ From %c"
   (leuven--section "26.2 Top-Level Definitions, or (emacs)Defuns")
 
   (GNUEmacs
-    ;; making buffer indexes as menus (awesome!)
-    (when (try-require 'imenu-XXX)
-      ;; imenu-add-to-menubar: Command attempted to use minibuffer while in
-      ;; minibuffer
+    ;; making buffer indexes as menus
+    (when (try-require 'imenu)          ; awesome!
 
-      ;; automatically add Imenu to the menu bar in /any/ mode that supports
-      ;; it
+      ;; automatically add Imenu to the menu bar in /any/ mode that supports it
       (defun try-to-add-imenu ()
         (condition-case nil
             (imenu-add-to-menubar "Imenu")
@@ -6635,6 +6628,8 @@ From %c"
 
       ;; show current function in mode line (based on Imenu)
       (which-func-mode 1)))             ; ~ Stickyfunc mode (in header line)
+
+    ;; (try-require 'imenu+)
 
 ;;** 26.3 (info "(emacs)Program Indent")ation
 
@@ -8536,6 +8531,13 @@ From %c"
   ;; translate ANSI escape sequences into faces (within Shell mode)
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
+  (defun add-mode-line-dirtrack (&optional _string)
+    (rename-buffer (concat "*shell " default-directory "*")))
+
+  (add-hook 'shell-mode-hook 'add-mode-line-dirtrack)
+
+  (add-hook 'comint-output-filter-functions 'add-mode-line-dirtrack nil t)
+
   (setenv "PAGER" "/usr/bin/cat")
 
 ;;** 36.4 Shell Prompts
@@ -9480,7 +9482,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131207.2237]--")
+(message "* --[ Loaded Emacs Leuven 20131208.0017]--")
 
 (provide 'emacs-leuven)
 

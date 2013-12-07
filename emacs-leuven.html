@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-07 Sat 22:38 -->
+  <title>Emacs Leuven</title><!-- 2013-12-08 Sun 00:18 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131207.2237</span>
+"color: #4C886B; font-style: italic;">Version: 20131208.0017</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131207.2237]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131208.0017]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -2177,6 +2177,7 @@
           circe
           <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">dictionary</span>
+          dired+
           ess
           fuzzy
           git-commit-mode
@@ -2193,7 +2194,8 @@
 "color: #4C886B; font-style: italic;">jabber</span>
           ledger-mode
           leuven-theme
-          multi-term
+          <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">multi-term</span>
           <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">org</span>
           <span style="color: #4C886B;">;; </span><span style=
@@ -8093,7 +8095,7 @@ M-: (executable-find "diff") RET
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">replace space by nobreak-space where it fits well</span>
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--smart-punctuation-colon</span> ()
+"color: #006699;">leuven-smart-punctuation-colon</span> ()
     <span style=
 "color: #008000;">"Replace space by nobreak-space in front of a colon."</span>
     (interactive)
@@ -8139,7 +8141,7 @@ M-: (executable-find "diff") RET
            (insert <span style="color: #036A07;">":"</span>))))
 
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--smart-punctuation-question-mark</span> ()
+"color: #006699;">leuven-smart-punctuation-question-mark</span> ()
     <span style=
 "color: #008000;">"If any, replace space by nobreak-space in front of a question mark."</span>
     (interactive)
@@ -8156,7 +8158,7 @@ M-: (executable-find "diff") RET
       (insert <span style="color: #036A07;">"?"</span>)))
 
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--smart-punctuation-exclamation-mark</span> ()
+"color: #006699;">leuven-smart-punctuation-exclamation-mark</span> ()
     <span style=
 "color: #008000;">"If any, replace space by nobreak-space in front of an exclamation</span>
 <span style="color: #008000;">  mark."</span>
@@ -8174,7 +8176,7 @@ M-: (executable-find "diff") RET
       (insert <span style="color: #036A07;">"!"</span>)))
 
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--smart-punctuation-semicolon</span> ()
+"color: #006699;">leuven-smart-punctuation-semicolon</span> ()
     <span style=
 "color: #008000;">"If any, replace space by nobreak-space in front of a semi-colon."</span>
     (interactive)
@@ -8205,7 +8207,7 @@ M-: (executable-find "diff") RET
       (insert <span style="color: #036A07;">";"</span>)))
 
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--smart-punctuation-apostrophe</span> ()
+"color: #006699;">leuven-smart-punctuation-apostrophe</span> ()
     (interactive)
     (<span style="color: #0000FF;">cond</span>
      ((or (bolp) (not (looking-back <span style="color: #036A07;">"'"</span>)))
@@ -8235,7 +8237,7 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"'"</span>))))))
 
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--smart-punctuation-quotation-mark</span> ()
+"color: #006699;">leuven-smart-punctuation-quotation-mark</span> ()
     <span style=
 "color: #008000;">"Replace two following double quotes by French quotes with nobreak-spaces."</span>
     (interactive)
@@ -8251,26 +8253,26 @@ M-: (executable-find "diff") RET
       (insert <span style="color: #036A07;">"\""</span>)))
 
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--smart-punctuation</span> ()
+"color: #006699;">leuven-smart-punctuation</span> ()
     <span style=
 "color: #008000;">"If any, replace space in front of colons, question marks, exclamation</span>
 <span style=
 "color: #008000;">  marks, etc. to avoid line break problems."</span>
     (interactive)
     (local-set-key <span style=
-"color: #036A07;">":"</span> 'leuven--smart-punctuation-colon)
+"color: #036A07;">":"</span> 'leuven-smart-punctuation-colon)
     (local-set-key <span style=
-"color: #036A07;">"?"</span> 'leuven--smart-punctuation-question-mark)
+"color: #036A07;">"?"</span> 'leuven-smart-punctuation-question-mark)
     (local-set-key <span style=
-"color: #036A07;">"!"</span> 'leuven--smart-punctuation-exclamation-mark)
+"color: #036A07;">"!"</span> 'leuven-smart-punctuation-exclamation-mark)
     (local-set-key <span style=
-"color: #036A07;">";"</span> 'leuven--smart-punctuation-semicolon)
-    (local-set-key [39] 'leuven--smart-punctuation-apostrophe)
+"color: #036A07;">";"</span> 'leuven-smart-punctuation-semicolon)
+    (local-set-key [39] 'leuven-smart-punctuation-apostrophe)
     (local-set-key <span style=
-"color: #036A07;">"\""</span> 'leuven--smart-punctuation-quotation-mark))
+"color: #036A07;">"\""</span> 'leuven-smart-punctuation-quotation-mark))
 
-  (add-hook 'text-mode-hook 'leuven--smart-punctuation)
-  (add-hook 'message-mode-hook 'leuven--smart-punctuation)
+  (add-hook 'text-mode-hook 'leuven-smart-punctuation)
+  (add-hook 'message-mode-hook 'leuven-smart-punctuation)
 </pre>
           </div>
         </div>
@@ -15958,8 +15960,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #4C886B; font-style: italic;">imenu</span><span style=
 "color: #4C886B; font-style: italic;">' has been loaded</span>
 
-    (try-require 'imenu+)
-
     (setq org-src-blocks-imenu-generic-expression
           `((<span style=
 "color: #036A07;">"Snippets"</span> ,org-babel-src-name-w-name-regexp 2)))
@@ -16665,11 +16665,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-      <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">;; TEST ??</span>
-      <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(add-hook 'tex-mode-hook 'imenu-add-menubar-index)</span>
-
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">;; LaTeX-sensitive spell checking</span>
       <span style="color: #4C886B;">;; </span><span style=
@@ -17463,18 +17458,14 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
   (GNUEmacs
     <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">making buffer indexes as menus (awesome!)</span>
-    (<span style="color: #0000FF;">when</span> (try-require 'imenu-<span style=
-"color: #CC0000; background-color: #FFFF88;">XXX</span>)
-      <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">imenu-add-to-menubar: Command attempted to use minibuffer while in</span>
-      <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">minibuffer</span>
+"color: #4C886B; font-style: italic;">making buffer indexes as menus</span>
+    (<span style=
+"color: #0000FF;">when</span> (try-require 'imenu)          <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">awesome!</span>
 
       <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">automatically add Imenu to the menu bar in /any/ mode that supports</span>
-      <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">it</span>
+"color: #4C886B; font-style: italic;">automatically add Imenu to the menu bar in /any/ mode that supports it</span>
       (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">try-to-add-imenu</span> ()
         (<span style="color: #0000FF;">condition-case</span> nil
@@ -17488,6 +17479,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
       (which-func-mode 1)))             <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">~ Stickyfunc mode (in header line)</span>
+
+    <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(try-require 'imenu+)</span>
 </pre>
           </div>
         </div>
@@ -22374,6 +22368,21 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 </pre>
           </div>
 
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">add-mode-line-dirtrack</span> (<span style=
+"color: #6434A3;">&amp;optional</span> _string)
+    (rename-buffer (concat <span style=
+"color: #036A07;">"*shell "</span> default-directory <span style=
+"color: #036A07;">"*"</span>)))
+
+  (add-hook 'shell-mode-hook 'add-mode-line-dirtrack)
+
+  (add-hook 'comint-output-filter-functions 'add-mode-line-dirtrack nil t)
+</pre>
+          </div>
+
           <p>If you ever tried to run a program like <code>git</code> under
           <code>M-x shell</code>, you will have come across the warning
           “terminal is not fully functional” followed by unusable behavior.
@@ -24197,16 +24206,17 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         <h3 id="sec-47-5">Key Bindings</h3>
 
         <div class="outline-text-3" id="text-47-5">
-          <p>The keys <code>C-c LETTER</code> are reserved for user
-          functions.</p>
+          <p>The keys <code>C-c LETTER</code> are <a href=
+          "http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html">
+          reserved for user functions</a>.</p>
 
           <p>You can get a list of all the disabled functions by typing:</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
-"color: #0000FF;">lambda</span>(x)(<span style=
-"color: #0000FF;">if</span>(get x 'disabled)(push x lst))))lst) &lt;RET&gt;
+M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
+"color: #0000FF;">lambda</span> (x) (<span style=
+"color: #0000FF;">if</span> (get x 'disabled) (push x lst)))) lst) &lt;RET&gt;
 </pre>
           </div>
 
@@ -25097,7 +25107,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131207.2238]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131208.0017]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
