@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-07 Sat 12:09 -->
+  <title>Emacs Leuven</title><!-- 2013-12-07 Sat 21:53 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1105,7 +1105,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131207.1208</span>
+"color: #4C886B; font-style: italic;">Version: 20131207.2152</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1227,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131207.1208]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131207.2152]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -2060,15 +2060,16 @@
     (<span style="color: #0000FF;">declare</span> (indent 1) (debug t))
     `(eval-after-load ,file
        '(<span style="color: #0000FF;">progn</span>
-          (message <span style=
+          (<span style="color: #0000FF;">let</span> ((time-start))
+            (message <span style=
 "color: #036A07;">"(Info) {{{ Running code block specific to `</span><span style="color: #036A07;">%s</span><span style="color: #036A07;">'..."</span>
-                   ,file)
-          (setq time-start (float-time))
-          ,@body
-          (message <span style=
+                     ,file)
+            (setq time-start (float-time))
+            ,@body
+            (message <span style=
 "color: #036A07;">"(Info) }}} Running code block specific to `</span><span style="color: #036A07;">%s</span><span style="color: #036A07;">'... done in %.3f s"</span>
-                   ,file
-                   (- (float-time) time-start)))))
+                     ,file
+                     (- (float-time) time-start))))))
 </pre>
           </div>
 
@@ -25091,7 +25092,7 @@ M-: (<span style="color: #0000FF;">let</span>(lst)(mapatoms(<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131207.1208]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131207.2152]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

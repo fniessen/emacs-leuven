@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-07 Sat 12:05>
+# Time-stamp: <2013-12-07 Sat 21:50>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -587,13 +587,14 @@ See function =--find-program= at http://www.visualco.de/src/elisp/.emacs.el.html
     (declare (indent 1) (debug t))
     `(eval-after-load ,file
        '(progn
-          (message "(Info) {{{ Running code block specific to `%s'..."
-                   ,file)
-          (setq time-start (float-time))
-          ,@body
-          (message "(Info) }}} Running code block specific to `%s'... done in %.3f s"
-                   ,file
-                   (- (float-time) time-start)))))
+          (let ((time-start))
+            (message "(Info) {{{ Running code block specific to `%s'..."
+                     ,file)
+            (setq time-start (float-time))
+            ,@body
+            (message "(Info) }}} Running code block specific to `%s'... done in %.3f s"
+                     ,file
+                     (- (float-time) time-start))))))
 #+end_src
 
 #+begin_src emacs-lisp

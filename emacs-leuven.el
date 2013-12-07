@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131207.1207
+;; Version: 20131207.215
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131207.1207]--")
+(message "* --[ Loading Emacs Leuven 20131207.215]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -464,13 +464,14 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     (declare (indent 1) (debug t))
     `(eval-after-load ,file
        '(progn
-          (message "(Info) {{{ Running code block specific to `%s'..."
-                   ,file)
-          (setq time-start (float-time))
-          ,@body
-          (message "(Info) }}} Running code block specific to `%s'... done in %.3f s"
-                   ,file
-                   (- (float-time) time-start)))))
+          (let ((time-start))
+            (message "(Info) {{{ Running code block specific to `%s'..."
+                     ,file)
+            (setq time-start (float-time))
+            ,@body
+            (message "(Info) }}} Running code block specific to `%s'... done in %.3f s"
+                     ,file
+                     (- (float-time) time-start))))))
 
 )                                       ; chapter 0 ends here
 
@@ -9476,7 +9477,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131207.1208]--")
+(message "* --[ Loaded Emacs Leuven 20131207.2151]--")
 
 (provide 'emacs-leuven)
 
