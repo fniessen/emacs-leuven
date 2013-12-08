@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-08 Sun 21:45>
+# Time-stamp: <2013-12-09 Mon 00:08>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -128,10 +128,10 @@ echo "$(date '+%Y%m%d.%H%M')"
 #+begin_src emacs-lisp
 ;;; User Customizable Internal Variables
 
-(defgroup emacs-leuven nil
-  "Emacs Leuven."
-  :group 'files
-  :group 'comm)
+(defgroup leuven nil
+  "Set of Emacs customizations (better defaults)."
+  :group 'convenience
+  :group 'text)
 
 (defcustom leuven-load-verbose nil
   "If non-nil, means show messages describing progress of loading Emacs Leuven."
@@ -319,6 +319,35 @@ distro) without impacting on stuff you have added by hand.
 #+end_src
 
 #+begin_src emacs-lisp
+  ;; require a feature/library if available; if not, fail silently
+  (defun try-require (feature)
+    "Attempt to load a feature or library.
+
+  Return true if the library given as argument is successfully loaded. If not,
+  just print a message."
+    (condition-case err
+        (progn                            ; protected form
+          (if (stringp feature)
+              (load-library feature)
+            (require feature))
+          t)                              ; necessary for correct behavior in
+                                          ; conditional expressions
+      (file-error
+       (message "Requiring `%s'... missing" feature)
+       nil)))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; TEMPORARY
+  ;; wrapper around `eval-after-load' (added in GNU Emacs 24.4)
+  (defmacro with-eval-after-load (mode &rest body)
+    "`eval-after-load' MODE evaluate BODY."
+    (declare (indent defun))
+    `(eval-after-load ,mode
+       '(progn ,@body)))
+#+end_src
+
+#+begin_src emacs-lisp
 )                                       ; chapter 0-loading-libraries ends here
 #+end_src
 
@@ -467,134 +496,6 @@ See function =--find-program= at http://www.visualco.de/src/elisp/.emacs.el.html
 
   ;; hit `C-g' while it's frozen to get an ELisp backtrace
   (setq debug-on-quit nil)
-#+end_src
-
-** Tree of all of the "require" dependencies
-
-#+begin_src emacs-lisp
-  (defconst require-depth 0
-    "Starting depth for load tree.")
-
-  (defvar leuven--missing-packages nil
-    "List of packages that `try-require' or `locate-library' can't find.")
-
-  (defadvice locate-library (around leuven-locate-library activate)
-    "Locate Emacs library named LIBRARY and report time spent."
-    (let ((filename (ad-get-arg 0))
-          (find-file-time-start (float-time))
-          (prefix (concat (make-string (* 8 require-depth) ? ) "    ")))
-      (if ad-do-it
-          (when leuven-load-verbose
-            (message "(Info) %sLocating library `%s'... located (in %.3f s)"
-                     prefix filename
-                     (- (float-time) find-file-time-start)))
-        (add-to-list 'leuven--missing-packages filename 'append)
-        (when leuven-load-verbose
-          (message "(Info) %sLocating library `%s'... missing (in %.3f s)"
-                   prefix filename
-                   (- (float-time) find-file-time-start))))))
-
-  ;; require a feature/library if available; if not, fail silently
-  (defun try-require (feature)
-    "Attempt to load a feature or library.
-
-  Return true if the library given as argument is successfully loaded. If not,
-  instead of an error, just add the package to a list of missing packages."
-    (let ((prefix (concat (make-string (* 8 require-depth) ? ) "    "))
-          time-start)
-      (condition-case err
-          ;; protected form
-          (progn
-            (if (stringp feature)
-                (load-library feature)
-              (setq time-start (float-time))
-              (require feature))
-            ;; return t (necessary for correct behavior in conditions,
-            ;; when leuven-load-verbose is nil)
-            t)
-        ;; error handler
-        (file-error                     ; condition
-         (progn
-           (when leuven-load-verbose
-             (message "(Info) %sRequiring `%s' <from `%s'>... missing"
-                      prefix feature
-                      (ignore-errors (file-name-base load-file-name))))
-           (add-to-list 'leuven--missing-packages feature 'append))
-         nil))))
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; make loaded files give a message
-  (when leuven-load-verbose
-    (GNUEmacs
-      (defadvice load (around leuven-load activate)
-        "Execute a file of Lisp code named FILE and report time spent."
-        (let ((filename (ad-get-arg 0))
-              (find-file-time-start (float-time))
-              (prefix-open (concat (make-string (* 8 require-depth) ? ) "└── "))
-              (prefix-close (concat (make-string (* 8 require-depth) ? ) "    ")))
-          (ad-disable-advice 'locate-library 'around 'leuven-locate-library)
-          (message "(Info) %sLoading `%s' <from `%s'>...%s"
-                   prefix-open filename
-                   (ignore-errors (file-name-base load-file-name))
-                   (ignore-errors
-                     (if (not (string-match-p
-                               (concat "^" (expand-file-name filename)
-                                       "\\.?e?l?c?")
-                               (locate-library filename)))
-                         (concat " " (locate-library filename))
-                       "")))            ; don't print full file name once again!
-          (ad-activate 'locate-library)
-          ad-do-it
-          (message "(Info) %sLoading `%s' <from `%s'>... loaded in %.3f s"
-                   prefix-close filename
-                   (ignore-errors (file-name-base load-file-name))
-                   (- (float-time) find-file-time-start))))
-
-      (defadvice require (around leuven-require activate)
-        "Leave a trace of packages being loaded."
-        (let* ((feature (ad-get-arg 0))
-               (prefix-open (concat (make-string (* 8 require-depth) ? ) "└── "))
-               (prefix-close (concat (make-string (* 8 require-depth) ? ) "    ")))
-          (cond ((featurep feature)
-                 (message "(Info) %sRequiring `%s' <from `%s'>... already loaded"
-                          prefix-open feature
-                          (ignore-errors (file-name-base load-file-name)))
-                 ;; in the case `ad-do-it' is not called, you have to set the
-                 ;; return value yourself!
-                 (setq ad-return-value feature))
-                (t
-                 (let ((time-start))
-                   (ad-disable-advice 'locate-library 'around 'leuven-locate-library)
-                   (message "(Info) %sRequiring `%s' <from `%s'>... %s"
-                            prefix-open feature
-                            (ignore-errors (file-name-base load-file-name))
-                            (locate-library (symbol-name feature)))
-                   (ad-activate 'locate-library)
-                   (setq time-start (float-time))
-                   (let ((require-depth (1+ require-depth)))
-                     ad-do-it)
-                   (message "(Info) %sRequiring `%s' <from `%s'>... loaded in %.3f s"
-                            prefix-close feature
-                            (ignore-errors (file-name-base load-file-name))
-                            (- (float-time) time-start)))))))))
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; wrapper around `eval-after-load' (added in GNU Emacs 24.4)
-  (defmacro with-eval-after-load (file &rest body)
-    "Execute BODY after FILE is loaded."
-    (declare (indent 1) (debug t))
-    `(eval-after-load ,file
-       '(progn
-          (let ((time-start))
-            (message "(Info) {{{ Running code block specific to `%s'..."
-                     ,file)
-            (setq time-start (float-time))
-            ,@body
-            (message "(Info) }}} Running code block specific to `%s'... done in %.3f s"
-                     ,file
-                     (- (float-time) time-start))))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -12666,9 +12567,9 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
     "Change Shell buffer's name to current directory."
     (rename-buffer (concat "*shell " default-directory "*")))
 
-  (add-hook 'shell-mode-hook 'leuven--rename-buffer-to-curdir)
+  ;; (add-hook 'shell-mode-hook 'leuven--rename-buffer-to-curdir)
 
-  (add-hook 'comint-output-filter-functions 'leuven--rename-buffer-to-curdir nil t)
+  (add-hook 'comint-output-filter-functions 'leuven--rename-buffer-to-curdir)
 #+end_src
 
 If you ever tried to run a program like =git= under =M-x shell=, you will have come
@@ -14321,11 +14222,6 @@ To get a backtrace when a specific regexp is displayed in the echo area
 #+end_src
 
 #+begin_src emacs-lisp
-;; warn that some packages were missing
-(when leuven-load-verbose
-  (dolist (pkg leuven--missing-packages)
-    (message "(warning) Package `%s' not found" pkg)))
-
 (message "Loading `%s'...done (in %.3f s)"
          load-file-name
          (- (float-time) leuven-before-time))
