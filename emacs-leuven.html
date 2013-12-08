@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-08 Sun 00:18 -->
+  <title>Emacs Leuven</title><!-- 2013-12-08 Sun 21:49 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -104,7 +104,15 @@
             </ul>
           </li>
 
-          <li><a href="#sec-13">The Mark and the Region</a></li>
+          <li>
+            <a href="#sec-13">The Mark and the Region</a>
+
+            <ul>
+              <li><a href="#sec-13-1">Commands to Mark Textual Objects</a></li>
+
+              <li><a href="#sec-13-2">Operating on the Region</a></li>
+            </ul>
+          </li>
 
           <li>
             <a href="#sec-14">Killing and Moving Text</a>
@@ -1105,7 +1113,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131208.0017</span>
+"color: #4C886B; font-style: italic;">Version: 20131208.2148</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1227,7 +1235,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131208.0017]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131208.2148]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -2984,18 +2992,50 @@
 "color: #4C886B; font-style: italic;">* 11 The (info "(emacs)Mark") and the Region</span>
 
 (leuven--chapter leuven-chapter-11-mark <span style=
-"color: #036A07;">"12 Killing and Moving Text"</span>
+"color: #036A07;">"11 Killing and Moving Text"</span>
+</pre>
+        </div>
+      </div>
 
+      <div id="outline-container-sec-13-1" class="outline-3">
+        <h3 id="sec-13-1">Commands to Mark Textual Objects</h3>
+
+        <div class="outline-text-3" id="text-13-1">
+          <dl class="org-dl">
+            <dt><code>M-@</code></dt>
+
+            <dd>Set mark after end of next <b>word</b> (<code>mark-word</code>)
+            without moving point.</dd>
+
+            <dt><code>C-M-@</code></dt>
+
+            <dd>Set mark after end of following <b>balanced expression</b>
+            (<code>mark-sexp</code>) without moving point.</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div id="outline-container-sec-13-2" class="outline-3">
+        <h3 id="sec-13-2">Operating on the Region</h3>
+
+        <div class="outline-text-3" id="text-13-2">
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">inserting text while the mark is active causes the text in the region to</span>
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">be deleted first</span>
   (delete-selection-mode 1)
+</pre>
+          </div>
 
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
 )                                       <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">chapter 11 ends here</span>
 </pre>
+          </div>
         </div>
       </div>
     </div>
@@ -9417,6 +9457,9 @@ M-: (executable-find "diff") RET
               (quote face) (quote mode-line-emphasis) (quote help-echo)
               “Outline path”)) signaled (wrong-type-argument stringp nil)</p>
             </div>
+
+            <p>Note that <b>Imenu</b> does display the current Org subtree in
+            the mode line, not the full outline path.</p>
           </div>
         </div>
 
@@ -22371,15 +22414,17 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">add-mode-line-dirtrack</span> (<span style=
+"color: #006699;">leuven--rename-buffer-to-curdir</span> (<span style=
 "color: #6434A3;">&amp;optional</span> _string)
+    <span style=
+"color: #008000;">"Change Shell buffer's name to current directory."</span>
     (rename-buffer (concat <span style=
 "color: #036A07;">"*shell "</span> default-directory <span style=
 "color: #036A07;">"*"</span>)))
 
-  (add-hook 'shell-mode-hook 'add-mode-line-dirtrack)
+  (add-hook 'shell-mode-hook 'leuven--rename-buffer-to-curdir)
 
-  (add-hook 'comint-output-filter-functions 'add-mode-line-dirtrack nil t)
+  (add-hook 'comint-output-filter-functions 'leuven--rename-buffer-to-curdir nil t)
 </pre>
           </div>
 
@@ -25107,7 +25152,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131208.0017]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131208.2149]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

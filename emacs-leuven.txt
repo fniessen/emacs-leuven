@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-08 Sun 00:25>
+# Time-stamp: <2013-12-08 Sun 21:45>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1133,12 +1133,27 @@ parameters, even those on continuation lines.
 #+begin_src emacs-lisp
 ;;* 11 The (info "(emacs)Mark") and the Region
 
-(leuven--chapter leuven-chapter-11-mark "12 Killing and Moving Text"
+(leuven--chapter leuven-chapter-11-mark "11 Killing and Moving Text"
+#+end_src
 
+** Commands to Mark Textual Objects
+
+- =M-@= ::
+     Set mark after end of next *word* (=mark-word=) without moving point.
+
+- =C-M-@= ::
+     Set mark after end of following *balanced expression* (=mark-sexp=) without
+     moving point.
+
+** Operating on the Region
+
+#+begin_src emacs-lisp
   ;; inserting text while the mark is active causes the text in the region to
   ;; be deleted first
   (delete-selection-mode 1)
+#+end_src
 
+#+begin_src emacs-lisp
 )                                       ; chapter 11 ends here
 #+end_src
 
@@ -4995,7 +5010,8 @@ Display outline path in mode line:
 (eval (org-propertize (org-display-outline-path nil t " / " t) (quote face) (quote mode-line-emphasis) (quote help-echo) "Outline path")) signaled (wrong-type-argument stringp nil)
 *************** END
 
-Note that *Imenu* does display the current Org subtree in the mode line.
+Note that *Imenu* does display the current Org subtree in the mode line, not the
+full outline path.
 
 *** 2.4 Motion
 
@@ -12646,12 +12662,13 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 #+end_src
 
 #+begin_src emacs-lisp
-  (defun add-mode-line-dirtrack (&optional _string)
+  (defun leuven--rename-buffer-to-curdir (&optional _string)
+    "Change Shell buffer's name to current directory."
     (rename-buffer (concat "*shell " default-directory "*")))
 
-  (add-hook 'shell-mode-hook 'add-mode-line-dirtrack)
+  (add-hook 'shell-mode-hook 'leuven--rename-buffer-to-curdir)
 
-  (add-hook 'comint-output-filter-functions 'add-mode-line-dirtrack nil t)
+  (add-hook 'comint-output-filter-functions 'leuven--rename-buffer-to-curdir nil t)
 #+end_src
 
 If you ever tried to run a program like =git= under =M-x shell=, you will have come

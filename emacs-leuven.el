@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131208.0015
+;; Version: 20131208.2147
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131208.0015]--")
+(message "* --[ Loading Emacs Leuven 20131208.2147]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -802,7 +802,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
 ;;* 11 The (info "(emacs)Mark") and the Region
 
-(leuven--chapter leuven-chapter-11-mark "12 Killing and Moving Text"
+(leuven--chapter leuven-chapter-11-mark "11 Killing and Moving Text"
 
   ;; inserting text while the mark is active causes the text in the region to
   ;; be deleted first
@@ -8531,12 +8531,13 @@ From %c"
   ;; translate ANSI escape sequences into faces (within Shell mode)
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
-  (defun add-mode-line-dirtrack (&optional _string)
+  (defun leuven--rename-buffer-to-curdir (&optional _string)
+    "Change Shell buffer's name to current directory."
     (rename-buffer (concat "*shell " default-directory "*")))
 
-  (add-hook 'shell-mode-hook 'add-mode-line-dirtrack)
+  (add-hook 'shell-mode-hook 'leuven--rename-buffer-to-curdir)
 
-  (add-hook 'comint-output-filter-functions 'add-mode-line-dirtrack nil t)
+  (add-hook 'comint-output-filter-functions 'leuven--rename-buffer-to-curdir nil t)
 
   (setenv "PAGER" "/usr/bin/cat")
 
@@ -9482,7 +9483,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131208.0017]--")
+(message "* --[ Loaded Emacs Leuven 20131208.2148]--")
 
 (provide 'emacs-leuven)
 
