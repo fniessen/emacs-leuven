@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DATE:      2012-06-22
-#+Time-stamp: <2013-11-09 Sat 10:25>
+#+Time-stamp: <2013-12-10 Tue 23:15>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en
@@ -53,6 +53,7 @@ Global key bindings.
 | <S-f2>   | org-save-buffer-and-do-related           |
 | <C-f2>   | (for interaction-log mode)               |
 | <f3>     | find-file (or helm-for-files)            |
+| <f4>     | helm-imenu                               |
 | <M-f4>   | save-buffers-kill-terminal               |
 | <f5>     | delete-other-windows                     |
 | <f6>     | other-window                             |
