@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131209.0009
+;; Version: 20131210.1028
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131209.0009]--")
+(message "* --[ Loading Emacs Leuven 20131210.1028]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -235,29 +235,31 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (leuven-add-to-load-path leuven-user-lisp-directory)
 
   ;; require a feature/library if available; if not, fail silently
-  (defun try-require (feature)
-    "Attempt to load a feature or library.
+  (unless (fboundp 'try-require)
+    (defun try-require (feature)
+      "Attempt to load a feature or library.
 
-  Return true if the library given as argument is successfully loaded. If not,
-  just print a message."
-    (condition-case err
-        (progn                            ; protected form
-          (if (stringp feature)
-              (load-library feature)
-            (require feature))
-          t)                              ; necessary for correct behavior in
-                                          ; conditional expressions
-      (file-error
-       (message "Requiring `%s'... missing" feature)
-       nil)))
+    Return true if the library given as argument is successfully loaded. If not,
+    just print a message."
+      (condition-case err
+          (progn
+            (if (stringp feature)
+                (load-library feature)
+              (require feature))
+            t)                              ; necessary for correct behavior in
+                                            ; conditional expressions
+        (file-error
+         (message "Requiring `%s'... missing" feature)
+         nil))))
 
   ;; TEMPORARY
-  ;; wrapper around `eval-after-load' (added in GNU Emacs 24.4)
-  (defmacro with-eval-after-load (mode &rest body)
-    "`eval-after-load' MODE evaluate BODY."
-    (declare (indent defun))
-    `(eval-after-load ,mode
-       '(progn ,@body)))
+  (unless (fboundp 'with-eval-after-load)
+    ;; wrapper around `eval-after-load' (added in GNU Emacs 24.4)
+    (defmacro with-eval-after-load (mode &rest body)
+      "`eval-after-load' MODE evaluate BODY."
+      (declare (indent defun))
+      `(eval-after-load ,mode
+         '(progn ,@body))))
 
 )                                       ; chapter 0-loading-libraries ends here
 
@@ -2006,7 +2008,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
         (setq helm-locate-command "es -s %s %s"))
 
       (global-set-key
-        (kbd "<f3>") 'helm-for-files)
+        (kbd "<f3>") 'helm-for-files)   ; better than `helm-find-files'
 
       (global-set-key
         (kbd "M-x") 'helm-M-x)
@@ -2027,6 +2029,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
       (global-set-key
         (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
+                                        ; and `C-c =' (like in RefTeX)?
 
       (global-set-key
         (kbd "C-c o") 'helm-occur)
@@ -5994,31 +5997,35 @@ From %c"
 
   (leuven--section "15.10 (org)Interaction")
 
-  ;; extension of Imenu
-  (when (and (fboundp 'org-babel-execute-src-block) ; `org-babel' has been
-                                                    ; loaded
-             (fboundp 'try-to-add-imenu)) ; `imenu' has been loaded
+  (with-eval-after-load "org"
+    ;; maximum level for Imenu access to Org-mode headlines
+    (setq org-imenu-depth 3)
 
-    (setq org-src-blocks-imenu-generic-expression
-          `(("Snippets" ,org-babel-src-name-w-name-regexp 2)))
+    ;; extension of Imenu
+    (when (and (fboundp 'org-babel-execute-src-block) ; `org-babel' has been
+                                                      ; loaded
+               (fboundp 'try-to-add-imenu)) ; `imenu' has been loaded
 
-    (add-hook 'org-mode-hook
-              (lambda ()
-                (setq imenu-generic-expression
-                      org-src-blocks-imenu-generic-expression))))
+      (setq org-src-blocks-imenu-generic-expression
+            `(("Snippets" ,org-babel-src-name-w-name-regexp 2)))
+
+      (add-hook 'org-mode-hook
+                (lambda ()
+                  (setq imenu-generic-expression
+                        org-src-blocks-imenu-generic-expression))))
 
 
-  ;; alternative to imenu
-  (defun dan/find-in-buffer ()
-    (interactive)
-    (let ((targets
-           `(("<named src blocks>" . ,org-babel-src-name-regexp)
-             ("<src block results>" . ,org-babel-result-regexp))))
-      (occur
-       (cdr
-        (assoc
-         (completing-read "Find: " (mapcar #'car targets)) targets)))
-      (other-window 1)))
+    ;; alternative to imenu
+    (defun dan/find-in-buffer ()
+      (interactive)
+      (let ((targets
+             `(("<named src blocks>" . ,org-babel-src-name-regexp)
+               ("<src block results>" . ,org-babel-result-regexp))))
+        (occur
+         (cdr
+          (assoc
+           (completing-read "Find: " (mapcar #'car targets)) targets)))
+        (other-window 1))))
 
   ;; keep my encrypted data (like account passwords) in my Org mode
   ;; files with a special tag instead
@@ -8440,9 +8447,12 @@ From %c"
     "Change Shell buffer's name to current directory."
     (rename-buffer (concat "*shell " default-directory "*")))
 
-  ;; (add-hook 'shell-mode-hook 'leuven--rename-buffer-to-curdir)
-
-  (add-hook 'comint-output-filter-functions 'leuven--rename-buffer-to-curdir)
+  (add-hook 'shell-mode-hook
+            (lambda ()
+              (leuven--rename-buffer-to-curdir)
+              (add-hook 'comint-output-filter-functions
+                        'leuven--rename-buffer-to-curdir nil t)))
+                                        ; local to Shell comint
 
   (setenv "PAGER" "/usr/bin/cat")
 
@@ -9383,7 +9393,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131209.0009]--")
+(message "* --[ Loaded Emacs Leuven 20131210.1029]--")
 
 (provide 'emacs-leuven)
 

@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-09 Mon 00:08>
+# Time-stamp: <2013-12-10 Tue 10:32>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -320,31 +320,33 @@ distro) without impacting on stuff you have added by hand.
 
 #+begin_src emacs-lisp
   ;; require a feature/library if available; if not, fail silently
-  (defun try-require (feature)
-    "Attempt to load a feature or library.
+  (unless (fboundp 'try-require)
+    (defun try-require (feature)
+      "Attempt to load a feature or library.
 
-  Return true if the library given as argument is successfully loaded. If not,
-  just print a message."
-    (condition-case err
-        (progn                            ; protected form
-          (if (stringp feature)
-              (load-library feature)
-            (require feature))
-          t)                              ; necessary for correct behavior in
-                                          ; conditional expressions
-      (file-error
-       (message "Requiring `%s'... missing" feature)
-       nil)))
+    Return true if the library given as argument is successfully loaded. If not,
+    just print a message."
+      (condition-case err
+          (progn
+            (if (stringp feature)
+                (load-library feature)
+              (require feature))
+            t)                              ; necessary for correct behavior in
+                                            ; conditional expressions
+        (file-error
+         (message "Requiring `%s'... missing" feature)
+         nil))))
 #+end_src
 
 #+begin_src emacs-lisp
   ;; TEMPORARY
-  ;; wrapper around `eval-after-load' (added in GNU Emacs 24.4)
-  (defmacro with-eval-after-load (mode &rest body)
-    "`eval-after-load' MODE evaluate BODY."
-    (declare (indent defun))
-    `(eval-after-load ,mode
-       '(progn ,@body)))
+  (unless (fboundp 'with-eval-after-load)
+    ;; wrapper around `eval-after-load' (added in GNU Emacs 24.4)
+    (defmacro with-eval-after-load (mode &rest body)
+      "`eval-after-load' MODE evaluate BODY."
+      (declare (indent defun))
+      `(eval-after-load ,mode
+         '(progn ,@body))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2710,8 +2712,14 @@ corresponding files in the other directory.
 - Display the *contents* of the archive
 - *View or edit* the actual files contained withing the archive
 
-Using the Emacs Dired utility, you can compress or uncompress a file by
-pressing =Z=.
+Using the Emacs Dired utility, you can compress or uncompress marked files
+(using =gzip=) by pressing =Z=.
+
+If you want to create one =tar= file from marked files, you can use:
+
+#+begin_example
+! tar -cf out.tar *
+#+end_example
 
 *** On Windows                                                       :noexport:
 
@@ -3086,7 +3094,7 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
         (setq helm-locate-command "es -s %s %s"))
 
       (global-set-key
-        (kbd "<f3>") 'helm-for-files)
+        (kbd "<f3>") 'helm-for-files)   ; better than `helm-find-files'
 
       (global-set-key
         (kbd "M-x") 'helm-M-x)
@@ -3107,6 +3115,7 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
 
       (global-set-key
         (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
+                                        ; and `C-c =' (like in RefTeX)?
 
       (global-set-key
         (kbd "C-c o") 'helm-occur)
@@ -8758,31 +8767,35 @@ For security reasons, evaluation is not turned on by default.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; extension of Imenu
-  (when (and (fboundp 'org-babel-execute-src-block) ; `org-babel' has been
-                                                    ; loaded
-             (fboundp 'try-to-add-imenu)) ; `imenu' has been loaded
+  (with-eval-after-load "org"
+    ;; maximum level for Imenu access to Org-mode headlines
+    (setq org-imenu-depth 3)
 
-    (setq org-src-blocks-imenu-generic-expression
-          `(("Snippets" ,org-babel-src-name-w-name-regexp 2)))
+    ;; extension of Imenu
+    (when (and (fboundp 'org-babel-execute-src-block) ; `org-babel' has been
+                                                      ; loaded
+               (fboundp 'try-to-add-imenu)) ; `imenu' has been loaded
 
-    (add-hook 'org-mode-hook
-              (lambda ()
-                (setq imenu-generic-expression
-                      org-src-blocks-imenu-generic-expression))))
+      (setq org-src-blocks-imenu-generic-expression
+            `(("Snippets" ,org-babel-src-name-w-name-regexp 2)))
+
+      (add-hook 'org-mode-hook
+                (lambda ()
+                  (setq imenu-generic-expression
+                        org-src-blocks-imenu-generic-expression))))
 
 
-  ;; alternative to imenu
-  (defun dan/find-in-buffer ()
-    (interactive)
-    (let ((targets
-           `(("<named src blocks>" . ,org-babel-src-name-regexp)
-             ("<src block results>" . ,org-babel-result-regexp))))
-      (occur
-       (cdr
-        (assoc
-         (completing-read "Find: " (mapcar #'car targets)) targets)))
-      (other-window 1)))
+    ;; alternative to imenu
+    (defun dan/find-in-buffer ()
+      (interactive)
+      (let ((targets
+             `(("<named src blocks>" . ,org-babel-src-name-regexp)
+               ("<src block results>" . ,org-babel-result-regexp))))
+        (occur
+         (cdr
+          (assoc
+           (completing-read "Find: " (mapcar #'car targets)) targets)))
+        (other-window 1))))
 #+end_src
 
 *** Org-crypt
@@ -9631,6 +9644,8 @@ Also =who-calls.el=
 Imenu is a great tool allowing you to go to a function definition, but only if
 the definition is in the buffer you are currently editing (it won't jump and
 open another file).
+
+XXX Autoloaded?
 
 #+begin_src emacs-lisp
 ;;** 26.2 Top-Level Definitions, or (info "(emacs)Defuns")
@@ -12562,14 +12577,19 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 #+end_src
 
+*************** TODO Fix case when 2 Shell buffers are run in the same dir (same name error!)
+
 #+begin_src emacs-lisp
   (defun leuven--rename-buffer-to-curdir (&optional _string)
     "Change Shell buffer's name to current directory."
     (rename-buffer (concat "*shell " default-directory "*")))
 
-  ;; (add-hook 'shell-mode-hook 'leuven--rename-buffer-to-curdir)
-
-  (add-hook 'comint-output-filter-functions 'leuven--rename-buffer-to-curdir)
+  (add-hook 'shell-mode-hook
+            (lambda ()
+              (leuven--rename-buffer-to-curdir)
+              (add-hook 'comint-output-filter-functions
+                        'leuven--rename-buffer-to-curdir nil t)))
+                                        ; local to Shell comint
 #+end_src
 
 If you ever tried to run a program like =git= under =M-x shell=, you will have come
