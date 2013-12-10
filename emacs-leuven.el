@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131210.1028
+;; Version: 20131210.1958
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131210.1028]--")
+(message "* --[ Loading Emacs Leuven 20131210.1958]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -377,7 +377,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (XEmacs
     (setq stack-trace-on-error t))
 
-  ;; hit `C-g' while it's frozen to get an ELisp backtrace
+  ;; hit `C-g' while it's frozen to get an Emacs Lisp backtrace
   (setq debug-on-quit nil)
 
 )                                       ; chapter 0 ends here
@@ -423,6 +423,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           ess
           fuzzy
           git-commit-mode
+          ;; git-gutter
           ;; gnuplot-mode                  ; or gnuplot?
           graphviz-dot-mode
           helm
@@ -610,7 +611,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     (interactive)
     (describe-function major-mode))
 
-  ;; look up subject in (the indices of the) ELisp manual
+  ;; look up subject in (the indices of the) Emacs Lisp manual
   (global-set-key
     (kbd "C-h E") 'elisp-index-search)
 
@@ -637,8 +638,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     (kbd "<f1>") 'info)
 
   ;; display symbol definitions, as found in the relevant manual
-  ;; (for AWK, C, ELisp, LaTeX, M4, Makefile, Sh and other languages that have
-  ;; documentation in Info)
+  ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
+  ;; have documentation in Info)
   (global-set-key
     (kbd "<C-f1>") 'info-lookup-symbol)
 
@@ -887,7 +888,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (setq scroll-conservatively 10000)    ; or `most-positive-fixnum'
 
   ;; number of lines of margin at the top and bottom of a window
-  (setq scroll-margin 3)                ; also for `isearch-forward'
+  (setq scroll-margin 1) ; or 3?        ; also for `isearch-forward'
 
   ;; scrolling down looks much better
   (setq auto-window-vscroll nil)
@@ -994,8 +995,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
   (leuven--section "14.15 (emacs)Displaying Boundaries")
 
-  ;; visually indicate buffer boundaries and scrolling
-  (setq indicate-buffer-boundaries t)
+  ;; visually indicate buffer boundaries and scrolling in the fringe
+  (setq indicate-buffer-boundaries t)   ; 'left
 
 ;;** 14.16 (info "(emacs)Useless Whitespace")
 
@@ -1012,7 +1013,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
               (unless (eq major-mode 'message-mode)
                 (delete-trailing-whitespace))))
 
-  ;; visually indicate empty lines after the buffer end
+  ;; visually indicate empty lines after the buffer end in the fringe
   (setq-default indicate-empty-lines t)
 
   ;; ;; control highlighting of non-ASCII space and hyphen chars, using the
@@ -2976,7 +2977,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     (interactive)
     (org-cycle t))
 
-  (global-set-key                       ; XXX ok on Elisp, not on LaTeX
+  (global-set-key                       ; XXX ok on Emacs Lisp, not on LaTeX
     (kbd "C-M-]") 'org-cycle-global)    ; <S-tab>?
 
   ;; (defun org-cycle-local ()
@@ -2992,7 +2993,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
       (beginning-of-defun))
     (org-cycle))
 
-  (global-set-key                       ; XXX ok on Elisp, not on LaTeX
+  (global-set-key                       ; XXX ok on Emacs Lisp, not on LaTeX
     (kbd "M-]") 'org-cycle-local)
 
 ;; C-M-] and M-] fold the whole buffer or the current defun.
@@ -6326,6 +6327,10 @@ From %c"
       ;; use PDF mode by default (instead of DVI)
       (setq-default TeX-PDF-mode t)
 
+      ;; rebind the "compile command" to `C-c C-c' in LaTeX mode only
+      (define-key LaTeX-mode-map
+        (kbd "<f9>") 'TeX-command-master)
+
 ;;** 4.2 (info "(auctex)Viewing") the formatted output
 
       (leuven--section "4.2 (auctex)Viewing the formatted output")
@@ -7006,7 +7011,7 @@ From %c"
   ;;   (define-key emacs-lisp-mode-map
   ;;     (kbd "<tab>") 'elisp-indent-or-complete))
 
-  ;;;_  + paredit
+  ;;;_  + paredit                       ; or smartparen (or autopair)?
 
   (autoload 'paredit-mode "paredit"
     "Minor mode for pseudo-structurally editing Lisp code." t)
@@ -7577,18 +7582,41 @@ From %c"
         (add-to-list 'ac-modes 'sword-mode)
 
         ;; ;; delay to completions will be available
-        ;; (setq ac-delay 0.1)
+        ;; (setq ac-delay 0.2)
 
         ;; completion menu will be automatically shown
-        (setq ac-auto-show-menu 0.3)
+        (setq ac-auto-show-menu 0.5)
+
+        ;; limit on number of candidates
+        (setq ac-candidate-limit 100)
+
+        ;; delay to show quick help
+        (setq ac-quick-help-delay 1.0)
+
+        ;; max height of candidate menu
+        (setq ac-menu-height 12)
 
         ;; ;; start auto-completion at current point
         ;; (define-key ac-mode-map
         ;;   (kbd "M-TAB") 'auto-complete)
 
         ;; try expand
-        (define-key ac-complete-mode-map
-          (kbd "<tab>") 'ac-expand))))
+        (define-key ac-completing-map
+          (kbd "<tab>") 'ac-expand)
+
+        (define-key ac-completing-map
+          (kbd "C-?") 'ac-quick-help)
+
+        ;; show a lastly completed candidate help in a "quick help" form
+        (define-key ac-mode-map
+          (kbd "C-c h") 'ac-last-quick-help)
+
+        ;; show a lastly completed candidate help in a "buffer help" form.
+        ;; If you give an argument by `C-u', its help buffer will not disappear
+        ;; automatically.
+        (define-key ac-mode-map
+          (kbd "C-c H") 'ac-last-help)
+)))
 
 )                                       ; chapter 29 ends here
 
@@ -8440,8 +8468,10 @@ From %c"
 
 ;; )
 
-  ;; translate ANSI escape sequences into faces (within Shell mode)
-  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+  ;; ;; translate ANSI escape sequences into text properties
+  ;; (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+  ;;                                       ; enable colorized `ls --color=yes'
+  ;;                                       ; output in shell buffers
 
   (defun leuven--rename-buffer-to-curdir (&optional _string)
     "Change Shell buffer's name to current directory."
@@ -9393,7 +9423,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131210.1029]--")
+(message "* --[ Loaded Emacs Leuven 20131210.1959]--")
 
 (provide 'emacs-leuven)
 
