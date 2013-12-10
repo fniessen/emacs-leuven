@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-10 Tue 20:00 -->
+  <title>Emacs Leuven</title><!-- 2013-12-10 Tue 23:06 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1108,7 +1108,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131210.1959</span>
+"color: #4C886B; font-style: italic;">Version: 20131210.2305</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1230,7 +1230,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131210.1959]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131210.2305]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -16702,8 +16702,11 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">rebind the "compile command" to `C-c C-c' in LaTeX mode only</span>
       (define-key LaTeX-mode-map
-        (kbd <span style=
-"color: #036A07;">"&lt;f9&gt;"</span>) 'TeX-command-master)
+        (kbd <span style="color: #036A07;">"&lt;f9&gt;"</span>)
+        (<span style="color: #0000FF;">lambda</span> ()
+          (interactive)
+          (save-buffer)
+          (TeX-command-master)))
 </pre>
           </div>
 
@@ -22317,17 +22320,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">)</span>
-
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">;; translate ANSI escape sequences into text properties</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)</span>
-  <span style=
-"color: #4C886B;">;;                                       </span><span style=
-"color: #4C886B; font-style: italic;">; enable colorized `ls --color=yes'</span>
-  <span style=
-"color: #4C886B;">;;                                       </span><span style=
-"color: #4C886B; font-style: italic;">; output in shell buffers</span>
 </pre>
           </div>
 
@@ -25073,7 +25065,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131210.2]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131210.2306]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

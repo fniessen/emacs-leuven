@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-10 Tue 19:56>
+# Time-stamp: <2013-12-10 Tue 22:55>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -9265,7 +9265,11 @@ file, AUCTeX gives you a =Command= menu.
 
       ;; rebind the "compile command" to `C-c C-c' in LaTeX mode only
       (define-key LaTeX-mode-map
-        (kbd "<f9>") 'TeX-command-master)
+        (kbd "<f9>")
+        (lambda ()
+          (interactive)
+          (save-buffer)
+          (TeX-command-master)))
 #+end_src
 
 A decent viewer reloads the PDF automatically when the file has changed while
@@ -12618,11 +12622,6 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
     (global-set-key (kbd "C-x ! c") 'leuven-comint-clear)
 
 ;; )
-
-  ;; ;; translate ANSI escape sequences into text properties
-  ;; (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-  ;;                                       ; enable colorized `ls --color=yes'
-  ;;                                       ; output in shell buffers
 #+end_src
 
 *************** TODO Fix case when 2 Shell buffers are run in the same dir (same name error!)

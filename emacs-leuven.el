@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131210.1958
+;; Version: 20131210.2304
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131210.1958]--")
+(message "* --[ Loading Emacs Leuven 20131210.2304]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6329,7 +6329,11 @@ From %c"
 
       ;; rebind the "compile command" to `C-c C-c' in LaTeX mode only
       (define-key LaTeX-mode-map
-        (kbd "<f9>") 'TeX-command-master)
+        (kbd "<f9>")
+        (lambda ()
+          (interactive)
+          (save-buffer)
+          (TeX-command-master)))
 
 ;;** 4.2 (info "(auctex)Viewing") the formatted output
 
@@ -8468,11 +8472,6 @@ From %c"
 
 ;; )
 
-  ;; ;; translate ANSI escape sequences into text properties
-  ;; (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-  ;;                                       ; enable colorized `ls --color=yes'
-  ;;                                       ; output in shell buffers
-
   (defun leuven--rename-buffer-to-curdir (&optional _string)
     "Change Shell buffer's name to current directory."
     (rename-buffer (concat "*shell " default-directory "*")))
@@ -9423,7 +9422,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131210.1959]--")
+(message "* --[ Loaded Emacs Leuven 20131210.2305]--")
 
 (provide 'emacs-leuven)
 
