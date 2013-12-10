@@ -1,6 +1,10 @@
 
 * Tasks
 
+** TODO Check key binding conventions
+
+http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html
+
 ** TODO Check for obsolete (deprecated) variables
 
 ** TODO Improve naming of hook functions
@@ -18,3 +22,5 @@ caller) in the =eval-after-load=.
 ** TODO Put missing packages (on a normal machine) in =eval-after-load=
 
 ** TODO Use =findstr= instead of =grep= on Windows
+
+** TODO Compare my config with http://zeekat.nl/articles/making-emacs-work-for-me.html
