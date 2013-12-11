@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131210.2304
+;; Version: 20131211.1642
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131210.2304]--")
+(message "* --[ Loading Emacs Leuven 20131211.1642]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6324,16 +6324,15 @@ From %c"
 
       (add-hook 'LaTeX-mode-hook 'leuven--LaTeX-mode-hook)
 
-      ;; use PDF mode by default (instead of DVI)
-      (setq-default TeX-PDF-mode t)
+      ;; don't ask user for permission to save files before starting TeX
+      (setq TeX-save-query nil)
 
       ;; rebind the "compile command" to `C-c C-c' in LaTeX mode only
       (define-key LaTeX-mode-map
-        (kbd "<f9>")
-        (lambda ()
-          (interactive)
-          (save-buffer)
-          (TeX-command-master)))
+        (kbd "<f9>") 'TeX-command-master)
+
+      ;; use PDF mode by default (instead of DVI)
+      (setq-default TeX-PDF-mode t)
 
 ;;** 4.2 (info "(auctex)Viewing") the formatted output
 
@@ -8648,7 +8647,12 @@ From %c"
       (or (equal (server-running-p) t)
 
           ;; start the Emacs server
-          (server-start))))             ; ~ 0.20 s
+          (server-start))               ; ~ 0.20 s
+
+      ;; save file without confirmation before returning to the client
+      (defadvice server-edit (before save-buffer-if-needed activate)
+        "Save current buffer before marking it as done."
+        (when server-buffer-clients (save-buffer)))))
 
 )                                       ; chapter 37 ends here
 
@@ -9422,7 +9426,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131210.2305]--")
+(message "* --[ Loaded Emacs Leuven 20131211.1643]--")
 
 (provide 'emacs-leuven)
 

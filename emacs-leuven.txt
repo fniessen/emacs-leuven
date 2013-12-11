@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-10 Tue 22:55>
+# Time-stamp: <2013-12-11 Wed 16:41>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -2725,10 +2725,18 @@ corresponding files in the other directory.
 Using the Emacs Dired utility, you can compress or uncompress marked files
 (using =gzip=) by pressing =Z=.
 
-If you want to create one =tar= file from marked files, you can use:
+If you want to create one *archive* file from marked files, you can use:
 
 #+begin_example
 ! tar -cf out.tar *
+#+end_example
+
+And if you actually want to *compress* the resulting archive, use one of the two
+commands:
+
+#+begin_example
+! tar -cZf out.tar.Z
+! tar -czf out.tar.gz
 #+end_example
 
 *** On Windows                                                       :noexport:
@@ -9260,16 +9268,15 @@ file, AUCTeX gives you a =Command= menu.
 
       (add-hook 'LaTeX-mode-hook 'leuven--LaTeX-mode-hook)
 
-      ;; use PDF mode by default (instead of DVI)
-      (setq-default TeX-PDF-mode t)
+      ;; don't ask user for permission to save files before starting TeX
+      (setq TeX-save-query nil)
 
       ;; rebind the "compile command" to `C-c C-c' in LaTeX mode only
       (define-key LaTeX-mode-map
-        (kbd "<f9>")
-        (lambda ()
-          (interactive)
-          (save-buffer)
-          (TeX-command-master)))
+        (kbd "<f9>") 'TeX-command-master)
+
+      ;; use PDF mode by default (instead of DVI)
+      (setq-default TeX-PDF-mode t)
 #+end_src
 
 A decent viewer reloads the PDF automatically when the file has changed while
@@ -11301,6 +11308,13 @@ Extensible inline text completion mechanism -- really brilliant!
 
 Auto start vs =M-/=.
 
+According to the settings, completion is done by =TAB= or =RET=.
+
+There are other ways to select candidates:
+- =M-1= to select candidate 1,
+- =M-2= to select candidate 2,
+- and so on.
+
 #+begin_src emacs-lisp
   (GNUEmacs
 
@@ -13011,7 +13025,12 @@ creates an X Window and doesn't wait for =(server-edit)=.
       (or (equal (server-running-p) t)
 
           ;; start the Emacs server
-          (server-start))))             ; ~ 0.20 s
+          (server-start))               ; ~ 0.20 s
+
+      ;; save file without confirmation before returning to the client
+      (defadvice server-edit (before save-buffer-if-needed activate)
+        "Save current buffer before marking it as done."
+        (when server-buffer-clients (save-buffer)))))
 
 )                                       ; chapter 37 ends here
 #+end_src

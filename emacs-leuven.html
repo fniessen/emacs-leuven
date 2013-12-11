@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-10 Tue 23:06 -->
+  <title>Emacs Leuven</title><!-- 2013-12-11 Wed 16:45 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1108,7 +1108,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131210.2305</span>
+"color: #4C886B; font-style: italic;">Version: 20131211.1644</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1230,7 +1230,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131210.2305]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131211.1644]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -5625,10 +5625,17 @@ M-: (executable-find "diff") RET
           marked files (using <code>gzip</code>) by pressing
           <code>Z</code>.</p>
 
-          <p>If you want to create one <code>tar</code> file from marked files,
+          <p>If you want to create one <b>archive</b> file from marked files,
           you can use:</p>
           <pre class="example">
 ! tar -cf out.tar *
+</pre>
+
+          <p>And if you actually want to <b>compress</b> the resulting archive,
+          use one of the two commands:</p>
+          <pre class="example">
+! tar -cZf out.tar.Z
+! tar -czf out.tar.gz
 </pre>
         </div>
       </div>
@@ -16696,17 +16703,18 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
       (add-hook 'LaTeX-mode-hook 'leuven--LaTeX-mode-hook)
 
       <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">use PDF mode by default (instead of DVI)</span>
-      (setq-default TeX-PDF-mode t)
+"color: #4C886B; font-style: italic;">don't ask user for permission to save files before starting TeX</span>
+      (setq TeX-save-query nil)
 
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">rebind the "compile command" to `C-c C-c' in LaTeX mode only</span>
       (define-key LaTeX-mode-map
-        (kbd <span style="color: #036A07;">"&lt;f9&gt;"</span>)
-        (<span style="color: #0000FF;">lambda</span> ()
-          (interactive)
-          (save-buffer)
-          (TeX-command-master)))
+        (kbd <span style=
+"color: #036A07;">"&lt;f9&gt;"</span>) 'TeX-command-master)
+
+      <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">use PDF mode by default (instead of DVI)</span>
+      (setq-default TeX-PDF-mode t)
 </pre>
           </div>
 
@@ -20025,6 +20033,19 @@ TAGS:
 
             <p>Auto start vs <code>M-/</code>.</p>
 
+            <p>According to the settings, completion is done by
+            <code>TAB</code> or <code>RET</code>.</p>
+
+            <p>There are other ways to select candidates:</p>
+
+            <ul class="org-ul">
+              <li><code>M-1</code> to select candidate 1,</li>
+
+              <li><code>M-2</code> to select candidate 2,</li>
+
+              <li>and so on.</li>
+            </ul>
+
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   (GNUEmacs
@@ -22973,9 +22994,18 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
           <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">start the Emacs server</span>
-          (server-start))))             <span style=
+          (server-start))               <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">~ 0.20 s</span>
+
+      <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">save file without confirmation before returning to the client</span>
+      (<span style="color: #0000FF;">defadvice</span> <span style=
+"color: #006699;">server-edit</span> (before save-buffer-if-needed activate)
+        <span style=
+"color: #008000;">"Save current buffer before marking it as done."</span>
+        (<span style=
+"color: #0000FF;">when</span> server-buffer-clients (save-buffer)))))
 
 )                                       <span style=
 "color: #4C886B;">; </span><span style=
@@ -25065,7 +25095,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131210.2306]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131211.1644]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
