@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-12 Thu 09:51>
+# Time-stamp: <2013-12-12 Thu 11:20>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4561,6 +4561,12 @@ work and tasks with Org mode.
   (define-key global-map
     (kbd "C-c a") 'org-agenda)
 
+  (global-set-key
+   (kbd "<f7>")
+   (lambda ()
+     (interactive)
+     (org-agenda nil "rd")))
+
   ;; using links outside Org
   (global-set-key
     (kbd "C-c L") 'org-insert-link-global)
@@ -7874,34 +7880,36 @@ Why not adding a recursive functionality as well (in Emacs Lisp too), to be
 launched from Dired?
 
 #+begin_src emacs-lisp
-  (defun org-save-buffer-and-do-related ()
-    "Save buffer, execute/tangle code blocks, and export to HTML/PDF."
-    (interactive)
-    (let* ((orgfile (buffer-file-name))
-           (base-name (file-name-base orgfile))
-           (htmlfile (concat base-name ".html"))
-           (pdffile (concat base-name ".pdf")))
-      (save-buffer)                     ; see other commands in
-                                        ; `before-save-hook':
-                                        ; `org-update-all-dblocks'
-                                        ; `org-table-iterate-buffer-tables'
-      (when (derived-mode-p 'org-mode)
-        (org-babel-execute-buffer)
-        (let ((before-save-hook nil))
-          (save-buffer))
-        (org-babel-tangle)
-        (when (file-exists-p htmlfile)
-          (if (file-newer-than-file-p orgfile htmlfile)
-              (org-html-export-to-html)
-            (message "HTML is up to date with Org file")))
-        (when (file-exists-p pdffile)
-          (if (file-newer-than-file-p orgfile pdffile)
-              (org-latex-export-to-pdf)
-            (message "PDF is up to date with Org file")))
-        (beep))))
+  (with-eval-after-load "org"
 
-  (global-set-key
-    (kbd "<f9>") 'org-save-buffer-and-do-related)
+    (defun org-save-buffer-and-do-related ()
+      "Save buffer, execute/tangle code blocks, and export to HTML/PDF."
+      (interactive)
+      (let* ((orgfile (buffer-file-name))
+             (base-name (file-name-base orgfile))
+             (htmlfile (concat base-name ".html"))
+             (pdffile (concat base-name ".pdf")))
+        (save-buffer)                     ; see other commands in
+                                          ; `before-save-hook':
+                                          ; `org-update-all-dblocks'
+                                          ; `org-table-iterate-buffer-tables'
+        (when (derived-mode-p 'org-mode)
+          (org-babel-execute-buffer)
+          (let ((before-save-hook nil))
+            (save-buffer))
+          (org-babel-tangle)
+          (when (file-exists-p htmlfile)
+            (if (file-newer-than-file-p orgfile htmlfile)
+                (org-html-export-to-html)
+              (message "HTML is up to date with Org file")))
+          (when (file-exists-p pdffile)
+            (if (file-newer-than-file-p orgfile pdffile)
+                (org-latex-export-to-pdf)
+              (message "PDF is up to date with Org file")))
+          (beep))))
+
+    (define-key org-mode-map
+      (kbd "<f9>") 'org-save-buffer-and-do-related))
 #+end_src
 
 *** Export options
@@ -13652,10 +13660,8 @@ http://lars.ingebrigtsen.no/2013/06/eww.html.
         (insert "\n\n\n--- Translation FR -> EN done by FreeTranslation ---\n\n")
         (insert (babel-work source "fr" "en" 'babel-free-fetch 'babel-free-wash))
         (insert "\n\n\n--- Translation EN -> FR done by FreeTranslation ---\n\n")
-        (insert (babel-work source "en" "fr" 'babel-free-fetch 'babel-free-wash))))
+        (insert (babel-work source "en" "fr" 'babel-free-fetch 'babel-free-wash)))))
 
-    (global-set-key
-      (kbd "<f7>") 'leuven-babel-translate))
 )
 #+end_src
 

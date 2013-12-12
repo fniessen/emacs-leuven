@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-12 Thu 09:55 -->
+  <title>Emacs Leuven</title><!-- 2013-12-12 Thu 11:34 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1108,7 +1108,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131212.0954</span>
+"color: #4C886B; font-style: italic;">Version: 20131212.1133</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1230,7 +1230,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131212.0954]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131212.1133]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -8653,6 +8653,12 @@ M-: (executable-find "diff") RET
   (define-key global-map
     (kbd <span style="color: #036A07;">"C-c a"</span>) 'org-agenda)
 
+  (global-set-key
+   (kbd <span style="color: #036A07;">"&lt;f7&gt;"</span>)
+   (<span style="color: #0000FF;">lambda</span> ()
+     (interactive)
+     (org-agenda nil <span style="color: #036A07;">"rd"</span>)))
+
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">using links outside Org</span>
   (global-set-key
@@ -14297,56 +14303,59 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (<span style="color: #0000FF;">defun</span> <span style=
+  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #036A07;">"org"</span>
+
+    (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">org-save-buffer-and-do-related</span> ()
-    <span style=
+      <span style=
 "color: #008000;">"Save buffer, execute/tangle code blocks, and export to HTML/PDF."</span>
-    (interactive)
-    (<span style="color: #0000FF;">let*</span> ((orgfile (buffer-file-name))
-           (base-name (file-name-base orgfile))
-           (htmlfile (concat base-name <span style=
+      (interactive)
+      (<span style="color: #0000FF;">let*</span> ((orgfile (buffer-file-name))
+             (base-name (file-name-base orgfile))
+             (htmlfile (concat base-name <span style=
 "color: #036A07;">".html"</span>))
-           (pdffile (concat base-name <span style=
+             (pdffile (concat base-name <span style=
 "color: #036A07;">".pdf"</span>)))
-      (save-buffer)                     <span style=
+        (save-buffer)                     <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">see other commands in</span>
-                                        <span style=
+                                          <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">`</span><span style=
 "color: #4C886B; font-style: italic;">before-save-hook</span><span style=
 "color: #4C886B; font-style: italic;">':</span>
-                                        <span style=
+                                          <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">`</span><span style=
 "color: #4C886B; font-style: italic;">org-update-all-dblocks</span><span style=
 "color: #4C886B; font-style: italic;">'</span>
-                                        <span style=
+                                          <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">`</span><span style=
 "color: #4C886B; font-style: italic;">org-table-iterate-buffer-tables</span><span style="color: #4C886B; font-style: italic;">'</span>
-      (<span style="color: #0000FF;">when</span> (derived-mode-p 'org-mode)
-        (org-babel-execute-buffer)
-        (<span style="color: #0000FF;">let</span> ((before-save-hook nil))
-          (save-buffer))
-        (org-babel-tangle)
-        (<span style="color: #0000FF;">when</span> (file-exists-p htmlfile)
-          (<span style=
+        (<span style="color: #0000FF;">when</span> (derived-mode-p 'org-mode)
+          (org-babel-execute-buffer)
+          (<span style="color: #0000FF;">let</span> ((before-save-hook nil))
+            (save-buffer))
+          (org-babel-tangle)
+          (<span style="color: #0000FF;">when</span> (file-exists-p htmlfile)
+            (<span style=
 "color: #0000FF;">if</span> (file-newer-than-file-p orgfile htmlfile)
-              (org-html-export-to-html)
-            (message <span style=
+                (org-html-export-to-html)
+              (message <span style=
 "color: #036A07;">"HTML is up to date with Org file"</span>)))
-        (<span style="color: #0000FF;">when</span> (file-exists-p pdffile)
-          (<span style=
+          (<span style="color: #0000FF;">when</span> (file-exists-p pdffile)
+            (<span style=
 "color: #0000FF;">if</span> (file-newer-than-file-p orgfile pdffile)
-              (org-latex-export-to-pdf)
-            (message <span style=
+                (org-latex-export-to-pdf)
+              (message <span style=
 "color: #036A07;">"PDF is up to date with Org file"</span>)))
-        (beep))))
+          (beep))))
 
-  (global-set-key
-    (kbd <span style=
-"color: #036A07;">"&lt;f9&gt;"</span>) 'org-save-buffer-and-do-related)
+    (define-key org-mode-map
+      (kbd <span style=
+"color: #036A07;">"&lt;f9&gt;"</span>) 'org-save-buffer-and-do-related))
 </pre>
           </div>
         </div>
@@ -23993,11 +24002,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #036A07;">"\n\n\n--- Translation EN -&gt; FR done by FreeTranslation ---\n\n"</span>)
         (insert (babel-work source <span style=
 "color: #036A07;">"en"</span> <span style=
-"color: #036A07;">"fr"</span> 'babel-free-fetch 'babel-free-wash))))
+"color: #036A07;">"fr"</span> 'babel-free-fetch 'babel-free-wash)))))
 
-    (global-set-key
-      (kbd <span style=
-"color: #036A07;">"&lt;f7&gt;"</span>) 'leuven-babel-translate))
 )
 </pre>
           </div>
@@ -25106,7 +25112,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131212.0954]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131212.1134]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

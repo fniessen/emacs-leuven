@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131212.0952
+;; Version: 20131212.1132
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131212.0952]--")
+(message "* --[ Loading Emacs Leuven 20131212.1132]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3033,6 +3033,12 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (define-key global-map
     (kbd "C-c a") 'org-agenda)
 
+  (global-set-key
+   (kbd "<f7>")
+   (lambda ()
+     (interactive)
+     (org-agenda nil "rd")))
+
   ;; using links outside Org
   (global-set-key
     (kbd "C-c L") 'org-insert-link-global)
@@ -5347,34 +5353,36 @@ From %c"
                            "Please upgrade to 8 or later"))
           (sit-for 1.5)))))
 
-  (defun org-save-buffer-and-do-related ()
-    "Save buffer, execute/tangle code blocks, and export to HTML/PDF."
-    (interactive)
-    (let* ((orgfile (buffer-file-name))
-           (base-name (file-name-base orgfile))
-           (htmlfile (concat base-name ".html"))
-           (pdffile (concat base-name ".pdf")))
-      (save-buffer)                     ; see other commands in
-                                        ; `before-save-hook':
-                                        ; `org-update-all-dblocks'
-                                        ; `org-table-iterate-buffer-tables'
-      (when (derived-mode-p 'org-mode)
-        (org-babel-execute-buffer)
-        (let ((before-save-hook nil))
-          (save-buffer))
-        (org-babel-tangle)
-        (when (file-exists-p htmlfile)
-          (if (file-newer-than-file-p orgfile htmlfile)
-              (org-html-export-to-html)
-            (message "HTML is up to date with Org file")))
-        (when (file-exists-p pdffile)
-          (if (file-newer-than-file-p orgfile pdffile)
-              (org-latex-export-to-pdf)
-            (message "PDF is up to date with Org file")))
-        (beep))))
+  (with-eval-after-load "org"
 
-  (global-set-key
-    (kbd "<f9>") 'org-save-buffer-and-do-related)
+    (defun org-save-buffer-and-do-related ()
+      "Save buffer, execute/tangle code blocks, and export to HTML/PDF."
+      (interactive)
+      (let* ((orgfile (buffer-file-name))
+             (base-name (file-name-base orgfile))
+             (htmlfile (concat base-name ".html"))
+             (pdffile (concat base-name ".pdf")))
+        (save-buffer)                     ; see other commands in
+                                          ; `before-save-hook':
+                                          ; `org-update-all-dblocks'
+                                          ; `org-table-iterate-buffer-tables'
+        (when (derived-mode-p 'org-mode)
+          (org-babel-execute-buffer)
+          (let ((before-save-hook nil))
+            (save-buffer))
+          (org-babel-tangle)
+          (when (file-exists-p htmlfile)
+            (if (file-newer-than-file-p orgfile htmlfile)
+                (org-html-export-to-html)
+              (message "HTML is up to date with Org file")))
+          (when (file-exists-p pdffile)
+            (if (file-newer-than-file-p orgfile pdffile)
+                (org-latex-export-to-pdf)
+              (message "PDF is up to date with Org file")))
+          (beep))))
+
+    (define-key org-mode-map
+      (kbd "<f9>") 'org-save-buffer-and-do-related))
 
 ;;** 12.2 (info "(org)Export options")
 
@@ -9160,10 +9168,8 @@ From %c"
         (insert "\n\n\n--- Translation FR -> EN done by FreeTranslation ---\n\n")
         (insert (babel-work source "fr" "en" 'babel-free-fetch 'babel-free-wash))
         (insert "\n\n\n--- Translation EN -> FR done by FreeTranslation ---\n\n")
-        (insert (babel-work source "en" "fr" 'babel-free-fetch 'babel-free-wash))))
+        (insert (babel-work source "en" "fr" 'babel-free-fetch 'babel-free-wash)))))
 
-    (global-set-key
-      (kbd "<f7>") 'leuven-babel-translate))
 )
 
 ;;* 46 Other (info "(emacs)Amusements")
@@ -9430,7 +9436,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131212.0953]--")
+(message "* --[ Loaded Emacs Leuven 20131212.1133]--")
 
 (provide 'emacs-leuven)
 
