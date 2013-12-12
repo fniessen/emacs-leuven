@@ -1260,7 +1260,7 @@
         (local-set-key (kbd "<M-tab>") 'mail-abbrev-complete-alias)
 
         ;; enable automatic word-wrap when composing messages
-        (setq fill-column 79)
+        (setq-default fill-column 79)
         (turn-on-auto-fill)
 
         ;; turn on the Org mode table editor (in emails)
