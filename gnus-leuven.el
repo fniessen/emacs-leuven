@@ -1249,8 +1249,9 @@
                   (define-key message-mode-map
                     (kbd "C-c C-v") nil)))
 
-      ;; operates on messages you send
+      ;; operates on messages you compose
       (defun leuven--message-mode-hook ()
+        "Enable Org minor modes, auto-fill and auto-complete."
 
         ;; ;; prompt for and insert a mail alias
         ;; (local-set-key (kbd "M-a") 'mail-abbrev-insert-alias)
