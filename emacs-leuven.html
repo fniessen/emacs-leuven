@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-12 Thu 09:46 -->
+  <title>Emacs Leuven</title><!-- 2013-12-12 Thu 09:55 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1108,7 +1108,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131212.0945</span>
+"color: #4C886B; font-style: italic;">Version: 20131212.0954</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1230,7 +1230,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131212.0945]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131212.0954]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -5116,93 +5116,6 @@
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">update the copyright notice in current buffer</span>
     (add-hook 'before-save-hook 'copyright-update))
-</pre>
-          </div>
-
-          <p>For Org buffers, add an enhanced version of
-          <code>save-buffer</code> which does:</p>
-
-          <ol class="org-ol">
-            <li>Save buffer (updating dynamic blocks and tables)</li>
-
-            <li>Execute the code blocks, and save another time</li>
-
-            <li>Tangle code blocks, if any to be tangled</li>
-
-            <li>Export to HTML and PDF, if such files already exist</li>
-
-            <li>Call <code>send-patch</code>?</li>
-          </ol>
-
-          <p>Notes:</p>
-
-          <ul class="org-ul">
-            <li>Use the asynchronous export (if possible, so that I don’t loose
-            time, or let it open to the value of that var)?</li>
-
-            <li>Different behaviors can be obtained with <code>C-u</code> (or
-            <code>C-u C-u</code>)</li>
-          </ul>
-
-          <p>Why not adding a recursive functionality as well (in Emacs Lisp
-          too), to be launched from Dired?</p>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">org-save-buffer-and-do-related</span> ()
-    <span style=
-"color: #008000;">"Save buffer, execute/tangle code blocks, and export to HTML/PDF."</span>
-    (interactive)
-    (<span style="color: #0000FF;">let*</span> ((orgfile (buffer-file-name))
-           (base-name (file-name-base orgfile))
-           (htmlfile (concat base-name <span style=
-"color: #036A07;">".html"</span>))
-           (pdffile (concat base-name <span style=
-"color: #036A07;">".pdf"</span>)))
-      (save-buffer)                     <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">see other commands in</span>
-                                        <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">`</span><span style=
-"color: #4C886B; font-style: italic;">before-save-hook</span><span style=
-"color: #4C886B; font-style: italic;">':</span>
-                                        <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">`</span><span style=
-"color: #4C886B; font-style: italic;">org-update-all-dblocks</span><span style=
-"color: #4C886B; font-style: italic;">'</span>
-                                        <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">`</span><span style=
-"color: #4C886B; font-style: italic;">org-table-iterate-buffer-tables</span><span style="color: #4C886B; font-style: italic;">'</span>
-      (<span style="color: #0000FF;">when</span> (derived-mode-p 'org-mode)
-        (org-babel-execute-buffer)
-        (<span style="color: #0000FF;">let</span> ((before-save-hook nil))
-          (save-buffer))
-        (org-babel-tangle)
-        (<span style="color: #0000FF;">when</span> (file-exists-p htmlfile)
-          (<span style=
-"color: #0000FF;">if</span> (file-newer-than-file-p orgfile htmlfile)
-              (org-html-export-to-html)
-            (message <span style=
-"color: #036A07;">"HTML is up to date with Org file"</span>)))
-        (<span style="color: #0000FF;">when</span> (file-exists-p pdffile)
-          (<span style=
-"color: #0000FF;">if</span> (file-newer-than-file-p orgfile pdffile)
-              (org-latex-export-to-pdf)
-            (message <span style=
-"color: #036A07;">"PDF is up to date with Org file"</span>)))
-        (beep))))
-
-  (global-set-key
-    (kbd <span style=
-"color: #036A07;">"&lt;S-f2&gt;"</span>) 'org-save-buffer-and-do-related)
-
-  (global-set-key
-    (kbd <span style=
-"color: #036A07;">"C-x C-S-s"</span>) 'org-save-buffer-and-do-related)
 </pre>
           </div>
         </div>
@@ -14351,6 +14264,89 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                            <span style=
 "color: #036A07;">"Please upgrade to 8 or later"</span>))
           (sit-for 1.5)))))
+</pre>
+          </div>
+
+          <p>For Org buffers, add an enhanced version of
+          <code>save-buffer</code> which does:</p>
+
+          <ol class="org-ol">
+            <li>Save buffer (updating dynamic blocks and tables)</li>
+
+            <li>Execute the code blocks, and save another time</li>
+
+            <li>Tangle code blocks, if any to be tangled</li>
+
+            <li>Export to HTML and PDF, if such files already exist</li>
+
+            <li>Call <code>send-patch</code>?</li>
+          </ol>
+
+          <p>Notes:</p>
+
+          <ul class="org-ul">
+            <li>Use the asynchronous export (if possible, so that I don’t loose
+            time, or let it open to the value of that var)?</li>
+
+            <li>Different behaviors can be obtained with <code>C-u</code> (or
+            <code>C-u C-u</code>)</li>
+          </ul>
+
+          <p>Why not adding a recursive functionality as well (in Emacs Lisp
+          too), to be launched from Dired?</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">org-save-buffer-and-do-related</span> ()
+    <span style=
+"color: #008000;">"Save buffer, execute/tangle code blocks, and export to HTML/PDF."</span>
+    (interactive)
+    (<span style="color: #0000FF;">let*</span> ((orgfile (buffer-file-name))
+           (base-name (file-name-base orgfile))
+           (htmlfile (concat base-name <span style=
+"color: #036A07;">".html"</span>))
+           (pdffile (concat base-name <span style=
+"color: #036A07;">".pdf"</span>)))
+      (save-buffer)                     <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">see other commands in</span>
+                                        <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">`</span><span style=
+"color: #4C886B; font-style: italic;">before-save-hook</span><span style=
+"color: #4C886B; font-style: italic;">':</span>
+                                        <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">`</span><span style=
+"color: #4C886B; font-style: italic;">org-update-all-dblocks</span><span style=
+"color: #4C886B; font-style: italic;">'</span>
+                                        <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">`</span><span style=
+"color: #4C886B; font-style: italic;">org-table-iterate-buffer-tables</span><span style="color: #4C886B; font-style: italic;">'</span>
+      (<span style="color: #0000FF;">when</span> (derived-mode-p 'org-mode)
+        (org-babel-execute-buffer)
+        (<span style="color: #0000FF;">let</span> ((before-save-hook nil))
+          (save-buffer))
+        (org-babel-tangle)
+        (<span style="color: #0000FF;">when</span> (file-exists-p htmlfile)
+          (<span style=
+"color: #0000FF;">if</span> (file-newer-than-file-p orgfile htmlfile)
+              (org-html-export-to-html)
+            (message <span style=
+"color: #036A07;">"HTML is up to date with Org file"</span>)))
+        (<span style="color: #0000FF;">when</span> (file-exists-p pdffile)
+          (<span style=
+"color: #0000FF;">if</span> (file-newer-than-file-p orgfile pdffile)
+              (org-latex-export-to-pdf)
+            (message <span style=
+"color: #036A07;">"PDF is up to date with Org file"</span>)))
+        (beep))))
+
+  (global-set-key
+    (kbd <span style=
+"color: #036A07;">"&lt;f9&gt;"</span>) 'org-save-buffer-and-do-related)
 </pre>
           </div>
         </div>
@@ -25110,7 +25106,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131212.0945]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131212.0954]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

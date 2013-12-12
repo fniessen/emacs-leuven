@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-12 Thu 09:43>
+# Time-stamp: <2013-12-12 Thu 09:51>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -2407,56 +2407,6 @@ sequence).
   (GNUEmacs
     ;; update the copyright notice in current buffer
     (add-hook 'before-save-hook 'copyright-update))
-#+end_src
-
-For Org buffers, add an enhanced version of =save-buffer= which does:
-
-1. Save buffer (updating dynamic blocks and tables)
-2. Execute the code blocks, and save another time
-3. Tangle code blocks, if any to be tangled
-4. Export to HTML and PDF, if such files already exist
-5. Call =send-patch=?
-
-Notes:
-- Use the asynchronous export (if possible, so that I don't loose time, or let
-  it open to the value of that var)?
-- Different behaviors can be obtained with =C-u= (or =C-u C-u=)
-
-Why not adding a recursive functionality as well (in Emacs Lisp too), to be
-launched from Dired?
-
-#+begin_src emacs-lisp
-  (defun org-save-buffer-and-do-related ()
-    "Save buffer, execute/tangle code blocks, and export to HTML/PDF."
-    (interactive)
-    (let* ((orgfile (buffer-file-name))
-           (base-name (file-name-base orgfile))
-           (htmlfile (concat base-name ".html"))
-           (pdffile (concat base-name ".pdf")))
-      (save-buffer)                     ; see other commands in
-                                        ; `before-save-hook':
-                                        ; `org-update-all-dblocks'
-                                        ; `org-table-iterate-buffer-tables'
-      (when (derived-mode-p 'org-mode)
-        (org-babel-execute-buffer)
-        (let ((before-save-hook nil))
-          (save-buffer))
-        (org-babel-tangle)
-        (when (file-exists-p htmlfile)
-          (if (file-newer-than-file-p orgfile htmlfile)
-              (org-html-export-to-html)
-            (message "HTML is up to date with Org file")))
-        (when (file-exists-p pdffile)
-          (if (file-newer-than-file-p orgfile pdffile)
-              (org-latex-export-to-pdf)
-            (message "PDF is up to date with Org file")))
-        (beep))))
-
-  (global-set-key
-    (kbd "<S-f2>") 'org-save-buffer-and-do-related)
-
-  (global-set-key
-    (kbd "C-x C-S-s") 'org-save-buffer-and-do-related)
 #+end_src
 
 ** Reverting a Buffer
@@ -7905,6 +7855,53 @@ To list all available entities, run =M-x org-entities-help=.
           (message (concat "This version of Org mode is no longer supported. "
                            "Please upgrade to 8 or later"))
           (sit-for 1.5)))))
+#+end_src
+
+For Org buffers, add an enhanced version of =save-buffer= which does:
+
+1. Save buffer (updating dynamic blocks and tables)
+2. Execute the code blocks, and save another time
+3. Tangle code blocks, if any to be tangled
+4. Export to HTML and PDF, if such files already exist
+5. Call =send-patch=?
+
+Notes:
+- Use the asynchronous export (if possible, so that I don't loose time, or let
+  it open to the value of that var)?
+- Different behaviors can be obtained with =C-u= (or =C-u C-u=)
+
+Why not adding a recursive functionality as well (in Emacs Lisp too), to be
+launched from Dired?
+
+#+begin_src emacs-lisp
+  (defun org-save-buffer-and-do-related ()
+    "Save buffer, execute/tangle code blocks, and export to HTML/PDF."
+    (interactive)
+    (let* ((orgfile (buffer-file-name))
+           (base-name (file-name-base orgfile))
+           (htmlfile (concat base-name ".html"))
+           (pdffile (concat base-name ".pdf")))
+      (save-buffer)                     ; see other commands in
+                                        ; `before-save-hook':
+                                        ; `org-update-all-dblocks'
+                                        ; `org-table-iterate-buffer-tables'
+      (when (derived-mode-p 'org-mode)
+        (org-babel-execute-buffer)
+        (let ((before-save-hook nil))
+          (save-buffer))
+        (org-babel-tangle)
+        (when (file-exists-p htmlfile)
+          (if (file-newer-than-file-p orgfile htmlfile)
+              (org-html-export-to-html)
+            (message "HTML is up to date with Org file")))
+        (when (file-exists-p pdffile)
+          (if (file-newer-than-file-p orgfile pdffile)
+              (org-latex-export-to-pdf)
+            (message "PDF is up to date with Org file")))
+        (beep))))
+
+  (global-set-key
+    (kbd "<f9>") 'org-save-buffer-and-do-related)
 #+end_src
 
 *** Export options
