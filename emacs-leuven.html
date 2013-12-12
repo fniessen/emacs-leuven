@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-12 Thu 11:34 -->
+  <title>Emacs Leuven</title><!-- 2013-12-12 Thu 23:49 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1108,7 +1108,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131212.1133</span>
+"color: #4C886B; font-style: italic;">Version: 20131212.2348</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1230,7 +1230,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131212.1133]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131212.2348]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -1837,8 +1837,7 @@
 "color: #4C886B; font-style: italic;">sleep 1.5 s so that you can see the </span><span style="color: #4C886B; background-color: #FFFF88; font-style: italic;">warning</span>
           (sit-for 1.5))
       (<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span> <span style=
-"color: #036A07;">"leuven--file-exists-and-executable-p: missing operand"</span>)))
+"color: #ff0000; background-color: #FFFF88; font-weight: bold;">error</span> <span style="color: #036A07;">"leuven--file-exists-and-executable-p: missing operand"</span>)))
 
 <span style="color: #4C886B;">;;</span><span style=
 "color: #4C886B; font-style: italic;">** Init</span>
@@ -2041,6 +2040,7 @@
 "color: #4C886B; font-style: italic;">paredit</span>
           rainbow-mode
           redshank
+          sml-modeline
           tidy
           <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">w3m</span>
@@ -2069,8 +2069,9 @@
 "color: #0000FF;">if</span> (yes-or-no-p (format <span style=
 "color: #036A07;">"Install package `</span><span style=
 "color: #036A07;">%s</span><span style="color: #036A07;">'? "</span> pkg))
-              (ignore-<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span>s
+              (<span style="color: #0000FF;">ignore-</span><span style=
+"color: #0000FF; background-color: #FFFF88;">error</span><span style=
+"color: #0000FF;">s</span>
                 (package-install pkg))
             (message <span style=
 "color: #036A07;">"Customize `</span><span style=
@@ -3063,15 +3064,18 @@
           (<code>kill-rectangle</code>). Or just “delete” the rectangle
           (without “killing” it) with <code>C-x r d</code>.</p>
 
-          <p>On the Emacs trunk, you can do: <code>C-x SPC</code>
-          &lt;..move..around..&gt; <code>DEL</code> to delete the rectangle and
-          <code>C-x SPC</code> &lt;..move..around..&gt; <code>C-t</code> to
-          invoke <code>string-rectangle</code>.</p>
+          <p>On the Emacs trunk, you can do: <code>C-x SPC</code> &lt;…move
+          around…&gt; <code>DEL</code> to delete the rectangle and <code>C-x
+          SPC</code> &lt;…move around…&gt; <code>C-t</code> to invoke
+          <code>string-rectangle</code>.</p>
 
           <p><code>kill-rectangle</code> and <code>yank-rectangle</code>
           (<code>C-x r y</code>) can also be very useful for shifting cells
           up/down within a column of an Org table while leaving remaining
           columns intact.</p>
+
+          <p>Other function of interest:
+          <code>delete-whitespace-rectangle</code>.</p>
         </div>
       </div>
 
@@ -3492,15 +3496,6 @@
 "color: #036A07; font-weight: bold;">|</span><span style=
 "color: #036A07; background-color: #FFFF88;">BUG</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">|</span><span style=
-"color: #036A07;">[Ee]rror</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">|</span><span style=
-"color: #036A07;">[Ww]arning</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">|</span><span style=
-"color: #036A07; background-color: #FFFF88;">WARNING</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">)</span><span style=
 "color: #036A07;">"</span>
     <span style=
@@ -3522,38 +3517,24 @@
 "color: #008000;">s stand out."</span>)
 
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">set up highlighting of special patterns for proper selected major modes</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">only</span>
+"color: #4C886B; font-style: italic;">add highlighting keywords for selected major modes only</span>
   (<span style="color: #0000FF;">dolist</span> (mode '(fundamental-mode
                   text-mode))
     (font-lock-add-keywords mode
-     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))))
+     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))
+     'end))
 
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">set up highlighting of special patterns for Org mode only</span>
+"color: #4C886B; font-style: italic;">add highlighting keywords for Org mode only</span>
   (<span style="color: #0000FF;">dolist</span> (mode '(org-mode))
     (font-lock-add-keywords mode
-     `((,leuven-highlight-keywords-in-org 1 'leuven-highlight-face prepend))))
+     `((,leuven-highlight-keywords-in-org 1 'leuven-highlight-face prepend))
+     'end))
 
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">add fontification patterns (even in comments) to a selected major</span>
+"color: #4C886B; font-style: italic;">add highlighting keywords for selected major modes *and* all major modes</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">mode *and* all major modes derived from it</span>
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--highlight-special-patterns</span> ()
-    (interactive)
-    (font-lock-add-keywords nil <span style=
-"color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">in the current buffer</span>
-     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))))
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #4C886B; font-style: italic;">                    0                    t</span>
-
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">set up highlighting of special patterns for selected major modes *and*</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">all major modes derived from them</span>
+"color: #4C886B; font-style: italic;">derived from them</span>
   (<span style="color: #0000FF;">dolist</span> (hook '(prog-mode-hook
                   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">text-mode-hook        ; avoid Org</span>
@@ -3564,13 +3545,21 @@
                   shell-mode-hook       <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">[parent: fundamental]</span>
-                                        <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">(works in *shell* buffers!)</span>
                   ssh-config-mode-hook))
-    (add-hook hook 'leuven--highlight-special-patterns))
+    (add-hook hook
+     (<span style="color: #0000FF;">lambda</span> ()
+       (font-lock-add-keywords nil      <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">in the current buffer</span>
+        `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))
+        <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #4C886B; font-style: italic;">                      0                        t</span>
+        'end))))
 </pre>
           </div>
+
+          <p>See doc of <code>font-lock-keywords</code> and
+          <code>font-lock-add-keywords</code>.</p>
 
           <p>For FIXME to be highlighted in Org tables as well, use:</p>
 
@@ -3578,12 +3567,12 @@
             <pre class="src src-emacs-lisp">
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">fp-fontify-fixme</span> ()
-    (font-lock-add-keywords
-     nil '((<span style="color: #036A07;">"\\&lt;</span><span style=
+    (font-lock-add-keywords nil
+     '((<span style="color: #036A07;">"\\&lt;</span><span style=
 "color: #036A07; background-color: #FFFF88;">FIXME</span><span style=
 "color: #036A07;">\\&gt;"</span> 0 font-lock-<span style=
 "color: #CC0000; background-color: #FFFF88;">warning</span>-face t)) t))
-                                                       ^!!!
+                                                   ^!!!
 </pre>
           </div>
 
@@ -3920,6 +3909,18 @@
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">use inactive face for mode line in non-selected windows</span>
   (setq mode-line-in-non-selected-windows t)
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">show position in a scrollbar like way in mode-line</span>
+  (<span style="color: #0000FF;">when</span> (try-require 'sml-modeline)
+
+    <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">mode line indicator total length</span>
+    (setq sml-modeline-len 10))
 </pre>
           </div>
         </div>
@@ -5396,7 +5397,7 @@
                 (diff-hunk-next)
                 (diff-refine-hunk)))
           (<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span> nil))
+"color: #ff0000; background-color: #FFFF88; font-weight: bold;">error</span> nil))
         (run-at-time 0.0 nil
                      (<span style="color: #0000FF;">lambda</span> ()
                        (<span style=
@@ -5932,9 +5933,9 @@ M-: (executable-find "diff") RET
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-    (<span style=
-"color: #0000FF;">defun</span> leuven-find-file-sudo-header-<span style=
-"color: #CC0000; background-color: #FFFF88;">warning</span> ()
+    (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven-find-file-sudo-header-</span><span style=
+"color: #006699; background-color: #FFFF88;">warning</span> ()
       <span style="color: #008000;">"*Display a </span><span style=
 "color: #008000; background-color: #FFFF88;">warning</span><span style=
 "color: #008000;"> in header line of the current buffer."</span>
@@ -7008,12 +7009,10 @@ M-: (executable-find "diff") RET
             (left . 0)))
 
     <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">default value of `</span><span style=
-"color: #4C886B; font-style: italic;">vertical-scroll-bar</span><span style=
-"color: #4C886B; font-style: italic;">' for buffers that don't</span>
+"color: #4C886B; font-style: italic;">;; position of the vertical scroll bar</span>
     <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">override it</span>
-    (setq default-vertical-scroll-bar 'right))
+"color: #4C886B; font-style: italic;">(setq-default vertical-scroll-bar 'right)</span>
+    )
 
   (XEmacs
     (set-frame-width (buffer-dedicated-frame) 80)
@@ -7028,8 +7027,9 @@ M-: (executable-find "diff") RET
                 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(capitalize (symbol-name system-type))</span>
                 emacs-version
-                (ignore-<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span>s
+                (<span style="color: #0000FF;">ignore-</span><span style=
+"color: #0000FF; background-color: #FFFF88;">error</span><span style=
+"color: #0000FF;">s</span>
                   (replace-regexp-in-string <span style=
 "color: #036A07;">" .*"</span> <span style=
 "color: #036A07;">""</span> emacs-bzr-version))
@@ -8456,8 +8456,9 @@ M-: (executable-find "diff") RET
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">org-cycle-local</span> ()
     (interactive)
-    (ignore-<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span>s
+    (<span style="color: #0000FF;">ignore-</span><span style=
+"color: #0000FF; background-color: #FFFF88;">error</span><span style=
+"color: #0000FF;">s</span>
       (end-of-defun)
       (beginning-of-defun))
     (org-cycle))
@@ -8656,6 +8657,8 @@ M-: (executable-find "diff") RET
   (global-set-key
    (kbd <span style="color: #036A07;">"&lt;f7&gt;"</span>)
    (<span style="color: #0000FF;">lambda</span> ()
+     <span style=
+"color: #008000;">"Execute `C-c a r d' to display the calendar and tasks for today."</span>
      (interactive)
      (org-agenda nil <span style="color: #036A07;">"rd"</span>)))
 
@@ -12073,8 +12076,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #006699;">leuven--compact-follow</span> ()
     <span style=
 "color: #008000;">"Make the view compact, then show the necessary minimum."</span>
-    (ignore-<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span>s
+    (<span style="color: #0000FF;">ignore-</span><span style=
+"color: #0000FF; background-color: #FFFF88;">error</span><span style=
+"color: #0000FF;">s</span>
       (<span style="color: #0000FF;">save-excursion</span>
         (<span style="color: #0000FF;">while</span> (org-up-heading-safe))
         (hide-subtree)))
@@ -14151,8 +14155,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
               (message <span style=
 "color: #036A07;">"Taking screenshot...done"</span>))
           (<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span> <span style=
-"color: #036A07;">"Cannot create image file"</span>)))
+"color: #ff0000; background-color: #FFFF88; font-weight: bold;">error</span> <span style="color: #036A07;">"Cannot create image file"</span>)))
       (insert (concat <span style=
 "color: #036A07;">"[["</span> name <span style="color: #036A07;">"]]"</span>))
       (org-display-inline-images)))
@@ -15428,7 +15431,8 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (<span style="color: #0000FF;">condition-case</span> err
         (<span style="color: #0000FF;">progn</span>
       ad-do-it)
-      (<span style="color: #CC0000; background-color: #FFFF88;">error</span>
+      (<span style=
+"color: #ff0000; background-color: #FFFF88; font-weight: bold;">error</span>
        (message <span style="color: #036A07;">"</span><span style=
 "color: #036A07; background-color: #FFFF88;">Error</span><span style=
 "color: #036A07;"> in sbe: %S"</span> err)
@@ -17416,7 +17420,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
         (<span style="color: #0000FF;">condition-case</span> nil
             (imenu-add-to-menubar <span style="color: #036A07;">"Imenu"</span>)
           (<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span> nil)))
+"color: #ff0000; background-color: #FFFF88; font-weight: bold;">error</span> nil)))
       (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
       <span style="color: #4C886B;">;; </span><span style=
@@ -18052,8 +18056,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
 
   (GNUEmacs
-    (<span style="color: #0000FF;">defun</span> cc-goto-first-<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span>( buffer exit-condition )
+    (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">cc-goto-first-</span><span style=
+"color: #006699; background-color: #FFFF88;">error</span>( buffer exit-condition )
       (<span style="color: #0000FF;">with-current-buffer</span> buffer
         (goto-char (point-min))
         (compilation-next-<span style=
@@ -18477,8 +18482,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
             <pre class="src src-emacs-lisp">
   <span style="color: #4C886B;">;;;</span><span style=
 "color: #4C886B; font-style: italic;">_ * emacs-lisp</span>
-
-  (add-hook 'emacs-lisp-mode-hook 'turn-on-auto-fill)
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(defun elisp-indent-or-complete (&amp;optional arg)</span>
@@ -21496,8 +21499,13 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 <span style="color: #4C886B;">;;</span><span style=
 "color: #4C886B; font-style: italic;">* (info "(bbdb)Installation")</span>
 
-  (<span style="color: #0000FF;">unless</span> (ignore-<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span>s (load-library <span style="color: #036A07;">"bbdb-autoloads"</span>)) <span style="color: #4C886B;">; </span><span style="color: #4C886B; font-style: italic;">"hand-made"</span>
+  (<span style="color: #0000FF;">unless</span> (<span style=
+"color: #0000FF;">ignore-</span><span style=
+"color: #0000FF; background-color: #FFFF88;">error</span><span style=
+"color: #0000FF;">s</span> (load-library <span style=
+"color: #036A07;">"bbdb-autoloads"</span>)) <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">"hand-made"</span>
     (autoload 'bbdb <span style="color: #036A07;">"bbdb-com"</span>
       <span style="color: #008000;">"Insidious Big Brother Database."</span> t)
     (autoload 'bbdb-name <span style="color: #036A07;">"bbdb-com"</span>
@@ -22146,8 +22154,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #4C886B; font-style: italic;">must be in the `</span><span style=
 "color: #4C886B; font-style: italic;">PATH</span><span style=
 "color: #4C886B; font-style: italic;">'</span>
-        (or (ignore-<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span>s
+        (or (<span style="color: #0000FF;">ignore-</span><span style=
+"color: #0000FF; background-color: #FFFF88;">error</span><span style=
+"color: #0000FF;">s</span>
               (file-name-nondirectory (or (executable-find <span style=
 "color: #036A07;">"zsh"</span>)
                                           (executable-find <span style=
@@ -24061,8 +24070,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #036A07;">"48 Customization"</span>
 
   (GNUEmacs24
-    (ignore-<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span>s
+    (<span style="color: #0000FF;">ignore-</span><span style=
+"color: #0000FF; background-color: #FFFF88;">error</span><span style=
+"color: #0000FF;">s</span>
       (load-theme 'leuven t)))
 </pre>
         </div>
@@ -25112,7 +25122,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131212.1134]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131212.2349]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

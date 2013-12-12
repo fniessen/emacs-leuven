@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131212.1132
+;; Version: 20131212.2347
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131212.1132]--")
+(message "* --[ Loading Emacs Leuven 20131212.2347]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -440,6 +440,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           ;; paredit
           rainbow-mode
           redshank
+          sml-modeline
           tidy
           ;; w3m
           yasnippet)
@@ -917,7 +918,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     "Patterns to highlight.")
 
   (defvar leuven-highlight-keywords-in-org
-    "\\(FIXME\\|XXX\\|BUG\\|[Ee]rror\\|[Ww]arning\\|WARNING\\)"
+    "\\(FIXME\\|XXX\\|BUG\\)"
     "Patterns to highlight (for Org mode only, to ensure no conflict with the
   Org mode TODO keyword).")
 
@@ -925,36 +926,33 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     '((t (:foreground "#CC0000" :background "#FFFF88")))
     "Face for making FIXME and other warnings stand out.")
 
-  ;; set up highlighting of special patterns for proper selected major modes
-  ;; only
+  ;; add highlighting keywords for selected major modes only
   (dolist (mode '(fundamental-mode
                   text-mode))
     (font-lock-add-keywords mode
-     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))))
+     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))
+     'end))
 
-  ;; set up highlighting of special patterns for Org mode only
+  ;; add highlighting keywords for Org mode only
   (dolist (mode '(org-mode))
     (font-lock-add-keywords mode
-     `((,leuven-highlight-keywords-in-org 1 'leuven-highlight-face prepend))))
+     `((,leuven-highlight-keywords-in-org 1 'leuven-highlight-face prepend))
+     'end))
 
-  ;; add fontification patterns (even in comments) to a selected major
-  ;; mode *and* all major modes derived from it
-  (defun leuven--highlight-special-patterns ()
-    (interactive)
-    (font-lock-add-keywords nil ;; in the current buffer
-     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))))
-  ;; FIXME                    0                    t
-
-  ;; set up highlighting of special patterns for selected major modes *and*
-  ;; all major modes derived from them
+  ;; add highlighting keywords for selected major modes *and* all major modes
+  ;; derived from them
   (dolist (hook '(prog-mode-hook
                   ;; text-mode-hook        ; avoid Org
                   css-mode-hook         ; [parent: fundamental]
                   latex-mode-hook
                   shell-mode-hook       ; [parent: fundamental]
-                                        ; (works in *shell* buffers!)
                   ssh-config-mode-hook))
-    (add-hook hook 'leuven--highlight-special-patterns))
+    (add-hook hook
+     (lambda ()
+       (font-lock-add-keywords nil      ; in the current buffer
+        `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))
+        ;; FIXME                      0                        t
+        'end))))
 
   ;; just-in-time fontification
   (with-eval-after-load "jit-lock"
@@ -1067,6 +1065,12 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
   ;; use inactive face for mode line in non-selected windows
   (setq mode-line-in-non-selected-windows t)
+
+  ;; show position in a scrollbar like way in mode-line
+  (when (try-require 'sml-modeline)
+
+    ;; mode line indicator total length
+    (setq sml-modeline-len 10))
 
 ;;** 14.19 How (info "(emacs)Text Display")ed
 
@@ -2397,9 +2401,9 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           '((top . 0)
             (left . 0)))
 
-    ;; default value of `vertical-scroll-bar' for buffers that don't
-    ;; override it
-    (setq default-vertical-scroll-bar 'right))
+    ;; ;; position of the vertical scroll bar
+    ;; (setq-default vertical-scroll-bar 'right)
+    )
 
   (XEmacs
     (set-frame-width (buffer-dedicated-frame) 80)
@@ -3036,6 +3040,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (global-set-key
    (kbd "<f7>")
    (lambda ()
+     "Execute `C-c a r d' to display the calendar and tasks for today."
      (interactive)
      (org-agenda nil "rd")))
 
@@ -7012,8 +7017,6 @@ From %c"
 
   ;;;_ * emacs-lisp
 
-  (add-hook 'emacs-lisp-mode-hook 'turn-on-auto-fill)
-
   ;; (defun elisp-indent-or-complete (&optional arg)
   ;;   (interactive "p")
   ;;   (call-interactively 'lisp-indent-line)
@@ -9436,7 +9439,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131212.1133]--")
+(message "* --[ Loaded Emacs Leuven 20131212.2348]--")
 
 (provide 'emacs-leuven)
 

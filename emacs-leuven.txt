@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-12 Thu 11:20>
+# Time-stamp: <2013-12-12 Thu 22:57>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -582,6 +582,7 @@ are generated programmatically from upstream Git-based sources.
           ;; paredit
           rainbow-mode
           redshank
+          sml-modeline
           tidy
           ;; w3m
           yasnippet)
@@ -1172,12 +1173,14 @@ given string.
 To kill the text of the region-rectangle, use =C-x r k= (=kill-rectangle=).
 Or just "delete" the rectangle (without "killing" it) with =C-x r d=.
 
-On the Emacs trunk, you can do: =C-x SPC= <..move..around..> =DEL= to delete the
-rectangle and =C-x SPC= <..move..around..> =C-t= to invoke =string-rectangle=.
+On the Emacs trunk, you can do: =C-x SPC= <...move around...> =DEL= to delete the
+rectangle and =C-x SPC= <...move around...> =C-t= to invoke =string-rectangle=.
 
 =kill-rectangle= and =yank-rectangle= (=C-x r y=) can also be very useful for
 shifting cells up/down within a column of an Org table while leaving remaining
 columns intact.
+
+Other function of interest: =delete-whitespace-rectangle=.
 
 ** CUA Bindings
 
@@ -1395,7 +1398,7 @@ modes run =prog-mode-hook=, prior to running their own mode hooks.
     "Patterns to highlight.")
 
   (defvar leuven-highlight-keywords-in-org
-    "\\(FIXME\\|XXX\\|BUG\\|[Ee]rror\\|[Ww]arning\\|WARNING\\)"
+    "\\(FIXME\\|XXX\\|BUG\\)"
     "Patterns to highlight (for Org mode only, to ensure no conflict with the
   Org mode TODO keyword).")
 
@@ -1403,45 +1406,44 @@ modes run =prog-mode-hook=, prior to running their own mode hooks.
     '((t (:foreground "#CC0000" :background "#FFFF88")))
     "Face for making FIXME and other warnings stand out.")
 
-  ;; set up highlighting of special patterns for proper selected major modes
-  ;; only
+  ;; add highlighting keywords for selected major modes only
   (dolist (mode '(fundamental-mode
                   text-mode))
     (font-lock-add-keywords mode
-     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))))
+     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))
+     'end))
 
-  ;; set up highlighting of special patterns for Org mode only
+  ;; add highlighting keywords for Org mode only
   (dolist (mode '(org-mode))
     (font-lock-add-keywords mode
-     `((,leuven-highlight-keywords-in-org 1 'leuven-highlight-face prepend))))
+     `((,leuven-highlight-keywords-in-org 1 'leuven-highlight-face prepend))
+     'end))
 
-  ;; add fontification patterns (even in comments) to a selected major
-  ;; mode *and* all major modes derived from it
-  (defun leuven--highlight-special-patterns ()
-    (interactive)
-    (font-lock-add-keywords nil ;; in the current buffer
-     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))))
-  ;; FIXME                    0                    t
-
-  ;; set up highlighting of special patterns for selected major modes *and*
-  ;; all major modes derived from them
+  ;; add highlighting keywords for selected major modes *and* all major modes
+  ;; derived from them
   (dolist (hook '(prog-mode-hook
                   ;; text-mode-hook        ; avoid Org
                   css-mode-hook         ; [parent: fundamental]
                   latex-mode-hook
                   shell-mode-hook       ; [parent: fundamental]
-                                        ; (works in *shell* buffers!)
                   ssh-config-mode-hook))
-    (add-hook hook 'leuven--highlight-special-patterns))
+    (add-hook hook
+     (lambda ()
+       (font-lock-add-keywords nil      ; in the current buffer
+        `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))
+        ;; FIXME                      0                        t
+        'end))))
 #+end_src
+
+See doc of =font-lock-keywords= and =font-lock-add-keywords=.
 
 For FIXME to be highlighted in Org tables as well, use:
 
 #+begin_src emacs-lisp :tangle no
   (defun fp-fontify-fixme ()
-    (font-lock-add-keywords
-     nil '(("\\<FIXME\\>" 0 font-lock-warning-face t)) t))
-                                                       ^!!!
+    (font-lock-add-keywords nil
+     '(("\\<FIXME\\>" 0 font-lock-warning-face t)) t))
+                                                   ^!!!
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1653,6 +1655,14 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
 
   ;; use inactive face for mode line in non-selected windows
   (setq mode-line-in-non-selected-windows t)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; show position in a scrollbar like way in mode-line
+  (when (try-require 'sml-modeline)
+
+    ;; mode line indicator total length
+    (setq sml-modeline-len 10))
 #+end_src
 
 ** How Text Is Displayed
@@ -3589,9 +3599,9 @@ one.
           '((top . 0)
             (left . 0)))
 
-    ;; default value of `vertical-scroll-bar' for buffers that don't
-    ;; override it
-    (setq default-vertical-scroll-bar 'right))
+    ;; ;; position of the vertical scroll bar
+    ;; (setq-default vertical-scroll-bar 'right)
+    )
 
   (XEmacs
     (set-frame-width (buffer-dedicated-frame) 80)
@@ -4564,6 +4574,7 @@ work and tasks with Org mode.
   (global-set-key
    (kbd "<f7>")
    (lambda ()
+     "Execute `C-c a r d' to display the calendar and tasks for today."
      (interactive)
      (org-agenda nil "rd")))
 
@@ -10356,8 +10367,6 @@ To evaluate a non-interactive command, simply use =IELM=.
 
 #+begin_src emacs-lisp
   ;;;_ * emacs-lisp
-
-  (add-hook 'emacs-lisp-mode-hook 'turn-on-auto-fill)
 
   ;; (defun elisp-indent-or-complete (&optional arg)
   ;;   (interactive "p")
