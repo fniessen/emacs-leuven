@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-12 Thu 09:24>
+# Time-stamp: <2013-12-12 Thu 09:43>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -9271,15 +9271,16 @@ file, AUCTeX gives you a =Command= menu.
       ;; don't ask user for permission to save files before starting TeX
       (setq TeX-save-query nil)
 
-      (defun pdflatex-quiet ()
+      (defun TeX-default ()
+        "Choose the default command from `C-c C-c'."
         (interactive)
-        (save-buffer)
-        (TeX-command "LaTeX" 'TeX-master-file -1))
+        (TeX-save-document "")          ; or just use `TeX-save-query'
+        (execute-kbd-macro (kbd "C-c C-c RET")))
 
       ;; rebind the "compile command" to default command from `C-c C-c'
       ;; (in LaTeX mode only)
       (define-key LaTeX-mode-map
-        (kbd "<f9>") 'pdflatex-quiet)
+        (kbd "<f9>") 'TeX-default)
 
       ;; use PDF mode by default (instead of DVI)
       (setq-default TeX-PDF-mode t)

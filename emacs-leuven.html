@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-12 Thu 09:27 -->
+  <title>Emacs Leuven</title><!-- 2013-12-12 Thu 09:46 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1108,7 +1108,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131212.0926</span>
+"color: #4C886B; font-style: italic;">Version: 20131212.0945</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1230,7 +1230,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131212.0926]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131212.0945]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -16707,19 +16707,25 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
       (setq TeX-save-query nil)
 
       (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">pdflatex-quiet</span> ()
+"color: #006699;">TeX-default</span> ()
+        <span style=
+"color: #008000;">"Choose the default command from `C-c C-c'."</span>
         (interactive)
-        (save-buffer)
-        (TeX-command <span style=
-"color: #036A07;">"LaTeX"</span> 'TeX-master-file -1))
+        (TeX-save-document <span style=
+"color: #036A07;">""</span>)          <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">or just use `</span><span style=
+"color: #4C886B; font-style: italic;">TeX-save-query</span><span style=
+"color: #4C886B; font-style: italic;">'</span>
+        (execute-kbd-macro (kbd <span style=
+"color: #036A07;">"C-c C-c RET"</span>)))
 
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">rebind the "compile command" to default command from `C-c C-c'</span>
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(in LaTeX mode only)</span>
       (define-key LaTeX-mode-map
-        (kbd <span style=
-"color: #036A07;">"&lt;f9&gt;"</span>) 'pdflatex-quiet)
+        (kbd <span style="color: #036A07;">"&lt;f9&gt;"</span>) 'TeX-default)
 
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">use PDF mode by default (instead of DVI)</span>
@@ -25104,7 +25110,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131212.0927]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131212.0945]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

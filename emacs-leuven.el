@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131212.0925
+;; Version: 20131212.0943
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131212.0925]--")
+(message "* --[ Loading Emacs Leuven 20131212.0943]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6327,15 +6327,16 @@ From %c"
       ;; don't ask user for permission to save files before starting TeX
       (setq TeX-save-query nil)
 
-      (defun pdflatex-quiet ()
+      (defun TeX-default ()
+        "Choose the default command from `C-c C-c'."
         (interactive)
-        (save-buffer)
-        (TeX-command "LaTeX" 'TeX-master-file -1))
+        (TeX-save-document "")          ; or just use `TeX-save-query'
+        (execute-kbd-macro (kbd "C-c C-c RET")))
 
       ;; rebind the "compile command" to default command from `C-c C-c'
       ;; (in LaTeX mode only)
       (define-key LaTeX-mode-map
-        (kbd "<f9>") 'pdflatex-quiet)
+        (kbd "<f9>") 'TeX-default)
 
       ;; use PDF mode by default (instead of DVI)
       (setq-default TeX-PDF-mode t)
@@ -9432,7 +9433,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131212.0926]--")
+(message "* --[ Loaded Emacs Leuven 20131212.0944]--")
 
 (provide 'emacs-leuven)
 
