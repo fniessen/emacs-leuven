@@ -307,7 +307,7 @@
 
       ;; auxiliary summary mode commands for Gnus
       ;; http://theotp1.physik.uni-ulm.de/~ste/comp/emacs/gnus/rs-gnus-summary.el
-      (when (try-require 'rs-gnus-summary)
+      (when (try-require 'rs-gnus-summary-XXX)
 
         ;; summary line indicators
         (setq rs-gnus-summary-line-content-type-alist
@@ -724,7 +724,6 @@
            1 (>= gnus-button-message-level 0) rs-gnus-button-browse-mid 1)
          t)) ;; append!
 
-
 ;;** 4.2 (info "(gnus)Using MIME")
 
       (message "Emacs MIME...")
@@ -1083,14 +1082,12 @@
       (fset 'leuven-mail-this-buffer ;; XXX does not work
             "\C-xh\M-w\M-xmail\C-m\C-c\C-t\C-y\C-c\C-f\C-t")
 
-
 ;;*** 1.4 (info "(message)Wide Reply")
 
       ;; addresses to prune (disable `Cc:' to myself) when doing wide replies
       (eval-after-load "message"
         (when (boundp 'gnus-ignored-from-addresses)
           (setq message-dont-reply-to-names gnus-ignored-from-addresses)))
-
 
 ;;*** 1.8 (info "(message)Forwarding")
 
@@ -1173,7 +1170,6 @@
               gnushush-user-agent-header
               "Gnus (www.gnus.org), GNU Emacs (www.gnu.org/software/emacs/)"))
 
-
 ;;*** 2.11 (info "(message)Spelling")
 
      (defun leuven-message-setup-routine ()
@@ -1187,7 +1183,6 @@
       ;; specify how `From' headers should look
       (setq message-from-style 'angles)
 
-
 ;;*** 3.3 (info "(message)Mail Variables")
 
       ;; sending mail -- for Gnus (for `message')
@@ -1195,7 +1190,6 @@
 
       ;; limit on the size of messages sent (5 MB)
       (setq message-send-mail-partially-limit (* 5 1024 1024))
-
 
 ;;*** 3.4 (info "(message)News Headers")
 
@@ -1206,7 +1200,6 @@
       ;; (default behavior since Gnus 5.10.0)
       (eval-after-load "message"
         '(add-to-list 'message-syntax-checks '(sender . disabled)))
-
 
 ;;*** 3.6 (info "(message)Insertion Variables")
 
@@ -1245,7 +1238,6 @@
                            (match-string 1 from)))))
               (insert (or head from) " wrote:\n\n"))))
 
-
 ;;*** 3.7 (info "(message)Various Message Variables")
 
       ;; ;; directory from which all other mail file variables are derived
@@ -1270,7 +1262,7 @@
         (setq fill-column 79)
         (turn-on-auto-fill)
 
-        ;; turn on the `org-mode' table editor
+        ;; turn on the Org mode table editor (in emails)
         (turn-on-orgtbl)
 
         ;; turn on (the enhanced version of) orgstruct-mode
@@ -1295,7 +1287,6 @@
       (add-hook 'message-mode-hook 'leuven--message-mode-hook)
 
       (add-hook 'message-send-hook 'org-footnote-normalize)
-
 
 ;;*** 3.9 (info "(message)Message Buffers")
 
@@ -1378,7 +1369,6 @@
       (define-key gnus-summary-mode-map
         (kbd "d") 'gnus-summary-mark-as-expirable)
 
-
       ;; ;; Email pre-expiry period according to group
       ;; (setq nnmail-expiry-wait-function
       ;;       (lambda (group)
@@ -1450,7 +1440,6 @@
 (eval-after-load "gnus-sum" ;; be sure to override default
       (gnus-define-keys gnus-summary-mode-map
         [delete] gnus-summary-delete-article))
-
 
 ;;*** 6.3.11 (info "(gnus)Duplicates")
 

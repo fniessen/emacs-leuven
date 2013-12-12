@@ -1,7 +1,7 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2013-11-20 Wed 21:05>
+#+Time-stamp: <2013-12-12 Thu 11:11>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -906,7 +906,6 @@ the stripe background is superimposed on my "read" background.
            1 (>= gnus-button-message-level 0) rs-gnus-button-browse-mid 1)
          t)) ;; append!
 
-
 ;;** 4.2 (info "(gnus)Using MIME")
 
       (message "Emacs MIME...")
@@ -1359,14 +1358,12 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
       (fset 'leuven-mail-this-buffer ;; XXX does not work
             "\C-xh\M-w\M-xmail\C-m\C-c\C-t\C-y\C-c\C-f\C-t")
 
-
 ;;*** 1.4 (info "(message)Wide Reply")
 
       ;; addresses to prune (disable `Cc:' to myself) when doing wide replies
       (eval-after-load "message"
         (when (boundp 'gnus-ignored-from-addresses)
           (setq message-dont-reply-to-names gnus-ignored-from-addresses)))
-
 
 ;;*** 1.8 (info "(message)Forwarding")
 
@@ -1453,7 +1450,6 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
               gnushush-user-agent-header
               "Gnus (www.gnus.org), GNU Emacs (www.gnu.org/software/emacs/)"))
 
-
 ;;*** 2.11 (info "(message)Spelling")
 
      (defun leuven-message-setup-routine ()
@@ -1471,7 +1467,6 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
       ;; specify how `From' headers should look
       (setq message-from-style 'angles)
 
-
 ;;*** 3.3 (info "(message)Mail Variables")
 
       ;; sending mail -- for Gnus (for `message')
@@ -1479,7 +1474,6 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
 
       ;; limit on the size of messages sent (5 MB)
       (setq message-send-mail-partially-limit (* 5 1024 1024))
-
 
 ;;*** 3.4 (info "(message)News Headers")
 
@@ -1490,7 +1484,6 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
       ;; (default behavior since Gnus 5.10.0)
       (eval-after-load "message"
         '(add-to-list 'message-syntax-checks '(sender . disabled)))
-
 
 ;;*** 3.6 (info "(message)Insertion Variables")
 
@@ -1529,7 +1522,6 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
                            (match-string 1 from)))))
               (insert (or head from) " wrote:\n\n"))))
 
-
 ;;*** 3.7 (info "(message)Various Message Variables")
 
       ;; ;; directory from which all other mail file variables are derived
@@ -1554,7 +1546,7 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
         (setq fill-column 79)
         (turn-on-auto-fill)
 
-        ;; turn on the `org-mode' table editor
+        ;; turn on the Org mode table editor (in emails)
         (turn-on-orgtbl)
 
         ;; turn on (the enhanced version of) orgstruct-mode
@@ -1579,7 +1571,6 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
       (add-hook 'message-mode-hook 'leuven--message-mode-hook)
 
       (add-hook 'message-send-hook 'org-footnote-normalize)
-
 
 ;;*** 3.9 (info "(message)Message Buffers")
 
@@ -1670,7 +1661,6 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
       (define-key gnus-summary-mode-map
         (kbd "d") 'gnus-summary-mark-as-expirable)
 
-
       ;; ;; Email pre-expiry period according to group
       ;; (setq nnmail-expiry-wait-function
       ;;       (lambda (group)
@@ -1742,7 +1732,6 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
 (eval-after-load "gnus-sum" ;; be sure to override default
       (gnus-define-keys gnus-summary-mode-map
         [delete] gnus-summary-delete-article))
-
 
 ;;*** 6.3.11 (info "(gnus)Duplicates")
 
