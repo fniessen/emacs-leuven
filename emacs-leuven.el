@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131212.2347
+;; Version: 20131212.2359
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131212.2347]--")
+(message "* --[ Loading Emacs Leuven 20131212.2359]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2504,6 +2504,13 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
       (autoload 'sr-speedbar-toggle "sr-speedbar" nil t)
       (global-set-key (kbd "<f4>") 'sr-speedbar-toggle)))
+
+;;** 21.12 (info "(emacs)Scroll Bars")
+
+  (leuven--section "21.12 (emacs)Scroll Bars")
+
+  ;; turn scroll bar off
+  (scroll-bar-mode -1)
 
 ;;** 21.15 (info "(emacs)Tool Bars")
 
@@ -9439,7 +9446,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131212.2348]--")
+(message "* --[ Loaded Emacs Leuven 20131213.0]--")
 
 (provide 'emacs-leuven)
 

@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-12 Thu 22:57>
+# Time-stamp: <2013-12-12 Thu 23:58>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -3724,6 +3724,17 @@ See =(display-pixel-width)=:
 
       (autoload 'sr-speedbar-toggle "sr-speedbar" nil t)
       (global-set-key (kbd "<f4>") 'sr-speedbar-toggle)))
+#+end_src
+
+** Scroll Bars
+
+#+begin_src emacs-lisp
+;;** 21.12 (info "(emacs)Scroll Bars")
+
+  (leuven--section "21.12 (emacs)Scroll Bars")
+
+  ;; turn scroll bar off
+  (scroll-bar-mode -1)
 #+end_src
 
 ** Tool Bars
