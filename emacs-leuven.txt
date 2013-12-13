@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-13 Fri 11:39>
+# Time-stamp: <2013-12-13 Fri 11:51>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -8341,8 +8341,6 @@ What about =apacite= and =tikz= in =org-latex-packages-alist=?
   ;; 12.6.6 Beamer class export
   ;; (require 'ox-beamer)
   (with-eval-after-load "ox-beamer"
-
-    (message "ox-beamer LOADED!") (sit-for 5)
 
     ;; default title of a frame containing an outline
     (setq org-beamer-outline-frame-title "Plan"))

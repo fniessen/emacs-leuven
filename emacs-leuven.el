@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131213.114
+;; Version: 20131213.1152
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131213.114]--")
+(message "* --[ Loading Emacs Leuven 20131213.1152]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5706,8 +5706,6 @@ From %c"
   ;; (require 'ox-beamer)
   (with-eval-after-load "ox-beamer"
 
-    (message "ox-beamer LOADED!") (sit-for 5)
-
     ;; default title of a frame containing an outline
     (setq org-beamer-outline-frame-title "Plan"))
 
@@ -9452,7 +9450,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131213.1142]--")
+(message "* --[ Loaded Emacs Leuven 20131213.1154]--")
 
 (provide 'emacs-leuven)
 
