@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-13 Fri 11:55 -->
+  <title>Emacs Leuven</title><!-- 2013-12-13 Fri 16:08 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1110,7 +1110,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131213.1154</span>
+"color: #4C886B; font-style: italic;">Version: 20131213.1607</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1232,7 +1232,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131213.1154]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131213.1607]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -1993,93 +1993,95 @@
 
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">load the latest version of all installed packages, and activate them</span>
-      <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(= add ALL ELPA subdirs to `</span><span style="color: #4C886B; font-style: italic;">load-path</span><span style="color: #4C886B; font-style: italic;">' and load `</span><span style="color: #4C886B; font-style: italic;">&lt;pkg&gt;-autoloads.el</span><span style="color: #4C886B; font-style: italic;">'?)</span>
-      (package-initialize)
-
-      <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">download the ELPA archive description if needed</span>
-      (<span style="color: #0000FF;">unless</span> package-archive-contents
-        (package-refresh-contents))
+      (package-initialize)              <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">add ALL ELPA subdirs to `</span><span style="color: #4C886B; font-style: italic;">load-path</span><span style="color: #4C886B; font-style: italic;">'</span>
+                                        <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">and load `</span><span style=
+"color: #4C886B; font-style: italic;">&lt;pkg&gt;-autoloads.el</span><span style="color: #4C886B; font-style: italic;">'</span>
 
       (<span style="color: #0000FF;">defcustom</span> <span style=
 "color: #BA36A5;">leuven-packages</span>
-        '(auctex
-          auto-complete
-          bbdb
-          boxquote
-          calfw
-          circe
-          <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">dictionary</span>
-          dired+
-          ess
-          fuzzy
-          git-commit-mode
-          <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">git-gutter</span>
-          <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">gnuplot-mode                  ; or gnuplot?</span>
-          graphviz-dot-mode
-          helm
+        '(auctex auto-complete bbdb boxquote calfw circe dired+ ess fuzzy
+          git-commit-mode graphviz-dot-mode helm
           htmlize                       <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">works with Org</span>
-          idle-require
-          interaction-log
+          idle-require interaction-log ledger-mode leuven-theme pager
+          rainbow-mode redshank sml-modeline tidy yasnippet
           <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">jabber</span>
-          ledger-mode
-          leuven-theme
+"color: #4C886B; font-style: italic;">dictionary</span>
           <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">multi-term</span>
+"color: #4C886B; font-style: italic;">gnuplot-mode                  ; or gnuplot?</span>
+          <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">jabber multi-term</span>
           <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">org</span>
           <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">org-mime                      ; from contrib</span>
-          pager
           <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">paredit</span>
-          rainbow-mode
-          redshank
-          sml-modeline
-          tidy
-          <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">w3m</span>
-          yasnippet)
+"color: #4C886B; font-style: italic;">paredit w3m</span>
+          )
         <span style=
 "color: #008000;">"A list of packages to ensure are installed at Emacs startup."</span>
         <span style="color: #006FE0;">:group</span> 'emacs-leuven
         <span style="color: #006FE0;">:type</span> '(repeat (string)))
 
+      (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven--missing-packages</span> ()
+        <span style=
+"color: #008000;">"List packages to install which are neither built-in nor already installed."</span>
+        (<span style="color: #0000FF;">let</span> (missing-packages)
+          (<span style="color: #0000FF;">dolist</span> (pkg leuven-packages)
+            (<span style=
+"color: #0000FF;">unless</span> (or (package-installed-p pkg)
+                        (locate-library (symbol-name pkg)))
+              (push pkg missing-packages)))))
+
       <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">install all packages specified in `</span><span style="color: #4C886B; font-style: italic;">leuven-packages</span><span style="color: #4C886B; font-style: italic;">' which are not</span>
+"color: #4C886B; font-style: italic;">propose to install all the packages specified in `</span><span style="color: #4C886B; font-style: italic;">leuven-packages</span><span style="color: #4C886B; font-style: italic;">'</span>
       <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">built-in nor already installed (must be run after initializing</span>
-      <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">`</span><span style=
-"color: #4C886B; font-style: italic;">package-initialize</span><span style=
-"color: #4C886B; font-style: italic;">')</span>
-      (<span style="color: #0000FF;">dolist</span> (pkg leuven-packages)
-        (<span style="color: #0000FF;">if</span> (or (package-installed-p pkg)
-                (locate-library (symbol-name pkg)))
-            (message <span style=
-"color: #036A07;">"(Info) Package `</span><span style=
-"color: #036A07;">%s</span><span style=
-"color: #036A07;">' built-in or already installed..."</span> pkg)
-          (<span style=
+"color: #4C886B; font-style: italic;">which are missing</span>
+      (<span style=
+"color: #0000FF;">let</span> ((missing-packages (leuven--missing-packages)))
+        (<span style="color: #0000FF;">when</span> missing-packages
+          <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">download once the ELPA archive description</span>
+          (package-refresh-contents)    <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">Ensure that the list of packages is</span>
+                                        <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">up-to-date. Otherwise, new packages</span>
+                                        <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">(not present in the cache of the ELPA</span>
+                                        <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">contents) won't install.</span>
+          (<span style="color: #0000FF;">dolist</span> (pkg missing-packages)
+            (<span style=
 "color: #0000FF;">if</span> (yes-or-no-p (format <span style=
 "color: #036A07;">"Install package `</span><span style=
 "color: #036A07;">%s</span><span style="color: #036A07;">'? "</span> pkg))
-              (<span style="color: #0000FF;">ignore-</span><span style=
+                (<span style="color: #0000FF;">ignore-</span><span style=
 "color: #0000FF; background-color: #FFFF88;">error</span><span style=
 "color: #0000FF;">s</span>
-                (package-install pkg))
-            (message <span style=
+                  (package-install pkg))
+                                        <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">must be run after initializing</span>
+                                        <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">`</span><span style=
+"color: #4C886B; font-style: italic;">package-initialize</span><span style=
+"color: #4C886B; font-style: italic;">'</span>
+              (message <span style=
 "color: #036A07;">"Customize `</span><span style=
 "color: #036A07;">leuven-packages</span><span style=
 "color: #036A07;">' to ignore this package at next startup..."</span>)
-            (sit-for 1.5))))
+              (sit-for 1.5)))))
 
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">don't truncate package names in Emacs package list</span>
@@ -25149,7 +25151,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131213.1155]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131213.1607]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

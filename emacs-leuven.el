@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131213.1152
+;; Version: 20131213.1605
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131213.1152]--")
+(message "* --[ Loading Emacs Leuven 20131213.1605]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -404,62 +404,51 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                     package-archives))
 
       ;; load the latest version of all installed packages, and activate them
-      ;; (= add ALL ELPA subdirs to `load-path' and load `<pkg>-autoloads.el'?)
-      (package-initialize)
-
-      ;; download the ELPA archive description if needed
-      (unless package-archive-contents
-        (package-refresh-contents))
+      (package-initialize)              ; add ALL ELPA subdirs to `load-path'
+                                        ; and load `<pkg>-autoloads.el'
 
       (defcustom leuven-packages
-        '(auctex
-          auto-complete
-          bbdb
-          boxquote
-          calfw
-          circe
-          ;; dictionary
-          dired+
-          ess
-          fuzzy
-          git-commit-mode
-          ;; git-gutter
-          ;; gnuplot-mode                  ; or gnuplot?
-          graphviz-dot-mode
-          helm
+        '(auctex auto-complete bbdb boxquote calfw circe dired+ ess fuzzy
+          git-commit-mode graphviz-dot-mode helm
           htmlize                       ; works with Org
-          idle-require
-          interaction-log
-          ;; jabber
-          ledger-mode
-          leuven-theme
-          ;; multi-term
+          idle-require interaction-log ledger-mode leuven-theme pager
+          rainbow-mode redshank sml-modeline tidy yasnippet
+          ;; dictionary
+          ;; gnuplot-mode                  ; or gnuplot?
+          ;; jabber multi-term
           ;; org
           ;; org-mime                      ; from contrib
-          pager
-          ;; paredit
-          rainbow-mode
-          redshank
-          sml-modeline
-          tidy
-          ;; w3m
-          yasnippet)
+          ;; paredit w3m
+          )
         "A list of packages to ensure are installed at Emacs startup."
         :group 'emacs-leuven
         :type '(repeat (string)))
 
-      ;; install all packages specified in `leuven-packages' which are not
-      ;; built-in nor already installed (must be run after initializing
-      ;; `package-initialize')
-      (dolist (pkg leuven-packages)
-        (if (or (package-installed-p pkg)
-                (locate-library (symbol-name pkg)))
-            (message "(Info) Package `%s' built-in or already installed..." pkg)
-          (if (yes-or-no-p (format "Install package `%s'? " pkg))
-              (ignore-errors
-                (package-install pkg))
-            (message "Customize `leuven-packages' to ignore this package at next startup...")
-            (sit-for 1.5))))
+      (defun leuven--missing-packages ()
+        "List packages to install which are neither built-in nor already installed."
+        (let (missing-packages)
+          (dolist (pkg leuven-packages)
+            (unless (or (package-installed-p pkg)
+                        (locate-library (symbol-name pkg)))
+              (push pkg missing-packages)))))
+
+      ;; propose to install all the packages specified in `leuven-packages'
+      ;; which are missing
+      (let ((missing-packages (leuven--missing-packages)))
+        (when missing-packages
+          ;; download once the ELPA archive description
+          (package-refresh-contents)    ; Ensure that the list of packages is
+                                        ; up-to-date. Otherwise, new packages
+                                        ; (not present in the cache of the ELPA
+                                        ; contents) won't install.
+          (dolist (pkg missing-packages)
+            (if (yes-or-no-p (format "Install package `%s'? " pkg))
+                (ignore-errors
+                  (package-install pkg))
+                                        ; must be run after initializing
+                                        ; `package-initialize'
+              (message "Customize `leuven-packages' to ignore this package at next startup...")
+              (sit-for 1.5)))))
 
       ;; don't truncate package names in Emacs package list
       (add-hook 'package-menu-mode-hook
@@ -9450,7 +9439,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131213.1154]--")
+(message "* --[ Loaded Emacs Leuven 20131213.1606]--")
 
 (provide 'emacs-leuven)
 
