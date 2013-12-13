@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131213.1605
+;; Version: 20131213.2334
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131213.1605]--")
+(message "* --[ Loading Emacs Leuven 20131213.2334]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2712,23 +2712,23 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           (adaptive-fill-function nil))
       (fill-paragraph)))
 
-  ;; replace space by nobreak-space where it fits well
+  ;; replace space by no-break space where it fits well
   (defun leuven-smart-punctuation-colon ()
-    "Replace space by nobreak-space in front of a colon."
+    "Replace space by no-break space in front of a colon."
     (interactive)
     (require 'org-element)
     (cond ((eq (char-before) ?\ )       ; normal space
            (backward-delete-char 1)
            (cond ((equal mode-name "PDFLaTeX")
-                  (insert "~:"))
+                  (insert " :"))        ; narrow no-break space (0x202F)
                  ((equal mode-name "Org")
                   (if (member (org-element-type (org-element-at-point))
                               ;; list of exceptions
                               '(src-block keyword table dynamic-block))
-                      (insert " :")
-                    (insert " :")))
+                      (insert " :")     ; normal space
+                    (insert " :")))     ; narrow no-break space (0x202F)
                  (t
-                  (insert " :"))))      ; non-breaking space
+                  (insert " :"))))      ; narrow no-break space (0x202F)
 
           ;; remove nobreak-space if two colons are put one after the
           ;; other (for terms and definitions in Org)
@@ -2741,33 +2741,32 @@ nil. Save execution times in the global list `leuven--load-times-list'."
            (insert ":"))))
 
   (defun leuven-smart-punctuation-question-mark ()
-    "If any, replace space by nobreak-space in front of a question mark."
+    "If any, replace space by no-break space in front of a question mark."
     (interactive)
-    (if (eq (char-before) ?\ ) ; normal space
+    (if (eq (char-before) ?\ )          ; normal space
         (progn
           (backward-delete-char 1)
           (if (equal mode-name "PDFLaTeX")
               (insert "\,?")
-            (insert " ?"))) ; non-breaking space
+            (insert " ?")))             ; no-break space (0x00A0)
       (insert "?")))
 
   (defun leuven-smart-punctuation-exclamation-mark ()
-    "If any, replace space by nobreak-space in front of an exclamation
-  mark."
+    "If any, replace space by no-break space in front of an exclamation mark."
     (interactive)
-    (if (eq (char-before) ?\ ) ; normal space
+    (if (eq (char-before) ?\ )          ; normal space
         (progn
           (backward-delete-char 1)
           (if (equal mode-name "PDFLaTeX")
               (insert "\,!")
-            (insert " !"))) ; non-breaking space
+            (insert " !")))             ; no-break space (0x00A0)
       (insert "!")))
 
   (defun leuven-smart-punctuation-semicolon ()
-    "If any, replace space by nobreak-space in front of a semi-colon."
+    "If any, replace space by no-break space in front of a semi-colon."
     (interactive)
     (require 'org-element)
-    (if (eq (char-before) ?\ ) ; normal space
+    (if (eq (char-before) ?\ )          ; normal space
         (progn
           (backward-delete-char 1)
           (cond ((equal mode-name "PDFLaTeX")
@@ -2779,7 +2778,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                      (insert " ;")
                    (insert " ;")))
                 (t
-                 (insert " ;")))) ; non-breaking space
+                 (insert " ;"))))       ; no-break space (0x00A0)
       (insert ";")))
 
   (defun leuven-smart-punctuation-apostrophe ()
@@ -2803,7 +2802,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
         (unless (looking-at "'") (insert-and-inherit "'"))))))
 
   (defun leuven-smart-punctuation-quotation-mark ()
-    "Replace two following double quotes by French quotes with nobreak-spaces."
+    "Replace two following double quotes by French quotes with no-break spaces."
     (interactive)
     (if (and (eq (char-before) ?\")
              (or (not (equal mode-name "Org"))
@@ -8163,7 +8162,10 @@ From %c"
     (add-hook 'gnus-startup-hook 'bbdb-insinuate-message)
 
 
-    ;; (bbdb-mua-auto-update-init 'gnus 'message)
+    ;; add addresses automatically
+    (bbdb-mua-auto-update-init 'gnus 'message)
+    ;; (setq bbdb-update-records-p 'create)
+    ;; (setq bbdb-mua-pop-up nil)
 
 
     ;; (define-key gnus-summary-mode-map
@@ -8175,11 +8177,11 @@ From %c"
     ;; (try-require 'message-x)
 
     ;; FIXME Does not work (still ask to add address)
-      ;; don't ask about fake addresses
-      ;; NOTE: there can be only one entry per header (such as To, From)
-      ;; http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html
-      (setq bbdb-ignore-some-messages-alist
-            '(("From" . "no.?reply\\|public.gmane.org")))
+    ;; don't ask about fake addresses
+    ;; NOTE: there can be only one entry per header (such as To, From)
+    ;; http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html
+    (setq bbdb-ignore-some-messages-alist
+          '(("From" . "no.?reply\\|public.gmane.org")))
 
 ;;* (info "(bbdb)Interfaces")
 
@@ -8609,6 +8611,9 @@ From %c"
 
   (autoload 'R-mode "ess-site"
     "Major mode for editing R source." t)
+
+  ;; number of seconds to highlight the evaluated region
+  (setq ess-blink-delay .6)
 
   ;; start R in current working directory, don't ask user
   (setq ess-ask-for-ess-directory nil)
@@ -9439,7 +9444,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131213.1606]--")
+(message "* --[ Loaded Emacs Leuven 20131213.2335]--")
 
 (provide 'emacs-leuven)
 

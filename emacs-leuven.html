@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-13 Fri 16:08 -->
+  <title>Emacs Leuven</title><!-- 2013-12-13 Fri 23:36 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1110,7 +1110,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131213.1607</span>
+"color: #4C886B; font-style: italic;">Version: 20131213.2335</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1232,7 +1232,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131213.1607]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131213.2335]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -7938,11 +7938,11 @@ M-: (executable-find "diff") RET
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">replace space by nobreak-space where it fits well</span>
+"color: #4C886B; font-style: italic;">replace space by no-break space where it fits well</span>
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-smart-punctuation-colon</span> ()
     <span style=
-"color: #008000;">"Replace space by nobreak-space in front of a colon."</span>
+"color: #008000;">"Replace space by no-break space in front of a colon."</span>
     (interactive)
     (<span style="color: #0000FF;">require</span> '<span style=
 "color: #D0372D;">org-element</span>)
@@ -7954,7 +7954,10 @@ M-: (executable-find "diff") RET
            (<span style=
 "color: #0000FF;">cond</span> ((equal mode-name <span style=
 "color: #036A07;">"PDFLaTeX"</span>)
-                  (insert <span style="color: #036A07;">"~:"</span>))
+                  (insert <span style=
+"color: #036A07;">" :"</span>))        <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
                  ((equal mode-name <span style="color: #036A07;">"Org"</span>)
                   (<span style=
 "color: #0000FF;">if</span> (member (org-element-type (org-element-at-point))
@@ -7962,13 +7965,19 @@ M-: (executable-find "diff") RET
 "color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">list of exceptions</span>
                               '(src-block keyword table dynamic-block))
-                      (insert <span style="color: #036A07;">" :"</span>)
-                    (insert <span style="color: #036A07;">" :"</span>)))
+                      (insert <span style=
+"color: #036A07;">" :"</span>)     <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">normal space</span>
+                    (insert <span style=
+"color: #036A07;">" :"</span>)))     <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
                  (t
                   (insert <span style=
-"color: #036A07;">" :"</span>))))      <span style=
+"color: #036A07;">" :"</span>))))      <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">non-breaking space</span>
+"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
 
           <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">remove nobreak-space if two colons are put one after the</span>
@@ -7988,47 +7997,54 @@ M-: (executable-find "diff") RET
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-smart-punctuation-question-mark</span> ()
     <span style=
-"color: #008000;">"If any, replace space by nobreak-space in front of a question mark."</span>
+"color: #008000;">"If any, replace space by no-break space in front of a question mark."</span>
     (interactive)
     (<span style=
-"color: #0000FF;">if</span> (eq (char-before) ?\ ) <span style="color: #4C886B;">; </span><span style="color: #4C886B; font-style: italic;">normal space</span>
+"color: #0000FF;">if</span> (eq (char-before) ?\ )          <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">normal space</span>
         (<span style="color: #0000FF;">progn</span>
           (backward-delete-char 1)
           (<span style=
 "color: #0000FF;">if</span> (equal mode-name <span style="color: #036A07;">"PDFLaTeX"</span>)
               (insert <span style="color: #036A07;">"\,?"</span>)
-            (insert <span style="color: #036A07;">" ?"</span>))) <span style=
+            (insert <span style=
+"color: #036A07;">" ?"</span>)))             <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">non-breaking space</span>
+"color: #4C886B; font-style: italic;">no-break space (0x00A0)</span>
       (insert <span style="color: #036A07;">"?"</span>)))
 
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-smart-punctuation-exclamation-mark</span> ()
     <span style=
-"color: #008000;">"If any, replace space by nobreak-space in front of an exclamation</span>
-<span style="color: #008000;">  mark."</span>
+"color: #008000;">"If any, replace space by no-break space in front of an exclamation mark."</span>
     (interactive)
     (<span style=
-"color: #0000FF;">if</span> (eq (char-before) ?\ ) <span style="color: #4C886B;">; </span><span style="color: #4C886B; font-style: italic;">normal space</span>
+"color: #0000FF;">if</span> (eq (char-before) ?\ )          <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">normal space</span>
         (<span style="color: #0000FF;">progn</span>
           (backward-delete-char 1)
           (<span style=
 "color: #0000FF;">if</span> (equal mode-name <span style="color: #036A07;">"PDFLaTeX"</span>)
               (insert <span style="color: #036A07;">"\,!"</span>)
-            (insert <span style="color: #036A07;">" !"</span>))) <span style=
+            (insert <span style=
+"color: #036A07;">" !"</span>)))             <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">non-breaking space</span>
+"color: #4C886B; font-style: italic;">no-break space (0x00A0)</span>
       (insert <span style="color: #036A07;">"!"</span>)))
 
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-smart-punctuation-semicolon</span> ()
     <span style=
-"color: #008000;">"If any, replace space by nobreak-space in front of a semi-colon."</span>
+"color: #008000;">"If any, replace space by no-break space in front of a semi-colon."</span>
     (interactive)
     (<span style="color: #0000FF;">require</span> '<span style=
 "color: #D0372D;">org-element</span>)
     (<span style=
-"color: #0000FF;">if</span> (eq (char-before) ?\ ) <span style="color: #4C886B;">; </span><span style="color: #4C886B; font-style: italic;">normal space</span>
+"color: #0000FF;">if</span> (eq (char-before) ?\ )          <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">normal space</span>
         (<span style="color: #0000FF;">progn</span>
           (backward-delete-char 1)
           (<span style=
@@ -8046,9 +8062,9 @@ M-: (executable-find "diff") RET
                    (insert <span style="color: #036A07;">" ;"</span>)))
                 (t
                  (insert <span style=
-"color: #036A07;">" ;"</span>)))) <span style=
+"color: #036A07;">" ;"</span>))))       <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">non-breaking space</span>
+"color: #4C886B; font-style: italic;">no-break space (0x00A0)</span>
       (insert <span style="color: #036A07;">";"</span>)))
 
   (<span style="color: #0000FF;">defun</span> <span style=
@@ -8084,7 +8100,7 @@ M-: (executable-find "diff") RET
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-smart-punctuation-quotation-mark</span> ()
     <span style=
-"color: #008000;">"Replace two following double quotes by French quotes with nobreak-spaces."</span>
+"color: #008000;">"Replace two following double quotes by French quotes with no-break spaces."</span>
     (interactive)
     (<span style="color: #0000FF;">if</span> (and (eq (char-before) ?\")
              (or (not (equal mode-name <span style=
@@ -21608,7 +21624,12 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
 
     <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(bbdb-mua-auto-update-init 'gnus 'message)</span>
+"color: #4C886B; font-style: italic;">add addresses automatically</span>
+    (bbdb-mua-auto-update-init 'gnus 'message)
+    <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(setq bbdb-update-records-p 'create)</span>
+    <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(setq bbdb-mua-pop-up nil)</span>
 
 
     <span style="color: #4C886B;">;; </span><span style=
@@ -21626,14 +21647,14 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #4C886B; font-style: italic;"> Does not work (still ask to add address)</span>
-      <span style="color: #4C886B;">;; </span><span style=
+    <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">don't ask about fake addresses</span>
-      <span style="color: #4C886B;">;; </span><span style=
+    <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">NOTE: there can be only one entry per header (such as To, From)</span>
-      <span style="color: #4C886B;">;; </span><span style=
+    <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html</span>
-      (setq bbdb-ignore-some-messages-alist
-            '((<span style="color: #036A07;">"From"</span> . <span style=
+    (setq bbdb-ignore-some-messages-alist
+          '((<span style="color: #036A07;">"From"</span> . <span style=
 "color: #036A07;">"no.?reply</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">|</span><span style=
@@ -22905,6 +22926,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">number of seconds to highlight the evaluated region</span>
+  (setq ess-blink-delay .6)
+
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">start R in current working directory, don't ask user</span>
   (setq ess-ask-for-ess-directory nil)
@@ -25151,7 +25176,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131213.1607]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131213.2336]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
