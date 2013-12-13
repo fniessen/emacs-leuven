@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-13 Fri 11:29 -->
+  <title>Emacs Leuven</title><!-- 2013-12-13 Fri 11:43 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1110,7 +1110,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131213.1128</span>
+"color: #4C886B; font-style: italic;">Version: 20131213.1142</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1232,7 +1232,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131213.1128]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131213.1142]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -3917,12 +3917,14 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">show position in a scrollbar like way in mode-line</span>
+"color: #4C886B; font-style: italic;">show buffer position like a scroll bar in mode line</span>
   (<span style="color: #0000FF;">when</span> (try-require 'sml-modeline)
 
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">mode line indicator total length</span>
-    (setq sml-modeline-len 10))
+    (setq sml-modeline-len 10)
+
+    (sml-modeline-mode))
 </pre>
           </div>
         </div>
@@ -7238,7 +7240,9 @@ M-: (executable-find "diff") RET
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">turn scroll bar off</span>
-  (scroll-bar-mode -1)
+  (<span style="color: #0000FF;">when</span> (and (display-graphic-p)
+             (fboundp 'sml-modeline-mode))
+    (scroll-bar-mode -1))
 </pre>
           </div>
         </div>
@@ -14375,7 +14379,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #0000FF;">if</span> (file-newer-than-file-p orgfile pdffile)
                 (<span style=
 "color: #0000FF;">if</span> (string-match <span style=
-"color: #036A07;">"^#\\+#+BEAMER_THEME: "</span> (buffer-string))
+"color: #036A07;">"^#\\+BEAMER_THEME: "</span> (buffer-string))
                     (org-beamer-export-to-pdf)
                   (org-latex-export-to-pdf))
               (message <span style=
@@ -25148,7 +25152,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131213.1129]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131213.1143]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

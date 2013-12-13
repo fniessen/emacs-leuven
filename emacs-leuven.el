@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131213.1126
+;; Version: 20131213.114
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131213.1126]--")
+(message "* --[ Loading Emacs Leuven 20131213.114]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1066,11 +1066,13 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   ;; use inactive face for mode line in non-selected windows
   (setq mode-line-in-non-selected-windows t)
 
-  ;; show position in a scrollbar like way in mode-line
+  ;; show buffer position like a scroll bar in mode line
   (when (try-require 'sml-modeline)
 
     ;; mode line indicator total length
-    (setq sml-modeline-len 10))
+    (setq sml-modeline-len 10)
+
+    (sml-modeline-mode))
 
 ;;** 14.19 How (info "(emacs)Text Display")ed
 
@@ -2510,7 +2512,9 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (leuven--section "21.12 (emacs)Scroll Bars")
 
   ;; turn scroll bar off
-  (scroll-bar-mode -1)
+  (when (and (display-graphic-p)
+             (fboundp 'sml-modeline-mode))
+    (scroll-bar-mode -1))
 
 ;;** 21.15 (info "(emacs)Tool Bars")
 
@@ -5389,7 +5393,7 @@ From %c"
               (message "HTML is up to date with Org file")))
           (when (file-exists-p pdffile)
             (if (file-newer-than-file-p orgfile pdffile)
-                (if (string-match "^#\\+#+BEAMER_THEME: " (buffer-string))
+                (if (string-match "^#\\+BEAMER_THEME: " (buffer-string))
                     (org-beamer-export-to-pdf)
                   (org-latex-export-to-pdf))
               (message "PDF is up to date with Org file")))
@@ -9448,7 +9452,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131213.1128]--")
+(message "* --[ Loaded Emacs Leuven 20131213.1142]--")
 
 (provide 'emacs-leuven)
 
