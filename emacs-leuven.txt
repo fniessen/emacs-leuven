@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-12 Thu 23:58>
+# Time-stamp: <2013-12-13 Fri 11:25>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -7926,7 +7926,9 @@ launched from Dired?
               (message "HTML is up to date with Org file")))
           (when (file-exists-p pdffile)
             (if (file-newer-than-file-p orgfile pdffile)
-                (org-latex-export-to-pdf)
+                (if (string-match "^#\\+#+BEAMER_THEME: " (buffer-string))
+                    (org-beamer-export-to-pdf)
+                  (org-latex-export-to-pdf))
               (message "PDF is up to date with Org file")))
           (beep))))
 
