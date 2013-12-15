@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-13 Fri 23:32>
+# Time-stamp: <2013-12-15 Sun 11:08>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4108,10 +4108,10 @@ See =sentence-end= and =(sentence-end)=.
 
 There are several *non-break space* characters:
 
-- *No-break space*, required for French punctuation (before =:=).
+- *No-break thin space* (202F), known in Unicode as "Narrow No-Break Space",
+  required for French punctuation (before =:=).
 
-- *No-break thin space*, known in Unicode as "Narrow No-Break Space", required
-  for French punctuation (before =?=, =!= or =;=).
+- *No-break space* (00A0), required for French punctuation (before =?=, =!= or =;=).
 
 #+begin_src emacs-lisp
   ;; replace space by no-break space where it fits well
@@ -8418,14 +8418,14 @@ Literate programming and reproducible research.
 #+end_src
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "ob-sh"
-
-    ;; command used to invoke a shell
-    (setq org-babel-sh-command "bash")
-
-    ;; use plain old syntax (instead of `$(...)') for Cygwin
-    (setq org-babel-sh-var-quote-fmt
-          "`cat <<'BABEL_TABLE'\n%s\nBABEL_TABLE\n`"))
+  ;; (with-eval-after-load "ob-shell"
+  ;;
+  ;;   ;; command used to invoke a shell
+  ;;   (setq org-babel-sh-command "bash")  ; now uses `shell-file-name' (2013-12-14)
+  ;;
+  ;;   ;; use plain old syntax (instead of `$(...)') for Cygwin
+  ;;   (setq org-babel-sh-var-quote-fmt
+  ;;         "`cat <<'BABEL_TABLE'\n%s\nBABEL_TABLE\n`"))
 #+end_src
 
 *** Editing source code
@@ -12230,7 +12230,7 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
     ;; add addresses automatically
     (bbdb-mua-auto-update-init 'gnus 'message)
     ;; (setq bbdb-update-records-p 'create)
-    ;; (setq bbdb-mua-pop-up nil)
+    (setq bbdb-mua-pop-up nil)
 
 
     ;; (define-key gnus-summary-mode-map

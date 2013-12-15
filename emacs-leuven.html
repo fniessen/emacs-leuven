@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-13 Fri 23:36 -->
+  <title>Emacs Leuven</title><!-- 2013-12-15 Sun 11:11 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1110,7 +1110,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131213.2335</span>
+"color: #4C886B; font-style: italic;">Version: 20131215.111</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1232,7 +1232,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131213.2335]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131215.111]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -7927,12 +7927,12 @@ M-: (executable-find "diff") RET
           <p>There are several <b>non-break space</b> characters:</p>
 
           <ul class="org-ul">
-            <li><b>No-break space</b>, required for French punctuation (before
+            <li><b>No-break thin space</b> (202F), known in Unicode as “Narrow
+            No-Break Space”, required for French punctuation (before
             <code>:</code>).</li>
 
-            <li><b>No-break thin space</b>, known in Unicode as “Narrow
-            No-Break Space”, required for French punctuation (before
-            <code>?</code>, <code>!</code> or <code>;</code>).</li>
+            <li><b>No-break space</b> (00A0), required for French punctuation
+            (before <code>?</code>, <code>!</code> or <code>;</code>).</li>
           </ul>
 
           <div class="org-src-container">
@@ -15256,18 +15256,20 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
-"color: #036A07;">"ob-sh"</span>
-
-    <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">command used to invoke a shell</span>
-    (setq org-babel-sh-command <span style="color: #036A07;">"bash"</span>)
-
-    <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">use plain old syntax (instead of `$(...)') for Cygwin</span>
-    (setq org-babel-sh-var-quote-fmt
-          <span style=
-"color: #036A07;">"`cat &lt;&lt;'BABEL_TABLE'\n%s\nBABEL_TABLE\n`"</span>))
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(with-eval-after-load "ob-shell"</span>
+  <span style="color: #4C886B;">;;</span>
+  <span style="color: #4C886B;">;;   </span><span style=
+"color: #4C886B; font-style: italic;">;; command used to invoke a shell</span>
+  <span style="color: #4C886B;">;;   </span><span style=
+"color: #4C886B; font-style: italic;">(setq org-babel-sh-command "bash")  ; now uses `</span><span style="color: #4C886B; font-style: italic;">shell-file-name</span><span style="color: #4C886B; font-style: italic;">' (2013-12-14)</span>
+  <span style="color: #4C886B;">;;</span>
+  <span style="color: #4C886B;">;;   </span><span style=
+"color: #4C886B; font-style: italic;">;; use plain old syntax (instead of `$(...)') for Cygwin</span>
+  <span style="color: #4C886B;">;;   </span><span style=
+"color: #4C886B; font-style: italic;">(setq org-babel-sh-var-quote-fmt</span>
+  <span style="color: #4C886B;">;;         </span><span style=
+"color: #4C886B; font-style: italic;">"`cat &lt;&lt;'BABEL_TABLE'\n%s\nBABEL_TABLE\n`"))</span>
 </pre>
           </div>
         </div>
@@ -21628,8 +21630,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (bbdb-mua-auto-update-init 'gnus 'message)
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(setq bbdb-update-records-p 'create)</span>
-    <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(setq bbdb-mua-pop-up nil)</span>
+    (setq bbdb-mua-pop-up nil)
 
 
     <span style="color: #4C886B;">;; </span><span style=
@@ -25176,7 +25177,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131213.2336]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131215.1111]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131213.2334
+;; Version: 20131215.1109
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131213.2334]--")
+(message "* --[ Loading Emacs Leuven 20131215.1109]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5744,14 +5744,14 @@ From %c"
       "Recenter after jumping to the file which contains the item at point."
       (recenter))
 
-  (with-eval-after-load "ob-sh"
-
-    ;; command used to invoke a shell
-    (setq org-babel-sh-command "bash")
-
-    ;; use plain old syntax (instead of `$(...)') for Cygwin
-    (setq org-babel-sh-var-quote-fmt
-          "`cat <<'BABEL_TABLE'\n%s\nBABEL_TABLE\n`"))
+  ;; (with-eval-after-load "ob-shell"
+  ;;
+  ;;   ;; command used to invoke a shell
+  ;;   (setq org-babel-sh-command "bash")  ; now uses `shell-file-name' (2013-12-14)
+  ;;
+  ;;   ;; use plain old syntax (instead of `$(...)') for Cygwin
+  ;;   (setq org-babel-sh-var-quote-fmt
+  ;;         "`cat <<'BABEL_TABLE'\n%s\nBABEL_TABLE\n`"))
 
 ;;** 14.2 (info "(org)Editing source code")
 
@@ -8165,7 +8165,7 @@ From %c"
     ;; add addresses automatically
     (bbdb-mua-auto-update-init 'gnus 'message)
     ;; (setq bbdb-update-records-p 'create)
-    ;; (setq bbdb-mua-pop-up nil)
+    (setq bbdb-mua-pop-up nil)
 
 
     ;; (define-key gnus-summary-mode-map
@@ -9444,7 +9444,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131213.2335]--")
+(message "* --[ Loaded Emacs Leuven 20131215.111]--")
 
 (provide 'emacs-leuven)
 
