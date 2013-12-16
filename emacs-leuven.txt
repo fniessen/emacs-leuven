@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-15 Sun 11:08>
+# Time-stamp: <2013-12-16 Mon 13:46>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4212,7 +4212,7 @@ There are several *non-break space* characters:
                               '(src-block keyword table dynamic-block)))))
         (progn
           (backward-delete-char 1)
-          (insert "«  »")
+          (insert "«  »")               ; narrow no-break space (0x202F)
           (backward-char 2))
       (insert "\"")))
 
