@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-16 Mon 13:46>
+# Time-stamp: <2013-12-17 Tue 11:07>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1594,6 +1594,7 @@ characters over the default mechanism of =nobreak-char-display= and
       ;; mappings for displaying characters
       (setq whitespace-display-mappings
             '((space-mark ?\xA0 [?\u00B7] [?.]) ; hard space - centered dot
+              (space-mark ?\u202F [?\u00B7] [?.]) ; hard space - centered dot
               (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) ; tab - left quote mark
       ))
 #+end_src
@@ -5185,11 +5186,9 @@ We use the following 4-letter status keywords:
 - STRT ::
      Some progress has already been done on the task.
 
-- DLGT ::
-     Task delegated to someone else.
-
 - WAIT ::
-     Waiting for some external event to be able to work on the task.
+     Task delegated to someone else. Or waiting for some external event to be
+     able to work on the task.
 
 - DFRD ::
      Task to be approved (and eventually done) in the future.
@@ -5219,8 +5218,7 @@ verified before really closing the task.
         '((sequence "NEW(n!)"           ; proposal
                     "TODO(t!)"          ; open, not started
                     "STRT(s!)"          ; in progress
-                    "WAIT(w!)"          ; on hold
-                    "DLGT(l!)"          ; assigned, feedback
+                    "WAIT(w!)"          ; on hold, assigned, feedback
                     "DFRD(f!)"          ; someday, maybe, perhaps, may be undertaken in the future, wish
                     "|"
                     "DONE(d!)"          ; completed, closed, resolved
@@ -5241,8 +5239,7 @@ verified before really closing the task.
           '(("NEW"  . leuven-org-created-kwd-face)
             ("TODO" . org-todo)
             ("STRT" . leuven-org-inprogress-kwd-face)
-            ("DLGT" . leuven-org-delegated-kwd-face)
-            ("WAIT" . leuven-org-delegated-kwd-face)
+            ("WAIT" . leuven-org-waiting-for-kwd-face)
             ("DFRD" . leuven-org-deferred-kwd-face)
             ("DONE" . org-done)
             ("CANX" . org-done)
@@ -5274,10 +5271,10 @@ verified before really closing the task.
       '((t (:weight bold :box (:line-width 1 :color "#D9D14A")
             :foreground "#D9D14A" :background "#FCFCDC")))
       "Face used to display state STRT.")
-    (defface leuven-org-delegated-kwd-face
+    (defface leuven-org-waiting-for-kwd-face
       '((t (:weight bold :box (:line-width 1 :color "#89C58F")
             :foreground "#89C58F" :background "#E2FEDE")))
-      "Face used to display state DLGT or WAIT.")
+      "Face used to display state WAIT.")
     (defface leuven-org-deferred-kwd-face
       '((t (:weight bold :box (:line-width 1 :color "#9EB6D4")
             :foreground "#9EB6D4" :background "#E0EFFF")))
@@ -5418,10 +5415,10 @@ that all tags starting with =@= or =#= will be excluded from inheritance with:
                          ("work"       . ?w)
                         (:endgroup . nil)
                         ("errands"     . ?e)
+                        ("finance"     . ?f)
                         ("phone"       . ?p)
                         ("mail"        . ?m)
 
-                        ("bank"        . ?b)
                         ("notbillable" . ?B)
                         ("now"         . ?N)
                         ;; ("reading" . ?r)
@@ -5774,8 +5771,8 @@ The ultimate capture tool.
                (t "~/"))))
 
   ;; 9.1.2 default target for storing notes
-  (setq org-default-notes-file
-        (concat org-directory "/refile.org")) ; Inbox for collecting
+  (setq org-default-notes-file          ; inbox for collecting
+        (concat org-directory "/refile.org"))
 #+end_src
 
 - Contacts
@@ -5875,8 +5872,8 @@ Find a location for refiling on capture.
                    :prepend t) t)
 
     (defun leuven-find-location ()
-      "Find my Inbox file and some headline in the current buffer."
-      (find-file "~/org/refile.org")
+      "Find my CollectBox file and some headline in the current buffer."
+      (find-file org-default-notes-file)
       (goto-char (point-min))
       (helm-org-headlines)
       (org-forward-heading-same-level 1))
@@ -5920,10 +5917,7 @@ Additional parameters can be included via the commands you use:
      Attach it to something that we're already working on.
 
 - Create a WAIT Item ::
-     Create a new "Waiting For" item.
-
-- Create a DLGT Item ::
-     Create a new "Assigned" item.
+     Create a new "Waiting For" item, eventually with an "Assignee" property.
 
 - Create a DFRD Item ::
      Create a new "Someday" item.
@@ -6957,8 +6951,8 @@ Hide certain tasks that you don't want to be bothered with all the time:
 
     (add-to-list 'org-agenda-custom-commands
                  `("pu" "Uncategorized"
-                   tags "CATEGORY={@Inbox}&LEVEL=2"
-                   ((org-agenda-overriding-header "Level 2 stuff in inbox"))) t)
+                   tags "CATEGORY={@CollectBox}&LEVEL=2"
+                   ((org-agenda-overriding-header "Level 2 stuff in CollectBox"))) t)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -7094,7 +7088,7 @@ Cleanup:
 
 **** Weekly task review
 
-1. Clear inbox
+1. Clear inbox for collecting
 2. Review previous calendar data
 3. Review upcoming calendar
 4. Review (stuck) projects
@@ -7106,8 +7100,8 @@ Cleanup:
     (add-to-list 'org-agenda-custom-commands
                  '("rw" "Weekly review"
                    (
-                    (tags "CATEGORY={@Inbox}&LEVEL=2|TODO={NEW}"
-                          ((org-agenda-overriding-header "Inbox")))
+                    (tags "CATEGORY={@CollectBox}&LEVEL=2|TODO={NEW}"
+                          ((org-agenda-overriding-header "CollectBox")))
 
                     (agenda ""
                             ((org-agenda-clockreport-mode t)
@@ -7144,19 +7138,19 @@ Cleanup:
                           ((org-agenda-overriding-header "In progress")
                            (org-agenda-todo-ignore-scheduled nil)))
 
-                    (todo "TODO"        ; don't include items from Inbox! XXX
+                    (todo "TODO"        ; don't include items from CollectBox! XXX
                           ((org-agenda-overriding-header "Action list")))
 
                     ;; ignore scheduled and deadline entries, as they're
                     ;; visible in the above agenda (for the past + for next
                     ;; month) or scheduled/deadline'd for much later...
-                    (todo "WAIT|DLGT"
+                    (todo "WAIT"
                           ((org-agenda-format-date "")
                            (org-agenda-overriding-header "Waiting for")
                            (org-agenda-todo-ignore-deadlines 'all) ; future?
                            (org-agenda-todo-ignore-scheduled t)))
 
-                    ;; same reasoning as for WAIT|DLGT
+                    ;; same reasoning as for WAIT
                     (todo "DFRD"
                           ((org-agenda-format-date "")
                            (org-agenda-overriding-header "Someday")
@@ -7439,9 +7433,9 @@ special command to produce all specified files in one step: =C-c a e=.
                     (tags-todo "mail&TODO={TODO\\|STRT}")
                     (tags-todo "errands&TODO={TODO\\|STRT}")
                     ;; Delegated/Waiting For Actions
-                    (tags-todo "phone&TODO={WAIT\\|DLGT}")
-                    (tags-todo "mail&TODO={WAIT\\|DLGT}")
-                    (tags-todo "errands&TODO={WAIT\\|DLGT}"))) t)
+                    (tags-todo "phone&TODO={WAIT}")
+                    (tags-todo "mail&TODO={WAIT}")
+                    (tags-todo "errands&TODO={WAIT}"))) t)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -7649,15 +7643,15 @@ Agenda:
 *************** TODO Show SCHEDULED items as well in "Next 12 Days"
 
 #+begin_src emacs-lisp
-    ;; inbox
+    ;; CollectBox
     (add-to-list 'org-agenda-custom-commands
-                 '("I" "Inbox"
+                 '("c" "CollectBox"
                    todo ""
                    ((org-agenda-files '("~/org/refile.org")))) t)
 
-    ;; emails
+    ;; Email
     (add-to-list 'org-agenda-custom-commands
-                 '("@" "Emails"
+                 '("@" "Email"
                    todo ""
                    ((org-agenda-files '("~/org/email.org")))) t)
 #+end_src
@@ -14025,6 +14019,8 @@ There are a few commands to adjust the font sizes:
 
 - =C-x C-0= ::
      Resets to defaults.
+
+Those bindings are global and repeatable, e.g. =C-x C-+ C-+ C-+=.
 
 #+begin_src emacs-lisp
 )

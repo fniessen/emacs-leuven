@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131216.135
+;; Version: 20131217.1108
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131216.135]--")
+(message "* --[ Loading Emacs Leuven 20131217.1108]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1031,6 +1031,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
       ;; mappings for displaying characters
       (setq whitespace-display-mappings
             '((space-mark ?\xA0 [?\u00B7] [?.]) ; hard space - centered dot
+              (space-mark ?\u202F [?\u00B7] [?.]) ; hard space - centered dot
               (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) ; tab - left quote mark
       ))
 
@@ -3458,8 +3459,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
         '((sequence "NEW(n!)"           ; proposal
                     "TODO(t!)"          ; open, not started
                     "STRT(s!)"          ; in progress
-                    "WAIT(w!)"          ; on hold
-                    "DLGT(l!)"          ; assigned, feedback
+                    "WAIT(w!)"          ; on hold, assigned, feedback
                     "DFRD(f!)"          ; someday, maybe, perhaps, may be undertaken in the future, wish
                     "|"
                     "DONE(d!)"          ; completed, closed, resolved
@@ -3476,8 +3476,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           '(("NEW"  . leuven-org-created-kwd-face)
             ("TODO" . org-todo)
             ("STRT" . leuven-org-inprogress-kwd-face)
-            ("DLGT" . leuven-org-delegated-kwd-face)
-            ("WAIT" . leuven-org-delegated-kwd-face)
+            ("WAIT" . leuven-org-waiting-for-kwd-face)
             ("DFRD" . leuven-org-deferred-kwd-face)
             ("DONE" . org-done)
             ("CANX" . org-done)
@@ -3509,10 +3508,10 @@ nil. Save execution times in the global list `leuven--load-times-list'."
       '((t (:weight bold :box (:line-width 1 :color "#D9D14A")
             :foreground "#D9D14A" :background "#FCFCDC")))
       "Face used to display state STRT.")
-    (defface leuven-org-delegated-kwd-face
+    (defface leuven-org-waiting-for-kwd-face
       '((t (:weight bold :box (:line-width 1 :color "#89C58F")
             :foreground "#89C58F" :background "#E2FEDE")))
-      "Face used to display state DLGT or WAIT.")
+      "Face used to display state WAIT.")
     (defface leuven-org-deferred-kwd-face
       '((t (:weight bold :box (:line-width 1 :color "#9EB6D4")
             :foreground "#9EB6D4" :background "#E0EFFF")))
@@ -3616,10 +3615,10 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                          ("work"       . ?w)
                         (:endgroup . nil)
                         ("errands"     . ?e)
+                        ("finance"     . ?f)
                         ("phone"       . ?p)
                         ("mail"        . ?m)
 
-                        ("bank"        . ?b)
                         ("notbillable" . ?B)
                         ("now"         . ?N)
                         ;; ("reading" . ?r)
@@ -3898,8 +3897,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                (t "~/"))))
 
   ;; 9.1.2 default target for storing notes
-  (setq org-default-notes-file
-        (concat org-directory "/refile.org")) ; Inbox for collecting
+  (setq org-default-notes-file          ; inbox for collecting
+        (concat org-directory "/refile.org"))
 
   ;; 9.1.2 templates for the creation of capture buffers
 
@@ -3943,8 +3942,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                    :prepend t) t)
 
     (defun leuven-find-location ()
-      "Find my Inbox file and some headline in the current buffer."
-      (find-file "~/org/refile.org")
+      "Find my CollectBox file and some headline in the current buffer."
+      (find-file org-default-notes-file)
       (goto-char (point-min))
       (helm-org-headlines)
       (org-forward-heading-same-level 1))
@@ -4636,8 +4635,8 @@ From %c"
 
     (add-to-list 'org-agenda-custom-commands
                  `("pu" "Uncategorized"
-                   tags "CATEGORY={@Inbox}&LEVEL=2"
-                   ((org-agenda-overriding-header "Level 2 stuff in inbox"))) t)
+                   tags "CATEGORY={@CollectBox}&LEVEL=2"
+                   ((org-agenda-overriding-header "Level 2 stuff in CollectBox"))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("o" . "3. Organize...") t)
@@ -4743,8 +4742,8 @@ From %c"
     (add-to-list 'org-agenda-custom-commands
                  '("rw" "Weekly review"
                    (
-                    (tags "CATEGORY={@Inbox}&LEVEL=2|TODO={NEW}"
-                          ((org-agenda-overriding-header "Inbox")))
+                    (tags "CATEGORY={@CollectBox}&LEVEL=2|TODO={NEW}"
+                          ((org-agenda-overriding-header "CollectBox")))
 
                     (agenda ""
                             ((org-agenda-clockreport-mode t)
@@ -4781,19 +4780,19 @@ From %c"
                           ((org-agenda-overriding-header "In progress")
                            (org-agenda-todo-ignore-scheduled nil)))
 
-                    (todo "TODO"        ; don't include items from Inbox! XXX
+                    (todo "TODO"        ; don't include items from CollectBox! XXX
                           ((org-agenda-overriding-header "Action list")))
 
                     ;; ignore scheduled and deadline entries, as they're
                     ;; visible in the above agenda (for the past + for next
                     ;; month) or scheduled/deadline'd for much later...
-                    (todo "WAIT|DLGT"
+                    (todo "WAIT"
                           ((org-agenda-format-date "")
                            (org-agenda-overriding-header "Waiting for")
                            (org-agenda-todo-ignore-deadlines 'all) ; future?
                            (org-agenda-todo-ignore-scheduled t)))
 
-                    ;; same reasoning as for WAIT|DLGT
+                    ;; same reasoning as for WAIT
                     (todo "DFRD"
                           ((org-agenda-format-date "")
                            (org-agenda-overriding-header "Someday")
@@ -5020,9 +5019,9 @@ From %c"
                     (tags-todo "mail&TODO={TODO\\|STRT}")
                     (tags-todo "errands&TODO={TODO\\|STRT}")
                     ;; Delegated/Waiting For Actions
-                    (tags-todo "phone&TODO={WAIT\\|DLGT}")
-                    (tags-todo "mail&TODO={WAIT\\|DLGT}")
-                    (tags-todo "errands&TODO={WAIT\\|DLGT}"))) t)
+                    (tags-todo "phone&TODO={WAIT}")
+                    (tags-todo "mail&TODO={WAIT}")
+                    (tags-todo "errands&TODO={WAIT}"))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("vp"
@@ -5191,15 +5190,15 @@ From %c"
                     (org-agenda-write-buffer-name "List Review"))
                    "org-agenda-all-todo-entries.html") t)
 
-    ;; inbox
+    ;; CollectBox
     (add-to-list 'org-agenda-custom-commands
-                 '("I" "Inbox"
+                 '("c" "CollectBox"
                    todo ""
                    ((org-agenda-files '("~/org/refile.org")))) t)
 
-    ;; emails
+    ;; Email
     (add-to-list 'org-agenda-custom-commands
-                 '("@" "Emails"
+                 '("@" "Email"
                    todo ""
                    ((org-agenda-files '("~/org/email.org")))) t)
 
@@ -9444,7 +9443,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131216.1351]--")
+(message "* --[ Loaded Emacs Leuven 20131217.1109]--")
 
 (provide 'emacs-leuven)
 

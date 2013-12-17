@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-16 Mon 13:52 -->
+  <title>Emacs Leuven</title><!-- 2013-12-17 Tue 11:11 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1110,7 +1110,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131216.1351</span>
+"color: #4C886B; font-style: italic;">Version: 20131217.111</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1232,7 +1232,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131216.1351]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131217.111]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -3833,6 +3833,9 @@
 "color: #4C886B; font-style: italic;">mappings for displaying characters</span>
       (setq whitespace-display-mappings
             '((space-mark ?\xA0 [?\u00B7] [?.]) <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">hard space - centered dot</span>
+              (space-mark ?\u202F [?\u00B7] [?.]) <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">hard space - centered dot</span>
               (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) <span style=
@@ -9720,14 +9723,10 @@ M-: (executable-find "diff") RET
 
               <dd>Some progress has already been done on the task.</dd>
 
-              <dt>DLGT</dt>
-
-              <dd>Task delegated to someone else.</dd>
-
               <dt>WAIT</dt>
 
-              <dd>Waiting for some external event to be able to work on the
-              task.</dd>
+              <dd>Task delegated to someone else. Or waiting for some external
+              event to be able to work on the task.</dd>
 
               <dt>DFRD</dt>
 
@@ -9789,11 +9788,7 @@ M-: (executable-find "diff") RET
                     <span style=
 "color: #036A07;">"WAIT(w!)"</span>          <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">on hold</span>
-                    <span style=
-"color: #036A07;">"DLGT(l!)"</span>          <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">assigned, feedback</span>
+"color: #4C886B; font-style: italic;">on hold, assigned, feedback</span>
                     <span style=
 "color: #036A07;">"DFRD(f!)"</span>          <span style=
 "color: #4C886B;">; </span><span style=
@@ -9838,9 +9833,7 @@ M-: (executable-find "diff") RET
             (<span style=
 "color: #036A07;">"STRT"</span> . leuven-org-inprogress-kwd-face)
             (<span style=
-"color: #036A07;">"DLGT"</span> . leuven-org-delegated-kwd-face)
-            (<span style=
-"color: #036A07;">"WAIT"</span> . leuven-org-delegated-kwd-face)
+"color: #036A07;">"WAIT"</span> . leuven-org-waiting-for-kwd-face)
             (<span style=
 "color: #036A07;">"DFRD"</span> . leuven-org-deferred-kwd-face)
             (<span style="color: #036A07;">"DONE"</span> . org-done)
@@ -9913,7 +9906,7 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"#FCFCDC"</span>)))
       <span style="color: #008000;">"Face used to display state STRT."</span>)
     (<span style="color: #0000FF;">defface</span> <span style=
-"color: #BA36A5;">leuven-org-delegated-kwd-face</span>
+"color: #BA36A5;">leuven-org-waiting-for-kwd-face</span>
       '((t (<span style="color: #006FE0;">:weight</span> bold <span style=
 "color: #006FE0;">:box</span> (<span style=
 "color: #006FE0;">:line-width</span> 1 <span style=
@@ -9922,8 +9915,7 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"#89C58F"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
 "color: #036A07;">"#E2FEDE"</span>)))
-      <span style=
-"color: #008000;">"Face used to display state DLGT or WAIT."</span>)
+      <span style="color: #008000;">"Face used to display state WAIT."</span>)
     (<span style="color: #0000FF;">defface</span> <span style=
 "color: #BA36A5;">leuven-org-deferred-kwd-face</span>
       '((t (<span style="color: #006FE0;">:weight</span> bold <span style=
@@ -10199,12 +10191,12 @@ M-: (executable-find "diff") RET
                         (<span style=
 "color: #036A07;">"errands"</span>     . ?e)
                         (<span style=
+"color: #036A07;">"finance"</span>     . ?f)
+                        (<span style=
 "color: #036A07;">"phone"</span>       . ?p)
                         (<span style=
 "color: #036A07;">"mail"</span>        . ?m)
 
-                        (<span style=
-"color: #036A07;">"bank"</span>        . ?b)
                         (<span style=
 "color: #036A07;">"notbillable"</span> . ?B)
                         (<span style=
@@ -10796,11 +10788,11 @@ M-: (executable-find "diff") RET
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">9.1.2 default target for storing notes</span>
-  (setq org-default-notes-file
-        (concat org-directory <span style=
-"color: #036A07;">"/refile.org"</span>)) <span style=
+  (setq org-default-notes-file          <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">Inbox for collecting</span>
+"color: #4C886B; font-style: italic;">inbox for collecting</span>
+        (concat org-directory <span style=
+"color: #036A07;">"/refile.org"</span>))
 </pre>
             </div>
 
@@ -10955,8 +10947,8 @@ M-: (executable-find "diff") RET
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-find-location</span> ()
       <span style=
-"color: #008000;">"Find my Inbox file and some headline in the current buffer."</span>
-      (find-file <span style="color: #036A07;">"~/org/refile.org"</span>)
+"color: #008000;">"Find my CollectBox file and some headline in the current buffer."</span>
+      (find-file org-default-notes-file)
       (goto-char (point-min))
       (helm-org-headlines)
       (org-forward-heading-same-level 1))
@@ -11020,11 +11012,8 @@ M-: (executable-find "diff") RET
 
                 <dt>Create a WAIT Item</dt>
 
-                <dd>Create a new “Waiting For” item.</dd>
-
-                <dt>Create a DLGT Item</dt>
-
-                <dd>Create a new “Assigned” item.</dd>
+                <dd>Create a new “Waiting For” item, eventually with an
+                “Assignee” property.</dd>
 
                 <dt>Create a DFRD Item</dt>
 
@@ -12756,9 +12745,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                  `(<span style="color: #036A07;">"pu"</span> <span style=
 "color: #036A07;">"Uncategorized"</span>
                    tags <span style=
-"color: #036A07;">"CATEGORY={@Inbox}&amp;LEVEL=2"</span>
+"color: #036A07;">"CATEGORY={@CollectBox}&amp;LEVEL=2"</span>
                    ((org-agenda-overriding-header <span style=
-"color: #036A07;">"Level 2 stuff in inbox"</span>))) t)
+"color: #036A07;">"Level 2 stuff in CollectBox"</span>))) t)
 </pre>
               </div>
 
@@ -12988,7 +12977,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
             <div class="outline-text-5" id="text-28-9-6-1">
               <ol class="org-ol">
-                <li>Clear inbox</li>
+                <li>Clear inbox for collecting</li>
 
                 <li>Review previous calendar data</li>
 
@@ -13010,11 +12999,11 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"Weekly review"</span>
                    (
                     (tags <span style=
-"color: #036A07;">"CATEGORY={@Inbox}&amp;LEVEL=2|</span><span style=
+"color: #036A07;">"CATEGORY={@CollectBox}&amp;LEVEL=2|</span><span style=
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
 "color: #036A07;">={NEW}"</span>
                           ((org-agenda-overriding-header <span style=
-"color: #036A07;">"Inbox"</span>)))
+"color: #036A07;">"CollectBox"</span>)))
 
                     (agenda <span style="color: #036A07;">""</span>
                             ((org-agenda-clockreport-mode t)
@@ -13071,7 +13060,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
 "color: #036A07;">"</span>        <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">don't include items from Inbox! </span><span style="color: #4C886B; background-color: #FFFF88; font-style: italic;">XXX</span>
+"color: #4C886B; font-style: italic;">don't include items from CollectBox! </span><span style="color: #4C886B; background-color: #FFFF88; font-style: italic;">XXX</span>
                           ((org-agenda-overriding-header <span style=
 "color: #036A07;">"Action list"</span>)))
 
@@ -13081,7 +13070,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #4C886B; font-style: italic;">visible in the above agenda (for the past + for next</span>
                     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">month) or scheduled/deadline'd for much later...</span>
-                    (todo <span style="color: #036A07;">"WAIT|DLGT"</span>
+                    (todo <span style="color: #036A07;">"WAIT"</span>
                           ((org-agenda-format-date <span style=
 "color: #036A07;">""</span>)
                            (org-agenda-overriding-header <span style=
@@ -13092,7 +13081,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                            (org-agenda-todo-ignore-scheduled t)))
 
                     <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">same reasoning as for WAIT|DLGT</span>
+"color: #4C886B; font-style: italic;">same reasoning as for WAIT</span>
                     (todo <span style="color: #036A07;">"DFRD"</span>
                           ((org-agenda-format-date <span style=
 "color: #036A07;">""</span>)
@@ -13564,24 +13553,15 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                     (tags-todo <span style=
 "color: #036A07;">"phone&amp;</span><span style=
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">={WAIT</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">|</span><span style=
-"color: #036A07;">DLGT}"</span>)
+"color: #036A07;">={WAIT}"</span>)
                     (tags-todo <span style=
 "color: #036A07;">"mail&amp;</span><span style=
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">={WAIT</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">|</span><span style=
-"color: #036A07;">DLGT}"</span>)
+"color: #036A07;">={WAIT}"</span>)
                     (tags-todo <span style=
 "color: #036A07;">"errands&amp;</span><span style=
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">={WAIT</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">|</span><span style=
-"color: #036A07;">DLGT}"</span>))) t)
+"color: #036A07;">={WAIT}"</span>))) t)
 </pre>
               </div>
 
@@ -13927,19 +13907,19 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
     <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">inbox</span>
+"color: #4C886B; font-style: italic;">CollectBox</span>
     (add-to-list 'org-agenda-custom-commands
-                 '(<span style="color: #036A07;">"I"</span> <span style=
-"color: #036A07;">"Inbox"</span>
+                 '(<span style="color: #036A07;">"c"</span> <span style=
+"color: #036A07;">"CollectBox"</span>
                    todo <span style="color: #036A07;">""</span>
                    ((org-agenda-files '(<span style=
 "color: #036A07;">"~/org/refile.org"</span>)))) t)
 
     <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">emails</span>
+"color: #4C886B; font-style: italic;">Email</span>
     (add-to-list 'org-agenda-custom-commands
                  '(<span style="color: #036A07;">"@"</span> <span style=
-"color: #036A07;">"Emails"</span>
+"color: #036A07;">"Email"</span>
                    todo <span style="color: #036A07;">""</span>
                    ((org-agenda-files '(<span style=
 "color: #036A07;">"~/org/email.org"</span>)))) t)
@@ -24706,6 +24686,9 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
               <dd>Resets to defaults.</dd>
             </dl>
 
+            <p>Those bindings are global and repeatable, e.g. <code>C-x C-+ C-+
+            C-+</code>.</p>
+
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
 )
@@ -25180,7 +25163,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131216.1351]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131217.111]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
