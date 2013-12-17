@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131217.1108
+;; Version: 20131217.1232
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131217.1108]--")
+(message "* --[ Loading Emacs Leuven 20131217.1232]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4376,22 +4376,22 @@ From %c"
   ;; 10.4 column to shift tags to (in agenda items)
   (setq org-agenda-tags-column -132)
 
-  ;; type "L" in agenda and todo buffers to show category name and task
+  ;; type "(" in agenda and todo buffers to show category name and task
   ;; length for each task
-  (defvar leuven--org-agenda-show-task-details nil)
-  (defun leuven-org-agenda-toggle-task-details ()
+  (defvar leuven--org-agenda-show-tasks-details nil)
+  (defun leuven-org-agenda-toggle-tasks-details ()
     "Toggle inclusion of category and estimate in agenda views."
     (interactive)
-    (if leuven--org-agenda-show-task-details
+    (if leuven--org-agenda-show-tasks-details
         (progn
-          (setq leuven--org-agenda-show-task-details nil)
+          (setq leuven--org-agenda-show-tasks-details nil)
           (setq org-agenda-prefix-format
                 '((agenda  . " %-11s%i %?-12t")
                   (timeline  . " % s")
                   (todo  . " ")
                   (search . " ")
                   (tags  . " "))))
-      (setq leuven--org-agenda-show-task-details t)
+      (setq leuven--org-agenda-show-tasks-details t)
       (setq org-agenda-prefix-format
             '((agenda . " %-11s%i %-12:c%?-12t%7e ")
               (timeline . " % s")
@@ -4405,9 +4405,9 @@ From %c"
     (add-hook 'org-mode-hook
               (lambda ()
                 (define-key org-agenda-keymap
-                  (kbd "L") 'leuven-org-agenda-toggle-task-details)
+                  (kbd "(") 'leuven-org-agenda-toggle-tasks-details)
                 (define-key org-agenda-mode-map
-                  (kbd "L") 'leuven-org-agenda-toggle-task-details))))
+                  (kbd "(") 'leuven-org-agenda-toggle-tasks-details))))
 
   ;; 10.4.2 settings for time grid for agenda display
   (setq org-agenda-time-grid '((daily remove-match)
@@ -9443,7 +9443,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131217.1109]--")
+(message "* --[ Loaded Emacs Leuven 20131217.1233]--")
 
 (provide 'emacs-leuven)
 

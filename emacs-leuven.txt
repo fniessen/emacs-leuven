@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-17 Tue 11:07>
+# Time-stamp: <2013-12-17 Tue 12:31>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -6478,22 +6478,22 @@ arrives -- at which point it will be in all lists.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; type "L" in agenda and todo buffers to show category name and task
+  ;; type "(" in agenda and todo buffers to show category name and task
   ;; length for each task
-  (defvar leuven--org-agenda-show-task-details nil)
-  (defun leuven-org-agenda-toggle-task-details ()
+  (defvar leuven--org-agenda-show-tasks-details nil)
+  (defun leuven-org-agenda-toggle-tasks-details ()
     "Toggle inclusion of category and estimate in agenda views."
     (interactive)
-    (if leuven--org-agenda-show-task-details
+    (if leuven--org-agenda-show-tasks-details
         (progn
-          (setq leuven--org-agenda-show-task-details nil)
+          (setq leuven--org-agenda-show-tasks-details nil)
           (setq org-agenda-prefix-format
                 '((agenda  . " %-11s%i %?-12t")
                   (timeline  . " % s")
                   (todo  . " ")
                   (search . " ")
                   (tags  . " "))))
-      (setq leuven--org-agenda-show-task-details t)
+      (setq leuven--org-agenda-show-tasks-details t)
       (setq org-agenda-prefix-format
             '((agenda . " %-11s%i %-12:c%?-12t%7e ")
               (timeline . " % s")
@@ -6507,9 +6507,9 @@ arrives -- at which point it will be in all lists.
     (add-hook 'org-mode-hook
               (lambda ()
                 (define-key org-agenda-keymap
-                  (kbd "L") 'leuven-org-agenda-toggle-task-details)
+                  (kbd "(") 'leuven-org-agenda-toggle-tasks-details)
                 (define-key org-agenda-mode-map
-                  (kbd "L") 'leuven-org-agenda-toggle-task-details))))
+                  (kbd "(") 'leuven-org-agenda-toggle-tasks-details))))
 #+end_src
 
 Show the time grid in the daily agenda but not in the weekly agenda, except
