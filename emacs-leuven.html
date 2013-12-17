@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-17 Tue 12:34 -->
+  <title>Emacs Leuven</title><!-- 2013-12-17 Tue 14:33 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1110,7 +1110,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131217.1233</span>
+"color: #4C886B; font-style: italic;">Version: 20131217.1433</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1232,7 +1232,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131217.1233]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131217.1433]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -3832,12 +3832,12 @@
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">mappings for displaying characters</span>
       (setq whitespace-display-mappings
-            '((space-mark ?\xA0 [?\u00B7] [?.]) <span style=
+            '((space-mark ?\xA0 [?\u2423] [?.]) <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">hard space - centered dot</span>
+"color: #4C886B; font-style: italic;">nbsp - open box (bottom square bracket)</span>
               (space-mark ?\u202F [?\u00B7] [?.]) <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">hard space - centered dot</span>
+"color: #4C886B; font-style: italic;">narrow nbsp - centered dot</span>
               (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">tab - left quote mark</span>
@@ -11982,46 +11982,43 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">type "(" in agenda and todo buffers to show category name and task</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">length for each task</span>
-  (<span style="color: #0000FF;">defvar</span> <span style=
-"color: #BA36A5;">leuven--org-agenda-show-tasks-details</span> nil)
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-org-agenda-toggle-tasks-details</span> ()
-    <span style=
-"color: #008000;">"Toggle inclusion of category and estimate in agenda views."</span>
-    (interactive)
-    (<span style=
-"color: #0000FF;">if</span> leuven--org-agenda-show-tasks-details
-        (<span style="color: #0000FF;">progn</span>
-          (setq leuven--org-agenda-show-tasks-details nil)
-          (setq org-agenda-prefix-format
-                '((agenda  . <span style=
-"color: #036A07;">" %-11s%i %?-12t"</span>)
-                  (timeline  . <span style="color: #036A07;">" % s"</span>)
-                  (todo  . <span style="color: #036A07;">" "</span>)
-                  (search . <span style="color: #036A07;">" "</span>)
-                  (tags  . <span style="color: #036A07;">" "</span>))))
-      (setq leuven--org-agenda-show-tasks-details t)
-      (setq org-agenda-prefix-format
-            '((agenda . <span style=
-"color: #036A07;">" %-11s%i %-12:c%?-12t%7e "</span>)
-              (timeline . <span style="color: #036A07;">" % s"</span>)
-              (todo . <span style="color: #036A07;">" %i %-12:c"</span>)
-              (search . <span style="color: #036A07;">" %i %-12:c"</span>)
-              (tags . <span style="color: #036A07;">" %i %-12:c"</span>))))
-    (org-agenda-redo))
-
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #036A07;">"org-agenda"</span>
 
+    <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">type "(" in agenda and todo buffers to show category name and task</span>
+    <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">length for each task</span>
+    (<span style="color: #0000FF;">defvar</span> <span style=
+"color: #BA36A5;">leuven--org-agenda-show-tasks-details</span> nil)
+    (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven-org-agenda-toggle-tasks-details</span> ()
+      <span style=
+"color: #008000;">"Hide/show tasks details (category and time estimate) in agenda views."</span>
+      (interactive)
+      (<span style=
+"color: #0000FF;">if</span> leuven--org-agenda-show-tasks-details
+          (<span style="color: #0000FF;">progn</span>
+            (setq leuven--org-agenda-show-tasks-details nil)
+            (setq org-agenda-prefix-format
+                  '((agenda  . <span style=
+"color: #036A07;">" %-11s%i %?-12t"</span>)
+                    (timeline  . <span style="color: #036A07;">" % s"</span>)
+                    (todo  . <span style="color: #036A07;">" "</span>)
+                    (search . <span style="color: #036A07;">" "</span>)
+                    (tags  . <span style="color: #036A07;">" "</span>))))
+        (setq leuven--org-agenda-show-tasks-details t)
+        (setq org-agenda-prefix-format
+              '((agenda . <span style=
+"color: #036A07;">" %-11s%i %-12:c%?-12t%7e "</span>)
+                (timeline . <span style="color: #036A07;">" % s"</span>)
+                (todo . <span style="color: #036A07;">" %i %-12:c"</span>)
+                (search . <span style="color: #036A07;">" %i %-12:c"</span>)
+                (tags . <span style="color: #036A07;">" %i %-12:c"</span>))))
+      (org-agenda-redo))
+
     (add-hook 'org-mode-hook
               (<span style="color: #0000FF;">lambda</span> ()
-                (define-key org-agenda-keymap
-                  (kbd <span style=
-"color: #036A07;">"("</span>) 'leuven-org-agenda-toggle-tasks-details)
                 (define-key org-agenda-mode-map
                   (kbd <span style=
 "color: #036A07;">"("</span>) 'leuven-org-agenda-toggle-tasks-details))))
@@ -25163,7 +25160,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131217.1234]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131217.1433]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
