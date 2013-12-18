@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131217.1431
+;; Version: 20131218.112
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131217.1431]--")
+(message "* --[ Loading Emacs Leuven 20131218.112]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1030,16 +1030,16 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
       ;; mappings for displaying characters
       (setq whitespace-display-mappings
-            '((space-mark ?\xA0 [?\u2423] [?.]) ; nbsp - open box (bottom square bracket)
+            '((space-mark ?\u00A0 [?\u2423] [?.]) ; nbsp - open box (bottom square bracket)
               (space-mark ?\u202F [?\u00B7] [?.]) ; narrow nbsp - centered dot
               (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) ; tab - left quote mark
       ))
 
   ;; ;; show zero-width spaces
   ;; (font-lock-add-keywords nil
-  ;;  `((,(format "\\(%c\\)" ?\u200b) ; #\ZERO_WIDTH_SPACE
+  ;;  `((,(format "\\(%c\\)" ?\u200B) ; #\ZERO_WIDTH_SPACE
   ;;     (1 (progn (compose-region (match-beginning 1) (match-end 1)
-  ;;                               ?\u2b1b ; #\BLACK_LARGE_SQUARE
+  ;;                               ?\u2B1B ; #\BLACK_LARGE_SQUARE
   ;;                               'decompose-region)
   ;;               nil)))))
 
@@ -3460,7 +3460,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                     "TODO(t!)"          ; open, not started
                     "STRT(s!)"          ; in progress
                     "WAIT(w!)"          ; on hold, assigned, feedback
-                    "DFRD(f!)"          ; someday, maybe, perhaps, may be undertaken in the future, wish
+                    "SDAY(y!)"          ; someday, maybe, perhaps, may be undertaken in the future, wish
                     "|"
                     "DONE(d!)"          ; completed, closed, resolved
                     "CANX(x!)")         ; wontfix, rejected
@@ -3477,7 +3477,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
             ("TODO" . org-todo)
             ("STRT" . leuven-org-inprogress-kwd-face)
             ("WAIT" . leuven-org-waiting-for-kwd-face)
-            ("DFRD" . leuven-org-deferred-kwd-face)
+            ("SDAY" . leuven-org-someday-kwd-face)
             ("DONE" . org-done)
             ("CANX" . org-done)
 
@@ -3512,10 +3512,10 @@ nil. Save execution times in the global list `leuven--load-times-list'."
       '((t (:weight bold :box (:line-width 1 :color "#89C58F")
             :foreground "#89C58F" :background "#E2FEDE")))
       "Face used to display state WAIT.")
-    (defface leuven-org-deferred-kwd-face
+    (defface leuven-org-someday-kwd-face
       '((t (:weight bold :box (:line-width 1 :color "#9EB6D4")
             :foreground "#9EB6D4" :background "#E0EFFF")))
-      "Face used to display state DFRD.")
+      "Face used to display state SDAY.")
 
     (defface leuven-org-quote-kwd-face
       '((t (:weight bold :box (:line-width 1 :color "#FC5158")
@@ -4622,9 +4622,9 @@ From %c"
 
     (add-to-list 'org-agenda-custom-commands
                  '("bT" "Filtered list of TODO entries"
-                   tags-todo "TODO<>{DFRD\\|PROJ}"
+                   tags-todo "TODO<>{SDAY\\|PROJ}"
                    ((org-agenda-overriding-header
-                     "List of TODO items of all types but DFRD/PROJ, and PRIORITY >= #B")
+                     "List of TODO items of all types but SDAY/PROJ, and PRIORITY >= #B")
                     (org-agenda-sorting-strategy
                      '(category-up priority-down todo-state-up alpha-up)))) t)
 
@@ -4661,12 +4661,12 @@ From %c"
                    ((org-agenda-entry-types '(:timestamp :deadline :scheduled))
                     (org-agenda-overriding-header "Unscheduled TODO entries: "))) t)
 
-    ;; all TODO entries, but DFRD
+    ;; all TODO entries, but SDAY
     (add-to-list 'org-agenda-custom-commands
-                 '("rT" "List of undated TODO entries (no DFRD)"
-                   tags-todo "TODO<>{DFRD}"
+                 '("rT" "List of undated TODO entries (no SDAY)"
+                   tags-todo "TODO<>{SDAY}"
                    ((org-agenda-overriding-header
-                     "Global list of undated TODO items of all types but DFRD")
+                     "Global list of undated TODO items of all types but SDAY")
                     (org-agenda-skip-function
                      '(org-agenda-skip-entry-if 'scheduled 'deadline 'timestamp))
                     (org-agenda-sorting-strategy '(priority-down)))) t)
@@ -4721,7 +4721,7 @@ From %c"
 
     (add-to-list 'org-agenda-custom-commands
                  '("r$" "Cleanup"
-                   todo "DONE|CANX|DFRD"
+                   todo "DONE|CANX|SDAY"
                    ((org-agenda-overriding-header "Old tasks to delete or archive")
                     ;; also show deadlines and scheduled items
                     (org-agenda-todo-ignore-with-date nil))) t)
@@ -4791,7 +4791,7 @@ From %c"
                            (org-agenda-todo-ignore-scheduled t)))
 
                     ;; same reasoning as for WAIT
-                    (todo "DFRD"
+                    (todo "SDAY"
                           ((org-agenda-format-date "")
                            (org-agenda-overriding-header "Someday")
                            (org-agenda-todo-ignore-deadlines 'all)
@@ -9441,7 +9441,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131217.1432]--")
+(message "* --[ Loaded Emacs Leuven 20131218.1122]--")
 
 (provide 'emacs-leuven)
 

@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-17 Tue 14:33 -->
+  <title>Emacs Leuven</title><!-- 2013-12-18 Wed 11:23 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1110,7 +1110,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131217.1433</span>
+"color: #4C886B; font-style: italic;">Version: 20131218.1122</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1232,7 +1232,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131217.1433]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131218.1122]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -3832,7 +3832,7 @@
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">mappings for displaying characters</span>
       (setq whitespace-display-mappings
-            '((space-mark ?\xA0 [?\u2423] [?.]) <span style=
+            '((space-mark ?\u00A0 [?\u2423] [?.]) <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">nbsp - open box (bottom square bracket)</span>
               (space-mark ?\u202F [?\u00B7] [?.]) <span style=
@@ -3857,12 +3857,12 @@
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(font-lock-add-keywords nil</span>
   <span style="color: #4C886B;">;;  </span><span style=
-"color: #4C886B; font-style: italic;">`((,(format "\\(%c\\)" ?\u200b) ; #\ZERO_WIDTH_SPACE</span>
+"color: #4C886B; font-style: italic;">`((,(format "\\(%c\\)" ?\u200B) ; #\ZERO_WIDTH_SPACE</span>
   <span style="color: #4C886B;">;;     </span><span style=
 "color: #4C886B; font-style: italic;">(1 (progn (compose-region (match-beginning 1) (match-end 1)</span>
   <span style=
 "color: #4C886B;">;;                               </span><span style=
-"color: #4C886B; font-style: italic;">?\u2b1b ; #\BLACK_LARGE_SQUARE</span>
+"color: #4C886B; font-style: italic;">?\u2B1B ; #\BLACK_LARGE_SQUARE</span>
   <span style=
 "color: #4C886B;">;;                               </span><span style=
 "color: #4C886B; font-style: italic;">'decompose-region)</span>
@@ -6128,12 +6128,13 @@ M-: (executable-find "diff") RET
             "https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el">
             configuration of Thierry Volpiatto</a>!</p>
 
-            <p>In Helm, generally, look at the mode-line, you will see
-            <code>C-c ? help</code>, it is your friend.</p>
+            <p>In Helm, generally, look at the mode line; you will see
+            <code>C-c ?:Help</code>, it is your friend: hit it for more
+            info.</p>
 
             <ul class="org-ul">
-              <li>Narrow the list by typing some patterns (multiple patterns
-              are space-delimited string),</li>
+              <li>Narrow the list by typing some patterns (use the <b>space as
+              separator</b> for multiple patterns),</li>
 
               <li>Select an element with <code>&lt;Up&gt;</code> /
               <code>&lt;Down&gt;</code> / <code>&lt;PageUp&gt;</code> /
@@ -6142,8 +6143,44 @@ M-: (executable-find "diff") RET
 
               <li>Choose with <code>&lt;RET&gt;</code>.</li>
 
-              <li>With <code>C-z</code> contents of selected candidate are
-              displayed without quitting helm session.</li>
+              <li>
+                <code>C-z</code> executes an action without quitting the Helm
+                session (persistent action):
+
+                <p>For <code>helm-find-files</code>:</p>
+
+                <ul class="org-ul">
+                  <li>On a regular file,
+
+                    <ul class="org-ul">
+                      <li>First hit on <code>C-z</code> expands the file
+                      name</li>
+
+                      <li>Second hit opens the file and displays its contents
+                      in the other window</li>
+
+                      <li>Third hit kills the buffer (unless it was already
+                      open before starting helm session).</li>
+                    </ul>
+                  </li>
+
+                  <li>On image files (.jpg, etc..)
+
+                    <ul class="org-ul">
+                      <li>Second hit (or <code>C-u C-z</code>) displays the
+                      image in the other window</li>
+
+                      <li>If you then turn on <code>helm-follow-mode</code>
+                      (<code>C-c C-f</code>), you turn on Helm in image browser
+                      (i.e., use <code>C-n/p</code> or
+                      <code>arrows/down/up</code>).</li>
+
+                      <li>You can rotate image with <code>M-l/r</code> (these
+                      are persistent actions too).</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
             </ul>
 
             <p>To go back to the <b>previous element</b> of the minibuffer
@@ -9715,28 +9752,28 @@ M-: (executable-find "diff") RET
             <p>We use the following 4-letter status keywords:</p>
 
             <dl class="org-dl">
-              <dt>TODO</dt>
+              <dt><code>TODO</code></dt>
 
               <dd>Approved task, to be done.</dd>
 
-              <dt>STRT</dt>
+              <dt><code>STRT</code></dt>
 
               <dd>Some progress has already been done on the task.</dd>
 
-              <dt>WAIT</dt>
+              <dt><code>WAIT</code></dt>
 
               <dd>Task delegated to someone else. Or waiting for some external
               event to be able to work on the task.</dd>
 
-              <dt>DFRD</dt>
+              <dt><code>SDAY</code></dt>
 
               <dd>Task to be approved (and eventually done) in the future.</dd>
 
-              <dt>DONE</dt>
+              <dt><code>DONE</code></dt>
 
               <dd>Task is completed.</dd>
 
-              <dt>CANX</dt>
+              <dt><code>CANX</code></dt>
 
               <dd>Task is declined (but kept documented, instead of being
               deleted).</dd>
@@ -9746,7 +9783,7 @@ M-: (executable-find "diff") RET
             scheme:</p>
 
             <dl class="org-dl">
-              <dt>NEW</dt>
+              <dt><code>NEW</code></dt>
 
               <dd>Proposed task, idea or wish, <b>not approved yet</b>.
               Draft.</dd>
@@ -9790,7 +9827,7 @@ M-: (executable-find "diff") RET
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">on hold, assigned, feedback</span>
                     <span style=
-"color: #036A07;">"DFRD(f!)"</span>          <span style=
+"color: #036A07;">"SDAY(y!)"</span>          <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">someday, maybe, perhaps, may be undertaken in the future, wish</span>
                     <span style="color: #036A07;">"|"</span>
@@ -9813,7 +9850,7 @@ M-: (executable-find "diff") RET
 </pre>
             </div>
 
-            <p><code>DFRD</code> is <b>not</b> a completion state (in order not
+            <p><code>SDAY</code> is <b>not</b> a completion state (in order not
             to be struck through).</p>
 
             <div class="org-src-container">
@@ -9835,7 +9872,7 @@ M-: (executable-find "diff") RET
             (<span style=
 "color: #036A07;">"WAIT"</span> . leuven-org-waiting-for-kwd-face)
             (<span style=
-"color: #036A07;">"DFRD"</span> . leuven-org-deferred-kwd-face)
+"color: #036A07;">"SDAY"</span> . leuven-org-someday-kwd-face)
             (<span style="color: #036A07;">"DONE"</span> . org-done)
             (<span style="color: #036A07;">"CANX"</span> . org-done)
 
@@ -9917,7 +9954,7 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"#E2FEDE"</span>)))
       <span style="color: #008000;">"Face used to display state WAIT."</span>)
     (<span style="color: #0000FF;">defface</span> <span style=
-"color: #BA36A5;">leuven-org-deferred-kwd-face</span>
+"color: #BA36A5;">leuven-org-someday-kwd-face</span>
       '((t (<span style="color: #006FE0;">:weight</span> bold <span style=
 "color: #006FE0;">:box</span> (<span style=
 "color: #006FE0;">:line-width</span> 1 <span style=
@@ -9926,7 +9963,7 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"#9EB6D4"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
 "color: #036A07;">"#E0EFFF"</span>)))
-      <span style="color: #008000;">"Face used to display state DFRD."</span>)
+      <span style="color: #008000;">"Face used to display state SDAY."</span>)
 
     (<span style="color: #0000FF;">defface</span> <span style=
 "color: #BA36A5;">leuven-org-quote-kwd-face</span>
@@ -11015,7 +11052,7 @@ M-: (executable-find "diff") RET
                 <dd>Create a new “Waiting For” item, eventually with an
                 “Assignee” property.</dd>
 
-                <dt>Create a DFRD Item</dt>
+                <dt>Create a SDAY Item</dt>
 
                 <dd>Create a new “Someday” item.</dd>
 
@@ -12696,7 +12733,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
               <ul class="org-ul">
                 <li>Hide low priority</li>
 
-                <li>Hide <code>DFRD</code> tasks</li>
+                <li>Hide <code>SDAY</code> tasks</li>
 
                 <li>Hide future tasks?</li>
 
@@ -12719,14 +12756,14 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;"> entries"</span>
                    tags-todo <span style="color: #036A07;">"</span><span style=
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">&lt;&gt;{DFRD</span><span style=
+"color: #036A07;">&lt;&gt;{SDAY</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">|</span><span style=
 "color: #036A07;">PROJ}"</span>
                    ((org-agenda-overriding-header
                      <span style="color: #036A07;">"List of </span><span style=
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> items of all types but DFRD/PROJ, and PRIORITY &gt;= #B"</span>)
+"color: #036A07;"> items of all types but SDAY/PROJ, and PRIORITY &gt;= #B"</span>)
                     (org-agenda-sorting-strategy
                      '(category-up priority-down todo-state-up alpha-up)))) t)
 </pre>
@@ -12811,20 +12848,20 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">all </span><span style=
-"color: #4C886B; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #4C886B; font-style: italic;"> entries, but DFRD</span>
+"color: #4C886B; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #4C886B; font-style: italic;"> entries, but SDAY</span>
     (add-to-list 'org-agenda-custom-commands
                  '(<span style="color: #036A07;">"rT"</span> <span style=
 "color: #036A07;">"List of undated </span><span style=
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> entries (no DFRD)"</span>
+"color: #036A07;"> entries (no SDAY)"</span>
                    tags-todo <span style="color: #036A07;">"</span><span style=
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">&lt;&gt;{DFRD}"</span>
+"color: #036A07;">&lt;&gt;{SDAY}"</span>
                    ((org-agenda-overriding-header
                      <span style=
 "color: #036A07;">"Global list of undated </span><span style=
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> items of all types but DFRD"</span>)
+"color: #036A07;"> items of all types but SDAY"</span>)
                     (org-agenda-skip-function
                      '(org-agenda-skip-entry-if 'scheduled 'deadline 'timestamp))
                     (org-agenda-sorting-strategy '(priority-down)))) t)
@@ -12936,7 +12973,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (add-to-list 'org-agenda-custom-commands
                  '(<span style="color: #036A07;">"r$"</span> <span style=
 "color: #036A07;">"Cleanup"</span>
-                   todo <span style="color: #036A07;">"DONE|CANX|DFRD"</span>
+                   todo <span style="color: #036A07;">"DONE|CANX|SDAY"</span>
                    ((org-agenda-overriding-header <span style=
 "color: #036A07;">"Old tasks to delete or archive"</span>)
                     <span style="color: #4C886B;">;; </span><span style=
@@ -13079,7 +13116,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
                     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">same reasoning as for WAIT</span>
-                    (todo <span style="color: #036A07;">"DFRD"</span>
+                    (todo <span style="color: #036A07;">"SDAY"</span>
                           ((org-agenda-format-date <span style=
 "color: #036A07;">""</span>)
                            (org-agenda-overriding-header <span style=
@@ -25160,7 +25197,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131217.1433]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131218.1122]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

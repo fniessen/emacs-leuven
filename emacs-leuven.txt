@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-17 Tue 14:31>
+# Time-stamp: <2013-12-18 Wed 11:20>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1593,7 +1593,7 @@ characters over the default mechanism of =nobreak-char-display= and
 
       ;; mappings for displaying characters
       (setq whitespace-display-mappings
-            '((space-mark ?\xA0 [?\u2423] [?.]) ; nbsp - open box (bottom square bracket)
+            '((space-mark ?\u00A0 [?\u2423] [?.]) ; nbsp - open box (bottom square bracket)
               (space-mark ?\u202F [?\u00B7] [?.]) ; narrow nbsp - centered dot
               (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) ; tab - left quote mark
       ))
@@ -1611,9 +1611,9 @@ PYTHON_OBJS=	\
 #+begin_src emacs-lisp
   ;; ;; show zero-width spaces
   ;; (font-lock-add-keywords nil
-  ;;  `((,(format "\\(%c\\)" ?\u200b) ; #\ZERO_WIDTH_SPACE
+  ;;  `((,(format "\\(%c\\)" ?\u200B) ; #\ZERO_WIDTH_SPACE
   ;;     (1 (progn (compose-region (match-beginning 1) (match-end 1)
-  ;;                               ?\u2b1b ; #\BLACK_LARGE_SQUARE
+  ;;                               ?\u2B1B ; #\BLACK_LARGE_SQUARE
   ;;                               'decompose-region)
   ;;               nil)))))
 #+end_src
@@ -3028,19 +3028,32 @@ root using the =sudo= tramp method.
 For Helm documentation, see the [[https://github.com/emacs-helm/helm/wiki][Emacs-helm wiki]] and the
 [[https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el][configuration of Thierry Volpiatto]]!
 
-In Helm, generally, look at the mode-line, you will see =C-c ? help=, it is your
-friend.
+In Helm, generally, look at the mode line; you will see =C-c ?:Help=, it is your
+friend: hit it for more info.
 
-- Narrow the list by typing some patterns (multiple patterns are
-  space-delimited string),
+- Narrow the list by typing some patterns (use the *space as separator* for
+  multiple patterns),
 
 - Select an element with =<Up>= / =<Down>= / =<PageUp>= / =<PageDown>= / =C-p= / =C-n= /
   =C-v= / =M-v=,
 
 - Choose with =<RET>=.
 
-- With =C-z= contents of selected candidate are displayed without quitting helm
-  session.
+- =C-z= executes an action without quitting the Helm session (persistent action):
+
+  For =helm-find-files=:
+
+  + On a regular file,
+    - First hit on =C-z= expands the file name
+    - Second hit opens the file and displays its contents in the other window
+    - Third hit kills the buffer (unless it was already open before starting
+      helm session).
+
+  + On image files (.jpg, etc..)
+    - Second hit (or =C-u C-z=) displays the image in the other window
+    - If you then turn on =helm-follow-mode= (=C-c C-f=), you turn on Helm in image
+      browser (i.e., use =C-n/p= or =arrows/down/up=).
+    - You can rotate image with =M-l/r= (these are persistent actions too).
 
 To go back to the *previous element* of the minibuffer history, use =M-p=.
 
@@ -5180,28 +5193,28 @@ work.
 
 We use the following 4-letter status keywords:
 
-- TODO ::
+- =TODO= ::
      Approved task, to be done.
 
-- STRT ::
+- =STRT= ::
      Some progress has already been done on the task.
 
-- WAIT ::
+- =WAIT= ::
      Task delegated to someone else. Or waiting for some external event to be
      able to work on the task.
 
-- DFRD ::
+- =SDAY= ::
      Task to be approved (and eventually done) in the future.
 
-- DONE ::
+- =DONE= ::
      Task is completed.
 
-- CANX ::
+- =CANX= ::
      Task is declined (but kept documented, instead of being deleted).
 
 There is just 1 exception (made on purpose) to the 4-letter scheme:
 
-- NEW ::
+- =NEW= ::
      Proposed task, idea or wish, *not approved yet*. Draft.
 
 One could add a =CLSD= or =VRFD= state for bug fixes, for example, which need to be
@@ -5219,7 +5232,7 @@ verified before really closing the task.
                     "TODO(t!)"          ; open, not started
                     "STRT(s!)"          ; in progress
                     "WAIT(w!)"          ; on hold, assigned, feedback
-                    "DFRD(f!)"          ; someday, maybe, perhaps, may be undertaken in the future, wish
+                    "SDAY(y!)"          ; someday, maybe, perhaps, may be undertaken in the future, wish
                     "|"
                     "DONE(d!)"          ; completed, closed, resolved
                     "CANX(x!)")         ; wontfix, rejected
@@ -5229,7 +5242,7 @@ verified before really closing the task.
                     "CLSDPO(C!)")))
 #+end_src
 
-=DFRD= is *not* a completion state (in order not to be struck through).
+=SDAY= is *not* a completion state (in order not to be struck through).
 
 #+begin_src emacs-lisp
   (with-eval-after-load "org-faces"
@@ -5240,7 +5253,7 @@ verified before really closing the task.
             ("TODO" . org-todo)
             ("STRT" . leuven-org-inprogress-kwd-face)
             ("WAIT" . leuven-org-waiting-for-kwd-face)
-            ("DFRD" . leuven-org-deferred-kwd-face)
+            ("SDAY" . leuven-org-someday-kwd-face)
             ("DONE" . org-done)
             ("CANX" . org-done)
 
@@ -5275,10 +5288,10 @@ verified before really closing the task.
       '((t (:weight bold :box (:line-width 1 :color "#89C58F")
             :foreground "#89C58F" :background "#E2FEDE")))
       "Face used to display state WAIT.")
-    (defface leuven-org-deferred-kwd-face
+    (defface leuven-org-someday-kwd-face
       '((t (:weight bold :box (:line-width 1 :color "#9EB6D4")
             :foreground "#9EB6D4" :background "#E0EFFF")))
-      "Face used to display state DFRD.")
+      "Face used to display state SDAY.")
 
     (defface leuven-org-quote-kwd-face
       '((t (:weight bold :box (:line-width 1 :color "#FC5158")
@@ -5919,7 +5932,7 @@ Additional parameters can be included via the commands you use:
 - Create a WAIT Item ::
      Create a new "Waiting For" item, eventually with an "Assignee" property.
 
-- Create a DFRD Item ::
+- Create a SDAY Item ::
      Create a new "Someday" item.
 
 - Create a Reference Item ::
@@ -6927,7 +6940,7 @@ We should have two agenda views:
 Hide certain tasks that you don't want to be bothered with all the time:
 
 - Hide low priority
-- Hide =DFRD= tasks
+- Hide =SDAY= tasks
 - Hide future tasks?
 - Hide subtasks?
 
@@ -6936,9 +6949,9 @@ Hide certain tasks that you don't want to be bothered with all the time:
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("bT" "Filtered list of TODO entries"
-                   tags-todo "TODO<>{DFRD\\|PROJ}"
+                   tags-todo "TODO<>{SDAY\\|PROJ}"
                    ((org-agenda-overriding-header
-                     "List of TODO items of all types but DFRD/PROJ, and PRIORITY >= #B")
+                     "List of TODO items of all types but SDAY/PROJ, and PRIORITY >= #B")
                     (org-agenda-sorting-strategy
                      '(category-up priority-down todo-state-up alpha-up)))) t)
 #+end_src
@@ -6987,12 +7000,12 @@ Recently done.
                    ((org-agenda-entry-types '(:timestamp :deadline :scheduled))
                     (org-agenda-overriding-header "Unscheduled TODO entries: "))) t)
 
-    ;; all TODO entries, but DFRD
+    ;; all TODO entries, but SDAY
     (add-to-list 'org-agenda-custom-commands
-                 '("rT" "List of undated TODO entries (no DFRD)"
-                   tags-todo "TODO<>{DFRD}"
+                 '("rT" "List of undated TODO entries (no SDAY)"
+                   tags-todo "TODO<>{SDAY}"
                    ((org-agenda-overriding-header
-                     "Global list of undated TODO items of all types but DFRD")
+                     "Global list of undated TODO items of all types but SDAY")
                     (org-agenda-skip-function
                      '(org-agenda-skip-entry-if 'scheduled 'deadline 'timestamp))
                     (org-agenda-sorting-strategy '(priority-down)))) t)
@@ -7063,7 +7076,7 @@ Cleanup:
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("r$" "Cleanup"
-                   todo "DONE|CANX|DFRD"
+                   todo "DONE|CANX|SDAY"
                    ((org-agenda-overriding-header "Old tasks to delete or archive")
                     ;; also show deadlines and scheduled items
                     (org-agenda-todo-ignore-with-date nil))) t)
@@ -7149,7 +7162,7 @@ Cleanup:
                            (org-agenda-todo-ignore-scheduled t)))
 
                     ;; same reasoning as for WAIT
-                    (todo "DFRD"
+                    (todo "SDAY"
                           ((org-agenda-format-date "")
                            (org-agenda-overriding-header "Someday")
                            (org-agenda-todo-ignore-deadlines 'all)
