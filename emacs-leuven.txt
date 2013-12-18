@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-18 Wed 13:56>
+# Time-stamp: <2013-12-18 Wed 15:15>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -3021,8 +3021,8 @@ root using the =sudo= tramp method.
     :ID:       59418189-b87e-45a2-b128-5cbdc8a16430
     :END:
 
-For Helm documentation, see the [[https://github.com/emacs-helm/helm/wiki][Emacs-helm wiki]] and the
-[[https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el][configuration of Thierry Volpiatto]]!
+For Helm documentation, see the [[https://github.com/emacs-helm/helm/wiki][Emacs-helm wiki]] and the [[https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el][Helm configuration file
+of Thierry Volpiatto]]!
 
 In Helm, generally, look at the mode line; you will see =C-c ?:Help=, it is your
 friend: hit it for more info.
@@ -3052,6 +3052,10 @@ friend: hit it for more info.
     - You can rotate image with =M-l/r= (these are persistent actions too).
 
 To go back to the *previous element* of the minibuffer history, use =M-p=.
+
+As a starting point for all *searches in buffers and files*, use
+=helm-buffers-list= and =helm-find-files=: you can launch =helm-multi-occur= and
+=helm-do-grep= from there.
 
 To mark all candidates in a helm buffer, use =M-a= or =M-m=.
 
@@ -4591,6 +4595,13 @@ work and tasks with Org mode.
      "Execute `C-c a r d' to display the calendar and tasks for today."
      (interactive)
      (org-agenda nil "rd")))
+
+  (global-set-key
+   (kbd "<S-f7>")
+   (lambda ()
+     "Execute `C-c a d h' to display the hotlist."
+     (interactive)
+     (org-agenda nil "dh")))
 
   ;; using links outside Org
   (global-set-key
@@ -6959,7 +6970,7 @@ Hide certain tasks that you don't want to be bothered with all the time:
 
     (add-to-list 'org-agenda-custom-commands
                  `("pu" "Uncategorized"
-                   tags "CATEGORY={@CollectBox}&LEVEL=2"
+                   tags "CATEGORY={@Collect}&LEVEL=2"
                    ((org-agenda-overriding-header "Level 2 stuff in CollectBox"))) t)
 #+end_src
 
@@ -7108,7 +7119,7 @@ Cleanup:
     (add-to-list 'org-agenda-custom-commands
                  '("rw" "Weekly review"
                    (
-                    (tags "CATEGORY={@CollectBox}&LEVEL=2|TODO={NEW}"
+                    (tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
                           ((org-agenda-overriding-header "CollectBox")))
 
                     (agenda ""
@@ -10287,6 +10298,17 @@ When you fix a bug in a C function, you have to recompile, relink, and reload
 your program before you can test the fix. You don't do that in Lisp. You make
 the fix and then go straight to testing it. This process can be even faster
 than fixing a bug in a scripting language like Perl.
+
+** Libraries of Lisp Code for Emacs
+
+#+begin_src emacs-lisp
+;;** 27.8 (info "(emacs)Lisp Libraries") for Emacs
+
+  (leuven--section "27.8 (emacs)Lisp Libraries")
+
+  ;; force load of Elisp files when they are newer than the `.elc' files
+  (setq load-prefer-newer t)            ; from Emacs 24.4
+#+end_src
 
 ** Evaluating Emacs Lisp Expressions
 

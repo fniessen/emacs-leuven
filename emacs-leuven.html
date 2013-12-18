@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-18 Wed 14:01 -->
+  <title>Emacs Leuven</title><!-- 2013-12-18 Wed 16:14 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -742,14 +742,16 @@
 
               <li><a href="#sec-32-6">Executing Lisp Expressions</a></li>
 
-              <li><a href="#sec-32-7">Evaluating Emacs Lisp
+              <li><a href="#sec-32-7">Libraries of Lisp Code for Emacs</a></li>
+
+              <li><a href="#sec-32-8">Evaluating Emacs Lisp
               Expressions</a></li>
 
-              <li><a href="#sec-32-8">Lisp Interaction Buffers</a></li>
+              <li><a href="#sec-32-9">Lisp Interaction Buffers</a></li>
 
-              <li><a href="#sec-32-9">Other</a></li>
+              <li><a href="#sec-32-10">Other</a></li>
 
-              <li><a href="#sec-32-10"><span class="todo TODO">TODO</span> From
+              <li><a href="#sec-32-11"><span class="todo TODO">TODO</span> From
               Thierry Volpiatto</a></li>
             </ul>
           </li>
@@ -1110,7 +1112,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131218.14</span>
+"color: #4C886B; font-style: italic;">Version: 20131218.1613</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1232,7 +1234,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131218.14]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131218.1613]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -6116,7 +6118,7 @@ M-: (executable-find "diff") RET
             "https://github.com/emacs-helm/helm/wiki">Emacs-helm wiki</a> and
             the <a href=
             "https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el">
-            configuration of Thierry Volpiatto</a>!</p>
+            Helm configuration file of Thierry Volpiatto</a>!</p>
 
             <p>In Helm, generally, look at the mode line; you will see
             <code>C-c ?:Help</code>, it is your friend: hit it for more
@@ -6175,6 +6177,12 @@ M-: (executable-find "diff") RET
 
             <p>To go back to the <b>previous element</b> of the minibuffer
             history, use <code>M-p</code>.</p>
+
+            <p>As a starting point for all <b>searches in buffers and
+            files</b>, use <code>helm-buffers-list</code> and
+            <code>helm-find-files</code>: you can launch
+            <code>helm-multi-occur</code> and <code>helm-do-grep</code> from
+            there.</p>
 
             <p>To mark all candidates in a helm buffer, use <code>M-a</code> or
             <code>M-m</code>.</p>
@@ -8740,6 +8748,14 @@ M-: (executable-find "diff") RET
 "color: #008000;">"Execute `C-c a r d' to display the calendar and tasks for today."</span>
      (interactive)
      (org-agenda nil <span style="color: #036A07;">"rd"</span>)))
+
+  (global-set-key
+   (kbd <span style="color: #036A07;">"&lt;S-f7&gt;"</span>)
+   (<span style="color: #0000FF;">lambda</span> ()
+     <span style=
+"color: #008000;">"Execute `C-c a d h' to display the hotlist."</span>
+     (interactive)
+     (org-agenda nil <span style="color: #036A07;">"dh"</span>)))
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">using links outside Org</span>
@@ -12771,7 +12787,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                  `(<span style="color: #036A07;">"pu"</span> <span style=
 "color: #036A07;">"Uncategorized"</span>
                    tags <span style=
-"color: #036A07;">"CATEGORY={@CollectBox}&amp;LEVEL=2"</span>
+"color: #036A07;">"CATEGORY={@Collect}&amp;LEVEL=2"</span>
                    ((org-agenda-overriding-header <span style=
 "color: #036A07;">"Level 2 stuff in CollectBox"</span>))) t)
 </pre>
@@ -13025,7 +13041,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"Weekly review"</span>
                    (
                     (tags <span style=
-"color: #036A07;">"CATEGORY={@CollectBox}&amp;LEVEL=2|</span><span style=
+"color: #036A07;">"CATEGORY={@Collect}&amp;LEVEL=2|</span><span style=
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
 "color: #036A07;">={NEW}"</span>
                           ((org-agenda-overriding-header <span style=
@@ -18407,9 +18423,31 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
       </div>
 
       <div id="outline-container-sec-32-7" class="outline-3">
-        <h3 id="sec-32-7">Evaluating Emacs Lisp Expressions</h3>
+        <h3 id="sec-32-7">Libraries of Lisp Code for Emacs</h3>
 
         <div class="outline-text-3" id="text-32-7">
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+<span style="color: #4C886B;">;;</span><span style=
+"color: #4C886B; font-style: italic;">** 27.8 (info "(emacs)Lisp Libraries") for Emacs</span>
+
+  (leuven--section <span style=
+"color: #036A07;">"27.8 (emacs)Lisp Libraries"</span>)
+
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">force load of Elisp files when they are newer than the `</span><span style="color: #4C886B; font-style: italic;">.elc</span><span style="color: #4C886B; font-style: italic;">' files</span>
+  (setq load-prefer-newer t)            <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">from Emacs 24.4</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="outline-container-sec-32-8" class="outline-3">
+        <h3 id="sec-32-8">Evaluating Emacs Lisp Expressions</h3>
+
+        <div class="outline-text-3" id="text-32-8">
           <dl class="org-dl">
             <dt><code>C-x C-e</code></dt>
 
@@ -18457,10 +18495,10 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
         </div>
       </div>
 
-      <div id="outline-container-sec-32-8" class="outline-3">
-        <h3 id="sec-32-8">Lisp Interaction Buffers</h3>
+      <div id="outline-container-sec-32-9" class="outline-3">
+        <h3 id="sec-32-9">Lisp Interaction Buffers</h3>
 
-        <div class="outline-text-3" id="text-32-8">
+        <div class="outline-text-3" id="text-32-9">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span style="color: #4C886B;">;;</span><span style=
@@ -18497,10 +18535,10 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
         </div>
       </div>
 
-      <div id="outline-container-sec-32-9" class="outline-3">
-        <h3 id="sec-32-9">Other</h3>
+      <div id="outline-container-sec-32-10" class="outline-3">
+        <h3 id="sec-32-10">Other</h3>
 
-        <div class="outline-text-3" id="text-32-9">
+        <div class="outline-text-3" id="text-32-10">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span style="color: #4C886B;">;;;</span><span style=
@@ -18602,11 +18640,11 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
         </div>
       </div>
 
-      <div id="outline-container-sec-32-10" class="outline-3">
-        <h3 id="sec-32-10"><span class="todo TODO">TODO</span> From Thierry
+      <div id="outline-container-sec-32-11" class="outline-3">
+        <h3 id="sec-32-11"><span class="todo TODO">TODO</span> From Thierry
         Volpiatto</h3>
 
-        <div class="outline-text-3" id="text-32-10">
+        <div class="outline-text-3" id="text-32-11">
           <p>Seems good, except that it changes the behavior of TAB when done
           in a word. Instead of indenting, it completes the word at point,
           changing the buffer’s contents!</p>
@@ -25189,7 +25227,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131218.1401]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131218.1613]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

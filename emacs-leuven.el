@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131218.1357
+;; Version: 20131218.1611
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131218.1357]--")
+(message "* --[ Loading Emacs Leuven 20131218.1611]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3041,6 +3041,13 @@ nil. Save execution times in the global list `leuven--load-times-list'."
      (interactive)
      (org-agenda nil "rd")))
 
+  (global-set-key
+   (kbd "<S-f7>")
+   (lambda ()
+     "Execute `C-c a d h' to display the hotlist."
+     (interactive)
+     (org-agenda nil "dh")))
+
   ;; using links outside Org
   (global-set-key
     (kbd "C-c L") 'org-insert-link-global)
@@ -4630,7 +4637,7 @@ From %c"
 
     (add-to-list 'org-agenda-custom-commands
                  `("pu" "Uncategorized"
-                   tags "CATEGORY={@CollectBox}&LEVEL=2"
+                   tags "CATEGORY={@Collect}&LEVEL=2"
                    ((org-agenda-overriding-header "Level 2 stuff in CollectBox"))) t)
 
     (add-to-list 'org-agenda-custom-commands
@@ -4737,7 +4744,7 @@ From %c"
     (add-to-list 'org-agenda-custom-commands
                  '("rw" "Weekly review"
                    (
-                    (tags "CATEGORY={@CollectBox}&LEVEL=2|TODO={NEW}"
+                    (tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
                           ((org-agenda-overriding-header "CollectBox")))
 
                     (agenda ""
@@ -6961,6 +6968,13 @@ From %c"
 
     (define-key edebug-mode-map
       [remap top-level] 'leuven-edebug-quit))
+
+;;** 27.8 (info "(emacs)Lisp Libraries") for Emacs
+
+  (leuven--section "27.8 (emacs)Lisp Libraries")
+
+  ;; force load of Elisp files when they are newer than the `.elc' files
+  (setq load-prefer-newer t)            ; from Emacs 24.4
 
 ;;** 27.9 (info "(emacs)Lisp Eval") Expressions
 
@@ -9438,7 +9452,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131218.14]--")
+(message "* --[ Loaded Emacs Leuven 20131218.1612]--")
 
 (provide 'emacs-leuven)
 
