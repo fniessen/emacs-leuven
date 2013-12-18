@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-18 Wed 11:20>
+# Time-stamp: <2013-12-18 Wed 11:29>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -3049,10 +3049,10 @@ friend: hit it for more info.
     - Third hit kills the buffer (unless it was already open before starting
       helm session).
 
-  + On image files (.jpg, etc..)
+  + On image files (~.jpg~, etc..)
     - Second hit (or =C-u C-z=) displays the image in the other window
-    - If you then turn on =helm-follow-mode= (=C-c C-f=), you turn on Helm in image
-      browser (i.e., use =C-n/p= or =arrows/down/up=).
+    - If you then turn on =helm-follow-mode= (=C-c C-f=), you turn on Helm in
+      *image browser* (i.e., use =C-n/p= or =arrows/down/up=).
     - You can rotate image with =M-l/r= (these are persistent actions too).
 
 To go back to the *previous element* of the minibuffer history, use =M-p=.
