@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131218.112
+;; Version: 20131218.1357
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131218.112]--")
+(message "* --[ Loading Emacs Leuven 20131218.1357]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1227,10 +1227,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (define-key isearch-mode-map
     (kbd "C-o") 'leuven--isearch-occur)
 
-  ;; activate `occur' easily globally
-  (global-set-key
-    (kbd "C-o") 'occur)                 ; [default: "M-s o"]
-
   (when (locate-library "color-moccur")
 
     ;; multi-buffer occur (grep) mode
@@ -1996,8 +1992,9 @@ nil. Save execution times in the global list `leuven--load-times-list'."
         (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
                                         ; and `C-c =' (like in RefTeX)?
 
+      ;; activate (a better version of) `occur' easily globally
       (global-set-key
-        (kbd "C-c o") 'helm-occur)
+        (kbd "C-o") 'helm-occur)
 
       (global-set-key
         (kbd "C-x r l") 'helm-bookmarks)
@@ -9441,7 +9438,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131218.1122]--")
+(message "* --[ Loaded Emacs Leuven 20131218.14]--")
 
 (provide 'emacs-leuven)
 

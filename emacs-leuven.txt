@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-18 Wed 11:29>
+# Time-stamp: <2013-12-18 Wed 13:56>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1926,10 +1926,6 @@ match for REGEXP.
   ;; activate `occur' easily while at the `I-search:' prompt
   (define-key isearch-mode-map
     (kbd "C-o") 'leuven--isearch-occur)
-
-  ;; activate `occur' easily globally
-  (global-set-key
-    (kbd "C-o") 'occur)                 ; [default: "M-s o"]
 #+end_src
 
 Occur Edit mode applies edits made in =*Occur*= buffers to the original buffers.
@@ -3100,8 +3096,9 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
         (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
                                         ; and `C-c =' (like in RefTeX)?
 
+      ;; activate (a better version of) `occur' easily globally
       (global-set-key
-        (kbd "C-c o") 'helm-occur)
+        (kbd "C-o") 'helm-occur)
 
       (global-set-key
         (kbd "C-x r l") 'helm-bookmarks)

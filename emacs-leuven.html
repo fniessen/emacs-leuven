@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-18 Wed 11:23 -->
+  <title>Emacs Leuven</title><!-- 2013-12-18 Wed 14:01 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1110,7 +1110,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131218.1122</span>
+"color: #4C886B; font-style: italic;">Version: 20131218.14</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1232,7 +1232,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131218.1122]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131218.14]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -4334,16 +4334,6 @@
 "color: #4C886B; font-style: italic;">' easily while at the `</span><span style="color: #4C886B; font-style: italic;">I-search:</span><span style="color: #4C886B; font-style: italic;">' prompt</span>
   (define-key isearch-mode-map
     (kbd <span style="color: #036A07;">"C-o"</span>) 'leuven--isearch-occur)
-
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">activate `</span><span style=
-"color: #4C886B; font-style: italic;">occur</span><span style=
-"color: #4C886B; font-style: italic;">' easily globally</span>
-  (global-set-key
-    (kbd <span style=
-"color: #036A07;">"C-o"</span>) 'occur)                 <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">[default: "M-s o"]</span>
 </pre>
           </div>
 
@@ -6164,15 +6154,15 @@ M-: (executable-find "diff") RET
                     </ul>
                   </li>
 
-                  <li>On image files (.jpg, etc..)
+                  <li>On image files (<code>.jpg</code>, etc..)
 
                     <ul class="org-ul">
                       <li>Second hit (or <code>C-u C-z</code>) displays the
                       image in the other window</li>
 
                       <li>If you then turn on <code>helm-follow-mode</code>
-                      (<code>C-c C-f</code>), you turn on Helm in image browser
-                      (i.e., use <code>C-n/p</code> or
+                      (<code>C-c C-f</code>), you turn on Helm in <b>image
+                      browser</b> (i.e., use <code>C-n/p</code> or
                       <code>arrows/down/up</code>).</li>
 
                       <li>You can rotate image with <code>M-l/r</code> (these
@@ -6251,8 +6241,10 @@ M-: (executable-find "diff") RET
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">and `C-c =' (like in RefTeX)?</span>
 
+      <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">activate (a better version of) `</span><span style="color: #4C886B; font-style: italic;">occur</span><span style="color: #4C886B; font-style: italic;">' easily globally</span>
       (global-set-key
-        (kbd <span style="color: #036A07;">"C-c o"</span>) 'helm-occur)
+        (kbd <span style="color: #036A07;">"C-o"</span>) 'helm-occur)
 
       (global-set-key
         (kbd <span style="color: #036A07;">"C-x r l"</span>) 'helm-bookmarks)
@@ -25197,7 +25189,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131218.1122]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131218.1401]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
