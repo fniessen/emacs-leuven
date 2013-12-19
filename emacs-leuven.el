@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131218.1611
+;; Version: 20131219.1136
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131218.1611]--")
+(message "* --[ Loading Emacs Leuven 20131219.1136]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2718,15 +2718,15 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     (cond ((eq (char-before) ?\ )       ; normal space
            (backward-delete-char 1)
            (cond ((equal mode-name "PDFLaTeX")
-                  (insert " :"))        ; narrow no-break space (0x202F)
+                  (insert " :"))        ; no-break space (0x00A0)
                  ((equal mode-name "Org")
                   (if (member (org-element-type (org-element-at-point))
                               ;; list of exceptions
                               '(src-block keyword table dynamic-block))
                       (insert " :")     ; normal space
-                    (insert " :")))     ; narrow no-break space (0x202F)
+                    (insert " :")))     ; no-break space (0x00A0)
                  (t
-                  (insert " :"))))      ; narrow no-break space (0x202F)
+                  (insert " :"))))      ; no-break space (0x00A0)
 
           ;; remove nobreak-space if two colons are put one after the
           ;; other (for terms and definitions in Org)
@@ -2746,7 +2746,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           (backward-delete-char 1)
           (if (equal mode-name "PDFLaTeX")
               (insert "\,?")
-            (insert " ?")))             ; no-break space (0x00A0)
+            (insert " ?")))             ; narrow no-break space (0x202F)
       (insert "?")))
 
   (defun leuven-smart-punctuation-exclamation-mark ()
@@ -2757,7 +2757,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           (backward-delete-char 1)
           (if (equal mode-name "PDFLaTeX")
               (insert "\,!")
-            (insert " !")))             ; no-break space (0x00A0)
+            (insert " !")))             ; narrow no-break space (0x202F)
       (insert "!")))
 
   (defun leuven-smart-punctuation-semicolon ()
@@ -2774,9 +2774,9 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                              ;; list of exceptions
                              '(src-block))
                      (insert " ;")
-                   (insert " ;")))
+                   (insert " ;")))      ; narrow no-break space (0x202F)
                 (t
-                 (insert " ;"))))       ; no-break space (0x00A0)
+                 (insert " ;"))))       ; narrow no-break space (0x202F)
       (insert ";")))
 
   (defun leuven-smart-punctuation-apostrophe ()
@@ -3636,22 +3636,22 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (setq org-tag-faces
         '(("refile"
            (:slant italic
-            :foreground "#FFFFFF" :background "#A48CC4"))
+            :foreground "#A9876E" :background "#FCEEB3"))
           ("home"
            (:slant italic
             :foreground "#5C88D3" :background "#BBDDFF"))
           ("work"
            (:slant italic
-            :foreground "#5F7C43" :background "#C1D996"))
+            :foreground "#699761" :background "#C1D996"))
           ("FLAGGED"
            (:slant italic
-            :foreground "#A28747" :background "#FFE88E"))
+            :foreground "#C15F4E" :background "#EDC6C8"))
           ("now"
            (:slant italic
             :foreground "#000000" :background "#FFEA80"))
           ("notbillable"
            (:slant italic
-            :foreground "#FFFFFF" :background "#989898"))))
+            :foreground "#8774AF" :background "#DED0EA"))))
 
   ;; 6.2 exit fast tag selection after first change (toggle this with `C-c')
   (setq org-fast-tag-selection-single-key t)
@@ -4048,71 +4048,6 @@ From %a"
                    "* %(format-time-string \"%H:%M\") %^{Entry} %^G
 %i%?") t)
 
-    (defun leuven--org-capture-template (keys description file headline)
-      "Create template for captured elements."
-      `(,keys ,description entry
-              (file+headline ,file ,headline)
-              "* %^{Title}
-   :PROPERTIES:
-   :Created: %:date-timestamp-inactive
-   :END:
-   %?
-   %i
-
-   From %a"
-              :empty-lines 1))
-
-    ;; notes
-    (add-to-list 'org-capture-templates
-                 `("N" "Templates adding notes") t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  "Ne" "Emacs"
-                  "~/org/notes/Notes-on-Emacs.txt" "Notes") t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  "No" "Org"
-                  "~/org/notes/Notes-on-Org.txt" "Notes") t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  "NL" "Lisp"
-                  "~/org/notes/Notes-on-Lisp.txt" "Notes") t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  "Ng" "Gnus"
-                  "~/org/notes/Notes-on-Gnus.txt" "Notes") t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  "Nl" "LaTeX"
-                  "~/org/notes/Notes-on-LaTeX.txt" "Notes") t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  "NT" "TikZ"
-                  "~/org/notes/Notes-on-TikZ.txt" "Notes") t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  "Nb" "Beamer"
-                  "~/org/notes/Notes-on-Beamer.txt" "Notes") t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  "NS" "StumpWM"
-                  "~/org/notes/Notes-on-StumpWM.txt" "Notes") t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  "Nu" "Unix"
-                  "~/org/notes/Notes-on-Unix.txt" "Notes") t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  "Nc" "Ledger"
-                  "~/org/notes/Notes-on-Ledger.txt" "Notes") t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  "Nr" "RFID" "~/org/notes/Notes-on-RFID.txt" "Notes") t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  "Ns" "Security"
-                  "~/org/notes/Notes-on-Security.txt" "Notes") t)
-
     ;;          ("w" "org-protocol" entry
     ;;           (file ,org-default-notes-file)
     ;;           "* TODO Review %c
@@ -4188,18 +4123,18 @@ From %c"
   (with-eval-after-load "org"
     (message "... Org Refile")
 
-    ;; 9.5 any headline with level <= 2 is a target
     (defvar leuven-org-refile-extra-files
       (if (file-exists-p "~/org/notes/")
           (directory-files "~/org/notes/" t "^[^\\.#].*\\.\\(txt\\|org\\)$")
         nil)
       "List of extra files to be used as targets for refile commands.")
 
+    ;; 9.5 any headline with level <= 3 is a target
     (setq org-refile-targets
           `((nil
-             :maxlevel . 8)             ; current file
+             :maxlevel . 3)             ; current file
             (,(append org-agenda-files leuven-org-refile-extra-files)
-             :maxlevel . 4)))
+             :maxlevel . 3)))
 
     ;; cache refile targets to speed up the process
     (setq org-refile-use-cache t)
@@ -4636,9 +4571,9 @@ From %c"
                  '("p" . "2. Process/Clarify...") t)
 
     (add-to-list 'org-agenda-custom-commands
-                 `("pu" "Uncategorized"
+                 `("pn" "New Tasks"
                    tags "CATEGORY={@Collect}&LEVEL=2"
-                   ((org-agenda-overriding-header "Level 2 stuff in CollectBox"))) t)
+                   ((org-agenda-overriding-header "New Tasks"))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("o" . "3. Organize...") t)
@@ -4745,7 +4680,7 @@ From %c"
                  '("rw" "Weekly review"
                    (
                     (tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
-                          ((org-agenda-overriding-header "CollectBox")))
+                          ((org-agenda-overriding-header "New Tasks")))
 
                     (agenda ""
                             ((org-agenda-clockreport-mode t)
@@ -4810,7 +4745,9 @@ From %c"
 
     (add-to-list 'org-agenda-custom-commands
                  '("rd" "Daily review"
-                   ((agenda ""
+                   ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
+                          ((org-agenda-overriding-header "New Tasks")))
+                    (agenda ""
                             ((org-agenda-entry-types '(:timestamp :sexp))
                              (org-agenda-overriding-header "Calendar")
                              (org-agenda-span 'day)))
@@ -5234,8 +5171,9 @@ From %c"
   ;; 10.7 alist of variable/value pairs that should be active during
   ;; agenda export
   (setq org-agenda-exporter-settings
-        '((ps-number-of-columns 1)
+        '((ps-number-of-columns 1)      ; 2?
           (ps-landscape-mode t)
+          ;; (org-agenda-add-entry-text-maxlines 5)
           (htmlize-output-type 'css)))
 
 ;;** 10.8 (info "(org)Agenda column view")
@@ -9452,7 +9390,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131218.1612]--")
+(message "* --[ Loaded Emacs Leuven 20131219.1137]--")
 
 (provide 'emacs-leuven)
 

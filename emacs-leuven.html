@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-18 Wed 16:14 -->
+  <title>Emacs Leuven</title><!-- 2013-12-19 Thu 11:38 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1112,7 +1112,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131218.1613</span>
+"color: #4C886B; font-style: italic;">Version: 20131219.1137</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1234,7 +1234,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131218.1613]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131219.1137]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -3849,8 +3849,8 @@
 
           <p>Example&nbsp;: VPATH=
           /home/jt/src/cygwin/cygwin-packages/1.7/python-2.6.8-2/python-2.6.8-2/src/Python-2.6.8
-          LDLAST= SGI_ABI= PYTHON_OBJS= \ Python/pythonrun.o \ Python/random.o
-          \ Python/structmember.o</p>
+          LDLAST= SGI<sub>ABI</sub>= PYTHON<sub>OBJS</sub>= \
+          Python/pythonrun.o \ Python/random.o \ Python/structmember.o</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -7969,10 +7969,10 @@ M-: (executable-find "diff") RET
           <ul class="org-ul">
             <li><b>No-break thin space</b> (202F), known in Unicode as “Narrow
             No-Break Space”, required for French punctuation (before
-            <code>:</code>).</li>
+            <code>?</code>, <code>!</code> or <code>;</code>).</li>
 
             <li><b>No-break space</b> (00A0), required for French punctuation
-            (before <code>?</code>, <code>!</code> or <code>;</code>).</li>
+            (before <code>:</code>).</li>
           </ul>
 
           <div class="org-src-container">
@@ -7995,9 +7995,9 @@ M-: (executable-find "diff") RET
 "color: #0000FF;">cond</span> ((equal mode-name <span style=
 "color: #036A07;">"PDFLaTeX"</span>)
                   (insert <span style=
-"color: #036A07;">" :"</span>))        <span style=
+"color: #036A07;">" :"</span>))        <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
+"color: #4C886B; font-style: italic;">no-break space (0x00A0)</span>
                  ((equal mode-name <span style="color: #036A07;">"Org"</span>)
                   (<span style=
 "color: #0000FF;">if</span> (member (org-element-type (org-element-at-point))
@@ -8010,14 +8010,14 @@ M-: (executable-find "diff") RET
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">normal space</span>
                     (insert <span style=
-"color: #036A07;">" :"</span>)))     <span style=
+"color: #036A07;">" :"</span>)))     <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
+"color: #4C886B; font-style: italic;">no-break space (0x00A0)</span>
                  (t
                   (insert <span style=
-"color: #036A07;">" :"</span>))))      <span style=
+"color: #036A07;">" :"</span>))))      <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
+"color: #4C886B; font-style: italic;">no-break space (0x00A0)</span>
 
           <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">remove nobreak-space if two colons are put one after the</span>
@@ -8049,9 +8049,9 @@ M-: (executable-find "diff") RET
 "color: #0000FF;">if</span> (equal mode-name <span style="color: #036A07;">"PDFLaTeX"</span>)
               (insert <span style="color: #036A07;">"\,?"</span>)
             (insert <span style=
-"color: #036A07;">" ?"</span>)))             <span style=
+"color: #036A07;">" ?"</span>)))             <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">no-break space (0x00A0)</span>
+"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
       (insert <span style="color: #036A07;">"?"</span>)))
 
   (<span style="color: #0000FF;">defun</span> <span style=
@@ -8069,9 +8069,9 @@ M-: (executable-find "diff") RET
 "color: #0000FF;">if</span> (equal mode-name <span style="color: #036A07;">"PDFLaTeX"</span>)
               (insert <span style="color: #036A07;">"\,!"</span>)
             (insert <span style=
-"color: #036A07;">" !"</span>)))             <span style=
+"color: #036A07;">" !"</span>)))             <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">no-break space (0x00A0)</span>
+"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
       (insert <span style="color: #036A07;">"!"</span>)))
 
   (<span style="color: #0000FF;">defun</span> <span style=
@@ -8099,12 +8099,15 @@ M-: (executable-find "diff") RET
 "color: #4C886B; font-style: italic;">list of exceptions</span>
                              '(src-block))
                      (insert <span style="color: #036A07;">" ;"</span>)
-                   (insert <span style="color: #036A07;">" ;"</span>)))
+                   (insert <span style=
+"color: #036A07;">" ;"</span>)))      <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
                 (t
                  (insert <span style=
-"color: #036A07;">" ;"</span>))))       <span style=
+"color: #036A07;">" ;"</span>))))       <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">no-break space (0x00A0)</span>
+"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
       (insert <span style="color: #036A07;">";"</span>)))
 
   (<span style="color: #0000FF;">defun</span> <span style=
@@ -10264,9 +10267,9 @@ M-: (executable-find "diff") RET
         '((<span style="color: #036A07;">"refile"</span>
            (<span style="color: #006FE0;">:slant</span> italic
             <span style="color: #006FE0;">:foreground</span> <span style=
-"color: #036A07;">"#FFFFFF"</span> <span style=
+"color: #036A07;">"#A9876E"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
-"color: #036A07;">"#A48CC4"</span>))
+"color: #036A07;">"#FCEEB3"</span>))
           (<span style="color: #036A07;">"home"</span>
            (<span style="color: #006FE0;">:slant</span> italic
             <span style="color: #006FE0;">:foreground</span> <span style=
@@ -10276,15 +10279,15 @@ M-: (executable-find "diff") RET
           (<span style="color: #036A07;">"work"</span>
            (<span style="color: #006FE0;">:slant</span> italic
             <span style="color: #006FE0;">:foreground</span> <span style=
-"color: #036A07;">"#5F7C43"</span> <span style=
+"color: #036A07;">"#699761"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
 "color: #036A07;">"#C1D996"</span>))
           (<span style="color: #036A07;">"FLAGGED"</span>
            (<span style="color: #006FE0;">:slant</span> italic
             <span style="color: #006FE0;">:foreground</span> <span style=
-"color: #036A07;">"#A28747"</span> <span style=
+"color: #036A07;">"#C15F4E"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
-"color: #036A07;">"#FFE88E"</span>))
+"color: #036A07;">"#EDC6C8"</span>))
           (<span style="color: #036A07;">"now"</span>
            (<span style="color: #006FE0;">:slant</span> italic
             <span style="color: #006FE0;">:foreground</span> <span style=
@@ -10294,9 +10297,9 @@ M-: (executable-find "diff") RET
           (<span style="color: #036A07;">"notbillable"</span>
            (<span style="color: #006FE0;">:slant</span> italic
             <span style="color: #006FE0;">:foreground</span> <span style=
-"color: #036A07;">"#FFFFFF"</span> <span style=
+"color: #036A07;">"#8774AF"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
-"color: #036A07;">"#989898"</span>))))
+"color: #036A07;">"#DED0EA"</span>))))
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">6.2 exit fast tag selection after first change (toggle this with `</span><span style="color: #4C886B; font-style: italic;">C-c</span><span style="color: #4C886B; font-style: italic;">')</span>
@@ -10888,11 +10891,11 @@ M-: (executable-find "diff") RET
 
               <dd>Cursor position.</dd>
 
-              <dt>%^T</dt>
+              <dt>%<sup>T</sup></dt>
 
               <dd>Prompt for a date and time.</dd>
 
-              <dt>%^G</dt>
+              <dt>%<sup>G</sup></dt>
 
               <dd>Prompt for tags with completion on tags in all agenda
               files.</dd>
@@ -10901,7 +10904,7 @@ M-: (executable-find "diff") RET
 
               <dd>Time stamp (date only).</dd>
 
-              <dt>%<sup>prompt</sup></dt>
+              <dt>%^{prompt}</dt>
 
               <dd>Prompt the user for a string.</dd>
 
@@ -11239,115 +11242,6 @@ M-: (executable-find "diff") RET
 
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
-    (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--org-capture-template</span> (keys description file headline)
-      <span style=
-"color: #008000;">"Create template for captured elements."</span>
-      `(,keys ,description entry
-              (file+headline ,file ,headline)
-              <span style="color: #036A07;">"* %^{Title}</span>
-<span style="color: #036A07;">   :PROPERTIES:</span>
-<span style="color: #036A07;">   :Created: %:date-timestamp-inactive</span>
-<span style="color: #036A07;">   :END:</span>
-<span style="color: #036A07;">   %?</span>
-<span style="color: #036A07;">   %i</span>
-
-<span style="color: #036A07;">   From %a"</span>
-              <span style="color: #006FE0;">:empty-lines</span> 1))
-
-    <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">notes</span>
-    (add-to-list 'org-capture-templates
-                 `(<span style="color: #036A07;">"N"</span> <span style=
-"color: #036A07;">"Templates adding notes"</span>) t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  <span style="color: #036A07;">"Ne"</span> <span style=
-"color: #036A07;">"Emacs"</span>
-                  <span style=
-"color: #036A07;">"~/org/notes/Notes-on-Emacs.txt"</span> <span style=
-"color: #036A07;">"Notes"</span>) t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  <span style="color: #036A07;">"No"</span> <span style=
-"color: #036A07;">"Org"</span>
-                  <span style=
-"color: #036A07;">"~/org/notes/Notes-on-Org.txt"</span> <span style=
-"color: #036A07;">"Notes"</span>) t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  <span style="color: #036A07;">"NL"</span> <span style=
-"color: #036A07;">"Lisp"</span>
-                  <span style=
-"color: #036A07;">"~/org/notes/Notes-on-Lisp.txt"</span> <span style=
-"color: #036A07;">"Notes"</span>) t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  <span style="color: #036A07;">"Ng"</span> <span style=
-"color: #036A07;">"Gnus"</span>
-                  <span style=
-"color: #036A07;">"~/org/notes/Notes-on-Gnus.txt"</span> <span style=
-"color: #036A07;">"Notes"</span>) t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  <span style="color: #036A07;">"Nl"</span> <span style=
-"color: #036A07;">"LaTeX"</span>
-                  <span style=
-"color: #036A07;">"~/org/notes/Notes-on-LaTeX.txt"</span> <span style=
-"color: #036A07;">"Notes"</span>) t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  <span style="color: #036A07;">"NT"</span> <span style=
-"color: #036A07;">"TikZ"</span>
-                  <span style=
-"color: #036A07;">"~/org/notes/Notes-on-TikZ.txt"</span> <span style=
-"color: #036A07;">"Notes"</span>) t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  <span style="color: #036A07;">"Nb"</span> <span style=
-"color: #036A07;">"Beamer"</span>
-                  <span style=
-"color: #036A07;">"~/org/notes/Notes-on-Beamer.txt"</span> <span style=
-"color: #036A07;">"Notes"</span>) t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  <span style="color: #036A07;">"NS"</span> <span style=
-"color: #036A07;">"StumpWM"</span>
-                  <span style=
-"color: #036A07;">"~/org/notes/Notes-on-StumpWM.txt"</span> <span style=
-"color: #036A07;">"Notes"</span>) t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  <span style="color: #036A07;">"Nu"</span> <span style=
-"color: #036A07;">"Unix"</span>
-                  <span style=
-"color: #036A07;">"~/org/notes/Notes-on-Unix.txt"</span> <span style=
-"color: #036A07;">"Notes"</span>) t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  <span style="color: #036A07;">"Nc"</span> <span style=
-"color: #036A07;">"Ledger"</span>
-                  <span style=
-"color: #036A07;">"~/org/notes/Notes-on-Ledger.txt"</span> <span style=
-"color: #036A07;">"Notes"</span>) t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  <span style="color: #036A07;">"Nr"</span> <span style=
-"color: #036A07;">"RFID"</span> <span style=
-"color: #036A07;">"~/org/notes/Notes-on-RFID.txt"</span> <span style=
-"color: #036A07;">"Notes"</span>) t)
-    (add-to-list 'org-capture-templates
-                 (leuven--org-capture-template
-                  <span style="color: #036A07;">"Ns"</span> <span style=
-"color: #036A07;">"Security"</span>
-                  <span style=
-"color: #036A07;">"~/org/notes/Notes-on-Security.txt"</span> <span style=
-"color: #036A07;">"Notes"</span>) t)
-</pre>
-              </div>
-
-              <div class="org-src-container">
-                <pre class="src src-emacs-lisp">
     <span style="color: #4C886B;">;;          </span><span style=
 "color: #4C886B; font-style: italic;">("w" "org-protocol" entry</span>
     <span style="color: #4C886B;">;;           </span><span style=
@@ -11547,8 +11441,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"org"</span>
     (message <span style="color: #036A07;">"... Org Refile"</span>)
 
-    <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">9.5 any headline with level &lt;= 2 is a target</span>
     (<span style="color: #0000FF;">defvar</span> <span style=
 "color: #BA36A5;">leuven-org-refile-extra-files</span>
       (<span style="color: #0000FF;">if</span> (file-exists-p <span style=
@@ -11570,14 +11462,16 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
       <span style=
 "color: #008000;">"List of extra files to be used as targets for refile commands."</span>)
 
+    <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">9.5 any headline with level &lt;= 3 is a target</span>
     (setq org-refile-targets
           `((nil
              <span style=
-"color: #006FE0;">:maxlevel</span> . 8)             <span style=
+"color: #006FE0;">:maxlevel</span> . 3)             <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">current file</span>
             (,(append org-agenda-files leuven-org-refile-extra-files)
-             <span style="color: #006FE0;">:maxlevel</span> . 4)))
+             <span style="color: #006FE0;">:maxlevel</span> . 3)))
 
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">cache refile targets to speed up the process</span>
@@ -12784,12 +12678,12 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"2. Process/Clarify..."</span>) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 `(<span style="color: #036A07;">"pu"</span> <span style=
-"color: #036A07;">"Uncategorized"</span>
+                 `(<span style="color: #036A07;">"pn"</span> <span style=
+"color: #036A07;">"New Tasks"</span>
                    tags <span style=
 "color: #036A07;">"CATEGORY={@Collect}&amp;LEVEL=2"</span>
                    ((org-agenda-overriding-header <span style=
-"color: #036A07;">"Level 2 stuff in CollectBox"</span>))) t)
+"color: #036A07;">"New Tasks"</span>))) t)
 </pre>
               </div>
 
@@ -13045,7 +12939,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
 "color: #036A07;">={NEW}"</span>
                           ((org-agenda-overriding-header <span style=
-"color: #036A07;">"CollectBox"</span>)))
+"color: #036A07;">"New Tasks"</span>)))
 
                     (agenda <span style="color: #036A07;">""</span>
                             ((org-agenda-clockreport-mode t)
@@ -13151,7 +13045,13 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (add-to-list 'org-agenda-custom-commands
                  '(<span style="color: #036A07;">"rd"</span> <span style=
 "color: #036A07;">"Daily review"</span>
-                   ((agenda <span style="color: #036A07;">""</span>
+                   ((tags <span style=
+"color: #036A07;">"CATEGORY={@Collect}&amp;LEVEL=2|</span><span style=
+"color: #036A07; background-color: #FFFF88;">TODO</span><span style=
+"color: #036A07;">={NEW}"</span>
+                          ((org-agenda-overriding-header <span style=
+"color: #036A07;">"New Tasks"</span>)))
+                    (agenda <span style="color: #036A07;">""</span>
                             ((org-agenda-entry-types '(<span style=
 "color: #006FE0;">:timestamp</span> <span style=
 "color: #006FE0;">:sexp</span>))
@@ -14065,8 +13965,12 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">agenda export</span>
   (setq org-agenda-exporter-settings
-        '((ps-number-of-columns 1)
+        '((ps-number-of-columns 1)      <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">2?</span>
           (ps-landscape-mode t)
+          <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(org-agenda-add-entry-text-maxlines 5)</span>
           (htmlize-output-type 'css)))
 </pre>
             </div>
@@ -25227,7 +25131,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131218.1613]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131219.1138]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
