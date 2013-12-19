@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-19 Thu 11:34>
+# Time-stamp: <2013-12-19 Thu 21:07>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -6743,8 +6743,9 @@ Ordered by:
   (setq org-agenda-compact-blocks nil)
 
   (setq org-agenda-block-separator
-        ;; (concat (make-string 132 (string-to-char "_")) "\n\n")
-        "\n")
+        #("____________________________________________________________________________________________________________________________________"
+          0 132 (face (:foreground "#E5E5E5"))))
+        ;; (make-string 132 (string-to-char "_")))
 #+end_src
 
 Get your errand list for this week by filtering the agenda (for the current
@@ -6802,7 +6803,6 @@ week) on the =errands= tag.
    ((org-agenda-with-colors nil)
     (org-agenda-prefix-format "%T [ ]")
     (org-agenda-todo-keyword-format "")
-    (org-agenda-block-separator "---------------\n")
     (org-agenda-remove-tags t)
     (ps-number-of-columns 2)
     ;; (ps-print-header nil)
@@ -7109,8 +7109,7 @@ Cleanup:
                            (org-agenda-todo-ignore-deadlines 'all)
                            (org-agenda-todo-ignore-scheduled t)))
 
-                   ;; ((org-agenda-block-separator "\n")
-                   ;;  (org-agenda-clockreport-mode nil)
+                   ;; ((org-agenda-clockreport-mode nil)
                    ;;  (org-agenda-prefix-format " %i %?-12t% s")
                    ;;  (org-agenda-write-buffer-name "Weekly task review"))
                    ;; "~/org-weekly-review.html") t)
@@ -7451,8 +7450,7 @@ All active *tasks*, filtered by due date:
                              (org-agenda-span 'day)
                              (org-agenda-time-grid nil)
                              (org-deadline-warning-days 365))))
-                   ((org-agenda-block-separator "\n")
-                    (org-agenda-clockreport-mode nil)
+                   ((org-agenda-clockreport-mode nil)
                     (org-agenda-format-date "")
                     (org-agenda-span 'day)
                     (org-agenda-sorting-strategy '(deadline-up))
@@ -7509,8 +7507,7 @@ Show reminders:
                              (org-agenda-skip-function
                               '(leuven--skip-entry-unless-deadline-in-n-days-or-more 2))
                              (org-deadline-warning-days 7))))
-                   ((org-agenda-block-separator "\n")
-                    (org-agenda-clockreport-mode nil)
+                   ((org-agenda-clockreport-mode nil)
                     (org-agenda-span 'day)
                     (org-agenda-use-time-grid nil)
                     (org-agenda-write-buffer-name "Reminders"))
@@ -7585,8 +7582,7 @@ Agenda:
                           ((org-agenda-overriding-header "No due date")
                            (org-agenda-skip-function
                             'leuven--skip-entry-if-deadline-or-schedule))))
-                   ((org-agenda-block-separator "\n")
-                    (org-agenda-clockreport-mode nil)
+                   ((org-agenda-clockreport-mode nil)
                     (org-agenda-prefix-format " %i %?-12t% s")
                     (org-agenda-span 'day)
                     (org-agenda-use-time-grid nil)

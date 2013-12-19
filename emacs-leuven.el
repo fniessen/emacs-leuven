@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131219.1136
+;; Version: 20131219.2118
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131219.1136]--")
+(message "* --[ Loading Emacs Leuven 20131219.2118]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4514,8 +4514,9 @@ From %c"
   (setq org-agenda-compact-blocks nil)
 
   (setq org-agenda-block-separator
-        ;; (concat (make-string 132 (string-to-char "_")) "\n\n")
-        "\n")
+        #("____________________________________________________________________________________________________________________________________"
+          0 132 (face (:foreground "#E5E5E5"))))
+        ;; (make-string 132 (string-to-char "_")))
 
 ;;** 10.6 (info "(org)Custom agenda views")
 
@@ -4736,8 +4737,7 @@ From %c"
                            (org-agenda-todo-ignore-deadlines 'all)
                            (org-agenda-todo-ignore-scheduled t)))
 
-                   ;; ((org-agenda-block-separator "\n")
-                   ;;  (org-agenda-clockreport-mode nil)
+                   ;; ((org-agenda-clockreport-mode nil)
                    ;;  (org-agenda-prefix-format " %i %?-12t% s")
                    ;;  (org-agenda-write-buffer-name "Weekly task review"))
                    ;; "~/org-weekly-review.html") t)
@@ -5005,8 +5005,7 @@ From %c"
                              (org-agenda-span 'day)
                              (org-agenda-time-grid nil)
                              (org-deadline-warning-days 365))))
-                   ((org-agenda-block-separator "\n")
-                    (org-agenda-clockreport-mode nil)
+                   ((org-agenda-clockreport-mode nil)
                     (org-agenda-format-date "")
                     (org-agenda-span 'day)
                     (org-agenda-sorting-strategy '(deadline-up))
@@ -5056,8 +5055,7 @@ From %c"
                              (org-agenda-skip-function
                               '(leuven--skip-entry-unless-deadline-in-n-days-or-more 2))
                              (org-deadline-warning-days 7))))
-                   ((org-agenda-block-separator "\n")
-                    (org-agenda-clockreport-mode nil)
+                   ((org-agenda-clockreport-mode nil)
                     (org-agenda-span 'day)
                     (org-agenda-use-time-grid nil)
                     (org-agenda-write-buffer-name "Reminders"))
@@ -5121,8 +5119,7 @@ From %c"
                           ((org-agenda-overriding-header "No due date")
                            (org-agenda-skip-function
                             'leuven--skip-entry-if-deadline-or-schedule))))
-                   ((org-agenda-block-separator "\n")
-                    (org-agenda-clockreport-mode nil)
+                   ((org-agenda-clockreport-mode nil)
                     (org-agenda-prefix-format " %i %?-12t% s")
                     (org-agenda-span 'day)
                     (org-agenda-use-time-grid nil)
@@ -9390,7 +9387,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131219.1137]--")
+(message "* --[ Loaded Emacs Leuven 20131219.2119]--")
 
 (provide 'emacs-leuven)
 
