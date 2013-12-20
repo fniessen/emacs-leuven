@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-20 Fri 12:22 -->
+  <title>Emacs Leuven</title><!-- 2013-12-20 Fri 15:59 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1112,7 +1112,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131220.1221</span>
+"color: #4C886B; font-style: italic;">Version: 20131220.1558</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1234,7 +1234,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131220.1221]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131220.1558]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -7851,6 +7851,21 @@ M-: (executable-find "diff") RET
         <h3 id="sec-27-3">Filling Text</h3>
 
         <div class="outline-text-3" id="text-27-3">
+          <p>There are several <b>non-break space</b> characters:</p>
+
+          <ul class="org-ul">
+            <li><b>No-break thin space</b> (202F), known in Unicode as “Narrow
+            No-Break Space”, required for French punctuation (before
+            <code>?</code>, <code>!</code> or <code>;</code>).</li>
+
+            <li><b>No-break space</b> (00A0), required for French punctuation
+            (before <code>:</code>).</li>
+          </ul>
+
+          <p>Another solution to avoid breaking at certain places is to add
+          <code>fill-french-nobreak-p</code> to
+          <code>fill-nobreak-predicate</code>.</p>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span style="color: #4C886B;">;;</span><span style=
@@ -7887,11 +7902,9 @@ M-: (executable-find "diff") RET
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(global-set-key (kbd "M-q") 'leuven-fill-paragraph)</span>
 
-
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(add-hook 'fill-nobreak-predicate 'fill-french-nobreak-p)</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(add-hook 'fill-nobreak-predicate 'fill-single-word-nobreak-p)</span>
+"color: #4C886B; font-style: italic;">prevent breaking lines just before a punctuation mark such as `?' or `:'</span>
+  (add-hook 'fill-nobreak-predicate 'fill-french-nobreak-p)
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">activate Auto Fill for all text mode buffers</span>
@@ -7920,154 +7933,12 @@ M-: (executable-find "diff") RET
 </pre>
           </div>
 
-          <p>There are several <b>non-break space</b> characters:</p>
-
-          <ul class="org-ul">
-            <li><b>No-break thin space</b> (202F), known in Unicode as “Narrow
-            No-Break Space”, required for French punctuation (before
-            <code>?</code>, <code>!</code> or <code>;</code>).</li>
-
-            <li><b>No-break space</b> (00A0), required for French punctuation
-            (before <code>:</code>).</li>
-          </ul>
-
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">replace space by no-break space where it fits well</span>
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-smart-punctuation-colon</span> ()
-    <span style=
-"color: #008000;">"Replace space by no-break space in front of a colon."</span>
-    (interactive)
-    (<span style="color: #0000FF;">require</span> '<span style=
-"color: #D0372D;">org-element</span>)
-    (<span style=
-"color: #0000FF;">cond</span> ((eq (char-before) ?\ )       <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">normal space</span>
-           (backward-delete-char 1)
-           (<span style=
-"color: #0000FF;">cond</span> ((equal mode-name <span style=
-"color: #036A07;">"PDFLaTeX"</span>)
-                  (insert <span style=
-"color: #036A07;">" :"</span>))        <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">no-break space (0x00A0)</span>
-                 ((equal mode-name <span style="color: #036A07;">"Org"</span>)
-                  (<span style=
-"color: #0000FF;">if</span> (member (org-element-type (org-element-at-point))
-                              <span style=
-"color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">list of exceptions</span>
-                              '(src-block keyword table dynamic-block))
-                      (insert <span style=
-"color: #036A07;">" :"</span>)     <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">normal space</span>
-                    (insert <span style=
-"color: #036A07;">" :"</span>)))     <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">no-break space (0x00A0)</span>
-                 (t
-                  (insert <span style=
-"color: #036A07;">" :"</span>))))      <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">no-break space (0x00A0)</span>
-
-          <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">remove nobreak-space if two colons are put one after the</span>
-          <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">other (for terms and definitions in Org)</span>
-          ((and (eq (char-before) ?\:)
-                (eq (char-before (- (point) 1)) ?\ ))
-           (backward-delete-char 2)
-           (insert <span style=
-"color: #036A07;">" ::"</span>))              <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">normal space</span>
-
-          (t
-           (insert <span style="color: #036A07;">":"</span>))))
-
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-smart-punctuation-question-mark</span> ()
-    <span style=
-"color: #008000;">"If any, replace space by no-break space in front of a question mark."</span>
-    (interactive)
-    (<span style=
-"color: #0000FF;">if</span> (eq (char-before) ?\ )          <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">normal space</span>
-        (<span style="color: #0000FF;">progn</span>
-          (backward-delete-char 1)
-          (<span style=
-"color: #0000FF;">if</span> (equal mode-name <span style="color: #036A07;">"PDFLaTeX"</span>)
-              (insert <span style="color: #036A07;">"\,?"</span>)
-            (insert <span style=
-"color: #036A07;">" ?"</span>)))             <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
-      (insert <span style="color: #036A07;">"?"</span>)))
-
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-smart-punctuation-exclamation-mark</span> ()
-    <span style=
-"color: #008000;">"If any, replace space by no-break space in front of an exclamation mark."</span>
-    (interactive)
-    (<span style=
-"color: #0000FF;">if</span> (eq (char-before) ?\ )          <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">normal space</span>
-        (<span style="color: #0000FF;">progn</span>
-          (backward-delete-char 1)
-          (<span style=
-"color: #0000FF;">if</span> (equal mode-name <span style="color: #036A07;">"PDFLaTeX"</span>)
-              (insert <span style="color: #036A07;">"\,!"</span>)
-            (insert <span style=
-"color: #036A07;">" !"</span>)))             <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
-      (insert <span style="color: #036A07;">"!"</span>)))
-
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-smart-punctuation-semicolon</span> ()
-    <span style=
-"color: #008000;">"If any, replace space by no-break space in front of a semi-colon."</span>
-    (interactive)
-    (<span style="color: #0000FF;">require</span> '<span style=
-"color: #D0372D;">org-element</span>)
-    (<span style=
-"color: #0000FF;">if</span> (eq (char-before) ?\ )          <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">normal space</span>
-        (<span style="color: #0000FF;">progn</span>
-          (backward-delete-char 1)
-          (<span style=
-"color: #0000FF;">cond</span> ((equal mode-name <span style=
-"color: #036A07;">"PDFLaTeX"</span>)
-                 (insert <span style="color: #036A07;">"\,;"</span>))
-                ((equal mode-name <span style="color: #036A07;">"Org"</span>)
-                 (<span style=
-"color: #0000FF;">if</span> (member (org-element-type (org-element-at-point))
-                             <span style=
-"color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">list of exceptions</span>
-                             '(src-block))
-                     (insert <span style="color: #036A07;">" ;"</span>)
-                   (insert <span style=
-"color: #036A07;">" ;"</span>)))      <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
-                (t
-                 (insert <span style=
-"color: #036A07;">" ;"</span>))))       <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
-      (insert <span style="color: #036A07;">";"</span>)))
-
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-smart-punctuation-apostrophe</span> ()
+    <span style=
+"color: #008000;">"Replace second apostrophe by backquote in front of symbol."</span>
     (interactive)
     (<span style="color: #0000FF;">cond</span>
      ((or (bolp) (not (looking-back <span style="color: #036A07;">"'"</span>)))
@@ -8099,37 +7970,29 @@ M-: (executable-find "diff") RET
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-smart-punctuation-quotation-mark</span> ()
     <span style=
-"color: #008000;">"Replace two following double quotes by French quotes with no-break spaces."</span>
+"color: #008000;">"Replace two following double quotes by French quotes."</span>
     (interactive)
-    (<span style="color: #0000FF;">if</span> (and (eq (char-before) ?\")
-             (or (not (equal mode-name <span style=
+    (<span style=
+"color: #0000FF;">let</span> ((dict (or ispell-local-dictionary
+                    ispell-dictionary)))
+      (<span style="color: #0000FF;">if</span> (and (string= dict <span style=
+"color: #036A07;">"francais"</span>)
+               (eq (char-before) ?\")
+               (or (not (equal mode-name <span style=
 "color: #036A07;">"Org"</span>))
-                 (not (member (org-element-type (org-element-at-point))
-                              '(src-block keyword table dynamic-block)))))
-        (<span style="color: #0000FF;">progn</span>
-          (backward-delete-char 1)
-          (insert <span style=
-"color: #036A07;">"«  »"</span>)               <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">narrow no-break space (0x202F)</span>
-          (backward-char 2))
-      (insert <span style="color: #036A07;">"\""</span>)))
+                   (not (member (org-element-type (org-element-at-point))
+                                '(src-block keyword table dynamic-block)))))
+          (<span style="color: #0000FF;">progn</span>
+            (backward-delete-char 1)
+            (insert <span style="color: #036A07;">"«  »"</span>)
+            (backward-char 2))
+        (insert <span style="color: #036A07;">"\""</span>))))
 
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-smart-punctuation</span> ()
     <span style=
-"color: #008000;">"If any, replace space in front of colons, question marks, exclamation</span>
-<span style=
-"color: #008000;">  marks, etc. to avoid line break problems."</span>
+"color: #008000;">"Replace second apostrophe or quotation mark."</span>
     (interactive)
-    (local-set-key <span style=
-"color: #036A07;">":"</span> 'leuven-smart-punctuation-colon)
-    (local-set-key <span style=
-"color: #036A07;">"?"</span> 'leuven-smart-punctuation-question-mark)
-    (local-set-key <span style=
-"color: #036A07;">"!"</span> 'leuven-smart-punctuation-exclamation-mark)
-    (local-set-key <span style=
-"color: #036A07;">";"</span> 'leuven-smart-punctuation-semicolon)
     (local-set-key [39] 'leuven-smart-punctuation-apostrophe)
     (local-set-key <span style=
 "color: #036A07;">"\""</span> 'leuven-smart-punctuation-quotation-mark))
@@ -24993,7 +24856,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131220.1221]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131220.1559]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
