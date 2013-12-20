@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-19 Thu 21:21 -->
+  <title>Emacs Leuven</title><!-- 2013-12-20 Fri 10:45 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1112,7 +1112,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131219.212</span>
+"color: #4C886B; font-style: italic;">Version: 20131220.1044</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1234,7 +1234,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131219.212]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131220.1044]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -8759,6 +8759,16 @@ M-: (executable-find "diff") RET
 "color: #008000;">"Execute `C-c a d h' to display the hotlist."</span>
      (interactive)
      (org-agenda nil <span style="color: #036A07;">"dh"</span>)))
+
+  (global-set-key
+   (kbd <span style="color: #036A07;">"&lt;C-f7&gt;"</span>)
+   (<span style="color: #0000FF;">lambda</span> ()
+     <span style=
+"color: #008000;">"Execute `C-c a d t' to display </span><span style=
+"color: #008000; background-color: #FFFF88;">TODO</span><span style=
+"color: #008000;"> entries."</span>
+     (interactive)
+     (org-agenda nil <span style="color: #036A07;">"dt"</span>)))
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">using links outside Org</span>
@@ -17659,110 +17669,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (kbd <span style="color: #036A07;">"C-c @ s"</span>) 'hs-show-block)
 </pre>
           </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">if hideshowvis is not installed, do not attempt to configure it,</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">as this will prevent packages (including hideshowvis itself)</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">from compiling</span>
-  (<span style="color: #0000FF;">when</span> (and (display-graphic-p)
-             (try-require 'hideshowvis-<span style=
-"color: #CC0000; background-color: #FFFF88;">XXX</span>))
-
-    (autoload 'hideshowvis-enable <span style=
-"color: #036A07;">"hideshowvis"</span>
-      <span style="color: #008000;">"Highlight foldable regions."</span> t)
-
-    (autoload 'hideshowvis-minor-mode <span style=
-"color: #036A07;">"hideshowvis"</span>
-      <span style=
-"color: #008000;">"Will indicate regions foldable with hideshow in the fringe."</span> t)
-
-    <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">enable hideshowvis for programming modes</span>
-    (add-hook 'prog-mode-hook
-              (<span style="color: #0000FF;">lambda</span> ()
-                <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">more syntax definitions</span>
-                (<span style="color: #0000FF;">require</span> '<span style=
-"color: #D0372D;">fold-dwim</span>)
-                (hideshowvis-enable)))
-
-    <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">+/- fold buttons</span>
-    (define-fringe-bitmap 'hs-marker [0 24 24 126 126 24 24 0])
-
-    (<span style="color: #0000FF;">defcustom</span> <span style=
-"color: #BA36A5;">hs-fringe-face</span> 'hs-fringe-face
-      <span style=
-"color: #008000;">"*Specify face used to highlight the fringe on hidden regions."</span>
-      <span style="color: #006FE0;">:type</span> 'face
-      <span style="color: #006FE0;">:group</span> 'hideshow)
-
-    (<span style="color: #0000FF;">defface</span> <span style=
-"color: #BA36A5;">hs-fringe-face</span>
-      '((t (<span style="color: #006FE0;">:box</span> (<span style=
-"color: #006FE0;">:line-width</span> 2 <span style=
-"color: #006FE0;">:color</span> <span style=
-"color: #036A07;">"#808080"</span> <span style=
-"color: #006FE0;">:style</span> released-button)
-            <span style="color: #006FE0;">:foreground</span> <span style=
-"color: #036A07;">"#999999"</span>)))
-      <span style=
-"color: #008000;">"Face used to highlight the fringe on folded regions"</span>
-      <span style="color: #006FE0;">:group</span> 'hideshow)
-
-    (<span style="color: #0000FF;">defcustom</span> <span style=
-"color: #BA36A5;">hs-face</span> 'hs-face
-      <span style=
-"color: #008000;">"*Specify the face to to use for the hidden region indicator"</span>
-      <span style="color: #006FE0;">:type</span> 'face
-      <span style="color: #006FE0;">:group</span> 'hideshow)
-
-    (<span style="color: #0000FF;">defface</span> <span style=
-"color: #BA36A5;">hs-face</span>
-      '((t (<span style="color: #006FE0;">:box</span> (<span style=
-"color: #006FE0;">:line-width</span> 1 <span style=
-"color: #006FE0;">:color</span> <span style="color: #036A07;">"#999999"</span>)
-            <span style="color: #006FE0;">:foreground</span> <span style=
-"color: #036A07;">"#999999"</span> <span style=
-"color: #006FE0;">:background</span> <span style=
-"color: #036A07;">"#FFF8C0"</span>)))
-      <span style=
-"color: #008000;">"Face to hightlight the ... area of hidden regions"</span>
-      <span style="color: #006FE0;">:group</span> 'hideshow)
-
-    (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">display-code-line-counts</span> (ov)
-      (<span style=
-"color: #0000FF;">when</span> (eq 'code (overlay-get ov 'hs))
-        (<span style="color: #0000FF;">let*</span> ((marker-string <span style=
-"color: #036A07;">"*fringe-dummy*"</span>)
-               (marker-length (length marker-string))
-               (display-string
-                <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(format "(%d)..."</span>
-                <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(count-lines (overlay-start ov) (overlay-end ov)))</span>
-                <span style="color: #036A07;">"..."</span>))
-          (overlay-put ov 'help-echo <span style=
-"color: #036A07;">"Hidden text. C-c,= to show"</span>)
-          (put-text-property 0 marker-length
-                             'display (list 'left-fringe
-                                            'hs-marker
-                                            'hs-fringe-face)
-                             marker-string)
-          (overlay-put ov 'before-string marker-string)
-          (put-text-property 0 (length display-string)
-                             'face 'hs-face display-string)
-          (overlay-put ov 'display display-string))))
-
-    (setq hs-set-up-overlay 'display-code-line-counts))
-</pre>
-          </div>
         </div>
       </div>
 
@@ -25125,7 +25031,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131219.212]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131220.1045]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

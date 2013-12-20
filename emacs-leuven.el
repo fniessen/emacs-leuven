@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131219.2118
+;; Version: 20131220.1043
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131219.2118]--")
+(message "* --[ Loading Emacs Leuven 20131220.1043]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3047,6 +3047,13 @@ nil. Save execution times in the global list `leuven--load-times-list'."
      "Execute `C-c a d h' to display the hotlist."
      (interactive)
      (org-agenda nil "dh")))
+
+  (global-set-key
+   (kbd "<C-f7>")
+   (lambda ()
+     "Execute `C-c a d t' to display TODO entries."
+     (interactive)
+     (org-agenda nil "dt")))
 
   ;; using links outside Org
   (global-set-key
@@ -6629,71 +6636,6 @@ From %c"
   (global-set-key
     (kbd "C-c @ s") 'hs-show-block)
 
-  ;; if hideshowvis is not installed, do not attempt to configure it,
-  ;; as this will prevent packages (including hideshowvis itself)
-  ;; from compiling
-  (when (and (display-graphic-p)
-             (try-require 'hideshowvis-XXX))
-
-    (autoload 'hideshowvis-enable "hideshowvis"
-      "Highlight foldable regions." t)
-
-    (autoload 'hideshowvis-minor-mode "hideshowvis"
-      "Will indicate regions foldable with hideshow in the fringe." t)
-
-    ;; enable hideshowvis for programming modes
-    (add-hook 'prog-mode-hook
-              (lambda ()
-                ;; more syntax definitions
-                (require 'fold-dwim)
-                (hideshowvis-enable)))
-
-    ;; +/- fold buttons
-    (define-fringe-bitmap 'hs-marker [0 24 24 126 126 24 24 0])
-
-    (defcustom hs-fringe-face 'hs-fringe-face
-      "*Specify face used to highlight the fringe on hidden regions."
-      :type 'face
-      :group 'hideshow)
-
-    (defface hs-fringe-face
-      '((t (:box (:line-width 2 :color "#808080" :style released-button)
-            :foreground "#999999")))
-      "Face used to highlight the fringe on folded regions"
-      :group 'hideshow)
-
-    (defcustom hs-face 'hs-face
-      "*Specify the face to to use for the hidden region indicator"
-      :type 'face
-      :group 'hideshow)
-
-    (defface hs-face
-      '((t (:box (:line-width 1 :color "#999999")
-            :foreground "#999999" :background "#FFF8C0")))
-      "Face to hightlight the ... area of hidden regions"
-      :group 'hideshow)
-
-    (defun display-code-line-counts (ov)
-      (when (eq 'code (overlay-get ov 'hs))
-        (let* ((marker-string "*fringe-dummy*")
-               (marker-length (length marker-string))
-               (display-string
-                ;; (format "(%d)..."
-                ;; (count-lines (overlay-start ov) (overlay-end ov)))
-                "..."))
-          (overlay-put ov 'help-echo "Hidden text. C-c,= to show")
-          (put-text-property 0 marker-length
-                             'display (list 'left-fringe
-                                            'hs-marker
-                                            'hs-fringe-face)
-                             marker-string)
-          (overlay-put ov 'before-string marker-string)
-          (put-text-property 0 (length display-string)
-                             'face 'hs-face display-string)
-          (overlay-put ov 'display display-string))))
-
-    (setq hs-set-up-overlay 'display-code-line-counts))
-
 ;;** 26.8 (info "(emacs)Symbol Completion")
 
   (leuven--section "26.8 (emacs)Symbol Completion")
@@ -9387,7 +9329,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131219.2119]--")
+(message "* --[ Loaded Emacs Leuven 20131220.1044]--")
 
 (provide 'emacs-leuven)
 
