@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-20 Fri 11:31 -->
+  <title>Emacs Leuven</title><!-- 2013-12-20 Fri 12:22 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1112,7 +1112,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131220.113</span>
+"color: #4C886B; font-style: italic;">Version: 20131220.1221</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1234,7 +1234,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131220.113]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131220.1221]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -2031,13 +2031,8 @@
             (<span style=
 "color: #0000FF;">unless</span> (or (package-installed-p pkg)
                         (locate-library (symbol-name pkg)))
-              (push pkg missing-packages)))))
-
-<span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">temp</span>
-(message <span style=
-"color: #036A07;">"MiSSing packages on your System: %S"</span> (leuven--missing-packages))
-(sit-for 2)
+              (push pkg missing-packages)))
+          missing-packages))
 
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">propose to install all the packages specified in `</span><span style="color: #4C886B; font-style: italic;">leuven-packages</span><span style="color: #4C886B; font-style: italic;">'</span>
@@ -11867,8 +11862,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
     (<span style="color: #0000FF;">defface</span> <span style=
 "color: #BA36A5;">leuven-org-deadline-today-face</span>
-      '((t (<span style="color: #006FE0;">:weight</span> bold <span style=
-"color: #006FE0;">:foreground</span> <span style=
+      '((t (<span style="color: #006FE0;">:foreground</span> <span style=
 "color: #036A07;">"#BF8239"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
 "color: #036A07;">"#F8D1A9"</span>)))
@@ -11877,8 +11871,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
     (<span style="color: #0000FF;">defface</span> <span style=
 "color: #BA36A5;">leuven-org-deadline-tomorrow-or-later-face</span>
-      '((t (<span style="color: #006FE0;">:weight</span> bold <span style=
-"color: #006FE0;">:foreground</span> <span style=
+      '((t (<span style="color: #006FE0;">:foreground</span> <span style=
 "color: #036A07;">"#45A856"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
 "color: #036A07;">"#B8E9B1"</span>)))
@@ -18608,7 +18601,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">major mode for editing git commit messages</span>
-    (<span style="color: #0000FF;">when</span> (try-require 'git-commit)
+    (<span style="color: #0000FF;">when</span> (try-require 'git-commit-mode)
 
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">turn on on-the-fly spell-checking</span>
@@ -25000,7 +24993,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131220.1131]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131220.1221]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

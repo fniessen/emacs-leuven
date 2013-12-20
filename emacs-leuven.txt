@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-20 Fri 11:28>
+# Time-stamp: <2013-12-20 Fri 12:18>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -568,11 +568,8 @@ are generated programmatically from upstream Git-based sources.
           (dolist (pkg leuven-packages)
             (unless (or (package-installed-p pkg)
                         (locate-library (symbol-name pkg)))
-              (push pkg missing-packages)))))
-
-;; temp
-(message "MiSSing packages on your System: %S" (leuven--missing-packages))
-(sit-for 2)
+              (push pkg missing-packages)))
+          missing-packages))
 
       ;; propose to install all the packages specified in `leuven-packages'
       ;; which are missing
@@ -6406,11 +6403,11 @@ arrives -- at which point it will be in all lists.
       "Face used to highlight tasks whose deadline is in the past.")
 
     (defface leuven-org-deadline-today-face
-      '((t (:weight bold :foreground "#BF8239" :background "#F8D1A9")))
+      '((t (:foreground "#BF8239" :background "#F8D1A9")))
       "Face used to highlight tasks whose deadline is today.")
 
     (defface leuven-org-deadline-tomorrow-or-later-face
-      '((t (:weight bold :foreground "#45A856" :background "#B8E9B1")))
+      '((t (:foreground "#45A856" :background "#B8E9B1")))
       "Face used to highlight tasks whose deadline is for later."))
 
   ;; 10.4 column to shift tags to (in agenda items)
@@ -10405,7 +10402,7 @@ Show the diff we are about to commit: =C-c C-d=.
   (with-eval-after-load "vc-git"
 
     ;; major mode for editing git commit messages
-    (when (try-require 'git-commit)
+    (when (try-require 'git-commit-mode)
 
       ;; turn on on-the-fly spell-checking
       (add-hook 'git-commit-mode-hook 'turn-on-flyspell)

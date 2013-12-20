@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131220.1128
+;; Version: 20131220.1219
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131220.1128]--")
+(message "* --[ Loading Emacs Leuven 20131220.1219]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -426,11 +426,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           (dolist (pkg leuven-packages)
             (unless (or (package-installed-p pkg)
                         (locate-library (symbol-name pkg)))
-              (push pkg missing-packages)))))
-
-;; temp
-(message "MiSSing packages on your System: %S" (leuven--missing-packages))
-(sit-for 2)
+              (push pkg missing-packages)))
+          missing-packages))
 
       ;; propose to install all the packages specified in `leuven-packages'
       ;; which are missing
@@ -4291,11 +4288,11 @@ From %c"
       "Face used to highlight tasks whose deadline is in the past.")
 
     (defface leuven-org-deadline-today-face
-      '((t (:weight bold :foreground "#BF8239" :background "#F8D1A9")))
+      '((t (:foreground "#BF8239" :background "#F8D1A9")))
       "Face used to highlight tasks whose deadline is today.")
 
     (defface leuven-org-deadline-tomorrow-or-later-face
-      '((t (:weight bold :foreground "#45A856" :background "#B8E9B1")))
+      '((t (:foreground "#45A856" :background "#B8E9B1")))
       "Face used to highlight tasks whose deadline is for later."))
 
   ;; 10.4 column to shift tags to (in agenda items)
@@ -6967,7 +6964,7 @@ From %c"
   (with-eval-after-load "vc-git"
 
     ;; major mode for editing git commit messages
-    (when (try-require 'git-commit)
+    (when (try-require 'git-commit-mode)
 
       ;; turn on on-the-fly spell-checking
       (add-hook 'git-commit-mode-hook 'turn-on-flyspell)
@@ -9310,7 +9307,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131220.113]--")
+(message "* --[ Loaded Emacs Leuven 20131220.122]--")
 
 (provide 'emacs-leuven)
 
