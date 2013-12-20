@@ -1546,7 +1546,7 @@ much easier to follow some key variables through a block of code.
   ;; highlight trailing whitespaces in all modes
   (setq-default show-trailing-whitespace t)
 
-  ;; nuke all trailing whitespace in the buffer
+  ;; nuke all trailing whitespaces in the buffer
   (add-hook 'before-save-hook
             (lambda ()
               ;; except for Message mode where "-- " is the signature separator
@@ -14259,6 +14259,7 @@ tests.
 # This is for the sake of Emacs.
 # Local Variables:
 # coding-system-for-write: utf-8-unix
+# eval: (remove-hook 'before-save-hook 'leuven-convert-nbsp)
 # End:
 
 # emacs-leuven.txt ends here

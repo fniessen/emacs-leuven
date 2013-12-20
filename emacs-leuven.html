@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-20 Fri 16:40 -->
+  <title>Emacs Leuven</title><!-- 2013-12-20 Fri 17:24 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1112,7 +1112,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131220.1639</span>
+"color: #4C886B; font-style: italic;">Version: 20131220.1723</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1234,7 +1234,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131220.1639]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131220.1723]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -2059,7 +2059,7 @@
             (<span style=
 "color: #0000FF;">if</span> (yes-or-no-p (format <span style=
 "color: #036A07;">"Install package `</span><span style=
-"color: #036A07;">%s</span><span style="color: #036A07;">'? "</span> pkg))
+"color: #036A07;">%s</span><span style="color: #036A07;">'  "</span> pkg))
                 (<span style="color: #0000FF;">ignore-</span><span style=
 "color: #0000FF; background-color: #FFFF88;">error</span><span style=
 "color: #0000FF;">s</span>
@@ -2967,7 +2967,7 @@
     <span style="color: #4C886B;">;;   </span><span style=
 "color: #4C886B; font-style: italic;">(beginning-of-line)</span>
     <span style="color: #4C886B;">;;   </span><span style=
-"color: #4C886B; font-style: italic;">(unless (= (elt string (1- (length string))) ?\n)</span>
+"color: #4C886B; font-style: italic;">(unless (= (elt string (1- (length string)))  \n)</span>
     <span style="color: #4C886B;">;;     </span><span style=
 "color: #4C886B; font-style: italic;">(save-excursion (insert "\n")))</span>
     <span style="color: #4C886B;">;;   </span><span style=
@@ -3112,7 +3112,7 @@
 
           <p>CUA mode also provides enhanced rectangle support with visible
           rectangle highlighting. Check out <a href=
-          "http://www.vimeo.com/1168225?pg=embed&amp;sec=1168225">Emacs Column
+          "http://www.vimeo.com/1168225 pg=embed&amp;sec=1168225">Emacs Column
           Editing on Vimeo</a>.</p>
 
           <ul class="org-ul">
@@ -3151,13 +3151,13 @@
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">;; Save current position with  Ctrl-F1 Ctrl-F2 Ctrl-F3 and Ctrl-F4</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(global-set-key [C-f1] (lambda () (interactive) (point-to-register ?1)))</span>
+"color: #4C886B; font-style: italic;">(global-set-key [C-f1] (lambda () (interactive) (point-to-register  1)))</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(global-set-key [C-f2] (lambda () (interactive) (point-to-register ?2)))</span>
+"color: #4C886B; font-style: italic;">(global-set-key [C-f2] (lambda () (interactive) (point-to-register  2)))</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(global-set-key [C-f3] (lambda () (interactive) (point-to-register ?3)))</span>
+"color: #4C886B; font-style: italic;">(global-set-key [C-f3] (lambda () (interactive) (point-to-register  3)))</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(global-set-key [C-f4] (lambda () (interactive) (point-to-register ?4)))</span>
+"color: #4C886B; font-style: italic;">(global-set-key [C-f4] (lambda () (interactive) (point-to-register  4)))</span>
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(defun jump-to-register-other (reg)</span>
@@ -3178,13 +3178,13 @@
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">;; Move to saved position with F1 F2 F3 and F4</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(global-set-key [f1] (lambda () (interactive) (jump-to-register-here ?1)))</span>
+"color: #4C886B; font-style: italic;">(global-set-key [f1] (lambda () (interactive) (jump-to-register-here  1)))</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(global-set-key [f2] (lambda () (interactive) (jump-to-register-here ?2)))</span>
+"color: #4C886B; font-style: italic;">(global-set-key [f2] (lambda () (interactive) (jump-to-register-here  2)))</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(global-set-key [f3] (lambda () (interactive) (jump-to-register-here ?3)))</span>
+"color: #4C886B; font-style: italic;">(global-set-key [f3] (lambda () (interactive) (jump-to-register-here  3)))</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(global-set-key [f4] (lambda () (interactive) (jump-to-register-here ?4)))</span>
+"color: #4C886B; font-style: italic;">(global-set-key [f4] (lambda () (interactive) (jump-to-register-here  4)))</span>
 </pre>
         </div>
 
@@ -3195,15 +3195,15 @@
 (global-set-key (kbd <span style=
 "color: #036A07;">"C-j"</span>) 'jump-to-register)
 
-(set-register ?a (cons 'file <span style=
+(set-register  a (cons 'file <span style=
 "color: #036A07;">"/sudo::/etc/apt/sources.list"</span>))
-(set-register ?b (cons 'file <span style=
+(set-register  b (cons 'file <span style=
 "color: #036A07;">"~/News/KILL"</span>))
-(set-register ?C (cons 'file <span style=
+(set-register  C (cons 'file <span style=
 "color: #036A07;">"/sudo::/etc/default/console-setup"</span>))
-(set-register ?c (cons 'file <span style=
+(set-register  c (cons 'file <span style=
 "color: #036A07;">"~/.irssi/config"</span>))
-(set-register ?d (cons 'file <span style=
+(set-register  d (cons 'file <span style=
 "color: #036A07;">"~/.emacs-dired"</span>))
 <span style="color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">etc.</span>
@@ -3266,7 +3266,7 @@
 "color: #036A07;">"bookmark-</span><span style=
 "color: #036A07; background-color: #FFFF88;">XXX</span><span style=
 "color: #036A07;">"</span>  <span style="color: #4C886B;">; </span><span style=
-"color: #4C886B; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #4C886B; font-style: italic;"> here does not work!?</span>
+"color: #4C886B; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #4C886B; font-style: italic;"> here does not work! </span>
 
     (try-require 'bookmark+++<span style=
 "color: #CC0000; background-color: #FFFF88;">XXX</span>)
@@ -3374,7 +3374,7 @@
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">number of lines of margin at the top and bottom of a window</span>
   (setq scroll-margin 1) <span style="color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">or 3?        ; also for `</span><span style="color: #4C886B; font-style: italic;">isearch-forward</span><span style="color: #4C886B; font-style: italic;">'</span>
+"color: #4C886B; font-style: italic;">or 3         ; also for `</span><span style="color: #4C886B; font-style: italic;">isearch-forward</span><span style="color: #4C886B; font-style: italic;">'</span>
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">scrolling down looks much better</span>
@@ -3763,7 +3763,7 @@
   (setq-default show-trailing-whitespace t)
 
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">nuke all trailing whitespace in the buffer</span>
+"color: #4C886B; font-style: italic;">nuke all trailing whitespaces in the buffer</span>
   (add-hook 'before-save-hook
             (<span style="color: #0000FF;">lambda</span> ()
               <span style="color: #4C886B;">;; </span><span style=
@@ -3827,13 +3827,13 @@
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">mappings for displaying characters</span>
       (setq whitespace-display-mappings
-            '((space-mark ?\u00A0 [?\u2423] [?.]) <span style=
+            '((space-mark  \u00A0 [ \u2423] [ .]) <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">nbsp - open box (bottom square bracket)</span>
-              (space-mark ?\u202F [?\u00B7] [?.]) <span style=
+              (space-mark  \u202F [ \u00B7] [ .]) <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">narrow nbsp - centered dot</span>
-              (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) <span style=
+              (tab-mark  \t [ \u00BB  \t] [ \\  \t]))) <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">tab - left quote mark</span>
       ))
@@ -3852,12 +3852,12 @@
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(font-lock-add-keywords nil</span>
   <span style="color: #4C886B;">;;  </span><span style=
-"color: #4C886B; font-style: italic;">`((,(format "\\(%c\\)" ?\u200B) ; #\ZERO_WIDTH_SPACE</span>
+"color: #4C886B; font-style: italic;">`((,(format "\\(%c\\)"  \u200B) ; #\ZERO_WIDTH_SPACE</span>
   <span style="color: #4C886B;">;;     </span><span style=
 "color: #4C886B; font-style: italic;">(1 (progn (compose-region (match-beginning 1) (match-end 1)</span>
   <span style=
 "color: #4C886B;">;;                               </span><span style=
-"color: #4C886B; font-style: italic;">?\u2B1B ; #\BLACK_LARGE_SQUARE</span>
+"color: #4C886B; font-style: italic;"> \u2B1B ; #\BLACK_LARGE_SQUARE</span>
   <span style=
 "color: #4C886B;">;;                               </span><span style=
 "color: #4C886B; font-style: italic;">'decompose-region)</span>
@@ -4492,7 +4492,7 @@
           (ispell-buffer)))
 
     <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">key bindings (or `C-c i' prefix key binding?)</span>
+"color: #4C886B; font-style: italic;">key bindings (or `C-c i' prefix key binding )</span>
     (global-set-key
       (kbd <span style=
 "color: #036A07;">"C-$"</span>) 'ispell-region-or-buffer)
@@ -4799,7 +4799,7 @@
     (interactive)
     (browse-url
      (concat <span style=
-"color: #036A07;">"http://www.answers.com/main/ntquery?s="</span> (find-tag-default))))
+"color: #036A07;">"http://www.answers.com/main/ntquery s="</span> (find-tag-default))))
 
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-lookup-word-definition-in-w3m</span> ()
@@ -4819,7 +4819,7 @@
       (setq word (replace-regexp-in-string <span style=
 "color: #036A07;">" "</span> <span style="color: #036A07;">"%20"</span> word))
       (setq url (concat <span style=
-"color: #036A07;">"http://www.answers.com/main/ntquery?s="</span> word))
+"color: #036A07;">"http://www.answers.com/main/ntquery s="</span> word))
       (w3m-browse-url url)))
 </pre>
           </div>
@@ -5388,7 +5388,7 @@ M-: (executable-find "diff") RET
           <p>In Ediff, press:</p>
 
           <ul class="org-ul">
-            <li><code>?</code> to get help</li>
+            <li><code> </code> to get help</li>
 
             <li><code>|</code> to change from vertical window layout to
             horizontal window layout, and vice versa</li>
@@ -5408,7 +5408,7 @@ M-: (executable-find "diff") RET
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(try-require 'ediff-hook)</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">already loaded (by Emacs?)</span>
+"color: #4C886B; font-style: italic;">already loaded (by Emacs )</span>
 
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #036A07;">"ediff"</span>
@@ -5557,7 +5557,7 @@ M-: (executable-find "diff") RET
             nil
           </div>
 
-          <p>What is PGP/MIME, what is OpenPGP, and how Gnus handles them?</p>
+          <p>What is PGP/MIME, what is OpenPGP, and how Gnus handles them </p>
 
           <ul class="org-ul">
             <li>PGP/MIME is a standard, which mml2015* implements using
@@ -5684,7 +5684,7 @@ M-: (executable-find "diff") RET
             But that will bring up a new &gt; editor, which is whatever you set
             in your EDITOR env variable, and both vi &gt; and emacs cannot be
             used in this dumb shell. How can I edit the crontab in &gt; my
-            emacs session?</p>
+            emacs session </p>
 
             <p>Create the crontab on the remote machine, open it using TRAMP
             from your machine, edit and save and then reinstall it. That or
@@ -5903,7 +5903,7 @@ M-: (executable-find "diff") RET
 "color: #036A07;">: EDITING FILE WITH ROOT PRIVILEGES!"</span>)
              (space (+ 6 (- (frame-width) (length <span style=
 "color: #CC0000; background-color: #FFFF88;">warning</span>))))
-             (bracket (make-string (/ space 2) ?-))
+             (bracket (make-string (/ space 2)  -))
              (<span style=
 "color: #CC0000; background-color: #FFFF88;">warning</span> (concat bracket <span style="color: #CC0000; background-color: #FFFF88;">warning</span> bracket)))
         (setq header-line-format
@@ -5940,7 +5940,7 @@ M-: (executable-find "diff") RET
 "color: #4C886B; font-style: italic;">(ad-get-arg 0)</span>
     <span style=
 "color: #4C886B;">;;                              </span><span style=
-"color: #4C886B; font-style: italic;">" is read-only.  Open it as root? ")))</span>
+"color: #4C886B; font-style: italic;">" is read-only.  Open it as root  ")))</span>
     <span style="color: #4C886B;">;;       </span><span style=
 "color: #4C886B; font-style: italic;">(leuven-find-file-sudo (ad-get-arg 0))</span>
     <span style="color: #4C886B;">;;     </span><span style=
@@ -6077,7 +6077,7 @@ M-: (executable-find "diff") RET
             Helm configuration file of Thierry Volpiatto</a>!</p>
 
             <p>In Helm, generally, look at the mode line; you will see
-            <code>C-c ?:Help</code>, it is your friend: hit it for more
+            <code>C-c  :Help</code>, it is your friend: hit it for more
             info.</p>
 
             <ul class="org-ul">
@@ -6203,7 +6203,7 @@ M-: (executable-find "diff") RET
 "color: #4C886B; font-style: italic;">awesome</span>
                                         <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">and `C-c =' (like in RefTeX)?</span>
+"color: #4C886B; font-style: italic;">and `C-c =' (like in RefTeX) </span>
 
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">activate (a better version of) `</span><span style="color: #4C886B; font-style: italic;">occur</span><span style="color: #4C886B; font-style: italic;">' easily globally</span>
@@ -6334,7 +6334,7 @@ M-: (executable-find "diff") RET
           <div class="outline-text-4" id="text-20-11-3">
             <div class="inlinetask">
               <b><span class="todo TODO">TODO</span> auto-image-file-mode in
-              find-file-hook for performance reasons!?</b><br />
+              find-file-hook for performance reasons! </b><br />
               nil
             </div>
 
@@ -6537,7 +6537,7 @@ M-: (executable-find "diff") RET
 "color: #036A07;">&lt;[0-9]+&gt;</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">)</span><span style=
-"color: #036A07;">?$"</span>)
+"color: #036A07;"> $"</span>)
                (name . <span style="color: #036A07;">"^\\*Occur\\*$"</span>)
                (name . <span style="color: #036A07;">"^\\*grep\\*$"</span>)
                (name . <span style=
@@ -7171,7 +7171,7 @@ M-: (executable-find "diff") RET
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">add new extensions for speedbar tagging (allow to expand/collapse</span>
     <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">sections, etc.) -- do this BEFORE firing up speedbar?</span>
+"color: #4C886B; font-style: italic;">sections, etc.) -- do this BEFORE firing up speedbar </span>
     (speedbar-add-supported-extension
      '(<span style="color: #036A07;">".bib"</span> <span style=
 "color: #036A07;">".css"</span> <span style=
@@ -7626,7 +7626,7 @@ M-: (executable-find "diff") RET
                   (<span style=
 "color: #036A07;">".ssh/config\\'"</span>  . ssh-config-mode)
                   (<span style=
-"color: #036A07;">"sshd?_config\\'"</span> . ssh-config-mode)
+"color: #036A07;">"sshd _config\\'"</span> . ssh-config-mode)
                   ) auto-mode-alist))
 
   <span style="color: #4C886B;">;; </span><span style=
@@ -7827,7 +7827,7 @@ M-: (executable-find "diff") RET
 
           <div class="inlinetask">
             <b><span class="todo TODO">TODO</span> When changing the ispell
-            language, change this var as well?</b><br />
+            language, change this var as well </b><br />
             nil
           </div>
 
@@ -7856,7 +7856,7 @@ M-: (executable-find "diff") RET
           <ul class="org-ul">
             <li><b>No-break thin space</b> (202F), known in Unicode as “Narrow
             No-Break Space”, required for French punctuation (before
-            <code>?</code>, <code>!</code> or <code>;</code>).</li>
+            <code> </code>, <code>!</code> or <code>;</code>).</li>
 
             <li><b>No-break space</b> (00A0), required for French punctuation
             (before <code>:</code>).</li>
@@ -7903,7 +7903,7 @@ M-: (executable-find "diff") RET
 "color: #4C886B; font-style: italic;">(global-set-key (kbd "M-q") 'leuven-fill-paragraph)</span>
 
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">prevent breaking lines just before a punctuation mark such as `?' or `:'</span>
+"color: #4C886B; font-style: italic;">prevent breaking lines just before a punctuation mark such as ` ' or `:'</span>
   (add-hook 'fill-nobreak-predicate 'fill-french-nobreak-p)
 
   <span style="color: #4C886B;">;; </span><span style=
@@ -7935,7 +7935,7 @@ M-: (executable-find "diff") RET
             (goto-char (point-min))
             (<span style=
 "color: #0000FF;">while</span> (re-search-forward <span style=
-"color: #036A07;">"[  ]"</span> nil t)
+"color: #036A07;">"[  ]"</span> nil t)
               (replace-match <span style=
 "color: #036A07;">" "</span> nil nil)))))))
 
@@ -8002,7 +8002,7 @@ M-: (executable-find "diff") RET
                     ispell-dictionary)))
       (<span style="color: #0000FF;">if</span> (and (string= dict <span style=
 "color: #036A07;">"francais"</span>)
-               (eq (char-before) ?\")
+               (eq (char-before)  \")
                (or (not (equal mode-name <span style=
 "color: #036A07;">"Org"</span>))
                    (not (member (org-element-type (org-element-at-point))
@@ -8081,7 +8081,7 @@ M-: (executable-find "diff") RET
             <code>outline-minor-mode</code> + <code>outline-magic</code>.</p>
             <pre class="example">
 (outline-minor-mode 1)
-(set (make-local-variable 'outline-regexp) "^[ \t]*\\(?:def\\|class\\|module\\)\\|^[ \t]*###==")
+(set (make-local-variable 'outline-regexp) "^[ \t]*\\( :def\\|class\\|module\\)\\|^[ \t]*###==")
 </pre>
 
             <p>Outline minor mode is also used to collapse Lisp code (i.e., to
@@ -8188,7 +8188,7 @@ M-: (executable-find "diff") RET
       (<span style=
 "color: #0000FF;">let*</span> ((org-fontify-whole-headline-regexp <span style=
 "color: #036A07;">""</span>) <span style=
-"color: #4C886B;">; </span><span style="color: #4C886B; font-style: italic;">"\n?")</span>
+"color: #4C886B;">; </span><span style="color: #4C886B; font-style: italic;">"\n ")</span>
              (heading-1-regexp
               (concat (substring outline-regexp 0 -1)
                       <span style=
@@ -8291,7 +8291,7 @@ M-: (executable-find "diff") RET
   <span style="color: #4C886B;">;;     </span><span style=
 "color: #4C886B; font-style: italic;">(define-key outline-minor-mode-map [(control tab)] 'org-cycle)</span>
   <span style="color: #4C886B;">;;     </span><span style=
-"color: #4C886B; font-style: italic;">(define-key outline-minor-mode-map [(shift tab)] 'org-global-cycle))) ; backtab?</span>
+"color: #4C886B; font-style: italic;">(define-key outline-minor-mode-map [(shift tab)] 'org-global-cycle))) ; backtab </span>
 </pre>
             </div>
 
@@ -8374,7 +8374,7 @@ M-: (executable-find "diff") RET
     (kbd <span style=
 "color: #036A07;">"C-M-]"</span>) 'org-cycle-global)    <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">&lt;S-tab&gt;?</span>
+"color: #4C886B; font-style: italic;">&lt;S-tab&gt; </span>
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(defun org-cycle-local ()</span>
@@ -8668,7 +8668,7 @@ M-: (executable-find "diff") RET
   <span style="color: #4C886B;">;;       </span><span style=
 "color: #4C886B; font-style: italic;">'(("&amp;" (:weight ultra-bold :foreground "#000000" :background "#FBFF00"))</span>
   <span style="color: #4C886B;">;;         </span><span style=
-"color: #4C886B; font-style: italic;">;; ("?" (:box t))</span>
+"color: #4C886B; font-style: italic;">;; (" " (:box t))</span>
   <span style="color: #4C886B;">;;         </span><span style=
 "color: #4C886B; font-style: italic;">("^" (:weight ultra-bold :foreground "#393D90"))</span>
   <span style="color: #4C886B;">;;         </span><span style=
@@ -8821,7 +8821,7 @@ M-: (executable-find "diff") RET
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Unhiding edited areas</span>
   <span style="color: #4C886B;">;;</span><span style=
-"color: #4C886B; font-style: italic;">??? I like the idea of clustering undo but find it disconcerting</span>
+"color: #4C886B; font-style: italic;">    I like the idea of clustering undo but find it disconcerting</span>
   (setf org-self-insert-cluster-for-undo nil) <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #4C886B; font-style: italic;"> undefined</span>
@@ -8939,7 +8939,7 @@ M-: (executable-find "diff") RET
 
     (setq org-ellipsis
           (<span style=
-"color: #0000FF;">if</span> (char-displayable-p ?\u25B7) <span style=
+"color: #0000FF;">if</span> (char-displayable-p  \u25B7) <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">white right-pointing triangle</span>
               <span style="color: #4C886B;">;; </span><span style=
@@ -9250,7 +9250,7 @@ M-: (executable-find "diff") RET
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">must be in eval-after-load "org"?</span>
+"color: #4C886B; font-style: italic;">must be in eval-after-load "org" </span>
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(define-key org-mode-map</span>
   <span style="color: #4C886B;">;;   </span><span style=
@@ -9486,7 +9486,7 @@ M-: (executable-find "diff") RET
 </pre>
             </div>
 
-            <p>PDF viewer? See <code>org-file-apps</code>. Just change to your
+            <p>PDF viewer  See <code>org-file-apps</code>. Just change to your
             favorite viewer. And make sure that you’re calling
             <code>org-return</code> to open (it’s bound to
             <code>C-m</code>).</p>
@@ -9524,7 +9524,7 @@ M-: (executable-find "diff") RET
             term instead of the complete URL.</p>
 
             <p>Here is an example: every time you need to use <a href=
-            "http://www.google.com/search?q=searchterms">http://www.google.com/search?q=searchterms</a>,
+            "http://www.google.com/search q=searchterms">http://www.google.com/search q=searchterms</a>,
             you can just type <code>[[google:searchterms]]</code> or
             <code>[[google:searchterms][description]]</code> instead.</p>
 
@@ -9535,25 +9535,25 @@ M-: (executable-find "diff") RET
     (setq org-link-abbrev-alist
           '((<span style="color: #036A07;">"cache"</span> .
              <span style=
-"color: #036A07;">"http://www.google.com/search?q=cache:%s"</span>)
+"color: #036A07;">"http://www.google.com/search q=cache:%s"</span>)
             (<span style="color: #036A07;">"dictionary"</span> .
              <span style=
-"color: #036A07;">"http://www.dict.org/bin/Dict?Database=*&amp;Form=Dict1&amp;Strategy=*&amp;Query=%s"</span>)
+"color: #036A07;">"http://www.dict.org/bin/Dict Database=*&amp;Form=Dict1&amp;Strategy=*&amp;Query=%s"</span>)
             (<span style="color: #036A07;">"google"</span> .
              <span style=
-"color: #036A07;">"http://www.google.com/search?q=%s"</span>)
+"color: #036A07;">"http://www.google.com/search q=%s"</span>)
             (<span style="color: #036A07;">"googlegroups"</span> .
              <span style=
-"color: #036A07;">"http://groups.google.com/groups?q=%s"</span>)
+"color: #036A07;">"http://groups.google.com/groups q=%s"</span>)
             (<span style="color: #036A07;">"googlemaps"</span> .
              <span style=
-"color: #036A07;">"http://maps.google.com/maps?q=%s"</span>)
+"color: #036A07;">"http://maps.google.com/maps q=%s"</span>)
             (<span style="color: #036A07;">"imdb"</span> .
              <span style=
-"color: #036A07;">"http://us.imdb.com/Title?%s"</span>)
+"color: #036A07;">"http://us.imdb.com/Title %s"</span>)
             (<span style="color: #036A07;">"openstreetmap"</span> .
              <span style=
-"color: #036A07;">"http://nominatim.openstreetmap.org/search?q=%s&amp;polygon=1"</span>)
+"color: #036A07;">"http://nominatim.openstreetmap.org/search q=%s&amp;polygon=1"</span>)
             (<span style="color: #036A07;">"wpen"</span> .
              <span style=
 "color: #036A07;">"http://en.wikipedia.org/wiki/%s"</span>)
@@ -10010,11 +10010,11 @@ M-: (executable-find "diff") RET
 "color: #4C886B; font-style: italic;">use character "heavy check mark" to show completed days on which</span>
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">a task was done</span>
-    (setq org-habit-completed-glyph ?\u2714)
+    (setq org-habit-completed-glyph  \u2714)
 
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">use character "heavy quadruple dash vertical" to identify today</span>
-    (setq org-habit-today-glyph ?\u250B))
+    (setq org-habit-today-glyph  \u250B))
 </pre>
             </div>
           </div>
@@ -10087,34 +10087,34 @@ M-: (executable-find "diff") RET
   (setq org-tag-alist '((<span style=
 "color: #006FE0;">:startgroup</span> . nil)
                          (<span style=
-"color: #036A07;">"home"</span>       . ?h)
+"color: #036A07;">"home"</span>       .  h)
                          (<span style=
-"color: #036A07;">"work"</span>       . ?w)
+"color: #036A07;">"work"</span>       .  w)
                         (<span style="color: #006FE0;">:endgroup</span> . nil)
                         (<span style=
-"color: #036A07;">"errands"</span>     . ?e)
+"color: #036A07;">"errands"</span>     .  e)
                         (<span style=
-"color: #036A07;">"finance"</span>     . ?f)
+"color: #036A07;">"finance"</span>     .  f)
                         (<span style=
-"color: #036A07;">"phone"</span>       . ?p)
+"color: #036A07;">"phone"</span>       .  p)
                         (<span style=
-"color: #036A07;">"mail"</span>        . ?m)
+"color: #036A07;">"mail"</span>        .  m)
 
                         (<span style=
-"color: #036A07;">"notbillable"</span> . ?B)
+"color: #036A07;">"notbillable"</span> .  B)
                         (<span style=
-"color: #036A07;">"now"</span>         . ?N)
+"color: #036A07;">"now"</span>         .  N)
                         <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">("reading" . ?r)</span>
+"color: #4C886B; font-style: italic;">("reading" .  r)</span>
                         <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">("proj" . ?P)</span>
+"color: #4C886B; font-style: italic;">("proj" .  P)</span>
 
                         (<span style=
-"color: #036A07;">"ARCHIVE"</span>     . ?A)
+"color: #036A07;">"ARCHIVE"</span>     .  A)
                         (<span style=
-"color: #036A07;">"crypt"</span>       . ?C)
+"color: #036A07;">"crypt"</span>       .  C)
                         (<span style=
-"color: #036A07;">"FLAGGED"</span>     . ??)))
+"color: #036A07;">"FLAGGED"</span>     .   )))
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">faces for specific tags</span>
@@ -10590,7 +10590,7 @@ M-: (executable-find "diff") RET
 "color: #D0372D;">org-clock</span>)
                (funcall 'org-clocking-p)
                (y-or-n-p <span style=
-"color: #036A07;">"You are currently clocking time, clock out? "</span>))
+"color: #036A07;">"You are currently clocking time, clock out  "</span>))
           (org-clock-out)
         t))                             <span style=
 "color: #4C886B;">; </span><span style=
@@ -10742,7 +10742,7 @@ M-: (executable-find "diff") RET
 
               <dd>Initial content (selected text).</dd>
 
-              <dt>%?</dt>
+              <dt>% </dt>
 
               <dd>Cursor position.</dd>
 
@@ -10781,9 +10781,9 @@ M-: (executable-find "diff") RET
 "color: #4C886B; font-style: italic;">9.1.2 templates for the creation of capture buffers</span>
 
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">("Receipt"   ?r "** %^{BriefDesc} %U %^g\n%?"   "~/Personal/finances.org")</span>
+"color: #4C886B; font-style: italic;">("Receipt"    r "** %^{BriefDesc} %U %^g\n% "   "~/Personal/finances.org")</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">("Someday"   ?s "** %^{Someday Heading} %U\n%?\n"  "~/Personal/someday.org")</span>
+"color: #4C886B; font-style: italic;">("Someday"    s "** %^{Someday Heading} %U\n% \n"  "~/Personal/someday.org")</span>
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">fast note taking in Org mode (the ultimate capture tool)</span>
@@ -10795,7 +10795,7 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"Task"</span> entry
                    (file+headline ,org-default-notes-file <span style=
 "color: #036A07;">"Tasks"</span>)
-                   <span style="color: #036A07;">"* NEW %^{Task}%?</span>
+                   <span style="color: #036A07;">"* NEW %^{Task}% </span>
 
 <span style="color: #036A07;">%i"</span>
                    <span style="color: #006FE0;">:empty-lines</span> 1) t)
@@ -10809,7 +10809,7 @@ M-: (executable-find "diff") RET
                     <span style="color: #036A07;">"Tasks"</span>)
                    <span style="color: #036A07;">"* </span><span style=
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> %?</span>
+"color: #036A07;"> % </span>
 <span style="color: #036A07;">  %U %a %n"</span>
                    <span style="color: #006FE0;">:prepend</span> t) t)
 
@@ -10818,7 +10818,7 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"Appt"</span> entry
                    (file+headline ,org-default-notes-file <span style=
 "color: #036A07;">"Calendar"</span>)
-                   <span style="color: #036A07;">"* %^{Appointment}%?</span>
+                   <span style="color: #036A07;">"* %^{Appointment}% </span>
 <span style="color: #036A07;">%^T</span>
 
 <span style="color: #036A07;">%i"</span>
@@ -10945,7 +10945,7 @@ M-: (executable-find "diff") RET
 "color: #4C886B; font-style: italic;">#+FILETAGS: :mail:</span>
                    <span style="color: #036A07;">"* </span><span style=
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> %:subject%? (from %:fromname)</span>
+"color: #036A07;"> %:subject%  (from %:fromname)</span>
 <span style="color: #036A07;">   %:date-timestamp-inactive</span>
 
 <span style="color: #036A07;">#+begin_verse</span>
@@ -10967,7 +10967,7 @@ M-: (executable-find "diff") RET
 "color: #4C886B; font-style: italic;">#+FILETAGS: :mail:</span>
                    <span style="color: #036A07;">"* </span><span style=
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> %:subject%? (from %:fromname)</span>
+"color: #036A07;"> %:subject%  (from %:fromname)</span>
 <span style=
 "color: #036A07;">   DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \" -0d\")</span>
 <span style="color: #036A07;">   %:date-timestamp-inactive</span>
@@ -11002,7 +11002,7 @@ M-: (executable-find "diff") RET
 <span style="color: #036A07;">- From :: %:from</span>
 <span style="color: #036A07;">- Subject :: %:subject</span>
 <span style="color: #036A07;">- Email :: %a</span>
-<span style="color: #036A07;">%?"</span>
+<span style="color: #036A07;">% "</span>
                    <span style="color: #006FE0;">:kill-buffer</span> t) t)
 </pre>
               </div>
@@ -11017,7 +11017,7 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"Phone call"</span> entry
                    (file+headline ,org-default-notes-file <span style=
 "color: #036A07;">"Phone calls"</span>)
-                   <span style="color: #036A07;">"* %?"</span>
+                   <span style="color: #036A07;">"* % "</span>
                    <span style=
 "color: #006FE0;">:empty-lines</span> 1 <span style=
 "color: #006FE0;">:clock-in</span> t <span style=
@@ -11043,7 +11043,7 @@ M-: (executable-find "diff") RET
                    (file+headline ,(concat org-directory <span style=
 "color: #036A07;">"/notes.org"</span>) <span style=
 "color: #036A07;">"Notes"</span>)
-                   <span style="color: #036A07;">"* %^{Thought}%?</span>
+                   <span style="color: #036A07;">"* %^{Thought}% </span>
 
 <span style="color: #036A07;">%i"</span>
                    <span style="color: #006FE0;">:empty-lines</span> 1) t)
@@ -11073,7 +11073,7 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"Journal"</span> entry
                    (file+datetree ,(concat org-directory <span style=
 "color: #036A07;">"/journal.org"</span>))
-                   <span style="color: #036A07;">"* %T %?</span>
+                   <span style="color: #036A07;">"* %T % </span>
 
 <span style="color: #036A07;">  %U</span>
 
@@ -11081,7 +11081,7 @@ M-: (executable-find "diff") RET
 
 <span style="color: #036A07;">From %a"</span>
                    <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">"* %^{Title}\n  :PROPERTIES:\n  :on: %T\n  :END:\n  %?\n  %x"</span>
+"color: #4C886B; font-style: italic;">"* %^{Title}\n  :PROPERTIES:\n  :on: %T\n  :END:\n  % \n  %x"</span>
                    <span style="color: #006FE0;">:empty-lines</span> 1) t)
 
     (add-to-list 'org-capture-templates
@@ -11091,7 +11091,7 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"~/git/notes/secure.org.gpg"</span>)
                    <span style=
 "color: #036A07;">"* %(format-time-string \"%H:%M\") %^{Entry} %^G</span>
-<span style="color: #036A07;">%i%?"</span>) t)
+<span style="color: #036A07;">%i% "</span>) t)
 </pre>
               </div>
 
@@ -11110,9 +11110,9 @@ M-: (executable-find "diff") RET
 "color: #4C886B; font-style: italic;">:immediate-finish t :clock-in t :clock-resume t)</span>
 
     <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">("web-clippings" ?w</span>
+"color: #4C886B; font-style: italic;">("web-clippings"  w</span>
     <span style="color: #4C886B;">;;  </span><span style=
-"color: #4C886B; font-style: italic;">"* %^{Title} %^g \n  :PROPERTIES:\n  :date: %^t\n  :link: %^{link}\n  :END:\n\n %x %?"</span>
+"color: #4C886B; font-style: italic;">"* %^{Title} %^g \n  :PROPERTIES:\n  :date: %^t\n  :link: %^{link}\n  :END:\n\n %x % "</span>
     <span style="color: #4C886B;">;;  </span><span style=
 "color: #4C886B; font-style: italic;">"~/org/data.org" "Web Clippings")</span>
 </pre>
@@ -11129,7 +11129,7 @@ M-: (executable-find "diff") RET
                    (file+headline ,(concat org-directory <span style=
 "color: #036A07;">"/capture.org"</span>) <span style=
 "color: #036A07;">"Notes"</span>)
-                   <span style="color: #036A07;">"* %^{Title}%?</span>
+                   <span style="color: #036A07;">"* %^{Title}% </span>
 <span style="color: #036A07;">  %u</span>
 
 <span style="color: #036A07;">%i</span>
@@ -11682,7 +11682,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #4C886B; font-style: italic;">10.4 format specifications for the prefix of items in the agenda views</span>
     (setq org-agenda-prefix-format
           '((agenda . <span style=
-"color: #036A07;">" %-11s%i %?-12t"</span>)  <span style=
+"color: #036A07;">" %-11s%i % -12t"</span>)  <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">agenda</span>
             (timeline . <span style=
@@ -11794,7 +11794,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
             (setq leuven--org-agenda-show-tasks-details nil)
             (setq org-agenda-prefix-format
                   '((agenda  . <span style=
-"color: #036A07;">" %-11s%i %?-12t"</span>)
+"color: #036A07;">" %-11s%i % -12t"</span>)
                     (timeline  . <span style="color: #036A07;">" % s"</span>)
                     (todo  . <span style="color: #036A07;">" "</span>)
                     (search . <span style="color: #036A07;">" "</span>)
@@ -11802,7 +11802,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
         (setq leuven--org-agenda-show-tasks-details t)
         (setq org-agenda-prefix-format
               '((agenda . <span style=
-"color: #036A07;">" %-11s%i %-12:c%?-12t%7e "</span>)
+"color: #036A07;">" %-11s%i %-12:c% -12t%7e "</span>)
                 (timeline . <span style="color: #036A07;">" % s"</span>)
                 (todo . <span style="color: #036A07;">" %i %-12:c"</span>)
                 (search . <span style="color: #036A07;">" %i %-12:c"</span>)
@@ -12013,7 +12013,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"~/org/diary.org"</span>)
 
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">10.5? keep filters from one agenda view to the next</span>
+"color: #4C886B; font-style: italic;">10.5  keep filters from one agenda view to the next</span>
   (setq org-agenda-persistent-filter t)
 
   <span style="color: #4C886B;">;; </span><span style=
@@ -12022,19 +12022,19 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #4C886B; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #4C886B; font-style: italic;"> This generates an </span><span style="color: #4C886B; background-color: #FFFF88; font-style: italic;">error</span><span style="color: #4C886B; font-style: italic;"> when C-x C-w'ing the agenda view</span>
   (setq org-priority-faces-<span style=
 "color: #CC0000; background-color: #FFFF88;">XXX</span>
-        '((?A . (<span style="color: #006FE0;">:weight</span> bold <span style=
+        '(( A . (<span style="color: #006FE0;">:weight</span> bold <span style=
 "color: #006FE0;">:slant</span> italic <span style=
 "color: #006FE0;">:underline</span> t
                  <span style="color: #006FE0;">:foreground</span> <span style=
 "color: #036A07;">"#6E0000"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
 "color: #036A07;">"#F67777"</span>))
-          (?B . (<span style="color: #006FE0;">:slant</span> italic
+          ( B . (<span style="color: #006FE0;">:slant</span> italic
                  <span style="color: #006FE0;">:foreground</span> <span style=
 "color: #036A07;">"#005606"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
 "color: #036A07;">"#B6E864"</span>))
-          (?C . (<span style="color: #006FE0;">:slant</span> italic
+          ( C . (<span style="color: #006FE0;">:slant</span> italic
                  <span style="color: #006FE0;">:foreground</span> <span style=
 "color: #036A07;">"#00337B"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
@@ -12065,15 +12065,15 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
             <dl class="org-dl">
               <dt>Phone</dt>
 
-              <dd>Am I outside of normal calling hours?</dd>
+              <dd>Am I outside of normal calling hours </dd>
 
               <dt>Errands</dt>
 
-              <dd>Am I outside of business hours?</dd>
+              <dd>Am I outside of business hours </dd>
 
               <dt>Home</dt>
 
-              <dd>Does my IP address begin with 192.168?</dd>
+              <dd>Does my IP address begin with 192.168 </dd>
             </dl>
 
             <p>I can now define the function
@@ -12471,7 +12471,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
     (add-to-list 'org-agenda-custom-commands
                  '(<span style="color: #036A07;">"b="</span> <span style=
-"color: #036A07;">"Edit (?) List of all </span><span style=
+"color: #036A07;">"Edit ( ) List of all </span><span style=
 "color: #036A07; background-color: #FFFF88;">TODO</span><span style=
 "color: #036A07;"> entries (column view)"</span>
                    alltodo <span style="color: #036A07;">""</span>
@@ -12492,9 +12492,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
                 <li>Hide <code>SDAY</code> tasks</li>
 
-                <li>Hide future tasks?</li>
+                <li>Hide future tasks </li>
 
-                <li>Hide subtasks?
+                <li>Hide subtasks
 
                   <div class="inlinetask">
                     <b><span class="todo TODO">TODO</span> Add extra filters
@@ -12802,11 +12802,11 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                               (concat <span style="color: #036A07;">"\n"</span>
                                       <span style=
 "color: #036A07;">"%Y-%m-%d"</span> <span style="color: #036A07;">" %a "</span>
-                                      (make-string (window-width) ?_)))
+                                      (make-string (window-width)  _)))
                              (org-agenda-overriding-header <span style=
 "color: #036A07;">"Past week"</span>)
                              (org-agenda-prefix-format <span style=
-"color: #036A07;">" %?-11t %i %-12:c% s"</span>)
+"color: #036A07;">" % -11t %i %-12:c% s"</span>)
                              (org-agenda-show-log 'clockcheck)
                              (org-agenda-span 7)
                              (org-agenda-start-day <span style=
@@ -12868,7 +12868,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"Waiting for"</span>)
                            (org-agenda-todo-ignore-deadlines 'all) <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">future?</span>
+"color: #4C886B; font-style: italic;">future </span>
                            (org-agenda-todo-ignore-scheduled t)))
 
                     <span style="color: #4C886B;">;; </span><span style=
@@ -12884,7 +12884,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                    <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">((org-agenda-clockreport-mode nil)</span>
                    <span style="color: #4C886B;">;;  </span><span style=
-"color: #4C886B; font-style: italic;">(org-agenda-prefix-format " %i %?-12t% s")</span>
+"color: #4C886B; font-style: italic;">(org-agenda-prefix-format " %i % -12t% s")</span>
                    <span style="color: #4C886B;">;;  </span><span style=
 "color: #4C886B; font-style: italic;">(org-agenda-write-buffer-name "Weekly task review"))</span>
                    <span style="color: #4C886B;">;; </span><span style=
@@ -13034,7 +13034,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
               <div class="inlinetask">
                 <b><span class="todo TODO">TODO</span> Use option
                 (org-agenda-todo-ignore-with-date t) = ignore SCHEDULED
-                criteria?</b><br />
+                criteria </b><br />
                 nil
               </div>
 
@@ -13396,7 +13396,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
                   <div class="inlinetask">
                     <b><span class="todo TODO">TODO</span> Do this above
-                    view?</b><br />
+                    view </b><br />
                     nil
                   </div>
                 </li>
@@ -13677,7 +13677,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                             'leuven--skip-entry-if-deadline-or-schedule))))
                    ((org-agenda-clockreport-mode nil)
                     (org-agenda-prefix-format <span style=
-"color: #036A07;">" %i %?-12t% s"</span>)
+"color: #036A07;">" %i % -12t% s"</span>)
                     (org-agenda-span 'day)
                     (org-agenda-use-time-grid nil)
                     (org-agenda-write-buffer-name <span style=
@@ -13814,7 +13814,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   (setq org-agenda-exporter-settings
         '((ps-number-of-columns 1)      <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">2?</span>
+"color: #4C886B; font-style: italic;">2 </span>
           (ps-landscape-mode t)
           <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(org-agenda-add-entry-text-maxlines 5)</span>
@@ -13873,7 +13873,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
             lines</h5>
 
             <div class="outline-text-5" id="text-28-9-9-1">
-              <p>XXX Does this work?</p>
+              <p>XXX Does this work </p>
 
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
@@ -13917,7 +13917,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (message <span style="color: #036A07;">"... Org Markup"</span>)
 
     <span style="color: #4C886B;">;;</span><span style=
-"color: #4C886B; font-style: italic;">??? change the face of a headline (as an additional information) if</span>
+"color: #4C886B; font-style: italic;">    change the face of a headline (as an additional information) if</span>
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">it is marked DONE (to face `</span><span style="color: #4C886B; font-style: italic;">org-headline-done</span><span style="color: #4C886B; font-style: italic;">')</span>
     (setq org-fontify-done-headline t)
@@ -13952,7 +13952,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #4C886B; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #4C886B; font-style: italic;">: Should limit to '("pdf" "jpeg" "jpg" "png" "ps" "eps")</span>
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">which is org-export-latex-inline-image-extensions.</span>
-      (interactive <span style="color: #036A07;">"GImage name? "</span>)
+      (interactive <span style="color: #036A07;">"GImage name  "</span>)
       (<span style="color: #0000FF;">when</span> (file-directory-p name)
         (setq name (concat
                     (make-temp-name
@@ -14037,7 +14037,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #4C886B; font-style: italic;">11.7 convert LaTeX fragments to images when exporting to HTML (using MathJax)</span>
   (setq org-export-with-LaTeX-fragments t) <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #4C886B; font-style: italic;"> undefined?</span>
+"color: #4C886B; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #4C886B; font-style: italic;"> undefined </span>
 </pre>
             </div>
 
@@ -14108,21 +14108,21 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
             <li>Export to HTML and PDF, if such files already exist</li>
 
-            <li>Call <code>send-patch</code>?</li>
+            <li>Call <code>send-patch</code> </li>
           </ol>
 
           <p>Notes:</p>
 
           <ul class="org-ul">
             <li>Use the asynchronous export (if possible, so that I don’t loose
-            time, or let it open to the value of that var)?</li>
+            time, or let it open to the value of that var) </li>
 
             <li>Different behaviors can be obtained with <code>C-u</code> (or
             <code>C-u C-u</code>)</li>
           </ul>
 
           <p>Why not adding a recursive functionality as well (in Emacs Lisp
-          too), to be launched from Dired?</p>
+          too), to be launched from Dired </p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -14310,9 +14310,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
           '((<span style="color: #036A07;">"html"</span> . <span style=
 "color: #036A07;">"&lt;!-- &lt;xml version=\"1.0\"&gt; --&gt;"</span>)
             (<span style="color: #036A07;">"was-html"</span> . <span style=
-"color: #036A07;">"&lt;?xml version=\"1.0\" encoding=\"%s\"?&gt;"</span>)
+"color: #036A07;">"&lt; xml version=\"1.0\" encoding=\"%s\" &gt;"</span>)
             (<span style="color: #036A07;">"php"</span> . <span style=
-"color: #036A07;">"&lt;?php echo \"&lt;?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?&gt;\"; ?&gt;"</span>)))
+"color: #036A07;">"&lt; php echo \"&lt; xml version=\\\"1.0\\\" encoding=\\\"%s\\\"  &gt;\";  &gt;"</span>)))
 
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">coding system for HTML export</span>
@@ -14594,7 +14594,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                 (format <span style=
 "color: #036A07;">"\\hfill{}\\fbox{\\textsc{%s}}"</span>
                 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #4C886B; font-style: italic;"> source of "undefined control sequence"?</span>
+"color: #4C886B; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #4C886B; font-style: italic;"> source of "undefined control sequence" </span>
                   (mapconcat 'identity tags <span style=
 "color: #036A07;">":"</span>)))))
 
@@ -14779,7 +14779,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
             </div>
 
             <p>What about <code>apacite</code> and <code>tikz</code> in
-            <code>org-latex-packages-alist</code>?</p>
+            <code>org-latex-packages-alist</code> </p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -15519,46 +15519,46 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #4C886B; font-style: italic;">keep lower-case (easy templates)</span>
     (setq org-structure-template-alist
           '((<span style="color: #036A07;">"s"</span> <span style=
-"color: #036A07;">"#+begin_src ?\n\n#+end_src"</span> <span style=
-"color: #036A07;">"&lt;src lang=\"?\"&gt;\n\n&lt;/src&gt;"</span>)
+"color: #036A07;">"#+begin_src  \n\n#+end_src"</span> <span style=
+"color: #036A07;">"&lt;src lang=\" \"&gt;\n\n&lt;/src&gt;"</span>)
             (<span style="color: #036A07;">"e"</span> <span style=
-"color: #036A07;">"#+begin_example\n?\n#+end_example"</span> <span style=
-"color: #036A07;">"&lt;example&gt;\n?\n&lt;/example&gt;"</span>)
+"color: #036A07;">"#+begin_example\n \n#+end_example"</span> <span style=
+"color: #036A07;">"&lt;example&gt;\n \n&lt;/example&gt;"</span>)
             (<span style="color: #036A07;">"q"</span> <span style=
-"color: #036A07;">"#+begin_quote\n?\n#+end_quote"</span> <span style=
-"color: #036A07;">"&lt;quote&gt;\n?\n&lt;/quote&gt;"</span>)
+"color: #036A07;">"#+begin_quote\n \n#+end_quote"</span> <span style=
+"color: #036A07;">"&lt;quote&gt;\n \n&lt;/quote&gt;"</span>)
             (<span style="color: #036A07;">"v"</span> <span style=
-"color: #036A07;">"#+begin_verse\n?\n#+end_verse"</span> <span style=
-"color: #036A07;">"&lt;verse&gt;\n?\n&lt;/verse&gt;"</span>)
+"color: #036A07;">"#+begin_verse\n \n#+end_verse"</span> <span style=
+"color: #036A07;">"&lt;verse&gt;\n \n&lt;/verse&gt;"</span>)
             (<span style="color: #036A07;">"c"</span> <span style=
-"color: #036A07;">"#+begin_center\n?\n#+end_center"</span> <span style=
-"color: #036A07;">"&lt;center&gt;\n?\n&lt;/center&gt;"</span>)
+"color: #036A07;">"#+begin_center\n \n#+end_center"</span> <span style=
+"color: #036A07;">"&lt;center&gt;\n \n&lt;/center&gt;"</span>)
             (<span style="color: #036A07;">"l"</span> <span style=
-"color: #036A07;">"#+begin_latex\n?\n#+end_latex"</span> <span style=
-"color: #036A07;">"&lt;literal style=\"latex\"&gt;\n?\n&lt;/literal&gt;"</span>)
+"color: #036A07;">"#+begin_latex\n \n#+end_latex"</span> <span style=
+"color: #036A07;">"&lt;literal style=\"latex\"&gt;\n \n&lt;/literal&gt;"</span>)
             (<span style="color: #036A07;">"L"</span> <span style=
 "color: #036A07;">"#+latex: "</span> <span style=
-"color: #036A07;">"&lt;literal style=\"latex\"&gt;?&lt;/literal&gt;"</span>)
+"color: #036A07;">"&lt;literal style=\"latex\"&gt; &lt;/literal&gt;"</span>)
             (<span style="color: #036A07;">"h"</span> <span style=
-"color: #036A07;">"#+begin_html\n?\n#+end_html"</span> <span style=
-"color: #036A07;">"&lt;literal style=\"html\"&gt;\n?\n&lt;/literal&gt;"</span>)
+"color: #036A07;">"#+begin_html\n \n#+end_html"</span> <span style=
+"color: #036A07;">"&lt;literal style=\"html\"&gt;\n \n&lt;/literal&gt;"</span>)
             (<span style="color: #036A07;">"H"</span> <span style=
 "color: #036A07;">"#+html: "</span> <span style=
-"color: #036A07;">"&lt;literal style=\"html\"&gt;?&lt;/literal&gt;"</span>)
+"color: #036A07;">"&lt;literal style=\"html\"&gt; &lt;/literal&gt;"</span>)
             (<span style="color: #036A07;">"a"</span> <span style=
-"color: #036A07;">"#+begin_ascii\n?\n#+end_ascii"</span>)
+"color: #036A07;">"#+begin_ascii\n \n#+end_ascii"</span>)
             (<span style="color: #036A07;">"A"</span> <span style=
 "color: #036A07;">"#+ascii: "</span>)
             (<span style="color: #036A07;">"i"</span> <span style=
-"color: #036A07;">"#+index: ?"</span> <span style=
-"color: #036A07;">"#+index: ?"</span>)
+"color: #036A07;">"#+index:  "</span> <span style=
+"color: #036A07;">"#+index:  "</span>)
             (<span style="color: #036A07;">"I"</span> <span style=
-"color: #036A07;">"#+include: %file ?"</span> <span style=
-"color: #036A07;">"&lt;include file=%file markup=\"?\"&gt;"</span>)))
+"color: #036A07;">"#+include: %file  "</span> <span style=
+"color: #036A07;">"&lt;include file=%file markup=\" \"&gt;"</span>)))
 
     (add-to-list 'org-structure-template-alist
                  '(<span style="color: #036A07;">"C"</span> <span style=
-"color: #036A07;">"#+begin_comment\n?\n#+end_comment"</span>)))
+"color: #036A07;">"#+begin_comment\n \n#+end_comment"</span>)))
 </pre>
             </div>
           </div>
@@ -15804,7 +15804,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">\\]</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">)</span><span style=
-"color: #036A07;">?\\:[ \t]*"</span>))
+"color: #036A07;"> \\:[ \t]*"</span>))
              (update (re new)
                      (goto-char (point-min))
                      (<span style=
@@ -15934,7 +15934,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"="</span>))))))
 
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">must be in eval-after-load "org"?</span>
+"color: #4C886B; font-style: italic;">must be in eval-after-load "org" </span>
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">(define-key org-mode-map</span>
   <span style="color: #4C886B;">;;   </span><span style=
@@ -16305,7 +16305,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #CC0000; background-color: #FFFF88;">warning</span>-face)
             (<span style="color: #036A07;">"^</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">(?:</span><span style=
+"color: #036A07; font-weight: bold;">( :</span><span style=
 "color: #036A07;">Overfull</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">|</span><span style=
@@ -16510,15 +16510,15 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                              <span style=
 "color: #036A07;">"^\\s-*\\\\usepackage</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">(?:</span><span style=
+"color: #036A07; font-weight: bold;">( :</span><span style=
 "color: #036A07;">\\[.*\\]</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">)</span><span style=
-"color: #036A07;">?"</span>
+"color: #036A07;"> "</span>
                              <span style=
 "color: #036A07;">"{.*\\&lt;</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">(?:</span><span style=
+"color: #036A07; font-weight: bold;">( :</span><span style=
 "color: #036A07;">font</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">|</span><span style=
@@ -16645,7 +16645,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 </pre>
           </div>
 
-          <p><code>C-c ?</code> (or <code>M-x TeX-doc</code>) displays
+          <p><code>C-c  </code> (or <code>M-x TeX-doc</code>) displays
           documentation for a package.</p>
 
           <div class="inlinetask">
@@ -16989,7 +16989,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">invoke html-helper-mode automatically on .html files</span>
     (add-to-list 'auto-mode-alist '(<span style=
-"color: #036A07;">"\\.html?\\'"</span> . html-helper-mode))
+"color: #036A07;">"\\.html \\'"</span> . html-helper-mode))
 
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">invoke html-helper-mode automatically on .asp files</span>
@@ -17017,7 +17017,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (add-to-list 'auto-mode-alist '(<span style=
-"color: #036A07;">"\\.xhtml?\\'"</span> . xml-mode)) <span style=
+"color: #036A07;">"\\.xhtml \\'"</span> . xml-mode)) <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">alias for `</span><span style=
 "color: #4C886B; font-style: italic;">nxml-mode</span><span style=
@@ -17037,7 +17037,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
             <li>folding,</li>
 
-            <li>improved interface to Tidy (?),</li>
+            <li>improved interface to Tidy ( ),</li>
 
             <li>etc.</li>
           </ul>
@@ -17220,7 +17220,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
           but only if the definition is in the buffer you are currently editing
           (it won’t jump and open another file).</p>
 
-          <p>XXX Autoloaded?</p>
+          <p>XXX Autoloaded </p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -17821,7 +17821,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 </pre>
           </div>
 
-          <p>You’re debugging Bash code? I normally use
+          <p>You’re debugging Bash code  I normally use
           <code>mode-compile.el</code> for this. Basically, it runs Bash with
           lots of debug output.</p>
         </div>
@@ -18237,7 +18237,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   <span style="color: #4C886B;">;;          </span><span style=
 "color: #4C886B; font-style: italic;">(bolp)</span>
   <span style="color: #4C886B;">;;          </span><span style=
-"color: #4C886B; font-style: italic;">(not (looking-back "[-[:alnum:]_*+/=&lt;&gt;!?]+")))</span>
+"color: #4C886B; font-style: italic;">(not (looking-back "[-[:alnum:]_*+/=&lt;&gt;! ]+")))</span>
   <span style="color: #4C886B;">;;     </span><span style=
 "color: #4C886B; font-style: italic;">(call-interactively 'lisp-complete-symbol)))</span>
   <span style="color: #4C886B;">;;</span>
@@ -18253,7 +18253,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span style="color: #4C886B;">;;;</span><span style=
-"color: #4C886B; font-style: italic;">_  + paredit                       ; or smartparen (or autopair)?</span>
+"color: #4C886B; font-style: italic;">_  + paredit                       ; or smartparen (or autopair) </span>
 
   (autoload 'paredit-mode <span style="color: #036A07;">"paredit"</span>
     <span style=
@@ -18372,7 +18372,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   <span style=
 "color: #4C886B;">;;                                       </span><span style=
 "color: #4C886B; font-style: italic;">; (</span><span style=
-"color: #4C886B; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #4C886B; font-style: italic;"> autoload?)</span>
+"color: #4C886B; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #4C886B; font-style: italic;"> autoload )</span>
 </pre>
           </div>
         </div>
@@ -18571,7 +18571,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"#"</span>) 'vc-ediff-ignore-whitespace)
                                          <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">ediff-windows-wordwise?</span>
+"color: #4C886B; font-style: italic;">ediff-windows-wordwise </span>
                ))
 
   (<span style="color: #0000FF;">defun</span> <span style=
@@ -18674,7 +18674,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
       (find-file file)
       (<span style="color: #0000FF;">if</span> (and (buffer-modified-p)
                (y-or-n-p (format <span style=
-"color: #036A07;">"Buffer %s is modified. Save buffer? "</span>
+"color: #036A07;">"Buffer %s is modified. Save buffer  "</span>
                                  (buffer-name))))
           (save-buffer (current-buffer)))
       (ediff-load-version-control)
@@ -18697,7 +18697,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                 (interactive)
                 (leuven--ediff-revision (buffer-file-name)
                                         (read-string <span style=
-"color: #036A07;">"revision? "</span>
+"color: #036A07;">"revision  "</span>
                                                      <span style=
 "color: #036A07;">"HEAD"</span> nil <span style=
 "color: #036A07;">"HEAD"</span>)
@@ -18740,7 +18740,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (add-hook 'change-log-mode-hook
               (add-to-list
                'change-log-font-lock-keywords
-               '(<span style="color: #036A07;">"^[0-9-]+:? +</span><span style=
+               '(<span style="color: #036A07;">"^[0-9-]+:  +</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">|</span><span style=
 "color: #036A07;">^</span><span style=
@@ -18773,7 +18773,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">(</span><span style=
 "color: #036A07;">[</span><span style="color: #036A07;">^</span><span style=
-"color: #036A07;">&lt;(]+?</span><span style=
+"color: #036A07;">&lt;(]+ </span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">)</span><span style=
 "color: #036A07;">[   ]*[(&lt;]</span><span style=
@@ -19038,7 +19038,7 @@ TAGS:
 "color: #4C886B; font-style: italic;">', and display all exact matches</span>
       (global-set-key
         (kbd <span style=
-"color: #036A07;">"M-?"</span>) 'etags-select-find-tag-at-point)))
+"color: #036A07;">"M- "</span>) 'etags-select-find-tag-at-point)))
 </pre>
             </div>
           </div>
@@ -19243,11 +19243,11 @@ TAGS:
 "color: #4C886B; font-style: italic;">automatically complete whatever symbol you are typing</span>
         (local-set-key
           (kbd <span style=
-"color: #036A07;">"C-c ?"</span>) 'semantic-ia-complete-symbol) <span style=
+"color: #036A07;">"C-c  "</span>) 'semantic-ia-complete-symbol) <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">better binding: `</span><span style=
 "color: #4C886B; font-style: italic;">M-/</span><span style=
-"color: #4C886B; font-style: italic;">'?</span>
+"color: #4C886B; font-style: italic;">' </span>
 
         <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">jump to the definition of the symbol under cursor</span>
@@ -19567,7 +19567,7 @@ TAGS:
                   (set (make-local-variable 'yas/trigger-key) (kbd <span style=
 "color: #036A07;">"tab"</span>)) <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">needed?</span>
+"color: #4C886B; font-style: italic;">needed </span>
                   (add-to-list 'org-tab-first-hook
                                'yas/org-very-safe-expand)
                   (define-key yas/keymap
@@ -19575,7 +19575,7 @@ TAGS:
 "color: #036A07;">"tab"</span>) 'yas/next-field) <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">`</span><span style=
-"color: #4C886B; font-style: italic;">yas/next-field-or-maybe-expand</span><span style="color: #4C886B; font-style: italic;">'?</span>
+"color: #4C886B; font-style: italic;">yas/next-field-or-maybe-expand</span><span style="color: #4C886B; font-style: italic;">' </span>
                   ))
 </pre>
           </div>
@@ -19889,7 +19889,7 @@ TAGS:
           (kbd <span style="color: #036A07;">"&lt;tab&gt;"</span>) 'ac-expand)
 
         (define-key ac-completing-map
-          (kbd <span style="color: #036A07;">"C-?"</span>) 'ac-quick-help)
+          (kbd <span style="color: #036A07;">"C- "</span>) 'ac-quick-help)
 
         <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">show a lastly completed candidate help in a "quick help" form</span>
@@ -20142,7 +20142,7 @@ TAGS:
       (kbd <span style=
 "color: #036A07;">"e"</span>) 'browse-url-of-dired-file) <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">&lt;C-RET&gt;?</span>
+"color: #4C886B; font-style: italic;">&lt;C-RET&gt; </span>
 </pre>
               </div>
 
@@ -20496,7 +20496,7 @@ TAGS:
           buffer is open…</p>
           <pre class="example">
 Reverting buffer `prestations/'.
-prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h) n
+prestations-2013-06.tex changed on disk; really edit the buffer  (y, n, r or C-h) n
 </pre>
 
           <div class="org-src-container">
@@ -20829,7 +20829,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
           <div class="inlinetask">
             <b><span class="todo TODO">TODO</span> Diff between shell-command
-            and call-process? Blocking call?</b><br />
+            and call-process  Blocking call </b><br />
             nil
           </div>
 
@@ -21067,14 +21067,14 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Unicode characters</span>
-    (setq cfw:fchar-junction ?╋
-          cfw:fchar-vertical-line ?┃
-          cfw:fchar-horizontal-line ?━
-          cfw:fchar-left-junction ?┣
-          cfw:fchar-right-junction ?┫
-          cfw:fchar-top-junction ?┯
-          cfw:fchar-top-left-corner ?┏
-          cfw:fchar-top-right-corner ?┓))
+    (setq cfw:fchar-junction  ╋
+          cfw:fchar-vertical-line  ┃
+          cfw:fchar-horizontal-line  ━
+          cfw:fchar-left-junction  ┣
+          cfw:fchar-right-junction  ┫
+          cfw:fchar-top-junction  ┯
+          cfw:fchar-top-left-corner  ┏
+          cfw:fchar-top-right-corner  ┓))
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">calendar view for org-agenda</span>
@@ -21086,7 +21086,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">cfw:org-summary-format</span> (item)
       <span style=
-"color: #008000;">"Format an item (How should it be displayed?)."</span>
+"color: #008000;">"Format an item (How should it be displayed )."</span>
       (<span style=
 "color: #0000FF;">let*</span> ((time (cfw:org-tp item 'time))
              (time-of-day (cfw:org-tp item 'time-of-day))
@@ -21352,7 +21352,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #4C886B; font-style: italic;">http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html</span>
     (setq bbdb-ignore-some-messages-alist
           '((<span style="color: #036A07;">"From"</span> . <span style=
-"color: #036A07;">"no.?reply</span><span style=
+"color: #036A07;">"no. reply</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">|</span><span style=
 "color: #036A07;">public.gmane.org"</span>)))
@@ -21565,7 +21565,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #036A07; font-weight: bold;">)</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">)</span><span style=
-"color: #036A07;">?"</span>
+"color: #036A07;"> "</span>
                                      <span style=
 "color: #036A07;">"</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
@@ -21579,7 +21579,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #036A07; font-weight: bold;">)</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">)</span><span style=
-"color: #036A07;">?"</span>
+"color: #036A07;"> "</span>
                                      <span style=
 "color: #036A07;">"</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
@@ -21593,7 +21593,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #036A07; font-weight: bold;">)</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">)</span><span style=
-"color: #036A07;">?"</span>)
+"color: #036A07;"> "</span>)
                              'face
                              <span style=
 "color: #036A07;">"\\1\\3\\5\\7"</span>)))))
@@ -21696,7 +21696,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           more suitable for heavy manipulation of the text of the PDF.</p>
 
           <p>Another option, without <code>doc-view</code>, is <code>! pdtotext
-          ? - &lt;RET&gt;</code>.</p>
+            - &lt;RET&gt;</code>.</p>
 
           <p><code>doc-view-enlarge</code> (<code>+</code>) and
           <code>doc-view-shrink</code> (<code>-</code>) work fine to zoom in or
@@ -21954,7 +21954,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #036A07;">"36.2 Interactive Shell"</span>)
 
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">for the interactive (sub)shell (and AUCTeX compilation?)</span>
+"color: #4C886B; font-style: italic;">for the interactive (sub)shell (and AUCTeX compilation )</span>
   (setq explicit-shell-file-name shell-file-name)
 </pre>
           </div>
@@ -22527,7 +22527,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">- plink (with `</span><span style=
 "color: #4C886B; font-style: italic;">dumb</span><span style=
-"color: #4C886B; font-style: italic;">' terminal option?) as interactive shell</span>
+"color: #4C886B; font-style: italic;">' terminal option ) as interactive shell</span>
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">- ssh -t -t user@host</span>
   <span style="color: #4C886B;">;; </span><span style=
@@ -22748,7 +22748,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         as your <code>EDITOR</code>. If you want <code>emacsclient</code> to
         return immediately, use the <code>-n</code> option.</p>
 
-        <p>Do you use <code>emacsclient</code> in terminals? If not, just use
+        <p>Do you use <code>emacsclient</code> in terminals  If not, just use
         parameter <code>-c -n</code>, which creates an X Window and doesn’t
         wait for <code>(server-edit)</code>.</p>
 
@@ -22891,7 +22891,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #008000;">"Query user before printing the buffer."</span>
     (interactive)
     (<span style="color: #0000FF;">when</span> (y-or-n-p <span style=
-"color: #036A07;">"Are you sure you want to print this buffer? "</span>)
+"color: #036A07;">"Are you sure you want to print this buffer  "</span>)
       (ps-print-buffer-with-faces)))
 
   <span style="color: #4C886B;">;; </span><span style=
@@ -23252,7 +23252,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #0000FF;">let</span> ((query (read-from-minibuffer <span style=
 "color: #036A07;">"Google Search: "</span>)))
         (browse-url (concat <span style=
-"color: #036A07;">"http://www.google.com/search?q="</span>
+"color: #036A07;">"http://www.google.com/search q="</span>
                             (url-hexify-string query)))))
 
     <span style="color: #4C886B;">;; </span><span style=
@@ -23262,7 +23262,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span style="color: #4C886B;">;;   </span><span style=
 "color: #4C886B; font-style: italic;">(interactive "sSearch for: ")</span>
     <span style="color: #4C886B;">;;   </span><span style=
-"color: #4C886B; font-style: italic;">(browse-url (concat "http://www.google.com/search?q="</span>
+"color: #4C886B; font-style: italic;">(browse-url (concat "http://www.google.com/search q="</span>
     <span style="color: #4C886B;">;;                   </span><span style=
 "color: #4C886B; font-style: italic;">(url-hexify-string</span>
     <span style="color: #4C886B;">;;                     </span><span style=
@@ -23274,7 +23274,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       (interactive)
       (browse-url
        (concat <span style=
-"color: #036A07;">"http://www.google.com/search?q="</span> (find-tag-default))))
+"color: #036A07;">"http://www.google.com/search q="</span> (find-tag-default))))
 
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-google-search-region</span> (prefix start end)
@@ -23289,7 +23289,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #0000FF;">let</span> ((query (buffer-substring-no-properties start end)))
           (browse-url
            (concat <span style=
-"color: #036A07;">"http://www.google.com/search?q="</span>
+"color: #036A07;">"http://www.google.com/search q="</span>
                    (url-hexify-string query))))))
 
     <span style="color: #4C886B;">;; </span><span style=
@@ -23335,7 +23335,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
              (<span style=
 "color: #0000FF;">let</span> ((dir default-directory))
                (w3m-browse-url (concat <span style=
-"color: #036A07;">"http://www.google.com/search?q="</span>
+"color: #036A07;">"http://www.google.com/search q="</span>
                                        (w3m-url-encode-string what)))
                (cd dir)
                (recursive-edit))))
@@ -23377,7 +23377,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (interactive (pm/region-or-word <span style=
 "color: #036A07;">"Google: "</span>))
     (browse-url (concat <span style=
-"color: #036A07;">"http://google.com/search?num=100&amp;q="</span> string)))
+"color: #036A07;">"http://google.com/search num=100&amp;q="</span> string)))
 </pre>
         </div>
 
@@ -23904,7 +23904,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">;; cause actual stack overflow in C, which would be fatal for Emacs</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(setq max-lisp-eval-depth 600)        ; 1000?</span>
+"color: #4C886B; font-style: italic;">(setq max-lisp-eval-depth 600)        ; 1000 </span>
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">limit on number of Lisp variable bindings &amp; unwind-protects</span>
@@ -24112,7 +24112,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
 "color: #036A07;">"&gt;"</span> <span style=
 "color: #036A07;">","</span> <span style=
 "color: #036A07;">"."</span> <span style=
-"color: #036A07;">"/"</span> <span style="color: #036A07;">"?"</span>
+"color: #036A07;">"/"</span> <span style="color: #036A07;">" "</span>
                           ))
               (n (length keys))
               (modifiers (list <span style=
@@ -24225,7 +24225,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
   <span style="color: #4C886B;">;;           </span><span style=
 "color: #4C886B; font-style: italic;">(lambda ()</span>
   <span style="color: #4C886B;">;;             </span><span style=
-"color: #4C886B; font-style: italic;">(modify-syntax-entry ?- "w")))</span>
+"color: #4C886B; font-style: italic;">(modify-syntax-entry  - "w")))</span>
 </pre>
           </div>
 
@@ -24428,7 +24428,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
 </pre>
           </div>
 
-          <p>How do I get image support? See <code>image-library-alist</code>,
+          <p>How do I get image support  See <code>image-library-alist</code>,
           a list of image types vs external libraries needed to display
           them.</p>
 
@@ -24747,25 +24747,25 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
   (XEmacs
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">keys to the right of the regular keyboard</span>
-    (define-key key-translation-map [kp-divide]     [?/])
-    (define-key key-translation-map [kp-multiply]   [?*])
-    (define-key key-translation-map [kp-subtract]   [?-])
-    (define-key key-translation-map [kp-add]        [?+])
-    (define-key key-translation-map [kp-enter]     [?\r])
-    (define-key key-translation-map [kp-decimal]    [?.])
+    (define-key key-translation-map [kp-divide]     [ /])
+    (define-key key-translation-map [kp-multiply]   [ *])
+    (define-key key-translation-map [kp-subtract]   [ -])
+    (define-key key-translation-map [kp-add]        [ +])
+    (define-key key-translation-map [kp-enter]     [ \r])
+    (define-key key-translation-map [kp-decimal]    [ .])
 
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">keys with digits</span>
-    (define-key key-translation-map [kp-0]          [?0])
-    (define-key key-translation-map [kp-1]          [?1])
-    (define-key key-translation-map [kp-2]          [?2])
-    (define-key key-translation-map [kp-3]          [?3])
-    (define-key key-translation-map [kp-4]          [?4])
-    (define-key key-translation-map [kp-5]          [?5])
-    (define-key key-translation-map [kp-6]          [?6])
-    (define-key key-translation-map [kp-7]          [?7])
-    (define-key key-translation-map [kp-8]          [?8])
-    (define-key key-translation-map [kp-9]          [?9])
+    (define-key key-translation-map [kp-0]          [ 0])
+    (define-key key-translation-map [kp-1]          [ 1])
+    (define-key key-translation-map [kp-2]          [ 2])
+    (define-key key-translation-map [kp-3]          [ 3])
+    (define-key key-translation-map [kp-4]          [ 4])
+    (define-key key-translation-map [kp-5]          [ 5])
+    (define-key key-translation-map [kp-6]          [ 6])
+    (define-key key-translation-map [kp-7]          [ 7])
+    (define-key key-translation-map [kp-8]          [ 8])
+    (define-key key-translation-map [kp-9]          [ 9])
 
     <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">additional keypad duplicates of keys ordinarily found elsewhere</span>
@@ -24881,7 +24881,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131220.1639]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131220.1724]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

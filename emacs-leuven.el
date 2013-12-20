@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131220.1637
+;; Version: 20131220.1722
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131220.1637]--")
+(message "* --[ Loading Emacs Leuven 20131220.1722]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -989,7 +989,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   ;; highlight trailing whitespaces in all modes
   (setq-default show-trailing-whitespace t)
 
-  ;; nuke all trailing whitespace in the buffer
+  ;; nuke all trailing whitespaces in the buffer
   (add-hook 'before-save-hook
             (lambda ()
               ;; except for Message mode where "-- " is the signature separator
@@ -9244,7 +9244,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131220.1638]--")
+(message "* --[ Loaded Emacs Leuven 20131220.1723]--")
 
 (provide 'emacs-leuven)
 
