@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-20 Fri 15:55>
+# Time-stamp: <2013-12-20 Fri 16:36>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4099,6 +4099,22 @@ Another solution to avoid breaking at certain places is to add
 #+end_src
 
 #+begin_src emacs-lisp
+  (defun leuven-convert-nbsp ()
+    "Replace all nbsp by normal spaces."
+    (interactive "*")
+    (save-excursion
+      (save-restriction
+        (save-match-data
+          (progn
+            (goto-char (point-min))
+            (while (re-search-forward "[  ]" nil t)
+              (replace-match " " nil nil)))))))
+
+  ;; make sure that all nbsp characters are replaced by spaces
+  (add-hook 'before-save-hook 'leuven-convert-nbsp) ; TEMP
+#+end_src
+
+#+begin_src emacs-lisp
   (defun leuven-good-old-fill-paragraph ()
     (interactive)
     (let ((fill-paragraph-function nil)
@@ -8109,7 +8125,7 @@ the UTF-8 *non-breaking space*:
 
 - Convert it in LaTeX:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     ;; convert `nbsp' to its LaTeX equivalent
     (add-to-list 'org-latex-packages-alist
                  (concat "\\ifdefined\\DeclareUnicodeCharacter{"

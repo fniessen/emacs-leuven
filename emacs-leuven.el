@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131220.1557
+;; Version: 20131220.1637
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131220.1557]--")
+(message "* --[ Loading Emacs Leuven 20131220.1637]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2678,6 +2678,20 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                    (lambda ()
                      (not (eq (get-text-property (point) 'face)
                               'font-lock-comment-face))))))
+
+  (defun leuven-convert-nbsp ()
+    "Replace all nbsp by normal spaces."
+    (interactive "*")
+    (save-excursion
+      (save-restriction
+        (save-match-data
+          (progn
+            (goto-char (point-min))
+            (while (re-search-forward "[  ]" nil t)
+              (replace-match " " nil nil)))))))
+
+  ;; make sure that all nbsp characters are replaced by spaces
+  (add-hook 'before-save-hook 'leuven-convert-nbsp) ; TEMP
 
   (defun leuven-good-old-fill-paragraph ()
     (interactive)
@@ -5481,12 +5495,6 @@ From %c"
 
     ;; include the `xcolor' package for colored source code
     (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
-
-    ;; convert `nbsp' to its LaTeX equivalent
-    (add-to-list 'org-latex-packages-alist
-                 (concat "\\ifdefined\\DeclareUnicodeCharacter{"
-                         "\\DeclareUnicodeCharacter{00A0}{~}"
-                         "}\\fi") t)
 
     ;; include the `babel' package for language-specific hyphenation and
     ;; typography
@@ -9236,7 +9244,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131220.1558]--")
+(message "* --[ Loaded Emacs Leuven 20131220.1638]--")
 
 (provide 'emacs-leuven)
 
