@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-20 Fri 10:42>
+# Time-stamp: <2013-12-20 Fri 11:28>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -550,16 +550,12 @@ are generated programmatically from upstream Git-based sources.
                                         ; and load `<pkg>-autoloads.el'
 
       (defcustom leuven-packages
-        '(auctex auto-complete bbdb boxquote calfw circe dired+ ess fuzzy
-          git-commit-mode graphviz-dot-mode helm
+        '(auctex auto-complete bbdb boxquote calfw circe dictionary dired+ ess
+          fuzzy git-commit-mode graphviz-dot-mode helm
           htmlize                       ; works with Org
-          idle-require interaction-log ledger-mode leuven-theme pager
-          rainbow-mode redshank sml-modeline tidy yasnippet
-          ;; dictionary
-          ;; gnuplot-mode                  ; or gnuplot?
+          idle-require interaction-log ledger-mode leuven-theme org-mime pager
+          rainbow-mode redo+ redshank sml-modeline tidy yasnippet
           ;; jabber multi-term
-          ;; org
-          ;; org-mime                      ; from contrib
           ;; paredit w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -573,6 +569,10 @@ are generated programmatically from upstream Git-based sources.
             (unless (or (package-installed-p pkg)
                         (locate-library (symbol-name pkg)))
               (push pkg missing-packages)))))
+
+;; temp
+(message "MiSSing packages on your System: %S" (leuven--missing-packages))
+(sit-for 2)
 
       ;; propose to install all the packages specified in `leuven-packages'
       ;; which are missing
@@ -743,8 +743,8 @@ Though, it does load the full Org mode right from the start...
     (kbd "<f11>") 'undo)
 
   ;; redo the most recent undo
-  (when (locate-library "redo")
-    (autoload 'redo "redo" "Redo the the most recent undo." t)
+  (when (locate-library "redo+")
+    (autoload 'redo "redo+" "Redo the the most recent undo." t)
     (global-set-key
       (kbd "<S-f11>") 'redo))
 #+end_src
@@ -2172,38 +2172,17 @@ of possible corrections for misspelled word before point.
 *************** TODO Have a look at `diction' (style and grammar for English)
 
 #+begin_src emacs-lisp
-  (when (locate-library "dictionary-init")
+  ;; client for rfc2229 dictionary servers
+  (when (try-require "dictionary-autoloads")
 
-     ;; ;; autoloads
-     ;; (load-library "dictionary-init")
+    (global-set-key
+      (kbd "C-c d s") 'dictionary-search)
+    (global-set-key
+      (kbd "C-c d l") 'dictionary-lookup-definition)
+    (global-set-key
+      (kbd "C-c d m") 'dictionary-match-words)
 
-     (autoload 'dictionary-search "dictionary"
-       "Ask for a word and search it in all dictionaries." t)
-     (autoload 'dictionary-match-words "dictionary"
-       "Ask for a word and search all matching words in the dictionaries." t)
-     (autoload 'dictionary-lookup-definition "dictionary"
-       "Unconditionally lookup the word at point." t)
-
-     (autoload 'dictionary "dictionary"
-       "Create a new dictionary buffer." t)
-     (autoload 'dictionary-mouse-popup-matching-words "dictionary"
-       "Display entries matching the word at the cursor." t)
-     (autoload 'dictionary-popup-matching-words "dictionary"
-       "Display entries matching the word at the point." t)
-     (autoload 'dictionary-tooltip-mode "dictionary"
-       "Display tooltips for the current word." t)
-     (unless (boundp 'running-xemacs)
-       (autoload 'global-dictionary-tooltip-mode "dictionary"
-         "Enable/disable dictionary-tooltip-mode for all buffers." t))
-
-     (global-set-key
-       (kbd "C-c d l") 'dictionary-lookup-definition)
-     (global-set-key
-       (kbd "C-c d s") 'dictionary-search)
-     (global-set-key
-       (kbd "C-c d m") 'dictionary-match-words)
-
-     (with-eval-after-load "dictionary"
+    (with-eval-after-load "dictionary"
 
       (global-dictionary-tooltip-mode 1)
 
@@ -2227,7 +2206,7 @@ of possible corrections for misspelled word before point.
               ("ftp"      . ,(getenv "http_proxy"))
               ("no_proxy" . "^.*example.com")))
               ;; disable proxy for some hosts
-     ))
+    ))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3887,7 +3866,7 @@ XXX Declare PDF files as binary
   ;; also moved to the front of the priority list for automatic detection
   (GNUEmacs
    (prefer-coding-system 'utf-8-unix))  ; Unix flavor for code blocks executed
-                                        ; via Org-Babel
+                                        ; via Org-babel
 #+end_src
 
 ** Specifying a File's Coding System
@@ -4283,7 +4262,7 @@ using =outline-minor-mode= + =outline-magic=.
 (set (make-local-variable 'outline-regexp) "^[ \t]*\\(?:def\\|class\\|module\\)\\|^[ \t]*###==")
 #+end_example
 
-~outline-minor-mode.el~ is also used to collapse Lisp code (i.e., to see in the
+Outline minor mode is also used to collapse Lisp code (i.e., to see in the
 buffer just the definition of a function instead of the whole body).
 
 See also the library [[id:a36b1dbd-1d05-4ff2-b19a-167e50c4f1f7][hs-minor-mode]].
@@ -4478,10 +4457,10 @@ This helps me survive in files like ~org.el~ and ~org-agenda.el~.
 *** fold-dwim-org
 
 #+begin_src emacs-lisp
-  ;; unified user interface for Emacs folding modes, bound to Org
-  ;; key-strokes
-  (GNUEmacs
-    (try-require 'fold-dwim-org-XXX))
+  ;; ;; unified user interface for Emacs folding modes, bound to Org
+  ;; ;; key-strokes
+  ;; (GNUEmacs
+  ;;   (try-require 'fold-dwim-org))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8209,8 +8188,8 @@ the UTF-8 *non-breaking space*:
                          "}\\fi") t)
 #+end_src
 
-The exporter will *add* a language option to the =babel= package according to the
-=#+LANGUAGE:= keyword (only) if:
+The exporter will *add* a language option to the LaTeX =babel= package according to
+the =#+LANGUAGE:= keyword (only) if:
 
 - The =babel= package is explicitly loaded (in preamble), _and_
 - The language is different from the one set by the user.
@@ -8449,7 +8428,7 @@ C-c TAB
 Toggle the visibility of existing tags in the buffer. This can be used as a
 cheap preview (sgml-tags-invisible).
 
-View just the source-code blocks within the current Babel file (something
+View just the source-code blocks within the current Org-babel file (something
 logically equivalent to "tangle", but without creating a separate file).
 
 #+begin_src emacs-lisp
@@ -8491,8 +8470,8 @@ logically equivalent to "tangle", but without creating a separate file).
   ;; block only with `C-c C-v e')
   (setq org-babel-no-eval-on-ctrl-c-ctrl-c t)
 
-  ;; languages for which Babel will raise literate programming errors
-  ;; when noweb references can not be resolved.
+  ;; languages for which Org-babel will raise literate programming errors when
+  ;; noweb references can not be resolved.
 
   (with-eval-after-load "ob-core"
     (add-to-list 'org-babel-noweb-error-langs "emacs-lisp"))
@@ -9592,6 +9571,7 @@ Some key bindings:
 ** Highlight the closing tag
 
 #+begin_src emacs-lisp
+  ;; highlight the current SGML tag context
   (when (try-require 'hl-tags-mode)
 
     (add-hook 'html-mode-hook
@@ -12741,18 +12721,18 @@ Note that =TERM= is different in both environments:
   ;; one Emacs screen and lots of shell screens; to just using Emacs, with
   ;; lots of terminals inside it."
 
-  (when (locate-library "multi-term")
-
-    (autoload 'multi-term "multi-term"
-      "Create new term buffer." t)
-    (autoload 'multi-term-next "multi-term"
-      "Go to the next term buffer." t)
-
-    (setq multi-term-program shell-file-name)
-
-    ;; (global-set-key (kbd "C-c t") 'multi-term-next)
-    (global-set-key
-      (kbd "C-c T") 'multi-term))       ; create a new one
+  ;; (when (locate-library "multi-term")
+  ;;
+  ;;   (autoload 'multi-term "multi-term"
+  ;;     "Create new term buffer." t)
+  ;;   (autoload 'multi-term-next "multi-term"
+  ;;     "Go to the next term buffer." t)
+  ;;
+  ;;   (setq multi-term-program shell-file-name)
+  ;;
+  ;;   ;; (global-set-key (kbd "C-c t") 'multi-term-next)
+  ;;   (global-set-key
+  ;;     (kbd "C-c T") 'multi-term))       ; create a new one
 #+end_src
 
 *************** TODO Try /visual/ commands (like =top= or =less=) in =multi-term=
@@ -13541,13 +13521,14 @@ http://lars.ingebrigtsen.no/2013/06/eww.html.
     (try-require 'google-maps))
 #+end_src
 
-** Babel
+** Babel translator
 
 #+begin_src emacs-lisp
 ;;** Babel
 
   (leuven--section "Babel")
 
+  ;; interface to web translation services such as Babelfish
   (when (locate-library "babel")
 
     (autoload 'babel "babel"

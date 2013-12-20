@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131220.1043
+;; Version: 20131220.1128
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131220.1043]--")
+(message "* --[ Loading Emacs Leuven 20131220.1128]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -408,16 +408,12 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                                         ; and load `<pkg>-autoloads.el'
 
       (defcustom leuven-packages
-        '(auctex auto-complete bbdb boxquote calfw circe dired+ ess fuzzy
-          git-commit-mode graphviz-dot-mode helm
+        '(auctex auto-complete bbdb boxquote calfw circe dictionary dired+ ess
+          fuzzy git-commit-mode graphviz-dot-mode helm
           htmlize                       ; works with Org
-          idle-require interaction-log ledger-mode leuven-theme pager
-          rainbow-mode redshank sml-modeline tidy yasnippet
-          ;; dictionary
-          ;; gnuplot-mode                  ; or gnuplot?
+          idle-require interaction-log ledger-mode leuven-theme org-mime pager
+          rainbow-mode redo+ redshank sml-modeline tidy yasnippet
           ;; jabber multi-term
-          ;; org
-          ;; org-mime                      ; from contrib
           ;; paredit w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -431,6 +427,10 @@ nil. Save execution times in the global list `leuven--load-times-list'."
             (unless (or (package-installed-p pkg)
                         (locate-library (symbol-name pkg)))
               (push pkg missing-packages)))))
+
+;; temp
+(message "MiSSing packages on your System: %S" (leuven--missing-packages))
+(sit-for 2)
 
       ;; propose to install all the packages specified in `leuven-packages'
       ;; which are missing
@@ -540,8 +540,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     (kbd "<f11>") 'undo)
 
   ;; redo the most recent undo
-  (when (locate-library "redo")
-    (autoload 'redo "redo" "Redo the the most recent undo." t)
+  (when (locate-library "redo+")
+    (autoload 'redo "redo+" "Redo the the most recent undo." t)
     (global-set-key
       (kbd "<S-f11>") 'redo))
 
@@ -1385,38 +1385,17 @@ nil. Save execution times in the global list `leuven--load-times-list'."
      (global-set-key
        (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary)))
 
-  (when (locate-library "dictionary-init")
+  ;; client for rfc2229 dictionary servers
+  (when (try-require "dictionary-autoloads")
 
-     ;; ;; autoloads
-     ;; (load-library "dictionary-init")
+    (global-set-key
+      (kbd "C-c d s") 'dictionary-search)
+    (global-set-key
+      (kbd "C-c d l") 'dictionary-lookup-definition)
+    (global-set-key
+      (kbd "C-c d m") 'dictionary-match-words)
 
-     (autoload 'dictionary-search "dictionary"
-       "Ask for a word and search it in all dictionaries." t)
-     (autoload 'dictionary-match-words "dictionary"
-       "Ask for a word and search all matching words in the dictionaries." t)
-     (autoload 'dictionary-lookup-definition "dictionary"
-       "Unconditionally lookup the word at point." t)
-
-     (autoload 'dictionary "dictionary"
-       "Create a new dictionary buffer." t)
-     (autoload 'dictionary-mouse-popup-matching-words "dictionary"
-       "Display entries matching the word at the cursor." t)
-     (autoload 'dictionary-popup-matching-words "dictionary"
-       "Display entries matching the word at the point." t)
-     (autoload 'dictionary-tooltip-mode "dictionary"
-       "Display tooltips for the current word." t)
-     (unless (boundp 'running-xemacs)
-       (autoload 'global-dictionary-tooltip-mode "dictionary"
-         "Enable/disable dictionary-tooltip-mode for all buffers." t))
-
-     (global-set-key
-       (kbd "C-c d l") 'dictionary-lookup-definition)
-     (global-set-key
-       (kbd "C-c d s") 'dictionary-search)
-     (global-set-key
-       (kbd "C-c d m") 'dictionary-match-words)
-
-     (with-eval-after-load "dictionary"
+    (with-eval-after-load "dictionary"
 
       (global-dictionary-tooltip-mode 1)
 
@@ -1440,7 +1419,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
               ("ftp"      . ,(getenv "http_proxy"))
               ("no_proxy" . "^.*example.com")))
               ;; disable proxy for some hosts
-     ))
+    ))
 
   ;; XXX excellent!
   (defun leuven-answers-define ()
@@ -2569,7 +2548,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   ;; also moved to the front of the priority list for automatic detection
   (GNUEmacs
    (prefer-coding-system 'utf-8-unix))  ; Unix flavor for code blocks executed
-                                        ; via Org-Babel
+                                        ; via Org-babel
 
 ;;** 22.8 (info "(emacs)Specify Coding") System of a File
 
@@ -2967,10 +2946,10 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
 ;; C-M-] and M-] fold the whole buffer or the current defun.
 
-  ;; unified user interface for Emacs folding modes, bound to Org
-  ;; key-strokes
-  (GNUEmacs
-    (try-require 'fold-dwim-org-XXX))
+  ;; ;; unified user interface for Emacs folding modes, bound to Org
+  ;; ;; key-strokes
+  ;; (GNUEmacs
+  ;;   (try-require 'fold-dwim-org))
 
   ;; 25.8.2
   (global-set-key
@@ -5785,8 +5764,8 @@ From %c"
   ;; block only with `C-c C-v e')
   (setq org-babel-no-eval-on-ctrl-c-ctrl-c t)
 
-  ;; languages for which Babel will raise literate programming errors
-  ;; when noweb references can not be resolved.
+  ;; languages for which Org-babel will raise literate programming errors when
+  ;; noweb references can not be resolved.
 
   (with-eval-after-load "ob-core"
     (add-to-list 'org-babel-noweb-error-langs "emacs-lisp"))
@@ -6464,6 +6443,7 @@ From %c"
       (kbd "C-c C-v") 'browse-url-of-buffer))
       ;; XXX (normally bound to `rng-validate-mode')
 
+  ;; highlight the current SGML tag context
   (when (try-require 'hl-tags-mode)
 
     (add-hook 'html-mode-hook
@@ -8430,18 +8410,18 @@ From %c"
   ;; one Emacs screen and lots of shell screens; to just using Emacs, with
   ;; lots of terminals inside it."
 
-  (when (locate-library "multi-term")
-
-    (autoload 'multi-term "multi-term"
-      "Create new term buffer." t)
-    (autoload 'multi-term-next "multi-term"
-      "Go to the next term buffer." t)
-
-    (setq multi-term-program shell-file-name)
-
-    ;; (global-set-key (kbd "C-c t") 'multi-term-next)
-    (global-set-key
-      (kbd "C-c T") 'multi-term))       ; create a new one
+  ;; (when (locate-library "multi-term")
+  ;;
+  ;;   (autoload 'multi-term "multi-term"
+  ;;     "Create new term buffer." t)
+  ;;   (autoload 'multi-term-next "multi-term"
+  ;;     "Go to the next term buffer." t)
+  ;;
+  ;;   (setq multi-term-program shell-file-name)
+  ;;
+  ;;   ;; (global-set-key (kbd "C-c t") 'multi-term-next)
+  ;;   (global-set-key
+  ;;     (kbd "C-c T") 'multi-term))       ; create a new one
 
   ;; ;; run an inferior shell, with I/O through buffer `*shell*'
   ;; (global-set-key
@@ -9035,6 +9015,7 @@ From %c"
 
   (leuven--section "Babel")
 
+  ;; interface to web translation services such as Babelfish
   (when (locate-library "babel")
 
     (autoload 'babel "babel"
@@ -9329,7 +9310,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131220.1044]--")
+(message "* --[ Loaded Emacs Leuven 20131220.113]--")
 
 (provide 'emacs-leuven)
 

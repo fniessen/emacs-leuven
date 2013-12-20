@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-20 Fri 10:45 -->
+  <title>Emacs Leuven</title><!-- 2013-12-20 Fri 11:31 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -998,7 +998,7 @@
 
               <li><a href="#sec-45-2">Google Maps</a></li>
 
-              <li><a href="#sec-45-3">Babel</a></li>
+              <li><a href="#sec-45-3">Babel translator</a></li>
             </ul>
           </li>
 
@@ -1112,7 +1112,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131220.1044</span>
+"color: #4C886B; font-style: italic;">Version: 20131220.113</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1234,7 +1234,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131220.1044]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131220.113]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -2005,23 +2005,15 @@
 
       (<span style="color: #0000FF;">defcustom</span> <span style=
 "color: #BA36A5;">leuven-packages</span>
-        '(auctex auto-complete bbdb boxquote calfw circe dired+ ess fuzzy
-          git-commit-mode graphviz-dot-mode helm
+        '(auctex auto-complete bbdb boxquote calfw circe dictionary dired+ ess
+          fuzzy git-commit-mode graphviz-dot-mode helm
           htmlize                       <span style=
 "color: #4C886B;">; </span><span style=
 "color: #4C886B; font-style: italic;">works with Org</span>
-          idle-require interaction-log ledger-mode leuven-theme pager
-          rainbow-mode redshank sml-modeline tidy yasnippet
-          <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">dictionary</span>
-          <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">gnuplot-mode                  ; or gnuplot?</span>
+          idle-require interaction-log ledger-mode leuven-theme org-mime pager
+          rainbow-mode redo+ redshank sml-modeline tidy yasnippet
           <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">jabber multi-term</span>
-          <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">org</span>
-          <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">org-mime                      ; from contrib</span>
           <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">paredit w3m</span>
           )
@@ -2040,6 +2032,12 @@
 "color: #0000FF;">unless</span> (or (package-installed-p pkg)
                         (locate-library (symbol-name pkg)))
               (push pkg missing-packages)))))
+
+<span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">temp</span>
+(message <span style=
+"color: #036A07;">"MiSSing packages on your System: %S"</span> (leuven--missing-packages))
+(sit-for 2)
 
       <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">propose to install all the packages specified in `</span><span style="color: #4C886B; font-style: italic;">leuven-packages</span><span style="color: #4C886B; font-style: italic;">'</span>
@@ -2352,8 +2350,8 @@
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">redo the most recent undo</span>
   (<span style="color: #0000FF;">when</span> (locate-library <span style=
-"color: #036A07;">"redo"</span>)
-    (autoload 'redo <span style="color: #036A07;">"redo"</span> <span style=
+"color: #036A07;">"redo+"</span>)
+    (autoload 'redo <span style="color: #036A07;">"redo+"</span> <span style=
 "color: #008000;">"Redo the the most recent undo."</span> t)
     (global-set-key
       (kbd <span style="color: #036A07;">"&lt;S-f11&gt;"</span>) 'redo))
@@ -4729,58 +4727,21 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (<span style="color: #0000FF;">when</span> (locate-library <span style=
-"color: #036A07;">"dictionary-init"</span>)
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">client for rfc2229 dictionary servers</span>
+  (<span style="color: #0000FF;">when</span> (try-require <span style=
+"color: #036A07;">"dictionary-autoloads"</span>)
 
-     <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">;; autoloads</span>
-     <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(load-library "dictionary-init")</span>
-
-     (autoload 'dictionary-search <span style=
-"color: #036A07;">"dictionary"</span>
-       <span style=
-"color: #008000;">"Ask for a word and search it in all dictionaries."</span> t)
-     (autoload 'dictionary-match-words <span style=
-"color: #036A07;">"dictionary"</span>
-       <span style=
-"color: #008000;">"Ask for a word and search all matching words in the dictionaries."</span> t)
-     (autoload 'dictionary-lookup-definition <span style=
-"color: #036A07;">"dictionary"</span>
-       <span style=
-"color: #008000;">"Unconditionally lookup the word at point."</span> t)
-
-     (autoload 'dictionary <span style="color: #036A07;">"dictionary"</span>
-       <span style=
-"color: #008000;">"Create a new dictionary buffer."</span> t)
-     (autoload 'dictionary-mouse-popup-matching-words <span style=
-"color: #036A07;">"dictionary"</span>
-       <span style=
-"color: #008000;">"Display entries matching the word at the cursor."</span> t)
-     (autoload 'dictionary-popup-matching-words <span style=
-"color: #036A07;">"dictionary"</span>
-       <span style=
-"color: #008000;">"Display entries matching the word at the point."</span> t)
-     (autoload 'dictionary-tooltip-mode <span style=
-"color: #036A07;">"dictionary"</span>
-       <span style=
-"color: #008000;">"Display tooltips for the current word."</span> t)
-     (<span style="color: #0000FF;">unless</span> (boundp 'running-xemacs)
-       (autoload 'global-dictionary-tooltip-mode <span style=
-"color: #036A07;">"dictionary"</span>
-         <span style=
-"color: #008000;">"Enable/disable dictionary-tooltip-mode for all buffers."</span> t))
-
-     (global-set-key
-       (kbd <span style=
+    (global-set-key
+      (kbd <span style="color: #036A07;">"C-c d s"</span>) 'dictionary-search)
+    (global-set-key
+      (kbd <span style=
 "color: #036A07;">"C-c d l"</span>) 'dictionary-lookup-definition)
-     (global-set-key
-       (kbd <span style="color: #036A07;">"C-c d s"</span>) 'dictionary-search)
-     (global-set-key
-       (kbd <span style=
+    (global-set-key
+      (kbd <span style=
 "color: #036A07;">"C-c d m"</span>) 'dictionary-match-words)
 
-     (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+    (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #036A07;">"dictionary"</span>
 
       (global-dictionary-tooltip-mode 1)
@@ -4828,7 +4789,7 @@
 "color: #036A07;">"^.*example.com"</span>)))
               <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">disable proxy for some hosts</span>
-     ))
+    ))
 </pre>
           </div>
 
@@ -7542,7 +7503,7 @@ M-: (executable-find "diff") RET
 "color: #4C886B; font-style: italic;">Unix flavor for code blocks executed</span>
                                         <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">via Org-Babel</span>
+"color: #4C886B; font-style: italic;">via Org-babel</span>
 </pre>
           </div>
         </div>
@@ -8240,9 +8201,9 @@ M-: (executable-find "diff") RET
 (set (make-local-variable 'outline-regexp) "^[ \t]*\\(?:def\\|class\\|module\\)\\|^[ \t]*###==")
 </pre>
 
-            <p><code>outline-minor-mode.el</code> is also used to collapse Lisp
-            code (i.e., to see in the buffer just the definition of a function
-            instead of the whole body).</p>
+            <p>Outline minor mode is also used to collapse Lisp code (i.e., to
+            see in the buffer just the definition of a function instead of the
+            whole body).</p>
 
             <p>See also the library <a href="#sec-31-7">hs-minor-mode</a>.</p>
 
@@ -8578,12 +8539,13 @@ M-: (executable-find "diff") RET
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">unified user interface for Emacs folding modes, bound to Org</span>
+"color: #4C886B; font-style: italic;">;; unified user interface for Emacs folding modes, bound to Org</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">key-strokes</span>
-  (GNUEmacs
-    (try-require 'fold-dwim-org-<span style=
-"color: #CC0000; background-color: #FFFF88;">XXX</span>))
+"color: #4C886B; font-style: italic;">;; key-strokes</span>
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(GNUEmacs</span>
+  <span style="color: #4C886B;">;;   </span><span style=
+"color: #4C886B; font-style: italic;">(try-require 'fold-dwim-org))</span>
 </pre>
             </div>
 
@@ -14910,7 +14872,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 </pre>
             </div>
 
-            <p>The exporter will <b>add</b> a language option to the
+            <p>The exporter will <b>add</b> a language option to the LaTeX
             <code>babel</code> package according to the
             <code>#+LANGUAGE:</code> keyword (only) if:</p>
 
@@ -15322,9 +15284,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
             <p>C-c TAB Toggle the visibility of existing tags in the buffer.
             This can be used as a cheap preview (sgml-tags-invisible).</p>
 
-            <p>View just the source-code blocks within the current Babel file
-            (something logically equivalent to “tangle”, but without creating a
-            separate file).</p>
+            <p>View just the source-code blocks within the current Org-babel
+            file (something logically equivalent to “tangle”, but without
+            creating a separate file).</p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -15384,9 +15346,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   (setq org-babel-no-eval-on-ctrl-c-ctrl-c t)
 
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">languages for which Babel will raise literate programming </span><span style="color: #4C886B; background-color: #FFFF88; font-style: italic;">error</span><span style="color: #4C886B; font-style: italic;">s</span>
+"color: #4C886B; font-style: italic;">languages for which Org-babel will raise literate programming </span><span style="color: #4C886B; background-color: #FFFF88; font-style: italic;">error</span><span style="color: #4C886B; font-style: italic;">s when</span>
   <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">when noweb references can not be resolved.</span>
+"color: #4C886B; font-style: italic;">noweb references can not be resolved.</span>
 
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #036A07;">"ob-core"</span>
@@ -17276,6 +17238,8 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
         <div class="outline-text-3" id="text-30-4">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">highlight the current SGML tag context</span>
   (<span style="color: #0000FF;">when</span> (try-require 'hl-tags-mode)
 
     (add-hook 'html-mode-hook
@@ -22574,24 +22538,27 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">lots of terminals inside it."</span>
 
-  (<span style="color: #0000FF;">when</span> (locate-library <span style=
-"color: #036A07;">"multi-term"</span>)
-
-    (autoload 'multi-term <span style="color: #036A07;">"multi-term"</span>
-      <span style="color: #008000;">"Create new term buffer."</span> t)
-    (autoload 'multi-term-next <span style=
-"color: #036A07;">"multi-term"</span>
-      <span style="color: #008000;">"Go to the next term buffer."</span> t)
-
-    (setq multi-term-program shell-file-name)
-
-    <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(global-set-key (kbd "C-c t") 'multi-term-next)</span>
-    (global-set-key
-      (kbd <span style=
-"color: #036A07;">"C-c T"</span>) 'multi-term))       <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">create a new one</span>
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(when (locate-library "multi-term")</span>
+  <span style="color: #4C886B;">;;</span>
+  <span style="color: #4C886B;">;;   </span><span style=
+"color: #4C886B; font-style: italic;">(autoload 'multi-term "multi-term"</span>
+  <span style="color: #4C886B;">;;     </span><span style=
+"color: #4C886B; font-style: italic;">"Create new term buffer." t)</span>
+  <span style="color: #4C886B;">;;   </span><span style=
+"color: #4C886B; font-style: italic;">(autoload 'multi-term-next "multi-term"</span>
+  <span style="color: #4C886B;">;;     </span><span style=
+"color: #4C886B; font-style: italic;">"Go to the next term buffer." t)</span>
+  <span style="color: #4C886B;">;;</span>
+  <span style="color: #4C886B;">;;   </span><span style=
+"color: #4C886B; font-style: italic;">(setq multi-term-program shell-file-name)</span>
+  <span style="color: #4C886B;">;;</span>
+  <span style="color: #4C886B;">;;   </span><span style=
+"color: #4C886B; font-style: italic;">;; (global-set-key (kbd "C-c t") 'multi-term-next)</span>
+  <span style="color: #4C886B;">;;   </span><span style=
+"color: #4C886B; font-style: italic;">(global-set-key</span>
+  <span style="color: #4C886B;">;;     </span><span style=
+"color: #4C886B; font-style: italic;">(kbd "C-c T") 'multi-term))       ; create a new one</span>
 </pre>
           </div>
 
@@ -23866,7 +23833,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       </div>
 
       <div id="outline-container-sec-45-3" class="outline-3">
-        <h3 id="sec-45-3">Babel</h3>
+        <h3 id="sec-45-3">Babel translator</h3>
 
         <div class="outline-text-3" id="text-45-3">
           <div class="org-src-container">
@@ -23876,6 +23843,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
   (leuven--section <span style="color: #036A07;">"Babel"</span>)
 
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">interface to web translation services such as Babelfish</span>
   (<span style="color: #0000FF;">when</span> (locate-library <span style=
 "color: #036A07;">"babel"</span>)
 
@@ -25031,7 +25000,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131220.1045]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131220.1131]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
