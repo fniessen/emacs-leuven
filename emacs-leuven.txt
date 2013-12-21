@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-20 Fri 16:36>
+# Time-stamp: <2013-12-21 Sat 00:30>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1024,7 +1024,7 @@ parameters, even those on continuation lines.
 #+begin_src emacs-lisp
 ;;* 11 The (info "(emacs)Mark") and the Region
 
-(leuven--chapter leuven-chapter-11-mark "11 Killing and Moving Text"
+(leuven--chapter leuven-chapter-11-mark "11 The Mark and the Region"
 #+end_src
 
 ** Commands to Mark Textual Objects
@@ -1596,7 +1596,7 @@ characters over the default mechanism of =nobreak-char-display= and
       ))
 #+end_src
 
-Example :
+Example :
 VPATH=		/home/jt/src/cygwin/cygwin-packages/1.7/python-2.6.8-2/python-2.6.8-2/src/Python-2.6.8
 LDLAST=
 SGI_ABI=
@@ -14193,8 +14193,9 @@ To get a backtrace when a specific regexp is displayed in the echo area
 ;; This is for the sake of Emacs.
 ;; Local Variables:
 ;; coding: utf-8
-;; eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))
 ;; ispell-local-dictionary: "american"
+;; eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))
+;; eval: (remove-hook 'before-save-hook 'leuven-convert-nbsp)
 ;; End:
 
 ;;; emacs-leuven.el ends here

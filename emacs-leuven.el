@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131220.1722
+;; Version: 20131221.0033
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131220.1722]--")
+(message "* --[ Loading Emacs Leuven 20131221.0033]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -697,7 +697,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
 ;;* 11 The (info "(emacs)Mark") and the Region
 
-(leuven--chapter leuven-chapter-11-mark "11 Killing and Moving Text"
+(leuven--chapter leuven-chapter-11-mark "11 The Mark and the Region"
 
   ;; inserting text while the mark is active causes the text in the region to
   ;; be deleted first
@@ -9244,7 +9244,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131220.1723]--")
+(message "* --[ Loaded Emacs Leuven 20131221.0034]--")
 
 (provide 'emacs-leuven)
 
@@ -9252,8 +9252,9 @@ From %c"
 ;; This is for the sake of Emacs.
 ;; Local Variables:
 ;; coding: utf-8
-;; eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))
 ;; ispell-local-dictionary: "american"
+;; eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))
+;; eval: (remove-hook 'before-save-hook 'leuven-convert-nbsp)
 ;; End:
 
 ;;; emacs-leuven.el ends here
