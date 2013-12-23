@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-23 Mon 11:26>
+# Time-stamp: <2013-12-23 Mon 15:56>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -2354,12 +2354,48 @@ sequence).
   ;; make your changes permanent
   (global-set-key
     (kbd "<f2>") 'save-buffer)
+#+end_src
 
+Builtin file version control of Emacs.
+
+#+begin_src emacs-lisp
+  ;; make numbered backups
+  (setq version-control t)
+
+  ;; save backup files (i.e., `foo~' or `foo.~i~') in one central location
+  ;; (instead of in the local directory)
+  (GNUEmacs
+    ;; filenames matching a regexp are backed up in the corresponding
+    ;; directory
+    (setq backup-directory-alist
+          ;; Emacs will `make-directory' it, if necessary
+          '((".*" . "~/.emacs.d/backups/")))) ; regexp => directory mappings
+
+  ;; ;; number of oldest versions to keep when a new numbered backup is made
+  ;; (setq kept-old-versions 0)            ; [default: 2]
+
+  ;; number of newest versions to keep when a new numbered backup is made
+  (setq kept-new-versions 20)           ; [default: 2]
+
+  ;; don't ask me about deleting excess backup versions
+  (setq delete-old-versions t)
+
+  ;; always use copying to create backup files (don't clobber symlinks)
+  (setq backup-by-copying t)
+#+end_src
+
+Customize saving of files.
+
+#+begin_src emacs-lisp
   ;; ensure a file ends in a newline when it is saved
   (setq require-final-newline t)
   ;; TODO Do this only for text and Fundamental modes, because I could
   ;; edit binary files (see `mode-require-final-newline')
+#+end_src
 
+Update time stamps (and copyright notice) automatically.
+
+#+begin_src emacs-lisp
   ;; update time stamps every time you save a buffer
   (add-hook 'before-save-hook 'time-stamp)
 
@@ -2406,34 +2442,10 @@ How to get Emacs to auto-save to your local disk (=#file#=).
   (leuven--section "18.6 (emacs)Auto Save: Protection Against Disasters")
 
   ;; auto-save every 100 input events
-  (setq auto-save-interval 100)
+  (setq auto-save-interval 100)         ; [default: 300]
 
   ;; auto-save after 10 seconds idle time
-  (setq auto-save-timeout 10)
-
-  ;; save backup files (i.e., `foo~' or `foo.~i~') in one central location
-  ;; (instead of in the local directory)
-  (GNUEmacs
-    ;; filenames matching a regexp are backed up in the corresponding
-    ;; directory
-    (setq backup-directory-alist
-          ;; Emacs will `make-directory' it, if necessary
-          '((".*" . "~/.emacs.d/backups/")))) ; regexp => directory mappings
-
-  ;; always use copying to create backup files (don't clobber symlinks)
-  (setq backup-by-copying t)
-
-  ;; make numbered backups
-  (setq version-control t)
-
-  ;; ;; number of oldest versions to keep when a new numbered backup is made
-  ;; (setq kept-old-versions 0)            ; [default: 2]
-
-  ;; number of newest versions to keep when a new numbered backup is made
-  (setq kept-new-versions 20)           ; [default: 2]
-
-  ;; don't ask me about deleting excess backup versions
-  (setq delete-old-versions t)
+  (setq auto-save-timeout 10)           ; [default: 30]
 #+end_src
 
 Disable backups and auto-save only in the current buffer with =M-x

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131223.1126
+;; Version: 20131223.1557
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131223.1126]--")
+(message "* --[ Loading Emacs Leuven 20131223.1557]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1512,6 +1512,30 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (global-set-key
     (kbd "<f2>") 'save-buffer)
 
+  ;; make numbered backups
+  (setq version-control t)
+
+  ;; save backup files (i.e., `foo~' or `foo.~i~') in one central location
+  ;; (instead of in the local directory)
+  (GNUEmacs
+    ;; filenames matching a regexp are backed up in the corresponding
+    ;; directory
+    (setq backup-directory-alist
+          ;; Emacs will `make-directory' it, if necessary
+          '((".*" . "~/.emacs.d/backups/")))) ; regexp => directory mappings
+
+  ;; ;; number of oldest versions to keep when a new numbered backup is made
+  ;; (setq kept-old-versions 0)            ; [default: 2]
+
+  ;; number of newest versions to keep when a new numbered backup is made
+  (setq kept-new-versions 20)           ; [default: 2]
+
+  ;; don't ask me about deleting excess backup versions
+  (setq delete-old-versions t)
+
+  ;; always use copying to create backup files (don't clobber symlinks)
+  (setq backup-by-copying t)
+
   ;; ensure a file ends in a newline when it is saved
   (setq require-final-newline t)
   ;; TODO Do this only for text and Fundamental modes, because I could
@@ -1553,34 +1577,10 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (leuven--section "18.6 (emacs)Auto Save: Protection Against Disasters")
 
   ;; auto-save every 100 input events
-  (setq auto-save-interval 100)
+  (setq auto-save-interval 100)         ; [default: 300]
 
   ;; auto-save after 10 seconds idle time
-  (setq auto-save-timeout 10)
-
-  ;; save backup files (i.e., `foo~' or `foo.~i~') in one central location
-  ;; (instead of in the local directory)
-  (GNUEmacs
-    ;; filenames matching a regexp are backed up in the corresponding
-    ;; directory
-    (setq backup-directory-alist
-          ;; Emacs will `make-directory' it, if necessary
-          '((".*" . "~/.emacs.d/backups/")))) ; regexp => directory mappings
-
-  ;; always use copying to create backup files (don't clobber symlinks)
-  (setq backup-by-copying t)
-
-  ;; make numbered backups
-  (setq version-control t)
-
-  ;; ;; number of oldest versions to keep when a new numbered backup is made
-  ;; (setq kept-old-versions 0)            ; [default: 2]
-
-  ;; number of newest versions to keep when a new numbered backup is made
-  (setq kept-new-versions 20)           ; [default: 2]
-
-  ;; don't ask me about deleting excess backup versions
-  (setq delete-old-versions t)
+  (setq auto-save-timeout 10)           ; [default: 30]
 
   (define-minor-mode sensitive-mode
     "For sensitive files like password lists.
@@ -9232,7 +9232,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131223.1127]--")
+(message "* --[ Loaded Emacs Leuven 20131223.1558]--")
 
 (provide 'emacs-leuven)
 

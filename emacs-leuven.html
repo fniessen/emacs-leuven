@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2013-12-23 Mon 11:28 -->
+  <title>Emacs Leuven</title><!-- 2013-12-23 Mon 15:59 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1112,7 +1112,7 @@
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Version: 20131223.1128</span>
+"color: #4C886B; font-style: italic;">Version: 20131223.1558</span>
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1234,7 +1234,7 @@
 "color: #4C886B; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20131223.1128]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20131223.1558]--"</span>)
 
 <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">uptimes</span>
@@ -5033,7 +5033,61 @@
 "color: #4C886B; font-style: italic;">make your changes permanent</span>
   (global-set-key
     (kbd <span style="color: #036A07;">"&lt;f2&gt;"</span>) 'save-buffer)
+</pre>
+          </div>
 
+          <p>Builtin file version control of Emacs.</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">make numbered backups</span>
+  (setq version-control t)
+
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">save backup files (i.e., `</span><span style="color: #4C886B; font-style: italic;">foo~</span><span style="color: #4C886B; font-style: italic;">' or `</span><span style="color: #4C886B; font-style: italic;">foo.~i~</span><span style="color: #4C886B; font-style: italic;">') in one central location</span>
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(instead of in the local directory)</span>
+  (GNUEmacs
+    <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">filenames matching a regexp are backed up in the corresponding</span>
+    <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">directory</span>
+    (setq backup-directory-alist
+          <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">Emacs will `</span><span style=
+"color: #4C886B; font-style: italic;">make-directory</span><span style=
+"color: #4C886B; font-style: italic;">' it, if necessary</span>
+          '((<span style="color: #036A07;">".*"</span> . <span style=
+"color: #036A07;">"~/.emacs.d/backups/"</span>)))) <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">regexp =&gt; directory mappings</span>
+
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">;; number of oldest versions to keep when a new numbered backup is made</span>
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">(setq kept-old-versions 0)            ; [default: 2]</span>
+
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">number of newest versions to keep when a new numbered backup is made</span>
+  (setq kept-new-versions 20)           <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">[default: 2]</span>
+
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">don't ask me about deleting excess backup versions</span>
+  (setq delete-old-versions t)
+
+  <span style="color: #4C886B;">;; </span><span style=
+"color: #4C886B; font-style: italic;">always use copying to create backup files (don't clobber symlinks)</span>
+  (setq backup-by-copying t)
+</pre>
+          </div>
+
+          <p>Customize saving of files.</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">ensure a file ends in a newline when it is saved</span>
   (setq require-final-newline t)
@@ -5041,7 +5095,13 @@
 "color: #4C886B; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #4C886B; font-style: italic;"> Do this only for text and Fundamental modes, because I could</span>
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">edit binary files (see `</span><span style="color: #4C886B; font-style: italic;">mode-require-final-newline</span><span style="color: #4C886B; font-style: italic;">')</span>
+</pre>
+          </div>
 
+          <p>Update time stamps (and copyright notice) automatically.</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">update time stamps every time you save a buffer</span>
   (add-hook 'before-save-hook 'time-stamp)
@@ -5123,53 +5183,15 @@
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">auto-save every 100 input events</span>
-  (setq auto-save-interval 100)
+  (setq auto-save-interval 100)         <span style=
+"color: #4C886B;">; </span><span style=
+"color: #4C886B; font-style: italic;">[default: 300]</span>
 
   <span style="color: #4C886B;">;; </span><span style=
 "color: #4C886B; font-style: italic;">auto-save after 10 seconds idle time</span>
-  (setq auto-save-timeout 10)
-
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">save backup files (i.e., `</span><span style="color: #4C886B; font-style: italic;">foo~</span><span style="color: #4C886B; font-style: italic;">' or `</span><span style="color: #4C886B; font-style: italic;">foo.~i~</span><span style="color: #4C886B; font-style: italic;">') in one central location</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(instead of in the local directory)</span>
-  (GNUEmacs
-    <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">filenames matching a regexp are backed up in the corresponding</span>
-    <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">directory</span>
-    (setq backup-directory-alist
-          <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">Emacs will `</span><span style=
-"color: #4C886B; font-style: italic;">make-directory</span><span style=
-"color: #4C886B; font-style: italic;">' it, if necessary</span>
-          '((<span style="color: #036A07;">".*"</span> . <span style=
-"color: #036A07;">"~/.emacs.d/backups/"</span>)))) <span style=
+  (setq auto-save-timeout 10)           <span style=
 "color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">regexp =&gt; directory mappings</span>
-
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">always use copying to create backup files (don't clobber symlinks)</span>
-  (setq backup-by-copying t)
-
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">make numbered backups</span>
-  (setq version-control t)
-
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">;; number of oldest versions to keep when a new numbered backup is made</span>
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">(setq kept-old-versions 0)            ; [default: 2]</span>
-
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">number of newest versions to keep when a new numbered backup is made</span>
-  (setq kept-new-versions 20)           <span style=
-"color: #4C886B;">; </span><span style=
-"color: #4C886B; font-style: italic;">[default: 2]</span>
-
-  <span style="color: #4C886B;">;; </span><span style=
-"color: #4C886B; font-style: italic;">don't ask me about deleting excess backup versions</span>
-  (setq delete-old-versions t)
+"color: #4C886B; font-style: italic;">[default: 30]</span>
 </pre>
           </div>
 
@@ -24865,7 +24887,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20131223.1128]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20131223.1559]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
