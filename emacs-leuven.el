@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131221.0033
+;; Version: 20131223.0953
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131221.0033]--")
+(message "* --[ Loading Emacs Leuven 20131223.0953]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1517,12 +1517,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   ;; TODO Do this only for text and Fundamental modes, because I could
   ;; edit binary files (see `mode-require-final-newline')
 
-  ;; directory used for temporary files
-  (XEmacs
-    (setq temporary-file-directory
-          (or (file-name-as-directory (getenv "TEMP"))
-              "/tmp/")))
-
   ;; update time stamps every time you save a buffer
   (add-hook 'before-save-hook 'time-stamp)
 
@@ -1531,7 +1525,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (with-eval-after-load "time-stamp"
 
    ;; format of the string inserted by `M-x time-stamp':
-   ;; `YYYY-MM-DD Weekday HH:MM' (see `system-time-locale' for non-numeric
+   ;; `YYYY-MM-DD Day HH:MM' (see `system-time-locale' for non-numeric
    ;; formatted items of time)
    (setq-default time-stamp-format "%:y-%02m-%02d %3a %02H:%02M"))
 
@@ -1572,13 +1566,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     (setq backup-directory-alist
           ;; Emacs will `make-directory' it, if necessary
           '((".*" . "~/.emacs.d/backups/")))) ; regexp => directory mappings
-
-  (XEmacs
-    (when (try-require 'backup-dir)
-      ;; FIXME Use a `set' construction, with `make-local-variable'
-      (make-variable-buffer-local 'backup-inhibited)
-      (setq bkup-backup-directory-info
-            '((t "~/.saves" ok-create full-path prepend-name)))))
 
   ;; always use copying to create backup files (don't clobber symlinks)
   (setq backup-by-copying t)
@@ -1658,7 +1645,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
   (leuven--section "18.10 (emacs)Diff Mode")
 
-  ;; extensions to `diff-mode' ("*Diff*" buffer is highlighted differently)
+  ;; extensions to `diff-mode' (*Diff* buffer is highlighted differently)
   (try-require 'diff-mode-)
   ;; this library should be loaded *before* library `diff-mode'
 
@@ -4587,7 +4574,7 @@ From %c"
 
     (add-to-list 'org-agenda-custom-commands
                  '("r$" "Cleanup"
-                   todo "DONE|CANX|SDAY"
+                   todo "DONE|CANX"
                    ((org-agenda-overriding-header "Old tasks to delete or archive")
                     ;; also show deadlines and scheduled items
                     (org-agenda-todo-ignore-with-date nil))) t)
@@ -9244,7 +9231,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131221.0034]--")
+(message "* --[ Loaded Emacs Leuven 20131223.0955]--")
 
 (provide 'emacs-leuven)
 

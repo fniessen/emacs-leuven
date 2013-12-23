@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-21 Sat 00:30>
+# Time-stamp: <2013-12-23 Mon 09:49>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -2360,12 +2360,6 @@ sequence).
   ;; TODO Do this only for text and Fundamental modes, because I could
   ;; edit binary files (see `mode-require-final-newline')
 
-  ;; directory used for temporary files
-  (XEmacs
-    (setq temporary-file-directory
-          (or (file-name-as-directory (getenv "TEMP"))
-              "/tmp/")))
-
   ;; update time stamps every time you save a buffer
   (add-hook 'before-save-hook 'time-stamp)
 
@@ -2374,7 +2368,7 @@ sequence).
   (with-eval-after-load "time-stamp"
 
    ;; format of the string inserted by `M-x time-stamp':
-   ;; `YYYY-MM-DD Weekday HH:MM' (see `system-time-locale' for non-numeric
+   ;; `YYYY-MM-DD Day HH:MM' (see `system-time-locale' for non-numeric
    ;; formatted items of time)
    (setq-default time-stamp-format "%:y-%02m-%02d %3a %02H:%02M"))
 
@@ -2425,13 +2419,6 @@ How to get Emacs to auto-save to your local disk (=#file#=).
     (setq backup-directory-alist
           ;; Emacs will `make-directory' it, if necessary
           '((".*" . "~/.emacs.d/backups/")))) ; regexp => directory mappings
-
-  (XEmacs
-    (when (try-require 'backup-dir)
-      ;; FIXME Use a `set' construction, with `make-local-variable'
-      (make-variable-buffer-local 'backup-inhibited)
-      (setq bkup-backup-directory-info
-            '((t "~/.saves" ok-create full-path prepend-name)))))
 
   ;; always use copying to create backup files (don't clobber symlinks)
   (setq backup-by-copying t)
@@ -2536,7 +2523,7 @@ In Diff mode, I can *select a hunk and apply it (in reverse)*. Nice following
 
   (leuven--section "18.10 (emacs)Diff Mode")
 
-  ;; extensions to `diff-mode' ("*Diff*" buffer is highlighted differently)
+  ;; extensions to `diff-mode' (*Diff* buffer is highlighted differently)
   (try-require 'diff-mode-)
   ;; this library should be loaded *before* library `diff-mode'
 
@@ -6948,7 +6935,7 @@ Cleanup:
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("r$" "Cleanup"
-                   todo "DONE|CANX|SDAY"
+                   todo "DONE|CANX"
                    ((org-agenda-overriding-header "Old tasks to delete or archive")
                     ;; also show deadlines and scheduled items
                     (org-agenda-todo-ignore-with-date nil))) t)
