@@ -1,7 +1,7 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2013-12-12 Thu 23:00>
+#+Time-stamp: <2013-12-23 Mon 10:27>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1384,6 +1384,7 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
 
                     "Approved\\|Archived-At\\|Authentication-Results\\|"
                     "Accept-Language\\|acceptlanguage\\|Auto-Submitted\\|"
+                    "BCc\\|"
                     "Cancel-Lock\\|Content-Class\\|Content-language\\|"
                     "DKIM-Signature\\|Delivered-To\\|"
                     "Disposition-Notification-To\\|DomainKey-Signature\\|"

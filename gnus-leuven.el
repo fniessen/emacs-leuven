@@ -1108,6 +1108,7 @@
 
                     "Approved\\|Archived-At\\|Authentication-Results\\|"
                     "Accept-Language\\|acceptlanguage\\|Auto-Submitted\\|"
+                    "BCc\\|"
                     "Cancel-Lock\\|Content-Class\\|Content-language\\|"
                     "DKIM-Signature\\|Delivered-To\\|"
                     "Disposition-Notification-To\\|DomainKey-Signature\\|"
