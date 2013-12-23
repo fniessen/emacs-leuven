@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-23 Mon 09:49>
+# Time-stamp: <2013-12-23 Mon 11:26>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4097,8 +4097,9 @@ Another solution to avoid breaking at certain places is to add
             (while (re-search-forward "[  ]" nil t)
               (replace-match " " nil nil)))))))
 
-  ;; make sure that all nbsp characters are replaced by spaces
-  (add-hook 'before-save-hook 'leuven-convert-nbsp) ; TEMP
+  ;; "There are 4 pages": nbsp must NOT be deleted there!
+  ;; ;; make sure that all nbsp characters are replaced by spaces
+  ;; (add-hook 'before-save-hook 'leuven-convert-nbsp) ; TEMP
 #+end_src
 
 #+begin_src emacs-lisp

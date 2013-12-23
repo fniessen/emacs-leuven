@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131223.0953
+;; Version: 20131223.1126
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131223.0953]--")
+(message "* --[ Loading Emacs Leuven 20131223.1126]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2677,8 +2677,9 @@ nil. Save execution times in the global list `leuven--load-times-list'."
             (while (re-search-forward "[  ]" nil t)
               (replace-match " " nil nil)))))))
 
-  ;; make sure that all nbsp characters are replaced by spaces
-  (add-hook 'before-save-hook 'leuven-convert-nbsp) ; TEMP
+  ;; "There are 4 pages": nbsp must NOT be deleted there!
+  ;; ;; make sure that all nbsp characters are replaced by spaces
+  ;; (add-hook 'before-save-hook 'leuven-convert-nbsp) ; TEMP
 
   (defun leuven-good-old-fill-paragraph ()
     (interactive)
@@ -9231,7 +9232,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131223.0955]--")
+(message "* --[ Loaded Emacs Leuven 20131223.1127]--")
 
 (provide 'emacs-leuven)
 
