@@ -1,7 +1,7 @@
 #+TITLE:     Minimal .emacs
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2014-01-02 Thu 10:31>
+#+Time-stamp: <2014-01-02 Thu 10:37>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -64,9 +64,9 @@ Here is a minimal Emacs config file.
 
 ;; Org-mode (reverse order, so that the Org lisp directory will be found
 ;; before the Org contrib lisp directory)
-(add-to-list 'load-path (expand-file-name "~/Public/Repositories/org-mode/testing"))
-(add-to-list 'load-path (expand-file-name "~/Public/Repositories/org-mode/contrib/lisp"))
-(add-to-list 'load-path (expand-file-name "~/Public/Repositories/org-mode/lisp"))
+;; (add-to-list 'load-path "~/Public/Repositories/org-mode/testing")
+;; (add-to-list 'load-path "~/Public/Repositories/org-mode/contrib/lisp")
+(add-to-list 'load-path "~/Public/Repositories/org-mode/lisp")
                                         ; modify the paths to suit your environment!
 
 ;; getting started
@@ -165,59 +165,59 @@ emacs --batch -Q -L ~/Public/Repositories/org-mode/lisp -l org --eval '(elp-inst
 #+results:
 | Function                                           |       Name |         Call |        Count | Elapsed | Time | Average | Time |
 | ================================================== | ========== | ============ | ============ |         |      |         |      |
-| org-mode                                           |          1 | 0.2643487999 | 0.2643487999 |         |      |         |      |
-| org-load-modules-maybe                             |          2 | 0.2225485999 | 0.1112742999 |         |      |         |      |
-| org-setup-filling                                  |          1 | 0.0396181999 | 0.0396181999 |         |      |         |      |
-| org-add-link-type                                  |          8 |    0.0145944 |    0.0018243 |         |      |         |      |
-| org-set-startup-visibility                         |          1 | 0.0013064999 | 0.0013064999 |         |      |         |      |
-| org-cycle                                          |          1 | 0.0012482999 | 0.0012482999 |         |      |         |      |
-| org-cycle-internal-global                          |          1 | 0.0011486999 | 0.0011486999 |         |      |         |      |
-| org-unlogged-message                               |          1 | 0.0010648999 | 0.0010648999 |         |      |         |      |
-| org-make-link-regexps                              |          8 |    0.0003412 |    4.265e-05 |         |      |         |      |
-| org-set-regexps-and-options                        |          1 | 0.0001556999 | 0.0001556999 |         |      |         |      |
-| org-macro-initialize-templates                     |          1 |    0.0001155 |    0.0001155 |         |      |         |      |
-| org-install-agenda-files-menu                      |          1 |    0.0001048 |    0.0001048 |         |      |         |      |
-| org-set-local                                      |         45 | 5.119...e-05 | 1.137...e-06 |         |      |         |      |
-| org-update-radio-target-regexp                     |          1 | 4.580...e-05 | 4.580...e-05 |         |      |         |      |
-| org-set-regexps-and-options-for-tags               |          1 | 3.330...e-05 | 3.330...e-05 |         |      |         |      |
-| org-cycle-show-empty-lines                         |          2 | 3.080...e-05 | 1.540...e-05 |         |      |         |      |
-| org-find-invisible-foreground                      |          1 | 2.739...e-05 | 2.739...e-05 |         |      |         |      |
-| org-setup-comments-handling                        |          1 |     2.65e-05 |     2.65e-05 |         |      |         |      |
-| org-add-hook                                       |          5 | 2.610...e-05 |     5.22e-06 |         |      |         |      |
+| org-mode                                           |          1 |    0.2006195 |    0.2006195 |         |      |         |      |
+| org-load-modules-maybe                             |          2 | 0.1613881999 | 0.0806940999 |         |      |         |      |
+| org-setup-filling                                  |          1 |    0.0380582 |    0.0380582 |         |      |         |      |
+| org-add-link-type                                  |          8 |    0.0137579 | 0.0017197375 |         |      |         |      |
+| org-set-startup-visibility                         |          1 |    0.0003468 |    0.0003468 |         |      |         |      |
+| org-make-link-regexps                              |          8 |    0.0003087 | 3.858...e-05 |         |      |         |      |
+| org-cycle                                          |          1 |    0.0003019 |    0.0003019 |         |      |         |      |
+| org-cycle-internal-global                          |          1 |    0.0002074 |    0.0002074 |         |      |         |      |
+| org-set-regexps-and-options                        |          1 |    0.0001539 |    0.0001539 |         |      |         |      |
+| org-macro-initialize-templates                     |          1 | 0.0001411999 | 0.0001411999 |         |      |         |      |
+| org-unlogged-message                               |          1 |    0.0001317 |    0.0001317 |         |      |         |      |
+| org-install-agenda-files-menu                      |          1 |    0.0001013 |    0.0001013 |         |      |         |      |
+| org-set-local                                      |         45 | 5.150...e-05 | 1.144...e-06 |         |      |         |      |
+| org-set-regexps-and-options-for-tags               |          1 | 3.380...e-05 | 3.380...e-05 |         |      |         |      |
+| org-cycle-show-empty-lines                         |          2 |      2.9e-05 |     1.45e-05 |         |      |         |      |
 | org-set-font-lock-defaults                         |          1 | 2.570...e-05 | 2.570...e-05 |         |      |         |      |
-| org-hide-block-toggle-maybe                        |          1 | 1.709...e-05 | 1.709...e-05 |         |      |         |      |
-| org-cycle-item-indentation                         |          1 |      1.5e-05 |      1.5e-05 |         |      |         |      |
-| org-cycle-hide-archived-subtrees                   |          2 |      1.4e-05 | 6.999...e-06 |         |      |         |      |
-| org-make-options-regexp                            |          2 | 1.320...e-05 | 6.600...e-06 |         |      |         |      |
-| org-overview                                       |          1 |     1.29e-05 |     1.29e-05 |         |      |         |      |
-| org-cycle-level                                    |          1 |     1.24e-05 |     1.24e-05 |         |      |         |      |
-| org-restart-font-lock                              |          1 |      1.2e-05 |      1.2e-05 |         |      |         |      |
-| org-remove-if                                      |          1 |     1.11e-05 |     1.11e-05 |         |      |         |      |
-| org-at-item-p                                      |          1 | 1.069...e-05 | 1.069...e-05 |         |      |         |      |
-| org-babel-hide-result-toggle-maybe                 |          1 | 1.069...e-05 | 1.069...e-05 |         |      |         |      |
+| org-find-invisible-foreground                      |          1 | 2.529...e-05 | 2.529...e-05 |         |      |         |      |
+| org-setup-comments-handling                        |          1 |     2.48e-05 |     2.48e-05 |         |      |         |      |
+| org-add-hook                                       |          5 | 2.300...e-05 | 4.600...e-06 |         |      |         |      |
+| org-update-radio-target-regexp                     |          1 | 1.959...e-05 | 1.959...e-05 |         |      |         |      |
+| org-hide-block-toggle-maybe                        |          1 | 1.580...e-05 | 1.580...e-05 |         |      |         |      |
+| org-cycle-item-indentation                         |          1 | 1.369...e-05 | 1.369...e-05 |         |      |         |      |
+| org-make-options-regexp                            |          2 |     1.36e-05 | 6.800...e-06 |         |      |         |      |
+| org-cycle-hide-archived-subtrees                   |          2 |     1.24e-05 | 6.199...e-06 |         |      |         |      |
+| org-overview                                       |          1 |      1.2e-05 |      1.2e-05 |         |      |         |      |
+| org-cycle-level                                    |          1 |     1.19e-05 |     1.19e-05 |         |      |         |      |
+| org-babel-hide-result-toggle-maybe                 |          1 | 1.020...e-05 | 1.020...e-05 |         |      |         |      |
+| org-remove-if                                      |          1 | 9.900...e-06 | 9.900...e-06 |         |      |         |      |
+| org-at-item-p                                      |          1 | 9.799...e-06 | 9.799...e-06 |         |      |         |      |
 | org-assign-fast-keys                               |          1 | 9.000...e-06 | 9.000...e-06 |         |      |         |      |
-| org-extract-log-state-settings                     |          2 | 8.100...e-06 | 4.050...e-06 |         |      |         |      |
-| org-point-at-end-of-empty-headline                 |          1 | 7.700...e-06 | 7.700...e-06 |         |      |         |      |
-| org-cycle-hide-drawers                             |          2 | 6.500...e-06 | 3.250...e-06 |         |      |         |      |
-| org-compute-latex-and-related-regexp               |          1 | 6.399...e-06 | 6.399...e-06 |         |      |         |      |
-| org-all-targets                                    |          1 | 6.000...e-06 | 6.000...e-06 |         |      |         |      |
-| org-set-visibility-according-to-property           |          1 | 6.000...e-06 | 6.000...e-06 |         |      |         |      |
-| org-macro--collect-macros                          |          1 | 5.100...e-06 | 5.100...e-06 |         |      |         |      |
-| org-hide-archived-subtrees                         |          1 | 4.300...e-06 | 4.300...e-06 |         |      |         |      |
-| org-uniquify                                       |          1 | 3.899...e-06 | 3.899...e-06 |         |      |         |      |
-| org-agenda-files                                   |          1 |      3.8e-06 |      3.8e-06 |         |      |         |      |
-| org-at-table-p                                     |          1 | 3.499...e-06 | 3.499...e-06 |         |      |         |      |
-| org-defvaralias                                    |          1 | 2.600...e-06 | 2.600...e-06 |         |      |         |      |
-| org-item-re                                        |          1 | 2.600...e-06 | 2.600...e-06 |         |      |         |      |
+| org-extract-log-state-settings                     |          2 | 7.200...e-06 | 3.600...e-06 |         |      |         |      |
+| org-compute-latex-and-related-regexp               |          1 | 7.199...e-06 | 7.199...e-06 |         |      |         |      |
+| org-point-at-end-of-empty-headline                 |          1 | 6.800...e-06 | 6.800...e-06 |         |      |         |      |
+| org-cycle-hide-drawers                             |          2 | 6.000...e-06 | 3.000...e-06 |         |      |         |      |
+| org-all-targets                                    |          1 | 5.599...e-06 | 5.599...e-06 |         |      |         |      |
+| org-set-visibility-according-to-property           |          1 | 5.499...e-06 | 5.499...e-06 |         |      |         |      |
+| org-macro--collect-macros                          |          1 | 5.499...e-06 | 5.499...e-06 |         |      |         |      |
+| org-agenda-files                                   |          1 | 3.899...e-06 | 3.899...e-06 |         |      |         |      |
+| org-hide-archived-subtrees                         |          1 |      3.8e-06 |      3.8e-06 |         |      |         |      |
+| org-at-table-p                                     |          1 | 3.400...e-06 | 3.400...e-06 |         |      |         |      |
+| org-uniquify                                       |          1 | 3.400...e-06 | 3.400...e-06 |         |      |         |      |
+| org-item-re                                        |          1 | 2.200...e-06 | 2.200...e-06 |         |      |         |      |
+| org-defvaralias                                    |          1 | 2.099...e-06 | 2.099...e-06 |         |      |         |      |
 | org-babel-hide-all-hashes                          |          1 | 2.099...e-06 | 2.099...e-06 |         |      |         |      |
-| org-optimize-window-after-visibility-change        |          1 |      1.7e-06 |      1.7e-06 |         |      |         |      |
-| org-delete-all                                     |          1 |      1.7e-06 |      1.7e-06 |         |      |         |      |
-| org-cycle-hide-inline-tasks                        |          1 |      1.3e-06 |      1.3e-06 |         |      |         |      |
-| org-babel-result-hide-spec                         |          1 |      1.3e-06 |      1.3e-06 |         |      |         |      |
-| org-babel-header-arg-expand                        |          1 | 1.199...e-06 | 1.199...e-06 |         |      |         |      |
+| org-delete-all                                     |          1 | 1.799...e-06 | 1.799...e-06 |         |      |         |      |
+| org-restart-font-lock                              |          1 |      1.3e-06 |      1.3e-06 |         |      |         |      |
+| org-optimize-window-after-visibility-change        |          1 |      1.3e-06 |      1.3e-06 |         |      |         |      |
+| org-last                                           |          1 | 8.999...e-07 | 8.999...e-07 |         |      |         |      |
 | org-src-native-tab-command-maybe                   |          1 | 8.999...e-07 | 8.999...e-07 |         |      |         |      |
-| org-last                                           |          1 | 3.999...e-07 | 3.999...e-07 |         |      |         |      |
-| org-make-target-link-regexp                        |          1 | 3.999...e-07 | 3.999...e-07 |         |      |         |      |
+| org-make-target-link-regexp                        |          1 | 8.999...e-07 | 8.999...e-07 |         |      |         |      |
+| org-babel-result-hide-spec                         |          1 | 8.999...e-07 | 8.999...e-07 |         |      |         |      |
+| org-babel-header-arg-expand                        |          1 | 7.999...e-07 | 7.999...e-07 |         |      |         |      |
+| org-cycle-hide-inline-tasks                        |          1 | 7.999...e-07 | 7.999...e-07 |         |      |         |      |
 
 *** Org-mode tests
 
