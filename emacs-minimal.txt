@@ -1,7 +1,7 @@
 #+TITLE:     Minimal .emacs
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2013-11-26 Tue 06:15>
+#+Time-stamp: <2014-01-02 Thu 10:31>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -67,7 +67,7 @@ Here is a minimal Emacs config file.
 (add-to-list 'load-path (expand-file-name "~/Public/Repositories/org-mode/testing"))
 (add-to-list 'load-path (expand-file-name "~/Public/Repositories/org-mode/contrib/lisp"))
 (add-to-list 'load-path (expand-file-name "~/Public/Repositories/org-mode/lisp"))
-                                        ; change the pathnames appropriately!
+                                        ; modify the paths to suit your environment!
 
 ;; getting started
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)\\'" . org-mode))
@@ -153,6 +153,72 @@ foo.org=:
 (setq org-agenda-files '("~/org/tests/org-test.txt"))
 #+end_src
 
+*** ELP
+    :PROPERTIES:
+    :eval:     yes
+    :END:
+
+#+begin_src sh
+emacs --batch -Q -L ~/Public/Repositories/org-mode/lisp -l org --eval '(elp-instrument-package "org")' 400.org --eval '(elp-results)'
+#+end_src
+
+#+results:
+| Function                                           |       Name |         Call |        Count | Elapsed | Time | Average | Time |
+| ================================================== | ========== | ============ | ============ |         |      |         |      |
+| org-mode                                           |          1 | 0.2643487999 | 0.2643487999 |         |      |         |      |
+| org-load-modules-maybe                             |          2 | 0.2225485999 | 0.1112742999 |         |      |         |      |
+| org-setup-filling                                  |          1 | 0.0396181999 | 0.0396181999 |         |      |         |      |
+| org-add-link-type                                  |          8 |    0.0145944 |    0.0018243 |         |      |         |      |
+| org-set-startup-visibility                         |          1 | 0.0013064999 | 0.0013064999 |         |      |         |      |
+| org-cycle                                          |          1 | 0.0012482999 | 0.0012482999 |         |      |         |      |
+| org-cycle-internal-global                          |          1 | 0.0011486999 | 0.0011486999 |         |      |         |      |
+| org-unlogged-message                               |          1 | 0.0010648999 | 0.0010648999 |         |      |         |      |
+| org-make-link-regexps                              |          8 |    0.0003412 |    4.265e-05 |         |      |         |      |
+| org-set-regexps-and-options                        |          1 | 0.0001556999 | 0.0001556999 |         |      |         |      |
+| org-macro-initialize-templates                     |          1 |    0.0001155 |    0.0001155 |         |      |         |      |
+| org-install-agenda-files-menu                      |          1 |    0.0001048 |    0.0001048 |         |      |         |      |
+| org-set-local                                      |         45 | 5.119...e-05 | 1.137...e-06 |         |      |         |      |
+| org-update-radio-target-regexp                     |          1 | 4.580...e-05 | 4.580...e-05 |         |      |         |      |
+| org-set-regexps-and-options-for-tags               |          1 | 3.330...e-05 | 3.330...e-05 |         |      |         |      |
+| org-cycle-show-empty-lines                         |          2 | 3.080...e-05 | 1.540...e-05 |         |      |         |      |
+| org-find-invisible-foreground                      |          1 | 2.739...e-05 | 2.739...e-05 |         |      |         |      |
+| org-setup-comments-handling                        |          1 |     2.65e-05 |     2.65e-05 |         |      |         |      |
+| org-add-hook                                       |          5 | 2.610...e-05 |     5.22e-06 |         |      |         |      |
+| org-set-font-lock-defaults                         |          1 | 2.570...e-05 | 2.570...e-05 |         |      |         |      |
+| org-hide-block-toggle-maybe                        |          1 | 1.709...e-05 | 1.709...e-05 |         |      |         |      |
+| org-cycle-item-indentation                         |          1 |      1.5e-05 |      1.5e-05 |         |      |         |      |
+| org-cycle-hide-archived-subtrees                   |          2 |      1.4e-05 | 6.999...e-06 |         |      |         |      |
+| org-make-options-regexp                            |          2 | 1.320...e-05 | 6.600...e-06 |         |      |         |      |
+| org-overview                                       |          1 |     1.29e-05 |     1.29e-05 |         |      |         |      |
+| org-cycle-level                                    |          1 |     1.24e-05 |     1.24e-05 |         |      |         |      |
+| org-restart-font-lock                              |          1 |      1.2e-05 |      1.2e-05 |         |      |         |      |
+| org-remove-if                                      |          1 |     1.11e-05 |     1.11e-05 |         |      |         |      |
+| org-at-item-p                                      |          1 | 1.069...e-05 | 1.069...e-05 |         |      |         |      |
+| org-babel-hide-result-toggle-maybe                 |          1 | 1.069...e-05 | 1.069...e-05 |         |      |         |      |
+| org-assign-fast-keys                               |          1 | 9.000...e-06 | 9.000...e-06 |         |      |         |      |
+| org-extract-log-state-settings                     |          2 | 8.100...e-06 | 4.050...e-06 |         |      |         |      |
+| org-point-at-end-of-empty-headline                 |          1 | 7.700...e-06 | 7.700...e-06 |         |      |         |      |
+| org-cycle-hide-drawers                             |          2 | 6.500...e-06 | 3.250...e-06 |         |      |         |      |
+| org-compute-latex-and-related-regexp               |          1 | 6.399...e-06 | 6.399...e-06 |         |      |         |      |
+| org-all-targets                                    |          1 | 6.000...e-06 | 6.000...e-06 |         |      |         |      |
+| org-set-visibility-according-to-property           |          1 | 6.000...e-06 | 6.000...e-06 |         |      |         |      |
+| org-macro--collect-macros                          |          1 | 5.100...e-06 | 5.100...e-06 |         |      |         |      |
+| org-hide-archived-subtrees                         |          1 | 4.300...e-06 | 4.300...e-06 |         |      |         |      |
+| org-uniquify                                       |          1 | 3.899...e-06 | 3.899...e-06 |         |      |         |      |
+| org-agenda-files                                   |          1 |      3.8e-06 |      3.8e-06 |         |      |         |      |
+| org-at-table-p                                     |          1 | 3.499...e-06 | 3.499...e-06 |         |      |         |      |
+| org-defvaralias                                    |          1 | 2.600...e-06 | 2.600...e-06 |         |      |         |      |
+| org-item-re                                        |          1 | 2.600...e-06 | 2.600...e-06 |         |      |         |      |
+| org-babel-hide-all-hashes                          |          1 | 2.099...e-06 | 2.099...e-06 |         |      |         |      |
+| org-optimize-window-after-visibility-change        |          1 |      1.7e-06 |      1.7e-06 |         |      |         |      |
+| org-delete-all                                     |          1 |      1.7e-06 |      1.7e-06 |         |      |         |      |
+| org-cycle-hide-inline-tasks                        |          1 |      1.3e-06 |      1.3e-06 |         |      |         |      |
+| org-babel-result-hide-spec                         |          1 |      1.3e-06 |      1.3e-06 |         |      |         |      |
+| org-babel-header-arg-expand                        |          1 | 1.199...e-06 | 1.199...e-06 |         |      |         |      |
+| org-src-native-tab-command-maybe                   |          1 | 8.999...e-07 | 8.999...e-07 |         |      |         |      |
+| org-last                                           |          1 | 3.999...e-07 | 3.999...e-07 |         |      |         |      |
+| org-make-target-link-regexp                        |          1 | 3.999...e-07 | 3.999...e-07 |         |      |         |      |
+
 *** Org-mode tests
 
 #+begin_src emacs-lisp
@@ -212,8 +278,8 @@ foo.org=:
 * Test
 
 #+begin_src sh
-    $  emacs --batch --eval '(message "defined? %S" (functionp (quote org-babel-do-load-languages)))'
-    defined? t
+$ emacs --batch --eval '(message "defined? %S" (functionp (quote org-babel-do-load-languages)))'
+defined? t
 #+end_src
 
 * Script
@@ -229,6 +295,10 @@ foo.org=:
 - =-Q=, =--quick= ::
      Similar to =-q --no-site-file --no-splash=. Also, avoid processing X
      resources.
+
+- =--batch= ::
+     Edit in batch mode. The editor will send messages to stderr. You must use
+     =-l= and =-f= options to specify files to execute and functions to call.
 
 ** Ideal
 
@@ -309,7 +379,7 @@ emacs -Q -l $TMP
 
 *Call this script emacs-q?*
 
-#+begin_src sh :tangle emacs-minimal :var workingDir=(file-name-directory (buffer-file-name)) :padline no :shebang #!/bin/sh
+#+begin_src sh :tangle emacs-minimal :var workingDir=(file-name-directory (or load-file-name (buffer-file-name))) :padline no :shebang #!/bin/sh
 TESTEL=
 TESTFILE=~/test.el
 if test -e $TESTFILE # file exists
@@ -317,9 +387,10 @@ then
     TESTEL="-l $TESTFILE"
 fi
 
+EMACS="/cygdrive/c/Program\ Files\ \(x86\)/emacs-24.2.91/bin/emacs"
+
 # no init file
-cmd="emacs -batch -l ${workingDir}.emacs-minimal.el $TESTEL"
-cmd="/cygdrive/c/Program\ Files\ \(x86\)/emacs-24.2.91/bin/emacs -q -l ${workingDir}.emacs-minimal.el $TESTEL"
+cmd="$EMACS -q -l ${workingDir}.emacs-minimal.el $TESTEL"
 
 echo "Launching '$cmd'..."
 eval "$cmd"
@@ -333,6 +404,6 @@ alias em=emacs-minimal
 
 Install it, by symlinking the file.
 
-#+begin_src sh :results silent :var workingDir=(file-name-directory (buffer-file-name))
+#+begin_src sh :results silent :var workingDir=(file-name-directory (or load-file-name (buffer-file-name)))
 ln -f -s $workingDir/emacs-minimal ~/bin/emacs-minimal
 #+end_src

@@ -1,8 +1,8 @@
 #!/bin/sh
-workingDir=`cat <<'BABEL_TABLE'
+workingDir=$(cat <<'BABEL_TABLE'
 d:/Users/fni/src/emacs-leuven/
 BABEL_TABLE
-`
+)
 TESTEL=
 TESTFILE=~/test.el
 if test -e $TESTFILE # file exists
@@ -10,9 +10,10 @@ then
     TESTEL="-l $TESTFILE"
 fi
 
+EMACS="/cygdrive/c/Program\ Files\ \(x86\)/emacs-24.2.91/bin/emacs"
+
 # no init file
-cmd="emacs -batch -l ${workingDir}.emacs-minimal.el $TESTEL"
-cmd="/cygdrive/c/Program\ Files\ \(x86\)/emacs-24.2.91/bin/emacs -q -l ${workingDir}.emacs-minimal.el $TESTEL"
+cmd="$EMACS -q -l ${workingDir}.emacs-minimal.el $TESTEL"
 
 echo "Launching '$cmd'..."
 eval "$cmd"
