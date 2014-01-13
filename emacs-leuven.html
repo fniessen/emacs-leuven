@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-01-13 Mon 11:53 -->
+  <title>Emacs Leuven</title><!-- 2014-01-13 Mon 12:32 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1125,7 +1125,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140113.1152</span>
+"color: #8D8D84; font-style: italic;">Version: 20140113.1231</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1247,7 +1247,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140113.1152]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140113.1231]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -2018,10 +2018,10 @@
 
       (<span style="color: #0000FF;">defcustom</span> <span style=
 "color: #BA36A5;">leuven-packages</span>
-        '(auctex auto-complete bbdb boxquote calfw circe dictionary dired+ ess
-          fuzzy git-commit-mode graphviz-dot-mode helm htmlize idle-require
-          info+ interaction-log ledger-mode leuven-theme org-mime pager
-          rainbow-mode redo+ redshank sml-modeline tidy yasnippet
+        '(ace-jump-mode auctex auto-complete bbdb boxquote calfw circe
+          dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode helm
+          htmlize idle-require info+ interaction-log ledger-mode leuven-theme
+          org-mime pager rainbow-mode redo+ redshank sml-modeline tidy yasnippet
           <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">jabber multi-term</span>
           <span style="color: #8D8D84;">;; </span><span style=
@@ -3296,8 +3296,7 @@
             <pre class="src src-emacs-lisp">
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">quickly jump to a position in the current view</span>
-  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
-"color: #036A07;">"ace-jump-mode"</span>
+  (<span style="color: #0000FF;">when</span> (try-require 'ace-jump-mode)
     (define-key global-map (kbd <span style=
 "color: #036A07;">"C-c SPC"</span>) 'ace-jump-mode))
 </pre>
@@ -8927,14 +8926,19 @@ M-: (executable-find "diff") RET
               <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">table</span>
               (local-set-key
-               (kbd <span style=
+                (kbd <span style=
 "color: #036A07;">"C-M-w"</span>) 'org-table-copy-region)
               (local-set-key
-               (kbd <span style=
+                (kbd <span style=
 "color: #036A07;">"C-M-y"</span>) 'org-table-paste-rectangle)
               (local-set-key
-               (kbd <span style=
-"color: #036A07;">"C-M-l"</span>) 'org-table-sort-lines)))
+                (kbd <span style=
+"color: #036A07;">"C-M-l"</span>) 'org-table-sort-lines)
+
+              <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">remove the binding of `C-c SPC' (in Org tables), used by Ace Jump</span>
+              (local-set-key
+                (kbd <span style="color: #036A07;">"C-c SPC"</span>) nil)))
 </pre>
         </div>
       </div>
@@ -25008,7 +25012,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140113.1152]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140113.1232]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

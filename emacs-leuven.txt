@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-01-13 Mon 11:54>
+# Time-stamp: <2014-01-13 Mon 12:29>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1291,7 +1291,7 @@ Visible bookmarks in buffer.
 
 #+begin_src emacs-lisp
   ;; quickly jump to a position in the current view
-  (with-eval-after-load "ace-jump-mode"
+  (when (try-require 'ace-jump-mode)
     (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
 #+end_src
 
@@ -4711,11 +4711,15 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 
               ;; table
               (local-set-key
-               (kbd "C-M-w") 'org-table-copy-region)
+                (kbd "C-M-w") 'org-table-copy-region)
               (local-set-key
-               (kbd "C-M-y") 'org-table-paste-rectangle)
+                (kbd "C-M-y") 'org-table-paste-rectangle)
               (local-set-key
-               (kbd "C-M-l") 'org-table-sort-lines)))
+                (kbd "C-M-l") 'org-table-sort-lines)
+
+              ;; remove the binding of `C-c SPC' (in Org tables), used by Ace Jump
+              (local-set-key
+                (kbd "C-c SPC") nil)))
 #+end_src
 
 *** Activation

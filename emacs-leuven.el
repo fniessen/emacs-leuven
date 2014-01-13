@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140113.1149
+;; Version: 20140113.123
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140113.1149]--")
+(message "* --[ Loading Emacs Leuven 20140113.123]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -838,7 +838,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     (setq bmkp-propertize-bookmark-names-flag nil))
 
   ;; quickly jump to a position in the current view
-  (with-eval-after-load "ace-jump-mode"
+  (when (try-require 'ace-jump-mode)
     (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
 
 )                                       ; chapter 13 ends here
@@ -3063,11 +3063,15 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
               ;; table
               (local-set-key
-               (kbd "C-M-w") 'org-table-copy-region)
+                (kbd "C-M-w") 'org-table-copy-region)
               (local-set-key
-               (kbd "C-M-y") 'org-table-paste-rectangle)
+                (kbd "C-M-y") 'org-table-paste-rectangle)
               (local-set-key
-               (kbd "C-M-l") 'org-table-sort-lines)))
+                (kbd "C-M-l") 'org-table-sort-lines)
+
+              ;; remove the binding of `C-c SPC' (in Org tables), used by Ace Jump
+              (local-set-key
+                (kbd "C-c SPC") nil)))
 
   (with-eval-after-load "org"
     (message "... Org Introduction")
@@ -9272,7 +9276,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140113.1151]--")
+(message "* --[ Loaded Emacs Leuven 20140113.1231]--")
 
 (provide 'emacs-leuven)
 
