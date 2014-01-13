@@ -1,10 +1,10 @@
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2013 Fabrice Niessen
+;; Copyright (C) 1999-2014 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20131223.1557
+;; Version: 20140113.1149
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20131223.1557]--")
+(message "* --[ Loading Emacs Leuven 20140113.1149]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -408,11 +408,10 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                                         ; and load `<pkg>-autoloads.el'
 
       (defcustom leuven-packages
-        '(auctex auto-complete bbdb boxquote calfw circe dictionary dired+ ess
-          fuzzy git-commit-mode graphviz-dot-mode helm
-          htmlize                       ; works with Org
-          idle-require interaction-log ledger-mode leuven-theme org-mime pager
-          rainbow-mode redo+ redshank sml-modeline tidy yasnippet
+        '(ace-jump-mode auctex auto-complete bbdb boxquote calfw circe
+          dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode helm
+          htmlize idle-require info+ interaction-log ledger-mode leuven-theme
+          org-mime pager rainbow-mode redo+ redshank sml-modeline tidy yasnippet
           ;; jabber multi-term
           ;; paredit w3m
           )
@@ -659,10 +658,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                  nil)))
 
     (GNUEmacs
-      ;; with `info+.el', you can merge an Info node with its subnodes
-      ;; into the same buffer, by calling `Info-merge-subnodes' (bound to
-      ;; `+')
-      (try-require 'info+-XXX))  ;; error finding dir file
+      (try-require 'info+))
 
     ;; some info related functions
     ;; (to insert links such as `(info "(message)Insertion Variables")')
@@ -840,6 +836,10 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     ;; we will often be going back and forth between using Bookmark+ and
     ;; using vanilla Emacs
     (setq bmkp-propertize-bookmark-names-flag nil))
+
+  ;; quickly jump to a position in the current view
+  (with-eval-after-load "ace-jump-mode"
+    (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
 
 )                                       ; chapter 13 ends here
 
@@ -1772,9 +1772,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     ;; files quite a bit faster than SSH. It's based on SSH, so it
     ;; works the same, just saves faster.
 
-    ;; ;; 2011-07-25 New test on Windows XP
-    ;; (setq tramp-default-method "ssh")
-    ;;
     ;; (nconc (cadr (assq 'tramp-login-args (assoc "ssh" tramp-methods)))
     ;;        '(("bash" "-i")))
     ;; (setcdr (assq 'tramp-remote-sh (assoc "ssh" tramp-methods))
@@ -2022,6 +2019,15 @@ nil. Save execution times in the global list `leuven--load-times-list'."
         (message "Helm debug %s" (if helm-debug
                                      "enabled"
                                    "disabled")))))
+
+  (with-eval-after-load "helm"
+    ;; ;; enable generic Helm completion (for all functions in Emacs that use
+    ;; ;; `completing-read' or `read-file-name' and friends)
+    ;; (helm-mode 1)
+
+    ;; ;; enable adaptative sorting in all sources
+    ;; (helm-adaptative-mode 1)
+    )
 
   (leuven--section "Image mode")
 
@@ -2330,41 +2336,37 @@ nil. Save execution times in the global list `leuven--load-times-list'."
         '(1
           ((shift) . 1)))
 
-;;** 21.5 (info "(emacs)Creating Frames")
+;;** 21.6 (info "(emacs)Creating Frames")
 
-  (leuven--section "21.5 (emacs)Creating Frames")
+  (leuven--section "21.6 (emacs)Creating Frames")
 
-  ;; put Emacs exactly where you want it, every time it starts up, by
-  ;; auto-detecting the screen dimensions and computing where it should be
   (when (display-graphic-p)
+
+    ;; put Emacs exactly where you want it, every time it starts up
+    (setq initial-frame-alist
+          '((top . 0)
+            (left . 0)))
+
     (GNUEmacs
-      ;; list of default values for frame creation
+      ;; auto-detect the screen dimensions and compute the size of Emacs
       (add-to-list 'default-frame-alist
                    (cons 'height
                          (/ (- (x-display-pixel-height) 106)
                             (frame-char-height)))))
 
-    ;; avoid Emacs hanging for a while (old hack from 2001)
-    (add-to-list 'default-frame-alist
-                 '(wait-for-wm . nil))
-
-    ;; list of frame parameters for creating the initial frame
-    (setq initial-frame-alist
-          '((top . 0)
-            (left . 0)))
-
-    ;; ;; position of the vertical scroll bar
-    ;; (setq-default vertical-scroll-bar 'right)
+    ;; ;; avoid Emacs hanging for a while (old hack from 2001)
+    ;; (add-to-list 'default-frame-alist
+    ;;              '(wait-for-wm . nil))
     )
 
   (XEmacs
+    (set-frame-position (buffer-dedicated-frame) 0 0)
     (set-frame-width (buffer-dedicated-frame) 80)
-    (set-frame-height (buffer-dedicated-frame) 42)
-    (set-frame-position (buffer-dedicated-frame) 0 0))
+    (set-frame-height (buffer-dedicated-frame) 42))
 
   ;; title bar display of visible frames
   (setq frame-title-format
-        (format "Emacs %s rev:%s of %s    PID:%d"
+        (format "Emacs %s (r%s) of %s - PID:%d"
                 ;; (capitalize (symbol-name system-type))
                 emacs-version
                 (ignore-errors
@@ -2380,12 +2382,12 @@ nil. Save execution times in the global list `leuven--load-times-list'."
       (select-frame (make-frame))
       (set-window-buffer (selected-window) current-buffer)))
 
-;;** 21.6 (info "(emacs)Frame Commands")
+;;** 21.7 (info "(emacs)Frame Commands")
 
-  (leuven--section "21.6 (emacs)Frame Commands")
+  (leuven--section "21.7 (emacs)Frame Commands")
 
   (XWindow
-   (defun toggle-full-screen ()
+   (defun toggle-fullscreen ()
      "Toggle between full screen and partial screen display on X11."
      (interactive)
      ;; WM must support EWMH
@@ -2394,7 +2396,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                             '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
 
    (global-set-key
-     (kbd "C-c z") 'toggle-full-screen))
+     (kbd "C-c z") 'toggle-fullscreen))
 
   (GNUEmacs
     (when running-ms-windows
@@ -2415,9 +2417,9 @@ nil. Save execution times in the global list `leuven--load-times-list'."
         (global-set-key
           (kbd "C-c z") 'w32-maximize-frame))))
 
-;;** 21.8 (info "(emacs)Speedbar")
+;;** 21.9 (info "(emacs)Speedbar")
 
-  (leuven--section "21.8 (emacs)Speedbar Frames")
+  (leuven--section "21.9 (emacs)Speedbar Frames")
 
   (unless (locate-library "helm-config") ; helm is better than speedbar!
 
@@ -2461,10 +2463,14 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
   (leuven--section "21.12 (emacs)Scroll Bars")
 
-  ;; turn scroll bar off
-  (when (and (display-graphic-p)
-             (fboundp 'sml-modeline-mode))
-    (scroll-bar-mode -1))
+  (if (and (display-graphic-p)
+           (fboundp 'sml-modeline-mode))
+
+      ;; turn scroll bar off
+      (scroll-bar-mode -1)
+
+    ;; position of the vertical scroll bar
+    (setq-default vertical-scroll-bar 'right))
 
 ;;** 21.15 (info "(emacs)Tool Bars")
 
@@ -2640,16 +2646,19 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   ;; line-wrapping beyond that column (when pressing `M-q')
   (setq-default fill-column 79)
 
-  ;; ;; `M-q' runs the command `fill-paragraph'. `C-u M-q' runs
-  ;; ;; "unfill-paragraph"
-  ;; (defun leuven-fill-paragraph (&optional arg)
-  ;;   (interactive "P")
-  ;;   (let ((fill-column (if arg
-  ;;                          (point-max)
-  ;;                        fill-column)))
-  ;;     (fill-paragraph nil)))
-  ;;
-  ;; (global-set-key (kbd "M-q") 'leuven-fill-paragraph)
+  ;; unfill paragraph
+  (defun leuven-fill-paragraph (&optional arg)
+    "`M-q' runs the command `fill-paragraph'.
+
+  `C-u M-q' runs \"unfill-paragraph\": it takes a multi-line paragraph and
+  converts it into a single line of text."
+    (interactive "P")
+    (let ((fill-column (if arg
+                           (point-max)
+                         fill-column)))
+      (fill-paragraph nil)))
+
+  (global-set-key (kbd "M-q") 'leuven-fill-paragraph)
 
   ;; prevent breaking lines just before a punctuation mark such as `?' or `:'
   (add-hook 'fill-nobreak-predicate 'fill-french-nobreak-p)
@@ -2893,6 +2902,9 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     (autoload 'boxquote-region "boxquote"
       "Draw a box around the left hand side of a region bounding START and END." t)
 
+    (global-set-key
+      (kbd "C-c q") 'boxquote-region)
+
     (with-eval-after-load "boxquote"
       (setq boxquote-top-and-tail "────")
       (setq boxquote-title-format " %s")
@@ -2937,9 +2949,19 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (define-key global-map
     (kbd "C-c c") 'org-capture)
   (define-key global-map
-    (kbd "C-c b") 'org-switchb)
-  (define-key global-map
     (kbd "C-c a") 'org-agenda)
+  (define-key global-map
+    (kbd "C-c b") 'org-switchb)
+
+  ;; using links outside Org
+  (global-set-key
+    (kbd "C-c L") 'org-insert-link-global)
+  (global-set-key
+    (kbd "C-c O") 'org-open-at-point-global)
+
+  ;; display the Org mode manual in Info mode
+  (define-key global-map
+    (kbd "C-h o") 'org-info)
 
   (global-set-key
    (kbd "<f7>")
@@ -2961,16 +2983,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
      "Execute `C-c a d t' to display TODO entries."
      (interactive)
      (org-agenda nil "dt")))
-
-  ;; using links outside Org
-  (global-set-key
-    (kbd "C-c L") 'org-insert-link-global)
-  (global-set-key
-    (kbd "C-c o") 'org-open-at-point-global)
-
-  ;; display the Org mode manual in Info mode
-  (define-key global-map
-    (kbd "C-h o") 'org-info)
 
   ;; These variables need to be set before org.el is loaded...
 
@@ -3216,17 +3228,18 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   ;; (interface also used by the `refile' command)
   (setq org-goto-interface 'outline-path-completion)
 
-  ;; must be in eval-after-load "org"?
-  ;; (define-key org-mode-map
-  ;;   (kbd "C-c C-r") 'leuven-org-reveal)
+  (with-eval-after-load "org"
 
-  (defun leuven-org-reveal (&optional all-siblings)
-    "For `C-u C-c C-r', it does the same as default org-mode --- shows all
-  hidden siblings, and for `C-c C-r' --- all siblings of current level."
-    (interactive "P")
-    (if all-siblings
-        (org-reveal t)
-      (org-show-siblings)))
+    (defun leuven-org-reveal (&optional all-siblings)
+      "For `C-u C-c C-r', it does the same as default Org mode --- shows all
+    hidden siblings, and for `C-c C-r' --- all siblings of current level."
+      (interactive "P")
+      (if all-siblings
+          (org-reveal t)
+        (org-show-siblings)))
+
+    (define-key org-mode-map
+      (kbd "C-c C-r") 'leuven-org-reveal))
 
 ;;** (info "(org)Structure editing")
 
@@ -3260,7 +3273,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (setq org-description-max-indent 3)
 
   ;; don't make tab cycle visibility on plain list items
-  (setq org-cycle-include-plain-lists nil)
+  (setq org-cycle-include-plain-lists nil) ;; 'integrate?
 
   ;; an empty line does not end all plain list levels
   (setq org-empty-line-terminates-plain-lists nil)
@@ -4255,10 +4268,8 @@ From %c"
                 (tags . " %i %-12:c"))))
       (org-agenda-redo))
 
-    (add-hook 'org-mode-hook
-              (lambda ()
-                (define-key org-agenda-mode-map
-                  (kbd "(") 'leuven-org-agenda-toggle-tasks-details))))
+    (define-key org-agenda-mode-map
+      (kbd "(") 'leuven-org-agenda-toggle-tasks-details))
 
   ;; 10.4.2 settings for time grid for agenda display
   (setq org-agenda-time-grid '((daily remove-match)
@@ -5105,6 +5116,32 @@ From %c"
               (remove-text-properties (point-min) (point-max)
                                       '(mouse-face t))))
 
+  (with-eval-after-load "org-agenda"
+
+    (defun leuven-org-agenda-mark-done-and-add-followup ()
+      "Mark the current TODO as done and add another task after it.
+    Creates it at the same level as the previous task, so it's better to use
+    this with to-do items than with projects or headings."
+      (interactive)
+      (org-agenda-todo "DONE")
+      (org-agenda-switch-to)
+      (org-capture 0 "t"))
+
+    (define-key org-agenda-mode-map
+      "Z" 'leuven-org-agenda-mark-done-and-add-followup)
+
+    (defun leuven-org-agenda-new ()
+      "Create a new note or task at the current agenda item.
+    Creates it at the same level as the previous task, so it's better to use
+    this with to-do items than with projects or headings."
+      (interactive)
+      (org-agenda-switch-to)
+      (org-capture 0))
+
+    ;; new key assignment (overrides `org-agenda-next-item')
+    (define-key org-agenda-mode-map
+      "N" 'leuven-org-agenda-new))
+
 ;;* 11 (info "(org)Markup")
 
   (leuven--section "11 (org)Markup")
@@ -5828,7 +5865,10 @@ From %c"
     (message "... Org Speek keys")
 
     ;; activate single letter commands at beginning of a headline
-    (setq org-use-speed-commands t))
+    (setq org-use-speed-commands t)
+
+    (add-to-list 'org-speed-commands-user '("d" org-todo "DONE"))
+    (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE")))
 
 ;;** 15.4 (info "(org)Code evaluation security") issues
 
@@ -6733,6 +6773,9 @@ From %c"
   ;; source-level debugger for Emacs Lisp
   (with-eval-after-load "edebug"
 
+    ;; display a trace of function entry and exit
+    (setq edebug-trace t)
+
     (defadvice edebug-overlay-arrow (around leuven-highlight-line activate)
       "Highlight line currently being Edebug'ged."
       (require 'hl-line)
@@ -6780,12 +6823,6 @@ From %c"
 
   ;; major mode command symbol to use for the initial `*scratch*' buffer
   (setq initial-major-mode 'fundamental-mode)
-
-  ;;;_ * eldoc
-
-  (add-hook 'emacs-lisp-mode-hook
-            (lambda ()
-              (require 'edebug)))
 
   ;;;_ * elint
 
@@ -7603,6 +7640,9 @@ From %c"
   ;; extensions to Dired (provides fancy highlighting, etc.)
   (add-hook 'dired-load-hook
             (lambda ()
+              ;; don't hide details in Dired
+              (setq diredp-hide-details-initially-flag nil)
+
               (try-require 'dired+)))
 
 ;;** (info "(emacs)ls in Lisp")
@@ -9232,7 +9272,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20131223.1558]--")
+(message "* --[ Loaded Emacs Leuven 20140113.1151]--")
 
 (provide 'emacs-leuven)
 

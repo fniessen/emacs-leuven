@@ -24,3 +24,11 @@ caller) in the =eval-after-load=.
 ** TODO Use =findstr= instead of =grep= on Windows
 
 ** TODO Compare my config with http://zeekat.nl/articles/making-emacs-work-for-me.html
+
+** TODO See google-c-style.el --- Google's C/C++ style for c-mode
+
+http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el
+
+** TODO See other LP'ed Emacs files
+
+http://sachachua.com/blog/2012/06/literate-programming-emacs-configuration-file/

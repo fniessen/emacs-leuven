@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DATE:      2012-06-22
-#+Time-stamp: <2013-12-17 Tue 13:03>
+#+Time-stamp: <2014-01-13 Mon 12:06>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en
@@ -77,39 +77,41 @@ Global key bindings.
 
 *** Shortcuts for Org mode
 
-| Shortcut    | What it runs                           |
-|-------------+----------------------------------------|
-| <S-f2>      | org-save-buffer-and-do-related         |
-| <C-f3>      | leuven-org-todo-list-current-dir       |
-| <f4>        | helm-org-headlines                     |
-| <M-f6>      | visible-mode                           |
-| C-M-]       | org-cycle-global ;; <S-tab>            |
-| M-]         | org-cycle-local                        |
-| C-c l       | org-store-link                         |
-| C-c c       | org-capture                            |
-| C-c b       | org-switchb                            |
-| C-c a       | org-agenda                             |
-| C-c L       | org-insert-link-global                 |
-| C-c o       | org-open-at-point-global               |
-| C-c C-b     | org-switch-to-agenda                   |
-| C-c h       | hide-other                             |
-| \C-\M-n     | outline-next-visible-heading           |
-| \C-\M-p     | outline-previous-visible-heading       |
-| \C-\M-u     | outline-up-heading                     |
-| C-c C-x f   | org-footnote-action                    |
-| C-c C-x C-i | org-clock-in                           |
-| C-c C-x C-j | org-clock-goto                         |
-| C-c C-x C-o | org-clock-out                          |
-| C-c C-x C-q | leuven-org-clock-in-interrupted-task   |
-| (           | leuven-org-agenda-toggle-tasks-details |
-| C-c C-e     | org-export-dispatch                    |
-| M-P         | htmlize-buffer                         |
-| C-c C-e h o | htmlize-view-buffer                    |
-| M-;         | leuven-org-comment-dwim                |
-| C-M-\\      | leuven-org-indent-region               |
-| C-c C-v C-d | org-babel-demarcate-block              |
-| C-c m       | org-mime-subtree                       |
-| C-c m       | leuven-mail-subtree                    |
+| Shortcut    | What it runs                                 |
+|-------------+----------------------------------------------|
+| <S-f2>      | org-save-buffer-and-do-related               |
+| <C-f3>      | leuven-org-todo-list-current-dir             |
+| <f4>        | helm-org-headlines                           |
+| <M-f6>      | visible-mode                                 |
+| C-M-]       | org-cycle-global ;; <S-tab>                  |
+| M-]         | org-cycle-local                              |
+| C-c l       | org-store-link                               |
+| C-c c       | org-capture                                  |
+| C-c b       | org-switchb                                  |
+| C-c a       | org-agenda                                   |
+| C-c L       | org-insert-link-global                       |
+| C-c o       | org-open-at-point-global                     |
+| C-c C-b     | org-switch-to-agenda                         |
+| C-c h       | hide-other                                   |
+| \C-\M-n     | outline-next-visible-heading                 |
+| \C-\M-p     | outline-previous-visible-heading             |
+| \C-\M-u     | outline-up-heading                           |
+| C-c C-x f   | org-footnote-action                          |
+| C-c C-x C-i | org-clock-in                                 |
+| C-c C-x C-j | org-clock-goto                               |
+| C-c C-x C-o | org-clock-out                                |
+| C-c C-x C-q | leuven-org-clock-in-interrupted-task         |
+| (           | leuven-org-agenda-toggle-tasks-details       |
+| C-c C-e     | org-export-dispatch                          |
+| M-P         | htmlize-buffer                               |
+| C-c C-e h o | htmlize-view-buffer                          |
+| M-;         | leuven-org-comment-dwim                      |
+| C-M-\\      | leuven-org-indent-region                     |
+| C-c C-v C-d | org-babel-demarcate-block                    |
+| C-c m       | org-mime-subtree                             |
+| C-c m       | leuven-mail-subtree                          |
+| N           | leuven-org-agenda-new                        |
+| Z           | leuven-org-agenda-mark-done-and-add-followup |
 
 *** Shortcuts for Dired
 
@@ -129,6 +131,7 @@ Global key bindings.
 | Shortcut | What it runs                                   |
 |----------+------------------------------------------------|
 | <return> | newline-and-indent                             |
+| C-c SPC  | ace-jump                                       |
 | C-)      | match-paren                                    |
 | C-c @ h  | hs-hide-block                                  |
 | C-c @ s  | hs-show-block                                  |
@@ -215,6 +218,7 @@ I still have to sort them out, by mode (when applicable).
 | <S-return>          | leuven-ess-eval                    |
 | <C-up>              | comint-previous-input              |
 | <C-down>            | comint-next-input                  |
+| C-c q               | boxquote-region                    |
 
 ** License
 

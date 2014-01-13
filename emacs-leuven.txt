@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2013-12-23 Mon 15:56>
+# Time-stamp: <2014-01-13 Mon 11:54>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -19,7 +19,11 @@
 
 * Description
 
-This set of customizations is a "short-cut".
+Emacs can be very difficult for the beginner, as many of the default choices
+may seem (and sometimes are) ugly or awkward.
+
+But -- that's the joy of Emacs -- nearly everything can be adjusted! Hence,
+this set of customizations to "short-cut" that initial process.
 
 * Header
 
@@ -31,7 +35,7 @@ echo "$(date '+%Y%m%d.%H%M')"
 #+begin_src emacs-lisp :noweb yes
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2013 Fabrice Niessen
+;; Copyright (C) 1999-2014 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
@@ -550,11 +554,10 @@ are generated programmatically from upstream Git-based sources.
                                         ; and load `<pkg>-autoloads.el'
 
       (defcustom leuven-packages
-        '(auctex auto-complete bbdb boxquote calfw circe dictionary dired+ ess
-          fuzzy git-commit-mode graphviz-dot-mode helm
-          htmlize                       ; works with Org
-          idle-require interaction-log ledger-mode leuven-theme org-mime pager
-          rainbow-mode redo+ redshank sml-modeline tidy yasnippet
+        '(ace-jump-mode auctex auto-complete bbdb boxquote calfw circe
+          dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode helm
+          htmlize idle-require info+ interaction-log ledger-mode leuven-theme
+          org-mime pager rainbow-mode redo+ redshank sml-modeline tidy yasnippet
           ;; jabber multi-term
           ;; paredit w3m
           )
@@ -976,12 +979,12 @@ In a manual, these key bindings will make your life easier:
 special forms, constants, options, other variables), and that includes their
 parameters, even those on continuation lines.
 
+With ~Info+~, you can also merge an Info node with its subnodes into the same
+buffer, by calling =Info-merge-subnodes= (bound to =+=).
+
 #+begin_src emacs-lisp
     (GNUEmacs
-      ;; with `info+.el', you can merge an Info node with its subnodes
-      ;; into the same buffer, by calling `Info-merge-subnodes' (bound to
-      ;; `+')
-      (try-require 'info+-XXX))  ;; error finding dir file
+      (try-require 'info+))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1282,6 +1285,14 @@ Visible bookmarks in buffer.
     ;; we will often be going back and forth between using Bookmark+ and
     ;; using vanilla Emacs
     (setq bmkp-propertize-bookmark-names-flag nil))
+#+end_src
+
+** Ace Jump
+
+#+begin_src emacs-lisp
+  ;; quickly jump to a position in the current view
+  (with-eval-after-load "ace-jump-mode"
+    (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2816,9 +2827,6 @@ machine editing your cron file on the remote.
     ;; files quite a bit faster than SSH. It's based on SSH, so it
     ;; works the same, just saves faster.
 
-    ;; ;; 2011-07-25 New test on Windows XP
-    ;; (setq tramp-default-method "ssh")
-    ;;
     ;; (nconc (cadr (assq 'tramp-login-args (assoc "ssh" tramp-methods)))
     ;;        '(("bash" "-i")))
     ;; (setcdr (assq 'tramp-remote-sh (assoc "ssh" tramp-methods))
@@ -3142,6 +3150,15 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
         (message "Helm debug %s" (if helm-debug
                                      "enabled"
                                    "disabled")))))
+
+  (with-eval-after-load "helm"
+    ;; ;; enable generic Helm completion (for all functions in Emacs that use
+    ;; ;; `completing-read' or `read-file-name' and friends)
+    ;; (helm-mode 1)
+
+    ;; ;; enable adaptative sorting in all sources
+    ;; (helm-adaptative-mode 1)
+    )
 #+end_src
 
 - =volatile= means your candidates are recomputed each time you enter a character
@@ -3544,9 +3561,9 @@ Use =M-x scroll-all-mode= to scroll all visible windows together in parallel.
 ** Creating Frames
 
 #+begin_src emacs-lisp
-;;** 21.5 (info "(emacs)Creating Frames")
+;;** 21.6 (info "(emacs)Creating Frames")
 
-  (leuven--section "21.5 (emacs)Creating Frames")
+  (leuven--section "21.6 (emacs)Creating Frames")
 #+end_src
 
 1. Resize the frame to the size you want
@@ -3561,37 +3578,33 @@ one.
 =initial-frame-alist= is just for overriding properties for the first frame.
 
 #+begin_src emacs-lisp
-  ;; put Emacs exactly where you want it, every time it starts up, by
-  ;; auto-detecting the screen dimensions and computing where it should be
   (when (display-graphic-p)
+
+    ;; put Emacs exactly where you want it, every time it starts up
+    (setq initial-frame-alist
+          '((top . 0)
+            (left . 0)))
+
     (GNUEmacs
-      ;; list of default values for frame creation
+      ;; auto-detect the screen dimensions and compute the size of Emacs
       (add-to-list 'default-frame-alist
                    (cons 'height
                          (/ (- (x-display-pixel-height) 106)
                             (frame-char-height)))))
 
-    ;; avoid Emacs hanging for a while (old hack from 2001)
-    (add-to-list 'default-frame-alist
-                 '(wait-for-wm . nil))
-
-    ;; list of frame parameters for creating the initial frame
-    (setq initial-frame-alist
-          '((top . 0)
-            (left . 0)))
-
-    ;; ;; position of the vertical scroll bar
-    ;; (setq-default vertical-scroll-bar 'right)
+    ;; ;; avoid Emacs hanging for a while (old hack from 2001)
+    ;; (add-to-list 'default-frame-alist
+    ;;              '(wait-for-wm . nil))
     )
 
   (XEmacs
+    (set-frame-position (buffer-dedicated-frame) 0 0)
     (set-frame-width (buffer-dedicated-frame) 80)
-    (set-frame-height (buffer-dedicated-frame) 42)
-    (set-frame-position (buffer-dedicated-frame) 0 0))
+    (set-frame-height (buffer-dedicated-frame) 42))
 
   ;; title bar display of visible frames
   (setq frame-title-format
-        (format "Emacs %s rev:%s of %s    PID:%d"
+        (format "Emacs %s (r%s) of %s - PID:%d"
                 ;; (capitalize (symbol-name system-type))
                 emacs-version
                 (ignore-errors
@@ -3612,13 +3625,21 @@ one.
 
 ** Frame Commands
 
-#+begin_src emacs-lisp
-;;** 21.6 (info "(emacs)Frame Commands")
+- =toggle-frame-fullscreen= ::
+     Toggle fullscreen mode of the selected frame. *Ignore window manager
+     screen decorations.*
 
-  (leuven--section "21.6 (emacs)Frame Commands")
+- =toggle-frame-maximized= ::
+     Toggle maximization state of the selected frame. Respect window manager
+     screen decorations.
+
+#+begin_src emacs-lisp
+;;** 21.7 (info "(emacs)Frame Commands")
+
+  (leuven--section "21.7 (emacs)Frame Commands")
 
   (XWindow
-   (defun toggle-full-screen ()
+   (defun toggle-fullscreen ()
      "Toggle between full screen and partial screen display on X11."
      (interactive)
      ;; WM must support EWMH
@@ -3627,7 +3648,7 @@ one.
                             '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
 
    (global-set-key
-     (kbd "C-c z") 'toggle-full-screen))
+     (kbd "C-c z") 'toggle-fullscreen))
 
   (GNUEmacs
     (when running-ms-windows
@@ -3649,7 +3670,7 @@ one.
           (kbd "C-c z") 'w32-maximize-frame))))
 #+end_src
 
-*************** TODO Try to use the name toggle-full-screen for Windows as well
+*************** TODO Try to use the name =toggle-fullscreen= for Windows as well
 
 See =(display-pixel-width)=:
 
@@ -3664,9 +3685,9 @@ See =(display-pixel-width)=:
 ** Speedbar Frames
 
 #+begin_src emacs-lisp
-;;** 21.8 (info "(emacs)Speedbar")
+;;** 21.9 (info "(emacs)Speedbar")
 
-  (leuven--section "21.8 (emacs)Speedbar Frames")
+  (leuven--section "21.9 (emacs)Speedbar Frames")
 
   (unless (locate-library "helm-config") ; helm is better than speedbar!
 
@@ -3714,10 +3735,14 @@ See =(display-pixel-width)=:
 
   (leuven--section "21.12 (emacs)Scroll Bars")
 
-  ;; turn scroll bar off
-  (when (and (display-graphic-p)
-             (fboundp 'sml-modeline-mode))
-    (scroll-bar-mode -1))
+  (if (and (display-graphic-p)
+           (fboundp 'sml-modeline-mode))
+
+      ;; turn scroll bar off
+      (scroll-bar-mode -1)
+
+    ;; position of the vertical scroll bar
+    (setq-default vertical-scroll-bar 'right))
 #+end_src
 
 ** Tool Bars
@@ -4070,16 +4095,19 @@ Another solution to avoid breaking at certain places is to add
   ;; line-wrapping beyond that column (when pressing `M-q')
   (setq-default fill-column 79)
 
-  ;; ;; `M-q' runs the command `fill-paragraph'. `C-u M-q' runs
-  ;; ;; "unfill-paragraph"
-  ;; (defun leuven-fill-paragraph (&optional arg)
-  ;;   (interactive "P")
-  ;;   (let ((fill-column (if arg
-  ;;                          (point-max)
-  ;;                        fill-column)))
-  ;;     (fill-paragraph nil)))
-  ;;
-  ;; (global-set-key (kbd "M-q") 'leuven-fill-paragraph)
+  ;; unfill paragraph
+  (defun leuven-fill-paragraph (&optional arg)
+    "`M-q' runs the command `fill-paragraph'.
+
+  `C-u M-q' runs \"unfill-paragraph\": it takes a multi-line paragraph and
+  converts it into a single line of text."
+    (interactive "P")
+    (let ((fill-column (if arg
+                           (point-max)
+                         fill-column)))
+      (fill-paragraph nil)))
+
+  (global-set-key (kbd "M-q") 'leuven-fill-paragraph)
 
   ;; prevent breaking lines just before a punctuation mark such as `?' or `:'
   (add-hook 'fill-nobreak-predicate 'fill-french-nobreak-p)
@@ -4429,6 +4457,9 @@ Use Unicode characters.
     (autoload 'boxquote-region "boxquote"
       "Draw a box around the left hand side of a region bounding START and END." t)
 
+    (global-set-key
+      (kbd "C-c q") 'boxquote-region)
+
     (with-eval-after-load "boxquote"
       (setq boxquote-top-and-tail "────")
       (setq boxquote-title-format " %s")
@@ -4509,9 +4540,19 @@ work and tasks with Org mode.
   (define-key global-map
     (kbd "C-c c") 'org-capture)
   (define-key global-map
-    (kbd "C-c b") 'org-switchb)
-  (define-key global-map
     (kbd "C-c a") 'org-agenda)
+  (define-key global-map
+    (kbd "C-c b") 'org-switchb)
+
+  ;; using links outside Org
+  (global-set-key
+    (kbd "C-c L") 'org-insert-link-global)
+  (global-set-key
+    (kbd "C-c O") 'org-open-at-point-global)
+
+  ;; display the Org mode manual in Info mode
+  (define-key global-map
+    (kbd "C-h o") 'org-info)
 
   (global-set-key
    (kbd "<f7>")
@@ -4533,16 +4574,6 @@ work and tasks with Org mode.
      "Execute `C-c a d t' to display TODO entries."
      (interactive)
      (org-agenda nil "dt")))
-
-  ;; using links outside Org
-  (global-set-key
-    (kbd "C-c L") 'org-insert-link-global)
-  (global-set-key
-    (kbd "C-c o") 'org-open-at-point-global)
-
-  ;; display the Org mode manual in Info mode
-  (define-key global-map
-    (kbd "C-h o") 'org-info)
 #+end_src
 
 These variables need to be set before Org mode is loaded.
@@ -4895,17 +4926,18 @@ vs =C-u C-c C-j=
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; must be in eval-after-load "org"?
-  ;; (define-key org-mode-map
-  ;;   (kbd "C-c C-r") 'leuven-org-reveal)
+  (with-eval-after-load "org"
 
-  (defun leuven-org-reveal (&optional all-siblings)
-    "For `C-u C-c C-r', it does the same as default org-mode --- shows all
-  hidden siblings, and for `C-c C-r' --- all siblings of current level."
-    (interactive "P")
-    (if all-siblings
-        (org-reveal t)
-      (org-show-siblings)))
+    (defun leuven-org-reveal (&optional all-siblings)
+      "For `C-u C-c C-r', it does the same as default Org mode --- shows all
+    hidden siblings, and for `C-c C-r' --- all siblings of current level."
+      (interactive "P")
+      (if all-siblings
+          (org-reveal t)
+        (org-show-siblings)))
+
+    (define-key org-mode-map
+      (kbd "C-c C-r") 'leuven-org-reveal))
 #+end_src
 
 See also [[*Sparse%20trees][Sparse trees]] for behavior when revealing a location.
@@ -4956,7 +4988,7 @@ See also [[*Sparse%20trees][Sparse trees]] for behavior when revealing a locatio
   (setq org-description-max-indent 3)
 
   ;; don't make tab cycle visibility on plain list items
-  (setq org-cycle-include-plain-lists nil)
+  (setq org-cycle-include-plain-lists nil) ;; 'integrate?
 
   ;; an empty line does not end all plain list levels
   (setq org-empty-line-terminates-plain-lists nil)
@@ -6389,10 +6421,8 @@ arrives -- at which point it will be in all lists.
                 (tags . " %i %-12:c"))))
       (org-agenda-redo))
 
-    (add-hook 'org-mode-hook
-              (lambda ()
-                (define-key org-agenda-mode-map
-                  (kbd "(") 'leuven-org-agenda-toggle-tasks-details))))
+    (define-key org-agenda-mode-map
+      (kbd "(") 'leuven-org-agenda-toggle-tasks-details))
 #+end_src
 
 Show the time grid in the daily agenda but not in the weekly agenda, except
@@ -7624,6 +7654,44 @@ XXX Does this work?
 
 *************** TODO Adding ":tangle yes" on the above code block results in partial tangling!
 
+**** Mark a task as DONE and create a follow-up task
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "org-agenda"
+
+    (defun leuven-org-agenda-mark-done-and-add-followup ()
+      "Mark the current TODO as done and add another task after it.
+    Creates it at the same level as the previous task, so it's better to use
+    this with to-do items than with projects or headings."
+      (interactive)
+      (org-agenda-todo "DONE")
+      (org-agenda-switch-to)
+      (org-capture 0 "t"))
+
+    (define-key org-agenda-mode-map
+      "Z" 'leuven-org-agenda-mark-done-and-add-followup)
+#+end_src
+
+Source: Sacha Chua.
+
+**** Capture something based on the agenda
+
+#+begin_src emacs-lisp
+    (defun leuven-org-agenda-new ()
+      "Create a new note or task at the current agenda item.
+    Creates it at the same level as the previous task, so it's better to use
+    this with to-do items than with projects or headings."
+      (interactive)
+      (org-agenda-switch-to)
+      (org-capture 0))
+
+    ;; new key assignment (overrides `org-agenda-next-item')
+    (define-key org-agenda-mode-map
+      "N" 'leuven-org-agenda-new))
+#+end_src
+
+Source: Sacha Chua.
+
 ** Markup for rich export
 
 #+begin_src emacs-lisp
@@ -8638,7 +8706,10 @@ For navigating blocks:
     (message "... Org Speek keys")
 
     ;; activate single letter commands at beginning of a headline
-    (setq org-use-speed-commands t))
+    (setq org-use-speed-commands t)
+
+    (add-to-list 'org-speed-commands-user '("d" org-todo "DONE"))
+    (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE")))
 #+end_src
 
 *** Code evaluation and security issues
@@ -10063,6 +10134,15 @@ With that source-level debugger for Emacs Lisp, you can:
   ;; source-level debugger for Emacs Lisp
   (with-eval-after-load "edebug"
 
+    ;; display a trace of function entry and exit
+    (setq edebug-trace t)
+#+end_src
+
+While =edebug='ging, use =T= to view a trace buffer (=*edebug-trace*=). Emacs will
+quickly execute the rest of your code, printing out the arguments and return
+values for each expression it evaluates.
+
+#+begin_src emacs-lisp
     (defadvice edebug-overlay-arrow (around leuven-highlight-line activate)
       "Highlight line currently being Edebug'ged."
       (require 'hl-line)
@@ -10164,14 +10244,6 @@ mode.
 To evaluate a non-interactive command, simply use =IELM=.
 
 ** Other
-
-#+begin_src emacs-lisp
-  ;;;_ * eldoc
-
-  (add-hook 'emacs-lisp-mode-hook
-            (lambda ()
-              (require 'edebug)))
-#+end_src
 
 #+begin_src emacs-lisp
   ;;;_ * elint
@@ -11617,6 +11689,9 @@ Extra Dired functionality
   ;; extensions to Dired (provides fancy highlighting, etc.)
   (add-hook 'dired-load-hook
             (lambda ()
+              ;; don't hide details in Dired
+              (setq diredp-hide-details-initially-flag nil)
+
               (try-require 'dired+)))
 #+end_src
 
