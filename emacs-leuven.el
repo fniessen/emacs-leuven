@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140113.123
+;; Version: 20140114.11
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140113.123]--")
+(message "* --[ Loading Emacs Leuven 20140114.11]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -658,7 +658,13 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                  nil)))
 
     (GNUEmacs
-      (try-require 'info+))
+      (when (try-require 'info+)
+
+        ;; show breadcrumbs in the header line
+        (setq Info-breadcrumbs-in-header-flag t)
+
+        ;; don't show breadcrumbs in the mode line
+        (setq Info-breadcrumbs-in-mode-line-mode nil)))
 
     ;; some info related functions
     ;; (to insert links such as `(info "(message)Insertion Variables")')
@@ -9276,7 +9282,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140113.1231]--")
+(message "* --[ Loaded Emacs Leuven 20140114.1101]--")
 
 (provide 'emacs-leuven)
 

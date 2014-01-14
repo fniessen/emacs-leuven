@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-01-13 Mon 12:29>
+# Time-stamp: <2014-01-14 Tue 10:59>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -984,7 +984,13 @@ buffer, by calling =Info-merge-subnodes= (bound to =+=).
 
 #+begin_src emacs-lisp
     (GNUEmacs
-      (try-require 'info+))
+      (when (try-require 'info+)
+
+        ;; show breadcrumbs in the header line
+        (setq Info-breadcrumbs-in-header-flag t)
+
+        ;; don't show breadcrumbs in the mode line
+        (setq Info-breadcrumbs-in-mode-line-mode nil)))
 #+end_src
 
 #+begin_src emacs-lisp

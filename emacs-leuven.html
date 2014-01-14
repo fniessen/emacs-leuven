@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-01-13 Mon 12:32 -->
+  <title>Emacs Leuven</title><!-- 2014-01-14 Tue 11:03 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1125,7 +1125,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140113.1231</span>
+"color: #8D8D84; font-style: italic;">Version: 20140114.1102</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1247,7 +1247,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140113.1231]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140114.1102]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -2747,7 +2747,15 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
     (GNUEmacs
-      (try-require 'info+))
+      (<span style="color: #0000FF;">when</span> (try-require 'info+)
+
+        <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">show breadcrumbs in the header line</span>
+        (setq Info-breadcrumbs-in-header-flag t)
+
+        <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">don't show breadcrumbs in the mode line</span>
+        (setq Info-breadcrumbs-in-mode-line-mode nil)))
 </pre>
           </div>
 
@@ -25012,7 +25020,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140113.1232]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140114.1102]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
