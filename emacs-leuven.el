@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140114.11
+;; Version: 20140115.1206
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140114.11]--")
+(message "* --[ Loading Emacs Leuven 20140115.1206]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -200,11 +200,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
 (leuven--chapter leuven-chapter-0-loading-libraries "0 Loading Libraries"
 
-  ;; remember this directory
-  (defconst leuven--directory
-    (file-name-directory (or load-file-name (buffer-file-name)))
-    "Directory path of Emacs Leuven.")
-
   ;; load-path enhancement
   (defun leuven-add-to-load-path (this-directory)
     "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
@@ -220,6 +215,14 @@ nil. Save execution times in the global list `leuven--load-times-list'."
           (add-to-list 'load-path this-directory)
           (when leuven-load-verbose
             (message "(Info) Added `%s' to `load-path'" this-directory))))))
+
+  ;; remember this directory
+  (defconst leuven--directory
+    (file-name-directory (or load-file-name (buffer-file-name)))
+    "Directory path of Emacs Leuven.")
+
+  (leuven-add-to-load-path
+   (concat leuven--directory "site-lisp"))
 
   (defvar leuven-local-repos-directory "~/Public/Repositories/"
     "Directory containing additional Emacs Lisp public repositories.")
@@ -408,7 +411,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                                         ; and load `<pkg>-autoloads.el'
 
       (defcustom leuven-packages
-        '(ace-jump-mode auctex auto-complete bbdb boxquote calfw circe
+        '(ace-jump-mode auctex auto-complete bbdb boxquote calfw circe csv-mode
           dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode helm
           htmlize idle-require info+ interaction-log ledger-mode leuven-theme
           org-mime pager rainbow-mode redo+ redshank sml-modeline tidy yasnippet
@@ -2587,10 +2590,13 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
 
   ;; major mode for editing comma-separated value files
-  (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
-  (autoload 'csv-mode "csv-mode"
-    "Major mode for editing comma-separated value files." t)
-  (with-eval-after-load "csv-mode"
+  (when (locate-library "csv-mode")
+
+    (autoload 'csv-mode "csv-mode"
+      "Major mode for editing comma-separated value files." t)
+
+    (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
+
     ;; field separators: a list of *single-character* strings
     (setq csv-separators '("," ";")))
 
@@ -9282,7 +9288,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140114.1101]--")
+(message "* --[ Loaded Emacs Leuven 20140115.1206]--")
 
 (provide 'emacs-leuven)
 

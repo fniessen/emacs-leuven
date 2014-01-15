@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-01-14 Tue 10:59>
+# Time-stamp: <2014-01-15 Wed 12:09>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -270,13 +270,6 @@ need to load a single file that define autoloaded functions.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; remember this directory
-  (defconst leuven--directory
-    (file-name-directory (or load-file-name (buffer-file-name)))
-    "Directory path of Emacs Leuven.")
-#+end_src
-
-#+begin_src emacs-lisp
   ;; load-path enhancement
   (defun leuven-add-to-load-path (this-directory)
     "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
@@ -292,6 +285,16 @@ need to load a single file that define autoloaded functions.
           (add-to-list 'load-path this-directory)
           (when leuven-load-verbose
             (message "(Info) Added `%s' to `load-path'" this-directory))))))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; remember this directory
+  (defconst leuven--directory
+    (file-name-directory (or load-file-name (buffer-file-name)))
+    "Directory path of Emacs Leuven.")
+
+  (leuven-add-to-load-path
+   (concat leuven--directory "site-lisp"))
 #+end_src
 
 =leuven-local-repos-directory= is where you put Emacs Git/SVN/CSV repositories.
@@ -554,7 +557,7 @@ are generated programmatically from upstream Git-based sources.
                                         ; and load `<pkg>-autoloads.el'
 
       (defcustom leuven-packages
-        '(ace-jump-mode auctex auto-complete bbdb boxquote calfw circe
+        '(ace-jump-mode auctex auto-complete bbdb boxquote calfw circe csv-mode
           dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode helm
           htmlize idle-require info+ interaction-log ledger-mode leuven-theme
           org-mime pager rainbow-mode redo+ redshank sml-modeline tidy yasnippet
@@ -2313,10 +2316,13 @@ If you want to repeat forever or until error, type =C-u 0 <f8>=.
 Assign the last macro to a free key binding of your choice with
 =kmacro-bind-to-key= (bound to =C-x C-k b=).
 
-To save a named keyboard macro (with its key binding) for future use, switch to
+To *save a named keyboard macro* (with its key binding) for future use, switch to
 your ~.emacs~ buffer, and run =C-u M-x insert-kbd-macro= (if you leave out the =C-u=,
 then it will just insert the macro definition without the =global-set-key=
 sequence).
+
+You can add =(interactive)= to make it a command, so that you can use it with
+=M-x=.
 
 #+begin_src emacs-lisp
 ;;** 17.5 Name and (info "(emacs)Save Keyboard Macro")s
@@ -3973,10 +3979,13 @@ Instead of superseding the binding in =auto-mode-alist=, you can replace it
   (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
 
   ;; major mode for editing comma-separated value files
-  (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
-  (autoload 'csv-mode "csv-mode"
-    "Major mode for editing comma-separated value files." t)
-  (with-eval-after-load "csv-mode"
+  (when (locate-library "csv-mode")
+
+    (autoload 'csv-mode "csv-mode"
+      "Major mode for editing comma-separated value files." t)
+
+    (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
+
     ;; field separators: a list of *single-character* strings
     (setq csv-separators '("," ";")))
 #+end_src
