@@ -10,7 +10,7 @@ then
     TESTEL="-l $TESTFILE"
 fi
 
-EMACS="/cygdrive/c/Program\ Files\ \(x86\)/emacs-r114715-20131019-w32/bin/emacs"
+EMACS="/cygdrive/c/Program\ Files\ \(x86\)/emacs-trunk/bin/emacs"
 
 # no init file
 cmd="$EMACS -q -l ${workingDir}.emacs-minimal.el $TESTEL"
