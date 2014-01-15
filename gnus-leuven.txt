@@ -1,7 +1,7 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2013-12-23 Mon 10:27>
+#+Time-stamp: <2014-01-15 Wed 11:43>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -18,7 +18,7 @@ See http://www.gnu.org/software/emacs/manual/gnus.html
 #+begin_src emacs-lisp
 ;;; gnus-leuven.el --- my Gnus config file
 
-;; Copyright (C) 2004-2013 Fabrice Niessen
+;; Copyright (C) 2004-2014 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; Keywords: gnus, dotfile, config
@@ -546,6 +546,29 @@ Cleanup all Gnus buffers on exit.
       (define-key gnus-summary-mode-map
         (kbd "<M-down>") '(lambda () (scroll-other-window 1)))
 #+end_src
+
+** Reply, Followup and Post
+
+Messages posted via Usenet do not show up in the Emacs bug tracker. Avoid to
+forget about this programmatically!
+
+#+begin_src emacs-lisp
+;;** 3.5
+
+      (defun leuven-gnus-summary-followup-with-original ()
+        "Force sending messages to `gnu.emacs.bug' per email."
+        (interactive)
+        (if (string-match (rx "gnu.emacs.bug") gnus-newsgroup-name)
+                                        ; answer per email
+            (call-interactively 'gnus-summary-wide-reply-with-original)
+                                        ; post via news
+          (call-interactively 'gnus-summary-followup-with-original)))
+
+      (define-key gnus-summary-mode-map
+        (kbd "F") 'leuven-gnus-summary-followup-with-original)
+#+end_src
+
+Source: Michael Heerdegen.
 
 ** Threading
 

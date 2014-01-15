@@ -1,6 +1,6 @@
 ;;; gnus-leuven.el --- my Gnus config file
 
-;; Copyright (C) 2004-2013 Fabrice Niessen
+;; Copyright (C) 2004-2014 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; Keywords: gnus, dotfile, config
@@ -432,6 +432,20 @@
 
       (define-key gnus-summary-mode-map
         (kbd "<M-down>") '(lambda () (scroll-other-window 1)))
+
+;;** 3.5
+
+      (defun leuven-gnus-summary-followup-with-original ()
+        "Force sending messages to `gnu.emacs.bug' per email."
+        (interactive)
+        (if (string-match (rx "gnu.emacs.bug") gnus-newsgroup-name)
+                                        ; answer per email
+            (call-interactively 'gnus-summary-wide-reply-with-original)
+                                        ; post via news
+          (call-interactively 'gnus-summary-followup-with-original)))
+
+      (define-key gnus-summary-mode-map
+        (kbd "F") 'leuven-gnus-summary-followup-with-original)
 
 ;;** 3.9 (info "(gnus)Threading")
 
