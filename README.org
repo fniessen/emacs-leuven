@@ -1,17 +1,20 @@
+#+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DATE:      2012-06-22
-#+Time-stamp: <2014-01-13 Mon 12:06>
+#+Time-stamp: <2014-01-16 Thu 23:41>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en
 
 #+PROPERTY:  eval no
 
-* Emacs-leuven
+* Emacs Leuven
 
-Looking for an Emacs configuration file with many packages already enabled and
+Looking for an Emacs *configuration file* with many packages already enabled and
 a more pleasant set of defaults?  Here's the place to find one!
+
+The "Emacs Leuven" configuration file is packaged as an Emacs Lisp library.
 
 ** Download
 
@@ -222,6 +225,8 @@ I still have to sort them out, by mode (when applicable).
 
 ** License
 
-Copyright (C) 1999-2013 Fabrice Niessen
+Copyright (C) 1999-2014 Fabrice Niessen
+
+These Emacs configuration files are open source and free to use under GPL.
 
 #  LocalWords:  Fabrice Niessen Leuven Dired
