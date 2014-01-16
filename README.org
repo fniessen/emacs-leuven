@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DATE:      2012-06-22
-#+Time-stamp: <2014-01-16 Thu 23:43>
+#+Time-stamp: <2014-01-16 Thu 23:48>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en
@@ -13,7 +13,8 @@
 Looking for an Emacs *configuration file* with many packages already enabled and
 a more pleasant set of defaults?  Here's the place to find one!
 
-The "Emacs Leuven" configuration file is packaged as an Emacs Lisp library.
+The "Emacs Leuven" configuration file is packaged as an Emacs Lisp library, and
+ready to be used by you.
 
 ** Download
 
@@ -26,7 +27,9 @@ git clone git://github.com/fniessen/emacs-leuven.git
 
 ** Installation
 
-- Download and install [[https://github.com/fniessen/emacs-leuven][emacs-leuven]]:
+Using the Emacs Leuven library is very easy: you just need to...
+
+- Download and install [[https://github.com/fniessen/emacs-leuven][emacs-leuven]].
 
   #+BEGIN_SRC emacs-lisp
   ;; make sure `emacs-leuven.el' is in your `load-path'
