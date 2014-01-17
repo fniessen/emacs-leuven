@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140117.2341
+;; Version: 20140117.2348
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140117.2341]--")
+(message "* --[ Loading Emacs Leuven 20140117.2348]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5831,7 +5831,7 @@ From %c"
                 ((string= dict "francais")
                  (setq sentence-end-double-space nil))
                 (t
-                 (message "Ispell dictionary for language `%s' is unknown in %s"
+                 (message "No Ispell dictionary for language `%s' (see file `%s')"
                           lang (file-name-base))
                  (sit-for 1.5)))
           (when dict
@@ -9278,7 +9278,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140117.2343]--")
+(message "* --[ Loaded Emacs Leuven 20140117.235]--")
 
 (provide 'emacs-leuven)
 
