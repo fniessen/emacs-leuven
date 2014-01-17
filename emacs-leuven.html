@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-01-16 Thu 10:29 -->
+  <title>Emacs Leuven</title><!-- 2014-01-17 Fri 10:50 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1125,7 +1125,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140116.1029</span>
+"color: #8D8D84; font-style: italic;">Version: 20140117.1049</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1219,7 +1219,7 @@
 "color: #8D8D84; font-style: italic;">-- Bogdan Maryniuk</span>
 <span style="color: #8D8D84;">;;</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">- Emacs is like a laser guided missile. It only has to be slightly</span>
+"color: #8D8D84; font-style: italic;">- Emacs is like a laser guided missile.  It only has to be slightly</span>
 <span style="color: #8D8D84;">;;   </span><span style=
 "color: #8D8D84; font-style: italic;">mis-configured to ruin your whole day.</span>
 <span style="color: #8D8D84;">;;   </span><span style=
@@ -1244,10 +1244,10 @@
 "color: #8D8D84; font-style: italic;">Code:</span>
 
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">This file is only provided as an example. Customize it to your own taste!</span>
+"color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140116.1029]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140117.1049]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -1440,10 +1440,12 @@
 (<span style="color: #0000FF;">defmacro</span> <span style=
 "color: #006699;">leuven--chapter</span> (chapterid chaptername <span style=
 "color: #6434A3;">&amp;rest</span> body)
-  <span style=
-"color: #008000;">"Wrap Lisp expressions as CHAPTERNAME, evaluated only when CHAPTERID is not</span>
+  <span style="color: #008000;">"Wrap Lisp expressions as CHAPTERNAME.</span>
 <span style=
-"color: #008000;">nil. Save execution times in the global list `</span><span style="color: #D0372D;">leuven--load-times-list</span><span style="color: #008000;">'."</span>
+"color: #008000;">Evaluated only when CHAPTERID is not nil.  Save execution times in the global</span>
+<span style="color: #008000;">list `</span><span style=
+"color: #D0372D;">leuven--load-times-list</span><span style=
+"color: #008000;">'."</span>
   `(<span style="color: #0000FF;">when</span> ,chapterid
      (<span style="color: #0000FF;">let</span> (before-chapter-time
            this-chapter-time)
@@ -1481,10 +1483,11 @@
 "color: #006699;">leuven--section</span> (sectionname <span style=
 "color: #6434A3;">&amp;optional</span> end-of-chapter)
   <span style=
-"color: #008000;">"Output time taken since last saved time (in global variable</span>
-<span style="color: #008000;">`</span><span style=
+"color: #008000;">"Output time taken since last saved time.</span>
+<span style=
+"color: #008000;">Last time is saved in global variable `</span><span style=
 "color: #D0372D;">leuven--before-section-time</span><span style=
-"color: #008000;">')."</span>
+"color: #008000;">'."</span>
   (<span style="color: #0000FF;">let</span> ((this-section-time (- (float-time)
                               leuven--before-section-time)))
     (<span style="color: #0000FF;">when</span> leuven-load-verbose
@@ -1642,10 +1645,9 @@
 "color: #006699;">try-require</span> (feature)
       <span style=
 "color: #008000;">"Attempt to load a feature or library.</span>
-
 <span style=
-"color: #008000;">    Return true if the library given as argument is successfully loaded. If not,</span>
-<span style="color: #008000;">    just print a message."</span>
+"color: #008000;">    Return true if the library given as argument is successfully loaded.  If</span>
+<span style="color: #008000;">    not, just print a message."</span>
       (<span style="color: #0000FF;">condition-case</span> err
           (<span style="color: #0000FF;">progn</span>
             (<span style="color: #0000FF;">if</span> (stringp feature)
@@ -2061,7 +2063,7 @@
 "color: #8D8D84; font-style: italic;">Ensure that the list of packages is</span>
                                         <span style=
 "color: #8D8D84;">; </span><span style=
-"color: #8D8D84; font-style: italic;">up-to-date. Otherwise, new packages</span>
+"color: #8D8D84; font-style: italic;">up-to-date.  Otherwise, new packages</span>
                                         <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">(not present in the cache of the ELPA</span>
@@ -2184,7 +2186,7 @@
 (<span style="color: #0000FF;">unless</span> (string-match <span style=
 "color: #036A07;">"^8"</span> (org-version))
   (message (concat <span style=
-"color: #036A07;">"This version of Org mode is no longer supported. "</span>
+"color: #036A07;">"This version of Org mode is no longer supported.  "</span>
                    <span style=
 "color: #036A07;">"Please upgrade to 8 or later"</span>))
   (sit-for 1.5))
@@ -2689,7 +2691,7 @@
 "color: #D0372D; font-style: italic;">Info-directory-list</span><span style=
 "color: #8D8D84; font-style: italic;">', it's not intended to be</span>
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">settable by the user. When `</span><span style="color: #D0372D; font-style: italic;">info</span><span style="color: #8D8D84; font-style: italic;">' is called, this variable is</span>
+"color: #8D8D84; font-style: italic;">settable by the user.  When `</span><span style="color: #D0372D; font-style: italic;">info</span><span style="color: #8D8D84; font-style: italic;">' is called, this variable is</span>
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">populated from:</span>
     <span style="color: #8D8D84;">;; </span><span style=
@@ -2920,8 +2922,7 @@
     (<span style="color: #0000FF;">defadvice</span> <span style=
 "color: #006699;">kill-ring-save</span> (before leuven-slick-copy activate)
       <span style=
-"color: #008000;">"When called interactively with no active region, copy the current</span>
-<span style="color: #008000;">    line instead."</span>
+"color: #008000;">"When called with no active region, copy the current line instead."</span>
       (interactive
        (<span style=
 "color: #0000FF;">if</span> (use-region-p) (list (region-beginning) (region-end))
@@ -2933,8 +2934,7 @@
     (<span style="color: #0000FF;">defadvice</span> <span style=
 "color: #006699;">kill-region</span> (before leuven-slick-cut activate)
       <span style=
-"color: #008000;">"When called interactively with no active region, kill the current</span>
-<span style="color: #008000;">    line instead."</span>
+"color: #008000;">"When called with no active region, kill the current line instead."</span>
       (interactive
        (<span style=
 "color: #0000FF;">if</span> (use-region-p) (list (region-beginning) (region-end))
@@ -3528,10 +3528,9 @@
 "color: #036A07; font-weight: bold;">)</span><span style=
 "color: #036A07;">"</span>
     <span style=
-"color: #008000;">"Patterns to highlight (for Org mode only, to ensure no conflict with the</span>
-<span style="color: #008000;">  Org mode </span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #008000;"> keyword)."</span>)
+"color: #008000;">"Patterns to highlight (for Org mode only).</span>
+<span style=
+"color: #008000;">  The goal is to ensure no conflict with the Org mode </span><span style="color: #CC0000; background-color: #FFFF88;">TODO</span><span style="color: #008000;"> keyword."</span>)
 
   (<span style="color: #0000FF;">defface</span> <span style=
 "color: #BA36A5;">leuven-highlight-face</span>
@@ -3708,7 +3707,6 @@
 "color: #006699;">leuven-highlight-current-word</span> ()
       <span style=
 "color: #008000;">"Highlight the word that point is on throughout the buffer.</span>
-
 <span style=
 "color: #008000;">    If already highlighted, unhighlight the word at point."</span>
       (interactive)
@@ -4344,7 +4342,8 @@
 "color: #006699;">leuven--isearch-occur</span> ()
     <span style="color: #008000;">"Invoke `</span><span style=
 "color: #D0372D;">occur</span><span style=
-"color: #008000;">' from within isearch."</span>
+"color: #008000;">' from within `</span><span style=
+"color: #D0372D;">isearch</span><span style="color: #008000;">'."</span>
     (interactive)
     (<span style=
 "color: #0000FF;">let</span> ((case-fold-search isearch-case-fold-search))
@@ -4835,7 +4834,6 @@
 "color: #006699;">leuven-lookup-word-definition-in-w3m</span> ()
     <span style=
 "color: #008000;">"Look up the word's definition in a emacs-w3m.</span>
-
 <span style=
 "color: #008000;">  If a region is active (a phrase), lookup that phrase."</span>
     (interactive)
@@ -5241,10 +5239,9 @@
 "color: #008000;">  It disables backup creation and auto saving in the current buffer.</span>
 
 <span style=
-"color: #008000;">  With no argument, this command toggles the mode. Non-null</span>
+"color: #008000;">  With no argument, this command toggles the mode.  Non-null prefix argument</span>
 <span style=
-"color: #008000;">  prefix argument turns on the mode. Null prefix argument</span>
-<span style="color: #008000;">  turns off the mode."</span>
+"color: #008000;">  turns on the mode.  Null prefix argument turns off the mode."</span>
     nil                                 <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">initial value</span>
@@ -5624,7 +5621,7 @@ M-: (executable-find "diff") RET
 "color: #8D8D84; font-style: italic;">cache passphrase for symmetric encryption (VERY important)</span>
     (setq epa-file-cache-passphrase-for-symmetric-encryption t)
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Not to sound paranoid. But if you want caching, it's recommended to</span>
+"color: #8D8D84; font-style: italic;">Not to sound paranoid.  But if you want caching, it's recommended to</span>
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">use *public-key encryption* instead of symmetric encryption.</span>
     <span style="color: #8D8D84;">;; </span><span style=
@@ -5772,7 +5769,7 @@ M-: (executable-find "diff") RET
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">You might try out the `</span><span style="color: #D0372D; font-style: italic;">rsync</span><span style="color: #8D8D84; font-style: italic;">' method, which saves the remote</span>
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">files quite a bit faster than SSH. It's based on SSH, so it</span>
+"color: #8D8D84; font-style: italic;">files quite a bit faster than SSH.  It's based on SSH, so it</span>
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">works the same, just saves faster.</span>
 
@@ -5812,9 +5809,9 @@ M-: (executable-find "diff") RET
 "color: #D0372D; font-style: italic;">ssh</span><span style=
 "color: #8D8D84; font-style: italic;">' under your account name, and perform `sudo -u root' on</span>
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">that host afterwards. It is important to know that the given</span>
+"color: #8D8D84; font-style: italic;">that host afterwards.  It is important to know that the given</span>
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">method is applied on the host which has been reached so far. The</span>
+"color: #8D8D84; font-style: italic;">method is applied on the host which has been reached so far.  The</span>
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">trick is to think from the end.</span>
 
@@ -6218,8 +6215,7 @@ M-: (executable-find "diff") RET
       (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-helm-org-prog-menu</span> ()
         <span style=
-"color: #008000;">"Jump to a place in the buffer using an index menu.</span>
-
+"color: #008000;">"Jump to a place in the buffer using an Index menu.</span>
 <span style=
 "color: #008000;">      For Org mode buffers, show Org headlines.</span>
 <span style=
@@ -6445,9 +6441,9 @@ M-: (executable-find "diff") RET
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">switch-or-start</span> (function buffer)
     <span style=
-"color: #008000;">"If the BUFFER is current, bury it. If there is a buffer with that</span>
+"color: #008000;">"If the BUFFER is current, bury it.  If there is a buffer with that name,</span>
 <span style=
-"color: #008000;">  name, switch to it; otherwise, invoke the FUNCTION."</span>
+"color: #008000;">  switch to it; otherwise, invoke the FUNCTION."</span>
     (<span style=
 "color: #0000FF;">if</span> (equal (buffer-name (current-buffer)) buffer)
         (bury-buffer)
@@ -6458,8 +6454,8 @@ M-: (executable-find "diff") RET
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">switch-or-find-file</span> (file)
     <span style=
-"color: #008000;">"If the FILE is current, bury it. If there is a buffer with that</span>
-<span style="color: #008000;">  name, switch to it; otherwise, open it."</span>
+"color: #008000;">"If the FILE is current, bury it.  If there is a buffer with that name,</span>
+<span style="color: #008000;">  switch to it; otherwise, open it."</span>
     (<span style="color: #0000FF;">when</span> (file-exists-p file)
       (<span style="color: #0000FF;">if</span> (and (buffer-file-name)
                (string= (expand-file-name file)
@@ -6869,7 +6865,6 @@ M-: (executable-find "diff") RET
 "color: #006699;">leuven-toggle-window-split</span> ()
     <span style=
 "color: #008000;">"Toggle between vertical and horizontal split.</span>
-
 <span style=
 "color: #008000;">  Vertical split shows more of each line, horizontal split shows more lines.</span>
 <span style=
@@ -7953,7 +7948,6 @@ M-: (executable-find "diff") RET
 "color: #D0372D;">M-q</span><span style=
 "color: #008000;">' runs the command `</span><span style=
 "color: #D0372D;">fill-paragraph</span><span style="color: #008000;">'.</span>
-
 <span style=
 "color: #008000;">  `C-u M-q' runs \"unfill-paragraph\": it takes a multi-line paragraph and</span>
 <span style="color: #008000;">  converts it into a single line of text."</span>
@@ -8304,7 +8298,7 @@ M-: (executable-find "diff") RET
 "color: #D0372D; font-style: italic;">&lt;M-right&gt;</span><span style=
 "color: #8D8D84; font-style: italic;">' will collapse</span>
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">or expand all headings respectively. I am guessing you mean to make</span>
+"color: #8D8D84; font-style: italic;">or expand all headings respectively.  I am guessing you mean to make</span>
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">segments such as `;; SHORTCUTS' and `;; VARIABLES', this will do</span>
     <span style="color: #8D8D84;">;; </span><span style=
@@ -8897,9 +8891,9 @@ M-: (executable-find "diff") RET
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">somebody, I think Carsten, suggested this, and it might work for</span>
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">you, but for some reason I commented it out. I don't remember what</span>
+"color: #8D8D84; font-style: italic;">you, but for some reason I commented it out.  I don't remember what</span>
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">the reason was. Maybe speed.</span>
+"color: #8D8D84; font-style: italic;">the reason was.  Maybe speed.</span>
   (<span style="color: #0000FF;">defadvice</span> <span style=
 "color: #006699;">undo</span> (after leuven-org-undo-reveal activate)
     <span style=
@@ -9329,10 +9323,9 @@ M-: (executable-find "diff") RET
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-org-reveal</span> (<span style=
 "color: #6434A3;">&amp;optional</span> all-siblings)
-      <span style=
-"color: #008000;">"For `C-u C-c C-r', it does the same as default Org mode --- shows all</span>
+      <span style="color: #008000;">"Show all siblings of current level.</span>
 <span style=
-"color: #008000;">    hidden siblings, and for `C-c C-r' --- all siblings of current level."</span>
+"color: #008000;">    `C-u C-c C-r' does the same as default Org mode: show all hidden siblings."</span>
       (interactive <span style="color: #036A07;">"P"</span>)
       (<span style="color: #0000FF;">if</span> all-siblings
           (org-reveal t)
@@ -10257,7 +10250,6 @@ M-: (executable-find "diff") RET
 "color: #006699;">leuven--org-remove-redundant-tags</span> ()
     <span style=
 "color: #008000;">"Remove redundant tags of headlines in current buffer.</span>
-
 <span style=
 "color: #008000;">  A tag is considered redundant if it is local to a headline and inherited by</span>
 <span style="color: #008000;">  a parent headline."</span>
@@ -10605,7 +10597,6 @@ M-: (executable-find "diff") RET
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--org-switch-to-started</span> (kwd)
       <span style="color: #008000;">"Switch task state to STRT.</span>
-
 <span style=
 "color: #008000;">    Skip normal headlines and capture tasks."</span>
       (<span style="color: #0000FF;">if</span> (and kwd
@@ -10657,7 +10648,6 @@ M-: (executable-find "diff") RET
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--org-query-clock-out</span> ()
       <span style="color: #008000;">"Ask the user before clocking out.</span>
-
 <span style=
 "color: #008000;">    This is a useful function for adding to `</span><span style="color: #D0372D;">kill-emacs-query-functions</span><span style="color: #008000;">'."</span>
       (<span style="color: #0000FF;">if</span> (and (<span style=
@@ -12173,7 +12163,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #006699;">leuven--working-p</span> ()
     <span style=
 "color: #008000;">"Return t if current time is inside normal working hours.</span>
-
 <span style="color: #008000;">  Currently: 08:30-12:30 and 13:30-17:30."</span>
     (<span style="color: #0000FF;">let*</span> ((time (decode-time))
            (hour (nth 2 time))
@@ -12190,7 +12179,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #006699;">leuven--calling-hours-p</span> ()
     <span style=
 "color: #008000;">"Return t if current time is inside normal calling hours.</span>
-
 <span style="color: #008000;">  Currently: 08:00-21:59."</span>
     (<span style="color: #0000FF;">let*</span> ((hour (nth 2 (decode-time))))
       (and (&lt;= 8 hour) (&lt;= hour 21))))
@@ -12904,7 +12892,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"Project list"</span>)))
 
                     <span style="color: #8D8D84;">;; </span><span style=
-"color: #CC0000; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #8D8D84; font-style: italic;"> we should show which tasks (don't) have CLOCK lines: archived vs deleted</span>
+"color: #CC0000; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #8D8D84; font-style: italic;"> we should show which tasks (don't) have CLOCK lines: archived vs. deleted</span>
                     (todo <span style="color: #036A07;">"DONE|PROJDONE"</span>
                           ((org-agenda-overriding-header
                             <span style=
@@ -14079,7 +14067,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #006699;">leuven-org-insert-image-or-take-screenshot</span> (name)
       <span style=
 "color: #008000;">"Insert a link to an already existing image, or else to a screenshot.</span>
-
 <span style=
 "color: #008000;">    The screenshot is either taken to the given non-existing file name,</span>
 <span style=
@@ -14225,7 +14212,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
         (<span style="color: #0000FF;">if</span> (fboundp 'org-export-dispatch)
             (funcall 'org-export-dispatch arg)
           (message (concat <span style=
-"color: #036A07;">"This version of Org mode is no longer supported. "</span>
+"color: #036A07;">"This version of Org mode is no longer supported.  "</span>
                            <span style=
 "color: #036A07;">"Please upgrade to 8 or later"</span>))
           (sit-for 1.5)))))
@@ -14603,13 +14590,12 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #006699;">htmlize-region-for-paste</span> (beg end)
       <span style=
 "color: #008000;">"Htmlize the region and return just the HTML as a string.</span>
-
-<span style="color: #008000;">  This forces the `</span><span style=
+<span style="color: #008000;">    This forces the `</span><span style=
 "color: #D0372D;">css</span><span style=
-"color: #008000;">' style and only returns the HTML body, but</span>
+"color: #008000;">' style and only returns the HTML body, but without the</span>
 <span style=
-"color: #008000;">  without the BODY tag. This should make it useful for inserting</span>
-<span style="color: #008000;">  the text to another HTML buffer."</span>
+"color: #008000;">    BODY tag.  This should make it useful for inserting the text to another HTML</span>
+<span style="color: #008000;">    buffer."</span>
       (<span style=
 "color: #0000FF;">let*</span> ((htmlize-output-type 'css)  <span style=
 "color: #8D8D84;">; </span><span style=
@@ -14755,8 +14741,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--change-pdflatex-program</span> (backend)
       <span style=
-"color: #008000;">"When exporting an Org document to LaTeX, automatically run XeLaTeX,</span>
-<span style="color: #008000;">    if asked."</span>
+"color: #008000;">"Automatically run XeLaTeX, if asked, when exporting to LaTeX."</span>
 
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">default (in Windows binary)</span>
@@ -14857,8 +14842,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--latex-filter-nbsp</span> (text backend info)
       <span style=
-"color: #008000;">"Ensure that non-breaking spaces are properly handled in LaTeX/Beamer</span>
-<span style="color: #008000;">    export."</span>
+"color: #008000;">"Convert non-breaking spaces when exporting to LaTeX/Beamer."</span>
       (<span style="color: #0000FF;">when</span> (memq backend '(latex beamer))
         (replace-regexp-in-string <span style=
 "color: #036A07;">" "</span> <span style="color: #036A07;">"~"</span> text)))
@@ -14922,9 +14906,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--change-pdflatex-packages</span> (backend)
       <span style=
-"color: #008000;">"When exporting an Org document to LaTeX, automatically select the</span>
+"color: #008000;">"Automatically select the LaTeX packages to include (depending on PDFLaTeX</span>
 <span style=
-"color: #008000;">    LaTeX packages to include (depending on PDFLaTeX vs XeLaTeX)."</span>
+"color: #008000;">    vs. XeLaTeX) when exporting When exporting to LaTeX."</span>
 
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">unconditionally remove `</span><span style="color: #D0372D; font-style: italic;">inputenc</span><span style="color: #8D8D84; font-style: italic;">' from all the default packages</span>
@@ -15479,36 +15463,36 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">loads org, gnus-sum, etc...</span>
      'org-babel-load-languages
-     '((C . nil)
-       (R . t)                          <span style=
+     '((C          . nil)
+       (R          . t)                 <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">requires R and ess-mode</span>
-       (awk . t)
+       (awk        . t)
        <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(calc . t)</span>
-       (ditaa . t)                      <span style=
+"color: #8D8D84; font-style: italic;">(calc       . t)</span>
+       (ditaa      . t)                 <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">sudo aptitude install openjdk-6-jre</span>
-       (dot . t)
+       (dot        . t)
        (emacs-lisp . t)
        <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(gnuplot . t)                    ; requires gnuplot-mode</span>
-       (haskell . nil)
-       (latex . t)
-       (ledger . t)                     <span style=
+"color: #8D8D84; font-style: italic;">(gnuplot    . t)                 ; requires gnuplot-mode</span>
+       (haskell    . nil)
+       (latex      . t)
+       (ledger     . t)                 <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">requires ledger</span>
-       (ocaml . nil)
-       (octave . nil)
-       (org . t)
-       (perl . nil)
+       (ocaml      . nil)
+       (octave     . nil)
+       (org        . t)
+       (perl       . nil)
        <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(python . t)</span>
-       (ruby . nil)
-       (screen . nil)
-       (sh . t)
-       (sql . t)
-       (sqlite . nil)))
+"color: #8D8D84; font-style: italic;">(python     . t)</span>
+       (ruby       . nil)
+       (screen     . nil)
+       (sh         . t)
+       (sql        . t)
+       (sqlite     . nil)))
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">accented characters on graphics</span>
@@ -15545,7 +15529,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-switch-to-org-scratch</span> ()
     <span style=
-"color: #008000;">"Switch to a temp Org buffer. If the region is active, insert it."</span>
+"color: #008000;">"Switch to a temp Org buffer.  If the region is active, insert it."</span>
     (interactive)
     (<span style="color: #0000FF;">let</span> ((contents (and (region-active-p)
                          (buffer-substring (region-beginning)
@@ -15982,7 +15966,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">minimum number of lines for output *block* (placed in a</span>
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">#+begin_example...#+end_example) vs output marked as literal by</span>
+"color: #8D8D84; font-style: italic;">#+begin_example...#+end_example) vs. output marked as literal by</span>
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">inserting a *colon* at the beginning of the lines</span>
   (setq org-babel-min-lines-for-block-output 2)
@@ -16008,7 +15992,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--org-export-preprocess-hook</span> ()
     <span style=
-"color: #008000;">"My backend aware export preprocess hook."</span>
+"color: #008000;">"Backend-aware export preprocess hook."</span>
     (<span style="color: #0000FF;">save-excursion</span>
       (<span style=
 "color: #0000FF;">when</span> (eq org-export-current-backend 'latex)
@@ -17890,9 +17874,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">;; I also don't like that the compilation window sticks around after</span>
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">;; a successful compile. After all, most of the time, all I care</span>
+"color: #8D8D84; font-style: italic;">;; a successful compile.  After all, most of the time, all I care</span>
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">;; about is that the compile completed cleanly. Here's how I make the</span>
+"color: #8D8D84; font-style: italic;">;; about is that the compile completed cleanly.  Here's how I make the</span>
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">;; compilation window go away, only if there was no compilation</span>
   <span style="color: #8D8D84;">;; </span><span style=
@@ -18094,7 +18078,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #6434A3;">&amp;optional</span> context)
     <span style=
 "color: #008000;">"Recursively search for REGEXP in Org files in directory tree rooted at `</span><span style="color: #D0372D;">org-directory</span><span style="color: #008000;">'.</span>
-
 <span style=
 "color: #008000;">  Prefix argument determines number of lines of output context."</span>
     (interactive <span style="color: #036A07;">"sSearch regexp: \nP"</span>)
@@ -18818,7 +18801,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
       (find-file file)
       (<span style="color: #0000FF;">if</span> (and (buffer-modified-p)
                (y-or-n-p (format <span style=
-"color: #036A07;">"Buffer %s is modified. Save buffer? "</span>
+"color: #036A07;">"Buffer %s is modified.  Save buffer? "</span>
                                  (buffer-name))))
           (save-buffer (current-buffer)))
       (ediff-load-version-control)
@@ -19941,7 +19924,7 @@ TAGS:
             <p>Extensible inline text completion mechanism – really
             brilliant!</p>
 
-            <p>Auto start vs <code>M-/</code>.</p>
+            <p>Auto start vs. <code>M-/</code>.</p>
 
             <p>According to the settings, completion is done by
             <code>TAB</code> or <code>RET</code>.</p>
@@ -20995,9 +20978,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #006699;">leuven--appt-display</span> (mins-to-appt current-time notification-string)
       <span style=
 "color: #008000;">"Display a reminder for appointments.</span>
-
-<span style=
-"color: #008000;">    Use libnotify if available and if display is graphical, or fall back on a</span>
+<span style="color: #008000;">    Use `</span><span style=
+"color: #D0372D;">libnotify</span><span style=
+"color: #008000;">' if available and if display is graphical, or fall back on a</span>
 <span style="color: #008000;">    message in the echo area."</span>
       (or (listp mins-to-appt)
           (setq notification-string (list notification-string)))
@@ -21058,8 +21041,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #8D8D84; font-style: italic;">your Org agenda file, delete the corresponding alert</span>
       (<span style="color: #0000FF;">defadvice</span> <span style=
 "color: #006699;">org-agenda-to-appt</span> (before leuven-org-agenda-to-appt activate)
-        <span style=
-"color: #008000;">"Clear the existing appt-time-msg-list."</span>
+        <span style="color: #008000;">"Clear the existing `</span><span style=
+"color: #D0372D;">appt-time-msg-list</span><span style=
+"color: #008000;">'."</span>
         (setq appt-time-msg-list nil))
 
       <span style="color: #8D8D84;">;; </span><span style=
@@ -21174,10 +21158,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-insert-current-date</span> (prefix)
     <span style=
-"color: #008000;">"Insert the current date in ISO format. With one PREFIX argument,</span>
+"color: #008000;">"Insert the current date in ISO format.</span>
 <span style=
-"color: #008000;">  add day of week. With two PREFIX arguments, add day of week and</span>
-<span style="color: #008000;">  time."</span>
+"color: #008000;">  With one PREFIX argument, add day of week.  With two PREFIX arguments, add day</span>
+<span style="color: #008000;">  of week and time."</span>
     (interactive <span style="color: #036A07;">"P"</span>)
     (<span style="color: #0000FF;">let</span> ((format (<span style=
 "color: #0000FF;">cond</span> ((not prefix) <span style=
@@ -21463,7 +21447,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">- add a binding for `</span><span style=
 "color: #D0372D; font-style: italic;">M-TAB</span><span style=
-"color: #8D8D84; font-style: italic;">' to Message mode. This will enable</span>
+"color: #8D8D84; font-style: italic;">' to Message mode.  This will enable</span>
     <span style="color: #8D8D84;">;;   </span><span style=
 "color: #8D8D84; font-style: italic;">completion of addresses based on BBDB records</span>
     (add-hook 'gnus-startup-hook 'bbdb-insinuate-message)
@@ -21819,7 +21803,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">`</span><span style=
 "color: #D0372D; font-style: italic;">doc-view</span><span style=
-"color: #8D8D84; font-style: italic;">' integrates with the usual bookmark facility. So simply</span>
+"color: #8D8D84; font-style: italic;">' integrates with the usual bookmark facility.  So simply</span>
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">use `C-x r m' (`</span><span style=
 "color: #D0372D; font-style: italic;">bookmark-set</span><span style=
@@ -21874,7 +21858,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">docx2txt</span> ()
-    <span style="color: #008000;">"Run docx2txt on the entire buffer."</span>
+    <span style="color: #008000;">"Run `</span><span style=
+"color: #D0372D;">docx2txt</span><span style=
+"color: #008000;">' on the entire buffer."</span>
     (shell-command-on-region (point-min) (point-max) <span style=
 "color: #036A07;">"docx2txt.pl"</span> t t))
 
@@ -21889,9 +21875,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">no-xls</span> (<span style=
 "color: #6434A3;">&amp;optional</span> filename)
-    <span style=
-"color: #008000;">"Run xlhtml and w3m -dump on the entire buffer.</span>
-
+    <span style="color: #008000;">"Run `</span><span style=
+"color: #D0372D;">xlhtml</span><span style=
+"color: #008000;">' and `w3m -dump' on the entire buffer.</span>
 <span style=
 "color: #008000;">  Optional FILENAME says what filename to use.  This is only necessary for</span>
 <span style="color: #008000;">  buffers without proper `</span><span style=
@@ -21920,9 +21906,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">no-ppt</span> (<span style=
 "color: #6434A3;">&amp;optional</span> filename)
-    <span style=
-"color: #008000;">"Run ppthtml and w3m -dump on the entire buffer.</span>
-
+    <span style="color: #008000;">"Run `</span><span style=
+"color: #D0372D;">ppthtml</span><span style=
+"color: #008000;">' and `w3m -dump' on the entire buffer.</span>
 <span style=
 "color: #008000;">  Optional FILENAME says what filename to use.  This is only necessary for</span>
 <span style="color: #008000;">  buffers without proper `</span><span style=
@@ -21983,7 +21969,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">(when (eq system-type 'windows-nt)</span>
   <span style="color: #8D8D84;">;;   </span><span style=
-"color: #8D8D84; font-style: italic;">;; Workaround for Cygwin shell, when set 'CYGWIN=noglob'. By default</span>
+"color: #8D8D84; font-style: italic;">;; Workaround for Cygwin shell, when set 'CYGWIN=noglob'.  By default</span>
   <span style="color: #8D8D84;">;;   </span><span style=
 "color: #8D8D84; font-style: italic;">;; shell-quote-argument' quoted by double '\' chars, this cause failure.</span>
   <span style="color: #8D8D84;">;;   </span><span style=
@@ -22226,7 +22212,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #8D8D84; font-style: italic;">commands</span>
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--up-down-keys</span> ()
-      <span style="color: #008000;">"Customize my shell-mode."</span>
+      <span style="color: #008000;">"Customize the Shell mode."</span>
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">(local-set-key</span>
       <span style="color: #8D8D84;">;;   </span><span style=
@@ -23386,9 +23372,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (<span style="color: #0000FF;">defconst</span> <span style=
 "color: #BA36A5;">leuven--google-maxlen</span> (* 32 7)
       <span style=
-"color: #008000;">"Maximum length of search string to send. This prevents you from</span>
+"color: #008000;">"Maximum length of search string to send.</span>
 <span style=
-"color: #008000;">    accidentally sending a 5 MB query string."</span>)
+"color: #008000;">    This prevents you from accidentally sending a 5 MB query string."</span>)
 
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-google-search</span> ()
@@ -23502,14 +23488,13 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #006699;">pm/region-or-word</span> (prompt)
     <span style=
 "color: #008000;">"Read a string from the minibuffer, prompting with PROMPT.</span>
-
 <span style="color: #008000;">  If `</span><span style=
 "color: #D0372D;">transient-mark-mode</span><span style=
-"color: #008000;">' is non-nil and the mark is active,</span>
+"color: #008000;">' is non-nil and the mark is active, it defaults to the</span>
 <span style=
-"color: #008000;">  it defaults to the current region, else to the word at or before</span>
-<span style=
-"color: #008000;">  point. This function returns a list (string) for use in `</span><span style="color: #D0372D;">interactive</span><span style="color: #008000;">'."</span>
+"color: #008000;">  current region, else to the word at or before point.  This function returns a</span>
+<span style="color: #008000;">  list (string) for use in `</span><span style=
+"color: #D0372D;">interactive</span><span style="color: #008000;">'."</span>
     (list (read-string prompt (or (and (use-region-p)
                                        (buffer-substring-no-properties
                                         (region-beginning) (region-end)))
@@ -23518,10 +23503,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">pm/google</span> (string)
     <span style="color: #008000;">"Ask a WWW browser to Google STRING.</span>
-
 <span style=
-"color: #008000;">  Prompt for a string, defaulting to the active region or the current word at</span>
-<span style="color: #008000;">  or before point."</span>
+"color: #008000;">  Prompt for a string, defaulting to the active region or the current word at or</span>
+<span style="color: #008000;">  before point."</span>
     (interactive (pm/region-or-word <span style=
 "color: #036A07;">"Google: "</span>))
     (browse-url (concat <span style=
@@ -24577,7 +24561,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
           </div>
 
           <p>How do I get image support? See <code>image-library-alist</code>,
-          a list of image types vs external libraries needed to display
+          a list of image types vs. external libraries needed to display
           them.</p>
 
           <div class="org-src-container">
@@ -24719,8 +24703,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
 "color: #8D8D84; font-style: italic;">default channels to join whenever connecting to Freenode</span>
     (setq circe-server-auto-join-channels
           '((<span style="color: #036A07;">"^freenode$"</span>
-             <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">"#emacs"</span>
+             <span style="color: #036A07;">"#emacs"</span>
              <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">"#gnus"</span>
              <span style="color: #8D8D84;">;; </span><span style=
@@ -24732,7 +24715,8 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
 "color: #8D8D84; font-style: italic;">"#stumpwm"</span>
              <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">"#zsh"</span>
-             <span style="color: #036A07;">"#xemacs"</span>
+             <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">"#xemacs"</span>
              )))
 
 <span style="color: #8D8D84;">;;</span><span style=
@@ -24768,7 +24752,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">window is showing them), the mode line will now show you the</span>
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">abbreviated channel or nick name. Use `C-c C-SPC' to switch to these</span>
+"color: #8D8D84; font-style: italic;">abbreviated channel or nick name.  Use `C-c C-SPC' to switch to these</span>
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">buffers.</span>
 
@@ -25029,7 +25013,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140116.1029]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140117.1049]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

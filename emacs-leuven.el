@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140116.1027
+;; Version: 20140117.1046
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 ;; - Show me your ~/.emacs and I will tell you who you are.
 ;;   -- Bogdan Maryniuk
 ;;
-;; - Emacs is like a laser guided missile. It only has to be slightly
+;; - Emacs is like a laser guided missile.  It only has to be slightly
 ;;   mis-configured to ruin your whole day.
 ;;   -- Sean McGrath
 ;;
@@ -70,9 +70,9 @@
 
 ;;; Code:
 
-;; This file is only provided as an example. Customize it to your own taste!
+;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140116.1027]--")
+(message "* --[ Loading Emacs Leuven 20140117.1046]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -163,8 +163,9 @@
   "List of chapters and time to load them.")
 
 (defmacro leuven--chapter (chapterid chaptername &rest body)
-  "Wrap Lisp expressions as CHAPTERNAME, evaluated only when CHAPTERID is not
-nil. Save execution times in the global list `leuven--load-times-list'."
+  "Wrap Lisp expressions as CHAPTERNAME.
+Evaluated only when CHAPTERID is not nil.  Save execution times in the global
+list `leuven--load-times-list'."
   `(when ,chapterid
      (let (before-chapter-time
            this-chapter-time)
@@ -185,8 +186,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   "Value of `float-time' before loading some section.")
 
 (defun leuven--section (sectionname &optional end-of-chapter)
-  "Output time taken since last saved time (in global variable
-`leuven--before-section-time')."
+  "Output time taken since last saved time.
+Last time is saved in global variable `leuven--before-section-time'."
   (let ((this-section-time (- (float-time)
                               leuven--before-section-time)))
     (when leuven-load-verbose
@@ -241,9 +242,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (unless (fboundp 'try-require)
     (defun try-require (feature)
       "Attempt to load a feature or library.
-
-    Return true if the library given as argument is successfully loaded. If not,
-    just print a message."
+    Return true if the library given as argument is successfully loaded.  If
+    not, just print a message."
       (condition-case err
           (progn
             (if (stringp feature)
@@ -437,7 +437,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
         (when missing-packages
           ;; download once the ELPA archive description
           (package-refresh-contents)    ; Ensure that the list of packages is
-                                        ; up-to-date. Otherwise, new packages
+                                        ; up-to-date.  Otherwise, new packages
                                         ; (not present in the cache of the ELPA
                                         ; contents) won't install.
           (dolist (pkg missing-packages)
@@ -634,7 +634,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
   (with-eval-after-load "info"
     ;; Don't play with `Info-directory-list', it's not intended to be
-    ;; settable by the user. When `info' is called, this variable is
+    ;; settable by the user.  When `info' is called, this variable is
     ;; populated from:
     ;; 1. the `INFOPATH' environment variable and/or
     ;; 2. the `Info-default-directory-list' variable -- non-existent
@@ -724,8 +724,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     ;; add the ability to copy or cut the current line without marking it
     ;; (no active region) -- idea stolen from SlickEdit
     (defadvice kill-ring-save (before leuven-slick-copy activate)
-      "When called interactively with no active region, copy the current
-    line instead."
+      "When called with no active region, copy the current line instead."
       (interactive
        (if (use-region-p) (list (region-beginning) (region-end))
          (message "Copied the current line")
@@ -733,8 +732,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                (line-beginning-position 2)))))
 
     (defadvice kill-region (before leuven-slick-cut activate)
-      "When called interactively with no active region, kill the current
-    line instead."
+      "When called with no active region, kill the current line instead."
       (interactive
        (if (use-region-p) (list (region-beginning) (region-end))
          (list (line-beginning-position)
@@ -914,8 +912,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
   (defvar leuven-highlight-keywords-in-org
     "\\(FIXME\\|XXX\\|BUG\\)"
-    "Patterns to highlight (for Org mode only, to ensure no conflict with the
-  Org mode TODO keyword).")
+    "Patterns to highlight (for Org mode only).
+  The goal is to ensure no conflict with the Org mode TODO keyword.")
 
   (defface leuven-highlight-face
     '((t (:foreground "#CC0000" :background "#FFFF88")))
@@ -971,7 +969,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
     (defun leuven-highlight-current-word ()
       "Highlight the word that point is on throughout the buffer.
-
     If already highlighted, unhighlight the word at point."
       (interactive)
       (let ((cword (current-word t)))
@@ -1221,7 +1218,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (leuven--section "15.10 (emacs)Other Repeating Search Commands")
 
   (defun leuven--isearch-occur ()
-    "Invoke `occur' from within isearch."
+    "Invoke `occur' from within `isearch'."
     (interactive)
     (let ((case-fold-search isearch-case-fold-search))
       (occur
@@ -1436,7 +1433,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
   (defun leuven-lookup-word-definition-in-w3m ()
     "Look up the word's definition in a emacs-w3m.
-
   If a region is active (a phrase), lookup that phrase."
     (interactive)
     (let (word
@@ -1595,9 +1591,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     "For sensitive files like password lists.
   It disables backup creation and auto saving in the current buffer.
 
-  With no argument, this command toggles the mode. Non-null
-  prefix argument turns on the mode. Null prefix argument
-  turns off the mode."
+  With no argument, this command toggles the mode.  Non-null prefix argument
+  turns on the mode.  Null prefix argument turns off the mode."
     nil                                 ; initial value
     " Sensitive"                        ; indicator for the mode line
     nil                                 ; minor mode bindings
@@ -1733,7 +1728,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
     ;; cache passphrase for symmetric encryption (VERY important)
     (setq epa-file-cache-passphrase-for-symmetric-encryption t)
-    ;; Not to sound paranoid. But if you want caching, it's recommended to
+    ;; Not to sound paranoid.  But if you want caching, it's recommended to
     ;; use *public-key encryption* instead of symmetric encryption.
     ;; `gpg-agent' is the preferred way to do this.
 
@@ -1778,7 +1773,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                  "ssh")))
 
     ;; You might try out the `rsync' method, which saves the remote
-    ;; files quite a bit faster than SSH. It's based on SSH, so it
+    ;; files quite a bit faster than SSH.  It's based on SSH, so it
     ;; works the same, just saves faster.
 
     ;; (nconc (cadr (assq 'tramp-login-args (assoc "ssh" tramp-methods)))
@@ -1797,8 +1792,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
                    '("10.10.13.123" "\\`root\\'" "/ssh:%h:")))
     ;; Opening `/sudo:10.10.13.123:' would connect first `10.10.13.123'
     ;; via `ssh' under your account name, and perform `sudo -u root' on
-    ;; that host afterwards. It is important to know that the given
-    ;; method is applied on the host which has been reached so far. The
+    ;; that host afterwards.  It is important to know that the given
+    ;; method is applied on the host which has been reached so far.  The
     ;; trick is to think from the end.
 
 ;;** 4.12 (info "(tramp)Password handling") for several connections
@@ -1948,8 +1943,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
         (kbd "C-x b") 'helm-buffers-list)
 
       (defun leuven-helm-org-prog-menu ()
-        "Jump to a place in the buffer using an index menu.
-
+        "Jump to a place in the buffer using an Index menu.
       For Org mode buffers, show Org headlines.
       For programming mode buffers, show functions, variables, etc."
         (interactive)
@@ -2057,8 +2051,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (leuven--section "19.1 (emacs)Select Buffer")
 
   (defun switch-or-start (function buffer)
-    "If the BUFFER is current, bury it. If there is a buffer with that
-  name, switch to it; otherwise, invoke the FUNCTION."
+    "If the BUFFER is current, bury it.  If there is a buffer with that name,
+  switch to it; otherwise, invoke the FUNCTION."
     (if (equal (buffer-name (current-buffer)) buffer)
         (bury-buffer)
       (if (get-buffer buffer)
@@ -2066,8 +2060,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
         (funcall function))))
 
   (defun switch-or-find-file (file)
-    "If the FILE is current, bury it. If there is a buffer with that
-  name, switch to it; otherwise, open it."
+    "If the FILE is current, bury it.  If there is a buffer with that name,
+  switch to it; otherwise, open it."
     (when (file-exists-p file)
       (if (and (buffer-file-name)
                (string= (expand-file-name file)
@@ -2288,7 +2282,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
   (defun leuven-toggle-window-split ()
     "Toggle between vertical and horizontal split.
-
   Vertical split shows more of each line, horizontal split shows more lines.
   This code only works for frames with exactly two windows."
     (interactive)
@@ -2661,7 +2654,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   ;; unfill paragraph
   (defun leuven-fill-paragraph (&optional arg)
     "`M-q' runs the command `fill-paragraph'.
-
   `C-u M-q' runs \"unfill-paragraph\": it takes a multi-line paragraph and
   converts it into a single line of text."
     (interactive "P")
@@ -2842,7 +2834,7 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     ;;
     ;; Now you can add `;;' and `;;*', etc. as headings in your `.emacs'
     ;; and cycle using `<S-tab>', `<M-left>' and `<M-right>' will collapse
-    ;; or expand all headings respectively. I am guessing you mean to make
+    ;; or expand all headings respectively.  I am guessing you mean to make
     ;; segments such as `;; SHORTCUTS' and `;; VARIABLES', this will do
     ;; that, but not too much more.
     )
@@ -3048,8 +3040,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   ;;??? I like the idea of clustering undo but find it disconcerting
   (setf org-self-insert-cluster-for-undo nil) ; XXX undefined
   ;; somebody, I think Carsten, suggested this, and it might work for
-  ;; you, but for some reason I commented it out. I don't remember what
-  ;; the reason was. Maybe speed.
+  ;; you, but for some reason I commented it out.  I don't remember what
+  ;; the reason was.  Maybe speed.
   (defadvice undo (after leuven-org-undo-reveal activate)
     "Make point and context visible after an undo command in Org mode."
     (message "Using adviced undo") (sit-for 1)
@@ -3247,8 +3239,8 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   (with-eval-after-load "org"
 
     (defun leuven-org-reveal (&optional all-siblings)
-      "For `C-u C-c C-r', it does the same as default Org mode --- shows all
-    hidden siblings, and for `C-c C-r' --- all siblings of current level."
+      "Show all siblings of current level.
+    `C-u C-c C-r' does the same as default Org mode: show all hidden siblings."
       (interactive "P")
       (if all-siblings
           (org-reveal t)
@@ -3602,7 +3594,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
   ;; remove redundant tags of headlines (from David Maus)
   (defun leuven--org-remove-redundant-tags ()
     "Remove redundant tags of headlines in current buffer.
-
   A tag is considered redundant if it is local to a headline and inherited by
   a parent headline."
     (interactive)
@@ -3768,7 +3759,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
 
     (defun leuven--org-switch-to-started (kwd)
       "Switch task state to STRT.
-
     Skip normal headlines and capture tasks."
       (if (and kwd
                (not (string-equal kwd "STRT"))
@@ -3803,7 +3793,6 @@ nil. Save execution times in the global list `leuven--load-times-list'."
     ;; ask the user if they wish to clock out before killing Emacs
     (defun leuven--org-query-clock-out ()
       "Ask the user before clocking out.
-
     This is a useful function for adding to `kill-emacs-query-functions'."
       (if (and (featurep 'org-clock)
                (funcall 'org-clocking-p)
@@ -4402,7 +4391,6 @@ From %c"
 
   (defun leuven--working-p ()
     "Return t if current time is inside normal working hours.
-
   Currently: 08:30-12:30 and 13:30-17:30."
     (let* ((time (decode-time))
            (hour (nth 2 time))
@@ -4417,7 +4405,6 @@ From %c"
 
   (defun leuven--calling-hours-p ()
     "Return t if current time is inside normal calling hours.
-
   Currently: 08:00-21:59."
     (let* ((hour (nth 2 (decode-time))))
       (and (<= 8 hour) (<= hour 21))))
@@ -4647,7 +4634,7 @@ From %c"
                     (todo "PROJ"
                           ((org-agenda-overriding-header "Project list")))
 
-                    ;; XXX we should show which tasks (don't) have CLOCK lines: archived vs deleted
+                    ;; XXX we should show which tasks (don't) have CLOCK lines: archived vs. deleted
                     (todo "DONE|PROJDONE"
                           ((org-agenda-overriding-header
                             "Candidates to be archived")))
@@ -5179,7 +5166,6 @@ From %c"
 
     (defun leuven-org-insert-image-or-take-screenshot (name)
       "Insert a link to an already existing image, or else to a screenshot.
-
     The screenshot is either taken to the given non-existing file name,
     or added into the given directory, defaulting to the current one."
       ;; FIXME: Should limit to '("pdf" "jpeg" "jpg" "png" "ps" "eps")
@@ -5256,7 +5242,7 @@ From %c"
         (interactive "P")
         (if (fboundp 'org-export-dispatch)
             (funcall 'org-export-dispatch arg)
-          (message (concat "This version of Org mode is no longer supported. "
+          (message (concat "This version of Org mode is no longer supported.  "
                            "Please upgrade to 8 or later"))
           (sit-for 1.5)))))
 
@@ -5429,10 +5415,9 @@ From %c"
     ;; override output type `inline-css' used for htmlizing a region
     (defun htmlize-region-for-paste (beg end)
       "Htmlize the region and return just the HTML as a string.
-
-  This forces the `css' style and only returns the HTML body, but
-  without the BODY tag. This should make it useful for inserting
-  the text to another HTML buffer."
+    This forces the `css' style and only returns the HTML body, but without the
+    BODY tag.  This should make it useful for inserting the text to another HTML
+    buffer."
       (let* ((htmlize-output-type 'css)  ; was `inline-css'
              (htmlbuf (htmlize-region beg end)))
         (unwind-protect
@@ -5502,8 +5487,7 @@ From %c"
     (setq org-latex-link-with-unknown-path-format "\\colorbox{red}{%s}")
 
     (defun leuven--change-pdflatex-program (backend)
-      "When exporting an Org document to LaTeX, automatically run XeLaTeX,
-    if asked."
+      "Automatically run XeLaTeX, if asked, when exporting to LaTeX."
 
       ;; default (in Windows binary)
       (setq org-latex-pdf-process
@@ -5542,8 +5526,8 @@ From %c"
     (add-to-list 'org-latex-packages-alist '("french" "babel") t)
 
     (defun leuven--change-pdflatex-packages (backend)
-      "When exporting an Org document to LaTeX, automatically select the
-    LaTeX packages to include (depending on PDFLaTeX vs XeLaTeX)."
+      "Automatically select the LaTeX packages to include (depending on PDFLaTeX
+    vs. XeLaTeX) when exporting When exporting to LaTeX."
 
       ;; unconditionally remove `inputenc' from all the default packages
       (setq org-latex-packages-alist
@@ -5779,27 +5763,27 @@ From %c"
 
     (org-babel-do-load-languages        ; loads org, gnus-sum, etc...
      'org-babel-load-languages
-     '((C . nil)
-       (R . t)                          ; requires R and ess-mode
-       (awk . t)
-       ;; (calc . t)
-       (ditaa . t)                      ; sudo aptitude install openjdk-6-jre
-       (dot . t)
+     '((C          . nil)
+       (R          . t)                 ; requires R and ess-mode
+       (awk        . t)
+       ;; (calc       . t)
+       (ditaa      . t)                 ; sudo aptitude install openjdk-6-jre
+       (dot        . t)
        (emacs-lisp . t)
-       ;; (gnuplot . t)                    ; requires gnuplot-mode
-       (haskell . nil)
-       (latex . t)
-       (ledger . t)                     ; requires ledger
-       (ocaml . nil)
-       (octave . nil)
-       (org . t)
-       (perl . nil)
-       ;; (python . t)
-       (ruby . nil)
-       (screen . nil)
-       (sh . t)
-       (sql . t)
-       (sqlite . nil)))
+       ;; (gnuplot    . t)                 ; requires gnuplot-mode
+       (haskell    . nil)
+       (latex      . t)
+       (ledger     . t)                 ; requires ledger
+       (ocaml      . nil)
+       (octave     . nil)
+       (org        . t)
+       (perl       . nil)
+       ;; (python     . t)
+       (ruby       . nil)
+       (screen     . nil)
+       (sh         . t)
+       (sql        . t)
+       (sqlite     . nil)))
 
     ;; accented characters on graphics
     (setq org-babel-R-command
@@ -5809,7 +5793,7 @@ From %c"
 
   ;; from Dan Davison
   (defun leuven-switch-to-org-scratch ()
-    "Switch to a temp Org buffer. If the region is active, insert it."
+    "Switch to a temp Org buffer.  If the region is active, insert it."
     (interactive)
     (let ((contents (and (region-active-p)
                          (buffer-substring (region-beginning)
@@ -5958,7 +5942,7 @@ From %c"
 
 
   ;; minimum number of lines for output *block* (placed in a
-  ;; #+begin_example...#+end_example) vs output marked as literal by
+  ;; #+begin_example...#+end_example) vs. output marked as literal by
   ;; inserting a *colon* at the beginning of the lines
   (setq org-babel-min-lines-for-block-output 2)
 
@@ -5968,7 +5952,7 @@ From %c"
 
   ;; backend aware export preprocess hook
   (defun leuven--org-export-preprocess-hook ()
-    "My backend aware export preprocess hook."
+    "Backend-aware export preprocess hook."
     (save-excursion
       (when (eq org-export-current-backend 'latex)
         ;; ignoreheading tag for bibliographies and appendices
@@ -6677,8 +6661,8 @@ From %c"
   (setq compilation-window-height (* 2 5))
 
   ;; ;; I also don't like that the compilation window sticks around after
-  ;; ;; a successful compile. After all, most of the time, all I care
-  ;; ;; about is that the compile completed cleanly. Here's how I make the
+  ;; ;; a successful compile.  After all, most of the time, all I care
+  ;; ;; about is that the compile completed cleanly.  Here's how I make the
   ;; ;; compilation window go away, only if there was no compilation
   ;; ;; errors:
   ;; (setq compilation-finish-function
@@ -6764,7 +6748,6 @@ From %c"
   ;; 10.3.5 Org keyword search
   (defun leuven-org-grep (regexp &optional context)
     "Recursively search for REGEXP in Org files in directory tree rooted at `org-directory'.
-
   Prefix argument determines number of lines of output context."
     (interactive "sSearch regexp: \nP")
     (let ((grep-find-ignored-files '("#*" ".#*"))
@@ -7053,7 +7036,7 @@ From %c"
       (require 'ediff)
       (find-file file)
       (if (and (buffer-modified-p)
-               (y-or-n-p (format "Buffer %s is modified. Save buffer? "
+               (y-or-n-p (format "Buffer %s is modified.  Save buffer? "
                                  (buffer-name))))
           (save-buffer (current-buffer)))
       (ediff-load-version-control)
@@ -7764,8 +7747,7 @@ From %c"
 
     (defun leuven--appt-display (mins-to-appt current-time notification-string)
       "Display a reminder for appointments.
-
-    Use libnotify if available and if display is graphical, or fall back on a
+    Use `libnotify' if available and if display is graphical, or fall back on a
     message in the echo area."
       (or (listp mins-to-appt)
           (setq notification-string (list notification-string)))
@@ -7800,7 +7782,7 @@ From %c"
       ;; keep your appointment list clean: if you delete an appointment from
       ;; your Org agenda file, delete the corresponding alert
       (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
-        "Clear the existing appt-time-msg-list."
+        "Clear the existing `appt-time-msg-list'."
         (setq appt-time-msg-list nil))
 
       ;; add today's appointments (found in `org-agenda-files') each time the
@@ -7842,9 +7824,9 @@ From %c"
   (setq calendar-mark-holidays-flag t)
 
   (defun leuven-insert-current-date (prefix)
-    "Insert the current date in ISO format. With one PREFIX argument,
-  add day of week. With two PREFIX arguments, add day of week and
-  time."
+    "Insert the current date in ISO format.
+  With one PREFIX argument, add day of week.  With two PREFIX arguments, add day
+  of week and time."
     (interactive "P")
     (let ((format (cond ((not prefix) "%Y-%m-%d")
                         ((equal prefix '(4)) "%Y-%m-%d %a")
@@ -8000,7 +7982,7 @@ From %c"
     ;;   in Gnus)
     (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
 
-    ;; - add a binding for `M-TAB' to Message mode. This will enable
+    ;; - add a binding for `M-TAB' to Message mode.  This will enable
     ;;   completion of addresses based on BBDB records
     (add-hook 'gnus-startup-hook 'bbdb-insinuate-message)
 
@@ -8143,7 +8125,7 @@ From %c"
 
   (leuven--section "35.1 (emacs)Navigation")
 
-  ;; `doc-view' integrates with the usual bookmark facility. So simply
+  ;; `doc-view' integrates with the usual bookmark facility.  So simply
   ;; use `C-x r m' (`bookmark-set') to jump back to the last page you've
   ;; read in a PDF document.
 
@@ -8158,7 +8140,7 @@ From %c"
   (add-to-list 'auto-mode-alist '("\\.docx\\'" . docx2txt))
 
   (defun docx2txt ()
-    "Run docx2txt on the entire buffer."
+    "Run `docx2txt' on the entire buffer."
     (shell-command-on-region (point-min) (point-max) "docx2txt.pl" t t))
 
 
@@ -8167,8 +8149,7 @@ From %c"
   ;; TODO sudo aptitude install xlhtml
   (add-to-list 'auto-mode-alist '("\\.xls\\'" . no-xls))
   (defun no-xls (&optional filename)
-    "Run xlhtml and w3m -dump on the entire buffer.
-
+    "Run `xlhtml' and `w3m -dump' on the entire buffer.
   Optional FILENAME says what filename to use.  This is only necessary for
   buffers without proper `buffer-file-name'.  FILENAME should be a real
   filename, not a path."
@@ -8188,8 +8169,7 @@ From %c"
   ;; TODO sudo aptitude install ppthtml
   ;; FIXME Not that good! (some text repeated multiple times)
   (defun no-ppt (&optional filename)
-    "Run ppthtml and w3m -dump on the entire buffer.
-
+    "Run `ppthtml' and `w3m -dump' on the entire buffer.
   Optional FILENAME says what filename to use.  This is only necessary for
   buffers without proper `buffer-file-name'.  FILENAME should be a real
   filename, not a path."
@@ -8218,7 +8198,7 @@ From %c"
 
   ;; XXX Test the following (added on 2011-08-03)
   ;; (when (eq system-type 'windows-nt)
-  ;;   ;; Workaround for Cygwin shell, when set 'CYGWIN=noglob'. By default
+  ;;   ;; Workaround for Cygwin shell, when set 'CYGWIN=noglob'.  By default
   ;;   ;; shell-quote-argument' quoted by double '\' chars, this cause failure.
   ;;   (defun shell-quote-argument (argument)
   ;;     (concat "'" argument "'"))
@@ -8305,7 +8285,7 @@ From %c"
     ;; use the `up' and `down' arrow keys to traverse through the previous
     ;; commands
     (defun leuven--up-down-keys ()
-      "Customize my shell-mode."
+      "Customize the Shell mode."
       ;; (local-set-key
       ;;   (kbd "<up>") 'comint-previous-input)
       ;; (local-set-key
@@ -8736,8 +8716,8 @@ From %c"
   (when t                               ; (try-require 'browse-url)
 
     (defconst leuven--google-maxlen (* 32 7)
-      "Maximum length of search string to send. This prevents you from
-    accidentally sending a 5 MB query string.")
+      "Maximum length of search string to send.
+    This prevents you from accidentally sending a 5 MB query string.")
 
     (defun leuven-google-search ()
       "Prompt for a query in the minibuffer, launch the web browser and
@@ -8802,10 +8782,9 @@ From %c"
 
   (defun pm/region-or-word (prompt)
     "Read a string from the minibuffer, prompting with PROMPT.
-
-  If `transient-mark-mode' is non-nil and the mark is active,
-  it defaults to the current region, else to the word at or before
-  point. This function returns a list (string) for use in `interactive'."
+  If `transient-mark-mode' is non-nil and the mark is active, it defaults to the
+  current region, else to the word at or before point.  This function returns a
+  list (string) for use in `interactive'."
     (list (read-string prompt (or (and (use-region-p)
                                        (buffer-substring-no-properties
                                         (region-beginning) (region-end)))
@@ -8813,9 +8792,8 @@ From %c"
 
   (defun pm/google (string)
     "Ask a WWW browser to Google STRING.
-
-  Prompt for a string, defaulting to the active region or the current word at
-  or before point."
+  Prompt for a string, defaulting to the active region or the current word at or
+  before point."
     (interactive (pm/region-or-word "Google: "))
     (browse-url (concat "http://google.com/search?num=100&q=" string)))
 
@@ -9288,7 +9266,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140116.1028]--")
+(message "* --[ Loaded Emacs Leuven 20140117.1048]--")
 
 (provide 'emacs-leuven)
 
