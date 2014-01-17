@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-01-17 Fri 10:45>
+# Time-stamp: <2014-01-17 Fri 23:05>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -11147,7 +11147,9 @@ Automatically reload snippets after saving.
           (yas-reload-all)
           (message "Reloaded all snippets")))
 
-      (add-hook 'after-save-hook 'recompile-and-reload-all-snippets)))
+      (add-hook 'after-save-hook 'recompile-and-reload-all-snippets)
+
+      (global-set-key (kbd "C-c s") 'yas-insert-snippet)))
 #+end_src
 
 ** Dynamic Abbrev Expansion

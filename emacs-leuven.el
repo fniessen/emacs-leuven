@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140117.1046
+;; Version: 20140117.2308
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140117.1046]--")
+(message "* --[ Loading Emacs Leuven 20140117.2308]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -7343,7 +7343,9 @@ From %c"
           (yas-reload-all)
           (message "Reloaded all snippets")))
 
-      (add-hook 'after-save-hook 'recompile-and-reload-all-snippets)))
+      (add-hook 'after-save-hook 'recompile-and-reload-all-snippets)
+
+      (global-set-key (kbd "C-c s") 'yas-insert-snippet)))
 
 ;;** 29.7 (info "(emacs)Dabbrev Customization")
 
@@ -9266,7 +9268,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140117.1048]--")
+(message "* --[ Loaded Emacs Leuven 20140117.231]--")
 
 (provide 'emacs-leuven)
 
