@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-01-17 Fri 23:05>
+# Time-stamp: <2014-01-17 Fri 23:41>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -2043,7 +2043,7 @@ it to the *file word list* (=ispell-add-per-file-word-list=).
 
     ;; ;; default dictionary to use (if `ispell-local-dictionary' is nil, that
     ;; ;; is if there is no local dictionary to use in the buffer)
-    ;; (setq ispell-dictionary "american")
+    ;; (setq ispell-dictionary "american") ; see `sentence-end-double-space'
 
     ;; enable on-the-fly spell checking
     (add-hook 'text-mode-hook
@@ -2165,7 +2165,12 @@ of possible corrections for misspelled word before point.
        (interactive)
        (let ((dict (or ispell-local-dictionary
                        ispell-dictionary)))
-         (setq dict (if (string= dict "francais") "american" "francais"))
+         (cond ((string= dict "francais")
+                (setq dict "american")
+                (setq sentence-end-double-space t))
+               (t
+                (setq dict "francais")
+                (setq sentence-end-double-space nil)))
          (message "Switched to %S" dict)
          (sit-for 0.5)
          (ispell-change-dictionary dict)
@@ -4070,17 +4075,13 @@ For a list of buffer beginnings, see =magic-mode-alist=.
 
 ** Sentences
 
-See =sentence-end= and =(sentence-end)=.
-
-*************** TODO When changing the ispell language, change this var as well?
-
 #+begin_src emacs-lisp
 ;;** 25.2 (info "(emacs)Sentences")
 
   (leuven--section "25.2 (emacs)Sentences")
 
-  ;; a single space does end a sentence
-  (setq-default sentence-end-double-space nil)
+  ;; ;; a single space does end a sentence
+  ;; (setq-default sentence-end-double-space nil) ; see `ispell-dictionary'
 #+end_src
 
 ** Filling Text
@@ -8633,12 +8634,17 @@ function is loaded (AFTER having been adviced).
         (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
           (setq lang (match-string 1))
           (setq dict (cdr (assoc lang dict-alist)))
-          (if dict
-              (ispell-change-dictionary dict)
-            (message "Ispell dictionary for language `%s' is unknown in %s"
-                     lang (file-name-base))
-            (sit-for 1.5))
-          (force-mode-line-update)))))
+          (cond ((string= dict "american")
+                 (setq sentence-end-double-space t))
+                ((string= dict "francais")
+                 (setq sentence-end-double-space nil))
+                (t
+                 (message "Ispell dictionary for language `%s' is unknown in %s"
+                          lang (file-name-base))
+                 (sit-for 1.5)))
+          (when dict
+            (ispell-change-dictionary dict)
+            (force-mode-line-update))))))
 
   ;; guess dictionary
   (add-hook 'org-mode-hook 'leuven--org-switch-dictionary)

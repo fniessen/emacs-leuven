@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140117.2308
+;; Version: 20140117.2341
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140117.2308]--")
+(message "* --[ Loading Emacs Leuven 20140117.2341]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1296,7 +1296,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; ;; default dictionary to use (if `ispell-local-dictionary' is nil, that
     ;; ;; is if there is no local dictionary to use in the buffer)
-    ;; (setq ispell-dictionary "american")
+    ;; (setq ispell-dictionary "american") ; see `sentence-end-double-space'
 
     ;; enable on-the-fly spell checking
     (add-hook 'text-mode-hook
@@ -1371,7 +1371,12 @@ Last time is saved in global variable `leuven--before-section-time'."
        (interactive)
        (let ((dict (or ispell-local-dictionary
                        ispell-dictionary)))
-         (setq dict (if (string= dict "francais") "american" "francais"))
+         (cond ((string= dict "francais")
+                (setq dict "american")
+                (setq sentence-end-double-space t))
+               (t
+                (setq dict "francais")
+                (setq sentence-end-double-space nil)))
          (message "Switched to %S" dict)
          (sit-for 0.5)
          (ispell-change-dictionary dict)
@@ -2641,8 +2646,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "25.2 (emacs)Sentences")
 
-  ;; a single space does end a sentence
-  (setq-default sentence-end-double-space nil)
+  ;; ;; a single space does end a sentence
+  ;; (setq-default sentence-end-double-space nil) ; see `ispell-dictionary'
 
 ;;** 25.5 (info "(emacs)Filling") Text
 
@@ -5821,12 +5826,17 @@ From %c"
         (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
           (setq lang (match-string 1))
           (setq dict (cdr (assoc lang dict-alist)))
-          (if dict
-              (ispell-change-dictionary dict)
-            (message "Ispell dictionary for language `%s' is unknown in %s"
-                     lang (file-name-base))
-            (sit-for 1.5))
-          (force-mode-line-update)))))
+          (cond ((string= dict "american")
+                 (setq sentence-end-double-space t))
+                ((string= dict "francais")
+                 (setq sentence-end-double-space nil))
+                (t
+                 (message "Ispell dictionary for language `%s' is unknown in %s"
+                          lang (file-name-base))
+                 (sit-for 1.5)))
+          (when dict
+            (ispell-change-dictionary dict)
+            (force-mode-line-update))))))
 
   ;; guess dictionary
   (add-hook 'org-mode-hook 'leuven--org-switch-dictionary)
@@ -9268,7 +9278,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140117.231]--")
+(message "* --[ Loaded Emacs Leuven 20140117.2343]--")
 
 (provide 'emacs-leuven)
 

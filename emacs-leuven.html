@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-01-17 Fri 23:12 -->
+  <title>Emacs Leuven</title><!-- 2014-01-17 Fri 23:44 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1125,7 +1125,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140117.231</span>
+"color: #8D8D84; font-style: italic;">Version: 20140117.2343</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1247,7 +1247,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140117.231]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140117.2343]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -4534,7 +4534,7 @@
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">;; is if there is no local dictionary to use in the buffer)</span>
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(setq ispell-dictionary "american")</span>
+"color: #8D8D84; font-style: italic;">(setq ispell-dictionary "american") ; see `</span><span style="color: #D0372D; font-style: italic;">sentence-end-double-space</span><span style="color: #8D8D84; font-style: italic;">'</span>
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">enable on-the-fly spell checking</span>
@@ -4715,11 +4715,13 @@
        (<span style=
 "color: #0000FF;">let</span> ((dict (or ispell-local-dictionary
                        ispell-dictionary)))
-         (setq dict (<span style=
-"color: #0000FF;">if</span> (string= dict <span style=
-"color: #036A07;">"francais"</span>) <span style=
-"color: #036A07;">"american"</span> <span style=
-"color: #036A07;">"francais"</span>))
+         (<span style="color: #0000FF;">cond</span> ((string= dict <span style=
+"color: #036A07;">"francais"</span>)
+                (setq dict <span style="color: #036A07;">"american"</span>)
+                (setq sentence-end-double-space t))
+               (t
+                (setq dict <span style="color: #036A07;">"francais"</span>)
+                (setq sentence-end-double-space nil)))
          (message <span style="color: #036A07;">"Switched to %S"</span> dict)
          (sit-for 0.5)
          (ispell-change-dictionary dict)
@@ -7884,14 +7886,6 @@ M-: (executable-find "diff") RET
         <h3 id="sec-27-2">Sentences</h3>
 
         <div class="outline-text-3" id="text-27-2">
-          <p>See <code>sentence-end</code> and <code>(sentence-end)</code>.</p>
-
-          <div class="inlinetask">
-            <b><span class="todo TODO">TODO</span> When changing the ispell
-            language, change this var as well?</b><br />
-            nil
-          </div>
-
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span style="color: #8D8D84;">;;</span><span style=
@@ -7901,8 +7895,9 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"25.2 (emacs)Sentences"</span>)
 
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">a single space does end a sentence</span>
-  (setq-default sentence-end-double-space nil)
+"color: #8D8D84; font-style: italic;">;; a single space does end a sentence</span>
+  <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">(setq-default sentence-end-double-space nil) ; see `</span><span style="color: #D0372D; font-style: italic;">ispell-dictionary</span><span style="color: #8D8D84; font-style: italic;">'</span>
 </pre>
           </div>
         </div>
@@ -15601,15 +15596,21 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"</span> 1 t)
           (setq lang (match-string 1))
           (setq dict (cdr (assoc lang dict-alist)))
-          (<span style="color: #0000FF;">if</span> dict
-              (ispell-change-dictionary dict)
-            (message <span style=
+          (<span style=
+"color: #0000FF;">cond</span> ((string= dict <span style="color: #036A07;">"american"</span>)
+                 (setq sentence-end-double-space t))
+                ((string= dict <span style="color: #036A07;">"francais"</span>)
+                 (setq sentence-end-double-space nil))
+                (t
+                 (message <span style=
 "color: #036A07;">"Ispell dictionary for language `</span><span style=
 "color: #D0372D;">%s</span><span style=
 "color: #036A07;">' is unknown in %s"</span>
-                     lang (file-name-base))
-            (sit-for 1.5))
-          (force-mode-line-update)))))
+                          lang (file-name-base))
+                 (sit-for 1.5)))
+          (<span style="color: #0000FF;">when</span> dict
+            (ispell-change-dictionary dict)
+            (force-mode-line-update))))))
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">guess dictionary</span>
@@ -25016,7 +25017,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140117.2311]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140117.2343]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
