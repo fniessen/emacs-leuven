@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140121.1357
+;; Version: 20140122.1249
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140121.1357]--")
+(message "* --[ Loading Emacs Leuven 20140122.1249]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1371,12 +1371,7 @@ Last time is saved in global variable `leuven--before-section-time'."
        (interactive)
        (let ((dict (or ispell-local-dictionary
                        ispell-dictionary)))
-         (cond ((string= dict "francais")
-                (setq dict "american")
-                (setq sentence-end-double-space t))
-               (t
-                (setq dict "francais")
-                (setq sentence-end-double-space nil)))
+         (setq dict (if (string= dict "francais") "american" "francais"))
          (message "Switched to %S" dict)
          (sit-for 0.5)
          (ispell-change-dictionary dict)
@@ -1387,7 +1382,7 @@ Last time is saved in global variable `leuven--before-section-time'."
            ;; won't work anymore
            (flyspell-buffer))))
 
-     ;; key binding
+     ;; key bindings
      (global-set-key
        (kbd "C-$") 'flyspell-buffer)
      (global-set-key
@@ -3008,15 +3003,9 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; (setq org-emphasis-alist
   ;;       '(("&" (:weight ultra-bold :foreground "#000000" :background "#FBFF00"))
   ;;         ;; ("?" (:box t))
-  ;;         ("^" (:weight ultra-bold :foreground "#393D90"))
   ;;         ("!" (:weight ultra-bold :foreground "#B40000")) ; = alert in some Wikis
-  ;;         ("*" bold "<b>" "</b>")
-  ;;         ("/" italic "<i>" "</i>")
-  ;;         ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
-  ;;         ("=" org-code "<code>" "</code>" verbatim)
-  ;;         ("~" org-verbatim "<code>" "</code>" verbatim)))
 
-  ;; single character alphabetical bullets are allowed
+  ;; single character alphabetical bullets (a, b, c, ..., X, Y, Z) are allowed
   (setq org-list-allow-alphabetical t)
 
   ;; libraries that should (always) be loaded along with `org.el'
@@ -5794,6 +5783,18 @@ From %c"
     (setq org-babel-R-command
           (concat org-babel-R-command " --encoding=UTF-8")))
 
+    (defun prettier-org-code-blocks ()
+      (interactive)
+      (font-lock-add-keywords nil
+        '(("\\(\+begin_src\\)"
+           (0 (progn (compose-region (match-beginning 1) (match-end 1) ?¦)
+                     nil)))
+          ("\\(\+end_src\\)"
+           (0 (progn (compose-region (match-beginning 1) (match-end 1) ?¦)
+                     nil))))))
+
+    (add-hook 'org-mode-hook 'prettier-org-code-blocks)
+
 ;;* 15 (info "(org)Miscellaneous")
 
   ;; from Dan Davison
@@ -5826,17 +5827,13 @@ From %c"
         (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
           (setq lang (match-string 1))
           (setq dict (cdr (assoc lang dict-alist)))
-          (cond ((string= dict "american")
-                 (setq sentence-end-double-space t))
-                ((string= dict "francais")
-                 (setq sentence-end-double-space nil))
-                (t
-                 (message "No Ispell dictionary for language `%s' (see file `%s')"
-                          lang (file-name-base))
-                 (sit-for 1.5)))
-          (when dict
-            (ispell-change-dictionary dict)
-            (force-mode-line-update))))))
+          (if dict
+              (progn
+                (ispell-change-dictionary dict)
+                (force-mode-line-update))
+            (message "No Ispell dictionary for language `%s' (see file `%s')"
+                     lang (file-name-base))
+            (sit-for 1.5))))))
 
   ;; guess dictionary
   (add-hook 'org-mode-hook 'leuven--org-switch-dictionary)
@@ -9278,7 +9275,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140121.1359]--")
+(message "* --[ Loaded Emacs Leuven 20140122.125]--")
 
 (provide 'emacs-leuven)
 

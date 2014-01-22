@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-01-21 Tue 14:00 -->
+  <title>Emacs Leuven</title><!-- 2014-01-22 Wed 12:52 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -619,6 +619,9 @@
                   <li><a href="#sec-28-13-3">Library of Babel</a></li>
 
                   <li><a href="#sec-28-13-4">Languages</a></li>
+
+                  <li><a href="#sec-28-13-5">Prettier (or at least fancier)
+                  code block delimiters</a></li>
                 </ul>
               </li>
 
@@ -1125,7 +1128,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140121.1359</span>
+"color: #8D8D84; font-style: italic;">Version: 20140122.1251</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1247,7 +1250,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140121.1359]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140122.1251]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -4232,9 +4235,21 @@
 </pre>
           </div>
 
-          <p>You have to <b>quote the form you are passing to
-          <code>eval-after-load</code></b>, otherwise, the form is evaluated on
-          the spot.</p>
+          <p>When search-invisible is t, perform-replace can replace matches in
+          any invisible text, but does not display it when prompting the user
+          for confirmation.</p>
+
+          <p>When search-invisible is ‘open, perform-replace can replace
+          matches only in hidden text (invisible through an overlay), and
+          displays it when prompting the user.</p>
+
+          <p>We lack a way to reveal truly invisible text when performing a
+          search and replace. The URL of a bracket link in Org is an example of
+          such truly invisible text.</p>
+
+          <p>Juri’s solution to add ‘open-all could also be used in
+          perform-replace to let the user see truly invisible matches before
+          replacing them.</p>
         </div>
       </div>
 
@@ -4715,13 +4730,11 @@
        (<span style=
 "color: #0000FF;">let</span> ((dict (or ispell-local-dictionary
                        ispell-dictionary)))
-         (<span style="color: #0000FF;">cond</span> ((string= dict <span style=
-"color: #036A07;">"francais"</span>)
-                (setq dict <span style="color: #036A07;">"american"</span>)
-                (setq sentence-end-double-space t))
-               (t
-                (setq dict <span style="color: #036A07;">"francais"</span>)
-                (setq sentence-end-double-space nil)))
+         (setq dict (<span style=
+"color: #0000FF;">if</span> (string= dict <span style=
+"color: #036A07;">"francais"</span>) <span style=
+"color: #036A07;">"american"</span> <span style=
+"color: #036A07;">"francais"</span>))
          (message <span style="color: #036A07;">"Switched to %S"</span> dict)
          (sit-for 0.5)
          (ispell-change-dictionary dict)
@@ -4736,7 +4749,7 @@
            (flyspell-buffer))))
 
      <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">key binding</span>
+"color: #8D8D84; font-style: italic;">key bindings</span>
      (global-set-key
        (kbd <span style="color: #036A07;">"C-$"</span>) 'flyspell-buffer)
      (global-set-key
@@ -7900,6 +7913,11 @@ M-: (executable-find "diff") RET
 "color: #8D8D84; font-style: italic;">(setq-default sentence-end-double-space nil) ; see `</span><span style="color: #D0372D; font-style: italic;">ispell-dictionary</span><span style="color: #8D8D84; font-style: italic;">'</span>
 </pre>
           </div>
+
+          <p>The default value of <code>sentence-end-double-space</code> is
+          good for French as well, as we put two spaces after a
+          interrogation/question mark. That way, those two spaces won’t be
+          transformed into one…</p>
         </div>
       </div>
 
@@ -8728,22 +8746,10 @@ M-: (executable-find "diff") RET
   <span style="color: #8D8D84;">;;         </span><span style=
 "color: #8D8D84; font-style: italic;">;; ("?" (:box t))</span>
   <span style="color: #8D8D84;">;;         </span><span style=
-"color: #8D8D84; font-style: italic;">("^" (:weight ultra-bold :foreground "#393D90"))</span>
-  <span style="color: #8D8D84;">;;         </span><span style=
 "color: #8D8D84; font-style: italic;">("!" (:weight ultra-bold :foreground "#B40000")) ; = alert in some Wikis</span>
-  <span style="color: #8D8D84;">;;         </span><span style=
-"color: #8D8D84; font-style: italic;">("*" bold "&lt;b&gt;" "&lt;/b&gt;")</span>
-  <span style="color: #8D8D84;">;;         </span><span style=
-"color: #8D8D84; font-style: italic;">("/" italic "&lt;i&gt;" "&lt;/i&gt;")</span>
-  <span style="color: #8D8D84;">;;         </span><span style=
-"color: #8D8D84; font-style: italic;">("_" underline "&lt;span style=\"text-decoration:underline;\"&gt;" "&lt;/span&gt;")</span>
-  <span style="color: #8D8D84;">;;         </span><span style=
-"color: #8D8D84; font-style: italic;">("=" org-code "&lt;code&gt;" "&lt;/code&gt;" verbatim)</span>
-  <span style="color: #8D8D84;">;;         </span><span style=
-"color: #8D8D84; font-style: italic;">("~" org-verbatim "&lt;code&gt;" "&lt;/code&gt;" verbatim)))</span>
 
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">single character alphabetical bullets are allowed</span>
+"color: #8D8D84; font-style: italic;">single character alphabetical bullets (a, b, c, ..., X, Y, Z) are allowed</span>
   (setq org-list-allow-alphabetical t)
 </pre>
         </div>
@@ -15423,7 +15429,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
         <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">(concat "\n==:\n"</span>
                 <span style=
-"color: #036A07;">"#+BEGIN_SRC %lang \n%body\n#+END_SRC"</span>)
+"color: #036A07;">"#+BEGIN_SRC %lang\n%body\n#+END_SRC"</span>)
         <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">)</span>
 
@@ -15502,6 +15508,44 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
             <p>Eric Schulte believes screen has more of a focus on sustained
             interaction with an interactive terminal.</p>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-28-13-5" class="outline-4">
+          <h4 id="sec-28-13-5">Prettier (or at least fancier) code block
+          delimiters</h4>
+
+          <div class="outline-text-4" id="text-28-13-5">
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+    (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">prettier-org-code-blocks</span> ()
+      (interactive)
+      (font-lock-add-keywords nil
+        '((<span style="color: #036A07;">"</span><span style=
+"color: #036A07; font-weight: bold;">\\</span><span style=
+"color: #036A07; font-weight: bold;">(</span><span style=
+"color: #036A07;">\+begin_src</span><span style=
+"color: #036A07; font-weight: bold;">\\</span><span style=
+"color: #036A07; font-weight: bold;">)</span><span style=
+"color: #036A07;">"</span>
+           (0 (<span style=
+"color: #0000FF;">progn</span> (compose-region (match-beginning 1) (match-end 1) ?¦)
+                     nil)))
+          (<span style="color: #036A07;">"</span><span style=
+"color: #036A07; font-weight: bold;">\\</span><span style=
+"color: #036A07; font-weight: bold;">(</span><span style=
+"color: #036A07;">\+end_src</span><span style=
+"color: #036A07; font-weight: bold;">\\</span><span style=
+"color: #036A07; font-weight: bold;">)</span><span style=
+"color: #036A07;">"</span>
+           (0 (<span style=
+"color: #0000FF;">progn</span> (compose-region (match-beginning 1) (match-end 1) ?¦)
+                     nil))))))
+
+    (add-hook 'org-mode-hook 'prettier-org-code-blocks)
+</pre>
+            </div>
           </div>
         </div>
       </div>
@@ -15596,22 +15640,17 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"</span> 1 t)
           (setq lang (match-string 1))
           (setq dict (cdr (assoc lang dict-alist)))
-          (<span style=
-"color: #0000FF;">cond</span> ((string= dict <span style="color: #036A07;">"american"</span>)
-                 (setq sentence-end-double-space t))
-                ((string= dict <span style="color: #036A07;">"francais"</span>)
-                 (setq sentence-end-double-space nil))
-                (t
-                 (message <span style=
+          (<span style="color: #0000FF;">if</span> dict
+              (<span style="color: #0000FF;">progn</span>
+                (ispell-change-dictionary dict)
+                (force-mode-line-update))
+            (message <span style=
 "color: #036A07;">"No Ispell dictionary for language `</span><span style=
 "color: #D0372D;">%s</span><span style=
 "color: #036A07;">' (see file `</span><span style=
 "color: #D0372D;">%s</span><span style="color: #036A07;">')"</span>
-                          lang (file-name-base))
-                 (sit-for 1.5)))
-          (<span style="color: #0000FF;">when</span> dict
-            (ispell-change-dictionary dict)
-            (force-mode-line-update))))))
+                     lang (file-name-base))
+            (sit-for 1.5))))))
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">guess dictionary</span>
@@ -25018,7 +25057,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140121.1359]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140122.1251]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

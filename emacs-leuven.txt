@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-01-19 Sun 11:13>
+# Time-stamp: <2014-01-22 Wed 11:42>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1839,8 +1839,20 @@ Since Emacs 24.3:
        (turn-on-fuzzy-isearch))))
 #+end_src
 
-You have to *quote the form you are passing to =eval-after-load=*, otherwise, the
-form is evaluated on the spot.
+When search-invisible is t, perform-replace can replace matches
+in any invisible text, but does not display it when prompting the
+user for confirmation.
+
+When search-invisible is 'open, perform-replace can replace matches
+only in hidden text (invisible through an overlay), and displays it
+when prompting the user.
+
+We lack a way to reveal truly invisible text when performing a search
+and replace.  The URL of a bracket link in Org is an example of such
+truly invisible text.
+
+Juri's solution to add 'open-all could also be used in perform-replace
+to let the user see truly invisible matches before replacing them.
 
 ** Regexp Search
 
@@ -2165,12 +2177,7 @@ of possible corrections for misspelled word before point.
        (interactive)
        (let ((dict (or ispell-local-dictionary
                        ispell-dictionary)))
-         (cond ((string= dict "francais")
-                (setq dict "american")
-                (setq sentence-end-double-space t))
-               (t
-                (setq dict "francais")
-                (setq sentence-end-double-space nil)))
+         (setq dict (if (string= dict "francais") "american" "francais"))
          (message "Switched to %S" dict)
          (sit-for 0.5)
          (ispell-change-dictionary dict)
@@ -2181,7 +2188,7 @@ of possible corrections for misspelled word before point.
            ;; won't work anymore
            (flyspell-buffer))))
 
-     ;; key binding
+     ;; key bindings
      (global-set-key
        (kbd "C-$") 'flyspell-buffer)
      (global-set-key
@@ -4084,6 +4091,10 @@ For a list of buffer beginnings, see =magic-mode-alist=.
   ;; (setq-default sentence-end-double-space nil) ; see `ispell-dictionary'
 #+end_src
 
+The default value of =sentence-end-double-space= is good for French as well, as
+we put two spaces after a interrogation/question mark. That way, those two
+spaces won't be transformed into one...
+
 ** Filling Text
 
 There are several *non-break space* characters:
@@ -4602,15 +4613,9 @@ These variables need to be set before Org mode is loaded.
   ;; (setq org-emphasis-alist
   ;;       '(("&" (:weight ultra-bold :foreground "#000000" :background "#FBFF00"))
   ;;         ;; ("?" (:box t))
-  ;;         ("^" (:weight ultra-bold :foreground "#393D90"))
   ;;         ("!" (:weight ultra-bold :foreground "#B40000")) ; = alert in some Wikis
-  ;;         ("*" bold "<b>" "</b>")
-  ;;         ("/" italic "<i>" "</i>")
-  ;;         ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
-  ;;         ("=" org-code "<code>" "</code>" verbatim)
-  ;;         ("~" org-verbatim "<code>" "</code>" verbatim)))
 
-  ;; single character alphabetical bullets are allowed
+  ;; single character alphabetical bullets (a, b, c, ..., X, Y, Z) are allowed
   (setq org-list-allow-alphabetical t)
 #+end_src
 
@@ -8586,6 +8591,22 @@ inspired by =eev=.
 Eric Schulte believes screen has more of a focus on sustained interaction with
 an interactive terminal.
 
+*** Prettier (or at least fancier) code block delimiters
+
+#+begin_src emacs-lisp
+    (defun prettier-org-code-blocks ()
+      (interactive)
+      (font-lock-add-keywords nil
+        '(("\\(\+begin_src\\)"
+           (0 (progn (compose-region (match-beginning 1) (match-end 1) ?¦)
+                     nil)))
+          ("\\(\+end_src\\)"
+           (0 (progn (compose-region (match-beginning 1) (match-end 1) ?¦)
+                     nil))))))
+
+    (add-hook 'org-mode-hook 'prettier-org-code-blocks)
+#+end_src
+
 ** Miscellaneous
 
 #+begin_src emacs-lisp
@@ -8634,17 +8655,13 @@ function is loaded (AFTER having been adviced).
         (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
           (setq lang (match-string 1))
           (setq dict (cdr (assoc lang dict-alist)))
-          (cond ((string= dict "american")
-                 (setq sentence-end-double-space t))
-                ((string= dict "francais")
-                 (setq sentence-end-double-space nil))
-                (t
-                 (message "No Ispell dictionary for language `%s' (see file `%s')"
-                          lang (file-name-base))
-                 (sit-for 1.5)))
-          (when dict
-            (ispell-change-dictionary dict)
-            (force-mode-line-update))))))
+          (if dict
+              (progn
+                (ispell-change-dictionary dict)
+                (force-mode-line-update))
+            (message "No Ispell dictionary for language `%s' (see file `%s')"
+                     lang (file-name-base))
+            (sit-for 1.5))))))
 
   ;; guess dictionary
   (add-hook 'org-mode-hook 'leuven--org-switch-dictionary)
