@@ -22,8 +22,7 @@
 
 ;; title bar display of visible frames
 (setq frame-title-format
-      (format "Minimal Emacs %s rev:%s of %s    PID:%d"
-              ;; (capitalize (symbol-name system-type))
+      (format "Minimal Emacs %s (r%s) of %s - PID: %d"
               emacs-version
               (ignore-errors
                 (replace-regexp-in-string " .*" "" emacs-bzr-version))
