@@ -1,7 +1,7 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2014-01-15 Wed 11:43>
+#+Time-stamp: <2014-01-22 Wed 11:32>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -553,7 +553,7 @@ Messages posted via Usenet do not show up in the Emacs bug tracker. Avoid to
 forget about this programmatically!
 
 #+begin_src emacs-lisp
-;;** 3.5
+;;** 3.5 (info "(gnus)Reply Followup and Post")
 
       (defun leuven-gnus-summary-followup-with-original ()
         "Force sending messages to `gnu.emacs.bug' per email."
@@ -564,8 +564,9 @@ forget about this programmatically!
                                         ; post via news
           (call-interactively 'gnus-summary-followup-with-original)))
 
-      (define-key gnus-summary-mode-map
-        (kbd "F") 'leuven-gnus-summary-followup-with-original)
+      (with-eval-after-load "gnus-sum"
+        (define-key gnus-summary-mode-map
+          (kbd "F") 'leuven-gnus-summary-followup-with-original))
 #+end_src
 
 Source: Michael Heerdegen.

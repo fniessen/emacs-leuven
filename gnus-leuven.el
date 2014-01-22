@@ -433,7 +433,7 @@
       (define-key gnus-summary-mode-map
         (kbd "<M-down>") '(lambda () (scroll-other-window 1)))
 
-;;** 3.5
+;;** 3.5 (info "(gnus)Reply Followup and Post")
 
       (defun leuven-gnus-summary-followup-with-original ()
         "Force sending messages to `gnu.emacs.bug' per email."
@@ -444,8 +444,9 @@
                                         ; post via news
           (call-interactively 'gnus-summary-followup-with-original)))
 
-      (define-key gnus-summary-mode-map
-        (kbd "F") 'leuven-gnus-summary-followup-with-original)
+      (with-eval-after-load "gnus-sum"
+        (define-key gnus-summary-mode-map
+          (kbd "F") 'leuven-gnus-summary-followup-with-original))
 
 ;;** 3.9 (info "(gnus)Threading")
 

@@ -7,44 +7,10 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Gnus Leuven</title><!-- 2014-01-15 Wed 11:43 -->
+  <title>Gnus Leuven</title><!-- 2014-01-22 Wed 11:32 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
-  <link rel="stylesheet" type="text/css" href=
-  "http://svn/mc/missioncriticalit/org-style/trunk/bigblow/css/htmlize.css" />
-  <link rel="stylesheet" type="text/css" href="bigblow/css/htmlize.css" />
-  <link rel="stylesheet" type="text/css" href=
-  "http://svn/mc/missioncriticalit/org-style/trunk/bigblow/css/bigblow.css" />
-  <link rel="stylesheet" type="text/css" href="bigblow/css/bigblow.css" />
-  <link rel="stylesheet" type="text/css" href=
-  "http://svn/mc/missioncriticalit/org-style/trunk/bigblow/css/hideshow.css" />
-  <link rel="stylesheet" type="text/css" href="bigblow/css/hideshow.css" />
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js">
-</script>
-<script type="text/javascript" src=
-"http://code.jquery.com/ui/1.10.2/jquery-ui.js">
-</script>
-<script type="text/javascript" src=
-"http://svn/mc/missioncriticalit/org-style/trunk/bigblow/js/jquery.localscroll-min.js">
-</script>
-<script type="text/javascript" src="bigblow/js/jquery.localscroll-min.js">
-</script>
-<script type="text/javascript" src=
-"http://svn/mc/missioncriticalit/org-style/trunk/bigblow/js/jquery.scrollTo-1.4.3.1-min.js">
-</script>
-<script type="text/javascript" src="bigblow/js/jquery.scrollTo-1.4.3.1-min.js">
-</script>
-<script type="text/javascript" src=
-"http://svn/mc/missioncriticalit/org-style/trunk/bigblow/js/bigblow.js">
-</script>
-<script type="text/javascript" src="bigblow/js/bigblow.js">
-</script>
-<script type="text/javascript" src=
-"http://svn/mc/missioncriticalit/org-style/trunk/bigblow/js/hideshow.js">
-</script>
-<script type="text/javascript" src="bigblow/js/hideshow.js">
-</script>
 </head>
 
 <body>
@@ -1190,7 +1156,7 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span style="color: #8D8D84;">;;</span><span style=
-"color: #8D8D84; font-style: italic;">** 3.5</span>
+"color: #8D8D84; font-style: italic;">** 3.5 (info "(gnus)Reply Followup and Post")</span>
 
       (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-gnus-summary-followup-with-original</span> ()
@@ -1210,9 +1176,11 @@
 "color: #8D8D84; font-style: italic;">post via news</span>
           (call-interactively 'gnus-summary-followup-with-original)))
 
-      (define-key gnus-summary-mode-map
-        (kbd <span style=
-"color: #036A07;">"F"</span>) 'leuven-gnus-summary-followup-with-original)
+      (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #036A07;">"gnus-sum"</span>
+        (define-key gnus-summary-mode-map
+          (kbd <span style=
+"color: #036A07;">"F"</span>) 'leuven-gnus-summary-followup-with-original))
 </pre>
           </div>
 
