@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-01-22 Wed 11:42>
+# Time-stamp: <2014-01-24 Fri 11:21>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -27,9 +27,9 @@ this set of customizations to "short-cut" that initial process.
 
 * Header
 
-#+name: time-stamp
-#+begin_src sh :eval yes :results silent :tangle no
-echo "$(date '+%Y%m%d.%H%M')"
+#+name: current-time
+#+begin_src emacs-lisp :eval yes :results silent :tangle no
+(format-time-string "%Y%m%d.%H%M")
 #+end_src
 
 #+begin_src emacs-lisp :noweb yes
@@ -39,7 +39,7 @@ echo "$(date '+%Y%m%d.%H%M')"
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <<time-stamp()>>
+;; Version: <<current-time()>>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -111,7 +111,7 @@ echo "$(date '+%Y%m%d.%H%M')"
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven <<time-stamp()>>]--")
+(message "* --[ Loading Emacs Leuven <<current-time()>>]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -14281,7 +14281,7 @@ To get a backtrace when a specific regexp is displayed in the echo area
 #+end_src
 
 #+begin_src emacs-lisp :noweb yes
-(message "* --[ Loaded Emacs Leuven <<time-stamp()>>]--")
+(message "* --[ Loaded Emacs Leuven <<current-time()>>]--")
 
 (provide 'emacs-leuven)
 

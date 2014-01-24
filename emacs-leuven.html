@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-01-22 Wed 12:52 -->
+  <title>Emacs Leuven</title><!-- 2014-01-24 Fri 11:26 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1109,9 +1109,8 @@
 
       <div class="outline-text-2" id="text-2">
         <div class="org-src-container">
-          <pre class="src src-sh" id="time-stamp">
-<span style="color: #006FE0;">echo</span> <span style=
-"color: #036A07;">"$(date '+%Y%m%d.%H%M')"</span>
+          <pre class="src src-emacs-lisp" id="current-time">
+(format-time-string <span style="color: #036A07;">"%Y%m%d.%H%M"</span>)
 </pre>
         </div>
 
@@ -1128,7 +1127,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140122.1251</span>
+"color: #8D8D84; font-style: italic;">Version: 20140124.1125</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1250,7 +1249,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140122.1251]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140124.1125]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -25057,7 +25056,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140122.1251]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140124.1126]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
