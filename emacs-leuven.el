@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140124.1124
+;; Version: 20140124.1724
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140124.1124]--")
+(message "* --[ Loading Emacs Leuven 20140124.1724]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3128,25 +3128,39 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; initial state (TODO keyword) of inline tasks
       (setq org-inlinetask-default-state "TODO")
 
-      ;; (defun org-html-format-inlinetask (todo type priority name tags
-      ;;                                    contents)
-      ;;   "Format an inline task element for HTML export."
-      ;;   (let ((full-title
-      ;;          (concat
-      ;;           (when todo
-      ;;             (format "\\textbf{\\textsf{\\textsc{%s}}} " todo))
-      ;;           (when priority (format "\\framebox{\\#%c} " priority))
-      ;;           title
-      ;;           (when tags (format "\\hfill{}\\textsc{%s}" tags)))))
-      ;;     (format (concat "<div class=\"inlinetask\">\n"
-      ;;                     "  <b>%s</b><br/>\n"
-      ;;                     "  %s\n"
-      ;;                     "</div>")
-      ;;             full-title
-      ;;             contents)))
+      ;; template for inline tasks in HTML exporter
+      (defun leuven--org-html-format-inlinetask (todo todo-type priority title
+                                                 tags contents)
+        "Format an inline task element for HTML export."
+        (let ((full-title
+               (concat
+                (when todo
+                  (format "<span class=\"%s %s\">%s</span> " todo-type todo todo))
+                (when priority (format "[#%c] " priority))
+                title
+                (when tags (concat "&nbsp;&nbsp;&nbsp;"
+                                   "<span class=\"tag\">"
+                                   (mapconcat
+                                    (lambda (tag)
+                                      (concat "<span class= \"" tag "\">" tag
+                                              "</span>"))
+                                    tags
+                                    "&nbsp;")
+                                   "</span>")))))
+          (format (concat "<div class=\"inlinetask\">\n"
+                          "  <b>%s</b>\n"
+                          "  %s\n"
+                          "</div>")
+                  full-title
+                  (or contents ""))))
+
+      ;; function called to format an inlinetask in HTML code
+      (setq org-html-format-inlinetask-function
+            'leuven--org-html-format-inlinetask)
 
       ;; template for inline tasks in LaTeX exporter
-      (defun org-latex-format-inlinetask (todo type priority name tags contents)
+      (defun leuven--org-latex-format-inlinetask (todo todo-type priority title
+                                                  tags contents)
         "Format an inline task element for LaTeX export."
         (let* ((tags-string (format ":%s:" (mapconcat 'identity tags ":")))
                (opt-color
@@ -3189,7 +3203,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       ;; function called to format an inlinetask in LaTeX code
       (setq org-latex-format-inlinetask-function
-            'org-latex-format-inlinetask))
+            'leuven--org-latex-format-inlinetask))
 
     )                                   ; with-eval-after-load "org" ends here
 
@@ -5782,18 +5796,6 @@ From %c"
     ;; accented characters on graphics
     (setq org-babel-R-command
           (concat org-babel-R-command " --encoding=UTF-8")))
-
-    (defun prettier-org-code-blocks ()
-      (interactive)
-      (font-lock-add-keywords nil
-        '(("\\(\+begin_src\\)"
-           (0 (progn (compose-region (match-beginning 1) (match-end 1) ?¦)
-                     nil)))
-          ("\\(\+end_src\\)"
-           (0 (progn (compose-region (match-beginning 1) (match-end 1) ?¦)
-                     nil))))))
-
-    (add-hook 'org-mode-hook 'prettier-org-code-blocks)
 
 ;;* 15 (info "(org)Miscellaneous")
 
@@ -9275,7 +9277,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140124.1125]--")
+(message "* --[ Loaded Emacs Leuven 20140124.1725]--")
 
 (provide 'emacs-leuven)
 

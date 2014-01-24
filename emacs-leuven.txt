@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-01-24 Fri 11:21>
+# Time-stamp: <2014-01-24 Fri 17:19>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4811,25 +4811,39 @@ installs the key binding =C-c C-x t= to insert a new *inline task*.
       ;; initial state (TODO keyword) of inline tasks
       (setq org-inlinetask-default-state "TODO")
 
-      ;; (defun org-html-format-inlinetask (todo type priority name tags
-      ;;                                    contents)
-      ;;   "Format an inline task element for HTML export."
-      ;;   (let ((full-title
-      ;;          (concat
-      ;;           (when todo
-      ;;             (format "\\textbf{\\textsf{\\textsc{%s}}} " todo))
-      ;;           (when priority (format "\\framebox{\\#%c} " priority))
-      ;;           title
-      ;;           (when tags (format "\\hfill{}\\textsc{%s}" tags)))))
-      ;;     (format (concat "<div class=\"inlinetask\">\n"
-      ;;                     "  <b>%s</b><br/>\n"
-      ;;                     "  %s\n"
-      ;;                     "</div>")
-      ;;             full-title
-      ;;             contents)))
+      ;; template for inline tasks in HTML exporter
+      (defun leuven--org-html-format-inlinetask (todo todo-type priority title
+                                                 tags contents)
+        "Format an inline task element for HTML export."
+        (let ((full-title
+               (concat
+                (when todo
+                  (format "<span class=\"%s %s\">%s</span> " todo-type todo todo))
+                (when priority (format "[#%c] " priority))
+                title
+                (when tags (concat "&nbsp;&nbsp;&nbsp;"
+                                   "<span class=\"tag\">"
+                                   (mapconcat
+                                    (lambda (tag)
+                                      (concat "<span class= \"" tag "\">" tag
+                                              "</span>"))
+                                    tags
+                                    "&nbsp;")
+                                   "</span>")))))
+          (format (concat "<div class=\"inlinetask\">\n"
+                          "  <b>%s</b>\n"
+                          "  %s\n"
+                          "</div>")
+                  full-title
+                  (or contents ""))))
+
+      ;; function called to format an inlinetask in HTML code
+      (setq org-html-format-inlinetask-function
+            'leuven--org-html-format-inlinetask)
 
       ;; template for inline tasks in LaTeX exporter
-      (defun org-latex-format-inlinetask (todo type priority name tags contents)
+      (defun leuven--org-latex-format-inlinetask (todo todo-type priority title
+                                                  tags contents)
         "Format an inline task element for LaTeX export."
         (let* ((tags-string (format ":%s:" (mapconcat 'identity tags ":")))
                (opt-color
@@ -4872,7 +4886,7 @@ installs the key binding =C-c C-x t= to insert a new *inline task*.
 
       ;; function called to format an inlinetask in LaTeX code
       (setq org-latex-format-inlinetask-function
-            'org-latex-format-inlinetask))
+            'leuven--org-latex-format-inlinetask))
 
     )                                   ; with-eval-after-load "org" ends here
 #+end_src
@@ -8593,7 +8607,7 @@ an interactive terminal.
 
 *** Prettier (or at least fancier) code block delimiters
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     (defun prettier-org-code-blocks ()
       (interactive)
       (font-lock-add-keywords nil
