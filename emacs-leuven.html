@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-01-24 Fri 17:26 -->
+  <title>Emacs Leuven</title><!-- 2014-01-27 Mon 11:33 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1127,7 +1127,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140124.1726</span>
+"color: #8D8D84; font-style: italic;">Version: 20140127.1133</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1249,7 +1249,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140124.1726]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140127.1133]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -9099,23 +9099,22 @@ M-: (executable-find "diff") RET
 "color: #0000FF;">when</span> priority (format <span style=
 "color: #036A07;">"[#%c] "</span> priority))
                 title
-                (<span style=
-"color: #0000FF;">when</span> tags (concat <span style=
+                (<span style="color: #0000FF;">when</span> tags
+                  (concat <span style=
 "color: #036A07;">"&amp;nbsp;&amp;nbsp;&amp;nbsp;"</span>
-                                   <span style=
+                          <span style=
 "color: #036A07;">"&lt;span class=\"tag\"&gt;"</span>
-                                   (mapconcat
-                                    (<span style=
+                          (mapconcat (<span style=
 "color: #0000FF;">lambda</span> (tag)
-                                      (concat <span style=
+                                       (concat <span style=
 "color: #036A07;">"&lt;span class= \""</span> tag <span style=
 "color: #036A07;">"\"&gt;"</span> tag
-                                              <span style=
+                                               <span style=
 "color: #036A07;">"&lt;/span&gt;"</span>))
-                                    tags
-                                    <span style=
+                                     tags
+                                     <span style=
 "color: #036A07;">"&amp;nbsp;"</span>)
-                                   <span style=
+                          <span style=
 "color: #036A07;">"&lt;/span&gt;"</span>)))))
           (format (concat <span style=
 "color: #036A07;">"&lt;div class=\"inlinetask\"&gt;\n"</span>
@@ -15480,9 +15479,19 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #8D8D84; font-style: italic;">(python     . t)</span>
        (ruby       . nil)
        (screen     . nil)
-       (shell      . t)
        (sql        . t)
        (sqlite     . nil)))
+
+    (<span style="color: #0000FF;">if</span> (locate-library <span style=
+"color: #036A07;">"ob-shell"</span>)     <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">ob-sh renamed on Dec 13th, 2013</span>
+        (org-babel-do-load-languages
+         'org-babel-load-languages
+         '((shell . t)))
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((sh . t))))
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">accented characters on graphics</span>
@@ -25036,7 +25045,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140124.1726]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140127.1133]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-01-24 Fri 17:19>
+# Time-stamp: <2014-01-27 Mon 11:31>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4821,15 +4821,15 @@ installs the key binding =C-c C-x t= to insert a new *inline task*.
                   (format "<span class=\"%s %s\">%s</span> " todo-type todo todo))
                 (when priority (format "[#%c] " priority))
                 title
-                (when tags (concat "&nbsp;&nbsp;&nbsp;"
-                                   "<span class=\"tag\">"
-                                   (mapconcat
-                                    (lambda (tag)
-                                      (concat "<span class= \"" tag "\">" tag
-                                              "</span>"))
-                                    tags
-                                    "&nbsp;")
-                                   "</span>")))))
+                (when tags
+                  (concat "&nbsp;&nbsp;&nbsp;"
+                          "<span class=\"tag\">"
+                          (mapconcat (lambda (tag)
+                                       (concat "<span class= \"" tag "\">" tag
+                                               "</span>"))
+                                     tags
+                                     "&nbsp;")
+                          "</span>")))))
           (format (concat "<div class=\"inlinetask\">\n"
                           "  <b>%s</b>\n"
                           "  %s\n"
@@ -8590,9 +8590,16 @@ languages which can be evaluated in Org mode buffers.
        ;; (python     . t)
        (ruby       . nil)
        (screen     . nil)
-       (shell      . t)
        (sql        . t)
        (sqlite     . nil)))
+
+    (if (locate-library "ob-shell")     ; ob-sh renamed on Dec 13th, 2013
+        (org-babel-do-load-languages
+         'org-babel-load-languages
+         '((shell . t)))
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((sh . t))))
 
     ;; accented characters on graphics
     (setq org-babel-R-command

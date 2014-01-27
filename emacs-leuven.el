@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140124.1724
+;; Version: 20140127.1131
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140124.1724]--")
+(message "* --[ Loading Emacs Leuven 20140127.1131]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3138,15 +3138,15 @@ Last time is saved in global variable `leuven--before-section-time'."
                   (format "<span class=\"%s %s\">%s</span> " todo-type todo todo))
                 (when priority (format "[#%c] " priority))
                 title
-                (when tags (concat "&nbsp;&nbsp;&nbsp;"
-                                   "<span class=\"tag\">"
-                                   (mapconcat
-                                    (lambda (tag)
-                                      (concat "<span class= \"" tag "\">" tag
-                                              "</span>"))
-                                    tags
-                                    "&nbsp;")
-                                   "</span>")))))
+                (when tags
+                  (concat "&nbsp;&nbsp;&nbsp;"
+                          "<span class=\"tag\">"
+                          (mapconcat (lambda (tag)
+                                       (concat "<span class= \"" tag "\">" tag
+                                               "</span>"))
+                                     tags
+                                     "&nbsp;")
+                          "</span>")))))
           (format (concat "<div class=\"inlinetask\">\n"
                           "  <b>%s</b>\n"
                           "  %s\n"
@@ -5789,9 +5789,16 @@ From %c"
        ;; (python     . t)
        (ruby       . nil)
        (screen     . nil)
-       (shell      . t)
        (sql        . t)
        (sqlite     . nil)))
+
+    (if (locate-library "ob-shell")     ; ob-sh renamed on Dec 13th, 2013
+        (org-babel-do-load-languages
+         'org-babel-load-languages
+         '((shell . t)))
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((sh . t))))
 
     ;; accented characters on graphics
     (setq org-babel-R-command
@@ -9277,7 +9284,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140124.1725]--")
+(message "* --[ Loaded Emacs Leuven 20140127.1132]--")
 
 (provide 'emacs-leuven)
 
