@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-01-27 Mon 11:33 -->
+  <title>Emacs Leuven</title><!-- 2014-01-27 Mon 15:03 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1127,7 +1127,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140127.1133</span>
+"color: #8D8D84; font-style: italic;">Version: 20140127.1502</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1249,7 +1249,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140127.1133]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140127.1502]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -17587,6 +17587,22 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   (setq comment-empty-lines t)
 </pre>
           </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  (GNUEmacs
+    (<span style="color: #0000FF;">defadvice</span> <span style=
+"color: #006699;">comment-dwim</span> (around leuven-comment activate)
+      <span style=
+"color: #008000;">"When called interactively with no active region, comment a single line instead."</span>
+      (<span style=
+"color: #0000FF;">if</span> (or (use-region-p) (not (called-interactively-p)))
+          ad-do-it
+        (comment-or-uncomment-region (line-beginning-position)
+                                     (line-end-position))
+        (message <span style="color: #036A07;">"Commented line"</span>))))
+</pre>
+          </div>
         </div>
       </div>
 
@@ -25045,7 +25061,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140127.1133]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140127.1503]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

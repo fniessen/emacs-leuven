@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140127.1131
+;; Version: 20140127.1501
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140127.1131]--")
+(message "* --[ Loading Emacs Leuven 20140127.1501]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6552,6 +6552,15 @@ From %c"
   ;; always comments out empty lines
   (setq comment-empty-lines t)
 
+  (GNUEmacs
+    (defadvice comment-dwim (around leuven-comment activate)
+      "When called interactively with no active region, comment a single line instead."
+      (if (or (use-region-p) (not (called-interactively-p)))
+          ad-do-it
+        (comment-or-uncomment-region (line-beginning-position)
+                                     (line-end-position))
+        (message "Commented line"))))
+
 ;;** 26.6 (info "(emacs)Documentation") Lookup
 
   (leuven--section "26.6 (emacs)Documentation Lookup")
@@ -9284,7 +9293,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140127.1132]--")
+(message "* --[ Loaded Emacs Leuven 20140127.1502]--")
 
 (provide 'emacs-leuven)
 
