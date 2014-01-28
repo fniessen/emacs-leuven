@@ -1,4 +1,3 @@
-<!-- <xml version="1.0"> -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -7,7 +6,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-01-27 Mon 15:03 -->
+  <title>Emacs Leuven</title><!-- 2014-01-28 Tue 16:17 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1127,7 +1126,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140127.1502</span>
+"color: #8D8D84; font-style: italic;">Version: 20140128.1616</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1249,7 +1248,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140127.1502]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140128.1616]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -14822,12 +14821,12 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
             solutions to support the UTF-8 <b>non-breaking space</b>:</p>
 
             <ul class="org-ul">
-              <li>Convert it in Org mode, when exporting (via a filter),
-              or</li>
-            </ul>
+              <li>Convert it in Org mode, when exporting (via a filter), or
 
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
+                <div class="org-src-container">
+                  <pre class="src src-emacs-lisp">
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">filter for non-breaking spaces</span>
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--latex-filter-nbsp</span> (text backend info)
       <span style=
@@ -14836,19 +14835,16 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
         (replace-regexp-in-string <span style=
 "color: #036A07;">" "</span> <span style="color: #036A07;">"~"</span> text)))
 
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">check that it's defined (in org-export.el)</span>
     (add-to-list 'org-export-filter-plain-text-functions
                  'leuven--latex-filter-nbsp)
 </pre>
-            </div>
+                </div>
+              </li>
 
-            <ul class="org-ul">
-              <li>Convert it in LaTeX:</li>
-            </ul>
+              <li>Convert it in LaTeX:
 
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
+                <div class="org-src-container">
+                  <pre class="src src-emacs-lisp">
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">convert `</span><span style=
 "color: #D0372D; font-style: italic;">nbsp</span><span style=
@@ -14860,7 +14856,12 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"\\DeclareUnicodeCharacter{00A0}{~}"</span>
                          <span style="color: #036A07;">"}\\fi"</span>) t)
 </pre>
-            </div>
+                </div>
+              </li>
+            </ul>
+
+            <p>XXX The first one is better because … (see mail of Daniel
+            Flipo)</p>
 
             <p>The exporter will <b>add</b> a language option to the LaTeX
             <code>babel</code> package according to the
@@ -15448,50 +15449,44 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"org"</span>
     (message <span style="color: #036A07;">"... Org Languages"</span>)
 
-    (org-babel-do-load-languages        <span style=
-"color: #8D8D84;">; </span><span style=
-"color: #8D8D84; font-style: italic;">loads org, gnus-sum, etc...</span>
-     'org-babel-load-languages
-     '((C          . nil)
-       (R          . t)                 <span style=
-"color: #8D8D84;">; </span><span style=
-"color: #8D8D84; font-style: italic;">requires R and ess-mode</span>
-       (awk        . t)
-       <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(calc       . t)</span>
-       (ditaa      . t)                 <span style=
-"color: #8D8D84;">; </span><span style=
-"color: #8D8D84; font-style: italic;">sudo aptitude install openjdk-6-jre</span>
-       (dot        . t)
-       (emacs-lisp . t)
-       <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(gnuplot    . t)                 ; requires gnuplot-mode</span>
-       (haskell    . nil)
-       (latex      . t)
-       (ledger     . t)                 <span style=
-"color: #8D8D84;">; </span><span style=
-"color: #8D8D84; font-style: italic;">requires ledger</span>
-       (ocaml      . nil)
-       (octave     . nil)
-       (org        . t)
-       (perl       . nil)
-       <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(python     . t)</span>
-       (ruby       . nil)
-       (screen     . nil)
-       (sql        . t)
-       (sqlite     . nil)))
-
     (<span style="color: #0000FF;">if</span> (locate-library <span style=
 "color: #036A07;">"ob-shell"</span>)     <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">ob-sh renamed on Dec 13th, 2013</span>
-        (org-babel-do-load-languages
+        (org-babel-do-load-languages    <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">loads org, gnus-sum, etc...</span>
          'org-babel-load-languages
-         '((shell . t)))
+         '((R          . t)             <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">requires R and ess-mode</span>
+           (awk        . t)
+           (ditaa      . t)             <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">sudo aptitude install openjdk-6-jre</span>
+           (dot        . t)
+           (emacs-lisp . t)
+           (latex      . t)
+           (ledger     . t)             <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">requires ledger</span>
+           (org        . t)
+           (shell      . t)
+           (sql        . t)))
+      <span style="color: #8D8D84;">;; </span><span style=
+"color: #CC0000; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #8D8D84; font-style: italic;"> (in the future) message saying "Upgrade to Org 8.3"</span>
       (org-babel-do-load-languages
        'org-babel-load-languages
-       '((sh . t))))
+       '((R          . t)
+         (awk        . t)
+         (ditaa      . t)
+         (dot        . t)
+         (emacs-lisp . t)
+         (latex      . t)
+         (ledger     . t)
+         (org        . t)
+         (sh         . t)
+         (sql        . t))))
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">accented characters on graphics</span>
@@ -25061,7 +25056,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140127.1503]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140128.1617]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

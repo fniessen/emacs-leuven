@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-01-27 Mon 15:00>
+# Time-stamp: <2014-01-28 Tue 16:14>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -8202,26 +8202,28 @@ the UTF-8 *non-breaking space*:
 
 - Convert it in Org mode, when exporting (via a filter), or
 
-#+begin_src emacs-lisp :tangle no
+  #+begin_src emacs-lisp
+    ;; filter for non-breaking spaces
     (defun leuven--latex-filter-nbsp (text backend info)
       "Convert non-breaking spaces when exporting to LaTeX/Beamer."
       (when (memq backend '(latex beamer))
         (replace-regexp-in-string " " "~" text)))
 
-    ;; check that it's defined (in org-export.el)
     (add-to-list 'org-export-filter-plain-text-functions
                  'leuven--latex-filter-nbsp)
-#+end_src
+  #+end_src
 
 - Convert it in LaTeX:
 
-#+begin_src emacs-lisp :tangle no
+  #+begin_src emacs-lisp :tangle no
     ;; convert `nbsp' to its LaTeX equivalent
     (add-to-list 'org-latex-packages-alist
                  (concat "\\ifdefined\\DeclareUnicodeCharacter{"
                          "\\DeclareUnicodeCharacter{00A0}{~}"
                          "}\\fi") t)
-#+end_src
+  #+end_src
+
+XXX The first one is better because ... (see mail of Daniel Flipo)
 
 The exporter will *add* a language option to the LaTeX =babel= package according to
 the =#+LANGUAGE:= keyword (only) if:
@@ -8570,36 +8572,32 @@ languages which can be evaluated in Org mode buffers.
   (with-eval-after-load "org"
     (message "... Org Languages")
 
-    (org-babel-do-load-languages        ; loads org, gnus-sum, etc...
-     'org-babel-load-languages
-     '((C          . nil)
-       (R          . t)                 ; requires R and ess-mode
-       (awk        . t)
-       ;; (calc       . t)
-       (ditaa      . t)                 ; sudo aptitude install openjdk-6-jre
-       (dot        . t)
-       (emacs-lisp . t)
-       ;; (gnuplot    . t)                 ; requires gnuplot-mode
-       (haskell    . nil)
-       (latex      . t)
-       (ledger     . t)                 ; requires ledger
-       (ocaml      . nil)
-       (octave     . nil)
-       (org        . t)
-       (perl       . nil)
-       ;; (python     . t)
-       (ruby       . nil)
-       (screen     . nil)
-       (sql        . t)
-       (sqlite     . nil)))
-
     (if (locate-library "ob-shell")     ; ob-sh renamed on Dec 13th, 2013
-        (org-babel-do-load-languages
+        (org-babel-do-load-languages    ; loads org, gnus-sum, etc...
          'org-babel-load-languages
-         '((shell . t)))
+         '((R          . t)             ; requires R and ess-mode
+           (awk        . t)
+           (ditaa      . t)             ; sudo aptitude install openjdk-6-jre
+           (dot        . t)
+           (emacs-lisp . t)
+           (latex      . t)
+           (ledger     . t)             ; requires ledger
+           (org        . t)
+           (shell      . t)
+           (sql        . t)))
+      ;; XXX (in the future) message saying "Upgrade to Org 8.3"
       (org-babel-do-load-languages
        'org-babel-load-languages
-       '((sh . t))))
+       '((R          . t)
+         (awk        . t)
+         (ditaa      . t)
+         (dot        . t)
+         (emacs-lisp . t)
+         (latex      . t)
+         (ledger     . t)
+         (org        . t)
+         (sh         . t)
+         (sql        . t))))
 
     ;; accented characters on graphics
     (setq org-babel-R-command

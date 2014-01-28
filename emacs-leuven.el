@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140127.1501
+;; Version: 20140128.1615
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140127.1501]--")
+(message "* --[ Loading Emacs Leuven 20140128.1615]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5529,6 +5529,15 @@ From %c"
     ;; include the `xcolor' package for colored source code
     (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
 
+    ;; filter for non-breaking spaces
+    (defun leuven--latex-filter-nbsp (text backend info)
+      "Convert non-breaking spaces when exporting to LaTeX/Beamer."
+      (when (memq backend '(latex beamer))
+        (replace-regexp-in-string " " "~" text)))
+
+    (add-to-list 'org-export-filter-plain-text-functions
+                 'leuven--latex-filter-nbsp)
+
     ;; include the `babel' package for language-specific hyphenation and
     ;; typography
     (add-to-list 'org-latex-packages-alist '("french" "babel") t)
@@ -5769,36 +5778,32 @@ From %c"
   (with-eval-after-load "org"
     (message "... Org Languages")
 
-    (org-babel-do-load-languages        ; loads org, gnus-sum, etc...
-     'org-babel-load-languages
-     '((C          . nil)
-       (R          . t)                 ; requires R and ess-mode
-       (awk        . t)
-       ;; (calc       . t)
-       (ditaa      . t)                 ; sudo aptitude install openjdk-6-jre
-       (dot        . t)
-       (emacs-lisp . t)
-       ;; (gnuplot    . t)                 ; requires gnuplot-mode
-       (haskell    . nil)
-       (latex      . t)
-       (ledger     . t)                 ; requires ledger
-       (ocaml      . nil)
-       (octave     . nil)
-       (org        . t)
-       (perl       . nil)
-       ;; (python     . t)
-       (ruby       . nil)
-       (screen     . nil)
-       (sql        . t)
-       (sqlite     . nil)))
-
     (if (locate-library "ob-shell")     ; ob-sh renamed on Dec 13th, 2013
-        (org-babel-do-load-languages
+        (org-babel-do-load-languages    ; loads org, gnus-sum, etc...
          'org-babel-load-languages
-         '((shell . t)))
+         '((R          . t)             ; requires R and ess-mode
+           (awk        . t)
+           (ditaa      . t)             ; sudo aptitude install openjdk-6-jre
+           (dot        . t)
+           (emacs-lisp . t)
+           (latex      . t)
+           (ledger     . t)             ; requires ledger
+           (org        . t)
+           (shell      . t)
+           (sql        . t)))
+      ;; XXX (in the future) message saying "Upgrade to Org 8.3"
       (org-babel-do-load-languages
        'org-babel-load-languages
-       '((sh . t))))
+       '((R          . t)
+         (awk        . t)
+         (ditaa      . t)
+         (dot        . t)
+         (emacs-lisp . t)
+         (latex      . t)
+         (ledger     . t)
+         (org        . t)
+         (sh         . t)
+         (sql        . t))))
 
     ;; accented characters on graphics
     (setq org-babel-R-command
@@ -9293,7 +9298,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140127.1502]--")
+(message "* --[ Loaded Emacs Leuven 20140128.1616]--")
 
 (provide 'emacs-leuven)
 
