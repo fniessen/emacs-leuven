@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140128.1615
+;; Version: 20140128.1623
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140128.1615]--")
+(message "* --[ Loading Emacs Leuven 20140128.1623]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5786,7 +5786,7 @@ From %c"
            (ditaa      . t)             ; sudo aptitude install openjdk-6-jre
            (dot        . t)
            (emacs-lisp . t)
-           (latex      . t)
+           ;; (latex   . t)             ; shouldn't you use #+begin/end_latex blocks instead?
            (ledger     . t)             ; requires ledger
            (org        . t)
            (shell      . t)
@@ -5799,7 +5799,7 @@ From %c"
          (ditaa      . t)
          (dot        . t)
          (emacs-lisp . t)
-         (latex      . t)
+         ;; (latex   . t)
          (ledger     . t)
          (org        . t)
          (sh         . t)
@@ -9298,7 +9298,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140128.1616]--")
+(message "* --[ Loaded Emacs Leuven 20140128.1624]--")
 
 (provide 'emacs-leuven)
 

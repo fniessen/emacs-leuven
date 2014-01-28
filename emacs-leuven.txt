@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-01-28 Tue 16:14>
+# Time-stamp: <2014-01-28 Tue 16:22>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -8580,7 +8580,7 @@ languages which can be evaluated in Org mode buffers.
            (ditaa      . t)             ; sudo aptitude install openjdk-6-jre
            (dot        . t)
            (emacs-lisp . t)
-           (latex      . t)
+           ;; (latex   . t)             ; shouldn't you use #+begin/end_latex blocks instead?
            (ledger     . t)             ; requires ledger
            (org        . t)
            (shell      . t)
@@ -8593,7 +8593,7 @@ languages which can be evaluated in Org mode buffers.
          (ditaa      . t)
          (dot        . t)
          (emacs-lisp . t)
-         (latex      . t)
+         ;; (latex   . t)
          (ledger     . t)
          (org        . t)
          (sh         . t)
