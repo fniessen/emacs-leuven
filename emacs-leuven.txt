@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-01-28 Tue 16:22>
+# Time-stamp: <2014-01-31 Fri 15:04>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -7614,7 +7614,7 @@ example).
                         (file-name-directory fname))
                     default-directory))
            (org-agenda-files (directory-files dname t "\\.\\(org\\|txt\\)$"))
-           (org-agenda-sorting-strategy '(priority-down))
+           (org-agenda-sorting-strategy '(todo-state-up priority-down))
            (org-agenda-overriding-header
             (format "TODO list for directory %s" dname))
            (org-agenda-sticky nil))
@@ -8138,6 +8138,9 @@ capabilities.
     (setq org-latex-format-headline-function
           'org-latex-format-headline)
 
+    ;; default width for images
+    (setq org-latex-image-default-width ".75\\linewidth")
+
     ;; format string for links with unknown path type
     (setq org-latex-link-with-unknown-path-format "\\colorbox{red}{%s}")
 #+end_src
@@ -8299,7 +8302,7 @@ What about =apacite= and =tikz= in =org-latex-packages-alist=?
   (with-eval-after-load "ox-beamer"
 
     ;; default title of a frame containing an outline
-    (setq org-beamer-outline-frame-title "Plan"))
+    (setq org-beamer-outline-frame-title "Plan")) ; [default: "Outline"]
 #+end_src
 
 *** OpenDocument Text (ODT)
@@ -8572,6 +8575,7 @@ languages which can be evaluated in Org mode buffers.
   (with-eval-after-load "org"
     (message "... Org Languages")
 
+    ;; configure Babel to support most languages
     (if (locate-library "ob-shell")     ; ob-sh renamed on Dec 13th, 2013
         (org-babel-do-load-languages    ; loads org, gnus-sum, etc...
          'org-babel-load-languages
@@ -8827,6 +8831,9 @@ For security reasons, evaluation is not turned on by default.
 #+end_src
 
 *** Org-crypt
+
+Org-crypt provides for encrypting individual entries in an otherwise
+non-encrypted file.
 
 To later decrypt an entry that's encrypted, use =M-x org-decrypt-entry= or =C-c
 C-r= (fits nicely with the meaning of "reveal").

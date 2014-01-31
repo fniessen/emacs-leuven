@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140128.1623
+;; Version: 20140131.1505
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140128.1623]--")
+(message "* --[ Loading Emacs Leuven 20140131.1505]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5084,7 +5084,7 @@ From %c"
                         (file-name-directory fname))
                     default-directory))
            (org-agenda-files (directory-files dname t "\\.\\(org\\|txt\\)$"))
-           (org-agenda-sorting-strategy '(priority-down))
+           (org-agenda-sorting-strategy '(todo-state-up priority-down))
            (org-agenda-overriding-header
             (format "TODO list for directory %s" dname))
            (org-agenda-sticky nil))
@@ -5491,6 +5491,9 @@ From %c"
     (setq org-latex-format-headline-function
           'org-latex-format-headline)
 
+    ;; default width for images
+    (setq org-latex-image-default-width ".75\\linewidth")
+
     ;; format string for links with unknown path type
     (setq org-latex-link-with-unknown-path-format "\\colorbox{red}{%s}")
 
@@ -5593,7 +5596,7 @@ From %c"
   (with-eval-after-load "ox-beamer"
 
     ;; default title of a frame containing an outline
-    (setq org-beamer-outline-frame-title "Plan"))
+    (setq org-beamer-outline-frame-title "Plan")) ; [default: "Outline"]
 
   (with-eval-after-load "ox-odt"
 
@@ -5778,6 +5781,7 @@ From %c"
   (with-eval-after-load "org"
     (message "... Org Languages")
 
+    ;; configure Babel to support most languages
     (if (locate-library "ob-shell")     ; ob-sh renamed on Dec 13th, 2013
         (org-babel-do-load-languages    ; loads org, gnus-sum, etc...
          'org-babel-load-languages
@@ -9298,7 +9302,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140128.1624]--")
+(message "* --[ Loaded Emacs Leuven 20140131.1506]--")
 
 (provide 'emacs-leuven)
 

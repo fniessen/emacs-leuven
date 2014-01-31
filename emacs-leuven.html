@@ -1,3 +1,4 @@
+<!-- <xml version="1.0"> -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -6,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-01-28 Tue 16:26 -->
+  <title>Emacs Leuven</title><!-- 2014-01-31 Fri 15:07 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1126,7 +1127,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140128.1625</span>
+"color: #8D8D84; font-style: italic;">Version: 20140131.1506</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1248,7 +1249,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140128.1625]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140131.1506]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -13816,7 +13817,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">)</span><span style=
 "color: #036A07;">$"</span>))
-           (org-agenda-sorting-strategy '(priority-down))
+           (org-agenda-sorting-strategy '(todo-state-up priority-down))
            (org-agenda-overriding-header
             (format <span style="color: #036A07;">"</span><span style=
 "color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
@@ -14714,6 +14715,11 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
           'org-latex-format-headline)
 
     <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">default width for images</span>
+    (setq org-latex-image-default-width <span style=
+"color: #036A07;">".75\\linewidth"</span>)
+
+    <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">format string for links with unknown path type</span>
     (setq org-latex-link-with-unknown-path-format <span style=
 "color: #036A07;">"\\colorbox{red}{%s}"</span>)
@@ -14992,7 +14998,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">default title of a frame containing an outline</span>
     (setq org-beamer-outline-frame-title <span style=
-"color: #036A07;">"Plan"</span>))
+"color: #036A07;">"Plan"</span>)) <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">[default: "Outline"]</span>
 </pre>
             </div>
           </div>
@@ -15449,6 +15457,8 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"org"</span>
     (message <span style="color: #036A07;">"... Org Languages"</span>)
 
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">configure Babel to support most languages</span>
     (<span style="color: #0000FF;">if</span> (locate-library <span style=
 "color: #036A07;">"ob-shell"</span>)     <span style=
 "color: #8D8D84;">; </span><span style=
@@ -15903,6 +15913,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
           <h4 id="sec-28-14-7">Org-crypt</h4>
 
           <div class="outline-text-4" id="text-28-14-7">
+            <p>Org-crypt provides for encrypting individual entries in an
+            otherwise non-encrypted file.</p>
+
             <p>To later decrypt an entry that’s encrypted, use <code>M-x
             org-decrypt-entry</code> or <code>C-c C-r</code> (fits nicely with
             the meaning of “reveal”).</p>
@@ -25058,7 +25071,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140128.1625]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140131.1507]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
