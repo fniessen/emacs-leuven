@@ -1,7 +1,7 @@
 #+TITLE:     Minimal .emacs
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2014-01-22 Wed 12:48>
+#+Time-stamp: <2014-02-04 Tue 14:05>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -164,44 +164,44 @@ emacs --batch -Q -L ~/Public/Repositories/org-mode/lisp -l org --eval '(elp-inst
 #+results:
 | Function                                           |       Name |         Call |        Count | Elapsed | Time | Average | Time |
 | ================================================== | ========== | ============ | ============ |         |      |         |      |
-| org-mode                                           |          1 | 0.2864305999 | 0.2864305999 |         |      |         |      |
-| org-load-modules-maybe                             |          1 | 0.2110084999 | 0.2110084999 |         |      |         |      |
-| org-setup-filling                                  |          1 |      0.07449 |      0.07449 |         |      |         |      |
-| org-add-link-type                                  |          8 | 0.0004097999 | 5.122...e-05 |         |      |         |      |
-| org-make-link-regexps                              |          8 |    0.0003283 | 4.103...e-05 |         |      |         |      |
-| org-set-regexps-and-options                        |          1 | 0.0001555999 | 0.0001555999 |         |      |         |      |
-| org-macro-initialize-templates                     |          1 | 0.0001287999 | 0.0001287999 |         |      |         |      |
-| org-install-agenda-files-menu                      |          1 |    0.0001061 |    0.0001061 |         |      |         |      |
-| org-set-startup-visibility                         |          1 |     8.42e-05 |     8.42e-05 |         |      |         |      |
-| org-set-local                                      |         46 | 6.619...e-05 | 1.439...e-06 |         |      |         |      |
-| org-add-hook                                       |          5 | 3.659...e-05 | 7.319...e-06 |         |      |         |      |
-| org-set-regexps-and-options-for-tags               |          1 | 2.860...e-05 | 2.860...e-05 |         |      |         |      |
-| org-find-invisible-foreground                      |          1 | 2.739...e-05 | 2.739...e-05 |         |      |         |      |
-| org-setup-comments-handling                        |          1 | 2.739...e-05 | 2.739...e-05 |         |      |         |      |
-| org-set-font-lock-defaults                         |          1 |     2.44e-05 |     2.44e-05 |         |      |         |      |
-| org-update-radio-target-regexp                     |          1 | 2.180...e-05 | 2.180...e-05 |         |      |         |      |
-| org-overview                                       |          1 | 2.010...e-05 | 2.010...e-05 |         |      |         |      |
-| org-cycle-hide-archived-subtrees                   |          1 |      1.5e-05 |      1.5e-05 |         |      |         |      |
-| org-cycle-show-empty-lines                         |          1 |     1.45e-05 |     1.45e-05 |         |      |         |      |
-| org-babel-hide-all-hashes                          |          1 | 1.069...e-05 | 1.069...e-05 |         |      |         |      |
-| org-remove-if                                      |          1 |     1.03e-05 |     1.03e-05 |         |      |         |      |
-| org-assign-fast-keys                               |          1 | 8.600...e-06 | 8.600...e-06 |         |      |         |      |
-| org-make-options-regexp                            |          2 | 8.100...e-06 | 4.050...e-06 |         |      |         |      |
-| org-extract-log-state-settings                     |          2 | 7.700...e-06 | 3.850...e-06 |         |      |         |      |
+| org-mode                                           |          1 | 0.2248402999 | 0.2248402999 |         |      |         |      |
+| org-load-modules-maybe                             |          1 | 0.1555459999 | 0.1555459999 |         |      |         |      |
+| org-setup-filling                                  |          1 |    0.0684402 |    0.0684402 |         |      |         |      |
+| org-add-link-type                                  |          8 |    0.0140388 |   0.00175485 |         |      |         |      |
+| org-make-link-regexps                              |          8 | 0.0139622999 | 0.0017452874 |         |      |         |      |
+| org-set-regexps-and-options                        |          1 |    0.0001548 |    0.0001548 |         |      |         |      |
+| org-macro-initialize-templates                     |          1 |    0.0001159 |    0.0001159 |         |      |         |      |
+| org-install-agenda-files-menu                      |          1 | 9.969...e-05 | 9.969...e-05 |         |      |         |      |
+| org-set-startup-visibility                         |          1 | 7.830...e-05 | 7.830...e-05 |         |      |         |      |
+| org-set-local                                      |         46 | 5.359...e-05 | 1.165...e-06 |         |      |         |      |
+| org-set-regexps-and-options-for-tags               |          1 |     2.83e-05 |     2.83e-05 |         |      |         |      |
+| org-find-invisible-foreground                      |          1 | 2.610...e-05 | 2.610...e-05 |         |      |         |      |
+| org-setup-comments-handling                        |          1 | 2.570...e-05 | 2.570...e-05 |         |      |         |      |
+| org-update-radio-target-regexp                     |          1 |     2.48e-05 |     2.48e-05 |         |      |         |      |
+| org-set-font-lock-defaults                         |          1 | 2.430...e-05 | 2.430...e-05 |         |      |         |      |
+| org-add-hook                                       |          5 | 2.300...e-05 | 4.600...e-06 |         |      |         |      |
+| org-overview                                       |          1 |     1.88e-05 |     1.88e-05 |         |      |         |      |
+| org-cycle-hide-archived-subtrees                   |          1 |     1.45e-05 |     1.45e-05 |         |      |         |      |
+| org-cycle-show-empty-lines                         |          1 |      1.2e-05 |      1.2e-05 |         |      |         |      |
+| org-remove-if                                      |          1 |     1.11e-05 |     1.11e-05 |         |      |         |      |
+| org-babel-hide-all-hashes                          |          1 | 9.900...e-06 | 9.900...e-06 |         |      |         |      |
+| org-assign-fast-keys                               |          1 | 9.000...e-06 | 9.000...e-06 |         |      |         |      |
+| org-make-options-regexp                            |          2 | 7.700...e-06 | 3.850...e-06 |         |      |         |      |
 | org-compute-latex-and-related-regexp               |          1 |      6.9e-06 |      6.9e-06 |         |      |         |      |
-| org-all-targets                                    |          1 | 6.800...e-06 | 6.800...e-06 |         |      |         |      |
-| org-set-visibility-according-to-property           |          1 | 6.800...e-06 | 6.800...e-06 |         |      |         |      |
-| org-macro--collect-macros                          |          1 | 6.399...e-06 | 6.399...e-06 |         |      |         |      |
+| org-extract-log-state-settings                     |          2 | 6.800...e-06 | 3.400...e-06 |         |      |         |      |
+| org-set-visibility-according-to-property           |          1 | 6.399...e-06 | 6.399...e-06 |         |      |         |      |
 | org-cycle-hide-drawers                             |          1 | 6.000...e-06 | 6.000...e-06 |         |      |         |      |
-| org-hide-archived-subtrees                         |          1 | 5.100...e-06 | 5.100...e-06 |         |      |         |      |
-| org-uniquify                                       |          1 | 3.899...e-06 | 3.899...e-06 |         |      |         |      |
-| org-agenda-files                                   |          1 | 3.499...e-06 | 3.499...e-06 |         |      |         |      |
-| org-defvaralias                                    |          1 | 2.099...e-06 | 2.099...e-06 |         |      |         |      |
+| org-all-targets                                    |          1 | 5.599...e-06 | 5.599...e-06 |         |      |         |      |
+| org-macro--collect-macros                          |          1 | 5.599...e-06 | 5.599...e-06 |         |      |         |      |
+| org-hide-archived-subtrees                         |          1 | 4.699...e-06 | 4.699...e-06 |         |      |         |      |
+| org-uniquify                                       |          1 | 3.499...e-06 | 3.499...e-06 |         |      |         |      |
+| org-agenda-files                                   |          1 | 3.400...e-06 | 3.400...e-06 |         |      |         |      |
+| org-defvaralias                                    |          1 |      1.7e-06 |      1.7e-06 |         |      |         |      |
 | org-delete-all                                     |          1 |      1.7e-06 |      1.7e-06 |         |      |         |      |
-| org-babel-result-hide-spec                         |          1 |      1.7e-06 |      1.7e-06 |         |      |         |      |
 | org-restart-font-lock                              |          1 |      1.3e-06 |      1.3e-06 |         |      |         |      |
 | org-last                                           |          1 |      1.3e-06 |      1.3e-06 |         |      |         |      |
-| org-make-target-link-regexp                        |          1 | 7.999...e-07 | 7.999...e-07 |         |      |         |      |
+| org-make-target-link-regexp                        |          1 | 8.999...e-07 | 8.999...e-07 |         |      |         |      |
+| org-babel-result-hide-spec                         |          1 | 7.999...e-07 | 7.999...e-07 |         |      |         |      |
 
 *** Org-mode tests
 
@@ -277,12 +277,13 @@ defined? t
      Do not load the site-wide startup file.
 
 - =-Q=, =--quick= ::
-     Similar to =-q --no-site-file --no-splash=. Also, avoid processing X
-     resources.
+     Similar to =-q --no-site-file --no-splash=. Ignore any personal
+     configuration ensuring a vanilla Emacs instance is used.
 
 - =--batch= ::
-     Edit in batch mode. The editor will send messages to stderr. You must use
-     =-l= and =-f= options to specify files to execute and functions to call.
+     Run Emacs in "batch" mode with no GUI and termination after execution.
+     The editor will send messages to stderr. You must use =-l= and =-f= options to
+     specify files to execute and functions to call.
 
 ** Ideal
 

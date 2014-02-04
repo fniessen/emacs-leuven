@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Minimal .emacs</title><!-- 2014-01-22 Wed 12:48 -->
+  <title>Minimal .emacs</title><!-- 2014-02-04 Tue 14:05 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -367,10 +367,11 @@ emacs --batch -Q -L ~/Public/Repositories/org-mode/lisp -l org --eval <span styl
 "color: #036A07;">"~/Public/Repositories/emacs/org/org-mode/testing"</span>))
 (load-library <span style="color: #036A07;">"org-test"</span>)
 
-(ert-deftest test-org/end-of-line ()
-  <span style="color: #036A07;">"Test `</span><span style=
+(<span style="color: #0000FF;">ert-deftest</span> <span style=
+"color: #006699;">test</span>-org/end-of-line ()
+  <span style="color: #008000;">"Test `</span><span style=
 "color: #D0372D;">org-end-of-line</span><span style=
-"color: #036A07;">' specifications."</span>
+"color: #008000;">' specifications."</span>
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">At an headline without special movement.</span>
   (should
@@ -456,14 +457,16 @@ defined? t
 
             <dt><code>-Q</code>, <code>--quick</code></dt>
 
-            <dd>Similar to <code>-q --no-site-file --no-splash</code>. Also,
-            avoid processing X resources.</dd>
+            <dd>Similar to <code>-q --no-site-file --no-splash</code>. Ignore
+            any personal configuration ensuring a vanilla Emacs instance is
+            used.</dd>
 
             <dt><code>--batch</code></dt>
 
-            <dd>Edit in batch mode. The editor will send messages to stderr.
-            You must use <code>-l</code> and <code>-f</code> options to specify
-            files to execute and functions to call.</dd>
+            <dd>Run Emacs in “batch” mode with no GUI and termination after
+            execution. The editor will send messages to stderr. You must use
+            <code>-l</code> and <code>-f</code> options to specify files to
+            execute and functions to call.</dd>
           </dl>
         </div>
       </div>
