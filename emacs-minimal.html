@@ -7,14 +7,34 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Minimal .emacs</title><!-- 2014-02-04 Tue 14:05 -->
+  <title>Minimal .emacs</title><!-- 2014-02-04 Tue 15:37 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
   <link rel="stylesheet" type="text/css" href=
-  "file:///D:/Users/fni/src/org-style/bigblow/css/bigblow.css" />
+  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/htmlize.css" />
   <link rel="stylesheet" type="text/css" href=
-  "file:///D:/Users/fni/src/org-style/bigblow/css/htmlize.css" />
+  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/bigblow.css" />
+  <link rel="stylesheet" type="text/css" href=
+  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/hideshow.css" />
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery-1.9.1.min.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery-ui-1.10.2.min.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery.localscroll-min.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery.scrollTo-1.4.3.1-min.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/bigblow.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/hideshow.js">
+</script>
 </head>
 
 <body>
@@ -36,28 +56,46 @@
                 <a href="#sec-1-2">Variable part</a>
 
                 <ul>
-                  <li><a href="#sec-1-2-1">Eval-after-load eval’ed
-                  twice</a></li>
+                  <li><a href="#sec-1-2-1">Test if function is defined</a></li>
 
-                  <li><a href="#sec-1-2-2">ELP</a></li>
+                  <li>
+                    <a href="#sec-1-2-2">Eval-after-load eval’ed twice</a>
 
-                  <li><a href="#sec-1-2-3">ELP</a></li>
+                    <ul>
+                      <li><a href="#sec-1-2-2-1">Minimal display</a></li>
 
-                  <li><a href="#sec-1-2-4">Org-mode tests</a></li>
+                      <li><a href="#sec-1-2-2-2">Backtraces</a></li>
+                    </ul>
+                  </li>
 
-                  <li><a href="#sec-1-2-5">Org agenda</a></li>
+                  <li><a href="#sec-1-2-3">Test export to HTML</a></li>
 
-                  <li><a href="#sec-1-2-6">One specific test</a></li>
+                  <li>
+                    <a href="#sec-1-2-4">Org-test</a>
 
-                  <li><a href="#sec-1-2-7">Export test</a></li>
+                    <ul>
+                      <li><a href="#sec-1-2-4-1">Create a new test
+                      case</a></li>
 
-                  <li><a href="#sec-1-2-8">Message</a></li>
+                      <li><a href="#sec-1-2-4-2">Run an existing test</a></li>
+                    </ul>
+                  </li>
+
+                  <li><a href="#sec-1-2-5">ELP</a></li>
+
+                  <li><a href="#sec-1-2-6">Message</a></li>
                 </ul>
               </li>
             </ul>
           </li>
 
-          <li><a href="#sec-2">Test</a></li>
+          <li>
+            <a href="#sec-2">One-liners</a>
+
+            <ul>
+              <li><a href="#sec-2-1">ELP</a></li>
+            </ul>
+          </li>
 
           <li>
             <a href="#sec-3">Script</a>
@@ -205,27 +243,51 @@
         </div>
 
         <div id="outline-container-sec-1-2-1" class="outline-4">
-          <h4 id="sec-1-2-1">Eval-after-load eval’ed twice</h4>
+          <h4 id="sec-1-2-1">Test if function is defined</h4>
 
           <div class="outline-text-4" id="text-1-2-1">
-            <p>You can see the problem by running the following code:</p>
-
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
+(message <span style=
+"color: #036A07;">"defined? %S"</span> (functionp (quote org-babel-do-load-languages)))
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-1-2-2" class="outline-4">
+          <h4 id="sec-1-2-2">Eval-after-load eval’ed twice</h4>
+
+          <div class="outline-text-4" id="text-1-2-2"></div>
+
+          <div id="outline-container-sec-1-2-2-1" class="outline-5">
+            <h5 id="sec-1-2-2-1">Minimal display</h5>
+
+            <div class="outline-text-5" id="text-1-2-2-1">
+              <p>You can see the problem by running the following code:</p>
+
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
 (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #036A07;">"org"</span>
   (message <span style="color: #036A07;">"LOADED org.el"</span>)
   (sit-for 3)
   (message <span style="color: #036A07;">""</span>))
 </pre>
+              </div>
             </div>
+          </div>
 
-            <p>You can <b>get backtraces</b> at each stopping point by
-            edebugging <code>foobar</code> and <code>C-x C-f
-            foo.org</code>:</p>
+          <div id="outline-container-sec-1-2-2-2" class="outline-5">
+            <h5 id="sec-1-2-2-2">Backtraces</h5>
 
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
+            <div class="outline-text-5" id="text-1-2-2-2">
+              <p>You can <b>get backtraces</b> at each stopping point by
+              Edebugging <code>foobar</code> and <code>C-x C-f
+              foo.org</code>:</p>
+
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
 (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">foobar</span> ()
   (message <span style="color: #036A07;">"LOADED org.el"</span>)
@@ -234,20 +296,104 @@
 
 (setq org-load-hook (function foobar))
 </pre>
+              </div>
             </div>
           </div>
         </div>
 
-        <div id="outline-container-sec-1-2-2" class="outline-4">
-          <h4 id="sec-1-2-2">ELP</h4>
+        <div id="outline-container-sec-1-2-3" class="outline-4">
+          <h4 id="sec-1-2-3">Test export to HTML</h4>
 
-          <div class="outline-text-4" id="text-1-2-2">
+          <div class="outline-text-4" id="text-1-2-3">
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+(<span style=
+"color: #0000FF;">let</span> ((org-confirm-babel-evaluate nil)) <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">preference over the explicit setq</span>
+  (find-file <span style="color: #036A07;">"file-to-export.org"</span>)
+  (org-export-as-html 3))
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-1-2-4" class="outline-4">
+          <h4 id="sec-1-2-4">Org-test</h4>
+
+          <div class="outline-text-4" id="text-1-2-4">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">;; (setq org-babel-load-languages '((emacs-lisp . t) (latex . t)))</span>
+"color: #8D8D84; font-style: italic;">change the pathname appropriately!</span>
+(add-to-list 'load-path (expand-file-name <span style=
+"color: #036A07;">"~/Public/Repositories/org-mode/testing"</span>))
+(load-library <span style="color: #036A07;">"org-test"</span>)
+</pre>
+            </div>
+          </div>
+
+          <div id="outline-container-sec-1-2-4-1" class="outline-5">
+            <h5 id="sec-1-2-4-1">Create a new test case</h5>
+
+            <div class="outline-text-5" id="text-1-2-4-1">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
+(<span style="color: #0000FF;">ert-deftest</span> <span style=
+"color: #006699;">test</span>-org/end-of-line ()
+  <span style="color: #008000;">"Test `</span><span style=
+"color: #D0372D;">org-end-of-line</span><span style=
+"color: #008000;">' specifications."</span>
+  <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">At an headline without special movement.</span>
+  (should
+   (org-test-with-temp-text <span style=
+"color: #036A07;">"* Headline2 :tag:\n"</span>
+     (<span style="color: #0000FF;">let</span> ((org-special-ctrl-a/e nil))
+       (and (<span style="color: #0000FF;">progn</span>
+              (message <span style="color: #036A07;">"FOO"</span>)
+              (org-end-of-line)
+              (message (format <span style=
+"color: #036A07;">"%d"</span> (point)))
+              (eolp))
+            (<span style="color: #0000FF;">progn</span>
+              (org-end-of-line)
+              (eolp)))))))
+
+(ert 'test-org/end-of-line)
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div id="outline-container-sec-1-2-4-2" class="outline-5">
+            <h5 id="sec-1-2-4-2">Run an existing test</h5>
+
+            <div class="outline-text-5" id="text-1-2-4-2">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">;; (setq org-confirm-babel-evaluate nil)</span>
+"color: #8D8D84; font-style: italic;">change the pathname appropriately!</span>
+(add-to-list 'load-path (expand-file-name <span style=
+"color: #036A07;">"~/Public/Repositories/org-mode/testing/lisp"</span>))
+(load-library <span style="color: #036A07;">"test-org"</span>)
+(ert-run-tests-batch-and-exit 'test-org/end-of-line)
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-1-2-5" class="outline-4">
+          <h4 id="sec-1-2-5">ELP</h4>
+
+          <div class="outline-text-4" id="text-1-2-5">
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+<span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">(setq org-babel-load-languages '((emacs-lisp . t) (latex . t)))</span>
+<span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">(setq org-confirm-babel-evaluate nil)</span>
 
 (<span style="color: #0000FF;">require</span> '<span style=
 "color: #D0372D;">org</span>)
@@ -287,7 +433,8 @@
   (elp-instrument-package <span style="color: #036A07;">"cal-iso"</span>)
   (elp-instrument-package <span style="color: #036A07;">"diary-lib"</span>)
 
-  (global-set-key <span style="color: #036A07;">"\C-ce"</span> 'elp-results))
+  (global-set-key (kbd <span style=
+"color: #036A07;">"C-c e"</span>) 'elp-results))
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">improve readability of profile results, give milliseconds</span>
@@ -305,112 +452,10 @@
           </div>
         </div>
 
-        <div id="outline-container-sec-1-2-3" class="outline-4">
-          <h4 id="sec-1-2-3">ELP</h4>
-
-          <div class="outline-text-4" id="text-1-2-3">
-            <div class="org-src-container">
-              <pre class="src src-sh">
-emacs --batch -Q -L ~/Public/Repositories/org-mode/lisp -l org --eval <span style="color: #036A07;">'(elp-instrument-package "org")'</span> 400.org --eval <span style="color: #036A07;">'(elp-results)'</span>
-</pre>
-            </div>
-          </div>
-        </div>
-
-        <div id="outline-container-sec-1-2-4" class="outline-4">
-          <h4 id="sec-1-2-4">Org-mode tests</h4>
-
-          <div class="outline-text-4" id="text-1-2-4">
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">change the pathname appropriately!</span>
-(add-to-list 'load-path (expand-file-name <span style=
-"color: #036A07;">"~/Public/Repositories/org-mode/testing"</span>))
-(load-library <span style="color: #036A07;">"org-test"</span>)
-
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">change the pathname appropriately!</span>
-(add-to-list 'load-path (expand-file-name <span style=
-"color: #036A07;">"~/Public/Repositories/org-mode/testing/lisp"</span>))
-(load-library <span style="color: #036A07;">"test-org"</span>)
-(ert-run-tests-batch-and-exit 'test-org/end-of-line)
-</pre>
-            </div>
-          </div>
-        </div>
-
-        <div id="outline-container-sec-1-2-5" class="outline-4">
-          <h4 id="sec-1-2-5">Org agenda</h4>
-
-          <div class="outline-text-4" id="text-1-2-5">
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-(setq org-agenda-files
-      '(<span style="color: #036A07;">"~/org/refile.org"</span>))
-
-(org-agenda-list <span style="color: #036A07;">"a"</span>)
-</pre>
-            </div>
-          </div>
-        </div>
-
         <div id="outline-container-sec-1-2-6" class="outline-4">
-          <h4 id="sec-1-2-6">One specific test</h4>
+          <h4 id="sec-1-2-6">Message</h4>
 
           <div class="outline-text-4" id="text-1-2-6">
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">change the pathname appropriately!</span>
-(add-to-list 'load-path (expand-file-name <span style=
-"color: #036A07;">"~/Public/Repositories/emacs/org/org-mode/testing"</span>))
-(load-library <span style="color: #036A07;">"org-test"</span>)
-
-(<span style="color: #0000FF;">ert-deftest</span> <span style=
-"color: #006699;">test</span>-org/end-of-line ()
-  <span style="color: #008000;">"Test `</span><span style=
-"color: #D0372D;">org-end-of-line</span><span style=
-"color: #008000;">' specifications."</span>
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">At an headline without special movement.</span>
-  (should
-   (org-test-with-temp-text <span style=
-"color: #036A07;">"* Headline2 :tag:\n"</span>
-     (<span style="color: #0000FF;">let</span> ((org-special-ctrl-a/e nil))
-       (and (<span style="color: #0000FF;">progn</span> (message <span style=
-"color: #036A07;">"FOO"</span>) (org-end-of-line) (message (format <span style=
-"color: #036A07;">"%d"</span> (point))) (eolp))
-            (<span style=
-"color: #0000FF;">progn</span> (org-end-of-line) (eolp)))))))
-
-(ert 'test-org/end-of-line)
-</pre>
-            </div>
-          </div>
-        </div>
-
-        <div id="outline-container-sec-1-2-7" class="outline-4">
-          <h4 id="sec-1-2-7">Export test</h4>
-
-          <div class="outline-text-4" id="text-1-2-7">
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-(<span style=
-"color: #0000FF;">let</span> ((org-confirm-babel-evaluate nil)) <span style=
-"color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">preference over the explicit setq</span>
-  (find-file <span style="color: #036A07;">"file-to-export.org"</span>)
-  (org-export-as-html 3))
-</pre>
-            </div>
-          </div>
-        </div>
-
-        <div id="outline-container-sec-1-2-8" class="outline-4">
-          <h4 id="sec-1-2-8">Message</h4>
-
-          <div class="outline-text-4" id="text-1-2-8">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
 (message <span style=
@@ -424,15 +469,22 @@ emacs --batch -Q -L ~/Public/Repositories/org-mode/lisp -l org --eval <span styl
     </div>
 
     <div id="outline-container-sec-2" class="outline-2">
-      <h2 id="sec-2">Test</h2>
+      <h2 id="sec-2">One-liners</h2>
 
-      <div class="outline-text-2" id="text-2">
-        <div class="org-src-container">
-          <pre class="src src-sh">
-$ emacs --batch --eval <span style=
-"color: #036A07;">'(message "defined? %S" (functionp (quote org-babel-do-load-languages)))'</span>
-defined? t
+      <div class="outline-text-2" id="text-2"></div>
+
+      <div id="outline-container-sec-2-1" class="outline-3">
+        <h3 id="sec-2-1">ELP</h3>
+
+        <div class="outline-text-3" id="text-2-1">
+          <div class="org-src-container">
+            <pre class="src src-sh">
+emacs -Q --batch -L ~/Public/Repositories/org-mode/lisp <span style=
+"color: #036A07;">\</span>
+    --eval <span style=
+"color: #036A07;">'(elp-instrument-package "org")'</span> 400.org --eval <span style="color: #036A07;">'(elp-results)'</span>
 </pre>
+          </div>
         </div>
       </div>
     </div>
@@ -457,16 +509,24 @@ defined? t
 
             <dt><code>-Q</code>, <code>--quick</code></dt>
 
-            <dd>Similar to <code>-q --no-site-file --no-splash</code>. Ignore
-            any personal configuration ensuring a vanilla Emacs instance is
-            used.</dd>
+            <dd>
+              Similar to <code>-q --no-site-file --no-splash</code>.
+
+              <p><b>Ignore any configuration</b> ensuring a vanilla Emacs
+              instance is used.</p>
+            </dd>
 
             <dt><code>--batch</code></dt>
 
-            <dd>Run Emacs in “batch” mode with no GUI and termination after
-            execution. The editor will send messages to stderr. You must use
-            <code>-l</code> and <code>-f</code> options to specify files to
-            execute and functions to call.</dd>
+            <dd>
+              Run Emacs in “batch” mode with <b>no GUI</b> and <b>termination
+              after execution</b>.
+
+              <p>The editor will send messages to stderr.</p>
+
+              <p>You must use <code>-l</code> and <code>-f</code> options to
+              specify files to execute and functions to call.</p>
+            </dd>
           </dl>
         </div>
       </div>
@@ -517,7 +577,6 @@ defined? t
 <span style="color: #8D8D84;">#</span><span style=
 "color: #8D8D84; font-style: italic;">!/bin/</span><span style=
 "color: #0000FF;">bash</span>
-
 
 <span style="color: #8D8D84;">## </span><span style=
 "color: #8D8D84; font-style: italic;">Copyright (C) 2012 Thierry Volpiatto <a href="mailto:thierry.volpiatto%40gmail.com">&lt;thierry.volpiatto@gmail.com&gt;</a></span>

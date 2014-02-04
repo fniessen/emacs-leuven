@@ -47,3 +47,6 @@
 (global-set-key (kbd "C-c c") 'org-capture)
 
 ;;* --[ Variable part Under Test ]--------------------------------------------
+
+(message "Loading Minimal Emacs... Done (in %.2f s)"
+         (- (float-time) em/emacs-load-time-start))
