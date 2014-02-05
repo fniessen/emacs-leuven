@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140131.1505
+;; Version: 20140205.1123
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140131.1505]--")
+(message "* --[ Loading Emacs Leuven 20140205.1123]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -650,8 +650,6 @@ Last time is saved in global variable `leuven--before-section-time'."
                    ,(expand-file-name
                      (concat (file-name-directory (locate-library "org"))
                              "../doc/"))
-                   ,(expand-file-name
-                     (concat leuven-local-repos-directory "gnus/texi/"))
                    "c:/cygwin/usr/share/info/"
                    ,@Info-default-directory-list))
                 (t
@@ -2972,7 +2970,7 @@ Last time is saved in global variable `leuven--before-section-time'."
    (lambda ()
      "Execute `C-c a r d' to display the calendar and tasks for today."
      (interactive)
-     (org-agenda nil "rd")))
+     (org-agenda nil "rd")))            ; or (org-agenda-list "rd")?
 
   (global-set-key
    (kbd "<S-f7>")
@@ -3029,19 +3027,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; make sure to turn `org-info' on in order to link to info nodes
   (add-to-list 'org-modules 'org-info)
-
-  ;; Unhiding edited areas
-  ;;??? I like the idea of clustering undo but find it disconcerting
-  (setf org-self-insert-cluster-for-undo nil) ; XXX undefined
-  ;; somebody, I think Carsten, suggested this, and it might work for
-  ;; you, but for some reason I commented it out.  I don't remember what
-  ;; the reason was.  Maybe speed.
-  (defadvice undo (after leuven-org-undo-reveal activate)
-    "Make point and context visible after an undo command in Org mode."
-    (message "Using adviced undo") (sit-for 1)
-    (and (derived-mode-p 'org-mode)
-         (org-reveal)))
-  ;;(ad-unadvise 'undo)
 
   (add-hook 'org-mode-hook
             (lambda ()
@@ -4683,6 +4668,9 @@ From %c"
                  '("rd" "Daily review"
                    ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
                           ((org-agenda-overriding-header "New Tasks")))
+                    (tags "LEVEL=2"
+                          ((org-agenda-overriding-header "New Emails")
+                           (org-agenda-files '("~/org/email.org"))))
                     (agenda ""
                             ((org-agenda-entry-types '(:timestamp :sexp))
                              (org-agenda-overriding-header "Calendar")
@@ -4896,7 +4884,8 @@ From %c"
                     ;; Delegated/Waiting For Actions
                     (tags-todo "phone&TODO={WAIT}")
                     (tags-todo "mail&TODO={WAIT}")
-                    (tags-todo "errands&TODO={WAIT}"))) t)
+                    (tags-todo "errands&TODO={WAIT}"))
+                   ((org-agenda-todo-ignore-scheduled 'future))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("vp"
@@ -5867,6 +5856,7 @@ From %c"
     (setq org-structure-template-alist
           '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
             ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
+            ("E" "\\begin\{equation\}\n?\n\\end\{equation\}" "") ; addition!
             ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
             ("v" "#+begin_verse\n?\n#+end_verse" "<verse>\n?\n</verse>")
             ("c" "#+begin_center\n?\n#+end_center" "<center>\n?\n</center>")
@@ -9302,7 +9292,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140131.1506]--")
+(message "* --[ Loaded Emacs Leuven 20140205.1124]--")
 
 (provide 'emacs-leuven)
 

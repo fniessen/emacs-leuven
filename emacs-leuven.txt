@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-01-31 Fri 15:04>
+# Time-stamp: <2014-02-05 Wed 11:23>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -14,8 +14,7 @@
 #+PROPERTY:  padline yes
 #+PROPERTY:  eval no
 
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="file:///D:/Users/fni/src/org-style/bigblow/css/bigblow.css"/>
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="file:///D:/Users/fni/src/org-style/bigblow/css/htmlize.css"/>
+#+SETUPFILE: ~/src/org-style/bigblow-local-abs.setup
 
 * Description
 
@@ -967,8 +966,6 @@ In a manual, these key bindings will make your life easier:
                    ,(expand-file-name
                      (concat (file-name-directory (locate-library "org"))
                              "../doc/"))
-                   ,(expand-file-name
-                     (concat leuven-local-repos-directory "gnus/texi/"))
                    "c:/cygwin/usr/share/info/"
                    ,@Info-default-directory-list))
                 (t
@@ -4578,7 +4575,7 @@ work and tasks with Org mode.
    (lambda ()
      "Execute `C-c a r d' to display the calendar and tasks for today."
      (interactive)
-     (org-agenda nil "rd")))
+     (org-agenda nil "rd")))            ; or (org-agenda-list "rd")?
 
   (global-set-key
    (kbd "<S-f7>")
@@ -4689,21 +4686,6 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 - =org-panel=
 - =org-R=
 *************** END
-
-#+begin_src emacs-lisp
-  ;; Unhiding edited areas
-  ;;??? I like the idea of clustering undo but find it disconcerting
-  (setf org-self-insert-cluster-for-undo nil) ; XXX undefined
-  ;; somebody, I think Carsten, suggested this, and it might work for
-  ;; you, but for some reason I commented it out.  I don't remember what
-  ;; the reason was.  Maybe speed.
-  (defadvice undo (after leuven-org-undo-reveal activate)
-    "Make point and context visible after an undo command in Org mode."
-    (message "Using adviced undo") (sit-for 1)
-    (and (derived-mode-p 'org-mode)
-         (org-reveal)))
-  ;;(ad-unadvise 'undo)
-#+end_src
 
 #+begin_src emacs-lisp
   (add-hook 'org-mode-hook
@@ -7108,6 +7090,9 @@ Cleanup:
                  '("rd" "Daily review"
                    ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
                           ((org-agenda-overriding-header "New Tasks")))
+                    (tags "LEVEL=2"
+                          ((org-agenda-overriding-header "New Emails")
+                           (org-agenda-files '("~/org/email.org"))))
                     (agenda ""
                             ((org-agenda-entry-types '(:timestamp :sexp))
                              (org-agenda-overriding-header "Calendar")
@@ -7375,7 +7360,8 @@ special command to produce all specified files in one step: =C-c a e=.
                     ;; Delegated/Waiting For Actions
                     (tags-todo "phone&TODO={WAIT}")
                     (tags-todo "mail&TODO={WAIT}")
-                    (tags-todo "errands&TODO={WAIT}"))) t)
+                    (tags-todo "errands&TODO={WAIT}"))
+                   ((org-agenda-todo-ignore-scheduled 'future))) t)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8704,6 +8690,7 @@ function is loaded (AFTER having been adviced).
     (setq org-structure-template-alist
           '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
             ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
+            ("E" "\\begin\{equation\}\n?\n\\end\{equation\}" "") ; addition!
             ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
             ("v" "#+begin_verse\n?\n#+end_verse" "<verse>\n?\n</verse>")
             ("c" "#+begin_center\n?\n#+end_center" "<center>\n?\n</center>")
@@ -11376,6 +11363,8 @@ There are other ways to select candidates:
 
 (leuven--chapter leuven-chapter-30-dired "30 Dired, the Directory Editor"
 #+end_src
+
+Type =0 w= to put the full path to some file into the kill ring.
 
 ** Entering Dired
 

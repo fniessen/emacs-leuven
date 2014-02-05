@@ -7,14 +7,10 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-01-31 Fri 15:07 -->
+  <title>Emacs Leuven</title><!-- 2014-02-05 Wed 11:26 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
-  <link rel="stylesheet" type="text/css" href=
-  "file:///D:/Users/fni/src/org-style/bigblow/css/bigblow.css" />
-  <link rel="stylesheet" type="text/css" href=
-  "file:///D:/Users/fni/src/org-style/bigblow/css/htmlize.css" />
 </head>
 
 <body>
@@ -1127,7 +1123,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140131.1506</span>
+"color: #8D8D84; font-style: italic;">Version: 20140205.1125</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1249,7 +1245,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140131.1506]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140205.1125]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -2722,9 +2718,6 @@
                      (concat (file-name-directory (locate-library <span style=
 "color: #036A07;">"org"</span>))
                              <span style="color: #036A07;">"../doc/"</span>))
-                   ,(expand-file-name
-                     (concat leuven-local-repos-directory <span style=
-"color: #036A07;">"gnus/texi/"</span>))
                    <span style=
 "color: #036A07;">"c:/cygwin/usr/share/info/"</span>
                    ,@Info-default-directory-list))
@@ -8676,7 +8669,10 @@ M-: (executable-find "diff") RET
      <span style=
 "color: #008000;">"Execute `C-c a r d' to display the calendar and tasks for today."</span>
      (interactive)
-     (org-agenda nil <span style="color: #036A07;">"rd"</span>)))
+     (org-agenda nil <span style=
+"color: #036A07;">"rd"</span>)))            <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">or (org-agenda-list "rd")?</span>
 
   (global-set-key
    (kbd <span style="color: #036A07;">"&lt;S-f7&gt;"</span>)
@@ -8869,34 +8865,6 @@ M-: (executable-find "diff") RET
 
             <li><code>org-R</code></li>
           </ul>
-        </div>
-
-        <div class="org-src-container">
-          <pre class="src src-emacs-lisp">
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Unhiding edited areas</span>
-  <span style="color: #8D8D84;">;;</span><span style=
-"color: #8D8D84; font-style: italic;">??? I like the idea of clustering undo but find it disconcerting</span>
-  (setf org-self-insert-cluster-for-undo nil) <span style=
-"color: #8D8D84;">; </span><span style=
-"color: #CC0000; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #8D8D84; font-style: italic;"> undefined</span>
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">somebody, I think Carsten, suggested this, and it might work for</span>
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">you, but for some reason I commented it out.  I don't remember what</span>
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">the reason was.  Maybe speed.</span>
-  (<span style="color: #0000FF;">defadvice</span> <span style=
-"color: #006699;">undo</span> (after leuven-org-undo-reveal activate)
-    <span style=
-"color: #008000;">"Make point and context visible after an undo command in Org mode."</span>
-    (message <span style=
-"color: #036A07;">"Using adviced undo"</span>) (sit-for 1)
-    (and (derived-mode-p 'org-mode)
-         (org-reveal)))
-  <span style="color: #8D8D84;">;;</span><span style=
-"color: #8D8D84; font-style: italic;">(ad-unadvise 'undo)</span>
-</pre>
         </div>
 
         <div class="org-src-container">
@@ -12964,6 +12932,11 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">={NEW}"</span>
                           ((org-agenda-overriding-header <span style=
 "color: #036A07;">"New Tasks"</span>)))
+                    (tags <span style="color: #036A07;">"LEVEL=2"</span>
+                          ((org-agenda-overriding-header <span style=
+"color: #036A07;">"New Emails"</span>)
+                           (org-agenda-files '(<span style=
+"color: #036A07;">"~/org/email.org"</span>))))
                     (agenda <span style="color: #036A07;">""</span>
                             ((org-agenda-entry-types '(<span style=
 "color: #006FE0;">:timestamp</span> <span style=
@@ -13413,7 +13386,8 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                     (tags-todo <span style=
 "color: #036A07;">"errands&amp;</span><span style=
 "color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">={WAIT}"</span>))) t)
+"color: #036A07;">={WAIT}"</span>))
+                   ((org-agenda-todo-ignore-scheduled 'future))) t)
 </pre>
               </div>
 
@@ -14831,18 +14805,18 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
                 <div class="org-src-container">
                   <pre class="src src-emacs-lisp">
-    <span style="color: #8D8D84;">;; </span><span style=
+  <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">filter for non-breaking spaces</span>
-    (<span style="color: #0000FF;">defun</span> <span style=
+  (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--latex-filter-nbsp</span> (text backend info)
-      <span style=
+    <span style=
 "color: #008000;">"Convert non-breaking spaces when exporting to LaTeX/Beamer."</span>
-      (<span style="color: #0000FF;">when</span> (memq backend '(latex beamer))
-        (replace-regexp-in-string <span style=
+    (<span style="color: #0000FF;">when</span> (memq backend '(latex beamer))
+      (replace-regexp-in-string <span style=
 "color: #036A07;">" "</span> <span style="color: #036A07;">"~"</span> text)))
 
-    (add-to-list 'org-export-filter-plain-text-functions
-                 'leuven--latex-filter-nbsp)
+  (add-to-list 'org-export-filter-plain-text-functions
+               'leuven--latex-filter-nbsp)
 </pre>
                 </div>
               </li>
@@ -14851,16 +14825,16 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
                 <div class="org-src-container">
                   <pre class="src src-emacs-lisp">
-    <span style="color: #8D8D84;">;; </span><span style=
+  <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">convert `</span><span style=
 "color: #D0372D; font-style: italic;">nbsp</span><span style=
 "color: #8D8D84; font-style: italic;">' to its LaTeX equivalent</span>
-    (add-to-list 'org-latex-packages-alist
-                 (concat <span style=
+  (add-to-list 'org-latex-packages-alist
+               (concat <span style=
 "color: #036A07;">"\\ifdefined\\DeclareUnicodeCharacter{"</span>
-                         <span style=
+                       <span style=
 "color: #036A07;">"\\DeclareUnicodeCharacter{00A0}{~}"</span>
-                         <span style="color: #036A07;">"}\\fi"</span>) t)
+                       <span style="color: #036A07;">"}\\fi"</span>) t)
 </pre>
                 </div>
               </li>
@@ -15690,6 +15664,8 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
             (<span style="color: #036A07;">"e"</span> <span style=
 "color: #036A07;">"#+begin_example\n?\n#+end_example"</span> <span style=
 "color: #036A07;">"&lt;example&gt;\n?\n&lt;/example&gt;"</span>)
+            (<span style="color: #036A07;">"E"</span> <span style=
+"color: #036A07;">"\\begin\{equation\}\n?\n\\end\{equation\}"</span> <span style="color: #036A07;">""</span>) <span style="color: #8D8D84;">; </span><span style="color: #8D8D84; font-style: italic;">addition!</span>
             (<span style="color: #036A07;">"q"</span> <span style=
 "color: #036A07;">"#+begin_quote\n?\n#+end_quote"</span> <span style=
 "color: #036A07;">"&lt;quote&gt;\n?\n&lt;/quote&gt;"</span>)
@@ -19037,7 +19013,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
               <div class="org-src-container">
                 <pre class="src src-sh">
-     etags --langdef=shell --regex-shell=<span style=
+etags --langdef=shell --regex-shell=<span style=
 "color: #036A07;">'/function [_[:alnum:]]+/[_[:alnum:]]+/'</span> --language-force=shell
 </pre>
               </div>
@@ -20129,6 +20105,9 @@ TAGS:
 "color: #036A07;">"30 Dired, the Directory Editor"</span>
 </pre>
         </div>
+
+        <p>Type <code>0 w</code> to put the full path to some file into the
+        kill ring.</p>
       </div>
 
       <div id="outline-container-sec-35-1" class="outline-3">
@@ -25071,7 +25050,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140131.1507]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140205.1125]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
