@@ -1,7 +1,7 @@
 #+TITLE:     Minimal .emacs
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2014-02-04 Tue 15:37>
+#+Time-stamp: <2014-02-05 Wed 11:28>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -85,6 +85,12 @@ Here is a minimal Emacs config file.
 
 #+begin_src emacs-lisp :tangle .emacs-minimal.el
 ;;* --[ Variable part Under Test ]--------------------------------------------
+#+end_src
+
+*** Sandbox
+
+#+begin_src emacs-lisp :tangle .emacs-minimal.el
+;; Place your test code here
 #+end_src
 
 *** Test if function is defined

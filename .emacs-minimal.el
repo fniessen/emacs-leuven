@@ -48,5 +48,7 @@
 
 ;;* --[ Variable part Under Test ]--------------------------------------------
 
+;; Place your test code here
+
 (message "Loading Minimal Emacs... Done (in %.2f s)"
          (- (float-time) em/emacs-load-time-start))
