@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140205.1123
+;; Version: 20140205.1520
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140205.1123]--")
+(message "* --[ Loading Emacs Leuven 20140205.1520]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -446,7 +446,8 @@ Last time is saved in global variable `leuven--before-section-time'."
                   (package-install pkg))
                                         ; must be run after initializing
                                         ; `package-initialize'
-              (message "Customize `leuven-packages' to ignore this package at next startup...")
+              (message (concat "Customize `leuven-packages' to ignore "
+                               "the `%s' package at next startup...") pkg)
               (sit-for 1.5)))))
 
       ;; don't truncate package names in Emacs package list
@@ -2649,7 +2650,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; line-wrapping beyond that column (when pressing `M-q')
   (setq-default fill-column 79)
 
-  ;; unfill paragraph
+  ;; (un-)fill paragraph
   (defun leuven-fill-paragraph (&optional arg)
     "`M-q' runs the command `fill-paragraph'.
   `C-u M-q' runs \"unfill-paragraph\": it takes a multi-line paragraph and
@@ -5161,6 +5162,9 @@ From %c"
     ;; 11.1 hide the emphasis marker characters
     (setq org-hide-emphasis-markers t)  ; impact on table alignment!
 
+    ;; hide the brackets marking macro calls
+    (setq org-hide-macro-markers t)
+
     (defun leuven-org-insert-image-or-take-screenshot (name)
       "Insert a link to an already existing image, or else to a screenshot.
     The screenshot is either taken to the given non-existing file name,
@@ -5215,10 +5219,7 @@ From %c"
   (setq org-export-with-LaTeX-fragments t) ; XXX undefined?
 
   ;; highlight LaTeX and related syntax
-  (setq org-highlight-latex-and-related
-        '(latex
-          script
-          entities))
+  (setq org-highlight-latex-and-related '(latex script entities))
 
 ;;* 12 (info "(org)Exporting")
 
@@ -9292,7 +9293,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140205.1124]--")
+(message "* --[ Loaded Emacs Leuven 20140205.1521]--")
 
 (provide 'emacs-leuven)
 

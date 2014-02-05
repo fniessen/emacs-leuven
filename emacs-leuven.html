@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-05 Wed 11:26 -->
+  <title>Emacs Leuven</title><!-- 2014-02-05 Wed 15:22 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1123,7 +1123,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140205.1125</span>
+"color: #8D8D84; font-style: italic;">Version: 20140205.1521</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1245,7 +1245,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140205.1125]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140205.1521]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -2084,10 +2084,14 @@
 "color: #8D8D84; font-style: italic;">`</span><span style=
 "color: #D0372D; font-style: italic;">package-initialize</span><span style=
 "color: #8D8D84; font-style: italic;">'</span>
-              (message <span style=
+              (message (concat <span style=
 "color: #036A07;">"Customize `</span><span style=
 "color: #D0372D;">leuven-packages</span><span style=
-"color: #036A07;">' to ignore this package at next startup..."</span>)
+"color: #036A07;">' to ignore "</span>
+                               <span style=
+"color: #036A07;">"the `</span><span style=
+"color: #D0372D;">%s</span><span style=
+"color: #036A07;">' package at next startup..."</span>) pkg)
               (sit-for 1.5)))))
 
       <span style="color: #8D8D84;">;; </span><span style=
@@ -7938,7 +7942,7 @@ M-: (executable-find "diff") RET
   (setq-default fill-column 79)
 
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">unfill paragraph</span>
+"color: #8D8D84; font-style: italic;">(un-)fill paragraph</span>
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-fill-paragraph</span> (<span style=
 "color: #6434A3;">&amp;optional</span> arg)
@@ -14014,6 +14018,10 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (setq org-hide-emphasis-markers t)  <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">impact on table alignment!</span>
+
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">hide the brackets marking macro calls</span>
+    (setq org-hide-macro-markers t)
 </pre>
           </div>
         </div>
@@ -14131,10 +14139,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
               <pre class="src src-emacs-lisp">
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">highlight LaTeX and related syntax</span>
-  (setq org-highlight-latex-and-related
-        '(latex
-          script
-          entities))
+  (setq org-highlight-latex-and-related '(latex script entities))
 </pre>
             </div>
           </div>
@@ -25050,7 +25055,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140205.1125]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140205.1522]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

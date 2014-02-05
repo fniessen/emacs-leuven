@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-05 Wed 11:23>
+# Time-stamp: <2014-02-05 Wed 14:50>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -591,7 +591,8 @@ are generated programmatically from upstream Git-based sources.
                   (package-install pkg))
                                         ; must be run after initializing
                                         ; `package-initialize'
-              (message "Customize `leuven-packages' to ignore this package at next startup...")
+              (message (concat "Customize `leuven-packages' to ignore "
+                               "the `%s' package at next startup...") pkg)
               (sit-for 1.5)))))
 
       ;; don't truncate package names in Emacs package list
@@ -4112,7 +4113,7 @@ Another solution to avoid breaking at certain places is to add
   ;; line-wrapping beyond that column (when pressing `M-q')
   (setq-default fill-column 79)
 
-  ;; unfill paragraph
+  ;; (un-)fill paragraph
   (defun leuven-fill-paragraph (&optional arg)
     "`M-q' runs the command `fill-paragraph'.
   `C-u M-q' runs \"unfill-paragraph\": it takes a multi-line paragraph and
@@ -7725,6 +7726,9 @@ Source: Sacha Chua.
 
     ;; 11.1 hide the emphasis marker characters
     (setq org-hide-emphasis-markers t)  ; impact on table alignment!
+
+    ;; hide the brackets marking macro calls
+    (setq org-hide-macro-markers t)
 #+end_src
 
 *** Images and Tables
@@ -7799,10 +7803,7 @@ To list all available entities, run =M-x org-entities-help=.
 
 #+begin_src emacs-lisp
   ;; highlight LaTeX and related syntax
-  (setq org-highlight-latex-and-related
-        '(latex
-          script
-          entities))
+  (setq org-highlight-latex-and-related '(latex script entities))
 #+end_src
 
 ** Exporting
