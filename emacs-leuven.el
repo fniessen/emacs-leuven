@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140205.1520
+;; Version: 20140206.1115
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140205.1520]--")
+(message "* --[ Loading Emacs Leuven 20140206.1115]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1647,10 +1647,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 ;;** 18.10 (info "(emacs)Diff Mode")
 
   (leuven--section "18.10 (emacs)Diff Mode")
-
-  ;; extensions to `diff-mode' (*Diff* buffer is highlighted differently)
-  (try-require 'diff-mode-)
-  ;; this library should be loaded *before* library `diff-mode'
 
   ;; mode for viewing/editing context diffs
   (with-eval-after-load "diff-mode"
@@ -5162,9 +5158,6 @@ From %c"
     ;; 11.1 hide the emphasis marker characters
     (setq org-hide-emphasis-markers t)  ; impact on table alignment!
 
-    ;; hide the brackets marking macro calls
-    (setq org-hide-macro-markers t)
-
     (defun leuven-org-insert-image-or-take-screenshot (name)
       "Insert a link to an already existing image, or else to a screenshot.
     The screenshot is either taken to the given non-existing file name,
@@ -5191,7 +5184,21 @@ From %c"
               (message "Taking screenshot...done"))
           (error "Cannot create image file")))
       (insert (concat "[[" name "]]"))
-      (org-display-inline-images)))
+      (org-display-inline-images))
+
+    ;; hide the brackets marking macro calls
+    (setq org-hide-macro-markers t)
+
+    (defun org-macro-insert ()
+      (interactive)
+      (let* ((macros (org-macro--collect-macros))
+             (macro (completing-read "Insert macro: " (mapcar 'car macros)))
+             (args (string-match "$[[:digit:]]" (cdr (assoc macro macros))))
+             pos)
+        (insert (format  "{{{%s" macro))
+        (when args (insert "(") (setq pos (point)) (insert ")"))
+        (insert "}}}")
+        (when pos (goto-char pos)))))
 
   ;; 11.7.1 define user entities to produce special characters
   (with-eval-after-load "org-entities"
@@ -9293,7 +9300,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140205.1521]--")
+(message "* --[ Loaded Emacs Leuven 20140206.1116]--")
 
 (provide 'emacs-leuven)
 

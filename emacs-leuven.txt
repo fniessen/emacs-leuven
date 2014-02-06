@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-05 Wed 14:50>
+# Time-stamp: <2014-02-06 Thu 11:15>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -2562,10 +2562,6 @@ In Diff mode, I can *select a hunk and apply it (in reverse)*.  Nice following
 ;;** 18.10 (info "(emacs)Diff Mode")
 
   (leuven--section "18.10 (emacs)Diff Mode")
-
-  ;; extensions to `diff-mode' (*Diff* buffer is highlighted differently)
-  (try-require 'diff-mode-)
-  ;; this library should be loaded *before* library `diff-mode'
 
   ;; mode for viewing/editing context diffs
   (with-eval-after-load "diff-mode"
@@ -7726,9 +7722,6 @@ Source: Sacha Chua.
 
     ;; 11.1 hide the emphasis marker characters
     (setq org-hide-emphasis-markers t)  ; impact on table alignment!
-
-    ;; hide the brackets marking macro calls
-    (setq org-hide-macro-markers t)
 #+end_src
 
 *** Images and Tables
@@ -7762,7 +7755,25 @@ Automatic screenshot insertion.
               (message "Taking screenshot...done"))
           (error "Cannot create image file")))
       (insert (concat "[[" name "]]"))
-      (org-display-inline-images)))
+      (org-display-inline-images))
+#+end_src
+
+*** Macro replacement
+
+#+begin_src emacs-lisp
+    ;; hide the brackets marking macro calls
+    (setq org-hide-macro-markers t)
+
+    (defun org-macro-insert ()
+      (interactive)
+      (let* ((macros (org-macro--collect-macros))
+             (macro (completing-read "Insert macro: " (mapcar 'car macros)))
+             (args (string-match "$[[:digit:]]" (cdr (assoc macro macros))))
+             pos)
+        (insert (format  "{{{%s" macro))
+        (when args (insert "(") (setq pos (point)) (insert ")"))
+        (insert "}}}")
+        (when pos (goto-char pos)))))
 #+end_src
 
 *** Embedded LaTeX

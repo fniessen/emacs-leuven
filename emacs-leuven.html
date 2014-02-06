@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-05 Wed 15:22 -->
+  <title>Emacs Leuven</title><!-- 2014-02-06 Thu 11:18 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -573,7 +573,9 @@
                 <ul>
                   <li><a href="#sec-28-10-1">Images and Tables</a></li>
 
-                  <li><a href="#sec-28-10-2">Embedded LaTeX</a></li>
+                  <li><a href="#sec-28-10-2">Macro replacement</a></li>
+
+                  <li><a href="#sec-28-10-3">Embedded LaTeX</a></li>
                 </ul>
               </li>
 
@@ -1123,7 +1125,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140205.1521</span>
+"color: #8D8D84; font-style: italic;">Version: 20140206.1117</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1245,7 +1247,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140205.1521]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140206.1117]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -5369,14 +5371,6 @@
 
   (leuven--section <span style=
 "color: #036A07;">"18.10 (emacs)Diff Mode"</span>)
-
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">extensions to `</span><span style=
-"color: #D0372D; font-style: italic;">diff-mode</span><span style=
-"color: #8D8D84; font-style: italic;">' (*Diff* buffer is highlighted differently)</span>
-  (try-require 'diff-mode-)
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">this library should be loaded *before* library `</span><span style="color: #D0372D; font-style: italic;">diff-mode</span><span style="color: #8D8D84; font-style: italic;">'</span>
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">mode for viewing/editing context diffs</span>
@@ -14018,10 +14012,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (setq org-hide-emphasis-markers t)  <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">impact on table alignment!</span>
-
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">hide the brackets marking macro calls</span>
-    (setq org-hide-macro-markers t)
 </pre>
           </div>
         </div>
@@ -14072,16 +14062,47 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #CC0000; background-color: #FFFF88; font-weight: bold;">error</span> <span style="color: #036A07;">"Cannot create image file"</span>)))
       (insert (concat <span style=
 "color: #036A07;">"[["</span> name <span style="color: #036A07;">"]]"</span>))
-      (org-display-inline-images)))
+      (org-display-inline-images))
 </pre>
             </div>
           </div>
         </div>
 
         <div id="outline-container-sec-28-10-2" class="outline-4">
-          <h4 id="sec-28-10-2">Embedded LaTeX</h4>
+          <h4 id="sec-28-10-2">Macro replacement</h4>
 
           <div class="outline-text-4" id="text-28-10-2">
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">hide the brackets marking macro calls</span>
+    (setq org-hide-macro-markers t)
+
+    (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">org-macro-insert</span> ()
+      (interactive)
+      (<span style=
+"color: #0000FF;">let*</span> ((macros (org-macro--collect-macros))
+             (macro (completing-read <span style=
+"color: #036A07;">"Insert macro: "</span> (mapcar 'car macros)))
+             (args (string-match <span style=
+"color: #036A07;">"$[[:digit:]]"</span> (cdr (assoc macro macros))))
+             pos)
+        (insert (format  <span style="color: #036A07;">"{{{%s"</span> macro))
+        (<span style="color: #0000FF;">when</span> args (insert <span style=
+"color: #036A07;">"("</span>) (setq pos (point)) (insert <span style=
+"color: #036A07;">")"</span>))
+        (insert <span style="color: #036A07;">"}}}"</span>)
+        (<span style="color: #0000FF;">when</span> pos (goto-char pos)))))
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-28-10-3" class="outline-4">
+          <h4 id="sec-28-10-3">Embedded LaTeX</h4>
+
+          <div class="outline-text-4" id="text-28-10-3">
             <p>To get one entity in the middle of a word, use <code>{}</code>,
             i.e. some <code>w\entity{}rd</code> (new exporter only).</p>
 
@@ -25055,7 +25076,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140205.1522]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140206.1117]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
