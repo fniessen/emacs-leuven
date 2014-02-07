@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-07 Fri 14:17 -->
+  <title>Emacs Leuven</title><!-- 2014-02-07 Fri 17:20 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1125,7 +1125,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140207.1416</span>
+"color: #8D8D84; font-style: italic;">Version: 20140207.1719</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1247,7 +1247,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140207.1416]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140207.1719]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -2686,57 +2686,50 @@
   (global-set-key
     (kbd <span style=
 "color: #036A07;">"&lt;C-f1&gt;"</span>) 'info-lookup-symbol)
+</pre>
+          </div>
 
+          <p>When Info is called, the variable <code>Info-directory-list</code>
+          is populated from:</p>
+
+          <ol class="org-ol">
+            <li>the <code>INFOPATH</code> environment variable, or (if
+            unset)</li>
+
+            <li>the <code>Info-default-directory-list</code> variable –
+            non-existent directories will be removed when copied to
+            <code>Info-directory-list</code></li>
+          </ol>
+
+          <p>The best would be to set the <code>INFOPATH</code> environment
+          variable so that you see the same manuals outside of Emacs, in the
+          same shell from which you invoke Emacs.</p>
+
+          <p>However, as EmacsW32 doesn’t see that Cygwin environment variable
+          (it would well work with a Windows environment variable), I prefer to
+          try and put the Windows configuration inside the Emacs configuration
+          files.</p>
+
+          <p>Normally, <code>Info-directory-list</code> is not intended to be
+          settable by the user. But we must do so if we want to force our Info
+          manuals before the standard ones (from Emacs).</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #036A07;">"info"</span>
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Don't play with `</span><span style=
-"color: #D0372D; font-style: italic;">Info-directory-list</span><span style=
-"color: #8D8D84; font-style: italic;">', it's not intended to be</span>
+"color: #8D8D84; font-style: italic;">list of directories to search for Info documentation files (in the order</span>
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">settable by the user.  When `</span><span style="color: #D0372D; font-style: italic;">info</span><span style="color: #8D8D84; font-style: italic;">' is called, this variable is</span>
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">populated from:</span>
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">1. the `</span><span style=
-"color: #D0372D; font-style: italic;">INFOPATH</span><span style=
-"color: #8D8D84; font-style: italic;">' environment variable and/or</span>
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">2. the `</span><span style=
-"color: #D0372D; font-style: italic;">Info-default-directory-list</span><span style="color: #8D8D84; font-style: italic;">' variable -- non-existent</span>
-    <span style="color: #8D8D84;">;;    </span><span style=
-"color: #8D8D84; font-style: italic;">directories will be removed when copied to `</span><span style="color: #D0372D; font-style: italic;">Info-directory-list</span><span style="color: #8D8D84; font-style: italic;">'</span>
-
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">list of additional directories to search for Info documentation</span>
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">files (in the order they are listed)</span>
-    (setq Info-default-directory-list
-          <span style="color: #8D8D84;">;; </span><span style=
-"color: #CC0000; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #8D8D84; font-style: italic;"> `</span><span style="color: #D0372D; font-style: italic;">Info-additional-directory-list</span><span style="color: #8D8D84; font-style: italic;">' does not work</span>
-          (<span style="color: #0000FF;">cond</span> (running-ms-windows
-                 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">EmacsW32 doesn't see `</span><span style=
-"color: #D0372D; font-style: italic;">INFOPATH</span><span style=
-"color: #8D8D84; font-style: italic;">'...</span>
-                 `(
-                   ,(expand-file-name
-                     (concat (file-name-directory (locate-library <span style=
+"color: #8D8D84; font-style: italic;">they are listed)</span>
+    (<span style="color: #0000FF;">when</span> running-ms-windows
+      (setq Info-directory-list
+            `(,(expand-file-name
+                (concat (file-name-directory (locate-library <span style=
 "color: #036A07;">"org"</span>))
-                             <span style="color: #036A07;">"../doc/"</span>))
-                   <span style=
-"color: #036A07;">"c:/cygwin/usr/share/info/"</span>
-                   ,@Info-default-directory-list))
-                (t
-                 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">best to set the `</span><span style=
-"color: #D0372D; font-style: italic;">INFOPATH</span><span style=
-"color: #8D8D84; font-style: italic;">' environment variable</span>
-                 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(outside of Emacs, in the same shell from which you</span>
-                 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">invoke Emacs)</span>
-                 nil)))
+                        <span style="color: #036A07;">"../doc/"</span>))
+              <span style="color: #036A07;">"c:/cygwin/usr/share/info/"</span>
+              ,@Info-directory-list))))
 </pre>
           </div>
 
@@ -25093,7 +25086,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140207.1417]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140207.1719]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

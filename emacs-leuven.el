@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140207.1414
+;; Version: 20140207.1717
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140207.1414]--")
+(message "* --[ Loading Emacs Leuven 20140207.1717]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -634,30 +634,15 @@ Last time is saved in global variable `leuven--before-section-time'."
     (kbd "<C-f1>") 'info-lookup-symbol)
 
   (with-eval-after-load "info"
-    ;; Don't play with `Info-directory-list', it's not intended to be
-    ;; settable by the user.  When `info' is called, this variable is
-    ;; populated from:
-    ;; 1. the `INFOPATH' environment variable and/or
-    ;; 2. the `Info-default-directory-list' variable -- non-existent
-    ;;    directories will be removed when copied to `Info-directory-list'
-
-    ;; list of additional directories to search for Info documentation
-    ;; files (in the order they are listed)
-    (setq Info-default-directory-list
-          ;; FIXME `Info-additional-directory-list' does not work
-          (cond (running-ms-windows
-                 ;; EmacsW32 doesn't see `INFOPATH'...
-                 `(
-                   ,(expand-file-name
-                     (concat (file-name-directory (locate-library "org"))
-                             "../doc/"))
-                   "c:/cygwin/usr/share/info/"
-                   ,@Info-default-directory-list))
-                (t
-                 ;; best to set the `INFOPATH' environment variable
-                 ;; (outside of Emacs, in the same shell from which you
-                 ;; invoke Emacs)
-                 nil)))
+    ;; list of directories to search for Info documentation files (in the order
+    ;; they are listed)
+    (when running-ms-windows
+      (setq Info-directory-list
+            `(,(expand-file-name
+                (concat (file-name-directory (locate-library "org"))
+                        "../doc/"))
+              "c:/cygwin/usr/share/info/"
+              ,@Info-directory-list)))
 
     (GNUEmacs
       (when (try-require 'info+)
@@ -9304,7 +9289,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140207.1416]--")
+(message "* --[ Loaded Emacs Leuven 20140207.1718]--")
 
 (provide 'emacs-leuven)
 

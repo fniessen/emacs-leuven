@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-07 Fri 14:12>
+# Time-stamp: <2014-02-07 Fri 17:23>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -948,32 +948,37 @@ In a manual, these key bindings will make your life easier:
   ;; have documentation in Info)
   (global-set-key
     (kbd "<C-f1>") 'info-lookup-symbol)
+#+end_src
 
+When Info is called, the variable =Info-directory-list= is populated from:
+
+1. the =INFOPATH= environment variable, or (if unset)
+
+2. the =Info-default-directory-list= variable -- non-existent directories will be
+   removed when copied to =Info-directory-list=
+
+The best would be to set the =INFOPATH= environment variable so that you see the
+same manuals outside of Emacs, in the same shell from which you invoke Emacs.
+
+However, as EmacsW32 doesn't see that Cygwin environment variable (it would
+well work with a Windows environment variable), I prefer to try and put the
+Windows configuration inside the Emacs configuration files.
+
+Normally, =Info-directory-list= is not intended to be settable by the user. But
+we must do so if we want to force our Info manuals before the standard ones
+(from Emacs).
+
+#+begin_src emacs-lisp
   (with-eval-after-load "info"
-    ;; Don't play with `Info-directory-list', it's not intended to be
-    ;; settable by the user.  When `info' is called, this variable is
-    ;; populated from:
-    ;; 1. the `INFOPATH' environment variable and/or
-    ;; 2. the `Info-default-directory-list' variable -- non-existent
-    ;;    directories will be removed when copied to `Info-directory-list'
-
-    ;; list of additional directories to search for Info documentation
-    ;; files (in the order they are listed)
-    (setq Info-default-directory-list
-          ;; FIXME `Info-additional-directory-list' does not work
-          (cond (running-ms-windows
-                 ;; EmacsW32 doesn't see `INFOPATH'...
-                 `(
-                   ,(expand-file-name
-                     (concat (file-name-directory (locate-library "org"))
-                             "../doc/"))
-                   "c:/cygwin/usr/share/info/"
-                   ,@Info-default-directory-list))
-                (t
-                 ;; best to set the `INFOPATH' environment variable
-                 ;; (outside of Emacs, in the same shell from which you
-                 ;; invoke Emacs)
-                 nil)))
+    ;; list of directories to search for Info documentation files (in the order
+    ;; they are listed)
+    (when running-ms-windows
+      (setq Info-directory-list
+            `(,(expand-file-name
+                (concat (file-name-directory (locate-library "org"))
+                        "../doc/"))
+              "c:/cygwin/usr/share/info/"
+              ,@Info-directory-list)))
 #+end_src
 
 ~Info+~ fontifies entries for reference items (functions, macros, commands,
