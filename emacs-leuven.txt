@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-07 Fri 10:33>
+# Time-stamp: <2014-02-07 Fri 14:12>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1894,11 +1894,11 @@ Example:
 #+begin_example
 ELISP> (save-excursion (set-buffer "BUFFER")
                        (re-search-forward "REGEXP" nil t)
-                       (leuven--buffer-matched-strings))
+                       (leuven-buffer-matched-strings))
 #+end_example
 
 #+begin_src emacs-lisp
-  (defun leuven--buffer-matched-strings ()
+  (defun leuven-buffer-matched-strings ()
     (interactive)
     (mapcar 'leuven--buffer-matched-string-nth '(0 1 2 3 4 5 6 7 8 9)))
 
@@ -1938,7 +1938,7 @@ match for REGEXP.
 
   (leuven--section "15.10 (emacs)Other Repeating Search Commands")
 
-  (defun leuven--isearch-occur ()
+  (defun leuven-isearch-occur ()
     "Invoke `occur' from within `isearch'."
     (interactive)
     (let ((case-fold-search isearch-case-fold-search))
@@ -1949,7 +1949,7 @@ match for REGEXP.
 
   ;; activate `occur' easily while at the `I-search:' prompt
   (define-key isearch-mode-map
-    (kbd "C-o") 'leuven--isearch-occur)
+    (kbd "C-o") 'leuven-isearch-occur)
 #+end_src
 
 Occur Edit mode applies edits made in =*Occur*= buffers to the original buffers.
@@ -2567,7 +2567,7 @@ In Diff mode, I can *select a hunk and apply it (in reverse)*.  Nice following
   (with-eval-after-load "diff-mode"
 
     ;; highlight the changes with better granularity
-    (defun leuven--diff-make-fine-diffs ()
+    (defun leuven-diff-make-fine-diffs ()
       "Enable Diff Auto Refine mode."
       (interactive)
       (let (diff-auto-refine-mode)
@@ -2589,7 +2589,7 @@ In Diff mode, I can *select a hunk and apply it (in reverse)*.  Nice following
       "Auto-refine only the regions of 14,000 bytes or less."
       ;; check for auto-refine limit
       (unless (> (buffer-size) 14000)
-        (leuven--diff-make-fine-diffs)))
+        (leuven-diff-make-fine-diffs)))
 
     (add-hook 'diff-mode-hook
               'leuven--diff-make-fine-diffs-if-necessary))
@@ -4311,7 +4311,6 @@ You can use =org-cycle= in other modes, with =outline-minor-mode=.
     (setq org-fontify-whole-heading-line t)
 
     (defun leuven--outline-minor-mode-hook ()
-      (interactive)
       (setq outline-regexp (leuven--outline-regexp))
       (let* ((org-fontify-whole-headline-regexp "") ; "\n?")
              (heading-1-regexp
@@ -5464,7 +5463,7 @@ that all tags starting with =@= or =#= will be excluded from inheritance with:
 
 #+begin_src emacs-lisp
   ;; remove redundant tags of headlines (from David Maus)
-  (defun leuven--org-remove-redundant-tags ()
+  (defun leuven-org-remove-redundant-tags ()
     "Remove redundant tags of headlines in current buffer.
   A tag is considered redundant if it is local to a headline and inherited by
   a parent headline."
@@ -8433,7 +8432,7 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
   (setq org-src-window-setup 'current-window)
 
   ;; FIXME Bind this to the correct keys
-  (defun leuven--org-babel-expand-src-block ()
+  (defun leuven-org-babel-expand-src-block ()
     (interactive)
     (let ((org-src-window-setup 'reorganize-frame))
       (org-babel-expand-src-block)))
@@ -9071,7 +9070,7 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
           (org-table-iterate-buffer-tables)
           ;; )
           (when (file-exists-p (buffer-file-name (current-buffer)))
-            (leuven--org-remove-redundant-tags))
+            (leuven-org-remove-redundant-tags))
           (when flyspell-mode-before-save (flyspell-mode 1)))))
 
     ;; make sure that all dynamic blocks and all tables are always

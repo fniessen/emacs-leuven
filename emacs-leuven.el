@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140207.1034
+;; Version: 20140207.1414
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140207.1034]--")
+(message "* --[ Loading Emacs Leuven 20140207.1414]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1192,7 +1192,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "15.4 (emacs)Regexp Search")
 
-  (defun leuven--buffer-matched-strings ()
+  (defun leuven-buffer-matched-strings ()
     (interactive)
     (mapcar 'leuven--buffer-matched-string-nth '(0 1 2 3 4 5 6 7 8 9)))
 
@@ -1216,7 +1216,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "15.10 (emacs)Other Repeating Search Commands")
 
-  (defun leuven--isearch-occur ()
+  (defun leuven-isearch-occur ()
     "Invoke `occur' from within `isearch'."
     (interactive)
     (let ((case-fold-search isearch-case-fold-search))
@@ -1227,7 +1227,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; activate `occur' easily while at the `I-search:' prompt
   (define-key isearch-mode-map
-    (kbd "C-o") 'leuven--isearch-occur)
+    (kbd "C-o") 'leuven-isearch-occur)
 
   (when (locate-library "color-moccur")
 
@@ -1652,7 +1652,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (with-eval-after-load "diff-mode"
 
     ;; highlight the changes with better granularity
-    (defun leuven--diff-make-fine-diffs ()
+    (defun leuven-diff-make-fine-diffs ()
       "Enable Diff Auto Refine mode."
       (interactive)
       (let (diff-auto-refine-mode)
@@ -1674,7 +1674,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       "Auto-refine only the regions of 14,000 bytes or less."
       ;; check for auto-refine limit
       (unless (> (buffer-size) 14000)
-        (leuven--diff-make-fine-diffs)))
+        (leuven-diff-make-fine-diffs)))
 
     (add-hook 'diff-mode-hook
               'leuven--diff-make-fine-diffs-if-necessary))
@@ -2803,7 +2803,6 @@ Last time is saved in global variable `leuven--before-section-time'."
     (setq org-fontify-whole-heading-line t)
 
     (defun leuven--outline-minor-mode-hook ()
-      (interactive)
       (setq outline-regexp (leuven--outline-regexp))
       (let* ((org-fontify-whole-headline-regexp "") ; "\n?")
              (heading-1-regexp
@@ -3587,7 +3586,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (setq org-fast-tag-selection-single-key t)
 
   ;; remove redundant tags of headlines (from David Maus)
-  (defun leuven--org-remove-redundant-tags ()
+  (defun leuven-org-remove-redundant-tags ()
     "Remove redundant tags of headlines in current buffer.
   A tag is considered redundant if it is local to a headline and inherited by
   a parent headline."
@@ -5672,7 +5671,7 @@ From %c"
   (setq org-src-window-setup 'current-window)
 
   ;; FIXME Bind this to the correct keys
-  (defun leuven--org-babel-expand-src-block ()
+  (defun leuven-org-babel-expand-src-block ()
     (interactive)
     (let ((org-src-window-setup 'reorganize-frame))
       (org-babel-expand-src-block)))
@@ -6110,7 +6109,7 @@ From %c"
           (org-table-iterate-buffer-tables)
           ;; )
           (when (file-exists-p (buffer-file-name (current-buffer)))
-            (leuven--org-remove-redundant-tags))
+            (leuven-org-remove-redundant-tags))
           (when flyspell-mode-before-save (flyspell-mode 1)))))
 
     ;; make sure that all dynamic blocks and all tables are always
@@ -9305,7 +9304,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140207.1035]--")
+(message "* --[ Loaded Emacs Leuven 20140207.1416]--")
 
 (provide 'emacs-leuven)
 

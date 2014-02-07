@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-07 Fri 10:36 -->
+  <title>Emacs Leuven</title><!-- 2014-02-07 Fri 14:17 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1125,7 +1125,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140207.1036</span>
+"color: #8D8D84; font-style: italic;">Version: 20140207.1416</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1247,7 +1247,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140207.1036]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140207.1416]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -4351,7 +4351,7 @@
 "color: #036A07;">"15.10 (emacs)Other Repeating Search Commands"</span>)
 
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--isearch-occur</span> ()
+"color: #006699;">leuven-isearch-occur</span> ()
     <span style="color: #008000;">"Invoke `</span><span style=
 "color: #D0372D;">occur</span><span style=
 "color: #008000;">' from within `</span><span style=
@@ -4369,7 +4369,7 @@
 "color: #D0372D; font-style: italic;">occur</span><span style=
 "color: #8D8D84; font-style: italic;">' easily while at the `</span><span style="color: #D0372D; font-style: italic;">I-search:</span><span style="color: #8D8D84; font-style: italic;">' prompt</span>
   (define-key isearch-mode-map
-    (kbd <span style="color: #036A07;">"C-o"</span>) 'leuven--isearch-occur)
+    (kbd <span style="color: #036A07;">"C-o"</span>) 'leuven-isearch-occur)
 </pre>
           </div>
 
@@ -5380,7 +5380,7 @@
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">highlight the changes with better granularity</span>
     (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--diff-make-fine-diffs</span> ()
+"color: #006699;">leuven-diff-make-fine-diffs</span> ()
       <span style="color: #008000;">"Enable Diff Auto Refine mode."</span>
       (interactive)
       (<span style="color: #0000FF;">let</span> (diff-auto-refine-mode)
@@ -5409,7 +5409,7 @@
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">check for auto-refine limit</span>
       (<span style="color: #0000FF;">unless</span> (&gt; (buffer-size) 14000)
-        (leuven--diff-make-fine-diffs)))
+        (leuven-diff-make-fine-diffs)))
 
     (add-hook 'diff-mode-hook
               'leuven--diff-make-fine-diffs-if-necessary))
@@ -8252,7 +8252,6 @@ M-: (executable-find "diff") RET
 
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--outline-minor-mode-hook</span> ()
-      (interactive)
       (setq outline-regexp (leuven--outline-regexp))
       (<span style=
 "color: #0000FF;">let*</span> ((org-fontify-whole-headline-regexp <span style=
@@ -10234,7 +10233,7 @@ M-: (executable-find "diff") RET
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">remove redundant tags of headlines (from David Maus)</span>
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--org-remove-redundant-tags</span> ()
+"color: #006699;">leuven-org-remove-redundant-tags</span> ()
     <span style=
 "color: #008000;">"Remove redundant tags of headlines in current buffer.</span>
 <span style=
@@ -15228,7 +15227,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #CC0000; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #8D8D84; font-style: italic;"> Bind this to the correct keys</span>
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--org-babel-expand-src-block</span> ()
+"color: #006699;">leuven-org-babel-expand-src-block</span> ()
     (interactive)
     (<span style=
 "color: #0000FF;">let</span> ((org-src-window-setup 'reorganize-frame))
@@ -16321,7 +16320,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #8D8D84; font-style: italic;">)</span>
           (<span style=
 "color: #0000FF;">when</span> (file-exists-p (buffer-file-name (current-buffer)))
-            (leuven--org-remove-redundant-tags))
+            (leuven-org-remove-redundant-tags))
           (<span style=
 "color: #0000FF;">when</span> flyspell-mode-before-save (flyspell-mode 1)))))
 
@@ -25094,7 +25093,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140207.1036]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140207.1417]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
