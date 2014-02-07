@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-06 Thu 11:15>
+# Time-stamp: <2014-02-07 Fri 10:33>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -2581,7 +2581,7 @@ In Diff mode, I can *select a hunk and apply it (in reverse)*.  Nice following
         (run-at-time 0.0 nil
                      (lambda ()
                        (if (eq major-mode 'diff-mode)
-                           ;; put back the cursor only if still in a diff buffer
+                           ;; put back the cursor only if still in a Diff buffer
                            ;; after the delay
                            (goto-char (point-min)))))))
 
@@ -4098,8 +4098,22 @@ There are several *non-break space* characters:
 
 - *No-break space* (00A0), required for French punctuation (before =:=).
 
-Another solution to avoid breaking at certain places is to add
-=fill-french-nobreak-p= to =fill-nobreak-predicate=.
+  It can be inserted with =S-SPC=:
+
+  #+begin_src emacs-lisp
+  (defun leuven-nbsp-command ()
+    "Insert the no-break space character 00A0."
+    (interactive)
+    (insert-char ?\u00A0))
+
+  (global-set-key
+    (kbd "S-SPC") 'leuven-nbsp-command)
+  #+end_src
+
+They could be used to avoid breaking at certain bad places.
+
+Another solution to avoid that is to add =fill-french-nobreak-p= to
+=fill-nobreak-predicate=.
 
 #+begin_src emacs-lisp
 ;;** 25.5 (info "(emacs)Filling") Text
@@ -4139,7 +4153,7 @@ Another solution to avoid breaking at certain places is to add
 #+end_src
 
 #+begin_src emacs-lisp
-  (defun leuven-convert-nbsp ()
+  (defun leuven-replace-nbsp-by-spc ()
     "Replace all nbsp by normal spaces."
     (interactive "*")
     (save-excursion
@@ -4149,10 +4163,6 @@ Another solution to avoid breaking at certain places is to add
             (goto-char (point-min))
             (while (re-search-forward "[  ]" nil t)
               (replace-match " " nil nil)))))))
-
-  ;; "There are 4 pages": nbsp must NOT be deleted there!
-  ;; ;; make sure that all nbsp characters are replaced by spaces
-  ;; (add-hook 'before-save-hook 'leuven-convert-nbsp) ; TEMP
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4563,9 +4573,10 @@ work and tasks with Org mode.
   (global-set-key
     (kbd "C-c O") 'org-open-at-point-global)
 
-  ;; display the Org mode manual in Info mode
-  (define-key global-map
-    (kbd "C-h o") 'org-info)
+  (with-eval-after-load "org"
+    ;; display the Org mode manual in Info mode
+    (define-key global-map
+      (kbd "C-h o") 'org-info))         ; not autoloaded
 
   (global-set-key
    (kbd "<f7>")
@@ -14329,7 +14340,6 @@ To get a backtrace when a specific regexp is displayed in the echo area
 ;; coding: utf-8
 ;; ispell-local-dictionary: "american"
 ;; eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))
-;; eval: (remove-hook 'before-save-hook 'leuven-convert-nbsp)
 ;; End:
 
 ;;; emacs-leuven.el ends here
@@ -14394,7 +14404,6 @@ tests.
 # This is for the sake of Emacs.
 # Local Variables:
 # coding-system-for-write: utf-8-unix
-# eval: (remove-hook 'before-save-hook 'leuven-convert-nbsp)
 # End:
 
 # emacs-leuven.txt ends here

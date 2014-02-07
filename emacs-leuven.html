@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-06 Thu 11:18 -->
+  <title>Emacs Leuven</title><!-- 2014-02-07 Fri 10:36 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1125,7 +1125,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140206.1117</span>
+"color: #8D8D84; font-style: italic;">Version: 20140207.1036</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1247,7 +1247,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140206.1117]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140207.1036]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -5397,7 +5397,7 @@
                        (<span style=
 "color: #0000FF;">if</span> (eq major-mode 'diff-mode)
                            <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">put back the cursor only if still in a diff buffer</span>
+"color: #8D8D84; font-style: italic;">put back the cursor only if still in a Diff buffer</span>
                            <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">after the delay</span>
                            (goto-char (point-min)))))))
@@ -7915,11 +7915,31 @@ M-: (executable-find "diff") RET
             No-Break Space”, required for French punctuation (before
             <code>?</code>, <code>!</code> or <code>;</code>).</li>
 
-            <li><b>No-break space</b> (00A0), required for French punctuation
-            (before <code>:</code>).</li>
+            <li>
+              <b>No-break space</b> (00A0), required for French punctuation
+              (before <code>:</code>).
+
+              <p>It can be inserted with <code>S-SPC</code>:</p>
+
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
+(<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven-nbsp-command</span> ()
+  <span style=
+"color: #008000;">"Insert the no-break space character 00A0."</span>
+  (interactive)
+  (insert-char ?\u00A0))
+
+(global-set-key
+  (kbd <span style="color: #036A07;">"S-SPC"</span>) 'leuven-nbsp-command)
+</pre>
+              </div>
+            </li>
           </ul>
 
-          <p>Another solution to avoid breaking at certain places is to add
+          <p>They could be used to avoid breaking at certain bad places.</p>
+
+          <p>Another solution to avoid that is to add
           <code>fill-french-nobreak-p</code> to
           <code>fill-nobreak-predicate</code>.</p>
 
@@ -7980,7 +8000,7 @@ M-: (executable-find "diff") RET
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-convert-nbsp</span> ()
+"color: #006699;">leuven-replace-nbsp-by-spc</span> ()
     <span style="color: #008000;">"Replace all nbsp by normal spaces."</span>
     (interactive <span style="color: #036A07;">"*"</span>)
     (<span style="color: #0000FF;">save-excursion</span>
@@ -7993,13 +8013,6 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"[  ]"</span> nil t)
               (replace-match <span style=
 "color: #036A07;">" "</span> nil nil)))))))
-
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">"There are 4 pages": nbsp must NOT be deleted there!</span>
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">;; make sure that all nbsp characters are replaced by spaces</span>
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(add-hook 'before-save-hook 'leuven-convert-nbsp) ; TEMP</span>
 </pre>
           </div>
 
@@ -8656,10 +8669,15 @@ M-: (executable-find "diff") RET
     (kbd <span style=
 "color: #036A07;">"C-c O"</span>) 'org-open-at-point-global)
 
-  <span style="color: #8D8D84;">;; </span><span style=
+  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #036A07;">"org"</span>
+    <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">display the Org mode manual in Info mode</span>
-  (define-key global-map
-    (kbd <span style="color: #036A07;">"C-h o"</span>) 'org-info)
+    (define-key global-map
+      (kbd <span style=
+"color: #036A07;">"C-h o"</span>) 'org-info))         <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">not autoloaded</span>
 
   (global-set-key
    (kbd <span style="color: #036A07;">"&lt;f7&gt;"</span>)
@@ -25076,7 +25094,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140206.1117]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140207.1036]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
@@ -25092,8 +25110,6 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
 "color: #8D8D84; font-style: italic;">ispell-local-dictionary: "american"</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))</span>
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">eval: (remove-hook 'before-save-hook 'leuven-convert-nbsp)</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">End:</span>
 

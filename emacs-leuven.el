@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140206.1115
+;; Version: 20140207.1034
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140206.1115]--")
+(message "* --[ Loading Emacs Leuven 20140207.1034]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1666,7 +1666,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         (run-at-time 0.0 nil
                      (lambda ()
                        (if (eq major-mode 'diff-mode)
-                           ;; put back the cursor only if still in a diff buffer
+                           ;; put back the cursor only if still in a Diff buffer
                            ;; after the delay
                            (goto-char (point-min)))))))
 
@@ -2639,6 +2639,14 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; ;; a single space does end a sentence
   ;; (setq-default sentence-end-double-space nil) ; see `ispell-dictionary'
 
+  (defun leuven-nbsp-command ()
+    "Insert the no-break space character 00A0."
+    (interactive)
+    (insert-char ?\u00A0))
+
+  (global-set-key
+    (kbd "S-SPC") 'leuven-nbsp-command)
+
 ;;** 25.5 (info "(emacs)Filling") Text
 
   (leuven--section "25.5 (emacs)Filling Text")
@@ -2674,7 +2682,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                      (not (eq (get-text-property (point) 'face)
                               'font-lock-comment-face))))))
 
-  (defun leuven-convert-nbsp ()
+  (defun leuven-replace-nbsp-by-spc ()
     "Replace all nbsp by normal spaces."
     (interactive "*")
     (save-excursion
@@ -2684,10 +2692,6 @@ Last time is saved in global variable `leuven--before-section-time'."
             (goto-char (point-min))
             (while (re-search-forward "[  ]" nil t)
               (replace-match " " nil nil)))))))
-
-  ;; "There are 4 pages": nbsp must NOT be deleted there!
-  ;; ;; make sure that all nbsp characters are replaced by spaces
-  ;; (add-hook 'before-save-hook 'leuven-convert-nbsp) ; TEMP
 
   (defun leuven-good-old-fill-paragraph ()
     (interactive)
@@ -2958,9 +2962,10 @@ Last time is saved in global variable `leuven--before-section-time'."
   (global-set-key
     (kbd "C-c O") 'org-open-at-point-global)
 
-  ;; display the Org mode manual in Info mode
-  (define-key global-map
-    (kbd "C-h o") 'org-info)
+  (with-eval-after-load "org"
+    ;; display the Org mode manual in Info mode
+    (define-key global-map
+      (kbd "C-h o") 'org-info))         ; not autoloaded
 
   (global-set-key
    (kbd "<f7>")
@@ -9300,7 +9305,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140206.1116]--")
+(message "* --[ Loaded Emacs Leuven 20140207.1035]--")
 
 (provide 'emacs-leuven)
 
@@ -9310,7 +9315,6 @@ From %c"
 ;; coding: utf-8
 ;; ispell-local-dictionary: "american"
 ;; eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))
-;; eval: (remove-hook 'before-save-hook 'leuven-convert-nbsp)
 ;; End:
 
 ;;; emacs-leuven.el ends here
