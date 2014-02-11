@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140207.1717
+;; Version: 20140211.1534
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140207.1717]--")
+(message "* --[ Loading Emacs Leuven 20140211.1534]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1638,15 +1638,15 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; highlight the changes with better granularity
     (defun leuven-diff-make-fine-diffs ()
-      "Enable Diff Auto Refine mode."
+      "Enable Diff Auto-Refine mode."
       (interactive)
-      (let (diff-auto-refine-mode)
+      (let (diff-auto-refine-mode)      ; avoid refining the hunks redundantly ...
         (condition-case nil
             (save-excursion
               (goto-char (point-min))
               (while (not (eobp))
                 (diff-hunk-next)
-                (diff-refine-hunk)))
+                (diff-refine-hunk)))    ; ... when this does it.
           (error nil))
         (run-at-time 0.0 nil
                      (lambda ()
@@ -1955,14 +1955,14 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; always display `helm-buffer' in current window
       (setq helm-split-window-default-side 'same)
 
-      (defface leuven-separator-face
+      (defface leuven-separator
         '((t (:weight bold :foreground "slate gray")))
         "Face used to display state NEW.")
 
       ;; candidates separator of `multiline' source
       (setq helm-candidate-separator
             (propertize "--separator-------------------------------"
-                        'face 'leuven-separator-face))
+                        'face 'leuven-separator))
 
       ;; suppress displaying sources which are out of screen at first
       (setq helm-quick-update t)
@@ -3103,10 +3103,12 @@ Last time is saved in global variable `leuven--before-section-time'."
       (defun leuven--org-html-format-inlinetask (todo todo-type priority title
                                                  tags contents)
         "Format an inline task element for HTML export."
-        (let ((full-title
+        (let ((todo-kw
+               (if todo
+                   (format "<span class=\"%s %s\">%s</span> " todo-type todo todo)
+                 ""))
+              (full-title-w/o-todo-kw
                (concat
-                (when todo
-                  (format "<span class=\"%s %s\">%s</span> " todo-type todo todo))
                 (when priority (format "[#%c] " priority))
                 title
                 (when tags
@@ -3118,12 +3120,13 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      tags
                                      "&nbsp;")
                           "</span>")))))
-          (format (concat "<div class=\"inlinetask\">\n"
-                          "  <b>%s</b>\n"
-                          "  %s\n"
-                          "</div>")
-                  full-title
-                  (or contents ""))))
+          (concat "<table class=\"inlinetask\" width=\"100%\">"
+                    "<tr>"
+                      "<td valign=\"top\"><b>" todo-kw "</b></td>"
+                      "<td width=\"100%\"><b>" full-title-w/o-todo-kw "</b><br />"
+                        (or contents "") "</td>"
+                    "</tr>"
+                  "</table>")))
 
       ;; function called to format an inlinetask in HTML code
       (setq org-html-format-inlinetask-function
@@ -3301,6 +3304,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 ;;* 4 (info "(org)Hyperlinks")
 
+;; don't hexify URL when creating a link
+(setq org-url-hexify-p nil)
+
   (with-eval-after-load "org"
     (message "... Hyperlinks")
 
@@ -3391,22 +3397,22 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; faces for specific TODO keywords
     (setq org-todo-keyword-faces
-          '(("NEW"  . leuven-org-created-kwd-face)
+          '(("NEW"  . leuven-org-created-kwd)
             ("TODO" . org-todo)
-            ("STRT" . leuven-org-inprogress-kwd-face)
-            ("WAIT" . leuven-org-waiting-for-kwd-face)
-            ("SDAY" . leuven-org-someday-kwd-face)
+            ("STRT" . leuven-org-inprogress-kwd)
+            ("WAIT" . leuven-org-waiting-for-kwd)
+            ("SDAY" . leuven-org-someday-kwd)
             ("DONE" . org-done)
             ("CANX" . org-done)
 
-            ("QTE" . leuven-org-quote-kwd-face)
-            ("QTD" . leuven-org-quoted-kwd-face)
-            ("APP" . leuven-org-approved-kwd-face)
-            ("EXP" . leuven-org-expired-kwd-face)
-            ("REJ" . leuven-org-rejected-kwd-face)
+            ("QTE" . leuven-org-quote-kwd)
+            ("QTD" . leuven-org-quoted-kwd)
+            ("APP" . leuven-org-approved-kwd)
+            ("EXP" . leuven-org-expired-kwd)
+            ("REJ" . leuven-org-rejected-kwd)
 
-            ("OPENPO" . leuven-org-openpo-kwd-face)
-            ("CLSDPO" . leuven-org-closedpo-kwd-face)))
+            ("OPENPO" . leuven-org-openpo-kwd)
+            ("CLSDPO" . leuven-org-closedpo-kwd)))
 
     ;; Org standard faces
     (set-face-attribute 'org-todo nil
@@ -3418,49 +3424,49 @@ Last time is saved in global variable `leuven--before-section-time'."
                         :foreground "#BBBBBB" :background "#F0F0F0")
 
     ;; Org non-standard faces
-    (defface leuven-org-created-kwd-face
+    (defface leuven-org-created-kwd
       '((t (:weight normal :box (:line-width 1 :color "#EEE9C3")
             :foreground "#1A1A1A" :background "#FDFCD8")))
       "Face used to display state NEW.")
-    (defface leuven-org-inprogress-kwd-face
+    (defface leuven-org-inprogress-kwd
       '((t (:weight bold :box (:line-width 1 :color "#D9D14A")
             :foreground "#D9D14A" :background "#FCFCDC")))
       "Face used to display state STRT.")
-    (defface leuven-org-waiting-for-kwd-face
+    (defface leuven-org-waiting-for-kwd
       '((t (:weight bold :box (:line-width 1 :color "#89C58F")
             :foreground "#89C58F" :background "#E2FEDE")))
       "Face used to display state WAIT.")
-    (defface leuven-org-someday-kwd-face
+    (defface leuven-org-someday-kwd
       '((t (:weight bold :box (:line-width 1 :color "#9EB6D4")
             :foreground "#9EB6D4" :background "#E0EFFF")))
       "Face used to display state SDAY.")
 
-    (defface leuven-org-quote-kwd-face
+    (defface leuven-org-quote-kwd
       '((t (:weight bold :box (:line-width 1 :color "#FC5158")
             :foreground "#FC5158" :background "#FED5D7")))
       "Face used to display .")
-    (defface leuven-org-quoted-kwd-face
+    (defface leuven-org-quoted-kwd
       '((t (:weight bold :box (:line-width 1 :color "#55BA80")
             :foreground "#55BA80" :background "#DFFFDF")))
       "Face used to display .")
-    (defface leuven-org-approved-kwd-face
+    (defface leuven-org-approved-kwd
       '((t (:weight bold :box (:line-width 1 :color "#969696")
             :foreground "#969696" :background "#F2F2EE")))
       "Face used to display .")
-    (defface leuven-org-expired-kwd-face
+    (defface leuven-org-expired-kwd
       '((t (:weight bold :box (:line-width 1 :color "#42B5FF")
             :foreground "#42B5FF" :background "#D3EEFF")))
       "Face used to display state EXPIRED.")
-    (defface leuven-org-rejected-kwd-face
+    (defface leuven-org-rejected-kwd
       '((t (:weight bold :box (:line-width 1 :color "#42B5FF")
             :foreground "#42B5FF" :background "#D3EEFF")))
       "Face used to display state REJECTED.")
 
-    (defface leuven-org-openpo-kwd-face
+    (defface leuven-org-openpo-kwd
       '((t (:weight bold :box (:line-width 1 :color "#FC5158")
             :foreground "#FC5158" :background "#FED5D7")))
       "Face used to display OPEN purchase order.")
-    (defface leuven-org-closedpo-kwd-face
+    (defface leuven-org-closedpo-kwd
       '((t (:weight bold :box (:line-width 1 :color "#969696")
             :foreground "#969696" :background "#F2F2EE")))
       "Face used to display CLOSED purchase order."))
@@ -4206,20 +4212,20 @@ From %c"
 
     ;; faces for showing deadlines in the agenda
     (setq org-agenda-deadline-faces
-          '((1.0001 . leuven-org-deadline-yesterday-or-before-face)
-            (0.9999 . leuven-org-deadline-today-face)
-            (0.0000 . leuven-org-deadline-tomorrow-or-later-face)))
+          '((1.0001 . leuven-org-deadline-yesterday-or-before)
+            (0.9999 . leuven-org-deadline-today)
+            (0.0000 . leuven-org-deadline-tomorrow-or-later)))
 
     ;; Org non-standard faces
-    (defface leuven-org-deadline-yesterday-or-before-face
+    (defface leuven-org-deadline-yesterday-or-before
       '((t (:weight bold :foreground "#D24231" :background "#F8D3D4")))
       "Face used to highlight tasks whose deadline is in the past.")
 
-    (defface leuven-org-deadline-today-face
+    (defface leuven-org-deadline-today
       '((t (:foreground "#BF8239" :background "#F8D1A9")))
       "Face used to highlight tasks whose deadline is today.")
 
-    (defface leuven-org-deadline-tomorrow-or-later-face
+    (defface leuven-org-deadline-tomorrow-or-later
       '((t (:foreground "#45A856" :background "#B8E9B1")))
       "Face used to highlight tasks whose deadline is for later."))
 
@@ -6327,8 +6333,7 @@ From %c"
         (setq preview-gs-command
           (cond (running-ms-windows
                  (or (executable-find "gswin32c.exe")
-                     "C:/texlive/2012/tlpkg/tlgs/bin/gswin32c.exe"))
-                                        ; default value
+                     "C:/texlive/2013/tlpkg/tlgs/bin/gswin32c.exe")) ; default value
                 (t
                  "/usr/bin/gs")))
         (leuven--file-exists-and-executable-p preview-gs-command)
@@ -9289,7 +9294,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140207.1718]--")
+(message "* --[ Loaded Emacs Leuven 20140211.1535]--")
 
 (provide 'emacs-leuven)
 
