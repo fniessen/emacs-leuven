@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-11 Tue 15:36 -->
+  <title>Emacs Leuven</title><!-- 2014-02-12 Wed 12:36 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1125,7 +1125,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140211.1535</span>
+"color: #8D8D84; font-style: italic;">Version: 20140212.1235</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1247,7 +1247,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140211.1535]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140212.1235]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -12629,89 +12629,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                   <div class="org-src-container">
                     <pre class="src src-emacs-lisp">
     (add-to-list 'org-agenda-custom-commands
-                 '(<span style="color: #036A07;">"b"</span> . <span style=
-"color: #036A07;">"All active tasks..."</span>) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '(<span style="color: #036A07;">"b="</span> <span style=
-"color: #036A07;">"Edit (?) List of all </span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> entries (column view)"</span>
-                   alltodo <span style="color: #036A07;">""</span>
-                   ((org-agenda-overriding-columns-format
-                     <span style=
-"color: #036A07;">"%65ITEM(Task) %4</span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> %PRIORITY %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)"</span>)
-                    (org-agenda-view-columns-initially t))) t)
-</pre>
-                  </div>
-
-                  <p>Hide certain tasks that you don’t want to be bothered with
-                  all the time:</p>
-
-                  <ul class="org-ul">
-                    <li>Hide low priority</li>
-
-                    <li>Hide <code>SDAY</code> tasks</li>
-
-                    <li>Hide future tasks?</li>
-
-                    <li>Hide subtasks?
-
-                      <table class="inlinetask" width="100%">
-                        <tr>
-                          <td valign="top"><b><span class=
-                          "todo TODO">TODO</span></b></td>
-
-                          <td width="100%"><b>Add extra filters (described
-                          above)</b><br /></td>
-                        </tr>
-                      </table>
-                    </li>
-                  </ul>
-
-                  <div class="org-src-container">
-                    <pre class="src src-emacs-lisp">
-    (add-to-list 'org-agenda-custom-commands
-                 '(<span style="color: #036A07;">"bT"</span> <span style=
-"color: #036A07;">"Filtered list of </span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> entries"</span>
-                   tags-todo <span style="color: #036A07;">"</span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">&lt;&gt;{SDAY</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">|</span><span style=
-"color: #036A07;">PROJ}"</span>
-                   ((org-agenda-overriding-header
-                     <span style="color: #036A07;">"List of </span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> items of all types but SDAY/PROJ, and PRIORITY &gt;= #B"</span>)
-                    (org-agenda-sorting-strategy
-                     '(category-up priority-down todo-state-up alpha-up)))) t)
-</pre>
-                  </div>
-
-                  <div class="org-src-container">
-                    <pre class="src src-emacs-lisp">
-    (add-to-list 'org-agenda-custom-commands
-                 '(<span style="color: #036A07;">"p"</span> . <span style=
-"color: #036A07;">"2. Process/Clarify..."</span>) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 `(<span style="color: #036A07;">"pn"</span> <span style=
-"color: #036A07;">"New Tasks"</span>
-                   tags <span style=
-"color: #036A07;">"CATEGORY={@Collect}&amp;LEVEL=2"</span>
-                   ((org-agenda-overriding-header <span style=
-"color: #036A07;">"New Tasks"</span>))) t)
-</pre>
-                  </div>
-
-                  <div class="org-src-container">
-                    <pre class="src src-emacs-lisp">
-    (add-to-list 'org-agenda-custom-commands
                  '(<span style="color: #036A07;">"o"</span> . <span style=
 "color: #036A07;">"3. Organize..."</span>) t)
 
@@ -12721,18 +12638,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                    tags <span style="color: #036A07;">"refile|capture"</span>
                    ((org-agenda-overriding-header <span style=
 "color: #036A07;">"Refile stuff"</span>))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 `(<span style="color: #036A07;">"oc"</span> <span style=
-"color: #036A07;">"Tasks to refile (column view)"</span>
-                   tags-todo <span style="color: #036A07;">""</span>
-                   ((org-agenda-files ,(quote (list org-default-notes-file)))
-                    (org-agenda-overriding-columns-format
-                     <span style=
-"color: #036A07;">"%65ITEM(Task) %4</span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> %PRIORITY %20TAGS %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)"</span>)
-                    (org-agenda-view-columns-initially t))) t)
 </pre>
                   </div>
 
@@ -12761,32 +12666,15 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-    (add-to-list 'org-agenda-custom-commands
-                 '(<span style="color: #036A07;">"rt"</span> <span style=
-"color: #036A07;">"Unscheduled </span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> entries"</span>
-                   alltodo <span style="color: #036A07;">""</span>
-                   ((org-agenda-entry-types '(<span style=
-"color: #006FE0;">:timestamp</span> <span style=
-"color: #006FE0;">:deadline</span> <span style=
-"color: #006FE0;">:scheduled</span>))
-                    (org-agenda-overriding-header <span style=
-"color: #036A07;">"Unscheduled </span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> entries: "</span>))) t)
-
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">all </span><span style=
-"color: #CC0000; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #8D8D84; font-style: italic;"> entries, but SDAY</span>
+"color: #CC0000; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #8D8D84; font-style: italic;"> entries</span>
     (add-to-list 'org-agenda-custom-commands
                  '(<span style="color: #036A07;">"rT"</span> <span style=
 "color: #036A07;">"List of undated </span><span style=
 "color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> entries (no SDAY)"</span>
-                   tags-todo <span style="color: #036A07;">"</span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">&lt;&gt;{SDAY}"</span>
+"color: #036A07;"> entries"</span>
+                   tags-todo <span style="color: #036A07;">""</span>
                    ((org-agenda-overriding-header
                      <span style=
 "color: #036A07;">"Global list of undated </span><span style=
@@ -12797,18 +12685,16 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                     (org-agenda-sorting-strategy '(priority-down)))) t)
 
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">show only </span><span style=
-"color: #CC0000; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #8D8D84; font-style: italic;"> entries, ignoring entries that have time stamps (it also</span>
+"color: #8D8D84; font-style: italic;">show </span><span style=
+"color: #CC0000; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #8D8D84; font-style: italic;"> entries that have no time stamps (it also covers scheduled or</span>
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">covers scheduled or deadline items)</span>
+"color: #8D8D84; font-style: italic;">deadline items)</span>
     (add-to-list 'org-agenda-custom-commands
                  '(<span style="color: #036A07;">"rs"</span> <span style=
 "color: #036A07;">"Undated </span><span style=
 "color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
 "color: #036A07;"> items"</span>
-                   todo <span style="color: #036A07;">"</span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">"</span>
+                   todo <span style="color: #036A07;">""</span>
                    ((org-agenda-overriding-header <span style=
 "color: #036A07;">"Undated </span><span style=
 "color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
@@ -13197,32 +13083,41 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
               contains <i>active</i> tasks that:</p>
 
               <ul class="org-ul">
-                <li>are due soon (in the next 7 days), or</li>
+                <li>are <b>due soon</b> (in the next 7 days), or</li>
 
-                <li>have a high priority (<code>#A</code>), or</li>
+                <li>have a <b>high priority</b> (<code>#A</code>), or</li>
 
                 <li>are <code>FLAGGED</code>.</li>
               </ul>
 
-              <p>There is an exception to the above rule: tasks with a future
-              <code>SCHEDULED</code> date will be hidden from the hotlist
-              regardless of their <code>DEADLINE</code> date, priority or
-              flag.</p>
+              <p>There is an exception to the above rule: <b>tasks with a
+              future <code>SCHEDULED</code> date will be hidden</b> from the
+              hotlist regardless of their <code>DEADLINE</code> date, priority
+              or flag.</p>
 
               <p>In other words, to be listed in the hotlist, tasks must have
-              as well a <code>SCHEDULED</code> date that is on or before today,
-              or that is blank.</p>
+              as well a <code>SCHEDULED</code> date that is:</p>
 
-              <table class="inlinetask" width="100%">
-                <tr>
-                  <td valign="top"><b><span class=
-                  "todo TODO">TODO</span></b></td>
+              <ul class="org-ul">
+                <li>on or before today, or</li>
 
-                  <td width="100%"><b>Use option
-                  (org-agenda-todo-ignore-with-date t) = ignore SCHEDULED
-                  criteria?</b><br /></td>
-                </tr>
-              </table>
+                <li>blank.
+
+                  <table class="inlinetask" width="100%">
+                    <tr>
+                      <td valign="top"><b><span class=
+                      "todo TODO">TODO</span></b></td>
+
+                      <td width="100%"><b>Use option
+                      (org-agenda-todo-ignore-with-date t) = ignore SCHEDULED
+                      criteria?</b><br /></td>
+                    </tr>
+                  </table>
+                </li>
+              </ul>
+
+              <p>BUG Tasks with #A priority are not all listed (even without
+              scheduled date)!</p>
 
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
@@ -13467,96 +13362,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                      '(org-agenda-skip-entry-if 'regexp <span style=
 "color: #036A07;">"\\=.*\\[#C\\]"</span>))
                     (org-agenda-span 'day))) t)
-</pre>
-              </div>
-
-              <div class="org-src-container">
-                <pre class="src src-emacs-lisp">
-<span style="color: #8D8D84;">;;</span><span style=
-"color: #8D8D84; font-style: italic;">*** Tags</span>
-
-    (add-to-list 'org-agenda-custom-commands
-                 '(<span style="color: #036A07;">"v:"</span> . <span style=
-"color: #036A07;">"Contexts..."</span>) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '(<span style="color: #036A07;">"v:h"</span> <span style=
-"color: #036A07;">"Home realm"</span>
-                   tags-todo <span style="color: #036A07;">"home"</span>) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '(<span style="color: #036A07;">"v:w"</span> <span style=
-"color: #036A07;">"Work realm"</span>
-                   tags-todo <span style="color: #036A07;">"work"</span>) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '(<span style="color: #036A07;">"v:e"</span> <span style=
-"color: #036A07;">"Errands context"</span>
-                   tags-todo <span style="color: #036A07;">"errands"</span>) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '(<span style="color: #036A07;">"v:p"</span> <span style=
-"color: #036A07;">"Phone context"</span>
-                   tags-todo <span style="color: #036A07;">"phone"</span>) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '(<span style="color: #036A07;">"v:m"</span> <span style=
-"color: #036A07;">"Mail context"</span>
-                   tags-todo <span style="color: #036A07;">"mail"</span>) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '(<span style="color: #036A07;">"v::"</span> <span style=
-"color: #036A07;">"Next/Started and Delegated/Waiting For Actions Grouped by Context"</span>
-                   (<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Next/Started Actions</span>
-                    (tags-todo <span style=
-"color: #036A07;">"phone&amp;</span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">={</span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">|</span><span style=
-"color: #036A07;">STRT}"</span>)
-                    (tags-todo <span style=
-"color: #036A07;">"mail&amp;</span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">={</span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">|</span><span style=
-"color: #036A07;">STRT}"</span>)
-                    (tags-todo <span style=
-"color: #036A07;">"errands&amp;</span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">={</span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">|</span><span style=
-"color: #036A07;">STRT}"</span>)
-                    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Delegated/Waiting For Actions</span>
-                    (tags-todo <span style=
-"color: #036A07;">"phone&amp;</span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">={WAIT}"</span>)
-                    (tags-todo <span style=
-"color: #036A07;">"mail&amp;</span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">={WAIT}"</span>)
-                    (tags-todo <span style=
-"color: #036A07;">"errands&amp;</span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;">={WAIT}"</span>))
-                   ((org-agenda-todo-ignore-scheduled 'future))) t)
-</pre>
-              </div>
-
-              <div class="org-src-container">
-                <pre class="src src-emacs-lisp">
-    (add-to-list 'org-agenda-custom-commands
-                 '(<span style="color: #036A07;">"vp"</span>
-                   tags-todo <span style="color: #036A07;">""</span>
-                   ((org-agenda-view-columns-initially t))) t)
 </pre>
               </div>
             </div>
@@ -14059,6 +13864,12 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
         <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">"%1BLOCKED %4</span><span style=
 "color: #CC0000; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #8D8D84; font-style: italic;"> %CATEGORY %5Effort{:} %50ITEM %20TAGS %21ALLTAGS")</span>
+        <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">"%65ITEM(Task) %4</span><span style=
+"color: #CC0000; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #8D8D84; font-style: italic;"> %PRIORITY %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)")</span>
+        <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">"%65ITEM(Task) %4</span><span style=
+"color: #CC0000; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #8D8D84; font-style: italic;"> %PRIORITY %20TAGS %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)")</span>
         <span style=
 "color: #036A07;">"%60ITEM(Details) %5PRIORITY(Prio) %14SCHEDULED(Scheduled) %15TAGS(Context) %7</span><span style="color: #CC0000; background-color: #FFFF88;">TODO</span><span style="color: #036A07;">(To Do) %6CLOCKSUM(Clock) %5Effort(Effort){:} "</span>)
 
@@ -18498,7 +18309,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"27.8 (emacs)Lisp Libraries"</span>)
 
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">force load of Elisp files when they are newer than the `</span><span style="color: #D0372D; font-style: italic;">.elc</span><span style="color: #8D8D84; font-style: italic;">' files</span>
+"color: #8D8D84; font-style: italic;">force load of `</span><span style=
+"color: #D0372D; font-style: italic;">.el</span><span style=
+"color: #8D8D84; font-style: italic;">' files when they are newer than the `</span><span style="color: #D0372D; font-style: italic;">.elc</span><span style="color: #8D8D84; font-style: italic;">' files</span>
   (setq load-prefer-newer t)            <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">from Emacs 24.4</span>
@@ -25338,7 +25151,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140211.1535]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140212.1236]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

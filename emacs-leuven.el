@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140211.1534
+;; Version: 20140212.1234
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140211.1534]--")
+(message "* --[ Loading Emacs Leuven 20140212.1234]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4464,32 +4464,6 @@ From %c"
     ;;              ;; scheduled in the past or for today)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("b" . "All active tasks...") t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("b=" "Edit (?) List of all TODO entries (column view)"
-                   alltodo ""
-                   ((org-agenda-overriding-columns-format
-                     "%65ITEM(Task) %4TODO %PRIORITY %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)")
-                    (org-agenda-view-columns-initially t))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("bT" "Filtered list of TODO entries"
-                   tags-todo "TODO<>{SDAY\\|PROJ}"
-                   ((org-agenda-overriding-header
-                     "List of TODO items of all types but SDAY/PROJ, and PRIORITY >= #B")
-                    (org-agenda-sorting-strategy
-                     '(category-up priority-down todo-state-up alpha-up)))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("p" . "2. Process/Clarify...") t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 `("pn" "New Tasks"
-                   tags "CATEGORY={@Collect}&LEVEL=2"
-                   ((org-agenda-overriding-header "New Tasks"))) t)
-
-    (add-to-list 'org-agenda-custom-commands
                  '("o" . "3. Organize...") t)
 
     (add-to-list 'org-agenda-custom-commands
@@ -4498,37 +4472,23 @@ From %c"
                    ((org-agenda-overriding-header "Refile stuff"))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 `("oc" "Tasks to refile (column view)"
-                   tags-todo ""
-                   ((org-agenda-files ,(quote (list org-default-notes-file)))
-                    (org-agenda-overriding-columns-format
-                     "%65ITEM(Task) %4TODO %PRIORITY %20TAGS %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)")
-                    (org-agenda-view-columns-initially t))) t)
-
-    (add-to-list 'org-agenda-custom-commands
                  '("r" . "4. Review...") t)
 
+    ;; all TODO entries
     (add-to-list 'org-agenda-custom-commands
-                 '("rt" "Unscheduled TODO entries"
-                   alltodo ""
-                   ((org-agenda-entry-types '(:timestamp :deadline :scheduled))
-                    (org-agenda-overriding-header "Unscheduled TODO entries: "))) t)
-
-    ;; all TODO entries, but SDAY
-    (add-to-list 'org-agenda-custom-commands
-                 '("rT" "List of undated TODO entries (no SDAY)"
-                   tags-todo "TODO<>{SDAY}"
+                 '("rT" "List of undated TODO entries"
+                   tags-todo ""
                    ((org-agenda-overriding-header
                      "Global list of undated TODO items of all types but SDAY")
                     (org-agenda-skip-function
                      '(org-agenda-skip-entry-if 'scheduled 'deadline 'timestamp))
                     (org-agenda-sorting-strategy '(priority-down)))) t)
 
-    ;; show only TODO entries, ignoring entries that have time stamps (it also
-    ;; covers scheduled or deadline items)
+    ;; show TODO entries that have no time stamps (it also covers scheduled or
+    ;; deadline items)
     (add-to-list 'org-agenda-custom-commands
                  '("rs" "Undated TODO items"
-                   todo "TODO"
+                   todo ""
                    ((org-agenda-overriding-header "Undated TODO items: ")
                     (org-agenda-todo-ignore-with-date t))) t)
 
@@ -4842,48 +4802,6 @@ From %c"
                      '(org-agenda-skip-entry-if 'regexp "\\=.*\\[#C\\]"))
                     (org-agenda-span 'day))) t)
 
-;;*** Tags
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("v:" . "Contexts...") t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("v:h" "Home realm"
-                   tags-todo "home") t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("v:w" "Work realm"
-                   tags-todo "work") t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("v:e" "Errands context"
-                   tags-todo "errands") t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("v:p" "Phone context"
-                   tags-todo "phone") t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("v:m" "Mail context"
-                   tags-todo "mail") t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("v::" "Next/Started and Delegated/Waiting For Actions Grouped by Context"
-                   (;; Next/Started Actions
-                    (tags-todo "phone&TODO={TODO\\|STRT}")
-                    (tags-todo "mail&TODO={TODO\\|STRT}")
-                    (tags-todo "errands&TODO={TODO\\|STRT}")
-                    ;; Delegated/Waiting For Actions
-                    (tags-todo "phone&TODO={WAIT}")
-                    (tags-todo "mail&TODO={WAIT}")
-                    (tags-todo "errands&TODO={WAIT}"))
-                   ((org-agenda-todo-ignore-scheduled 'future))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("vp"
-                   tags-todo ""
-                   ((org-agenda-view-columns-initially t))) t)
-
     (add-to-list 'org-agenda-custom-commands
                  `("dd" "All active tasks, by due date"
                    ((agenda ""
@@ -5098,6 +5016,8 @@ From %c"
   (setq org-columns-default-format
         ;; "%65ITEM(Task) %DEADLINE(Due Date) %PRIORITY %6CLOCKSUM(Spent) %6Effort(Estim.){:}")
         ;; "%1BLOCKED %4TODO %CATEGORY %5Effort{:} %50ITEM %20TAGS %21ALLTAGS")
+        ;; "%65ITEM(Task) %4TODO %PRIORITY %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)")
+        ;; "%65ITEM(Task) %4TODO %PRIORITY %20TAGS %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)")
         "%60ITEM(Details) %5PRIORITY(Prio) %14SCHEDULED(Scheduled) %15TAGS(Context) %7TODO(To Do) %6CLOCKSUM(Clock) %5Effort(Effort){:} ")
 
   ;; DUPLICATE Obey `eval' variables -- RISKY!
@@ -6820,7 +6740,7 @@ From %c"
 
   (leuven--section "27.8 (emacs)Lisp Libraries")
 
-  ;; force load of Elisp files when they are newer than the `.elc' files
+  ;; force load of `.el' files when they are newer than the `.elc' files
   (setq load-prefer-newer t)            ; from Emacs 24.4
 
 ;;** 27.9 (info "(emacs)Lisp Eval") Expressions
@@ -9294,7 +9214,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140211.1535]--")
+(message "* --[ Loaded Emacs Leuven 20140212.1235]--")
 
 (provide 'emacs-leuven)
 
