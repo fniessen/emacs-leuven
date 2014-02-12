@@ -10,7 +10,7 @@
 #+PROPERTY:  padline yes
 #+PROPERTY:  eval no
 
-#+SETUPFILE: ~/src/org-style/bigblow-local-abs.setup
+#+SETUPFILE: ~/src/org-style/setup/bigblow-local-abs.setup
 
 * Key bindings
 
@@ -103,7 +103,32 @@ week) on the =errands= tag.
 
 ** Today
 
+#+begin_warning
+A deadline with no scheduling information has an implicit scheduled date equal
+to the deadline date.
+#+end_warning
+
 ** Next
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("N" "List of all unscheduled TODO entries (no SDAY)"
+                   tags-todo "TODO<>{SDAY}"
+                   ((org-agenda-overriding-header "Unscheduled Tasks (no SDAY):")
+                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
+                    (org-agenda-sorting-strategy '(priority-down)))) t)
+#+end_src
+
+#+begin_note
+If you don't want to show scheduled items, deadlines nor appointments in lists,
+you can use either =(org-agenda-todo-ignore-with-date t)=,
+=(org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp))= or
+=(org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'deadline
+'timestamp))=.
+
+Though, we could make a performance comparison to see whether one is quicker
+than the other.
+#+end_note
 
 ** Future
 
@@ -114,6 +139,8 @@ week) on the =errands= tag.
 ** Completed Tasks
 
 ** Archived Tasks
+
+** Calendar
 
 ** Search
 
@@ -170,26 +197,6 @@ We should have two agenda views:
 *************** TODO Add report "Recently added/completed/modified"
 Recently done.
 *************** END
-
-#+begin_src emacs-lisp
-    ;; all TODO entries
-    (add-to-list 'org-agenda-custom-commands
-                 '("rT" "List of undated TODO entries"
-                   tags-todo ""
-                   ((org-agenda-overriding-header
-                     "Global list of undated TODO items of all types but SDAY")
-                    (org-agenda-skip-function
-                     '(org-agenda-skip-entry-if 'scheduled 'deadline 'timestamp))
-                    (org-agenda-sorting-strategy '(priority-down)))) t)
-
-    ;; show TODO entries that have no time stamps (it also covers scheduled or
-    ;; deadline items)
-    (add-to-list 'org-agenda-custom-commands
-                 '("rs" "Undated TODO items"
-                   todo ""
-                   ((org-agenda-overriding-header "Undated TODO items: ")
-                    (org-agenda-todo-ignore-with-date t))) t)
-#+end_src
 
 #+begin_src emacs-lisp
     ;; calendar view for org-agenda

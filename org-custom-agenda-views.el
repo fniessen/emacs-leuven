@@ -9,6 +9,13 @@
                      '("~/org/refile.org" "~/org/email.org")))) t)
 
     (add-to-list 'org-agenda-custom-commands
+                 '("N" "List of all unscheduled TODO entries (no SDAY)"
+                   tags-todo "TODO<>{SDAY}"
+                   ((org-agenda-overriding-header "Unscheduled Tasks (no SDAY):")
+                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
+                    (org-agenda-sorting-strategy '(priority-down)))) t)
+
+    (add-to-list 'org-agenda-custom-commands
                  '("f" "Like s, but with extra files"
                    search ""
                    ((org-agenda-text-search-extra-files
@@ -41,24 +48,6 @@
 
     (add-to-list 'org-agenda-custom-commands
                  '("r" . "4. Review...") t)
-
-    ;; all TODO entries
-    (add-to-list 'org-agenda-custom-commands
-                 '("rT" "List of undated TODO entries"
-                   tags-todo ""
-                   ((org-agenda-overriding-header
-                     "Global list of undated TODO items of all types but SDAY")
-                    (org-agenda-skip-function
-                     '(org-agenda-skip-entry-if 'scheduled 'deadline 'timestamp))
-                    (org-agenda-sorting-strategy '(priority-down)))) t)
-
-    ;; show TODO entries that have no time stamps (it also covers scheduled or
-    ;; deadline items)
-    (add-to-list 'org-agenda-custom-commands
-                 '("rs" "Undated TODO items"
-                   todo ""
-                   ((org-agenda-overriding-header "Undated TODO items: ")
-                    (org-agenda-todo-ignore-with-date t))) t)
 
     ;; calendar view for org-agenda
     (when (locate-library "calfw-org")
