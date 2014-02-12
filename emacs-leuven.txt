@@ -14,7 +14,7 @@
 #+PROPERTY:  padline yes
 #+PROPERTY:  eval no
 
-#+SETUPFILE: ~/src/org-style/bigblow-local-abs.setup
+#+SETUPFILE: ~/src/org-style/setup/bigblow-local-abs.setup
 
 * Description
 
