@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-12 Wed 14:12>
+# Time-stamp: <2014-02-13 Thu 15:52>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4146,15 +4146,6 @@ Another solution to avoid that is to add =fill-french-nobreak-p= to
 
   ;; activate Auto Fill for all text mode buffers
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
-
-  ;; automatically fill comments (but not code) in programming modes
-  (add-hook 'prog-mode-hook
-            (lambda ()
-              (auto-fill-mode 1)
-              (set (make-local-variable 'fill-nobreak-predicate)
-                   (lambda ()
-                     (not (eq (get-text-property (point) 'face)
-                              'font-lock-comment-face))))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -6417,7 +6408,7 @@ arrives -- at which point it will be in all lists.
       "Face used to highlight tasks whose deadline is in the past.")
 
     (defface leuven-org-deadline-today
-      '((t (:foreground "#BF8239" :background "#F8D1A9")))
+      '((t (:weight bold :foreground "#BF8239" :background "#F8D1A9")))
       "Face used to highlight tasks whose deadline is today.")
 
     (defface leuven-org-deadline-tomorrow-or-later

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140212.1641
+;; Version: 20140213.1552
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140212.1641]--")
+(message "* --[ Loading Emacs Leuven 20140213.1552]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2658,15 +2658,6 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; activate Auto Fill for all text mode buffers
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
-  ;; automatically fill comments (but not code) in programming modes
-  (add-hook 'prog-mode-hook
-            (lambda ()
-              (auto-fill-mode 1)
-              (set (make-local-variable 'fill-nobreak-predicate)
-                   (lambda ()
-                     (not (eq (get-text-property (point) 'face)
-                              'font-lock-comment-face))))))
-
   (defun leuven-replace-nbsp-by-spc ()
     "Replace all nbsp by normal spaces."
     (interactive "*")
@@ -4222,7 +4213,7 @@ From %c"
       "Face used to highlight tasks whose deadline is in the past.")
 
     (defface leuven-org-deadline-today
-      '((t (:foreground "#BF8239" :background "#F8D1A9")))
+      '((t (:weight bold :foreground "#BF8239" :background "#F8D1A9")))
       "Face used to highlight tasks whose deadline is today.")
 
     (defface leuven-org-deadline-tomorrow-or-later
@@ -8677,7 +8668,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140212.1641]--")
+(message "* --[ Loaded Emacs Leuven 20140213.1553]--")
 
 (provide 'emacs-leuven)
 

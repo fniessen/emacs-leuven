@@ -7,10 +7,34 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-12 Wed 16:43 -->
+  <title>Emacs Leuven</title><!-- 2014-02-13 Thu 15:54 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
+  <link rel="stylesheet" type="text/css" href=
+  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/htmlize.css" />
+  <link rel="stylesheet" type="text/css" href=
+  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/bigblow.css" />
+  <link rel="stylesheet" type="text/css" href=
+  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/hideshow.css" />
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery-1.9.1.min.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery-ui-1.10.2.min.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery.localscroll-min.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery.scrollTo-1.4.3.1-min.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/bigblow.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/hideshow.js">
+</script>
 </head>
 
 <body>
@@ -1116,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140212.1642</span>
+"color: #8D8D84; font-style: italic;">Version: 20140213.1553</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1238,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140212.1642]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140213.1553]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -8026,16 +8050,6 @@ M-: (executable-find "diff") RET
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">activate Auto Fill for all text mode buffers</span>
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
-
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">automatically fill comments (but not code) in programming modes</span>
-  (add-hook 'prog-mode-hook
-            (<span style="color: #0000FF;">lambda</span> ()
-              (auto-fill-mode 1)
-              (set (make-local-variable 'fill-nobreak-predicate)
-                   (<span style="color: #0000FF;">lambda</span> ()
-                     (not (eq (get-text-property (point) 'face)
-                              'font-lock-comment-face))))))
 </pre>
           </div>
 
@@ -11891,7 +11905,8 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
     (<span style="color: #0000FF;">defface</span> <span style=
 "color: #BA36A5;">leuven-org-deadline-today</span>
-      '((t (<span style="color: #006FE0;">:foreground</span> <span style=
+      '((t (<span style="color: #006FE0;">:weight</span> bold <span style=
+"color: #006FE0;">:foreground</span> <span style=
 "color: #036A07;">"#BF8239"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
 "color: #036A07;">"#F8D1A9"</span>)))
@@ -23800,7 +23815,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140212.1642]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140213.1554]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
