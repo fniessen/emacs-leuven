@@ -1,7 +1,7 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2014-01-22 Wed 11:32>
+#+Time-stamp: <2014-02-10 Mon 14:23>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -264,11 +264,11 @@ unsubscribe directly afterward...
 ;;** 2.1 (info "(gnus)Group Buffer Format")
 
       ;; create some faces
-      (defface leuven-gnus-ticked-face '((t (:weight bold :foreground "#CF5D60")))
+      (defface leuven-gnus-ticked '((t (:weight bold :foreground "#CF5D60")))
         "Face for count of ticked articles.")
-      (defface leuven-gnus-unseen-face '((t (:weight bold :foreground "blue")))
+      (defface leuven-gnus-unseen '((t (:weight bold :foreground "blue")))
         "Face for marker of new mail, and count of unseen articles.")
-      (defface leuven-gnus-unread-face '((t (:weight bold :foreground "black")))
+      (defface leuven-gnus-unread '((t (:weight bold :foreground "black")))
         "Face for count of unread articles.")
       (defface leuven-gnus-linum '((t (:foreground "#AFB7BA")))
         "Face for markers in summary buffer.")
@@ -279,9 +279,9 @@ unsubscribe directly afterward...
       (defface leuven-gnus-org-date '((t (:foreground "purple")))
         "Face for date in summary buffer.")
 
-      (setq gnus-face-1 'leuven-gnus-ticked-face)
-      (setq gnus-face-3 'leuven-gnus-unseen-face)
-      (setq gnus-face-4 'leuven-gnus-unread-face)
+      (setq gnus-face-1 'leuven-gnus-ticked)
+      (setq gnus-face-3 'leuven-gnus-unseen)
+      (setq gnus-face-4 'leuven-gnus-unread)
       (setq gnus-face-5 'leuven-gnus-linum)
       (setq gnus-face-6 'leuven-gnus-score)
       (setq gnus-face-7 'leuven-gnus-diredp-file-suffix)
