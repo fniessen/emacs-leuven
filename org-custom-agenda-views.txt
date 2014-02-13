@@ -14,33 +14,34 @@
 
 * Key bindings
 
-| a | xx         | A | All Tasks |
-| b |            | B |           |
-| c | collectBox | C | xx        |
-| d |            | D | Completed |
-| e | xx         | E |           |
-| f |            | F | Future    |
-| g |            | G |           |
-| h |            | H |           |
-| i |            | I | Inbox     |
-| j |            | J |           |
-| k |            | K |           |
-| l |            | L | xx        |
-| m | xx         | M | xx        |
-| n | x          | N | Next      |
-| o |            | O |           |
-| p |            | P | Projects  |
-| q |            | Q |           |
-| r |            | R |           |
-| s | xx         | S | xx        |
-| t | xx         | T | xx        |
-| u |            | U |           |
-| v |            | V |           |
-| w |            | W |           |
-| x |            | X |           |
-| y |            | Y | Someday   |
-| z |            | Z |           |
-|   |            | . | Today     |
+| a | xx         | A | All Tasks   |
+| b |            | B |             |
+| c | collectBox | C | xx          |
+| d |            | D | Completed   |
+| e | xx         | E |             |
+| f |            | F | Future      |
+| g |            | G |             |
+| h |            | H |             |
+| i |            | I | Inbox       |
+| j |            | J |             |
+| k |            | K |             |
+| l |            | L | xx          |
+| m | xx         | M | xx          |
+| n | x          | N | Next        |
+| o |            | O |             |
+| p |            | P | Projects    |
+| q |            | Q |             |
+| r |            | R |             |
+| s | xx         | S | xx          |
+| t | xx         | T | xx          |
+| u |            | U |             |
+| v |            | V |             |
+| w |            | W | Waiting for |
+| x |            | X |             |
+| y |            | Y | Someday     |
+| z |            | Z |             |
+|   |            | . | Today       |
+|   |            | 7 | Next 7 Days |
 
 XXX | [yas] elisp error! Symbol's function definition is void: ca-with-commentT |   |
 XXX | [yas] elisp error! Symbol's function definition is void: ca-with-commentX |   |
@@ -90,68 +91,232 @@ week) on the =errands= tag.
     (setq org-agenda-custom-commands nil)
 #+end_src
 
-** All tasks
+#+begin_note
+Puisque l'on peut facilement filter par catégorie, on peut imaginer qu'il est
+inutile de trier par catégorie : il suffit de faire =<= pour voir toutes les
+tâches d'une catégorie.
+#+end_note
+
+** All tasks (tags view)
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("A" . "All Tasks...") t)
+#+end_src
 
+*** Sorted by due date
+
+All *tasks*, filtered by due date:
+- *Overdue*
+- Due *today*
+- Due *tomorrow*
+- Due within *a week* (next 5 days)
+- Due within *a month* (next 3 weeks)
+- Due *later*
+- *No due date* (includes *CollectBox*)
+- *Completed*
+
+*************** TODO Show SCHEDULED items as well in "Next 5 Days"
+
+**** All tasks (tags view)
+
+#+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("Ad" "All Tasks (grouped by Due Date)"
                    ((tags-todo "DEADLINE<\"<+0d>\""
-                               ((org-agenda-overriding-header "Overdue:")
+                               ((org-agenda-overriding-header "OVERDUE")
                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     (tags-todo "DEADLINE=\"<+0d>\""
-                               ((org-agenda-overriding-header "Today:")
+                               ((org-agenda-overriding-header "DUE TODAY")
                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     (tags-todo "DEADLINE=\"<+1d>\""
-                               ((org-agenda-overriding-header "Tomorrow:")
+                               ((org-agenda-overriding-header "DUE TOMORROW")
                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     (tags-todo "DEADLINE>\"<+1d>\"+DEADLINE<=\"<+7d>\""
-                               ((org-agenda-overriding-header "Next 7 days:")
+                               ((org-agenda-overriding-header "DUE WITHIN A WEEK")
                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
-                    (tags-todo "DEADLINE>\"<+7d>\""
-                               ((org-agenda-overriding-header "Later:")
+                    (tags-todo "DEADLINE>\"<+7d>\"+DEADLINE<=\"<+28d>\""
+                               ((org-agenda-overriding-header "DUE WITHIN A MONTH")
                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
-                    (tags-todo ""
-                               ((org-agenda-overriding-header "No date:")
+                    (tags-todo "DEADLINE>\"<+28d>\""
+                               ((org-agenda-overriding-header "DUE LATER")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (todo ""
+                               ((org-agenda-overriding-header "NO DUE DATE")
                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     (todo "DONE|CANX"
-                          ((org-agenda-overriding-header "Completed:"))))) t)
+                          ((org-agenda-overriding-header "COMPLETED"))))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("Af" "All Tasks (sorted by Due Date)"
+                 '("A1" "All Tasks (sorted by Due Date)"
                    alltodo ""
-                   ((org-agenda-overriding-header "All Tasks (sorted by Due Date):")
+                   ((org-agenda-overriding-header "All Tasks (sorted by Due Date)")
                     (org-agenda-sorting-strategy '(deadline-up)))) t) ; XXX sort not OK
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("Ag" "All Tasks (sorted by Due Date)"
-                   agenda ""
-                   ((org-agenda-overriding-header "All Tasks (sorted by Due Date):")
-                    (org-agenda-sorting-strategy '(deadline-up)))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("Ap" "All Tasks (grouped by Priority)"
-                   ((tags-todo "PRIORITY={A}"
-                               ((org-agenda-overriding-header "High:")))
-                    (tags-todo "PRIORITY={B}"
-                               ((org-agenda-overriding-header "Medium:")))
-                    (tags-todo "PRIORITY=\"\""
-                               ((org-agenda-overriding-header "None:"))) ; = medium
-                    (tags-todo "PRIORITY={C}"
-                               ((org-agenda-overriding-header "Low:"))))) t)
 #+end_src
 
 XXX Check tasks falling in the "Next 7 days" range (look for +7, +8 days)
 
-** Inbox
+**** All tasks (agenda view)
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 `("A2" "All active tasks, by due date"
+                   ((agenda ""
+                            ((org-agenda-overriding-header "Today")
+                             ;; FIXME We don't see "timed" DEADLINE
+                             (org-agenda-skip-function
+                              (lambda ()
+                                (let* ((dl (org-entry-get nil "DEADLINE")))
+                                  (if (or (not dl)
+                                          (equal dl "")
+                                          (org-time> dl (org-time-today)))
+                                      (progn (outline-next-heading) (point))))))
+                             (org-agenda-skip-scheduled-if-deadline-is-shown t)
+                             (org-agenda-span 'day)
+                             (org-deadline-warning-days 0)))
+                    (agenda ""
+                            ((org-agenda-entry-types '(:deadline))
+                             (org-agenda-overriding-header "Tomorrow")
+                             (org-agenda-skip-function
+                              '(leuven--skip-entry-unless-deadline-in-n-days-or-more 1))
+                             (org-deadline-warning-days 1)))
+                    (agenda ""
+                            ((org-agenda-overriding-header "Next 5 days")
+                             (org-agenda-skip-function
+                              '(leuven--skip-entry-unless-deadline-in-n-days-or-more 2))
+                             (org-deadline-warning-days 7)))
+                    (agenda ""
+                            ((org-agenda-format-date "")
+                             (org-agenda-overriding-header "Next 3 weeks")
+                             (org-agenda-skip-function
+                              '(leuven--skip-entry-unless-deadline-in-n-days-or-more 7))
+                             (org-deadline-warning-days 28))))
+                   ((org-agenda-clockreport-mode nil)
+                    (org-agenda-format-date "")
+                    (org-agenda-span 'day)
+                    (org-agenda-sorting-strategy '(deadline-up))
+                    (org-agenda-use-time-grid nil)
+                    (org-agenda-write-buffer-name "Reminders"))) t)
+#+end_src
+
+#+begin_src emacs-lisp
+    (defun leuven--skip-entry-unless-deadline-in-n-days-or-more (n)
+      "Skip entries that have no deadline, or that have a deadline earlier than in N days."
+      (let* ((dl (org-entry-get nil "DEADLINE")))
+        (if (or (not dl)
+                (equal dl "")
+                (org-time< dl (+ (org-time-today) (* n 86400))))
+            (progn (outline-next-heading) (point)))))
+#+end_src
+
+#+begin_src emacs-lisp
+    (defun leuven--skip-entry-unless-overdue-deadline ()
+      "Skip entries that have no deadline, or that have a deadline later than or equal to today."
+      (let* ((dl (org-entry-get nil "DEADLINE")))
+        (if (or (not dl)
+                (equal dl "")
+                (org-time>= dl (org-time-today)))
+            (progn (outline-next-heading) (point)))))
+
+    (defun leuven--skip-entry-if-past-deadline ()
+      "Skip entries that have a deadline earlier than today."
+      (let* ((dl (org-entry-get nil "DEADLINE")))
+        (if (org-time< dl (org-time-today))
+            (progn (outline-next-heading) (point)))))
+
+    (defun leuven--skip-entry-if-deadline-in-less-than-n-days-or-schedule-in-less-than-n-days (n1 n2)
+      "Skip entries that have a deadline in less than N1 days, or that have a
+    scheduled date in less than N2 days, or that have no deadline nor scheduled."
+      (let* ((dl (org-entry-get nil "DEADLINE"))
+             (sd (org-entry-get nil "SCHEDULED")))
+        (if (or (and dl
+                     (not (equal dl ""))
+                     (org-time< dl (+ (org-time-today) (* n1 86400))))
+                (and sd
+                     (not (equal sd ""))
+                     (org-time< sd (+ (org-time-today) (* n2 86400))))
+                (and (or (not dl)       ; no deadline
+                         (equal dl ""))
+                     (or (not sd)       ; nor scheduled
+                         (equal sd ""))))
+            (progn (outline-next-heading) (point)))))
+
+    (defun leuven--skip-entry-if-deadline-or-schedule ()
+      "Skip entries that have a deadline or that have a scheduled date."
+      (let* ((dl (org-entry-get nil "DEADLINE"))
+             (sd (org-entry-get nil "SCHEDULED")))
+        (if (or (and dl
+                     (not (equal dl "")))
+                (and sd
+                     (not (equal sd ""))))
+            (progn (outline-next-heading) (point)))))
+#+end_src
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("A3" "Agenda for all TODO entries"
+                   ((agenda ""
+                            ((org-agenda-format-date "")
+                             (org-agenda-overriding-header "Past due")
+                             (org-agenda-skip-function
+                              'leuven--skip-entry-unless-overdue-deadline)
+                             (org-deadline-warning-days 0)))
+                    (agenda ""
+                            ((org-agenda-format-date "")
+                             (org-agenda-overriding-header "Today/tomorrow")
+                             (org-agenda-skip-function
+                              'leuven--skip-entry-if-past-deadline)
+                             (org-agenda-span 2)
+                             (org-agenda-use-time-grid t)
+                             (org-deadline-warning-days 0)))
+                    (agenda ""
+                            ((org-agenda-format-date "")
+                             (org-agenda-overriding-header "Next 12 days")
+                             (org-agenda-skip-function
+                              '(leuven--skip-entry-unless-deadline-in-n-days-or-more 2))
+                             (org-deadline-warning-days 14)))
+                    (todo ""
+                          ((org-agenda-overriding-header "Later")
+                           (org-agenda-skip-function
+                            '(leuven--skip-entry-if-deadline-in-less-than-n-days-or-schedule-in-less-than-n-days 15 2))
+                           (org-agenda-sorting-strategy '(ts-up))))
+                    (todo ""
+                          ((org-agenda-overriding-header "No due date")
+                           (org-agenda-skip-function
+                            'leuven--skip-entry-if-deadline-or-schedule))))
+                   ((org-agenda-clockreport-mode nil)
+                    (org-agenda-prefix-format " %i %?-12t% s")
+                    (org-agenda-span 'day)
+                    (org-agenda-use-time-grid nil)
+                    (org-agenda-write-buffer-name "List Review"))
+                   "org-agenda-all-todo-entries.html") t)
+#+end_src
+
+*** Sorted by priority
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("Ap" "All Tasks (grouped by Priority)"
+                   ((tags-todo "PRIORITY={A}"
+                               ((org-agenda-overriding-header "HIGH")))
+                    (tags-todo "PRIORITY={B}"
+                               ((org-agenda-overriding-header "MEDIUM")))
+                    (tags-todo "PRIORITY=\"\""
+                               ((org-agenda-overriding-header "NONE"))) ; = medium
+                    (tags-todo "PRIORITY={C}"
+                               ((org-agenda-overriding-header "LOW")))
+                    (todo "DONE|CANX"
+                          ((org-agenda-overriding-header "COMPLETED"))))) t)
+#+end_src
+
+** CollectBox
 
 #+begin_src emacs-lisp
     ;; CollectBox + Email
@@ -172,23 +337,26 @@ to the deadline date.
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("." "Today"
-                   ;; list of all TODO entries with deadline today (no SDAY)
-                   ((tags-todo "TODO<>{SDAY}+DEADLINE=\"<+0d>\""
-                               ((org-agenda-overriding-header "Today:")
+                   ;; list of all TODO entries with deadline today
+                   ((tags-todo "DEADLINE=\"<+0d>\""
+                               ((org-agenda-overriding-header "DUE TODAY")
                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
-                    ;; list of all TODO entries with deadline before today (no SDAY)
-                    (tags-todo "TODO<>{SDAY}+DEADLINE<\"<+0d>\""
-                               ((org-agenda-overriding-header "Overdue:")
+                    ;; list of all TODO entries with deadline before today
+                    (tags-todo "DEADLINE<\"<+0d>\""
+                               ((org-agenda-overriding-header "OVERDUE")
                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     ;; list of all TODO entries completed today
-                    (tags-todo "CLOSED=\"<+0d>\""
-                               ((org-agenda-overriding-header "Completed:")
+                    (todo "DONE|CANX"
+                               ((org-agenda-overriding-header "COMPLETED")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "CLOSED: \\[2014-02-13"))
                                 (org-agenda-sorting-strategy '(priority-down)))))) t)
 #+end_src
 
-XXX Add list of tasks completed today.
+XXX For the list of tasks completed today, make a regexp which works with state
+changes (not the CLOSED timestamp), both with my custom version, and the
+default one (see `org-log-note-headings').
 
 #+begin_note
 Checking that =DEADLINE= <>"" can be implemented by =(org-agenda-skip-function
@@ -197,10 +365,44 @@ Checking that =DEADLINE= <>"" can be implemented by =(org-agenda-skip-function
 Though, we should check which one is more responsive.
 #+end_note
 
-Test case:
-- sched, no deadline
-- sched, deadline
-- no sched, deadline
+** Next 7 Days
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("7" "Next 7 Days"
+                   ((tags-todo "DEADLINE=\"<+0d>\""
+                               ((org-agenda-overriding-header "TODAY")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (tags-todo "DEADLINE=\"<+1d>\""
+                               ((org-agenda-overriding-header "TOMORROW")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (tags-todo "DEADLINE=\"<+2d>\""
+                               ((org-agenda-overriding-header "IN 2 DAYS")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (tags-todo "DEADLINE=\"<+3d>\""
+                               ((org-agenda-overriding-header "IN 3 DAYS")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (tags-todo "DEADLINE=\"<+4d>\""
+                               ((org-agenda-overriding-header "IN 4 DAYS")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (tags-todo "DEADLINE=\"<+5d>\""
+                               ((org-agenda-overriding-header "IN 5 DAYS")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (tags-todo "DEADLINE=\"<+6d>\""
+                               ((org-agenda-overriding-header "IN 6 DAYS")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (tags-todo "DEADLINE=\"<+7d>\""
+                               ((org-agenda-overriding-header "IN 7 DAYS")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down)))))) t)
+#+end_src
 
 ** Next
 
@@ -208,7 +410,7 @@ Test case:
     (add-to-list 'org-agenda-custom-commands
                  '("N" "Next"
                    tags-todo "TODO<>{SDAY}"
-                   ((org-agenda-overriding-header "List of all TODO entries with no due date (no SDAY):")
+                   ((org-agenda-overriding-header "List of all TODO entries with no due date (no SDAY)")
                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
                     (org-agenda-sorting-strategy '(priority-down)))) t)
 #+end_src
@@ -224,13 +426,15 @@ Though, we could make a performance comparison to see whether one is quicker
 than the other.
 #+end_note
 
-** Future
+** COMMENT Future
+
+XXX C'est scheduled qu'il faut checker, plutôt que deadline ?
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("F" "Future"
                    tags-todo "TODO<>{SDAY}+DEADLINE>\"<+0d>\""
-                   ((org-agenda-overriding-header "List of all TODO entries with future due date (no SDAY):")
+                   ((org-agenda-overriding-header "List of all TODO entries with future due date (no SDAY)")
                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
                     (org-agenda-sorting-strategy '(priority-down)))) t)
 #+end_src
@@ -241,20 +445,101 @@ than the other.
     (add-to-list 'org-agenda-custom-commands
                  '("Y" "Someday"
                    tags-todo "TODO={SDAY}"
-                   ((org-agenda-overriding-header "List of all SDAY entries:")
+                   ((org-agenda-overriding-header "List of all SDAY entries")
                     (org-agenda-sorting-strategy '(priority-down)))) t)
 #+end_src
 
-Test case:
-- SDAY with a deadline date
+** Waiting for
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("W" "Waiting for"
+                   tags-todo "TODO={WAIT}"
+                   ((org-agenda-overriding-header "Waiting for")
+                    (org-agenda-sorting-strategy '(deadline-up)))) t) ; XXX does not work
+#+end_src
 
 ** Projects
 
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("P" "Projects"
+                   tags-todo "project-DONE-CANX"
+                   ((org-agenda-overriding-header "Projects (High Level)")
+                    (org-agenda-sorting-strategy nil))) t)
+#+end_src
+
 ** Completed Tasks
 
-** Archived Tasks
+XXX Group completed tasks per date of completion.
+
+*************** TODO Add report "Recently added/completed/modified"
+Recently done.
+*************** END
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("R" "Recent items (past 7 days)"
+                   ;; faster than tags
+                   agenda ""
+                   ((org-agenda-start-day "-7d")
+                    (org-agenda-span 7)
+                    (org-agenda-repeating-timestamp-show-all nil)
+                    ;; %s is only for agenda views
+                    ;; (org-agenda-prefix-format "%s")
+                    ;; maybe not make much difference ka
+                    ;; (org-agenda-use-tag-inheritance nil)
+                    (org-agenda-inactive-leader "Inactive:  ")
+                    (org-agenda-include-inactive-timestamps t))) t)
+#+end_src
+
+*** Cleanup
+
+Cleanup:
+
+- Done actions older than 14 days
+- Inactive ticklers older than 14 days
+- Completed projects older than 14 days
 
 ** Calendar
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("^" . "Calendar...") t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("^w" "Events and appointments for 7 days"
+                   agenda ""
+                   ((org-agenda-entry-types '(:timestamp :sexp))
+                    ;; (org-agenda-overriding-header "Calendar for 7 days")
+                    ;; (org-agenda-repeating-timestamp-show-all t)
+                    (org-agenda-span 'week)
+                    (org-agenda-time-grid nil))) t)
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; calendar view for org-agenda
+    (when (locate-library "calfw-org")
+
+      (autoload 'cfw:open-org-calendar "calfw-org"
+        "Open an Org schedule calendar." t)
+
+      (add-to-list 'org-agenda-custom-commands
+                   '("^m" "Calendar for current month"
+                     (lambda (&rest ignore)
+                       (cfw:open-org-calendar))) t)
+
+      ;; (defun cfw:open-org-calendar-non-work (&args)
+      ;;   (interactive)
+      ;;   (let ((org-agenda-skip-function 'org-agenda-skip-work))
+      ;;     (cfw:open-org-calendar)))
+      ;;
+      ;; (add-to-list 'org-agenda-custom-commands
+      ;;              '("c" "Calendar (non-work) for current month"
+      ;;                cfw:open-org-calendar-non-work) t)
+
+      )
+#+end_src
 
 ** Search
 
@@ -270,44 +555,27 @@ Search any word or regexp within your task name or in the note field:
 #+end_src
 
 *************** TODO Add =F= to search in all files, but not into DONE tasks
+*************** END
 
 We should have two agenda views:
 - sorted by priority (C-c a a, for example)
 - sorted by effort
 
-#+begin_src emacs-lisp
-    ;; (add-to-list 'org-agenda-custom-commands
-    ;;              '("A" . "0. Agenda...") t)
-    ;;
-    ;; (add-to-list 'org-agenda-custom-commands
-    ;;              '("AF" "Agenda of upcoming due dates (6 months)"
-    ;;                ;; FIXME We don't see DEADLINE with `-1m' (or so)
-    ;;                ;; specifications (if they are more than 1m ahead of now)!
-    ;;                agenda ""
-    ;;                ((org-agenda-skip-function
-    ;;                  '(org-agenda-skip-entry-if 'notdeadline))
-    ;;                 (org-agenda-span 'day)
-    ;;                 (org-agenda-time-grid nil)
-    ;;                 (org-deadline-warning-days 183))) t)
-    ;;              ;; Some SCHEDULED are shown (when paired with a deadline and
-    ;;              ;; scheduled in the past or for today)
-#+end_src
+** Notes
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
-                 '("o" "Organize thoughts to refile"
+                 '("n" "Organize thoughts to refile"
                    tags "refile|capture"
                    ((org-agenda-overriding-header "Refile stuff"))) t)
 #+end_src
+
+** Reviews
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("r" . "4. Review...") t)
 #+end_src
-
-*************** TODO Add report "Recently added/completed/modified"
-Recently done.
-*************** END
 
 =org-timeline= has weaknesses and although not officially deprecated, should be
 best avoided.  See Carsten's comments in
@@ -335,28 +603,98 @@ http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
-                 '("rP" "Projects"
-                   tags-todo "project-DONE-CANX"
-                   ((org-agenda-overriding-header "Projects (High Level)")
-                    (org-agenda-sorting-strategy nil))) t)
-#+end_src
-
-#+begin_src emacs-lisp
-    (add-to-list 'org-agenda-custom-commands
                  '("rn" "Now (undated tasks in progress)"
                    todo "STRT"
                    ((org-agenda-todo-ignore-with-date t))) t)
 #+end_src
 
-** Cleanup
+*** Hotlist
 
-Cleanup:
+The *hotlist* is a convenient way to see your *most important tasks* for you to be
+working on right now.  It contains /active/ tasks that:
 
-- Done actions older than 14 days
-- Inactive ticklers older than 14 days
-- Completed projects older than 14 days
+- are *due soon* (in the next 7 days), or
+- have a *high priority* (=#A=), or
+- are =FLAGGED=.
 
-** Weekly task review
+There is an exception to the above rule: *tasks with a future =SCHEDULED= date
+will be hidden* from the hotlist regardless of their =DEADLINE= date, priority or
+flag.
+
+In other words, to be listed in the hotlist, tasks must have as well
+a =SCHEDULED= date that is:
+
+- on or before today, or
+- blank.
+
+FIXME Tasks with #A priority are not all listed (even without scheduled date)!
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("rh" "Hotlist"
+                   ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
+                   ((tags-todo "DEADLINE<=\"<+0d>\""
+                               ((org-agenda-overriding-header "Late")))
+                    (tags-todo "DEADLINE>\"<+0d>\"+DEADLINE<=\"<+1w>\""
+                               ((org-agenda-overriding-header "Due in next 7 days")))
+                    (tags-todo "DEADLINE={}+PRIORITY={A}|DEADLINE>\"<+1w>\"+PRIORITY={A}"
+                               ((org-agenda-overriding-header "High priority")))
+                    (tags-todo "DEADLINE={}+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
+                               ((org-agenda-overriding-header "Flagged")
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-when-regexp-matches))
+                                (org-agenda-skip-regexp "\\[#A\\]"))))
+                   ((org-agenda-todo-ignore-scheduled 'future)
+                    (org-agenda-sorting-strategy '(deadline-down)))) t)
+#+end_src
+
+The hotlist is the perfect thing to *review each morning* to know what you need
+to do each day.
+
+*************** TODO Have the hotlist emailed to you each day
+
+*** Daily task review
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("rd" "Daily review"
+                   ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
+                          ((org-agenda-overriding-header "New Tasks")))
+                    (tags "LEVEL=2"
+                          ((org-agenda-overriding-header "New Emails")
+                           (org-agenda-files '("~/org/email.org"))))
+                    (agenda ""
+                            ((org-agenda-entry-types '(:timestamp :sexp))
+                             (org-agenda-overriding-header "Calendar")
+                             (org-agenda-span 'day)))
+                    (agenda ""
+                            ((org-agenda-entry-types '(:deadline))
+                             (org-agenda-overriding-header "Due Dates")
+                             (org-agenda-skip-function
+                              '(org-agenda-skip-entry-if 'todo 'done))
+                             (org-agenda-sorting-strategy
+                              '(priority-down time-down))
+                             (org-agenda-span 'day)
+                             (org-agenda-start-on-weekday nil)
+                             (org-agenda-time-grid nil)))
+                    (agenda ""
+                            ((org-agenda-entry-types '(:scheduled))
+                             (org-agenda-overriding-header "Scheduled")
+                             (org-agenda-skip-function
+                              '(org-agenda-skip-entry-if 'todo 'done))
+                             (org-agenda-sorting-strategy
+                              '(priority-down time-down))
+                             (org-agenda-span 'day)
+                             (org-agenda-start-on-weekday nil)
+                             (org-agenda-time-grid nil)))
+                    )
+                   ((org-agenda-format-date "")
+                    (org-agenda-start-with-clockreport-mode nil))) t)
+#+end_src
+
+*************** TODO Show overridden headers when in agenda view
+
+*** Weekly task review
 
 1. Clear inbox for collecting
 2. Review previous calendar data
@@ -434,127 +772,12 @@ Cleanup:
                     )) t)
 #+end_src
 
-#+begin_src emacs-lisp
-    (add-to-list 'org-agenda-custom-commands
-                 '("rd" "Daily review"
-                   ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
-                          ((org-agenda-overriding-header "New Tasks")))
-                    (tags "LEVEL=2"
-                          ((org-agenda-overriding-header "New Emails")
-                           (org-agenda-files '("~/org/email.org"))))
-                    (agenda ""
-                            ((org-agenda-entry-types '(:timestamp :sexp))
-                             (org-agenda-overriding-header "Calendar")
-                             (org-agenda-span 'day)))
-                    (agenda ""
-                            ((org-agenda-entry-types '(:deadline))
-                             (org-agenda-overriding-header "Due Dates")
-                             (org-agenda-skip-function
-                              '(org-agenda-skip-entry-if 'todo 'done))
-                             (org-agenda-sorting-strategy
-                              '(priority-down time-down))
-                             (org-agenda-span 'day)
-                             (org-agenda-start-on-weekday nil)
-                             (org-agenda-time-grid nil)))
-                    (agenda ""
-                            ((org-agenda-entry-types '(:scheduled))
-                             (org-agenda-overriding-header "Scheduled")
-                             (org-agenda-skip-function
-                              '(org-agenda-skip-entry-if 'todo 'done))
-                             (org-agenda-sorting-strategy
-                              '(priority-down time-down))
-                             (org-agenda-span 'day)
-                             (org-agenda-start-on-weekday nil)
-                             (org-agenda-time-grid nil)))
-                    )
-                   ((org-agenda-format-date "")
-                    (org-agenda-start-with-clockreport-mode nil))) t)
-#+end_src
-
-#+begin_src emacs-lisp
-;;*** Calendar style views
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("rc" "Calendar for 7 days"
-                   agenda ""
-                   ((org-agenda-entry-types '(:timestamp :sexp))
-                    (org-agenda-overriding-header "Calendar for 7 days")
-                    ;; (org-agenda-repeating-timestamp-show-all t)
-                    (org-agenda-span 'week)
-                    (org-agenda-time-grid nil))) t)
-#+end_src
-
-#+begin_src emacs-lisp
-    (add-to-list 'org-agenda-custom-commands
-                 '("rr" "Recent items (past 7 days)"
-                   ;; faster than tags
-                   agenda ""
-                   ((org-agenda-start-day "-7d")
-                    (org-agenda-span 7)
-                    (org-agenda-repeating-timestamp-show-all nil)
-                    ;; %s is only for agenda views
-                    ;; (org-agenda-prefix-format "%s")
-                    ;; maybe not make much difference ka
-                    ;; (org-agenda-use-tag-inheritance nil)
-                    (org-agenda-inactive-leader "Inactive:  ")
-                    (org-agenda-include-inactive-timestamps t))) t)
-#+end_src
+** Do the work!
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("d" . "5. Do the work...") t)
 #+end_src
-
-*************** TODO Show overridden headers when in agenda view
-
-#+begin_src emacs-lisp
-;;*** Other views
-#+end_src
-
-The *hotlist* is a convenient way to see your *most important tasks* for you to be
-working on right now.  It contains /active/ tasks that:
-
-- are *due soon* (in the next 7 days), or
-- have a *high priority* (=#A=), or
-- are =FLAGGED=.
-
-There is an exception to the above rule: *tasks with a future =SCHEDULED= date
-will be hidden* from the hotlist regardless of their =DEADLINE= date, priority or
-flag.
-
-In other words, to be listed in the hotlist, tasks must have as well
-a =SCHEDULED= date that is:
-
-- on or before today, or
-- blank.
-
-*************** TODO Use option (org-agenda-todo-ignore-with-date t) = ignore SCHEDULED criteria?
-
-BUG Tasks with #A priority are not all listed (even without scheduled date)!
-
-#+begin_src emacs-lisp
-    (add-to-list 'org-agenda-custom-commands
-                 '("dh" "Hotlist"
-                   ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
-                   ((tags-todo "DEADLINE<=\"<+0d>\""
-                               ((org-agenda-overriding-header "Late")))
-                    (tags-todo "DEADLINE>\"<+0d>\"+DEADLINE<=\"<+1w>\""
-                               ((org-agenda-overriding-header "Due in next 7 days")))
-                    (tags-todo "DEADLINE={}+PRIORITY={A}|DEADLINE>\"<+1w>\"+PRIORITY={A}"
-                               ((org-agenda-overriding-header "High priority")))
-                    (tags-todo "DEADLINE={}+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
-                               ((org-agenda-overriding-header "Flagged")
-                                (org-agenda-skip-function
-                                 '(org-agenda-skip-entry-when-regexp-matches))
-                                (org-agenda-skip-regexp "\\[#A\\]"))))
-                   ((org-agenda-todo-ignore-scheduled 'future)
-                    (org-agenda-sorting-strategy '(deadline-down)))) t)
-#+end_src
-
-The hotlist is the perfect thing to *review each morning* to know what you need
-to do each day.
-
-*************** TODO Have the hotlist emailed to you each day
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -572,13 +795,7 @@ to do each day.
                      ,(concat "Tasks assigned to " user-login-name)))) t)
 #+end_src
 
-#+begin_src emacs-lisp
-    ;; create a sparse tree (current buffer only) with all entries containing
-    ;; the word `TODO', `FIXME' or `XXX'
-    (add-to-list 'org-agenda-custom-commands
-                 '("1" "Task markers (in current buffer)"
-                   occur-tree "\\<TODO\\|FIXME\\|XXX\\>") t)
-#+end_src
+** Export (printed agenda)
 
 To create PDF output, the GhostScript =ps2pdf= utility must be installed on the
 system.
@@ -592,8 +809,6 @@ special command to produce all specified files in one step: =C-c a e=.
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("E" . "Exported agenda files...") t)
-
-;;*** Printed agenda
 
     ;; exporting agenda views
     (add-to-list 'org-agenda-custom-commands
@@ -615,7 +830,28 @@ special command to produce all specified files in one step: =C-c a e=.
                     (ps-landscape-mode t)
                     (ps-number-of-columns 1))
                    ("~/org-calls.pdf")) t)
+#+end_src
 
+** Task markers (in the current buffer)
+
+#+begin_src emacs-lisp
+    ;; create a sparse tree (current buffer only) with all entries containing
+    ;; the word `TODO', `FIXME' or `XXX'
+    (add-to-list 'org-agenda-custom-commands
+                 '("1" "Task markers (in current buffer)"
+                   occur-tree "\\<TODO\\|FIXME\\|XXX\\>") t)
+#+end_src
+
+** Others
+
+*************** TODO Add a custom view which is some "bill" to send to your boss/client (table view)
+
+* Buggy commands
+  :PROPERTIES:
+  :tangle:   no
+  :END:
+
+#+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("Ee" "Print reports (TODO)"
                    ;; See ThinkingRock examples
@@ -641,17 +877,11 @@ special command to produce all specified files in one step: =C-c a e=.
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
-                 '("v" . "6. More views...") t)
-
-;;*** Priorities
-
-    ;; priority levels
-    (add-to-list 'org-agenda-custom-commands
-                 '("v," . "Priorities...") t)
+                 '("," . "Priorities...") t)
 
     ;; list only priority A tasks for the current day
     (add-to-list 'org-agenda-custom-commands
-                 '("v,A" "Priority #A tasks for today"
+                 '(",A" "Priority #A tasks for today"
                    agenda ""
                    ((org-agenda-skip-function
                      '(org-agenda-skip-entry-if 'notregexp "\\=.*\\[#A\\]"))
@@ -661,7 +891,7 @@ special command to produce all specified files in one step: =C-c a e=.
 
     ;; list priority A and B tasks for the current day
     (add-to-list 'org-agenda-custom-commands
-                 '("v,B" "Priority #A and #B tasks for today"
+                 '(",B" "Priority #A and #B tasks for today"
                    agenda ""
                    ((org-agenda-overriding-header
                      "Today's priority #A and #B tasks: ")
@@ -670,226 +900,22 @@ special command to produce all specified files in one step: =C-c a e=.
                     (org-agenda-span 'day))) t)
 #+end_src
 
-** TODO Organize view
-
-All active *tasks*, filtered by due date:
-- *Overdue*
-- Completed (today, I guess)
-- Due *today*
-- Due *tomorrow*
-- Due within *a week*
-- Due *later*
-- *No due date* (includes *In-Tray*)
-
-*************** TODO Do this above view?
-
 #+begin_src emacs-lisp
-    (add-to-list 'org-agenda-custom-commands
-                 `("dd" "All active tasks, by due date"
-                   ((agenda ""
-                            ((org-agenda-overriding-header "Today")
-                             ;; FIXME We don't see "timed" DEADLINE
-                             (org-agenda-skip-function
-                              (lambda ()
-                                (let* ((dl (org-entry-get nil "DEADLINE")))
-                                  (if (or (not dl)
-                                          (equal dl "")
-                                          (org-time> dl (org-time-today)))
-                                      (progn (outline-next-heading) (point))))))
-                             (org-agenda-skip-scheduled-if-deadline-is-shown t)
-                             (org-agenda-span 'day)
-                             (org-deadline-warning-days 0)))
-                    (agenda ""
-                            ((org-agenda-entry-types '(:deadline))
-                             (org-agenda-overriding-header "Tomorrow")
-                             (org-deadline-warning-days 1)))
-                    (agenda ""
-                            ((org-agenda-overriding-header "Next 5 days")
-                             (org-agenda-skip-function
-                              '(leuven--skip-entry-unless-deadline-in-n-days-or-more 2))
-                             (org-deadline-warning-days 7)))
-                    (agenda ""
-                            ((org-agenda-format-date "")
-                             (org-agenda-overriding-header "Next 3 weeks")
-                             (org-agenda-skip-function
-                              '(leuven--skip-entry-unless-deadline-in-n-days-or-more 7))
-                             (org-deadline-warning-days 28)))
-                    (agenda ""
-                            ((org-agenda-entry-types '(:deadline))
-                             (org-agenda-overriding-header
-                              "Unscheduled upcoming due dates:")
-                             (org-agenda-skip-entry-if 'scheduled)
-                             (org-agenda-span 'day)
-                             (org-agenda-time-grid nil)
-                             (org-deadline-warning-days 365))))
-                   ((org-agenda-clockreport-mode nil)
-                    (org-agenda-format-date "")
-                    (org-agenda-span 'day)
-                    (org-agenda-sorting-strategy '(deadline-up))
-                    (org-agenda-use-time-grid nil)
-                    (org-agenda-write-buffer-name "Reminders"))) t)
-#+end_src
-
-Show reminders:
-- Overdue actions *(leadtime: -365..-1)*
-- Actions for today/tomorrow
-- All reminders for the next 5 days
-
-#+begin_src emacs-lisp
-    (defun leuven--skip-entry-unless-overdue-deadline ()
-      "Skip entries that have no deadline, or that have a deadline later than or equal to today."
-      (let* ((dl (org-entry-get nil "DEADLINE")))
-        (if (or (not dl)
-                (equal dl "")
-                (org-time>= dl (org-time-today)))
-            (progn (outline-next-heading) (point)))))
-
-    (defun leuven--skip-entry-if-past-deadline ()
-      "Skip entries that have a deadline earlier than today."
-      (let* ((dl (org-entry-get nil "DEADLINE")))
-        (if (org-time< dl (org-time-today))
-            (progn (outline-next-heading) (point)))))
-
-    (defun leuven--skip-entry-unless-deadline-in-n-days-or-more (n)
-      "Skip entries that have no deadline, or that have a deadline earlier than in N days."
-      (let* ((dl (org-entry-get nil "DEADLINE")))
-        (if (or (not dl)
-                (equal dl "")
-                (org-time< dl (+ (org-time-today) (* n 86400))))
-            (progn (outline-next-heading) (point)))))
-
-    (add-to-list 'org-agenda-custom-commands
-                 `("dt" "Agenda for upcoming TODO entries"
-                   ((agenda ""
-                            ((org-agenda-format-date "")
-                             (org-agenda-overriding-header "Past due")
-                             (org-agenda-skip-function
-                              'leuven--skip-entry-unless-overdue-deadline)
-                             (org-deadline-warning-days 0)))
-                    (agenda ""
-                            ((org-agenda-overriding-header "Today/tomorrow")
-                             (org-agenda-skip-function
-                              'leuven--skip-entry-if-past-deadline)
-                             (org-agenda-span 2)
-                             (org-agenda-use-time-grid t)
-                             (org-deadline-warning-days 0)))
-                    (agenda ""
-                            ((org-agenda-format-date "")
-                             (org-agenda-overriding-header "Next 5 days")
-                             (org-agenda-skip-function
-                              '(leuven--skip-entry-unless-deadline-in-n-days-or-more 2))
-                             (org-deadline-warning-days 7))))
-                   ((org-agenda-clockreport-mode nil)
-                    (org-agenda-span 'day)
-                    (org-agenda-use-time-grid nil)
-                    (org-agenda-write-buffer-name "Reminders"))
-                   "~/org-agenda-upcoming-todo-entries.html") t)
-#+end_src
-
-Agenda:
-- Overdue
-- Today
-- Tomorrow
-- Next 5 days
-- Next 3 weeks
-- Later
-- No due date
-
-#+begin_src emacs-lisp
-    (defun leuven--skip-entry-if-deadline-or-schedule ()
-      "Skip entries that have a deadline or that have a scheduled date."
-      (let* ((dl (org-entry-get nil "DEADLINE"))
-             (sd (org-entry-get nil "SCHEDULED")))
-        (if (or (and dl
-                     (not (equal dl "")))
-                (and sd
-                     (not (equal sd ""))))
-            (progn (outline-next-heading) (point)))))
-
-    (defun leuven--skip-entry-if-deadline-in-less-than-n-days-or-schedule-in-less-than-n-days (n1 n2)
-      "Skip entries that have a deadline in less than N1 days, or that have a
-    scheduled date in less than N2 days, or that have no deadline nor scheduled."
-      (let* ((dl (org-entry-get nil "DEADLINE"))
-             (sd (org-entry-get nil "SCHEDULED")))
-        (if (or (and dl
-                     (not (equal dl ""))
-                     (org-time< dl (+ (org-time-today) (* n1 86400))))
-                (and sd
-                     (not (equal sd ""))
-                     (org-time< sd (+ (org-time-today) (* n2 86400))))
-                (and (or (not dl)       ; no deadline
-                         (equal dl ""))
-                     (or (not sd)       ; nor scheduled
-                         (equal sd ""))))
-            (progn (outline-next-heading) (point)))))
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("dT" "Agenda for all TODO entries"
-                   ((agenda ""
-                            ((org-agenda-format-date "")
-                             (org-agenda-overriding-header "Past due")
-                             (org-agenda-skip-function
-                              'leuven--skip-entry-unless-overdue-deadline)
-                             (org-deadline-warning-days 0)))
-                    (agenda ""
-                            ((org-agenda-format-date "")
-                             (org-agenda-overriding-header "Today/tomorrow")
-                             (org-agenda-skip-function
-                              'leuven--skip-entry-if-past-deadline)
-                             (org-agenda-span 2)
-                             (org-agenda-use-time-grid t)
-                             (org-deadline-warning-days 0)))
-                    (agenda ""
-                            ((org-agenda-format-date "")
-                             (org-agenda-overriding-header "Next 12 days")
-                             (org-agenda-skip-function
-                              '(leuven--skip-entry-unless-deadline-in-n-days-or-more 2))
-                             (org-deadline-warning-days 14)))
-                    (todo ""
-                          ((org-agenda-overriding-header "Later")
-                           (org-agenda-skip-function
-                            '(leuven--skip-entry-if-deadline-in-less-than-n-days-or-schedule-in-less-than-n-days 15 2))
-                           (org-agenda-sorting-strategy '(ts-up))))
-                    (todo ""
-                          ((org-agenda-overriding-header "No due date")
-                           (org-agenda-skip-function
-                            'leuven--skip-entry-if-deadline-or-schedule))))
-                   ((org-agenda-clockreport-mode nil)
-                    (org-agenda-prefix-format " %i %?-12t% s")
-                    (org-agenda-span 'day)
-                    (org-agenda-use-time-grid nil)
-                    (org-agenda-write-buffer-name "List Review"))
-                   "org-agenda-all-todo-entries.html") t)
-#+end_src
-
-*************** TODO Show SCHEDULED items as well in "Next 12 Days"
-
-*************** TODO Add a custom view which is some "bill" to send to your boss/client (table view)
-
-** Calendar
-
-#+begin_src emacs-lisp
-    ;; calendar view for org-agenda
-    (when (locate-library "calfw-org")
-
-      (autoload 'cfw:open-org-calendar "calfw-org"
-        "Open an Org schedule calendar." t)
-
-      (add-to-list 'org-agenda-custom-commands
-                   '("^" "Calendar for current month"
-                     (lambda (&rest ignore)
-                       (cfw:open-org-calendar))) t)
-
-      ;; (defun cfw:open-org-calendar-non-work (&args)
-      ;;   (interactive)
-      ;;   (let ((org-agenda-skip-function 'org-agenda-skip-work))
-      ;;     (cfw:open-org-calendar)))
-      ;;
-      ;; (add-to-list 'org-agenda-custom-commands
-      ;;              '("c" "Calendar (non-work) for current month"
-      ;;                cfw:open-org-calendar-non-work) t)
-
-      )
+    ;; (add-to-list 'org-agenda-custom-commands
+    ;;              '("A" . "0. Agenda...") t)
+    ;;
+    ;; (add-to-list 'org-agenda-custom-commands
+    ;;              '("AF" "Agenda of upcoming due dates (6 months)"
+    ;;                ;; FIXME We don't see DEADLINE with `-1m' (or so)
+    ;;                ;; specifications (if they are more than 1m ahead of now)!
+    ;;                agenda ""
+    ;;                ((org-agenda-skip-function
+    ;;                  '(org-agenda-skip-entry-if 'notdeadline))
+    ;;                 (org-agenda-span 'day)
+    ;;                 (org-agenda-time-grid nil)
+    ;;                 (org-deadline-warning-days 183))) t)
+    ;;              ;; Some SCHEDULED are shown (when paired with a deadline and
+    ;;              ;; scheduled in the past or for today)
 #+end_src
 
 * Unused code
@@ -961,4 +987,56 @@ Agenda:
     (todo "PROJ"
           ((org-agenda-todo-ignore-deadlines t)
            (org-agenda-sorting-strategy '(priority-down))))))
+#+end_src
+
+* Test cases
+
+- Entries with no TODO keyword, but well with a DEADLINE.
+- Scheduled date, but no deadline
+- Scheduled date and deadline
+  + on the same date
+  + on different dates
+- No scheduled date, well a deadline
+- SDAY with a deadline date
+- Entries with "timed" dates
+
+* Francesco
+
+#+begin_src emacs-lisp :tangle no
+    (add-to-list 'org-agenda-custom-commands
+                 '("A" "All Tasks (grouped by Due Date)"
+                   ((tags-todo "DEADLINE<\"<+0d>\""
+                               ((org-agenda-overriding-header "OVERDUE")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (tags-todo "DEADLINE=\"<+0d>\""
+                               ((org-agenda-overriding-header "DUE TODAY")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (tags-todo "DEADLINE=\"<+1d>\""
+                               ((org-agenda-overriding-header "DUE TOMORROW")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (tags-todo "DEADLINE>\"<+1d>\"+DEADLINE<=\"<+7d>\""
+                               ((org-agenda-overriding-header "DUE WITHIN A WEEK")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (tags-todo "DEADLINE>\"<+7d>\"+DEADLINE<=\"<+31d>\""
+                               ((org-agenda-overriding-header "DUE WITHIN A MONTH")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (tags-todo "DEADLINE>\"<+31d>\"+TODO<>{SDAY}"
+                               ((org-agenda-overriding-header "DUE LATER")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (tags-todo "DEADLINE>\"<+31d>\"+TODO={SDAY}"
+                               ((org-agenda-overriding-header "SOMEDAY")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (todo ""
+                               ((org-agenda-overriding-header "NO DUE DATE")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    (todo "DONE|CANX"
+                          ((org-agenda-overriding-header "COMPLETED"))))) t)
 #+end_src
