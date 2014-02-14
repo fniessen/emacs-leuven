@@ -97,6 +97,19 @@ Puisque l'on peut facilement filter par catégorie, on peut imaginer qu'il est
 tâches d'une catégorie.
 #+end_note
 
+** List of commands
+
+Base package (for the tools, such as http://ticktick.com/, which only have the
+concept of deadline):
+
+- All
+- Today
+- Next 7 days
+- Inbox
+- List (Work, Family)
+- Completed
+- Trash
+
 ** All tasks (tags view)
 
 #+begin_src emacs-lisp
@@ -106,17 +119,15 @@ tâches d'une catégorie.
 
 *** Sorted by due date
 
-All *tasks*, filtered by due date:
-- *Overdue*
-- Due *today*
-- Due *tomorrow*
-- Due within *a week* (next 5 days)
-- Due within *a month* (next 3 weeks)
-- Due *later*
-- *No due date* (includes *CollectBox*)
-- *Completed*
-
-*************** TODO Show SCHEDULED items as well in "Next 5 Days"
+All *tasks*, filtered by *due date*:
+- /Overdue/
+- Due /today/
+- Due /tomorrow/
+- Due within /a week/ (next 5 days)
+- Due within /a month/ (next 3 weeks)
+- Due /later/
+- /No due date/ (includes /CollectBox/)
+- /Completed/
 
 **** All tasks (tags view)
 
@@ -125,34 +136,28 @@ All *tasks*, filtered by due date:
                  '("Ad" "All Tasks (grouped by Due Date)"
                    ((tags-todo "DEADLINE<\"<+0d>\""
                                ((org-agenda-overriding-header "OVERDUE")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE=\"<+0d>\""
                                ((org-agenda-overriding-header "DUE TODAY")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE=\"<+1d>\""
                                ((org-agenda-overriding-header "DUE TOMORROW")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE>\"<+1d>\"+DEADLINE<=\"<+7d>\""
                                ((org-agenda-overriding-header "DUE WITHIN A WEEK")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE>\"<+7d>\"+DEADLINE<=\"<+28d>\""
                                ((org-agenda-overriding-header "DUE WITHIN A MONTH")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE>\"<+28d>\""
                                ((org-agenda-overriding-header "DUE LATER")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
                     (todo ""
                                ((org-agenda-overriding-header "NO DUE DATE")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
                     (todo "DONE|CANX"
-                          ((org-agenda-overriding-header "COMPLETED"))))) t)
+                          ((org-agenda-overriding-header "COMPLETED"))))
+                   ((org-agenda-sorting-strategy '(priority-down)))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("A1" "All Tasks (sorted by Due Date)"
@@ -160,8 +165,6 @@ All *tasks*, filtered by due date:
                    ((org-agenda-overriding-header "All Tasks (sorted by Due Date)")
                     (org-agenda-sorting-strategy '(deadline-up)))) t) ; XXX sort not OK
 #+end_src
-
-XXX Check tasks falling in the "Next 7 days" range (look for +7, +8 days)
 
 **** All tasks (agenda view)
 
@@ -314,7 +317,8 @@ XXX Check tasks falling in the "Next 7 days" range (look for +7, +8 days)
                     (tags-todo "PRIORITY={C}"
                                ((org-agenda-overriding-header "LOW")))
                     (todo "DONE|CANX"
-                          ((org-agenda-overriding-header "COMPLETED"))))) t)
+                          ((org-agenda-overriding-header "COMPLETED")
+                           (org-agenda-sorting-strategy '(priority-down)))))) t)
 #+end_src
 
 ** CollectBox
@@ -509,7 +513,7 @@ Cleanup:
                  '("^" . "Calendar...") t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("^w" "Events and appointments for 7 days"
+                 '("^7" "Events and appointments for 7 days"
                    agenda ""
                    ((org-agenda-entry-types '(:timestamp :sexp))
                     ;; (org-agenda-overriding-header "Calendar for 7 days")

@@ -8,34 +8,28 @@
                  '("Ad" "All Tasks (grouped by Due Date)"
                    ((tags-todo "DEADLINE<\"<+0d>\""
                                ((org-agenda-overriding-header "OVERDUE")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE=\"<+0d>\""
                                ((org-agenda-overriding-header "DUE TODAY")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE=\"<+1d>\""
                                ((org-agenda-overriding-header "DUE TOMORROW")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE>\"<+1d>\"+DEADLINE<=\"<+7d>\""
                                ((org-agenda-overriding-header "DUE WITHIN A WEEK")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE>\"<+7d>\"+DEADLINE<=\"<+28d>\""
                                ((org-agenda-overriding-header "DUE WITHIN A MONTH")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE>\"<+28d>\""
                                ((org-agenda-overriding-header "DUE LATER")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
                     (todo ""
                                ((org-agenda-overriding-header "NO DUE DATE")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
                     (todo "DONE|CANX"
-                          ((org-agenda-overriding-header "COMPLETED"))))) t)
+                          ((org-agenda-overriding-header "COMPLETED"))))
+                   ((org-agenda-sorting-strategy '(priority-down)))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("A1" "All Tasks (sorted by Due Date)"
@@ -181,7 +175,8 @@
                     (tags-todo "PRIORITY={C}"
                                ((org-agenda-overriding-header "LOW")))
                     (todo "DONE|CANX"
-                          ((org-agenda-overriding-header "COMPLETED"))))) t)
+                          ((org-agenda-overriding-header "COMPLETED")
+                           (org-agenda-sorting-strategy '(priority-down)))))) t)
 
     ;; CollectBox + Email
     (add-to-list 'org-agenda-custom-commands
@@ -286,7 +281,7 @@
                  '("^" . "Calendar...") t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("^w" "Events and appointments for 7 days"
+                 '("^7" "Events and appointments for 7 days"
                    agenda ""
                    ((org-agenda-entry-types '(:timestamp :sexp))
                     ;; (org-agenda-overriding-header "Calendar for 7 days")
