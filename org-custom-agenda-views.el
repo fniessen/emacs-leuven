@@ -24,9 +24,20 @@
                     (tags-todo "DEADLINE>\"<+28d>\""
                                ((org-agenda-overriding-header "DUE LATER")
                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
-                    (todo ""
-                               ((org-agenda-overriding-header "NO DUE DATE")
+
+                    ;; (todo ""
+                    ;;            ((org-agenda-overriding-header "NO DUE DATE")
+                    ;;             (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+                    (tags-todo "TODO<>{WAIT\\|SDAY}"
+                               ((org-agenda-overriding-header "NO DUE DATE / NEXT")
                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+                    (tags-todo "TODO={WAIT}"
+                               ((org-agenda-overriding-header "NO DUE DATE / WAITING FOR")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+                    (tags-todo "TODO={SDAY}"
+                               ((org-agenda-overriding-header "NO DUE DATE / SOMEDAY")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+
                     (todo "DONE|CANX"
                           ((org-agenda-overriding-header "COMPLETED"))))
                    ((org-agenda-sorting-strategy '(priority-down)))) t)
@@ -352,14 +363,14 @@
     (add-to-list 'org-agenda-custom-commands
                  '("rh" "Hotlist"
                    ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
-                   ((tags-todo "DEADLINE<=\"<+0d>\""
-                               ((org-agenda-overriding-header "Late")))
-                    (tags-todo "DEADLINE>\"<+0d>\"+DEADLINE<=\"<+1w>\""
-                               ((org-agenda-overriding-header "Due in next 7 days")))
+                   ((tags-todo "DEADLINE<\"<+0d>\""
+                               ((org-agenda-overriding-header "OVERDUE")))
+                    (tags-todo "DEADLINE>=\"<+0d>\"+DEADLINE<=\"<+1w>\""
+                               ((org-agenda-overriding-header "DUE IN NEXT 7 DAYS")))
                     (tags-todo "DEADLINE={}+PRIORITY={A}|DEADLINE>\"<+1w>\"+PRIORITY={A}"
-                               ((org-agenda-overriding-header "High priority")))
+                               ((org-agenda-overriding-header "HIGH PRIORITY")))
                     (tags-todo "DEADLINE={}+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
-                               ((org-agenda-overriding-header "Flagged")
+                               ((org-agenda-overriding-header "FLAGGED")
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-when-regexp-matches))
                                 (org-agenda-skip-regexp "\\[#A\\]"))))
@@ -369,17 +380,17 @@
     (add-to-list 'org-agenda-custom-commands
                  '("rd" "Daily review"
                    ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
-                          ((org-agenda-overriding-header "New Tasks")))
+                          ((org-agenda-overriding-header "NEW TASKS")))
                     (tags "LEVEL=2"
-                          ((org-agenda-overriding-header "New Emails")
+                          ((org-agenda-overriding-header "NEW EMAILS")
                            (org-agenda-files '("~/org/email.org"))))
                     (agenda ""
                             ((org-agenda-entry-types '(:timestamp :sexp))
-                             (org-agenda-overriding-header "Calendar")
+                             (org-agenda-overriding-header "CALENDAR")
                              (org-agenda-span 'day)))
                     (agenda ""
                             ((org-agenda-entry-types '(:deadline))
-                             (org-agenda-overriding-header "Due Dates")
+                             (org-agenda-overriding-header "DUE DATES")
                              (org-agenda-skip-function
                               '(org-agenda-skip-entry-if 'todo 'done))
                              (org-agenda-sorting-strategy
@@ -389,7 +400,7 @@
                              (org-agenda-time-grid nil)))
                     (agenda ""
                             ((org-agenda-entry-types '(:scheduled))
-                             (org-agenda-overriding-header "Scheduled")
+                             (org-agenda-overriding-header "SCHEDULED")
                              (org-agenda-skip-function
                               '(org-agenda-skip-entry-if 'todo 'done))
                              (org-agenda-sorting-strategy
