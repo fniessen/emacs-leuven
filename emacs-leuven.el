@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140214.1316
+;; Version: 20140214.1622
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140214.1316]--")
+(message "* --[ Loading Emacs Leuven 20140214.1622]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4349,14 +4349,10 @@ From %c"
   (setq org-agenda-persistent-filter t)
 
   ;; faces for specific Priorities (#A, #B and #C)
-  ;; XXX This generates an error when C-x C-w'ing the agenda view
-  (setq org-priority-faces-XXX
-        '((?A . (:weight bold :slant italic :underline t
-                 :foreground "#6E0000" :background "#F67777"))
-          (?B . (:slant italic
-                 :foreground "#005606" :background "#B6E864"))
-          (?C . (:slant italic
-                 :foreground "#00337B" :background "#C3DCFF"))))
+  (setq org-priority-faces
+        '((?A . (:weight bold :foreground "#F92F50"))
+          (?B . (:weight bold :foreground "#F3BB4C"))
+          (?C . (:slant italic :foreground "#90ABD6"))))
 
   ;; 10.5 Commands in the agenda buffer
   (defun leuven--weekday-p ()
@@ -5130,11 +5126,13 @@ From %c"
       (when (file-exists-p lob-file)
         (org-babel-lob-ingest lob-file))))
 
-  ;; template used to export the body of code blocks
-  (setq org-babel-exp-code-template
-        ;; (concat "\n=%name=:\n"
-                "#+BEGIN_SRC %lang%switches%flags\n%body\n#+END_SRC")
-        ;; )
+  (with-eval-after-load "ob-exp"
+    ;; template used to export the body of code blocks
+    (setq org-babel-exp-code-template
+          ;; (concat "\n=%name=:\n"
+                  org-babel-exp-code-template)
+          ;; )
+    )
 
   ;; keep lower-case
   (setq org-babel-results-keyword "results")
@@ -8670,7 +8668,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140214.1317]--")
+(message "* --[ Loaded Emacs Leuven 20140214.1623]--")
 
 (provide 'emacs-leuven)
 

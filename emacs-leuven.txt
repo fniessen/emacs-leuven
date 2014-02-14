@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-14 Fri 13:15>
+# Time-stamp: <2014-02-14 Fri 16:45>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4583,16 +4583,16 @@ work and tasks with Org mode.
   (global-set-key
    (kbd "<S-f7>")
    (lambda ()
-     "Execute `C-c a d h' to display the hotlist."
+     "Execute `C-c a r h' to display the hotlist."
      (interactive)
-     (org-agenda nil "dh")))
+     (org-agenda nil "rh")))
 
   (global-set-key
    (kbd "<C-f7>")
    (lambda ()
-     "Execute `C-c a d t' to display TODO entries."
+     "Execute `C-c a A 2' to display TODO entries."
      (interactive)
-     (org-agenda nil "dt")))
+     (org-agenda nil "A2")))
 #+end_src
 
 These variables need to be set before Org mode is loaded.
@@ -6574,14 +6574,10 @@ If you press =E=, it will *show* the *first notes* about the tasks.
   (setq org-agenda-persistent-filter t)
 
   ;; faces for specific Priorities (#A, #B and #C)
-  ;; XXX This generates an error when C-x C-w'ing the agenda view
-  (setq org-priority-faces-XXX
-        '((?A . (:weight bold :slant italic :underline t
-                 :foreground "#6E0000" :background "#F67777"))
-          (?B . (:slant italic
-                 :foreground "#005606" :background "#B6E864"))
-          (?C . (:slant italic
-                 :foreground "#00337B" :background "#C3DCFF"))))
+  (setq org-priority-faces
+        '((?A . (:weight bold :foreground "#F92F50"))
+          (?B . (:weight bold :foreground "#F3BB4C"))
+          (?C . (:slant italic :foreground "#90ABD6"))))
 #+end_src
 
 Contextual auto-exclusion for tags in the Agenda view.  For example, I use the
@@ -7682,11 +7678,13 @@ Write error messages to the Messages buffer for invalid =sbe= calls.
 *** Languages
 
 #+begin_src emacs-lisp
-  ;; template used to export the body of code blocks
-  (setq org-babel-exp-code-template
-        ;; (concat "\n=%name=:\n"
-                "#+BEGIN_SRC %lang%switches%flags\n%body\n#+END_SRC")
-        ;; )
+  (with-eval-after-load "ob-exp"
+    ;; template used to export the body of code blocks
+    (setq org-babel-exp-code-template
+          ;; (concat "\n=%name=:\n"
+                  org-babel-exp-code-template)
+          ;; )
+    )
 
   ;; keep lower-case
   (setq org-babel-results-keyword "results")

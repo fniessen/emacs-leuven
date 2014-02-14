@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-14 Fri 13:18 -->
+  <title>Emacs Leuven</title><!-- 2014-02-14 Fri 16:24 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140214.1317</span>
+"color: #8D8D84; font-style: italic;">Version: 20140214.1624</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140214.1317]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140214.1624]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -12178,27 +12178,15 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">faces for specific Priorities (#A, #B and #C)</span>
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #CC0000; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #8D8D84; font-style: italic;"> This generates an </span><span style="color: #CC0000; background-color: #FFFF88; font-style: italic;">error</span><span style="color: #8D8D84; font-style: italic;"> when C-x C-w'ing the agenda view</span>
-  (setq org-priority-faces-<span style=
-"color: #CC0000; background-color: #FFFF88;">XXX</span>
+  (setq org-priority-faces
         '((?A . (<span style="color: #006FE0;">:weight</span> bold <span style=
-"color: #006FE0;">:slant</span> italic <span style=
-"color: #006FE0;">:underline</span> t
-                 <span style="color: #006FE0;">:foreground</span> <span style=
-"color: #036A07;">"#6E0000"</span> <span style=
-"color: #006FE0;">:background</span> <span style=
-"color: #036A07;">"#F67777"</span>))
-          (?B . (<span style="color: #006FE0;">:slant</span> italic
-                 <span style="color: #006FE0;">:foreground</span> <span style=
-"color: #036A07;">"#005606"</span> <span style=
-"color: #006FE0;">:background</span> <span style=
-"color: #036A07;">"#B6E864"</span>))
-          (?C . (<span style="color: #006FE0;">:slant</span> italic
-                 <span style="color: #006FE0;">:foreground</span> <span style=
-"color: #036A07;">"#00337B"</span> <span style=
-"color: #006FE0;">:background</span> <span style=
-"color: #036A07;">"#C3DCFF"</span>))))
+"color: #006FE0;">:foreground</span> <span style=
+"color: #036A07;">"#F92F50"</span>))
+          (?B . (<span style="color: #006FE0;">:weight</span> bold <span style=
+"color: #006FE0;">:foreground</span> <span style=
+"color: #036A07;">"#F3BB4C"</span>))
+          (?C . (<span style=
+"color: #006FE0;">:slant</span> italic <span style="color: #006FE0;">:foreground</span> <span style="color: #036A07;">"#90ABD6"</span>))))
 </pre>
             </div>
 
@@ -14102,15 +14090,17 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
           <div class="outline-text-4" id="text-28-13-4">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span style="color: #8D8D84;">;; </span><span style=
+  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #036A07;">"ob-exp"</span>
+    <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">template used to export the body of code blocks</span>
-  (setq org-babel-exp-code-template
-        <span style="color: #8D8D84;">;; </span><span style=
+    (setq org-babel-exp-code-template
+          <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">(concat "\n==:\n"</span>
-                <span style=
-"color: #036A07;">"#+BEGIN_SRC %lang\n%body\n#+END_SRC"</span>)
-        <span style="color: #8D8D84;">;; </span><span style=
+                  org-babel-exp-code-template)
+          <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">)</span>
+    )
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">keep lower-case</span>
@@ -23825,7 +23815,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140214.1317]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140214.1624]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
