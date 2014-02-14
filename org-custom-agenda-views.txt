@@ -93,7 +93,7 @@ week) on the =errands= tag.
 
 #+begin_note
 Puisque l'on peut facilement filter par catégorie, on peut imaginer qu'il est
-inutile de trier par catégorie : il suffit de faire =<= pour voir toutes les
+*inutile de trier par catégorie* : il suffit de faire =<= pour voir toutes les
 tâches d'une catégorie.
 #+end_note
 
@@ -198,7 +198,8 @@ XXX Check tasks falling in the "Next 7 days" range (look for +7, +8 days)
                              (org-agenda-skip-function
                               '(leuven--skip-entry-unless-deadline-in-n-days-or-more 7))
                              (org-deadline-warning-days 28))))
-                   ((org-agenda-clockreport-mode nil)
+                   ((org-agenda-deadline-faces '((0.0 . default)))
+                    (org-agenda-clockreport-mode nil)
                     (org-agenda-format-date "")
                     (org-agenda-span 'day)
                     (org-agenda-sorting-strategy '(deadline-up))

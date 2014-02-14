@@ -75,7 +75,8 @@
                              (org-agenda-skip-function
                               '(leuven--skip-entry-unless-deadline-in-n-days-or-more 7))
                              (org-deadline-warning-days 28))))
-                   ((org-agenda-clockreport-mode nil)
+                   ((org-agenda-deadline-faces '((0.0 . default)))
+                    (org-agenda-clockreport-mode nil)
                     (org-agenda-format-date "")
                     (org-agenda-span 'day)
                     (org-agenda-sorting-strategy '(deadline-up))
