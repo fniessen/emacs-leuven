@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140214.1622
+;; Version: 20140215.0000
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140214.1622]--")
+(message "* --[ Loading Emacs Leuven 20140215.0000]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2952,16 +2952,16 @@ Last time is saved in global variable `leuven--before-section-time'."
   (global-set-key
    (kbd "<S-f7>")
    (lambda ()
-     "Execute `C-c a d h' to display the hotlist."
+     "Execute `C-c a r h' to display the hotlist."
      (interactive)
-     (org-agenda nil "dh")))
+     (org-agenda nil "rh")))
 
   (global-set-key
    (kbd "<C-f7>")
    (lambda ()
-     "Execute `C-c a d t' to display TODO entries."
+     "Execute `C-c a A 2' to display TODO entries."
      (interactive)
-     (org-agenda nil "dt")))
+     (org-agenda nil "A2")))
 
   ;; These variables need to be set before org.el is loaded...
 
@@ -3526,12 +3526,12 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; 6.2 list of tags ("contexts") allowed in Org mode files
   (setq org-tag-alist '((:startgroup . nil)
-                         ("home"       . ?h)
-                         ("work"       . ?w)
+                         ("personal"  . ?p)
+                         ("work"      . ?w)
                         (:endgroup . nil)
+                        ("call"        . ?c)
                         ("errands"     . ?e)
                         ("finance"     . ?f)
-                        ("phone"       . ?p)
                         ("mail"        . ?m)
 
                         ("notbillable" . ?B)
@@ -3548,7 +3548,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         '(("refile"
            (:slant italic
             :foreground "#A9876E" :background "#FCEEB3"))
-          ("home"
+          ("personal"
            (:slant italic
             :foreground "#5C88D3" :background "#BBDDFF"))
           ("work"
@@ -4351,7 +4351,7 @@ From %c"
   ;; faces for specific Priorities (#A, #B and #C)
   (setq org-priority-faces
         '((?A . (:weight bold :foreground "#F92F50"))
-          (?B . (:weight bold :foreground "#F3BB4C"))
+          (?B . (:weight bold :foreground "#FBAA44"))
           (?C . (:slant italic :foreground "#90ABD6"))))
 
   ;; 10.5 Commands in the agenda buffer
@@ -4383,13 +4383,13 @@ From %c"
 
   (defun leuven--org-auto-exclude-function (tag)
     (and (cond
-          ((string= tag "home")
+          ((string= tag "personal")
            (with-temp-buffer
              (call-process "/sbin/ifconfig" nil t nil "en0" "inet")
              (goto-char (point-min))
              (not (re-search-forward "inet 192\\.168\\.9\\." nil t))))
           ((or (string= tag "errands")
-               (string= tag "phone"))
+               (string= tag "call"))
            (let ((hour (nth 2 (decode-time))))
              (or (< hour 8) (> hour 21)))))
          (concat "-" tag)))
@@ -4397,12 +4397,12 @@ From %c"
   ;;! ensure that `:refile:' tags never will be excluded!
   (defun leuven--org-auto-exclude-function (tag)
     (and (cond
-          ((string= tag "home")
+          ((string= tag "personal")
            (leuven--working-p))
           ((string= tag "work")
            (not (leuven--working-p)))
           ((or (string= tag "errands")
-               (string= tag "phone"))
+               (string= tag "call"))
            (not (leuven--calling-hours-p))))
          (concat "-" tag)))
 
@@ -8668,7 +8668,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140214.1623]--")
+(message "* --[ Loaded Emacs Leuven 20140215.0001]--")
 
 (provide 'emacs-leuven)
 

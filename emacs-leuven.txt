@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-14 Fri 16:45>
+# Time-stamp: <2014-02-15 Sat 00:04>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -5423,12 +5423,12 @@ that all tags starting with =@= or =#= will be excluded from inheritance with:
 
   ;; 6.2 list of tags ("contexts") allowed in Org mode files
   (setq org-tag-alist '((:startgroup . nil)
-                         ("home"       . ?h)
-                         ("work"       . ?w)
+                         ("personal"  . ?p)
+                         ("work"      . ?w)
                         (:endgroup . nil)
+                        ("call"        . ?c)
                         ("errands"     . ?e)
                         ("finance"     . ?f)
-                        ("phone"       . ?p)
                         ("mail"        . ?m)
 
                         ("notbillable" . ?B)
@@ -5445,7 +5445,7 @@ that all tags starting with =@= or =#= will be excluded from inheritance with:
         '(("refile"
            (:slant italic
             :foreground "#A9876E" :background "#FCEEB3"))
-          ("home"
+          ("personal"
            (:slant italic
             :foreground "#5C88D3" :background "#BBDDFF"))
           ("work"
@@ -6576,7 +6576,7 @@ If you press =E=, it will *show* the *first notes* about the tasks.
   ;; faces for specific Priorities (#A, #B and #C)
   (setq org-priority-faces
         '((?A . (:weight bold :foreground "#F92F50"))
-          (?B . (:weight bold :foreground "#F3BB4C"))
+          (?B . (:weight bold :foreground "#FBAA44"))
           (?C . (:slant italic :foreground "#90ABD6"))))
 #+end_src
 
@@ -6640,13 +6640,13 @@ on my machine's current temporal and physical context.
 
   (defun leuven--org-auto-exclude-function (tag)
     (and (cond
-          ((string= tag "home")
+          ((string= tag "personal")
            (with-temp-buffer
              (call-process "/sbin/ifconfig" nil t nil "en0" "inet")
              (goto-char (point-min))
              (not (re-search-forward "inet 192\\.168\\.9\\." nil t))))
           ((or (string= tag "errands")
-               (string= tag "phone"))
+               (string= tag "call"))
            (let ((hour (nth 2 (decode-time))))
              (or (< hour 8) (> hour 21)))))
          (concat "-" tag)))
@@ -6654,12 +6654,12 @@ on my machine's current temporal and physical context.
   ;;! ensure that `:refile:' tags never will be excluded!
   (defun leuven--org-auto-exclude-function (tag)
     (and (cond
-          ((string= tag "home")
+          ((string= tag "personal")
            (leuven--working-p))
           ((string= tag "work")
            (not (leuven--working-p)))
           ((or (string= tag "errands")
-               (string= tag "phone"))
+               (string= tag "call"))
            (not (leuven--calling-hours-p))))
          (concat "-" tag)))
 

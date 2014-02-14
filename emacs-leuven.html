@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-14 Fri 16:24 -->
+  <title>Emacs Leuven</title><!-- 2014-02-15 Sat 00:02 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140214.1624</span>
+"color: #8D8D84; font-style: italic;">Version: 20140215.0002</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140214.1624]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140215.0002]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -8749,19 +8749,19 @@ M-: (executable-find "diff") RET
    (kbd <span style="color: #036A07;">"&lt;S-f7&gt;"</span>)
    (<span style="color: #0000FF;">lambda</span> ()
      <span style=
-"color: #008000;">"Execute `C-c a d h' to display the hotlist."</span>
+"color: #008000;">"Execute `C-c a r h' to display the hotlist."</span>
      (interactive)
-     (org-agenda nil <span style="color: #036A07;">"dh"</span>)))
+     (org-agenda nil <span style="color: #036A07;">"rh"</span>)))
 
   (global-set-key
    (kbd <span style="color: #036A07;">"&lt;C-f7&gt;"</span>)
    (<span style="color: #0000FF;">lambda</span> ()
      <span style=
-"color: #008000;">"Execute `C-c a d t' to display </span><span style=
+"color: #008000;">"Execute `C-c a A 2' to display </span><span style=
 "color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
 "color: #008000;"> entries."</span>
      (interactive)
-     (org-agenda nil <span style="color: #036A07;">"dt"</span>)))
+     (org-agenda nil <span style="color: #036A07;">"A2"</span>)))
 </pre>
         </div>
 
@@ -10235,16 +10235,16 @@ M-: (executable-find "diff") RET
   (setq org-tag-alist '((<span style=
 "color: #006FE0;">:startgroup</span> . nil)
                          (<span style=
-"color: #036A07;">"home"</span>       . ?h)
+"color: #036A07;">"personal"</span>  . ?p)
                          (<span style=
-"color: #036A07;">"work"</span>       . ?w)
+"color: #036A07;">"work"</span>      . ?w)
                         (<span style="color: #006FE0;">:endgroup</span> . nil)
+                        (<span style=
+"color: #036A07;">"call"</span>        . ?c)
                         (<span style=
 "color: #036A07;">"errands"</span>     . ?e)
                         (<span style=
 "color: #036A07;">"finance"</span>     . ?f)
-                        (<span style=
-"color: #036A07;">"phone"</span>       . ?p)
                         (<span style=
 "color: #036A07;">"mail"</span>        . ?m)
 
@@ -10273,7 +10273,7 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"#A9876E"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
 "color: #036A07;">"#FCEEB3"</span>))
-          (<span style="color: #036A07;">"home"</span>
+          (<span style="color: #036A07;">"personal"</span>
            (<span style="color: #006FE0;">:slant</span> italic
             <span style="color: #006FE0;">:foreground</span> <span style=
 "color: #036A07;">"#5C88D3"</span> <span style=
@@ -12184,7 +12184,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"#F92F50"</span>))
           (?B . (<span style="color: #006FE0;">:weight</span> bold <span style=
 "color: #006FE0;">:foreground</span> <span style=
-"color: #036A07;">"#F3BB4C"</span>))
+"color: #036A07;">"#FBAA44"</span>))
           (?C . (<span style=
 "color: #006FE0;">:slant</span> italic <span style="color: #006FE0;">:foreground</span> <span style="color: #036A07;">"#90ABD6"</span>))))
 </pre>
@@ -12271,7 +12271,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--org-auto-exclude-function</span> (tag)
     (and (<span style="color: #0000FF;">cond</span>
-          ((string= tag <span style="color: #036A07;">"home"</span>)
+          ((string= tag <span style="color: #036A07;">"personal"</span>)
            (<span style="color: #0000FF;">with-temp-buffer</span>
              (call-process <span style=
 "color: #036A07;">"/sbin/ifconfig"</span> nil t nil <span style=
@@ -12280,7 +12280,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
              (not (re-search-forward <span style=
 "color: #036A07;">"inet 192\\.168\\.9\\."</span> nil t))))
           ((or (string= tag <span style="color: #036A07;">"errands"</span>)
-               (string= tag <span style="color: #036A07;">"phone"</span>))
+               (string= tag <span style="color: #036A07;">"call"</span>))
            (<span style=
 "color: #0000FF;">let</span> ((hour (nth 2 (decode-time))))
              (or (&lt; hour 8) (&gt; hour 21)))))
@@ -12293,12 +12293,12 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--org-auto-exclude-function</span> (tag)
     (and (<span style="color: #0000FF;">cond</span>
-          ((string= tag <span style="color: #036A07;">"home"</span>)
+          ((string= tag <span style="color: #036A07;">"personal"</span>)
            (leuven--working-p))
           ((string= tag <span style="color: #036A07;">"work"</span>)
            (not (leuven--working-p)))
           ((or (string= tag <span style="color: #036A07;">"errands"</span>)
-               (string= tag <span style="color: #036A07;">"phone"</span>))
+               (string= tag <span style="color: #036A07;">"call"</span>))
            (not (leuven--calling-hours-p))))
          (concat <span style="color: #036A07;">"-"</span> tag)))
 
@@ -23815,7 +23815,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140214.1624]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140215.0002]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
