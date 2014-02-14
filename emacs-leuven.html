@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-13 Thu 15:54 -->
+  <title>Emacs Leuven</title><!-- 2014-02-14 Fri 13:18 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140213.1553</span>
+"color: #8D8D84; font-style: italic;">Version: 20140214.1317</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140213.1553]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140214.1317]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -12396,8 +12396,14 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #036A07;">"org-agenda"</span>
-    (load-file <span style=
-"color: #036A07;">"~/src/emacs-leuven/org-custom-agenda-views.el"</span>)) <span style="color: #8D8D84;">; </span><span style="color: #8D8D84; font-style: italic;">with-eval-after-load "org-agenda" ends here</span>
+    (<span style=
+"color: #0000FF;">let</span> ((leuven-org-agenda-views <span style=
+"color: #036A07;">"~/src/emacs-leuven/org-custom-agenda-views.el"</span>))
+      (<span style=
+"color: #0000FF;">when</span> (file-exists-p leuven-org-agenda-views)
+        (load-file leuven-org-agenda-views)))) <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">with-eval-after-load "org-agenda" ends here</span>
 </pre>
             </div>
           </div>
@@ -13912,7 +13918,11 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #8D8D84; font-style: italic;">preserve spaces and `</span><span style=
 "color: #D0372D; font-style: italic;">tab</span><span style=
 "color: #8D8D84; font-style: italic;">' characters in source code blocks</span>
-  (setq org-src-preserve-indentation t)
+  (setq org-src-preserve-indentation t) <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">or add a `</span><span style=
+"color: #D0372D; font-style: italic;">-i</span><span style=
+"color: #8D8D84; font-style: italic;">' flag to you source block</span>
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">same effect for `</span><span style=
@@ -23815,7 +23825,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140213.1554]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140214.1317]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

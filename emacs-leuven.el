@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140213.1552
+;; Version: 20140214.1316
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140213.1552]--")
+(message "* --[ Loading Emacs Leuven 20140214.1316]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4427,7 +4427,9 @@ From %c"
   (leuven--section "10.6 (org)Custom agenda views")
 
   (with-eval-after-load "org-agenda"
-    (load-file "~/src/emacs-leuven/org-custom-agenda-views.el")) ; with-eval-after-load "org-agenda" ends here
+    (let ((leuven-org-agenda-views "~/src/emacs-leuven/org-custom-agenda-views.el"))
+      (when (file-exists-p leuven-org-agenda-views)
+        (load-file leuven-org-agenda-views)))) ; with-eval-after-load "org-agenda" ends here
 
   (defun leuven-org-todo-list-current-dir ()
     "Produce a view from all Org files in the current directory."
@@ -5050,7 +5052,7 @@ From %c"
                                         ;! text property `org-block'
 
   ;; preserve spaces and `tab' characters in source code blocks
-  (setq org-src-preserve-indentation t)
+  (setq org-src-preserve-indentation t) ; or add a `-i' flag to you source block
 
   ;; same effect for `tab' as in the language major mode buffer
   (setq org-src-tab-acts-natively t)
@@ -5131,7 +5133,7 @@ From %c"
   ;; template used to export the body of code blocks
   (setq org-babel-exp-code-template
         ;; (concat "\n=%name=:\n"
-                "#+BEGIN_SRC %lang%flags\n%body\n#+END_SRC")
+                "#+BEGIN_SRC %lang%switches%flags\n%body\n#+END_SRC")
         ;; )
 
   ;; keep lower-case
@@ -8668,7 +8670,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140213.1553]--")
+(message "* --[ Loaded Emacs Leuven 20140214.1317]--")
 
 (provide 'emacs-leuven)
 

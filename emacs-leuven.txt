@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-13 Thu 15:52>
+# Time-stamp: <2014-02-14 Fri 13:15>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -6708,7 +6708,9 @@ Commands:
   (leuven--section "10.6 (org)Custom agenda views")
 
   (with-eval-after-load "org-agenda"
-    (load-file "~/src/emacs-leuven/org-custom-agenda-views.el")) ; with-eval-after-load "org-agenda" ends here
+    (let ((leuven-org-agenda-views "~/src/emacs-leuven/org-custom-agenda-views.el"))
+      (when (file-exists-p leuven-org-agenda-views)
+        (load-file leuven-org-agenda-views)))) ; with-eval-after-load "org-agenda" ends here
 #+end_src
 
 *** Display all active tasks from the current directory
@@ -7567,7 +7569,7 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
                                         ;! text property `org-block'
 
   ;; preserve spaces and `tab' characters in source code blocks
-  (setq org-src-preserve-indentation t)
+  (setq org-src-preserve-indentation t) ; or add a `-i' flag to you source block
 
   ;; same effect for `tab' as in the language major mode buffer
   (setq org-src-tab-acts-natively t)
@@ -7683,7 +7685,7 @@ Write error messages to the Messages buffer for invalid =sbe= calls.
   ;; template used to export the body of code blocks
   (setq org-babel-exp-code-template
         ;; (concat "\n=%name=:\n"
-                "#+BEGIN_SRC %lang%flags\n%body\n#+END_SRC")
+                "#+BEGIN_SRC %lang%switches%flags\n%body\n#+END_SRC")
         ;; )
 
   ;; keep lower-case
