@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140215.0000
+;; Version: 20140217.1340
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140215.0000]--")
+(message "* --[ Loading Emacs Leuven 20140217.1340]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2952,16 +2952,16 @@ Last time is saved in global variable `leuven--before-section-time'."
   (global-set-key
    (kbd "<S-f7>")
    (lambda ()
-     "Execute `C-c a r h' to display the hotlist."
+     "Execute `C-c a f h' to display the hotlist."
      (interactive)
-     (org-agenda nil "rh")))
+     (org-agenda nil "fh")))
 
   (global-set-key
    (kbd "<C-f7>")
    (lambda ()
-     "Execute `C-c a A 2' to display TODO entries."
+     "Execute `C-c a r a 2' to display TODO entries."
      (interactive)
-     (org-agenda nil "A2")))
+     (org-agenda nil "ra2")))
 
   ;; These variables need to be set before org.el is loaded...
 
@@ -3493,7 +3493,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (message "... Progress logging")
 
     (setcdr (assq 'state org-log-note-headings)
-            "State %-12S  ->  %-12s %t"))
+            "State %-12s  ->  %-12s %t"))
 
   (with-eval-after-load "org-habit"
 
@@ -4258,7 +4258,7 @@ From %c"
                                (0800 1000 1200 1400 1600 1800 2000)))
 
   ;; string for the current time marker in the agenda
-  (setq org-agenda-current-time-string "now")
+  (setq org-agenda-current-time-string "Right now")
 
   ;; 10.4.3 sorting structure for the agenda items of a single day
   (setq org-agenda-sorting-strategy   ; custom value
@@ -8668,7 +8668,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140215.0001]--")
+(message "* --[ Loaded Emacs Leuven 20140217.1341]--")
 
 (provide 'emacs-leuven)
 

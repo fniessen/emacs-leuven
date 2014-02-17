@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-15 Sat 00:04>
+# Time-stamp: <2014-02-17 Mon 13:34>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4583,16 +4583,16 @@ work and tasks with Org mode.
   (global-set-key
    (kbd "<S-f7>")
    (lambda ()
-     "Execute `C-c a r h' to display the hotlist."
+     "Execute `C-c a f h' to display the hotlist."
      (interactive)
-     (org-agenda nil "rh")))
+     (org-agenda nil "fh")))
 
   (global-set-key
    (kbd "<C-f7>")
    (lambda ()
-     "Execute `C-c a A 2' to display TODO entries."
+     "Execute `C-c a r a 2' to display TODO entries."
      (interactive)
-     (org-agenda nil "A2")))
+     (org-agenda nil "ra2")))
 #+end_src
 
 These variables need to be set before Org mode is loaded.
@@ -5363,7 +5363,7 @@ verified before really closing the task.
     (message "... Progress logging")
 
     (setcdr (assq 'state org-log-note-headings)
-            "State %-12S  ->  %-12s %t"))
+            "State %-12s  ->  %-12s %t"))
 #+end_src
 
 Warning! The docstring of =org-log-note-headings= mentions that "in fact, it is
@@ -6460,7 +6460,7 @@ for today's date:
                                (0800 1000 1200 1400 1600 1800 2000)))
 
   ;; string for the current time marker in the agenda
-  (setq org-agenda-current-time-string "now")
+  (setq org-agenda-current-time-string "Right now")
 #+end_src
 
 =time-up= will only be applied to those items have a time stamp for the day in
