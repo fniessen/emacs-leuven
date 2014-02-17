@@ -1,15 +1,21 @@
     ;; custom commands for the agenda -- start with a clean slate
     (setq org-agenda-custom-commands nil)
 
+    (add-to-list 'org-agenda-custom-commands
+                 '("c" . "COLLECT...") t)
+
     ;; CollectBox + Email
     (add-to-list 'org-agenda-custom-commands
-                 '("c" "CollectBox"
+                 '("cc" "CollectBox"
                    alltodo ""
                    ((org-agenda-files
                      '("~/org/refile.org" "~/org/email.org")))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("." "Today"
+                 '("f" . "FOCUS...") t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("f." "Today"
                    ;; list of all TODO entries with deadline today
                    ((tags-todo "DEADLINE=\"<+0d>\""
                                ((org-agenda-overriding-header "DUE TODAY")
@@ -23,7 +29,7 @@
                                  '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     ;; list of all TODO entries completed today
-                    (todo "DONE|CANX"
+                    (todo ""            ; includes repeated tasks (back in TODO)
                                ((org-agenda-overriding-header "COMPLETED TODAY")
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if
@@ -32,7 +38,7 @@
                                 (org-agenda-sorting-strategy '(priority-down)))))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("7" "Next 7 Days"
+                 '("f7" "Next 7 Days"
                    ((tags-todo "DEADLINE=\"<+0d>\""
                                ((org-agenda-overriding-header "DUE TODAY")
                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
@@ -73,13 +79,7 @@
                                 (org-agenda-sorting-strategy '(priority-down)))))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("P" "Projects"
-                   tags-todo "project-DONE-CANX"
-                   ((org-agenda-overriding-header "Projects (High Level)")
-                    (org-agenda-sorting-strategy nil))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("rh" "Hotlist"
+                 '("fh" "Hotlist"
                    ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
                    ((tags-todo "DEADLINE<\"<+0d>\""
                                ((org-agenda-overriding-header "OVERDUE")))
@@ -96,10 +96,24 @@
                     (org-agenda-sorting-strategy '(deadline-down)))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("A" . "All Tasks...") t)
+                 '("fe" "Effort less than 1 hour"
+                   tags-todo "Effort<>{}+Effort<\"1:00\""
+                   ((org-agenda-todo-ignore-scheduled 'future))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("Ad" "All Tasks (grouped by Due Date)"
+                 '("P" "Projects"
+                   tags-todo "project-DONE-CANX"
+                   ((org-agenda-overriding-header "Projects (High Level)")
+                    (org-agenda-sorting-strategy nil))) t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("r" . "REVIEW...") t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("ra" . "All Tasks...") t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("rad" "All Tasks (grouped by Due Date)"
                    ((tags-todo "DEADLINE<\"<+0d>\""
                                ((org-agenda-overriding-header "OVERDUE")
                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
@@ -122,7 +136,10 @@
                     ;; (todo ""
                     ;;            ((org-agenda-overriding-header "NO DUE DATE")
                     ;;             (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
-                    (tags-todo "TODO<>{WAIT\\|SDAY}"
+                    (tags-todo "TODO={STRT}"
+                               ((org-agenda-overriding-header "NO DUE DATE / STARTED")
+                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+                    (tags-todo "TODO<>{STRT\\|WAIT\\|SDAY}"
                                ((org-agenda-overriding-header "NO DUE DATE / NEXT")
                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
                     (tags-todo "TODO={WAIT}"
@@ -137,13 +154,13 @@
                    ((org-agenda-sorting-strategy '(priority-down)))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("A1" "All Tasks (sorted by Due Date)"
+                 '("ra1" "All Tasks (sorted by Due Date)"
                    alltodo ""
                    ((org-agenda-overriding-header "All Tasks (sorted by Due Date)")
                     (org-agenda-sorting-strategy '(deadline-up)))) t) ; XXX sort not OK
 
     (add-to-list 'org-agenda-custom-commands
-                 `("A2" "All active tasks, by due date"
+                 `("ra2" "All active tasks, by due date"
                    ((agenda ""
                             ((org-agenda-overriding-header "Today")
                              ;; FIXME We don't see "timed" DEADLINE
@@ -232,7 +249,45 @@
             (progn (outline-next-heading) (point)))))
 
     (add-to-list 'org-agenda-custom-commands
-                 '("Ap" "All Tasks (grouped by Priority)"
+                 '("ra3" "Agenda for all TODO entries"
+                   ((agenda ""
+                            ((org-agenda-format-date "")
+                             (org-agenda-overriding-header "Past due")
+                             (org-agenda-skip-function
+                              'leuven--skip-entry-unless-overdue-deadline)
+                             (org-deadline-warning-days 0)))
+                    (agenda ""
+                            ((org-agenda-format-date "")
+                             (org-agenda-overriding-header "Today/tomorrow")
+                             (org-agenda-skip-function
+                              'leuven--skip-entry-if-past-deadline)
+                             (org-agenda-span 2)
+                             (org-agenda-use-time-grid t)
+                             (org-deadline-warning-days 0)))
+                    (agenda ""
+                            ((org-agenda-format-date "")
+                             (org-agenda-overriding-header "Next 12 days")
+                             (org-agenda-skip-function
+                              '(leuven--skip-entry-unless-deadline-in-n-days-or-more 2))
+                             (org-deadline-warning-days 14)))
+                    (todo ""
+                          ((org-agenda-overriding-header "Later")
+                           (org-agenda-skip-function
+                            '(leuven--skip-entry-if-deadline-in-less-than-n-days-or-schedule-in-less-than-n-days 15 2))
+                           (org-agenda-sorting-strategy '(ts-up))))
+                    (todo ""
+                          ((org-agenda-overriding-header "No due date")
+                           (org-agenda-skip-function
+                            'leuven--skip-entry-if-deadline-or-schedule))))
+                   ((org-agenda-clockreport-mode nil)
+                    (org-agenda-prefix-format " %i %?-12t% s")
+                    (org-agenda-span 'day)
+                    (org-agenda-use-time-grid nil)
+                    (org-agenda-write-buffer-name "List Review"))
+                   "org-agenda-all-todo-entries.html") t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("rap" "All Tasks (grouped by Priority)"
                    ((tags-todo "PRIORITY={A}"
                                ((org-agenda-overriding-header "HIGH")))
                     (tags-todo "PRIORITY={B}"
@@ -246,11 +301,44 @@
                            (org-agenda-sorting-strategy '(priority-down)))))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("r" . "4. Review...") t)
+                 '("r^" . "Calendar...") t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("r^7" "Events and appointments for 7 days"
+                   agenda ""
+                   ((org-agenda-entry-types '(:timestamp :sexp))
+                    ;; (org-agenda-overriding-header "Calendar for 7 days")
+                    ;; (org-agenda-repeating-timestamp-show-all t)
+                    (org-agenda-span 'week)
+                    (org-agenda-format-date "\n%a %d")
+                    ;; (org-agenda-date-weekend ... new face ...)
+                    (org-agenda-time-grid nil))) t)
+
+    ;; calendar view for org-agenda
+    (when (locate-library "calfw-org")
+
+      (autoload 'cfw:open-org-calendar "calfw-org"
+        "Open an Org schedule calendar." t)
+
+      (add-to-list 'org-agenda-custom-commands
+                   '("r^m" "Calendar for current month"
+                     (lambda (&rest ignore)
+                       (cfw:open-org-calendar))) t)
+
+      ;; (defun cfw:open-org-calendar-non-work (&args)
+      ;;   (interactive)
+      ;;   (let ((org-agenda-skip-function 'org-agenda-skip-work))
+      ;;     (cfw:open-org-calendar)))
+      ;;
+      ;; (add-to-list 'org-agenda-custom-commands
+      ;;              '("c" "Calendar (non-work) for current month"
+      ;;                cfw:open-org-calendar-non-work) t)
+
+      )
 
     ;; show what happened today
     (add-to-list 'org-agenda-custom-commands
-                 '("rL" "Timeline for today"
+                 '("rl" "Timeline for today"
                    ((agenda ""
                             ((org-agenda-clockreport-mode t)
                              (org-agenda-entry-types '(:timestamp))
@@ -259,17 +347,12 @@
                              (org-agenda-span 'day))))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("rC" "Clock Review"
+                 '("rc" "Clock Review"
                    ((agenda ""
                             ((org-agenda-clockreport-mode t)
                              (org-agenda-overriding-header "Clocking Review")
                              (org-agenda-show-log 'clockcheck)
                              (org-agenda-span 'day))))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("rn" "Now (undated tasks in progress)"
-                   todo "STRT"
-                   ((org-agenda-todo-ignore-with-date t))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("rd" "Daily review"
@@ -373,42 +456,6 @@
                     )) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("^" . "Calendar...") t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("^7" "Events and appointments for 7 days"
-                   agenda ""
-                   ((org-agenda-entry-types '(:timestamp :sexp))
-                    ;; (org-agenda-overriding-header "Calendar for 7 days")
-                    ;; (org-agenda-repeating-timestamp-show-all t)
-                    (org-agenda-span 'week)
-                    (org-agenda-format-date "\n%a %d")
-                    ;; (org-agenda-date-weekend ... new face ...)
-                    (org-agenda-time-grid nil))) t)
-
-    ;; calendar view for org-agenda
-    (when (locate-library "calfw-org")
-
-      (autoload 'cfw:open-org-calendar "calfw-org"
-        "Open an Org schedule calendar." t)
-
-      (add-to-list 'org-agenda-custom-commands
-                   '("^m" "Calendar for current month"
-                     (lambda (&rest ignore)
-                       (cfw:open-org-calendar))) t)
-
-      ;; (defun cfw:open-org-calendar-non-work (&args)
-      ;;   (interactive)
-      ;;   (let ((org-agenda-skip-function 'org-agenda-skip-work))
-      ;;     (cfw:open-org-calendar)))
-      ;;
-      ;; (add-to-list 'org-agenda-custom-commands
-      ;;              '("c" "Calendar (non-work) for current month"
-      ;;                cfw:open-org-calendar-non-work) t)
-
-      )
-
-    (add-to-list 'org-agenda-custom-commands
                  '("N" "Next"
                    tags-todo "TODO<>{SDAY}"
                    ((org-agenda-overriding-header "List of all TODO entries with no due date (no SDAY)")
@@ -428,7 +475,10 @@
                     (org-agenda-sorting-strategy '(deadline-up)))) t) ; XXX does not work
 
     (add-to-list 'org-agenda-custom-commands
-                 '("R" "Recent items (past 7 days)"
+                 '("o" . "MORE...") t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("rr" "Recent items (past 7 days)"
                    ;; faster than tags
                    agenda ""
                    ((org-agenda-start-day "-7d")
@@ -441,8 +491,15 @@
                     (org-agenda-inactive-leader "Inactive:  ")
                     (org-agenda-include-inactive-timestamps t))) t)
 
+    ;; checking tasks that are assigned to me
     (add-to-list 'org-agenda-custom-commands
-                 '("f" "Like s, but with extra files"
+                 `("oa" "Tasks assigned to me"
+                   tags ,(concat "Assignee={" user-login-name "\\|" user-mail-address "}")
+                   ((org-agenda-overriding-header
+                     ,(concat "TASKS ASSIGNED TO " user-login-name)))) t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("F" "Like s, but with extra files"
                    search ""
                    ((org-agenda-text-search-extra-files
                      ;; FIXME Add `agenda-archives'
@@ -452,21 +509,6 @@
                  '("n" "Organize thoughts to refile"
                    tags "refile|capture"
                    ((org-agenda-overriding-header "Refile stuff"))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("d" . "5. Do the work...") t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("de" "Effort less than 1 hour"
-                   tags-todo "Effort<>{}+Effort<\"1:00\""
-                   ((org-agenda-todo-ignore-scheduled 'future))) t)
-
-    ;; checking tasks that are assigned to me
-    (add-to-list 'org-agenda-custom-commands
-                 `("dm" "Tasks assigned to me"
-                   tags ,(concat "Assignee={" user-login-name "}")
-                   ((org-agenda-overriding-header
-                     ,(concat "Tasks assigned to " user-login-name)))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("E" . "Exported agenda files...") t)
