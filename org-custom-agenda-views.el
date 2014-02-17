@@ -29,7 +29,7 @@
                                  '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     ;; list of all TODO entries completed today
-                    (todo ""            ; includes repeated tasks (back in TODO)
+                    (todo "TODO|DONE|CANX"            ; includes repeated tasks (back in TODO)
                                ((org-agenda-overriding-header "COMPLETED TODAY")
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if
@@ -350,7 +350,7 @@
                  '("rc" "Clock Review"
                    ((agenda ""
                             ((org-agenda-clockreport-mode t)
-                             (org-agenda-overriding-header "Clocking Review")
+                             (org-agenda-overriding-header "CLOCK REVIEW")
                              (org-agenda-show-log 'clockcheck)
                              (org-agenda-span 'day))))) t)
 
@@ -393,7 +393,7 @@
                  '("rw" "Weekly review"
                    (
                     (tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
-                          ((org-agenda-overriding-header "New Tasks")))
+                          ((org-agenda-overriding-header "NEW TASKS")))
 
                     (agenda ""
                             ((org-agenda-clockreport-mode t)
@@ -401,7 +401,7 @@
                               (concat "\n"
                                       "%Y-%m-%d" " %a "
                                       (make-string (window-width) ?_)))
-                             (org-agenda-overriding-header "Past week")
+                             (org-agenda-overriding-header "PAST WEEK")
                              (org-agenda-prefix-format " %?-11t %i %-12:c% s")
                              (org-agenda-show-log 'clockcheck)
                              (org-agenda-span 7)
@@ -409,14 +409,14 @@
                              (org-deadline-warning-days 0)))
 
                     (agenda ""
-                            ((org-agenda-overriding-header "Next month")
+                            ((org-agenda-overriding-header "NEXT MONTH")
                              (org-agenda-span 'month)
                              (org-agenda-start-day "+0d")
                              (org-deadline-warning-days 0) ; XXX
                              ))
 
                     (todo "PROJ"
-                          ((org-agenda-overriding-header "Project list")))
+                          ((org-agenda-overriding-header "PROJECT LIST")))
 
                     ;; XXX we should show which tasks (don't) have CLOCK lines: archived vs. deleted
                     (todo "DONE|PROJDONE"
@@ -427,25 +427,25 @@
                     ;;        ((org-agenda-overriding-header "Stuck projects")))
 
                     (todo "STRT"
-                          ((org-agenda-overriding-header "In progress")
+                          ((org-agenda-overriding-header "IN PROGRESS")
                            (org-agenda-todo-ignore-scheduled nil)))
 
                     (todo "TODO"        ; don't include items from CollectBox! XXX
-                          ((org-agenda-overriding-header "Action list")))
+                          ((org-agenda-overriding-header "ACTION LIST")))
 
                     ;; ignore scheduled and deadline entries, as they're
                     ;; visible in the above agenda (for the past + for next
                     ;; month) or scheduled/deadline'd for much later...
                     (todo "WAIT"
                           ((org-agenda-format-date "")
-                           (org-agenda-overriding-header "Waiting for")
+                           (org-agenda-overriding-header "WAITING FOR")
                            (org-agenda-todo-ignore-deadlines 'all) ; future?
                            (org-agenda-todo-ignore-scheduled t)))
 
                     ;; same reasoning as for WAIT
                     (todo "SDAY"
                           ((org-agenda-format-date "")
-                           (org-agenda-overriding-header "Someday")
+                           (org-agenda-overriding-header "SOMEDAY")
                            (org-agenda-todo-ignore-deadlines 'all)
                            (org-agenda-todo-ignore-scheduled t)))
 
