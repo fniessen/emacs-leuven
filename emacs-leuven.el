@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140217.1340
+;; Version: 20140217.1450
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140217.1340]--")
+(message "* --[ Loading Emacs Leuven 20140217.1450]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2942,26 +2942,17 @@ Last time is saved in global variable `leuven--before-section-time'."
     (define-key global-map
       (kbd "C-h o") 'org-info))         ; not autoloaded
 
+  ;; display the hotlist
   (global-set-key
-   (kbd "<f7>")
-   (lambda ()
-     "Execute `C-c a r d' to display the calendar and tasks for today."
-     (interactive)
-     (org-agenda nil "rd")))            ; or (org-agenda-list "rd")?
+   (kbd "<f7>") (kbd "C-c a f h"))
 
+  ;; display the calendar and tasks for today
   (global-set-key
-   (kbd "<S-f7>")
-   (lambda ()
-     "Execute `C-c a f h' to display the hotlist."
-     (interactive)
-     (org-agenda nil "fh")))
+   (kbd "<S-f7>") (kbd "C-c a r d"))
 
+  ;; display TODO entries
   (global-set-key
-   (kbd "<C-f7>")
-   (lambda ()
-     "Execute `C-c a r a 2' to display TODO entries."
-     (interactive)
-     (org-agenda nil "ra2")))
+   (kbd "<C-f7>") (kbd "C-c a r a 2"))
 
   ;; These variables need to be set before org.el is loaded...
 
@@ -8668,7 +8659,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140217.1341]--")
+(message "* --[ Loaded Emacs Leuven 20140217.1451]--")
 
 (provide 'emacs-leuven)
 

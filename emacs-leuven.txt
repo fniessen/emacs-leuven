@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-17 Mon 13:34>
+# Time-stamp: <2014-02-17 Mon 14:50>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4573,26 +4573,17 @@ work and tasks with Org mode.
     (define-key global-map
       (kbd "C-h o") 'org-info))         ; not autoloaded
 
+  ;; display the hotlist
   (global-set-key
-   (kbd "<f7>")
-   (lambda ()
-     "Execute `C-c a r d' to display the calendar and tasks for today."
-     (interactive)
-     (org-agenda nil "rd")))            ; or (org-agenda-list "rd")?
+   (kbd "<f7>") (kbd "C-c a f h"))
 
+  ;; display the calendar and tasks for today
   (global-set-key
-   (kbd "<S-f7>")
-   (lambda ()
-     "Execute `C-c a f h' to display the hotlist."
-     (interactive)
-     (org-agenda nil "fh")))
+   (kbd "<S-f7>") (kbd "C-c a r d"))
 
+  ;; display TODO entries
   (global-set-key
-   (kbd "<C-f7>")
-   (lambda ()
-     "Execute `C-c a r a 2' to display TODO entries."
-     (interactive)
-     (org-agenda nil "ra2")))
+   (kbd "<C-f7>") (kbd "C-c a r a 2"))
 #+end_src
 
 These variables need to be set before Org mode is loaded.
