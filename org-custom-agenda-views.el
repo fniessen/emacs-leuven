@@ -29,53 +29,87 @@
                                  '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     ;; list of all TODO entries completed today
-                    (todo "TODO|DONE|CANX"            ; includes repeated tasks (back in TODO)
+                    (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
                                ((org-agenda-overriding-header "COMPLETED TODAY")
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if
                                    'notregexp
-                                   (format-time-string " \\(CLOSED: \\[%Y-%m-%d\\|- State.*\"DONE\".*\\[%Y-%m-%d\\) ")))
+                                   (format-time-string
+                                    (concat
+                                     " \\("
+                                     "CLOSED: \\[%Y-%m-%d"
+                                     "\\|"
+                                     "- State \"\\(DONE\\|CANX\\)\" * from .* \\[%Y-%m-%d"
+                                     "\\|"
+                                     "- State .* ->  *\"\\(DONE\\|CANX\\)\" * \\[%Y-%m-%d"
+                                     "\\) "))))
                                 (org-agenda-sorting-strategy '(priority-down)))))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("f7" "Next 7 Days"
                    ((tags-todo "DEADLINE=\"<+0d>\""
                                ((org-agenda-overriding-header "DUE TODAY")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     (tags-todo "DEADLINE=\"<+1d>\""
                                ((org-agenda-overriding-header "DUE TOMORROW")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     (tags-todo "DEADLINE=\"<+2d>\""
                                ((org-agenda-overriding-header
-                                 (upcase (format-time-string "DUE BY %a %d" (time-add (current-time) (seconds-to-time (* 2 86400))))))
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                 (upcase (format-time-string
+                                          "DUE BY %a %d"
+                                          (time-add (current-time)
+                                                    (seconds-to-time (* 2 86400))))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     (tags-todo "DEADLINE=\"<+3d>\""
                                ((org-agenda-overriding-header
-                                 (upcase (format-time-string "DUE BY %a %d" (time-add (current-time) (seconds-to-time (* 3 86400))))))
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                 (upcase (format-time-string
+                                          "DUE BY %a %d"
+                                          (time-add (current-time)
+                                                    (seconds-to-time (* 3 86400))))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     (tags-todo "DEADLINE=\"<+4d>\""
                                ((org-agenda-overriding-header
-                                 (upcase (format-time-string "DUE BY %a %d" (time-add (current-time) (seconds-to-time (* 4 86400))))))
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                 (upcase (format-time-string
+                                          "DUE BY %a %d"
+                                          (time-add (current-time)
+                                                    (seconds-to-time (* 4 86400))))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     (tags-todo "DEADLINE=\"<+5d>\""
                                ((org-agenda-overriding-header
-                                 (upcase (format-time-string "DUE BY %a %d" (time-add (current-time) (seconds-to-time (* 5 86400))))))
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                 (upcase (format-time-string
+                                          "DUE BY %a %d"
+                                          (time-add (current-time)
+                                                    (seconds-to-time (* 5 86400))))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     (tags-todo "DEADLINE=\"<+6d>\""
                                ((org-agenda-overriding-header
-                                 (upcase (format-time-string "DUE BY %a %d" (time-add (current-time) (seconds-to-time (* 6 86400))))))
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                 (upcase (format-time-string
+                                          "DUE BY %a %d"
+                                          (time-add (current-time)
+                                                    (seconds-to-time (* 6 86400))))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     (tags-todo "DEADLINE=\"<+7d>\""
                                ((org-agenda-overriding-header
-                                 (upcase (format-time-string "DUE BY %a %d" (time-add (current-time) (seconds-to-time (* 7 86400))))))
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
+                                 (upcase (format-time-string
+                                          "DUE BY %a %d"
+                                          (time-add (current-time)
+                                                    (seconds-to-time (* 7 86400))))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down)))))) t)
 
     (add-to-list 'org-agenda-custom-commands
@@ -347,10 +381,24 @@
                              (org-agenda-span 'day))))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("rc" "Clock Review"
+                 '("rr" "Recent items (past 7 days)"
+                   ;; faster than tags
+                   agenda ""
+                   ((org-agenda-start-day "-7d")
+                    (org-agenda-span 7)
+                    (org-agenda-repeating-timestamp-show-all nil)
+                    ;; %s is only for agenda views
+                    ;; (org-agenda-prefix-format "%s")
+                    ;; maybe not make much difference ka
+                    ;; (org-agenda-use-tag-inheritance nil)
+                    (org-agenda-inactive-leader "Inactive:  ")
+                    (org-agenda-include-inactive-timestamps t))) t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("rt" "Timesheet"
                    ((agenda ""
                             ((org-agenda-clockreport-mode t)
-                             (org-agenda-overriding-header "CLOCK REVIEW")
+                             (org-agenda-overriding-header "TIMESHEET")
                              (org-agenda-show-log 'clockcheck)
                              (org-agenda-span 'day))))) t)
 
@@ -476,20 +524,6 @@
 
     (add-to-list 'org-agenda-custom-commands
                  '("o" . "MORE...") t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("rr" "Recent items (past 7 days)"
-                   ;; faster than tags
-                   agenda ""
-                   ((org-agenda-start-day "-7d")
-                    (org-agenda-span 7)
-                    (org-agenda-repeating-timestamp-show-all nil)
-                    ;; %s is only for agenda views
-                    ;; (org-agenda-prefix-format "%s")
-                    ;; maybe not make much difference ka
-                    ;; (org-agenda-use-tag-inheritance nil)
-                    (org-agenda-inactive-leader "Inactive:  ")
-                    (org-agenda-include-inactive-timestamps t))) t)
 
     ;; checking tasks that are assigned to me
     (add-to-list 'org-agenda-custom-commands
