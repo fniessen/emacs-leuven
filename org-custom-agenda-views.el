@@ -203,7 +203,7 @@
                           ((org-agenda-overriding-header "COMPLETED"))))
                    ((org-agenda-sorting-strategy '(priority-down))
                     (org-agenda-write-buffer-name "All Tasks (grouped by Due Date)"))
-                   "org___all-tasks-by-due-date.pdf") t)
+                   "~/org___all-tasks-by-due-date.pdf") t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("ra1" "All Tasks (sorted by Due Date)"
@@ -336,7 +336,7 @@
                     (org-agenda-span 'day)
                     (org-agenda-use-time-grid nil)
                     (org-agenda-write-buffer-name "List Review"))
-                   "org-agenda-all-todo-entries.html") t)
+                   "~/org___agenda-all-todo-entries.html") t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("rap" "All Tasks (grouped by Priority)"
@@ -572,7 +572,7 @@
                      "Phone calls that you need to make")
                     (ps-landscape-mode t)
                     (ps-number-of-columns 1))
-                   ("~/org-calls.pdf")) t)
+                   ("~/org___calls.pdf")) t)
 
     ;; create a sparse tree (current buffer only) with all entries containing
     ;; the word `TODO', `FIXME' or `XXX'

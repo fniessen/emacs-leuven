@@ -349,6 +349,11 @@ The project type can be specified either in XXX.
                     (org-agenda-sorting-strategy nil))) t)
 #+end_src
 
+Comment identifier un projet ?
+- Identifier les tâches qui ont des sous-tâches?
+- Mettre un tag PROJ?
+- Avoir des tâches dans section "(Single) Actions" ou dans section "Projects"?
+
 From Tracks:
 - Active Projects
 - Hidden Projects
@@ -438,7 +443,7 @@ All *tasks*, grouped by *due date*:
                           ((org-agenda-overriding-header "COMPLETED"))))
                    ((org-agenda-sorting-strategy '(priority-down))
                     (org-agenda-write-buffer-name "All Tasks (grouped by Due Date)"))
-                   "org___all-tasks-by-due-date.pdf") t)
+                   "~/org___all-tasks-by-due-date.pdf") t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("ra1" "All Tasks (sorted by Due Date)"
@@ -581,7 +586,7 @@ All *tasks*, grouped by *due date*:
                     (org-agenda-span 'day)
                     (org-agenda-use-time-grid nil)
                     (org-agenda-write-buffer-name "List Review"))
-                   "org-agenda-all-todo-entries.html") t)
+                   "~/org___agenda-all-todo-entries.html") t)
 #+end_src
 
 *** Sorted by priority
@@ -980,7 +985,7 @@ special command to produce all specified files in one step: =C-c a e=.
                      "Phone calls that you need to make")
                     (ps-landscape-mode t)
                     (ps-number-of-columns 1))
-                   ("~/org-calls.pdf")) t)
+                   ("~/org___calls.pdf")) t)
 #+end_src
 
 ** Task markers (in the current buffer)
@@ -1075,7 +1080,7 @@ Search any word or regexp within your task name or in the note field:
                                 (org-agenda-sorting-strategy '(todo-state-up))
                                 (org-agenda-todo-keyword-format "%-10s"))))
                    ((org-agenda-remove-tags t))
-                   ("~/org-agenda-de.html")) t)
+                   ("~/org___agenda-de.html")) t)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1179,7 +1184,7 @@ Search any word or regexp within your task name or in the note field:
     (ps-number-of-columns 2)
     ;; (ps-print-header nil)
     (ps-landscape-mode t))
-   ("~/org-agenda-storage.pdf"))
+   ("~/org___agenda-storage.pdf"))
 
   ("P" "Projects"
    ((agenda ""
@@ -1364,9 +1369,9 @@ Ignore scheduled?
 1. =(org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))= WORKS
 2. =org-agenda-todo-ignore-scheduled=
 
-** Tips and tricks
+* Tips and tricks
 
-*** Tasks with a time component
+** Tasks with a time component
 
 To be sure to get tasks with a time component in the lists, use
 
@@ -1376,7 +1381,7 @@ instead of
 
     = <today>
 
-*** Cas d'erreurs supplémentaires
+** Cas d'erreurs supplémentaires
 
 |              | no state  | with TODO                |
 |--------------+-----------+--------------------------|
@@ -1389,9 +1394,3 @@ Les cas:
 - avec state mais un timestamp actif
 
 devraient être considérés comme erronés...
-
-** Comment identifier un projet ?
-
-- Avoir des tâches dans section "(Single) Actions" ou dans section "Projects"
-- Identifier les tâches qui ont des sous-tâches
-- Mettre un tag PROJ
