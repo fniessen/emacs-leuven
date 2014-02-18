@@ -155,42 +155,55 @@
                  '("rad" "All Tasks (grouped by Due Date)"
                    ((tags-todo "DEADLINE<\"<+0d>\""
                                ((org-agenda-overriding-header "OVERDUE")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE=\"<+0d>\""
                                ((org-agenda-overriding-header "DUE TODAY")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE=\"<+1d>\""
                                ((org-agenda-overriding-header "DUE TOMORROW")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE>\"<+1d>\"+DEADLINE<=\"<+7d>\""
                                ((org-agenda-overriding-header "DUE WITHIN A WEEK")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE>\"<+7d>\"+DEADLINE<=\"<+28d>\""
                                ((org-agenda-overriding-header "DUE WITHIN A MONTH")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'notdeadline))))
                     (tags-todo "DEADLINE>\"<+28d>\""
                                ((org-agenda-overriding-header "DUE LATER")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'notdeadline))))
 
                     ;; (todo ""
                     ;;            ((org-agenda-overriding-header "NO DUE DATE")
-                    ;;             (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+                    ;;             (org-agenda-skip-function
+                    ;;              '(org-agenda-skip-entry-if 'deadline))))
                     (tags-todo "TODO={STRT}"
                                ((org-agenda-overriding-header "NO DUE DATE / STARTED")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'deadline))))
                     (tags-todo "TODO<>{STRT\\|WAIT\\|SDAY}"
                                ((org-agenda-overriding-header "NO DUE DATE / NEXT")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'deadline))))
                     (tags-todo "TODO={WAIT}"
                                ((org-agenda-overriding-header "NO DUE DATE / WAITING FOR")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'deadline))))
                     (tags-todo "TODO={SDAY}"
                                ((org-agenda-overriding-header "NO DUE DATE / SOMEDAY")
-                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if 'deadline))))
 
                     (todo "DONE|CANX"
                           ((org-agenda-overriding-header "COMPLETED"))))
-                   ((org-agenda-sorting-strategy '(priority-down)))) t)
+                   ((org-agenda-sorting-strategy '(priority-down))
+                    (org-agenda-write-buffer-name "All Tasks (grouped by Due Date)"))
+                   "org___all-tasks-by-due-date.pdf") t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("ra1" "All Tasks (sorted by Due Date)"
@@ -532,23 +545,10 @@
 
     ;; checking tasks that are assigned to me
     (add-to-list 'org-agenda-custom-commands
-                 `("oa" "Tasks assigned to me"
+                 `("oa" "Assigned to me"
                    tags ,(concat "Assignee={" user-login-name "\\|"
                                  user-mail-address "}")
-                   ((org-agenda-overriding-header
-                     ,(concat "TASKS ASSIGNED TO " user-login-name)))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("F" "Like s, but with extra files"
-                   search ""
-                   ((org-agenda-text-search-extra-files
-                     ;; FIXME Add `agenda-archives'
-                     leuven-org-search-extra-files))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("n" "Organize thoughts to refile"
-                   tags "refile|capture"
-                   ((org-agenda-overriding-header "Refile stuff"))) t)
+                   ((org-agenda-overriding-header "ASSIGNED TO ME"))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("E" . "Exported agenda files...") t)
@@ -560,7 +560,7 @@
                    (;; (org-tag-faces nil)
                     (ps-landscape-mode t)
                     (ps-number-of-columns 1))
-                   ("~/org-agenda.txt" "~/org-agenda.html" "~/org-agenda.pdf")) t)
+                   ("~/org-agenda.html" "~/org-agenda.pdf")) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("Ep" "Call list"
@@ -579,3 +579,27 @@
     (add-to-list 'org-agenda-custom-commands
                  '("1" "Task markers (in current buffer)"
                    occur-tree "\\<TODO\\|FIXME\\|XXX\\>") t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("R" . "REFERENCE...") t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("Rf" "Like s, but with extra files"
+                   search ""
+                   ((org-agenda-text-search-extra-files
+                     ;; FIXME Add `agenda-archives'
+                     leuven-org-search-extra-files))) t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("Rn" "Organize thoughts to refile"
+                   tags "refile|capture"
+                   ((org-agenda-overriding-header "Refile stuff"))) t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("A" . "ARCHIVE...") t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("AA" "Archive"
+                   ((tags-todo "ARCHIVE"))
+                   ((org-agenda-todo-ignore-scheduled 'future)
+                    (org-agenda-sorting-strategy '(deadline-down)))) t)
