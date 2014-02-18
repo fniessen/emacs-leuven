@@ -46,6 +46,11 @@
                                 (org-agenda-sorting-strategy '(priority-down)))))) t)
 
     (add-to-list 'org-agenda-custom-commands
+                '("fc" "Closed this week (TEST)"
+                  tags "CLOSED>\"<-1w>\""
+                  ((org-agenda-sorting-strategy '(priority-down)))))
+
+    (add-to-list 'org-agenda-custom-commands
                  '("f7" "Next 7 Days"
                    ((tags-todo "DEADLINE=\"<+0d>\""
                                ((org-agenda-overriding-header "DUE TODAY")
@@ -335,10 +340,10 @@
                            (org-agenda-sorting-strategy '(priority-down)))))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("r^" . "Calendar...") t)
+                 '("rc" . "Calendar...") t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("r^7" "Events and appointments for 7 days"
+                 '("rc7" "Events and appointments for 7 days"
                    agenda ""
                    ((org-agenda-entry-types '(:timestamp :sexp))
                     ;; (org-agenda-overriding-header "Calendar for 7 days")
@@ -355,7 +360,7 @@
         "Open an Org schedule calendar." t)
 
       (add-to-list 'org-agenda-custom-commands
-                   '("r^m" "Calendar for current month"
+                   '("rcm" "Calendar for current month"
                      (lambda (&rest ignore)
                        (cfw:open-org-calendar))) t)
 
@@ -528,7 +533,8 @@
     ;; checking tasks that are assigned to me
     (add-to-list 'org-agenda-custom-commands
                  `("oa" "Tasks assigned to me"
-                   tags ,(concat "Assignee={" user-login-name "\\|" user-mail-address "}")
+                   tags ,(concat "Assignee={" user-login-name "\\|"
+                                 user-mail-address "}")
                    ((org-agenda-overriding-header
                      ,(concat "TASKS ASSIGNED TO " user-login-name)))) t)
 

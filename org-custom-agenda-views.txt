@@ -97,7 +97,12 @@ Puisque l'on peut facilement filter par catégorie, on peut imaginer qu'il est
 tâches d'une catégorie.
 #+end_note
 
-* Collect
+You should be able to work with Org items with the mapping and property APIs:
+
+- (info "(org) Using the property API")
+- (info "(org) Using the mapping API")
+
+* COLLECT
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -115,7 +120,7 @@ tâches d'une catégorie.
                      '("~/org/refile.org" "~/org/email.org")))) t)
 #+end_src
 
-* Focus
+* FOCUS
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -162,6 +167,13 @@ to the deadline date.
                                 (org-agenda-sorting-strategy '(priority-down)))))) t)
 #+end_src
 
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                '("fc" "Closed this week (TEST)"
+                  tags "CLOSED>\"<-1w>\""
+                  ((org-agenda-sorting-strategy '(priority-down)))))
+#+end_src
+
 #+begin_note
 Checking that =DEADLINE= <>"" can be implemented by =(org-agenda-skip-function
 '(org-agenda-skip-entry-if 'notdeadline))=.
@@ -173,6 +185,9 @@ Though, we should check which one is more responsive.
 
 - Overdue
 - 7 days
+
+XXX A task with a DEADLINE and a =-0d= specifier is not shown!!!  Well shown in
+the hotlist!!!
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -334,7 +349,7 @@ The project type can be specified either in XXX.
                     (org-agenda-sorting-strategy nil))) t)
 #+end_src
 
-* Review
+* REVIEW
 
 See http://www.omnigroup.com/ftp/pub/software/macosx/extras/omnifocus/gtdandomnifocus.pdf
 for mode dedicated solely to review!
@@ -580,14 +595,14 @@ All *tasks*, grouped by *priority*:
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
-                 '("r^" . "Calendar...") t)
+                 '("rc" . "Calendar...") t)
 #+end_src
 
 XXX Faire 7 vues agenda "jour" pour avoir un séparateur customizable...
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
-                 '("r^7" "Events and appointments for 7 days"
+                 '("rc7" "Events and appointments for 7 days"
                    agenda ""
                    ((org-agenda-entry-types '(:timestamp :sexp))
                     ;; (org-agenda-overriding-header "Calendar for 7 days")
@@ -609,7 +624,7 @@ view.
         "Open an Org schedule calendar." t)
 
       (add-to-list 'org-agenda-custom-commands
-                   '("r^m" "Calendar for current month"
+                   '("rcm" "Calendar for current month"
                      (lambda (&rest ignore)
                        (cfw:open-org-calendar))) t)
 
@@ -877,7 +892,7 @@ again, ready for you to decide what to do with it.
                     (org-agenda-sorting-strategy '(deadline-up)))) t) ; XXX does not work
 #+end_src
 
-* More
+* MORE
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -902,7 +917,8 @@ Cleanup:
     ;; checking tasks that are assigned to me
     (add-to-list 'org-agenda-custom-commands
                  `("oa" "Tasks assigned to me"
-                   tags ,(concat "Assignee={" user-login-name "\\|" user-mail-address "}")
+                   tags ,(concat "Assignee={" user-login-name "\\|"
+                                 user-mail-address "}")
                    ((org-agenda-overriding-header
                      ,(concat "TASKS ASSIGNED TO " user-login-name)))) t)
 #+end_src
