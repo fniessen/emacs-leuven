@@ -124,13 +124,16 @@
                                ((org-agenda-overriding-header "OVERDUE")))
                     (tags-todo "DEADLINE>=\"<+0d>\"+DEADLINE<=\"<+1w>\""
                                ((org-agenda-overriding-header "DUE IN NEXT 7 DAYS")))
-                    (tags-todo "DEADLINE={}+PRIORITY={A}|DEADLINE>\"<+1w>\"+PRIORITY={A}"
+                    (tags-todo "DEADLINE=\"\"+PRIORITY={A}|DEADLINE>\"<+1w>\"+PRIORITY={A}"
                                ((org-agenda-overriding-header "HIGH PRIORITY")))
-                    (tags-todo "DEADLINE={}+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
+                    (tags-todo "DEADLINE=\"\"+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
                                ((org-agenda-overriding-header "FLAGGED")
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-when-regexp-matches))
-                                (org-agenda-skip-regexp "\\[#A\\]"))))
+                                (org-agenda-skip-regexp "\\[#A\\]")))
+                    ;; (tags-todo "DEADLINE=\"\"+PRIORITY<>{A}+FLAGGED|DEADLINE>\"<+1w>\"+PRIORITY<>{A}+FLAGGED"
+                    ;;            ((org-agenda-overriding-header "...FLAGGED...")))
+                    )
                    ((org-agenda-todo-ignore-scheduled 'future)
                     (org-agenda-sorting-strategy '(deadline-down)))) t)
 

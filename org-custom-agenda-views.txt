@@ -129,6 +129,8 @@ You should be able to work with Org items with the mapping and property APIs:
 
 ** Today
 
+XXX Add calendar events for today, calendar events for tomorrow and scheduled for today?
+
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("f." "Today"
@@ -285,13 +287,16 @@ FIXME Tasks with #A priority are not all listed (even without scheduled date)!
                                ((org-agenda-overriding-header "OVERDUE")))
                     (tags-todo "DEADLINE>=\"<+0d>\"+DEADLINE<=\"<+1w>\""
                                ((org-agenda-overriding-header "DUE IN NEXT 7 DAYS")))
-                    (tags-todo "DEADLINE={}+PRIORITY={A}|DEADLINE>\"<+1w>\"+PRIORITY={A}"
+                    (tags-todo "DEADLINE=\"\"+PRIORITY={A}|DEADLINE>\"<+1w>\"+PRIORITY={A}"
                                ((org-agenda-overriding-header "HIGH PRIORITY")))
-                    (tags-todo "DEADLINE={}+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
+                    (tags-todo "DEADLINE=\"\"+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
                                ((org-agenda-overriding-header "FLAGGED")
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-when-regexp-matches))
-                                (org-agenda-skip-regexp "\\[#A\\]"))))
+                                (org-agenda-skip-regexp "\\[#A\\]")))
+                    ;; (tags-todo "DEADLINE=\"\"+PRIORITY<>{A}+FLAGGED|DEADLINE>\"<+1w>\"+PRIORITY<>{A}+FLAGGED"
+                    ;;            ((org-agenda-overriding-header "...FLAGGED...")))
+                    )
                    ((org-agenda-todo-ignore-scheduled 'future)
                     (org-agenda-sorting-strategy '(deadline-down)))) t)
 #+end_src
@@ -1370,6 +1375,12 @@ Ignore scheduled?
 2. =org-agenda-todo-ignore-scheduled=
 
 * Tips and tricks
+
+** DEADLINE
+
+Writing =DEADLINE={}= is wrong. You must write:
+
+: DEADLINE=""
 
 ** Tasks with a time component
 
