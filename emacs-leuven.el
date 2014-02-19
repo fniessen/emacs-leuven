@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140217.1450
+;; Version: 20140219.2058
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140217.1450]--")
+(message "* --[ Loading Emacs Leuven 20140219.2058]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1661,10 +1661,13 @@ Last time is saved in global variable `leuven--before-section-time'."
       (unless (> (buffer-size) 14000)
         (leuven-diff-make-fine-diffs)))
 
-    (add-hook 'diff-mode-hook
-              'leuven--diff-make-fine-diffs-if-necessary))
+    ;; push the auto-refine function after `vc-diff'
+    (advice-add
+     'vc-diff :after
+     (lambda (&rest _)
+       (leuven--diff-make-fine-diffs-if-necessary))))
 
-  ;; ;; ediff, a comprehensive visual interface to diff & patch
+  ;; ;; Ediff, a comprehensive visual interface to diff & patch
   ;; ;; setup for Ediff's menus and autoloads
   ;; (try-require 'ediff-hook)
   ;; already loaded (by Emacs?)
@@ -4194,22 +4197,29 @@ From %c"
 
     ;; faces for showing deadlines in the agenda
     (setq org-agenda-deadline-faces
-          '((1.0001 . leuven-org-deadline-yesterday-or-before)
+          '((1.0001 . leuven-org-deadline-overdue)
             (0.9999 . leuven-org-deadline-today)
-            (0.0000 . leuven-org-deadline-tomorrow-or-later)))
+            (0.8000 . leuven-org-deadline-tomorrow)
+            (0.0000 . leuven-org-deadline-future)))
+
+    ;; see http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
 
     ;; Org non-standard faces
-    (defface leuven-org-deadline-yesterday-or-before
+    (defface leuven-org-deadline-overdue
       '((t (:weight bold :foreground "#D24231" :background "#F8D3D4")))
-      "Face used to highlight tasks whose deadline is in the past.")
+      "Face used to highlight tasks whose due date is in the past.")
 
     (defface leuven-org-deadline-today
       '((t (:weight bold :foreground "#BF8239" :background "#F8D1A9")))
-      "Face used to highlight tasks whose deadline is today.")
+      "Face used to highlight tasks whose due date is today.")
 
-    (defface leuven-org-deadline-tomorrow-or-later
+    (defface leuven-org-deadline-tomorrow
+      '((t (:weight bold :foreground "#BF8239" :background "#F8D1A9")))
+      "Face used to highlight tasks whose due date is tomorrow.")
+
+    (defface leuven-org-deadline-future
       '((t (:foreground "#45A856" :background "#B8E9B1")))
-      "Face used to highlight tasks whose deadline is for later."))
+      "Face used to highlight tasks whose due date is for later."))
 
   ;; 10.4 column to shift tags to (in agenda items)
   (setq org-agenda-tags-column -132)
@@ -4430,7 +4440,7 @@ From %c"
            (org-agenda-files (directory-files dname t "\\.\\(org\\|txt\\)$"))
            (org-agenda-sorting-strategy '(todo-state-up priority-down))
            (org-agenda-overriding-header
-            (format "TODO list for directory %s" dname))
+            (format "List of TODO items restricted to directory\n%s" dname))
            (org-agenda-sticky nil))
       (message "%s..." org-agenda-overriding-header)
       (org-todo-list)))
@@ -4493,9 +4503,10 @@ From %c"
       (org-agenda-switch-to)
       (org-capture 0))
 
-    ;; new key assignment (overrides `org-agenda-next-item')
-    (define-key org-agenda-mode-map
-      "N" 'leuven-org-agenda-new))
+    ;; ;; new key assignment (overrides `org-agenda-next-item')
+    ;; (define-key org-agenda-mode-map
+    ;;   "N" 'leuven-org-agenda-new)
+  )
 
 ;;* 11 (info "(org)Markup")
 
@@ -8659,7 +8670,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140217.1451]--")
+(message "* --[ Loaded Emacs Leuven 20140219.2059]--")
 
 (provide 'emacs-leuven)
 

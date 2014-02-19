@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-17 Mon 14:52 -->
+  <title>Emacs Leuven</title><!-- 2014-02-19 Wed 20:50 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140217.1452</span>
+"color: #8D8D84; font-style: italic;">Version: 20140219.2049</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140217.1452]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140219.2049]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -5453,8 +5453,13 @@
       (<span style="color: #0000FF;">unless</span> (&gt; (buffer-size) 14000)
         (leuven-diff-make-fine-diffs)))
 
-    (add-hook 'diff-mode-hook
-              'leuven--diff-make-fine-diffs-if-necessary))
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">push the auto-refine function after `</span><span style="color: #D0372D; font-style: italic;">vc-diff</span><span style="color: #8D8D84; font-style: italic;">'</span>
+    (advice-add
+     'vc-diff <span style="color: #006FE0;">:after</span>
+     (<span style="color: #0000FF;">lambda</span> (<span style=
+"color: #6434A3;">&amp;rest</span> _)
+       (leuven--diff-make-fine-diffs-if-necessary))))
 </pre>
           </div>
 
@@ -5481,7 +5486,7 @@ M-: (executable-find "diff") RET
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">;; ediff, a comprehensive visual interface to diff &amp; patch</span>
+"color: #8D8D84; font-style: italic;">;; Ediff, a comprehensive visual interface to diff &amp; patch</span>
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">;; setup for Ediff's menus and autoloads</span>
   <span style="color: #8D8D84;">;; </span><span style=
@@ -11815,6 +11820,10 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
           <h4 id="sec-28-9-4">Presentation and sorting</h4>
 
           <div class="outline-text-4" id="text-28-9-4">
+            <p>See <a href=
+            "http://www.dgtale.ch/index.php?option=com_content&amp;view=article&amp;id=52&amp;Itemid=61">
+            http://www.dgtale.ch/index.php?option=com_content&amp;view=article&amp;id=52&amp;Itemid=61</a></p>
+
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
 <span style="color: #8D8D84;">;;</span><span style=
@@ -11877,21 +11886,25 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">faces for showing deadlines in the agenda</span>
     (setq org-agenda-deadline-faces
-          '((1.0001 . leuven-org-deadline-yesterday-or-before)
+          '((1.0001 . leuven-org-deadline-overdue)
             (0.9999 . leuven-org-deadline-today)
-            (0.0000 . leuven-org-deadline-tomorrow-or-later)))
+            (0.8000 . leuven-org-deadline-tomorrow)
+            (0.0000 . leuven-org-deadline-future)))
+
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">see http://www.dgtale.ch/index.php?option=com_content&amp;view=article&amp;id=52&amp;Itemid=61</span>
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Org non-standard faces</span>
     (<span style="color: #0000FF;">defface</span> <span style=
-"color: #BA36A5;">leuven-org-deadline-yesterday-or-before</span>
+"color: #BA36A5;">leuven-org-deadline-overdue</span>
       '((t (<span style="color: #006FE0;">:weight</span> bold <span style=
 "color: #006FE0;">:foreground</span> <span style=
 "color: #036A07;">"#D24231"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
 "color: #036A07;">"#F8D3D4"</span>)))
       <span style=
-"color: #008000;">"Face used to highlight tasks whose deadline is in the past."</span>)
+"color: #008000;">"Face used to highlight tasks whose due date is in the past."</span>)
 
     (<span style="color: #0000FF;">defface</span> <span style=
 "color: #BA36A5;">leuven-org-deadline-today</span>
@@ -11901,16 +11914,26 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #006FE0;">:background</span> <span style=
 "color: #036A07;">"#F8D1A9"</span>)))
       <span style=
-"color: #008000;">"Face used to highlight tasks whose deadline is today."</span>)
+"color: #008000;">"Face used to highlight tasks whose due date is today."</span>)
 
     (<span style="color: #0000FF;">defface</span> <span style=
-"color: #BA36A5;">leuven-org-deadline-tomorrow-or-later</span>
+"color: #BA36A5;">leuven-org-deadline-tomorrow</span>
+      '((t (<span style="color: #006FE0;">:weight</span> bold <span style=
+"color: #006FE0;">:foreground</span> <span style=
+"color: #036A07;">"#BF8239"</span> <span style=
+"color: #006FE0;">:background</span> <span style=
+"color: #036A07;">"#F8D1A9"</span>)))
+      <span style=
+"color: #008000;">"Face used to highlight tasks whose due date is tomorrow."</span>))
+
+    (<span style="color: #0000FF;">defface</span> <span style=
+"color: #BA36A5;">leuven-org-deadline-future</span>
       '((t (<span style="color: #006FE0;">:foreground</span> <span style=
 "color: #036A07;">"#45A856"</span> <span style=
 "color: #006FE0;">:background</span> <span style=
 "color: #036A07;">"#B8E9B1"</span>)))
       <span style=
-"color: #008000;">"Face used to highlight tasks whose deadline is for later."</span>))
+"color: #008000;">"Face used to highlight tasks whose due date is for later."</span>))
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">10.4 column to shift tags to (in agenda items)</span>
@@ -12434,9 +12457,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">$"</span>))
            (org-agenda-sorting-strategy '(todo-state-up priority-down))
            (org-agenda-overriding-header
-            (format <span style="color: #036A07;">"</span><span style=
+            (format <span style="color: #036A07;">"List of </span><span style=
 "color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> list for directory %s"</span> dname))
+"color: #036A07;"> items restricted to directory\n%s"</span> dname))
            (org-agenda-sticky nil))
       (message <span style=
 "color: #036A07;">"%s..."</span> org-agenda-overriding-header)
@@ -12617,9 +12640,12 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
       (org-capture 0))
 
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">new key assignment (overrides `</span><span style="color: #D0372D; font-style: italic;">org-agenda-next-item</span><span style="color: #8D8D84; font-style: italic;">')</span>
-    (define-key org-agenda-mode-map
-      <span style="color: #036A07;">"N"</span> 'leuven-org-agenda-new))
+"color: #8D8D84; font-style: italic;">;; new key assignment (overrides `</span><span style="color: #D0372D; font-style: italic;">org-agenda-next-item</span><span style="color: #8D8D84; font-style: italic;">')</span>
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">(define-key org-agenda-mode-map</span>
+    <span style="color: #8D8D84;">;;   </span><span style=
+"color: #8D8D84; font-style: italic;">"N" 'leuven-org-agenda-new)</span>
+  )
 </pre>
               </div>
 
@@ -19060,20 +19086,18 @@ TAGS:
                 <tr>
                   <td valign="top"></td>
 
+                  <td width="100%"><b>END</b><br /></td>
+                </tr>
+              </table>
+
+              <table class="inlinetask" width="100%">
+                <tr>
+                  <td valign="top"><b><span class=
+                  "todo TODO">TODO</span></b></td>
+
                   <td width="100%">
-                    <b>END</b><br />
-
-                    <div class="figure"></div>
-
-                    <table class="inlinetask" width="100%">
-                      <tr>
-                        <td valign="top"><b><span class=
-                        "todo TODO">TODO</span></b></td>
-
-                        <td width="100%"><b><code>C-u &lt;RET&gt;</code> opens
-                        dired on Org link</b><br /></td>
-                      </tr>
-                    </table>
+                    <b><code>C-u &lt;RET&gt;</code> opens dired on Org
+                    link</b><br />
 
                     <p>We should probably have the same type of key binding for
                     opening Explorer from Dired.</p>
@@ -23380,6 +23404,19 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
 
           <p>to check if you have <code>png</code> image support in your
           Emacs.</p>
+
+          <p>To check all image libraries at once:</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+(mapcar (<span style="color: #0000FF;">lambda</span> (elt)
+          (list (car elt) (image-type-available-p (car elt))))
+        dynamic-library-alist)
+</pre>
+          </div>
+
+          <p>If missing image libraries bother you, read
+          <code>README.W32</code> or <code>nt/INSTALL</code>.</p>
         </div>
       </div>
     </div>
@@ -23805,7 +23842,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140217.1452]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140219.2049]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

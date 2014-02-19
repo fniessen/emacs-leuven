@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-17 Mon 14:50>
+# Time-stamp: <2014-02-19 Wed 20:58>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -2596,8 +2596,11 @@ In Diff mode, I can *select a hunk and apply it (in reverse)*.  Nice following
       (unless (> (buffer-size) 14000)
         (leuven-diff-make-fine-diffs)))
 
-    (add-hook 'diff-mode-hook
-              'leuven--diff-make-fine-diffs-if-necessary))
+    ;; push the auto-refine function after `vc-diff'
+    (advice-add
+     'vc-diff :after
+     (lambda (&rest _)
+       (leuven--diff-make-fine-diffs-if-necessary))))
 #+end_src
 
 To compare 2 text files, you can also use Ediff if the following command
@@ -2617,7 +2620,7 @@ In Ediff, press:
 - =ra= or =rb= to revert your change
 
 #+begin_src emacs-lisp
-  ;; ;; ediff, a comprehensive visual interface to diff & patch
+  ;; ;; Ediff, a comprehensive visual interface to diff & patch
   ;; ;; setup for Ediff's menus and autoloads
   ;; (try-require 'ediff-hook)
   ;; already loaded (by Emacs?)
@@ -6356,6 +6359,9 @@ arrives -- at which point it will be in all lists.
 
 *** Presentation and sorting
 
+See
+http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
+
 #+begin_src emacs-lisp
 ;;** 10.4 (info "(org)Presentation and sorting")
 
@@ -6389,22 +6395,29 @@ arrives -- at which point it will be in all lists.
 
     ;; faces for showing deadlines in the agenda
     (setq org-agenda-deadline-faces
-          '((1.0001 . leuven-org-deadline-yesterday-or-before)
+          '((1.0001 . leuven-org-deadline-overdue)
             (0.9999 . leuven-org-deadline-today)
-            (0.0000 . leuven-org-deadline-tomorrow-or-later)))
+            (0.8000 . leuven-org-deadline-tomorrow)
+            (0.0000 . leuven-org-deadline-future)))
+
+    ;; see http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
 
     ;; Org non-standard faces
-    (defface leuven-org-deadline-yesterday-or-before
+    (defface leuven-org-deadline-overdue
       '((t (:weight bold :foreground "#D24231" :background "#F8D3D4")))
-      "Face used to highlight tasks whose deadline is in the past.")
+      "Face used to highlight tasks whose due date is in the past.")
 
     (defface leuven-org-deadline-today
       '((t (:weight bold :foreground "#BF8239" :background "#F8D1A9")))
-      "Face used to highlight tasks whose deadline is today.")
+      "Face used to highlight tasks whose due date is today.")
 
-    (defface leuven-org-deadline-tomorrow-or-later
+    (defface leuven-org-deadline-tomorrow
+      '((t (:weight bold :foreground "#BF8239" :background "#F8D1A9")))
+      "Face used to highlight tasks whose due date is tomorrow.")
+
+    (defface leuven-org-deadline-future
       '((t (:foreground "#45A856" :background "#B8E9B1")))
-      "Face used to highlight tasks whose deadline is for later."))
+      "Face used to highlight tasks whose due date is for later."))
 
   ;; 10.4 column to shift tags to (in agenda items)
   (setq org-agenda-tags-column -132)
@@ -6721,7 +6734,7 @@ example).
            (org-agenda-files (directory-files dname t "\\.\\(org\\|txt\\)$"))
            (org-agenda-sorting-strategy '(todo-state-up priority-down))
            (org-agenda-overriding-header
-            (format "TODO list for directory %s" dname))
+            (format "List of TODO items restricted to directory\n%s" dname))
            (org-agenda-sticky nil))
       (message "%s..." org-agenda-overriding-header)
       (org-todo-list)))
@@ -6814,9 +6827,10 @@ Source: Sacha Chua.
       (org-agenda-switch-to)
       (org-capture 0))
 
-    ;; new key assignment (overrides `org-agenda-next-item')
-    (define-key org-agenda-mode-map
-      "N" 'leuven-org-agenda-new))
+    ;; ;; new key assignment (overrides `org-agenda-next-item')
+    ;; (define-key org-agenda-mode-map
+    ;;   "N" 'leuven-org-agenda-new)
+  )
 #+end_src
 
 Source: Sacha Chua.
@@ -13170,6 +13184,30 @@ You can do:
 #+end_src
 
 to check if you have =png= image support in your Emacs.
+
+To check all image libraries at once:
+
+#+begin_src emacs-lisp
+(mapcar (lambda (elt)
+          (list (car elt) (image-type-available-p (car elt))))
+        dynamic-library-alist)
+#+end_src
+
+#+results:
+| xpm        | nil |
+| png        | t   |
+| jpeg       | t   |
+| tiff       | nil |
+| gif        | nil |
+| svg        | nil |
+| gdk-pixbuf | nil |
+| glib       | nil |
+| gobject    | nil |
+| gnutls     | nil |
+| libxml2    | nil |
+| zlib       | nil |
+
+If missing image libraries bother you, read ~README.W32~ or ~nt/INSTALL~.
 
 * Calc
 
