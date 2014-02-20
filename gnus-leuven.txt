@@ -1,7 +1,7 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2014-02-10 Mon 14:23>
+#+Time-stamp: <2014-02-20 Thu 20:03>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1921,6 +1921,9 @@ searching *IMAP* and *Gmane* groups.
 
       ;; attach all marked files from Dired to a new Gnus message
       (autoload 'turn-on-gnus-dired-mode "gnus-dired"
+        "Attach dired's marked files to a gnus message composition." t)
+
+      (autoload 'gnus-dired-attach "gnus-dired"
         "Attach dired's marked files to a gnus message composition." t)
 
       (with-eval-after-load "dired"

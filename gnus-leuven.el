@@ -1575,6 +1575,9 @@
       (autoload 'turn-on-gnus-dired-mode "gnus-dired"
         "Attach dired's marked files to a gnus message composition." t)
 
+      (autoload 'gnus-dired-attach "gnus-dired"
+        "Attach dired's marked files to a gnus message composition." t)
+
       (with-eval-after-load "dired"
 
         (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
