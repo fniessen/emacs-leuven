@@ -438,7 +438,7 @@
                  `("rd" "Daily review"
                    ((tags "LEVEL=2"
                           ((org-agenda-overriding-header "NEW TASKS")
-                           (org-agenda-files (list ,@org-default-notes-file))))
+                           (org-agenda-files (list ,org-default-notes-file))))
                     (agenda ""
                             ((org-agenda-entry-types '(:timestamp :sexp))
                              (org-agenda-overriding-header "CALENDAR")
