@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140219.2058
+;; Version: 20140220.1408
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140219.2058]--")
+(message "* --[ Loading Emacs Leuven 20140220.1408]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3533,7 +3533,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                         ;; ("reading" . ?r)
                         ;; ("proj" . ?P)
 
-                        ("ARCHIVE"     . ?A)
+                        ("ARCHIVE"     . ?a) ; speed command + action in task list
                         ("crypt"       . ?C)
                         ("FLAGGED"     . ??)))
 
@@ -3541,22 +3541,23 @@ Last time is saved in global variable `leuven--before-section-time'."
   (setq org-tag-faces
         '(("refile"
            (:slant italic
-            :foreground "#A9876E" :background "#FCEEB3"))
+            :foreground "#A9876E"))     ; :background "#FCEEB3"
           ("personal"
            (:slant italic
-            :foreground "#5C88D3" :background "#BBDDFF"))
+            :foreground "#5C88D3"))     ; :background "#BBDDFF"
           ("work"
            (:slant italic
-            :foreground "#699761" :background "#C1D996"))
+            :foreground "#699761"))     ; :background "#C1D996"
           ("FLAGGED"
            (:slant italic
-            :foreground "#C15F4E" :background "#EDC6C8"))
+            :foreground "#C15F4E"))     ; :background "#EDC6C8"
           ("now"
            (:slant italic
-            :foreground "#000000" :background "#FFEA80"))
+            :foreground "#000000"))     ; :background "#FFEA80"
           ("notbillable"
            (:slant italic
-            :foreground "#8774AF" :background "#DED0EA"))))
+            :foreground "#8774AF"))     ; :background "#DED0EA"
+          ))
 
   ;; 6.2 exit fast tag selection after first change (toggle this with `C-c')
   (setq org-fast-tag-selection-single-key t)
@@ -4161,9 +4162,9 @@ From %c"
 
     ;; 10.3.6 how to identify stuck projects
     (setq org-stuck-projects
-          '("+LEVEL=2/-DONE"              ; identify a project
-            ("TODO" "STRT")               ; TODO keywords
-            nil ""))                      ; tags, regexp
+          '("+LEVEL=2/-DONE"            ; identify a project
+            ("TODO" "STRT")             ; TODO keywords
+            nil ""))                    ; tags, regexp
 
 ;;** 10.4 (info "(org)Presentation and sorting")
 
@@ -4171,11 +4172,11 @@ From %c"
 
     ;; 10.4 format specifications for the prefix of items in the agenda views
     (setq org-agenda-prefix-format
-          '((agenda . " %-11s%i %?-12t")  ; agenda
-            (timeline . " % s")           ; timeline
-            (todo . " %i %-12:c")         ; todo, alltodo
-            (tags . " %i %-12:c")         ; tags, tags-todo, stuck
-            (search . " %i %-12:c")))     ; search
+          '((agenda . " %-11s%i %?-12t") ; agenda
+            (timeline . " % s")         ; timeline
+            (todo . " %i %-12:c")       ; todo, alltodo
+            (tags . " %i %-12:c")       ; tags, tags-todo, stuck
+            (search . " %i %-12:c")))   ; search
 
     ;; text preceding scheduled items in the agenda view
     (setq org-agenda-scheduled-leaders
@@ -4188,7 +4189,7 @@ From %c"
     ;; text preceding deadline items in the agenda view
     (setq org-agenda-deadline-leaders
           '("Deadline   "
-            "In %d d"                     ; or "%d d left"
+            "In %d d"                   ; or "%d d left"
             "%d d ago"))
 
     )                                   ; with-eval-after-load "org-agenda" ends here
@@ -4199,26 +4200,26 @@ From %c"
     (setq org-agenda-deadline-faces
           '((1.0001 . leuven-org-deadline-overdue)
             (0.9999 . leuven-org-deadline-today)
-            (0.8000 . leuven-org-deadline-tomorrow)
+            (0.8571 . leuven-org-deadline-tomorrow) ; = 6/7, see `org-deadline-warning-days'
             (0.0000 . leuven-org-deadline-future)))
 
     ;; see http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
 
     ;; Org non-standard faces
     (defface leuven-org-deadline-overdue
-      '((t (:weight bold :foreground "#D24231" :background "#F8D3D4")))
+      '((t (:foreground "#C15F4E")))
       "Face used to highlight tasks whose due date is in the past.")
 
     (defface leuven-org-deadline-today
-      '((t (:weight bold :foreground "#BF8239" :background "#F8D1A9")))
+      '((t (:weight bold :foreground "#4F4A3D" :background "#FFFFCC")))
       "Face used to highlight tasks whose due date is today.")
 
     (defface leuven-org-deadline-tomorrow
-      '((t (:weight bold :foreground "#BF8239" :background "#F8D1A9")))
+      '((t (:foreground "#333333")))
       "Face used to highlight tasks whose due date is tomorrow.")
 
     (defface leuven-org-deadline-future
-      '((t (:foreground "#45A856" :background "#B8E9B1")))
+      '((t (:foreground "#333333")))
       "Face used to highlight tasks whose due date is for later."))
 
   ;; 10.4 column to shift tags to (in agenda items)
@@ -8670,7 +8671,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140219.2059]--")
+(message "* --[ Loaded Emacs Leuven 20140220.1409]--")
 
 (provide 'emacs-leuven)
 
