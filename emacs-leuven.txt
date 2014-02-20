@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-20 Thu 14:08>
+# Time-stamp: <2014-02-20 Thu 14:57>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4575,18 +4575,6 @@ work and tasks with Org mode.
     ;; display the Org mode manual in Info mode
     (define-key global-map
       (kbd "C-h o") 'org-info))         ; not autoloaded
-
-  ;; display the hotlist
-  (global-set-key
-   (kbd "<f7>") (kbd "C-c a f h"))
-
-  ;; display the calendar and tasks for today
-  (global-set-key
-   (kbd "<S-f7>") (kbd "C-c a r d"))
-
-  ;; display TODO entries
-  (global-set-key
-   (kbd "<C-f7>") (kbd "C-c a r a 2"))
 #+end_src
 
 These variables need to be set before Org mode is loaded.
@@ -5935,7 +5923,7 @@ Additional parameters can be included via the commands you use:
 
     (add-to-list 'org-capture-templates
                  `("mt" "Create a TODO Action + edit" entry
-                   (file+headline "~/org/email.org" "Tasks") ; #+FILETAGS: :mail:
+                   (file+headline ,org-default-notes-file "Email") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
    %:date-timestamp-inactive
 
@@ -5948,7 +5936,7 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("mr" "Create a TODO Action Remind 3" entry
-                   (file+headline "~/org/email.org" "Tasks") ; #+FILETAGS: :mail:
+                   (file+headline ,org-default-notes-file "Email") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
    DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \" -0d\")
    %:date-timestamp-inactive
@@ -5964,21 +5952,8 @@ From %a"
 The property =:immediate-finish=, when set, immediately files the item without
 further prompt (skipping =C-c C-c=); very handy for quick storing of emails.
 
-#+begin_src emacs-lisp
-    (add-to-list 'org-capture-templates
-                 `("M" "mailtodo" entry
-                   (file+datetree "~/org/mails.org")
-                   "* TODO %^{Task} %^G
-SCHEDULED: %t
-- From :: %:from
-- Subject :: %:subject
-- Email :: %a
-%?"
-                   :kill-buffer t) t)
-#+end_src
-
-With the clock options, =org-capture= automatically clocks in.  When pressing =C-c
-C-c=, it clocks out.
+With the clock options, =org-capture= automatically clocks in.  When pressing
+=C-c C-c=, it clocks out.
 
 #+begin_src emacs-lisp
     (add-to-list 'org-capture-templates

@@ -62,8 +62,19 @@ can do such an update via =C-u C-u C-c C-d=.
 XXX | [yas] elisp error! Symbol's function definition is void: ca-with-commentT |   |
 XXX | [yas] elisp error! Symbol's function definition is void: ca-with-commentX |   |
 
-XXX Have relative names for dates: instead of "in 1 day", have "Tomorrow";
-instead of "in 2 days", have (for example) "Friday".
+#+begin_src emacs-lisp
+  ;; display the calendar and tasks for today
+  (global-set-key
+   (kbd "<f7>") (kbd "C-c a r d"))
+
+  ;; display the hotlist
+  (global-set-key
+   (kbd "<S-f7>") (kbd "C-c a f h"))
+
+  ;; display TODO entries
+  (global-set-key
+   (kbd "<C-f7>") (kbd "C-c a r a 2"))
+#+end_src
 
 * Description
 
@@ -132,10 +143,9 @@ The CollectBox is the default place where you collect your thoughts.
 #+begin_src emacs-lisp
     ;; CollectBox + Email
     (add-to-list 'org-agenda-custom-commands
-                 '("cc" "CollectBox"
+                 `("cd" "CollectBox"
                    alltodo ""
-                   ((org-agenda-files
-                     '("~/org/refile.org" "~/org/email.org")))) t)
+                   ((org-agenda-files (list ,org-default-notes-file)))) t)
 #+end_src
 
 * FOCUS
@@ -765,12 +775,10 @@ Take a moment to plan your day:
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
-                 '("rd" "Daily review"
-                   ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
-                          ((org-agenda-overriding-header "NEW TASKS")))
-                    (tags "LEVEL=2"
-                          ((org-agenda-overriding-header "NEW EMAILS")
-                           (org-agenda-files '("~/org/email.org"))))
+                 `("rd" "Daily review"
+                   ((tags "LEVEL=2"
+                          ((org-agenda-overriding-header "NEW TASKS")
+                           (org-agenda-files (list ,@org-default-notes-file))))
                     (agenda ""
                             ((org-agenda-entry-types '(:timestamp :sexp))
                              (org-agenda-overriding-header "CALENDAR")

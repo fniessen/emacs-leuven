@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140220.1408
+;; Version: 20140220.1504
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140220.1408]--")
+(message "* --[ Loading Emacs Leuven 20140220.1504]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2945,18 +2945,6 @@ Last time is saved in global variable `leuven--before-section-time'."
     (define-key global-map
       (kbd "C-h o") 'org-info))         ; not autoloaded
 
-  ;; display the hotlist
-  (global-set-key
-   (kbd "<f7>") (kbd "C-c a f h"))
-
-  ;; display the calendar and tasks for today
-  (global-set-key
-   (kbd "<S-f7>") (kbd "C-c a r d"))
-
-  ;; display TODO entries
-  (global-set-key
-   (kbd "<C-f7>") (kbd "C-c a r a 2"))
-
   ;; These variables need to be set before org.el is loaded...
 
   ;; face to be used by `font-lock' for highlighting in Org mode Emacs
@@ -3860,7 +3848,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (add-to-list 'org-capture-templates
                  `("mt" "Create a TODO Action + edit" entry
-                   (file+headline "~/org/email.org" "Tasks") ; #+FILETAGS: :mail:
+                   (file+headline ,org-default-notes-file "Email") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
    %:date-timestamp-inactive
 
@@ -3873,7 +3861,7 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("mr" "Create a TODO Action Remind 3" entry
-                   (file+headline "~/org/email.org" "Tasks") ; #+FILETAGS: :mail:
+                   (file+headline ,org-default-notes-file "Email") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
    DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \" -0d\")
    %:date-timestamp-inactive
@@ -3884,17 +3872,6 @@ From %a"
 
 From %a"
                    :empty-lines 1 :immediate-finish t) t)
-
-    (add-to-list 'org-capture-templates
-                 `("M" "mailtodo" entry
-                   (file+datetree "~/org/mails.org")
-                   "* TODO %^{Task} %^G
-SCHEDULED: %t
-- From :: %:from
-- Subject :: %:subject
-- Email :: %a
-%?"
-                   :kill-buffer t) t)
 
     (add-to-list 'org-capture-templates
                  `("p" "Phone call" entry
@@ -8671,7 +8648,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140220.1409]--")
+(message "* --[ Loaded Emacs Leuven 20140220.1505]--")
 
 (provide 'emacs-leuven)
 

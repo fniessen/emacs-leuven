@@ -1,3 +1,15 @@
+  ;; display the calendar and tasks for today
+  (global-set-key
+   (kbd "<f7>") (kbd "C-c a r d"))
+
+  ;; display the hotlist
+  (global-set-key
+   (kbd "<S-f7>") (kbd "C-c a f h"))
+
+  ;; display TODO entries
+  (global-set-key
+   (kbd "<C-f7>") (kbd "C-c a r a 2"))
+
     ;; custom commands for the agenda -- start with a clean slate
     (setq org-agenda-custom-commands nil)
 
@@ -6,10 +18,9 @@
 
     ;; CollectBox + Email
     (add-to-list 'org-agenda-custom-commands
-                 '("cc" "CollectBox"
+                 `("cd" "CollectBox"
                    alltodo ""
-                   ((org-agenda-files
-                     '("~/org/refile.org" "~/org/email.org")))) t)
+                   ((org-agenda-files (list ,org-default-notes-file)))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("f" . "FOCUS...") t)
@@ -424,12 +435,10 @@
                              (org-agenda-span 'day))))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("rd" "Daily review"
-                   ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
-                          ((org-agenda-overriding-header "NEW TASKS")))
-                    (tags "LEVEL=2"
-                          ((org-agenda-overriding-header "NEW EMAILS")
-                           (org-agenda-files '("~/org/email.org"))))
+                 `("rd" "Daily review"
+                   ((tags "LEVEL=2"
+                          ((org-agenda-overriding-header "NEW TASKS")
+                           (org-agenda-files (list ,@org-default-notes-file))))
                     (agenda ""
                             ((org-agenda-entry-types '(:timestamp :sexp))
                              (org-agenda-overriding-header "CALENDAR")

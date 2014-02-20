@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-20 Thu 14:10 -->
+  <title>Emacs Leuven</title><!-- 2014-02-20 Thu 15:07 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140220.1409</span>
+"color: #8D8D84; font-style: italic;">Version: 20140220.1506</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140220.1409]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140220.1506]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -8738,25 +8738,6 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"C-h o"</span>) 'org-info))         <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">not autoloaded</span>
-
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">display the hotlist</span>
-  (global-set-key
-   (kbd <span style="color: #036A07;">"&lt;f7&gt;"</span>) (kbd <span style=
-"color: #036A07;">"C-c a f h"</span>))
-
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">display the calendar and tasks for today</span>
-  (global-set-key
-   (kbd <span style="color: #036A07;">"&lt;S-f7&gt;"</span>) (kbd <span style=
-"color: #036A07;">"C-c a r d"</span>))
-
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">display </span><span style=
-"color: #CC0000; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #8D8D84; font-style: italic;"> entries</span>
-  (global-set-key
-   (kbd <span style="color: #036A07;">"&lt;C-f7&gt;"</span>) (kbd <span style=
-"color: #036A07;">"C-c a r a 2"</span>))
 </pre>
         </div>
 
@@ -11091,9 +11072,8 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"Create a </span><span style=
 "color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
 "color: #036A07;"> Action + edit"</span> entry
-                   (file+headline <span style=
-"color: #036A07;">"~/org/email.org"</span> <span style=
-"color: #036A07;">"Tasks"</span>) <span style=
+                   (file+headline ,org-default-notes-file <span style=
+"color: #036A07;">"Email"</span>) <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">#+FILETAGS: :mail:</span>
                    <span style="color: #036A07;">"* </span><span style=
@@ -11113,9 +11093,8 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"Create a </span><span style=
 "color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
 "color: #036A07;"> Action Remind 3"</span> entry
-                   (file+headline <span style=
-"color: #036A07;">"~/org/email.org"</span> <span style=
-"color: #036A07;">"Tasks"</span>) <span style=
+                   (file+headline ,org-default-notes-file <span style=
+"color: #036A07;">"Email"</span>) <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">#+FILETAGS: :mail:</span>
                    <span style="color: #036A07;">"* </span><span style=
@@ -11140,25 +11119,6 @@ M-: (executable-find "diff") RET
               immediately files the item without further prompt (skipping
               <code>C-c C-c</code>); very handy for quick storing of
               emails.</p>
-
-              <div class="org-src-container">
-                <pre class="src src-emacs-lisp">
-    (add-to-list 'org-capture-templates
-                 `(<span style="color: #036A07;">"M"</span> <span style=
-"color: #036A07;">"mailtodo"</span> entry
-                   (file+datetree <span style=
-"color: #036A07;">"~/org/mails.org"</span>)
-                   <span style="color: #036A07;">"* </span><span style=
-"color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> %^{Task} %^G</span>
-<span style="color: #036A07;">SCHEDULED: %t</span>
-<span style="color: #036A07;">- From :: %:from</span>
-<span style="color: #036A07;">- Subject :: %:subject</span>
-<span style="color: #036A07;">- Email :: %a</span>
-<span style="color: #036A07;">%?"</span>
-                   <span style="color: #006FE0;">:kill-buffer</span> t) t)
-</pre>
-              </div>
 
               <p>With the clock options, <code>org-capture</code> automatically
               clocks in. When pressing <code>C-c C-c</code>, it clocks out.</p>
@@ -23841,7 +23801,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140220.1410]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140220.1506]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
