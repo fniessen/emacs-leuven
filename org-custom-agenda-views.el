@@ -48,10 +48,10 @@
     (add-to-list 'org-agenda-custom-commands
                 '("fc" "Closed this week (TEST)"
                   tags "CLOSED>\"<-1w>\""
-                  ((org-agenda-sorting-strategy '(priority-down)))))
+                  ((org-agenda-sorting-strategy '(priority-down)))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("f7" "Next 7 Days"
+                 '("f7" "7 Days"
                    ((tags-todo "DEADLINE=\"<+0d>\""
                                ((org-agenda-overriding-header "DUE TODAY")
                                 (org-agenda-skip-function
@@ -584,6 +584,15 @@
                    occur-tree "\\<TODO\\|FIXME\\|XXX\\>") t)
 
     (add-to-list 'org-agenda-custom-commands
+                 '("A" . "ARCHIVE...") t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("Aa" "Archive"
+                   ((tags-todo "ARCHIVE"))
+                   ((org-agenda-todo-ignore-scheduled 'future)
+                    (org-agenda-sorting-strategy '(deadline-down)))) t)
+
+    (add-to-list 'org-agenda-custom-commands
                  '("R" . "REFERENCE...") t)
 
     (add-to-list 'org-agenda-custom-commands
@@ -597,12 +606,3 @@
                  '("Rn" "Organize thoughts to refile"
                    tags "refile|capture"
                    ((org-agenda-overriding-header "Refile stuff"))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("A" . "ARCHIVE...") t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("AA" "Archive"
-                   ((tags-todo "ARCHIVE"))
-                   ((org-agenda-todo-ignore-scheduled 'future)
-                    (org-agenda-sorting-strategy '(deadline-down)))) t)

@@ -12,6 +12,22 @@
 
 #+SETUPFILE: ~/src/org-style/setup/bigblow-local-abs.setup
 
+* Private Notes                                                      :noexport:
+
+At the beginning, we've put way to many tasks either as scheduled or deadline
+because the unique interaction with Org mode was via the agenda view, and we
+did not want to loose some tasks out of our view.
+
+When we add more consolidated views (multi-blocks), we gain confidence that we
+won't loose tasks (together with reviews), and we're finally able to use
+deadline and scheduled for what they're meant.
+
+A *scheduled* date is a *start date*.
+
+A *deadline* is a ultimate finish date. It can have a *reminder* (the warning
+specifier), which must be updated every time we want to snooze the reminder. We
+can do such an update via =C-u C-u C-c C-d=.
+
 * Key bindings
 
 | a | xx         | A | All Tasks   |
@@ -111,6 +127,8 @@ You should be able to work with Org items with the mapping and property APIs:
 
 ** CollectBox
 
+The CollectBox is the default place where you collect your thoughts.
+
 #+begin_src emacs-lisp
     ;; CollectBox + Email
     (add-to-list 'org-agenda-custom-commands
@@ -168,7 +186,7 @@ XXX Add calendar events for today, calendar events for tomorrow and scheduled fo
     (add-to-list 'org-agenda-custom-commands
                 '("fc" "Closed this week (TEST)"
                   tags "CLOSED>\"<-1w>\""
-                  ((org-agenda-sorting-strategy '(priority-down)))))
+                  ((org-agenda-sorting-strategy '(priority-down)))) t)
 #+end_src
 
 #+begin_note
@@ -178,8 +196,9 @@ Checking that =DEADLINE= <>"" can be implemented by =(org-agenda-skip-function
 Though, we should check which one is more responsive.
 #+end_note
 
-** Next 7 Days
+** 7 Days
 
+Forecast:
 - Overdue
 - 7 days
 
@@ -188,7 +207,7 @@ the hotlist!!!
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
-                 '("f7" "Next 7 Days"
+                 '("f7" "7 Days"
                    ((tags-todo "DEADLINE=\"<+0d>\""
                                ((org-agenda-overriding-header "DUE TODAY")
                                 (org-agenda-skip-function
@@ -276,6 +295,9 @@ a =SCHEDULED= date that is:
 
 - on or before today, or
 - blank.
+
+# Why?  Because scheduling also means: don't show me that task before that
+# date. I will review it starting on the scheduled date, not now!
 
 FIXME Tasks with #A priority are not all listed (even without scheduled date)!
 
@@ -458,6 +480,9 @@ All *tasks*, grouped by *due date*:
 #+end_src
 
 **** All tasks (agenda view)
+
+XXX Tasks with pre-warning of 45d do not appear in the first block; well in
+every other one!!!  Bad.
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -1012,6 +1037,23 @@ How to implement *reminders*?  Once a day, week, month, year?
 Setting a warning period does well remind us from a certain period before the
 deadline, but it's always, then (at every consultation of the list)!
 
+* ARCHIVE
+
+Archiving a completed project or action consists in hiding it from view.
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("A" . "ARCHIVE...") t)
+#+end_src
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("Aa" "Archive"
+                   ((tags-todo "ARCHIVE"))
+                   ((org-agenda-todo-ignore-scheduled 'future)
+                    (org-agenda-sorting-strategy '(deadline-down)))) t)
+#+end_src
+
 * REFERENCE
 
 #+begin_src emacs-lisp
@@ -1042,21 +1084,6 @@ Search any word or regexp within your task name or in the note field:
                  '("Rn" "Organize thoughts to refile"
                    tags "refile|capture"
                    ((org-agenda-overriding-header "Refile stuff"))) t)
-#+end_src
-
-* ARCHIVE
-
-#+begin_src emacs-lisp
-    (add-to-list 'org-agenda-custom-commands
-                 '("A" . "ARCHIVE...") t)
-#+end_src
-
-#+begin_src emacs-lisp
-    (add-to-list 'org-agenda-custom-commands
-                 '("AA" "Archive"
-                   ((tags-todo "ARCHIVE"))
-                   ((org-agenda-todo-ignore-scheduled 'future)
-                    (org-agenda-sorting-strategy '(deadline-down)))) t)
 #+end_src
 
 * Buggy commands
