@@ -289,7 +289,7 @@ the hotlist!!!
 The *hotlist* is a convenient and smart way to see (in a single, clear overview)
 the *most urgent and important tasks* for you to be working on right now.
 
-It contains /active/ (that is, not completed) tasks that:
+It contains /active/ tasks (that is, not completed) that:
 
 - are *overdue*, or
 - are *due soon* (in the next 7 days), or
@@ -309,7 +309,8 @@ a =SCHEDULED= date that is:
 # Why?  Because scheduling also means: don't show me that task before that
 # date. I will review it starting on the scheduled date, not now!
 
-FIXME Tasks with #A priority are not all listed (even without scheduled date)!
+*************** TODO Rajouter les SCHEDULED today dans la hotlist ?
+*************** END
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
