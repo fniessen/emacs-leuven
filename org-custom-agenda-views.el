@@ -16,7 +16,7 @@
     (add-to-list 'org-agenda-custom-commands
                  '("c" . "COLLECT...") t)
 
-    ;; CollectBox + Email
+    ;; CollectBox
     (add-to-list 'org-agenda-custom-commands
                  `("cd" "CollectBox"
                    alltodo ""
@@ -223,7 +223,7 @@
                  '("ra1" "All Tasks (sorted by Due Date)"
                    alltodo ""
                    ((org-agenda-overriding-header "All Tasks (sorted by Due Date)")
-                    (org-agenda-sorting-strategy '(deadline-up)))) t) ; XXX sort not OK
+                    (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK
 
     (add-to-list 'org-agenda-custom-commands
                  `("ra2" "All active tasks, by due date"
@@ -496,7 +496,7 @@
                     (todo "PROJ"
                           ((org-agenda-overriding-header "PROJECT LIST")))
 
-                    ;; XXX we should show which tasks (don't) have CLOCK lines: archived vs. deleted
+                    ;; FIXME we should show which tasks (don't) have CLOCK lines: archived vs. deleted
                     (todo "DONE|PROJDONE"
                           ((org-agenda-overriding-header
                             "Candidates to be archived")))
@@ -550,7 +550,7 @@
                  '("W" "Waiting for"
                    tags-todo "TODO={WAIT}"
                    ((org-agenda-overriding-header "Waiting for")
-                    (org-agenda-sorting-strategy '(deadline-up)))) t) ; XXX does not work
+                    (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME does not work
 
     (add-to-list 'org-agenda-custom-commands
                  '("o" . "MORE...") t)
@@ -586,12 +586,6 @@
                     (ps-number-of-columns 1))
                    ("~/org___calls.pdf")) t)
 
-    ;; create a sparse tree (current buffer only) with all entries containing
-    ;; the word `TODO', `FIXME' or `XXX'
-    (add-to-list 'org-agenda-custom-commands
-                 '("1" "Task markers (in current buffer)"
-                   occur-tree "\\<TODO\\|FIXME\\|XXX\\>") t)
-
     (add-to-list 'org-agenda-custom-commands
                  '("A" . "ARCHIVE...") t)
 
@@ -605,7 +599,14 @@
                  '("R" . "REFERENCE...") t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("Rf" "Like s, but with extra files"
+                 '("Rs" "Like s, but with extra files"
+                   search ""
+                   ((org-agenda-text-search-extra-files
+                     ;; FIXME Add `agenda-archives'
+                     leuven-org-search-extra-files))) t)
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("RS" "Like s, but only TODO entries"
                    search ""
                    ((org-agenda-text-search-extra-files
                      ;; FIXME Add `agenda-archives'
@@ -615,3 +616,9 @@
                  '("Rn" "Organize thoughts to refile"
                    tags "refile|capture"
                    ((org-agenda-overriding-header "Refile stuff"))) t)
+
+    ;; create a sparse tree (current buffer only) with all entries containing
+    ;; the word `TODO', `FIXME' or `XXX'
+    (add-to-list 'org-agenda-custom-commands
+                 '("1" "Task markers (in current buffer)"
+                   occur-tree "\\<TODO\\|FIXME\\|XXX\\>") t)

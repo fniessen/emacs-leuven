@@ -1,5 +1,5 @@
 # Hey Emacs, this is a -*- org -*- file ...
-#+TITLE:     Org custom agenda views
+#+TITLE:     Org customized views
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+KEYWORDS:
@@ -24,9 +24,9 @@ deadline and scheduled for what they're meant.
 
 A *scheduled* date is a *start date*.
 
-A *deadline* is a ultimate finish date. It can have a *reminder* (the warning
-specifier), which must be updated every time we want to snooze the reminder. We
-can do such an update via =C-u C-u C-c C-d=.
+A *deadline* is a ultimate finish date. It can have a *reminder* (the *warning
+period*), which /must be updated every time we want to snooze the reminder/ (once
+a day, week, month). We can do such an update via =C-u C-u C-c C-d=.
 
 * Key bindings
 
@@ -59,8 +59,8 @@ can do such an update via =C-u C-u C-c C-d=.
 |   |            | . | Today       |
 |   |            | 7 | Next 7 Days |
 
-XXX | [yas] elisp error! Symbol's function definition is void: ca-with-commentT |   |
-XXX | [yas] elisp error! Symbol's function definition is void: ca-with-commentX |   |
+FIXME | [yas] elisp error! Symbol's function definition is void: ca-with-commentT |   |
+FIXME | [yas] elisp error! Symbol's function definition is void: ca-with-commentX |   |
 
 #+begin_src emacs-lisp
   ;; display the calendar and tasks for today
@@ -141,7 +141,7 @@ You should be able to work with Org items with the mapping and property APIs:
 The CollectBox is the default place where you collect your thoughts.
 
 #+begin_src emacs-lisp
-    ;; CollectBox + Email
+    ;; CollectBox
     (add-to-list 'org-agenda-custom-commands
                  `("cd" "CollectBox"
                    alltodo ""
@@ -157,7 +157,10 @@ The CollectBox is the default place where you collect your thoughts.
 
 ** Today
 
-XXX Add calendar events for today, calendar events for tomorrow and scheduled for today?
+FIXME Add calendar events for today, calendar events for tomorrow and scheduled for today?
+
+Completed tasks can be "in review" or "need verification", that's why they have
+their own section.
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -212,7 +215,7 @@ Forecast:
 - Overdue
 - 7 days
 
-XXX A task with a DEADLINE and a =-0d= specifier is not shown!!!  Well shown in
+FIXME A task with a DEADLINE and a =-0d= specifier is not shown!!!  Well shown in
 the hotlist!!!
 
 #+begin_src emacs-lisp
@@ -337,9 +340,7 @@ a =SCHEDULED= date that is:
 The hotlist is the perfect thing to *review each morning* to know what you need
 to do each day.
 
-*************** TODO Have the hotlist emailed to you each day
-
-XXX Add an *HotNFast* list, which is everything on the Hotlist that takes less
+FIXME Add an *HotNFast* list, which is everything on the Hotlist that takes less
 than 10 minutes. Tasks without a time estimate will NOT show up in this list.
 
 #+begin_src emacs-lisp
@@ -369,7 +370,7 @@ to the deadline date.
 
 ** Projects
 
-A project is any desired result that requires more than one action to achieve.
+A *project* is any desired goal that requires *more than one action* to achieve.
 
 Making a decision about the order of your actions is very important.
 
@@ -417,14 +418,14 @@ for mode dedicated solely to review!
 *** Sorted by due date
 
 All *tasks*, grouped by *due date*:
-- /Overdue/
-- Due /today/
-- Due /tomorrow/
-- Due within /a week/ (next 5 days)
-- Due within /a month/ (next 3 weeks)
-- Due /later/
-- /No due date/ (includes /CollectBox/)
-- /Completed/
+- Overdue
+- Due today
+- Due tomorrow
+- Due within a week (next 5 days)
+- Due within a month (next 3 weeks)
+- Due later
+- No due date (includes CollectBox)
+- Completed
 
 **** All tasks (tags view)
 
@@ -487,12 +488,12 @@ All *tasks*, grouped by *due date*:
                  '("ra1" "All Tasks (sorted by Due Date)"
                    alltodo ""
                    ((org-agenda-overriding-header "All Tasks (sorted by Due Date)")
-                    (org-agenda-sorting-strategy '(deadline-up)))) t) ; XXX sort not OK
+                    (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK
 #+end_src
 
 **** All tasks (agenda view)
 
-XXX Tasks with pre-warning of 45d do not appear in the first block; well in
+FIXME Tasks with pre-warning of 45d do not appear in the first block; well in
 every other one!!!  Bad.
 
 #+begin_src emacs-lisp
@@ -662,7 +663,7 @@ All *tasks*, grouped by *priority*:
                  '("rc" . "Calendar...") t)
 #+end_src
 
-XXX Faire 7 vues agenda "jour" pour avoir un séparateur customizable...
+FIXME Faire 7 vues agenda "jour" pour avoir un séparateur customizable...
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -722,6 +723,21 @@ http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465
                              (org-agenda-span 'day))))) t)
 #+end_src
 
+** Completed Tasks
+
+What tasks have been *completed recently* (in this project): in the last day,
+week, or two weeks?
+
+FIXME Group completed tasks per date of completion.
+
+*** Cleanup
+
+Cleanup:
+
+- Done actions older than 14 days
+- Inactive ticklers older than 14 days
+- Completed projects older than 14 days
+
 ** Recent items
 
 *************** TODO Add report "Recently added/completed/modified"
@@ -760,9 +776,11 @@ https://www.freshbooks.com/timesheet#date/2014-02-17
                              (org-agenda-span 'day))))) t)
 #+end_src
 
-XXX Show percent completion
+FIXME Show percent completion
 
 http://www.techsupportalert.com/best-free-project-time-keeping-utility.htm
+
+*************** TODO Add a custom view which is some "bill" to send to your boss/client (table view)
 
 ** Expense reporting
 
@@ -851,7 +869,7 @@ Take a moment to plan your day:
                     (todo "PROJ"
                           ((org-agenda-overriding-header "PROJECT LIST")))
 
-                    ;; XXX we should show which tasks (don't) have CLOCK lines: archived vs. deleted
+                    ;; FIXME we should show which tasks (don't) have CLOCK lines: archived vs. deleted
                     (todo "DONE|PROJDONE"
                           ((org-agenda-overriding-header
                             "Candidates to be archived")))
@@ -913,7 +931,7 @@ than the other.
 
 ** COMMENT Future
 
-XXX C'est scheduled qu'il faut checker, plutôt que deadline ?
+FIXME C'est scheduled qu'il faut checker, plutôt que deadline ?
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -955,7 +973,7 @@ again, ready for you to decide what to do with it.
                  '("W" "Waiting for"
                    tags-todo "TODO={WAIT}"
                    ((org-agenda-overriding-header "Waiting for")
-                    (org-agenda-sorting-strategy '(deadline-up)))) t) ; XXX does not work
+                    (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME does not work
 #+end_src
 
 * MORE
@@ -964,18 +982,6 @@ again, ready for you to decide what to do with it.
     (add-to-list 'org-agenda-custom-commands
                  '("o" . "MORE...") t)
 #+end_src
-
-** Completed Tasks
-
-XXX Group completed tasks per date of completion.
-
-*** Cleanup
-
-Cleanup:
-
-- Done actions older than 14 days
-- Inactive ticklers older than 14 days
-- Completed projects older than 14 days
 
 ** Assigned to me
 
@@ -988,18 +994,28 @@ Cleanup:
                    ((org-agenda-overriding-header "ASSIGNED TO ME"))) t)
 #+end_src
 
+** Tasks by assignee
+
 ** Email list
 
-** Print list
+*************** TODO Have the hotlist emailed to you each day
 
-To create PDF output, the GhostScript =ps2pdf= utility must be installed on the
-system.
+** Print list
 
 The *exported agenda views* are not *stored* when you use one of those commands
 interactively because this might use too much overhead.  Instead, there is a
 special command to produce all specified files in one step: =C-c a e=.
 
-=C-x C-w=: write the agenda view to a file.
+#+begin_note
+To create PDF output, the GhostScript =ps2pdf= utility must be installed on the
+system.
+#+end_note
+
+FIXME Changes
+- Little checkbox
+- No icon
+- Proportional font
+- No tag: =(setq org-agenda-hide-tags-regexp ".*")=
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -1027,28 +1043,16 @@ special command to produce all specified files in one step: =C-c a e=.
                    ("~/org___calls.pdf")) t)
 #+end_src
 
-** Task markers (in the current buffer)
-
-#+begin_src emacs-lisp
-    ;; create a sparse tree (current buffer only) with all entries containing
-    ;; the word `TODO', `FIXME' or `XXX'
-    (add-to-list 'org-agenda-custom-commands
-                 '("1" "Task markers (in current buffer)"
-                   occur-tree "\\<TODO\\|FIXME\\|XXX\\>") t)
-#+end_src
-
-** Others
-
-*************** TODO Add a custom view which is some "bill" to send to your boss/client (table view)
-
-How to implement *reminders*?  Once a day, week, month, year?
-
-Setting a warning period does well remind us from a certain period before the
-deadline, but it's always, then (at every consultation of the list)!
+You can save any list or agenda view as PDF by writing it to a file (via
+=C-x C-w=).
 
 * ARCHIVE
 
-Archiving a completed project or action consists in hiding it from view.
+Archiving a project (or action) consists in hiding its contents from view (and
+from search?).
+
+Archive projects that have been completed or deferred, so you can focus on more
+active projects.
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -1076,15 +1080,24 @@ Search any word or regexp within your task name or in the note field:
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
-                 '("Rf" "Like s, but with extra files"
+                 '("Rs" "Like s, but with extra files"
                    search ""
                    ((org-agenda-text-search-extra-files
                      ;; FIXME Add `agenda-archives'
                      leuven-org-search-extra-files))) t)
 #+end_src
 
-*************** TODO Add =F= to search in all files, but not into DONE tasks
+*************** TODO Add =S= to search in all files, but not into DONE tasks
 *************** END
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("RS" "Like s, but only TODO entries"
+                   search ""
+                   ((org-agenda-text-search-extra-files
+                     ;; FIXME Add `agenda-archives'
+                     leuven-org-search-extra-files))) t)
+#+end_src
 
 ** Notes
 
@@ -1093,6 +1106,16 @@ Search any word or regexp within your task name or in the note field:
                  '("Rn" "Organize thoughts to refile"
                    tags "refile|capture"
                    ((org-agenda-overriding-header "Refile stuff"))) t)
+#+end_src
+
+* Task markers (in the current buffer)
+
+#+begin_src emacs-lisp
+    ;; create a sparse tree (current buffer only) with all entries containing
+    ;; the word `TODO', `FIXME' or `XXX'
+    (add-to-list 'org-agenda-custom-commands
+                 '("1" "Task markers (in current buffer)"
+                   occur-tree "\\<TODO\\|FIXME\\|XXX\\>") t)
 #+end_src
 
 * Buggy commands
@@ -1428,7 +1451,7 @@ instead of
 
     = <today>
 
-** Cas d'erreurs supplémentaires
+** Cas d'erreurs
 
 |              | no state  | with TODO                |
 |--------------+-----------+--------------------------|
