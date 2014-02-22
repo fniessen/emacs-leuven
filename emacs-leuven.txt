@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-20 Thu 14:57>
+# Time-stamp: <2014-02-22 Sat 21:01>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1363,13 +1363,16 @@ Visible bookmarks in buffer.
 ** Narrowing
 
 - =C-x n n= ::
-     Narrow down to between point and mark.
-
-- =C-x n w= ::
-     Widen to make the entire buffer accessible again.
+     *Narrow* down to between point and mark.
 
 - =C-x n d= ::
-     Narrow down to the current /defun/.
+     *Narrow* down to the current *defun*.
+
+- =C-x n s= ::
+     *Narrow* buffer to the current *subtree* (bound in Org mode).
+
+- =C-x n w= ::
+     *Widen* to make the entire buffer accessible again.
 
 #+begin_src emacs-lisp
 ;;** 14.5 (info "(emacs)Narrowing")
@@ -5763,7 +5766,7 @@ The ultimate capture tool.
                (t "~/"))))
 
   ;; 9.1.2 default target for storing notes
-  (setq org-default-notes-file          ; inbox for collecting
+  (setq org-default-notes-file          ; inbox for collecting [default: "~/.notes"]
         (concat org-directory "/refile.org"))
 #+end_src
 
@@ -5873,26 +5876,25 @@ Find a location for refiling on capture.
 
 **** Email-to-Org
 
-Instantly *create tasks* and notes *from emails*.
+Instantly *create tasks* and notes *from emails*, with a link back to the the
+emails.
 
-The items item will be linked back to the the emails.
+The following rules will apply to interpret an email to a task:
 
-The following rules will apply:
+- Email subject ::
+     Task name.
 
-- Task creator ::
-     Sender's email.
+- Person in the =From:= field ::
+     Task creator.
 
-- Task assignee ::
-     Recipient(s)' email.
+- Person(s) in the =To:= field ::
+     Task assignee(s).
 
-- Task Name ::
-     Subject.
+- Email body (or selected region) ::
+     Task description / notes.
 
-- Files ::
-     Attachment(s).
-
-- Task Description ::
-     Email body (or selected region).
+- Email attachment(s) ::
+     Task attachment(s).
 
 Additional parameters can be included via the commands you use:
 
@@ -6380,7 +6382,7 @@ http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
 
     ;; Org non-standard faces
     (defface leuven-org-deadline-overdue
-      '((t (:foreground "#C15F4E")))
+      '((t (:foreground "#F22659")))
       "Face used to highlight tasks whose due date is in the past.")
 
     (defface leuven-org-deadline-today
@@ -6388,11 +6390,11 @@ http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
       "Face used to highlight tasks whose due date is today.")
 
     (defface leuven-org-deadline-tomorrow
-      '((t (:foreground "#333333")))
+      '((t (:foreground "#34AD00")))
       "Face used to highlight tasks whose due date is tomorrow.")
 
     (defface leuven-org-deadline-future
-      '((t (:foreground "#333333")))
+      '((t (:foreground "#34AD00")))
       "Face used to highlight tasks whose due date is for later."))
 
   ;; 10.4 column to shift tags to (in agenda items)

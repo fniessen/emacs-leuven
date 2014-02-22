@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140220.1504
+;; Version: 20140222.2102
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140220.1504]--")
+(message "* --[ Loading Emacs Leuven 20140222.2102]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3792,7 +3792,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                (t "~/"))))
 
   ;; 9.1.2 default target for storing notes
-  (setq org-default-notes-file          ; inbox for collecting
+  (setq org-default-notes-file          ; inbox for collecting [default: "~/.notes"]
         (concat org-directory "/refile.org"))
 
   ;; 9.1.2 templates for the creation of capture buffers
@@ -4184,7 +4184,7 @@ From %c"
 
     ;; Org non-standard faces
     (defface leuven-org-deadline-overdue
-      '((t (:foreground "#C15F4E")))
+      '((t (:foreground "#F22659")))
       "Face used to highlight tasks whose due date is in the past.")
 
     (defface leuven-org-deadline-today
@@ -4192,11 +4192,11 @@ From %c"
       "Face used to highlight tasks whose due date is today.")
 
     (defface leuven-org-deadline-tomorrow
-      '((t (:foreground "#333333")))
+      '((t (:foreground "#34AD00")))
       "Face used to highlight tasks whose due date is tomorrow.")
 
     (defface leuven-org-deadline-future
-      '((t (:foreground "#333333")))
+      '((t (:foreground "#34AD00")))
       "Face used to highlight tasks whose due date is for later."))
 
   ;; 10.4 column to shift tags to (in agenda items)
@@ -8648,7 +8648,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140220.1505]--")
+(message "* --[ Loaded Emacs Leuven 20140222.2103]--")
 
 (provide 'emacs-leuven)
 
