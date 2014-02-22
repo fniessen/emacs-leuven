@@ -154,7 +154,7 @@
                    ((org-agenda-todo-ignore-scheduled 'future))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("P" "Projects"
+                 '("fP" "Projects"
                    tags-todo "project-DONE-CANX"
                    ((org-agenda-overriding-header "Projects (High Level)")
                     (org-agenda-sorting-strategy nil))) t)
@@ -534,20 +534,14 @@
                     )) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("N" "Next"
+                 '("rN" "Next"
                    tags-todo "TODO<>{SDAY}"
                    ((org-agenda-overriding-header "List of all TODO entries with no due date (no SDAY)")
                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
                     (org-agenda-sorting-strategy '(priority-down)))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("Y" "Someday"
-                   tags-todo "TODO={SDAY}"
-                   ((org-agenda-overriding-header "List of all SDAY entries")
-                    (org-agenda-sorting-strategy '(priority-down)))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("W" "Waiting for"
+                 '("rW" "Waiting for"
                    tags-todo "TODO={WAIT}"
                    ((org-agenda-overriding-header "Waiting for")
                     (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME does not work
