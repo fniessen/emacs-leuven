@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140224.1530
+;; Version: 20140224.2159
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140224.1530]--")
+(message "* --[ Loading Emacs Leuven 20140224.2159]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3037,7 +3037,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 ;;* 2 (info "(org)Document Structure")
 
-  ;; ellipsis to use in the Org mode outline
   (with-eval-after-load "org"
     (message "... Org Document Structure")
 
@@ -3047,6 +3046,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                         :foreground "#999999" :background "#FFF8C0"
                         :underline nil)
 
+    ;; ellipsis to use in the Org mode outline
     (setq org-ellipsis
           (if (char-displayable-p ?\u25B7) ; white right-pointing triangle
               ;; this test takes ~ 0.40s; hence, wrapped in eval-after-load
@@ -3058,8 +3058,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; blank lines
   (setq org-blank-before-new-entry
-        '(
-          ;; insert  a blank line before new heading
+        '(;; insert  a blank line before new heading
           (heading . t)
 
           ;; try to make an intelligent decision whether to insert a
@@ -3275,20 +3274,15 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "3.5 (org)The spreadsheet")
 
-  ;; FIXME Only set `calc-internal-prec' to 12 [default: 8]
-  (setq org-calc-default-modes
-        '(calc-internal-prec 12
-          calc-float-format  (float 12)
-          calc-angle-mode    deg
-          calc-prefer-frac   nil
-          calc-symbolic-mode nil
-          calc-date-format (YYYY "-" MM "-" DD " " Www (" " hh ":" mm))
-          calc-display-working-message t))
+  (with-eval-after-load "org-table"
+    ;; some Calc mode settings for use in `calc-eval' for table formulas
+    (setcar (cdr (memq 'calc-float-format org-calc-default-modes))
+            '(float 12)))               ; [default: 8]
 
 ;;* 4 (info "(org)Hyperlinks")
 
-;; don't hexify URL when creating a link
-(setq org-url-hexify-p nil)
+  ;; don't hexify URL when creating a link
+  (setq org-url-hexify-p nil)
 
   (with-eval-after-load "org"
     (message "... Hyperlinks")
@@ -4159,11 +4153,11 @@ From %c"
 
     ;; 10.4 format specifications for the prefix of items in the agenda views
     (setq org-agenda-prefix-format
-          '((agenda . " %-11s%i %?-12t") ; agenda
+          '((agenda   . " %-11s%i %?-12t") ; agenda
             (timeline . " % s")         ; timeline
-            (todo . " %i %-12:c")       ; todo, alltodo
-            (tags . " %i %-12:c")       ; tags, tags-todo, stuck
-            (search . " %i %-12:c")))   ; search
+            (todo     . " %i %-12:c")   ; todo, alltodo
+            (tags     . " %i %-12:c")   ; tags, tags-todo, stuck
+            (search   . " %i %-12:c"))) ; search
 
     ;; text preceding scheduled items in the agenda view
     (setq org-agenda-scheduled-leaders
@@ -4224,18 +4218,18 @@ From %c"
           (progn
             (setq leuven--org-agenda-show-tasks-details nil)
             (setq org-agenda-prefix-format
-                  '((agenda  . " %-11s%i %?-12t")
+                  '((agenda    . " %-11s%i %?-12t")
                     (timeline  . " % s")
-                    (todo  . " ")
-                    (search . " ")
-                    (tags  . " "))))
+                    (todo      . " ")
+                    (search    . " ")
+                    (tags      . " "))))
         (setq leuven--org-agenda-show-tasks-details t)
         (setq org-agenda-prefix-format
-              '((agenda . " %-11s%i %-12:c%?-12t%7e ")
+              '((agenda   . " %-11s%i %-12:c%?-12t%7e ")
                 (timeline . " % s")
-                (todo . " %i %-12:c")
-                (search . " %i %-12:c")
-                (tags . " %i %-12:c"))))
+                (todo     . " %i %-12:c")
+                (search   . " %i %-12:c")
+                (tags     . " %i %-12:c"))))
       (org-agenda-redo))
 
     (define-key org-agenda-mode-map
@@ -5289,7 +5283,6 @@ From %c"
                 (lambda ()
                   (setq imenu-generic-expression
                         org-src-blocks-imenu-generic-expression))))
-
 
     ;; alternative to imenu
     (defun dan/find-in-buffer ()
@@ -8658,7 +8651,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140224.1531]--")
+(message "* --[ Loaded Emacs Leuven 20140224.2200]--")
 
 (provide 'emacs-leuven)
 

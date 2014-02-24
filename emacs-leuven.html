@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-24 Mon 15:32 -->
+  <title>Emacs Leuven</title><!-- 2014-02-24 Mon 22:01 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140224.1531</span>
+"color: #8D8D84; font-style: italic;">Version: 20140224.2201</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140224.1531]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140224.2201]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -9042,8 +9042,6 @@ M-: (executable-find "diff") RET
 <span style="color: #8D8D84;">;;</span><span style=
 "color: #8D8D84; font-style: italic;">* 2 (info "(org)Document Structure")</span>
 
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">ellipsis to use in the Org mode outline</span>
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #036A07;">"org"</span>
     (message <span style="color: #036A07;">"... Org Document Structure"</span>)
@@ -9060,6 +9058,8 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"#FFF8C0"</span>
                         <span style="color: #006FE0;">:underline</span> nil)
 
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">ellipsis to use in the Org mode outline</span>
     (setq org-ellipsis
           (<span style=
 "color: #0000FF;">if</span> (char-displayable-p ?\u25B7) <span style=
@@ -9082,8 +9082,7 @@ M-: (executable-find "diff") RET
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">blank lines</span>
   (setq org-blank-before-new-entry
-        '(
-          <span style="color: #8D8D84;">;; </span><span style=
+        '(<span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">insert  a blank line before new heading</span>
           (heading . t)
 
@@ -9544,20 +9543,14 @@ M-: (executable-find "diff") RET
   (leuven--section <span style=
 "color: #036A07;">"3.5 (org)The spreadsheet"</span>)
 
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #CC0000; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #8D8D84; font-style: italic;"> Only set `</span><span style="color: #D0372D; font-style: italic;">calc-internal-prec</span><span style="color: #8D8D84; font-style: italic;">' to 12 [default: 8]</span>
-  (setq org-calc-default-modes
-        '(calc-internal-prec 12
-          calc-float-format  (float 12)
-          calc-angle-mode    deg
-          calc-prefer-frac   nil
-          calc-symbolic-mode nil
-          calc-date-format (YYYY <span style=
-"color: #036A07;">"-"</span> MM <span style=
-"color: #036A07;">"-"</span> DD <span style=
-"color: #036A07;">" "</span> Www (<span style=
-"color: #036A07;">" "</span> hh <span style="color: #036A07;">":"</span> mm))
-          calc-display-working-message t))
+  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #036A07;">"org-table"</span>
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">some Calc mode settings for use in `</span><span style="color: #D0372D; font-style: italic;">calc-eval</span><span style="color: #8D8D84; font-style: italic;">' for table formulas</span>
+    (setcar (cdr (memq 'calc-float-format org-calc-default-modes))
+            '(float 12)))               <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">[default: 8]</span>
 </pre>
           </div>
 
@@ -9590,9 +9583,9 @@ M-: (executable-find "diff") RET
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-<span style="color: #8D8D84;">;; </span><span style=
+  <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">don't hexify URL when creating a link</span>
-(setq org-url-hexify-p nil)
+  (setq org-url-hexify-p nil)
 </pre>
           </div>
         </div>
@@ -11619,12 +11612,12 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
             <code>org-agenda-files</code> added at the end of your
             <code>.emacs</code> file.</p>
             <pre class="example">
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (org-defkey org-mode-map
-                          (kbd "C-c [") 'undefined)
-              (org-defkey org-mode-map
-                          (kbd "C-c ]") 'undefined)))
+(add-hook 'org-mode-hook
+          (lambda ()
+            (org-defkey org-mode-map
+                        (kbd "C-c [") 'undefined)
+            (org-defkey org-mode-map
+                        (kbd "C-c ]") 'undefined)))
 </pre>
           </div>
         </div>
@@ -11839,7 +11832,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">10.4 format specifications for the prefix of items in the agenda views</span>
     (setq org-agenda-prefix-format
-          '((agenda . <span style=
+          '((agenda   . <span style=
 "color: #036A07;">" %-11s%i %?-12t"</span>) <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">agenda</span>
@@ -11847,16 +11840,16 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">" % s"</span>)         <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">timeline</span>
-            (todo . <span style=
-"color: #036A07;">" %i %-12:c"</span>)       <span style=
+            (todo     . <span style=
+"color: #036A07;">" %i %-12:c"</span>)   <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">todo, alltodo</span>
-            (tags . <span style=
-"color: #036A07;">" %i %-12:c"</span>)       <span style=
+            (tags     . <span style=
+"color: #036A07;">" %i %-12:c"</span>)   <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">tags, tags-todo, stuck</span>
-            (search . <span style=
-"color: #036A07;">" %i %-12:c"</span>)))   <span style=
+            (search   . <span style=
+"color: #036A07;">" %i %-12:c"</span>))) <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">search</span>
 
@@ -11962,20 +11955,21 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
           (<span style="color: #0000FF;">progn</span>
             (setq leuven--org-agenda-show-tasks-details nil)
             (setq org-agenda-prefix-format
-                  '((agenda  . <span style=
+                  '((agenda    . <span style=
 "color: #036A07;">" %-11s%i %?-12t"</span>)
                     (timeline  . <span style="color: #036A07;">" % s"</span>)
-                    (todo  . <span style="color: #036A07;">" "</span>)
-                    (search . <span style="color: #036A07;">" "</span>)
-                    (tags  . <span style="color: #036A07;">" "</span>))))
+                    (todo      . <span style="color: #036A07;">" "</span>)
+                    (search    . <span style="color: #036A07;">" "</span>)
+                    (tags      . <span style="color: #036A07;">" "</span>))))
         (setq leuven--org-agenda-show-tasks-details t)
         (setq org-agenda-prefix-format
-              '((agenda . <span style=
+              '((agenda   . <span style=
 "color: #036A07;">" %-11s%i %-12:c%?-12t%7e "</span>)
                 (timeline . <span style="color: #036A07;">" % s"</span>)
-                (todo . <span style="color: #036A07;">" %i %-12:c"</span>)
-                (search . <span style="color: #036A07;">" %i %-12:c"</span>)
-                (tags . <span style="color: #036A07;">" %i %-12:c"</span>))))
+                (todo     . <span style="color: #036A07;">" %i %-12:c"</span>)
+                (search   . <span style="color: #036A07;">" %i %-12:c"</span>)
+                (tags     . <span style=
+"color: #036A07;">" %i %-12:c"</span>))))
       (org-agenda-redo))
 
     (define-key org-agenda-mode-map
@@ -14584,8 +14578,11 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
                 (<span style="color: #0000FF;">lambda</span> ()
                   (setq imenu-generic-expression
                         org-src-blocks-imenu-generic-expression))))
+</pre>
+            </div>
 
-
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">alternative to imenu</span>
     (<span style="color: #0000FF;">defun</span> <span style=
@@ -23849,7 +23846,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140224.1532]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140224.2201]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
