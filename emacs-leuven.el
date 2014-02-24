@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140222.2102
+;; Version: 20140224.1444
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140222.2102]--")
+(message "* --[ Loading Emacs Leuven 20140224.1444]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1938,6 +1938,16 @@ Last time is saved in global variable `leuven--before-section-time'."
         (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
                                         ; and `C-c =' (like in RefTeX)?
 
+      (defun leuven-helm-grep-org-files ()
+        "Launch grep on Org files in `~/org'."
+        (interactive)
+        (let ((files (helm-walk-directory "~/org"
+                                          :path 'full
+                                          :directories nil
+                                          :match ".*\\.\\(org\\|txt\\)$"
+                                          :skip-subdirs t)))
+          (helm-do-grep-1 files)))
+
       ;; activate (a better version of) `occur' easily globally
       (global-set-key
         (kbd "C-o") 'helm-occur)
@@ -3350,8 +3360,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "5.2 Use of (org)TODO extensions")
 
-  ;; list of TODO entry keyword sequences and their interpretation (for
-  ;; the different task states)
+  ;; list of TODO entry keyword sequences (+ fast access keys and specifiers
+  ;; for state change logging)
   (setq org-todo-keywords
         '((sequence "NEW(n!)"           ; proposal
                     "TODO(t!)"          ; open, not started
@@ -6112,8 +6122,8 @@ From %c"
   (setq grep-command "grep -i -H -n -e ")
 
   ;; do not append `null-device' (`/dev/null' or `NUL') to `grep' commands
-  (setq grep-use-null-device nil)
-  ;; not necessary if the `grep' program used supports the `-H' option
+  (setq grep-use-null-device nil)       ; not necessary if the `grep' program
+                                        ; used supports the `-H' option
 
   ;; ;; for Windows
   ;; (setq grep-find-command '("findstr /sn *" . 13))
@@ -6126,7 +6136,7 @@ From %c"
     (kbd "C-c 3") 'rgrep)
 
   ;; 10.3.5 Org keyword search
-  (defun leuven-org-grep (regexp &optional context)
+  (defun leuven-grep-org-files (regexp &optional context)
     "Recursively search for REGEXP in Org files in directory tree rooted at `org-directory'.
   Prefix argument determines number of lines of output context."
     (interactive "sSearch regexp: \nP")
@@ -8648,7 +8658,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140222.2103]--")
+(message "* --[ Loaded Emacs Leuven 20140224.1445]--")
 
 (provide 'emacs-leuven)
 

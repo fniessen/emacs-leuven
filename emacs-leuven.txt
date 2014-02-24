@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-22 Sat 21:01>
+# Time-stamp: <2014-02-24 Mon 14:44>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -3031,6 +3031,9 @@ root using the =sudo= tramp method.
 For Helm documentation, see the [[https://github.com/emacs-helm/helm/wiki][Emacs-helm wiki]] and the [[https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el][Helm configuration file
 of Thierry Volpiatto]]!
 
+With =helm-M-x=, to pass prefix arguments to the command you want to run, you
+have to type =C-u= *after* typing =M-x=.
+
 In Helm, generally, look at the mode line; you will see =C-c ?:Help=, it is your
 friend: hit it for more info.
 
@@ -3064,7 +3067,10 @@ As a starting point for all *searches in buffers and files*, use
 =helm-buffers-list= and =helm-find-files=: you can launch =helm-multi-occur= and
 =helm-do-grep= from there.
 
-To mark all candidates in a helm buffer, use =M-a= or =M-m=.
+You can also use the =@= prefix to *search buffer contents*.
+
+To mark all candidates in a Helm buffer, use =M-a= (=helm-mark-all=) or =M-m=
+(=helm-toggle-all-marks=).
 
 Locate for *Windows* users: you have to install [[http://www.voidtools.com/download.php][Everything]] with his command line
 interface.
@@ -3105,6 +3111,16 @@ Switch to =*Helm Log*= buffer with =M-x helm-open-last-log=.
       (global-set-key
         (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
                                         ; and `C-c =' (like in RefTeX)?
+
+      (defun leuven-helm-grep-org-files ()
+        "Launch grep on Org files in `~/org'."
+        (interactive)
+        (let ((files (helm-walk-directory "~/org"
+                                          :path 'full
+                                          :directories nil
+                                          :match ".*\\.\\(org\\|txt\\)$"
+                                          :skip-subdirs t)))
+          (helm-do-grep-1 files)))
 
       ;; activate (a better version of) `occur' easily globally
       (global-set-key
@@ -5209,8 +5225,8 @@ verified before really closing the task.
 
   (leuven--section "5.2 Use of (org)TODO extensions")
 
-  ;; list of TODO entry keyword sequences and their interpretation (for
-  ;; the different task states)
+  ;; list of TODO entry keyword sequences (+ fast access keys and specifiers
+  ;; for state change logging)
   (setq org-todo-keywords
         '((sequence "NEW(n!)"           ; proposal
                     "TODO(t!)"          ; open, not started
@@ -9229,8 +9245,8 @@ are somehow more user-friendly than the =M-x grep= command.
   (setq grep-command "grep -i -H -n -e ")
 
   ;; do not append `null-device' (`/dev/null' or `NUL') to `grep' commands
-  (setq grep-use-null-device nil)
-  ;; not necessary if the `grep' program used supports the `-H' option
+  (setq grep-use-null-device nil)       ; not necessary if the `grep' program
+                                        ; used supports the `-H' option
 
   ;; ;; for Windows
   ;; (setq grep-find-command '("findstr /sn *" . 13))
@@ -9245,7 +9261,7 @@ are somehow more user-friendly than the =M-x grep= command.
 
 #+begin_src emacs-lisp
   ;; 10.3.5 Org keyword search
-  (defun leuven-org-grep (regexp &optional context)
+  (defun leuven-grep-org-files (regexp &optional context)
     "Recursively search for REGEXP in Org files in directory tree rooted at `org-directory'.
   Prefix argument determines number of lines of output context."
     (interactive "sSearch regexp: \nP")
@@ -9256,6 +9272,8 @@ are somehow more user-friendly than the =M-x grep= command.
                                  " -e <R> <F>")))
       (rgrep regexp "*.org" org-directory)))
 #+end_src
+
+See =leuven-helm-grep-org-files=.
 
 ** Running Debuggers Under Emacs
 

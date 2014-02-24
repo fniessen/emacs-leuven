@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-22 Sat 21:04 -->
+  <title>Emacs Leuven</title><!-- 2014-02-24 Mon 14:46 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140222.2104</span>
+"color: #8D8D84; font-style: italic;">Version: 20140224.1446</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140222.2104]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140224.1446]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -6173,6 +6173,10 @@ M-: (executable-find "diff") RET
             "https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el">
             Helm configuration file of Thierry Volpiatto</a>!</p>
 
+            <p>With <code>helm-M-x</code>, to pass prefix arguments to the
+            command you want to run, you have to type <code>C-u</code>
+            <b>after</b> typing <code>M-x</code>.</p>
+
             <p>In Helm, generally, look at the mode line; you will see
             <code>C-c ?:Help</code>, it is your friend: hit it for more
             info.</p>
@@ -6237,8 +6241,12 @@ M-: (executable-find "diff") RET
             <code>helm-multi-occur</code> and <code>helm-do-grep</code> from
             there.</p>
 
-            <p>To mark all candidates in a helm buffer, use <code>M-a</code> or
-            <code>M-m</code>.</p>
+            <p>You can also use the <code>@</code> prefix to <b>search buffer
+            contents</b>.</p>
+
+            <p>To mark all candidates in a Helm buffer, use <code>M-a</code>
+            (<code>helm-mark-all</code>) or <code>M-m</code>
+            (<code>helm-toggle-all-marks</code>).</p>
 
             <p>Locate for <b>Windows</b> users: you have to install <a href=
             "http://www.voidtools.com/download.php">Everything</a> with his
@@ -6300,6 +6308,35 @@ M-: (executable-find "diff") RET
                                         <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">and `C-c =' (like in RefTeX)?</span>
+
+      (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven-helm-grep-org-files</span> ()
+        <span style=
+"color: #008000;">"Launch grep on Org files in `</span><span style=
+"color: #D0372D;">~/org</span><span style="color: #008000;">'."</span>
+        (interactive)
+        (<span style=
+"color: #0000FF;">let</span> ((files (helm-walk-directory <span style=
+"color: #036A07;">"~/org"</span>
+                                          <span style=
+"color: #006FE0;">:path</span> 'full
+                                          <span style=
+"color: #006FE0;">:directories</span> nil
+                                          <span style=
+"color: #006FE0;">:match</span> <span style=
+"color: #036A07;">".*\\.</span><span style=
+"color: #036A07; font-weight: bold;">\\</span><span style=
+"color: #036A07; font-weight: bold;">(</span><span style=
+"color: #036A07;">org</span><span style=
+"color: #036A07; font-weight: bold;">\\</span><span style=
+"color: #036A07; font-weight: bold;">|</span><span style=
+"color: #036A07;">txt</span><span style=
+"color: #036A07; font-weight: bold;">\\</span><span style=
+"color: #036A07; font-weight: bold;">)</span><span style=
+"color: #036A07;">$"</span>
+                                          <span style=
+"color: #006FE0;">:skip-subdirs</span> t)))
+          (helm-do-grep-1 files)))
 
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">activate (a better version of) `</span><span style="color: #D0372D; font-style: italic;">occur</span><span style="color: #8D8D84; font-style: italic;">' easily globally</span>
@@ -9545,7 +9582,7 @@ M-: (executable-find "diff") RET
 </pre>
           </div>
 
-          <p>If you insert a <a href="http:///">http:///</a> link containing
+          <p>If you insert a <a href="http://">http://</a> link containing
           equal signs (such as <a href=
           "http://test/test?name=me">http://test/test?name=me</a>), the
           verbatim link being inserted in the Org document has the equal signs
@@ -9801,9 +9838,9 @@ M-: (executable-find "diff") RET
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">list of </span><span style=
-"color: #CC0000; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #8D8D84; font-style: italic;"> entry keyword sequences and their interpretation (for</span>
+"color: #CC0000; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #8D8D84; font-style: italic;"> entry keyword sequences (+ fast access keys and specifiers</span>
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">the different task states)</span>
+"color: #8D8D84; font-style: italic;">for state change logging)</span>
   (setq org-todo-keywords
         '((sequence <span style=
 "color: #036A07;">"NEW(n!)"</span>           <span style=
@@ -16014,7 +16051,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
           <p>Have a look at:</p>
 
           <ul class="org-ul">
-            <li><a href="http://cedet.sourceforge.net/">CEDET</a> for
+            <li><a href="http://cedet.sourceforge.net">CEDET</a> for
             development in AWK, C/C++, C#, Calc, Erlang, Java, Javascript,
             Make, PHP, Python, Ruby and Scheme,</li>
 
@@ -16772,11 +16809,16 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #8D8D84; font-style: italic;">') to `</span><span style=
 "color: #D0372D; font-style: italic;">grep</span><span style=
 "color: #8D8D84; font-style: italic;">' commands</span>
-  (setq grep-use-null-device nil)
-  <span style="color: #8D8D84;">;; </span><span style=
+  (setq grep-use-null-device nil)       <span style=
+"color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">not necessary if the `</span><span style=
 "color: #D0372D; font-style: italic;">grep</span><span style=
-"color: #8D8D84; font-style: italic;">' program used supports the `</span><span style="color: #D0372D; font-style: italic;">-H</span><span style="color: #8D8D84; font-style: italic;">' option</span>
+"color: #8D8D84; font-style: italic;">' program</span>
+                                        <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">used supports the `</span><span style=
+"color: #D0372D; font-style: italic;">-H</span><span style=
+"color: #8D8D84; font-style: italic;">' option</span>
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">;; for Windows</span>
@@ -16803,7 +16845,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">10.3.5 Org keyword search</span>
   (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-org-grep</span> (regexp <span style=
+"color: #006699;">leuven-grep-org-files</span> (regexp <span style=
 "color: #6434A3;">&amp;optional</span> context)
     <span style=
 "color: #008000;">"Recursively search for REGEXP in Org files in directory tree rooted at `</span><span style="color: #D0372D;">org-directory</span><span style="color: #008000;">'.</span>
@@ -16825,6 +16867,8 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"*.org"</span> org-directory)))
 </pre>
           </div>
+
+          <p>See <code>leuven-helm-grep-org-files</code>.</p>
         </div>
       </div>
 
@@ -19315,7 +19359,7 @@ TAGS:
           <p>Prerequisites:</p>
 
           <ul class="org-ul">
-            <li><a href="http://www.imagemagick.org./">ImageMagick</a>
+            <li><a href="http://www.imagemagick.org.">ImageMagick</a>
             package</li>
 
             <li>JpegTRAN program</li>
@@ -23805,7 +23849,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140222.2104]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140224.1446]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
