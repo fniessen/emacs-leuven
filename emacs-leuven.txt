@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-24 Mon 14:44>
+# Time-stamp: <2014-02-24 Mon 15:30>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -6371,7 +6371,7 @@ http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
 
     ;; text preceding scheduled items in the agenda view
     (setq org-agenda-scheduled-leaders
-          '("Today      "
+          '("Scheduled  "
             "           "))
 
     ;; text preceding item pulled into the agenda by inactive time stamps

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140224.1444
+;; Version: 20140224.1530
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140224.1444]--")
+(message "* --[ Loading Emacs Leuven 20140224.1530]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4167,7 +4167,7 @@ From %c"
 
     ;; text preceding scheduled items in the agenda view
     (setq org-agenda-scheduled-leaders
-          '("Today      "
+          '("Scheduled  "
             "           "))
 
     ;; text preceding item pulled into the agenda by inactive time stamps
@@ -8658,7 +8658,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140224.1445]--")
+(message "* --[ Loaded Emacs Leuven 20140224.1531]--")
 
 (provide 'emacs-leuven)
 
