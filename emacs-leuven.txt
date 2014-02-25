@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-24 Mon 21:58>
+# Time-stamp: <2014-02-25 Tue 11:44>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1166,20 +1166,33 @@ Interactively insert items from kill ring with =M-x helm-show-kill-ring= (see
 
 ** Rectangles
 
-Use =C-x r t STRING <RET>= to replace each line of a region-rectangle with a
-given string.
+To kill the text of the "region-rectangle", use =C-x r k= (=kill-rectangle=).  Or
+just "delete" the rectangle (without "killing" it) with =C-x r d=.
 
-To kill the text of the region-rectangle, use =C-x r k= (=kill-rectangle=).
-Or just "delete" the rectangle (without "killing" it) with =C-x r d=.
+To copy a (series of) Org column(s) while avoiding the use of registers:
+1. select the region-rectangle,
+2. use the command =copy-rectangle-as-kill= (bound to =C-x r M-w=), then
+3. paste the copied rectangle by doing =yank-rectangle= (=C-x r y=).
 
+To do the same with registers:
+1. select the region-rectangle,
+2. use =C-x r r R= to copy the rectangle to the register named =R=,
+3. use =C-x r i R= to insert the rectangle that is being held in the register
+   named =R=.
+
+To shift cells up/down within a column of an Org table while leaving remaining
+columns intact, use =kill-rectangle= and =yank-rectangle=.
+
+To delete whitespace in each of the lines on the specified rectangle, use
+=M-x delete-whitespace-rectangle=.
+
+Use =C-x r t STRING <RET>= to replace each line of a region-rectangle with
+a given string.
+
+#+begin_note
 On the Emacs trunk, you can do: =C-x SPC= <...move around...> =DEL= to delete the
 rectangle and =C-x SPC= <...move around...> =C-t= to invoke =string-rectangle=.
-
-=kill-rectangle= and =yank-rectangle= (=C-x r y=) can also be very useful for
-shifting cells up/down within a column of an Org table while leaving remaining
-columns intact.
-
-Other function of interest: =delete-whitespace-rectangle=.
+#+end_note
 
 ** CUA Bindings
 
@@ -4404,8 +4417,8 @@ Now doing
 
 will give you a give quick overview of all the function names.
 
-Or check out ~outline-magic.el~, which does this and also provides promotion and
-demotion functionality.
+Or check out ~outline-magic.el~, which does this and also provides *promotion and
+demotion* functionality.
 
 *** org
 
@@ -9015,6 +9028,73 @@ distinguishes end-of-block.
     (kbd "C-c @ s") 'hs-show-block)
 #+end_src
 
+#+begin_src emacs-lisp
+  ;; if hideshowvis is not installed, do not attempt to configure it,
+  ;; as this will prevent packages (including hideshowvis itself)
+  ;; from compiling
+  (when (and (display-graphic-p)
+             (try-require 'hideshowvis-XXX))
+
+    (autoload 'hideshowvis-enable "hideshowvis"
+      "Highlight foldable regions." t)
+
+    (autoload 'hideshowvis-minor-mode "hideshowvis"
+      "Will indicate regions foldable with hideshow in the fringe." t)
+
+    ;; enable hideshowvis for programming modes
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                ;; more syntax definitions
+                (require 'fold-dwim)
+                (hideshowvis-enable)))
+
+    ;; +/- fold buttons
+    (define-fringe-bitmap 'hs-marker [0 24 24 126 126 24 24 0])
+
+    (defcustom hs-fringe-face 'hs-fringe-face
+      "*Specify face used to highlight the fringe on hidden regions."
+      :type 'face
+      :group 'hideshow)
+
+    (defface hs-fringe-face
+      '((t (:box (:line-width 2 :color "#808080" :style released-button)
+            :foreground "#999999")))
+      "Face used to highlight the fringe on folded regions"
+      :group 'hideshow)
+
+    (defcustom hs-face 'hs-face
+      "*Specify the face to to use for the hidden region indicator"
+      :type 'face
+      :group 'hideshow)
+
+    (defface hs-face
+      '((t (:box (:line-width 1 :color "#999999")
+            :foreground "#999999" :background "#FFF8C0")))
+      "Face to hightlight the ... area of hidden regions"
+      :group 'hideshow)
+
+    (defun display-code-line-counts (ov)
+      (when (eq 'code (overlay-get ov 'hs))
+        (let* ((marker-string "*fringe-dummy*")
+               (marker-length (length marker-string))
+               (display-string
+                ;; (format "(%d)..."
+                ;; (count-lines (overlay-start ov) (overlay-end ov)))
+                "..."))
+          (overlay-put ov 'help-echo "Hidden text. C-c,= to show")
+          (put-text-property 0 marker-length
+                             'display (list 'left-fringe
+                                            'hs-marker
+                                            'hs-fringe-face)
+                             marker-string)
+          (overlay-put ov 'before-string marker-string)
+          (put-text-property 0 (length display-string)
+                             'face 'hs-face display-string)
+          (overlay-put ov 'display display-string))))
+
+    (setq hs-set-up-overlay 'display-code-line-counts))
+#+end_src
+
 ** Completion for Symbol Names
    :PROPERTIES:
    :ID:       4b262301-5370-40c6-8da6-019215634e20
@@ -10881,6 +10961,9 @@ Extra Dired functionality
             (lambda ()
               ;; don't hide details in Dired
               (setq diredp-hide-details-initially-flag nil)
+
+              ;; don't wrap "next" command around to buffer beginning
+              (setq diredp-wrap-around-flag nil)
 
               (try-require 'dired+)))
 #+end_src
