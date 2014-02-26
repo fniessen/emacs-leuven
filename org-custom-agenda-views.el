@@ -4,11 +4,11 @@
 
   ;; display the hotlist
   (global-set-key
-   (kbd "<S-f7>") (kbd "C-c a f h"))
+   (kbd "<S-f7>") (kbd "C-c a f ."))
 
   ;; display TODO entries
   (global-set-key
-   (kbd "<C-f7>") (kbd "C-c a r a 2"))
+   (kbd "<C-f7>") (kbd "C-c a f ."))
 
     ;; custom commands for the agenda -- start with a clean slate
     (setq org-agenda-custom-commands nil)
@@ -437,7 +437,7 @@
     (add-to-list 'org-agenda-custom-commands
                  `("rd" "Daily review"
                    ((tags "LEVEL=2"
-                          ((org-agenda-overriding-header "NEW TASKS")
+                          ((org-agenda-overriding-header "COLLECTBOX")
                            (org-agenda-files (list ,org-default-notes-file))))
                     (agenda ""
                             ((org-agenda-entry-types '(:timestamp :sexp))
@@ -547,11 +547,11 @@
                     (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME does not work
 
     (add-to-list 'org-agenda-custom-commands
-                 '("o" . "MORE...") t)
+                 '("+" . "MORE...") t)
 
     ;; checking tasks that are assigned to me
     (add-to-list 'org-agenda-custom-commands
-                 `("oa" "Assigned to me"
+                 `("+a" "Assigned to me"
                    tags ,(concat "Assignee={" user-login-name "\\|"
                                  user-mail-address "}")
                    ((org-agenda-overriding-header "ASSIGNED TO ME"))) t)

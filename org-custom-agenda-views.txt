@@ -69,11 +69,11 @@ FIXME | [yas] elisp error! Symbol's function definition is void: ca-with-comment
 
   ;; display the hotlist
   (global-set-key
-   (kbd "<S-f7>") (kbd "C-c a f h"))
+   (kbd "<S-f7>") (kbd "C-c a f ."))
 
   ;; display TODO entries
   (global-set-key
-   (kbd "<C-f7>") (kbd "C-c a r a 2"))
+   (kbd "<C-f7>") (kbd "C-c a f ."))
 #+end_src
 
 * Description
@@ -984,7 +984,7 @@ See other people's tasks.
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
-                 '("o" . "MORE...") t)
+                 '("+" . "MORE...") t)
 #+end_src
 
 ** Assigned to me
@@ -992,7 +992,7 @@ See other people's tasks.
 #+begin_src emacs-lisp
     ;; checking tasks that are assigned to me
     (add-to-list 'org-agenda-custom-commands
-                 `("oa" "Assigned to me"
+                 `("+a" "Assigned to me"
                    tags ,(concat "Assignee={" user-login-name "\\|"
                                  user-mail-address "}")
                    ((org-agenda-overriding-header "ASSIGNED TO ME"))) t)
