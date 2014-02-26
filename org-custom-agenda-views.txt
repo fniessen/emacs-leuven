@@ -73,7 +73,7 @@ FIXME | [yas] elisp error! Symbol's function definition is void: ca-with-comment
 
   ;; display TODO entries
   (global-set-key
-   (kbd "<C-f7>") (kbd "C-c a f ."))
+   (kbd "<C-f7>") (kbd "C-c a f h"))
 #+end_src
 
 * Description

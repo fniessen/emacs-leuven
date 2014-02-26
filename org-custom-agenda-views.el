@@ -8,7 +8,7 @@
 
   ;; display TODO entries
   (global-set-key
-   (kbd "<C-f7>") (kbd "C-c a f ."))
+   (kbd "<C-f7>") (kbd "C-c a f h"))
 
     ;; custom commands for the agenda -- start with a clean slate
     (setq org-agenda-custom-commands nil)
