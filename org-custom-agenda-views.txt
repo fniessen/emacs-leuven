@@ -837,6 +837,8 @@ Take a moment to plan your day:
 
 *************** TODO Show overridden headers when in agenda view
 
+Read [[http://gridwriter.com/2012/11/14/omnifocus-series-flags-due-dates-daily-review/][Flags, Due Dates, and Daily Review]].
+
 ** Weekly task review
 
 1. Clear inbox for collecting
