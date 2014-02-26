@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-25 Tue 11:52 -->
+  <title>Emacs Leuven</title><!-- 2014-02-26 Wed 11:29 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140225.1151</span>
+"color: #8D8D84; font-style: italic;">Version: 20140226.1128</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140225.1151]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140226.1128]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -8047,16 +8047,18 @@ M-: (executable-find "diff") RET
         <h3 id="sec-27-3">Filling Text</h3>
 
         <div class="outline-text-3" id="text-27-3">
-          <p>There are several <b>non-break space</b> characters:</p>
+          <p>There are several <b>non-break space</b> characters required for
+          French punctuation:</p>
 
           <ul class="org-ul">
-            <li><b>No-break thin space</b> (202F), known in Unicode as “Narrow
-            No-Break Space”, required for French punctuation (before
-            <code>?</code>, <code>!</code> or <code>;</code>).</li>
+            <li><b>No-break thin space</b> (<code>202F</code>), known in
+            Unicode as “Narrow No-Break Space”, required before <code>?</code>,
+            <code>!</code> and <code>;</code>.</li>
 
             <li>
-              <b>No-break space</b> (00A0), required for French punctuation
-              (before <code>:</code>).
+              <b>No-break space</b> (<code>00A0</code>), required before
+              <code>:</code> and <code>»</code>, and required after
+              <code>«</code>.
 
               <p>It can be inserted with <code>S-SPC</code>:</p>
 
@@ -8850,7 +8852,30 @@ M-: (executable-find "diff") RET
 "color: #8D8D84; font-style: italic;">;; ("?" (:box t))</span>
   <span style="color: #8D8D84;">;;         </span><span style=
 "color: #8D8D84; font-style: italic;">("!" (:weight ultra-bold :foreground "#B40000")) ; = alert in some Wikis</span>
+</pre>
+        </div>
 
+        <p><code>org-emphasis-alist</code> has a <code>:set</code> handler
+        <code>org-set-emph-re</code> which will do the job of setting up the
+        regexps. I don’t want to call <code>org-set-emph-re</code> directly,
+        instead I set <code>org-emphasis-alist</code> to itself and let the
+        customize interface call the handler for me.</p>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+  <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">change the variable `</span><span style=
+"color: #D0372D; font-style: italic;">org-emphasis-regexp-components</span><span style="color: #8D8D84; font-style: italic;">' such that the borders</span>
+  <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">part no longer include "</span>
+  (setcar (nthcdr 2 org-emphasis-regexp-components) <span style=
+"color: #036A07;">" \t\n,'"</span>)
+  (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist))
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">single character alphabetical bullets (a, b, c, ..., X, Y, Z) are allowed</span>
   (setq org-list-allow-alphabetical t)
@@ -9102,7 +9127,7 @@ M-: (executable-find "diff") RET
 "color: #8D8D84; font-style: italic;">face</span>
 
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">&lt;RET&gt; follows links (except in tables)</span>
+"color: #8D8D84; font-style: italic;">&lt;RET&gt; follows links (except in tables, where you must use `C-c C-o')</span>
   (setq org-return-follows-link t)
 
   <span style="color: #8D8D84;">;; </span><span style=
@@ -10853,17 +10878,22 @@ M-: (executable-find "diff") RET
           <h4 id="sec-28-8-1">Capture</h4>
 
           <div class="outline-text-4" id="text-28-8-1">
-            <p>The ultimate capture tool.</p>
+            <p>The ultimate capture tool to <b>quickly add</b> tasks or
+            notes.</p>
 
-            <table class="inlinetask" width="100%">
-              <tr>
-                <td valign="top"><b><span class=
-                "todo TODO">TODO</span></b></td>
+            <p>Structure:</p>
 
-                <td width="100%"><b>Look at
-                <code>:kill-buffer</code></b><br /></td>
-              </tr>
-            </table>
+            <ul class="org-ul">
+              <li>Contacts</li>
+
+              <li>Calendar</li>
+
+              <li>Tasks</li>
+
+              <li>Notes</li>
+
+              <li>Journal</li>
+            </ul>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -10894,48 +10924,16 @@ M-: (executable-find "diff") RET
 </pre>
             </div>
 
-            <ul class="org-ul">
-              <li>Contacts</li>
-
-              <li>Calendar</li>
-
-              <li>Tasks</li>
-
-              <li>Notes</li>
-
-              <li>Journal</li>
-
-              <li>Family</li>
-
-              <li>Friends</li>
-
-              <li>Future</li>
-
-              <li>Graphics</li>
-
-              <li>Languages</li>
-
-              <li>Linux</li>
-
-              <li>Magical Moments</li>
-
-              <li>Networks</li>
-
-              <li>Projects</li>
-
-              <li>Traveling</li>
-            </ul>
-
-            <p>%-escapes:</p>
+            <p><code>%</code>-escapes:</p>
 
             <dl class="org-dl">
               <dt>%a</dt>
 
-              <dd>Annotation (link).</dd>
+              <dd>Annotation (<b>link</b>).</dd>
 
               <dt>%i</dt>
 
-              <dd>Initial content (selected text).</dd>
+              <dd>Initial content (<b>selected text</b>).</dd>
 
               <dt>%?</dt>
 
@@ -10970,6 +10968,16 @@ M-: (executable-find "diff") RET
             <p>Use <code>:jump-to-captured</code> to tell capture to jump to
             the note after storing it.</p>
 
+            <table class="inlinetask" width="100%">
+              <tr>
+                <td valign="top"><b><span class=
+                "todo TODO">TODO</span></b></td>
+
+                <td width="100%"><b>Look at
+                <code>:kill-buffer</code></b><br /></td>
+              </tr>
+            </table>
+
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span style="color: #8D8D84;">;; </span><span style=
@@ -10977,8 +10985,6 @@ M-: (executable-find "diff") RET
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">("Receipt"   ?r "** %^{BriefDesc} %U %^g\n%?"   "~/Personal/finances.org")</span>
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">("Someday"   ?s "** %^{Someday Heading} %U\n%?\n"  "~/Personal/someday.org")</span>
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">fast note taking in Org mode (the ultimate capture tool)</span>
@@ -11060,7 +11066,7 @@ M-: (executable-find "diff") RET
 
             <div class="outline-text-5" id="text-28-8-1-2">
               <p>Instantly <b>create tasks</b> and notes <b>from emails</b>,
-              with a link back to the the emails.</p>
+              with a <b>link</b> back <b>to the emails</b>.</p>
 
               <p>The following rules will apply to interpret an email to a
               task:</p>
@@ -11227,7 +11233,7 @@ M-: (executable-find "diff") RET
                  `(<span style="color: #036A07;">"b"</span> <span style=
 "color: #036A07;">"Buy"</span> checkitem
                    (file+headline ,org-default-notes-file <span style=
-"color: #036A07;">"Shopping list"</span>)) t)
+"color: #036A07;">"Shopping"</span>)) t)
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">add a note to the currently clocked task</span>
@@ -11261,7 +11267,7 @@ M-: (executable-find "diff") RET
                  `(<span style="color: #036A07;">"S"</span> <span style=
 "color: #036A07;">"secure"</span> entry
                    (file+datetree+prompt <span style=
-"color: #036A07;">"~/git/notes/secure.org.gpg"</span>)
+"color: #036A07;">"~/org/notes/secure.org.gpg"</span>)
                    <span style=
 "color: #036A07;">"* %(format-time-string \"%H:%M\") %^{Entry} %^G</span>
 <span style="color: #036A07;">%i%?"</span>) t)
@@ -11526,7 +11532,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
       (interactive)
       (<span style=
 "color: #0000FF;">let</span> ((org-refile-targets '((nil <span style=
-"color: #006FE0;">:maxlevel</span> . 8))))
+"color: #006FE0;">:maxlevel</span> . 4))))
         (org-refile)))
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #CC0000; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #8D8D84; font-style: italic;"> Add a smart key binding</span>
@@ -18973,8 +18979,16 @@ TAGS:
 </pre>
         </div>
 
-        <p>Type <code>0 w</code> to put the full path to some file into the
-        kill ring.</p>
+        <p>Type <code>0 w</code> (<code>dired-copy-filename-as-kill</code>) in
+        Dired to put the <b>full path</b> to some local file into the kill
+        ring.</p>
+
+        <div class="note">
+          <p>If you want to insert a link to a file in an Org mode document,
+          you can also call <code>org-insert-link</code> (<code>C-c C-l</code>)
+          with a <code>C-u</code> prefix (to get the regular
+          <code>find-file</code> interface).</p>
+        </div>
       </div>
 
       <div id="outline-container-sec-35-1" class="outline-3">
@@ -23555,6 +23569,16 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
 
           <p>If missing image libraries bother you, read
           <code>README.W32</code> or <code>nt/INSTALL</code>.</p>
+
+          <p>For animated GIF (or multi-page TIFF):</p>
+
+          <ul class="org-ul">
+            <li><code>f</code> steps through image frame, and</li>
+
+            <li><code>RET</code> animates.</li>
+          </ul>
+
+          <p>No need for ImageMagick.</p>
         </div>
       </div>
     </div>
@@ -23980,7 +24004,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140225.1152]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140226.1129]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

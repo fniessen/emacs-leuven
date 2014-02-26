@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-25 Tue 11:44>
+# Time-stamp: <2014-02-26 Wed 11:25>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4131,12 +4131,12 @@ spaces won't be transformed into one...
 
 ** Filling Text
 
-There are several *non-break space* characters:
+There are several *non-break space* characters required for French punctuation:
 
-- *No-break thin space* (202F), known in Unicode as "Narrow No-Break Space",
-  required for French punctuation (before =?=, =!= or =;=).
+- *No-break thin space* (=202F=), known in Unicode as "Narrow No-Break Space",
+  required before =?=, =!= and =;=.
 
-- *No-break space* (00A0), required for French punctuation (before =:=).
+- *No-break space* (=00A0=), required before =:= and =»=, and required after =«=.
 
   It can be inserted with =S-SPC=:
 
@@ -4628,7 +4628,21 @@ These variables need to be set before Org mode is loaded.
   ;;       '(("&" (:weight ultra-bold :foreground "#000000" :background "#FBFF00"))
   ;;         ;; ("?" (:box t))
   ;;         ("!" (:weight ultra-bold :foreground "#B40000")) ; = alert in some Wikis
+#+end_src
 
+=org-emphasis-alist= has a =:set= handler =org-set-emph-re= which will do the job of
+setting up the regexps. I don't want to call =org-set-emph-re= directly, instead
+I set =org-emphasis-alist= to itself and let the customize interface call the
+handler for me.
+
+#+begin_src emacs-lisp
+  ;; change the variable `org-emphasis-regexp-components' such that the borders
+  ;; part no longer include "
+  (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\n,'")
+  (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist))
+#+end_src
+
+#+begin_src emacs-lisp
   ;; single character alphabetical bullets (a, b, c, ..., X, Y, Z) are allowed
   (setq org-list-allow-alphabetical t)
 #+end_src
@@ -4769,7 +4783,7 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
               " \u25B7"                 ; string
             'org-ellipsis)))            ; face
 
-  ;; <RET> follows links (except in tables)
+  ;; <RET> follows links (except in tables, where you must use `C-c C-o')
   (setq org-return-follows-link t)
 
   ;; blank lines
@@ -5773,9 +5787,14 @@ When clocking in, ask for a time estimate if the property is not yet defined.
 
 *** Capture
 
-The ultimate capture tool.
+The ultimate capture tool to *quickly add* tasks or notes.
 
-*************** TODO Look at =:kill-buffer=
+Structure:
+- Contacts
+- Calendar
+- Tasks
+- Notes
+- Journal
 
 #+begin_src emacs-lisp
 ;;* 9 (info "(org)Capture - Refile - Archive")
@@ -5793,30 +5812,13 @@ The ultimate capture tool.
         (concat org-directory "/refile.org"))
 #+end_src
 
-- Contacts
-- Calendar
-- Tasks
-- Notes
-- Journal
-
-- Family
-- Friends
-- Future
-- Graphics
-- Languages
-- Linux
-- Magical Moments
-- Networks
-- Projects
-- Traveling
-
-%-escapes:
+=%=-escapes:
 
 - %a ::
-     Annotation (link).
+     Annotation (*link*).
 
 - %i ::
-     Initial content (selected text).
+     Initial content (*selected text*).
 
 - %? ::
      Cursor position.
@@ -5841,11 +5843,12 @@ The ultimate capture tool.
 
 Use =:jump-to-captured= to tell capture to jump to the note after storing it.
 
+*************** TODO Look at =:kill-buffer=
+
 #+begin_src emacs-lisp
   ;; 9.1.2 templates for the creation of capture buffers
 
   ;; ("Receipt"   ?r "** %^{BriefDesc} %U %^g\n%?"   "~/Personal/finances.org")
-  ;; ("Someday"   ?s "** %^{Someday Heading} %U\n%?\n"  "~/Personal/someday.org")
 
   ;; fast note taking in Org mode (the ultimate capture tool)
   (with-eval-after-load "org-capture"
@@ -5899,8 +5902,7 @@ Find a location for refiling on capture.
 
 **** Email-to-Org
 
-Instantly *create tasks* and notes *from emails*, with a link back to the the
-emails.
+Instantly *create tasks* and notes *from emails*, with a *link* back *to the emails*.
 
 The following rules will apply to interpret an email to a task:
 
@@ -6007,7 +6009,7 @@ With the clock options, =org-capture= automatically clocks in.  When pressing
     ;; shopping list (stuff to buy)
     (add-to-list 'org-capture-templates
                  `("b" "Buy" checkitem
-                   (file+headline ,org-default-notes-file "Shopping list")) t)
+                   (file+headline ,org-default-notes-file "Shopping")) t)
 
     ;; add a note to the currently clocked task
     (add-to-list 'org-capture-templates
@@ -6034,7 +6036,7 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("S" "secure" entry
-                   (file+datetree+prompt "~/git/notes/secure.org.gpg")
+                   (file+datetree+prompt "~/org/notes/secure.org.gpg")
                    "* %(format-time-string \"%H:%M\") %^{Entry} %^G
 %i%?") t)
 #+end_src
@@ -6181,7 +6183,7 @@ the header under which the entry will be placed.
     (defun leuven-org-refile-within-current-buffer ()
       "Move the entry at point to another heading in the current buffer."
       (interactive)
-      (let ((org-refile-targets '((nil :maxlevel . 8))))
+      (let ((org-refile-targets '((nil :maxlevel . 4))))
         (org-refile)))
     ;; FIXME Add a smart key binding
   #+end_src
@@ -10582,7 +10584,14 @@ There are other ways to select candidates:
 (leuven--chapter leuven-chapter-30-dired "30 Dired, the Directory Editor"
 #+end_src
 
-Type =0 w= to put the full path to some file into the kill ring.
+Type =0 w= (=dired-copy-filename-as-kill=) in Dired to put the *full path* to some
+local file into the kill ring.
+
+#+begin_note
+If you want to insert a link to a file in an Org mode document, you can also
+call =org-insert-link= (=C-c C-l=) with a =C-u= prefix (to get the regular =find-file=
+interface).
+#+end_note
 
 ** Entering Dired
 
@@ -13282,6 +13291,11 @@ To check all image libraries at once:
 | zlib       | nil |
 
 If missing image libraries bother you, read ~README.W32~ or ~nt/INSTALL~.
+
+For animated GIF (or multi-page TIFF):
+- =f= steps through image frame, and
+- =RET= animates.
+No need for ImageMagick.
 
 * Calc
 

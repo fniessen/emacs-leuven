@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140225.1150
+;; Version: 20140226.1126
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140225.1150]--")
+(message "* --[ Loading Emacs Leuven 20140226.1126]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2972,6 +2972,11 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;;         ;; ("?" (:box t))
   ;;         ("!" (:weight ultra-bold :foreground "#B40000")) ; = alert in some Wikis
 
+  ;; change the variable `org-emphasis-regexp-components' such that the borders
+  ;; part no longer include "
+  (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\n,'")
+  (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist))
+
   ;; single character alphabetical bullets (a, b, c, ..., X, Y, Z) are allowed
   (setq org-list-allow-alphabetical t)
 
@@ -3053,7 +3058,7 @@ Last time is saved in global variable `leuven--before-section-time'."
               " \u25B7"                 ; string
             'org-ellipsis)))            ; face
 
-  ;; <RET> follows links (except in tables)
+  ;; <RET> follows links (except in tables, where you must use `C-c C-o')
   (setq org-return-follows-link t)
 
   ;; blank lines
@@ -3802,7 +3807,6 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; 9.1.2 templates for the creation of capture buffers
 
   ;; ("Receipt"   ?r "** %^{BriefDesc} %U %^g\n%?"   "~/Personal/finances.org")
-  ;; ("Someday"   ?s "** %^{Someday Heading} %U\n%?\n"  "~/Personal/someday.org")
 
   ;; fast note taking in Org mode (the ultimate capture tool)
   (with-eval-after-load "org-capture"
@@ -3901,7 +3905,7 @@ From %a"
     ;; shopping list (stuff to buy)
     (add-to-list 'org-capture-templates
                  `("b" "Buy" checkitem
-                   (file+headline ,org-default-notes-file "Shopping list")) t)
+                   (file+headline ,org-default-notes-file "Shopping")) t)
 
     ;; add a note to the currently clocked task
     (add-to-list 'org-capture-templates
@@ -3928,7 +3932,7 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("S" "secure" entry
-                   (file+datetree+prompt "~/git/notes/secure.org.gpg")
+                   (file+datetree+prompt "~/org/notes/secure.org.gpg")
                    "* %(format-time-string \"%H:%M\") %^{Entry} %^G
 %i%?") t)
 
@@ -4035,7 +4039,7 @@ From %c"
     (defun leuven-org-refile-within-current-buffer ()
       "Move the entry at point to another heading in the current buffer."
       (interactive)
-      (let ((org-refile-targets '((nil :maxlevel . 8))))
+      (let ((org-refile-targets '((nil :maxlevel . 4))))
         (org-refile)))
     ;; FIXME Add a smart key binding
 
@@ -8719,7 +8723,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140225.1151]--")
+(message "* --[ Loaded Emacs Leuven 20140226.1128]--")
 
 (provide 'emacs-leuven)
 
