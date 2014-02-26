@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-26 Wed 19:14>
+# Time-stamp: <2014-02-26 Wed 20:26>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -556,10 +556,11 @@ are generated programmatically from upstream Git-based sources.
                                         ; and load `<pkg>-autoloads.el'
 
       (defcustom leuven-packages
-        '(ace-jump-mode auctex auto-complete bbdb boxquote calfw circe csv-mode
-          dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode helm
-          htmlize idle-require info+ interaction-log ledger-mode leuven-theme
-          org-mime pager rainbow-mode redo+ redshank sml-modeline tidy yasnippet
+        '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
+          csv-mode dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode
+          helm htmlize idle-require info+ interaction-log ledger-mode
+          leuven-theme org-mime pager rainbow-mode redo+ redshank sml-modeline
+          tidy yasnippet
           ;; jabber multi-term
           ;; paredit w3m
           )
@@ -1289,25 +1290,40 @@ directory.
                                         ;! the time `bookmark' is required!
 
     ;; each command that sets a bookmark will also save your bookmarks
-    (setq bookmark-save-flag 1))
+    (setq bookmark-save-flag 1)
 #+end_src
 
 Visible bookmarks in buffer.
 
 *Bookmark+* offers everything that =bm.el= offers, and quite a bit more.
 
+- =C-x p RET= ::
+     *Set* (or delete) a *bookmark* at point.
+
+- =C-x p C-down= ::
+     Cycle to the *next* highlighted *bookmark* in the current buffer.
+
+- =C-x p C-up= ::
+     Cycle to the *previous* highlighted *bookmark* in the current buffer.
+
+- =C-x (4) j h= ::
+     Jump to a highlighted bookmark (in another window).
+
 #+begin_src emacs-lisp
-  ;; extensions to standard library `bookmark.el'
-  (with-eval-after-load "bookmark-XXX"  ; XXX here does not work!?
+    ;; extensions to standard library `bookmark.el'
+    (when (try-require 'bookmark+)
 
-    (try-require 'bookmark+++XXX)
+      ;; automatically highlight bookmarks when set
+      (setq bmkp-auto-light-when-set 'any-bookmark)
 
-    ;; bookmarks to automatically highlight when jumped to
-    (setq bmkp-auto-light-when-jump 'any-bookmark)
+      ;; automatically highlight bookmarks when jumped to
+      (setq bmkp-auto-light-when-jump 'any-bookmark)
 
-    ;; we will often be going back and forth between using Bookmark+ and
-    ;; using vanilla Emacs
-    (setq bmkp-propertize-bookmark-names-flag nil))
+      ;; don't propertize bookmark names to hold full bookmark data
+      (setq bmkp-propertize-bookmark-names-flag nil)))
+                                        ; we will often be going back and forth
+                                        ; between using Bookmark+ and using
+                                        ; vanilla Emacs
 #+end_src
 
 ** Ace Jump

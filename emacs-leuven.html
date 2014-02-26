@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-26 Wed 19:17 -->
+  <title>Emacs Leuven</title><!-- 2014-02-26 Wed 20:35 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140226.1916</span>
+"color: #8D8D84; font-style: italic;">Version: 20140226.2034</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140226.1916]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140226.2034]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -2046,10 +2046,11 @@
 
       (<span style="color: #0000FF;">defcustom</span> <span style=
 "color: #BA36A5;">leuven-packages</span>
-        '(ace-jump-mode auctex auto-complete bbdb boxquote calfw circe csv-mode
-          dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode helm
-          htmlize idle-require info+ interaction-log ledger-mode leuven-theme
-          org-mime pager rainbow-mode redo+ redshank sml-modeline tidy yasnippet
+        '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
+          csv-mode dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode
+          helm htmlize idle-require info+ interaction-log ledger-mode
+          leuven-theme org-mime pager rainbow-mode redo+ redshank sml-modeline
+          tidy yasnippet
           <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">jabber multi-term</span>
           <span style="color: #8D8D84;">;; </span><span style=
@@ -3306,7 +3307,7 @@
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">each command that sets a bookmark will also save your bookmarks</span>
-    (setq bookmark-save-flag 1))
+    (setq bookmark-save-flag 1)
 </pre>
           </div>
 
@@ -3315,28 +3316,52 @@
           <p><b>Bookmark+</b> offers everything that <code>bm.el</code> offers,
           and quite a bit more.</p>
 
+          <dl class="org-dl">
+            <dt><code>C-x p RET</code></dt>
+
+            <dd><b>Set</b> (or delete) a <b>bookmark</b> at point.</dd>
+
+            <dt><code>C-x p C-down</code></dt>
+
+            <dd>Cycle to the <b>next</b> highlighted <b>bookmark</b> in the
+            current buffer.</dd>
+
+            <dt><code>C-x p C-up</code></dt>
+
+            <dd>Cycle to the <b>previous</b> highlighted <b>bookmark</b> in the
+            current buffer.</dd>
+
+            <dt><code>C-x (4) j h</code></dt>
+
+            <dd>Jump to a highlighted bookmark (in another window).</dd>
+          </dl>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  <span style="color: #8D8D84;">;; </span><span style=
+    <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">extensions to standard library `</span><span style="color: #D0372D; font-style: italic;">bookmark.el</span><span style="color: #8D8D84; font-style: italic;">'</span>
-  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
-"color: #036A07;">"bookmark-</span><span style=
-"color: #CC0000; background-color: #FFFF88;">XXX</span><span style=
-"color: #036A07;">"</span>  <span style="color: #8D8D84;">; </span><span style=
-"color: #CC0000; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #8D8D84; font-style: italic;"> here does not work!?</span>
+    (<span style="color: #0000FF;">when</span> (try-require 'bookmark+)
 
-    (try-require 'bookmark+++<span style=
-"color: #CC0000; background-color: #FFFF88;">XXX</span>)
+      <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">automatically highlight bookmarks when set</span>
+      (setq bmkp-auto-light-when-set 'any-bookmark)
 
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">bookmarks to automatically highlight when jumped to</span>
-    (setq bmkp-auto-light-when-jump 'any-bookmark)
+      <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">automatically highlight bookmarks when jumped to</span>
+      (setq bmkp-auto-light-when-jump 'any-bookmark)
 
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">we will often be going back and forth between using Bookmark+ and</span>
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">using vanilla Emacs</span>
-    (setq bmkp-propertize-bookmark-names-flag nil))
+      <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">don't propertize bookmark names to hold full bookmark data</span>
+      (setq bmkp-propertize-bookmark-names-flag nil)))
+                                        <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">we will often be going back and forth</span>
+                                        <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">between using Bookmark+ and using</span>
+                                        <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">vanilla Emacs</span>
 </pre>
           </div>
         </div>
@@ -24003,7 +24028,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140226.1916]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140226.2034]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

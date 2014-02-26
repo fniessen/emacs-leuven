@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140226.1915
+;; Version: 20140226.2033
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140226.1915]--")
+(message "* --[ Loading Emacs Leuven 20140226.2033]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -411,10 +411,11 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ; and load `<pkg>-autoloads.el'
 
       (defcustom leuven-packages
-        '(ace-jump-mode auctex auto-complete bbdb boxquote calfw circe csv-mode
-          dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode helm
-          htmlize idle-require info+ interaction-log ledger-mode leuven-theme
-          org-mime pager rainbow-mode redo+ redshank sml-modeline tidy yasnippet
+        '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
+          csv-mode dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode
+          helm htmlize idle-require info+ interaction-log ledger-mode
+          leuven-theme org-mime pager rainbow-mode redo+ redshank sml-modeline
+          tidy yasnippet
           ;; jabber multi-term
           ;; paredit w3m
           )
@@ -814,19 +815,22 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ;! the time `bookmark' is required!
 
     ;; each command that sets a bookmark will also save your bookmarks
-    (setq bookmark-save-flag 1))
+    (setq bookmark-save-flag 1)
 
-  ;; extensions to standard library `bookmark.el'
-  (with-eval-after-load "bookmark-XXX"  ; XXX here does not work!?
+    ;; extensions to standard library `bookmark.el'
+    (when (try-require 'bookmark+)
 
-    (try-require 'bookmark+++XXX)
+      ;; automatically highlight bookmarks when set
+      (setq bmkp-auto-light-when-set 'any-bookmark)
 
-    ;; bookmarks to automatically highlight when jumped to
-    (setq bmkp-auto-light-when-jump 'any-bookmark)
+      ;; automatically highlight bookmarks when jumped to
+      (setq bmkp-auto-light-when-jump 'any-bookmark)
 
-    ;; we will often be going back and forth between using Bookmark+ and
-    ;; using vanilla Emacs
-    (setq bmkp-propertize-bookmark-names-flag nil))
+      ;; don't propertize bookmark names to hold full bookmark data
+      (setq bmkp-propertize-bookmark-names-flag nil)))
+                                        ; we will often be going back and forth
+                                        ; between using Bookmark+ and using
+                                        ; vanilla Emacs
 
   ;; quickly jump to a position in the current view
   (when (try-require 'ace-jump-mode)
@@ -8722,7 +8726,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140226.1916]--")
+(message "* --[ Loaded Emacs Leuven 20140226.2033]--")
 
 (provide 'emacs-leuven)
 
