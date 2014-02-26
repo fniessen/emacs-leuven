@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-26 Wed 11:29 -->
+  <title>Emacs Leuven</title><!-- 2014-02-26 Wed 19:17 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140226.1128</span>
+"color: #8D8D84; font-style: italic;">Version: 20140226.1916</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140226.1128]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140226.1916]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -8863,14 +8863,16 @@ M-: (executable-find "diff") RET
 
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
-  <span style="color: #8D8D84;">;; </span><span style=
+  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #036A07;">"org"</span>
+    <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">change the variable `</span><span style=
 "color: #D0372D; font-style: italic;">org-emphasis-regexp-components</span><span style="color: #8D8D84; font-style: italic;">' such that the borders</span>
-  <span style="color: #8D8D84;">;; </span><span style=
+    <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">part no longer include "</span>
-  (setcar (nthcdr 2 org-emphasis-regexp-components) <span style=
+    (setcar (nthcdr 2 org-emphasis-regexp-components) <span style=
 "color: #036A07;">" \t\n,'"</span>)
-  (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist))
+    (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist)))
 </pre>
         </div>
 
@@ -15038,10 +15040,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #8D8D84; font-style: italic;">up-to-date</span>
     (add-hook 'before-save-hook 'leuven-org-update-buffer)
     (message <span style=
-"color: #036A07;">"Add leuven-org-update-buffer to before-save-hook  &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;"</span>)
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(sit-for 1.5)</span>
-    )
+"color: #036A07;">"Add leuven-org-update-buffer to before-save-hook  &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;"</span>))
 </pre>
           </div>
         </div>
@@ -24004,7 +24003,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140226.1129]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140226.1916]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

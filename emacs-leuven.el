@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140226.1126
+;; Version: 20140226.1915
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140226.1126]--")
+(message "* --[ Loading Emacs Leuven 20140226.1915]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2972,10 +2972,11 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;;         ;; ("?" (:box t))
   ;;         ("!" (:weight ultra-bold :foreground "#B40000")) ; = alert in some Wikis
 
-  ;; change the variable `org-emphasis-regexp-components' such that the borders
-  ;; part no longer include "
-  (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\n,'")
-  (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist))
+  (with-eval-after-load "org"
+    ;; change the variable `org-emphasis-regexp-components' such that the borders
+    ;; part no longer include "
+    (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\n,'")
+    (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist)))
 
   ;; single character alphabetical bullets (a, b, c, ..., X, Y, Z) are allowed
   (setq org-list-allow-alphabetical t)
@@ -5467,9 +5468,7 @@ From %c"
     ;; make sure that all dynamic blocks and all tables are always
     ;; up-to-date
     (add-hook 'before-save-hook 'leuven-org-update-buffer)
-    (message "Add leuven-org-update-buffer to before-save-hook  <<<<<<<<<<<<<<")
-    ;; (sit-for 1.5)
-    )
+    (message "Add leuven-org-update-buffer to before-save-hook  <<<<<<<<<<<<<<"))
 
   ;; (with-eval-after-load "org"
   ;;   (message "... Org Effectiveness")
@@ -8723,7 +8722,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140226.1128]--")
+(message "* --[ Loaded Emacs Leuven 20140226.1916]--")
 
 (provide 'emacs-leuven)
 

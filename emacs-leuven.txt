@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-26 Wed 11:25>
+# Time-stamp: <2014-02-26 Wed 19:14>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4636,10 +4636,11 @@ I set =org-emphasis-alist= to itself and let the customize interface call the
 handler for me.
 
 #+begin_src emacs-lisp
-  ;; change the variable `org-emphasis-regexp-components' such that the borders
-  ;; part no longer include "
-  (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\n,'")
-  (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist))
+  (with-eval-after-load "org"
+    ;; change the variable `org-emphasis-regexp-components' such that the borders
+    ;; part no longer include "
+    (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\n,'")
+    (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8206,9 +8207,7 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
     ;; make sure that all dynamic blocks and all tables are always
     ;; up-to-date
     (add-hook 'before-save-hook 'leuven-org-update-buffer)
-    (message "Add leuven-org-update-buffer to before-save-hook  <<<<<<<<<<<<<<")
-    ;; (sit-for 1.5)
-    )
+    (message "Add leuven-org-update-buffer to before-save-hook  <<<<<<<<<<<<<<"))
 #+end_src
 
 ** Org-contrib
