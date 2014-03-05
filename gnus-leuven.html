@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Gnus Leuven</title><!-- 2014-03-05 Wed 09:54 -->
+  <title>Gnus Leuven</title><!-- 2014-03-05 Wed 10:06 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -2199,40 +2199,14 @@
 "color: #8D8D84; font-style: italic;">** 5.2 (info "(gnus)Posting Server")</span>
 
       <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(try-require 'smtpmail)</span>
-
-      <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">sending mail</span>
-      (setq send-mail-function 'smtpmail-send-it)  <span style=
-"color: #8D8D84;">; </span><span style=
-"color: #8D8D84; font-style: italic;">not for Gnus (for `</span><span style=
-"color: #D0372D; font-style: italic;">mail</span><span style=
-"color: #8D8D84; font-style: italic;">')</span>
-
-      <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">default SMTP server (overriden by `</span><span style="color: #D0372D; font-style: italic;">smtpmail-smtp-server</span><span style="color: #8D8D84; font-style: italic;">')</span>
-      (setq smtpmail-default-smtp-server <span style=
-"color: #036A07;">"mail"</span>)
-      <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">process SMTP must be running there</span>
-
-      (setq smtpmail-smtp-server smtpmail-default-smtp-server)
-      <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">avoid the </span><span style=
-"color: #CC0000; background-color: #FFFF88; font-style: italic;">error</span>
-      <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">`smtpmail-via-smtp: `</span><span style=
-"color: #D0372D; font-style: italic;">smtpmail-smtp-server</span><span style=
-"color: #8D8D84; font-style: italic;">' not defined'</span>
-
-      <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">control the hostname sent in the first EHLO or HELO command sent to</span>
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">the server (client sends `EHLO CLARK.smtpmail-local-domain')</span>
       (setq smtpmail-local-domain <span style=
 "color: #036A07;">"i-did-not-set--mail-host-address--so-tickle-me"</span>)
-      <span style=
-"color: #8D8D84;">;;                                          </span><span style="color: #8D8D84; font-style: italic;">^^^^^^^^^^^^^^^^^</span>
+                                        <span style=
+"color: #8D8D84;">;         </span><span style=
+"color: #8D8D84; font-style: italic;">^^^^^^^^^^^^^^^^^</span>
 
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">make the SMTP library add `@' and the specified domain name to</span>

@@ -919,23 +919,10 @@
 
 ;;** 5.2 (info "(gnus)Posting Server")
 
-      ;; (try-require 'smtpmail)
-
-      ;; sending mail
-      (setq send-mail-function 'smtpmail-send-it)  ; not for Gnus (for `mail')
-
-      ;; default SMTP server (overriden by `smtpmail-smtp-server')
-      (setq smtpmail-default-smtp-server "mail")
-      ;; process SMTP must be running there
-
-      (setq smtpmail-smtp-server smtpmail-default-smtp-server)
-      ;; avoid the error
-      ;; `smtpmail-via-smtp: `smtpmail-smtp-server' not defined'
-
       ;; control the hostname sent in the first EHLO or HELO command sent to
       ;; the server (client sends `EHLO CLARK.smtpmail-local-domain')
       (setq smtpmail-local-domain "i-did-not-set--mail-host-address--so-tickle-me")
-      ;;                                          ^^^^^^^^^^^^^^^^^
+                                        ;         ^^^^^^^^^^^^^^^^^
 
       ;; make the SMTP library add `@' and the specified domain name to
       ;; recipients specified in the message when they are sent using the RCPT
