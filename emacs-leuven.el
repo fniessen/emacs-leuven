@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140226.2033
+;; Version: 20140305.1007
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140226.2033]--")
+(message "* --[ Loading Emacs Leuven 20140305.1007]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2977,9 +2977,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;;         ("!" (:weight ultra-bold :foreground "#B40000")) ; = alert in some Wikis
 
   (with-eval-after-load "org"
-    ;; change the variable `org-emphasis-regexp-components' such that the borders
-    ;; part no longer include "
-    (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\n,'")
+    ;; allow both single and double quotes in the border
+    (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\r\n,")
     (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist)))
 
   ;; single character alphabetical bullets (a, b, c, ..., X, Y, Z) are allowed
@@ -4268,11 +4267,6 @@ From %c"
 
   (leuven--section "10.5 (org)Agenda commands")
 
-  ;; ;; enable Follow mode
-  ;; (setq org-agenda-start-with-follow-mode t) ; XXX Seems nice, but first solve
-  ;;                                            ; problem with decrypt question
-  ;;                                            ; (auto-save)
-
   ;; get a compact view during follow mode in the agenda
   (defun leuven--compact-follow ()
     "Make the view compact, then show the necessary minimum."
@@ -4587,6 +4581,9 @@ From %c"
 
   ;; highlight LaTeX and related syntax
   (setq org-highlight-latex-and-related '(latex script entities))
+
+  ;; show entities as UTF8 characters
+  (setq org-pretty-entities t)
 
 ;;* 12 (info "(org)Exporting")
 
@@ -7355,15 +7352,8 @@ From %c"
   ;; sending mail
   (setq send-mail-function 'smtpmail-send-it)
 
-  (with-eval-after-load "smtpmail"
-
-    ;; name of the host running SMTP server
-    (setq smtpmail-smtp-server
-          (or (getenv "SMTPSERVER")
-              "mail"))
-
-    ;; SMTP service port number
-    (setq smtpmail-smtp-service 25))
+  ;; default SMTP server (overriden by `smtpmail-smtp-server')
+  (setq smtpmail-default-smtp-server "smtp") ; SMTP process must be running there
 
 )                                       ; chapter 32 ends here
 
@@ -8726,7 +8716,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140226.2033]--")
+(message "* --[ Loaded Emacs Leuven 20140305.1008]--")
 
 (provide 'emacs-leuven)
 

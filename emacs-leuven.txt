@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-02-26 Wed 20:26>
+# Time-stamp: <2014-03-05 Wed 10:05>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1563,7 +1563,7 @@ Comparison:
       (kbd "C-*") 'leuven-highlight-current-word))
 #+end_src
 
-*************** TODO Improve word highlighting
+*************** TODO Use rainbow colors for word highlighting
 Use =highlight-symbol= which chooses rainbow colors automatically and makes it
 much easier to follow some key variables through a block of code.
 *************** END
@@ -2229,8 +2229,6 @@ of possible corrections for misspelled word before point.
      (global-set-key
        (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary)))
 #+end_src
-
-*************** TODO Have a look at `diction' (style and grammar for English)
 
 #+begin_src emacs-lisp
   ;; client for rfc2229 dictionary servers
@@ -4653,9 +4651,8 @@ handler for me.
 
 #+begin_src emacs-lisp
   (with-eval-after-load "org"
-    ;; change the variable `org-emphasis-regexp-components' such that the borders
-    ;; part no longer include "
-    (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\n,'")
+    ;; allow both single and double quotes in the border
+    (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\r\n,")
     (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist)))
 #+end_src
 
@@ -6519,11 +6516,6 @@ Agenda view: put related tasks together, then by priority.
 
   (leuven--section "10.5 (org)Agenda commands")
 
-  ;; ;; enable Follow mode
-  ;; (setq org-agenda-start-with-follow-mode t) ; XXX Seems nice, but first solve
-  ;;                                            ; problem with decrypt question
-  ;;                                            ; (auto-save)
-
   ;; get a compact view during follow mode in the agenda
   (defun leuven--compact-follow ()
     "Make the view compact, then show the necessary minimum."
@@ -6969,6 +6961,9 @@ To list all available entities, run =M-x org-entities-help=.
 #+begin_src emacs-lisp
   ;; highlight LaTeX and related syntax
   (setq org-highlight-latex-and-related '(latex script entities))
+
+  ;; show entities as UTF8 characters
+  (setq org-pretty-entities t)
 #+end_src
 
 ** Exporting
@@ -10508,6 +10503,15 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
 
 Extensible inline text completion mechanism -- really brilliant!
 
+Auto-complete uses the variable =ac-modes= to decide whether to enable
+auto-completion in a particular mode; by default, =org-mode= (which interprets
+the =<tab>= key) is not present in this list. So, to enable auto-completion in
+Org mode, simply add it to the =ac-modes=:
+
+#+begin_example
+(add-to-list 'ac-modes 'org-mode)
+#+end_example
+
 Auto start vs. =M-/=.
 
 According to the settings, completion is done by =TAB= or =RET=.
@@ -11317,15 +11321,8 @@ Minimal configuration for sending a bug report, for example.
   ;; sending mail
   (setq send-mail-function 'smtpmail-send-it)
 
-  (with-eval-after-load "smtpmail"
-
-    ;; name of the host running SMTP server
-    (setq smtpmail-smtp-server
-          (or (getenv "SMTPSERVER")
-              "mail"))
-
-    ;; SMTP service port number
-    (setq smtpmail-smtp-service 25))
+  ;; default SMTP server (overriden by `smtpmail-smtp-server')
+  (setq smtpmail-default-smtp-server "smtp") ; SMTP process must be running there
 
 )                                       ; chapter 32 ends here
 #+end_src

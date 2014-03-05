@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-02-26 Wed 20:35 -->
+  <title>Emacs Leuven</title><!-- 2014-03-05 Wed 10:09 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140226.2034</span>
+"color: #8D8D84; font-style: italic;">Version: 20140305.1008</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140226.2034]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140305.1008]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -3803,7 +3803,7 @@
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
 
               <td width="100%">
-                <b>Improve word highlighting</b><br />
+                <b>Use rainbow colors for word highlighting</b><br />
 
                 <p>Use <code>highlight-symbol</code> which chooses rainbow
                 colors automatically and makes it much easier to follow some
@@ -4842,15 +4842,6 @@
 "color: #036A07;">"C-M-$"</span>) 'leuven-flyspell-toggle-dictionary)))
 </pre>
           </div>
-
-          <table class="inlinetask" width="100%">
-            <tr>
-              <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
-
-              <td width="100%"><b>Have a look at `diction’ (style and grammar
-              for English)</b><br /></td>
-            </tr>
-          </table>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -8891,12 +8882,9 @@ M-: (executable-find "diff") RET
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #036A07;">"org"</span>
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">change the variable `</span><span style=
-"color: #D0372D; font-style: italic;">org-emphasis-regexp-components</span><span style="color: #8D8D84; font-style: italic;">' such that the borders</span>
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">part no longer include "</span>
+"color: #8D8D84; font-style: italic;">allow both single and double quotes in the border</span>
     (setcar (nthcdr 2 org-emphasis-regexp-components) <span style=
-"color: #036A07;">" \t\n,'"</span>)
+"color: #036A07;">" \t\r\n,"</span>)
     (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist)))
 </pre>
         </div>
@@ -12113,15 +12101,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"10.5 (org)Agenda commands"</span>)
 
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">;; enable Follow mode</span>
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(setq org-agenda-start-with-follow-mode t) ; </span><span style="color: #CC0000; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #8D8D84; font-style: italic;"> Seems nice, but first solve</span>
-  <span style=
-"color: #8D8D84;">;;                                            </span><span style="color: #8D8D84; font-style: italic;">; problem with decrypt question</span>
-  <span style=
-"color: #8D8D84;">;;                                            </span><span style="color: #8D8D84; font-style: italic;">; (auto-save)</span>
-
-  <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">get a compact view during follow mode in the agenda</span>
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--compact-follow</span> ()
@@ -12890,6 +12869,10 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">highlight LaTeX and related syntax</span>
   (setq org-highlight-latex-and-related '(latex script entities))
+
+  <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">show entities as UTF8 characters</span>
+  (setq org-pretty-entities t)
 </pre>
             </div>
           </div>
@@ -18865,6 +18848,16 @@ TAGS:
             <p>Extensible inline text completion mechanism – really
             brilliant!</p>
 
+            <p>Auto-complete uses the variable <code>ac-modes</code> to decide
+            whether to enable auto-completion in a particular mode; by default,
+            <code>org-mode</code> (which interprets the
+            <code>&lt;tab&gt;</code> key) is not present in this list. So, to
+            enable auto-completion in Org mode, simply add it to the
+            <code>ac-modes</code>:</p>
+            <pre class="example">
+(add-to-list 'ac-modes 'org-mode)
+</pre>
+
             <p>Auto start vs. <code>M-/</code>.</p>
 
             <p>According to the settings, completion is done by
@@ -20266,18 +20259,12 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #8D8D84; font-style: italic;">sending mail</span>
   (setq send-mail-function 'smtpmail-send-it)
 
-  (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
-"color: #036A07;">"smtpmail"</span>
-
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">name of the host running SMTP server</span>
-    (setq smtpmail-smtp-server
-          (or (getenv <span style="color: #036A07;">"SMTPSERVER"</span>)
-              <span style="color: #036A07;">"mail"</span>))
-
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">SMTP service port number</span>
-    (setq smtpmail-smtp-service 25))
+  <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">default SMTP server (overriden by `</span><span style="color: #D0372D; font-style: italic;">smtpmail-smtp-server</span><span style="color: #8D8D84; font-style: italic;">')</span>
+  (setq smtpmail-default-smtp-server <span style=
+"color: #036A07;">"smtp"</span>) <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">SMTP process must be running there</span>
 
 )                                       <span style=
 "color: #8D8D84;">; </span><span style=
@@ -24028,7 +24015,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140226.2034]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140305.1009]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
