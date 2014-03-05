@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Gnus Leuven</title><!-- 2014-02-20 Thu 20:03 -->
+  <title>Gnus Leuven</title><!-- 2014-03-05 Wed 09:54 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -2926,10 +2926,6 @@
       <span style="color: #8D8D84;">;;       </span><span style=
 "color: #8D8D84; font-style: italic;">tc-make-attribution 'tc-fancy-attribution)</span>
 
-      <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">don't write the email address of the original poster, but only its</span>
-      <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">name</span>
       (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">message-insert-citation-line</span> ()
         <span style=
@@ -2937,24 +2933,17 @@
 "color: #D0372D;">message-insert-citation-line</span><span style=
 "color: #008000;">'."</span>
         (<span style=
-"color: #0000FF;">let</span> ((author (replace-regexp-in-string
-                       <span style="color: #036A07;">"[()]</span><span style=
+"color: #0000FF;">let</span> ((from (replace-regexp-in-string
+                     <span style="color: #036A07;">"[()]</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">|</span><span style=
 "color: #036A07;"> ?[</span><span style="color: #036A07;">^</span><span style=
 "color: #036A07;"> ]*?@[</span><span style=
 "color: #036A07;">^</span><span style=
 "color: #036A07;"> ]* ?"</span> <span style="color: #036A07;">""</span>
-                       (mail-header-from message-reply-headers))))
-          (insert (concat (<span style=
-"color: #0000FF;">if</span> (string= author <span style=
-"color: #036A07;">""</span>)
-                              (concat <span style=
-"color: #036A07;">"Author?\n\n"</span>
-                                      (mail-header-from message-reply-headers))
-                            (concat author <span style=
-"color: #036A07;">",\n\n"</span> author))
-                          <span style="color: #036A07;">" wrote:\n"</span>))))
+                     (mail-header-from message-reply-headers))))
+          (insert (concat from <span style=
+"color: #036A07;">" wrote:\n"</span>))))
 
       (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-message-insert-citation-line</span> ()
@@ -3052,7 +3041,7 @@
         (<span style="color: #0000FF;">when</span> (try-require 'auto-complete)
           (auto-complete-mode)))
 
-      (add-hook 'message-mode-hook 'leuven--message-mode-hook)
+      (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append)
 
       (add-hook 'message-send-hook 'org-footnote-normalize)
 

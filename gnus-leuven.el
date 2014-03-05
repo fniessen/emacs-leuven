@@ -1228,18 +1228,12 @@
       ;;       tc-fill-long-lines nil
       ;;       tc-make-attribution 'tc-fancy-attribution)
 
-      ;; don't write the email address of the original poster, but only its
-      ;; name
       (defun message-insert-citation-line ()
         "A replacement of the original `message-insert-citation-line'."
-        (let ((author (replace-regexp-in-string
-                       "[()]\\| ?[^ ]*?@[^ ]* ?" ""
-                       (mail-header-from message-reply-headers))))
-          (insert (concat (if (string= author "")
-                              (concat "Author?\n\n"
-                                      (mail-header-from message-reply-headers))
-                            (concat author ",\n\n" author))
-                          " wrote:\n"))))
+        (let ((from (replace-regexp-in-string
+                     "[()]\\| ?[^ ]*?@[^ ]* ?" ""
+                     (mail-header-from message-reply-headers))))
+          (insert (concat from " wrote:\n"))))
 
       (defun leuven-message-insert-citation-line ()
         "Insert preferred citation line."
@@ -1301,7 +1295,7 @@
         (when (try-require 'auto-complete)
           (auto-complete-mode)))
 
-      (add-hook 'message-mode-hook 'leuven--message-mode-hook)
+      (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append)
 
       (add-hook 'message-send-hook 'org-footnote-normalize)
 

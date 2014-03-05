@@ -1,7 +1,7 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2014-02-20 Thu 20:03>
+#+Time-stamp: <2014-03-05 Wed 09:54>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1521,18 +1521,12 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
       ;;       tc-fill-long-lines nil
       ;;       tc-make-attribution 'tc-fancy-attribution)
 
-      ;; don't write the email address of the original poster, but only its
-      ;; name
       (defun message-insert-citation-line ()
         "A replacement of the original `message-insert-citation-line'."
-        (let ((author (replace-regexp-in-string
-                       "[()]\\| ?[^ ]*?@[^ ]* ?" ""
-                       (mail-header-from message-reply-headers))))
-          (insert (concat (if (string= author "")
-                              (concat "Author?\n\n"
-                                      (mail-header-from message-reply-headers))
-                            (concat author ",\n\n" author))
-                          " wrote:\n"))))
+        (let ((from (replace-regexp-in-string
+                     "[()]\\| ?[^ ]*?@[^ ]* ?" ""
+                     (mail-header-from message-reply-headers))))
+          (insert (concat from " wrote:\n"))))
 
       (defun leuven-message-insert-citation-line ()
         "Insert preferred citation line."
@@ -1594,7 +1588,7 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
         (when (try-require 'auto-complete)
           (auto-complete-mode)))
 
-      (add-hook 'message-mode-hook 'leuven--message-mode-hook)
+      (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append)
 
       (add-hook 'message-send-hook 'org-footnote-normalize)
 
