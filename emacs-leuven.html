@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-03-05 Wed 10:09 -->
+  <title>Emacs Leuven</title><!-- 2014-03-05 Wed 21:21 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140305.1008</span>
+"color: #8D8D84; font-style: italic;">Version: 20140305.2120</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140305.1008]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140305.2120]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -20398,7 +20398,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">enable the various package-specific BBDB functions</span>
     (bbdb-initialize 'gnus 'message)
-
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">- add bindings for the default keys to Gnus and configure Gnus to</span>
     <span style="color: #8D8D84;">;;   </span><span style=
@@ -20407,52 +20406,21 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #8D8D84; font-style: italic;">BBDB is to be able to display BBDB entries for messages displayed</span>
     <span style="color: #8D8D84;">;;   </span><span style=
 "color: #8D8D84; font-style: italic;">in Gnus)</span>
-    (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
-
+    <span style="color: #8D8D84;">;;</span>
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">- add a binding for `</span><span style=
 "color: #D0372D; font-style: italic;">M-TAB</span><span style=
 "color: #8D8D84; font-style: italic;">' to Message mode.  This will enable</span>
     <span style="color: #8D8D84;">;;   </span><span style=
 "color: #8D8D84; font-style: italic;">completion of addresses based on BBDB records</span>
-    (add-hook 'gnus-startup-hook 'bbdb-insinuate-message)
-
 
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">add addresses automatically</span>
-    (bbdb-mua-auto-update-init 'gnus 'message)
+"color: #8D8D84; font-style: italic;">what do we do when invoking bbdb interactively (`:' to display sender)</span>
+    (setq bbdb-mua-update-interactive-p '(query . create))
+
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(setq bbdb-update-records-p 'create)</span>
+"color: #8D8D84; font-style: italic;">update BBDB silently (don't display an auto-updated BBDB window)</span>
     (setq bbdb-mua-pop-up nil)
-
-
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(define-key gnus-summary-mode-map</span>
-    <span style="color: #8D8D84;">;;   </span><span style=
-"color: #8D8D84; font-style: italic;">(kbd ":") 'bbdb-mua-display-sender)</span>
-
-
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">;; customizable completion in message headers</span>
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">;; (to avoid conflict between `</span><span style="color: #D0372D; font-style: italic;">flyspell</span><span style="color: #8D8D84; font-style: italic;">' and `</span><span style="color: #D0372D; font-style: italic;">BBDB</span><span style="color: #8D8D84; font-style: italic;">')</span>
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(try-require 'message-x)</span>
-
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #CC0000; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #8D8D84; font-style: italic;"> Does not work (still ask to add address)</span>
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">don't ask about fake addresses</span>
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">NOTE: there can be only one entry per header (such as To, From)</span>
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html</span>
-    (setq bbdb-ignore-some-messages-alist
-          '((<span style="color: #036A07;">"From"</span> . <span style=
-"color: #036A07;">"no.?reply</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">|</span><span style=
-"color: #036A07;">public.gmane.org"</span>)))
 </pre>
           </div>
         </div>
@@ -20470,7 +20438,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #8D8D84; font-style: italic;">mail aliases (local mailing lists)</span>
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">(add-hook 'message-setup-hook 'bbdb-define-all-aliases) ; BBDB 2.35</span>
-    (add-hook 'message-setup-hook 'bbdb-get-mail-aliases) <span style=
+    (add-hook 'message-setup-hook 'bbdb-mail-aliases) <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">BBDB 3</span>
 
@@ -24015,7 +23983,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140305.1009]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140305.2121]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

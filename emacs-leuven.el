@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140305.1007
+;; Version: 20140305.2119
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140305.1007]--")
+(message "* --[ Loading Emacs Leuven 20140305.2119]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -7425,44 +7425,25 @@ From %c"
 
     ;; enable the various package-specific BBDB functions
     (bbdb-initialize 'gnus 'message)
-
     ;; - add bindings for the default keys to Gnus and configure Gnus to
     ;;   notify the BBDB when new messages are loaded (required if the
     ;;   BBDB is to be able to display BBDB entries for messages displayed
     ;;   in Gnus)
-    (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
-
+    ;;
     ;; - add a binding for `M-TAB' to Message mode.  This will enable
     ;;   completion of addresses based on BBDB records
-    (add-hook 'gnus-startup-hook 'bbdb-insinuate-message)
 
+    ;; what do we do when invoking bbdb interactively (`:' to display sender)
+    (setq bbdb-mua-update-interactive-p '(query . create))
 
-    ;; add addresses automatically
-    (bbdb-mua-auto-update-init 'gnus 'message)
-    ;; (setq bbdb-update-records-p 'create)
+    ;; update BBDB silently (don't display an auto-updated BBDB window)
     (setq bbdb-mua-pop-up nil)
-
-
-    ;; (define-key gnus-summary-mode-map
-    ;;   (kbd ":") 'bbdb-mua-display-sender)
-
-
-    ;; ;; customizable completion in message headers
-    ;; ;; (to avoid conflict between `flyspell' and `BBDB')
-    ;; (try-require 'message-x)
-
-    ;; FIXME Does not work (still ask to add address)
-    ;; don't ask about fake addresses
-    ;; NOTE: there can be only one entry per header (such as To, From)
-    ;; http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html
-    (setq bbdb-ignore-some-messages-alist
-          '(("From" . "no.?reply\\|public.gmane.org")))
 
 ;;* (info "(bbdb)Interfaces")
 
     ;; mail aliases (local mailing lists)
     ;; (add-hook 'message-setup-hook 'bbdb-define-all-aliases) ; BBDB 2.35
-    (add-hook 'message-setup-hook 'bbdb-get-mail-aliases) ; BBDB 3
+    (add-hook 'message-setup-hook 'bbdb-mail-aliases) ; BBDB 3
 
     ;; always use full name when sending mail
     ;; (even if User Name has an address of the form <user.name@domain>)
@@ -8716,7 +8697,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140305.1008]--")
+(message "* --[ Loaded Emacs Leuven 20140305.2120]--")
 
 (provide 'emacs-leuven)
 
