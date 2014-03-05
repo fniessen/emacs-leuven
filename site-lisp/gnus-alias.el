@@ -1046,12 +1046,10 @@ the beginning as is normal)."
               (split-string afters)
             ;; goto end of header, backup a line, use that header
             (message-goto-eoh)
-
-;;;             (forward-line -1)
-            ;; fni 2009-02-03 fixing bug `progn: Search failed: "^\\(.+\\):"'
-	    (while (and (zerop (forward-line -1))
-			(memq (char-after) '(?\t ?\n ? ))))
-
+            (forward-line -1)
+            ;; XXX FNI 2009-02-03 Fix bug `progn: Search failed: "^\\(.+\\):"'
+            (while (and (zerop (forward-line -1))
+                        (memq (char-after) '(?\t ?\n ? ))))
             (save-match-data
               (re-search-forward "^\\(.+\\):")
               (list (match-string-no-properties 1)))
