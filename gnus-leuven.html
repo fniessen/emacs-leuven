@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Gnus Leuven</title><!-- 2014-03-05 Wed 10:06 -->
+  <title>Gnus Leuven</title><!-- 2014-03-10 Mon 15:37 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -851,6 +851,16 @@
 <span style="color: #8D8D84;">;;</span><span style=
 "color: #8D8D84; font-style: italic;">** 2.17 (info "(gnus)Misc Group Stuff")</span>
 
+      (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">leuven--hl-line-highlight</span> ()
+        <span style=
+"color: #008000;">"Enable line highlighting in the current buffer."</span>
+        (hl-line-mode 1))
+
+      <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">highlight current line in group buffer</span>
+      (add-hook 'gnus-group-mode-hook 'leuven--hl-line-highlight)
+
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">jump to the first group with unread articles, after getting new news</span>
       (add-hook 'gnus-after-getting-new-news-hook
@@ -1508,12 +1518,7 @@
 
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">highlight current line in summary buffer</span>
-      (GNUEmacs
-       (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven-setup-highlight-line</span> ()
-         (hl-line-mode 1))
-
-       (add-hook 'gnus-summary-mode-hook 'leuven-setup-highlight-line))
+      (add-hook 'gnus-summary-mode-hook 'leuven--hl-line-highlight)
 
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">search forward for an article containing a given regexp</span>
@@ -3118,9 +3123,17 @@
         <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">specify how to split mail</span>
         (setq nnimap-split-fancy
-              <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">split to the first rule making a match</span>
-              `(| <span style="color: #8D8D84;">;; </span><span style=
+              `(|                       <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">split to the *first* match</span>
+
+                  <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">mailing lists (in To: or Cc:)</span>
+                  (to <span style=
+"color: #036A07;">"foo@bar\\.com"</span> <span style=
+"color: #036A07;">"list.foo"</span>)
+
+                  <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">invoke BBDB</span>
                   (: (<span style="color: #0000FF;">lambda</span> ()
                        (car (bbdb/gnus-split-method))))

@@ -280,6 +280,13 @@
 
 ;;** 2.17 (info "(gnus)Misc Group Stuff")
 
+      (defun leuven--hl-line-highlight ()
+        "Enable line highlighting in the current buffer."
+        (hl-line-mode 1))
+
+      ;; highlight current line in group buffer
+      (add-hook 'gnus-group-mode-hook 'leuven--hl-line-highlight)
+
       ;; jump to the first group with unread articles, after getting new news
       (add-hook 'gnus-after-getting-new-news-hook
                 'gnus-group-first-unread-group)
@@ -606,11 +613,7 @@
 ;;** 3.27 (info "(gnus)Various Summary Stuff")
 
       ;; highlight current line in summary buffer
-      (GNUEmacs
-       (defun leuven-setup-highlight-line ()
-         (hl-line-mode 1))
-
-       (add-hook 'gnus-summary-mode-hook 'leuven-setup-highlight-line))
+      (add-hook 'gnus-summary-mode-hook 'leuven--hl-line-highlight)
 
       ;; search forward for an article containing a given regexp
       (define-key gnus-summary-mode-map
@@ -1336,8 +1339,12 @@
 
         ;; specify how to split mail
         (setq nnimap-split-fancy
-              ;; split to the first rule making a match
-              `(| ;; invoke BBDB
+              `(|                       ; split to the *first* match
+
+                  ;; mailing lists (in To: or Cc:)
+                  (to "foo@bar\\.com" "list.foo")
+
+                  ;; invoke BBDB
                   (: (lambda ()
                        (car (bbdb/gnus-split-method))))
 
