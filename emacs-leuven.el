@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140305.2119
+;; Version: 20140313.1337
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140305.2119]--")
+(message "* --[ Loading Emacs Leuven 20140313.1337]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3598,6 +3598,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         '(("Effort_ALL" .
            "0 0:10 0:30 1:00 2:00 3:00 4:00 5:00 6:00 8:00"
            ;; "0d 1d 2d 3d 4d 5d 6d 7d 8d 10d"
+           ;; "0 1:00 4:00 1d 2d 1w 2w"
            )))
 
 ;;* 8 (info "(org)Dates and Times")
@@ -3861,7 +3862,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (add-to-list 'org-capture-templates
                  `("mt" "Create a TODO Action + edit" entry
                    (file+headline ,org-default-notes-file "Email") ; #+FILETAGS: :mail:
-                   "* TODO %:subject%? (from %:fromname)
+                   "* TODO %^{Creating action}%? (from %:fromname)
    %:date-timestamp-inactive
 
 #+begin_verse
@@ -4137,7 +4138,9 @@ From %c"
     ;; 10.3.5 list of extra files to be searched by text search commands
     ;; (C-c a s)
     (setq org-agenda-text-search-extra-files nil) ; org.el
-    ;; (setq leuven-org-search-extra-files ...) to list extra files to be searched
+
+    (defvar leuven-org-search-extra-files nil
+      "List of extra files to be searched by custom search commands (`R s' and `R S').")
 
     ;; turn on individual word search (for Google addicts)
     (setq org-agenda-search-view-always-boolean t
@@ -4456,6 +4459,7 @@ From %c"
         ;; "%1BLOCKED %4TODO %CATEGORY %5Effort{:} %50ITEM %20TAGS %21ALLTAGS")
         ;; "%65ITEM(Task) %4TODO %PRIORITY %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)")
         ;; "%65ITEM(Task) %4TODO %PRIORITY %20TAGS %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)")
+        ;; "%40ITEM(Task) %17Effort(Estimated Effort){:} %CLOCKSUM"
         "%60ITEM(Details) %5PRIORITY(Prio) %14SCHEDULED(Scheduled) %15TAGS(Context) %7TODO(To Do) %6CLOCKSUM(Clock) %5Effort(Effort){:} ")
 
   ;; DUPLICATE Obey `eval' variables -- RISKY!
@@ -8697,7 +8701,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140305.2120]--")
+(message "* --[ Loaded Emacs Leuven 20140313.1338]--")
 
 (provide 'emacs-leuven)
 

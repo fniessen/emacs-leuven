@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title><!-- 2014-03-05 Wed 21:21 -->
+  <title>Emacs Leuven</title><!-- 2014-03-13 Thu 13:40 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140305.2120</span>
+"color: #8D8D84; font-style: italic;">Version: 20140313.1339</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140305.2120]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140313.1339]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -10474,6 +10474,8 @@ M-: (executable-find "diff") RET
 "color: #036A07;">"0 0:10 0:30 1:00 2:00 3:00 4:00 5:00 6:00 8:00"</span>
            <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">"0d 1d 2d 3d 4d 5d 6d 7d 8d 10d"</span>
+           <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">"0 1:00 4:00 1d 2d 1w 2w"</span>
            )))
 </pre>
           </div>
@@ -11159,7 +11161,7 @@ M-: (executable-find "diff") RET
 "color: #8D8D84; font-style: italic;">#+FILETAGS: :mail:</span>
                    <span style="color: #036A07;">"* </span><span style=
 "color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
-"color: #036A07;"> %:subject%? (from %:fromname)</span>
+"color: #036A07;"> %^{Creating action}%? (from %:fromname)</span>
 <span style="color: #036A07;">   %:date-timestamp-inactive</span>
 
 <span style="color: #036A07;">#+begin_verse</span>
@@ -11817,8 +11819,11 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (setq org-agenda-text-search-extra-files nil) <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">org.el</span>
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(setq leuven-org-search-extra-files ...) to list extra files to be searched</span>
+
+    (<span style="color: #0000FF;">defvar</span> <span style=
+"color: #BA36A5;">leuven-org-search-extra-files</span> nil
+      <span style=
+"color: #008000;">"List of extra files to be searched by custom search commands (`R s' and `R S')."</span>)
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">turn on individual word search (for Google addicts)</span>
@@ -12573,6 +12578,8 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
         <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">"%65ITEM(Task) %4</span><span style=
 "color: #CC0000; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #8D8D84; font-style: italic;"> %PRIORITY %20TAGS %6Effort(Estim.) %14SCHEDULED %14DEADLINE(Due Date)")</span>
+        <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">"%40ITEM(Task) %17Effort(Estimated Effort){:} %CLOCKSUM"</span>
         <span style=
 "color: #036A07;">"%60ITEM(Details) %5PRIORITY(Prio) %14SCHEDULED(Scheduled) %15TAGS(Context) %7</span><span style="color: #CC0000; background-color: #FFFF88;">TODO</span><span style="color: #036A07;">(To Do) %6CLOCKSUM(Clock) %5Effort(Effort){:} "</span>)
 
@@ -23983,7 +23990,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140305.2121]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140313.1339]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
