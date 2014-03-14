@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-03-12 Wed 12:06>
+# Time-stamp: <2014-03-14 Fri 10:13>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -6702,7 +6702,7 @@ on my machine's current temporal and physical context.
   (setq org-agenda-block-separator
         #("____________________________________________________________________________________________________________________________________"
           0 132 (face (:foreground "#E5E5E5"))))
-        ;; (make-string 132 (string-to-char "_")))
+        ;; (make-string 132 (string-to-char "_"))
 #+end_src
 
 Links to common agenda views:
@@ -11181,18 +11181,16 @@ It uses =notify-send= (if the =libnotify-bin= Ubuntu package is installed).
 #+end_src
 
 #+begin_src emacs-lisp
-    (with-eval-after-load "org-agenda"
+    ;; keep your appointment list clean: if you delete an appointment from
+    ;; your Org agenda file, delete the corresponding alert
+    (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
+      "Clear the existing `appt-time-msg-list'."
+      (setq appt-time-msg-list nil))
 
-      ;; keep your appointment list clean: if you delete an appointment from
-      ;; your Org agenda file, delete the corresponding alert
-      (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
-        "Clear the existing `appt-time-msg-list'."
-        (setq appt-time-msg-list nil))
-
-      ;; add today's appointments (found in `org-agenda-files') each time the
-      ;; agenda buffer is (re)built
-      (add-hook 'org-finalize-agenda-hook
-                'org-agenda-to-appt)    ;! don't use the `org-agenda-mode-hook'
+    ;; add today's appointments (found in `org-agenda-files') each time the
+    ;; agenda buffer is (re)built
+    (add-hook 'org-finalize-agenda-hook
+              'org-agenda-to-appt)      ;! don't use the `org-agenda-mode-hook'
                                         ;! because the Org agenda files would
                                         ;! be opened once by
                                         ;! `org-agenda-to-appt', and then
@@ -11202,13 +11200,13 @@ It uses =notify-send= (if the =libnotify-bin= Ubuntu package is installed).
                                         ;! they weren't already opened), to be
                                         ;! finally re-opened!
 
-      ;; add today's appointments (found in `org-agenda-files') each time such a
-      ;; file is saved
-      (add-hook 'after-save-hook
-                (lambda ()
-                  (when (and (eq major-mode 'org-mode)
-                             (org-agenda-file-p))
-                    (org-agenda-to-appt)))))
+    ;; add today's appointments (found in `org-agenda-files') each time such a
+    ;; file is saved
+    (add-hook 'after-save-hook
+              (lambda ()
+                (when (and (eq major-mode 'org-mode)
+                           (org-agenda-file-p))
+                  (org-agenda-to-appt))))
 #+end_src
 
 #+begin_src emacs-lisp

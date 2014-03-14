@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140313.1337
+;; Version: 20140314.1136
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140313.1337]--")
+(message "* --[ Loading Emacs Leuven 20140314.1136]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4405,7 +4405,7 @@ From %c"
   (setq org-agenda-block-separator
         #("____________________________________________________________________________________________________________________________________"
           0 132 (face (:foreground "#E5E5E5"))))
-        ;; (make-string 132 (string-to-char "_")))
+        ;; (make-string 132 (string-to-char "_"))
 
 ;;** 10.6 (info "(org)Custom agenda views")
 
@@ -7238,18 +7238,16 @@ From %c"
     ;; enable appointment notification, several minutes beforehand
     (add-hook 'diary-hook 'appt-make-list)
 
-    (with-eval-after-load "org-agenda"
+    ;; keep your appointment list clean: if you delete an appointment from
+    ;; your Org agenda file, delete the corresponding alert
+    (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
+      "Clear the existing `appt-time-msg-list'."
+      (setq appt-time-msg-list nil))
 
-      ;; keep your appointment list clean: if you delete an appointment from
-      ;; your Org agenda file, delete the corresponding alert
-      (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
-        "Clear the existing `appt-time-msg-list'."
-        (setq appt-time-msg-list nil))
-
-      ;; add today's appointments (found in `org-agenda-files') each time the
-      ;; agenda buffer is (re)built
-      (add-hook 'org-finalize-agenda-hook
-                'org-agenda-to-appt)    ;! don't use the `org-agenda-mode-hook'
+    ;; add today's appointments (found in `org-agenda-files') each time the
+    ;; agenda buffer is (re)built
+    (add-hook 'org-finalize-agenda-hook
+              'org-agenda-to-appt)      ;! don't use the `org-agenda-mode-hook'
                                         ;! because the Org agenda files would
                                         ;! be opened once by
                                         ;! `org-agenda-to-appt', and then
@@ -7259,13 +7257,13 @@ From %c"
                                         ;! they weren't already opened), to be
                                         ;! finally re-opened!
 
-      ;; add today's appointments (found in `org-agenda-files') each time such a
-      ;; file is saved
-      (add-hook 'after-save-hook
-                (lambda ()
-                  (when (and (eq major-mode 'org-mode)
-                             (org-agenda-file-p))
-                    (org-agenda-to-appt)))))
+    ;; add today's appointments (found in `org-agenda-files') each time such a
+    ;; file is saved
+    (add-hook 'after-save-hook
+              (lambda ()
+                (when (and (eq major-mode 'org-mode)
+                           (org-agenda-file-p))
+                  (org-agenda-to-appt))))
 
     )                                   ; with-eval-after-load "appt" ends here
 
@@ -8701,7 +8699,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140313.1338]--")
+(message "* --[ Loaded Emacs Leuven 20140314.1137]--")
 
 (provide 'emacs-leuven)
 
