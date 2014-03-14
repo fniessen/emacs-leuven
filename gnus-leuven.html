@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Gnus Leuven</title><!-- 2014-03-10 Mon 15:37 -->
+  <title>Gnus Leuven</title><!-- 2014-03-12 Wed 16:20 -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -851,10 +851,19 @@
 <span style="color: #8D8D84;">;;</span><span style=
 "color: #8D8D84; font-style: italic;">** 2.17 (info "(gnus)Misc Group Stuff")</span>
 
+      (<span style="color: #0000FF;">defface</span> <span style=
+"color: #BA36A5;">gnus-hl-line</span>
+        '((t (<span style="color: #006FE0;">:background</span> <span style=
+"color: #036A07;">"#D8D8D8"</span>)))
+        <span style=
+"color: #008000;">"Face for highlighting the current line with `</span><span style="color: #D0372D;">gnus-hl-line</span><span style="color: #008000;">'."</span>
+        <span style="color: #006FE0;">:group</span> 'hl-line)
+
       (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven--hl-line-highlight</span> ()
         <span style=
 "color: #008000;">"Enable line highlighting in the current buffer."</span>
+        (set (make-local-variable 'hl-line-face) 'gnus-hl-line)
         (hl-line-mode 1))
 
       <span style="color: #8D8D84;">;; </span><span style=

@@ -280,8 +280,14 @@
 
 ;;** 2.17 (info "(gnus)Misc Group Stuff")
 
+      (defface gnus-hl-line
+        '((t (:background "#D8D8D8")))
+        "Face for highlighting the current line with `gnus-hl-line'."
+        :group 'hl-line)
+
       (defun leuven--hl-line-highlight ()
         "Enable line highlighting in the current buffer."
+        (set (make-local-variable 'hl-line-face) 'gnus-hl-line)
         (hl-line-mode 1))
 
       ;; highlight current line in group buffer
