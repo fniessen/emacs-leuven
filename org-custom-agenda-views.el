@@ -1,14 +1,18 @@
   ;; display the calendar and tasks for today
   (global-set-key
-   (kbd "<f7>") (kbd "C-c a r d"))
+    (kbd "<f7>") (kbd "C-c a r d"))
 
   ;; display the hotlist
   (global-set-key
-   (kbd "<S-f7>") (kbd "C-c a f ."))
+    (kbd "<S-f7>") (kbd "C-c a f ."))
 
   ;; display TODO entries
   (global-set-key
-   (kbd "<C-f7>") (kbd "C-c a f h"))
+    (kbd "<C-f7>") (kbd "C-c a f h"))
+
+  ;; display calendar for 7 days
+  (global-set-key
+    (kbd "<C-M-f7>") (kbd "C-c a r c 7"))
 
     ;; custom commands for the agenda -- start with a clean slate
     (setq org-agenda-custom-commands nil)
