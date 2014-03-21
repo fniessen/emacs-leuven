@@ -1673,7 +1673,9 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; XXX I tried this simpler form, but does not work.
     ;; (defadvice vc-diff (after leuven-vc-diff activate)
     ;;   "Push the auto-refine function after `vc-diff'."
-    ;;   (leuven--diff-make-fine-diffs-if-necessary)))
+    ;;   (leuven--diff-make-fine-diffs-if-necessary))
+
+    )
 
   ;; ;; Ediff, a comprehensive visual interface to diff & patch
   ;; ;; setup for Ediff's menus and autoloads

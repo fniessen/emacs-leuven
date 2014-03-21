@@ -2634,7 +2634,9 @@ In Diff mode, I can *select a hunk and apply it (in reverse)*.  Nice following
     ;; XXX I tried this simpler form, but does not work.
     ;; (defadvice vc-diff (after leuven-vc-diff activate)
     ;;   "Push the auto-refine function after `vc-diff'."
-    ;;   (leuven--diff-make-fine-diffs-if-necessary)))
+    ;;   (leuven--diff-make-fine-diffs-if-necessary))
+
+    )
 #+end_src
 
 To compare 2 text files, you can also use Ediff if the following command
