@@ -1006,6 +1006,10 @@ See other people's tasks.
 
 *************** TODO Have the hotlist emailed to you each day
 
+See http://www.randomsample.de/dru5/node/61
+
+: /usr/bin/yes p | /usr/local/bin/emacs -batch -l ~/.emacs -eval '(org-batch-agenda "#")' 2>/dev/null | /usr/bin/mailx -s'Stuck projects' me@example.com
+
 ** Print list
 
 The *exported agenda views* are not *stored* when you use one of those commands
@@ -1022,6 +1026,15 @@ FIXME Changes
 - No icon
 - Proportional font
 - No tag: =(setq org-agenda-hide-tags-regexp ".*")=
+
+XXX See http://www.toodledo.com/tools/booklet.php:
+Easily print your to-do list as a foldable booklet that you can put in your
+pocket. Each booklet contains your hotlist, your top 110 most important tasks,
+and a section for written notes. Assembly of the booklet is as simple as one
+cut with a scissors and a few folds.
+
+XXX See solution of Christian Egli:
+http://orgmode.org/w/?p=org-mode.git;a=blob;f=contrib/scripts/org2hpda;hb=HEAD
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
