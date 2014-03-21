@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140321.1205
+;; Version: 20140321.1430
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140321.1205]--")
+(message "* --[ Loading Emacs Leuven 20140321.1430]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6764,11 +6764,11 @@ From %c"
       (add-hook 'org-mode-hook
                 (lambda ()
                   ;; YASnippet (using the new org-cycle hooks)
-                  (set (make-local-variable 'yas/trigger-key) (kbd "tab")) ; needed?
                   (add-to-list 'org-tab-first-hook
                                'yas/org-very-safe-expand)
-                  (define-key yas/keymap
-                    (kbd "tab") 'yas/next-field) ; `yas/next-field-or-maybe-expand'?
+                  ;; When enabled, problem with inserting letter `t' in YASnippet fields
+                  ;; (define-key yas/keymap
+                  ;;   (kbd "tab") 'yas/next-field) ; `yas/next-field-or-maybe-expand'?
                   ))
 
       (defvar leuven-yasnippet-my-snippets-dir
@@ -8710,7 +8710,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140321.1206]--")
+(message "* --[ Loaded Emacs Leuven 20140321.1431]--")
 
 (provide 'emacs-leuven)
 

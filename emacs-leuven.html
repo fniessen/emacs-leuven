@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140321.1206</span>
+"color: #8D8D84; font-style: italic;">Version: 20140321.1432</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140321.1206]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140321.1432]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -5513,7 +5513,9 @@
     <span style="color: #8D8D84;">;;   </span><span style=
 "color: #8D8D84; font-style: italic;">"Push the auto-refine function after `</span><span style="color: #D0372D; font-style: italic;">vc-diff</span><span style="color: #8D8D84; font-style: italic;">'."</span>
     <span style="color: #8D8D84;">;;   </span><span style=
-"color: #8D8D84; font-style: italic;">(leuven--diff-make-fine-diffs-if-necessary)))</span>
+"color: #8D8D84; font-style: italic;">(leuven--diff-make-fine-diffs-if-necessary))</span>
+
+    )
 </pre>
           </div>
 
@@ -18627,18 +18629,14 @@ TAGS:
                 (<span style="color: #0000FF;">lambda</span> ()
                   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">YASnippet (using the new org-cycle hooks)</span>
-                  (set (make-local-variable 'yas/trigger-key) (kbd <span style=
-"color: #036A07;">"tab"</span>)) <span style=
-"color: #8D8D84;">; </span><span style=
-"color: #8D8D84; font-style: italic;">needed?</span>
                   (add-to-list 'org-tab-first-hook
                                'yas/org-very-safe-expand)
-                  (define-key yas/keymap
-                    (kbd <span style=
-"color: #036A07;">"tab"</span>) 'yas/next-field) <span style=
-"color: #8D8D84;">; </span><span style=
-"color: #8D8D84; font-style: italic;">`</span><span style=
-"color: #D0372D; font-style: italic;">yas/next-field-or-maybe-expand</span><span style="color: #8D8D84; font-style: italic;">'?</span>
+                  <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">When enabled, problem with inserting letter `t' in YASnippet fields</span>
+                  <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">(define-key yas/keymap</span>
+                  <span style="color: #8D8D84;">;;   </span><span style=
+"color: #8D8D84; font-style: italic;">(kbd "tab") 'yas/next-field) ; `</span><span style="color: #D0372D; font-style: italic;">yas/next-field-or-maybe-expand</span><span style="color: #8D8D84; font-style: italic;">'?</span>
                   ))
 </pre>
           </div>
@@ -23990,7 +23988,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140321.1207]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140321.1432]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

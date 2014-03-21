@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-03-21 Fri 12:05>
+# Time-stamp: <2014-03-21 Fri 14:30>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -10374,11 +10374,11 @@ See [[id:366386cb-9c4f-4d61-b676-e742e6277587][Interaction between Org and other
       (add-hook 'org-mode-hook
                 (lambda ()
                   ;; YASnippet (using the new org-cycle hooks)
-                  (set (make-local-variable 'yas/trigger-key) (kbd "tab")) ; needed?
                   (add-to-list 'org-tab-first-hook
                                'yas/org-very-safe-expand)
-                  (define-key yas/keymap
-                    (kbd "tab") 'yas/next-field) ; `yas/next-field-or-maybe-expand'?
+                  ;; When enabled, problem with inserting letter `t' in YASnippet fields
+                  ;; (define-key yas/keymap
+                  ;;   (kbd "tab") 'yas/next-field) ; `yas/next-field-or-maybe-expand'?
                   ))
 #+end_src
 
