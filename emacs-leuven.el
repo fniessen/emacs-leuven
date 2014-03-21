@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140314.1136
+;; Version: 20140321.1205
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140314.1136]--")
+(message "* --[ Loading Emacs Leuven 20140321.1205]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1665,11 +1665,15 @@ Last time is saved in global variable `leuven--before-section-time'."
       (unless (> (buffer-size) 14000)
         (leuven-diff-make-fine-diffs)))
 
-    ;; push the auto-refine function after `vc-diff'
-    (advice-add
-     'vc-diff :after
-     (lambda (&rest _)
-       (leuven--diff-make-fine-diffs-if-necessary))))
+    (when (fboundp 'advice-add)
+      (advice-add 'vc-diff :after
+       (lambda (&rest _)
+         (leuven--diff-make-fine-diffs-if-necessary))))
+
+    ;; XXX I tried this simpler form, but does not work.
+    ;; (defadvice vc-diff (after leuven-vc-diff activate)
+    ;;   "Push the auto-refine function after `vc-diff'."
+    ;;   (leuven--diff-make-fine-diffs-if-necessary)))
 
   ;; ;; Ediff, a comprehensive visual interface to diff & patch
   ;; ;; setup for Ediff's menus and autoloads
@@ -2968,8 +2972,8 @@ Last time is saved in global variable `leuven--before-section-time'."
         '(("*" bold "<b>" "</b>")
           ("/" italic "<i>" "</i>")
           ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
-          ("=" org-code "<code>" "</code>" verbatim)
-          ("~" org-verbatim "<code>" "</code>" verbatim)))
+          ("=" org-verbatim "<code>" "</code>" verbatim)
+          ("~" org-code "<code>" "</code>" verbatim)))
 
   ;; (setq org-emphasis-alist
   ;;       '(("&" (:weight ultra-bold :foreground "#000000" :background "#FBFF00"))
@@ -3488,7 +3492,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (message "... Progress logging")
 
     (setcdr (assq 'state org-log-note-headings)
-            "State %-12s  ->  %-12s %t"))
+            "State %-12S  ->  %-12s %t")) ; "State old -> new + timestamp"
 
   (with-eval-after-load "org-habit"
 
@@ -3572,16 +3576,18 @@ Last time is saved in global variable `leuven--before-section-time'."
     (when (eq major-mode 'org-mode)
       (save-excursion
         (org-map-entries
-         '(lambda ()
-            (let ((alltags (split-string
-                            (or (org-entry-get (point) "ALLTAGS") "")
-                            ":"))
-                  local inherited tag)
-              (dolist (tag alltags)
-                (if (get-text-property 0 'inherited tag)
-                    (push tag inherited) (push tag local)))
-              (dolist (tag local)
-                (if (member tag inherited) (org-toggle-tag tag 'off)))))
+         (lambda ()
+           (let ((alltags (split-string
+                           (or (org-entry-get (point) "ALLTAGS") "")
+                           ":"))
+                 local inherited tag)
+             (dolist (tag alltags)
+               (if (get-text-property 0 'inherited tag)
+                   (push tag inherited)
+                 (push tag local)))
+             (dolist (tag local)
+               (when (member tag inherited)
+                 (org-toggle-tag tag 'off)))))
          t nil))))
 
   ;; ;; always offer completion for all tags of all agenda files
@@ -4589,6 +4595,9 @@ From %c"
   ;; show entities as UTF8 characters
   (setq org-pretty-entities t)
 
+  ;; ;; pretty entity display doesn't include formatting sub/superscripts
+  ;; (setq org-pretty-entities-include-sub-superscripts nil)
+
 ;;* 12 (info "(org)Exporting")
 
   ;; bind the exporter dispatcher to a key sequence
@@ -4652,8 +4661,8 @@ From %c"
   ;; Org generic export engine
   (with-eval-after-load "ox"
 
-    ;; ;; 12.3 don't insert a time stamp into the exported file
-    ;; (setq org-export-time-stamp-file nil)
+    ;; 12.3 don't insert a time stamp into the exported file
+    (setq org-export-time-stamp-file nil)
 
     ;; 13.1.5 export all drawers (including properties)
     ;; (setq org-export-with-drawers t)
@@ -4714,7 +4723,7 @@ From %c"
 
     ;; format for the HTML postamble
     (setq org-html-postamble
-          "  <div id=\"copyright\">\n    &copy; %d %a\n  </div>")
+          "  <div id=\"footer\"><div id=\"copyright\">\n    Copyright &copy; %d %a\n  </div></div>")
 
     ;; 13.1.5 don't include the JavaScript snippets in exported HTML files
     (setq org-html-head-include-scripts nil)
@@ -8699,7 +8708,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140314.1137]--")
+(message "* --[ Loaded Emacs Leuven 20140321.1206]--")
 
 (provide 'emacs-leuven)
 
