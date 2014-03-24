@@ -707,6 +707,18 @@ FIXME Group completed tasks per date of completion.
 
 *** Cleanup
 
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("rx" "Completed tasks with no CLOCK lines"
+                   ((todo "DONE|CANX"
+                               ((org-agenda-overriding-header "Completed tasks with no CLOCK lines")
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if
+                                   'regexp
+                                   (format-time-string "  CLOCK: .*--.* =>  .*")))
+                                (org-agenda-sorting-strategy '(priority-down)))))) t)
+#+end_src
+
 Cleanup:
 
 - Done actions older than 14 days

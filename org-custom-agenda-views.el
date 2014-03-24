@@ -417,6 +417,16 @@
                              (org-agenda-span 'day))))) t)
 
     (add-to-list 'org-agenda-custom-commands
+                 '("rx" "Completed tasks with no CLOCK lines"
+                   ((todo "DONE|CANX"
+                               ((org-agenda-overriding-header "Completed tasks with no CLOCK lines")
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if
+                                   'regexp
+                                   (format-time-string "  CLOCK: .*--.* =>  .*")))
+                                (org-agenda-sorting-strategy '(priority-down)))))) t)
+
+    (add-to-list 'org-agenda-custom-commands
                  '("rr" "Recent items (past 7 days)"
                    ;; faster than tags
                    agenda ""
