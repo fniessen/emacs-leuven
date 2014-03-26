@@ -1002,7 +1002,7 @@
         (setq gnus-alias-identity-alist
               '(("John-Doe-ID"
                  ""
-                 "\"John Doe\" <john@doe.com>"
+                 "John Doe <john@doe.com>"
                  "John Doe"
                  (("X-Url" . "http://www.doe.com/~john"))
                  "\nJohn\n"
@@ -1010,7 +1010,7 @@
 
                 ("Jane-Doe-ID"
                  ""
-                 "\"Jane Doe\" <jane@doe.com>"
+                 "Jane Doe <jane@doe.com>"
                  "Jane Doe"
                  (("X-Url" . "Under construction..."))
                  "\nBest regards,\n  Jane\n"
@@ -1018,7 +1018,11 @@
 
         ;; automatically choose an identity given the message context
         (setq gnus-alias-identity-rules
-              '(("John-Doe-Rule"
+              '(("Newsgroups-Rule"
+                 ("newsgroups" ".*" current)
+                 "John-Doe-ID")
+
+                ("John-Doe-Rule"
                  ("any" "john@doe.com" both)
                  "John-Doe-ID")
 

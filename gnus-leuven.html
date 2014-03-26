@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Gnus Leuven</title><!-- 2014-03-12 Wed 16:20 -->
+  <title>Gnus Leuven</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -2378,7 +2378,7 @@
         (setq gnus-alias-identity-alist
               '((<span style="color: #036A07;">"John-Doe-ID"</span>
                  <span style="color: #036A07;">""</span>
-                 <span style="color: #036A07;">"\"John Doe\" <a href=
+                 <span style="color: #036A07;">"John Doe <a href=
 "mailto:john%40doe.com">&lt;john@doe.com&gt;</a>"</span>
                  <span style="color: #036A07;">"John Doe"</span>
                  ((<span style="color: #036A07;">"X-Url"</span> . <span style=
@@ -2388,7 +2388,7 @@
 
                 (<span style="color: #036A07;">"Jane-Doe-ID"</span>
                  <span style="color: #036A07;">""</span>
-                 <span style="color: #036A07;">"\"Jane Doe\" <a href=
+                 <span style="color: #036A07;">"Jane Doe <a href=
 "mailto:jane%40doe.com">&lt;jane@doe.com&gt;</a>"</span>
                  <span style="color: #036A07;">"Jane Doe"</span>
                  ((<span style="color: #036A07;">"X-Url"</span> . <span style=
@@ -2400,7 +2400,12 @@
         <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">automatically choose an identity given the message context</span>
         (setq gnus-alias-identity-rules
-              '((<span style="color: #036A07;">"John-Doe-Rule"</span>
+              '((<span style="color: #036A07;">"Newsgroups-Rule"</span>
+                 (<span style=
+"color: #036A07;">"newsgroups"</span> <span style="color: #036A07;">".*"</span> current)
+                 <span style="color: #036A07;">"John-Doe-ID"</span>)
+
+                (<span style="color: #036A07;">"John-Doe-Rule"</span>
                  (<span style="color: #036A07;">"any"</span> <span style=
 "color: #036A07;">"john@doe.com"</span> both)
                  <span style="color: #036A07;">"John-Doe-ID"</span>)
@@ -3766,8 +3771,10 @@
   </div>
 
   <div id="postamble" class="status">
-    <div id="copyright">
-      © Fabrice Niessen
+    <div id="footer">
+      <div id="copyright">
+        Copyright © Fabrice Niessen
+      </div>
     </div>
   </div>
 </body>
