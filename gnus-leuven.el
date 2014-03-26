@@ -281,7 +281,7 @@
 ;;** 2.17 (info "(gnus)Misc Group Stuff")
 
       (defface gnus-hl-line
-        '((t (:background "#D8D8D8")))
+        '((t (:background "#F7F7F7")))
         "Face for highlighting the current line with `gnus-hl-line'."
         :group 'hl-line)
 

@@ -1,7 +1,7 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2014-03-26 Wed 22:50>
+#+Time-stamp: <2014-03-26 Wed 22:58>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -382,7 +382,7 @@ Cleanup all Gnus buffers on exit.
 ;;** 2.17 (info "(gnus)Misc Group Stuff")
 
       (defface gnus-hl-line
-        '((t (:background "#D8D8D8")))
+        '((t (:background "#F7F7F7")))
         "Face for highlighting the current line with `gnus-hl-line'."
         :group 'hl-line)
 
