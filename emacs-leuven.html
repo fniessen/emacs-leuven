@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140321.1432</span>
+"color: #8D8D84; font-style: italic;">Version: 20140328.1153</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140321.1432]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140328.1153]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -1526,12 +1526,12 @@
 
       <div class="outline-text-2" id="text-4">
         <p>Adding the right Lisp directories to your <code>load-path</code>
-        (list of directories where Emacs Lisp libraries – <code>.el</code> and
-        <code>.elc</code> files – are installed) must be the very <b>first
-        thing</b> in your <code>.emacs</code> file, before the first time
-        packages are required, to make sure that you’re not picking up bits and
-        pieces from older files (bundled with Emacs, and loaded before the path
-        to the <b>newest</b> versions are set).</p>
+        (list of directories where Emacs Lisp libraries – =.el= and =.elc=
+        files – are installed) must be the very <b>first thing</b> in your
+        ~.emacs~ file, before the first time packages are required, to make
+        sure that you’re not picking up bits and pieces from older files
+        (bundled with Emacs, and loaded before the path to the <b>newest</b>
+        versions are set).</p>
 
         <p>The most important directories are the last to be added to
         <code>load-path</code> (so that they become the first of the list)!</p>
@@ -1911,7 +1911,7 @@
             <td width="100%">
               <b>Function for finding executables</b><br />
 
-              <p>See function <code>--find-program</code> at <a href=
+              <p>See function =–find-program= at <a href=
               "http://www.visualco.de/src/elisp/.emacs.el.html">http://www.visualco.de/src/elisp/.emacs.el.html</a>.</p>
             </td>
           </tr>
@@ -3978,13 +3978,14 @@
         <h3 id="sec-16-9">Selective Display</h3>
 
         <div class="outline-text-3" id="text-16-9">
-          <p>Emacs has the ability to hide lines indented more than a given
-          number of columns. You can use this to get an overview of a part of a
-          program.</p>
+          <p>Emacs has the ability to <b>hide lines indented more than a given
+          number of columns</b>. You can use this to get an overview of a part
+          of a program.</p>
 
-          <p>To hide lines with at least 1 column of indentation, type
-          <code>C-1 C-x $</code>. It gives a quick overview any source
-          file.</p>
+          <p>To hide lines with at least 1 column of indentation (replacing
+          them by an ellipsis), type <code>C-1 C-x $</code> (or <code>C-x
+          $</code> and give it <code>1</code> as depth argument). It gives a
+          quick overview any source file.</p>
 
           <p>To make all lines visible again, type <code>C-x $</code> with no
           argument.</p>
@@ -4635,36 +4636,87 @@
 "color: #8D8D84; font-style: italic;">;; is if there is no local dictionary to use in the buffer)</span>
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">(setq ispell-dictionary "american") ; see `</span><span style="color: #D0372D; font-style: italic;">sentence-end-double-space</span><span style="color: #8D8D84; font-style: italic;">'</span>
-
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">enable on-the-fly spell checking</span>
-    (add-hook 'text-mode-hook
-              (<span style="color: #0000FF;">lambda</span> ()
-                (flyspell-mode 1)))
-
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">prevent flyspell from finding mistakes in the code, which is pretty cool</span>
-    (add-hook 'prog-mode-hook
-              (<span style="color: #0000FF;">lambda</span> ()
-                <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">`</span><span style=
-"color: #D0372D; font-style: italic;">ispell-comments-and-strings</span><span style="color: #8D8D84; font-style: italic;">'</span>
-                (flyspell-prog-mode)))
-
-    (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
-"color: #036A07;">"ispell"</span>
-
-     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">save the personal dictionary without confirmation</span>
-     (setq ispell-silently-savep t)
 </pre>
           </div>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-     <span style="color: #8D8D84;">;; </span><span style=
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">enable on-the-fly spell checking</span>
+    (add-hook 'org-mode-hook
+              (<span style="color: #0000FF;">lambda</span> ()
+                (<span style=
+"color: #0000FF;">if</span> (or (eq (aref (buffer-name) 0) ?\s) <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">buffer starting with " *"</span>
+                        (and (boundp 'org-babel-exp-reference-buffer)
+                             org-babel-exp-reference-buffer)) <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">export buffer</span>
+                    (message <span style=
+"color: #036A07;">"Don't turn on Flyspell mode in `</span><span style=
+"color: #D0372D;">%s</span><span style=
+"color: #036A07;">'"</span> (buffer-name))
+                  (message <span style=
+"color: #036A07;">"Turn on Flyspell mode in `</span><span style=
+"color: #D0372D;">%s</span><span style=
+"color: #036A07;">'"</span> (buffer-name))
+                  (turn-on-flyspell))))
+</pre>
+          </div>
+
+          <table class="inlinetask" width="100%">
+            <tr>
+              <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
+
+              <td width="100%"><b>Enable Flyspell in other modes deriving from
+              Text (HTML, etc.)</b><br /></td>
+            </tr>
+          </table>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">enable on-the-fly spell checking</span>
+    (add-hook 'text-mode-hook
+              (<span style="color: #0000FF;">lambda</span> ()
+                (message <span style=
+"color: #036A07;">"Turn on Flyspell mode in `</span><span style=
+"color: #D0372D;">%s</span><span style=
+"color: #036A07;">'"</span> (buffer-name))
+                (turn-on-flyspell)))
+
+    (<span style="color: #0000FF;">defadvice</span> <span style=
+"color: #006699;">org-export-as</span> (around leuven-org-export-as activate)
+      <span style=
+"color: #008000;">"Turn off Text mode hooks (Flyspell, etc.) when exporting current Org buffer."</span>
+      (<span style="color: #0000FF;">let</span> (text-mode-hook)
+        ad-do-it))
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">prevent flyspell from finding mistakes in the code, well in comments and</span>
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">strings</span>
+    (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+    (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
+"color: #036A07;">"ispell"</span>
+
+      <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">save the personal dictionary without confirmation</span>
+      (setq ispell-silently-savep t)
+
+      <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">extensions and extra switches to pass to the `</span><span style="color: #D0372D; font-style: italic;">ispell</span><span style="color: #8D8D84; font-style: italic;">' program</span>
-     (<span style="color: #0000FF;">cond</span>
+      (<span style="color: #0000FF;">cond</span>
 </pre>
           </div>
 
@@ -4685,42 +4737,41 @@
             mode.</li>
           </ul>
 
-          <p>Use the <code>-C</code> option which will
-          ConsiderCamelCaseToBeCorrect.</p>
+          <p>Use the =-C= option which will ConsiderCamelCaseToBeCorrect.</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-      ((string-match <span style=
+       ((string-match <span style=
 "color: #036A07;">"aspell"</span> ispell-program-name)
-       (setq ispell-extra-args '(<span style=
+        (setq ispell-extra-args '(<span style=
 "color: #036A07;">"--sug-mode=ultra"</span> <span style=
 "color: #036A07;">"-C"</span>))
-       (setq ispell-really-aspell t)
-       (setq ispell-really-hunspell nil))
+        (setq ispell-really-aspell t)
+        (setq ispell-really-hunspell nil))
 </pre>
           </div>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-      ((string-match <span style=
+       ((string-match <span style=
 "color: #036A07;">"ispell"</span> ispell-program-name)
-       (setq ispell-extra-args '())
-       (setq ispell-really-aspell nil)
-       (setq ispell-really-hunspell nil)))
+        (setq ispell-extra-args '())
+        (setq ispell-really-aspell nil)
+        (setq ispell-really-hunspell nil)))
 </pre>
           </div>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-     <span style="color: #8D8D84;">;; </span><span style=
+      <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">;; solve the problem of words separated by `-' flagged as</span>
-     <span style="color: #8D8D84;">;; </span><span style=
+      <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">;; erroneous by removing the `-' from the value of otherchars</span>
-     <span style="color: #8D8D84;">;; </span><span style=
+      <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">(if (fboundp 'ispell-get-decoded-string)</span>
-     <span style="color: #8D8D84;">;;     </span><span style=
+      <span style="color: #8D8D84;">;;     </span><span style=
 "color: #8D8D84; font-style: italic;">(defun ispell-get-otherchars ()</span>
-     <span style="color: #8D8D84;">;;       </span><span style=
+      <span style="color: #8D8D84;">;;       </span><span style=
 "color: #8D8D84; font-style: italic;">(replace-regexp-in-string "-" "" (ispell-get-decoded-string 3))))</span>
 </pre>
           </div>
@@ -4729,28 +4780,38 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-     (setq-default mode-line-format
-                   (cons
-                    '(<span style="color: #006FE0;">:eval</span>
-                      (<span style=
+      (setq-default mode-line-format
+                    (cons
+                     '(<span style="color: #006FE0;">:eval</span>
+                       (<span style=
 "color: #0000FF;">let</span> ((dict (and (<span style=
 "color: #0000FF;">featurep</span> '<span style="color: #D0372D;">ispell</span>)
-                                       (not buffer-read-only)
-                                       (or ispell-local-dictionary
-                                           ispell-dictionary))))
-                        (and dict
-                             (propertize (concat <span style=
+                                        (not buffer-read-only)
+                                        (or ispell-local-dictionary
+                                            ispell-dictionary
+                                            <span style=
+"color: #036A07;">"--"</span> <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">default dictionary</span>
+                                            ))))
+                         (and dict
+                              (propertize (concat <span style=
 "color: #036A07;">" "</span> (substring dict 0 2))
-                                         'face 'mode-line-highlight))))
-                    (default-value 'mode-line-format)))
+                                          'face 'mode-line-highlight))))
+                     (default-value 'mode-line-format)))
 </pre>
           </div>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-     )
+      )
 </pre>
           </div>
+
+          <p>Note – Each time you cycle to another window (<code>C-x o</code>),
+          the <b>Ispell process</b> gets <b>killed</b> and a <b>new Ispell
+          process</b> is <b>started</b>, if the language in the next window is
+          different from the language in the current window…</p>
 
           <p><code>flyspell-auto-correct-word</code> is bound to
           <code>C-.</code>. Press it one time to correct the word under the
@@ -5058,10 +5119,10 @@
           b</code>).</p>
 
           <p>To <b>save a named keyboard macro</b> (with its key binding) for
-          future use, switch to your <code>.emacs</code> buffer, and run
-          <code>C-u M-x insert-kbd-macro</code> (if you leave out the
-          <code>C-u</code>, then it will just insert the macro definition
-          without the <code>global-set-key</code> sequence).</p>
+          future use, switch to your ~.emacs~ buffer, and run <code>C-u M-x
+          insert-kbd-macro</code> (if you leave out the <code>C-u</code>, then
+          it will just insert the macro definition without the
+          <code>global-set-key</code> sequence).</p>
 
           <p>You can add <code>(interactive)</code> to make it a command, so
           that you can use it with <code>M-x</code>.</p>
@@ -5500,20 +5561,23 @@
       (<span style="color: #0000FF;">unless</span> (&gt; (buffer-size) 14000)
         (leuven-diff-make-fine-diffs)))
 
-    (<span style="color: #0000FF;">when</span> (fboundp 'advice-add)
-      (advice-add 'vc-diff <span style="color: #006FE0;">:after</span>
-       (<span style="color: #0000FF;">lambda</span> (<span style=
-"color: #6434A3;">&amp;rest</span> _)
-         (leuven--diff-make-fine-diffs-if-necessary))))
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">(when (fboundp 'advice-add)</span>
+    <span style="color: #8D8D84;">;;   </span><span style=
+"color: #8D8D84; font-style: italic;">(advice-add 'vc-diff :after</span>
+    <span style="color: #8D8D84;">;;    </span><span style=
+"color: #8D8D84; font-style: italic;">(lambda (&amp;rest _)</span>
+    <span style="color: #8D8D84;">;;      </span><span style=
+"color: #8D8D84; font-style: italic;">(leuven--diff-make-fine-diffs-if-necessary))))</span>
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #CC0000; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #8D8D84; font-style: italic;"> I tried this simpler form, but does not work.</span>
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(defadvice vc-diff (after leuven-vc-diff activate)</span>
-    <span style="color: #8D8D84;">;;   </span><span style=
-"color: #8D8D84; font-style: italic;">"Push the auto-refine function after `</span><span style="color: #D0372D; font-style: italic;">vc-diff</span><span style="color: #8D8D84; font-style: italic;">'."</span>
-    <span style="color: #8D8D84;">;;   </span><span style=
-"color: #8D8D84; font-style: italic;">(leuven--diff-make-fine-diffs-if-necessary))</span>
+    (<span style="color: #0000FF;">defadvice</span> <span style=
+"color: #006699;">vc-diff</span> (after leuven-vc-diff activate)
+      <span style=
+"color: #008000;">"Push the auto-refine function after `</span><span style=
+"color: #D0372D;">vc-diff</span><span style="color: #008000;">'."</span>
+      (leuven--diff-make-fine-diffs-if-necessary))
 
     )
 </pre>
@@ -5528,7 +5592,7 @@ M-: (executable-find "diff") RET
           <p>In Ediff, press:</p>
 
           <ul class="org-ul">
-            <li><code>?</code> to get help</li>
+            <li>=?= to get help</li>
 
             <li><code>|</code> to change from vertical window layout to
             horizontal window layout, and vice versa</li>
@@ -6257,7 +6321,7 @@ M-: (executable-find "diff") RET
                     </ul>
                   </li>
 
-                  <li>On image files (<code>.jpg</code>, etc..)
+                  <li>On image files (~.jpg~, etc..)
 
                     <ul class="org-ul">
                       <li>Second hit (or <code>C-u C-z</code>) displays the
@@ -6624,8 +6688,8 @@ M-: (executable-find "diff") RET
 
         <div class="outline-text-3" id="text-21-2">
           <ul class="org-ul">
-            <li>The <code>C</code> (current) column has a <code>.</code> for
-            the buffer from which you came.</li>
+            <li>The <code>C</code> (current) column has a =.= for the buffer
+            from which you came.</li>
 
             <li>The <code>R</code> (read-only) column has a <code>%</code> if
             the buffer is read-only.</li>
@@ -8070,13 +8134,12 @@ M-: (executable-find "diff") RET
 
           <ul class="org-ul">
             <li><b>No-break thin space</b> (<code>202F</code>), known in
-            Unicode as “Narrow No-Break Space”, required before <code>?</code>,
-            <code>!</code> and <code>;</code>.</li>
+            Unicode as “Narrow No-Break Space”, required before =?=, =!= and
+            =;=.</li>
 
             <li>
-              <b>No-break space</b> (<code>00A0</code>), required before
-              <code>:</code> and <code>»</code>, and required after
-              <code>«</code>.
+              <b>No-break space</b> (<code>00A0</code>), required before =:=
+              and <code>»</code>, and required after <code>«</code>.
 
               <p>It can be inserted with <code>S-SPC</code>:</p>
 
@@ -8873,7 +8936,7 @@ M-: (executable-find "diff") RET
 </pre>
         </div>
 
-        <p><code>org-emphasis-alist</code> has a <code>:set</code> handler
+        <p><code>org-emphasis-alist</code> has a =:set= handler
         <code>org-set-emph-re</code> which will do the job of setting up the
         regexps. I don’t want to call <code>org-set-emph-re</code> directly,
         instead I set <code>org-emphasis-alist</code> to itself and let the
@@ -10988,16 +11051,15 @@ M-: (executable-find "diff") RET
               <dd>Inactive time stamp with date and time.</dd>
             </dl>
 
-            <p>Use <code>:jump-to-captured</code> to tell capture to jump to
-            the note after storing it.</p>
+            <p>Use =:jump-to-captured= to tell capture to jump to the note
+            after storing it.</p>
 
             <table class="inlinetask" width="100%">
               <tr>
                 <td valign="top"><b><span class=
                 "todo TODO">TODO</span></b></td>
 
-                <td width="100%"><b>Look at
-                <code>:kill-buffer</code></b><br /></td>
+                <td width="100%"><b>Look at =:kill-buffer=</b><br /></td>
               </tr>
             </table>
 
@@ -11113,7 +11175,12 @@ M-: (executable-find "diff") RET
 
                 <dt>Email attachment(s)</dt>
 
-                <dd>Task attachment(s).</dd>
+                <dd>
+                  Task attachment(s).
+
+                  <p>XXX Wouldn’t it be great if files attached to email can be
+                  quickly added to the tasks or projects you create?</p>
+                </dd>
               </dl>
 
               <p>Additional parameters can be included via the commands you
@@ -11204,10 +11271,9 @@ M-: (executable-find "diff") RET
 </pre>
               </div>
 
-              <p>The property <code>:immediate-finish</code>, when set,
-              immediately files the item without further prompt (skipping
-              <code>C-c C-c</code>); very handy for quick storing of
-              emails.</p>
+              <p>The property =:immediate-finish=, when set, immediately files
+              the item without further prompt (skipping <code>C-c C-c</code>);
+              very handy for quick storing of emails.</p>
 
               <p>With the clock options, <code>org-capture</code> automatically
               clocks in. When pressing <code>C-c C-c</code>, it clocks out.</p>
@@ -11664,8 +11730,8 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
             </div>
 
             <p>Avoid any possibility of getting a customized version of
-            <code>org-agenda-files</code> added at the end of your
-            <code>.emacs</code> file.</p>
+            <code>org-agenda-files</code> added at the end of your ~.emacs~
+            file.</p>
             <pre class="example">
 (add-hook 'org-mode-hook
           (lambda ()
@@ -13132,6 +13198,8 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #036A07;">"ox-html"</span>
 
+    (setq org-html-checkbox-type 'unicode)
+
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">output type to be used by htmlize when formatting code snippets</span>
     (setq org-export-htmlize-output-type 'css) <span style=
@@ -14329,45 +14397,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
           <h4 id="sec-28-14-1">Ispell</h4>
 
           <div class="outline-text-4" id="text-28-14-1">
-            <table class="inlinetask" width="100%">
-              <tr>
-                <td valign="top"><b><span class=
-                "todo TODO">TODO</span></b></td>
-
-                <td width="100%">
-                  <b>ad-handle-definition: `org-mode-flyspell-verify’ got
-                  redefined</b><br />
-
-                  <p>IIUC, this message appears when the original definition of
-                  the adviced function is loaded (AFTER having been
-                  adviced).</p>
-                </td>
-              </tr>
-            </table>
-
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">;; flyspell should not check babel blocks</span>
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(defadvice org-mode-flyspell-verify</span>
-  <span style="color: #8D8D84;">;;   </span><span style=
-"color: #8D8D84; font-style: italic;">(after leuven-org-mode-flyspell-verify activate)</span>
-  <span style="color: #8D8D84;">;;   </span><span style=
-"color: #8D8D84; font-style: italic;">"Don't spell check src blocks."</span>
-  <span style="color: #8D8D84;">;;   </span><span style=
-"color: #8D8D84; font-style: italic;">(require 'org-element)</span>
-  <span style="color: #8D8D84;">;;   </span><span style=
-"color: #8D8D84; font-style: italic;">(setq ad-return-value</span>
-  <span style="color: #8D8D84;">;;         </span><span style=
-"color: #8D8D84; font-style: italic;">(and ad-return-value</span>
-  <span style="color: #8D8D84;">;;              </span><span style=
-"color: #8D8D84; font-style: italic;">(not (eq (org-element-type (org-element-at-point))</span>
-  <span style="color: #8D8D84;">;;                       </span><span style=
-"color: #8D8D84; font-style: italic;">'src-block)))))</span>
-</pre>
-            </div>
-
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   (<span style="color: #0000FF;">defun</span> <span style=
@@ -16734,10 +16763,10 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
           <p>You don’t need a <code>Makefile</code> to perform simple tasks,
           because <code>make</code> knows a lot of built in rules out of the
-          box. For example, to compile a <code>.c</code> source file
-          <code>foo.c</code> into a program <code>foo</code>, all you need is
-          say <code>make -k foo</code>, and <code>make</code> will do it even
-          without a <code>Makefile</code>.</p>
+          box. For example, to compile a =.c= source file <code>foo.c</code>
+          into a program <code>foo</code>, all you need is say <code>make -k
+          foo</code>, and <code>make</code> will do it even without a
+          <code>Makefile</code>.</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -17246,9 +17275,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 </pre>
           </div>
 
-          <p><b>That code must be used in the <code>.emacs</code> file (or
-          libraries loaded from it).</b> Otherwise, <code>*scratch*</code> will
-          already have been created, in the default major mode.</p>
+          <p><b>That code must be used in the ~.emacs~ file (or libraries
+          loaded from it).</b> Otherwise, <code>*scratch*</code> will already
+          have been created, in the default major mode.</p>
 
           <p>To evaluate a non-interactive command, simply use
           <code>IELM</code>.</p>
@@ -17440,11 +17469,10 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
           <h4 id="sec-33-1-1">Version Control and the Mode Line</h4>
 
           <div class="outline-text-4" id="text-33-1-1">
-            <p>“Unmodified-according-to-VC” buffers use <code>-</code> as a
-            separator in their VC indicator, and modified buffers have
-            <code>:</code> (e.g., <code>CVS-1.2</code> vs.
-            <code>CVS:1.2</code>). The tooltip over the VC indicator also says
-            more explicitly.</p>
+            <p>“Unmodified-according-to-VC” buffers use =-= as a separator in
+            their VC indicator, and modified buffers have =:= (e.g.,
+            <code>CVS-1.2</code> vs. <code>CVS:1.2</code>). The tooltip over
+            the VC indicator also says more explicitly.</p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -17511,10 +17539,10 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
                   <p>The Lisp expressions supported in
                   <code>mode-line-format</code> are those documented in the
-                  manual, and nothing else. In particular, the
-                  <code>:eval</code> part must appear explicitly, and any
-                  symbol stands for its value (which is not eval’ed). IOW, a
-                  full-blown Lisp evaluation there is not implemented…</p>
+                  manual, and nothing else. In particular, the =:eval= part
+                  must appear explicitly, and any symbol stands for its value
+                  (which is not eval’ed). IOW, a full-blown Lisp evaluation
+                  there is not implemented…</p>
                 </td>
               </tr>
             </table>
@@ -17899,8 +17927,8 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
               <p>You should download <b>Exuberant Ctags</b> from <a href=
               "http://ctags.sourceforge.net/">http://ctags.sourceforge.net/</a>
               or from Cygwin. Only <b>Exuberant</b> <code>ctags.exe</code>
-              recognizes <code>-e</code> option (<i>etags mode</i>, which will
-              create a tag file for use with the Emacs editor).</p>
+              recognizes =-e= option (<i>etags mode</i>, which will create a
+              tag file for use with the Emacs editor).</p>
 
               <p>Exuberant Ctags can be extended to look for other things via
               regular expression. It is a wonderful thing!</p>
@@ -19152,7 +19180,7 @@ TAGS:
             which open files using external programs (such as PDF viewers),
             based on their extension.</p>
 
-            <p>One advantage is that using the traditional <code>!</code> (or
+            <p>One advantage is that using the traditional =!= (or
             <code>X</code>) switch with Dired locks up Emacs until you close
             the other program. These add-ons do not and leave Emacs free for
             continued used.</p>
@@ -19240,11 +19268,9 @@ TAGS:
               <p>It opens the Windows explorer for:</p>
 
               <ul class="org-ul">
-                <li>the <b>current directory</b> when invoked on
-                <code>.</code>.</li>
+                <li>the <b>current directory</b> when invoked on =.=.</li>
 
-                <li>the <b>parent directory</b> when invoked on
-                <code>..</code>.
+                <li>the <b>parent directory</b> when invoked on =..=.
 
                   <table class="inlinetask" width="100%">
                     <tr>
@@ -19314,7 +19340,7 @@ TAGS:
 
               <p>It works for files as well as for directories. It opens the
               Windows explorer for the <b>current directory</b> when invoked on
-              <code>.</code> (correct) or <code>..</code> (bug!!).</p>
+              =.= (correct) or =..= (bug!!).</p>
             </div>
           </div>
         </div>
@@ -20764,12 +20790,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           <code>pdftotext</code>) of the current doc in a new buffer, which is
           more suitable for heavy manipulation of the text of the PDF.</p>
 
-          <p>Another option, without <code>doc-view</code>, is <code>! pdtotext
-          ? - &lt;RET&gt;</code>.</p>
+          <p>Another option, without <code>doc-view</code>, is =! pdtotext ? -
+          &lt;RET&gt;=.</p>
 
           <p><code>doc-view-enlarge</code> (<code>+</code>) and
-          <code>doc-view-shrink</code> (<code>-</code>) work fine to zoom in or
-          out.</p>
+          <code>doc-view-shrink</code> (=-=) work fine to zoom in or out.</p>
         </div>
       </div>
 
@@ -21440,13 +21465,13 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           decrease / increase volume.</p>
 
           <p>You can switch to <b>line mode</b> (<code>C-c C-j</code>) when you
-          need Term to <i>basically</i> act like a Shell mode buffer, and
-          wander around the buffer pretty much like anywhere else in Emacs.
-          Kill-ring commands, <code>isearch</code>, etc. do work.</p>
+          need Term to <i>basically</i> act like a Shell mode buffer, and move
+          around the buffer pretty much like anywhere else in Emacs. Copy /
+          kill-ring commands, <code>isearch</code>, etc. do work.</p>
 
           <p>Then, you can use <code>C-c C-k</code> to switch back to
           <b>character mode</b>, the default, which is like your normal
-          terminal emulator except the escape key.</p>
+          <b>terminal</b> emulator except the escape key.</p>
 
           <p>It’s wrong to think that <code>M-x term</code> captures everything
           it seems (which would defeat the purpose of running it inside
@@ -21823,11 +21848,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         <p><code>emacsclient</code> is waiting for Emacs to tell it it’s done
         editing that file. That’s important if you use <code>emacsclient</code>
         as your <code>EDITOR</code>. If you want <code>emacsclient</code> to
-        return immediately, use the <code>-n</code> option.</p>
+        return immediately, use the =-n= option.</p>
 
         <p>Do you use <code>emacsclient</code> in terminals? If not, just use
-        parameter <code>-c -n</code>, which creates an X Window and doesn’t
-        wait for <code>(server-edit)</code>.</p>
+        parameter =-c -n=, which creates an X Window and doesn’t wait for
+        <code>(server-edit)</code>.</p>
 
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
@@ -21873,8 +21898,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 </pre>
         </div>
 
-        <p>Since GNU Emacs 23, there is also a <code>--daemon</code> flag to
-        start the server in a convenient way.</p>
+        <p>Since GNU Emacs 23, there is also a =–daemon= flag to start the
+        server in a convenient way.</p>
 
         <table class="inlinetask" width="100%">
           <tr>
@@ -22176,7 +22201,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 (leuven--chapter leuven-chapter-42-saving-emacs-sessions <span style=
 "color: #036A07;">"42 Saving Emacs Sessions"</span>
 
-  (idle-require 'saveplace)
+  (try-require 'saveplace)
   (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #036A07;">"saveplace"</span>
 
@@ -23290,8 +23315,8 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
           </ul>
 
           <p>Evaluate <code>current-word</code> and see whether characters such
-          as <code>-</code> and <code>_</code> are considered part of the word
-          (depending on the current major mode).</p>
+          as =-= and <code>_</code> are considered part of the word (depending
+          on the current major mode).</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -23394,11 +23419,10 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
           <p>For reasons unknown to me, Emacs takes a long time to change fonts
           in an X environment.</p>
 
-          <p>Rather than using <code>(set-default-font ...)</code> in
-          <code>.emacs</code>, stick the font definition in your
-          <code>.Xresources</code> file (key ‘Emacs*font’) and then use
-          <code>xrdb -load</code> to activate it. You will find that startup
-          time is greatly improved!</p>
+          <p>Rather than using <code>(set-default-font ...)</code> in ~.emacs~,
+          stick the font definition in your ~.Xresources~ file (key
+          ‘Emacs*font’) and then use <code>xrdb -load</code> to activate it.
+          You will find that startup time is greatly improved!</p>
 
           <p>Edit your <code>~/.Xresources</code> file to have a line with
           “Emacs.font”. Then do a <code>xrdb -merge ~/.Xresources</code> or
@@ -23988,7 +24012,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140321.1432]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140328.1153]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
@@ -24023,9 +24047,9 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <h3 id="sec-53-1">Context</h3>
 
         <div class="outline-text-3" id="text-53-1">
-          <p>Identify what parts of your <code>.emacs</code> take so long. You
-          can do this e.g. by starting Emacs with <code>emacs -q</code>, set up
-          your <code>load-path</code>, and then evaluate</p>
+          <p>Identify what parts of your =.emacs= take so long. You can do this
+          e.g. by starting Emacs with <code>emacs -q</code>, set up your
+          <code>load-path</code>, and then evaluate</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">

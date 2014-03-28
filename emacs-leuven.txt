@@ -2,13 +2,13 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-03-21 Fri 14:30>
+# Time-stamp: <2014-03-28 Fri 11:51>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
 #+OPTIONS:   H:4 num:nil
 
-#+SEQ_TODO: TODO FIXME DOESN'T_WORK | WORKS
+#+SEQ_TODO:  TODO FIXME DOESN'T_WORK | WORKS
 
 #+PROPERTY:  tangle emacs-leuven.el
 #+PROPERTY:  padline yes
@@ -1669,10 +1669,11 @@ PYTHON_OBJS=	\
 
 ** Selective Display
 
-Emacs has the ability to hide lines indented more than a given number of
-columns.  You can use this to get an overview of a part of a program.
+Emacs has the ability to *hide lines indented more than a given number of
+columns*.  You can use this to get an overview of a part of a program.
 
-To hide lines with at least 1 column of indentation, type =C-1 C-x $=.  It gives
+To hide lines with at least 1 column of indentation (replacing them by an
+ellipsis), type =C-1 C-x $= (or =C-x $= and give it =1= as depth argument).  It gives
 a quick overview any source file.
 
 To make all lines visible again, type =C-x $= with no argument.
@@ -2091,27 +2092,49 @@ it to the *file word list* (=ispell-add-per-file-word-list=).
     ;; ;; default dictionary to use (if `ispell-local-dictionary' is nil, that
     ;; ;; is if there is no local dictionary to use in the buffer)
     ;; (setq ispell-dictionary "american") ; see `sentence-end-double-space'
-
-    ;; enable on-the-fly spell checking
-    (add-hook 'text-mode-hook
-              (lambda ()
-                (flyspell-mode 1)))
-
-    ;; prevent flyspell from finding mistakes in the code, which is pretty cool
-    (add-hook 'prog-mode-hook
-              (lambda ()
-                ;; `ispell-comments-and-strings'
-                (flyspell-prog-mode)))
-
-    (with-eval-after-load "ispell"
-
-     ;; save the personal dictionary without confirmation
-     (setq ispell-silently-savep t)
 #+end_src
 
 #+begin_src emacs-lisp
-     ;; extensions and extra switches to pass to the `ispell' program
-     (cond
+    ;; enable on-the-fly spell checking
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (if (or (eq (aref (buffer-name) 0) ?\s) ; buffer starting with " *"
+                        (and (boundp 'org-babel-exp-reference-buffer)
+                             org-babel-exp-reference-buffer)) ; export buffer
+                    (message "Don't turn on Flyspell mode in `%s'" (buffer-name))
+                  (message "Turn on Flyspell mode in `%s'" (buffer-name))
+                  (turn-on-flyspell))))
+#+end_src
+
+*************** TODO Enable Flyspell in other modes deriving from Text (HTML, etc.)
+
+#+begin_src emacs-lisp :tangle no
+    ;; enable on-the-fly spell checking
+    (add-hook 'text-mode-hook
+              (lambda ()
+                (message "Turn on Flyspell mode in `%s'" (buffer-name))
+                (turn-on-flyspell)))
+
+    (defadvice org-export-as (around leuven-org-export-as activate)
+      "Turn off Text mode hooks (Flyspell, etc.) when exporting current Org buffer."
+      (let (text-mode-hook)
+        ad-do-it))
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; prevent flyspell from finding mistakes in the code, well in comments and
+    ;; strings
+    (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+#+end_src
+
+#+begin_src emacs-lisp
+    (with-eval-after-load "ispell"
+
+      ;; save the personal dictionary without confirmation
+      (setq ispell-silently-savep t)
+
+      ;; extensions and extra switches to pass to the `ispell' program
+      (cond
 #+end_src
 
 Tell =aspell= to speed up, though this reduces somewhat the quality of its
@@ -2129,46 +2152,52 @@ suggestions.  According to the =aspell= documentation:
 Use the =-C= option which will ConsiderCamelCaseToBeCorrect.
 
 #+begin_src emacs-lisp
-      ((string-match "aspell" ispell-program-name)
-       (setq ispell-extra-args '("--sug-mode=ultra" "-C"))
-       (setq ispell-really-aspell t)
-       (setq ispell-really-hunspell nil))
+       ((string-match "aspell" ispell-program-name)
+        (setq ispell-extra-args '("--sug-mode=ultra" "-C"))
+        (setq ispell-really-aspell t)
+        (setq ispell-really-hunspell nil))
 #+end_src
 
 #+begin_src emacs-lisp
-      ((string-match "ispell" ispell-program-name)
-       (setq ispell-extra-args '())
-       (setq ispell-really-aspell nil)
-       (setq ispell-really-hunspell nil)))
+       ((string-match "ispell" ispell-program-name)
+        (setq ispell-extra-args '())
+        (setq ispell-really-aspell nil)
+        (setq ispell-really-hunspell nil)))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-     ;; ;; solve the problem of words separated by `-' flagged as
-     ;; ;; erroneous by removing the `-' from the value of otherchars
-     ;; (if (fboundp 'ispell-get-decoded-string)
-     ;;     (defun ispell-get-otherchars ()
-     ;;       (replace-regexp-in-string "-" "" (ispell-get-decoded-string 3))))
+      ;; ;; solve the problem of words separated by `-' flagged as
+      ;; ;; erroneous by removing the `-' from the value of otherchars
+      ;; (if (fboundp 'ispell-get-decoded-string)
+      ;;     (defun ispell-get-otherchars ()
+      ;;       (replace-regexp-in-string "-" "" (ispell-get-decoded-string 3))))
 #+end_src
 
 Add language indicator.
 
 #+begin_src emacs-lisp
-     (setq-default mode-line-format
-                   (cons
-                    '(:eval
-                      (let ((dict (and (featurep 'ispell)
-                                       (not buffer-read-only)
-                                       (or ispell-local-dictionary
-                                           ispell-dictionary))))
-                        (and dict
-                             (propertize (concat " " (substring dict 0 2))
-                                         'face 'mode-line-highlight))))
-                    (default-value 'mode-line-format)))
+      (setq-default mode-line-format
+                    (cons
+                     '(:eval
+                       (let ((dict (and (featurep 'ispell)
+                                        (not buffer-read-only)
+                                        (or ispell-local-dictionary
+                                            ispell-dictionary
+                                            "--" ; default dictionary
+                                            ))))
+                         (and dict
+                              (propertize (concat " " (substring dict 0 2))
+                                          'face 'mode-line-highlight))))
+                     (default-value 'mode-line-format)))
 #+end_src
 
 #+begin_src emacs-lisp
-     )
+      )
 #+end_src
+
+Note -- Each time you cycle to another window (~C-x o~), the *Ispell process* gets
+*killed* and a *new Ispell process* is *started*, if the language in the next window
+is different from the language in the current window...
 
 =flyspell-auto-correct-word= is bound to =C-.=.  Press it one time to correct the
 word under the cursor.  If several spellings are possible, they appear in the
@@ -2626,15 +2655,15 @@ In Diff mode, I can *select a hunk and apply it (in reverse)*.  Nice following
       (unless (> (buffer-size) 14000)
         (leuven-diff-make-fine-diffs)))
 
-    (when (fboundp 'advice-add)
-      (advice-add 'vc-diff :after
-       (lambda (&rest _)
-         (leuven--diff-make-fine-diffs-if-necessary))))
+    ;; (when (fboundp 'advice-add)
+    ;;   (advice-add 'vc-diff :after
+    ;;    (lambda (&rest _)
+    ;;      (leuven--diff-make-fine-diffs-if-necessary))))
 
     ;; XXX I tried this simpler form, but does not work.
-    ;; (defadvice vc-diff (after leuven-vc-diff activate)
-    ;;   "Push the auto-refine function after `vc-diff'."
-    ;;   (leuven--diff-make-fine-diffs-if-necessary))
+    (defadvice vc-diff (after leuven-vc-diff activate)
+      "Push the auto-refine function after `vc-diff'."
+      (leuven--diff-make-fine-diffs-if-necessary))
 
     )
 #+end_src
@@ -5944,6 +5973,9 @@ The following rules will apply to interpret an email to a task:
 - Email attachment(s) ::
      Task attachment(s).
 
+     XXX Wouldn't it be great if files attached to email can be quickly added
+     to the tasks or projects you create?
+
 Additional parameters can be included via the commands you use:
 
 - Create a TODO Action ::
@@ -7122,6 +7154,8 @@ org-export-htmlize-generate-css= to extract class definitions.
   ;; Org HTML export engine
   (with-eval-after-load "ox-html"
 
+    (setq org-html-checkbox-type 'unicode)
+
     ;; output type to be used by htmlize when formatting code snippets
     (setq org-export-htmlize-output-type 'css) ; XXX
 
@@ -7813,23 +7847,6 @@ an interactive terminal.
 #+end_src
 
 *** Ispell
-
-*************** TODO ad-handle-definition: `org-mode-flyspell-verify' got redefined
-IIUC, this message appears when the original definition of the adviced
-function is loaded (AFTER having been adviced).
-*************** END
-
-#+begin_src emacs-lisp
-  ;; ;; flyspell should not check babel blocks
-  ;; (defadvice org-mode-flyspell-verify
-  ;;   (after leuven-org-mode-flyspell-verify activate)
-  ;;   "Don't spell check src blocks."
-  ;;   (require 'org-element)
-  ;;   (setq ad-return-value
-  ;;         (and ad-return-value
-  ;;              (not (eq (org-element-type (org-element-at-point))
-  ;;                       'src-block)))))
-#+end_src
 
 #+begin_src emacs-lisp
   (defun leuven--org-switch-dictionary ()
@@ -11997,11 +12014,11 @@ interactive with your terminal (such as the command =top=).
   to decrease / increase volume.
 
 You can switch to *line mode* (=C-c C-j=) when you need Term to /basically/ act like
-a Shell mode buffer, and wander around the buffer pretty much like anywhere
-else in Emacs.  Kill-ring commands, =isearch=, etc. do work.
+a Shell mode buffer, and move around the buffer pretty much like anywhere
+else in Emacs.  Copy / kill-ring commands, =isearch=, etc. do work.
 
 Then, you can use =C-c C-k= to switch back to *character mode*, the default, which
-is like your normal terminal emulator except the escape key.
+is like your normal *terminal* emulator except the escape key.
 
 It's wrong to think that =M-x term= captures everything it seems (which would
 defeat the purpose of running it inside Emacs):
@@ -12429,7 +12446,7 @@ up printing on Windows.
 
 (leuven--chapter leuven-chapter-42-saving-emacs-sessions "42 Saving Emacs Sessions"
 
-  (idle-require 'saveplace)
+  (try-require 'saveplace)
   (with-eval-after-load "saveplace"
 
     ;; automatically save place in each file

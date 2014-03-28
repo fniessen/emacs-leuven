@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140321.1430
+;; Version: 20140328.1151
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140321.1430]--")
+(message "* --[ Loading Emacs Leuven 20140328.1151]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1287,47 +1287,52 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; (setq ispell-dictionary "american") ; see `sentence-end-double-space'
 
     ;; enable on-the-fly spell checking
-    (add-hook 'text-mode-hook
+    (add-hook 'org-mode-hook
               (lambda ()
-                (flyspell-mode 1)))
+                (if (or (eq (aref (buffer-name) 0) ?\s) ; buffer starting with " *"
+                        (and (boundp 'org-babel-exp-reference-buffer)
+                             org-babel-exp-reference-buffer)) ; export buffer
+                    (message "Don't turn on Flyspell mode in `%s'" (buffer-name))
+                  (message "Turn on Flyspell mode in `%s'" (buffer-name))
+                  (turn-on-flyspell))))
 
-    ;; prevent flyspell from finding mistakes in the code, which is pretty cool
-    (add-hook 'prog-mode-hook
-              (lambda ()
-                ;; `ispell-comments-and-strings'
-                (flyspell-prog-mode)))
+    ;; prevent flyspell from finding mistakes in the code, well in comments and
+    ;; strings
+    (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
     (with-eval-after-load "ispell"
 
-     ;; save the personal dictionary without confirmation
-     (setq ispell-silently-savep t)
+      ;; save the personal dictionary without confirmation
+      (setq ispell-silently-savep t)
 
-     ;; extensions and extra switches to pass to the `ispell' program
-     (cond
+      ;; extensions and extra switches to pass to the `ispell' program
+      (cond
 
-      ((string-match "aspell" ispell-program-name)
-       (setq ispell-extra-args '("--sug-mode=ultra" "-C"))
-       (setq ispell-really-aspell t)
-       (setq ispell-really-hunspell nil))
+       ((string-match "aspell" ispell-program-name)
+        (setq ispell-extra-args '("--sug-mode=ultra" "-C"))
+        (setq ispell-really-aspell t)
+        (setq ispell-really-hunspell nil))
 
-      ((string-match "ispell" ispell-program-name)
-       (setq ispell-extra-args '())
-       (setq ispell-really-aspell nil)
-       (setq ispell-really-hunspell nil)))
+       ((string-match "ispell" ispell-program-name)
+        (setq ispell-extra-args '())
+        (setq ispell-really-aspell nil)
+        (setq ispell-really-hunspell nil)))
 
-     (setq-default mode-line-format
-                   (cons
-                    '(:eval
-                      (let ((dict (and (featurep 'ispell)
-                                       (not buffer-read-only)
-                                       (or ispell-local-dictionary
-                                           ispell-dictionary))))
-                        (and dict
-                             (propertize (concat " " (substring dict 0 2))
-                                         'face 'mode-line-highlight))))
-                    (default-value 'mode-line-format)))
+      (setq-default mode-line-format
+                    (cons
+                     '(:eval
+                       (let ((dict (and (featurep 'ispell)
+                                        (not buffer-read-only)
+                                        (or ispell-local-dictionary
+                                            ispell-dictionary
+                                            "--" ; default dictionary
+                                            ))))
+                         (and dict
+                              (propertize (concat " " (substring dict 0 2))
+                                          'face 'mode-line-highlight))))
+                     (default-value 'mode-line-format)))
 
-     )
+      )
 
     ;; don't use `M-TAB' to auto-correct the current word (only use `C-.')
     (setq flyspell-use-meta-tab nil)
@@ -1665,15 +1670,15 @@ Last time is saved in global variable `leuven--before-section-time'."
       (unless (> (buffer-size) 14000)
         (leuven-diff-make-fine-diffs)))
 
-    (when (fboundp 'advice-add)
-      (advice-add 'vc-diff :after
-       (lambda (&rest _)
-         (leuven--diff-make-fine-diffs-if-necessary))))
+    ;; (when (fboundp 'advice-add)
+    ;;   (advice-add 'vc-diff :after
+    ;;    (lambda (&rest _)
+    ;;      (leuven--diff-make-fine-diffs-if-necessary))))
 
     ;; XXX I tried this simpler form, but does not work.
-    ;; (defadvice vc-diff (after leuven-vc-diff activate)
-    ;;   "Push the auto-refine function after `vc-diff'."
-    ;;   (leuven--diff-make-fine-diffs-if-necessary))
+    (defadvice vc-diff (after leuven-vc-diff activate)
+      "Push the auto-refine function after `vc-diff'."
+      (leuven--diff-make-fine-diffs-if-necessary))
 
     )
 
@@ -4707,6 +4712,8 @@ From %c"
   ;; Org HTML export engine
   (with-eval-after-load "ox-html"
 
+    (setq org-html-checkbox-type 'unicode)
+
     ;; output type to be used by htmlize when formatting code snippets
     (setq org-export-htmlize-output-type 'css) ; XXX
 
@@ -5195,16 +5202,6 @@ From %c"
                                            (region-end)))))
       (find-file "/tmp/org-scratch.org")
       (if contents (insert contents))))
-
-  ;; ;; flyspell should not check babel blocks
-  ;; (defadvice org-mode-flyspell-verify
-  ;;   (after leuven-org-mode-flyspell-verify activate)
-  ;;   "Don't spell check src blocks."
-  ;;   (require 'org-element)
-  ;;   (setq ad-return-value
-  ;;         (and ad-return-value
-  ;;              (not (eq (org-element-type (org-element-at-point))
-  ;;                       'src-block)))))
 
   (defun leuven--org-switch-dictionary ()
     "Switch language if a `#+LANGUAGE:' Org meta-tag is on top 8 lines."
@@ -8084,7 +8081,7 @@ From %c"
 
 (leuven--chapter leuven-chapter-42-saving-emacs-sessions "42 Saving Emacs Sessions"
 
-  (idle-require 'saveplace)
+  (try-require 'saveplace)
   (with-eval-after-load "saveplace"
 
     ;; automatically save place in each file
@@ -8710,7 +8707,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140321.1431]--")
+(message "* --[ Loaded Emacs Leuven 20140328.1152]--")
 
 (provide 'emacs-leuven)
 
