@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140328.1151
+;; Version: 20140331.1434
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140328.1151]--")
+(message "* --[ Loading Emacs Leuven 20140331.1434]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6577,6 +6577,21 @@ From %c"
   (GNUEmacs
     (find-function-setup-keys))
 
+(progn
+  (require 'thingatpt)
+
+  (defun leuven-find-symbol-at-point ()
+    "Find the definition of the symbol at point."
+    (interactive)
+    (let ((sym (symbol-at-point)))
+      (funcall (pcase sym
+                 ((pred facep)           'find-face)
+                 ((pred symbol-function) 'find-function)
+                 (_                      'find-variable))
+               sym)))
+
+  (global-set-key (kbd "<S-return>") 'leuven-find-symbol-at-point))
+
 ;;** 28.4 (info "(emacs)EDE")
 
   (leuven--section "28.4 Emacs Development Environment")
@@ -8707,7 +8722,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140328.1152]--")
+(message "* --[ Loaded Emacs Leuven 20140331.1437]--")
 
 (provide 'emacs-leuven)
 
