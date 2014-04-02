@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140331.1434
+;; Version: 20140402.1345
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -52,7 +52,7 @@
 ;; line before requiring Emacs Leuven.
 ;;
 ;;     ;; do not (try to) install extra Emacs packages
-;;     (setq leuven-packages nil)
+;;     (setq leuven-elpa-packages nil)
 ;;
 ;; For help on the Emacs Editor, see (info "(emacs)")  <== `C-x C-e' here!
 
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140331.1434]--")
+(message "* --[ Loading Emacs Leuven 20140402.1345]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -410,7 +410,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       (package-initialize)              ; add ALL ELPA subdirs to `load-path'
                                         ; and load `<pkg>-autoloads.el'
 
-      (defcustom leuven-packages
+      (defcustom leuven-elpa-packages
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
           csv-mode dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode
           helm htmlize idle-require info+ interaction-log ledger-mode
@@ -423,31 +423,31 @@ Last time is saved in global variable `leuven--before-section-time'."
         :group 'emacs-leuven
         :type '(repeat (string)))
 
-      (defun leuven--missing-packages ()
+      (defun leuven--missing-elpa-packages ()
         "List packages to install which are neither built-in nor already installed."
-        (let (missing-packages)
-          (dolist (pkg leuven-packages)
+        (let (missing-elpa-packages)
+          (dolist (pkg leuven-elpa-packages)
             (unless (or (package-installed-p pkg)
                         (locate-library (symbol-name pkg)))
-              (push pkg missing-packages)))
-          missing-packages))
+              (push pkg missing-elpa-packages)))
+          missing-elpa-packages))
 
-      ;; propose to install all the packages specified in `leuven-packages'
+      ;; propose to install all the packages specified in `leuven-elpa-packages'
       ;; which are missing
-      (let ((missing-packages (leuven--missing-packages)))
-        (when missing-packages
+      (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
+        (when missing-elpa-packages
           ;; download once the ELPA archive description
           (package-refresh-contents)    ; Ensure that the list of packages is
                                         ; up-to-date.  Otherwise, new packages
                                         ; (not present in the cache of the ELPA
                                         ; contents) won't install.
-          (dolist (pkg missing-packages)
-            (if (yes-or-no-p (format "Install package `%s'? " pkg))
+          (dolist (pkg missing-elpa-packages)
+            (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
                 (ignore-errors
                   (package-install pkg))
                                         ; must be run after initializing
                                         ; `package-initialize'
-              (message (concat "Customize `leuven-packages' to ignore "
+              (message (concat "Customize `leuven-elpa-packages' to ignore "
                                "the `%s' package at next startup...") pkg)
               (sit-for 1.5)))))
 
@@ -1292,7 +1292,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                 (if (or (eq (aref (buffer-name) 0) ?\s) ; buffer starting with " *"
                         (and (boundp 'org-babel-exp-reference-buffer)
                              org-babel-exp-reference-buffer)) ; export buffer
-                    (message "Don't turn on Flyspell mode in `%s'" (buffer-name))
+                    (message "DON'T TURN ON Flyspell mode in `%s'" (buffer-name))
                   (message "Turn on Flyspell mode in `%s'" (buffer-name))
                   (turn-on-flyspell))))
 
@@ -1720,7 +1720,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (with-eval-after-load "epa-file"
 
     ;; stop EasyPG from asking for the recipient used for encrypting files
-    (setq epa-file-encrypt-to "john@doe.com")
+    (setq epa-file-encrypt-to "johndoe@example.com")
     ;; if no one is selected (""), symmetric encryption will always be
     ;; performed
 
@@ -5977,71 +5977,6 @@ From %c"
   (global-set-key
     (kbd "C-c @ s") 'hs-show-block)
 
-  ;; if hideshowvis is not installed, do not attempt to configure it,
-  ;; as this will prevent packages (including hideshowvis itself)
-  ;; from compiling
-  (when (and (display-graphic-p)
-             (try-require 'hideshowvis-XXX))
-
-    (autoload 'hideshowvis-enable "hideshowvis"
-      "Highlight foldable regions." t)
-
-    (autoload 'hideshowvis-minor-mode "hideshowvis"
-      "Will indicate regions foldable with hideshow in the fringe." t)
-
-    ;; enable hideshowvis for programming modes
-    (add-hook 'prog-mode-hook
-              (lambda ()
-                ;; more syntax definitions
-                (require 'fold-dwim)
-                (hideshowvis-enable)))
-
-    ;; +/- fold buttons
-    (define-fringe-bitmap 'hs-marker [0 24 24 126 126 24 24 0])
-
-    (defcustom hs-fringe-face 'hs-fringe-face
-      "*Specify face used to highlight the fringe on hidden regions."
-      :type 'face
-      :group 'hideshow)
-
-    (defface hs-fringe-face
-      '((t (:box (:line-width 2 :color "#808080" :style released-button)
-            :foreground "#999999")))
-      "Face used to highlight the fringe on folded regions"
-      :group 'hideshow)
-
-    (defcustom hs-face 'hs-face
-      "*Specify the face to to use for the hidden region indicator"
-      :type 'face
-      :group 'hideshow)
-
-    (defface hs-face
-      '((t (:box (:line-width 1 :color "#999999")
-            :foreground "#999999" :background "#FFF8C0")))
-      "Face to hightlight the ... area of hidden regions"
-      :group 'hideshow)
-
-    (defun display-code-line-counts (ov)
-      (when (eq 'code (overlay-get ov 'hs))
-        (let* ((marker-string "*fringe-dummy*")
-               (marker-length (length marker-string))
-               (display-string
-                ;; (format "(%d)..."
-                ;; (count-lines (overlay-start ov) (overlay-end ov)))
-                "..."))
-          (overlay-put ov 'help-echo "Hidden text. C-c,= to show")
-          (put-text-property 0 marker-length
-                             'display (list 'left-fringe
-                                            'hs-marker
-                                            'hs-fringe-face)
-                             marker-string)
-          (overlay-put ov 'before-string marker-string)
-          (put-text-property 0 (length display-string)
-                             'face 'hs-face display-string)
-          (overlay-put ov 'display display-string))))
-
-    (setq hs-set-up-overlay 'display-code-line-counts))
-
 ;;** 26.8 (info "(emacs)Symbol Completion")
 
   (leuven--section "26.8 (emacs)Symbol Completion")
@@ -6280,8 +6215,10 @@ From %c"
 
   (leuven--section "27.10 (emacs)Lisp Interaction Buffers")
 
-  ;; inhibit the initial startup message in the `*scratch*' buffer
-  (setq inhibit-startup-message t)
+  ;; don't display the "Welcome to GNU Emacs" buffer on startup
+  (setq inhibit-startup-screen t)
+
+  ;; don't insert instructions in the `*scratch*' buffer at startup
   (setq initial-scratch-message nil)
 
   ;; major mode command symbol to use for the initial `*scratch*' buffer
@@ -6716,34 +6653,6 @@ From %c"
 
     (add-hook 'semantic-init-hooks 'leuven--semantic-imenu)
 
-    )
-
-  ;; Emacs Code Browser
-  (custom-set-variables '(ecb-options-version "2.40"))
-  (when (try-require 'ecb-autoloads-XXX)
-
-    ;; trick for starting ECB 2.40 (with CEDET merged in Emacs since 23.2)
-    (GNUEmacs
-      (require 'semantic/analyze))
-    (provide 'semantic-analyze)
-    (provide 'semantic-ctxt)
-    (provide 'semanticdb)
-    (provide 'semanticdb-find)
-    (provide 'semanticdb-mode)
-    (provide 'semantic-load)
-
-    (setq stack-trace-on-error t)
-
-    ;; don't show tip of the day at start time of ECB
-    (setq ecb-tip-of-the-day nil)
-
-    ;; toggle activation of ECB (between `ecb-activate' and
-    ;; `ecb-deactivate')
-    (global-set-key
-      (kbd "C-c e") 'ecb-minor-mode)
-
-    ;; (global-set-key (kbd "<M-left>") 'ecb-goto-window-methods)
-    ;; (global-set-key (kbd "<M-right>") 'ecb-goto-window-edit1)
     )
 
 )                                       ; chapter 28 ends here
@@ -7372,7 +7281,7 @@ From %c"
 
   ;; full mailing address of this user
   ;; (used in MAIL envelope FROM, and to select the default personality ID)
-  (setq user-mail-address "john@doe.com")
+  (setq user-mail-address "johndoe@example.com")
 
   ;; sending mail
   (setq send-mail-function 'smtpmail-send-it)
@@ -8722,7 +8631,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140331.1437]--")
+(message "* --[ Loaded Emacs Leuven 20140402.1346]--")
 
 (provide 'emacs-leuven)
 

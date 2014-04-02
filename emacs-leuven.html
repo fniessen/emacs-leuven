@@ -1140,7 +1140,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140331.1437</span>
+"color: #8D8D84; font-style: italic;">Version: 20140402.1346</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1220,7 +1220,7 @@
 <span style="color: #8D8D84;">;;     </span><span style=
 "color: #8D8D84; font-style: italic;">;; do not (try to) install extra Emacs packages</span>
 <span style="color: #8D8D84;">;;     </span><span style=
-"color: #8D8D84; font-style: italic;">(setq leuven-packages nil)</span>
+"color: #8D8D84; font-style: italic;">(setq leuven-elpa-packages nil)</span>
 <span style="color: #8D8D84;">;;</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">For help on the Emacs Editor, see (info "(emacs)")  &lt;== `C-x C-e' here!</span>
@@ -1262,7 +1262,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140331.1437]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140402.1346]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -2000,6 +2000,14 @@
         <h3 id="sec-7-2">Package Installation</h3>
 
         <div class="outline-text-3" id="text-7-2">
+          <ul class="org-ul">
+            <li>User’s Emacs Lisp packages in <code>package-user-dir</code>
+            (<code>~/.emacs.d/elpa</code>)</li>
+
+            <li>System-wide Emacs Lisp packages in
+            <code>package-directory-list</code></li>
+          </ul>
+
           <p>In Marmalade, the developers themselves do the packaging. In
           MELPA, packages are generated programmatically from upstream
           Git-based sources.</p>
@@ -2045,7 +2053,7 @@
 "color: #D0372D; font-style: italic;">&lt;pkg&gt;-autoloads.el</span><span style="color: #8D8D84; font-style: italic;">'</span>
 
       (<span style="color: #0000FF;">defcustom</span> <span style=
-"color: #BA36A5;">leuven-packages</span>
+"color: #BA36A5;">leuven-elpa-packages</span>
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
           csv-mode dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode
           helm htmlize idle-require info+ interaction-log ledger-mode
@@ -2062,24 +2070,25 @@
         <span style="color: #006FE0;">:type</span> '(repeat (string)))
 
       (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">leuven--missing-packages</span> ()
+"color: #006699;">leuven--missing-elpa-packages</span> ()
         <span style=
 "color: #008000;">"List packages to install which are neither built-in nor already installed."</span>
-        (<span style="color: #0000FF;">let</span> (missing-packages)
-          (<span style="color: #0000FF;">dolist</span> (pkg leuven-packages)
+        (<span style="color: #0000FF;">let</span> (missing-elpa-packages)
+          (<span style=
+"color: #0000FF;">dolist</span> (pkg leuven-elpa-packages)
             (<span style=
 "color: #0000FF;">unless</span> (or (package-installed-p pkg)
                         (locate-library (symbol-name pkg)))
-              (push pkg missing-packages)))
-          missing-packages))
+              (push pkg missing-elpa-packages)))
+          missing-elpa-packages))
 
       <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">propose to install all the packages specified in `</span><span style="color: #D0372D; font-style: italic;">leuven-packages</span><span style="color: #8D8D84; font-style: italic;">'</span>
+"color: #8D8D84; font-style: italic;">propose to install all the packages specified in `</span><span style="color: #D0372D; font-style: italic;">leuven-elpa-packages</span><span style="color: #8D8D84; font-style: italic;">'</span>
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">which are missing</span>
       (<span style=
-"color: #0000FF;">let</span> ((missing-packages (leuven--missing-packages)))
-        (<span style="color: #0000FF;">when</span> missing-packages
+"color: #0000FF;">let</span> ((missing-elpa-packages (leuven--missing-elpa-packages)))
+        (<span style="color: #0000FF;">when</span> missing-elpa-packages
           <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">download once the ELPA archive description</span>
           (package-refresh-contents)    <span style=
@@ -2094,10 +2103,11 @@
                                         <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">contents) won't install.</span>
-          (<span style="color: #0000FF;">dolist</span> (pkg missing-packages)
+          (<span style=
+"color: #0000FF;">dolist</span> (pkg missing-elpa-packages)
             (<span style=
 "color: #0000FF;">if</span> (yes-or-no-p (format <span style=
-"color: #036A07;">"Install package `</span><span style=
+"color: #036A07;">"Install ELPA package `</span><span style=
 "color: #D0372D;">%s</span><span style="color: #036A07;">'? "</span> pkg))
                 (<span style="color: #0000FF;">ignore-</span><span style=
 "color: #CC0000; background-color: #FFFF88;">error</span><span style=
@@ -2113,7 +2123,7 @@
 "color: #8D8D84; font-style: italic;">'</span>
               (message (concat <span style=
 "color: #036A07;">"Customize `</span><span style=
-"color: #D0372D;">leuven-packages</span><span style=
+"color: #D0372D;">leuven-elpa-packages</span><span style=
 "color: #036A07;">' to ignore "</span>
                                <span style=
 "color: #036A07;">"the `</span><span style=
@@ -4654,7 +4664,7 @@
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">export buffer</span>
                     (message <span style=
-"color: #036A07;">"Don't turn on Flyspell mode in `</span><span style=
+"color: #036A07;">"DON'T TURN ON Flyspell mode in `</span><span style=
 "color: #D0372D;">%s</span><span style=
 "color: #036A07;">'"</span> (buffer-name))
                   (message <span style=
@@ -5781,7 +5791,7 @@ M-: (executable-find "diff") RET
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">stop EasyPG from asking for the recipient used for encrypting files</span>
     (setq epa-file-encrypt-to <span style=
-"color: #036A07;">"john@doe.com"</span>)
+"color: #036A07;">"johndoe@example.com"</span>)
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">if no one is selected (""), symmetric encryption will always be</span>
     <span style="color: #8D8D84;">;; </span><span style=
@@ -16502,8 +16512,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">from compiling</span>
   (<span style="color: #0000FF;">when</span> (and (display-graphic-p)
-             (try-require 'hideshowvis-<span style=
-"color: #CC0000; background-color: #FFFF88;">XXX</span>))
+             (try-require 'hideshowvis))
 
     (autoload 'hideshowvis-enable <span style=
 "color: #036A07;">"hideshowvis"</span>
@@ -17260,8 +17269,11 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 "color: #036A07;">"27.10 (emacs)Lisp Interaction Buffers"</span>)
 
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">inhibit the initial startup message in the `</span><span style="color: #D0372D; font-style: italic;">*scratch*</span><span style="color: #8D8D84; font-style: italic;">' buffer</span>
-  (setq inhibit-startup-message t)
+"color: #8D8D84; font-style: italic;">don't display the "Welcome to GNU Emacs" buffer on startup</span>
+  (setq inhibit-startup-screen t)
+
+  <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">don't insert instructions in the `</span><span style="color: #D0372D; font-style: italic;">*scratch*</span><span style="color: #8D8D84; font-style: italic;">' buffer at startup</span>
   (setq initial-scratch-message nil)
 </pre>
           </div>
@@ -18516,9 +18528,7 @@ TAGS:
 "color: #8D8D84; font-style: italic;">Emacs Code Browser</span>
   (custom-set-variables '(ecb-options-version <span style=
 "color: #036A07;">"2.40"</span>))
-  (<span style=
-"color: #0000FF;">when</span> (try-require 'ecb-autoloads-<span style=
-"color: #CC0000; background-color: #FFFF88;">XXX</span>)
+  (<span style="color: #0000FF;">when</span> (try-require 'ecb-autoloads)
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">trick for starting ECB 2.40 (with CEDET merged in Emacs since 23.2)</span>
@@ -20312,7 +20322,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "color: #8D8D84; font-style: italic;">full mailing address of this user</span>
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">(used in MAIL envelope FROM, and to select the default personality ID)</span>
-  (setq user-mail-address <span style="color: #036A07;">"john@doe.com"</span>)
+  (setq user-mail-address <span style=
+"color: #036A07;">"johndoe@example.com"</span>)
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">sending mail</span>
@@ -23757,7 +23768,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">default nick</span>
-    (setq circe-default-nick <span style="color: #036A07;">"john_doe"</span>)
+    (setq circe-default-nick <span style="color: #036A07;">"johndoe"</span>)
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">your "real name" on IRC</span>
@@ -23858,7 +23869,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
 "color: #0000FF;">when</span> (try-require 'jabber-autoloads-<span style=
 "color: #CC0000; background-color: #FFFF88;">XXX</span>)
     (setq jabber-account-list '((<span style=
-"color: #036A07;">"john.doe@gmail.com"</span>
+"color: #036A07;">"johndoe@example.com"</span>
                                  (<span style=
 "color: #006FE0;">:network-server</span> . <span style=
 "color: #036A07;">"talk.google.com"</span>)
@@ -24043,7 +24054,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140331.1437]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140402.1347]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

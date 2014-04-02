@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-03-31 Mon 14:32>
+# Time-stamp: <2014-04-02 Wed 13:45>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -86,7 +86,7 @@ this set of customizations to "short-cut" that initial process.
 ;; line before requiring Emacs Leuven.
 ;;
 ;;     ;; do not (try to) install extra Emacs packages
-;;     (setq leuven-packages nil)
+;;     (setq leuven-elpa-packages nil)
 ;;
 ;; For help on the Emacs Editor, see (info "(emacs)")  <== `C-x C-e' here!
 
@@ -530,6 +530,9 @@ by hit ~y~ (/Yes/) when asked.
 
 ** Package Installation
 
+- User's Emacs Lisp packages in ~package-user-dir~ (=~/.emacs.d/elpa=)
+- System-wide Emacs Lisp packages in ~package-directory-list~
+
 In Marmalade, the developers themselves do the packaging.  In MELPA, packages
 are generated programmatically from upstream Git-based sources.
 
@@ -555,7 +558,7 @@ are generated programmatically from upstream Git-based sources.
       (package-initialize)              ; add ALL ELPA subdirs to `load-path'
                                         ; and load `<pkg>-autoloads.el'
 
-      (defcustom leuven-packages
+      (defcustom leuven-elpa-packages
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
           csv-mode dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode
           helm htmlize idle-require info+ interaction-log ledger-mode
@@ -568,31 +571,31 @@ are generated programmatically from upstream Git-based sources.
         :group 'emacs-leuven
         :type '(repeat (string)))
 
-      (defun leuven--missing-packages ()
+      (defun leuven--missing-elpa-packages ()
         "List packages to install which are neither built-in nor already installed."
-        (let (missing-packages)
-          (dolist (pkg leuven-packages)
+        (let (missing-elpa-packages)
+          (dolist (pkg leuven-elpa-packages)
             (unless (or (package-installed-p pkg)
                         (locate-library (symbol-name pkg)))
-              (push pkg missing-packages)))
-          missing-packages))
+              (push pkg missing-elpa-packages)))
+          missing-elpa-packages))
 
-      ;; propose to install all the packages specified in `leuven-packages'
+      ;; propose to install all the packages specified in `leuven-elpa-packages'
       ;; which are missing
-      (let ((missing-packages (leuven--missing-packages)))
-        (when missing-packages
+      (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
+        (when missing-elpa-packages
           ;; download once the ELPA archive description
           (package-refresh-contents)    ; Ensure that the list of packages is
                                         ; up-to-date.  Otherwise, new packages
                                         ; (not present in the cache of the ELPA
                                         ; contents) won't install.
-          (dolist (pkg missing-packages)
-            (if (yes-or-no-p (format "Install package `%s'? " pkg))
+          (dolist (pkg missing-elpa-packages)
+            (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
                 (ignore-errors
                   (package-install pkg))
                                         ; must be run after initializing
                                         ; `package-initialize'
-              (message (concat "Customize `leuven-packages' to ignore "
+              (message (concat "Customize `leuven-elpa-packages' to ignore "
                                "the `%s' package at next startup...") pkg)
               (sit-for 1.5)))))
 
@@ -2101,7 +2104,7 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
                 (if (or (eq (aref (buffer-name) 0) ?\s) ; buffer starting with " *"
                         (and (boundp 'org-babel-exp-reference-buffer)
                              org-babel-exp-reference-buffer)) ; export buffer
-                    (message "Don't turn on Flyspell mode in `%s'" (buffer-name))
+                    (message "DON'T TURN ON Flyspell mode in `%s'" (buffer-name))
                   (message "Turn on Flyspell mode in `%s'" (buffer-name))
                   (turn-on-flyspell))))
 #+end_src
@@ -2816,7 +2819,7 @@ What is PGP/MIME, what is OpenPGP, and how Gnus handles them?
   (with-eval-after-load "epa-file"
 
     ;; stop EasyPG from asking for the recipient used for encrypting files
-    (setq epa-file-encrypt-to "john@doe.com")
+    (setq epa-file-encrypt-to "johndoe@example.com")
     ;; if no one is selected (""), symmetric encryption will always be
     ;; performed
 
@@ -9072,12 +9075,12 @@ distinguishes end-of-block.
     (kbd "C-c @ s") 'hs-show-block)
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; if hideshowvis is not installed, do not attempt to configure it,
   ;; as this will prevent packages (including hideshowvis itself)
   ;; from compiling
   (when (and (display-graphic-p)
-             (try-require 'hideshowvis-XXX))
+             (try-require 'hideshowvis))
 
     (autoload 'hideshowvis-enable "hideshowvis"
       "Highlight foldable regions." t)
@@ -9534,8 +9537,10 @@ To (attempt to) cleanly reevaluate a buffer of Emacs Lisp code, use
 
   (leuven--section "27.10 (emacs)Lisp Interaction Buffers")
 
-  ;; inhibit the initial startup message in the `*scratch*' buffer
-  (setq inhibit-startup-message t)
+  ;; don't display the "Welcome to GNU Emacs" buffer on startup
+  (setq inhibit-startup-screen t)
+
+  ;; don't insert instructions in the `*scratch*' buffer at startup
   (setq initial-scratch-message nil)
 #+end_src
 
@@ -10301,10 +10306,10 @@ Keyboard navigation:
 - ~C-c . g 1~ ::
      Go to edit buffer.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Emacs Code Browser
   (custom-set-variables '(ecb-options-version "2.40"))
-  (when (try-require 'ecb-autoloads-XXX)
+  (when (try-require 'ecb-autoloads)
 
     ;; trick for starting ECB 2.40 (with CEDET merged in Emacs since 23.2)
     (GNUEmacs
@@ -11363,7 +11368,7 @@ Minimal configuration for sending a bug report, for example.
 
   ;; full mailing address of this user
   ;; (used in MAIL envelope FROM, and to select the default personality ID)
-  (setq user-mail-address "john@doe.com")
+  (setq user-mail-address "johndoe@example.com")
 
   ;; sending mail
   (setq send-mail-function 'smtpmail-send-it)
@@ -13417,7 +13422,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 ;;*** 2.3 Configuration
 
     ;; default nick
-    (setq circe-default-nick "john_doe")
+    (setq circe-default-nick "johndoe")
 
     ;; your "real name" on IRC
     (setq circe-default-realname "John Doe")
@@ -13479,7 +13484,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 #+begin_src emacs-lisp :tangle no
   ;; Jabber (GTalk)
   (when (try-require 'jabber-autoloads-XXX)
-    (setq jabber-account-list '(("john.doe@gmail.com"
+    (setq jabber-account-list '(("johndoe@example.com"
                                  (:network-server . "talk.google.com")
                                  (:connection-type . ssl)
                                  (:port . 443))))
