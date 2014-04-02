@@ -854,7 +854,9 @@
       (<span style="color: #0000FF;">defface</span> <span style=
 "color: #BA36A5;">gnus-hl-line</span>
         '((t (<span style="color: #006FE0;">:background</span> <span style=
-"color: #036A07;">"#F7F7F7"</span>)))
+"color: #036A07;">"#F5F5F5"</span>)))  <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">#FFFFCC</span>
         <span style=
 "color: #008000;">"Face for highlighting the current line with `</span><span style="color: #D0372D;">gnus-hl-line</span><span style="color: #008000;">'."</span>
         <span style="color: #006FE0;">:group</span> 'hl-line)
@@ -1068,13 +1070,13 @@
            (setq message-alternative-emails
                  (concat
                   (regexp-quote <span style=
-"color: #036A07;">"john@doe.com"</span>) <span style=
+"color: #036A07;">"johndoe@example.com"</span>) <span style=
 "color: #036A07;">"</span><span style=
 "color: #036A07; font-weight: bold;">\\</span><span style=
 "color: #036A07; font-weight: bold;">|</span><span style=
 "color: #036A07;">"</span>
                   (regexp-quote <span style=
-"color: #036A07;">"jane@doe.com"</span>)))
+"color: #036A07;">"janedoe@example.com"</span>)))
 
            <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">`</span><span style=
@@ -2379,17 +2381,17 @@
               '((<span style="color: #036A07;">"John-Doe-ID"</span>
                  <span style="color: #036A07;">""</span>
                  <span style="color: #036A07;">"John Doe <a href=
-"mailto:john%40doe.com">&lt;john@doe.com&gt;</a>"</span>
+"mailto:johndoe%40example.com">&lt;johndoe@example.com&gt;</a>"</span>
                  <span style="color: #036A07;">"John Doe"</span>
                  ((<span style="color: #036A07;">"X-Url"</span> . <span style=
-"color: #036A07;">"http://www.doe.com/~john"</span>))
+"color: #036A07;">"http://www.example.com/~john"</span>))
                  <span style="color: #036A07;">"\nJohn\n"</span>
                  <span style="color: #036A07;">"John Doe"</span>)
 
                 (<span style="color: #036A07;">"Jane-Doe-ID"</span>
                  <span style="color: #036A07;">""</span>
                  <span style="color: #036A07;">"Jane Doe <a href=
-"mailto:jane%40doe.com">&lt;jane@doe.com&gt;</a>"</span>
+"mailto:janedoe%40example.com">&lt;janedoe@example.com&gt;</a>"</span>
                  <span style="color: #036A07;">"Jane Doe"</span>
                  ((<span style="color: #036A07;">"X-Url"</span> . <span style=
 "color: #036A07;">"Under construction..."</span>))
@@ -2407,12 +2409,12 @@
 
                 (<span style="color: #036A07;">"John-Doe-Rule"</span>
                  (<span style="color: #036A07;">"any"</span> <span style=
-"color: #036A07;">"john@doe.com"</span> both)
+"color: #036A07;">"johndoe@example.com"</span> both)
                  <span style="color: #036A07;">"John-Doe-ID"</span>)
 
                 (<span style="color: #036A07;">"Jane-Doe-Rule"</span>
                  (<span style="color: #036A07;">"any"</span> <span style=
-"color: #036A07;">"jane@doe.com"</span> both)
+"color: #036A07;">"janedoe@example.com"</span> both)
                  <span style="color: #036A07;">"Jane-Doe-ID"</span>)))
 
         <span style="color: #8D8D84;">;; </span><span style=
@@ -2795,7 +2797,7 @@
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">name of file containing the signature</span>
       (setq message-signature-file <span style=
-"color: #036A07;">"~/Mail/signatures/john-doe"</span>)
+"color: #036A07;">"~/Mail/signatures/johndoe"</span>)
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">this file must exist (otherwise, you get misplaced headers when</span>
       <span style="color: #8D8D84;">;; </span><span style=

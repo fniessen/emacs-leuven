@@ -281,7 +281,7 @@
 ;;** 2.17 (info "(gnus)Misc Group Stuff")
 
       (defface gnus-hl-line
-        '((t (:background "#F7F7F7")))
+        '((t (:background "#F5F5F5")))  ; #FFFFCC
         "Face for highlighting the current line with `gnus-hl-line'."
         :group 'hl-line)
 
@@ -396,8 +396,8 @@
            ;; regexp matching alternative email addresses
            (setq message-alternative-emails
                  (concat
-                  (regexp-quote "john@doe.com") "\\|"
-                  (regexp-quote "jane@doe.com")))
+                  (regexp-quote "johndoe@example.com") "\\|"
+                  (regexp-quote "janedoe@example.com")))
 
            ;; `From' headers that may be suppressed in favor of `To' headers
            (setq gnus-ignored-from-addresses
@@ -1002,15 +1002,15 @@
         (setq gnus-alias-identity-alist
               '(("John-Doe-ID"
                  ""
-                 "John Doe <john@doe.com>"
+                 "John Doe <johndoe@example.com>"
                  "John Doe"
-                 (("X-Url" . "http://www.doe.com/~john"))
+                 (("X-Url" . "http://www.example.com/~john"))
                  "\nJohn\n"
                  "John Doe")
 
                 ("Jane-Doe-ID"
                  ""
-                 "Jane Doe <jane@doe.com>"
+                 "Jane Doe <janedoe@example.com>"
                  "Jane Doe"
                  (("X-Url" . "Under construction..."))
                  "\nBest regards,\n  Jane\n"
@@ -1023,11 +1023,11 @@
                  "John-Doe-ID")
 
                 ("John-Doe-Rule"
-                 ("any" "john@doe.com" both)
+                 ("any" "johndoe@example.com" both)
                  "John-Doe-ID")
 
                 ("Jane-Doe-Rule"
-                 ("any" "jane@doe.com" both)
+                 ("any" "janedoe@example.com" both)
                  "Jane-Doe-ID")))
 
         ;; identity to use when gnus-alias finds an unknown identity
@@ -1156,7 +1156,7 @@
 ;;*** 2.4 (info "(message)Insertion")
 
       ;; name of file containing the signature
-      (setq message-signature-file "~/Mail/signatures/john-doe")
+      (setq message-signature-file "~/Mail/signatures/johndoe")
       ;; this file must exist (otherwise, you get misplaced headers when
       ;; switching between personalities (see `gnus-alias')
 
