@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-04-02 Wed 13:45>
+# Time-stamp: <2014-04-02 Wed 14:35>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -560,10 +560,10 @@ are generated programmatically from upstream Git-based sources.
 
       (defcustom leuven-elpa-packages
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
-          csv-mode dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode
-          helm htmlize idle-require info+ interaction-log ledger-mode
-          leuven-theme org-mime pager rainbow-mode redo+ redshank sml-modeline
-          tidy yasnippet
+          csv-mode dictionary dired+ dired-single ess fuzzy git-commit-mode
+          graphviz-dot-mode helm htmlize idle-require info+ interaction-log
+          ledger-mode leuven-theme org-mime pager rainbow-mode redo+ redshank
+          sml-modeline tidy yasnippet
           ;; jabber multi-term
           ;; paredit w3m
           )
@@ -2417,6 +2417,17 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
 ;;* 18 (info "(emacs)Files") Handling
 
 (leuven--chapter leuven-chapter-18-files "18 Files Handling"
+#+end_src
+
+** File Names
+
+#+begin_src emacs-lisp
+;;** 18.1 (info "(emacs)File Names")
+
+  (leuven--section "18.1 (emacs)File Names")
+
+  ;; ;; name of default directory
+  ;; (setq default-directory (concat (getenv "HOME") "/"))
 #+end_src
 
 ** Visiting Files
@@ -9592,9 +9603,9 @@ To evaluate a non-interactive command, simply use ~IELM~.
   ;;     (kbd "<tab>") 'elisp-indent-or-complete))
 #+end_src
 
-#+begin_src emacs-lisp
-  ;;;_  + paredit                       ; or smartparen (or autopair)?
+Paredit (or smartparen or autopair)?
 
+#+begin_src emacs-lisp :tangle no
   (autoload 'paredit-mode "paredit"
     "Minor mode for pseudo-structurally editing Lisp code." t)
   (autoload 'enable-paredit-mode "paredit"
@@ -10423,7 +10434,7 @@ See [[id:366386cb-9c4f-4d61-b676-e742e6277587][Interaction between Org and other
 
 ~yas-snippet-dirs~ is assumed to contain *directories of modes* with snippets.
 
-By default, put *your own snippets* in =~/.emacs.d/snippets=.
+By default, put *your own snippets* in the directory =~/.emacs.d/snippets=.
 
 #+begin_src emacs-lisp
       (defvar leuven-yasnippet-my-snippets-dir

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140402.1345
+;; Version: 20140402.1436
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140402.1345]--")
+(message "* --[ Loading Emacs Leuven 20140402.1436]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -412,10 +412,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (defcustom leuven-elpa-packages
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
-          csv-mode dictionary dired+ ess fuzzy git-commit-mode graphviz-dot-mode
-          helm htmlize idle-require info+ interaction-log ledger-mode
-          leuven-theme org-mime pager rainbow-mode redo+ redshank sml-modeline
-          tidy yasnippet
+          csv-mode dictionary dired+ dired-single ess fuzzy git-commit-mode
+          graphviz-dot-mode helm htmlize idle-require info+ interaction-log
+          ledger-mode leuven-theme org-mime pager rainbow-mode redo+ redshank
+          sml-modeline tidy yasnippet
           ;; jabber multi-term
           ;; paredit w3m
           )
@@ -1484,6 +1484,13 @@ Last time is saved in global variable `leuven--before-section-time'."
 ;;* 18 (info "(emacs)Files") Handling
 
 (leuven--chapter leuven-chapter-18-files "18 Files Handling"
+
+;;** 18.1 (info "(emacs)File Names")
+
+  (leuven--section "18.1 (emacs)File Names")
+
+  ;; ;; name of default directory
+  ;; (setq default-directory (concat (getenv "HOME") "/"))
 
 ;;** 18.2 (info "(emacs)Visiting") Files
 
@@ -6252,15 +6259,6 @@ From %c"
   ;;   (define-key emacs-lisp-mode-map
   ;;     (kbd "<tab>") 'elisp-indent-or-complete))
 
-  ;;;_  + paredit                       ; or smartparen (or autopair)?
-
-  (autoload 'paredit-mode "paredit"
-    "Minor mode for pseudo-structurally editing Lisp code." t)
-  (autoload 'enable-paredit-mode "paredit"
-    "Minor mode for pseudo-structurally editing Lisp code." t)
-
-  ;;;;;;;;;;;;;;(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
-
   ;;;_  + redshank
 
   (when (locate-library "redshank")
@@ -8631,7 +8629,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140402.1346]--")
+(message "* --[ Loaded Emacs Leuven 20140402.1437]--")
 
 (provide 'emacs-leuven)
 
