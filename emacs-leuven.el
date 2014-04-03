@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140402.1436
+;; Version: 20140403.0945
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140402.1436]--")
+(message "* --[ Loading Emacs Leuven 20140403.0945]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -6887,22 +6887,22 @@ From %c"
     (when (try-require 'dired-single)
 
       (define-key dired-mode-map
-        (kbd "<return>") 'joc-dired-single-buffer)
+        (kbd "<return>") 'dired-single-buffer)
 
       (define-key dired-mode-map
-        (kbd "<mouse-1>") 'joc-dired-single-buffer-mouse)
+        (kbd "<mouse-1>") 'dired-single-buffer-mouse)
 
       (define-key dired-mode-map
         (kbd "^")
         (lambda ()
           (interactive)
-          (joc-dired-single-buffer "..")))
+          (dired-single-buffer "..")))
 
       (define-key dired-mode-map
         (kbd "C-x C-j")
         (lambda ()
           (interactive)
-          (joc-dired-single-buffer ".."))))
+          (dired-single-buffer ".."))))
 
     (define-key dired-mode-map
       (kbd "e") 'browse-url-of-dired-file) ; <C-RET>?
@@ -8629,7 +8629,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140402.1437]--")
+(message "* --[ Loaded Emacs Leuven 20140403.0946]--")
 
 (provide 'emacs-leuven)
 

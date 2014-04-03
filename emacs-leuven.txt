@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-04-02 Wed 14:35>
+# Time-stamp: <2014-04-03 Thu 09:44>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -10732,22 +10732,22 @@ Single Dired buffer.
     (when (try-require 'dired-single)
 
       (define-key dired-mode-map
-        (kbd "<return>") 'joc-dired-single-buffer)
+        (kbd "<return>") 'dired-single-buffer)
 
       (define-key dired-mode-map
-        (kbd "<mouse-1>") 'joc-dired-single-buffer-mouse)
+        (kbd "<mouse-1>") 'dired-single-buffer-mouse)
 
       (define-key dired-mode-map
         (kbd "^")
         (lambda ()
           (interactive)
-          (joc-dired-single-buffer "..")))
+          (dired-single-buffer "..")))
 
       (define-key dired-mode-map
         (kbd "C-x C-j")
         (lambda ()
           (interactive)
-          (joc-dired-single-buffer ".."))))
+          (dired-single-buffer ".."))))
 #+end_src
 
 *** Open file with default tool (open directory with Windows Explorer)
