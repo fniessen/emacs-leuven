@@ -24,9 +24,10 @@ deadline and scheduled for what they're meant.
 
 A *scheduled* date is a *start date*.
 
-A *deadline* is a ultimate finish date. It can have a *reminder* (the *warning
-period*), which /must be updated every time we want to snooze the reminder/ (once
-a day, week, month). We can do such an update via =C-u C-u C-c C-d=.
+A *deadline* is a ultimate finish date. It can have a custom *reminder* to receive
+alerts for approaching due dates (in the *warning period*); it /must be updated
+every time we want to snooze the reminder/ (once a day, week, month). We can do
+such an update via =C-u C-u C-c C-d=.
 
 * Key bindings
 
