@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140403.0945
+;; Version: 20140407.1532
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140403.0945]--")
+(message "* --[ Loading Emacs Leuven 20140407.1532]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -112,9 +112,9 @@
 
 ;; allow quick include/exclude of setup parts -- DO NOT EDIT the DEFVAR!
 (defvar leuven-chapter-0-environment t) ; required
-(defvar leuven-chapter-0-loading-libraries t)
-                                        ; required
+(defvar leuven-chapter-0-loading-libraries t) ; required
 (defvar leuven-chapter-0-debugging t)
+(defvar leuven-chapter-47-packages t)
 (defvar leuven-chapter-1-screen t)
 (defvar leuven-chapter-6-exiting t)
 (defvar leuven-chapter-7-basic t)
@@ -153,7 +153,6 @@
 (defvar leuven-chapter-42-saving-emacs-sessions t)
 (defvar leuven-chapter-45-hyperlinking t)
 (defvar leuven-chapter-46-amusements t)
-(defvar leuven-chapter-47-packages t)
 (defvar leuven-chapter-48-customization t)
 (defvar leuven-chapter-AppG-ms-dos t)
 (defvar leuven-chapter-XX-emacs-display t)
@@ -263,6 +262,25 @@ Last time is saved in global variable `leuven--before-section-time'."
       (declare (indent defun))
       `(eval-after-load ,mode
          '(progn ,@body))))
+
+  (if (try-require 'idle-require)
+
+      (progn
+        ;; idle time in seconds after which autoload functions will be loaded
+        (setq idle-require-idle-delay 5)
+
+        ;; time in seconds between automatically loaded functions
+        (setq idle-require-load-break 2))
+
+    ;; fail-safe for `idle-require'
+    (defun idle-require (feature &optional file noerror)
+      (try-require feature)))
+
+  (add-hook 'after-init-hook
+            (lambda ()
+              (when (fboundp 'idle-require-mode)
+                ;; starts loading
+                (idle-require-mode 1))))
 
 )                                       ; chapter 0-loading-libraries ends here
 
@@ -460,25 +478,6 @@ Last time is saved in global variable `leuven--before-section-time'."
                          ("Status"  10 package-menu--status-predicate)
                          ("Description" 0 nil)])
                   (tabulated-list-init-header)))))
-
-  (if (try-require 'idle-require)
-
-      (progn
-        ;; idle time in seconds after which autoload functions will be loaded
-        (setq idle-require-idle-delay 5)
-
-        ;; time in seconds between automatically loaded functions
-        (setq idle-require-load-break 2))
-
-    ;; fail-safe for `idle-require'
-    (defun idle-require (feature &optional file noerror)
-      (try-require feature)))
-
-  (add-hook 'after-init-hook
-            (lambda ()
-              (when (fboundp 'idle-require-mode)
-                ;; starts loading
-                (idle-require-mode 1))))
 
 )                                       ; chapter 47 ends here
 
@@ -8629,7 +8628,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140403.0946]--")
+(message "* --[ Loaded Emacs Leuven 20140407.1533]--")
 
 (provide 'emacs-leuven)
 
