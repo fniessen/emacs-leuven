@@ -1142,7 +1142,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140402.1438</span>
+"color: #8D8D84; font-style: italic;">Version: 20140407.1624</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1264,7 +1264,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140402.1438]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140407.1624]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -1352,12 +1352,13 @@
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">required</span>
 (<span style="color: #0000FF;">defvar</span> <span style=
-"color: #BA36A5;">leuven-chapter-0-loading-libraries</span> t)
-                                        <span style=
+"color: #BA36A5;">leuven-chapter-0-loading-libraries</span> t) <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">required</span>
 (<span style="color: #0000FF;">defvar</span> <span style=
 "color: #BA36A5;">leuven-chapter-0-debugging</span> t)
+(<span style="color: #0000FF;">defvar</span> <span style=
+"color: #BA36A5;">leuven-chapter-47-packages</span> t)
 (<span style="color: #0000FF;">defvar</span> <span style=
 "color: #BA36A5;">leuven-chapter-1-screen</span> t)
 (<span style="color: #0000FF;">defvar</span> <span style=
@@ -1434,8 +1435,6 @@
 "color: #BA36A5;">leuven-chapter-45-hyperlinking</span> t)
 (<span style="color: #0000FF;">defvar</span> <span style=
 "color: #BA36A5;">leuven-chapter-46-amusements</span> t)
-(<span style="color: #0000FF;">defvar</span> <span style=
-"color: #BA36A5;">leuven-chapter-47-packages</span> t)
 (<span style="color: #0000FF;">defvar</span> <span style=
 "color: #BA36A5;">leuven-chapter-48-customization</span> t)
 (<span style="color: #0000FF;">defvar</span> <span style=
@@ -1707,6 +1706,39 @@
       (<span style="color: #0000FF;">declare</span> (indent defun))
       `(eval-after-load ,mode
          '(<span style="color: #0000FF;">progn</span> ,@body))))
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+  (<span style="color: #0000FF;">if</span> (try-require 'idle-require)
+
+      (<span style="color: #0000FF;">progn</span>
+        <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">idle time in seconds after which autoload functions will be loaded</span>
+        (setq idle-require-idle-delay 5)
+
+        <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">time in seconds between automatically loaded functions</span>
+        (setq idle-require-load-break 2))
+
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">fail-safe for `</span><span style=
+"color: #D0372D; font-style: italic;">idle-require</span><span style=
+"color: #8D8D84; font-style: italic;">'</span>
+    (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">idle-require</span> (feature <span style=
+"color: #6434A3;">&amp;optional</span> file no<span style=
+"color: #CC0000; background-color: #FFFF88;">error</span>)
+      (try-require feature)))
+
+  (add-hook 'after-init-hook
+            (<span style="color: #0000FF;">lambda</span> ()
+              (<span style=
+"color: #0000FF;">when</span> (fboundp 'idle-require-mode)
+                <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">starts loading</span>
+                (idle-require-mode 1))))
 </pre>
         </div>
 
@@ -2059,12 +2091,12 @@
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
           csv-mode dictionary dired+ dired-single ess fuzzy git-commit-mode
           graphviz-dot-mode helm htmlize idle-require info+ interaction-log
-          ledger-mode leuven-theme org-mime pager rainbow-mode redo+ redshank
+          ledger-mode leuven-theme org-mime pager rainbow-mode redo+
           sml-modeline tidy yasnippet
           <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">jabber multi-term</span>
           <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">paredit w3m</span>
+"color: #8D8D84; font-style: italic;">paredit redshank w3m</span>
           )
         <span style=
 "color: #008000;">"A list of packages to ensure are installed at Emacs startup."</span>
@@ -2147,39 +2179,6 @@
                          (<span style=
 "color: #036A07;">"Description"</span> 0 nil)])
                   (tabulated-list-init-header)))))
-</pre>
-          </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  (<span style="color: #0000FF;">if</span> (try-require 'idle-require)
-
-      (<span style="color: #0000FF;">progn</span>
-        <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">idle time in seconds after which autoload functions will be loaded</span>
-        (setq idle-require-idle-delay 5)
-
-        <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">time in seconds between automatically loaded functions</span>
-        (setq idle-require-load-break 2))
-
-    <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">fail-safe for `</span><span style=
-"color: #D0372D; font-style: italic;">idle-require</span><span style=
-"color: #8D8D84; font-style: italic;">'</span>
-    (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">idle-require</span> (feature <span style=
-"color: #6434A3;">&amp;optional</span> file no<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span>)
-      (try-require feature)))
-
-  (add-hook 'after-init-hook
-            (<span style="color: #0000FF;">lambda</span> ()
-              (<span style=
-"color: #0000FF;">when</span> (fboundp 'idle-require-mode)
-                <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">starts loading</span>
-                (idle-require-mode 1))))
 </pre>
           </div>
 
@@ -17328,9 +17327,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
         <div class="outline-text-3" id="text-32-10">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  <span style="color: #8D8D84;">;;;</span><span style=
-"color: #8D8D84; font-style: italic;">_ * elint</span>
-
   (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">elint-current-buffer</span> ()
     (interactive)
@@ -17349,9 +17345,6 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  <span style="color: #8D8D84;">;;;</span><span style=
-"color: #8D8D84; font-style: italic;">_ * emacs-lisp</span>
-
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">(defun elisp-indent-or-complete (&amp;optional arg)</span>
   <span style="color: #8D8D84;">;;   </span><span style=
@@ -17376,39 +17369,36 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 </pre>
           </div>
 
-          <p>Paredit (or smartparen or autopair)?</p>
+          <p>XXX Paredit (or smartparen or autopair)?</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (autoload 'paredit-mode <span style="color: #036A07;">"paredit"</span>
-    <span style=
-"color: #008000;">"Minor mode for pseudo-structurally editing Lisp code."</span> t)
-  (autoload 'enable-paredit-mode <span style="color: #036A07;">"paredit"</span>
-    <span style=
-"color: #008000;">"Minor mode for pseudo-structurally editing Lisp code."</span> t)
-
-  <span style="color: #8D8D84;">;;;;;;;;;;;;;;</span><span style=
-"color: #8D8D84; font-style: italic;">(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)</span>
-</pre>
-          </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  <span style="color: #8D8D84;">;;;</span><span style=
-"color: #8D8D84; font-style: italic;">_  + redshank</span>
-
+  <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">minor mode for editing parentheses</span>
   (<span style="color: #0000FF;">when</span> (locate-library <span style=
-"color: #036A07;">"redshank"</span>)
+"color: #036A07;">"paredit"</span>)
+
+    (autoload 'enable-paredit-mode <span style=
+"color: #036A07;">"paredit"</span>
+      <span style=
+"color: #008000;">"Minor mode for pseudo-structurally editing Lisp code."</span> t)
+
+    (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">Common Lisp editing extensions</span>
+    (<span style="color: #0000FF;">when</span> (locate-library <span style=
+"color: #036A07;">"redshank"</span>)   <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">requires `</span><span style=
+"color: #D0372D; font-style: italic;">paredit</span><span style=
+"color: #8D8D84; font-style: italic;">'</span>
+
       (autoload 'redshank-mode <span style="color: #036A07;">"redshank"</span>
         <span style=
 "color: #008000;">"Minor mode for restructuring Lisp code (i.e., refactoring)."</span> t)
 
-      (add-hook 'emacs-lisp-mode-hook
-                (<span style="color: #0000FF;">lambda</span> ()
-                  (redshank-mode 1))))
-
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">lang-emacs-lisp.el ends here</span>
+      (add-hook 'emacs-lisp-mode-hook 'turn-on-redshank-mode)))
 </pre>
           </div>
         </div>
@@ -19207,24 +19197,23 @@ TAGS:
 
       (define-key dired-mode-map
         (kbd <span style=
-"color: #036A07;">"&lt;return&gt;"</span>) 'joc-dired-single-buffer)
+"color: #036A07;">"&lt;return&gt;"</span>) 'dired-single-buffer)
 
       (define-key dired-mode-map
         (kbd <span style=
-"color: #036A07;">"&lt;mouse-1&gt;"</span>) 'joc-dired-single-buffer-mouse)
+"color: #036A07;">"&lt;mouse-1&gt;"</span>) 'dired-single-buffer-mouse)
 
       (define-key dired-mode-map
         (kbd <span style="color: #036A07;">"^"</span>)
         (<span style="color: #0000FF;">lambda</span> ()
           (interactive)
-          (joc-dired-single-buffer <span style="color: #036A07;">".."</span>)))
+          (dired-single-buffer <span style="color: #036A07;">".."</span>)))
 
       (define-key dired-mode-map
         (kbd <span style="color: #036A07;">"C-x C-j"</span>)
         (<span style="color: #0000FF;">lambda</span> ()
           (interactive)
-          (joc-dired-single-buffer <span style=
-"color: #036A07;">".."</span>))))
+          (dired-single-buffer <span style="color: #036A07;">".."</span>))))
 </pre>
             </div>
           </div>
@@ -24076,7 +24065,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140402.1438]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140407.1625]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

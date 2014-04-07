@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-04-07 Mon 15:32>
+# Time-stamp: <2014-04-07 Mon 16:01>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -582,10 +582,10 @@ are generated programmatically from upstream Git-based sources.
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
           csv-mode dictionary dired+ dired-single ess fuzzy git-commit-mode
           graphviz-dot-mode helm htmlize idle-require info+ interaction-log
-          ledger-mode leuven-theme org-mime pager rainbow-mode redo+ redshank
+          ledger-mode leuven-theme org-mime pager rainbow-mode redo+
           sml-modeline tidy yasnippet
           ;; jabber multi-term
-          ;; paredit w3m
+          ;; paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
         :group 'emacs-leuven
@@ -9571,8 +9571,6 @@ To evaluate a non-interactive command, simply use ~IELM~.
 ** Other
 
 #+begin_src emacs-lisp
-  ;;;_ * elint
-
   (defun elint-current-buffer ()
     (interactive)
     (elint-initialize)
@@ -9587,8 +9585,6 @@ To evaluate a non-interactive command, simply use ~IELM~.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;;;_ * emacs-lisp
-
   ;; (defun elisp-indent-or-complete (&optional arg)
   ;;   (interactive "p")
   ;;   (call-interactively 'lisp-indent-line)
@@ -9602,29 +9598,24 @@ To evaluate a non-interactive command, simply use ~IELM~.
   ;;     (kbd "<tab>") 'elisp-indent-or-complete))
 #+end_src
 
-Paredit (or smartparen or autopair)?
-
-#+begin_src emacs-lisp :tangle no
-  (autoload 'paredit-mode "paredit"
-    "Minor mode for pseudo-structurally editing Lisp code." t)
-  (autoload 'enable-paredit-mode "paredit"
-    "Minor mode for pseudo-structurally editing Lisp code." t)
-
-  ;;;;;;;;;;;;;;(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
-#+end_src
+XXX Paredit (or smartparen or autopair)?
 
 #+begin_src emacs-lisp
-  ;;;_  + redshank
+  ;; minor mode for editing parentheses
+  (when (locate-library "paredit")
 
-  (when (locate-library "redshank")
+    (autoload 'enable-paredit-mode "paredit"
+      "Minor mode for pseudo-structurally editing Lisp code." t)
+
+    (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+
+    ;; Common Lisp editing extensions
+    (when (locate-library "redshank")   ; requires `paredit'
+
       (autoload 'redshank-mode "redshank"
         "Minor mode for restructuring Lisp code (i.e., refactoring)." t)
 
-      (add-hook 'emacs-lisp-mode-hook
-                (lambda ()
-                  (redshank-mode 1))))
-
-  ;; lang-emacs-lisp.el ends here
+      (add-hook 'emacs-lisp-mode-hook 'turn-on-redshank-mode)))
 #+end_src
 
 ** TODO From Thierry Volpiatto

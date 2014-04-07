@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140407.1532
+;; Version: 20140407.1602
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140407.1532]--")
+(message "* --[ Loading Emacs Leuven 20140407.1602]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -432,10 +432,10 @@ Last time is saved in global variable `leuven--before-section-time'."
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
           csv-mode dictionary dired+ dired-single ess fuzzy git-commit-mode
           graphviz-dot-mode helm htmlize idle-require info+ interaction-log
-          ledger-mode leuven-theme org-mime pager rainbow-mode redo+ redshank
+          ledger-mode leuven-theme org-mime pager rainbow-mode redo+
           sml-modeline tidy yasnippet
           ;; jabber multi-term
-          ;; paredit w3m
+          ;; paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
         :group 'emacs-leuven
@@ -6230,8 +6230,6 @@ From %c"
   ;; major mode command symbol to use for the initial `*scratch*' buffer
   (setq initial-major-mode 'fundamental-mode)
 
-  ;;;_ * elint
-
   (defun elint-current-buffer ()
     (interactive)
     (elint-initialize)
@@ -6243,8 +6241,6 @@ From %c"
     (add-to-list 'elint-standard-variables 'buffer-file-coding-system)
     (add-to-list 'elint-standard-variables 'emacs-major-version)
     (add-to-list 'elint-standard-variables 'window-system))
-
-  ;;;_ * emacs-lisp
 
   ;; (defun elisp-indent-or-complete (&optional arg)
   ;;   (interactive "p")
@@ -6258,17 +6254,21 @@ From %c"
   ;;   (define-key emacs-lisp-mode-map
   ;;     (kbd "<tab>") 'elisp-indent-or-complete))
 
-  ;;;_  + redshank
+  ;; minor mode for editing parentheses
+  (when (locate-library "paredit")
 
-  (when (locate-library "redshank")
+    (autoload 'enable-paredit-mode "paredit"
+      "Minor mode for pseudo-structurally editing Lisp code." t)
+
+    (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+
+    ;; Common Lisp editing extensions
+    (when (locate-library "redshank")   ; requires `paredit'
+
       (autoload 'redshank-mode "redshank"
         "Minor mode for restructuring Lisp code (i.e., refactoring)." t)
 
-      (add-hook 'emacs-lisp-mode-hook
-                (lambda ()
-                  (redshank-mode 1))))
-
-  ;; lang-emacs-lisp.el ends here
+      (add-hook 'emacs-lisp-mode-hook 'turn-on-redshank-mode)))
 
 )                                       ; chapter 27 ends here
 
@@ -8628,7 +8628,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140407.1533]--")
+(message "* --[ Loaded Emacs Leuven 20140407.1603]--")
 
 (provide 'emacs-leuven)
 
