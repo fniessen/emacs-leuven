@@ -1142,7 +1142,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140407.1624</span>
+"color: #8D8D84; font-style: italic;">Version: 20140430.1631</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1264,7 +1264,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140407.1624]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140430.1631]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -6559,7 +6559,7 @@ M-: (executable-find "diff") RET
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">;; don't save history information to file</span>
       <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(remove-hook 'kill-emacs-hook 'helm-c-adaptive-save-history)</span>
+"color: #8D8D84; font-style: italic;">(remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)</span>
 
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">don't show only basename of candidates in `</span><span style="color: #D0372D; font-style: italic;">helm-find-files</span><span style="color: #8D8D84; font-style: italic;">'</span>
@@ -9740,7 +9740,7 @@ M-: (executable-find "diff") RET
 </pre>
           </div>
 
-          <p>If you insert a <a href="http:///">http:///</a> link containing
+          <p>If you insert a <a href="http://">http://</a> link containing
           equal signs (such as <a href=
           "http://test/test?name=me">http://test/test?name=me</a>), the
           verbatim link being inserted in the Org document has the equal signs
@@ -13175,8 +13175,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     (setq org-export-allow-bind-keywords t)
 
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">exported stuff will not be pushed onto the kill ring</span>
-    (setq org-export-copy-to-kill-ring nil)
+"color: #8D8D84; font-style: italic;">;; exported stuff will not be pushed onto the kill ring</span>
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">(setq org-export-copy-to-kill-ring nil) ; new default since 2014-04-17</span>
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">;; export and publishing commands will run in background</span>
@@ -16168,7 +16169,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
           <p>Have a look at:</p>
 
           <ul class="org-ul">
-            <li><a href="http://cedet.sourceforge.net/">CEDET</a> for
+            <li><a href="http://cedet.sourceforge.net">CEDET</a> for
             development in AWK, C/C++, C#, Calc, Erlang, Java, Javascript,
             Make, PHP, Python, Ruby and Scheme,</li>
 
@@ -19248,14 +19249,14 @@ TAGS:
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
 (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">helm-c-open-file-with-default-tool</span> (file)
+"color: #006699;">helm-open-file-with-default-tool</span> (file)
   <span style=
 "color: #008000;">"Open FILE with the default tool on this platform."</span>
   (<span style="color: #0000FF;">let</span> (process-connection-type)
     (<span style="color: #0000FF;">if</span> (eq system-type 'windows-nt)
         (helm-w32-shell-execute-open-file file)
         (start-process <span style=
-"color: #036A07;">"helm-c-open-file-with-default-tool"</span>
+"color: #036A07;">"helm-open-file-with-default-tool"</span>
                        nil
                        (<span style=
 "color: #0000FF;">cond</span> ((eq system-type 'gnu/linux)
@@ -19600,7 +19601,7 @@ TAGS:
           <p>Prerequisites:</p>
 
           <ul class="org-ul">
-            <li><a href="http://www.imagemagick.org./">ImageMagick</a>
+            <li><a href="http://www.imagemagick.org.">ImageMagick</a>
             package</li>
 
             <li>JpegTRAN program</li>
@@ -24065,7 +24066,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140407.1625]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140430.1632]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

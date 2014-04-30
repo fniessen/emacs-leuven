@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DATE:      2012-06-22
-#+Time-stamp: <2014-01-17 Fri 23:07>
+#+Time-stamp: <2014-04-30 Wed 16:35>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en
@@ -122,9 +122,9 @@ Global key bindings.
 
 | Shortcut  | What it runs                    |
 |-----------+---------------------------------|
-| <return>  | joc-dired-single-buffer         |
-| <mouse-1> | joc-dired-single-buffer-mouse   |
-| ^         |                                 |
+| <return>  | dired-single-buffer             |
+| <mouse-1> | dired-single-buffer-mouse       |
+| ^         | (anonymous function)            |
 | e         | browse-url-of-dired-file        |
 | E         | w32-dired-open-files-externally |
 | C-c 1     | find-name-dired                 |

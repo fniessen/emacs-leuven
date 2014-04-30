@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-04-07 Mon 16:01>
+# Time-stamp: <2014-04-29 Tue 17:00>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -3246,7 +3246,7 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
       (setq helm-candidate-number-limit 100) ; more than one screen page
 
       ;; ;; don't save history information to file
-      ;; (remove-hook 'kill-emacs-hook 'helm-c-adaptive-save-history)
+      ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
 
       ;; don't show only basename of candidates in `helm-find-files'
       (setq helm-ff-transformer-show-only-basename nil)
@@ -7132,8 +7132,8 @@ launched from Dired?
     ;; allow #+BIND to define local variable values for export
     (setq org-export-allow-bind-keywords t)
 
-    ;; exported stuff will not be pushed onto the kill ring
-    (setq org-export-copy-to-kill-ring nil)
+    ;; ;; exported stuff will not be pushed onto the kill ring
+    ;; (setq org-export-copy-to-kill-ring nil) ; new default since 2014-04-17
 
     ;; ;; export and publishing commands will run in background
     ;; (setq org-export-in-background t)
@@ -10752,12 +10752,12 @@ Emacs free for continued used.
 *************** TODO Read http://www.piprime.fr/1302/plus-qu-un-explorateur-de-fichiers-le-mode-dired-d-emacs/
 
 #+begin_src emacs-lisp :tangle no
-(defun helm-c-open-file-with-default-tool (file)
+(defun helm-open-file-with-default-tool (file)
   "Open FILE with the default tool on this platform."
   (let (process-connection-type)
     (if (eq system-type 'windows-nt)
         (helm-w32-shell-execute-open-file file)
-        (start-process "helm-c-open-file-with-default-tool"
+        (start-process "helm-open-file-with-default-tool"
                        nil
                        (cond ((eq system-type 'gnu/linux)
                               "xdg-open")

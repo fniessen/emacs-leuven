@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140407.1602
+;; Version: 20140430.1630
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140407.1602]--")
+(message "* --[ Loading Emacs Leuven 20140430.1630]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2018,7 +2018,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       (setq helm-candidate-number-limit 100) ; more than one screen page
 
       ;; ;; don't save history information to file
-      ;; (remove-hook 'kill-emacs-hook 'helm-c-adaptive-save-history)
+      ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
 
       ;; don't show only basename of candidates in `helm-find-files'
       (setq helm-ff-transformer-show-only-basename nil)
@@ -4692,8 +4692,8 @@ From %c"
     ;; allow #+BIND to define local variable values for export
     (setq org-export-allow-bind-keywords t)
 
-    ;; exported stuff will not be pushed onto the kill ring
-    (setq org-export-copy-to-kill-ring nil)
+    ;; ;; exported stuff will not be pushed onto the kill ring
+    ;; (setq org-export-copy-to-kill-ring nil) ; new default since 2014-04-17
 
     ;; ;; export and publishing commands will run in background
     ;; (setq org-export-in-background t)
@@ -8628,7 +8628,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140407.1603]--")
+(message "* --[ Loaded Emacs Leuven 20140430.1631]--")
 
 (provide 'emacs-leuven)
 
