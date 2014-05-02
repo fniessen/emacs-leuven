@@ -1142,7 +1142,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140430.1631</span>
+"color: #8D8D84; font-style: italic;">Version: 20140502.1542</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1264,7 +1264,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140430.1631]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140502.1542]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -4318,7 +4318,7 @@
 
       (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #036A07;">"fuzzy"</span>
-       (turn-on-fuzzy-isearch))))
+        (turn-on-fuzzy-isearch))))
 </pre>
           </div>
 
@@ -4672,7 +4672,7 @@
 "color: #036A07;">"Turn on Flyspell mode in `</span><span style=
 "color: #D0372D;">%s</span><span style=
 "color: #036A07;">'"</span> (buffer-name))
-                  (turn-on-flyspell))))
+                  (flyspell-mode))))
 </pre>
           </div>
 
@@ -4695,7 +4695,7 @@
 "color: #036A07;">"Turn on Flyspell mode in `</span><span style=
 "color: #D0372D;">%s</span><span style=
 "color: #036A07;">'"</span> (buffer-name))
-                (turn-on-flyspell)))
+                (flyspell-mode)))
 
     (<span style="color: #0000FF;">defadvice</span> <span style=
 "color: #006699;">org-export-as</span> (around leuven-org-export-as activate)
@@ -8239,7 +8239,7 @@ M-: (executable-find "diff") RET
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">activate Auto Fill for all text mode buffers</span>
-  (add-hook 'text-mode-hook 'turn-on-auto-fill)
+  (add-hook 'text-mode-hook 'auto-fill-mode)
 </pre>
           </div>
 
@@ -15785,7 +15785,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-      (add-hook 'LaTeX-mode-hook 'turn-on-reftex) <span style=
+      (add-hook 'LaTeX-mode-hook 'reftex-mode) <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">with AUCTeX LaTeX mode</span>
 
@@ -16275,8 +16275,8 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">turn on auto-fill mode in Lisp modes</span>
-    (add-hook 'lisp-mode-hook 'turn-on-auto-fill)
-    (add-hook 'emacs-lisp-mode-hook 'turn-on-auto-fill)
+    (add-hook 'lisp-mode-hook 'auto-fill-mode)
+    (add-hook 'emacs-lisp-mode-hook 'auto-fill-mode)
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">auto-indentation: automatically jump to the "correct" column when</span>
@@ -16450,9 +16450,9 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">show the function arglist or the variable docstring in the echo area</span>
   (GNUEmacs
-    (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-    (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-    (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode))
+    (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
+    (add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
+    (add-hook 'ielm-mode-hook 'eldoc-mode))
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">highlight the arguments in `</span><span style="color: #D0372D; font-style: italic;">font-lock-variable-name-face</span><span style="color: #8D8D84; font-style: italic;">'</span>
@@ -17399,7 +17399,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
         <span style=
 "color: #008000;">"Minor mode for restructuring Lisp code (i.e., refactoring)."</span> t)
 
-      (add-hook 'emacs-lisp-mode-hook 'turn-on-redshank-mode)))
+      (add-hook 'emacs-lisp-mode-hook 'redshank-mode)))
 </pre>
           </div>
         </div>
@@ -17615,7 +17615,7 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
 
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">turn on on-the-fly spell-checking</span>
-      (add-hook 'git-commit-mode-hook 'turn-on-flyspell)
+      (add-hook 'git-commit-mode-hook 'flyspell-mode)
 
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">turn off save-place</span>
@@ -24066,7 +24066,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140430.1632]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140502.1542]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140430.1630
+;; Version: 20140502.1541
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140430.1630]--")
+(message "* --[ Loading Emacs Leuven 20140502.1541]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1174,7 +1174,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                   (require 'fuzzy)))
 
       (with-eval-after-load "fuzzy"
-       (turn-on-fuzzy-isearch))))
+        (turn-on-fuzzy-isearch))))
 
 ;;** 15.5 (info "(emacs)Regexp Search")
 
@@ -1293,7 +1293,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                              org-babel-exp-reference-buffer)) ; export buffer
                     (message "DON'T TURN ON Flyspell mode in `%s'" (buffer-name))
                   (message "Turn on Flyspell mode in `%s'" (buffer-name))
-                  (turn-on-flyspell))))
+                  (flyspell-mode))))
 
     ;; prevent flyspell from finding mistakes in the code, well in comments and
     ;; strings
@@ -2690,7 +2690,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (add-hook 'fill-nobreak-predicate 'fill-french-nobreak-p)
 
   ;; activate Auto Fill for all text mode buffers
-  (add-hook 'text-mode-hook 'turn-on-auto-fill)
+  (add-hook 'text-mode-hook 'auto-fill-mode)
 
   (defun leuven-replace-nbsp-by-spc ()
     "Replace all nbsp by normal spaces."
@@ -5720,7 +5720,7 @@ From %c"
         ;; scale factor for included previews
         (setq preview-scale-function 1.2))
 
-      (add-hook 'LaTeX-mode-hook 'turn-on-reftex) ; with AUCTeX LaTeX mode
+      (add-hook 'LaTeX-mode-hook 'reftex-mode) ; with AUCTeX LaTeX mode
 
       ;; minor mode with distinct support for `\label', `\ref', `\cite'
       ;; and `\index' in LaTeX
@@ -5853,8 +5853,8 @@ From %c"
     (leuven--section "26.3 (emacs)Program Indentation")
 
     ;; turn on auto-fill mode in Lisp modes
-    (add-hook 'lisp-mode-hook 'turn-on-auto-fill)
-    (add-hook 'emacs-lisp-mode-hook 'turn-on-auto-fill)
+    (add-hook 'lisp-mode-hook 'auto-fill-mode)
+    (add-hook 'emacs-lisp-mode-hook 'auto-fill-mode)
 
     ;; auto-indentation: automatically jump to the "correct" column when
     ;; the <RET> key is pressed while editing a program (act as if you
@@ -5947,9 +5947,9 @@ From %c"
 
   ;; show the function arglist or the variable docstring in the echo area
   (GNUEmacs
-    (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-    (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-    (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode))
+    (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
+    (add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
+    (add-hook 'ielm-mode-hook 'eldoc-mode))
 
   ;; highlight the arguments in `font-lock-variable-name-face'
   (defun leuven--frob-eldoc-argument-list (string)
@@ -6268,7 +6268,7 @@ From %c"
       (autoload 'redshank-mode "redshank"
         "Minor mode for restructuring Lisp code (i.e., refactoring)." t)
 
-      (add-hook 'emacs-lisp-mode-hook 'turn-on-redshank-mode)))
+      (add-hook 'emacs-lisp-mode-hook 'redshank-mode)))
 
 )                                       ; chapter 27 ends here
 
@@ -6326,7 +6326,7 @@ From %c"
     (when (try-require 'git-commit-mode)
 
       ;; turn on on-the-fly spell-checking
-      (add-hook 'git-commit-mode-hook 'turn-on-flyspell)
+      (add-hook 'git-commit-mode-hook 'flyspell-mode)
 
       ;; turn off save-place
       (add-hook 'git-commit-mode-hook
@@ -8628,7 +8628,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140430.1631]--")
+(message "* --[ Loaded Emacs Leuven 20140502.1542]--")
 
 (provide 'emacs-leuven)
 

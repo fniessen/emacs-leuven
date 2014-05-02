@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-04-29 Tue 17:00>
+# Time-stamp: <2014-05-02 Fri 15:31>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1874,7 +1874,7 @@ Since Emacs 24.3:
                   (require 'fuzzy)))
 
       (with-eval-after-load "fuzzy"
-       (turn-on-fuzzy-isearch))))
+        (turn-on-fuzzy-isearch))))
 #+end_src
 
 When search-invisible is t, perform-replace can replace matches
@@ -2105,7 +2105,7 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
                              org-babel-exp-reference-buffer)) ; export buffer
                     (message "DON'T TURN ON Flyspell mode in `%s'" (buffer-name))
                   (message "Turn on Flyspell mode in `%s'" (buffer-name))
-                  (turn-on-flyspell))))
+                  (flyspell-mode))))
 #+end_src
 
 *************** TODO Enable Flyspell in other modes deriving from Text (HTML, etc.)
@@ -2115,7 +2115,7 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
     (add-hook 'text-mode-hook
               (lambda ()
                 (message "Turn on Flyspell mode in `%s'" (buffer-name))
-                (turn-on-flyspell)))
+                (flyspell-mode)))
 
     (defadvice org-export-as (around leuven-org-export-as activate)
       "Turn off Text mode hooks (Flyspell, etc.) when exporting current Org buffer."
@@ -4242,7 +4242,7 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
   (add-hook 'fill-nobreak-predicate 'fill-french-nobreak-p)
 
   ;; activate Auto Fill for all text mode buffers
-  (add-hook 'text-mode-hook 'turn-on-auto-fill)
+  (add-hook 'text-mode-hook 'auto-fill-mode)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8639,7 +8639,7 @@ current selection.  More general index entries are created with ~C-c <~.
 ~C-c >~ displays the compiled index.
 
 #+begin_src emacs-lisp
-      (add-hook 'LaTeX-mode-hook 'turn-on-reftex) ; with AUCTeX LaTeX mode
+      (add-hook 'LaTeX-mode-hook 'reftex-mode) ; with AUCTeX LaTeX mode
 
       ;; minor mode with distinct support for `\label', `\ref', `\cite'
       ;; and `\index' in LaTeX
@@ -8925,8 +8925,8 @@ things.
     (leuven--section "26.3 (emacs)Program Indentation")
 
     ;; turn on auto-fill mode in Lisp modes
-    (add-hook 'lisp-mode-hook 'turn-on-auto-fill)
-    (add-hook 'emacs-lisp-mode-hook 'turn-on-auto-fill)
+    (add-hook 'lisp-mode-hook 'auto-fill-mode)
+    (add-hook 'emacs-lisp-mode-hook 'auto-fill-mode)
 
     ;; auto-indentation: automatically jump to the "correct" column when
     ;; the <RET> key is pressed while editing a program (act as if you
@@ -9033,9 +9033,9 @@ things.
 
   ;; show the function arglist or the variable docstring in the echo area
   (GNUEmacs
-    (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-    (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-    (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode))
+    (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
+    (add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
+    (add-hook 'ielm-mode-hook 'eldoc-mode))
 
   ;; highlight the arguments in `font-lock-variable-name-face'
   (defun leuven--frob-eldoc-argument-list (string)
@@ -9615,7 +9615,7 @@ XXX Paredit (or smartparen or autopair)?
       (autoload 'redshank-mode "redshank"
         "Minor mode for restructuring Lisp code (i.e., refactoring)." t)
 
-      (add-hook 'emacs-lisp-mode-hook 'turn-on-redshank-mode)))
+      (add-hook 'emacs-lisp-mode-hook 'redshank-mode)))
 #+end_src
 
 ** TODO From Thierry Volpiatto
@@ -9741,7 +9741,7 @@ Show the diff we are about to commit: ~C-c C-d~.
     (when (try-require 'git-commit-mode)
 
       ;; turn on on-the-fly spell-checking
-      (add-hook 'git-commit-mode-hook 'turn-on-flyspell)
+      (add-hook 'git-commit-mode-hook 'flyspell-mode)
 
       ;; turn off save-place
       (add-hook 'git-commit-mode-hook
