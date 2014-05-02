@@ -1142,7 +1142,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140502.1557</span>
+"color: #8D8D84; font-style: italic;">Version: 20140502.1649</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1264,7 +1264,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140502.1557]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140502.1649]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -12969,14 +12969,13 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">11.7 interpret "_" and "^" for export when braces are used</span>
-  (setq org-export-with-sub-superscripts '{})
+"color: #8D8D84; font-style: italic;">11.7.2 interpret "_" and "^" for display when braces are used</span>
+  (setq org-use-sub-superscripts '{})
 
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">11.7 convert LaTeX fragments to images when exporting to HTML (using MathJax)</span>
-  (setq org-export-with-LaTeX-fragments t) <span style=
-"color: #8D8D84;">; </span><span style=
-"color: #CC0000; background-color: #FFFF88; font-style: italic;">XXX</span><span style="color: #8D8D84; font-style: italic;"> undefined?</span>
+"color: #8D8D84; font-style: italic;">;; 11.7.3 convert LaTeX fragments to images when exporting to HTML (using MathJax)</span>
+  <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">(setq org-export-with-latex t)</span>
 </pre>
             </div>
 
@@ -13170,6 +13169,10 @@ emacsclient -n -e <span style="color: #036A07;">'(make-capture-frame)'</span>
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">activate smart quotes during export</span>
     (setq org-export-with-smart-quotes t)
+
+    <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">interpret "_" and "^" for export when braces are used</span>
+    (setq org-export-with-sub-superscripts '{})
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">allow #+BIND to define local variable values for export</span>
@@ -24067,7 +24070,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140502.1557]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140502.1650]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)

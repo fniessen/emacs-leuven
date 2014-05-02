@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140502.1555
+;; Version: 20140502.1647
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140502.1555]--")
+(message "* --[ Loading Emacs Leuven 20140502.1647]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4600,11 +4600,11 @@ From %c"
                    "NOK"
                    "NOK" "✘")))
 
-  ;; 11.7 interpret "_" and "^" for export when braces are used
-  (setq org-export-with-sub-superscripts '{})
+  ;; 11.7.2 interpret "_" and "^" for display when braces are used
+  (setq org-use-sub-superscripts '{})
 
-  ;; 11.7 convert LaTeX fragments to images when exporting to HTML (using MathJax)
-  (setq org-export-with-LaTeX-fragments t) ; XXX undefined?
+  ;; ;; 11.7.3 convert LaTeX fragments to images when exporting to HTML (using MathJax)
+  ;; (setq org-export-with-latex t)
 
   ;; highlight LaTeX and related syntax
   (setq org-highlight-latex-and-related '(latex script entities))
@@ -4692,6 +4692,9 @@ From %c"
 
     ;; activate smart quotes during export
     (setq org-export-with-smart-quotes t)
+
+    ;; interpret "_" and "^" for export when braces are used
+    (setq org-export-with-sub-superscripts '{})
 
     ;; allow #+BIND to define local variable values for export
     (setq org-export-allow-bind-keywords t)
@@ -8632,7 +8635,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140502.1556]--")
+(message "* --[ Loaded Emacs Leuven 20140502.1649]--")
 
 (provide 'emacs-leuven)
 
