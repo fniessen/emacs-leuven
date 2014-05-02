@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-05-02 Fri 15:31>
+# Time-stamp: <2014-05-02 Fri 15:55>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -3717,11 +3717,15 @@ one.
 
   ;; title bar display of visible frames
   (setq frame-title-format
-        (format "Emacs %s (r%s) of %s - PID: %d"
+        (format "Emacs %s%s of %s - PID: %d"
                 ;; (capitalize (symbol-name system-type))
                 emacs-version
-                (ignore-errors
-                  (replace-regexp-in-string " .*" "" emacs-bzr-version))
+                (if emacs-bzr-version
+                    (concat " (r"
+                            (replace-regexp-in-string " .*" ""
+                                                      emacs-bzr-version)
+                            ")")
+                  "")
                 (format-time-string "%Y-%m-%d" emacs-build-time)
                 (emacs-pid)))
 #+end_src

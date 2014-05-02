@@ -1142,7 +1142,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140502.1542</span>
+"color: #8D8D84; font-style: italic;">Version: 20140502.1557</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1264,7 +1264,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #036A07;">"* --[ Loading Emacs Leuven 20140502.1542]--"</span>)
+"color: #036A07;">"* --[ Loading Emacs Leuven 20140502.1557]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -7315,16 +7315,17 @@ M-: (executable-find "diff") RET
 "color: #8D8D84; font-style: italic;">title bar display of visible frames</span>
   (setq frame-title-format
         (format <span style=
-"color: #036A07;">"Emacs %s (r%s) of %s - PID: %d"</span>
+"color: #036A07;">"Emacs %s%s of %s - PID: %d"</span>
                 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">(capitalize (symbol-name system-type))</span>
                 emacs-version
-                (<span style="color: #0000FF;">ignore-</span><span style=
-"color: #CC0000; background-color: #FFFF88;">error</span><span style=
-"color: #0000FF;">s</span>
-                  (replace-regexp-in-string <span style=
-"color: #036A07;">" .*"</span> <span style=
-"color: #036A07;">""</span> emacs-bzr-version))
+                (<span style="color: #0000FF;">if</span> emacs-bzr-version
+                    (concat <span style="color: #036A07;">" (r"</span>
+                            (replace-regexp-in-string <span style=
+"color: #036A07;">" .*"</span> <span style="color: #036A07;">""</span>
+                                                      emacs-bzr-version)
+                            <span style="color: #036A07;">")"</span>)
+                  <span style="color: #036A07;">""</span>)
                 (format-time-string <span style=
 "color: #036A07;">"%Y-%m-%d"</span> emacs-build-time)
                 (emacs-pid)))
@@ -24066,7 +24067,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #036A07;">"* --[ Loaded Emacs Leuven 20140502.1542]--"</span>)
+"color: #036A07;">"* --[ Loaded Emacs Leuven 20140502.1557]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
