@@ -1,7 +1,7 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2014-04-01 Tue 10:59>
+#+Time-stamp: <2014-05-02 Fri 15:47>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1564,7 +1564,7 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
 
         ;; enable automatic word-wrap when composing messages
         (setq-default fill-column 79)
-        (turn-on-auto-fill)
+        (auto-fill-mode)
 
         ;; turn on the Org mode table editor (in emails)
         (turn-on-orgtbl)
@@ -1857,6 +1857,33 @@ of the score file local for the group) by pressing =M-i a I= or =M-i a L=.
       (message "7 Scoring... Done"))
 #+end_src
 
+** From Sacha Chua
+
+Adaptive scoring means that if you kill a thread you're not particularly
+interested in, it lowers the score on that one, so any replies are shown
+with a negative score. You can also configure it to hide messages with
+scores below a certain threshold, so you don't even see replies.
+
+#+begin_src emacs-lisp :tangle no
+(setq gnus-use-adaptive-scoring t)
+
+(setq gnus-default-adaptive-score-alist
+      '((gnus-unread-mark)
+        (gnus-ticked-mark (subject 10))
+        (gnus-killed-mark (subject -5))
+        (gnus-catchup-mark (subject -1))))
+#+end_src
+
+I also have some more rules that score things up if they mention my name or
+other things I'm interested in. =)
+
+Maybe a score file with this in it?
+
+: (("Body" ("sacha" 10 nil s)))
+
+which theoretically adds a score based on that keyword, but I haven't tested it
+and it slows loading groups down a bit.
+
 * Searching
 
 Basically, there's only one user-frontend function: =gnus-group-make-nnir-group=
@@ -1918,7 +1945,7 @@ searching *IMAP* and *Gmane* groups.
 ;;** 9.20 Interaction with (info "(gnus)Other modes")
 
       ;; attach all marked files from Dired to a new Gnus message
-      (autoload 'turn-on-gnus-dired-mode "gnus-dired"
+      (autoload 'gnus-dired-mode "gnus-dired"
         "Attach dired's marked files to a gnus message composition." t)
 
       (autoload 'gnus-dired-attach "gnus-dired"
@@ -1926,7 +1953,7 @@ searching *IMAP* and *Gmane* groups.
 
       (with-eval-after-load "dired"
 
-        (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+        (add-hook 'dired-mode-hook 'gnus-dired-mode)
 
         (define-key dired-mode-map
           (kbd "a") 'gnus-dired-attach)) ; XXX conflict with

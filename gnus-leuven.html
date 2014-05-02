@@ -3009,7 +3009,7 @@
         <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">enable automatic word-wrap when composing messages</span>
         (setq-default fill-column 79)
-        (turn-on-auto-fill)
+        (auto-fill-mode)
 
         <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">turn on the Org mode table editor (in emails)</span>
@@ -3656,7 +3656,7 @@
 
       <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">attach all marked files from Dired to a new Gnus message</span>
-      (autoload 'turn-on-gnus-dired-mode <span style=
+      (autoload 'gnus-dired-mode <span style=
 "color: #036A07;">"gnus-dired"</span>
         <span style=
 "color: #008000;">"Attach dired's marked files to a gnus message composition."</span> t)
@@ -3669,7 +3669,7 @@
       (<span style="color: #0000FF;">with-eval-after-load</span> <span style=
 "color: #036A07;">"dired"</span>
 
-        (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+        (add-hook 'dired-mode-hook 'gnus-dired-mode)
 
         (define-key dired-mode-map
           (kbd <span style=

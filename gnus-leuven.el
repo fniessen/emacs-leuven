@@ -1271,7 +1271,7 @@
 
         ;; enable automatic word-wrap when composing messages
         (setq-default fill-column 79)
-        (turn-on-auto-fill)
+        (auto-fill-mode)
 
         ;; turn on the Org mode table editor (in emails)
         (turn-on-orgtbl)
@@ -1570,7 +1570,7 @@
 ;;** 9.20 Interaction with (info "(gnus)Other modes")
 
       ;; attach all marked files from Dired to a new Gnus message
-      (autoload 'turn-on-gnus-dired-mode "gnus-dired"
+      (autoload 'gnus-dired-mode "gnus-dired"
         "Attach dired's marked files to a gnus message composition." t)
 
       (autoload 'gnus-dired-attach "gnus-dired"
@@ -1578,7 +1578,7 @@
 
       (with-eval-after-load "dired"
 
-        (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+        (add-hook 'dired-mode-hook 'gnus-dired-mode)
 
         (define-key dired-mode-map
           (kbd "a") 'gnus-dired-attach)) ; XXX conflict with
