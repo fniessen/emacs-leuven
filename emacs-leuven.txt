@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-05-02 Fri 16:47>
+# Time-stamp: <2014-05-06 Tue 15:11>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1855,10 +1855,10 @@ Since Emacs 24.3:
   ;;   (when isearch-forward (goto-char isearch-other-end)))
 
   (GNUEmacs
-    ;; incremental search will open the contents
-    (setq search-invisible 'open)       ; XXX
+    ;; ;; incremental search/query-replace will open the contents
+    ;; (setq search-invisible 'open)       ; XXX
 
-    ;; re-hide an invisible match right away
+    ;; don't re-hide an invisible match right away
     (setq isearch-hide-immediately nil)) ; XXX
 
   ;; scrolling commands are allowed during incremental search (without

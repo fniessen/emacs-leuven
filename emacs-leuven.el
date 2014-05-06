@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140502.1647
+;; Version: 20140506.1514
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140502.1647]--")
+(message "* --[ Loading Emacs Leuven 20140506.1514]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1155,10 +1155,10 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;;   (when isearch-forward (goto-char isearch-other-end)))
 
   (GNUEmacs
-    ;; incremental search will open the contents
-    (setq search-invisible 'open)       ; XXX
+    ;; ;; incremental search/query-replace will open the contents
+    ;; (setq search-invisible 'open)       ; XXX
 
-    ;; re-hide an invisible match right away
+    ;; don't re-hide an invisible match right away
     (setq isearch-hide-immediately nil)) ; XXX
 
   ;; scrolling commands are allowed during incremental search (without
@@ -8635,7 +8635,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140502.1649]--")
+(message "* --[ Loaded Emacs Leuven 20140506.1515]--")
 
 (provide 'emacs-leuven)
 
