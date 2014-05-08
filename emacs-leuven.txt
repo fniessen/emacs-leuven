@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-05-06 Tue 15:11>
+# Time-stamp: <2014-05-08 Thu 14:48>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -355,27 +355,6 @@ distro) without impacting on stuff you have added by hand.
 #+end_src
 
 #+begin_src emacs-lisp
-  (if (try-require 'idle-require)
-
-      (progn
-        ;; idle time in seconds after which autoload functions will be loaded
-        (setq idle-require-idle-delay 5)
-
-        ;; time in seconds between automatically loaded functions
-        (setq idle-require-load-break 2))
-
-    ;; fail-safe for `idle-require'
-    (defun idle-require (feature &optional file noerror)
-      (try-require feature)))
-
-  (add-hook 'after-init-hook
-            (lambda ()
-              (when (fboundp 'idle-require-mode)
-                ;; starts loading
-                (idle-require-mode 1))))
-#+end_src
-
-#+begin_src emacs-lisp
 )                                       ; chapter 0-loading-libraries ends here
 #+end_src
 
@@ -632,6 +611,30 @@ are generated programmatically from upstream Git-based sources.
 
 #+begin_src emacs-lisp
 )                                       ; chapter 47 ends here
+#+end_src
+
+~Idle-require~ must be loaded *after* ~package-initialize~, and should not be
+cancelable; hence, we put it out of a "chapter".
+
+#+begin_src emacs-lisp
+  (if (try-require 'idle-require)
+
+      (progn
+        ;; idle time in seconds after which autoload functions will be loaded
+        (setq idle-require-idle-delay 5)
+
+        ;; time in seconds between automatically loaded functions
+        (setq idle-require-load-break 2))
+
+    ;; fail-safe for `idle-require'
+    (defun idle-require (feature &optional file noerror)
+      (try-require feature)))
+
+  (add-hook 'after-init-hook
+            (lambda ()
+              (when (fboundp 'idle-require-mode)
+                ;; starts loading
+                (idle-require-mode 1))))
 #+end_src
 
 ** Check Org mode version
@@ -6236,9 +6239,9 @@ the header under which the entry will be placed.
     ;; 9.5 any headline with level <= 3 is a target
     (setq org-refile-targets
           `((nil
-             :maxlevel . 3)             ; current file
+             :maxlevel . 4)             ; current file
             (,(append org-agenda-files leuven-org-refile-extra-files)
-             :maxlevel . 3)))
+             :maxlevel . 2)))
 
     ;; cache refile targets to speed up the process
     (setq org-refile-use-cache t)
@@ -10500,13 +10503,13 @@ Automatically reload snippets after saving.
 *determined automatically from the contents of the buffer*.  It is completely
 independent of Abbrev mode.
 
-~M-/~ runs the command ~dabbrev-expand~ by default.  Expand previous word
-"dynamically".  *Expands to the most recent, preceding word* for which this is a
-prefix.
+- ~M-/~ runs the command ~dabbrev-expand~ by default.  Expand previous word
+  "dynamically".  *Expands to the most recent, preceding word* for which this is
+  a prefix.
 
-~C-M-/~ runs the command ~dabbrev-completion~.  Completion on current word.  Like
-~M-/~ but finds all expansions in the current buffer and *presents suggestions
-for completion*.
+- ~C-M-/~ runs the command ~dabbrev-completion~.  Completion on current word.  Like
+  ~M-/~ but finds all expansions in the current buffer and *presents suggestions
+  for completion*.
 
 See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
 

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140506.1514
+;; Version: 20140508.1450
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140506.1514]--")
+(message "* --[ Loading Emacs Leuven 20140508.1450]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -262,25 +262,6 @@ Last time is saved in global variable `leuven--before-section-time'."
       (declare (indent defun))
       `(eval-after-load ,mode
          '(progn ,@body))))
-
-  (if (try-require 'idle-require)
-
-      (progn
-        ;; idle time in seconds after which autoload functions will be loaded
-        (setq idle-require-idle-delay 5)
-
-        ;; time in seconds between automatically loaded functions
-        (setq idle-require-load-break 2))
-
-    ;; fail-safe for `idle-require'
-    (defun idle-require (feature &optional file noerror)
-      (try-require feature)))
-
-  (add-hook 'after-init-hook
-            (lambda ()
-              (when (fboundp 'idle-require-mode)
-                ;; starts loading
-                (idle-require-mode 1))))
 
 )                                       ; chapter 0-loading-libraries ends here
 
@@ -480,6 +461,25 @@ Last time is saved in global variable `leuven--before-section-time'."
                   (tabulated-list-init-header)))))
 
 )                                       ; chapter 47 ends here
+
+  (if (try-require 'idle-require)
+
+      (progn
+        ;; idle time in seconds after which autoload functions will be loaded
+        (setq idle-require-idle-delay 5)
+
+        ;; time in seconds between automatically loaded functions
+        (setq idle-require-load-break 2))
+
+    ;; fail-safe for `idle-require'
+    (defun idle-require (feature &optional file noerror)
+      (try-require feature)))
+
+  (add-hook 'after-init-hook
+            (lambda ()
+              (when (fboundp 'idle-require-mode)
+                ;; starts loading
+                (idle-require-mode 1))))
 
 ;;* 1 The Organization of the (info "(emacs)Screen")
 
@@ -4048,9 +4048,9 @@ From %c"
     ;; 9.5 any headline with level <= 3 is a target
     (setq org-refile-targets
           `((nil
-             :maxlevel . 3)             ; current file
+             :maxlevel . 4)             ; current file
             (,(append org-agenda-files leuven-org-refile-extra-files)
-             :maxlevel . 3)))
+             :maxlevel . 2)))
 
     ;; cache refile targets to speed up the process
     (setq org-refile-use-cache t)
@@ -8635,7 +8635,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140506.1515]--")
+(message "* --[ Loaded Emacs Leuven 20140508.1451]--")
 
 (provide 'emacs-leuven)
 
