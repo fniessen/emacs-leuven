@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DATE:      2012-06-22
-#+Time-stamp: <2014-04-30 Wed 16:35>
+#+Time-stamp: <2014-05-22 Thu 15:11>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en
@@ -41,9 +41,16 @@ Using the Emacs Leuven library is very easy: you just need to...
 
 - Restart Emacs.
 
+** Some better defaults
+
+- Unnecessary spaces at the end of the lines are indicated by red blocks.
+
 ** Keyboard shortcuts
 
 Save time and boost your productivity with Emacs Leuven keyboard shortcuts.
+
+Key binding conventions:
+http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html
 
 *** General shortcuts
 
