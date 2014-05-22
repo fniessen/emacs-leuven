@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-05-08 Thu 14:48>
+# Time-stamp: <2014-05-22 Thu 16:09>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -3128,16 +3128,18 @@ friend: hit it for more info.
   For ~helm-find-files~:
 
   + On a regular file,
-    - First hit on ~C-z~ expands the file name
-    - Second hit opens the file and displays its contents in the other window
-    - Third hit kills the buffer (unless it was already open before starting
-      helm session).
+    1. First hit on ~C-z~ expands the file name
+    2. Second hit opens the file and displays its contents in the other window
+    3. Third hit kills the buffer (unless it was already open before starting
+       helm session).
 
   + On image files (~.jpg~, etc..)
-    - Second hit (or ~C-u C-z~) displays the image in the other window
-    - If you then turn on ~helm-follow-mode~ (~C-c C-f~), you turn on Helm in
-      *image browser* (i.e., use ~C-n/p~ or ~arrows/down/up~).
-    - You can rotate image with ~M-l/r~ (these are persistent actions too).
+    1. Second hit (or ~C-u C-z~) displays the image in the other window
+    2. If you then turn on ~helm-follow-mode~ (~C-c C-f~), you turn on Helm in
+       *image browser* (i.e., use ~C-n/p~ or ~arrows/down/up~).
+    3. You can rotate image with ~M-l/r~ (these are persistent actions too).
+
+Kill your buffers with ~C-u C-z~ one by one.
 
 To go back to the *previous element* of the minibuffer history, use ~M-p~.
 
@@ -3150,8 +3152,8 @@ You can also use the ~@~ prefix to *search buffer contents*.
 To mark all candidates in a Helm buffer, use ~M-a~ (~helm-mark-all~) or ~M-m~
 (~helm-toggle-all-marks~).
 
-Locate for *Windows* users: you have to install [[http://www.voidtools.com/download.php][Everything]] with his command line
-interface.
+Locate for *Windows* users: you have to install [[http://www.voidtools.com/download.php][Everything]] with its command line
+interface ~es.exe~.
 
 Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 
@@ -3163,8 +3165,10 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
     ;; open Helm (QuickSilver-like candidate-selection framework)
     (when (try-require 'helm-config)
 
-      ;; sort locate results by full path
-      (when running-ms-windows
+      (when (and running-ms-windows
+                 (executable-find "es"))
+
+        ;; sort locate results by full path
         (setq helm-locate-command "es -s %s %s"))
 
       (global-set-key
@@ -3702,22 +3706,19 @@ one.
             (left . 0)))
 
     (GNUEmacs
-      ;; auto-detect the screen dimensions and compute the size of Emacs
+      ;; auto-detect the screen dimensions and compute the height of Emacs
       (add-to-list 'default-frame-alist
                    (cons 'height
                          (/ (- (x-display-pixel-height) 106)
                             (frame-char-height)))))
 
-    ;; ;; avoid Emacs hanging for a while (old hack from 2001)
-    ;; (add-to-list 'default-frame-alist
-    ;;              '(wait-for-wm . nil))
-    )
+    (XEmacs
+      (set-frame-position (buffer-dedicated-frame) 0 0)
+      (set-frame-width (buffer-dedicated-frame) 80)
+      (set-frame-height (buffer-dedicated-frame) 42)))
+#+end_src
 
-  (XEmacs
-    (set-frame-position (buffer-dedicated-frame) 0 0)
-    (set-frame-width (buffer-dedicated-frame) 80)
-    (set-frame-height (buffer-dedicated-frame) 42))
-
+#+begin_src emacs-lisp
   ;; title bar display of visible frames
   (setq frame-title-format
         (format "Emacs %s%s of %s - PID: %d"
@@ -6040,7 +6041,7 @@ From %a"
                  `("mr" "Create a TODO Action Remind 3" entry
                    (file+headline ,org-default-notes-file "Email") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
-   DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \" -0d\")
+   SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \"\")
    %:date-timestamp-inactive
 
 #+begin_verse
@@ -8666,6 +8667,12 @@ current selection.  More general index entries are created with ~C-c <~.
 ** BibTeX
 
 #+begin_src emacs-lisp
+      ;; BibTeX mode
+      (with-eval-after-load "bibtex"
+
+        ;; current BibTeX dialect
+        (setq bibtex-dialect 'biblatex))
+
       ))                                ; with-eval-after-load "latex" ends here
 #+end_src
 
@@ -10759,6 +10766,30 @@ One advantage is that using the traditional ~!~ (or ~X~) switch with Dired locks
 up Emacs until you close the other program.  These add-ons do not and leave
 Emacs free for continued used.
 
+*************** Alternative
+Nowadays, there's at least the built-in ~dired-do-async-shell-command~, bound
+to ~&~.
+
+In addition to what others have mentioned, if you are on MS Windows
+then, after loading `w32-browser.el' and `dired+.el', you can use
+item `Open Associated Windows App' in the `Single' menu to open a
+file with the associated program.
+
+Same thing for the marked files, using `Open Associated Windows
+Apps' in menus `Multiple' and `Multiple > Marked Here and Below'.
+
+And you can use item `Single' > `Open in Windows Explorer' to open
+a file or folder in Windows Explorer.
+
+You can also right-click on a file and pick `Open Associated
+Windows App' or `Open in Windows Explorer'.
+
+There are key bindings for these as well:
+
+`M-RET' or `mouse-2' - open with associated program
+`C-RET' - open in Explorer
+*************** END
+
 *************** TODO Read http://www.piprime.fr/1302/plus-qu-un-explorateur-de-fichiers-le-mode-dired-d-emacs/
 
 #+begin_src emacs-lisp :tangle no
@@ -10885,17 +10916,15 @@ See news "Opening html-File in Dired with w3m" for extra info.
 
 ** Updating the Dired Buffer
 
-Check this out as well: http://www.emacswiki.org/emacs/DiredSortMenu
-
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Dired Updating")
 
     (leuven--section "30.15 (emacs)Dired Updating")
 
-    ;; add-on for sorting
+    ;; Dired sort
     (try-require 'dired-sort-map)
     ;; press `s' then `s', `x', `t', `n' or `d' to sort by
-    ;; Size, eXtension, Time, Name or name grouping Dirs
+    ;; Size, eXtension, Time, Name or name grouping Dirs first
 #+end_src
 
 ** Dired and ~find~
@@ -12526,6 +12555,7 @@ up printing on Windows.
   ;; that let me use `w3m' for EmacsWiki/Common Lisp documentation and
   ;; Firefox otherwise.
 
+  ;; TODO Check if this is needed, or must be fixed/adapted
   ;; ;; name of the browser program used by `browse-url-generic'
   ;; (setq browse-url-generic-program
   ;;       (when (and (display-graphic-p)
