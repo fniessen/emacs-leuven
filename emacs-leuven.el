@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140508.1450
+;; Version: 20140522.1805
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140508.1450]--")
+(message "* --[ Loading Emacs Leuven 20140522.1805]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1932,8 +1932,10 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; open Helm (QuickSilver-like candidate-selection framework)
     (when (try-require 'helm-config)
 
-      ;; sort locate results by full path
-      (when running-ms-windows
+      (when (and running-ms-windows
+                 (executable-find "es"))
+
+        ;; sort locate results by full path
         (setq helm-locate-command "es -s %s %s"))
 
       (global-set-key
@@ -2364,21 +2366,16 @@ Last time is saved in global variable `leuven--before-section-time'."
             (left . 0)))
 
     (GNUEmacs
-      ;; auto-detect the screen dimensions and compute the size of Emacs
+      ;; auto-detect the screen dimensions and compute the height of Emacs
       (add-to-list 'default-frame-alist
                    (cons 'height
                          (/ (- (x-display-pixel-height) 106)
                             (frame-char-height)))))
 
-    ;; ;; avoid Emacs hanging for a while (old hack from 2001)
-    ;; (add-to-list 'default-frame-alist
-    ;;              '(wait-for-wm . nil))
-    )
-
-  (XEmacs
-    (set-frame-position (buffer-dedicated-frame) 0 0)
-    (set-frame-width (buffer-dedicated-frame) 80)
-    (set-frame-height (buffer-dedicated-frame) 42))
+    (XEmacs
+      (set-frame-position (buffer-dedicated-frame) 0 0)
+      (set-frame-width (buffer-dedicated-frame) 80)
+      (set-frame-height (buffer-dedicated-frame) 42)))
 
   ;; title bar display of visible frames
   (setq frame-title-format
@@ -3899,7 +3896,7 @@ From %a"
                  `("mr" "Create a TODO Action Remind 3" entry
                    (file+headline ,org-default-notes-file "Email") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
-   DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \" -0d\")
+   SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \"\")
    %:date-timestamp-inactive
 
 #+begin_verse
@@ -5740,6 +5737,12 @@ From %c"
         ;; menu generally comes up faster
         (setq reftex-use-multiple-selection-buffers t))
 
+      ;; BibTeX mode
+      (with-eval-after-load "bibtex"
+
+        ;; current BibTeX dialect
+        (setq bibtex-dialect 'biblatex))
+
       ))                                ; with-eval-after-load "latex" ends here
 
 )                                       ; chapter 25.10-tex-mode ends here
@@ -6959,10 +6962,10 @@ From %c"
 
     (leuven--section "30.15 (emacs)Dired Updating")
 
-    ;; add-on for sorting
+    ;; Dired sort
     (try-require 'dired-sort-map)
     ;; press `s' then `s', `x', `t', `n' or `d' to sort by
-    ;; Size, eXtension, Time, Name or name grouping Dirs
+    ;; Size, eXtension, Time, Name or name grouping Dirs first
 
 ;;** (info "(emacs)Dired and Find")
 
@@ -8050,6 +8053,7 @@ From %c"
   ;; that let me use `w3m' for EmacsWiki/Common Lisp documentation and
   ;; Firefox otherwise.
 
+  ;; TODO Check if this is needed, or must be fixed/adapted
   ;; ;; name of the browser program used by `browse-url-generic'
   ;; (setq browse-url-generic-program
   ;;       (when (and (display-graphic-p)
@@ -8635,7 +8639,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140508.1451]--")
+(message "* --[ Loaded Emacs Leuven 20140522.1806]--")
 
 (provide 'emacs-leuven)
 
