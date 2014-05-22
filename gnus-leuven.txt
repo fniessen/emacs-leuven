@@ -1,7 +1,7 @@
 #+TITLE:     Gnus Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2014-05-02 Fri 15:47>
+#+Time-stamp: <2014-05-17 Sat 09:42>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1373,6 +1373,23 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
 
 ** Interface
 
+> Is there a way to configure multiple addresses?
+
+Yes. There are a couple of variables for that. I use a code piece like
+the one below to set the variables.
+
+#+begin_src emacs-lisp :tangle no
+    (let ((addr '("primary.address@somewhere.invalid"
+                  "another.address@isp.invalid"
+                  "yet.another@address.invalid")))
+
+      (setq-default
+       user-mail-address (car addr)
+       message-alternative-emails (regexp-opt (cdr addr) 'words)
+       message-dont-reply-to-names (regexp-opt addr 'words)
+       gnus-ignored-from-addresses message-dont-reply-to-names))
+#+end_src
+
 #+begin_src emacs-lisp
 ;;** 1 (info "(message)Interface")
 
@@ -1802,6 +1819,8 @@ See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the
                 ;; first try the current method
                 current
 
+                ;; find the message-id based on the registry, so that you can
+                ;; safely move articles around
                 ;; (nnregistry)
 
                 (nnweb "gmane" (nnweb-type gmane))

@@ -1497,6 +1497,8 @@
                 ;; first try the current method
                 current
 
+                ;; find the message-id based on the registry, so that you can
+                ;; safely move articles around
                 ;; (nnregistry)
 
                 (nnweb "gmane" (nnweb-type gmane))
