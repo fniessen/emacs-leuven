@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140522.1805
+;; Version: 20140618.0950
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140522.1805]--")
+(message "* --[ Loading Emacs Leuven 20140618.0950]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -930,9 +930,8 @@ Last time is saved in global variable `leuven--before-section-time'."
     (add-hook hook
      (lambda ()
        (font-lock-add-keywords nil      ; in the current buffer
-        `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))
-        ;; FIXME                      0                        t
-        'end))))
+        `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend)) 'end))))
+        ;; FIXME                      0                        t          t
 
   ;; just-in-time fontification
   (with-eval-after-load "jit-lock"
@@ -4975,6 +4974,37 @@ From %c"
     ;; 12.6.5 default position for LaTeX figures
     (setq org-latex-default-figure-position "!htbp")
 
+    (defun org-export-ignore-headlines (data backend info)
+      "Remove headlines tagged \"ignore\" retaining contents and promoting children.
+    Each headline tagged \"ignore\" will be removed retaining its
+    contents and promoting any children headlines to the level of the
+    parent."
+      (org-element-map data 'headline
+        (lambda (object)
+          (when (member "ignore" (org-element-property :tags object))
+            (let ((level-top (org-element-property :level object))
+                  level-diff)
+              (mapc (lambda (el)
+                      ;; recursively promote all nested headlines
+                      (org-element-map el 'headline
+                        (lambda (el)
+                          (when (equal 'headline (org-element-type el))
+                            (unless level-diff
+                              (setq level-diff (- (org-element-property :level el)
+                                                  level-top)))
+                            (org-element-put-property el
+                              :level (- (org-element-property :level el)
+                                        level-diff)))))
+                      ;; insert back into parse tree
+                      (org-element-insert-before el object))
+                    (org-element-contents object)))
+            (org-element-extract-element object)))
+        info nil)
+      data)
+
+    (add-hook 'org-export-filter-parse-tree-functions
+              'org-export-ignore-headlines)
+
     )                                   ; with-eval-after-load "ox-latex" ends here
 
   ;; 12.6.6 Beamer class export
@@ -5241,22 +5271,14 @@ From %c"
   (with-eval-after-load "org"
     (message "... Org Easy Templates")
 
-    ;; keep lower-case (easy templates)
-    (setq org-structure-template-alist
-          '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
-            ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
-            ("E" "\\begin\{equation\}\n?\n\\end\{equation\}" "") ; addition!
-            ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
-            ("v" "#+begin_verse\n?\n#+end_verse" "<verse>\n?\n</verse>")
-            ("c" "#+begin_center\n?\n#+end_center" "<center>\n?\n</center>")
-            ("l" "#+begin_latex\n?\n#+end_latex" "<literal style=\"latex\">\n?\n</literal>")
-            ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
-            ("h" "#+begin_html\n?\n#+end_html" "<literal style=\"html\">\n?\n</literal>")
-            ("H" "#+html: " "<literal style=\"html\">?</literal>")
-            ("a" "#+begin_ascii\n?\n#+end_ascii")
-            ("A" "#+ascii: ")
-            ("i" "#+index: ?" "#+index: ?")
-            ("I" "#+include: %file ?" "<include file=%file markup=\"?\">")))
+    ;; modify `org-structure-template-alist' to keep lower-case easy templates
+    (mapc (lambda (asc)
+            (let ((org-sce-dc (downcase (nth 1 asc))))
+              (setf (nth 1 asc) org-sce-dc)))
+          org-structure-template-alist)
+
+    (add-to-list 'org-structure-template-alist
+                 '("E" "\\begin\{equation\}\n?\n\\end\{equation\}" ""))
 
     (add-to-list 'org-structure-template-alist
                  '("C" "#+begin_comment\n?\n#+end_comment")))
@@ -5343,6 +5365,9 @@ From %c"
   ;; how to combine blocks of the same name during tangling
   (setq org-babel-tangle-named-block-combination 'append)
 
+  ;; speed up tangling of a couple of orders of magnitude
+  (setq org-babel-use-quick-and-dirty-noweb-expansion t)
+                                        ; :noweb-ref feature must NOT be used!
 
   ;; minimum number of lines for output *block* (placed in a
   ;; #+begin_example...#+end_example) vs. output marked as literal by
@@ -6263,22 +6288,6 @@ From %c"
   ;; (with-eval-after-load "lisp-mode"
   ;;   (define-key emacs-lisp-mode-map
   ;;     (kbd "<tab>") 'elisp-indent-or-complete))
-
-  ;; minor mode for editing parentheses
-  (when (locate-library "paredit")
-
-    (autoload 'enable-paredit-mode "paredit"
-      "Minor mode for pseudo-structurally editing Lisp code." t)
-
-    (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
-
-    ;; Common Lisp editing extensions
-    (when (locate-library "redshank")   ; requires `paredit'
-
-      (autoload 'redshank-mode "redshank"
-        "Minor mode for restructuring Lisp code (i.e., refactoring)." t)
-
-      (add-hook 'emacs-lisp-mode-hook 'redshank-mode)))
 
 )                                       ; chapter 27 ends here
 
@@ -8639,7 +8648,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140522.1806]--")
+(message "* --[ Loaded Emacs Leuven 20140618.0951]--")
 
 (provide 'emacs-leuven)
 
