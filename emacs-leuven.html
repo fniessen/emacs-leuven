@@ -67,7 +67,8 @@
 
               <li><a href="#sec-7-2">Package Installation</a></li>
 
-              <li><a href="#sec-7-3">Check Org mode version</a></li>
+              <li><a href="#sec-7-3"><span class="todo TODO">TODO</span> Check
+              Org mode version</a></li>
             </ul>
           </li>
 
@@ -606,10 +607,13 @@
 
                   <li><a href="#sec-28-11-3">LaTeX and PDF export</a></li>
 
-                  <li><a href="#sec-28-11-4">LaTeX Beamer and PDF
+                  <li><a href="#sec-28-11-4">“Ignore heading + promote
+                  children” tag</a></li>
+
+                  <li><a href="#sec-28-11-5">LaTeX Beamer and PDF
                   export</a></li>
 
-                  <li><a href="#sec-28-11-5">OpenDocument Text (ODT)</a></li>
+                  <li><a href="#sec-28-11-6">OpenDocument Text (ODT)</a></li>
                 </ul>
               </li>
 
@@ -662,27 +666,24 @@
                 </ul>
               </li>
 
-              <li><a href="#sec-28-15">Obsoleted syntax (since Org
-              7.8)</a></li>
+              <li><a href="#sec-28-15">Other</a></li>
 
-              <li><a href="#sec-28-16">Other</a></li>
+              <li><a href="#sec-28-16">A.3 Adding hyperlink types</a></li>
 
-              <li><a href="#sec-28-17">A.3 Adding hyperlink types</a></li>
-
-              <li><a href="#sec-28-18">A.5 Tables and lists in arbitrary
+              <li><a href="#sec-28-17">A.5 Tables and lists in arbitrary
               syntax</a></li>
 
-              <li><a href="#sec-28-19">A.6 Dynamic blocks</a></li>
+              <li><a href="#sec-28-18">A.6 Dynamic blocks</a></li>
 
               <li>
-                <a href="#sec-28-20">Org-contrib</a>
+                <a href="#sec-28-19">Org-contrib</a>
 
                 <ul>
-                  <li><a href="#sec-28-20-1">Org-effectiveness</a></li>
+                  <li><a href="#sec-28-19-1">Org-effectiveness</a></li>
 
-                  <li><a href="#sec-28-20-2">Org-notmuch</a></li>
+                  <li><a href="#sec-28-19-2">Org-notmuch</a></li>
 
-                  <li><a href="#sec-28-20-3">Google Weather</a></li>
+                  <li><a href="#sec-28-19-3">Google Weather</a></li>
                 </ul>
               </li>
             </ul>
@@ -1142,7 +1143,7 @@
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">URL: https://github.com/fniessen/emacs-leuven</span>
 <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Version: 20140522.1806</span>
+"color: #8D8D84; font-style: italic;">Version: 20140618.0954</span>
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">Keywords: emacs, dotfile, config</span>
 
@@ -1264,7 +1265,7 @@
 "color: #8D8D84; font-style: italic;">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span style=
-"color: #008000;">"* --[ Loading Emacs Leuven 20140522.1806]--"</span>)
+"color: #008000;">"* --[ Loading Emacs Leuven 20140618.0954]--"</span>)
 
 <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">uptimes</span>
@@ -2129,7 +2130,8 @@
                                <span style=
 "color: #008000;">"the `</span><span style=
 "color: #D0372D;">%s</span><span style=
-"color: #008000;">' package at next startup..."</span>) pkg)
+"color: #008000;">' package at next startup..."</span>) <span style=
+"color: #ff0000; font-weight: bold;">pkg)</span>
               (sit-for 1.5)))))
 
       <span style="color: #8D8D84;">;; </span><span style=
@@ -2197,7 +2199,8 @@
       </div>
 
       <div id="outline-container-sec-7-3" class="outline-3">
-        <h3 id="sec-7-3">Check Org mode version</h3>
+        <h3 id="sec-7-3"><span class="todo TODO">TODO</span> Check Org mode
+        version</h3>
 
         <div class="outline-text-3" id="text-7-3">
           <p>The following block checks for the Org mode version, and warns the
@@ -3667,30 +3670,14 @@
        (font-lock-add-keywords nil      <span style=
 "color: #8D8D84;">; </span><span style=
 "color: #8D8D84; font-style: italic;">in the current buffer</span>
-        `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))
+        `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend)) 'end))))
         <span style="color: #8D8D84;">;; </span><span style=
-"color: #CC0000; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #8D8D84; font-style: italic;">                      0                        t</span>
-        'end))))
+"color: #CC0000; background-color: #FFFF88; font-style: italic;">FIXME</span><span style="color: #8D8D84; font-style: italic;">                      0                        t          t</span>
 </pre>
           </div>
 
           <p>See doc of <code>font-lock-keywords</code> and
           <code>font-lock-add-keywords</code>.</p>
-
-          <p>For FIXME to be highlighted in Org tables as well, use:</p>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">fp-fontify-fixme</span> ()
-    (font-lock-add-keywords nil
-     '((<span style="color: #008000;">"\\&lt;</span><span style=
-"color: #CC0000; background-color: #FFFF88;">FIXME</span><span style=
-"color: #008000;">\\&gt;"</span> 0 font-lock-<span style=
-"color: #CC0000; background-color: #FFFF88;">warning</span>-face t)) t))
-                                                   ^!!!
-</pre>
-          </div>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -4384,6 +4371,8 @@
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">shift the meaning of `</span><span style=
 "color: #D0372D; font-style: italic;">C-M-s/r</span><span style=
+"color: #8D8D84; font-style: italic;">' with `</span><span style=
+"color: #D0372D; font-style: italic;">C-s/r</span><span style=
 "color: #8D8D84; font-style: italic;">'</span>
   (global-set-key
     (kbd <span style="color: #008000;">"C-M-s"</span>) 'isearch-forward)
@@ -7859,7 +7848,7 @@ M-: (executable-find "diff") RET
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">faster scrolling (if you never expect to have to display bidirectional</span>
   <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">scripts, like Arabic)</span>
+"color: #8D8D84; font-style: italic;">scripts, such as Arabic and Hebrew)</span>
   (setq-default bidi-paragraph-direction 'left-to-right)
 </pre>
           </div>
@@ -7941,7 +7930,8 @@ M-: (executable-find "diff") RET
 "color: #008000;">".ssh/config\\'"</span>  . ssh-config-mode)
                   (<span style=
 "color: #008000;">"sshd?_config\\'"</span> . ssh-config-mode)
-                  ) auto-mode-alist))
+                  ) <span style=
+"color: #ff0000; font-weight: bold;">auto-mode-alist))</span>
 
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">major mode for fontifiying ssh config files</span>
@@ -11123,7 +11113,9 @@ M-: (executable-find "diff") RET
                    <span style="color: #008000;">"* NEW %^{Task}%?</span>
 
 <span style="color: #008000;">%i"</span>
-                   <span style="color: #006FE0;">:empty-lines</span> 1) t)
+                   <span style=
+"color: #006FE0;">:empty-lines</span> 1) <span style=
+"color: #ff0000; font-weight: bold;">t)</span>
 
     (add-to-list 'org-capture-templates
                  `(<span style="color: #008000;">"T"</span> <span style=
@@ -11136,7 +11128,8 @@ M-: (executable-find "diff") RET
 "color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
 "color: #008000;"> %?</span>
 <span style="color: #008000;">  %U %a %n"</span>
-                   <span style="color: #006FE0;">:prepend</span> t) t)
+                   <span style=
+"color: #006FE0;">:prepend</span> t) <span style="color: #ff0000; font-weight: bold;">t)</span>
 
     (add-to-list 'org-capture-templates
                  `(<span style="color: #008000;">"a"</span> <span style=
@@ -11147,7 +11140,9 @@ M-: (executable-find "diff") RET
 <span style="color: #008000;">%^T</span>
 
 <span style="color: #008000;">%i"</span>
-                   <span style="color: #006FE0;">:empty-lines</span> 1) t)
+                   <span style=
+"color: #006FE0;">:empty-lines</span> 1) <span style=
+"color: #ff0000; font-weight: bold;">t)</span>
                    <span style="color: #8D8D84;">;; </span><span style=
 "color: #CC0000; background-color: #FFFF88; font-style: italic;">TODO</span><span style="color: #8D8D84; font-style: italic;"> Prompt only for date, not time...</span>
 </pre>
@@ -11170,7 +11165,8 @@ M-: (executable-find "diff") RET
                    <span style="color: #008000;">"** </span><span style=
 "color: #CC0000; background-color: #FFFF88;">TODO</span><span style=
 "color: #008000;"> Put this in some other file\n\n"</span>
-                   <span style="color: #006FE0;">:prepend</span> t) t)
+                   <span style=
+"color: #006FE0;">:prepend</span> t) <span style="color: #ff0000; font-weight: bold;">t)</span>
 
     (<span style="color: #0000FF;">defun</span> <span style=
 "color: #006699;">leuven-find-location</span> ()
@@ -11281,7 +11277,9 @@ M-: (executable-find "diff") RET
 <span style="color: #008000;">#+end_verse</span>
 
 <span style="color: #008000;">From %a"</span>
-                   <span style="color: #006FE0;">:empty-lines</span> 1) t)
+                   <span style=
+"color: #006FE0;">:empty-lines</span> 1) <span style=
+"color: #ff0000; font-weight: bold;">t)</span>
 
     (add-to-list 'org-capture-templates
                  `(<span style="color: #008000;">"mr"</span> <span style=
@@ -11306,7 +11304,8 @@ M-: (executable-find "diff") RET
 <span style="color: #008000;">From %a"</span>
                    <span style=
 "color: #006FE0;">:empty-lines</span> 1 <span style=
-"color: #006FE0;">:immediate-finish</span> t) t)
+"color: #006FE0;">:immediate-finish</span> t) <span style=
+"color: #ff0000; font-weight: bold;">t)</span>
 </pre>
               </div>
 
@@ -11329,7 +11328,8 @@ M-: (executable-find "diff") RET
                    <span style=
 "color: #006FE0;">:empty-lines</span> 1 <span style=
 "color: #006FE0;">:clock-in</span> t <span style=
-"color: #006FE0;">:clock-resume</span> t) t)
+"color: #006FE0;">:clock-resume</span> t) <span style=
+"color: #ff0000; font-weight: bold;">t)</span>
 
     (add-to-list 'org-capture-templates
                  `(<span style="color: #008000;">"i"</span> <span style=
@@ -11337,7 +11337,7 @@ M-: (executable-find "diff") RET
                    (file ,org-default-notes-file)
                    <span style="color: #008000;">"A TEMPLATE HERE"</span>
                    <span style=
-"color: #006FE0;">:clock-in</span> t <span style="color: #006FE0;">:clock-resume</span> t) t)
+"color: #006FE0;">:clock-in</span> t <span style="color: #006FE0;">:clock-resume</span> t) <span style="color: #ff0000; font-weight: bold;">t)</span>
 </pre>
               </div>
 
@@ -11354,7 +11354,9 @@ M-: (executable-find "diff") RET
                    <span style="color: #008000;">"* %^{Thought}%?</span>
 
 <span style="color: #008000;">%i"</span>
-                   <span style="color: #006FE0;">:empty-lines</span> 1) t)
+                   <span style=
+"color: #006FE0;">:empty-lines</span> 1) <span style=
+"color: #ff0000; font-weight: bold;">t)</span>
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">shopping list (stuff to buy)</span>
@@ -11362,7 +11364,8 @@ M-: (executable-find "diff") RET
                  `(<span style="color: #008000;">"b"</span> <span style=
 "color: #008000;">"Buy"</span> checkitem
                    (file+headline ,org-default-notes-file <span style=
-"color: #008000;">"Shopping"</span>)) t)
+"color: #008000;">"Shopping"</span>)) <span style=
+"color: #ff0000; font-weight: bold;">t)</span>
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">add a note to the currently clocked task</span>
@@ -11390,7 +11393,9 @@ M-: (executable-find "diff") RET
 <span style="color: #008000;">From %a"</span>
                    <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">"* %^{Title}\n  :PROPERTIES:\n  :on: %T\n  :END:\n  %?\n  %x"</span>
-                   <span style="color: #006FE0;">:empty-lines</span> 1) t)
+                   <span style=
+"color: #006FE0;">:empty-lines</span> 1) <span style=
+"color: #ff0000; font-weight: bold;">t)</span>
 
     (add-to-list 'org-capture-templates
                  `(<span style="color: #008000;">"S"</span> <span style=
@@ -11445,7 +11450,8 @@ M-: (executable-find "diff") RET
 <span style="color: #008000;">From %c"</span>
                    <span style=
 "color: #006FE0;">:empty-lines</span> 1 <span style=
-"color: #006FE0;">:immediate-finish</span> t) t)
+"color: #006FE0;">:immediate-finish</span> t) <span style=
+"color: #ff0000; font-weight: bold;">t)</span>
 
     <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">default `</span><span style=
@@ -11583,7 +11589,8 @@ emacsclient -n -e <span style="color: #008000;">'(make-capture-frame)'</span>
 "color: #008000;">"http://orgmode.org/worg/"</span>
                    <span style=
 "color: #006FE0;">:working-directory</span> <span style=
-"color: #008000;">"~/Public/Repositories/worg/"</span>) t))
+"color: #008000;">"~/Public/Repositories/worg/"</span>) <span style=
+"color: #ff0000; font-weight: bold;">t))</span>
 </pre>
             </div>
           </div>
@@ -13701,7 +13708,9 @@ emacsclient -n -e <span style="color: #008000;">'(make-capture-frame)'</span>
 "color: #008000;">"\\ifdefined\\DeclareUnicodeCharacter{"</span>
                        <span style=
 "color: #008000;">"\\DeclareUnicodeCharacter{00A0}{~}"</span>
-                       <span style="color: #008000;">"}\\fi"</span>) t)
+                       <span style=
+"color: #008000;">"}\\fi"</span>) <span style=
+"color: #ff0000; font-weight: bold;">t)</span>
 </pre>
                 </div>
               </li>
@@ -13812,6 +13821,122 @@ emacsclient -n -e <span style="color: #008000;">'(make-capture-frame)'</span>
 "color: #008000;">"!htbp"</span>)
 </pre>
             </div>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-28-11-4" class="outline-4">
+          <h4 id="sec-28-11-4">“Ignore heading + promote children” tag</h4>
+
+          <div class="outline-text-4" id="text-28-11-4">
+            <p>The actual contents of an abstract can be rather large.</p>
+
+            <p>To be able to put it into a collapsable headline <b>without
+            exporting the headline</b>, but <b>well its contents</b>, you can
+            add a <code>ignore</code> tag to remove the headline:</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+    (<span style="color: #0000FF;">defun</span> <span style=
+"color: #006699;">org-export-ignore-headlines</span> (data backend info)
+      <span style=
+"color: #036A07;">"Remove headlines tagged \"ignore\" retaining contents and promoting children.</span>
+<span style=
+"color: #036A07;">    Each headline tagged \"ignore\" will be removed retaining its</span>
+<span style=
+"color: #036A07;">    contents and promoting any children headlines to the level of the</span>
+<span style="color: #036A07;">    parent."</span>
+      (org-element-map data 'headline
+        (<span style="color: #0000FF;">lambda</span> (object)
+          (<span style="color: #0000FF;">when</span> (member <span style=
+"color: #008000;">"ignore"</span> (org-element-property <span style=
+"color: #006FE0;">:tags</span> object))
+            (<span style=
+"color: #0000FF;">let</span> ((level-top (org-element-property <span style=
+"color: #006FE0;">:level</span> object))
+                  level-diff)
+              (mapc (<span style="color: #0000FF;">lambda</span> (el)
+                      <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">recursively promote all nested headlines</span>
+                      (org-element-map el 'headline
+                        (<span style="color: #0000FF;">lambda</span> (el)
+                          (<span style=
+"color: #0000FF;">when</span> (equal 'headline (org-element-type el))
+                            (<span style=
+"color: #0000FF;">unless</span> level-diff
+                              (setq level-diff (- (org-element-property <span style="color: #006FE0;">:level</span> el)
+                                                  level-top)))
+                            (org-element-put-property el
+                              <span style=
+"color: #006FE0;">:level</span> (- (org-element-property <span style=
+"color: #006FE0;">:level</span> el)
+                                        level-diff)))))
+                      <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">insert back into parse tree</span>
+                      (org-element-insert-before el object))
+                    (org-element-contents object)))
+            (org-element-extract-element object)))
+        info nil)
+      data)
+
+    (add-hook 'org-export-filter-parse-tree-functions
+              'org-export-ignore-headlines)
+</pre>
+            </div>
+
+            <p>In addition, it promotes all headlines under the removed
+            <code>ignore</code>-tagged headline. This is useful to support
+            structures like the following:</p>
+
+            <div class="org-src-container">
+              <pre class="src src-org">
+<span style=
+"color: #8D8D84; font-style: italic;"># Wrapping an abstract in a headline</span>
+
+<span style=
+"color: #3C3C3C; background-color: #F0F0F0; font-size: 130%; font-weight: bold; text-decoration: overline;">* Abstract                                                             </span><span style="color: #9A9FA4; background-color: #ffffff; font-size: 130%; font-weight: bold; font-style: italic; text-decoration: overline;">:ignore:</span>
+<span style=
+"color: #008ED1; background-color: #EAEAFF;">#+LaTeX:</span> <span style=
+"color: #000088; background-color: #FFFFE0;">\begin{abstract}</span>
+<span style=
+"color: #008ED1; background-color: #EAEAFF;">#+HTML:</span> <span style=
+"color: #000088; background-color: #FFFFE0;">&lt;div id="abstract"&gt;</span>
+...
+<span style=
+"color: #008ED1; background-color: #EAEAFF;">#+HTML:</span> <span style=
+"color: #000088; background-color: #FFFFE0;">&lt;/div&gt;</span>
+<span style=
+"color: #008ED1; background-color: #EAEAFF;">#+LaTeX:</span> <span style=
+"color: #000088; background-color: #FFFFE0;">\end{abstract}</span>
+
+<span style=
+"color: #8D8D84; font-style: italic;"># Placing References under a headline (using ox-bibtex in contrib)</span>
+
+<span style=
+"color: #3C3C3C; background-color: #F0F0F0; font-size: 130%; font-weight: bold; text-decoration: overline;">* References                                                           </span><span style="color: #9A9FA4; background-color: #ffffff; font-size: 130%; font-weight: bold; font-style: italic; text-decoration: overline;">:ignore:</span>
+<span style=
+"color: #008ED1; background-color: #EAEAFF;">#+BIBLIOGRAPHY: dissertation plain</span>
+
+<span style=
+"color: #8D8D84; font-style: italic;"># Inserting an appendix for LaTeX using the appendix package.</span>
+
+<span style=
+"color: #3C3C3C; background-color: #F0F0F0; font-size: 130%; font-weight: bold; text-decoration: overline;">* Appendix                                                             </span><span style="color: #9A9FA4; background-color: #ffffff; font-size: 130%; font-weight: bold; font-style: italic; text-decoration: overline;">:ignore:</span>
+<span style=
+"color: #008ED1; background-color: #EAEAFF;">#+LaTeX:</span> <span style=
+"color: #000088; background-color: #FFFFE0;">\begin{appendices}</span>
+<span style=
+"color: #123555; background-color: #E5F4FB; font-weight: bold; text-decoration: overline;">** Reproduction</span>
+<span style=
+"color: #123555; background-color: #E5F4FB; font-weight: bold; text-decoration: overline;">** Data Sets</span>
+<span style=
+"color: #123555; background-color: #E5F4FB; font-weight: bold; text-decoration: overline;">** Tooling</span>
+<span style=
+"color: #123555; background-color: #E5F4FB; font-weight: bold; text-decoration: overline;">** Definitions</span>
+<span style=
+"color: #008ED1; background-color: #EAEAFF;">#+LaTeX:</span> <span style=
+"color: #000088; background-color: #FFFFE0;">\end{appendices}</span>
+</pre>
+            </div>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -13823,10 +13948,10 @@ emacsclient -n -e <span style="color: #008000;">'(make-capture-frame)'</span>
           </div>
         </div>
 
-        <div id="outline-container-sec-28-11-4" class="outline-4">
-          <h4 id="sec-28-11-4">LaTeX Beamer and PDF export</h4>
+        <div id="outline-container-sec-28-11-5" class="outline-4">
+          <h4 id="sec-28-11-5">LaTeX Beamer and PDF export</h4>
 
-          <div class="outline-text-4" id="text-28-11-4">
+          <div class="outline-text-4" id="text-28-11-5">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span style="color: #8D8D84;">;; </span><span style=
@@ -13847,10 +13972,10 @@ emacsclient -n -e <span style="color: #008000;">'(make-capture-frame)'</span>
           </div>
         </div>
 
-        <div id="outline-container-sec-28-11-5" class="outline-4">
-          <h4 id="sec-28-11-5">OpenDocument Text (ODT)</h4>
+        <div id="outline-container-sec-28-11-6" class="outline-4">
+          <h4 id="sec-28-11-6">OpenDocument Text (ODT)</h4>
 
-          <div class="outline-text-4" id="text-28-11-5">
+          <div class="outline-text-4" id="text-28-11-6">
             <p>ODT export is not loaded by default. You will have to load it
             explicitly or to add it to <code>org-export-backends</code>.</p>
 
@@ -14504,47 +14629,17 @@ emacsclient -n -e <span style="color: #008000;">'(make-capture-frame)'</span>
     (message <span style="color: #008000;">"... Org Easy Templates"</span>)
 
     <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">keep lower-case (easy templates)</span>
-    (setq org-structure-template-alist
-          '((<span style="color: #008000;">"s"</span> <span style=
-"color: #008000;">"#+begin_src ?\n\n#+end_src"</span> <span style=
-"color: #008000;">"&lt;src lang=\"?\"&gt;\n\n&lt;/src&gt;"</span>)
-            (<span style="color: #008000;">"e"</span> <span style=
-"color: #008000;">"#+begin_example\n?\n#+end_example"</span> <span style=
-"color: #008000;">"&lt;example&gt;\n?\n&lt;/example&gt;"</span>)
-            (<span style="color: #008000;">"E"</span> <span style=
-"color: #008000;">"\\begin\{equation\}\n?\n\\end\{equation\}"</span> <span style="color: #008000;">""</span>) <span style="color: #8D8D84;">; </span><span style="color: #8D8D84; font-style: italic;">addition!</span>
-            (<span style="color: #008000;">"q"</span> <span style=
-"color: #008000;">"#+begin_quote\n?\n#+end_quote"</span> <span style=
-"color: #008000;">"&lt;quote&gt;\n?\n&lt;/quote&gt;"</span>)
-            (<span style="color: #008000;">"v"</span> <span style=
-"color: #008000;">"#+begin_verse\n?\n#+end_verse"</span> <span style=
-"color: #008000;">"&lt;verse&gt;\n?\n&lt;/verse&gt;"</span>)
-            (<span style="color: #008000;">"c"</span> <span style=
-"color: #008000;">"#+begin_center\n?\n#+end_center"</span> <span style=
-"color: #008000;">"&lt;center&gt;\n?\n&lt;/center&gt;"</span>)
-            (<span style="color: #008000;">"l"</span> <span style=
-"color: #008000;">"#+begin_latex\n?\n#+end_latex"</span> <span style=
-"color: #008000;">"&lt;literal style=\"latex\"&gt;\n?\n&lt;/literal&gt;"</span>)
-            (<span style="color: #008000;">"L"</span> <span style=
-"color: #008000;">"#+latex: "</span> <span style=
-"color: #008000;">"&lt;literal style=\"latex\"&gt;?&lt;/literal&gt;"</span>)
-            (<span style="color: #008000;">"h"</span> <span style=
-"color: #008000;">"#+begin_html\n?\n#+end_html"</span> <span style=
-"color: #008000;">"&lt;literal style=\"html\"&gt;\n?\n&lt;/literal&gt;"</span>)
-            (<span style="color: #008000;">"H"</span> <span style=
-"color: #008000;">"#+html: "</span> <span style=
-"color: #008000;">"&lt;literal style=\"html\"&gt;?&lt;/literal&gt;"</span>)
-            (<span style="color: #008000;">"a"</span> <span style=
-"color: #008000;">"#+begin_ascii\n?\n#+end_ascii"</span>)
-            (<span style="color: #008000;">"A"</span> <span style=
-"color: #008000;">"#+ascii: "</span>)
-            (<span style="color: #008000;">"i"</span> <span style=
-"color: #008000;">"#+index: ?"</span> <span style=
-"color: #008000;">"#+index: ?"</span>)
-            (<span style="color: #008000;">"I"</span> <span style=
-"color: #008000;">"#+include: %file ?"</span> <span style=
-"color: #008000;">"&lt;include file=%file markup=\"?\"&gt;"</span>)))
+"color: #8D8D84; font-style: italic;">modify `</span><span style=
+"color: #D0372D; font-style: italic;">org-structure-template-alist</span><span style="color: #8D8D84; font-style: italic;">' to keep lower-case easy templates</span>
+    (mapc (<span style="color: #0000FF;">lambda</span> (asc)
+            (<span style=
+"color: #0000FF;">let</span> ((org-sce-dc (downcase (nth 1 asc))))
+              (setf (nth 1 asc) org-sce-dc)))
+          org-structure-template-alist)
+
+    (add-to-list 'org-structure-template-alist
+                 '(<span style="color: #008000;">"E"</span> <span style=
+"color: #008000;">"\\begin\{equation\}\n?\n\\end\{equation\}"</span> <span style="color: #008000;">""</span>))
 
     (add-to-list 'org-structure-template-alist
                  '(<span style="color: #008000;">"C"</span> <span style=
@@ -14777,57 +14872,9 @@ emacsclient -n -e <span style="color: #008000;">'(make-capture-frame)'</span>
       </div>
 
       <div id="outline-container-sec-28-15" class="outline-3">
-        <h3 id="sec-28-15">Obsoleted syntax (since Org 7.8)</h3>
+        <h3 id="sec-28-15">Other</h3>
 
         <div class="outline-text-3" id="text-28-15">
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">function to update Org mode buffers to use the new code block</span>
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">syntax (switch between versions 7.7 and 7.8)</span>
-  (<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">update-org-buffer</span> ()
-    <span style=
-"color: #036A07;">"Update an Org mode buffer to the new data, code block and call line syntax."</span>
-    (interactive)
-    (<span style="color: #0000FF;">save-excursion</span>
-      (flet ((to-re (lst) (concat <span style=
-"color: #008000;">"^[ \t]*#\\+"</span> (regexp-opt lst t)
-                                  <span style=
-"color: #008000;">"</span><span style=
-"color: #008000; font-weight: bold;">\\</span><span style=
-"color: #008000; font-weight: bold;">(</span><span style=
-"color: #008000;">\\[</span><span style=
-"color: #008000; font-weight: bold;">\\</span><span style=
-"color: #008000; font-weight: bold;">(</span><span style=
-"color: #008000;">[[:alnum:]]+</span><span style=
-"color: #008000; font-weight: bold;">\\</span><span style=
-"color: #008000; font-weight: bold;">)</span><span style=
-"color: #008000;">\\]</span><span style=
-"color: #008000; font-weight: bold;">\\</span><span style=
-"color: #008000; font-weight: bold;">)</span><span style=
-"color: #008000;">?\\:[ \t]*"</span>))
-             (update (re new)
-                     (goto-char (point-min))
-                     (<span style=
-"color: #0000FF;">while</span> (re-search-forward re nil t)
-                       (replace-match new nil nil nil 1))))
-        (<span style=
-"color: #0000FF;">let</span> ((old-re (to-re '(<span style="color: #008000;">"RESULTS"</span> <span style="color: #008000;">"DATA"</span> <span style="color: #008000;">"SRCNAME"</span> <span style="color: #008000;">"SOURCE"</span>)))
-              (lob-re (to-re '(<span style="color: #008000;">"LOB"</span>)))
-              (case-fold-search t))
-          (update old-re <span style="color: #008000;">"name"</span>)
-          (update lob-re <span style="color: #008000;">"call"</span>)))))
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="outline-container-sec-28-16" class="outline-3">
-        <h3 id="sec-28-16">Other</h3>
-
-        <div class="outline-text-3" id="text-28-16">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span style="color: #8D8D84;">;; </span><span style=
@@ -14837,8 +14884,22 @@ emacsclient -n -e <span style="color: #008000;">'(make-capture-frame)'</span>
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">how to combine blocks of the same name during tangling</span>
   (setq org-babel-tangle-named-block-combination 'append)
+</pre>
+          </div>
 
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  <span style="color: #8D8D84;">;; </span><span style=
+"color: #8D8D84; font-style: italic;">speed up tangling of a couple of orders of magnitude</span>
+  (setq org-babel-use-quick-and-dirty-noweb-expansion t)
+                                        <span style=
+"color: #8D8D84;">; </span><span style=
+"color: #8D8D84; font-style: italic;">:noweb-ref feature must NOT be used!</span>
+</pre>
+          </div>
 
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   <span style="color: #8D8D84;">;; </span><span style=
 "color: #8D8D84; font-style: italic;">minimum number of lines for output *block* (placed in a</span>
   <span style="color: #8D8D84;">;; </span><span style=
@@ -15009,10 +15070,10 @@ emacsclient -n -e <span style="color: #008000;">'(make-capture-frame)'</span>
         </div>
       </div>
 
-      <div id="outline-container-sec-28-17" class="outline-3">
-        <h3 id="sec-28-17">A.3 Adding hyperlink types</h3>
+      <div id="outline-container-sec-28-16" class="outline-3">
+        <h3 id="sec-28-16">A.3 Adding hyperlink types</h3>
 
-        <div class="outline-text-3" id="text-28-17">
+        <div class="outline-text-3" id="text-28-16">
           <p>For more flexibility, you can use a URL-like syntax which could
           then export conditionally on the output format.</p>
 
@@ -15064,10 +15125,10 @@ emacsclient -n -e <span style="color: #008000;">'(make-capture-frame)'</span>
         </div>
       </div>
 
-      <div id="outline-container-sec-28-18" class="outline-3">
-        <h3 id="sec-28-18">A.5 Tables and lists in arbitrary syntax</h3>
+      <div id="outline-container-sec-28-17" class="outline-3">
+        <h3 id="sec-28-17">A.5 Tables and lists in arbitrary syntax</h3>
 
-        <div class="outline-text-3" id="text-28-18">
+        <div class="outline-text-3" id="text-28-17">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (<span style="color: #0000FF;">defun</span> <span style=
@@ -15083,10 +15144,10 @@ emacsclient -n -e <span style="color: #008000;">'(make-capture-frame)'</span>
         </div>
       </div>
 
-      <div id="outline-container-sec-28-19" class="outline-3">
-        <h3 id="sec-28-19">A.6 Dynamic blocks</h3>
+      <div id="outline-container-sec-28-18" class="outline-3">
+        <h3 id="sec-28-18">A.6 Dynamic blocks</h3>
 
-        <div class="outline-text-3" id="text-28-19">
+        <div class="outline-text-3" id="text-28-18">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span style="color: #8D8D84;">;;</span><span style=
@@ -15143,15 +15204,15 @@ emacsclient -n -e <span style="color: #008000;">'(make-capture-frame)'</span>
         </div>
       </div>
 
-      <div id="outline-container-sec-28-20" class="outline-3">
-        <h3 id="sec-28-20">Org-contrib</h3>
+      <div id="outline-container-sec-28-19" class="outline-3">
+        <h3 id="sec-28-19">Org-contrib</h3>
 
-        <div class="outline-text-3" id="text-28-20"></div>
+        <div class="outline-text-3" id="text-28-19"></div>
 
-        <div id="outline-container-sec-28-20-1" class="outline-4">
-          <h4 id="sec-28-20-1">Org-effectiveness</h4>
+        <div id="outline-container-sec-28-19-1" class="outline-4">
+          <h4 id="sec-28-19-1">Org-effectiveness</h4>
 
-          <div class="outline-text-4" id="text-28-20-1">
+          <div class="outline-text-4" id="text-28-19-1">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span style="color: #8D8D84;">;; </span><span style=
@@ -15175,18 +15236,18 @@ emacsclient -n -e <span style="color: #008000;">'(make-capture-frame)'</span>
           </div>
         </div>
 
-        <div id="outline-container-sec-28-20-2" class="outline-4">
-          <h4 id="sec-28-20-2">Org-notmuch</h4>
+        <div id="outline-container-sec-28-19-2" class="outline-4">
+          <h4 id="sec-28-19-2">Org-notmuch</h4>
 
-          <div class="outline-text-4" id="text-28-20-2">
+          <div class="outline-text-4" id="text-28-19-2">
             <p>Link emails from Org files.</p>
           </div>
         </div>
 
-        <div id="outline-container-sec-28-20-3" class="outline-4">
-          <h4 id="sec-28-20-3">Google Weather</h4>
+        <div id="outline-container-sec-28-19-3" class="outline-4">
+          <h4 id="sec-28-19-3">Google Weather</h4>
 
-          <div class="outline-text-4" id="text-28-20-3">
+          <div class="outline-text-4" id="text-28-19-3">
             <pre class="example">
 * Weather
   :PROPERTIES:
@@ -24116,7 +24177,7 @@ M-: (<span style="color: #0000FF;">let</span> (lst) (mapatoms (<span style=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span style=
-"color: #008000;">"* --[ Loaded Emacs Leuven 20140522.1807]--"</span>)
+"color: #008000;">"* --[ Loaded Emacs Leuven 20140618.0954]--"</span>)
 
 (<span style="color: #0000FF;">provide</span> '<span style=
 "color: #D0372D;">emacs-leuven</span>)
