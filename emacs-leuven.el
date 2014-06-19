@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140618.0950
+;; Version: 20140619.1335
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140618.0950]--")
+(message "* --[ Loading Emacs Leuven 20140619.1335]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3337,7 +3337,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (message "... Handling links")
 
     ;; 4.4 show inline images when loading a new Org file
-    (setq org-startup-with-inline-images t)
+    (setq org-startup-with-inline-images t) ; invokes org-display-inline-images
 
     ;; 4.4 try to get the width from an #+ATTR.* keyword and fall back on the
     ;; original width if none is found
@@ -4756,7 +4756,7 @@ From %c"
       (defun leuven--export-html-final-filter (contents backend info)
         (if (not (eq backend 'html)) contents
           (let* ((in-file "~/tidy-stdin.html")
-                          ;; this filepath must be readable by Cygwin
+                                        ; this filepath must be readable by Cygwin
                  (err-file "~/tidy-errors.log")
                  new-contents)
             (with-temp-file in-file
@@ -4767,7 +4767,14 @@ From %c"
                            err-file in-file)))
             (message "HTML Tidy'ed")
             (message "%s" (org-file-contents err-file))
-            new-contents)))
+            new-contents)
+
+          ;; (with-output-to-string
+          ;;   (insert contents)
+          ;;   (shell-command-on-region (point-min) (point-max)
+          ;;                            "tidy -config ~/.tidyrc"
+          ;;                            t t "*Tidy errors*" t))
+          ))
       (add-to-list 'org-export-filter-final-output-functions
                    'leuven--export-html-final-filter))
 
@@ -5365,7 +5372,7 @@ From %c"
   ;; how to combine blocks of the same name during tangling
   (setq org-babel-tangle-named-block-combination 'append)
 
-  ;; speed up tangling of a couple of orders of magnitude
+  ;; speed up tangling dramatically (a couple of orders of magnitude)
   (setq org-babel-use-quick-and-dirty-noweb-expansion t)
                                         ; :noweb-ref feature must NOT be used!
 
@@ -8620,6 +8627,16 @@ From %c"
 
 )                                       ; chapter G ends here
 
+;;* Profiler
+
+  (setq profiler-report-cpu-line-format
+    '((100 left)
+                                        ; The 100 above is increased from the
+                                        ; default of 50 to allow the deeply
+                                        ; nested call tree to be seen.
+      (24 right ((19 right)
+                 (5 right)))))
+
 ;; Recovery from Problems
 
 ;;* Reporting Bugs
@@ -8648,7 +8665,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140618.0951]--")
+(message "* --[ Loaded Emacs Leuven 20140619.1336]--")
 
 (provide 'emacs-leuven)
 

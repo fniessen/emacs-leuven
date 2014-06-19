@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-06-18 Wed 09:46>
+# Time-stamp: <2014-06-19 Thu 13:35>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -5205,7 +5205,7 @@ and resize it to a specific width.
     (message "... Handling links")
 
     ;; 4.4 show inline images when loading a new Org file
-    (setq org-startup-with-inline-images t)
+    (setq org-startup-with-inline-images t) ; invokes org-display-inline-images
 
     ;; 4.4 try to get the width from an #+ATTR.* keyword and fall back on the
     ;; original width if none is found
@@ -7207,7 +7207,7 @@ org-export-htmlize-generate-css~ to extract class definitions.
       (defun leuven--export-html-final-filter (contents backend info)
         (if (not (eq backend 'html)) contents
           (let* ((in-file "~/tidy-stdin.html")
-                          ;; this filepath must be readable by Cygwin
+                                        ; this filepath must be readable by Cygwin
                  (err-file "~/tidy-errors.log")
                  new-contents)
             (with-temp-file in-file
@@ -7218,10 +7218,19 @@ org-export-htmlize-generate-css~ to extract class definitions.
                            err-file in-file)))
             (message "HTML Tidy'ed")
             (message "%s" (org-file-contents err-file))
-            new-contents)))
+            new-contents)
+
+          ;; (with-output-to-string
+          ;;   (insert contents)
+          ;;   (shell-command-on-region (point-min) (point-max)
+          ;;                            "tidy -config ~/.tidyrc"
+          ;;                            t t "*Tidy errors*" t))
+          ))
       (add-to-list 'org-export-filter-final-output-functions
                    'leuven--export-html-final-filter))
+#+end_src
 
+#+begin_src emacs-lisp
       ;; HTML checkbox output
       (defun leuven--checkbox-filter (item backend info)
         (when (org-export-derived-backend-p backend 'html)
@@ -8123,7 +8132,7 @@ C-r~ (fits nicely with the meaning of "reveal").
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; speed up tangling of a couple of orders of magnitude
+  ;; speed up tangling dramatically (a couple of orders of magnitude)
   (setq org-babel-use-quick-and-dirty-noweb-expansion t)
                                         ; :noweb-ref feature must NOT be used!
 #+end_src
@@ -9920,6 +9929,9 @@ Show the diff we are about to commit: ~C-c C-d~.
     (define-key vc-prefix-map
       (kbd "=") 'leuven-vc-diff))
 #+end_src
+
+*************** TODO Customize `vc-annotate-background' (and future `vc-annotate-foreground')
+*************** END
 
 ** Change Logs
 
@@ -13607,6 +13619,20 @@ Eventually have a look as well at ~input-decode-map~.
     (define-key key-translation-map [kp-delete] [delete]))
 
 )                                       ; chapter G ends here
+#+end_src
+
+* Profiler
+
+#+begin_src emacs-lisp
+;;* Profiler
+
+  (setq profiler-report-cpu-line-format
+    '((100 left)
+                                        ; The 100 above is increased from the
+                                        ; default of 50 to allow the deeply
+                                        ; nested call tree to be seen.
+      (24 right ((19 right)
+                 (5 right)))))
 #+end_src
 
 * Reporting Bugs
