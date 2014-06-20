@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140619.1335
+;; Version: 20140619.1404
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140619.1335]--")
+(message "* --[ Loading Emacs Leuven 20140619.1404]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4686,7 +4686,7 @@ From %c"
     ;; include priority cookies in export
     (setq org-export-with-priority t)
 
-    ;; activate smart quotes during export
+    ;; activate smart quotes during export (convert " to \og, \fg in French)
     (setq org-export-with-smart-quotes t)
 
     ;; interpret "_" and "^" for export when braces are used
@@ -4724,15 +4724,15 @@ From %c"
     (setq org-html-checkbox-type 'unicode)
 
     ;; output type to be used by htmlize when formatting code snippets
-    (setq org-export-htmlize-output-type 'css) ; XXX
+    (setq org-html-htmlize-output-type 'css)
 
     ;; ;; URL pointing to a CSS file defining text colors for htmlized Emacs
     ;; ;; buffers
-    ;; (setq org-export-htmlized-org-css-url "style.css")
+    ;; (setq org-org-htmlized-css-url "style.css")
 
     ;; XML declaration
     (setq org-html-xml-declaration
-          '(("html" . "<!-- <xml version=\"1.0\"> -->")
+          '(("html" . "<!-- <xml version=\"1.0\" encoding=\"%s\"> -->")
             ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
             ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>")))
 
@@ -8665,7 +8665,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140619.1336]--")
+(message "* --[ Loaded Emacs Leuven 20140619.1405]--")
 
 (provide 'emacs-leuven)
 

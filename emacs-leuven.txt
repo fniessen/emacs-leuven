@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-06-19 Thu 13:35>
+# Time-stamp: <2014-06-19 Thu 14:04>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -7171,15 +7171,15 @@ org-export-htmlize-generate-css~ to extract class definitions.
     (setq org-html-checkbox-type 'unicode)
 
     ;; output type to be used by htmlize when formatting code snippets
-    (setq org-export-htmlize-output-type 'css) ; XXX
+    (setq org-html-htmlize-output-type 'css)
 
     ;; ;; URL pointing to a CSS file defining text colors for htmlized Emacs
     ;; ;; buffers
-    ;; (setq org-export-htmlized-org-css-url "style.css")
+    ;; (setq org-org-htmlized-css-url "style.css")
 
     ;; XML declaration
     (setq org-html-xml-declaration
-          '(("html" . "<!-- <xml version=\"1.0\"> -->")
+          '(("html" . "<!-- <xml version=\"1.0\" encoding=\"%s\"> -->")
             ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
             ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>")))
 
