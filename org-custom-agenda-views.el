@@ -1,3 +1,8 @@
+
+;;; org-custom-agenda-views.el --- Org customized views
+
+;;; Code:
+
   ;; display the calendar and tasks for today
   (global-set-key
     (kbd "<f7>") (kbd "C-c a r d"))
