@@ -645,7 +645,7 @@ this set of customizations to &ldquo;short-cut&rdquo; that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20140704.1329</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20140704.1408</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -721,7 +721,7 @@ this set of customizations to &ldquo;short-cut&rdquo; that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(message <span class="org-string">"* --[ Loading Emacs Leuven 20140704.1329]--"</span>)
+(message <span class="org-string">"* --[ Loading Emacs Leuven 20140704.1408]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">uptimes</span>
 (<span class="org-keyword">when</span> (string-match <span class="org-string">"XEmacs"</span> (version))
@@ -5984,7 +5984,7 @@ Another solution to avoid that is to add <code>fill-french-nobreak-p</code> to
              (or (insert-and-inherit <span class="org-string">"`"</span>) t))))
      (t
       <span class="org-comment-delimiter">;; </span><span class="org-comment">insert `' around following symbol</span>
-      (delete-backward-char 1)
+      (delete-char -1)
       (<span class="org-keyword">unless</span> (looking-back <span class="org-string">"`"</span>) (insert-and-inherit <span class="org-string">"`"</span>))
       (<span class="org-keyword">save-excursion</span>
         (skip-syntax-forward <span class="org-string">"w_"</span>)
@@ -10466,7 +10466,8 @@ an interactive terminal.
 <pre class="src src-emacs-lisp">  (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--org-switch-dictionary</span> ()
     <span class="org-doc">"Switch language if a `#+LANGUAGE:' Org meta-tag is on top 8 lines."</span>
     (<span class="org-keyword">save-excursion</span>
-      (goto-line (1+ 8))
+      (goto-char (point-min))
+      (forward-line 8)
       (<span class="org-keyword">let</span> (lang dict
             (dict-alist '((<span class="org-string">"en"</span> . <span class="org-string">"american"</span>)
                           (<span class="org-string">"fr"</span> . <span class="org-string">"francais"</span>))))
@@ -10777,7 +10778,7 @@ C-r</code> (fits nicely with the meaning of &ldquo;reveal&rdquo;).
              (or (insert-and-inherit <span class="org-string">"="</span>) t))))
      (t
       <span class="org-comment-delimiter">;; </span><span class="org-comment">insert == around following symbol</span>
-      (delete-backward-char 1)
+      (delete-char -1)
       (<span class="org-keyword">unless</span> (looking-back <span class="org-string">"="</span>) (insert-and-inherit <span class="org-string">"="</span>))
       (<span class="org-keyword">save-excursion</span>
         (skip-syntax-forward <span class="org-string">"w_"</span>)
@@ -17753,7 +17754,7 @@ To get a backtrace when a specific regexp is displayed in the echo area
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(message <span class="org-string">"* --[ Loaded Emacs Leuven 20140704.1330]--"</span>)
+<pre class="src src-emacs-lisp">(message <span class="org-string">"* --[ Loaded Emacs Leuven 20140704.1408]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class="org-constant">emacs-leuven</span>)
 

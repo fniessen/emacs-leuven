@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-07-04 Fri 13:28>
+# Time-stamp: <2014-07-04 Fri 14:06>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -4280,7 +4280,7 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
              (or (insert-and-inherit "`") t))))
      (t
       ;; insert `' around following symbol
-      (delete-backward-char 1)
+      (delete-char -1)
       (unless (looking-back "`") (insert-and-inherit "`"))
       (save-excursion
         (skip-syntax-forward "w_")
@@ -7936,7 +7936,8 @@ an interactive terminal.
   (defun leuven--org-switch-dictionary ()
     "Switch language if a `#+LANGUAGE:' Org meta-tag is on top 8 lines."
     (save-excursion
-      (goto-line (1+ 8))
+      (goto-char (point-min))
+      (forward-line 8)
       (let (lang dict
             (dict-alist '(("en" . "american")
                           ("fr" . "francais"))))
@@ -8189,7 +8190,7 @@ C-r~ (fits nicely with the meaning of "reveal").
              (or (insert-and-inherit "=") t))))
      (t
       ;; insert == around following symbol
-      (delete-backward-char 1)
+      (delete-char -1)
       (unless (looking-back "=") (insert-and-inherit "="))
       (save-excursion
         (skip-syntax-forward "w_")

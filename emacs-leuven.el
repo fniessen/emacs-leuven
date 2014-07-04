@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140704.1339
+;; Version: 20140704.1407
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -73,7 +73,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140704.1339]--")
+(message "* --[ Loading Emacs Leuven 20140704.1407]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2722,7 +2722,7 @@ Last time is saved in global variable `leuven--before-section-time'."
              (or (insert-and-inherit "`") t))))
      (t
       ;; insert `' around following symbol
-      (delete-backward-char 1)
+      (delete-char -1)
       (unless (looking-back "`") (insert-and-inherit "`"))
       (save-excursion
         (skip-syntax-forward "w_")
@@ -5242,7 +5242,8 @@ From %c"
   (defun leuven--org-switch-dictionary ()
     "Switch language if a `#+LANGUAGE:' Org meta-tag is on top 8 lines."
     (save-excursion
-      (goto-line (1+ 8))
+      (goto-char (point-min))
+      (forward-line 8)
       (let (lang dict
             (dict-alist '(("en" . "american")
                           ("fr" . "francais"))))
@@ -5412,7 +5413,7 @@ From %c"
              (or (insert-and-inherit "=") t))))
      (t
       ;; insert == around following symbol
-      (delete-backward-char 1)
+      (delete-char -1)
       (unless (looking-back "=") (insert-and-inherit "="))
       (save-excursion
         (skip-syntax-forward "w_")
@@ -8667,7 +8668,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140704.1339]--")
+(message "* --[ Loaded Emacs Leuven 20140704.1407]--")
 
 (provide 'emacs-leuven)
 
