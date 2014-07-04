@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140704.1407
+;; Version: 20140704.1621
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -73,7 +73,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140704.1407]--")
+(message "* --[ Loading Emacs Leuven 20140704.1621]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5240,23 +5240,24 @@ From %c"
       (if contents (insert contents))))
 
   (defun leuven--org-switch-dictionary ()
-    "Switch language if a `#+LANGUAGE:' Org meta-tag is on top 8 lines."
-    (save-excursion
-      (goto-char (point-min))
-      (forward-line 8)
-      (let (lang dict
-            (dict-alist '(("en" . "american")
-                          ("fr" . "francais"))))
-        (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
-          (setq lang (match-string 1))
-          (setq dict (cdr (assoc lang dict-alist)))
-          (if dict
-              (progn
-                (ispell-change-dictionary dict)
-                (force-mode-line-update))
-            (message "No Ispell dictionary for language `%s' (see file `%s')"
-                     lang (file-name-base))
-            (sit-for 1.5))))))
+    "Set language if Flyspell is enabled and `#+LANGUAGE:' is on top 8 lines."
+    (when flyspell-mode
+      (save-excursion
+        (goto-char (point-min))
+        (forward-line 8)
+        (let (lang dict
+              (dict-alist '(("en" . "american")
+                            ("fr" . "francais"))))
+          (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
+            (setq lang (match-string 1))
+            (setq dict (cdr (assoc lang dict-alist)))
+            (if dict
+                (progn
+                  (ispell-change-dictionary dict)
+                  (force-mode-line-update))
+              (message "No Ispell dictionary for language `%s' (see file `%s')"
+                       lang (file-name-base))
+              (sit-for 1.5)))))))
 
   ;; guess dictionary
   (add-hook 'org-mode-hook 'leuven--org-switch-dictionary)
@@ -8668,7 +8669,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140704.1407]--")
+(message "* --[ Loaded Emacs Leuven 20140704.1622]--")
 
 (provide 'emacs-leuven)
 
