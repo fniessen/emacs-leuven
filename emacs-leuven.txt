@@ -2,7 +2,7 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# Time-stamp: <2014-06-19 Thu 14:04>
+# Time-stamp: <2014-07-04 Fri 11:44>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -1681,9 +1681,6 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
 ;;** 14.18 (info "(emacs)Optional Mode Line") Features
 
   (leuven--section "14.18 (emacs)Optional Mode Line Features")
-
-  ;; show the line number in each mode line
-  (line-number-mode 1)
 
   ;; show the column number in each mode line
   (column-number-mode 1)
@@ -7124,8 +7121,8 @@ launched from Dired?
     ;; include priority cookies in export
     (setq org-export-with-priority t)
 
-    ;; activate smart quotes during export
-    (setq org-export-with-smart-quotes t)
+    ;; activate smart quotes during export (convert " to \og, \fg in French)
+    (setq org-export-with-smart-quotes t) ; curly quotes in HTML
 
     ;; interpret "_" and "^" for export when braces are used
     (setq org-export-with-sub-superscripts '{})
@@ -7206,26 +7203,17 @@ org-export-htmlize-generate-css~ to extract class definitions.
 
       (defun leuven--export-html-final-filter (contents backend info)
         (if (not (eq backend 'html)) contents
-          (let* ((in-file "~/tidy-stdin.html")
-                                        ; this filepath must be readable by Cygwin
-                 (err-file "~/tidy-errors.log")
-                 new-contents)
-            (with-temp-file in-file
-              (insert contents))
-            (setq new-contents
-                  (shell-command-to-string
-                   (format "tidy -config ~/.tidyrc -f %s %s"
-                           err-file in-file)))
-            (message "HTML Tidy'ed")
-            (message "%s" (org-file-contents err-file))
-            new-contents)
+          (message "Tidy'fying...")
+          (let* ((new-contents
+                  (with-temp-buffer
+                    (insert contents)
+                    (shell-command-on-region (point-min) (point-max)
+                                             "tidy -config ~/.tidyrc"
+                                             t t "*Tidy errors*")
+                    (buffer-string))))
+            (message "Tidy'fying... Done")
+            new-contents)))
 
-          ;; (with-output-to-string
-          ;;   (insert contents)
-          ;;   (shell-command-on-region (point-min) (point-max)
-          ;;                            "tidy -config ~/.tidyrc"
-          ;;                            t t "*Tidy errors*" t))
-          ))
       (add-to-list 'org-export-filter-final-output-functions
                    'leuven--export-html-final-filter))
 #+end_src
@@ -7681,7 +7669,7 @@ Literate programming and reproducible research.
   ;; (with-eval-after-load "ob-shell"
   ;;
   ;;   ;; command used to invoke a shell
-  ;;   (setq org-babel-sh-command "bash")  ; now uses `shell-file-name' (2013-12-14)
+  ;;   (setq org-babel-sh-command "bash")  ; now uses `shell-file-name' throughout (2013-12-14)
   ;;
   ;;   ;; use plain old syntax (instead of `$(...)') for Cygwin
   ;;   (setq org-babel-sh-var-quote-fmt
@@ -7721,7 +7709,7 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
   ;; indent the content of a source code block
   (setq org-edit-src-content-indentation 2)
 
-  ;; fontify code in code blocks (highlight syntax in the org-buffer)
+  ;; fontify code in code blocks (highlight syntax in the Org buffer)
   (setq org-src-fontify-natively t)     ;! create overlay
                                         ;! `org-block-background' and remove
                                         ;! text property `org-block'
@@ -7963,6 +7951,13 @@ an interactive terminal.
   ;; guess dictionary
   (add-hook 'org-mode-hook 'leuven--org-switch-dictionary)
 #+end_src
+
+*************** TODO Avoid (error "Undefined dictionary: american")
+when dictionaries are not installed. IN FACT, ISPELL IS NOT AT ALL INSTALLED!
+
+Check out for valid dictionaries:
+(append ispell-local-dictionary-alist ispell-dictionary-alist)
+*************** END
 
 *** Easy templates
 
@@ -8592,15 +8587,6 @@ SumatraPDF as your PDF viewer.
 #+end_src
 
 #+begin_src emacs-lisp
-;;** 4.3 (info "(auctex)Debugging") Catching the errors
-
-      (leuven--section "4.3 (auctex)Debugging Catching the errors")
-
-      ;; don't show output of TeX compilation in other window
-      (setq TeX-show-compilation nil)
-#+end_src
-
-#+begin_src emacs-lisp
 ;;** 4.7 (info "(auctex)Documentation")
 #+end_src
 
@@ -8613,8 +8599,8 @@ Nor a default when point is on a command name...
 #+begin_src emacs-lisp
 ;;** 5.2 (info "(auctex)Multifile") Documents
 
-      ;; assume that the file is a master file itself
-      (setq-default TeX-master t)
+      ;; ;; assume that the file is a master file itself
+      ;; (setq-default TeX-master t)
 
 ;;** 5.3 Automatic (info "(auctex)Parsing Files")
 
@@ -8663,7 +8649,8 @@ LaTeX file, ~preview-latex~ gives you a ~Preview~ menu.
         (setq preview-gs-command
           (cond (running-ms-windows
                  (or (executable-find "gswin32c.exe")
-                     "C:/texlive/2013/tlpkg/tlgs/bin/gswin32c.exe")) ; default value
+                     "C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"))
+                                        ; default value
                 (t
                  "/usr/bin/gs")))
         (leuven--file-exists-and-executable-p preview-gs-command)
@@ -8833,7 +8820,8 @@ tags around a region you've specified.
 (reformulation of HTML as an XML application).
 
 #+begin_src emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode)) ; alias for `nxml-mode'
+  (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode))
+                                        ; alias for `nxml-mode'
 #+end_src
 
 Alternatively, you can use [[http://ourcomments.org/Emacs/nXhtml/doc/nxhtml.html][nXhtml]] mode, derived from nXML mode.  It adds a lot
@@ -9025,16 +9013,6 @@ things.
 
   (leuven--section "26.4 Commands for Editing with (emacs)Parentheses")
 
-  ;; jump to matching parenthesis
-  (defun match-paren (arg)
-    "Go to the matching parenthesis, if on a parenthesis."
-    (interactive "p")
-    (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
-          ((looking-at "\\s\)") (forward-char 1) (backward-list 1))))
-
-  (global-set-key
-    (kbd "C-)") 'match-paren)
-
   ;; highlight matching paren
   (GNUEmacs
     (show-paren-mode 1)
@@ -9064,6 +9042,66 @@ things.
       (setq hl-paren-colors
             '("black" "black" "black" "black"))))
 #+end_src
+
+*** Moving in the Parenthesis Structure
+
+#+begin_src emacs-lisp
+  ;; jump to matching parenthesis
+  (defun match-paren (arg)
+    "Go to the matching parenthesis, if on a parenthesis."
+    (interactive "p")
+    (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+          ((looking-at "\\s\)") (forward-char 1) (backward-list 1))))
+
+  (global-set-key
+    (kbd "C-)") 'match-paren)
+#+end_src
+
+*** Matching Parentheses
+
+Balanced editing: inserting two matching parentheses at once, etc.
+
+- electric-pair-mode (in Emacs, since 24.1)
+
+  Here's a quick summary (~|~ marks point):
+
+  + typing ~((((~ makes            ~((((|))))~
+  + typing ~))))~ afterwards makes ~(((())))|~
+  + if the buffer has too many closers, an opener before them will *not* autopair
+  + if the buffer has too many openers, a closer after them will *not* autoskip
+  + in a mixed parenthesis situation with ~[]~'s and ~()~'s, it tries to do
+    sensible things
+
+#+begin_src emacs-lisp
+  (electric-pair-mode 1)
+#+end_src
+
+  Deleting one bracket doesn't delete the other.  If you want that, install
+  ~autopairs~ package.
+
+- paredit
+
+#+begin_src emacs-lisp :tangle no
+  ;; minor mode for editing parentheses
+  (when (locate-library "paredit")
+
+    (autoload 'enable-paredit-mode "paredit"
+      "Minor mode for pseudo-structurally editing Lisp code." t)
+
+    (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+
+    ;; Common Lisp editing extensions
+    (when (locate-library "redshank")   ; requires `paredit'
+
+      (autoload 'redshank-mode "redshank"
+        "Minor mode for restructuring Lisp code (i.e., refactoring)." t)
+
+      (add-hook 'emacs-lisp-mode-hook 'redshank-mode)))
+#+end_src
+
+- autopair
+
+- smartparens
 
 ** Manipulating Comments
 
@@ -9640,26 +9678,6 @@ To evaluate a non-interactive command, simply use ~IELM~.
   ;;     (kbd "<tab>") 'elisp-indent-or-complete))
 #+end_src
 
-XXX Paredit (or smartparen or autopair)?
-
-#+begin_src emacs-lisp :tangle no
-  ;; minor mode for editing parentheses
-  (when (locate-library "paredit")
-
-    (autoload 'enable-paredit-mode "paredit"
-      "Minor mode for pseudo-structurally editing Lisp code." t)
-
-    (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
-
-    ;; Common Lisp editing extensions
-    (when (locate-library "redshank")   ; requires `paredit'
-
-      (autoload 'redshank-mode "redshank"
-        "Minor mode for restructuring Lisp code (i.e., refactoring)." t)
-
-      (add-hook 'emacs-lisp-mode-hook 'redshank-mode)))
-#+end_src
-
 ** TODO From Thierry Volpiatto
 
 Seems good, except that it changes the behavior of TAB when done in a word.
@@ -10093,9 +10111,9 @@ After this, you can select the tag file to use with the command
 
 *** Finding a Tag
 
-You can search for the *first definition* of a tag (matching your regexp) by
-using ~M-x find-tag~ (bound to ~M-.~).  The default tag is the identifier under the
-cursor.
+You can *jump to* the first *definition* of a tag (matching your regexp) --
+*according to TAGS file* -- by using ~M-x find-tag~ (bound to ~M-.~).  The default
+tag is the identifier under the cursor.
 
 To continue searching for *next definition*, use ~C-u M-.~.
 
@@ -10448,7 +10466,7 @@ See [[id:366386cb-9c4f-4d61-b676-e742e6277587][Interaction between Org and other
 #+begin_src emacs-lisp
       ;;! make sure you initialise YASnippet *before* Org mode
       (when (featurep 'org)
-        (message "(Error) Org is already loaded -> Too late to initialize YASnippet!")
+        (message "(Error) Org is already loaded -> Too late to init YASnippet!")
         (sit-for 3))
 
       (defun yas/org-very-safe-expand ()
@@ -10461,9 +10479,12 @@ See [[id:366386cb-9c4f-4d61-b676-e742e6277587][Interaction between Org and other
                   ;; YASnippet (using the new org-cycle hooks)
                   (add-to-list 'org-tab-first-hook
                                'yas/org-very-safe-expand)
-                  ;; When enabled, problem with inserting letter `t' in YASnippet fields
+
+                  ;; When enabled, problem with inserting letter `t' in
+                  ;; YASnippet fields
                   ;; (define-key yas/keymap
-                  ;;   (kbd "tab") 'yas/next-field) ; `yas/next-field-or-maybe-expand'?
+                  ;;   (kbd "tab") 'yas/next-field)
+                                        ; `yas/next-field-or-maybe-expand'?
                   ))
 #+end_src
 
@@ -10599,9 +10620,14 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
                     'yas/hippie-try-expand)))
 #+end_src
 
-*** Auto-Complete
+*** Auto-Complete ("IntelliSensy" completion when writing code)
 
 Extensible inline text completion mechanism -- really brilliant!
+
+#+begin_info
+The best alternative to Auto-Complete seems to be Company-Mode (used by
+Stefan?).
+#+end_info
 
 Auto-complete uses the variable ~ac-modes~ to decide whether to enable
 auto-completion in a particular mode; by default, ~org-mode~ (which interprets
@@ -11236,7 +11262,7 @@ But [[id:737b836b-ac1f-4120-94ca-c9e0282268f0][Org]] outperforms it!
   (if (file-readable-p "~/diary")
       (try-require 'appt)               ; requires `diary-lib', which requires
                                         ; `diary-loaddefs'
-    (message "Appointment reminders library `appt' not loaded (no diary file found)"))
+    (message "Appointment reminders lib `appt' not loaded (no diary file found)"))
 
   (with-eval-after-load "appt"
 
@@ -13369,9 +13395,8 @@ Value: ((xpm "libxpm.dll" "xpm4.dll" "libXpm-nox4.dll")
 #+end_example
 
 If you use compiled Emacs binaries (available on the [[http://ftp.gnu.org/gnu/emacs/windows/][GNU Website]]), eventually,
-copy those DLLs (=libpng14-14.dll=, for example) from an old EmacsW32
-installation to your Emacs =bin= directory, and restart Emacs for image support
-to be enabled.
+copy those DLLs (=libpng16.dll=, for example) from an old EmacsW32 installation
+to your Emacs =bin= directory, and restart Emacs for image support to be enabled.
 
 If you use Cygwin Emacs, install ~libpng~ via Cygwin as well.
 
@@ -13382,6 +13407,8 @@ You can do:
 #+end_src
 
 to check if you have ~png~ image support in your Emacs.
+
+~image-library-alist~ maps image type to a list of dlls which support it.
 
 To check all image libraries at once:
 

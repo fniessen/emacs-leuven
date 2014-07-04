@@ -1,10 +1,11 @@
+
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
 ;; Copyright (C) 1999-2014 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140619.1404
+;; Version: 20140704.1144
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +73,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140619.1404]--")
+(message "* --[ Loading Emacs Leuven 20140704.1144]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1035,9 +1036,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 ;;** 14.18 (info "(emacs)Optional Mode Line") Features
 
   (leuven--section "14.18 (emacs)Optional Mode Line Features")
-
-  ;; show the line number in each mode line
-  (line-number-mode 1)
 
   ;; show the column number in each mode line
   (column-number-mode 1)
@@ -4687,7 +4685,7 @@ From %c"
     (setq org-export-with-priority t)
 
     ;; activate smart quotes during export (convert " to \og, \fg in French)
-    (setq org-export-with-smart-quotes t)
+    (setq org-export-with-smart-quotes t) ; curly quotes in HTML
 
     ;; interpret "_" and "^" for export when braces are used
     (setq org-export-with-sub-superscripts '{})
@@ -4755,26 +4753,17 @@ From %c"
 
       (defun leuven--export-html-final-filter (contents backend info)
         (if (not (eq backend 'html)) contents
-          (let* ((in-file "~/tidy-stdin.html")
-                                        ; this filepath must be readable by Cygwin
-                 (err-file "~/tidy-errors.log")
-                 new-contents)
-            (with-temp-file in-file
-              (insert contents))
-            (setq new-contents
-                  (shell-command-to-string
-                   (format "tidy -config ~/.tidyrc -f %s %s"
-                           err-file in-file)))
-            (message "HTML Tidy'ed")
-            (message "%s" (org-file-contents err-file))
-            new-contents)
+          (message "Tidy'fying...")
+          (let* ((new-contents
+                  (with-temp-buffer
+                    (insert contents)
+                    (shell-command-on-region (point-min) (point-max)
+                                             "tidy -config ~/.tidyrc"
+                                             t t "*Tidy errors*")
+                    (buffer-string))))
+            (message "Tidy'fying... Done")
+            new-contents)))
 
-          ;; (with-output-to-string
-          ;;   (insert contents)
-          ;;   (shell-command-on-region (point-min) (point-max)
-          ;;                            "tidy -config ~/.tidyrc"
-          ;;                            t t "*Tidy errors*" t))
-          ))
       (add-to-list 'org-export-filter-final-output-functions
                    'leuven--export-html-final-filter))
 
@@ -5071,7 +5060,7 @@ From %c"
   ;; (with-eval-after-load "ob-shell"
   ;;
   ;;   ;; command used to invoke a shell
-  ;;   (setq org-babel-sh-command "bash")  ; now uses `shell-file-name' (2013-12-14)
+  ;;   (setq org-babel-sh-command "bash")  ; now uses `shell-file-name' throughout (2013-12-14)
   ;;
   ;;   ;; use plain old syntax (instead of `$(...)') for Cygwin
   ;;   (setq org-babel-sh-var-quote-fmt
@@ -5101,7 +5090,7 @@ From %c"
   ;; indent the content of a source code block
   (setq org-edit-src-content-indentation 2)
 
-  ;; fontify code in code blocks (highlight syntax in the org-buffer)
+  ;; fontify code in code blocks (highlight syntax in the Org buffer)
   (setq org-src-fontify-natively t)     ;! create overlay
                                         ;! `org-block-background' and remove
                                         ;! text property `org-block'
@@ -5694,19 +5683,12 @@ From %c"
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '("SumatraPDF")))
 
-;;** 4.3 (info "(auctex)Debugging") Catching the errors
-
-      (leuven--section "4.3 (auctex)Debugging Catching the errors")
-
-      ;; don't show output of TeX compilation in other window
-      (setq TeX-show-compilation nil)
-
 ;;** 4.7 (info "(auctex)Documentation")
 
 ;;** 5.2 (info "(auctex)Multifile") Documents
 
-      ;; assume that the file is a master file itself
-      (setq-default TeX-master t)
+      ;; ;; assume that the file is a master file itself
+      ;; (setq-default TeX-master t)
 
 ;;** 5.3 Automatic (info "(auctex)Parsing Files")
 
@@ -5748,7 +5730,8 @@ From %c"
         (setq preview-gs-command
           (cond (running-ms-windows
                  (or (executable-find "gswin32c.exe")
-                     "C:/texlive/2013/tlpkg/tlgs/bin/gswin32c.exe")) ; default value
+                     "C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"))
+                                        ; default value
                 (t
                  "/usr/bin/gs")))
         (leuven--file-exists-and-executable-p preview-gs-command)
@@ -5829,7 +5812,8 @@ From %c"
     ;; invoke html-helper-mode automatically on .jsp files
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode)))
 
-  (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode)) ; alias for `nxml-mode'
+  (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode))
+                                        ; alias for `nxml-mode'
 
   (with-eval-after-load "nxml-mode"
 
@@ -5928,16 +5912,6 @@ From %c"
 
   (leuven--section "26.4 Commands for Editing with (emacs)Parentheses")
 
-  ;; jump to matching parenthesis
-  (defun match-paren (arg)
-    "Go to the matching parenthesis, if on a parenthesis."
-    (interactive "p")
-    (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
-          ((looking-at "\\s\)") (forward-char 1) (backward-list 1))))
-
-  (global-set-key
-    (kbd "C-)") 'match-paren)
-
   ;; highlight matching paren
   (GNUEmacs
     (show-paren-mode 1)
@@ -5966,6 +5940,18 @@ From %c"
 
       (setq hl-paren-colors
             '("black" "black" "black" "black"))))
+
+  ;; jump to matching parenthesis
+  (defun match-paren (arg)
+    "Go to the matching parenthesis, if on a parenthesis."
+    (interactive "p")
+    (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+          ((looking-at "\\s\)") (forward-char 1) (backward-list 1))))
+
+  (global-set-key
+    (kbd "C-)") 'match-paren)
+
+  (electric-pair-mode 1)
 
 ;;** 26.5 (info "(emacs)Comments")
 
@@ -6697,7 +6683,7 @@ From %c"
 
       ;;! make sure you initialise YASnippet *before* Org mode
       (when (featurep 'org)
-        (message "(Error) Org is already loaded -> Too late to initialize YASnippet!")
+        (message "(Error) Org is already loaded -> Too late to init YASnippet!")
         (sit-for 3))
 
       (defun yas/org-very-safe-expand ()
@@ -6710,9 +6696,12 @@ From %c"
                   ;; YASnippet (using the new org-cycle hooks)
                   (add-to-list 'org-tab-first-hook
                                'yas/org-very-safe-expand)
-                  ;; When enabled, problem with inserting letter `t' in YASnippet fields
+
+                  ;; When enabled, problem with inserting letter `t' in
+                  ;; YASnippet fields
                   ;; (define-key yas/keymap
-                  ;;   (kbd "tab") 'yas/next-field) ; `yas/next-field-or-maybe-expand'?
+                  ;;   (kbd "tab") 'yas/next-field)
+                                        ; `yas/next-field-or-maybe-expand'?
                   ))
 
       (defvar leuven-yasnippet-my-snippets-dir
@@ -7145,7 +7134,7 @@ From %c"
   (if (file-readable-p "~/diary")
       (try-require 'appt)               ; requires `diary-lib', which requires
                                         ; `diary-loaddefs'
-    (message "Appointment reminders library `appt' not loaded (no diary file found)"))
+    (message "Appointment reminders lib `appt' not loaded (no diary file found)"))
 
   (with-eval-after-load "appt"
 
@@ -8665,7 +8654,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140619.1405]--")
+(message "* --[ Loaded Emacs Leuven 20140704.1144]--")
 
 (provide 'emacs-leuven)
 
