@@ -422,14 +422,15 @@
 <li><a href="#sec-32-1">Running Compilations under Emacs</a></li>
 <li><a href="#sec-32-2">Compilation Mode</a></li>
 <li><a href="#sec-32-3">Searching with Grep under Emacs</a></li>
-<li><a href="#sec-32-4">Running Debuggers Under Emacs</a></li>
-<li><a href="#sec-32-5">Debugging Lisp programs</a></li>
-<li><a href="#sec-32-6">Executing Lisp Expressions</a></li>
-<li><a href="#sec-32-7">Libraries of Lisp Code for Emacs</a></li>
-<li><a href="#sec-32-8">Evaluating Emacs Lisp Expressions</a></li>
-<li><a href="#sec-32-9">Lisp Interaction Buffers</a></li>
-<li><a href="#sec-32-10">Other</a></li>
-<li><a href="#sec-32-11"><span class="todo TODO">TODO</span> From Thierry Volpiatto</a></li>
+<li><a href="#sec-32-4">Finding Syntax Errors On The Fly</a></li>
+<li><a href="#sec-32-5">Running Debuggers Under Emacs</a></li>
+<li><a href="#sec-32-6">Debugging Lisp programs</a></li>
+<li><a href="#sec-32-7">Executing Lisp Expressions</a></li>
+<li><a href="#sec-32-8">Libraries of Lisp Code for Emacs</a></li>
+<li><a href="#sec-32-9">Evaluating Emacs Lisp Expressions</a></li>
+<li><a href="#sec-32-10">Lisp Interaction Buffers</a></li>
+<li><a href="#sec-32-11">Other</a></li>
+<li><a href="#sec-32-12"><span class="todo TODO">TODO</span> From Thierry Volpiatto</a></li>
 </ul>
 </li>
 <li><a href="#sec-33">Maintaining Programs</a>
@@ -644,7 +645,7 @@ this set of customizations to &ldquo;short-cut&rdquo; that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20140704.1145</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20140704.1329</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -720,7 +721,7 @@ this set of customizations to &ldquo;short-cut&rdquo; that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(message <span class="org-string">"* --[ Loading Emacs Leuven 20140704.1145]--"</span>)
+(message <span class="org-string">"* --[ Loading Emacs Leuven 20140704.1329]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">uptimes</span>
 (<span class="org-keyword">when</span> (string-match <span class="org-string">"XEmacs"</span> (version))
@@ -1221,6 +1222,11 @@ In Marmalade, the developers themselves do the packaging.  In MELPA, packages
 are generated programmatically from upstream Git-based sources.
 </p>
 
+<p>
+Note &#x2013; The Marmalade repository is not recommended by Flycheck (due to
+frequent outages).
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** 47.2 Package Installation</span>
@@ -1235,7 +1241,7 @@ are generated programmatically from upstream Git-based sources.
       (setq package-archives
             (append '((<span class="org-string">"org"</span>       . <span class="org-string">"http://orgmode.org/elpa/"</span>)
                       (<span class="org-string">"melpa"</span>     . <span class="org-string">"http://melpa.milkbox.net/packages/"</span>)
-                      (<span class="org-string">"marmalade"</span> . <span class="org-string">"http://marmalade-repo.org/packages/"</span>)
+                      <span class="org-comment-delimiter">;; </span><span class="org-comment">("marmalade" . "http://marmalade-repo.org/packages/")</span>
                       <span class="org-comment-delimiter">;; </span><span class="org-comment">("ELPA"      . "http://tromey.com/elpa/")</span>
                       )
                     package-archives))
@@ -1246,10 +1252,10 @@ are generated programmatically from upstream Git-based sources.
 
       (<span class="org-keyword">defcustom</span> <span class="org-variable-name">leuven-elpa-packages</span>
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
-          csv-mode dictionary dired+ dired-single ess fuzzy git-commit-mode
-          graphviz-dot-mode helm htmlize idle-require info+ interaction-log
-          ledger-mode leuven-theme org-mime pager rainbow-mode redo+
-          sml-modeline tidy yasnippet
+          csv-mode dictionary dired+ dired-single ess flycheck fuzzy
+          git-commit-mode graphviz-dot-mode helm htmlize idle-require info+
+          interaction-log ledger-mode leuven-theme org-mime pager rainbow-mode
+          redo+ sml-modeline tidy yasnippet
           <span class="org-comment-delimiter">;; </span><span class="org-comment">jabber multi-term</span>
           <span class="org-comment-delimiter">;; </span><span class="org-comment">paredit redshank w3m</span>
           )
@@ -3177,10 +3183,10 @@ it to the <b>file word list</b> (<code>ispell-add-per-file-word-list</code>).
   (leuven--section <span class="org-string">"16.4 (emacs)Checking and Correcting Spelling"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">spelling checker program</span>
-  (setq ispell-program-name             <span class="org-comment-delimiter">; </span><span class="org-comment"><span class="org-leuven-highlight">XXX</span></span><span class="org-comment"> undefined</span>
+  (setq ispell-program-name             <span class="org-comment-delimiter">; </span><span class="org-comment">defined in ispell.el</span>
         (or (executable-find <span class="org-string">"aspell"</span>)
             (executable-find <span class="org-string">"ispell"</span>)
-            <span class="org-comment-delimiter">;; </span><span class="org-comment">nil                         ; [default: "ispell"]</span>
+            <span class="org-comment-delimiter">;; </span><span class="org-comment">nil                      ; [default: "ispell"]</span>
             ))
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">check if `</span><span class="org-comment"><span class="org-constant">ispell-program-name</span></span><span class="org-comment">' seems correct</span>
@@ -5429,8 +5435,8 @@ See <code>(display-pixel-width)</code>:
 
   (leuven--section <span class="org-string">"21.17 (emacs)Tooltips"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">use the echo area for help and GUD tooltips</span>
-  (setq tooltip-use-echo-area t)
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">disable Tooltip mode (use the echo area for help and GUD tooltips)</span>
+  (tooltip-mode -1)
 </pre>
 </div>
 
@@ -10203,18 +10209,18 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
   (setq org-src-tab-acts-natively t)
 
 
-  (with-eval-after-load <span class="org-string">"org"</span>
-    (message <span class="org-string">"... Org Editing source code"</span>)
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">allow indent region in the code edit buffer (according to language)</span>
-    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-org-indent-region</span> (<span class="org-type">&amp;optional</span> arg)
-      (interactive <span class="org-string">"P"</span>)
-      (or (org-babel-do-key-sequence-in-edit-buffer (kbd <span class="org-string">"C-M-\\"</span>))
-          (indent-region arg)))
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">make `C-c C-v C-x C-M-\' more convenient</span>
-    (define-key org-mode-map
-      (kbd <span class="org-string">"C-M-\\"</span>) 'leuven-org-indent-region))
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">(with-eval-after-load "org"</span>
+  <span class="org-comment-delimiter">;;   </span><span class="org-comment">(message "... Org Editing source code")</span>
+  <span class="org-comment-delimiter">;;</span>
+  <span class="org-comment-delimiter">;;   </span><span class="org-comment">;; allow indent region in the code edit buffer (according to language)</span>
+  <span class="org-comment-delimiter">;;   </span><span class="org-comment">(defun leuven-org-indent-region (&amp;optional arg)</span>
+  <span class="org-comment-delimiter">;;     </span><span class="org-comment">(interactive "P")</span>
+  <span class="org-comment-delimiter">;;     </span><span class="org-comment">(or (org-babel-do-key-sequence-in-edit-buffer (kbd "C-M-\\"))</span>
+  <span class="org-comment-delimiter">;;         </span><span class="org-comment">(indent-region arg)))</span>
+  <span class="org-comment-delimiter">;;</span>
+  <span class="org-comment-delimiter">;;   </span><span class="org-comment">;; make `C-c C-v C-x C-M-\' more convenient</span>
+  <span class="org-comment-delimiter">;;   </span><span class="org-comment">(define-key org-mode-map</span>
+  <span class="org-comment-delimiter">;;     </span><span class="org-comment">(kbd "C-M-\\") 'leuven-org-indent-region))</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">prevent auto-filling in src blocks</span>
   (setq org-src-prevent-auto-filling t)
@@ -11774,7 +11780,7 @@ XXX Autoloaded?
       (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">show current function in mode line (based on Imenu)</span>
-      (which-func-mode 1)))             <span class="org-comment-delimiter">; </span><span class="org-comment">~ Stickyfunc mode (in header line)</span>
+      (which-function-mode 1)))         <span class="org-comment-delimiter">; </span><span class="org-comment">~ Stickyfunc mode (in header line)</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(try-require 'imenu+)</span>
 </pre>
@@ -12458,8 +12464,29 @@ See <code>leuven-helm-grep-org-files</code>.
 </div>
 </div>
 <div id="outline-container-sec-32-4" class="outline-3">
-<h3 id="sec-32-4">Running Debuggers Under Emacs</h3>
+<h3 id="sec-32-4">Finding Syntax Errors On The Fly</h3>
 <div class="outline-text-3" id="text-32-4">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** 27.5 (info "(emacs)Flymake")</span>
+
+  (leuven--section <span class="org-string">"27.5 (emacs)Flymake"</span>)
+
+  (<span class="org-keyword">when</span> (try-require 'flycheck)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">enable Flycheck mode in all buffers</span>
+    (add-hook 'after-init-hook #'global-flycheck-mode)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; show the </span><span class="org-comment"><span class="org-leuven-highlight">error</span></span><span class="org-comment"> list for the current buffer (for wide screens)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(add-hook 'flycheck-mode-hook 'flycheck-list-</span><span class="org-comment"><span class="org-leuven-highlight">error</span></span><span class="org-comment">s)</span>
+    )
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-32-5" class="outline-3">
+<h3 id="sec-32-5">Running Debuggers Under Emacs</h3>
+<div class="outline-text-3" id="text-32-5">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** 27.6 Running (info "(emacs)Debuggers") Under Emacs</span>
@@ -12475,9 +12502,9 @@ See <code>leuven-helm-grep-org-files</code>.
 </div>
 </div>
 </div>
-<div id="outline-container-sec-32-5" class="outline-3">
-<h3 id="sec-32-5">Debugging Lisp programs</h3>
-<div class="outline-text-3" id="text-32-5">
+<div id="outline-container-sec-32-6" class="outline-3">
+<h3 id="sec-32-6">Debugging Lisp programs</h3>
+<div class="outline-text-3" id="text-32-6">
 <p>
 Emacs has the basic debugger/stack trace, but it also has the Edebug facility,
 which is very powerful, for the more complex situation.
@@ -12531,9 +12558,9 @@ values for each expression it evaluates.
 </div>
 </div>
 </div>
-<div id="outline-container-sec-32-6" class="outline-3">
-<h3 id="sec-32-6">Executing Lisp Expressions</h3>
-<div class="outline-text-3" id="text-32-6">
+<div id="outline-container-sec-32-7" class="outline-3">
+<h3 id="sec-32-7">Executing Lisp Expressions</h3>
+<div class="outline-text-3" id="text-32-7">
 <p>
 Just as in C, C++, Java, Perl, Python, etc, Lisp code is kept in files.  All
 the normal editing operations are performed on files.  In this respect, hacking
@@ -12556,9 +12583,9 @@ than fixing a bug in a scripting language like Perl.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-32-7" class="outline-3">
-<h3 id="sec-32-7">Libraries of Lisp Code for Emacs</h3>
-<div class="outline-text-3" id="text-32-7">
+<div id="outline-container-sec-32-8" class="outline-3">
+<h3 id="sec-32-8">Libraries of Lisp Code for Emacs</h3>
+<div class="outline-text-3" id="text-32-8">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** 27.8 (info "(emacs)Lisp Libraries") for Emacs</span>
@@ -12571,9 +12598,9 @@ than fixing a bug in a scripting language like Perl.
 </div>
 </div>
 </div>
-<div id="outline-container-sec-32-8" class="outline-3">
-<h3 id="sec-32-8">Evaluating Emacs Lisp Expressions</h3>
-<div class="outline-text-3" id="text-32-8">
+<div id="outline-container-sec-32-9" class="outline-3">
+<h3 id="sec-32-9">Evaluating Emacs Lisp Expressions</h3>
+<div class="outline-text-3" id="text-32-9">
 <dl class="org-dl">
 <dt> <code>C-x C-e</code> </dt><dd>     Evaluate the Emacs Lisp expression before point, and print the value in
 the echo area (<code>eval-last-sexp</code>).
@@ -12609,9 +12636,9 @@ To (attempt to) cleanly reevaluate a buffer of Emacs Lisp code, use
 </div>
 </div>
 </div>
-<div id="outline-container-sec-32-9" class="outline-3">
-<h3 id="sec-32-9">Lisp Interaction Buffers</h3>
-<div class="outline-text-3" id="text-32-9">
+<div id="outline-container-sec-32-10" class="outline-3">
+<h3 id="sec-32-10">Lisp Interaction Buffers</h3>
+<div class="outline-text-3" id="text-32-10">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** 27.10 Lisp Interaction Buffers</span>
@@ -12649,9 +12676,9 @@ To evaluate a non-interactive command, simply use <code>IELM</code>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-32-10" class="outline-3">
-<h3 id="sec-32-10">Other</h3>
-<div class="outline-text-3" id="text-32-10">
+<div id="outline-container-sec-32-11" class="outline-3">
+<h3 id="sec-32-11">Other</h3>
+<div class="outline-text-3" id="text-32-11">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">  (<span class="org-keyword">defun</span> <span class="org-function-name">elint-current-buffer</span> ()
@@ -12685,9 +12712,9 @@ To evaluate a non-interactive command, simply use <code>IELM</code>.
 </div>
 </div>
 </div>
-<div id="outline-container-sec-32-11" class="outline-3">
-<h3 id="sec-32-11"><span class="todo TODO">TODO</span> From Thierry Volpiatto</h3>
-<div class="outline-text-3" id="text-32-11">
+<div id="outline-container-sec-32-12" class="outline-3">
+<h3 id="sec-32-12"><span class="todo TODO">TODO</span> From Thierry Volpiatto</h3>
+<div class="outline-text-3" id="text-32-12">
 <p>
 Seems good, except that it changes the behavior of TAB when done in a word.
 Instead of indenting, it completes the word at point, changing the buffer&rsquo;s
@@ -17726,7 +17753,7 @@ To get a backtrace when a specific regexp is displayed in the echo area
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(message <span class="org-string">"* --[ Loaded Emacs Leuven 20140704.1145]--"</span>)
+<pre class="src src-emacs-lisp">(message <span class="org-string">"* --[ Loaded Emacs Leuven 20140704.1330]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class="org-constant">emacs-leuven</span>)
 

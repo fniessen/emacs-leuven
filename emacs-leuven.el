@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140704.1144
+;; Version: 20140704.1339
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -73,7 +73,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140704.1144]--")
+(message "* --[ Loading Emacs Leuven 20140704.1339]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -401,7 +401,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       (setq package-archives
             (append '(("org"       . "http://orgmode.org/elpa/")
                       ("melpa"     . "http://melpa.milkbox.net/packages/")
-                      ("marmalade" . "http://marmalade-repo.org/packages/")
+                      ;; ("marmalade" . "http://marmalade-repo.org/packages/")
                       ;; ("ELPA"      . "http://tromey.com/elpa/")
                       )
                     package-archives))
@@ -412,10 +412,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (defcustom leuven-elpa-packages
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
-          csv-mode dictionary dired+ dired-single ess fuzzy git-commit-mode
-          graphviz-dot-mode helm htmlize idle-require info+ interaction-log
-          ledger-mode leuven-theme org-mime pager rainbow-mode redo+
-          sml-modeline tidy yasnippet
+          csv-mode dictionary dired+ dired-single ess flycheck fuzzy
+          git-commit-mode graphviz-dot-mode helm htmlize idle-require info+
+          interaction-log ledger-mode leuven-theme org-mime pager rainbow-mode
+          redo+ sml-modeline tidy yasnippet
           ;; jabber multi-term
           ;; paredit redshank w3m
           )
@@ -1248,10 +1248,10 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "16.4 (emacs)Checking and Correcting Spelling")
 
   ;; spelling checker program
-  (setq ispell-program-name             ; XXX undefined
+  (setq ispell-program-name             ; defined in ispell.el
         (or (executable-find "aspell")
             (executable-find "ispell")
-            ;; nil                         ; [default: "ispell"]
+            ;; nil                      ; [default: "ispell"]
             ))
 
   ;; check if `ispell-program-name' seems correct
@@ -2511,8 +2511,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "21.17 (emacs)Tooltips")
 
-  ;; use the echo area for help and GUD tooltips
-  (setq tooltip-use-echo-area t)
+  ;; disable Tooltip mode (use the echo area for help and GUD tooltips)
+  (tooltip-mode -1)
 
 )                                       ; chapter 21 ends here
 
@@ -5102,18 +5102,18 @@ From %c"
   (setq org-src-tab-acts-natively t)
 
 
-  (with-eval-after-load "org"
-    (message "... Org Editing source code")
-
-    ;; allow indent region in the code edit buffer (according to language)
-    (defun leuven-org-indent-region (&optional arg)
-      (interactive "P")
-      (or (org-babel-do-key-sequence-in-edit-buffer (kbd "C-M-\\"))
-          (indent-region arg)))
-
-    ;; make `C-c C-v C-x C-M-\' more convenient
-    (define-key org-mode-map
-      (kbd "C-M-\\") 'leuven-org-indent-region))
+  ;; (with-eval-after-load "org"
+  ;;   (message "... Org Editing source code")
+  ;;
+  ;;   ;; allow indent region in the code edit buffer (according to language)
+  ;;   (defun leuven-org-indent-region (&optional arg)
+  ;;     (interactive "P")
+  ;;     (or (org-babel-do-key-sequence-in-edit-buffer (kbd "C-M-\\"))
+  ;;         (indent-region arg)))
+  ;;
+  ;;   ;; make `C-c C-v C-x C-M-\' more convenient
+  ;;   (define-key org-mode-map
+  ;;     (kbd "C-M-\\") 'leuven-org-indent-region))
 
   ;; prevent auto-filling in src blocks
   (setq org-src-prevent-auto-filling t)
@@ -5870,7 +5870,7 @@ From %c"
       (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
       ;; show current function in mode line (based on Imenu)
-      (which-func-mode 1)))             ; ~ Stickyfunc mode (in header line)
+      (which-function-mode 1)))         ; ~ Stickyfunc mode (in header line)
 
     ;; (try-require 'imenu+)
 
@@ -6189,6 +6189,19 @@ From %c"
                                    (concat "-C" (number-to-string context)))
                                  " -e <R> <F>")))
       (rgrep regexp "*.org" org-directory)))
+
+;;** 27.5 (info "(emacs)Flymake")
+
+  (leuven--section "27.5 (emacs)Flymake")
+
+  (when (try-require 'flycheck)
+
+    ;; enable Flycheck mode in all buffers
+    (add-hook 'after-init-hook #'global-flycheck-mode)
+
+    ;; ;; show the error list for the current buffer (for wide screens)
+    ;; (add-hook 'flycheck-mode-hook 'flycheck-list-errors)
+    )
 
 ;;** 27.6 Running (info "(emacs)Debuggers") Under Emacs
 
@@ -8654,7 +8667,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140704.1144]--")
+(message "* --[ Loaded Emacs Leuven 20140704.1339]--")
 
 (provide 'emacs-leuven)
 
