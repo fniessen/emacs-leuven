@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140619.1404
+;; Version: 20140724.1026
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140619.1404]--")
+(message "* --[ Loading Emacs Leuven 20140724.1026]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -400,7 +400,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       (setq package-archives
             (append '(("org"       . "http://orgmode.org/elpa/")
                       ("melpa"     . "http://melpa.milkbox.net/packages/")
-                      ("marmalade" . "http://marmalade-repo.org/packages/")
+                      ;; ("marmalade" . "http://marmalade-repo.org/packages/")
                       ;; ("ELPA"      . "http://tromey.com/elpa/")
                       )
                     package-archives))
@@ -411,10 +411,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (defcustom leuven-elpa-packages
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
-          csv-mode dictionary dired+ dired-single ess fuzzy git-commit-mode
-          graphviz-dot-mode helm htmlize idle-require info+ interaction-log
-          ledger-mode leuven-theme org-mime pager rainbow-mode redo+
-          sml-modeline tidy yasnippet
+          csv-mode dictionary dired+ dired-single ess flycheck fuzzy
+          git-commit-mode graphviz-dot-mode helm htmlize idle-require info+
+          interaction-log ledger-mode leuven-theme org-mime pager rainbow-mode
+          redo+ sml-modeline tidy yasnippet
           ;; jabber multi-term
           ;; paredit redshank w3m
           )
@@ -726,7 +726,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; (defadvice kill-ring-save (around leuven-slick-copy activate)
     ;;   "When called interactively with no active region, copy a single line instead."
-    ;;   (if (or (use-region-p) (not (called-interactively-p)))
+    ;;   (if (or (use-region-p) (not (called-interactively-p 'any)))
     ;;       ad-do-it
     ;;     (kill-new (buffer-substring (line-beginning-position)
     ;;                                 (line-beginning-position 2)))
@@ -734,7 +734,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;;
     ;; (defadvice kill-region (around leuven-slick-cut activate)
     ;;   "When called interactively with no active region, kill a single line instead."
-    ;;   (if (or (use-region-p) (not (called-interactively-p)))
+    ;;   (if (or (use-region-p) (not (called-interactively-p 'any)))
     ;;       ad-do-it
     ;;     (kill-new (filter-buffer-substring (line-beginning-position)
     ;;                                        (line-beginning-position 2) t))))
@@ -1036,9 +1036,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "14.18 (emacs)Optional Mode Line Features")
 
-  ;; show the line number in each mode line
-  (line-number-mode 1)
-
   ;; show the column number in each mode line
   (column-number-mode 1)
 
@@ -1250,10 +1247,10 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "16.4 (emacs)Checking and Correcting Spelling")
 
   ;; spelling checker program
-  (setq ispell-program-name             ; XXX undefined
+  (setq ispell-program-name             ; defined in ispell.el
         (or (executable-find "aspell")
             (executable-find "ispell")
-            ;; nil                         ; [default: "ispell"]
+            ;; nil                      ; [default: "ispell"]
             ))
 
   ;; check if `ispell-program-name' seems correct
@@ -2513,8 +2510,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "21.17 (emacs)Tooltips")
 
-  ;; use the echo area for help and GUD tooltips
-  (setq tooltip-use-echo-area t)
+  ;; disable Tooltip mode (use the echo area for help and GUD tooltips)
+  (tooltip-mode -1)
 
 )                                       ; chapter 21 ends here
 
@@ -2724,7 +2721,7 @@ Last time is saved in global variable `leuven--before-section-time'."
              (or (insert-and-inherit "`") t))))
      (t
       ;; insert `' around following symbol
-      (delete-backward-char 1)
+      (delete-char -1)
       (unless (looking-back "`") (insert-and-inherit "`"))
       (save-excursion
         (skip-syntax-forward "w_")
@@ -4687,7 +4684,7 @@ From %c"
     (setq org-export-with-priority t)
 
     ;; activate smart quotes during export (convert " to \og, \fg in French)
-    (setq org-export-with-smart-quotes t)
+    (setq org-export-with-smart-quotes t) ; curly quotes in HTML
 
     ;; interpret "_" and "^" for export when braces are used
     (setq org-export-with-sub-superscripts '{})
@@ -4755,26 +4752,17 @@ From %c"
 
       (defun leuven--export-html-final-filter (contents backend info)
         (if (not (eq backend 'html)) contents
-          (let* ((in-file "~/tidy-stdin.html")
-                                        ; this filepath must be readable by Cygwin
-                 (err-file "~/tidy-errors.log")
-                 new-contents)
-            (with-temp-file in-file
-              (insert contents))
-            (setq new-contents
-                  (shell-command-to-string
-                   (format "tidy -config ~/.tidyrc -f %s %s"
-                           err-file in-file)))
-            (message "HTML Tidy'ed")
-            (message "%s" (org-file-contents err-file))
-            new-contents)
+          (message "Tidy'fying...")
+          (let* ((new-contents
+                  (with-temp-buffer
+                    (insert contents)
+                    (shell-command-on-region (point-min) (point-max)
+                                             "tidy -config ~/.tidyrc"
+                                             t t "*Tidy errors*")
+                    (buffer-string))))
+            (message "Tidy'fying... Done")
+            new-contents)))
 
-          ;; (with-output-to-string
-          ;;   (insert contents)
-          ;;   (shell-command-on-region (point-min) (point-max)
-          ;;                            "tidy -config ~/.tidyrc"
-          ;;                            t t "*Tidy errors*" t))
-          ))
       (add-to-list 'org-export-filter-final-output-functions
                    'leuven--export-html-final-filter))
 
@@ -5071,7 +5059,7 @@ From %c"
   ;; (with-eval-after-load "ob-shell"
   ;;
   ;;   ;; command used to invoke a shell
-  ;;   (setq org-babel-sh-command "bash")  ; now uses `shell-file-name' (2013-12-14)
+  ;;   (setq org-babel-sh-command "bash")  ; now uses `shell-file-name' throughout (2013-12-14)
   ;;
   ;;   ;; use plain old syntax (instead of `$(...)') for Cygwin
   ;;   (setq org-babel-sh-var-quote-fmt
@@ -5101,7 +5089,7 @@ From %c"
   ;; indent the content of a source code block
   (setq org-edit-src-content-indentation 2)
 
-  ;; fontify code in code blocks (highlight syntax in the org-buffer)
+  ;; fontify code in code blocks (highlight syntax in the Org buffer)
   (setq org-src-fontify-natively t)     ;! create overlay
                                         ;! `org-block-background' and remove
                                         ;! text property `org-block'
@@ -5113,18 +5101,18 @@ From %c"
   (setq org-src-tab-acts-natively t)
 
 
-  (with-eval-after-load "org"
-    (message "... Org Editing source code")
-
-    ;; allow indent region in the code edit buffer (according to language)
-    (defun leuven-org-indent-region (&optional arg)
-      (interactive "P")
-      (or (org-babel-do-key-sequence-in-edit-buffer (kbd "C-M-\\"))
-          (indent-region arg)))
-
-    ;; make `C-c C-v C-x C-M-\' more convenient
-    (define-key org-mode-map
-      (kbd "C-M-\\") 'leuven-org-indent-region))
+  ;; (with-eval-after-load "org"
+  ;;   (message "... Org Editing source code")
+  ;;
+  ;;   ;; allow indent region in the code edit buffer (according to language)
+  ;;   (defun leuven-org-indent-region (&optional arg)
+  ;;     (interactive "P")
+  ;;     (or (org-babel-do-key-sequence-in-edit-buffer (kbd "C-M-\\"))
+  ;;         (indent-region arg)))
+  ;;
+  ;;   ;; make `C-c C-v C-x C-M-\' more convenient
+  ;;   (define-key org-mode-map
+  ;;     (kbd "C-M-\\") 'leuven-org-indent-region))
 
   ;; prevent auto-filling in src blocks
   (setq org-src-prevent-auto-filling t)
@@ -5251,22 +5239,24 @@ From %c"
       (if contents (insert contents))))
 
   (defun leuven--org-switch-dictionary ()
-    "Switch language if a `#+LANGUAGE:' Org meta-tag is on top 8 lines."
-    (save-excursion
-      (goto-line (1+ 8))
-      (let (lang dict
-            (dict-alist '(("en" . "american")
-                          ("fr" . "francais"))))
-        (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
-          (setq lang (match-string 1))
-          (setq dict (cdr (assoc lang dict-alist)))
-          (if dict
-              (progn
-                (ispell-change-dictionary dict)
-                (force-mode-line-update))
-            (message "No Ispell dictionary for language `%s' (see file `%s')"
-                     lang (file-name-base))
-            (sit-for 1.5))))))
+    "Set language if Flyspell is enabled and `#+LANGUAGE:' is on top 8 lines."
+    (when flyspell-mode
+      (save-excursion
+        (goto-char (point-min))
+        (forward-line 8)
+        (let (lang dict
+              (dict-alist '(("en" . "american")
+                            ("fr" . "francais"))))
+          (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
+            (setq lang (match-string 1))
+            (setq dict (cdr (assoc lang dict-alist)))
+            (if dict
+                (progn
+                  (ispell-change-dictionary dict)
+                  (force-mode-line-update))
+              (message "No Ispell dictionary for language `%s' (see file `%s')"
+                       lang (file-name-base))
+              (sit-for 1.5)))))))
 
   ;; guess dictionary
   (add-hook 'org-mode-hook 'leuven--org-switch-dictionary)
@@ -5423,7 +5413,7 @@ From %c"
              (or (insert-and-inherit "=") t))))
      (t
       ;; insert == around following symbol
-      (delete-backward-char 1)
+      (delete-char -1)
       (unless (looking-back "=") (insert-and-inherit "="))
       (save-excursion
         (skip-syntax-forward "w_")
@@ -5694,19 +5684,12 @@ From %c"
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '("SumatraPDF")))
 
-;;** 4.3 (info "(auctex)Debugging") Catching the errors
-
-      (leuven--section "4.3 (auctex)Debugging Catching the errors")
-
-      ;; don't show output of TeX compilation in other window
-      (setq TeX-show-compilation nil)
-
 ;;** 4.7 (info "(auctex)Documentation")
 
 ;;** 5.2 (info "(auctex)Multifile") Documents
 
-      ;; assume that the file is a master file itself
-      (setq-default TeX-master t)
+      ;; ;; assume that the file is a master file itself
+      ;; (setq-default TeX-master t)
 
 ;;** 5.3 Automatic (info "(auctex)Parsing Files")
 
@@ -5748,7 +5731,8 @@ From %c"
         (setq preview-gs-command
           (cond (running-ms-windows
                  (or (executable-find "gswin32c.exe")
-                     "C:/texlive/2013/tlpkg/tlgs/bin/gswin32c.exe")) ; default value
+                     "C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"))
+                                        ; default value
                 (t
                  "/usr/bin/gs")))
         (leuven--file-exists-and-executable-p preview-gs-command)
@@ -5829,7 +5813,8 @@ From %c"
     ;; invoke html-helper-mode automatically on .jsp files
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode)))
 
-  (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode)) ; alias for `nxml-mode'
+  (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode))
+                                        ; alias for `nxml-mode'
 
   (with-eval-after-load "nxml-mode"
 
@@ -5886,7 +5871,7 @@ From %c"
       (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
       ;; show current function in mode line (based on Imenu)
-      (which-func-mode 1)))             ; ~ Stickyfunc mode (in header line)
+      (which-function-mode 1)))         ; ~ Stickyfunc mode (in header line)
 
     ;; (try-require 'imenu+)
 
@@ -5928,16 +5913,6 @@ From %c"
 
   (leuven--section "26.4 Commands for Editing with (emacs)Parentheses")
 
-  ;; jump to matching parenthesis
-  (defun match-paren (arg)
-    "Go to the matching parenthesis, if on a parenthesis."
-    (interactive "p")
-    (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
-          ((looking-at "\\s\)") (forward-char 1) (backward-list 1))))
-
-  (global-set-key
-    (kbd "C-)") 'match-paren)
-
   ;; highlight matching paren
   (GNUEmacs
     (show-paren-mode 1)
@@ -5967,6 +5942,18 @@ From %c"
       (setq hl-paren-colors
             '("black" "black" "black" "black"))))
 
+  ;; jump to matching parenthesis
+  (defun match-paren (arg)
+    "Go to the matching parenthesis, if on a parenthesis."
+    (interactive "p")
+    (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+          ((looking-at "\\s\)") (forward-char 1) (backward-list 1))))
+
+  (global-set-key
+    (kbd "C-)") 'match-paren)
+
+  (electric-pair-mode 1)
+
 ;;** 26.5 (info "(emacs)Comments")
 
   (leuven--section "26.5 (emacs)Comments")
@@ -5977,7 +5964,7 @@ From %c"
   (GNUEmacs
     (defadvice comment-dwim (around leuven-comment activate)
       "When called interactively with no active region, comment a single line instead."
-      (if (or (use-region-p) (not (called-interactively-p)))
+      (if (or (use-region-p) (not (called-interactively-p 'any)))
           ad-do-it
         (comment-or-uncomment-region (line-beginning-position)
                                      (line-end-position))
@@ -6203,6 +6190,19 @@ From %c"
                                    (concat "-C" (number-to-string context)))
                                  " -e <R> <F>")))
       (rgrep regexp "*.org" org-directory)))
+
+;;** 27.5 (info "(emacs)Flymake")
+
+  (leuven--section "27.5 (emacs)Flymake")
+
+  (when (try-require 'flycheck)
+
+    ;; enable Flycheck mode in all buffers
+    (add-hook 'after-init-hook #'global-flycheck-mode)
+
+    ;; ;; show the error list for the current buffer (for wide screens)
+    ;; (add-hook 'flycheck-mode-hook 'flycheck-list-errors)
+    )
 
 ;;** 27.6 Running (info "(emacs)Debuggers") Under Emacs
 
@@ -6697,7 +6697,7 @@ From %c"
 
       ;;! make sure you initialise YASnippet *before* Org mode
       (when (featurep 'org)
-        (message "(Error) Org is already loaded -> Too late to initialize YASnippet!")
+        (message "(Error) Org is already loaded -> Too late to init YASnippet!")
         (sit-for 3))
 
       (defun yas/org-very-safe-expand ()
@@ -6710,9 +6710,12 @@ From %c"
                   ;; YASnippet (using the new org-cycle hooks)
                   (add-to-list 'org-tab-first-hook
                                'yas/org-very-safe-expand)
-                  ;; When enabled, problem with inserting letter `t' in YASnippet fields
+
+                  ;; When enabled, problem with inserting letter `t' in
+                  ;; YASnippet fields
                   ;; (define-key yas/keymap
-                  ;;   (kbd "tab") 'yas/next-field) ; `yas/next-field-or-maybe-expand'?
+                  ;;   (kbd "tab") 'yas/next-field)
+                                        ; `yas/next-field-or-maybe-expand'?
                   ))
 
       (defvar leuven-yasnippet-my-snippets-dir
@@ -7145,7 +7148,7 @@ From %c"
   (if (file-readable-p "~/diary")
       (try-require 'appt)               ; requires `diary-lib', which requires
                                         ; `diary-loaddefs'
-    (message "Appointment reminders library `appt' not loaded (no diary file found)"))
+    (message "Appointment reminders lib `appt' not loaded (no diary file found)"))
 
   (with-eval-after-load "appt"
 
@@ -8665,7 +8668,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140619.1405]--")
+(message "* --[ Loaded Emacs Leuven 20140724.1027]--")
 
 (provide 'emacs-leuven)
 
