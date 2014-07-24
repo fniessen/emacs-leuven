@@ -1,15 +1,10 @@
-
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
 ;; Copyright (C) 1999-2014 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-<<<<<<< HEAD
-;; Version: 20140724.1026
-=======
-;; Version: 20140704.1621
->>>>>>> 059e2d48d8cc59f3c565c3338827b7c3c1233a18
+;; Version: 20140724.1641
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -77,11 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-<<<<<<< HEAD
-(message "* --[ Loading Emacs Leuven 20140724.1026]--")
-=======
-(message "* --[ Loading Emacs Leuven 20140704.1621]--")
->>>>>>> 059e2d48d8cc59f3c565c3338827b7c3c1233a18
+(message "* --[ Loading Emacs Leuven 20140724.1641]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3389,17 +3380,23 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; list of TODO entry keyword sequences (+ fast access keys and specifiers
   ;; for state change logging)
   (setq org-todo-keywords
-        '((sequence "NEW(n!)"           ; proposal
+        '((sequence "NEW(n!)"           ; proposal, idea
                     "TODO(t!)"          ; open, not started
-                    "STRT(s!)"          ; in progress
+                    "STRT(s!)"          ; in progress, doing
                     "WAIT(w!)"          ; on hold, assigned, feedback
-                    "SDAY(y!)"          ; someday, maybe, perhaps, may be undertaken in the future, wish
+                    "SDAY(y!)"          ; someday, maybe, perhaps, wish
                     "|"
                     "DONE(d!)"          ; completed, closed, resolved
                     "CANX(x!)")         ; wontfix, rejected
-          (sequence "QTE(q!)" "QTD(Q!)" "|"
-                    "APP(A!)" "EXP(E!)" "REJ(R!)")
-          (sequence "OPENPO(O!)" "|"
+
+          (sequence "QTE(q!)"           ; work-in-progress?
+                    "QTD(Q!)"           ; awaiting approval
+                    "|"
+                    "APP(A!)"           ; approved
+                    "REJ(R!)")          ; rejected
+
+          (sequence "OPENPO(O!)"
+                    "|"
                     "CLSDPO(C!)")))
 
   (with-eval-after-load "org-faces"
@@ -3408,7 +3405,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (setq org-todo-keyword-faces
           '(("NEW"  . leuven-org-created-kwd)
             ("TODO" . org-todo)
-            ("STRT" . leuven-org-inprogress-kwd)
+            ("STRT" . leuven-org-in-progress-kwd)
             ("WAIT" . leuven-org-waiting-for-kwd)
             ("SDAY" . leuven-org-someday-kwd)
             ("DONE" . org-done)
@@ -3417,7 +3414,6 @@ Last time is saved in global variable `leuven--before-section-time'."
             ("QTE" . leuven-org-quote-kwd)
             ("QTD" . leuven-org-quoted-kwd)
             ("APP" . leuven-org-approved-kwd)
-            ("EXP" . leuven-org-expired-kwd)
             ("REJ" . leuven-org-rejected-kwd)
 
             ("OPENPO" . leuven-org-openpo-kwd)
@@ -3437,7 +3433,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       '((t (:weight normal :box (:line-width 1 :color "#EEE9C3")
             :foreground "#1A1A1A" :background "#FDFCD8")))
       "Face used to display state NEW.")
-    (defface leuven-org-inprogress-kwd
+    (defface leuven-org-in-progress-kwd
       '((t (:weight bold :box (:line-width 1 :color "#D9D14A")
             :foreground "#D9D14A" :background "#FCFCDC")))
       "Face used to display state STRT.")
@@ -3462,10 +3458,6 @@ Last time is saved in global variable `leuven--before-section-time'."
       '((t (:weight bold :box (:line-width 1 :color "#969696")
             :foreground "#969696" :background "#F2F2EE")))
       "Face used to display .")
-    (defface leuven-org-expired-kwd
-      '((t (:weight bold :box (:line-width 1 :color "#42B5FF")
-            :foreground "#42B5FF" :background "#D3EEFF")))
-      "Face used to display state EXPIRED.")
     (defface leuven-org-rejected-kwd
       '((t (:weight bold :box (:line-width 1 :color "#42B5FF")
             :foreground "#42B5FF" :background "#D3EEFF")))
@@ -8677,11 +8669,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-<<<<<<< HEAD
-(message "* --[ Loaded Emacs Leuven 20140724.1027]--")
-=======
-(message "* --[ Loaded Emacs Leuven 20140704.1622]--")
->>>>>>> 059e2d48d8cc59f3c565c3338827b7c3c1233a18
+(message "* --[ Loaded Emacs Leuven 20140724.1642]--")
 
 (provide 'emacs-leuven)
 
