@@ -1,10 +1,15 @@
+
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
 ;; Copyright (C) 1999-2014 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
+<<<<<<< HEAD
 ;; Version: 20140724.1026
+=======
+;; Version: 20140704.1621
+>>>>>>> 059e2d48d8cc59f3c565c3338827b7c3c1233a18
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +77,11 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
+<<<<<<< HEAD
 (message "* --[ Loading Emacs Leuven 20140724.1026]--")
+=======
+(message "* --[ Loading Emacs Leuven 20140704.1621]--")
+>>>>>>> 059e2d48d8cc59f3c565c3338827b7c3c1233a18
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -8668,7 +8677,11 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
+<<<<<<< HEAD
 (message "* --[ Loaded Emacs Leuven 20140724.1027]--")
+=======
+(message "* --[ Loaded Emacs Leuven 20140704.1622]--")
+>>>>>>> 059e2d48d8cc59f3c565c3338827b7c3c1233a18
 
 (provide 'emacs-leuven)
 

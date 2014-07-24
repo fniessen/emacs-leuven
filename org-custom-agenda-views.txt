@@ -32,6 +32,10 @@ such an update via =C-u C-u C-c C-d=.
 * Key bindings
 
 #+begin_src emacs-lisp
+;;; org-custom-agenda-views.el --- Org customized views
+
+;;; Code:
+
   ;; display the calendar and tasks for today
   (global-set-key
     (kbd "<f7>") (kbd "C-c a r d"))
@@ -924,7 +928,10 @@ Though, we could make a performance comparison to see whether one is quicker
 than the other.
 #+end_note
 
-** COMMENT Future
+** Future
+   :PROPERTIES:
+   :tangle:   no
+   :END:
 
 FIXME C'est scheduled qu'il faut checker, plutôt que deadline ?
 
@@ -935,6 +942,14 @@ FIXME C'est scheduled qu'il faut checker, plutôt que deadline ?
                    ((org-agenda-overriding-header "List of all TODO entries with future due date (no SDAY)")
                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
                     (org-agenda-sorting-strategy '(priority-down)))) t)
+#+end_src
+
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("F" "List TODO entries scheduled for the future"
+                   todo ""
+                   ((org-agenda-todo-ignore-scheduled 'past)
+                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'notscheduled)))) t)
 #+end_src
 
 ** Ticklers
@@ -1276,7 +1291,10 @@ Search any word or regexp within your task name or in the note field:
 - SDAY with a deadline date
 - Entries with "timed" dates
 
-* COMMENT Org mode
+* Org mode
+  :PROPERTIES:
+  :tangle:   no
+  :END:
 
 ** Lists
 

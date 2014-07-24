@@ -2,7 +2,11 @@
 #+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
+<<<<<<< HEAD
 # Time-stamp: <2014-07-24 Thu 10:25>
+=======
+# Time-stamp: <2014-07-04 Fri 16:21>
+>>>>>>> 059e2d48d8cc59f3c565c3338827b7c3c1233a18
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
