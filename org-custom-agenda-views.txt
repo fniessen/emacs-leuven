@@ -34,6 +34,8 @@ such an update via =C-u C-u C-c C-d=.
 #+begin_src emacs-lisp
 ;;; org-custom-agenda-views.el --- Org customized views
 
+;;; Commentary:
+
 ;;; Code:
 
   ;; display the calendar and tasks for today
@@ -1493,3 +1495,11 @@ Les cas:
 - avec state mais un timestamp actif
 
 devraient être considérés comme erronés...
+
+* Footer
+
+#+begin_src emacs-lisp
+(provide 'org-custom-agenda-views)
+
+;;; org-custom-agenda-views.el ends here
+#+end_src

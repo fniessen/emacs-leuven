@@ -1,5 +1,7 @@
 ;;; org-custom-agenda-views.el --- Org customized views
 
+;;; Commentary:
+
 ;;; Code:
 
   ;; display the calendar and tasks for today
@@ -634,3 +636,7 @@
     (add-to-list 'org-agenda-custom-commands
                  '("1" "Task markers (in current buffer)"
                    occur-tree "\\<TODO\\|FIXME\\|XXX\\>") t)
+
+(provide 'org-custom-agenda-views)
+
+;;; org-custom-agenda-views.el ends here
