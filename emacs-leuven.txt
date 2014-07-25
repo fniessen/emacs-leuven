@@ -5309,15 +5309,15 @@ verified before really closing the task.
   ;; for state change logging)
   (setq org-todo-keywords
         '((sequence "NEW(n!)"           ; proposal, idea
-                    "TODO(t!)"          ; open, not started
-                    "STRT(s!)"          ; in progress, doing
+                    "TODO(t!)"          ; open, not (yet) started
+                    "STRT(s!)"          ; in progress, working on, doing
                     "WAIT(w!)"          ; on hold, assigned, feedback
                     "SDAY(y!)"          ; someday, maybe, perhaps, wish
                     "|"
                     "DONE(d!)"          ; completed, closed, resolved
                     "CANX(x!)")         ; wontfix, rejected
 
-          (sequence "QTE(q!)"           ; work-in-progress?
+          (sequence "QTE(q!)"           ; planning
                     "QTD(Q!)"           ; awaiting approval
                     "|"
                     "APP(A!)"           ; approved

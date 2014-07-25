@@ -1156,7 +1156,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140724.1642</span>
+"org-comment">Version: 20140725.0944</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1279,7 +1279,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140724.1642]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140725.0944]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">uptimes</span>
@@ -1294,7 +1294,8 @@
     <span class="org-doc">"Convert `</span><span class="org-doc"><span class=
 "org-constant">current-time</span></span><span class=
 "org-doc">' to a floating point number."</span>
-    (multiple-value-bind (s0 s1 s2) (current-time)
+    (<span class=
+"org-keyword">multiple-value-bind</span> (s0 s1 s2) (current-time)
       (+ (* (float (ash 1 16)) s0) (float s1) (* 0.0000001 s2)))))
 
 (<span class="org-keyword">defconst</span> <span class=
@@ -1722,7 +1723,7 @@
 "org-constant">eval-after-load</span></span><span class=
 "org-doc">' MODE evaluate BODY."</span>
       (<span class="org-keyword">declare</span> (indent defun))
-      `(eval-after-load ,mode
+      `(<span class="org-keyword">eval-after-load</span> ,mode
          '(<span class="org-keyword">progn</span> ,@body))))
 </pre>
         </div>
@@ -2664,8 +2665,7 @@
 
   (leuven--section <span class="org-string">"10.4 (emacs)Apropos"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"apropos"</span>
+  (with-eval-after-load <span class="org-string">"apropos"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">check all variables and non-interactive functions as well</span>
@@ -2778,8 +2778,7 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"info"</span>
+  (with-eval-after-load <span class="org-string">"info"</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">list of directories to search for Info documentation files (in the order</span>
     <span class="org-comment-delimiter">;; </span><span class=
@@ -2853,8 +2852,7 @@
   (global-set-key
     (kbd <span class="org-string">"&lt;S-f1&gt;"</span>) 'man-follow)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"man"</span>
+  (with-eval-after-load <span class="org-string">"man"</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">make the manpage the current buffer in the current window</span>
     (setq Man-notify-method 'pushy))
@@ -2866,8 +2864,7 @@
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">decode and browse Unix man-pages "W.o. (without) Man"</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"woman"</span>
+  (with-eval-after-load <span class="org-string">"woman"</span>
     (<span class="org-keyword">defalias</span> '<span class=
 "org-function-name">man</span> 'woman))
 
@@ -3322,8 +3319,7 @@
 
   (leuven--section <span class="org-string">"13.7 (emacs)Bookmarks"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"bookmark"</span>
+  (with-eval-after-load <span class="org-string">"bookmark"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">where to save the bookmarks</span>
@@ -3723,8 +3719,7 @@
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">just-in-time fontification</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"jit-lock"</span>
+  (with-eval-after-load <span class="org-string">"jit-lock"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">stealth fontification should show status messages</span>
@@ -3955,8 +3950,7 @@
               (<span class="org-keyword">lambda</span> ()
                 (whitespace-mode 1)))
 
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"whitespace"</span>
+    (with-eval-after-load <span class="org-string">"whitespace"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">which kind of blank is visualized</span>
@@ -4216,8 +4210,7 @@
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">exhaustive log of interactions with Emacs (display keystrokes, etc.)</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"interaction-log"</span>
+  (with-eval-after-load <span class="org-string">"interaction-log"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; maximum number of lines to keep in the *Emacs Log* buffer</span>
@@ -4344,8 +4337,7 @@
                   (<span class="org-keyword">require</span> '<span class=
 "org-constant">fuzzy</span>)))
 
-      (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"fuzzy"</span>
+      (with-eval-after-load <span class="org-string">"fuzzy"</span>
         (turn-on-fuzzy-isearch))))
 </pre>
           </div>
@@ -4536,8 +4528,7 @@
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">multi-buffer occur (grep) mode</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"color-moccur"</span>
+  (with-eval-after-load <span class="org-string">"color-moccur"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">input word splited by space</span>
@@ -4751,8 +4742,7 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ispell"</span>
+    (with-eval-after-load <span class="org-string">"ispell"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">save the personal dictionary without confirmation</span>
@@ -4887,8 +4877,7 @@
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">chunk of code is placed within (with-eval-after-load "flyspell"...)</span>
 
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"flyspell"</span>
+    (with-eval-after-load <span class="org-string">"flyspell"</span>
 
      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">don't consider that a word repeated twice is an </span><span class="org-comment"><span class="org-leuven-highlight">error</span></span>
@@ -4974,8 +4963,7 @@
     (global-set-key
       (kbd <span class="org-string">"C-c d m"</span>) 'dictionary-match-words)
 
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"dictionary"</span>
+    (with-eval-after-load <span class="org-string">"dictionary"</span>
 
       (global-dictionary-tooltip-mode 1)
 
@@ -5377,8 +5365,7 @@
 "org-comment">maintain last change time stamps (`Time-stamp: &lt;&gt;' occurring within</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">the first 8 lines) in files edited by Emacs</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"time-stamp"</span>
+  (with-eval-after-load <span class="org-string">"time-stamp"</span>
 
    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">format of the string inserted by `M-x time-stamp':</span>
@@ -5597,8 +5584,7 @@
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">mode for viewing/editing context diffs</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"diff-mode"</span>
+  (with-eval-after-load <span class="org-string">"diff-mode"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">highlight the changes with better granularity</span>
@@ -5696,8 +5682,7 @@ M-: (executable-find "diff") RET
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">already loaded (by Emacs?)</span>
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ediff"</span>
+  (with-eval-after-load <span class="org-string">"ediff"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">skip over difference regions that differ only in white space and line</span>
@@ -5865,8 +5850,7 @@ M-: (executable-find "diff") RET
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">the EasyPG Assistant, transparent file encryption</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"epa-file"</span>
+  (with-eval-after-load <span class="org-string">"epa-file"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">stop EasyPG from asking for the recipient used for encrypting files</span>
@@ -5939,8 +5923,7 @@ M-: (executable-find "diff") RET
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">transparent FTP support</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ange-ftp"</span>
+  (with-eval-after-load <span class="org-string">"ange-ftp"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">try to use passive mode in ftp, if the client program supports it</span>
@@ -5999,7 +5982,7 @@ M-: (executable-find "diff") RET
 
   (leuven--section <span class="org-string">"TRAMP"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
+  (with-eval-after-load <span class=
 "org-string">"tramp"</span>         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">the autoloads are predefined</span>
@@ -6296,8 +6279,7 @@ M-: (executable-find "diff") RET
   (GNUEmacs
     (idle-require 'recentf))
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"recentf"</span>
+  (with-eval-after-load <span class="org-string">"recentf"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">maximum number of items that will be saved</span>
@@ -6341,8 +6323,7 @@ M-: (executable-find "diff") RET
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">find file (or URL) at point</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ffap"</span>
+  (with-eval-after-load <span class="org-string">"ffap"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">function called to fetch an URL</span>
@@ -6655,8 +6636,7 @@ M-: (executable-find "diff") RET
                                    <span class=
 "org-string">"disabled"</span>)))))
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"helm"</span>
+  (with-eval-after-load <span class="org-string">"helm"</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; enable generic Helm completion (for all functions in Emacs that use</span>
     <span class="org-comment-delimiter">;; </span><span class=
@@ -6823,8 +6803,7 @@ M-: (executable-find "diff") RET
   (global-set-key
     (kbd <span class="org-string">"C-x C-b"</span>) 'ibuffer)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ibuffer"</span>
+  (with-eval-after-load <span class="org-string">"ibuffer"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">completely replaces `</span><span class=
@@ -7016,8 +6995,7 @@ M-: (executable-find "diff") RET
 "org-comment">unique buffer names dependent on file name</span>
   (try-require 'uniquify)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"uniquify"</span>
+  (with-eval-after-load <span class="org-string">"uniquify"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">style used for uniquifying buffer names with parts of directory</span>
@@ -7514,8 +7492,7 @@ M-: (executable-find "diff") RET
 "org-comment">everything browser (into individual source files), or Dired on</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">steroids</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"speedbar"</span>
+  (with-eval-after-load <span class="org-string">"speedbar"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">number of spaces used for indentation</span>
@@ -8447,8 +8424,7 @@ M-: (executable-find "diff") RET
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">outline mode commands for Emacs</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"outline"</span>
+  (with-eval-after-load <span class="org-string">"outline"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">bind the outline minor mode functions to an easy to remember prefix</span>
@@ -8856,8 +8832,7 @@ M-: (executable-find "diff") RET
     (global-set-key
       (kbd <span class="org-string">"C-c q"</span>) 'boxquote-region)
 
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"boxquote"</span>
+    (with-eval-after-load <span class="org-string">"boxquote"</span>
       (setq boxquote-top-and-tail <span class="org-string">"────"</span>)
       (setq boxquote-title-format <span class="org-string">" %s"</span>)
       (setq boxquote-top-corner    <span class="org-string">"  ╭"</span>)
@@ -8984,8 +8959,7 @@ M-: (executable-find "diff") RET
   (global-set-key
     (kbd <span class="org-string">"C-c O"</span>) 'org-open-at-point-global)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">display the Org mode manual in Info mode</span>
     (define-key global-map
@@ -9046,8 +9020,7 @@ M-: (executable-find "diff") RET
 
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">allow both single and double quotes in the border</span>
     (setcar (nthcdr 2 org-emphasis-regexp-components) <span class=
@@ -9254,8 +9227,7 @@ M-: (executable-find "diff") RET
         <div class="outline-text-4" id="text-28-0-1">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Introduction"</span>)
 
 <span class="org-comment-delimiter">;;</span><span class=
@@ -9280,8 +9252,7 @@ M-: (executable-find "diff") RET
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">* 2 (info "(org)Document Structure")</span>
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Document Structure"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -9362,8 +9333,7 @@ M-: (executable-find "diff") RET
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Headlines"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -9634,8 +9604,7 @@ M-: (executable-find "diff") RET
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
 
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-org-reveal</span> (<span class=
@@ -9776,8 +9745,7 @@ M-: (executable-find "diff") RET
 
   (leuven--section <span class="org-string">"3.5 (org)The spreadsheet"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-table"</span>
+  (with-eval-after-load <span class="org-string">"org-table"</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">some Calc mode settings for use in `</span><span class=
 "org-comment"><span class="org-constant">calc-eval</span></span><span class=
@@ -9830,8 +9798,7 @@ M-: (executable-find "diff") RET
           <div class="outline-text-4" id="text-28-3-1">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Hyperlinks"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -9851,8 +9818,7 @@ M-: (executable-find "diff") RET
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">support for links to Gnus groups and messages from within Org mode</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-gnus"</span>
+  (with-eval-after-load <span class="org-string">"org-gnus"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">create web links to Google groups or Gmane (instead of Gnus</span>
@@ -9872,8 +9838,7 @@ M-: (executable-find "diff") RET
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">global identifiers for Org-mode entries</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-id"</span>
+  (with-eval-after-load <span class="org-string">"org-id"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">storing a link to an Org file will use entry IDs</span>
@@ -9893,8 +9858,7 @@ M-: (executable-find "diff") RET
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Handling links"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -10085,11 +10049,11 @@ M-: (executable-find "diff") RET
 "org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
 "org-string">(t!)"</span>          <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">open, not started</span>
+"org-comment">open, not (yet) started</span>
                     <span class=
 "org-string">"STRT(s!)"</span>          <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">in progress, doing</span>
+"org-comment">in progress, working on, doing</span>
                     <span class=
 "org-string">"WAIT(w!)"</span>          <span class=
 "org-comment-delimiter">; </span><span class=
@@ -10110,8 +10074,7 @@ M-: (executable-find "diff") RET
 
           (sequence <span class=
 "org-string">"QTE(q!)"</span>           <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">work-in-progress?</span>
+"org-comment-delimiter">; </span><span class="org-comment">planning</span>
                     <span class=
 "org-string">"QTD(Q!)"</span>           <span class=
 "org-comment-delimiter">; </span><span class=
@@ -10135,8 +10098,7 @@ M-: (executable-find "diff") RET
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-faces"</span>
+  (with-eval-after-load <span class="org-string">"org-faces"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">faces for specific </span><span class="org-comment"><span class=
@@ -10364,8 +10326,7 @@ M-: (executable-find "diff") RET
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">~5.3.2 heading for state change added to entries</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Progress logging"</span>)
 
     (setcdr (assq 'state org-log-note-headings)
@@ -10383,8 +10344,7 @@ M-: (executable-find "diff") RET
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-habit"</span>
+  (with-eval-after-load <span class="org-string">"org-habit"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">show habits for future days</span>
@@ -10646,8 +10606,7 @@ M-: (executable-find "diff") RET
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">insinuate appt if Org mode is loaded</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Dates and Times"</span>)
 
     (try-require 'appt))
@@ -10839,8 +10798,7 @@ M-: (executable-find "diff") RET
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Alternative: resume clocks when opening the first Org file</span>
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-clock"</span>
+  (with-eval-after-load <span class="org-string">"org-clock"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">8.4 save both the running clock and the entire clock history when Emacs</span>
@@ -11149,8 +11107,7 @@ M-: (executable-find "diff") RET
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">fast note taking in Org mode (the ultimate capture tool)</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-capture"</span>
+  (with-eval-after-load <span class="org-string">"org-capture"</span>
 
     (add-to-list 'org-capture-templates
                  `(<span class="org-string">"t"</span> <span class=
@@ -11608,8 +11565,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">9.4 capture from Firefox (to store links and text)</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-protocol"</span>
+  (with-eval-after-load <span class="org-string">"org-protocol"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">map online URL to an existing working file</span>
@@ -11641,8 +11597,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Refile"</span>)
 
     (<span class="org-keyword">defvar</span> <span class=
@@ -11760,8 +11715,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">* 10 (info "(org)Agenda Views")</span>
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-agenda"</span>
+  (with-eval-after-load <span class="org-string">"org-agenda"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">multiple same-day time stamps in entry make multiple agenda lines</span>
@@ -12092,8 +12046,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment-delimiter">; </span><span class=
 "org-comment">with-eval-after-load "org-agenda" ends here</span>
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-faces"</span>
+  (with-eval-after-load <span class="org-string">"org-faces"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">faces for showing deadlines in the agenda</span>
@@ -12153,8 +12106,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-agenda"</span>
+  (with-eval-after-load <span class="org-string">"org-agenda"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">type "(" in agenda and todo buffers to show category name and task</span>
@@ -12589,8 +12541,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (leuven--section <span class=
 "org-string">"10.6 (org)Custom agenda views"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-agenda"</span>
+  (with-eval-after-load <span class="org-string">"org-agenda"</span>
     (<span class=
 "org-keyword">let</span> ((leuven-org-agenda-views <span class="org-string">"~/src/emacs-leuven/org-custom-agenda-views.el"</span>))
       (<span class=
@@ -12795,8 +12746,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             <div class="outline-text-5" id="text-28-9-10-2">
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-agenda"</span>
+  (with-eval-after-load <span class="org-string">"org-agenda"</span>
 
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-org-agenda-mark-done-and-add-followup</span> ()
@@ -12870,15 +12820,13 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   (leuven--section <span class="org-string">"11 (org)Markup"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-faces"</span>
+  (with-eval-after-load <span class="org-string">"org-faces"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">add a face to #+begin_quote and #+begin_verse blocks</span>
     (setq org-fontify-quote-and-verse-blocks t))
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Markup"</span>)
 
     <span class="org-comment-delimiter">;;</span><span class=
@@ -12995,8 +12943,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">11.7.1 define user entities to produce special characters</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-entities"</span>
+  (with-eval-after-load <span class="org-string">"org-entities"</span>
 
     (add-to-list 'org-entities-user
                  '(<span class="org-string">"ok"</span>
@@ -13071,8 +13018,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">bind the exporter dispatcher to a key sequence</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Exporting"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -13132,8 +13078,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
 
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">org-save-buffer-and-do-related</span> ()
@@ -13206,8 +13151,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Org generic export engine</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ox"</span>
+  (with-eval-after-load <span class="org-string">"ox"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">12.3 don't insert a time stamp into the exported file</span>
@@ -13302,8 +13246,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Org HTML export engine</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ox-html"</span>
+  (with-eval-after-load <span class="org-string">"ox-html"</span>
 
     (setq org-html-checkbox-type 'unicode)
 
@@ -13464,8 +13407,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     <span class=
 "org-doc">"Load FILE, fontify it, convert it to HTML, and save the result."</span> t)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"htmlize"</span>
+  (with-eval-after-load <span class="org-string">"htmlize"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">output type of generated HTML</span>
@@ -13545,8 +13487,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">view current buffer as html in web browser</span>
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"htmlize-view"</span>
+    (with-eval-after-load <span class="org-string">"htmlize-view"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">add "Quick Print" entry to file menu</span>
@@ -13577,8 +13518,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">LaTeX back-end</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ox-latex"</span>
+  (with-eval-after-load <span class="org-string">"ox-latex"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">markup for </span><span class="org-comment"><span class=
@@ -14005,8 +13945,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">12.6.6 Beamer class export</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(require 'ox-beamer)</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ox-beamer"</span>
+  (with-eval-after-load <span class="org-string">"ox-beamer"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">default title of a frame containing an outline</span>
@@ -14028,8 +13967,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ox-odt"</span>
+  (with-eval-after-load <span class="org-string">"ox-odt"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">convert "odt" format to "doc" format</span>
@@ -14070,8 +14008,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   (leuven--section <span class="org-string">"13 (org)Publishing"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ox-publish"</span>
+  (with-eval-after-load <span class="org-string">"ox-publish"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">show message about files *not* published</span>
@@ -14126,8 +14063,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">* 14 (info "(org)Working With Source Code")</span>
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ob-core"</span>
+  (with-eval-after-load <span class="org-string">"ob-core"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">make the images in the Emacs buffer automatically refresh after</span>
@@ -14206,8 +14142,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-src"</span>
+  (with-eval-after-load <span class="org-string">"org-src"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">mapping languages to their major mode (for editing the source code block</span>
@@ -14374,8 +14309,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">noweb references can not be resolved.</span>
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ob-core"</span>
+  (with-eval-after-load <span class="org-string">"ob-core"</span>
     (add-to-list 'org-babel-noweb-<span class=
 "org-leuven-highlight">error</span>-langs <span class=
 "org-string">"emacs-lisp"</span>))
@@ -14420,8 +14354,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (leuven--section <span class=
 "org-string">"14.6 (org)Library of Babel"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">load the NAMED code blocks defined in Org mode files into the</span>
@@ -14447,8 +14380,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
           <div class="outline-text-4" id="text-28-13-4">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ob-exp"</span>
+  (with-eval-after-load <span class="org-string">"ob-exp"</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">template used to export the body of code blocks</span>
     (setq org-babel-exp-code-template
@@ -14482,8 +14414,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">setting language to yes...</span>
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Languages"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -14700,8 +14631,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   (leuven--section <span class="org-string">"15.2 (org)Easy Templates"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Easy Templates"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -14772,8 +14702,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   (leuven--section <span class="org-string">"15.3 (org)Speed keys"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Speek keys"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -14805,8 +14734,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (leuven--section <span class=
 "org-string">"15.4 (org)Code evaluation security issues"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ob-core"</span>
+  (with-eval-after-load <span class="org-string">"ob-core"</span>
 
     <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">!! don't be prompted on every code block evaluation</span>
@@ -14825,8 +14753,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** 15.8 A (info "(org)Clean view")</span>
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Clean view"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -14854,8 +14781,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">maximum level for Imenu access to Org-mode headlines</span>
     (setq org-imenu-depth 3)
@@ -14922,8 +14848,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">keep my encrypted data (like account passwords) in my Org mode</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">files with a special tag instead</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Crypt"</span>)
 
     (<span class=
@@ -15099,8 +15024,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Mime"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -15159,8 +15083,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** A.3 (info "(org)Adding hyperlink types")</span>
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Adding hyperlink types"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -15227,8 +15150,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** A.6 (info "(org)Dynamic blocks")</span>
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org"</span>
+  (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class=
 "org-string">"... Org Update dynamic blocks and tables"</span>)
 
@@ -15340,8 +15262,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
       <span class=
 "org-doc">"Return Org entry with the weather for LOCATION in LANGUAGE."</span> t)
 
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-google-weather"</span>
+    (with-eval-after-load <span class="org-string">"org-google-weather"</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(try-require 'url)</span>
 
@@ -15525,8 +15446,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">support for LaTeX documents</span>
   (GNUEmacs
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"latex"</span>
+    (with-eval-after-load <span class="org-string">"latex"</span>
 </pre>
           </div>
 
@@ -15871,8 +15791,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
       (leuven--section <span class="org-string">"(preview-latex)Top"</span>)
 
-      (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"preview"</span>
+      (with-eval-after-load <span class="org-string">"preview"</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">path to `</span><span class="org-comment"><span class=
@@ -15937,8 +15856,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">minor mode with distinct support for `\label', `\ref', `\cite'</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">and `\index' in LaTeX</span>
-      (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"reftex"</span>
+      (with-eval-after-load <span class="org-string">"reftex"</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn all plug-ins on</span>
@@ -15962,8 +15880,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             <pre class="src src-emacs-lisp">
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">BibTeX mode</span>
-      (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"bibtex"</span>
+      (with-eval-after-load <span class="org-string">"bibtex"</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">current BibTeX dialect</span>
@@ -16235,8 +16152,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"nxml-mode"</span>
+  (with-eval-after-load <span class="org-string">"nxml-mode"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">remove the binding of `C-c C-x' (`</span><span class=
@@ -16465,8 +16381,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     <span class="org-comment-delimiter">;;     </span><span class=
 "org-comment">(align beg end)))</span>
 
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"sh-script"</span>
+    (with-eval-after-load <span class="org-string">"sh-script"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">use the SMIE code for navigation and indentation</span>
@@ -16508,7 +16423,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)</span>
 
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
+    (with-eval-after-load <span class=
 "org-string">"highlight-parentheses"</span>
 
       (<span class=
@@ -16941,8 +16856,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (leuven--section <span class=
 "org-string">"26.9 (emacs)Glasses minor mode"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"glasses"</span>
+  (with-eval-after-load <span class="org-string">"glasses"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">face to be put on capitals of an identifier looked through glasses</span>
@@ -16997,8 +16911,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (autoload 'flymake-mode <span class="org-string">"flymake"</span>
     <span class="org-doc">"Toggle on-the-fly syntax checking."</span> t)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"flymake"</span>
+  (with-eval-after-load <span class="org-string">"flymake"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">set up `</span><span class="org-comment"><span class=
@@ -17393,8 +17306,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (leuven--section <span class=
 "org-string">"27.6 Running (emacs)Debuggers Under Emacs"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"gdb-mi"</span>
+  (with-eval-after-load <span class="org-string">"gdb-mi"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">enable Gdb-Many-Windows mode</span>
@@ -17430,8 +17342,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">source-level debugger for Emacs Lisp</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"edebug"</span>
+  (with-eval-after-load <span class="org-string">"edebug"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">display a trace of function entry and exit</span>
@@ -17625,8 +17536,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     (elint-initialize)
     (elint-current-buffer))
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"elint"</span>
+  (with-eval-after-load <span class="org-string">"elint"</span>
     (add-to-list 'elint-standard-variables 'current-prefix-arg)
     (add-to-list 'elint-standard-variables 'command-line-args-left)
     (add-to-list 'elint-standard-variables 'buffer-file-coding-system)
@@ -17767,8 +17677,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (leuven--section <span class=
 "org-string">"28.1.2 Version Control and the Mode Line"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"vc"</span>
+  (with-eval-after-load <span class="org-string">"vc"</span>
 
     (GNUEmacs
       (<span class="org-keyword">when</span> (image-type-available-p 'png)
@@ -17860,8 +17769,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"vc-git"</span>
+  (with-eval-after-load <span class="org-string">"vc-git"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">major mode for editing git commit messages</span>
@@ -18107,8 +18015,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   (leuven--section <span class="org-string">"28.2 (emacs)Change Logs"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"add-log"</span>
+  (with-eval-after-load <span class="org-string">"add-log"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">don't make a new entry, when the last entry was made by you and on</span>
@@ -18344,8 +18251,7 @@ TAGS:
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"etags"</span>
+  (with-eval-after-load <span class="org-string">"etags"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">tags enhancements</span>
@@ -18428,8 +18334,7 @@ TAGS:
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"etags"</span>
+  (with-eval-after-load <span class="org-string">"etags"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">select from multiple tags</span>
@@ -18660,8 +18565,7 @@ TAGS:
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(require 'semantic/db)</span>
 
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"semantic"</span>
+    (with-eval-after-load <span class="org-string">"semantic"</span>
 
       (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven--semantic</span> ()
@@ -19158,8 +19062,7 @@ TAGS:
   (global-set-key
     (kbd <span class="org-string">"M-/"</span>) 'hippie-expand)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"hippie-exp"</span>
+  (with-eval-after-load <span class="org-string">"hippie-exp"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">list of expansion functions tried (in order) by `</span><span class="org-comment"><span class="org-constant">hippie-expand</span></span><span class="org-comment">'</span>
@@ -19207,8 +19110,7 @@ TAGS:
 "org-comment">integrate YASnippet with `</span><span class=
 "org-comment"><span class=
 "org-constant">hippie-expand</span></span><span class="org-comment">'</span>
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"yasnippet"</span>
+    (with-eval-after-load <span class="org-string">"yasnippet"</span>
 
       (add-to-list 'hippie-expand-try-functions-list
                     'yas/hippie-try-expand)))
@@ -19265,7 +19167,7 @@ TAGS:
 "org-string">"auto-complete-config"</span>)
       (idle-require 'auto-complete-config)
 
-      (<span class="org-keyword">with-eval-after-load</span> <span class=
+      (with-eval-after-load <span class=
 "org-string">"auto-complete-config"</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
@@ -19402,8 +19304,7 @@ TAGS:
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">directory-browsing commands</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"dired"</span>
+  (with-eval-after-load <span class="org-string">"dired"</span>
 
     (leuven--section <span class="org-string">"30.1 (emacs)Dired Enter"</span>)
 
@@ -19605,7 +19506,7 @@ TAGS:
 "org-function-name">dired-launch-command</span> ()
  (interactive)
  (dired-do-shell-command
-  (case system-type
+  (<span class="org-keyword">case</span> system-type
     (gnu/linux <span class=
 "org-string">"gnome-open"</span>)            <span class=
 "org-comment-delimiter">; </span><span class=
@@ -19911,8 +19812,7 @@ TAGS:
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">put a Dired buffer in a mode in which filenames are editable</span>
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"wdired"</span>
+    (with-eval-after-load <span class="org-string">"wdired"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">permissions bits of the files are editable</span>
@@ -19974,8 +19874,7 @@ TAGS:
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">use Dired to browse and manipulate your images</span>
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"image-dired"</span>
+    (with-eval-after-load <span class="org-string">"image-dired"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">maximum number of files to show before </span><span class=
@@ -20114,8 +20013,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">emulate insert-directory completely in Emacs Lisp</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ls-lisp"</span>
+  (with-eval-after-load <span class="org-string">"ls-lisp"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">disable the case sensitive sort of file names</span>
@@ -20246,8 +20144,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">calendar functions for solar events</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"solar"</span>
+  (with-eval-after-load <span class="org-string">"solar"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">name of the calendar location</span>
@@ -20313,8 +20210,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-string"><span class="org-constant">appt</span></span><span class=
 "org-string">' not loaded (no diary file found)"</span>))
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"appt"</span>
+  (with-eval-after-load <span class="org-string">"appt"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">send the first </span><span class="org-comment"><span class=
@@ -20583,8 +20479,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">calendar view framework on Emacs</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"calfw"</span>
+  (with-eval-after-load <span class="org-string">"calfw"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Unicode characters</span>
@@ -20599,8 +20494,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">calendar view for org-agenda</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"calfw-org"</span>
+  (with-eval-after-load <span class="org-string">"calfw-org"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">remove some strings (tags and filenames) from item summary</span>
@@ -20726,8 +20620,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">a newsreader for GNU Emacs</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"gnus"</span>
+  (with-eval-after-load <span class="org-string">"gnus"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">package to compose an outgoing mail (Message, with Gnus paraphernalia)</span>
@@ -20795,8 +20688,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (global-set-key
     (kbd <span class="org-string">"&lt;C-f11&gt;"</span>) 'bbdb)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"bbdb"</span>
+  (with-eval-after-load <span class="org-string">"bbdb"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">coding system used for reading and writing `</span><span class=
@@ -21331,8 +21223,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">transform shell names to what they really are</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"sh-script"</span>
+  (with-eval-after-load <span class="org-string">"sh-script"</span>
 
     (add-to-list 'sh-alias-alist '(sh . bash)))
 
@@ -22174,8 +22065,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">ESS: Emacs Speaks Statistics</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ess-site"</span>
+  (with-eval-after-load <span class="org-string">"ess-site"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">use eldoc to report R function names</span>
@@ -22232,8 +22122,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (global-set-key
     (kbd <span class="org-string">"C-x p"</span>) 'proced)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"proced"</span>
+  (with-eval-after-load <span class="org-string">"proced"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">current sort scheme for proced listing</span>
@@ -22287,8 +22176,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (GNUEmacs
     (idle-require 'server)              <span class=
 "org-comment-delimiter">; </span><span class="org-comment">after init</span>
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"server"</span>
+    (with-eval-after-load <span class="org-string">"server"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">test whether server is (definitely) running, avoiding the message of</span>
@@ -22378,8 +22266,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment">print Emacs buffer on line printer</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">for {lpr,print}-{buffer,region}</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"lpr"</span>
+  (with-eval-after-load <span class="org-string">"lpr"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">name of program for printing a file</span>
@@ -22438,8 +22325,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">print text from the buffer as PostScript</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ps-print"</span>
+  (with-eval-after-load <span class="org-string">"ps-print"</span>
 
     (<span class="org-keyword">defvar</span> <span class=
 "org-variable-name">gsprint-program</span>
@@ -22619,8 +22505,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-string">"42 Saving Emacs Sessions"</span>
 
   (try-require 'saveplace)
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"saveplace"</span>
+  (with-eval-after-load <span class="org-string">"saveplace"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">automatically save place in each file</span>
@@ -23000,8 +22885,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       (autoload 'w3m-browse-url <span class="org-string">"w3m"</span>
         <span class="org-doc">"Ask emacs-w3m to show a URL."</span> t))
 
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"w3m"</span>
+    (with-eval-after-load <span class="org-string">"w3m"</span>
 </pre>
           </div>
 
@@ -23131,8 +23015,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">functions for cookie processing</span>
-      (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"w3m-cookie"</span>
+      (with-eval-after-load <span class="org-string">"w3m-cookie"</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">ask user whether accept bad cookies or not</span>
@@ -23316,8 +23199,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">define a default menu bar</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"menu-bar"</span>
+  (with-eval-after-load <span class="org-string">"menu-bar"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">get rid of the Games in the Tools menu</span>
@@ -24075,8 +23957,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
                        <span class=
 "org-string">"irc.freenode.net:6667"</span>)))
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"circe"</span>
+  (with-eval-after-load <span class="org-string">"circe"</span>
 
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** 1 Basics</span>
@@ -24422,7 +24303,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140724.1643]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140725.0944]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
