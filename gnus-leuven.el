@@ -126,6 +126,9 @@
                       (nnimap-address "mail")
                       ;; (nnimap-server-port 993)
                       ;; (nnimap-stream ssl)
+
+                      (nnimap-split-methods 'nnimap-split-fancy) ; XXX when (try-require 'bbdb-gnus)...
+
                       )
 
               (nntp "gmane"
@@ -154,10 +157,10 @@
 ;;** 1.6 (info "(gnus)Startup Files")
 
       ;; don't save a `.newsrc' file (for using other newsreaders) on exit
-      (setq gnus-save-newsrc-file nil) ;; speed-up
+      (setq gnus-save-newsrc-file nil)  ; speed-up
 
       ;; ignore the `.newsrc' file
-      (setq gnus-read-newsrc-file nil)
+      (setq gnus-read-newsrc-file nil)  ; speed-up
 
       ;; my `.newsrc' file (and the derived .el/.eld files)
       (setq gnus-startup-file (concat gnus-directory ".newsrc"))
