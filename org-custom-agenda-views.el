@@ -1,4 +1,3 @@
-
 ;;; org-custom-agenda-views.el --- Org customized views
 
 ;;; Code:

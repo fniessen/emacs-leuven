@@ -365,6 +365,13 @@ The project type can be specified either in XXX.
                     (org-agenda-sorting-strategy nil))) t)
 #+end_src
 
+Display:
+- Title
+- Status
+- Progress (%)
+- Start Date
+- Completion Date
+
 Comment identifier un projet ?
 - Identifier les tâches qui ont des sous-tâches?
 - Mettre un tag PROJ?
