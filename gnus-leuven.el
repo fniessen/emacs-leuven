@@ -1207,8 +1207,8 @@
       ;; sending mail -- for Gnus (for `message')
       (setq message-send-mail-function 'message-smtpmail-send-it)
 
-      ;; limit on the size of messages sent (5 MB)
-      (setq message-send-mail-partially-limit (* 5 1024 1024))
+      ;; limit on the size of messages sent (10 MB)
+      (setq message-send-mail-partially-limit (* 10 1000 1024))
 
 ;;*** 3.4 (info "(message)News Headers")
 

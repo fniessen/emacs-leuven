@@ -1057,7 +1057,8 @@
           (setq gnus-sum-thread-tree-single-leaf <span class=
 "org-string">"\\-&gt; "</span>)))
 
-      (eval-after-load <span class="org-string">"message"</span>
+      (<span class="org-keyword">eval-after-load</span> <span class=
+"org-string">"message"</span>
         '(<span class="org-keyword">progn</span>
            <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">regexp matching alternative email addresses</span>
@@ -1191,8 +1192,7 @@
 "org-comment-delimiter">; </span><span class="org-comment">post via news</span>
           (call-interactively 'gnus-summary-followup-with-original)))
 
-      (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"gnus-sum"</span>
+      (with-eval-after-load <span class="org-string">"gnus-sum"</span>
         (define-key gnus-summary-mode-map
           (kbd <span class=
 "org-string">"F"</span>) 'leuven-gnus-summary-followup-with-original))
@@ -1695,7 +1695,8 @@
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** 4.1 Hiding headers</span>
 
-      (eval-after-load <span class="org-string">"gnus-art"</span>
+      (<span class="org-keyword">eval-after-load</span> <span class=
+"org-string">"gnus-art"</span>
         '(<span class="org-keyword">progn</span>
            <span class="org-comment-delimiter">;; </span><span class=
 "org-comment"><span class="org-leuven-highlight">TODO</span></span><span class=
@@ -1930,7 +1931,8 @@
 "org-comment">don't render HTML automatically *when plain text alternative is</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">available*</span>
-      (eval-after-load <span class="org-string">"mm-decode"</span>
+      (<span class="org-keyword">eval-after-load</span> <span class=
+"org-string">"mm-decode"</span>
         '(<span class="org-keyword">progn</span>
            (add-to-list 'mm-discouraged-alternatives <span class=
 "org-string">"text/html"</span>)
@@ -1979,7 +1981,8 @@
       (setq mm-text-html-renderer 'shr)
 
 
-      (eval-after-load <span class="org-string">"w3m"</span>
+      (<span class="org-keyword">eval-after-load</span> <span class=
+"org-string">"w3m"</span>
         '(<span class="org-keyword">progn</span>
            <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(setq browse-url-browser-function 'w3m-browse-url)</span>
@@ -2111,7 +2114,8 @@
 "org-comment">choose the right MIME type when sending an attachment</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">MIME content-types keyed by file extensions</span>
-      (eval-after-load <span class="org-string">"mailcap"</span>
+      (<span class="org-keyword">eval-after-load</span> <span class=
+"org-string">"mailcap"</span>
         '(<span class="org-keyword">progn</span>
            (add-to-list 'mailcap-mime-extensions
                         '(<span class="org-string">".doc"</span> . <span class=
@@ -2375,7 +2379,8 @@
 "org-string">"gnus-alias"</span> nil t)
       (add-hook 'message-setup-hook 'gnus-alias-determine-identity)
 
-      (eval-after-load <span class="org-string">"gnus-alias"</span>
+      (<span class="org-keyword">eval-after-load</span> <span class=
+"org-string">"gnus-alias"</span>
         '(<span class="org-keyword">progn</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
@@ -2624,7 +2629,8 @@
 "org-comment">addresses to prune (disable `</span><span class=
 "org-comment"><span class="org-constant">Cc:</span></span><span class=
 "org-comment">' to myself) when doing wide replies</span>
-      (eval-after-load <span class="org-string">"message"</span>
+      (<span class="org-keyword">eval-after-load</span> <span class=
+"org-string">"message"</span>
         (<span class=
 "org-keyword">when</span> (boundp 'gnus-ignored-from-addresses)
           (setq message-dont-reply-to-names gnus-ignored-from-addresses)))
@@ -2990,8 +2996,8 @@
       (setq message-send-mail-function 'message-smtpmail-send-it)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">limit on the size of messages sent (5 MB)</span>
-      (setq message-send-mail-partially-limit (* 5 1024 1024))
+"org-comment">limit on the size of messages sent (10 MB)</span>
+      (setq message-send-mail-partially-limit (* 10 1000 1024))
 
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">*** 3.4 (info "(message)News Headers")</span>
@@ -3007,7 +3013,8 @@
 "org-comment">tell Gnus not to generate a sender header on outgoing posts</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(default behavior since Gnus 5.10.0)</span>
-      (eval-after-load <span class="org-string">"message"</span>
+      (<span class="org-keyword">eval-after-load</span> <span class=
+"org-string">"message"</span>
         '(add-to-list 'message-syntax-checks '(sender . disabled)))
 
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3434,7 +3441,8 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment"><span class=
 "org-leuven-highlight">FIXME</span></span><span class="org-comment"> Does not work... This is the opposite of SPC (page down)!</span>
-(eval-after-load <span class="org-string">"gnus-sum"</span> <span class=
+(<span class="org-keyword">eval-after-load</span> <span class=
+"org-string">"gnus-sum"</span> <span class=
 "org-comment-delimiter">;; </span><span class=
 "org-comment">be sure to override default</span>
       (gnus-define-keys gnus-summary-mode-map
@@ -3782,8 +3790,7 @@
         <span class=
 "org-doc">"Attach dired's marked files to a gnus message composition."</span> t)
 
-      (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"dired"</span>
+      (with-eval-after-load <span class="org-string">"dired"</span>
 
         (add-hook 'dired-mode-hook 'gnus-dired-mode)
 
