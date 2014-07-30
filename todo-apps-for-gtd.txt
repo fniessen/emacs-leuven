@@ -1,7 +1,7 @@
 #+TITLE:     Todo apps for getting tasks done
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# #+Time-stamp: <2014-07-30 Wed 11:21>
+# #+Time-stamp: <2014-07-30 Wed 16:29>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -22,36 +22,13 @@ http://www.priacta.com/Articles/Comparison_of_GTD_Software.php
 |---------+----------+---------+------+--------+-------|
 | Total   |          |         |      |        |       |
 
-* Basic tools
+* Designed for personal use
 
-** Firetask
+** Basic tools
 
-http://firetask.com/images/Firetask-Mac-2.png
+*** Todoist
 
-Review / Organize:
-- In-tray
-- Today
-- Tomorrow
-- Due
-- Next
-
-Icônes, listes, ...
-
-** TickTick
-
-http://ticktick.com/
-
-- All
-- Today
-- Next 7 days
-- Inbox
-- List (Work, Family)
-- Completed
-- Trash
-
-** Todoist
-
-*** Views
+**** Views
 
 - Today ::
      overdue, today
@@ -75,7 +52,7 @@ http://ticktick.com/
 - Tasks with no due date ::
      no date
 
-*** Email "Todoist Daily Digest for Aug 27 (1 due today, 2 overdue)"
+**** Email "Todoist Daily Digest for Aug 27 (1 due today, 2 overdue)"
 
 #+begin_verse
 Hi Fabrice
@@ -106,6 +83,358 @@ In total you completed 2 task(s)!
 
 [[View more graphs... ]]
 #+end_verse
+
+*** Remember the Milk
+
+You can create Smart Lists that only show:
+
+- Tasks due in the upcoming month
+- Tasks with no due date
+- Tasks that have been completed in the past week
+- Tasks with high priority
+- Tasks with time estimates less than 1 hour
+- Tasks that have been postponed 3 times already
+- Tasks that are shared with anyone
+- Tasks that are shared with Bob T. Monkey
+- Tasks that are tagged with 'mall'
+- Tasks that contain the word 'phone'
+
+Smart Lists can also be based on multiple criteria, for example:
+
+- Tasks in my 'Work' list with high priority
+- Tasks that are high priority and due in the upcoming week
+- Tasks that are high priority or medium priority
+- Tasks that are shared with anyone due in the upcoming week
+- Tasks that are tagged with both 'mall' and 'gift'
+
+From [[http://www.rememberthemilk.com/help/answers/smartlists/whatare.rtm][Remember The Milk - Help / FAQ / Smart Lists / What are Smart Lists?]]
+
+* Designed for teamwork
+
+** Doit.im
+
+- State ::
+     "Uncompleted" or "Completed".
+
+*** Focus
+
+All lists show the title and the deadline (in compact form: "X days overdue",
+"due today", "X days left", "MM-DD" or "YYYY").
+
+They're sorted on the deadline (no DEADLINE = last).
+
+- Inbox ::
+     (no SCHEDULED date)
+     (Constraint: adding a project or a status [Today, Next, etc.] makes them
+     *move* to Next)
+     All to-dos to refine later.
+
+- Today ::
+     (SCHEDULED date = today, sorted by DEADLINE)
+     (Grouped between "Do it now" and "Today others")
+     Tasks starting or due today (*or before*).
+
+General constraint for the other lists: Deadline date > today; if not, they go
+to Today.
+
+- Next ::
+     (no SCHEDULED date)
+     (Group by Project?)
+     Actions to be done as soon as possible but with no exact start time.
+
+- Tomorrow ::
+     (SCHEDULED date = tomorrow)
+     (Ungrouped)
+     Tasks to be handled tomorrow.
+
+- Scheduled ::
+     (SCHEDULED date > tomorrow)
+     (Group by Start time: "(after) tomorrow", "next (work) week" [up to
+     Sunday], "this month", "next month and later")
+     All to-dos with start time after tomorrow, including repeated ones.
+
+- Someday ::
+     (no SCHEDULED date)
+     (Ungrouped)
+     Tasks with no start time yet and probably to be done someday in the
+     future.
+
+- Waiting for ::
+     (no SCHEDULED date)
+     (Group by Contact: "Mine", ...)
+     Tasks forwarded to others.
+
+*** Projects
+
+Show all tasks of a project, grouped by:
+
+- Today
+- Next
+- Tomorrow
+- Scheduled
+- Someday
+- Waiting for
+- Completed (collapsed)
+- Archived (collapsed)
+
+*** Goals
+
+*** Contexts
+
+Show all tasks, grouped by context:
+
+- Computer
+- Errands
+- Home
+- Office
+- Phone
+
+*** Filters
+
+- Completed ::
+     (Group by Completion date, today first)
+     Completed tasks.
+
+- Trash ::
+     Deleted tasks.
+
+*** Review
+
+- Daily review ::
+     (date visible)
+     (Group by "Completed", "Uncompleted")
+
+- Weekly review ::
+     An overall summary of daily review in this week.
+     (Weekly report: group by "Completed", "Uncompleted")
+
+** Toodledo
+
+Task Status:
+- Planning
+- Active
+- Waiting
+- Canceled
+- Reference
+- Delegated
+- Next Action
+- Hold
+- (None)
+
+Contexts:
+- Work
+- Home
+- Out
+- (No Context)
+
+Some Folders:
+- Chores [Daily or routine domestic tasks]
+- Work
+- Vacation Planning
+- Home Repairs
+- Shopping
+
+Getting things done:
+http://www.toodledo.com/forums/5/3775/0/pawnmowers-gtd-setup.html
+
+** Asana
+
+https://asana.com/guide/videos/plan-your-day
+
+*** Great shared task list for your team
+
+http://blog.asana.com/2011/05/new-asana-intro-video/
+
+I use org for personal task management, but I use asana.com with my workgroup.
+
+I just learned that Asana offers an API that exposes all the usual interfaces.
+http://developers.asana.com/documentation/
+
+- http://asana.com/product#pricing
+- http://help.asana.com/customer/portal/articles/109473-project-management-with-asana
+
+*** Tasks
+
+- New Tasks
+- Today
+- Upcoming
+- Later
+
+When sorted by *priority* (= default)...
+
+When sorted by *assignee*:
+- fniessen
+- Unassigned
+
+When sorted by *project*:
+- Project 1
+- No project (latest position?)
+
+When sorted by *date*:
+- Task  Saturday
+- Task  Oct 10
+- Task  Jan 13, 2014
+- No due date
+
+*** Highlights
+
+- Quite complex to understand where is the overview of all tasks for all
+  projects
+
+*** Search Views, New Right Pane, Colored Projects & Tags, and more! (from Asana) :mail:
+    [2013-04-16 Tue 21:39]
+
+#+begin_verse
+Read about some of our exciting feature launches this April in Asana!
+( http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCK-0/c.aspx )
+April Newsletter
+
+Search Views ( http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCL-0/c.aspx )
+
+Teams that are successful with Asana put everything in it, from daily tasks
+and project work to high level goals and planning. Search Views, our newest
+feature, gives you a powerful new way to locate a specific task, or build
+custom views of your team's work.
+
+Find Anything
+Search Views allow you to find all the tasks that match your criteria for
+assignee, creator, due date, project, tags and more. You can also search
+across comments and notes! Save your searches to keep track of important lists
+- such as unassigned tasks overdue across your team, or tasks you've assigned
+to a new teammate.
+
+Learn more about how Search Views work » (
+http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCL-0/c.aspx )
+
+The New Task Pane ( http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCM-0/c.aspx )
+
+Notice Anything Different?
+You may have noticed that we've given the Asana task pane a design overhaul.
+We rebuilt it from the ground up, with the goal of simplifying, beautifying,
+and improving the area of Asana where you track the details of your work. All
+the same functionality is still there, but now with a more focused and elegant
+interface.
+
+Read about all the changes » ( http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCM-0/c.aspx )
+
+Colored Projects and Tags ( http://connect.asana.com/1L9Q-1EBU8-8X1XHI-KBJNH-0/c.aspx )
+
+Add a little color to your task list with colored project & tag labels. Give
+any project or tag a color to help visually categorize and differentiate your
+tasks. For example, add a red tag to high priority tasks to keep them top of
+mind.
+
+Add some color to Asana » ( http://connect.asana.com/1L9Q-1EBU8-8X1XHI-KBJNH-0/c.aspx )
+#+end_verse
+
+From [[gnus:nnimap%2Bmc:INBOX#SOV-DM-DROID2520eb75c335e45f0828d56735fefbe43@sov-dm-droid2][Email from Asana: Search Views, New Right Pane, ]]
+
+** [[https://www.azendoo.com/][Azendoo]]
+
+Azendoo provides easy ways to organize your work, *without "work about work"*.
+
+Tasks can be planned to be worked:
+- on a *specific day*, making it a *priority* task on that specific day,
+- *anytime in a week*, making it a *planned* task or
+- for *someday*, making it an *unorganized* task.
+
+Tasks sometimes need some more details to be completed.  You may add checkboxes
+*subtasks* to a task's description.
+
+Workspaces (= Org files) are where people work on Subjects (like projects,
+customers, departments, products, events, meetings, or anything you want) and
+choose how involved they are in each.
+
+A new task is (by default) scheduled (= work planned) for today.
+
+Task views:
+
+- All
+
+  All unfinished tasks, for everybody in my team:
+  + Sorted by scheduled date
+  + Someday for all the unscheduled tasks
+
+- Planner (= My Tasks)
+
+  All my unfinished and finished tasks:
+  + Sorted per day, by scheduled date, for the coming 7 days \\
+  + Sorted per week, by scheduled date, for the coming 4 weeks
+
+- With a due date
+
+  All finished tasks, sorted by target date (= deadline)
+
+- Now
+
+  All my unfinished and finished tasks, scheduled for today (unfinished + finished)
+
+- Assigned to me
+
+  + Assigned to me and unfinished (sorted by 'work planned' date)
+  + Assigned to me and finished (sorted by completion date)
+
+- Someday (= Tasks to organize)
+
+- Finished
+
+  All finished tasks
+
+- Sent
+
+  All tasks assigned to somebody
+
+- Sent and finished
+
+  All tasks assigned to somebody and finished
+
+Your *daily planner* (daily productivity list) =
+- Your tasks scheduled for today
+- Your tasks scheduled to do anytime this week
+
+Informations visible in the lists:
+- Assignee (profile picture)
+- Task label
+- Due date
+
+** [[http://www.beesapps.com/][BeesApps]]
+
+Our solution Beesy addresses 6 main subject of concern for professionals:
+
+- An All-in-one App to consolidate your information (calendar, notes, to-do,
+  people, projects).
+- A fast and smart note taking app.
+- Professional meeting minutes in less than 1 minute.
+- Automated to-do management from these notes.
+- Team management by assigning actions during notes.
+- Priority management by assigning notes to goals and projects.
+
+* Basic tools
+
+** Firetask
+
+http://firetask.com/images/Firetask-Mac-2.png
+
+Review / Organize:
+- In-tray
+- Today
+- Tomorrow
+- Due
+- Next
+
+Icons, lists, ...
+
+** TickTick
+
+http://ticktick.com/
+
+- All
+- Today
+- Next 7 days
+- Inbox
+- List (Work, Family)
+- Completed
+- Trash
 
 ** Any.do
 
@@ -252,7 +581,9 @@ over dates, deadlines, delegation structure, etc. (like a task) while also
 allowing you to manage a list of tasks and participants in the project (like a
 workspace).
 
-* Producteev
+* All unsorted tools
+
+** Producteev
 
 http://www.producteev.com/
 
@@ -295,112 +626,15 @@ Ordered by:
 - Ascending
 - Descending (= default)
 
-** Highlights
+*** Highlights
 
 - Bulk actions
 
-** Documentation
+*** Documentation
 
 http://blog.producteev.com/post/38326716677/gtd-up-close-part-i-labeling-your-workspace
 
-* Doit.im
-
-- State ::
-     "Uncompleted" or "Completed".
-
-** Focus
-
-All lists show the title and the deadline (in compact form: "X days overdue",
-"due today", "X days left", "MM-DD" or "YYYY").
-
-They're sorted on the deadline (no DEADLINE = last).
-
-- Inbox ::
-     (no SCHEDULED date)
-     (Constraint: adding a project or a status [Today, Next, etc.] makes them
-     *move* to Next)
-     All to-dos to refine later.
-
-- Today ::
-     (SCHEDULED date = today, sorted by DEADLINE)
-     (Grouped between "Do it now" and "Today others")
-     Tasks starting or due today (*or before*).
-
-General constraint for the other lists: Deadline date > today; if not, they go
-to Today.
-
-- Next ::
-     (no SCHEDULED date)
-     (Group by Project?)
-     Actions to be done as soon as possible but with no exact start time.
-
-- Tomorrow ::
-     (SCHEDULED date = tomorrow)
-     (Ungrouped)
-     Tasks to be handled tomorrow.
-
-- Scheduled ::
-     (SCHEDULED date > tomorrow)
-     (Group by Start time: "(after) tomorrow", "next (work) week" [up to
-     Sunday], "this month", "next month and later")
-     All to-dos with start time after tomorrow, including repeated ones.
-
-- Someday ::
-     (no SCHEDULED date)
-     (Ungrouped)
-     Tasks with no start time yet and probably to be done someday in the
-     future.
-
-- Waiting for ::
-     (no SCHEDULED date)
-     (Group by Contact: "Mine", ...)
-     Tasks forwarded to others.
-
-** Projects
-
-Show all tasks of a project, grouped by:
-
-- Today
-- Next
-- Tomorrow
-- Scheduled
-- Someday
-- Waiting for
-- Completed (collapsed)
-- Archived (collapsed)
-
-** Goals
-
-** Contexts
-
-Show all tasks, grouped by context:
-
-- Computer
-- Errands
-- Home
-- Office
-- Phone
-
-** Filters
-
-- Completed ::
-     (Group by Completion date, today first)
-     Completed tasks.
-
-- Trash ::
-     Deleted tasks.
-
-** Review
-
-- Daily review ::
-     (date visible)
-     (Group by "Completed", "Uncompleted")
-
-- Weekly review ::
-     An overall summary of daily review in this week.
-     (Weekly report: group by "Completed", "Uncompleted")
-
-* Nirvana
+** Nirvana
 
 All list show:
 
@@ -416,11 +650,11 @@ When editing an action:
 - Due date
 - *Standalone* or belong to *Active project*
 
-** Collect
+*** Collect
 
 - Inbox ::
 
-** Actions
+*** Actions
 
 - Next ::
 
@@ -433,109 +667,17 @@ When editing an action:
 - Focus ::
      (Subset of other lists)
 
-* Asana
+** Mijura
 
-https://asana.com/guide/videos/plan-your-day
-
-** Great shared task list for your team
-
-http://blog.asana.com/2011/05/new-asana-intro-video/
-
-I use org for personal task management, but I use asana.com with my workgroup.
-
-I just learned that Asana offers an API that exposes all the usual interfaces.
-http://developers.asana.com/documentation/
-
-- http://asana.com/product#pricing
-- http://help.asana.com/customer/portal/articles/109473-project-management-with-asana
-
-** Tasks
-
-- New Tasks
-- Today
-- Upcoming
-- Later
-
-When sorted by *priority* (= default)...
-
-When sorted by *assignee*:
-- fniessen
-- Unassigned
-
-When sorted by *project*:
-- Project 1
-- No project (latest position?)
-
-When sorted by *date*:
-- Task  Saturday
-- Task  Oct 10
-- Task  Jan 13, 2014
-- No due date
-
-** Highlights
-
-- Quite complex to understand where is the overview of all tasks for all
-  projects
-
-** Search Views, New Right Pane, Colored Projects & Tags, and more! (from Asana) :mail:
-   [2013-04-16 Tue 21:39]
-
-#+begin_verse
-Read about some of our exciting feature launches this April in Asana!
-( http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCK-0/c.aspx )
-April Newsletter
-
-Search Views ( http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCL-0/c.aspx )
-
-Teams that are successful with Asana put everything in it, from daily tasks
-and project work to high level goals and planning. Search Views, our newest
-feature, gives you a powerful new way to locate a specific task, or build
-custom views of your team's work.
-
-Find Anything
-Search Views allow you to find all the tasks that match your criteria for
-assignee, creator, due date, project, tags and more. You can also search
-across comments and notes! Save your searches to keep track of important lists
-- such as unassigned tasks overdue across your team, or tasks you've assigned
-to a new teammate.
-
-Learn more about how Search Views work » (
-http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCL-0/c.aspx )
-
-The New Task Pane ( http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCM-0/c.aspx )
-
-Notice Anything Different?
-You may have noticed that we've given the Asana task pane a design overhaul.
-We rebuilt it from the ground up, with the goal of simplifying, beautifying,
-and improving the area of Asana where you track the details of your work. All
-the same functionality is still there, but now with a more focused and elegant
-interface.
-
-Read about all the changes » ( http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCM-0/c.aspx )
-
-Colored Projects and Tags ( http://connect.asana.com/1L9Q-1EBU8-8X1XHI-KBJNH-0/c.aspx )
-
-Add a little color to your task list with colored project & tag labels. Give
-any project or tag a color to help visually categorize and differentiate your
-tasks. For example, add a red tag to high priority tasks to keep them top of
-mind.
-
-Add some color to Asana » ( http://connect.asana.com/1L9Q-1EBU8-8X1XHI-KBJNH-0/c.aspx )
-#+end_verse
-
-From [[gnus:nnimap%2Bmc:INBOX#SOV-DM-DROID2520eb75c335e45f0828d56735fefbe43@sov-dm-droid2][Email from Asana: Search Views, New Right Pane, ]]
-
-* Mijura
-
-** Marketing team dashboard
+*** Marketing team dashboard
 
 - Team activity + my notifications
 - Recent meetings + my meetings
 - Team members + my priorities
 
-** Tasks worked-on report
+*** Tasks worked-on report
 
-** Hightlights
+*** Hightlights
 
 Take rich meeting minutes with Mijura, add attendees and annotate actions with
 your colleagues names. Actions are automatically turned into tasks and
@@ -543,21 +685,21 @@ assigned to the right people.
 
 Who worked on what, when
 
-* Somethngs
+** Somethngs
 
 http://thn.gs/
 
-* Get It Done
+** Get It Done
 
 http://getitdone.uservoice.com/
 
-** Areas of responsibility
+*** Areas of responsibility
 
 - Work
 - Home
 - Hobby
 
-** Focus
+*** Focus
 
 - *Inbox*
 - *Today* (when SCHEDULED = today)
@@ -572,13 +714,13 @@ http://getitdone.uservoice.com/
   + Repeat after completion
 - *Someday*
 
-** Old items
+*** Old items
 
 - Completed items
 - *Trash*
   ("Clear done" = move them to trash?)
 
-** Email "Daily Reminder" (sent every day at 04:00)
+*** Email "Daily Reminder" (sent every day at 04:00)
 
 #+begin_verse
 Here is what is on the agenda for today:
@@ -593,7 +735,7 @@ Here is what is on the agenda for today:
 - ...
 #+end_verse
 
-** Documentation
+*** Documentation
 
 "We try to follow the book Getting Things Done as close as possible so *we do
 not allow sorting by task name or due date*, we only allow sorting by dragging
@@ -626,7 +768,7 @@ What is the difference between Scheduled and Due Dates?
   After you set due dates for your tasks, you can quickly see when all your
   tasks are due.
 
-* Things
+** Things
 
 *Daily Review, Don't let anything fall through the cracks.*
 
@@ -642,16 +784,16 @@ the top of your Today list, together with all to-dos that have become due. We
 call it Daily Review. It's a way for you to easily review which tasks you want
 to start today, and which ones you want to postpone until later.
 
-** Areas
+*** Areas
 
 - Family
 - Work
 
-** Collect
+*** Collect
 
 - Inbox
 
-** Focus
+*** Focus
 
 - Today
 - Next
@@ -659,41 +801,41 @@ to start today, and which ones you want to postpone until later.
 - Someday
 - Projects
 
-** Active projects
+*** Active projects
 
-** Others (no label)
+*** Others (no label)
 
 - Logbook
 - Trash
 
-** Tags
+*** Tags
 
 - work (w)
 - home (h)
 - errand (e)
 - phone
 
-* Plancake
+** Plancake
 
-** Tags
+*** Tags
 
 - home
 - errands
 - computer
 
-** Star
+*** Star
 
 = tasks that are important or require extra attention.
 
-** Calendar (= Org agenda)
+*** Calendar (= Org agenda)
 
 allows you to quickly see tasks due this week, or browse to any other point in time.
 
-* 5pm
+** 5pm
 
 http://www.5pmweb.com/
 
-** Email to 5pm
+*** Email to 5pm
 
 - project name
 - start date
@@ -704,11 +846,11 @@ http://www.5pmweb.com/
 - priority (low, normal, high, urgent)
 - progress
 
-* Wrike
+** Wrike
 
 http://www.wrike.com/
 
-* Do
+** Do
 
 https://do.com/
 
@@ -721,57 +863,27 @@ https://do.com/
 4. Contacts
 5. Deals (worth $123): LEAD, QUALIFIED, QUOTE, NEGOTIATE, CLOSE
 
-* BugNET
+** BugNET
 
-* Kinkless
+** Kinkless
 
 http://www.youtube.com/watch?v=6YW-c9-az7Y
 - Twin button to switch betwen "context view" and "project view"
 - Archive when DONE since 1+ day
 
-* TickTick
-
-http://ticktick.com/
-
-* Midgnight Inbox
+** Midgnight Inbox
 
 http://www.midnightbeep.com/
 
-* Smartytask for GTD
+** Smartytask for GTD
 
 http://www.smartytask.com/tour/
 
-* Toodledo
-
-Task Status:
-- Planning
-- Active
-- Waiting
-- Canceled
-- Reference
-- Delegated
-- Next Action
-- Hold
-- (None)
-
-Contexts:
-- Work
-- Home
-- Out
-- (No Context)
-
-Some Folders:
-- Chores [Daily or routine domestic tasks]
-- Work
-- Vacation Planning
-- Home Repairs
-- Shopping
-
-* Jume.in
+** Jume.in
 
 When creating new things to do, add your tasks to the sentence "I want to...".
 
-* ThinkingRock
+** ThinkingRock
 
 Processing thoughts...
 
@@ -805,7 +917,7 @@ installation:
 - All Actions
 - Done
 
-* OmniFocus
+** OmniFocus
 
 I have OmniFocus set up with the following *areas* (contexts):
 
@@ -828,18 +940,18 @@ I have OmniFocus set up with the following *areas* (contexts):
 From the page [[http://www.davidco.com/forum/showthread.php?8781-Omnifocus/page4][Omnifocus]]
 [2010-04-28 Wed]
 
-* TaskPaper
+** TaskPaper
 
 Inside Projects, you have:
 - Tasks (actions that you must take to complete project)
 - Notes (extra information related to a project or task)
 
-* Tracks
+** Tracks
 
 See http://getontracks.org/images/uploads/tracks_project_page.png
 for inspiration about colors, etc.
 
-* Basecamp
+** Basecamp
 
 Headings:
 - Overview
@@ -855,13 +967,13 @@ On the right side:
 - People & Permissions
 - Search
 
-* TiddlyWiki based GTD systems
+** TiddlyWiki based GTD systems
 
 http://www.tiddlywiki.com/
 
-** GTD TiddlyWiki
+*** GTD TiddlyWiki
 
-** MPTW (MonkeyPirateTiddlyWiki)
+*** MPTW (MonkeyPirateTiddlyWiki)
 
 http://mptw.tiddlyspot.com/
 
@@ -889,7 +1001,7 @@ http://mptw.tiddlyspot.com/
 - realm :: Is a way to group/select all related /projects/ and /actions/ in one
            go.
 
-** mGSD
+*** mGSD
 
 - http://mgsd.tiddlyspot.com/demo3.html
 - http://thinkcreatesolve.biz/mGSDEnhancements.html
@@ -914,9 +1026,9 @@ Areas:
 - Home Maintenance
 - Recreation
 
-** D-cubed
+*** D-cubed
 
-** tbGTD
+*** tbGTD
 
 http://tbgtd.tiddlyspot.com/
 
@@ -978,11 +1090,11 @@ contact (?):
 - tech
 - work
 
-** TeamTasks
+*** TeamTasks
 
 http://teamtasks.tiddlyspace.com/
 
-* Nozbe
+** Nozbe
 
 They have projects at level-1.
 At level-2:
@@ -990,7 +1102,7 @@ At level-2:
 - Notes
 - Files
 
-* DGT Task Manager
+** DGT Task Manager
 
 See http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
 
@@ -998,23 +1110,23 @@ See http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=
 - In all lists, you see the number of items overdue and the total number of
   items: 3/27
 
-* 2Do
+** 2Do
 
 http://www.2doapp.com/
 
-* Podio.com
+** Podio.com
 
 https://podio.com/
 
 https://help.podio.com/hc/en-us/articles/201020248-Quick-Start-Guide-to-Project-Management
 
-* Trello
+** Trello
 
 Pas mal...
 
-* Atlassian
+** Atlassian
 
-** Confluence
+*** Confluence
 
 http://www.atlassian.com/software/confluence/overview
 
@@ -1049,7 +1161,7 @@ Typical "*Meeting Notes* - <date>"
 - Meeting Agenda
 - Actions Items for Next Week
 
-*** Advanced topics
+**** Advanced topics
 
 - Creating pages and linking
 - Formatting content
@@ -1062,11 +1174,11 @@ Typical "*Meeting Notes* - <date>"
 - Displaying source code
 - Archiving email
 
-*** Videos
+**** Videos
 
 http://quickstart.atlassian.com/ondemand/confluence/ninja-training/confluence-ninja/black-belt/
 
-** Jira
+*** Jira
 
 http://www.youtube.com/embed/MTvEudE4WWA?autoplay=1&rel=0&wmode=transparent
 
@@ -1084,15 +1196,15 @@ Session (at 4:34):
 - Started (Orange)
 - Completed (Green)
 
-** GreenHopper
+*** GreenHopper
 
 http://www.atlassian.com/software/greenhopper/overview
 
-** Conclusions
+*** Conclusions
 
 What's clear is that TODO color must be different from STARTED...
 
-** Jira and Greenhopper (from Peter Ross)                                :mail:
+*** Jira and Greenhopper (from Peter Ross)                               :mail:
    [2013-01-31 Thu 06:01]
 
 #+begin_verse
@@ -1109,71 +1221,3 @@ You can purchase them for $10 for up to 10 users.
 #+end_verse
 
 From [[gnus:nnimap%2Bmc:INBOX.mc#CAOotw2%3DE69_vt31KxUrfWtV6WTo0iFiE12d9cmPMMN3t8iAwPA@mail.gmail.com][Email from Peter Ross: {mct} jira and grasshopper]]
-
-** [[https://www.azendoo.com/][Azendoo]]
-
-Azendoo provides easy ways to organize your work, *without "work about work"*.
-
-Tasks can be planned to be worked:
-- on a *specific day*, making it a *priority* task on that specific day,
-- *anytime in a week*, making it a *planned* task or
-- for *someday*, making it an *unorganized* task.
-
-Tasks sometimes need some more details to be completed.  You may add checkboxes
-*subtasks* to a task's description.
-
-Workspaces (= Org files) are where people work on Subjects (like projects,
-customers, departments, products, events, meetings, or anything you want) and
-choose how involved they are in each.
-
-A new task is (by default) scheduled (= work planned) for today.
-
-Task views:
-
-- All
-
-  All unfinished tasks, for everybody in my team:
-  + Sorted by scheduled date
-  + Someday for all the unscheduled tasks
-
-- Planner (= My Tasks)
-
-  All my unfinished and finished tasks:
-  + Sorted per day, by scheduled date, for the coming 7 days \\
-  + Sorted per week, by scheduled date, for the coming 4 weeks
-
-- With a due date
-
-  All finished tasks, sorted by target date (= deadline)
-
-- Now
-
-  All my unfinished and finished tasks, scheduled for today (unfinished + finished)
-
-- Assigned to me
-
-  + Assigned to me and unfinished (sorted by 'work planned' date)
-  + Assigned to me and finished (sorted by completion date)
-
-- Someday (= Tasks to organize)
-
-- Finished
-
-  All finished tasks
-
-- Sent
-
-  All tasks assigned to somebody
-
-- Sent and finished
-
-  All tasks assigned to somebody and finished
-
-Your *daily planner* (daily productivity list) =
-- Your tasks scheduled for today
-- Your tasks scheduled to do anytime this week
-
-Informations visible in the lists:
-- Assignee (profile picture)
-- Task label
-- Due date
