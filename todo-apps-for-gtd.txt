@@ -1,7 +1,6 @@
 #+TITLE:     Todo apps for getting tasks done
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-# #+Time-stamp: <2014-07-30 Wed 16:29>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -338,14 +337,16 @@ Tasks can be planned to be worked:
 - *anytime in a week*, making it a *planned* task or
 - for *someday*, making it an *unorganized* task.
 
+*A new task is (by default) scheduled (= work planned) for today!*
+
+    Un-SCHEDULE'ing it means setting it as SOMEDAY.
+
 Tasks sometimes need some more details to be completed.  You may add checkboxes
 *subtasks* to a task's description.
 
 Workspaces (= Org files) are where people work on Subjects (like projects,
 customers, departments, products, events, meetings, or anything you want) and
 choose how involved they are in each.
-
-A new task is (by default) scheduled (= work planned) for today.
 
 Task views:
 
