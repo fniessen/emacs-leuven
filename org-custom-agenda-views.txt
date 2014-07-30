@@ -128,7 +128,7 @@ The CollectBox is the default place where you collect your thoughts.
 #+begin_src emacs-lisp
     ;; CollectBox
     (add-to-list 'org-agenda-custom-commands
-                 `("cd" "CollectBox"
+                 `("cb" "CollectBox"
                    alltodo ""
                    ((org-agenda-files (list ,org-default-notes-file)))) t)
 #+end_src
@@ -144,8 +144,11 @@ The CollectBox is the default place where you collect your thoughts.
 
 FIXME Add calendar events for today, calendar events for tomorrow and scheduled for today?
 
-Completed tasks can be "in review" or "need verification", that's why they have
-their own section.
+Completed tasks stay displayed in their own section until the end of the day,
+because:
+
+- they can be "in review" or "need verification", and
+- it allows you to gain momentum while completing tasks.
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -1017,13 +1020,20 @@ See other people's tasks.
 
 ** Tasks by assignee
 
+* EMAIL notifications
+
 ** Email list
+
+You can receive an email with your daily planner every morning at 8:00 AM to
+help you getting started in the morning.
 
 *************** TODO Have the hotlist emailed to you each day
 
 See http://www.randomsample.de/dru5/node/61
 
 : /usr/bin/yes p | /usr/local/bin/emacs -batch -l ~/.emacs -eval '(org-batch-agenda "#")' 2>/dev/null | /usr/bin/mailx -s'Stuck projects' me@example.com
+
+* EXPORT
 
 ** Print list
 
@@ -1079,6 +1089,8 @@ http://orgmode.org/w/?p=org-mode.git;a=blob;f=contrib/scripts/org2hpda;hb=HEAD
 
 You can save any list or agenda view as PDF by writing it to a file (via
 =C-x C-w=).
+
+** Export tasks lists as CSV files
 
 * ARCHIVE
 

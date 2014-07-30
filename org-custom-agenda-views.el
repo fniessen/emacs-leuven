@@ -28,7 +28,7 @@
 
     ;; CollectBox
     (add-to-list 'org-agenda-custom-commands
-                 `("cd" "CollectBox"
+                 `("cb" "CollectBox"
                    alltodo ""
                    ((org-agenda-files (list ,org-default-notes-file)))) t)
 

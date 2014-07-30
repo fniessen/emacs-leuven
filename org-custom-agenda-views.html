@@ -140,54 +140,68 @@
               <li><a href="#sec-7-1">Assigned to me</a></li>
 
               <li><a href="#sec-7-2">Tasks by assignee</a></li>
-
-              <li><a href="#sec-7-3">Email list</a></li>
-
-              <li><a href="#sec-7-4">Print list</a></li>
-            </ul>
-          </li>
-
-          <li><a href="#sec-8">ARCHIVE</a></li>
-
-          <li>
-            <a href="#sec-9">REFERENCE</a>
-
-            <ul>
-              <li><a href="#sec-9-1">Search</a></li>
-
-              <li><a href="#sec-9-2">Notes</a></li>
-            </ul>
-          </li>
-
-          <li><a href="#sec-10">Task markers (in the current buffer)</a></li>
-
-          <li><a href="#sec-11">Buggy commands</a></li>
-
-          <li><a href="#sec-12">Unused code</a></li>
-
-          <li><a href="#sec-13">Test cases</a></li>
-
-          <li>
-            <a href="#sec-14">Org mode</a>
-
-            <ul>
-              <li><a href="#sec-14-1">Lists</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#sec-15">Tips and tricks</a>
+            <a href="#sec-8">EMAIL notifications</a>
 
             <ul>
-              <li><a href="#sec-15-1">DEADLINE</a></li>
-
-              <li><a href="#sec-15-2">Tasks with a time component</a></li>
-
-              <li><a href="#sec-15-3">Cas d’erreurs</a></li>
+              <li><a href="#sec-8-1">Email list</a></li>
             </ul>
           </li>
 
-          <li><a href="#sec-16">Footer</a></li>
+          <li>
+            <a href="#sec-9">EXPORT</a>
+
+            <ul>
+              <li><a href="#sec-9-1">Print list</a></li>
+
+              <li><a href="#sec-9-2">Export tasks lists as CSV files</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#sec-10">ARCHIVE</a></li>
+
+          <li>
+            <a href="#sec-11">REFERENCE</a>
+
+            <ul>
+              <li><a href="#sec-11-1">Search</a></li>
+
+              <li><a href="#sec-11-2">Notes</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#sec-12">Task markers (in the current buffer)</a></li>
+
+          <li><a href="#sec-13">Buggy commands</a></li>
+
+          <li><a href="#sec-14">Unused code</a></li>
+
+          <li><a href="#sec-15">Test cases</a></li>
+
+          <li>
+            <a href="#sec-16">Org mode</a>
+
+            <ul>
+              <li><a href="#sec-16-1">Lists</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <a href="#sec-17">Tips and tricks</a>
+
+            <ul>
+              <li><a href="#sec-17-1">DEADLINE</a></li>
+
+              <li><a href="#sec-17-2">Tasks with a time component</a></li>
+
+              <li><a href="#sec-17-3">Cas d’erreurs</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#sec-18">Footer</a></li>
         </ul>
       </div>
     </div>
@@ -362,7 +376,7 @@
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">CollectBox</span>
     (add-to-list 'org-agenda-custom-commands
-                 `(<span class="org-string">"cd"</span> <span class=
+                 `(<span class="org-string">"cb"</span> <span class=
 "org-string">"CollectBox"</span>
                    alltodo <span class="org-string">""</span>
                    ((org-agenda-files (list ,org-default-notes-file)))) t)
@@ -392,8 +406,14 @@
           <p>FIXME Add calendar events for today, calendar events for tomorrow
           and scheduled for today?</p>
 
-          <p>Completed tasks can be “in review” or “need verification”, that’s
-          why they have their own section.</p>
+          <p>Completed tasks stay displayed in their own section until the end
+          of the day, because:</p>
+
+          <ul class="org-ul">
+            <li>they can be “in review” or “need verification”, and</li>
+
+            <li>it allows you to gain momentum while completing tasks.</li>
+          </ul>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -1876,11 +1896,20 @@
       <div id="outline-container-sec-" class="outline-3">
         <h3 id="sec-">Tasks by assignee</h3>
       </div>
+    </div>
+
+    <div id="outline-container-sec-" class="outline-2">
+      <h2 id="sec-">EMAIL notifications</h2>
+
+      <div class="outline-text-2" id="text-8"></div>
 
       <div id="outline-container-sec-" class="outline-3">
         <h3 id="sec-">Email list</h3>
 
-        <div class="outline-text-3" id="text-7-3">
+        <div class="outline-text-3" id="text-8-1">
+          <p>You can receive an email with your daily planner every morning at
+          8:00 AM to help you getting started in the morning.</p>
+
           <table class="inlinetask" width="100%">
             <tr>
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
@@ -1897,11 +1926,17 @@
 </pre>
         </div>
       </div>
+    </div>
+
+    <div id="outline-container-sec-" class="outline-2">
+      <h2 id="sec-">EXPORT</h2>
+
+      <div class="outline-text-2" id="text-9"></div>
 
       <div id="outline-container-sec-" class="outline-3">
         <h3 id="sec-">Print list</h3>
 
-        <div class="outline-text-3" id="text-7-4">
+        <div class="outline-text-3" id="text-9-1">
           <p>The <b>exported agenda views</b> are not <b>stored</b> when you
           use one of those commands interactively because this might use too
           much overhead. Instead, there is a special command to produce all
@@ -1977,12 +2012,16 @@
           file (via <code>C-x C-w</code>).</p>
         </div>
       </div>
+
+      <div id="outline-container-sec-" class="outline-3">
+        <h3 id="sec-">Export tasks lists as CSV files</h3>
+      </div>
     </div>
 
     <div id="outline-container-sec-" class="outline-2">
       <h2 id="sec-">ARCHIVE</h2>
 
-      <div class="outline-text-2" id="text-8">
+      <div class="outline-text-2" id="text-10">
         <p>Archiving a project (or action) consists in hiding its contents from
         view (and from search?).</p>
 
@@ -2013,7 +2052,7 @@
     <div id="outline-container-sec-" class="outline-2">
       <h2 id="sec-">REFERENCE</h2>
 
-      <div class="outline-text-2" id="text-9">
+      <div class="outline-text-2" id="text-11">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
     (add-to-list 'org-agenda-custom-commands
@@ -2026,7 +2065,7 @@
       <div id="outline-container-sec-" class="outline-3">
         <h3 id="sec-">Search</h3>
 
-        <div class="outline-text-3" id="text-9-1">
+        <div class="outline-text-3" id="text-11-1">
           <p>Search any word or regexp within your task name or in the note
           field:</p>
 
@@ -2074,7 +2113,7 @@
       <div id="outline-container-sec-" class="outline-3">
         <h3 id="sec-">Notes</h3>
 
-        <div class="outline-text-3" id="text-9-2">
+        <div class="outline-text-3" id="text-11-2">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
     (add-to-list 'org-agenda-custom-commands
@@ -2092,7 +2131,7 @@
     <div id="outline-container-sec-" class="outline-2">
       <h2 id="sec-">Task markers (in the current buffer)</h2>
 
-      <div class="outline-text-2" id="text-10">
+      <div class="outline-text-2" id="text-12">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
@@ -2132,7 +2171,7 @@
     <div id="outline-container-sec-" class="outline-2">
       <h2 id="sec-">Buggy commands</h2>
 
-      <div class="outline-text-2" id="text-11">
+      <div class="outline-text-2" id="text-13">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
     (add-to-list 'org-agenda-custom-commands
@@ -2254,7 +2293,7 @@
     <div id="outline-container-sec-" class="outline-2">
       <h2 id="sec-">Unused code</h2>
 
-      <div class="outline-text-2" id="text-12">
+      <div class="outline-text-2" id="text-14">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   (<span class="org-string">"d"</span> <span class=
@@ -2354,7 +2393,7 @@
     <div id="outline-container-sec-" class="outline-2">
       <h2 id="sec-">Test cases</h2>
 
-      <div class="outline-text-2" id="text-13">
+      <div class="outline-text-2" id="text-15">
         <ul class="org-ul">
           <li>
             <p>Entries with no TODO keyword, but well with a DEADLINE.</p>
@@ -2392,12 +2431,12 @@
     <div id="outline-container-sec-" class="outline-2">
       <h2 id="sec-">Org mode</h2>
 
-      <div class="outline-text-2" id="text-14"></div>
+      <div class="outline-text-2" id="text-16"></div>
 
       <div id="outline-container-sec-" class="outline-3">
         <h3 id="sec-">Lists</h3>
 
-        <div class="outline-text-3" id="text-14-1">
+        <div class="outline-text-3" id="text-16-1">
           <ol class="org-ol">
             <li>Inbox</li>
 
@@ -2664,12 +2703,12 @@
     <div id="outline-container-sec-" class="outline-2">
       <h2 id="sec-">Tips and tricks</h2>
 
-      <div class="outline-text-2" id="text-15"></div>
+      <div class="outline-text-2" id="text-17"></div>
 
       <div id="outline-container-sec-" class="outline-3">
         <h3 id="sec-">DEADLINE</h3>
 
-        <div class="outline-text-3" id="text-15-1">
+        <div class="outline-text-3" id="text-17-1">
           <p>Writing <code>DEADLINE={}</code> is wrong. You must write:</p>
           <pre class="example">
 DEADLINE=""
@@ -2680,7 +2719,7 @@ DEADLINE=""
       <div id="outline-container-sec-" class="outline-3">
         <h3 id="sec-">Tasks with a time component</h3>
 
-        <div class="outline-text-3" id="text-15-2">
+        <div class="outline-text-3" id="text-17-2">
           <p>To be sure to get tasks with a time component in the lists,
           use</p>
 
@@ -2695,7 +2734,7 @@ DEADLINE=""
       <div id="outline-container-sec-" class="outline-3">
         <h3 id="sec-">Cas d’erreurs</h3>
 
-        <div class="outline-text-3" id="text-15-3">
+        <div class="outline-text-3" id="text-17-3">
           <table border="2" cellspacing="0" cellpadding="6" rules="groups"
           frame="hsides">
             <colgroup>
@@ -2749,7 +2788,7 @@ DEADLINE=""
     <div id="outline-container-sec-" class="outline-2">
       <h2 id="sec-">Footer</h2>
 
-      <div class="outline-text-2" id="text-16">
+      <div class="outline-text-2" id="text-18">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (<span class="org-keyword">provide</span> '<span class=
