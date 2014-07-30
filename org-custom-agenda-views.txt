@@ -1022,6 +1022,21 @@ See other people's tasks.
 
 * EMAIL notifications
 
+** Task assigned
+
+#+begin_src text :tangle no
+    Azendoo | Notification
+---------------------------------------
+
+Task label
+
+
+Check it out : http://app.azendoo.com/tasks/53d8b82f64594a5a270001f5
+
+
+This notification has been sent to you via Azendoo, do not reply.
+#+end_src
+
 ** Email list
 
 You can receive an email with your daily planner every morning at 8:00 AM to
