@@ -6752,7 +6752,7 @@ on my machine's current temporal and physical context.
 
   (setq org-agenda-block-separator
         #("____________________________________________________________________________________________________________________________________"
-          0 132 (face (:foreground "#E5E5E5"))))
+          0 132 (face (:foreground "#59ACE2")))) ; lighter version with #C0E2F4
         ;; (make-string 132 (string-to-char "_"))
 #+end_src
 

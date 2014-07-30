@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140730.1200
+;; Version: 20140730.1414
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140730.1200]--")
+(message "* --[ Loading Emacs Leuven 20140730.1414]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4421,7 +4421,7 @@ From %c"
 
   (setq org-agenda-block-separator
         #("____________________________________________________________________________________________________________________________________"
-          0 132 (face (:foreground "#E5E5E5"))))
+          0 132 (face (:foreground "#59ACE2")))) ; lighter version with #C0E2F4
         ;; (make-string 132 (string-to-char "_"))
 
 ;;** 10.6 (info "(org)Custom agenda views")
@@ -8707,7 +8707,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140730.1201]--")
+(message "* --[ Loaded Emacs Leuven 20140730.1415]--")
 
 (provide 'emacs-leuven)
 
