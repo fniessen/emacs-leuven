@@ -46,15 +46,11 @@ Overall count: 6 projects.
 
   ;; display the calendar and tasks for today
   (global-set-key
-    (kbd "<f7>") (kbd "C-c a r d"))
+    (kbd "<f7>") (kbd "C-c a f ."))
 
   ;; display the hotlist
   (global-set-key
-    (kbd "<S-f7>") (kbd "C-c a f ."))
-
-  ;; display TODO entries
-  (global-set-key
-    (kbd "<C-f7>") (kbd "C-c a f h"))
+    (kbd "<S-f7>") (kbd "C-c a f h"))
 
   ;; display calendar for 7 days
   (global-set-key
