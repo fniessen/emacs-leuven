@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140725.0943
+;; Version: 20140730.1200
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140725.0943]--")
+(message "* --[ Loading Emacs Leuven 20140730.1200]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3380,7 +3380,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; list of TODO entry keyword sequences (+ fast access keys and specifiers
   ;; for state change logging)
   (setq org-todo-keywords
-        '((sequence "NEW(n!)"           ; proposal, idea
+        '((sequence "NEW(n!)"           ; proposal, idea (under review)
                     "TODO(t!)"          ; open, not (yet) started
                     "STRT(s!)"          ; in progress, working on, doing
                     "WAIT(w!)"          ; on hold, assigned, feedback
@@ -4356,9 +4356,9 @@ From %c"
 
   ;; faces for specific Priorities (#A, #B and #C)
   (setq org-priority-faces
-        '((?A . (:weight bold :foreground "#F92F50"))
-          (?B . (:weight bold :foreground "#FBAA44"))
-          (?C . (:slant italic :foreground "#90ABD6"))))
+        '((?A . (:weight bold :foreground "#5F3731" :background "#EFC4C0"))
+          (?B . (:foreground "#475443" :background "#D5E1D0"))
+          (?C . (:foreground "#2D373F" :background "#C9DBE3"))))
 
   ;; 10.5 Commands in the agenda buffer
   (defun leuven--weekday-p ()
@@ -5039,7 +5039,10 @@ From %c"
 
     ;; make the images in the Emacs buffer automatically refresh after
     ;; execution
-    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+    (add-hook 'org-babel-after-execute-hook
+              (lambda ()
+                (org-display-inline-images nil t)))
+                                        ; more efficient with refresh == t
 
     (defadvice org-babel-next-src-block
       (after leuven-org-babel-next-src-block activate)
@@ -5292,7 +5295,17 @@ From %c"
     (setq org-use-speed-commands t)
 
     (add-to-list 'org-speed-commands-user '("d" org-todo "DONE"))
-    (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE")))
+    (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE"))
+
+    (setq w32-pass-apps-to-system nil)
+    (setq w32-apps-modifier 'hyper) ; Apps key
+
+    (define-key org-mode-map
+      (kbd "H-e") 'org-babel-execute-maybe)
+    (define-key org-mode-map
+      (kbd "H-t") 'org-babel-tangle)
+
+    )
 
 ;;** 15.4 (info "(org)Code evaluation security") issues
 
@@ -5356,6 +5369,31 @@ From %c"
 
       ;; which tag is used to mark headings to be encrypted
       (setq org-tags-exclude-from-inheritance '("crypt"))))
+
+  (defun leuven-scramble-contents ()
+    (interactive)
+    (let ((tree (org-element-parse-buffer)))
+      (org-element-map tree '(code comment comment-block example-block fixed-width
+                                   keyword link node-property plain-text verbatim)
+        (lambda (obj)
+          (case (org-element-type obj)
+            ((code comment comment-block example-block fixed-width keyword
+                   node-property verbatim)
+             (let ((value (org-element-property :value obj)))
+               (org-element-put-property
+                obj :value (replace-regexp-in-string "[[:alnum:]]" "x" value))))
+            (link
+             (unless (string= (org-element-property :type obj) "radio")
+               (org-element-put-property obj :raw-link "http://orgmode.org")))
+            (plain-text
+             (org-element-set-element
+              obj (replace-regexp-in-string "[[:alnum:]]" "x" obj)))))
+        nil nil nil t)
+      (let ((buffer (get-buffer-create "*Scrambled text*")))
+        (with-current-buffer buffer
+          (insert (org-element-interpret-data tree))
+          (goto-char (point-min)))
+        (switch-to-buffer buffer))))
 
   ;; don't pad tangled code with newlines
   (setq org-babel-tangle-pad-newline nil)
@@ -6701,22 +6739,22 @@ From %c"
         (message "(Error) Org is already loaded -> Too late to init YASnippet!")
         (sit-for 3))
 
-      (defun yas/org-very-safe-expand ()
-        (let ((yas/fallback-behavior 'return-nil))
-          (yas/expand)))
+      (defun yas-org-very-safe-expand ()
+        (let ((yas-fallback-behavior 'return-nil))
+          (yas-expand)))
 
       ;; allow YASnippet to do its thing in Org files
       (add-hook 'org-mode-hook
                 (lambda ()
                   ;; YASnippet (using the new org-cycle hooks)
                   (add-to-list 'org-tab-first-hook
-                               'yas/org-very-safe-expand)
+                               'yas-org-very-safe-expand)
 
                   ;; When enabled, problem with inserting letter `t' in
                   ;; YASnippet fields
-                  ;; (define-key yas/keymap
-                  ;;   (kbd "tab") 'yas/next-field)
-                                        ; `yas/next-field-or-maybe-expand'?
+                  ;; (define-key yas-keymap
+                  ;;   (kbd "tab") 'yas-next-field)
+                                        ; `yas-next-field-or-maybe-expand'?
                   ))
 
       (defvar leuven-yasnippet-my-snippets-dir
@@ -6805,7 +6843,7 @@ From %c"
     (with-eval-after-load "yasnippet"
 
       (add-to-list 'hippie-expand-try-functions-list
-                    'yas/hippie-try-expand)))
+                    'yas-hippie-try-expand)))
 
   (GNUEmacs
 
@@ -8669,7 +8707,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140725.0943]--")
+(message "* --[ Loaded Emacs Leuven 20140730.1201]--")
 
 (provide 'emacs-leuven)
 

@@ -5308,7 +5308,7 @@ verified before really closing the task.
   ;; list of TODO entry keyword sequences (+ fast access keys and specifiers
   ;; for state change logging)
   (setq org-todo-keywords
-        '((sequence "NEW(n!)"           ; proposal, idea
+        '((sequence "NEW(n!)"           ; proposal, idea (under review)
                     "TODO(t!)"          ; open, not (yet) started
                     "STRT(s!)"          ; in progress, working on, doing
                     "WAIT(w!)"          ; on hold, assigned, feedback
@@ -5963,7 +5963,7 @@ Find a location for refiling on capture.
       (org-forward-heading-same-level 1))
 #+end_src
 
-**** Email-to-Org
+**** TODO Email-to-task
 
 Instantly *create tasks* and notes *from emails*, with a *link* back *to the emails*.
 
@@ -5979,10 +5979,10 @@ The following rules will apply to interpret an email to a task:
      Task assignee(s).
 
 - Email body (or selected region) ::
-     Task description / notes.
+     Inserted into the task's description.
 
 - Email attachment(s) ::
-     Task attachment(s).
+     Inserted as task's attachment(s).
 
      XXX Wouldn't it be great if files attached to email can be quickly added
      to the tasks or projects you create?
@@ -6645,9 +6645,9 @@ If you press ~E~, it will *show* the *first notes* about the tasks.
 
   ;; faces for specific Priorities (#A, #B and #C)
   (setq org-priority-faces
-        '((?A . (:weight bold :foreground "#F92F50"))
-          (?B . (:weight bold :foreground "#FBAA44"))
-          (?C . (:slant italic :foreground "#90ABD6"))))
+        '((?A . (:weight bold :foreground "#5F3731" :background "#EFC4C0"))
+          (?B . (:foreground "#475443" :background "#D5E1D0"))
+          (?C . (:foreground "#2D373F" :background "#C9DBE3"))))
 #+end_src
 
 Contextual auto-exclusion for tags in the Agenda view.  For example, I use the
@@ -7642,10 +7642,18 @@ Literate programming and reproducible research.
 ;;* 14 (info "(org)Working With Source Code")
 
   (with-eval-after-load "ob-core"
+#+end_src
 
+Automate the redisplay of inline images, so that the images are always
+up-to-date.
+
+#+begin_src emacs-lisp
     ;; make the images in the Emacs buffer automatically refresh after
     ;; execution
-    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+    (add-hook 'org-babel-after-execute-hook
+              (lambda ()
+                (org-display-inline-images nil t)))
+                                        ; more efficient with refresh == t
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8024,7 +8032,24 @@ For navigating blocks:
     (setq org-use-speed-commands t)
 
     (add-to-list 'org-speed-commands-user '("d" org-todo "DONE"))
-    (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE")))
+    (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE"))
+#+end_src
+
+**** Convert Windows Apps key to Hyper
+
+Here are more obvious key bindings (than ~C-c C-v C-e~ and company) using
+"hyper":
+
+#+begin_src emacs-lisp
+    (setq w32-pass-apps-to-system nil)
+    (setq w32-apps-modifier 'hyper) ; Apps key
+
+    (define-key org-mode-map
+      (kbd "H-e") 'org-babel-execute-maybe)
+    (define-key org-mode-map
+      (kbd "H-t") 'org-babel-tangle)
+
+    )
 #+end_src
 
 *** Code evaluation and security issues
@@ -8123,6 +8148,35 @@ C-r~ (fits nicely with the meaning of "reveal").
 
 ** Other
 
+Anonymize Org contents.
+
+#+begin_src emacs-lisp
+  (defun leuven-scramble-contents ()
+    (interactive)
+    (let ((tree (org-element-parse-buffer)))
+      (org-element-map tree '(code comment comment-block example-block fixed-width
+                                   keyword link node-property plain-text verbatim)
+        (lambda (obj)
+          (case (org-element-type obj)
+            ((code comment comment-block example-block fixed-width keyword
+                   node-property verbatim)
+             (let ((value (org-element-property :value obj)))
+               (org-element-put-property
+                obj :value (replace-regexp-in-string "[[:alnum:]]" "x" value))))
+            (link
+             (unless (string= (org-element-property :type obj) "radio")
+               (org-element-put-property obj :raw-link "http://orgmode.org")))
+            (plain-text
+             (org-element-set-element
+              obj (replace-regexp-in-string "[[:alnum:]]" "x" obj)))))
+        nil nil nil t)
+      (let ((buffer (get-buffer-create "*Scrambled text*")))
+        (with-current-buffer buffer
+          (insert (org-element-interpret-data tree))
+          (goto-char (point-min)))
+        (switch-to-buffer buffer))))
+#+end_src
+
 #+begin_src emacs-lisp
   ;; don't pad tangled code with newlines
   (setq org-babel-tangle-pad-newline nil)
@@ -8174,6 +8228,22 @@ C-r~ (fits nicely with the meaning of "reveal").
            match)))))
 
   (add-hook 'org-export-preprocess-hook 'leuven--org-export-preprocess-hook)
+#+end_src
+
+Promote ignoreheading. Works in ASCII backend too:
+
+#+begin_src emacs-lisp :tangle no
+  (defun yz/org-export-ignore-headline (backend)
+    "Ignore headlines with tag `ignoreheading'."
+    (save-excursion
+      (let ((org-allow-promoting-top-level-subtree t))
+        (org-map-entries
+         (lambda ()
+           (when (member "ignoreheading" (org-get-tags-at nil 'local))
+             (org-promote-subtree)
+             (delete-region (line-beginning-position) (line-end-position))))))))
+
+  (add-hook 'org-export-before-parsing-hook 'yz/org-export-ignore-headline)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -10491,22 +10561,22 @@ See [[id:366386cb-9c4f-4d61-b676-e742e6277587][Interaction between Org and other
         (message "(Error) Org is already loaded -> Too late to init YASnippet!")
         (sit-for 3))
 
-      (defun yas/org-very-safe-expand ()
-        (let ((yas/fallback-behavior 'return-nil))
-          (yas/expand)))
+      (defun yas-org-very-safe-expand ()
+        (let ((yas-fallback-behavior 'return-nil))
+          (yas-expand)))
 
       ;; allow YASnippet to do its thing in Org files
       (add-hook 'org-mode-hook
                 (lambda ()
                   ;; YASnippet (using the new org-cycle hooks)
                   (add-to-list 'org-tab-first-hook
-                               'yas/org-very-safe-expand)
+                               'yas-org-very-safe-expand)
 
                   ;; When enabled, problem with inserting letter `t' in
                   ;; YASnippet fields
-                  ;; (define-key yas/keymap
-                  ;;   (kbd "tab") 'yas/next-field)
-                                        ; `yas/next-field-or-maybe-expand'?
+                  ;; (define-key yas-keymap
+                  ;;   (kbd "tab") 'yas-next-field)
+                                        ; `yas-next-field-or-maybe-expand'?
                   ))
 #+end_src
 
@@ -10639,7 +10709,7 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
     (with-eval-after-load "yasnippet"
 
       (add-to-list 'hippie-expand-try-functions-list
-                    'yas/hippie-try-expand)))
+                    'yas-hippie-try-expand)))
 #+end_src
 
 *** Auto-Complete ("IntelliSensy" completion when writing code)
