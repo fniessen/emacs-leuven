@@ -420,13 +420,24 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
     (add-to-list 'org-agenda-custom-commands
-                 '(<span class="org-string">"f."</span> <span class=
+                 `(<span class="org-string">"f."</span> <span class=
 "org-string">"Today"</span>
-                   <span class="org-comment-delimiter">;; </span><span class=
+                   (
+                    (agenda <span class="org-string">""</span>
+                            ((org-agenda-entry-types '(<span class=
+"org-builtin">:timestamp</span> <span class="org-builtin">:sexp</span>))
+                             (org-agenda-overriding-header <span class=
+"org-string">"CALENDAR"</span>)
+                             (org-agenda-span 'day)))
+                    (tags <span class="org-string">"LEVEL=2"</span>
+                          ((org-agenda-overriding-header <span class=
+"org-string">"COLLECTBOX"</span>)
+                           (org-agenda-files (list ,org-default-notes-file))))
+                    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">list of all </span><span class="org-comment"><span class=
 "org-leuven-highlight">TODO</span></span><span class=
 "org-comment"> entries with deadline today</span>
-                   ((tags-todo <span class=
+                    (tags-todo <span class=
 "org-string">"DEADLINE=\"&lt;+0d&gt;\""</span>
                                ((org-agenda-overriding-header <span class=
 "org-string">"DUE TODAY"</span>)
@@ -444,6 +455,30 @@
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
+                    (agenda <span class="org-string">""</span>
+                            ((org-agenda-entry-types '(<span class=
+"org-builtin">:deadline</span>))
+                             (org-agenda-overriding-header <span class=
+"org-string">"DUE DATES"</span>)
+                             (org-agenda-skip-function
+                              '(org-agenda-skip-entry-if 'todo 'done))
+                             (org-agenda-sorting-strategy
+                              '(priority-down time-down))
+                             (org-agenda-span 'day)
+                             (org-agenda-start-on-weekday nil)
+                             (org-agenda-time-grid nil)))
+                    (agenda <span class="org-string">""</span>
+                            ((org-agenda-entry-types '(<span class=
+"org-builtin">:scheduled</span>))
+                             (org-agenda-overriding-header <span class=
+"org-string">"SCHEDULED"</span>)
+                             (org-agenda-skip-function
+                              '(org-agenda-skip-entry-if 'todo 'done))
+                             (org-agenda-sorting-strategy
+                              '(priority-down time-down))
+                             (org-agenda-span 'day)
+                             (org-agenda-start-on-weekday nil)
+                             (org-agenda-time-grid nil)))
                     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">list of all </span><span class="org-comment"><span class=
 "org-leuven-highlight">TODO</span></span><span class=
@@ -516,7 +551,9 @@
 "org-string"><span class=
 "org-regexp-grouping-construct">)</span></span><span class=
 "org-string"> "</span>))))
-                                (org-agenda-sorting-strategy '(priority-down)))))) t)
+                                (org-agenda-sorting-strategy '(priority-down)))))
+                   ((org-agenda-format-date <span class="org-string">""</span>)
+                    (org-agenda-start-with-clockreport-mode nil))) t)
 </pre>
           </div>
 

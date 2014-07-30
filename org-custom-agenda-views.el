@@ -36,9 +36,17 @@
                  '("f" . "FOCUS...") t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("f." "Today"
-                   ;; list of all TODO entries with deadline today
-                   ((tags-todo "DEADLINE=\"<+0d>\""
+                 `("f." "Today"
+                   (
+                    (agenda ""
+                            ((org-agenda-entry-types '(:timestamp :sexp))
+                             (org-agenda-overriding-header "CALENDAR")
+                             (org-agenda-span 'day)))
+                    (tags "LEVEL=2"
+                          ((org-agenda-overriding-header "COLLECTBOX")
+                           (org-agenda-files (list ,org-default-notes-file))))
+                    ;; list of all TODO entries with deadline today
+                    (tags-todo "DEADLINE=\"<+0d>\""
                                ((org-agenda-overriding-header "DUE TODAY")
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if 'notdeadline))
@@ -49,6 +57,26 @@
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
+                    (agenda ""
+                            ((org-agenda-entry-types '(:deadline))
+                             (org-agenda-overriding-header "DUE DATES")
+                             (org-agenda-skip-function
+                              '(org-agenda-skip-entry-if 'todo 'done))
+                             (org-agenda-sorting-strategy
+                              '(priority-down time-down))
+                             (org-agenda-span 'day)
+                             (org-agenda-start-on-weekday nil)
+                             (org-agenda-time-grid nil)))
+                    (agenda ""
+                            ((org-agenda-entry-types '(:scheduled))
+                             (org-agenda-overriding-header "SCHEDULED")
+                             (org-agenda-skip-function
+                              '(org-agenda-skip-entry-if 'todo 'done))
+                             (org-agenda-sorting-strategy
+                              '(priority-down time-down))
+                             (org-agenda-span 'day)
+                             (org-agenda-start-on-weekday nil)
+                             (org-agenda-time-grid nil)))
                     ;; list of all TODO entries completed today
                     (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
                                ((org-agenda-overriding-header "COMPLETED TODAY")
@@ -64,7 +92,9 @@
                                      "\\|"
                                      "- State .* ->  *\"\\(DONE\\|CANX\\)\" * \\[%Y-%m-%d"
                                      "\\) "))))
-                                (org-agenda-sorting-strategy '(priority-down)))))) t)
+                                (org-agenda-sorting-strategy '(priority-down)))))
+                   ((org-agenda-format-date "")
+                    (org-agenda-start-with-clockreport-mode nil))) t)
 
     (add-to-list 'org-agenda-custom-commands
                 '("fc" "Closed this week (TEST)"
