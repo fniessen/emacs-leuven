@@ -1119,8 +1119,8 @@ You can save any list or agenda view as PDF by writing it to a file (via
 
 * ARCHIVE
 
-Archiving a project (or action) consists in hiding its contents from view (and
-from search?).
+Archiving a project (or action) consists in hiding its contents from view (NOT
+from search).
 
 Archive projects that have been completed or deferred, so you can focus on more
 active projects.
