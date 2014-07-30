@@ -485,39 +485,6 @@
                              (org-agenda-span 'day))))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 `("rd" "Daily review"
-                   ((tags "LEVEL=2"
-                          ((org-agenda-overriding-header "COLLECTBOX")
-                           (org-agenda-files (list ,org-default-notes-file))))
-                    (agenda ""
-                            ((org-agenda-entry-types '(:timestamp :sexp))
-                             (org-agenda-overriding-header "CALENDAR")
-                             (org-agenda-span 'day)))
-                    (agenda ""
-                            ((org-agenda-entry-types '(:deadline))
-                             (org-agenda-overriding-header "DUE DATES")
-                             (org-agenda-skip-function
-                              '(org-agenda-skip-entry-if 'todo 'done))
-                             (org-agenda-sorting-strategy
-                              '(priority-down time-down))
-                             (org-agenda-span 'day)
-                             (org-agenda-start-on-weekday nil)
-                             (org-agenda-time-grid nil)))
-                    (agenda ""
-                            ((org-agenda-entry-types '(:scheduled))
-                             (org-agenda-overriding-header "SCHEDULED")
-                             (org-agenda-skip-function
-                              '(org-agenda-skip-entry-if 'todo 'done))
-                             (org-agenda-sorting-strategy
-                              '(priority-down time-down))
-                             (org-agenda-span 'day)
-                             (org-agenda-start-on-weekday nil)
-                             (org-agenda-time-grid nil)))
-                    )
-                   ((org-agenda-format-date "")
-                    (org-agenda-start-with-clockreport-mode nil))) t)
-
-    (add-to-list 'org-agenda-custom-commands
                  '("rw" "Weekly review"
                    (
                     (tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"

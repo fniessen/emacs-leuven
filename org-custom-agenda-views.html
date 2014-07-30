@@ -408,6 +408,32 @@
           <p>FIXME Add calendar events for today, calendar events for tomorrow
           and scheduled for today?</p>
 
+          <p>An everyday objective should be to empty this list first, by any
+          mean. For example, start every morning by:</p>
+
+          <ul class="org-ul">
+            <li>
+              <p>scheduling tasks to another day if you already know it can’t
+              be completed before that date,</p>
+            </li>
+
+            <li>
+              <p>moving tasks to Someday if you just don’t know if/when it will
+              be completed</p>
+
+              <p>[This explanation assumes every task without a scheduled date
+              = someday task!]</p>
+            </li>
+
+            <li>
+              <p>delegating, and</p>
+            </li>
+
+            <li>
+              <p>of course completing tasks.</p>
+            </li>
+          </ul>
+
           <p>Completed tasks stay displayed in their own section until the end
           of the day, because:</p>
 
@@ -1568,67 +1594,31 @@
           <p>Take a moment to plan your day:</p>
 
           <ul class="org-ul">
-            <li>Recently created (actions = today, later, done, delete)</li>
+            <li>
+              <p>Recently created (possible actions: today, later, done,
+              delete)</p>
+            </li>
 
-            <li>No due date (actions = tomorrow, in 2 days, next week,
-            someday)</li>
+            <li>
+              <p>No due date (possible actions: tomorrow, in 2 days, next week,
+              someday)</p>
+            </li>
 
-            <li>Scheduled today (actions = today, later, done, delete)</li>
+            <li>
+              <p>Scheduled today (possible actions: today, later, done,
+              delete)</p>
+
+              <table class="inlinetask" width="100%">
+                <tr>
+                  <td valign="top"><b><span class=
+                  "todo TODO">TODO</span></b></td>
+
+                  <td width="100%"><b>Show overridden headers when in agenda
+                  view</b><br /></td>
+                </tr>
+              </table>
+            </li>
           </ul>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-    (add-to-list 'org-agenda-custom-commands
-                 `(<span class="org-string">"rd"</span> <span class=
-"org-string">"Daily review"</span>
-                   ((tags <span class="org-string">"LEVEL=2"</span>
-                          ((org-agenda-overriding-header <span class=
-"org-string">"COLLECTBOX"</span>)
-                           (org-agenda-files (list ,org-default-notes-file))))
-                    (agenda <span class="org-string">""</span>
-                            ((org-agenda-entry-types '(<span class=
-"org-builtin">:timestamp</span> <span class="org-builtin">:sexp</span>))
-                             (org-agenda-overriding-header <span class=
-"org-string">"CALENDAR"</span>)
-                             (org-agenda-span 'day)))
-                    (agenda <span class="org-string">""</span>
-                            ((org-agenda-entry-types '(<span class=
-"org-builtin">:deadline</span>))
-                             (org-agenda-overriding-header <span class=
-"org-string">"DUE DATES"</span>)
-                             (org-agenda-skip-function
-                              '(org-agenda-skip-entry-if 'todo 'done))
-                             (org-agenda-sorting-strategy
-                              '(priority-down time-down))
-                             (org-agenda-span 'day)
-                             (org-agenda-start-on-weekday nil)
-                             (org-agenda-time-grid nil)))
-                    (agenda <span class="org-string">""</span>
-                            ((org-agenda-entry-types '(<span class=
-"org-builtin">:scheduled</span>))
-                             (org-agenda-overriding-header <span class=
-"org-string">"SCHEDULED"</span>)
-                             (org-agenda-skip-function
-                              '(org-agenda-skip-entry-if 'todo 'done))
-                             (org-agenda-sorting-strategy
-                              '(priority-down time-down))
-                             (org-agenda-span 'day)
-                             (org-agenda-start-on-weekday nil)
-                             (org-agenda-time-grid nil)))
-                    )
-                   ((org-agenda-format-date <span class="org-string">""</span>)
-                    (org-agenda-start-with-clockreport-mode nil))) t)
-</pre>
-          </div>
-
-          <table class="inlinetask" width="100%">
-            <tr>
-              <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
-
-              <td width="100%"><b>Show overridden headers when in agenda
-              view</b><br /></td>
-            </tr>
-          </table>
 
           <p>Read <a href=
           "http://gridwriter.com/2012/11/14/omnifocus-series-flags-due-dates-daily-review/">

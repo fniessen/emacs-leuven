@@ -144,6 +144,21 @@ The CollectBox is the default place where you collect your thoughts.
 
 FIXME Add calendar events for today, calendar events for tomorrow and scheduled for today?
 
+An everyday objective should be to empty this list first, by any mean.  For
+example, start every morning by:
+
+- scheduling tasks to another day if you already know it can't be completed
+  before that date,
+
+- moving tasks to Someday if you just don't know if/when it will be completed
+
+  [This explanation assumes every task without a scheduled date = someday
+  task!]
+
+- delegating, and
+
+- of course completing tasks.
+
 Completed tasks stay displayed in their own section until the end of the day,
 because:
 
@@ -833,44 +848,9 @@ http://www.techsupportalert.com/best-free-project-time-keeping-utility.htm
 
 Take a moment to plan your day:
 
-- Recently created (actions = today, later, done, delete)
-- No due date (actions = tomorrow, in 2 days, next week, someday)
-- Scheduled today (actions = today, later, done, delete)
-
-#+begin_src emacs-lisp
-    (add-to-list 'org-agenda-custom-commands
-                 `("rd" "Daily review"
-                   ((tags "LEVEL=2"
-                          ((org-agenda-overriding-header "COLLECTBOX")
-                           (org-agenda-files (list ,org-default-notes-file))))
-                    (agenda ""
-                            ((org-agenda-entry-types '(:timestamp :sexp))
-                             (org-agenda-overriding-header "CALENDAR")
-                             (org-agenda-span 'day)))
-                    (agenda ""
-                            ((org-agenda-entry-types '(:deadline))
-                             (org-agenda-overriding-header "DUE DATES")
-                             (org-agenda-skip-function
-                              '(org-agenda-skip-entry-if 'todo 'done))
-                             (org-agenda-sorting-strategy
-                              '(priority-down time-down))
-                             (org-agenda-span 'day)
-                             (org-agenda-start-on-weekday nil)
-                             (org-agenda-time-grid nil)))
-                    (agenda ""
-                            ((org-agenda-entry-types '(:scheduled))
-                             (org-agenda-overriding-header "SCHEDULED")
-                             (org-agenda-skip-function
-                              '(org-agenda-skip-entry-if 'todo 'done))
-                             (org-agenda-sorting-strategy
-                              '(priority-down time-down))
-                             (org-agenda-span 'day)
-                             (org-agenda-start-on-weekday nil)
-                             (org-agenda-time-grid nil)))
-                    )
-                   ((org-agenda-format-date "")
-                    (org-agenda-start-with-clockreport-mode nil))) t)
-#+end_src
+- Recently created (possible actions: today, later, done, delete)
+- No due date (possible actions: tomorrow, in 2 days, next week, someday)
+- Scheduled today (possible actions: today, later, done, delete)
 
 *************** TODO Show overridden headers when in agenda view
 
