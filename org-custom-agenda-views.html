@@ -74,8 +74,6 @@
               Hotlist</a></li>
 
               <li><a href="#sec-5-5">Scheduled</a></li>
-
-              <li><a href="#sec-5-6">Projects</a></li>
             </ul>
           </li>
 
@@ -133,6 +131,8 @@
               <li><a href="#sec-6-13">Ticklers</a></li>
 
               <li><a href="#sec-6-14">Waiting for</a></li>
+
+              <li><a href="#sec-6-15">Projects</a></li>
             </ul>
           </li>
 
@@ -851,72 +851,6 @@
             scheduled date equal to the deadline date (or, in some tools like
             Azendoo, to today!).</p>
           </div>
-        </div>
-      </div>
-
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Projects</h3>
-
-        <div class="outline-text-3" id="text-5-6">
-          <p>A <b>project</b> is any desired goal that requires <b>more than
-          one action</b> to achieve.</p>
-
-          <p>Making a decision about the order of your actions is very
-          important.</p>
-
-          <p>A project where the actions need to be performed in sequence is
-          called a <b>sequential project</b>. A project where the actions can
-          be performed in any order is called a <b>parallel project</b>.</p>
-
-          <p>The project type can be specified either in XXX.</p>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-    (add-to-list 'org-agenda-custom-commands
-                 '(<span class="org-string">"fP"</span> <span class=
-"org-string">"Projects"</span>
-                   tags-todo <span class=
-"org-string">"project-DONE-CANX"</span>
-                   ((org-agenda-overriding-header <span class=
-"org-string">"Projects (High Level)"</span>)
-                    (org-agenda-sorting-strategy nil))) t)
-</pre>
-          </div>
-
-          <p>Display:</p>
-
-          <ul class="org-ul">
-            <li>Title</li>
-
-            <li>Status</li>
-
-            <li>Progress (%)</li>
-
-            <li>Start Date</li>
-
-            <li>Completion Date (= deadline)</li>
-          </ul>
-
-          <p>Comment identifier un projet&nbsp;?</p>
-
-          <ul class="org-ul">
-            <li>Identifier les tâches qui ont des sous-tâches?</li>
-
-            <li>Mettre un tag PROJ?</li>
-
-            <li>Avoir des tâches dans section "(Single) Actions” ou dans
-            section “Projects”?</li>
-          </ul>
-
-          <p>From Tracks:</p>
-
-          <ul class="org-ul">
-            <li>Active Projects</li>
-
-            <li>Hidden Projects</li>
-
-            <li>Completed Projects</li>
-          </ul>
         </div>
       </div>
     </div>
@@ -1915,6 +1849,72 @@
                     (org-agenda-sorting-strategy '(deadline-up)))) t) <span class="org-comment-delimiter">; </span><span class="org-comment"><span class="org-leuven-highlight">FIXME</span></span><span class="org-comment"> does not work</span>
 </pre>
           </div>
+        </div>
+      </div>
+
+      <div id="outline-container-sec-" class="outline-3">
+        <h3 id="sec-">Projects</h3>
+
+        <div class="outline-text-3" id="text-6-15">
+          <p>A <b>project</b> is any desired goal that requires <b>more than
+          one action</b> to achieve.</p>
+
+          <p>Making a decision about the order of your actions is very
+          important.</p>
+
+          <p>A project where the actions need to be performed in sequence is
+          called a <b>sequential project</b>. A project where the actions can
+          be performed in any order is called a <b>parallel project</b>.</p>
+
+          <p>The project type can be specified either in XXX.</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+    (add-to-list 'org-agenda-custom-commands
+                 '(<span class="org-string">"rP"</span> <span class=
+"org-string">"Projects"</span>
+                   tags-todo <span class=
+"org-string">"project-DONE-CANX"</span>
+                   ((org-agenda-overriding-header <span class=
+"org-string">"Projects (High Level)"</span>)
+                    (org-agenda-sorting-strategy nil))) t)
+</pre>
+          </div>
+
+          <p>Display:</p>
+
+          <ul class="org-ul">
+            <li>Title</li>
+
+            <li>Status</li>
+
+            <li>Progress (%)</li>
+
+            <li>Start Date</li>
+
+            <li>Completion Date (= deadline)</li>
+          </ul>
+
+          <p>Comment identifier un projet&nbsp;?</p>
+
+          <ul class="org-ul">
+            <li>Identifier les tâches qui ont des sous-tâches?</li>
+
+            <li>Mettre un tag PROJ?</li>
+
+            <li>Avoir des tâches dans section "(Single) Actions” ou dans
+            section “Projects”?</li>
+          </ul>
+
+          <p>From Tracks:</p>
+
+          <ul class="org-ul">
+            <li>Active Projects</li>
+
+            <li>Hidden Projects</li>
+
+            <li>Completed Projects</li>
+          </ul>
         </div>
       </div>
     </div>

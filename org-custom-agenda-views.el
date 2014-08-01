@@ -206,12 +206,6 @@
                    ((org-agenda-todo-ignore-scheduled 'future))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("fP" "Projects"
-                   tags-todo "project-DONE-CANX"
-                   ((org-agenda-overriding-header "Projects (High Level)")
-                    (org-agenda-sorting-strategy nil))) t)
-
-    (add-to-list 'org-agenda-custom-commands
                  '("r" . "REVIEW...") t)
 
     (add-to-list 'org-agenda-custom-commands
@@ -579,6 +573,12 @@
                    tags-todo "TODO={WAIT}"
                    ((org-agenda-overriding-header "Waiting for")
                     (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME does not work
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("rP" "Projects"
+                   tags-todo "project-DONE-CANX"
+                   ((org-agenda-overriding-header "Projects (High Level)")
+                    (org-agenda-sorting-strategy nil))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("+" . "MORE...") t)
