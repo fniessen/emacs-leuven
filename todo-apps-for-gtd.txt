@@ -108,6 +108,11 @@ Smart Lists can also be based on multiple criteria, for example:
 
 From [[http://www.rememberthemilk.com/help/answers/smartlists/whatare.rtm][Remember The Milk - Help / FAQ / Smart Lists / What are Smart Lists?]]
 
+*** [[https://teuxdeux.com/][TeuxDeux]]
+
+Combined with Fluid to turn the web application into a desktop tool, it's
+a brilliant option if you need something that looks great.
+
 * Designed for teamwork
 
 ** Doit.im
@@ -344,7 +349,7 @@ Tasks can be planned to be worked:
 Tasks sometimes need some more details to be completed.  You may add checkboxes
 *subtasks* to a task's description.
 
-Workspaces (= Org files) are where people work on Subjects (like projects,
+/Workspaces/ (= Org files) are where people work on /Subjects/ (like projects,
 customers, departments, products, events, meetings, or anything you want) and
 choose how involved they are in each.
 
@@ -359,12 +364,12 @@ Task views:
 - Planner (= My Tasks)
 
   All my unfinished and finished tasks:
-  + Sorted per day, by scheduled date, for the coming 7 days \\
-  + Sorted per week, by scheduled date, for the coming 4 weeks
+  + Grouped per day, by scheduled date, for the coming 7 days \\
+  + Grouped per week, by scheduled date, for the coming 4 weeks
 
 - With a due date
 
-  All finished tasks, sorted by target date (= deadline)
+  All unfinished tasks, sorted by target date (= deadline)
 
 - Now
 
