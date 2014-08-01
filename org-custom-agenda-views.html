@@ -70,8 +70,8 @@
 
               <li><a href="#sec-5-3">Hotlist</a></li>
 
-              <li><a href="#sec-5-4"><span class="todo nilTODO">TODO</span>
-              Hotlist</a></li>
+              <li><a href="#sec-5-4"><span class="todo nilTODO">TODO</span> Hot
+              N Fast</a></li>
 
               <li><a href="#sec-5-5">Scheduled</a></li>
             </ul>
@@ -475,18 +475,35 @@
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
-                    (agenda <span class="org-string">""</span>
-                            ((org-agenda-entry-types '(<span class=
-"org-builtin">:deadline</span>))
-                             (org-agenda-overriding-header <span class=
-"org-string">"DUE DATES"</span>)
-                             (org-agenda-skip-function
-                              '(org-agenda-skip-entry-if 'todo 'done))
-                             (org-agenda-sorting-strategy
-                              '(priority-down time-down))
-                             (org-agenda-span 'day)
-                             (org-agenda-start-on-weekday nil)
-                             (org-agenda-time-grid nil)))
+                    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(agenda ""</span>
+                    <span class=
+"org-comment-delimiter">;;         </span><span class=
+"org-comment">((org-agenda-entry-types '(:deadline))</span>
+                    <span class=
+"org-comment-delimiter">;;          </span><span class=
+"org-comment">(org-agenda-overriding-header "DUE DATES")</span>
+                    <span class=
+"org-comment-delimiter">;;          </span><span class=
+"org-comment">(org-agenda-skip-function</span>
+                    <span class=
+"org-comment-delimiter">;;           </span><span class=
+"org-comment">'(org-agenda-skip-entry-if 'todo 'done))</span>
+                    <span class=
+"org-comment-delimiter">;;          </span><span class=
+"org-comment">(org-agenda-sorting-strategy</span>
+                    <span class=
+"org-comment-delimiter">;;           </span><span class=
+"org-comment">'(priority-down time-down))</span>
+                    <span class=
+"org-comment-delimiter">;;          </span><span class=
+"org-comment">(org-agenda-span 'day)</span>
+                    <span class=
+"org-comment-delimiter">;;          </span><span class=
+"org-comment">(org-agenda-start-on-weekday nil)</span>
+                    <span class=
+"org-comment-delimiter">;;          </span><span class=
+"org-comment">(org-agenda-time-grid nil)))</span>
                     (agenda <span class="org-string">""</span>
                             ((org-agenda-entry-types '(<span class=
 "org-builtin">:scheduled</span>))
@@ -784,7 +801,7 @@
       </div>
 
       <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-"><span class="todo TODO">TODO</span> Hotlist</h3>
+        <h3 id="sec-"><span class="todo TODO">TODO</span> Hot N Fast</h3>
 
         <div class="outline-text-3" id="text-5-4">
           <p>The <b>Hot N Fast</b> list is everything on the Hotlist that takes

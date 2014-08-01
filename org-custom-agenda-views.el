@@ -54,16 +54,16 @@
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
-                    (agenda ""
-                            ((org-agenda-entry-types '(:deadline))
-                             (org-agenda-overriding-header "DUE DATES")
-                             (org-agenda-skip-function
-                              '(org-agenda-skip-entry-if 'todo 'done))
-                             (org-agenda-sorting-strategy
-                              '(priority-down time-down))
-                             (org-agenda-span 'day)
-                             (org-agenda-start-on-weekday nil)
-                             (org-agenda-time-grid nil)))
+                    ;; (agenda ""
+                    ;;         ((org-agenda-entry-types '(:deadline))
+                    ;;          (org-agenda-overriding-header "DUE DATES")
+                    ;;          (org-agenda-skip-function
+                    ;;           '(org-agenda-skip-entry-if 'todo 'done))
+                    ;;          (org-agenda-sorting-strategy
+                    ;;           '(priority-down time-down))
+                    ;;          (org-agenda-span 'day)
+                    ;;          (org-agenda-start-on-weekday nil)
+                    ;;          (org-agenda-time-grid nil)))
                     (agenda ""
                             ((org-agenda-entry-types '(:scheduled))
                              (org-agenda-overriding-header "SCHEDULED")

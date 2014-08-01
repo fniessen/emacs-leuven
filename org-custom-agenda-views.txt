@@ -183,16 +183,16 @@ because:
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
-                    (agenda ""
-                            ((org-agenda-entry-types '(:deadline))
-                             (org-agenda-overriding-header "DUE DATES")
-                             (org-agenda-skip-function
-                              '(org-agenda-skip-entry-if 'todo 'done))
-                             (org-agenda-sorting-strategy
-                              '(priority-down time-down))
-                             (org-agenda-span 'day)
-                             (org-agenda-start-on-weekday nil)
-                             (org-agenda-time-grid nil)))
+                    ;; (agenda ""
+                    ;;         ((org-agenda-entry-types '(:deadline))
+                    ;;          (org-agenda-overriding-header "DUE DATES")
+                    ;;          (org-agenda-skip-function
+                    ;;           '(org-agenda-skip-entry-if 'todo 'done))
+                    ;;          (org-agenda-sorting-strategy
+                    ;;           '(priority-down time-down))
+                    ;;          (org-agenda-span 'day)
+                    ;;          (org-agenda-start-on-weekday nil)
+                    ;;          (org-agenda-time-grid nil)))
                     (agenda ""
                             ((org-agenda-entry-types '(:scheduled))
                              (org-agenda-overriding-header "SCHEDULED")
@@ -362,7 +362,7 @@ Déjà le cas pour les tâches avec DEADLINE. Pas pour les autres.
 The hotlist is the perfect thing to *review each morning* to know what you need
 to do each day.
 
-** TODO Hotlist
+** TODO Hot N Fast
 
 The *Hot N Fast* list is everything on the Hotlist that takes less than 10
 minutes. Tasks without a time estimate will NOT show up in this list.
