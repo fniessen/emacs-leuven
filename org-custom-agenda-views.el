@@ -94,73 +94,6 @@
                     (org-agenda-start-with-clockreport-mode nil))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("f7" "7 Days"
-                   ((tags-todo "DEADLINE=\"<+0d>\""
-                               ((org-agenda-overriding-header "DUE TODAY")
-                                (org-agenda-skip-function
-                                 '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
-                    (tags-todo "DEADLINE=\"<+1d>\""
-                               ((org-agenda-overriding-header "DUE TOMORROW")
-                                (org-agenda-skip-function
-                                 '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
-                    (tags-todo "DEADLINE=\"<+2d>\""
-                               ((org-agenda-overriding-header
-                                 (upcase (format-time-string
-                                          "DUE BY %a %d"
-                                          (time-add (current-time)
-                                                    (seconds-to-time (* 2 86400))))))
-                                (org-agenda-skip-function
-                                 '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
-                    (tags-todo "DEADLINE=\"<+3d>\""
-                               ((org-agenda-overriding-header
-                                 (upcase (format-time-string
-                                          "DUE BY %a %d"
-                                          (time-add (current-time)
-                                                    (seconds-to-time (* 3 86400))))))
-                                (org-agenda-skip-function
-                                 '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
-                    (tags-todo "DEADLINE=\"<+4d>\""
-                               ((org-agenda-overriding-header
-                                 (upcase (format-time-string
-                                          "DUE BY %a %d"
-                                          (time-add (current-time)
-                                                    (seconds-to-time (* 4 86400))))))
-                                (org-agenda-skip-function
-                                 '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
-                    (tags-todo "DEADLINE=\"<+5d>\""
-                               ((org-agenda-overriding-header
-                                 (upcase (format-time-string
-                                          "DUE BY %a %d"
-                                          (time-add (current-time)
-                                                    (seconds-to-time (* 5 86400))))))
-                                (org-agenda-skip-function
-                                 '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
-                    (tags-todo "DEADLINE=\"<+6d>\""
-                               ((org-agenda-overriding-header
-                                 (upcase (format-time-string
-                                          "DUE BY %a %d"
-                                          (time-add (current-time)
-                                                    (seconds-to-time (* 6 86400))))))
-                                (org-agenda-skip-function
-                                 '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down))))
-                    (tags-todo "DEADLINE=\"<+7d>\""
-                               ((org-agenda-overriding-header
-                                 (upcase (format-time-string
-                                          "DUE BY %a %d"
-                                          (time-add (current-time)
-                                                    (seconds-to-time (* 7 86400))))))
-                                (org-agenda-skip-function
-                                 '(org-agenda-skip-entry-if 'notdeadline))
-                                (org-agenda-sorting-strategy '(priority-down)))))) t)
-
-    (add-to-list 'org-agenda-custom-commands
                  '("fh" "Hotlist"
                    ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
                    ((tags-todo "DEADLINE<\"<+0d>\""
@@ -199,11 +132,6 @@
                     )
                    ((org-agenda-todo-ignore-scheduled 'future)
                     (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("fe" "Effort less than 1 hour"
-                   tags-todo "Effort<>{}+Effort<\"1:00\""
-                   ((org-agenda-todo-ignore-scheduled 'future))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("r" . "REVIEW...") t)
@@ -257,19 +185,18 @@
                     (tags-todo "TODO={SDAY}"
                                ((org-agenda-overriding-header "NO DUE DATE / SOMEDAY")
                                 (org-agenda-skip-function
-                                 '(org-agenda-skip-entry-if 'deadline))))
-
-                    (todo "DONE|CANX"
-                          ((org-agenda-overriding-header "COMPLETED"))))
+                                 '(org-agenda-skip-entry-if 'deadline)))))
                    ((org-agenda-sorting-strategy '(priority-down))
                     (org-agenda-write-buffer-name "All Tasks (grouped by Due Date)"))
                    "~/org___all-tasks-by-due-date.pdf") t)
 
     (add-to-list 'org-agenda-custom-commands
-                 '("ra1" "All Tasks (sorted by Due Date)"
+                 '("ra1" "All Tasks with a due date"
                    alltodo ""
                    ((org-agenda-overriding-header "All Tasks (sorted by Due Date)")
-                    (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK
+                    (org-agenda-skip-function
+                     '(org-agenda-skip-entry-if 'notdeadline))
+                    (org-agenda-sorting-strategy '(deadline-up)))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  `("ra2" "All active tasks, by due date"
@@ -395,6 +322,7 @@
                     (org-agenda-prefix-format " %i %?-12t% s")
                     (org-agenda-span 'day)
                     (org-agenda-use-time-grid nil)
+                    (org-agenda-sorting-strategy '(deadline-up)) ; FIXME sort does not work in "Past due", well in "Next 12 days"
                     (org-agenda-write-buffer-name "List Review"))
                    "~/org___agenda-all-todo-entries.html") t)
 

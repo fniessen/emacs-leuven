@@ -230,14 +230,26 @@ Checking that =DEADLINE= <>"" can be implemented by =(org-agenda-skip-function
 Though, we should check which one is more responsive.
 #+end_note
 
-** 7 Days
+** COMMENT 7 Days
 
 Forecast:
 - Overdue
 - 7 days
 
-FIXME A task with a DEADLINE and a =-0d= specifier is not shown!!!  Well shown in
-the hotlist!!! (exemple: Noter les index de consommation)
+Advantages of this view:
+
+- Tasks are grouped day per day, with a custom header (today, tomorrow, then
+  the real names).
+
+Disadvantages of this view:
+
+- Tasks with a DEADLINE and a =-0d= specifier are not shown!
+
+  Maybe be we can consider that as desired: we said get that task out of my way
+  for now, right?
+
+  Note that such a task is well shown in the hotlist (example: "Noter les
+  index de consommation").  A bug would be there, then!
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -337,6 +349,10 @@ a =SCHEDULED= date that is:
 Déjà le cas pour les tâches avec DEADLINE. Pas pour les autres.
 *************** END
 
+*************** TODO Tasks with a DEADLINE and a =-0d= specifier are shown
+We said "get it out my way for now", nope?
+*************** END
+
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
                  '("fh" "Hotlist"
@@ -389,7 +405,7 @@ minutes. Tasks without a time estimate will NOT show up in this list.
                     (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     (add-to-list 'org-agenda-custom-commands
                  '("fe" "Effort less than 1 hour"
                    tags-todo "Effort<>{}+Effort<\"1:00\""
@@ -434,9 +450,8 @@ All *tasks*, grouped by *due date*:
 - Due within a month (next 3 weeks)
 - Due later
 - No due date (includes CollectBox)
-- Completed
 
-**** All tasks (tags view)
+**** All tasks (tags view command)
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -485,25 +500,33 @@ All *tasks*, grouped by *due date*:
                     (tags-todo "TODO={SDAY}"
                                ((org-agenda-overriding-header "NO DUE DATE / SOMEDAY")
                                 (org-agenda-skip-function
-                                 '(org-agenda-skip-entry-if 'deadline))))
-
-                    (todo "DONE|CANX"
-                          ((org-agenda-overriding-header "COMPLETED"))))
+                                 '(org-agenda-skip-entry-if 'deadline)))))
                    ((org-agenda-sorting-strategy '(priority-down))
                     (org-agenda-write-buffer-name "All Tasks (grouped by Due Date)"))
                    "~/org___all-tasks-by-due-date.pdf") t)
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("ra1" "All Tasks (sorted by Due Date)"
-                   alltodo ""
-                   ((org-agenda-overriding-header "All Tasks (sorted by Due Date)")
-                    (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK
 #+end_src
 
-**** All tasks (agenda view)
+#+begin_src emacs-lisp
+    (add-to-list 'org-agenda-custom-commands
+                 '("ra1" "All Tasks with a due date"
+                   alltodo ""
+                   ((org-agenda-overriding-header "All Tasks (sorted by Due Date)")
+                    (org-agenda-skip-function
+                     '(org-agenda-skip-entry-if 'notdeadline))
+                    (org-agenda-sorting-strategy '(deadline-up)))) t)
+#+end_src
 
-FIXME Tasks with pre-warning of 45d do not appear in the first block; well in
-every other one!!!  Bad.
+**** All tasks (agenda view command)
+
+*************** TODO When I'm in the range of the pre-warning, tasks are shown...
+... even if they aren't for tomorrow or for the next 5 days.
+
+That causes repetition of tasks between different blocks.
+*************** END
+
+*************** TODO Tasks with a long pre-warning do not appear in the first block
+Well in every other one!!!  Bad.
+*************** END
 
 #+begin_src emacs-lisp
     (add-to-list 'org-agenda-custom-commands
@@ -636,6 +659,7 @@ every other one!!!  Bad.
                     (org-agenda-prefix-format " %i %?-12t% s")
                     (org-agenda-span 'day)
                     (org-agenda-use-time-grid nil)
+                    (org-agenda-sorting-strategy '(deadline-up)) ; FIXME sort does not work in "Past due", well in "Next 12 days"
                     (org-agenda-write-buffer-name "List Review"))
                    "~/org___agenda-all-todo-entries.html") t)
 #+end_src
