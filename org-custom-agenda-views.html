@@ -70,9 +70,12 @@
 
               <li><a href="#sec-5-3">Hotlist</a></li>
 
-              <li><a href="#sec-5-4">Scheduled</a></li>
+              <li><a href="#sec-5-4"><span class="todo nilTODO">TODO</span>
+              Hotlist</a></li>
 
-              <li><a href="#sec-5-5">Projects</a></li>
+              <li><a href="#sec-5-5">Scheduled</a></li>
+
+              <li><a href="#sec-5-6">Projects</a></li>
             </ul>
           </li>
 
@@ -238,7 +241,7 @@
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">display calendar for 7 days</span>
   (global-set-key
-    (kbd <span class="org-string">"&lt;C-M-f7&gt;"</span>) (kbd <span class=
+    (kbd <span class="org-string">"&lt;M-f7&gt;"</span>) (kbd <span class=
 "org-string">"C-c a r c 7"</span>))
 </pre>
         </div>
@@ -397,9 +400,6 @@
         <h3 id="sec-">Today</h3>
 
         <div class="outline-text-3" id="text-5-1">
-          <p>FIXME Add calendar events for today, calendar events for tomorrow
-          and scheduled for today?</p>
-
           <p>An everyday objective should be to empty this list first, by any
           mean. For example, start every morning by:</p>
 
@@ -441,6 +441,8 @@
                  `(<span class="org-string">"f."</span> <span class=
 "org-string">"Today"</span>
                    (
+                    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">events</span>
                     (agenda <span class="org-string">""</span>
                             ((org-agenda-entry-types '(<span class=
 "org-builtin">:timestamp</span> <span class="org-builtin">:sexp</span>))
@@ -575,17 +577,6 @@
 </pre>
           </div>
 
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-    (add-to-list 'org-agenda-custom-commands
-                '(<span class="org-string">"fc"</span> <span class=
-"org-string">"Closed this week (TEST)"</span>
-                  tags <span class=
-"org-string">"CLOSED&gt;\"&lt;-1w&gt;\""</span>
-                  ((org-agenda-sorting-strategy '(priority-down)))) t)
-</pre>
-          </div>
-
           <div class="note">
             <p>Checking that <code>DEADLINE</code> &lt;&gt;"" can be
             implemented by <code>(org-agenda-skip-function
@@ -609,7 +600,8 @@
           </ul>
 
           <p>FIXME A task with a DEADLINE and a <code>-0d</code> specifier is
-          not shown!!! Well shown in the hotlist!!!</p>
+          not shown!!! Well shown in the hotlist!!! (exemple: Noter les index
+          de consommation)</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -716,9 +708,10 @@
 
             <li>are <b>due soon</b> (in the next 7 days), or</li>
 
-            <li>have a <b>high priority</b> (<code>#A</code>), or</li>
+            <li>have a <b>high priority</b> (<code>#A</code>) [= next action?],
+            or</li>
 
-            <li>are <b>FLAGGED</b>.</li>
+            <li>are <b>FLAGGED</b> [= next action?].</li>
           </ul>
 
           <p>There is an exception to the above rule: <b>tasks with a future
@@ -738,8 +731,12 @@
             <tr>
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
 
-              <td width="100%"><b>Rajouter les SCHEDULED today dans la hotlist
-              ?</b><br /></td>
+              <td width="100%">
+                <b>Rajouter les SCHEDULED today dans la hotlist ?</b><br />
+
+                <p>Déjà le cas pour les tâches avec DEADLINE. Pas pour les
+                autres.</p>
+              </td>
             </tr>
           </table>
 
@@ -777,16 +774,60 @@
 "org-comment">((org-agenda-overriding-header "...FLAGGED...")))</span>
                     )
                    ((org-agenda-todo-ignore-scheduled 'future)
-                    (org-agenda-sorting-strategy '(deadline-down)))) t)
+                    (org-agenda-sorting-strategy '(deadline-up)))) t) <span class="org-comment-delimiter">; </span><span class="org-comment"><span class="org-leuven-highlight">FIXME</span></span><span class="org-comment"> sort not OK</span>
 </pre>
           </div>
 
           <p>The hotlist is the perfect thing to <b>review each morning</b> to
           know what you need to do each day.</p>
+        </div>
+      </div>
 
-          <p>FIXME Add an <b>HotNFast</b> list, which is everything on the
-          Hotlist that takes less than 10 minutes. Tasks without a time
-          estimate will NOT show up in this list.</p>
+      <div id="outline-container-sec-" class="outline-3">
+        <h3 id="sec-"><span class="todo TODO">TODO</span> Hotlist</h3>
+
+        <div class="outline-text-3" id="text-5-4">
+          <p>The <b>Hot N Fast</b> list is everything on the Hotlist that takes
+          less than 10 minutes. Tasks without a time estimate will NOT show up
+          in this list.</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+    (add-to-list 'org-agenda-custom-commands
+                 '(<span class="org-string">"ff"</span> <span class=
+"org-string">"Hot N Fast"</span>
+                   <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">tags-todo "DEADLINE&lt;=\"&lt;+1w&gt;\"|PRIORITY={A}|FLAGGED"</span>
+                   ((tags-todo <span class=
+"org-string">"DEADLINE&lt;\"&lt;+0d&gt;\""</span>
+                               ((org-agenda-overriding-header <span class=
+"org-string">"OVERDUE"</span>)))
+                    (tags-todo <span class=
+"org-string">"DEADLINE&gt;=\"&lt;+0d&gt;\"+DEADLINE&lt;=\"&lt;+1w&gt;\""</span>
+                               ((org-agenda-overriding-header <span class=
+"org-string">"DUE IN NEXT 7 DAYS"</span>)))
+                    (tags-todo <span class=
+"org-string">"DEADLINE=\"\"+PRIORITY={A}|DEADLINE&gt;\"&lt;+1w&gt;\"+PRIORITY={A}"</span>
+                               ((org-agenda-overriding-header <span class=
+"org-string">"HIGH PRIORITY"</span>)))
+                    (tags-todo <span class=
+"org-string">"DEADLINE=\"\"+FLAGGED|DEADLINE&gt;\"&lt;+1w&gt;\"+FLAGGED"</span>
+                               ((org-agenda-overriding-header <span class=
+"org-string">"FLAGGED"</span>)
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-when-regexp-matches))
+                                (org-agenda-skip-regexp <span class=
+"org-string">"\\[#A\\]"</span>)))
+                    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(tags-todo "DEADLINE=\"\"+PRIORITY&lt;&gt;{A}+FLAGGED|DEADLINE&gt;\"&lt;+1w&gt;\"+PRIORITY&lt;&gt;{A}+FLAGGED"</span>
+                    <span class=
+"org-comment-delimiter">;;            </span><span class=
+"org-comment">((org-agenda-overriding-header "...FLAGGED...")))</span>
+                    )
+                   ((org-agenda-todo-ignore-scheduled 'future)
+                    (org-agenda-sorting-strategy '(deadline-up)))) t) <span class="org-comment-delimiter">; </span><span class="org-comment"><span class="org-leuven-highlight">FIXME</span></span><span class="org-comment"> sort not OK</span>
+</pre>
+          </div>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -798,28 +839,17 @@
                    ((org-agenda-todo-ignore-scheduled 'future))) t)
 </pre>
           </div>
-
-          <p>During my review, I bring up the Projects I need to review, change
-          due dates and priorities as appropriate. If tasks have no due dates
-          and are not priority 1, then they won’t show up on a Hotlist, so
-          here’s the time when tasks get real dates or become priority 1 (next
-          action). Otherwise, I don’t want to look at them in my Hotlists. Then
-          I use Hotlists to get things done (ooops) in a Forster kind of way,
-          depending on my context.</p>
-
-          <p>There is one task in each Folder that repeats as often as I need
-          to review that Folder. Some Folders I only need to review weekly or
-          monthly. These review tasks get the gtd tag.</p>
         </div>
       </div>
 
       <div id="outline-container-sec-" class="outline-3">
         <h3 id="sec-">Scheduled</h3>
 
-        <div class="outline-text-3" id="text-5-4">
+        <div class="outline-text-3" id="text-5-5">
           <div class="warning">
             <p>A deadline with no scheduling information has an implicit
-            scheduled date equal to the deadline date.</p>
+            scheduled date equal to the deadline date (or, in some tools like
+            Azendoo, to today!).</p>
           </div>
         </div>
       </div>
@@ -827,7 +857,7 @@
       <div id="outline-container-sec-" class="outline-3">
         <h3 id="sec-">Projects</h3>
 
-        <div class="outline-text-3" id="text-5-5">
+        <div class="outline-text-3" id="text-5-6">
           <p>A <b>project</b> is any desired goal that requires <b>more than
           one action</b> to achieve.</p>
 
@@ -907,6 +937,10 @@
 "org-string">"REVIEW..."</span>) t)
 </pre>
         </div>
+
+        <p>There is one task in each Folder that repeats as often as I need to
+        review that Folder. Some Folders I only need to review weekly or
+        monthly. These review tasks get the <code>gtd</code> tag.</p>
       </div>
 
       <div id="outline-container-sec-" class="outline-3">
@@ -1748,6 +1782,17 @@
                    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">"~/org-weekly-review.html") t)</span>
                     )) t)
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+    (add-to-list 'org-agenda-custom-commands
+                '(<span class="org-string">"rC"</span> <span class=
+"org-string">"Closed this week (TEST)"</span>
+                  tags <span class=
+"org-string">"CLOSED&gt;\"&lt;-1w&gt;\""</span>
+                  ((org-agenda-sorting-strategy '(priority-down)))) t)
 </pre>
           </div>
         </div>

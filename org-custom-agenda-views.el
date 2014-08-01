@@ -14,7 +14,7 @@
 
   ;; display calendar for 7 days
   (global-set-key
-    (kbd "<C-M-f7>") (kbd "C-c a r c 7"))
+    (kbd "<M-f7>") (kbd "C-c a r c 7"))
 
     ;; custom commands for the agenda -- start with a clean slate
     (setq org-agenda-custom-commands nil)
@@ -34,6 +34,7 @@
     (add-to-list 'org-agenda-custom-commands
                  `("f." "Today"
                    (
+                    ;; events
                     (agenda ""
                             ((org-agenda-entry-types '(:timestamp :sexp))
                              (org-agenda-overriding-header "CALENDAR")
@@ -91,11 +92,6 @@
                                 (org-agenda-sorting-strategy '(priority-down)))))
                    ((org-agenda-format-date "")
                     (org-agenda-start-with-clockreport-mode nil))) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                '("fc" "Closed this week (TEST)"
-                  tags "CLOSED>\"<-1w>\""
-                  ((org-agenda-sorting-strategy '(priority-down)))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("f7" "7 Days"
@@ -182,7 +178,27 @@
                     ;;            ((org-agenda-overriding-header "...FLAGGED...")))
                     )
                    ((org-agenda-todo-ignore-scheduled 'future)
-                    (org-agenda-sorting-strategy '(deadline-down)))) t)
+                    (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("ff" "Hot N Fast"
+                   ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
+                   ((tags-todo "DEADLINE<\"<+0d>\""
+                               ((org-agenda-overriding-header "OVERDUE")))
+                    (tags-todo "DEADLINE>=\"<+0d>\"+DEADLINE<=\"<+1w>\""
+                               ((org-agenda-overriding-header "DUE IN NEXT 7 DAYS")))
+                    (tags-todo "DEADLINE=\"\"+PRIORITY={A}|DEADLINE>\"<+1w>\"+PRIORITY={A}"
+                               ((org-agenda-overriding-header "HIGH PRIORITY")))
+                    (tags-todo "DEADLINE=\"\"+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
+                               ((org-agenda-overriding-header "FLAGGED")
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-when-regexp-matches))
+                                (org-agenda-skip-regexp "\\[#A\\]")))
+                    ;; (tags-todo "DEADLINE=\"\"+PRIORITY<>{A}+FLAGGED|DEADLINE>\"<+1w>\"+PRIORITY<>{A}+FLAGGED"
+                    ;;            ((org-agenda-overriding-header "...FLAGGED...")))
+                    )
+                   ((org-agenda-todo-ignore-scheduled 'future)
+                    (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK
 
     (add-to-list 'org-agenda-custom-commands
                  '("fe" "Effort less than 1 hour"
@@ -545,6 +561,11 @@
                    ;;  (org-agenda-write-buffer-name "Weekly task review"))
                    ;; "~/org-weekly-review.html") t)
                     )) t)
+
+    (add-to-list 'org-agenda-custom-commands
+                '("rC" "Closed this week (TEST)"
+                  tags "CLOSED>\"<-1w>\""
+                  ((org-agenda-sorting-strategy '(priority-down)))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("rN" "Next"
