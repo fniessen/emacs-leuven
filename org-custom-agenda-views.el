@@ -387,6 +387,57 @@
                              (org-agenda-span 'day))))) t)
 
     (add-to-list 'org-agenda-custom-commands
+                 `("rD" "Completed view"
+                   (;; list of all TODO entries completed yesterday
+                    (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
+                               ((org-agenda-overriding-header
+                                 (concat "YESTERDAY   "
+                                         (format-time-string "%a %d %b" (current-time-ndays-ago 1))
+                                         ;; #("__________________" 0 12 (face (:foreground "gray")))
+                                         ))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if
+                                   'notregexp
+                                   (format-time-string (closed-regexp) (current-time-ndays-ago 1))))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    ;; list of all TODO entries completed 2 days ago
+                    (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
+                               ((org-agenda-overriding-header
+                                 (concat "2 DAYS AGO  "
+                                         (format-time-string "%a %d %b" (current-time-ndays-ago 2))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if
+                                   'notregexp
+                                   (format-time-string (closed-regexp) (current-time-ndays-ago 2))))
+                                (org-agenda-sorting-strategy '(priority-down))))
+                    ;; list of all TODO entries completed 3 days ago
+                    (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
+                               ((org-agenda-overriding-header
+                                 (concat "3 DAYS AGO  "
+                                         (format-time-string "%a %d %b" (current-time-ndays-ago 3))))
+                                (org-agenda-skip-function
+                                 '(org-agenda-skip-entry-if
+                                   'notregexp
+                                   (format-time-string (closed-regexp) (current-time-ndays-ago 3))))
+                                (org-agenda-sorting-strategy '(priority-down)))))
+                   ((org-agenda-format-date "")
+                    (org-agenda-start-with-clockreport-mode nil))) t)
+
+    (defun closed-regexp ()
+      "Return regexp matching a closing date and time."
+      (concat " \\("
+              "CLOSED: \\[%Y-%m-%d"
+              "\\|"
+              "- State \"\\(DONE\\|CANX\\)\" * from .* \\[%Y-%m-%d"
+              "\\|"
+              "- State .* ->  *\"\\(DONE\\|CANX\\)\" * \\[%Y-%m-%d"
+              "\\) "))
+
+    (defun current-time-ndays-ago (n)
+      "Return the current time minus N days."
+      (time-subtract (current-time) (days-to-time n)))
+
+    (add-to-list 'org-agenda-custom-commands
                  '("rx" "Completed tasks with no CLOCK lines"
                    ((todo "DONE|CANX"
                                ((org-agenda-overriding-header "Completed tasks with no CLOCK lines")
