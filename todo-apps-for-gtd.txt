@@ -353,6 +353,10 @@ Tasks sometimes need some more details to be completed.  You may add checkboxes
 customers, departments, products, events, meetings, or anything you want) and
 choose how involved they are in each.
 
+Your workspace is organized into Subjects. An Azendoo Subject can be anything,
+like a project, a client, a topic, a portfolio, an idea board, etc. And each
+Subject regroups team members, tasks, documents and messages.
+
 Task views:
 
 - All
@@ -588,6 +592,8 @@ allowing you to manage a list of tasks and participants in the project (like a
 workspace).
 
 * All unsorted tools
+
+https://en.wikipedia.org/wiki/List_of_personal_information_managers
 
 ** Producteev
 
@@ -1227,3 +1233,7 @@ You can purchase them for $10 for up to 10 users.
 #+end_verse
 
 From [[gnus:nnimap%2Bmc:INBOX.mc#CAOotw2%3DE69_vt31KxUrfWtV6WTo0iFiE12d9cmPMMN3t8iAwPA@mail.gmail.com][Email from Peter Ross: {mct} jira and grasshopper]]
+
+** [[http://www.mylifeorganized.net/][MyLifeOrganized]]
+
+** [[http://taskcoach.org/][Task Coach]]
