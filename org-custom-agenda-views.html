@@ -158,6 +158,8 @@
               <li><a href="#sec-9-1">Print list</a></li>
 
               <li><a href="#sec-9-2">Export tasks lists as CSV files</a></li>
+
+              <li><a href="#sec-9-3">Upload on a Web site</a></li>
             </ul>
           </li>
 
@@ -214,8 +216,8 @@
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">Key bindings</h2>
+    <div id="outline-container-sec-1" class="outline-2">
+      <h2 id="sec-1">Key bindings</h2>
 
       <div class="outline-text-2" id="text-1">
         <div class="org-src-container">
@@ -246,13 +248,70 @@
   (global-set-key
     (kbd <span class="org-string">"&lt;M-f7&gt;"</span>) (kbd <span class=
 "org-string">"C-c a r c 7"</span>))
+
+  (<span class="org-keyword">defconst</span> <span class=
+"org-variable-name">leuven-org-completed-date-regexp</span>
+    (concat <span class="org-string">" </span><span class=
+"org-string"><span class=
+"org-regexp-grouping-backslash">\\</span></span><span class=
+"org-string"><span class=
+"org-regexp-grouping-construct">(</span></span><span class=
+"org-string">"</span>
+            <span class="org-string">"CLOSED: \\[%Y-%m-%d"</span>
+            <span class="org-string">"</span><span class=
+"org-string"><span class=
+"org-regexp-grouping-backslash">\\</span></span><span class=
+"org-string"><span class=
+"org-regexp-grouping-construct">|</span></span><span class=
+"org-string">"</span>
+            <span class="org-string">"- State \"</span><span class=
+"org-string"><span class=
+"org-regexp-grouping-backslash">\\</span></span><span class=
+"org-string"><span class=
+"org-regexp-grouping-construct">(</span></span><span class=
+"org-string">DONE</span><span class="org-string"><span class=
+"org-regexp-grouping-backslash">\\</span></span><span class=
+"org-string"><span class=
+"org-regexp-grouping-construct">|</span></span><span class=
+"org-string">CANX</span><span class="org-string"><span class=
+"org-regexp-grouping-backslash">\\</span></span><span class=
+"org-string"><span class=
+"org-regexp-grouping-construct">)</span></span><span class=
+"org-string">\" * from .* \\[%Y-%m-%d"</span>
+            <span class="org-string">"</span><span class=
+"org-string"><span class=
+"org-regexp-grouping-backslash">\\</span></span><span class=
+"org-string"><span class=
+"org-regexp-grouping-construct">|</span></span><span class=
+"org-string">"</span>
+            <span class="org-string">"- State .* -&gt;  *\"</span><span class=
+"org-string"><span class=
+"org-regexp-grouping-backslash">\\</span></span><span class=
+"org-string"><span class=
+"org-regexp-grouping-construct">(</span></span><span class=
+"org-string">DONE</span><span class="org-string"><span class=
+"org-regexp-grouping-backslash">\\</span></span><span class=
+"org-string"><span class=
+"org-regexp-grouping-construct">|</span></span><span class=
+"org-string">CANX</span><span class="org-string"><span class=
+"org-regexp-grouping-backslash">\\</span></span><span class=
+"org-string"><span class=
+"org-regexp-grouping-construct">)</span></span><span class=
+"org-string">\" * \\[%Y-%m-%d"</span>
+            <span class="org-string">"</span><span class=
+"org-string"><span class=
+"org-regexp-grouping-backslash">\\</span></span><span class=
+"org-string"><span class=
+"org-regexp-grouping-construct">)</span></span><span class=
+"org-string"> "</span>)
+    <span class="org-doc">"Matches any completion time stamp."</span>)
 </pre>
         </div>
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">Description</h2>
+    <div id="outline-container-sec-2" class="outline-2">
+      <h2 id="sec-2">Description</h2>
 
       <div class="outline-text-2" id="text-2">
         <p>Vocabulary:</p>
@@ -321,8 +380,8 @@
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">Views</h2>
+    <div id="outline-container-sec-3" class="outline-2">
+      <h2 id="sec-3">Views</h2>
 
       <div class="outline-text-2" id="text-3">
         <div class="org-src-container">
@@ -351,8 +410,8 @@
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">COLLECT</h2>
+    <div id="outline-container-sec-4" class="outline-2">
+      <h2 id="sec-4">COLLECT</h2>
 
       <div class="outline-text-2" id="text-4">
         <div class="org-src-container">
@@ -364,8 +423,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">CollectBox</h3>
+      <div id="outline-container-sec-4-1" class="outline-3">
+        <h3 id="sec-4-1">CollectBox</h3>
 
         <div class="outline-text-3" id="text-4-1">
           <p>The CollectBox is the default place where you collect your
@@ -386,8 +445,8 @@
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">FOCUS</h2>
+    <div id="outline-container-sec-5" class="outline-2">
+      <h2 id="sec-5">FOCUS</h2>
 
       <div class="outline-text-2" id="text-5">
         <div class="org-src-container">
@@ -399,8 +458,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Today</h3>
+      <div id="outline-container-sec-5-1" class="outline-3">
+        <h3 id="sec-5-1">Today</h3>
 
         <div class="outline-text-3" id="text-5-1">
           <p>An everyday objective should be to empty this list first, by any
@@ -452,7 +511,7 @@
                              (org-agenda-overriding-header <span class=
 "org-string">"CALENDAR"</span>)
                              (org-agenda-span 'day)))
-                    (tags <span class="org-string">"LEVEL=2"</span>
+                    (tags-todo <span class="org-string">"LEVEL=2"</span>
                           ((org-agenda-overriding-header <span class=
 "org-string">"COLLECTBOX"</span>)
                            (org-agenda-files (list ,org-default-notes-file))))
@@ -462,8 +521,15 @@
 "org-comment"> entries with deadline today</span>
                     (tags-todo <span class=
 "org-string">"DEADLINE=\"&lt;+0d&gt;\""</span>
-                               ((org-agenda-overriding-header <span class=
-"org-string">"DUE TODAY"</span>)
+                               ((org-agenda-overriding-header
+                                 (concat  <span class=
+"org-string">"DUE TODAY "</span>
+                                          (format-time-string <span class=
+"org-string">"%a %d"</span> (current-time))
+                                          <span class=
+"org-comment-delimiter">;; </span><span class=
+"org-comment">#("__________________" 0 12 (face (:foreground "gray")))</span>
+                                          ))
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
@@ -535,62 +601,7 @@
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if
                                    'notregexp
-                                   (format-time-string
-                                    (concat
-                                     <span class=
-"org-string">" </span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">(</span></span><span class=
-"org-string">"</span>
-                                     <span class=
-"org-string">"CLOSED: \\[%Y-%m-%d"</span>
-                                     <span class=
-"org-string">"</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">"</span>
-                                     <span class=
-"org-string">"- State \"</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">(</span></span><span class=
-"org-string">DONE</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">CANX</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">)</span></span><span class=
-"org-string">\" * from .* \\[%Y-%m-%d"</span>
-                                     <span class=
-"org-string">"</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">"</span>
-                                     <span class=
-"org-string">"- State .* -&gt;  *\"</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">(</span></span><span class=
-"org-string">DONE</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">CANX</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">)</span></span><span class=
-"org-string">\" * \\[%Y-%m-%d"</span>
-                                     <span class=
-"org-string">"</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">)</span></span><span class=
-"org-string"> "</span>))))
+                                   (format-time-string leuven-org-completed-date-regexp)))
                                 (org-agenda-sorting-strategy '(priority-down)))))
                    ((org-agenda-format-date <span class="org-string">""</span>)
                     (org-agenda-start-with-clockreport-mode nil))) t)
@@ -607,8 +618,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Hotlist</h3>
+      <div id="outline-container-sec-5-2" class="outline-3">
+        <h3 id="sec-5-2">Hotlist</h3>
 
         <div class="outline-text-3" id="text-5-2">
           <p>The <b>hotlist</b> is a convenient and smart way to see (in a
@@ -710,8 +721,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-"><span class="todo TODO">TODO</span> Hot N Fast</h3>
+      <div id="outline-container-sec-5-3" class="outline-3">
+        <h3 id="sec-5-3"><span class="todo TODO">TODO</span> Hot N Fast</h3>
 
         <div class="outline-text-3" id="text-5-3">
           <p>The <b>Hot N Fast</b> list is everything on the Hotlist that takes
@@ -769,8 +780,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Scheduled</h3>
+      <div id="outline-container-sec-5-4" class="outline-3">
+        <h3 id="sec-5-4">Scheduled</h3>
 
         <div class="outline-text-3" id="text-5-4">
           <div class="warning">
@@ -782,8 +793,8 @@
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">REVIEW</h2>
+    <div id="outline-container-sec-6" class="outline-2">
+      <h2 id="sec-6">REVIEW</h2>
 
       <div class="outline-text-2" id="text-6">
         <p>See <a href=
@@ -804,8 +815,8 @@
         monthly. These review tasks get the <code>gtd</code> tag.</p>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">All tasks</h3>
+      <div id="outline-container-sec-6-1" class="outline-3">
+        <h3 id="sec-6-1">All tasks</h3>
 
         <div class="outline-text-3" id="text-6-1">
           <div class="org-src-container">
@@ -817,8 +828,8 @@
           </div>
         </div>
 
-        <div id="outline-container-sec-" class="outline-4">
-          <h4 id="sec-">Sorted by due date</h4>
+        <div id="outline-container-sec-6-1-1" class="outline-4">
+          <h4 id="sec-6-1-1">Sorted by due date</h4>
 
           <div class="outline-text-4" id="text-6-1-1">
             <p>All <b>tasks</b>, grouped by <b>due date</b>:</p>
@@ -840,8 +851,8 @@
             </ul>
           </div>
 
-          <div id="outline-container-sec-" class="outline-5">
-            <h5 id="sec-">All tasks (tags view command)</h5>
+          <div id="outline-container-sec-6-1-1-1" class="outline-5">
+            <h5 id="sec-6-1-1-1">All tasks (tags view command)</h5>
 
             <div class="outline-text-5" id="text-6-1-1-1">
               <div class="org-src-container">
@@ -957,8 +968,8 @@
             </div>
           </div>
 
-          <div id="outline-container-sec-" class="outline-5">
-            <h5 id="sec-">All tasks (agenda view command)</h5>
+          <div id="outline-container-sec-6-1-1-2" class="outline-5">
+            <h5 id="sec-6-1-1-2">All tasks (agenda view command)</h5>
 
             <div class="outline-text-5" id="text-6-1-1-2">
               <table class="inlinetask" width="100%">
@@ -1210,8 +1221,8 @@
           </div>
         </div>
 
-        <div id="outline-container-sec-" class="outline-4">
-          <h4 id="sec-">Sorted by priority</h4>
+        <div id="outline-container-sec-6-1-2" class="outline-4">
+          <h4 id="sec-6-1-2">Sorted by priority</h4>
 
           <div class="outline-text-4" id="text-6-1-2">
             <p>All <b>tasks</b>, grouped by <b>priority</b>:</p>
@@ -1256,8 +1267,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Calendar</h3>
+      <div id="outline-container-sec-6-2" class="outline-3">
+        <h3 id="sec-6-2">Calendar</h3>
 
         <div class="outline-text-3" id="text-6-2">
           <div class="org-src-container">
@@ -1335,8 +1346,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Timeline</h3>
+      <div id="outline-container-sec-6-3" class="outline-3">
+        <h3 id="sec-6-3">Timeline</h3>
 
         <div class="outline-text-3" id="text-6-3">
           <p><code>org-timeline</code> has weaknesses and although not
@@ -1363,8 +1374,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Completed Tasks</h3>
+      <div id="outline-container-sec-6-4" class="outline-3">
+        <h3 id="sec-6-4">Completed Tasks</h3>
 
         <div class="outline-text-3" id="text-6-4">
           <p>To monitor your progress, you can view what tasks have been
@@ -1380,7 +1391,7 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
     (add-to-list 'org-agenda-custom-commands
-                 `(<span class="org-string">"rD"</span> <span class=
+                 `(<span class="org-string">"rC"</span> <span class=
 "org-string">"Completed view"</span>
                    (<span class="org-comment-delimiter">;; </span><span class=
 "org-comment">list of all </span><span class="org-comment"><span class=
@@ -1397,7 +1408,7 @@
                                  (concat <span class=
 "org-string">"YESTERDAY   "</span>
                                          (format-time-string <span class=
-"org-string">"%a %d %b"</span> (current-time-ndays-ago 1))
+"org-string">"%a %d"</span> (current-time-ndays-ago 1))
                                          <span class=
 "org-comment-delimiter">;; </span><span class=
 "org-comment">#("__________________" 0 12 (face (:foreground "gray")))</span>
@@ -1405,7 +1416,7 @@
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if
                                    'notregexp
-                                   (format-time-string (closed-regexp) (current-time-ndays-ago 1))))
+                                   (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 1))))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">list of all </span><span class="org-comment"><span class=
@@ -1426,7 +1437,7 @@
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if
                                    'notregexp
-                                   (format-time-string (closed-regexp) (current-time-ndays-ago 2))))
+                                   (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 2))))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">list of all </span><span class="org-comment"><span class=
@@ -1447,68 +1458,10 @@
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if
                                    'notregexp
-                                   (format-time-string (closed-regexp) (current-time-ndays-ago 3))))
+                                   (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 3))))
                                 (org-agenda-sorting-strategy '(priority-down)))))
                    ((org-agenda-format-date <span class="org-string">""</span>)
                     (org-agenda-start-with-clockreport-mode nil))) t)
-
-    (<span class="org-keyword">defun</span> <span class=
-"org-function-name">closed-regexp</span> ()
-      <span class=
-"org-doc">"Return regexp matching a closing date and time."</span>
-      (concat <span class="org-string">" </span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">(</span></span><span class=
-"org-string">"</span>
-              <span class="org-string">"CLOSED: \\[%Y-%m-%d"</span>
-              <span class="org-string">"</span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">"</span>
-              <span class="org-string">"- State \"</span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">(</span></span><span class=
-"org-string">DONE</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">CANX</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">)</span></span><span class=
-"org-string">\" * from .* \\[%Y-%m-%d"</span>
-              <span class="org-string">"</span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">"</span>
-              <span class=
-"org-string">"- State .* -&gt;  *\"</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">(</span></span><span class=
-"org-string">DONE</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">CANX</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">)</span></span><span class=
-"org-string">\" * \\[%Y-%m-%d"</span>
-              <span class="org-string">"</span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">)</span></span><span class=
-"org-string"> "</span>))
 
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">current-time-ndays-ago</span> (n)
@@ -1516,11 +1469,22 @@
       (time-subtract (current-time) (days-to-time n)))
 </pre>
           </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+    (add-to-list 'org-agenda-custom-commands
+                '(<span class="org-string">"rD"</span> <span class=
+"org-string">"Closed this week (TEST)"</span>
+                  tags <span class=
+"org-string">"CLOSED&gt;\"&lt;-1w&gt;\""</span>
+                  ((org-agenda-sorting-strategy '(priority-down)))) t)
+</pre>
+          </div>
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Cleanup</h3>
+      <div id="outline-container-sec-6-5" class="outline-3">
+        <h3 id="sec-6-5">Cleanup</h3>
 
         <div class="outline-text-3" id="text-6-5">
           <div class="org-src-container">
@@ -1549,11 +1513,14 @@
 
             <li>Completed projects older than 14 days</li>
           </ul>
+
+          <p>Cleanup = delete what does not contain CLOCK lines, and archive
+          others, for example?</p>
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Recent items</h3>
+      <div id="outline-container-sec-6-6" class="outline-3">
+        <h3 id="sec-6-6">Recent items</h3>
 
         <div class="outline-text-3" id="text-6-6">
           <table class="inlinetask" width="100%">
@@ -1596,8 +1563,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Timesheet</h3>
+      <div id="outline-container-sec-6-7" class="outline-3">
+        <h3 id="sec-6-7">Timesheet</h3>
 
         <div class="outline-text-3" id="text-6-7">
           <p>Track time.</p>
@@ -1621,8 +1588,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Time tracking</h3>
+      <div id="outline-container-sec-6-8" class="outline-3">
+        <h3 id="sec-6-8">Time tracking</h3>
 
         <div class="outline-text-3" id="text-6-8">
           <p>Generate a time tracking report: <a href=
@@ -1645,12 +1612,12 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Expense reporting</h3>
+      <div id="outline-container-sec-6-9" class="outline-3">
+        <h3 id="sec-6-9">Expense reporting</h3>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Daily task review</h3>
+      <div id="outline-container-sec-6-10" class="outline-3">
+        <h3 id="sec-6-10">Daily task review</h3>
 
         <div class="outline-text-3" id="text-6-10">
           <p>Take a moment to plan your day:</p>
@@ -1688,8 +1655,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Weekly task review</h3>
+      <div id="outline-container-sec-6-11" class="outline-3">
+        <h3 id="sec-6-11">Weekly task review</h3>
 
         <div class="outline-text-3" id="text-6-11">
           <ol class="org-ol">
@@ -1820,22 +1787,11 @@
                     )) t)
 </pre>
           </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-    (add-to-list 'org-agenda-custom-commands
-                '(<span class="org-string">"rC"</span> <span class=
-"org-string">"Closed this week (TEST)"</span>
-                  tags <span class=
-"org-string">"CLOSED&gt;\"&lt;-1w&gt;\""</span>
-                  ((org-agenda-sorting-strategy '(priority-down)))) t)
-</pre>
-          </div>
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Next</h3>
+      <div id="outline-container-sec-6-12" class="outline-3">
+        <h3 id="sec-6-12">Next</h3>
 
         <div class="outline-text-3" id="text-6-12">
           <div class="org-src-container">
@@ -1870,8 +1826,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Future</h3>
+      <div id="outline-container-sec-6-13" class="outline-3">
+        <h3 id="sec-6-13">Future</h3>
 
         <div class="outline-text-3" id="text-6-13">
           <p>FIXME C’est scheduled qu’il faut checker, plutôt que deadline
@@ -1909,8 +1865,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Ticklers</h3>
+      <div id="outline-container-sec-6-14" class="outline-3">
+        <h3 id="sec-6-14">Ticklers</h3>
 
         <div class="outline-text-3" id="text-6-14">
           <p>If you can’t get to work on something right now, but it’s not too
@@ -1928,8 +1884,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Waiting for</h3>
+      <div id="outline-container-sec-6-15" class="outline-3">
+        <h3 id="sec-6-15">Waiting for</h3>
 
         <div class="outline-text-3" id="text-6-15">
           <p>Only allow one assignee per task. See <a href=
@@ -1954,8 +1910,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Projects</h3>
+      <div id="outline-container-sec-6-16" class="outline-3">
+        <h3 id="sec-6-16">Projects</h3>
 
         <div class="outline-text-3" id="text-6-16">
           <p>A <b>project</b> is any desired goal that requires <b>more than
@@ -2021,8 +1977,8 @@
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">MORE</h2>
+    <div id="outline-container-sec-7" class="outline-2">
+      <h2 id="sec-7">MORE</h2>
 
       <div class="outline-text-2" id="text-7">
         <div class="org-src-container">
@@ -2034,8 +1990,8 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Assigned to me</h3>
+      <div id="outline-container-sec-7-1" class="outline-3">
+        <h3 id="sec-7-1">Assigned to me</h3>
 
         <div class="outline-text-3" id="text-7-1">
           <div class="org-src-container">
@@ -2061,18 +2017,18 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Tasks by assignee</h3>
+      <div id="outline-container-sec-7-2" class="outline-3">
+        <h3 id="sec-7-2">Tasks by assignee</h3>
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">EMAIL notifications</h2>
+    <div id="outline-container-sec-8" class="outline-2">
+      <h2 id="sec-8">EMAIL notifications</h2>
 
       <div class="outline-text-2" id="text-8"></div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Task assigned</h3>
+      <div id="outline-container-sec-8-1" class="outline-3">
+        <h3 id="sec-8-1">Task assigned</h3>
 
         <div class="outline-text-3" id="text-8-1">
           <div class="org-src-container">
@@ -2092,8 +2048,8 @@ This notification has been sent to you via Azendoo, do not reply.
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Email list</h3>
+      <div id="outline-container-sec-8-2" class="outline-3">
+        <h3 id="sec-8-2">Email list</h3>
 
         <div class="outline-text-3" id="text-8-2">
           <p>You can receive an email with your daily planner every morning at
@@ -2117,13 +2073,15 @@ This notification has been sent to you via Azendoo, do not reply.
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">EXPORT</h2>
+    <div id="outline-container-sec-9" class="outline-2">
+      <h2 id="sec-9">EXPORT</h2>
 
-      <div class="outline-text-2" id="text-9"></div>
+      <div class="outline-text-2" id="text-9">
+        <p>Exporting your personal or team task lists.</p>
+      </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Print list</h3>
+      <div id="outline-container-sec-9-1" class="outline-3">
+        <h3 id="sec-9-1">Print list</h3>
 
         <div class="outline-text-3" id="text-9-1">
           <p>The <b>exported agenda views</b> are not <b>stored</b> when you
@@ -2202,18 +2160,34 @@ This notification has been sent to you via Azendoo, do not reply.
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Export tasks lists as CSV files</h3>
+      <div id="outline-container-sec-9-2" class="outline-3">
+        <h3 id="sec-9-2">Export tasks lists as CSV files</h3>
+      </div>
+
+      <div id="outline-container-sec-9-3" class="outline-3">
+        <h3 id="sec-9-3">Upload on a Web site</h3>
+
+        <div class="outline-text-3" id="text-9-3">
+          <p>I upload my agenda on a website, so I can access it from multiple
+          devices. This works nicely with the following in a cron job:</p>
+
+          <div class="org-src-container">
+            <pre class="src src-shell">
+emacs --batch -l ~/.emacs.d/init.el -eval <span class=
+"org-string">'(org-batch-store-agenda-views)'</span> -kill
+</pre>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">VISUALIZE</h2>
+    <div id="outline-container-sec-10" class="outline-2">
+      <h2 id="sec-10">VISUALIZE</h2>
 
       <div class="outline-text-2" id="text-10"></div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Productivity</h3>
+      <div id="outline-container-sec-10-1" class="outline-3">
+        <h3 id="sec-10-1">Productivity</h3>
 
         <div class="outline-text-3" id="text-10-1">
           <p>The <b>Visualize productivity</b> view shows a graphical
@@ -2225,8 +2199,8 @@ This notification has been sent to you via Azendoo, do not reply.
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">ARCHIVE</h2>
+    <div id="outline-container-sec-11" class="outline-2">
+      <h2 id="sec-11">ARCHIVE</h2>
 
       <div class="outline-text-2" id="text-11">
         <p>Archiving a project (or action) consists in hiding its contents from
@@ -2256,8 +2230,8 @@ This notification has been sent to you via Azendoo, do not reply.
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">REFERENCE</h2>
+    <div id="outline-container-sec-12" class="outline-2">
+      <h2 id="sec-12">REFERENCE</h2>
 
       <div class="outline-text-2" id="text-12">
         <div class="org-src-container">
@@ -2269,8 +2243,8 @@ This notification has been sent to you via Azendoo, do not reply.
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Search</h3>
+      <div id="outline-container-sec-12-1" class="outline-3">
+        <h3 id="sec-12-1">Search</h3>
 
         <div class="outline-text-3" id="text-12-1">
           <p>Search any word or regexp within your task name or in the note
@@ -2317,8 +2291,8 @@ This notification has been sent to you via Azendoo, do not reply.
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Notes</h3>
+      <div id="outline-container-sec-12-2" class="outline-3">
+        <h3 id="sec-12-2">Notes</h3>
 
         <div class="outline-text-3" id="text-12-2">
           <div class="org-src-container">
@@ -2335,8 +2309,8 @@ This notification has been sent to you via Azendoo, do not reply.
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">Task markers (in the current buffer)</h2>
+    <div id="outline-container-sec-13" class="outline-2">
+      <h2 id="sec-13">Task markers (in the current buffer)</h2>
 
       <div class="outline-text-2" id="text-13">
         <div class="org-src-container">
@@ -2375,8 +2349,8 @@ This notification has been sent to you via Azendoo, do not reply.
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">Buggy commands</h2>
+    <div id="outline-container-sec-14" class="outline-2">
+      <h2 id="sec-14">Buggy commands</h2>
 
       <div class="outline-text-2" id="text-14">
         <div class="org-src-container">
@@ -2497,8 +2471,8 @@ This notification has been sent to you via Azendoo, do not reply.
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">Unused code</h2>
+    <div id="outline-container-sec-15" class="outline-2">
+      <h2 id="sec-15">Unused code</h2>
 
       <div class="outline-text-2" id="text-15">
         <div class="org-src-container">
@@ -2597,8 +2571,8 @@ This notification has been sent to you via Azendoo, do not reply.
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">Test cases</h2>
+    <div id="outline-container-sec-16" class="outline-2">
+      <h2 id="sec-16">Test cases</h2>
 
       <div class="outline-text-2" id="text-16">
         <ul class="org-ul">
@@ -2635,13 +2609,13 @@ This notification has been sent to you via Azendoo, do not reply.
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">Org mode</h2>
+    <div id="outline-container-sec-17" class="outline-2">
+      <h2 id="sec-17">Org mode</h2>
 
       <div class="outline-text-2" id="text-17"></div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Lists</h3>
+      <div id="outline-container-sec-17-1" class="outline-3">
+        <h3 id="sec-17-1">Lists</h3>
 
         <div class="outline-text-3" id="text-17-1">
           <ol class="org-ol">
@@ -2907,13 +2881,13 @@ This notification has been sent to you via Azendoo, do not reply.
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">Tips and tricks</h2>
+    <div id="outline-container-sec-18" class="outline-2">
+      <h2 id="sec-18">Tips and tricks</h2>
 
       <div class="outline-text-2" id="text-18"></div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">DEADLINE</h3>
+      <div id="outline-container-sec-18-1" class="outline-3">
+        <h3 id="sec-18-1">DEADLINE</h3>
 
         <div class="outline-text-3" id="text-18-1">
           <p>Writing <code>DEADLINE={}</code> is wrong. You must write:</p>
@@ -2923,8 +2897,8 @@ DEADLINE=""
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Tasks with a time component</h3>
+      <div id="outline-container-sec-18-2" class="outline-3">
+        <h3 id="sec-18-2">Tasks with a time component</h3>
 
         <div class="outline-text-3" id="text-18-2">
           <p>To be sure to get tasks with a time component in the lists,
@@ -2938,8 +2912,8 @@ DEADLINE=""
         </div>
       </div>
 
-      <div id="outline-container-sec-" class="outline-3">
-        <h3 id="sec-">Cas d’erreurs</h3>
+      <div id="outline-container-sec-18-3" class="outline-3">
+        <h3 id="sec-18-3">Cas d’erreurs</h3>
 
         <div class="outline-text-3" id="text-18-3">
           <table border="2" cellspacing="0" cellpadding="6" rules="groups"
@@ -2992,8 +2966,8 @@ DEADLINE=""
       </div>
     </div>
 
-    <div id="outline-container-sec-" class="outline-2">
-      <h2 id="sec-">Footer</h2>
+    <div id="outline-container-sec-19" class="outline-2">
+      <h2 id="sec-19">Footer</h2>
 
       <div class="outline-text-2" id="text-19">
         <div class="org-src-container">

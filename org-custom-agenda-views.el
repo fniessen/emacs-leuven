@@ -16,6 +16,16 @@
   (global-set-key
     (kbd "<M-f7>") (kbd "C-c a r c 7"))
 
+  (defconst leuven-org-completed-date-regexp
+    (concat " \\("
+            "CLOSED: \\[%Y-%m-%d"
+            "\\|"
+            "- State \"\\(DONE\\|CANX\\)\" * from .* \\[%Y-%m-%d"
+            "\\|"
+            "- State .* ->  *\"\\(DONE\\|CANX\\)\" * \\[%Y-%m-%d"
+            "\\) ")
+    "Matches any completion time stamp.")
+
     ;; custom commands for the agenda -- start with a clean slate
     (setq org-agenda-custom-commands nil)
 
@@ -39,12 +49,16 @@
                             ((org-agenda-entry-types '(:timestamp :sexp))
                              (org-agenda-overriding-header "CALENDAR")
                              (org-agenda-span 'day)))
-                    (tags "LEVEL=2"
+                    (tags-todo "LEVEL=2"
                           ((org-agenda-overriding-header "COLLECTBOX")
                            (org-agenda-files (list ,org-default-notes-file))))
                     ;; list of all TODO entries with deadline today
                     (tags-todo "DEADLINE=\"<+0d>\""
-                               ((org-agenda-overriding-header "DUE TODAY")
+                               ((org-agenda-overriding-header
+                                 (concat  "DUE TODAY "
+                                          (format-time-string "%a %d" (current-time))
+                                          ;; #("__________________" 0 12 (face (:foreground "gray")))
+                                          ))
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if 'notdeadline))
                                 (org-agenda-sorting-strategy '(priority-down))))
@@ -80,15 +94,7 @@
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if
                                    'notregexp
-                                   (format-time-string
-                                    (concat
-                                     " \\("
-                                     "CLOSED: \\[%Y-%m-%d"
-                                     "\\|"
-                                     "- State \"\\(DONE\\|CANX\\)\" * from .* \\[%Y-%m-%d"
-                                     "\\|"
-                                     "- State .* ->  *\"\\(DONE\\|CANX\\)\" * \\[%Y-%m-%d"
-                                     "\\) "))))
+                                   (format-time-string leuven-org-completed-date-regexp)))
                                 (org-agenda-sorting-strategy '(priority-down)))))
                    ((org-agenda-format-date "")
                     (org-agenda-start-with-clockreport-mode nil))) t)
@@ -387,18 +393,18 @@
                              (org-agenda-span 'day))))) t)
 
     (add-to-list 'org-agenda-custom-commands
-                 `("rD" "Completed view"
+                 `("rC" "Completed view"
                    (;; list of all TODO entries completed yesterday
                     (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
                                ((org-agenda-overriding-header
                                  (concat "YESTERDAY   "
-                                         (format-time-string "%a %d %b" (current-time-ndays-ago 1))
+                                         (format-time-string "%a %d" (current-time-ndays-ago 1))
                                          ;; #("__________________" 0 12 (face (:foreground "gray")))
                                          ))
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if
                                    'notregexp
-                                   (format-time-string (closed-regexp) (current-time-ndays-ago 1))))
+                                   (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 1))))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     ;; list of all TODO entries completed 2 days ago
                     (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
@@ -408,7 +414,7 @@
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if
                                    'notregexp
-                                   (format-time-string (closed-regexp) (current-time-ndays-ago 2))))
+                                   (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 2))))
                                 (org-agenda-sorting-strategy '(priority-down))))
                     ;; list of all TODO entries completed 3 days ago
                     (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
@@ -418,24 +424,19 @@
                                 (org-agenda-skip-function
                                  '(org-agenda-skip-entry-if
                                    'notregexp
-                                   (format-time-string (closed-regexp) (current-time-ndays-ago 3))))
+                                   (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 3))))
                                 (org-agenda-sorting-strategy '(priority-down)))))
                    ((org-agenda-format-date "")
                     (org-agenda-start-with-clockreport-mode nil))) t)
 
-    (defun closed-regexp ()
-      "Return regexp matching a closing date and time."
-      (concat " \\("
-              "CLOSED: \\[%Y-%m-%d"
-              "\\|"
-              "- State \"\\(DONE\\|CANX\\)\" * from .* \\[%Y-%m-%d"
-              "\\|"
-              "- State .* ->  *\"\\(DONE\\|CANX\\)\" * \\[%Y-%m-%d"
-              "\\) "))
-
     (defun current-time-ndays-ago (n)
       "Return the current time minus N days."
       (time-subtract (current-time) (days-to-time n)))
+
+    (add-to-list 'org-agenda-custom-commands
+                '("rD" "Closed this week (TEST)"
+                  tags "CLOSED>\"<-1w>\""
+                  ((org-agenda-sorting-strategy '(priority-down)))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("rx" "Completed tasks with no CLOCK lines"
@@ -534,11 +535,6 @@
                    ;;  (org-agenda-write-buffer-name "Weekly task review"))
                    ;; "~/org-weekly-review.html") t)
                     )) t)
-
-    (add-to-list 'org-agenda-custom-commands
-                '("rC" "Closed this week (TEST)"
-                  tags "CLOSED>\"<-1w>\""
-                  ((org-agenda-sorting-strategy '(priority-down)))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("rN" "Next"
