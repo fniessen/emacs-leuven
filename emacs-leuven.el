@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140730.1414
+;; Version: 20140805.1122
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140730.1414]--")
+(message "* --[ Loading Emacs Leuven 20140805.1122]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -4231,10 +4231,17 @@ From %c"
       '((t (:foreground "#34AD00")))
       "Face used to highlight tasks whose due date is for later."))
 
-  ;; 10.4 column to shift tags to (in agenda items)
-  (setq org-agenda-tags-column -132)
-
   (with-eval-after-load "org-agenda"
+
+    ;; ;; 10.4 column to shift tags to (in agenda items)
+    ;; (setq org-agenda-tags-column -132)
+
+    ;; right-justify tags in the agenda buffer
+    (defun leuven--org-agenda-right-justify-tags ()
+      "Justify the tags to the right border of the agenda window."
+      (let ((org-agenda-tags-column (- 2 (window-width))))
+        (org-agenda-align-tags)))
+    (add-hook 'org-agenda-finalize-hook 'leuven--org-agenda-right-justify-tags)
 
     ;; type "(" in agenda and todo buffers to show category name and task
     ;; length for each task
@@ -4314,9 +4321,12 @@ From %c"
   ;; format string for displaying dates in the daily/weekly agenda
   ;; and in the timeline
   (setq org-agenda-format-date
-        (concat ;; "\n"
+        (concat                         ; "\n"
                 "%Y-%m-%d" " %a "
-                (make-string (1- (window-width)) (string-to-char "_"))))
+                (make-string 65 (string-to-char " "))
+                "_"
+                ;; (make-string 1 ?\u25AE)
+                ))
 
   ;; 10.5 only show clocked entries in agenda log mode (no closed
   ;; entries, no state changes)
@@ -7243,7 +7253,7 @@ From %c"
 
     ;; add today's appointments (found in `org-agenda-files') each time the
     ;; agenda buffer is (re)built
-    (add-hook 'org-finalize-agenda-hook
+    (add-hook 'org-agenda-finalize-hook
               'org-agenda-to-appt)      ;! don't use the `org-agenda-mode-hook'
                                         ;! because the Org agenda files would
                                         ;! be opened once by
@@ -8707,7 +8717,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140730.1415]--")
+(message "* --[ Loaded Emacs Leuven 20140805.1123]--")
 
 (provide 'emacs-leuven)
 

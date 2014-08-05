@@ -6489,13 +6489,20 @@ http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
     (defface leuven-org-deadline-future
       '((t (:foreground "#34AD00")))
       "Face used to highlight tasks whose due date is for later."))
-
-  ;; 10.4 column to shift tags to (in agenda items)
-  (setq org-agenda-tags-column -132)
 #+end_src
 
 #+begin_src emacs-lisp
   (with-eval-after-load "org-agenda"
+
+    ;; ;; 10.4 column to shift tags to (in agenda items)
+    ;; (setq org-agenda-tags-column -132)
+
+    ;; right-justify tags in the agenda buffer
+    (defun leuven--org-agenda-right-justify-tags ()
+      "Justify the tags to the right border of the agenda window."
+      (let ((org-agenda-tags-column (- 2 (window-width))))
+        (org-agenda-align-tags)))
+    (add-hook 'org-agenda-finalize-hook 'leuven--org-agenda-right-justify-tags)
 
     ;; type "(" in agenda and todo buffers to show category name and task
     ;; length for each task
@@ -6597,9 +6604,12 @@ Agenda view: put related tasks together, then by priority.
   ;; format string for displaying dates in the daily/weekly agenda
   ;; and in the timeline
   (setq org-agenda-format-date
-        (concat ;; "\n"
+        (concat                         ; "\n"
                 "%Y-%m-%d" " %a "
-                (make-string (1- (window-width)) (string-to-char "_"))))
+                (make-string 65 (string-to-char " "))
+                "_"
+                ;; (make-string 1 ?\u25AE)
+                ))
 
   ;; 10.5 only show clocked entries in agenda log mode (no closed
   ;; entries, no state changes)
@@ -10970,6 +10980,17 @@ If ~xdg-open~ is not available, one can replace it with ~gnome-open~ or ~kde-ope
   (kbd "F") 'dired-launch-command)
 #+end_src
 
+> These days, there are mature programs for launching an arbitrary file with
+> an appropriate viewer: run-mailcap (which is mature to the point of
+> obsolescence) and xdg-open on GNU systems; open on Mac OS X; start on MS
+> Windows).
+
+It would be a bad idea to use 'start' on Windows: it has too many
+quirks regarding quoting of its command line.  Instead, just invoke
+the existing primitive w32-shell-execute with the 'open' verb.  As a
+nice side effect, this will support Unicode file names, something that
+is currently impossible when you invoke an external command.
+
 **** Ask a WWW browser to display file
 
 Just ask a WWW browser to display the current file.
@@ -11425,7 +11446,7 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
 
     ;; add today's appointments (found in `org-agenda-files') each time the
     ;; agenda buffer is (re)built
-    (add-hook 'org-finalize-agenda-hook
+    (add-hook 'org-agenda-finalize-hook
               'org-agenda-to-appt)      ;! don't use the `org-agenda-mode-hook'
                                         ;! because the Org agenda files would
                                         ;! be opened once by
