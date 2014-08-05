@@ -1165,7 +1165,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140805.1123</span>
+"org-comment">Version: 20140805.1537</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1288,7 +1288,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140805.1123]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140805.1537]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">uptimes</span>
@@ -1478,10 +1478,11 @@
 (<span class="org-keyword">defmacro</span> <span class=
 "org-function-name">leuven--chapter</span> (chapterid chaptername <span class=
 "org-type">&amp;rest</span> body)
-  <span class="org-doc">"Wrap Lisp expressions as CHAPTERNAME.</span>
+  <span class=
+"org-doc">"Evaluated only when CHAPTERID is not nil, wrapping Lisp expressions as CHAPTERNAME.</span>
 <span class=
-"org-doc">Evaluated only when CHAPTERID is not nil.  Save execution times in the global</span>
-<span class="org-doc">list `</span><span class="org-doc"><span class=
+"org-doc">Save execution times in the global list `</span><span class=
+"org-doc"><span class=
 "org-constant">leuven--load-times-list</span></span><span class=
 "org-doc">'."</span>
   `(<span class="org-keyword">when</span> ,chapterid
@@ -4922,15 +4923,6 @@
      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">'("francais" "deutsch8" "norsk")</span>
 
-     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">spell-check your XHTML (by adding `</span><span class=
-"org-comment"><span class=
-"org-constant">nxml-text-face</span></span><span class=
-"org-comment">' to the list of</span>
-     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">faces corresponding to text in programming-mode buffers)</span>
-     (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)
-
      (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-flyspell-toggle-dictionary</span> ()
        <span class=
@@ -4964,7 +4956,16 @@
        (kbd <span class="org-string">"C-$"</span>) 'flyspell-buffer)
      (global-set-key
        (kbd <span class=
-"org-string">"C-M-$"</span>) 'leuven-flyspell-toggle-dictionary)))
+"org-string">"C-M-$"</span>) 'leuven-flyspell-toggle-dictionary)
+
+     <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">spell-check your XHTML (by adding `</span><span class=
+"org-comment"><span class=
+"org-constant">nxml-text-face</span></span><span class=
+"org-comment">' to the list of</span>
+     <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">faces corresponding to text in programming-mode buffers)</span>
+     (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)))
 </pre>
           </div>
 
@@ -7378,11 +7379,13 @@ M-: (executable-find "diff") RET
                 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(capitalize (symbol-name system-type))</span>
                 emacs-version
-                (<span class="org-keyword">if</span> emacs-bzr-version
+                (<span class=
+"org-keyword">if</span> (and (boundp 'emacs-repository-version)
+                         emacs-repository-version)
                     (concat <span class="org-string">" (r"</span>
                             (replace-regexp-in-string <span class=
 "org-string">" .*"</span> <span class="org-string">""</span>
-                                                      emacs-bzr-version)
+                                                      emacs-repository-version)
                             <span class="org-string">")"</span>)
                   <span class="org-string">""</span>)
                 (format-time-string <span class=
@@ -12332,6 +12335,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment-delimiter">; </span><span class="org-comment">"\n"</span>
                 <span class="org-string">"%Y-%m-%d"</span> <span class=
 "org-string">" %a "</span>
+                <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(make-string (1- (window-width)) (string-to-char "_"))))</span>
                 (make-string 65 (string-to-char <span class=
 "org-string">" "</span>))
                 <span class="org-string">"_"</span>
@@ -14665,13 +14670,19 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
           <h4 id="sec-28-14-1">Ispell</h4>
 
           <div class="outline-text-4" id="text-28-14-1">
+            <div class="note">
+              <p>The <code>leuven--org-switch-dictionary</code> function is
+              called as well on each code block (at least, in emails that are
+              being read), in buffers called <code>*fontification*</code>.</p>
+            </div>
+
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven--org-switch-dictionary</span> ()
     <span class=
 "org-doc">"Set language if Flyspell is enabled and `#+LANGUAGE:' is on top 8 lines."</span>
-    (<span class="org-keyword">when</span> flyspell-mode
+    (<span class="org-keyword">when</span> ispell-dictionary-alist
       (<span class="org-keyword">save-excursion</span>
         (goto-char (point-min))
         (forward-line 8)
@@ -15385,11 +15396,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">modifications of the buffer</span>
           (org-align-all-tags)
           (org-update-all-dblocks)
-          <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(when (fboundp 'org-table-iterate-buffer-tables)</span>
           (org-table-iterate-buffer-tables)
-          <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">)</span>
           (<span class=
 "org-keyword">when</span> (file-exists-p (buffer-file-name (current-buffer)))
             (leuven-org-remove-redundant-tags))
@@ -17497,6 +17504,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">enable Flycheck mode in all buffers</span>
     (add-hook 'after-init-hook #'global-flycheck-mode)
+
+    (setq flycheck-idle-change-delay 2)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; show the </span><span class="org-comment"><span class=
@@ -23626,8 +23635,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (setq safe-local-variable-values
         '((TeX-master . t)
           (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
-          <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(ac-user-dictionary-files . ("../dictionary.txt"))</span>
           (flyspell-mode . -1)
           (flyspell-mode . 1)
           (ispell-local-dictionary . <span class=
@@ -23934,10 +23941,6 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 "org-comment">** (info "(elisp)Faces")</span>
 
   (leuven--section <span class="org-string">"Faces"</span>)
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable more bold and italic fonts to be displayed</span>
-  (setq w32-enable-synthesized-fonts t)
 </pre>
           </div>
 
@@ -24565,7 +24568,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140805.1124]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140805.1538]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

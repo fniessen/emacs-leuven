@@ -207,9 +207,8 @@ this set of customizations to "short-cut" that initial process.
   "List of chapters and time to load them.")
 
 (defmacro leuven--chapter (chapterid chaptername &rest body)
-  "Wrap Lisp expressions as CHAPTERNAME.
-Evaluated only when CHAPTERID is not nil.  Save execution times in the global
-list `leuven--load-times-list'."
+  "Evaluated only when CHAPTERID is not nil, wrapping Lisp expressions as CHAPTERNAME.
+Save execution times in the global list `leuven--load-times-list'."
   `(when ,chapterid
      (let (before-chapter-time
            this-chapter-time)
@@ -2226,10 +2225,6 @@ of possible corrections for misspelled word before point.
      (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
      ;; '("francais" "deutsch8" "norsk")
 
-     ;; spell-check your XHTML (by adding `nxml-text-face' to the list of
-     ;; faces corresponding to text in programming-mode buffers)
-     (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)
-
      (defun leuven-flyspell-toggle-dictionary ()
        "Toggle the local dictionary between French and US English."
        (interactive)
@@ -2250,7 +2245,11 @@ of possible corrections for misspelled word before point.
      (global-set-key
        (kbd "C-$") 'flyspell-buffer)
      (global-set-key
-       (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary)))
+       (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary)
+
+     ;; spell-check your XHTML (by adding `nxml-text-face' to the list of
+     ;; faces corresponding to text in programming-mode buffers)
+     (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3713,10 +3712,11 @@ one.
         (format "Emacs %s%s of %s - PID: %d"
                 ;; (capitalize (symbol-name system-type))
                 emacs-version
-                (if emacs-bzr-version
+                (if (and (boundp 'emacs-repository-version)
+                         emacs-repository-version)
                     (concat " (r"
                             (replace-regexp-in-string " .*" ""
-                                                      emacs-bzr-version)
+                                                      emacs-repository-version)
                             ")")
                   "")
                 (format-time-string "%Y-%m-%d" emacs-build-time)
@@ -6606,6 +6606,7 @@ Agenda view: put related tasks together, then by priority.
   (setq org-agenda-format-date
         (concat                         ; "\n"
                 "%Y-%m-%d" " %a "
+                ;; (make-string (1- (window-width)) (string-to-char "_"))))
                 (make-string 65 (string-to-char " "))
                 "_"
                 ;; (make-string 1 ?\u25AE)
@@ -7950,10 +7951,15 @@ an interactive terminal.
 
 *** Ispell
 
+#+begin_note
+The ~leuven--org-switch-dictionary~ function is called as well on each code block
+(at least, in emails that are being read), in buffers called ~*fontification*~.
+#+end_note
+
 #+begin_src emacs-lisp
   (defun leuven--org-switch-dictionary ()
     "Set language if Flyspell is enabled and `#+LANGUAGE:' is on top 8 lines."
-    (when flyspell-mode
+    (when ispell-dictionary-alist
       (save-excursion
         (goto-char (point-min))
         (forward-line 8)
@@ -8390,9 +8396,7 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
                                           ; modifications of the buffer
           (org-align-all-tags)
           (org-update-all-dblocks)
-          ;; (when (fboundp 'org-table-iterate-buffer-tables)
           (org-table-iterate-buffer-tables)
-          ;; )
           (when (file-exists-p (buffer-file-name (current-buffer)))
             (leuven-org-remove-redundant-tags))
           (when flyspell-mode-before-save (flyspell-mode 1)))))
@@ -9604,6 +9608,8 @@ See ~leuven-helm-grep-org-files~.
 
     ;; enable Flycheck mode in all buffers
     (add-hook 'after-init-hook #'global-flycheck-mode)
+
+    (setq flycheck-idle-change-delay 2)
 
     ;; ;; show the error list for the current buffer (for wide screens)
     ;; (add-hook 'flycheck-mode-hook 'flycheck-list-errors)
@@ -13216,7 +13222,6 @@ particular color...
   (setq safe-local-variable-values
         '((TeX-master . t)
           (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
-          ;; (ac-user-dictionary-files . ("../dictionary.txt"))
           (flyspell-mode . -1)
           (flyspell-mode . 1)
           (ispell-local-dictionary . "american")
@@ -13390,9 +13395,6 @@ Now Emacs should start with that font.
 ;;** (info "(elisp)Faces")
 
   (leuven--section "Faces")
-
-  ;; enable more bold and italic fonts to be displayed
-  (setq w32-enable-synthesized-fonts t)
 #+end_src
 
 For reasons unknown to me, Emacs takes a long time to change fonts in an X

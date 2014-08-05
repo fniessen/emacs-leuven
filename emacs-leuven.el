@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140805.1122
+;; Version: 20140805.1536
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140805.1122]--")
+(message "* --[ Loading Emacs Leuven 20140805.1536]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -162,9 +162,8 @@
   "List of chapters and time to load them.")
 
 (defmacro leuven--chapter (chapterid chaptername &rest body)
-  "Wrap Lisp expressions as CHAPTERNAME.
-Evaluated only when CHAPTERID is not nil.  Save execution times in the global
-list `leuven--load-times-list'."
+  "Evaluated only when CHAPTERID is not nil, wrapping Lisp expressions as CHAPTERNAME.
+Save execution times in the global list `leuven--load-times-list'."
   `(when ,chapterid
      (let (before-chapter-time
            this-chapter-time)
@@ -1350,10 +1349,6 @@ Last time is saved in global variable `leuven--before-section-time'."
      (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
      ;; '("francais" "deutsch8" "norsk")
 
-     ;; spell-check your XHTML (by adding `nxml-text-face' to the list of
-     ;; faces corresponding to text in programming-mode buffers)
-     (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)
-
      (defun leuven-flyspell-toggle-dictionary ()
        "Toggle the local dictionary between French and US English."
        (interactive)
@@ -1374,7 +1369,11 @@ Last time is saved in global variable `leuven--before-section-time'."
      (global-set-key
        (kbd "C-$") 'flyspell-buffer)
      (global-set-key
-       (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary)))
+       (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary)
+
+     ;; spell-check your XHTML (by adding `nxml-text-face' to the list of
+     ;; faces corresponding to text in programming-mode buffers)
+     (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)))
 
   ;; client for rfc2229 dictionary servers
   (when (try-require "dictionary-autoloads")
@@ -2378,10 +2377,11 @@ Last time is saved in global variable `leuven--before-section-time'."
         (format "Emacs %s%s of %s - PID: %d"
                 ;; (capitalize (symbol-name system-type))
                 emacs-version
-                (if emacs-bzr-version
+                (if (and (boundp 'emacs-repository-version)
+                         emacs-repository-version)
                     (concat " (r"
                             (replace-regexp-in-string " .*" ""
-                                                      emacs-bzr-version)
+                                                      emacs-repository-version)
                             ")")
                   "")
                 (format-time-string "%Y-%m-%d" emacs-build-time)
@@ -4323,6 +4323,7 @@ From %c"
   (setq org-agenda-format-date
         (concat                         ; "\n"
                 "%Y-%m-%d" " %a "
+                ;; (make-string (1- (window-width)) (string-to-char "_"))))
                 (make-string 65 (string-to-char " "))
                 "_"
                 ;; (make-string 1 ?\u25AE)
@@ -5254,7 +5255,7 @@ From %c"
 
   (defun leuven--org-switch-dictionary ()
     "Set language if Flyspell is enabled and `#+LANGUAGE:' is on top 8 lines."
-    (when flyspell-mode
+    (when ispell-dictionary-alist
       (save-excursion
         (goto-char (point-min))
         (forward-line 8)
@@ -5552,9 +5553,7 @@ From %c"
                                           ; modifications of the buffer
           (org-align-all-tags)
           (org-update-all-dblocks)
-          ;; (when (fboundp 'org-table-iterate-buffer-tables)
           (org-table-iterate-buffer-tables)
-          ;; )
           (when (file-exists-p (buffer-file-name (current-buffer)))
             (leuven-org-remove-redundant-tags))
           (when flyspell-mode-before-save (flyspell-mode 1)))))
@@ -6248,6 +6247,8 @@ From %c"
 
     ;; enable Flycheck mode in all buffers
     (add-hook 'after-init-hook #'global-flycheck-mode)
+
+    (setq flycheck-idle-change-delay 2)
 
     ;; ;; show the error list for the current buffer (for wide screens)
     ;; (add-hook 'flycheck-mode-hook 'flycheck-list-errors)
@@ -8516,7 +8517,6 @@ From %c"
   (setq safe-local-variable-values
         '((TeX-master . t)
           (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
-          ;; (ac-user-dictionary-files . ("../dictionary.txt"))
           (flyspell-mode . -1)
           (flyspell-mode . 1)
           (ispell-local-dictionary . "american")
@@ -8614,9 +8614,6 @@ From %c"
 ;;** (info "(elisp)Faces")
 
   (leuven--section "Faces")
-
-  ;; enable more bold and italic fonts to be displayed
-  (setq w32-enable-synthesized-fonts t)
 
   (defun merge-x-resources ()
     (let ((file (file-name-nondirectory (buffer-file-name))))
@@ -8717,7 +8714,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140805.1123]--")
+(message "* --[ Loaded Emacs Leuven 20140805.1537]--")
 
 (provide 'emacs-leuven)
 
