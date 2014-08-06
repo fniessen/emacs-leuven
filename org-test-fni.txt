@@ -75,6 +75,15 @@
 
 * Tests
 
+Files to test:
+
+- sample Org file
+- example.txt
+- ERT Refcard
+- Babel Refcard
+- Beamer Refcard
+- Emacs-Leuven
+
 #+begin_src emacs-lisp
 ;;; Internal Tests
 
