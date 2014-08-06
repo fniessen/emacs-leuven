@@ -7959,7 +7959,8 @@ The ~leuven--org-switch-dictionary~ function is called as well on each code bloc
 #+begin_src emacs-lisp
   (defun leuven--org-switch-dictionary ()
     "Set language if Flyspell is enabled and `#+LANGUAGE:' is on top 8 lines."
-    (when ispell-dictionary-alist
+    (when (and (boundp 'ispell-dictionary-alist)
+               ispell-dictionary-alist)
       (save-excursion
         (goto-char (point-min))
         (forward-line 8)
@@ -9604,17 +9605,24 @@ See ~leuven-helm-grep-org-files~.
 
   (leuven--section "27.5 (emacs)Flymake")
 
+  ;; modern on-the-fly syntax checking
   (when (try-require 'flycheck)
+
+    ;; how many seconds to wait before checking syntax automatically
+    (setq flycheck-idle-change-delay 2)
 
     ;; enable Flycheck mode in all buffers
     (add-hook 'after-init-hook #'global-flycheck-mode)
-
-    (setq flycheck-idle-change-delay 2)
 
     ;; ;; show the error list for the current buffer (for wide screens)
     ;; (add-hook 'flycheck-mode-hook 'flycheck-list-errors)
     )
 #+end_src
+
+If FlyCheck is taking too much time, see
+https://github.com/magnars/.emacs.d/blob/master/setup-flycheck.el for a smart
+way to reduce the time: *only check FlyCheck every 30s on clean buffers* (adjust
+the time to 30 s in buffers with no errors, and to 0.5 s for the others)...
 
 ** Running Debuggers Under Emacs
 

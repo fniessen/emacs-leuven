@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140805.1536
+;; Version: 20140806.1030
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140805.1536]--")
+(message "* --[ Loading Emacs Leuven 20140806.1030]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -5255,7 +5255,8 @@ From %c"
 
   (defun leuven--org-switch-dictionary ()
     "Set language if Flyspell is enabled and `#+LANGUAGE:' is on top 8 lines."
-    (when ispell-dictionary-alist
+    (when (and (boundp 'ispell-dictionary-alist)
+               ispell-dictionary-alist)
       (save-excursion
         (goto-char (point-min))
         (forward-line 8)
@@ -6243,12 +6244,14 @@ From %c"
 
   (leuven--section "27.5 (emacs)Flymake")
 
+  ;; modern on-the-fly syntax checking
   (when (try-require 'flycheck)
+
+    ;; how many seconds to wait before checking syntax automatically
+    (setq flycheck-idle-change-delay 2)
 
     ;; enable Flycheck mode in all buffers
     (add-hook 'after-init-hook #'global-flycheck-mode)
-
-    (setq flycheck-idle-change-delay 2)
 
     ;; ;; show the error list for the current buffer (for wide screens)
     ;; (add-hook 'flycheck-mode-hook 'flycheck-list-errors)
@@ -8714,7 +8717,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140805.1537]--")
+(message "* --[ Loaded Emacs Leuven 20140806.1031]--")
 
 (provide 'emacs-leuven)
 
