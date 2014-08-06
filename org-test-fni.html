@@ -1,0 +1,232 @@
+<!-- <xml version="1.0" encoding="utf-8"> -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
+
+  <title>Extra tests for Org mode</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="generator" content="Org-mode" />
+  <meta name="author" content="Fabrice Niessen" />
+  <link rel="stylesheet" type="text/css" href=
+  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/htmlize.css" />
+  <link rel="stylesheet" type="text/css" href=
+  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/bigblow.css" />
+  <link rel="stylesheet" type="text/css" href=
+  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/hideshow.css" />
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery-1.9.1.min.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery-ui-1.10.2.min.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery.localscroll-min.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery.scrollTo-1.4.3.1-min.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/bigblow.js">
+</script>
+<script type="text/javascript" src=
+"file:///D:/Users/fni/src/org-style/styles/bigblow/js/hideshow.js">
+</script>
+</head>
+
+<body>
+  <div id="content">
+    <h1 class="title">Extra tests for Org mode</h1>
+
+    <div id="table-of-contents">
+      <h2>Table of Contents</h2>
+
+      <div id="text-table-of-contents">
+        <ul>
+          <li><a href="#sec-1">Header</a></li>
+
+          <li><a href="#sec-2">Helper functions</a></li>
+
+          <li><a href="#sec-3">Tests</a></li>
+
+          <li><a href="#sec-4">Footer</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="outline-container-sec-1" class="outline-2">
+      <h2 id="sec-1">Header</h2>
+
+      <div class="outline-text-2" id="text-1">
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+<span class="org-comment-delimiter">;;;; </span><span class=
+"org-comment">org-test-fni.el --- Extra tests for Org mode</span>
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Copyright (C) 2014  Fabrice Niessen</span>
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Author: Fabrice Niessen</span>
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">This file is not part of GNU Emacs.</span>
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">This program is free software; you can redistribute it and/or modify</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">it under the terms of the GNU General Public License as published by</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">the Free Software Foundation, either version 3 of the License, or</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(at your option) any later version.</span>
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">This program is distributed in the hope that it will be useful,</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">GNU General Public License for more details.</span>
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">You should have received a copy of the GNU General Public License</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">along with this program.  If not, see <a href=
+"http://www.gnu.org/licenses/">&lt;http://www.gnu.org/licenses/&gt;</a>.</span>
+
+<span class="org-comment-delimiter">;;; </span><span class=
+"org-comment">Commentary:</span>
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Command:</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">emacs -Q --batch -L lisp/ -L testing/ -l ~/src/emacs-leuven/org-test-fni.el --eval '(setq org-confirm-babel-evaluate nil)' -f ert-run-tests-batch-and-exit</span>
+
+<span class="org-comment-delimiter">;;; </span><span class=
+"org-comment">Code:</span>
+
+(<span class="org-keyword">require</span> '<span class=
+"org-constant">ert</span>)
+(<span class="org-keyword">require</span> '<span class=
+"org-constant">ox</span>)
+</pre>
+        </div>
+      </div>
+    </div>
+
+    <div id="outline-container-sec-2" class="outline-2">
+      <h2 id="sec-2">Helper functions</h2>
+
+      <div class="outline-text-2" id="text-2">
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+<span class="org-comment-delimiter">;;; </span><span class=
+"org-comment">Functions for writing tests</span>
+
+(<span class="org-keyword">defun</span> <span class=
+"org-function-name">compare-org-html-export-files</span> (orgfile)
+  <span class=
+"org-doc">"Compare current export of ORGFILE with HTML file already present on disk."</span>
+  (<span class="org-keyword">let*</span> ((base-name
+          (concat (file-name-directory orgfile) (file-name-base orgfile)))
+         (htmlfile (concat base-name <span class="org-string">".html"</span>))
+         htmlcontents)
+    (should
+     (equal
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">new export</span>
+      (<span class="org-keyword">with-temp-buffer</span>
+        (insert-file-contents orgfile)
+        (setq htmlcontents (org-export-as 'html))
+        (delete-region (point-min) (point-max))
+        (insert htmlcontents)
+        (buffer-string))
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">old export</span>
+      (<span class="org-keyword">with-temp-buffer</span>
+        (insert-file-contents htmlfile)
+        (buffer-string))))))
+</pre>
+        </div>
+      </div>
+    </div>
+
+    <div id="outline-container-sec-3" class="outline-2">
+      <h2 id="sec-3">Tests</h2>
+
+      <div class="outline-text-2" id="text-3">
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+<span class="org-comment-delimiter">;;; </span><span class=
+"org-comment">Internal Tests</span>
+
+(ert-deftest test-org-export/export-html-backend-test-file ()
+  <span class=
+"org-string">"Compare current export of ORGFILE with HTML file already present on disk."</span>
+  (compare-org-html-export-files <span class=
+"org-string">"~/src/emacs-leuven/org-test-sample.org"</span>))
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(ert 'test-org-export/export-html-backend-test-file)</span>
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+(ert-deftest test-org-export/export-html-backend-example-file ()
+  <span class=
+"org-string">"Compare current export of ORGFILE with HTML file already present on disk."</span>
+  (compare-org-html-export-files <span class=
+"org-string">"~/src/org-style/example.txt"</span>))
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(ert 'test-org-export/export-html-backend-example-file)</span>
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+(ert-deftest test-org-export/export-html-backend-ERT-refcard-file ()
+  <span class=
+"org-string">"Compare current export of ORGFILE with HTML file already present on disk."</span>
+  (compare-org-html-export-files <span class=
+"org-string">"~/src/reference-cards/ERT-refcard.txt"</span>))
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(ert 'test-org-export/export-html-backend-ERT-refcard-file)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+
+    <div id="outline-container-sec-4" class="outline-2">
+      <h2 id="sec-4">Footer</h2>
+
+      <div class="outline-text-2" id="text-4">
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+(<span class="org-keyword">provide</span> '<span class=
+"org-constant">org-test-fni</span>)
+
+<span class="org-comment-delimiter">;;; </span><span class=
+"org-comment">org-test-fni.el ends here</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="postamble" class="status">
+    <div id="footer">
+      <div id="copyright">
+        Copyright © Fabrice Niessen
+      </div>
+    </div>
+  </div>
+</body>
+</html>

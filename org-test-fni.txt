@@ -1,3 +1,20 @@
+#+TITLE:     Extra tests for Org mode
+#+AUTHOR:    Fabrice Niessen
+#+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:4 num:nil
+
+#+PROPERTY:  tangle yes
+#+PROPERTY:  padline yes
+#+PROPERTY:  eval no
+
+#+SETUPFILE: ~/src/org-style/setup/bigblow-local-abs.setup
+
+* Header
+
+#+begin_src emacs-lisp
 ;;;; org-test-fni.el --- Extra tests for Org mode
 
 ;; Copyright (C) 2014  Fabrice Niessen
@@ -28,7 +45,11 @@
 
 (require 'ert)
 (require 'ox)
+#+end_src
 
+* Helper functions
+
+#+begin_src emacs-lisp
 ;;; Functions for writing tests
 
 (defun compare-org-html-export-files (orgfile)
@@ -50,7 +71,11 @@
       (with-temp-buffer
         (insert-file-contents htmlfile)
         (buffer-string))))))
+#+end_src
 
+* Tests
+
+#+begin_src emacs-lisp
 ;;; Internal Tests
 
 (ert-deftest test-org-export/export-html-backend-test-file ()
@@ -58,19 +83,28 @@
   (compare-org-html-export-files "~/src/emacs-leuven/org-test-sample.org"))
 
 ;; (ert 'test-org-export/export-html-backend-test-file)
+#+end_src
 
+#+begin_src emacs-lisp
 (ert-deftest test-org-export/export-html-backend-example-file ()
   "Compare current export of ORGFILE with HTML file already present on disk."
   (compare-org-html-export-files "~/src/org-style/example.txt"))
 
 ;; (ert 'test-org-export/export-html-backend-example-file)
+#+end_src
 
+#+begin_src emacs-lisp
 (ert-deftest test-org-export/export-html-backend-ERT-refcard-file ()
   "Compare current export of ORGFILE with HTML file already present on disk."
   (compare-org-html-export-files "~/src/reference-cards/ERT-refcard.txt"))
 
 ;; (ert 'test-org-export/export-html-backend-ERT-refcard-file)
+#+end_src
 
+* Footer
+
+#+begin_src emacs-lisp
 (provide 'org-test-fni)
 
 ;;; org-test-fni.el ends here
+#+end_src
