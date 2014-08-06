@@ -384,16 +384,6 @@
 
     )
 
-  ;; show what happened today
-  (add-to-list 'org-agenda-custom-commands
-               '("rl" "Timeline for today"
-                 ((agenda ""
-                          ((org-agenda-clockreport-mode t)
-                           (org-agenda-entry-types '(:timestamp))
-                           (org-agenda-log-mode-items '(clock closed))
-                           (org-agenda-show-log t)
-                           (org-agenda-span 'day))))) t)
-
   (add-to-list 'org-agenda-custom-commands
                `("rC" "Completed view"
                  (;; list of all TODO entries completed yesterday
@@ -464,11 +454,13 @@
                   (org-agenda-inactive-leader "Inactive:  ")
                   (org-agenda-include-inactive-timestamps t))) t)
 
+  ;; show what happened today
   (add-to-list 'org-agenda-custom-commands
                '("rt" "Timesheet"
                  ((agenda ""
                           ((org-agenda-clockreport-mode t)
                            (org-agenda-overriding-header "TIMESHEET")
+                           (org-agenda-log-mode-items '(clock closed))
                            (org-agenda-show-log 'clockcheck)
                            (org-agenda-span 'day))))) t)
 

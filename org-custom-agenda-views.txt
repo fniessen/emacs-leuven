@@ -35,6 +35,13 @@ such an update via =C-u C-u C-c C-d=.
 
 Overall count: 6 projects.
 
+* Tasks                                                              :noexport:
+
+** TODO Convert <+0d> into <today>
+
+Check first that all the correct tasks are shown, the ones with a time part and
+the ones without...
+
 * Key bindings
 
 #+begin_src emacs-lisp
@@ -746,24 +753,6 @@ view.
     )
 #+end_src
 
-** Timeline
-
-=org-timeline= has weaknesses and although not officially deprecated, should be
-best avoided.  See Carsten's comments in
-http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465
-
-#+begin_src emacs-lisp
-  ;; show what happened today
-  (add-to-list 'org-agenda-custom-commands
-               '("rl" "Timeline for today"
-                 ((agenda ""
-                          ((org-agenda-clockreport-mode t)
-                           (org-agenda-entry-types '(:timestamp))
-                           (org-agenda-log-mode-items '(clock closed))
-                           (org-agenda-show-log t)
-                           (org-agenda-span 'day))))) t)
-#+end_src
-
 ** Completed Tasks
 
 To monitor your progress, you can view what tasks have been *completed recently*
@@ -870,16 +859,24 @@ Recently done.
 
 ** Timesheet
 
+#+begin_note
+=org-timeline= has weaknesses and although not officially deprecated, should be
+best avoided.  See Carsten's comments in
+http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465
+#+end_note
+
 Track time.
 
 https://www.freshbooks.com/timesheet#date/2014-02-17
 
 #+begin_src emacs-lisp
+  ;; show what happened today
   (add-to-list 'org-agenda-custom-commands
                '("rt" "Timesheet"
                  ((agenda ""
                           ((org-agenda-clockreport-mode t)
                            (org-agenda-overriding-header "TIMESHEET")
+                           (org-agenda-log-mode-items '(clock closed))
                            (org-agenda-show-log 'clockcheck)
                            (org-agenda-span 'day))))) t)
 #+end_src
@@ -1684,3 +1681,5 @@ So, for example: to hide TODO keywords from the agenda:
 (setq org-agenda-custom-commands
       '(("a" agenda ""
          ((org-agenda-todo-keyword-format "")))))
+
+** Look at Podio for nice colors for the agenda buffer
