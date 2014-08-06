@@ -19,10 +19,15 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-;;; Code:
+;;; Commentary:
 
 ;; Command:
 ;; emacs -Q --batch -L lisp/ -L testing/ -l ~/src/emacs-leuven/org-test-fni.el --eval '(setq org-confirm-babel-evaluate nil)' -f ert-run-tests-batch-and-exit
+
+;;; Code:
+
+(require 'ert)
+(require 'ox)
 
 ;;; Functions for writing tests
 
@@ -47,15 +52,9 @@
 
 ;;; Internal Tests
 
-(ert-deftest test-org-export/export-html-backend ()
-  "Compare HTML export for file."
-  (compare-org-html-export-files "~/src/reference-cards/ERT-refcard.txt"))
-
-;; (ert 'test-org-export/export-html-backend)
-
 (ert-deftest test-org-export/export-html-backend-test-file ()
   "Compare current export of ORGFILE with HTML file already present on disk."
-  (compare-org-html-export-files "~/src/emacs-leuven/test.org"))
+  (compare-org-html-export-files "~/src/emacs-leuven/org-test-sample.org"))
 
 ;; (ert 'test-org-export/export-html-backend-test-file)
 
