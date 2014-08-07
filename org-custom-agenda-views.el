@@ -402,7 +402,7 @@
                   (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
                              ((org-agenda-overriding-header
                                (concat "2 DAYS AGO  "
-                                       (format-time-string "%a %d %b" (current-time-ndays-ago 2))))
+                                       (format-time-string "%a %d" (current-time-ndays-ago 2))))
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if
                                  'notregexp
@@ -412,7 +412,7 @@
                   (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
                              ((org-agenda-overriding-header
                                (concat "3 DAYS AGO  "
-                                       (format-time-string "%a %d %b" (current-time-ndays-ago 3))))
+                                       (format-time-string "%a %d" (current-time-ndays-ago 3))))
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if
                                  'notregexp
