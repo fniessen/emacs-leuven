@@ -1,3 +1,9 @@
+;;; .emacs-minimal --- Minimal configuration file for Emacs
+
+;;; Commentary:
+
+;;; Code:
+
 (message "Loading Minimal Emacs...")
 
 (defconst em/emacs-load-time-start (float-time))
@@ -16,16 +22,22 @@
 (set-input-mode nil nil 1)
 
 ;; enable visualization of matching parens
+(require 'paren)
 (show-paren-mode 1)
 (setq show-paren-style 'mixed)
 (setq show-paren-ring-bell-on-mismatch t)
 
 ;; title bar display of visible frames
 (setq frame-title-format
-      (format "Minimal Emacs %s (r%s) of %s - PID: %d"
+      (format "Minimal Emacs %s%s of %s - PID: %d"
               emacs-version
-              (ignore-errors
-                (replace-regexp-in-string " .*" "" emacs-bzr-version))
+              (if (and (boundp 'emacs-repository-version)
+                       emacs-repository-version)
+                  (concat " (r"
+                          (replace-regexp-in-string " .*" ""
+                                                    emacs-repository-version)
+                          ")")
+                "")
               (format-time-string "%Y-%m-%d" emacs-build-time)
               (emacs-pid)))
 
@@ -52,3 +64,7 @@
 
 (message "Loading Minimal Emacs... Done (in %.2f s)"
          (- (float-time) em/emacs-load-time-start))
+
+(provide '.emacs-minimal)
+
+;;; .emacs-minimal.el ends here

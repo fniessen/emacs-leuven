@@ -1,8 +1,5 @@
 #!/bin/sh
-workingDir=$(cat <<'BABEL_TABLE'
-d:/Users/fni/src/emacs-leuven/
-BABEL_TABLE
-)
+workingDir='d:/Users/fni/src/emacs-leuven/'
 TESTEL=
 TESTFILE=~/test.el
 if test -e $TESTFILE # file exists

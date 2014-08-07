@@ -1,4 +1,4 @@
-<!-- <xml version="1.0"> -->
+<!-- <xml version="1.0" encoding="utf-8"> -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Minimal .emacs</title><!-- 2014-02-05 Wed 11:28 -->
+  <title>Minimal .emacs</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -88,6 +88,8 @@
                   <li><a href="#sec-1-2-7">Message</a></li>
                 </ul>
               </li>
+
+              <li><a href="#sec-1-3">Footer</a></li>
             </ul>
           </li>
 
@@ -138,95 +140,110 @@
         <div class="outline-text-3" id="text-1-1">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-(message <span style="color: #036A07;">"Loading Minimal Emacs..."</span>)
+<span class="org-comment-delimiter">;;; </span><span class=
+"org-comment">.emacs-minimal --- Minimal configuration file for Emacs</span>
 
-(<span style="color: #0000FF;">defconst</span> <span style=
-"color: #BA36A5;">em/emacs-load-time-start</span> (float-time))
+<span class="org-comment-delimiter">;;; </span><span class=
+"org-comment">Commentary:</span>
 
-<span style="color: #8D8D84;">;;</span><span style=
-"color: #8D8D84; font-style: italic;">* --[ Constant part ]-------------------------------------------------------</span>
+<span class="org-comment-delimiter">;;; </span><span class=
+"org-comment">Code:</span>
 
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">activate debugging</span>
-(setq debug-on-<span style=
-"color: #CC0000; background-color: #FFFF88;">error</span> t)
+(message <span class="org-string">"Loading Minimal Emacs..."</span>)
+
+(<span class="org-keyword">defconst</span> <span class=
+"org-variable-name">em/emacs-load-time-start</span> (float-time))
+
+<span class="org-comment-delimiter">;;</span><span class=
+"org-comment">* --[ Constant part ]-------------------------------------------------------</span>
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">activate debugging</span>
+(setq debug-on-<span class="org-leuven-highlight">error</span> t)
 (setq debug-on-quit t)
 
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">no limit when printing values</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">no limit when printing values</span>
 (setq eval-expression-print-length nil)
 (setq eval-expression-print-level nil)
 
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">allow input of accented characters (for terminals that use 8-bit charsets)</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">allow input of accented characters (for terminals that use 8-bit charsets)</span>
 (set-input-mode nil nil 1)
 
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">enable visualization of matching parens</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">enable visualization of matching parens</span>
+(<span class="org-keyword">require</span> '<span class=
+"org-constant">paren</span>)
 (show-paren-mode 1)
 (setq show-paren-style 'mixed)
 (setq show-paren-ring-bell-on-mismatch t)
 
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">title bar display of visible frames</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">title bar display of visible frames</span>
 (setq frame-title-format
-      (format <span style=
-"color: #036A07;">"Minimal Emacs %s (r%s) of %s - PID: %d"</span>
+      (format <span class=
+"org-string">"Minimal Emacs %s%s of %s - PID: %d"</span>
               emacs-version
-              (<span style="color: #0000FF;">ignore-</span><span style=
-"color: #CC0000; background-color: #FFFF88;">error</span><span style=
-"color: #0000FF;">s</span>
-                (replace-regexp-in-string <span style=
-"color: #036A07;">" .*"</span> <span style=
-"color: #036A07;">""</span> emacs-bzr-version))
-              (format-time-string <span style=
-"color: #036A07;">"%Y-%m-%d"</span> emacs-build-time)
+              (<span class=
+"org-keyword">if</span> (and (boundp 'emacs-repository-version)
+                       emacs-repository-version)
+                  (concat <span class="org-string">" (r"</span>
+                          (replace-regexp-in-string <span class=
+"org-string">" .*"</span> <span class="org-string">""</span>
+                                                    emacs-repository-version)
+                          <span class="org-string">")"</span>)
+                <span class="org-string">""</span>)
+              (format-time-string <span class=
+"org-string">"%Y-%m-%d"</span> emacs-build-time)
               (emacs-pid)))
 
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Org-mode (reverse order, so that the Org lisp directory will be found</span>
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">before the Org contrib lisp directory)</span>
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(add-to-list 'load-path "~/Public/Repositories/org-mode/testing")</span>
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(add-to-list 'load-path "~/Public/Repositories/org-mode/contrib/lisp")</span>
-(add-to-list 'load-path <span style=
-"color: #036A07;">"~/Public/Repositories/org-mode/lisp"</span>)
-                                        <span style=
-"color: #8D8D84;">; </span><span style=
-"color: #8D8D84; font-style: italic;">modify the paths to suit your environment!</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Org-mode (reverse order, so that the Org lisp directory will be found</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">before the Org contrib lisp directory)</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(add-to-list 'load-path "~/Public/Repositories/org-mode/testing")</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(add-to-list 'load-path "~/Public/Repositories/org-mode/contrib/lisp")</span>
+(add-to-list 'load-path <span class=
+"org-string">"~/Public/Repositories/org-mode/lisp"</span>)
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">modify the paths to suit your environment!</span>
 
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">getting started</span>
-(add-to-list 'auto-mode-alist '(<span style=
-"color: #036A07;">"\\.</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">(</span><span style=
-"color: #036A07;">org</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">|</span><span style=
-"color: #036A07;">org_archive</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">|</span><span style=
-"color: #036A07;">txt</span><span style=
-"color: #036A07; font-weight: bold;">\\</span><span style=
-"color: #036A07; font-weight: bold;">)</span><span style=
-"color: #036A07;">\\'"</span> . org-mode))
-(<span style="color: #0000FF;">if</span> (locate-library <span style=
-"color: #036A07;">"org-loaddefs"</span>)
-    (<span style="color: #0000FF;">require</span> '<span style=
-"color: #D0372D;">org-loaddefs</span>)
-  (<span style="color: #0000FF;">require</span> '<span style=
-"color: #D0372D;">org-install</span>))               <span style=
-"color: #8D8D84;">; </span><span style=
-"color: #8D8D84; font-style: italic;">obsolete since Emacs 24.3</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">getting started</span>
+(add-to-list 'auto-mode-alist '(<span class=
+"org-string">"\\.</span><span class="org-string"><span class=
+"org-regexp-grouping-backslash">\\</span></span><span class=
+"org-string"><span class=
+"org-regexp-grouping-construct">(</span></span><span class=
+"org-string">org</span><span class="org-string"><span class=
+"org-regexp-grouping-backslash">\\</span></span><span class=
+"org-string"><span class=
+"org-regexp-grouping-construct">|</span></span><span class=
+"org-string">org_archive</span><span class="org-string"><span class=
+"org-regexp-grouping-backslash">\\</span></span><span class=
+"org-string"><span class=
+"org-regexp-grouping-construct">|</span></span><span class=
+"org-string">txt</span><span class="org-string"><span class=
+"org-regexp-grouping-backslash">\\</span></span><span class=
+"org-string"><span class=
+"org-regexp-grouping-construct">)</span></span><span class=
+"org-string">\\'"</span> . org-mode))
+(<span class="org-keyword">if</span> (locate-library <span class=
+"org-string">"org-loaddefs"</span>)
+    (<span class="org-keyword">require</span> '<span class=
+"org-constant">org-loaddefs</span>)
+  (<span class="org-keyword">require</span> '<span class=
+"org-constant">org-install</span>))               <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">obsolete since Emacs 24.3</span>
 
-(global-set-key (kbd <span style=
-"color: #036A07;">"C-c l"</span>) 'org-store-link)
-(global-set-key (kbd <span style="color: #036A07;">"C-c a"</span>) 'org-agenda)
-(global-set-key (kbd <span style=
-"color: #036A07;">"C-c c"</span>) 'org-capture)
+(global-set-key (kbd <span class="org-string">"C-c l"</span>) 'org-store-link)
+(global-set-key (kbd <span class="org-string">"C-c a"</span>) 'org-agenda)
+(global-set-key (kbd <span class="org-string">"C-c c"</span>) 'org-capture)
 </pre>
           </div>
         </div>
@@ -238,8 +255,8 @@
         <div class="outline-text-3" id="text-1-2">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-<span style="color: #8D8D84;">;;</span><span style=
-"color: #8D8D84; font-style: italic;">* --[ Variable part Under Test ]--------------------------------------------</span>
+<span class="org-comment-delimiter">;;</span><span class=
+"org-comment">* --[ Variable part Under Test ]--------------------------------------------</span>
 </pre>
           </div>
         </div>
@@ -250,8 +267,8 @@
           <div class="outline-text-4" id="text-1-2-1">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">Place your test code here</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Place your test code here</span>
 </pre>
             </div>
           </div>
@@ -263,8 +280,8 @@
           <div class="outline-text-4" id="text-1-2-2">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-(message <span style=
-"color: #036A07;">"defined? %S"</span> (functionp (quote org-babel-do-load-languages)))
+(message <span class=
+"org-string">"defined? %S"</span> (functionp (quote org-babel-do-load-languages)))
 </pre>
             </div>
           </div>
@@ -283,11 +300,11 @@
 
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
-(<span style="color: #0000FF;">with-eval-after-load</span> <span style=
-"color: #036A07;">"org"</span>
-  (message <span style="color: #036A07;">"LOADED org.el"</span>)
+(<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"org"</span>
+  (message <span class="org-string">"LOADED org.el"</span>)
   (sit-for 3)
-  (message <span style="color: #036A07;">""</span>))
+  (message <span class="org-string">""</span>))
 </pre>
               </div>
             </div>
@@ -303,11 +320,11 @@
 
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
-(<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">foobar</span> ()
-  (message <span style="color: #036A07;">"LOADED org.el"</span>)
+(<span class="org-keyword">defun</span> <span class=
+"org-function-name">foobar</span> ()
+  (message <span class="org-string">"LOADED org.el"</span>)
   (sit-for 3)
-  (message <span style="color: #036A07;">""</span>))
+  (message <span class="org-string">""</span>))
 
 (setq org-load-hook (function foobar))
 </pre>
@@ -322,11 +339,11 @@
           <div class="outline-text-4" id="text-1-2-4">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-(<span style=
-"color: #0000FF;">let</span> ((org-confirm-babel-evaluate nil)) <span style=
-"color: #8D8D84;">; </span><span style=
-"color: #8D8D84; font-style: italic;">preference over the explicit setq</span>
-  (find-file <span style="color: #036A07;">"file-to-export.org"</span>)
+(<span class=
+"org-keyword">let</span> ((org-confirm-babel-evaluate nil)) <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">preference over the explicit setq</span>
+  (find-file <span class="org-string">"file-to-export.org"</span>)
   (org-export-as-html 3))
 </pre>
             </div>
@@ -339,11 +356,11 @@
           <div class="outline-text-4" id="text-1-2-5">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">change the pathname appropriately!</span>
-(add-to-list 'load-path (expand-file-name <span style=
-"color: #036A07;">"~/Public/Repositories/org-mode/testing"</span>))
-(load-library <span style="color: #036A07;">"org-test"</span>)
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">change the pathname appropriately!</span>
+(add-to-list 'load-path (expand-file-name <span class=
+"org-string">"~/Public/Repositories/org-mode/testing"</span>))
+(load-library <span class="org-string">"org-test"</span>)
 </pre>
             </div>
           </div>
@@ -355,22 +372,21 @@
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
 (ert-deftest test-org/end-of-line ()
-  <span style="color: #036A07;">"Test `</span><span style=
-"color: #D0372D;">org-end-of-line</span><span style=
-"color: #036A07;">' specifications."</span>
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">At an headline without special movement.</span>
+  <span class="org-string">"Test `</span><span class="org-string"><span class=
+"org-constant">org-end-of-line</span></span><span class=
+"org-string">' specifications."</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">At an headline without special movement.</span>
   (should
-   (org-test-with-temp-text <span style=
-"color: #036A07;">"* Headline2 :tag:\n"</span>
-     (<span style="color: #0000FF;">let</span> ((org-special-ctrl-a/e nil))
-       (and (<span style="color: #0000FF;">progn</span>
-              (message <span style="color: #036A07;">"FOO"</span>)
+   (org-test-with-temp-text <span class=
+"org-string">"* Headline2 :tag:\n"</span>
+     (<span class="org-keyword">let</span> ((org-special-ctrl-a/e nil))
+       (and (<span class="org-keyword">progn</span>
+              (message <span class="org-string">"FOO"</span>)
               (org-end-of-line)
-              (message (format <span style=
-"color: #036A07;">"%d"</span> (point)))
+              (message (format <span class="org-string">"%d"</span> (point)))
               (eolp))
-            (<span style="color: #0000FF;">progn</span>
+            (<span class="org-keyword">progn</span>
               (org-end-of-line)
               (eolp)))))))
 
@@ -386,11 +402,11 @@
             <div class="outline-text-5" id="text-1-2-5-2">
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">change the pathname appropriately!</span>
-(add-to-list 'load-path (expand-file-name <span style=
-"color: #036A07;">"~/Public/Repositories/org-mode/testing/lisp"</span>))
-(load-library <span style="color: #036A07;">"test-org"</span>)
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">change the pathname appropriately!</span>
+(add-to-list 'load-path (expand-file-name <span class=
+"org-string">"~/Public/Repositories/org-mode/testing/lisp"</span>))
+(load-library <span class="org-string">"test-org"</span>)
 (ert-run-tests-batch-and-exit 'test-org/end-of-line)
 </pre>
               </div>
@@ -404,63 +420,62 @@
           <div class="outline-text-4" id="text-1-2-6">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(setq org-babel-load-languages '((emacs-lisp . t) (latex . t)))</span>
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(setq org-confirm-babel-evaluate nil)</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq org-babel-load-languages '((emacs-lisp . t) (latex . t)))</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq org-confirm-babel-evaluate nil)</span>
 
-(<span style="color: #0000FF;">require</span> '<span style=
-"color: #D0372D;">org</span>)
-(<span style="color: #0000FF;">require</span> '<span style=
-"color: #D0372D;">org-agenda</span>)
-(<span style="color: #0000FF;">require</span> '<span style=
-"color: #D0372D;">outline</span>)
-(<span style="color: #0000FF;">require</span> '<span style=
-"color: #D0372D;">font-lock</span>)
-(<span style="color: #0000FF;">require</span> '<span style=
-"color: #D0372D;">flyspell</span>)
-(<span style="color: #0000FF;">require</span> '<span style=
-"color: #D0372D;">ispell</span>)
-(<span style="color: #0000FF;">require</span> '<span style=
-"color: #D0372D;">calendar</span>)
-(<span style="color: #0000FF;">require</span> '<span style=
-"color: #D0372D;">cal-iso</span>)
-(<span style="color: #0000FF;">require</span> '<span style=
-"color: #D0372D;">diary-lib</span>)
+(<span class="org-keyword">require</span> '<span class=
+"org-constant">org</span>)
+(<span class="org-keyword">require</span> '<span class=
+"org-constant">org-agenda</span>)
+(<span class="org-keyword">require</span> '<span class=
+"org-constant">outline</span>)
+(<span class="org-keyword">require</span> '<span class=
+"org-constant">font-lock</span>)
+(<span class="org-keyword">require</span> '<span class=
+"org-constant">flyspell</span>)
+(<span class="org-keyword">require</span> '<span class=
+"org-constant">ispell</span>)
+(<span class="org-keyword">require</span> '<span class=
+"org-constant">calendar</span>)
+(<span class="org-keyword">require</span> '<span class=
+"org-constant">cal-iso</span>)
+(<span class="org-keyword">require</span> '<span class=
+"org-constant">diary-lib</span>)
 
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">profile some times... CAUTION: require the packages first (to get results)!</span>
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">(elp-instrument-list '(org-agenda-next-line next-line line-move))</span>
-(<span style="color: #0000FF;">when</span> (<span style=
-"color: #0000FF;">require</span> '<span style="color: #D0372D;">elp</span>)
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">the most important ones</span>
-  (elp-instrument-package <span style="color: #036A07;">"org"</span>)
-  (elp-instrument-package <span style="color: #036A07;">"org-agenda"</span>)
-  (elp-instrument-package <span style="color: #036A07;">"outline"</span>)
-  (elp-instrument-package <span style="color: #036A07;">"font-lock"</span>)
-  (elp-instrument-package <span style="color: #036A07;">"flyspell"</span>)
-  (elp-instrument-package <span style="color: #036A07;">"ispell"</span>)
-  (elp-instrument-package <span style="color: #036A07;">"emacs-leuven"</span>)
-  (elp-instrument-package <span style="color: #036A07;">"calendar"</span>)
-  (elp-instrument-package <span style="color: #036A07;">"cal-iso"</span>)
-  (elp-instrument-package <span style="color: #036A07;">"diary-lib"</span>)
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">profile some times... CAUTION: require the packages first (to get results)!</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(elp-instrument-list '(org-agenda-next-line next-line line-move))</span>
+(<span class="org-keyword">when</span> (<span class=
+"org-keyword">require</span> '<span class="org-constant">elp</span>)
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">the most important ones</span>
+  (elp-instrument-package <span class="org-string">"org"</span>)
+  (elp-instrument-package <span class="org-string">"org-agenda"</span>)
+  (elp-instrument-package <span class="org-string">"outline"</span>)
+  (elp-instrument-package <span class="org-string">"font-lock"</span>)
+  (elp-instrument-package <span class="org-string">"flyspell"</span>)
+  (elp-instrument-package <span class="org-string">"ispell"</span>)
+  (elp-instrument-package <span class="org-string">"emacs-leuven"</span>)
+  (elp-instrument-package <span class="org-string">"calendar"</span>)
+  (elp-instrument-package <span class="org-string">"cal-iso"</span>)
+  (elp-instrument-package <span class="org-string">"diary-lib"</span>)
 
-  (global-set-key (kbd <span style=
-"color: #036A07;">"C-c e"</span>) 'elp-results))
+  (global-set-key (kbd <span class="org-string">"C-c e"</span>) 'elp-results))
 
-<span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">improve readability of profile results, give milliseconds</span>
-(<span style="color: #0000FF;">defun</span> <span style=
-"color: #006699;">elp-pack-number</span> (number width)
-  (format (concat <span style=
-"color: #036A07;">"%"</span> (number-to-string (- width 3)) <span style=
-"color: #036A07;">".2f"</span>)
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">improve readability of profile results, give milliseconds</span>
+(<span class="org-keyword">defun</span> <span class=
+"org-function-name">elp-pack-number</span> (number width)
+  (format (concat <span class=
+"org-string">"%"</span> (number-to-string (- width 3)) <span class=
+"org-string">".2f"</span>)
           (* 100 (string-to-number number))))
 
-(setq org-agenda-files '(<span style=
-"color: #036A07;">"~/org/tests/org-test.txt"</span>))
+(setq org-agenda-files '(<span class=
+"org-string">"~/org/tests/org-test.txt"</span>))
 </pre>
             </div>
           </div>
@@ -472,11 +487,27 @@
           <div class="outline-text-4" id="text-1-2-7">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-(message <span style=
-"color: #036A07;">"Loading Minimal Emacs... Done (in %.2f s)"</span>
+(message <span class=
+"org-string">"Loading Minimal Emacs... Done (in %.2f s)"</span>
          (- (float-time) em/emacs-load-time-start))
 </pre>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="outline-container-sec-1-3" class="outline-3">
+        <h3 id="sec-1-3">Footer</h3>
+
+        <div class="outline-text-3" id="text-1-3">
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+(<span class="org-keyword">provide</span> '<span class=
+"org-constant">.emacs-minimal</span>)
+
+<span class="org-comment-delimiter">;;; </span><span class=
+"org-comment">.emacs-minimal.el ends here</span>
+</pre>
           </div>
         </div>
       </div>
@@ -493,10 +524,10 @@
         <div class="outline-text-3" id="text-2-1">
           <div class="org-src-container">
             <pre class="src src-sh">
-emacs -Q --batch -L ~/Public/Repositories/org-mode/lisp <span style=
-"color: #036A07;">\</span>
-    --eval <span style=
-"color: #036A07;">'(elp-instrument-package "org")'</span> 400.org --eval <span style="color: #036A07;">'(elp-results)'</span>
+emacs -Q --batch -L ~/Public/Repositories/org-mode/lisp <span class=
+"org-sh-escaped-newline">\</span>
+    --eval <span class=
+"org-string">'(elp-instrument-package "org")'</span> 400.org --eval <span class="org-string">'(elp-results)'</span>
 </pre>
           </div>
         </div>
@@ -515,16 +546,20 @@ emacs -Q --batch -L ~/Public/Repositories/org-mode/lisp <span style=
           <dl class="org-dl">
             <dt><code>-q</code>, <code>--no-init-file</code></dt>
 
-            <dd>Do not load an init file.</dd>
+            <dd>
+              <p>Do not load an init file.</p>
+            </dd>
 
             <dt><code>--no-site-file</code></dt>
 
-            <dd>Do not load the site-wide startup file.</dd>
+            <dd>
+              <p>Do not load the site-wide startup file.</p>
+            </dd>
 
             <dt><code>-Q</code>, <code>--quick</code></dt>
 
             <dd>
-              Similar to <code>-q --no-site-file --no-splash</code>.
+              <p>Similar to <code>-q --no-site-file --no-splash</code>.</p>
 
               <p><b>Ignore any configuration</b> ensuring a vanilla Emacs
               instance is used.</p>
@@ -533,8 +568,8 @@ emacs -Q --batch -L ~/Public/Repositories/org-mode/lisp <span style=
             <dt><code>--batch</code></dt>
 
             <dd>
-              Run Emacs in “batch” mode with <b>no GUI</b> and <b>termination
-              after execution</b>.
+              <p>Run Emacs in “batch” mode with <b>no GUI</b> and
+              <b>termination after execution</b>.</p>
 
               <p>The editor will send messages to stderr.</p>
 
@@ -556,8 +591,8 @@ emacs -Q --batch -L ~/Public/Repositories/org-mode/lisp <span style=
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  <span style="color: #8D8D84;">;; </span><span style=
-"color: #8D8D84; font-style: italic;">major mode command symbol to use for the initial `</span><span style="color: #D0372D; font-style: italic;">*scratch*</span><span style="color: #8D8D84; font-style: italic;">' buffer</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">major mode command symbol to use for the initial `</span><span class="org-comment"><span class="org-constant">*scratch*</span></span><span class="org-comment">' buffer</span>
   (setq initial-major-mode 'fundamental-mode)
 </pre>
           </div>
@@ -588,81 +623,80 @@ emacs -Q --batch -L ~/Public/Repositories/org-mode/lisp <span style=
 
           <div class="org-src-container">
             <pre class="src src-sh">
-<span style="color: #8D8D84;">#</span><span style=
-"color: #8D8D84; font-style: italic;">!/bin/</span><span style=
-"color: #0000FF;">bash</span>
+<span class="org-comment-delimiter">#</span><span class=
+"org-comment">!/bin/</span><span class="org-keyword">bash</span>
 
-<span style="color: #8D8D84;">## </span><span style=
-"color: #8D8D84; font-style: italic;">Copyright (C) 2012 Thierry Volpiatto <a href="mailto:thierry.volpiatto%40gmail.com">&lt;thierry.volpiatto@gmail.com&gt;</a></span>
-<span style="color: #8D8D84;">##</span>
-<span style="color: #8D8D84;">## </span><span style=
-"color: #8D8D84; font-style: italic;">This program is free software; you can redistribute it and/or modify</span>
-<span style="color: #8D8D84;">## </span><span style=
-"color: #8D8D84; font-style: italic;">it under the terms of the GNU General Public License as published by</span>
-<span style="color: #8D8D84;">## </span><span style=
-"color: #8D8D84; font-style: italic;">the Free Software Foundation, either version 3 of the License, or</span>
-<span style="color: #8D8D84;">## </span><span style=
-"color: #8D8D84; font-style: italic;">(at your option) any later version.</span>
-<span style="color: #8D8D84;">##</span>
-<span style="color: #8D8D84;">## </span><span style=
-"color: #8D8D84; font-style: italic;">This program is distributed in the hope that it will be useful,</span>
-<span style="color: #8D8D84;">## </span><span style=
-"color: #8D8D84; font-style: italic;">but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span style="color: #8D8D84;">## </span><span style=
-"color: #8D8D84; font-style: italic;">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span style="color: #8D8D84;">## </span><span style=
-"color: #8D8D84; font-style: italic;">GNU General Public License for more details.</span>
-<span style="color: #8D8D84;">##</span>
-<span style="color: #8D8D84;">## </span><span style=
-"color: #8D8D84; font-style: italic;">You should have received a copy of the GNU General Public License</span>
-<span style="color: #8D8D84;">## </span><span style=
-"color: #8D8D84; font-style: italic;">along with this program.  If not, see <a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">&lt;http://www.gnu.org/licenses/&gt;.</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">
+<span class="org-comment-delimiter">## </span><span class=
+"org-comment">Copyright (C) 2012 Thierry Volpiatto <a href=
+"mailto:thierry.volpiatto%40gmail.com">&lt;thierry.volpiatto@gmail.com&gt;</a></span>
+<span class="org-comment-delimiter">##</span>
+<span class="org-comment-delimiter">## </span><span class=
+"org-comment">This program is free software; you can redistribute it and/or modify</span>
+<span class="org-comment-delimiter">## </span><span class=
+"org-comment">it under the terms of the GNU General Public License as published by</span>
+<span class="org-comment-delimiter">## </span><span class=
+"org-comment">the Free Software Foundation, either version 3 of the License, or</span>
+<span class="org-comment-delimiter">## </span><span class=
+"org-comment">(at your option) any later version.</span>
+<span class="org-comment-delimiter">##</span>
+<span class="org-comment-delimiter">## </span><span class=
+"org-comment">This program is distributed in the hope that it will be useful,</span>
+<span class="org-comment-delimiter">## </span><span class=
+"org-comment">but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="org-comment-delimiter">## </span><span class=
+"org-comment">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="org-comment-delimiter">## </span><span class=
+"org-comment">GNU General Public License for more details.</span>
+<span class="org-comment-delimiter">##</span>
+<span class="org-comment-delimiter">## </span><span class=
+"org-comment">You should have received a copy of the GNU General Public License</span>
+<span class="org-comment-delimiter">## </span><span class=
+"org-comment">along with this program.  If not, see <a href=
+"http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">&lt;http://www.gnu.org/licenses/&gt;.</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">
 
-</a><span style="color: #8D8D84;"><a href=
-"http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">## </a></span><span style="color: #8D8D84; font-style: italic;"><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">Commentary:</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">
+</a><span class="org-comment-delimiter"><a href=
+"http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">## </a></span><span class="org-comment"><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">Commentary:</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">
 
-</a><span style="color: #8D8D84;"><a href=
-"http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat"># </a></span><span style="color: #8D8D84; font-style: italic;"><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">Preconfigured Emacs with a basic helm configuration.</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">
-</a><span style="color: #8D8D84;"><a href=
-"http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat"># </a></span><span style="color: #8D8D84; font-style: italic;"><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">Useful to start quickly an emacs -Q with helm.</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">
-</a><span style="color: #8D8D84;"><a href=
-"http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat"># </a></span><span style="color: #8D8D84; font-style: italic;"><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">Run it from this directory.</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">
+</a><span class="org-comment-delimiter"><a href=
+"http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat"># </a></span><span class="org-comment"><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">Preconfigured Emacs with a basic helm configuration.</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">
+</a><span class="org-comment-delimiter"><a href=
+"http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat"># </a></span><span class="org-comment"><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">Useful to start quickly an emacs -Q with helm.</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">
+</a><span class="org-comment-delimiter"><a href=
+"http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat"># </a></span><span class="org-comment"><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">Run it from this directory.</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">
 
-</a><span style="color: #BA36A5;"><a href=
-"http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">TMP</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">=</a><span style="color: #036A07;"><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">"/tmp/helm-cfg.el"</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">
-</a><span style="color: #BA36A5;"><a href=
-"http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">LOADPATH</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">=</a><span style="color: #FF1493;"><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">`dirname $0`</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">
-cat &gt;</a> $<span style="color: #BA36A5;">TMP</span> &lt;&lt;EOF
-<span style=
-"color: #0000ff; background-color: #EEF5FE;">(setq default-frame-alist '((vertical-scroll-bars . nil)</span>
-<span style=
-"color: #0000ff; background-color: #EEF5FE;">                            (tool-bar-lines . 0)</span>
-<span style=
-"color: #0000ff; background-color: #EEF5FE;">                            (menu-bar-lines . 0)</span>
-<span style=
-"color: #0000ff; background-color: #EEF5FE;">                            (fullscreen . nil)))</span>
-<span style=
-"color: #0000ff; background-color: #EEF5FE;">(blink-cursor-mode -1)</span>
-<span style=
-"color: #0000ff; background-color: #EEF5FE;">(add-to-list 'load-path (expand-file-name "$LOADPATH"))</span>
-<span style=
-"color: #0000ff; background-color: #EEF5FE;">(require 'helm-config)</span>
-<span style="color: #0000ff; background-color: #EEF5FE;">(helm-mode 1)</span>
-<span style=
-"color: #0000ff; background-color: #EEF5FE;">(define-key global-map [remap find-file] 'helm-find-files)</span>
-<span style=
-"color: #0000ff; background-color: #EEF5FE;">(define-key global-map [remap occur] 'helm-occur)</span>
-<span style=
-"color: #0000ff; background-color: #EEF5FE;">(define-key global-map [remap list-buffers] 'helm-buffers-list)</span>
-<span style=
-"color: #0000ff; background-color: #EEF5FE;">(define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)</span>
-<span style=
-"color: #0000ff; background-color: #EEF5FE;">(define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)</span>
-<span style=
-"color: #0000ff; background-color: #EEF5FE;">(add-hook 'kill-emacs-hook #'(lambda () (delete-file "$TMP")))</span>
-<span style="color: #0000ff; background-color: #EEF5FE;">(cd "~/")</span>
-<span style="color: #0000ff; background-color: #EEF5FE;">EOF</span>
-emacs -Q -l $<span style="color: #BA36A5;">TMP</span>
+</a><span class="org-variable-name"><a href=
+"http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">TMP</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">=</a><span class="org-string"><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">"/tmp/helm-cfg.el"</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">
+</a><span class="org-variable-name"><a href=
+"http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">LOADPATH</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">=</a><span class="org-sh-quoted-exec"><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">`dirname $0`</a></span><a href="http://www.gnu.org/licenses/%3E.##%20Commentary:#%20Preconfigured%20Emacs%20with%20a%20basic%20helm%20configuration.#%20Useful%20to%20start%20quickly%20an%20emacs%20-Q%20with%20helm.#%20Run%20it%20from%20this%20directory.TMP=&quot;/tmp/helm-cfg.el&quot;LOADPATH=`dirname%20$0`cat">
+cat &gt;</a> $<span class="org-variable-name">TMP</span> &lt;&lt;EOF
+<span class=
+"org-sh-heredoc">(setq default-frame-alist '((vertical-scroll-bars . nil)</span>
+<span class=
+"org-sh-heredoc">                            (tool-bar-lines . 0)</span>
+<span class=
+"org-sh-heredoc">                            (menu-bar-lines . 0)</span>
+<span class=
+"org-sh-heredoc">                            (fullscreen . nil)))</span>
+<span class="org-sh-heredoc">(blink-cursor-mode -1)</span>
+<span class=
+"org-sh-heredoc">(add-to-list 'load-path (expand-file-name "$LOADPATH"))</span>
+<span class="org-sh-heredoc">(require 'helm-config)</span>
+<span class="org-sh-heredoc">(helm-mode 1)</span>
+<span class=
+"org-sh-heredoc">(define-key global-map [remap find-file] 'helm-find-files)</span>
+<span class=
+"org-sh-heredoc">(define-key global-map [remap occur] 'helm-occur)</span>
+<span class=
+"org-sh-heredoc">(define-key global-map [remap list-buffers] 'helm-buffers-list)</span>
+<span class=
+"org-sh-heredoc">(define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)</span>
+<span class=
+"org-sh-heredoc">(define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)</span>
+<span class=
+"org-sh-heredoc">(add-hook 'kill-emacs-hook #'(lambda () (delete-file "$TMP")))</span>
+<span class="org-sh-heredoc">(cd "~/")</span>
+<span class="org-sh-heredoc">EOF</span>
+emacs -Q -l $<span class="org-variable-name">TMP</span>
 </pre>
           </div>
         </div>
@@ -676,39 +710,37 @@ emacs -Q -l $<span style="color: #BA36A5;">TMP</span>
 
           <div class="org-src-container">
             <pre class="src src-sh">
-<span style="color: #BA36A5;">TESTEL</span>=
-<span style="color: #BA36A5;">TESTFILE</span>=~/test.el
-<span style="color: #0000FF;">if</span> test -e $<span style=
-"color: #BA36A5;">TESTFILE</span> <span style=
-"color: #8D8D84;"># </span><span style=
-"color: #8D8D84; font-style: italic;">file exists</span>
-<span style="color: #0000FF;">then</span>
-    <span style="color: #BA36A5;">TESTEL</span>=<span style=
-"color: #036A07;">"-l $TESTFILE"</span>
-<span style="color: #0000FF;">fi</span>
+<span class="org-variable-name">TESTEL</span>=
+<span class="org-variable-name">TESTFILE</span>=~/test.el
+<span class="org-keyword">if</span> test -e $<span class=
+"org-variable-name">TESTFILE</span> <span class=
+"org-comment-delimiter"># </span><span class="org-comment">file exists</span>
+<span class="org-keyword">then</span>
+    <span class="org-variable-name">TESTEL</span>=<span class=
+"org-string">"-l $TESTFILE"</span>
+<span class="org-keyword">fi</span>
 
-<span style="color: #BA36A5;">EMACS</span>=<span style=
-"color: #036A07;">"/cygdrive/c/Program\ Files\ \(x86\)/emacs-trunk/bin/emacs"</span>
+<span class="org-variable-name">EMACS</span>=<span class=
+"org-string">"/cygdrive/c/Program\ Files\ \(x86\)/emacs-trunk/bin/emacs"</span>
 
-<span style="color: #8D8D84;"># </span><span style=
-"color: #8D8D84; font-style: italic;">no init file</span>
-<span style="color: #BA36A5;">cmd</span>=<span style=
-"color: #036A07;">"$EMACS -q -l ${workingDir}.emacs-minimal.el $TESTEL"</span>
+<span class="org-comment-delimiter"># </span><span class=
+"org-comment">no init file</span>
+<span class="org-variable-name">cmd</span>=<span class=
+"org-string">"$EMACS -q -l ${workingDir}.emacs-minimal.el $TESTEL"</span>
 
-<span style="color: #006FE0;">echo</span> <span style=
-"color: #036A07;">"Launching '$cmd'..."</span>
-<span style="color: #006FE0;">eval</span> <span style=
-"color: #036A07;">"$cmd"</span>
+<span class="org-builtin">echo</span> <span class=
+"org-string">"Launching '$cmd'..."</span>
+<span class="org-builtin">eval</span> <span class="org-string">"$cmd"</span>
 
-<span style="color: #006FE0;">echo</span> <span style=
-"color: #036A07;">"Exit status: $?"</span>
+<span class="org-builtin">echo</span> <span class=
+"org-string">"Exit status: $?"</span>
 </pre>
           </div>
 
           <div class="org-src-container">
             <pre class="src src-sh">
-<span style="color: #006FE0;">alias</span> <span style=
-"color: #BA36A5;">em</span>=emacs-minimal
+<span class="org-builtin">alias</span> <span class=
+"org-variable-name">em</span>=emacs-minimal
 </pre>
           </div>
 
@@ -716,8 +748,8 @@ emacs -Q -l $<span style="color: #BA36A5;">TMP</span>
 
           <div class="org-src-container">
             <pre class="src src-sh">
-ln -f -s $<span style=
-"color: #BA36A5;">workingDir</span>/emacs-minimal ~/bin/emacs-minimal
+ln -f -s $<span class=
+"org-variable-name">workingDir</span>/emacs-minimal ~/bin/emacs-minimal
 </pre>
           </div>
         </div>
@@ -726,8 +758,10 @@ ln -f -s $<span style=
   </div>
 
   <div id="postamble" class="status">
-    <div id="copyright">
-      © Fabrice Niessen
+    <div id="footer">
+      <div id="copyright">
+        Copyright © Fabrice Niessen
+      </div>
     </div>
   </div>
 </body>

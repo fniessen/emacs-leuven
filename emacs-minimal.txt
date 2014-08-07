@@ -1,7 +1,7 @@
 #+TITLE:     Minimal .emacs
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2014-02-05 Wed 11:28>
+#+Time-stamp: <2014-08-07 Thu 11:13>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -29,6 +29,12 @@ Here is a minimal Emacs config file.
 ** Constant part
 
 #+begin_src emacs-lisp
+;;; .emacs-minimal --- Minimal configuration file for Emacs
+
+;;; Commentary:
+
+;;; Code:
+
 (message "Loading Minimal Emacs...")
 
 (defconst em/emacs-load-time-start (float-time))
@@ -47,16 +53,22 @@ Here is a minimal Emacs config file.
 (set-input-mode nil nil 1)
 
 ;; enable visualization of matching parens
+(require 'paren)
 (show-paren-mode 1)
 (setq show-paren-style 'mixed)
 (setq show-paren-ring-bell-on-mismatch t)
 
 ;; title bar display of visible frames
 (setq frame-title-format
-      (format "Minimal Emacs %s (r%s) of %s - PID: %d"
+      (format "Minimal Emacs %s%s of %s - PID: %d"
               emacs-version
-              (ignore-errors
-                (replace-regexp-in-string " .*" "" emacs-bzr-version))
+              (if (and (boundp 'emacs-repository-version)
+                       emacs-repository-version)
+                  (concat " (r"
+                          (replace-regexp-in-string " .*" ""
+                                                    emacs-repository-version)
+                          ")")
+                "")
               (format-time-string "%Y-%m-%d" emacs-build-time)
               (emacs-pid)))
 
@@ -218,6 +230,14 @@ You can *get backtraces* at each stopping point by Edebugging =foobar= and
 #+begin_src emacs-lisp :tangle .emacs-minimal.el
 (message "Loading Minimal Emacs... Done (in %.2f s)"
          (- (float-time) em/emacs-load-time-start))
+#+end_src
+
+** Footer
+
+#+begin_src emacs-lisp
+(provide '.emacs-minimal)
+
+;;; .emacs-minimal.el ends here
 #+end_src
 
 * One-liners
