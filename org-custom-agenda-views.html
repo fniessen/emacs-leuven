@@ -1438,16 +1438,17 @@
 </pre>
           </div>
 
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
+          <p>The above is more appropriate than:</p>
+          <pre class="example">
   (add-to-list 'org-agenda-custom-commands
-              '(<span class="org-string">"rD"</span> <span class=
-"org-string">"Closed this week (TEST)"</span>
-                tags <span class=
-"org-string">"CLOSED&gt;\"&lt;-1w&gt;\""</span>
+              '("rC" "Recently closed"
+                tags "CLOSED&gt;\"&lt;-2w&gt;\""
                 ((org-agenda-sorting-strategy '(priority-down)))) t)
 </pre>
-          </div>
+
+          <p>because <b>repeatable</b> tasks are switched back to a non-TODO
+          state and (at least, by default) don’t get a <code>CLOSED:</code>
+          time-stamp.</p>
         </div>
       </div>
 
@@ -1527,6 +1528,15 @@
                   (org-agenda-include-inactive-timestamps t))) t)
 </pre>
           </div>
+
+          <table class="inlinetask" width="100%">
+            <tr>
+              <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
+
+              <td width="100%"><b>Items are duplicated because of LOGBOOK +
+              LAST_REPEAT</b><br /></td>
+            </tr>
+          </table>
         </div>
       </div>
 
@@ -1544,7 +1554,7 @@
           <p>Track time.</p>
 
           <p><a href=
-          "https://www.freshbooks.com/timesheet#date/2014-02-17">https://www.freshbooks.com/timesheet#date/2014-02-17</a></p>
+          "http://www.freshbooks.com/track-your-time">http://www.freshbooks.com/track-your-time</a></p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -1552,11 +1562,11 @@
 "org-comment">show what happened today</span>
   (add-to-list 'org-agenda-custom-commands
                '(<span class="org-string">"rt"</span> <span class=
-"org-string">"Timesheet"</span>
+"org-string">"Daily Timesheet"</span>
                  ((agenda <span class="org-string">""</span>
                           ((org-agenda-clockreport-mode t)
                            (org-agenda-overriding-header <span class=
-"org-string">"TIMESHEET"</span>)
+"org-string">"DAILY TIMESHEET"</span>)
                            (org-agenda-log-mode-items '(clock closed))
                            (org-agenda-show-log 'clockcheck)
                            (org-agenda-span 'day))))) t)

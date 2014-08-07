@@ -806,12 +806,17 @@ FIXME Group completed tasks per date of completion.
     (time-subtract (current-time) (days-to-time n)))
 #+end_src
 
-#+begin_src emacs-lisp
+The above is more appropriate than:
+
+#+begin_example
   (add-to-list 'org-agenda-custom-commands
-              '("rD" "Closed this week (TEST)"
-                tags "CLOSED>\"<-1w>\""
+              '("rC" "Recently closed"
+                tags "CLOSED>\"<-2w>\""
                 ((org-agenda-sorting-strategy '(priority-down)))) t)
-#+end_src
+#+end_example
+
+because *repeatable* tasks are switched back to a non-TODO state and (at least,
+by default) don't get a ~CLOSED:~ time-stamp.
 
 ** Cleanup
 
@@ -857,6 +862,9 @@ Recently done.
                   (org-agenda-include-inactive-timestamps t))) t)
 #+end_src
 
+*************** TODO Items are duplicated because of LOGBOOK + LAST_REPEAT
+*************** END
+
 ** Timesheet
 
 #+begin_note
@@ -867,15 +875,15 @@ http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465
 
 Track time.
 
-https://www.freshbooks.com/timesheet#date/2014-02-17
+http://www.freshbooks.com/track-your-time
 
 #+begin_src emacs-lisp
   ;; show what happened today
   (add-to-list 'org-agenda-custom-commands
-               '("rt" "Timesheet"
+               '("rt" "Daily Timesheet"
                  ((agenda ""
                           ((org-agenda-clockreport-mode t)
-                           (org-agenda-overriding-header "TIMESHEET")
+                           (org-agenda-overriding-header "DAILY TIMESHEET")
                            (org-agenda-log-mode-items '(clock closed))
                            (org-agenda-show-log 'clockcheck)
                            (org-agenda-span 'day))))) t)

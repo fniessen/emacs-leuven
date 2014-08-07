@@ -426,11 +426,6 @@
     (time-subtract (current-time) (days-to-time n)))
 
   (add-to-list 'org-agenda-custom-commands
-              '("rD" "Closed this week (TEST)"
-                tags "CLOSED>\"<-1w>\""
-                ((org-agenda-sorting-strategy '(priority-down)))) t)
-
-  (add-to-list 'org-agenda-custom-commands
                '("rx" "Completed tasks with no CLOCK lines"
                  ((todo "DONE|CANX"
                              ((org-agenda-overriding-header "Completed tasks with no CLOCK lines")
@@ -456,10 +451,10 @@
 
   ;; show what happened today
   (add-to-list 'org-agenda-custom-commands
-               '("rt" "Timesheet"
+               '("rt" "Daily Timesheet"
                  ((agenda ""
                           ((org-agenda-clockreport-mode t)
-                           (org-agenda-overriding-header "TIMESHEET")
+                           (org-agenda-overriding-header "DAILY TIMESHEET")
                            (org-agenda-log-mode-items '(clock closed))
                            (org-agenda-show-log 'clockcheck)
                            (org-agenda-span 'day))))) t)
