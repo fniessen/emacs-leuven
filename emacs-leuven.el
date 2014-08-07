@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140806.1030
+;; Version: 20140807.1202
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140806.1030]--")
+(message "* --[ Loading Emacs Leuven 20140807.1202]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3489,8 +3489,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "5.3 (org)Progress logging")
 
-  ;; 5.3.1 insert a CLOSED time stamp each time a TODO entry is marked DONE
-  (setq org-log-done nil)
+  ;; ;; 5.3.1 don't insert a CLOSED time stamp each time a TODO entry is marked DONE
+  ;; (setq org-log-done nil)
 
   ;; 5.3.2 the notes will be ordered according to time
   (setq org-log-states-order-reversed nil)
@@ -8717,7 +8717,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140806.1031]--")
+(message "* --[ Loaded Emacs Leuven 20140807.1203]--")
 
 (provide 'emacs-leuven)
 

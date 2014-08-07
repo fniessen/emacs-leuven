@@ -5431,8 +5431,8 @@ verified before really closing the task.
 
   (leuven--section "5.3 (org)Progress logging")
 
-  ;; 5.3.1 insert a CLOSED time stamp each time a TODO entry is marked DONE
-  (setq org-log-done nil)
+  ;; ;; 5.3.1 don't insert a CLOSED time stamp each time a TODO entry is marked DONE
+  ;; (setq org-log-done nil)
 
   ;; 5.3.2 the notes will be ordered according to time
   (setq org-log-states-order-reversed nil)
