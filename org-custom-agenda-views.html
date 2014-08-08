@@ -509,8 +509,14 @@
                   (agenda <span class="org-string">""</span>
                           ((org-agenda-entry-types '(<span class=
 "org-builtin">:timestamp</span> <span class="org-builtin">:sexp</span>))
-                           (org-agenda-overriding-header <span class=
-"org-string">"CALENDAR"</span>)
+                           (org-agenda-overriding-header
+                            (concat <span class="org-string">"CALENDAR "</span>
+                                    (format-time-string <span class=
+"org-string">"%a %d"</span> (current-time))
+                                    <span class=
+"org-comment-delimiter">;; </span><span class=
+"org-comment">#("__________________" 0 12 (face (:foreground "gray")))</span>
+                                    ))
                            (org-agenda-span 'day)))
                   (tags-todo <span class="org-string">"LEVEL=2"</span>
                         ((org-agenda-overriding-header <span class=
@@ -522,15 +528,8 @@
 "org-comment"> entries with deadline today</span>
                   (tags-todo <span class=
 "org-string">"DEADLINE=\"&lt;+0d&gt;\""</span>
-                             ((org-agenda-overriding-header
-                               (concat  <span class=
-"org-string">"DUE TODAY "</span>
-                                        (format-time-string <span class=
-"org-string">"%a %d"</span> (current-time))
-                                        <span class=
-"org-comment-delimiter">;; </span><span class=
-"org-comment">#("__________________" 0 12 (face (:foreground "gray")))</span>
-                                        ))
+                             ((org-agenda-overriding-header <span class=
+"org-string">"DUE TODAY"</span>)
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'notdeadline))
                               (org-agenda-sorting-strategy '(priority-down))))
@@ -608,6 +607,15 @@
                   (org-agenda-start-with-clockreport-mode nil))) t)
 </pre>
           </div>
+
+          <table class="inlinetask" width="100%">
+            <tr>
+              <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
+
+              <td width="100%"><b>The date next to “CALENDAR” is not updated
+              when doing <code>f</code> or <code>b</code></b><br /></td>
+            </tr>
+          </table>
 
           <div class="note">
             <p>Checking that <code>DEADLINE</code> &lt;&gt;"" can be

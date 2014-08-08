@@ -49,18 +49,18 @@
                   ;; events
                   (agenda ""
                           ((org-agenda-entry-types '(:timestamp :sexp))
-                           (org-agenda-overriding-header "CALENDAR")
+                           (org-agenda-overriding-header
+                            (concat "CALENDAR "
+                                    (format-time-string "%a %d" (current-time))
+                                    ;; #("__________________" 0 12 (face (:foreground "gray")))
+                                    ))
                            (org-agenda-span 'day)))
                   (tags-todo "LEVEL=2"
                         ((org-agenda-overriding-header "COLLECTBOX")
                          (org-agenda-files (list ,org-default-notes-file))))
                   ;; list of all TODO entries with deadline today
                   (tags-todo "DEADLINE=\"<+0d>\""
-                             ((org-agenda-overriding-header
-                               (concat  "DUE TODAY "
-                                        (format-time-string "%a %d" (current-time))
-                                        ;; #("__________________" 0 12 (face (:foreground "gray")))
-                                        ))
+                             ((org-agenda-overriding-header "DUE TODAY")
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'notdeadline))
                               (org-agenda-sorting-strategy '(priority-down))))
