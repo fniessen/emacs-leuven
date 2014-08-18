@@ -1303,6 +1303,22 @@ Visible bookmarks in buffer.
 
 *Bookmark+* offers everything that =bm.el= offers, and quite a bit more.
 
+- You can bookmark arbitrary sets of files, from any locations.
+
+- You can bookmark Dired buffers (which, again, can actually list arbitrary
+  files, not even necessarily in the same directory).  Markings, subdir
+  inclusions, and omissions are all recorded, and restored when you access the
+  bookmark.
+
+- You can tag bookmarks or files, using arbitrary strings as tags.  You can do
+  this programmatically and interactively, by regexp, name, or Dired markings.
+  Tags give you a great way to define sets of bookmarks or files -- sets that
+  can overlap etc.  They serve to categorize, but they can do more than that.
+  You can use tags to, in effect, merge projects, split projects, define
+  subprojects, and so on.
+
+Key bindings:
+
 - ~C-x p RET~ ::
      *Set* (or delete) a *bookmark* at point.
 
@@ -2472,7 +2488,7 @@ Builtin file version control of Emacs.
   ;; (setq kept-old-versions 0)            ; [default: 2]
 
   ;; number of newest versions to keep when a new numbered backup is made
-  (setq kept-new-versions 20)           ; [default: 2]
+  (setq kept-new-versions 5)            ; [default: 2]
 
   ;; don't ask me about deleting excess backup versions
   (setq delete-old-versions t)
@@ -2545,8 +2561,8 @@ How to get Emacs to auto-save to your local disk (=#file#=).
   (setq auto-save-timeout 10)           ; [default: 30]
 #+end_src
 
-Disable backups and auto-save only in the current buffer with ~M-x
-sensitive-mode~:
+Disable backups and auto-save only in the current buffer with
+~M-x sensitive-mode~:
 
 #+begin_src emacs-lisp
   (define-minor-mode sensitive-mode
@@ -2571,6 +2587,8 @@ sensitive-mode~:
       (if auto-save-default
           (auto-save-mode 1))))
 #+end_src
+
+You should enable it for all =.vcf= and =.gpg= files.
 
 Make the message "/FILENAME has auto save data/" unmissable:
 
@@ -3155,6 +3173,8 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 
       (when (and running-ms-windows
                  (executable-find "es"))
+                                        ; we could check for it in
+                                        ; (concat (getenv "USERPROFILE") "/Downloads")
 
         ;; sort locate results by full path
         (setq helm-locate-command "es -s %s %s"))
@@ -5745,6 +5765,9 @@ Remove scheduling date with ~C-u C-c C-s~.
     ;; time duration (avoid showing days)
     (setq org-time-clocksum-format
           '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
+                                        ; some clocktable functions cannot
+                                        ; digest day formats (e.g.,
+                                        ; org-clock-time%)
 
     ;; ;; 8.4.2 use fractional times
     ;; (setq org-time-clocksum-use-fractional t)
@@ -9559,6 +9582,11 @@ The commands
 - ~rgrep~ (*recursive* search, with ~grep-find-template~)
 are somehow more user-friendly than the ~M-x grep~ command.
 
+The doc string of ~grep-use-null-device~ which explains that, with its default
+value ~auto-detect~, Emacs invokes Grep once with ~/dev/null~ appended (causing the
+search to return no results) for the purposes of detecting how to invoke it
+thereafter.
+
 #+begin_src emacs-lisp
 ;;** 27.4 (info "(emacs)Grep Searching") under Emacs
 
@@ -11253,6 +11281,9 @@ Extra Dired functionality
 #+end_src
 
 ** Dired+
+
+Library ~Dired+~ lets you act on sets of marked files in subdirs, recursively,
+for example.
 
 #+begin_src emacs-lisp
 ;;** Dired+

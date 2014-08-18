@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140807.1202
+;; Version: 20140818.1052
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140807.1202]--")
+(message "* --[ Loading Emacs Leuven 20140818.1052]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1527,7 +1527,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; (setq kept-old-versions 0)            ; [default: 2]
 
   ;; number of newest versions to keep when a new numbered backup is made
-  (setq kept-new-versions 20)           ; [default: 2]
+  (setq kept-new-versions 5)            ; [default: 2]
 
   ;; don't ask me about deleting excess backup versions
   (setq delete-old-versions t)
@@ -1929,6 +1929,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (when (and running-ms-windows
                  (executable-find "es"))
+                                        ; we could check for it in
+                                        ; (concat (getenv "USERPROFILE") "/Downloads")
 
         ;; sort locate results by full path
         (setq helm-locate-command "es -s %s %s"))
@@ -3721,6 +3723,9 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; time duration (avoid showing days)
     (setq org-time-clocksum-format
           '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
+                                        ; some clocktable functions cannot
+                                        ; digest day formats (e.g.,
+                                        ; org-clock-time%)
 
     ;; ;; 8.4.2 use fractional times
     ;; (setq org-time-clocksum-use-fractional t)
@@ -8717,7 +8722,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140807.1203]--")
+(message "* --[ Loaded Emacs Leuven 20140818.1053]--")
 
 (provide 'emacs-leuven)
 
