@@ -42,6 +42,17 @@ Overall count: 6 projects.
 Check first that all the correct tasks are shown, the ones with a time part and
 the ones without...
 
+** TODO Voir s'il faut montrer les tâches quel que soit leur niveau
+
+Éventuellement, ne montrer que les tâches de niveau <= 2.
+
+Dans ce cas, il faudrait que des tâches de niveau 3 ou plus qui aient un
+~SCHEDULE~ ou un ~DEADLINE~ rendent leur tâche parent visible dans l'agenda !
+
+Cela permettrait de garder des status TODO sur les sous-tâches (ce qui
+bloquerait une fermeture trop aisée de la tâche parent, comme avec des [ ]),
+tout en ne polluant pas trop les agendas (et les comptes de tâches).
+
 * Key bindings
 
 #+begin_src emacs-lisp
