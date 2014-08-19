@@ -229,7 +229,7 @@ Save execution times in the global list `leuven--load-times-list'."
   "Value of `float-time' before loading some section.")
 
 (defun leuven--section (sectionname &optional end-of-chapter)
-  "Output time taken since last saved time.
+  "Report under SECTIONNAME the time taken since it was last saved.
 Last time is saved in global variable `leuven--before-section-time'."
   (let ((this-section-time (- (float-time)
                               leuven--before-section-time)))
@@ -461,7 +461,7 @@ distro) without impacting on stuff you have added by hand.
           (message "(warning) Can't find executable `%s'" file)
           ;; sleep 1.5 s so that you can see the warning
           (sit-for 1.5))
-      (error "Missing argument to function \"leuven--file-exists-and-executable-p\"")))
+      (error "Missing argument to \"leuven--file-exists-and-executable-p\"")))
 
 ;;** Init
 
@@ -4240,7 +4240,7 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
   (leuven--section "25.5 (emacs)Filling Text")
 
   ;; line-wrapping beyond that column (when pressing `M-q')
-  (setq-default fill-column 79)
+  (setq-default fill-column 80)
 
   ;; (un-)fill paragraph
   (defun leuven-fill-paragraph (&optional arg)
@@ -13729,7 +13729,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
     (setq lui-max-buffer-size 30000)
 
     ;; column at which Lui should break output
-    (setq lui-fill-column 79)
+    (setq lui-fill-column fill-column)
 
     )                                   ; with-eval-after-load "circe" ends here
 #+end_src
@@ -13906,6 +13906,23 @@ Report all errors with:
 #+begin_src emacs-lisp
 (checkdoc-current-buffer t)
 #+end_src
+
+- Format the documentation string so that it fits in an Emacs window on an
+  80-column screen. It is a good idea for most lines to be no wider than 60
+  characters. The first line should not be wider than 67 characters or it will
+  look bad in the output of apropos.
+
+  You can fill the text if that looks good. However, rather than blindly
+  filling the entire documentation string, you can often make it much more
+  readable by choosing certain line breaks with care. Use blank lines between
+  topics if the documentation string is long.
+
+- Do not indent subsequent lines of a documentation string so that the text is
+  lined up in the source code with the text of the first line. This looks nice
+  in the source code, but looks bizarre when users view the documentation.
+
+  Remember that the indentation before the starting double-quote is not part of
+  the string!
 
 * Startup time
   :PROPERTIES:

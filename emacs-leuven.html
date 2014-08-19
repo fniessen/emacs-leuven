@@ -1174,7 +1174,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140819.1042</span>
+"org-comment">Version: 20140819.1404</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1297,7 +1297,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140819.1042]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140819.1404]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">uptimes</span>
@@ -1529,7 +1529,8 @@
 (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven--section</span> (sectionname <span class=
 "org-type">&amp;optional</span> end-of-chapter)
-  <span class="org-doc">"Output time taken since last saved time.</span>
+  <span class=
+"org-doc">"Report under SECTIONNAME the time taken since it was last saved.</span>
 <span class=
 "org-doc">Last time is saved in global variable `</span><span class="org-doc"><span class="org-constant">leuven--before-section-time</span></span><span class="org-doc">'."</span>
   (<span class="org-keyword">let</span> ((this-section-time (- (float-time)
@@ -1918,7 +1919,7 @@
           (sit-for 1.5))
       (<span class="org-warning"><span class=
 "org-leuven-highlight">error</span></span> <span class=
-"org-string">"Missing argument to function \"leuven--file-exists-and-executable-p\""</span>)))
+"org-string">"Missing argument to \"leuven--file-exists-and-executable-p\""</span>)))
 
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** Init</span>
@@ -8295,7 +8296,7 @@ M-: (executable-find "diff") RET
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">line-wrapping beyond that column (when pressing `</span><span class="org-comment"><span class="org-constant">M-q</span></span><span class="org-comment">')</span>
-  (setq-default fill-column 79)
+  (setq-default fill-column 80)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(un-)fill paragraph</span>
@@ -24417,7 +24418,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">column at which Lui should break output</span>
-    (setq lui-fill-column 79)
+    (setq lui-fill-column fill-column)
 
     )                                   <span class=
 "org-comment-delimiter">; </span><span class=
@@ -24648,7 +24649,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140819.1043]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140819.1405]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
@@ -24691,6 +24692,32 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 (checkdoc-current-buffer t)
 </pre>
           </div>
+
+          <ul class="org-ul">
+            <li>
+              <p>Format the documentation string so that it fits in an Emacs
+              window on an 80-column screen. It is a good idea for most lines
+              to be no wider than 60 characters. The first line should not be
+              wider than 67 characters or it will look bad in the output of
+              apropos.</p>
+
+              <p>You can fill the text if that looks good. However, rather than
+              blindly filling the entire documentation string, you can often
+              make it much more readable by choosing certain line breaks with
+              care. Use blank lines between topics if the documentation string
+              is long.</p>
+            </li>
+
+            <li>
+              <p>Do not indent subsequent lines of a documentation string so
+              that the text is lined up in the source code with the text of the
+              first line. This looks nice in the source code, but looks bizarre
+              when users view the documentation.</p>
+
+              <p>Remember that the indentation before the starting double-quote
+              is not part of the string!</p>
+            </li>
+          </ul>
         </div>
       </div>
     </div>

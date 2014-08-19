@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140819.1040
+;; Version: 20140819.1403
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140819.1040]--")
+(message "* --[ Loading Emacs Leuven 20140819.1403]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -184,7 +184,7 @@ Save execution times in the global list `leuven--load-times-list'."
   "Value of `float-time' before loading some section.")
 
 (defun leuven--section (sectionname &optional end-of-chapter)
-  "Output time taken since last saved time.
+  "Report under SECTIONNAME the time taken since it was last saved.
 Last time is saved in global variable `leuven--before-section-time'."
   (let ((this-section-time (- (float-time)
                               leuven--before-section-time)))
@@ -350,7 +350,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           (message "(warning) Can't find executable `%s'" file)
           ;; sleep 1.5 s so that you can see the warning
           (sit-for 1.5))
-      (error "Missing argument to function \"leuven--file-exists-and-executable-p\"")))
+      (error "Missing argument to \"leuven--file-exists-and-executable-p\"")))
 
 ;;** Init
 
@@ -2670,7 +2670,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "25.5 (emacs)Filling Text")
 
   ;; line-wrapping beyond that column (when pressing `M-q')
-  (setq-default fill-column 79)
+  (setq-default fill-column 80)
 
   ;; (un-)fill paragraph
   (defun leuven-fill-paragraph (&optional arg)
@@ -8721,7 +8721,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140819.1041]--")
+(message "* --[ Loaded Emacs Leuven 20140819.1404]--")
 
 (provide 'emacs-leuven)
 
