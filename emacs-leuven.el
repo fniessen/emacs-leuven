@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140818.1052
+;; Version: 20140819.1040
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140818.1052]--")
+(message "* --[ Loading Emacs Leuven 20140819.1040]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -162,7 +162,7 @@
   "List of chapters and time to load them.")
 
 (defmacro leuven--chapter (chapterid chaptername &rest body)
-  "Evaluated only when CHAPTERID is not nil, wrapping Lisp expressions as CHAPTERNAME.
+  "When CHAPTERID is not nil, report as CHAPTERNAME the evaluation of BODY.
 Save execution times in the global list `leuven--load-times-list'."
   `(when ,chapterid
      (let (before-chapter-time
@@ -350,7 +350,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           (message "(warning) Can't find executable `%s'" file)
           ;; sleep 1.5 s so that you can see the warning
           (sit-for 1.5))
-      (error "leuven--file-exists-and-executable-p: missing operand")))
+      (error "Missing argument to function \"leuven--file-exists-and-executable-p\"")))
 
 ;;** Init
 
@@ -3498,7 +3498,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (setq org-log-states-order-reversed nil)
 
   ;; 5.3.2 insert state change notes and time stamps into a LOGBOOK drawer
-  (setq org-log-into-drawer t)          ; should be the default
+  (setq org-log-into-drawer t)          ; should be the DEFAULT!
 
   ;; ~5.3.2 heading for state change added to entries
   (with-eval-after-load "org"
@@ -3697,9 +3697,8 @@ Last time is saved in global variable `leuven--before-section-time'."
     (kbd "C-c C-x C-o") 'org-clock-out)
 
   ;; the time clocking code for Org mode
-  ;; (try-require 'org-clock)
-  ;;! needed for trying to automatically re-clock at Emacs startup
-  ;; Alternative: resume clocks when opening the first Org file
+  ;; (require 'org-clock)               ;! needed for trying to automatically
+                                        ;! re-clock at Emacs startup
 
   (with-eval-after-load "org-clock"
 
@@ -8722,7 +8721,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140818.1053]--")
+(message "* --[ Loaded Emacs Leuven 20140819.1041]--")
 
 (provide 'emacs-leuven)
 

@@ -7,11 +7,11 @@
 #+LANGUAGE:  en
 #+OPTIONS:   H:4 num:nil
 
-#+SEQ_TODO:  TODO FIXME DOESN'T_WORK | WORKS
+#+SEQ_TODO:  TODO FIXME | DONE
 
 #+PROPERTY:  tangle emacs-leuven.el
 #+PROPERTY:  padline yes
-#+PROPERTY:  eval no
+#+PROPERTY:  eval never
 
 #+SETUPFILE: ~/src/org-style/setup/bigblow-local-abs.setup
 
@@ -207,7 +207,7 @@ this set of customizations to "short-cut" that initial process.
   "List of chapters and time to load them.")
 
 (defmacro leuven--chapter (chapterid chaptername &rest body)
-  "Evaluated only when CHAPTERID is not nil, wrapping Lisp expressions as CHAPTERNAME.
+  "When CHAPTERID is not nil, report as CHAPTERNAME the evaluation of BODY.
 Save execution times in the global list `leuven--load-times-list'."
   `(when ,chapterid
      (let (before-chapter-time
@@ -461,7 +461,7 @@ distro) without impacting on stuff you have added by hand.
           (message "(warning) Can't find executable `%s'" file)
           ;; sleep 1.5 s so that you can see the warning
           (sit-for 1.5))
-      (error "leuven--file-exists-and-executable-p: missing operand")))
+      (error "Missing argument to function \"leuven--file-exists-and-executable-p\"")))
 
 ;;** Init
 
@@ -5458,7 +5458,7 @@ verified before really closing the task.
   (setq org-log-states-order-reversed nil)
 
   ;; 5.3.2 insert state change notes and time stamps into a LOGBOOK drawer
-  (setq org-log-into-drawer t)          ; should be the default
+  (setq org-log-into-drawer t)          ; should be the DEFAULT!
 
   ;; ~5.3.2 heading for state change added to entries
   (with-eval-after-load "org"
@@ -5726,6 +5726,10 @@ Remove scheduling date with ~C-u C-c C-s~.
 
 *** Clocking work time
 
+*************** TODO Resume clocks when opening the first Org file
+Alternative to requiring org-clock in every Emacs session.
+*************** END
+
 #+begin_src emacs-lisp
 ;;** 8.4 (info "(org)Clocking work time")
 
@@ -5739,9 +5743,8 @@ Remove scheduling date with ~C-u C-c C-s~.
     (kbd "C-c C-x C-o") 'org-clock-out)
 
   ;; the time clocking code for Org mode
-  ;; (try-require 'org-clock)
-  ;;! needed for trying to automatically re-clock at Emacs startup
-  ;; Alternative: resume clocks when opening the first Org file
+  ;; (require 'org-clock)               ;! needed for trying to automatically
+                                        ;! re-clock at Emacs startup
 
   (with-eval-after-load "org-clock"
 
@@ -13889,6 +13892,19 @@ To get a backtrace when a specific regexp is displayed in the echo area
 ;; End:
 
 ;;; emacs-leuven.el ends here
+#+end_src
+
+* Tasks
+
+** TODO Automate reporting of style errors
+   :PROPERTIES:
+   :tangle:   no
+   :END:
+
+Report all errors with:
+
+#+begin_src emacs-lisp
+(checkdoc-current-buffer t)
 #+end_src
 
 * Startup time
