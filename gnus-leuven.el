@@ -27,8 +27,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-
-;;* Commentary:
+;;; Commentary:
 
 ;;** Help
 ;;
@@ -40,9 +39,7 @@
 ;; Updating info for nnimap does not occurr for group INBOX (well for
 ;; subgroups) - i.e., mail GCc'ed to INBOX is lost...
 
-
 ;; http://www.emacswiki.org/emacs/GnusTutorial
-
 
 ;; Disconnected from IMAP? In the `*Server*' buffer, hit 'C' to close the
 ;; server and then 'O' to reopen it.
@@ -51,8 +48,7 @@
 ;; byte-compiled. Check `M-x locate-library RET gnus RET' if it picks up the
 ;; .el or .elc file.
 
-
-;;* Code:
+;;; Code:
 
 ;; This file is only provided as an example. Customize it to your own taste!
 
@@ -478,11 +474,14 @@
       ;; fill in all the gaps to tie loose threads together
       (setq gnus-build-sparse-threads nil) ;; was 'some
 
-      ;; added some key bindings to the gnus summary mode
-      (define-key gnus-summary-mode-map
-        (kbd "<C-up>") 'gnus-summary-prev-thread)
-      (define-key gnus-summary-mode-map
-        (kbd "<C-down>") 'gnus-summary-next-thread)
+      ;; sort the articles within a thread after it has been gathered together
+      (setq gnus-sort-gathered-threads-function 'gnus-thread-sort-by-date)
+
+      ;; ;; add some key bindings to the Gnus summary buffer
+      ;; (define-key gnus-summary-mode-map
+      ;;   (kbd "<C-up>") 'gnus-summary-prev-thread)
+      ;; (define-key gnus-summary-mode-map
+      ;;   (kbd "<C-down>") 'gnus-summary-next-thread)
 
 (define-key gnus-summary-mode-map
   (kbd ">") 'gnus-summary-show-thread)
@@ -497,6 +496,9 @@
               (not gnus-thread-sort-by-most-recent-date)
               ;; gnus-thread-sort-by-total-score
               ))
+
+      ;; If needed, look at `gnus-subthread-sort-functions' for sorting
+      ;; subthreads in the summary buffer.
 
 ;;** 3.12 (info "(gnus)Article Caching")
 
