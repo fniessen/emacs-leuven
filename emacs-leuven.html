@@ -1174,7 +1174,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140819.1404</span>
+"org-comment">Version: 20140819.1515</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1297,7 +1297,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140819.1404]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140819.1515]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">uptimes</span>
@@ -1702,7 +1702,7 @@
   (<span class="org-keyword">unless</span> (fboundp 'try-require)
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">try-require</span> (feature)
-      <span class="org-doc">"Attempt to load a feature or library.</span>
+      <span class="org-doc">"Attempt to load a FEATURE (or library).</span>
 <span class=
 "org-doc">    Return true if the library given as argument is successfully loaded.  If</span>
 <span class="org-doc">    not, just print a message."</span>
@@ -2109,10 +2109,10 @@
       (<span class="org-keyword">defcustom</span> <span class=
 "org-variable-name">leuven-elpa-packages</span>
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
-          csv-mode dictionary dired+ dired-single ess flycheck fuzzy
-          git-commit-mode graphviz-dot-mode helm htmlize idle-require info+
-          interaction-log ledger-mode leuven-theme org-mime pager rainbow-mode
-          redo+ sml-modeline tidy yasnippet
+          csv-mode dictionary dired+ dired-single ess fill-column-indicator
+          flycheck fuzzy git-commit-mode graphviz-dot-mode helm htmlize
+          idle-require info+ interaction-log ledger-mode leuven-theme org-mime
+          pager rainbow-mode redo+ sml-modeline tidy yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">jabber multi-term</span>
           <span class="org-comment-delimiter">;; </span><span class=
@@ -8332,6 +8332,33 @@ M-: (executable-find "diff") RET
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">graphically indicate the fill column</span>
+  (<span class="org-keyword">when</span> (try-require 'fill-column-indicator)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">color used to draw the fill-column rule</span>
+    (setq fci-rule-color <span class="org-string">"#FFE0E0"</span>)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">show the fill-column rule as dashes</span>
+    (setq fci-rule-use-dashes t)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">ratio of dash length to line height</span>
+    (setq fci-dash-pattern 0.5)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">enable fci-mode as a global minor mode</span>
+    (<span class="org-keyword">define-globalized-minor-mode</span> <span class=
+"org-function-name">global-fci-mode</span> fci-mode
+      (<span class="org-keyword">lambda</span> () (fci-mode 1)))
+    (global-fci-mode 1))
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-replace-nbsp-by-spc</span> ()
     <span class="org-doc">"Replace all nbsp by normal spaces."</span>
@@ -10514,7 +10541,7 @@ M-: (executable-find "diff") RET
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">column to which tags should be indented in a headline</span>
-  (setq org-tags-column -79)
+  (setq org-tags-column -80)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">6.2 list of tags ("contexts") allowed in Org mode files</span>
@@ -11959,7 +11986,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">show dated entries in the global `</span><span class=
 "org-comment"><span class="org-constant">todo</span></span><span class=
 "org-comment">' list</span>
-    (setq org-agenda-todo-ignore-with-date nil) <span class=
+    (setq org-agenda-todo-ignore-with-date nil)
+                                        <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">!! tricky setting</span>
 </pre>
@@ -11984,7 +12012,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
               <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">10.3.2 don't show scheduled entries in the global `</span><span class="org-comment"><span class="org-constant">todo</span></span><span class="org-comment">' list</span>
-    (setq org-agenda-todo-ignore-scheduled 'future) <span class=
+    (setq org-agenda-todo-ignore-scheduled 'future)
+                                        <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">!! tricky setting</span>
     (setq org-agenda-todo-ignore-scheduled nil)
@@ -12002,7 +12031,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment"><span class=
 "org-leuven-highlight">warning</span></span><span class=
 "org-comment"> period)</span>
-    (setq org-agenda-todo-ignore-deadlines 'near) <span class=
+    (setq org-agenda-todo-ignore-deadlines 'near)
+                                        <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">!! tricky setting</span>
     (setq org-agenda-todo-ignore-deadlines nil)
@@ -12685,11 +12715,13 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"org-agenda"</span>
-    (<span class=
-"org-keyword">let</span> ((leuven-org-agenda-views <span class="org-string">"~/src/emacs-leuven/org-custom-agenda-views.el"</span>))
+    (<span class="org-keyword">let</span> ((leuven-org-agenda-views
+           <span class=
+"org-string">"~/src/emacs-leuven/org-custom-agenda-views.el"</span>))
       (<span class=
 "org-keyword">when</span> (file-exists-p leuven-org-agenda-views)
-        (load-file leuven-org-agenda-views)))) <span class=
+        (load-file leuven-org-agenda-views))))
+                                        <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">with-eval-after-load "org-agenda" ends here</span>
 </pre>
@@ -12780,9 +12812,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"10.7 (org)Exporting Agenda Views"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">10.7 alist of variable/value pairs that should be active during</span>
+"org-comment">10.7 alist of variable/value pairs that should be active during agenda</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">agenda export</span>
+"org-comment">export</span>
   (setq org-agenda-exporter-settings
         '((ps-number-of-columns 1)      <span class=
 "org-comment-delimiter">; </span><span class="org-comment">2?</span>
@@ -12898,9 +12930,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-doc"><span class="org-leuven-highlight">TODO</span></span><span class=
 "org-doc"> as done and add another task after it.</span>
 <span class=
-"org-doc">    Creates it at the same level as the previous task, so it's better to use</span>
+"org-doc">Creates it at the same level as the previous task, so it's better to use</span>
 <span class=
-"org-doc">    this with to-do items than with projects or headings."</span>
+"org-doc">this with to-do items than with projects or headings."</span>
       (interactive)
       (org-agenda-todo <span class="org-string">"DONE"</span>)
       (org-agenda-switch-to)
@@ -12927,9 +12959,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
       <span class=
 "org-doc">"Create a new note or task at the current agenda item.</span>
 <span class=
-"org-doc">    Creates it at the same level as the previous task, so it's better to use</span>
+"org-doc">Creates it at the same level as the previous task, so it's better to use</span>
 <span class=
-"org-doc">    this with to-do items than with projects or headings."</span>
+"org-doc">this with to-do items than with projects or headings."</span>
       (interactive)
       (org-agenda-switch-to)
       (org-capture 0))
@@ -12976,9 +13008,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     (message <span class="org-string">"... Org Markup"</span>)
 
     <span class="org-comment-delimiter">;;</span><span class=
-"org-comment">??? change the face of a headline (as an additional information) if</span>
+"org-comment">??? change the face of a headline (as an additional information) if it is</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">it is marked DONE (to face `</span><span class=
+"org-comment">marked DONE (to face `</span><span class=
 "org-comment"><span class=
 "org-constant">org-headline-done</span></span><span class=
 "org-comment">')</span>
@@ -14141,21 +14173,12 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
         <div class="outline-text-3" id="text-28-12">
           <p>Publish related Org mode files as a website.</p>
 
-          <table class="inlinetask" width="100%">
-            <tr>
-              <td valign="top"></td>
-
-              <td width="100%">
-                <b>Publishing&nbsp;&nbsp;&nbsp;<span class="tag"><span class=
-                "warning">warning</span></span></b><br />
-
-                <p>It can be used for generating different PDF files from the
-                same source file… See <a href=
-                "http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-9-2">
-                9.2 The Multiple Export Case</a>.</p>
-              </td>
-            </tr>
-          </table>
+          <div class="warning">
+            <p>It can be used for generating different PDF files from the same
+            source file… See <a href=
+            "http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-9-2">
+            9.2 The Multiple Export Case</a>.</p>
+          </div>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -24649,7 +24672,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140819.1405]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140819.1518]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

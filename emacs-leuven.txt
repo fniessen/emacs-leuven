@@ -326,7 +326,7 @@ distro) without impacting on stuff you have added by hand.
   ;; require a feature/library if available; if not, fail silently
   (unless (fboundp 'try-require)
     (defun try-require (feature)
-      "Attempt to load a feature or library.
+      "Attempt to load a FEATURE (or library).
     Return true if the library given as argument is successfully loaded.  If
     not, just print a message."
       (condition-case err
@@ -522,8 +522,8 @@ To upgrade packages after running ~package-list-packages~, type:
 - ~U~ (/mark Upgradable packages/) and then
 - ~x~ (/eXecute the installs and deletions/).
 
-When it's done installing all the packages, you delete the obsolete packages
-by hit ~y~ (/Yes/) when asked.
+When it's done installing all the packages, you delete the obsolete packages by
+hit ~y~ (/Yes/) when asked.
 
 ** Package Installation
 
@@ -560,10 +560,10 @@ frequent outages).
 
       (defcustom leuven-elpa-packages
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
-          csv-mode dictionary dired+ dired-single ess flycheck fuzzy
-          git-commit-mode graphviz-dot-mode helm htmlize idle-require info+
-          interaction-log ledger-mode leuven-theme org-mime pager rainbow-mode
-          redo+ sml-modeline tidy yasnippet
+          csv-mode dictionary dired+ dired-single ess fill-column-indicator
+          flycheck fuzzy git-commit-mode graphviz-dot-mode helm htmlize
+          idle-require info+ interaction-log ledger-mode leuven-theme org-mime
+          pager rainbow-mode redo+ sml-modeline tidy yasnippet
           ;; jabber multi-term
           ;; paredit redshank w3m
           )
@@ -1931,7 +1931,7 @@ Optimize regexps with =regexp-opt.el=.
     (kbd "C-M-r") 'isearch-backward)
 #+end_src
 
-*** IELM                                                             :noexport:
+*** IELM                                                              :noexport:
 
 In IELM, list the input line, followed by the first nine substrings matches,
 to debug regexp searches (in IELM)
@@ -2781,7 +2781,7 @@ commands:
 ! tar -czf out.tar.gz
 #+end_example
 
-*** On Windows                                                       :noexport:
+*** On Windows                                                        :noexport:
 
 On Windows, if you are trying to use ~gunzip~ to uncompress a file under Dired,
 you will probably encounter errors.
@@ -4263,6 +4263,25 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 #+end_src
 
 #+begin_src emacs-lisp
+  ;; graphically indicate the fill column
+  (when (try-require 'fill-column-indicator)
+
+    ;; color used to draw the fill-column rule
+    (setq fci-rule-color "#FFE0E0")
+
+    ;; show the fill-column rule as dashes
+    (setq fci-rule-use-dashes t)
+
+    ;; ratio of dash length to line height
+    (setq fci-dash-pattern 0.5)
+
+    ;; enable fci-mode as a global minor mode
+    (define-globalized-minor-mode global-fci-mode fci-mode
+      (lambda () (fci-mode 1)))
+    (global-fci-mode 1))
+#+end_src
+
+#+begin_src emacs-lisp
   (defun leuven-replace-nbsp-by-spc ()
     "Replace all nbsp by normal spaces."
     (interactive "*")
@@ -5521,7 +5540,7 @@ that all tags starting with ~@~ or ~#~ will be excluded from inheritance with:
 ;;* 6 (info "(org)Tags")
 
   ;; column to which tags should be indented in a headline
-  (setq org-tags-column -79)
+  (setq org-tags-column -80)
 
   ;; 6.2 list of tags ("contexts") allowed in Org mode files
   (setq org-tag-alist '((:startgroup . nil)
@@ -5602,8 +5621,8 @@ that all tags starting with ~@~ or ~#~ will be excluded from inheritance with:
 
 ** Properties and Columns
 
-By convention, *user-defined properties are capitalized*; built-in properties
-with special meaning are written with all capitals.
+By convention, *user-defined properties are capitalized*; built-in properties with
+special meaning are written with all capitals.
 
 #+begin_src emacs-lisp
 ;;* 7 (info "(org)Properties and Columns")
@@ -6385,7 +6404,8 @@ Press ~C-c a a~ to jump you to this week's task page from anywhere.
 
 #+begin_src emacs-lisp
     ;; show dated entries in the global `todo' list
-    (setq org-agenda-todo-ignore-with-date nil) ;!! tricky setting
+    (setq org-agenda-todo-ignore-with-date nil)
+                                        ;!! tricky setting
 #+end_src
 
 #+begin_src emacs-lisp
@@ -6399,14 +6419,16 @@ arrives -- at which point it will be in all lists.
 
 #+begin_src emacs-lisp
     ;; 10.3.2 don't show scheduled entries in the global `todo' list
-    (setq org-agenda-todo-ignore-scheduled 'future) ;!! tricky setting
+    (setq org-agenda-todo-ignore-scheduled 'future)
+                                        ;!! tricky setting
     (setq org-agenda-todo-ignore-scheduled nil)
 #+end_src
 
 #+begin_src emacs-lisp
     ;; 10.3.2 don't show entries scheduled in the future in the global
     ;; `todo' list (until they are within the warning period)
-    (setq org-agenda-todo-ignore-deadlines 'near) ;!! tricky setting
+    (setq org-agenda-todo-ignore-deadlines 'near)
+                                        ;!! tricky setting
     (setq org-agenda-todo-ignore-deadlines nil)
 #+end_src
 
@@ -6776,7 +6798,8 @@ on my machine's current temporal and physical context.
 *************** TODO We should ensure that appointments don't disappear when filtering late at nite
 - Look at appointments tagged ~errands~
 - Filter at 23:00 with ~/ <RET>~
-- Appointments such as "going to the doctor" will be removed from the agenda view...
+- Appointments such as "going to the doctor" will be removed from the agenda
+  view...
 *************** END
 
 *** Custom agenda views
@@ -6811,9 +6834,11 @@ Commands:
   (leuven--section "10.6 (org)Custom agenda views")
 
   (with-eval-after-load "org-agenda"
-    (let ((leuven-org-agenda-views "~/src/emacs-leuven/org-custom-agenda-views.el"))
+    (let ((leuven-org-agenda-views
+           "~/src/emacs-leuven/org-custom-agenda-views.el"))
       (when (file-exists-p leuven-org-agenda-views)
-        (load-file leuven-org-agenda-views)))) ; with-eval-after-load "org-agenda" ends here
+        (load-file leuven-org-agenda-views))))
+                                        ; with-eval-after-load "org-agenda" ends here
 #+end_src
 
 *** Display all active tasks from the current directory
@@ -6854,8 +6879,8 @@ example).
 
   (leuven--section "10.7 (org)Exporting Agenda Views")
 
-  ;; 10.7 alist of variable/value pairs that should be active during
-  ;; agenda export
+  ;; 10.7 alist of variable/value pairs that should be active during agenda
+  ;; export
   (setq org-agenda-exporter-settings
         '((ps-number-of-columns 1)      ; 2?
           (ps-landscape-mode t)
@@ -6907,8 +6932,8 @@ XXX Does this work?
 
     (defun leuven-org-agenda-mark-done-and-add-followup ()
       "Mark the current TODO as done and add another task after it.
-    Creates it at the same level as the previous task, so it's better to use
-    this with to-do items than with projects or headings."
+Creates it at the same level as the previous task, so it's better to use
+this with to-do items than with projects or headings."
       (interactive)
       (org-agenda-todo "DONE")
       (org-agenda-switch-to)
@@ -6925,8 +6950,8 @@ Source: Sacha Chua.
 #+begin_src emacs-lisp
     (defun leuven-org-agenda-new ()
       "Create a new note or task at the current agenda item.
-    Creates it at the same level as the previous task, so it's better to use
-    this with to-do items than with projects or headings."
+Creates it at the same level as the previous task, so it's better to use
+this with to-do items than with projects or headings."
       (interactive)
       (org-agenda-switch-to)
       (org-capture 0))
@@ -6954,8 +6979,8 @@ Source: Sacha Chua.
   (with-eval-after-load "org"
     (message "... Org Markup")
 
-    ;;??? change the face of a headline (as an additional information) if
-    ;; it is marked DONE (to face `org-headline-done')
+    ;;??? change the face of a headline (as an additional information) if it is
+    ;; marked DONE (to face `org-headline-done')
     (setq org-fontify-done-headline t)
 
     ;; 11.1 hide the emphasis marker characters
@@ -7638,10 +7663,10 @@ add it to ~org-export-backends~.
 
 Publish related Org mode files as a website.
 
-*************** Publishing                                            :warning:
+#+begin_warning
 It can be used for generating different PDF files from the same source file...
 See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-9-2][9.2 The Multiple Export Case]].
-*************** END
+#+end_warning
 
 #+begin_src emacs-lisp
 ;;* 13 (info "(org)Publishing")

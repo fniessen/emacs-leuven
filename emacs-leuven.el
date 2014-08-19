@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140819.1403
+;; Version: 20140819.1513
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140819.1403]--")
+(message "* --[ Loading Emacs Leuven 20140819.1513]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -239,7 +239,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; require a feature/library if available; if not, fail silently
   (unless (fboundp 'try-require)
     (defun try-require (feature)
-      "Attempt to load a feature or library.
+      "Attempt to load a FEATURE (or library).
     Return true if the library given as argument is successfully loaded.  If
     not, just print a message."
       (condition-case err
@@ -410,10 +410,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (defcustom leuven-elpa-packages
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
-          csv-mode dictionary dired+ dired-single ess flycheck fuzzy
-          git-commit-mode graphviz-dot-mode helm htmlize idle-require info+
-          interaction-log ledger-mode leuven-theme org-mime pager rainbow-mode
-          redo+ sml-modeline tidy yasnippet
+          csv-mode dictionary dired+ dired-single ess fill-column-indicator
+          flycheck fuzzy git-commit-mode graphviz-dot-mode helm htmlize
+          idle-require info+ interaction-log ledger-mode leuven-theme org-mime
+          pager rainbow-mode redo+ sml-modeline tidy yasnippet
           ;; jabber multi-term
           ;; paredit redshank w3m
           )
@@ -2691,6 +2691,23 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; activate Auto Fill for all text mode buffers
   (add-hook 'text-mode-hook 'auto-fill-mode)
 
+  ;; graphically indicate the fill column
+  (when (try-require 'fill-column-indicator)
+
+    ;; color used to draw the fill-column rule
+    (setq fci-rule-color "#FFE0E0")
+
+    ;; show the fill-column rule as dashes
+    (setq fci-rule-use-dashes t)
+
+    ;; ratio of dash length to line height
+    (setq fci-dash-pattern 0.5)
+
+    ;; enable fci-mode as a global minor mode
+    (define-globalized-minor-mode global-fci-mode fci-mode
+      (lambda () (fci-mode 1)))
+    (global-fci-mode 1))
+
   (defun leuven-replace-nbsp-by-spc ()
     "Replace all nbsp by normal spaces."
     (interactive "*")
@@ -3534,7 +3551,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 ;;* 6 (info "(org)Tags")
 
   ;; column to which tags should be indented in a headline
-  (setq org-tags-column -79)
+  (setq org-tags-column -80)
 
   ;; 6.2 list of tags ("contexts") allowed in Org mode files
   (setq org-tag-alist '((:startgroup . nil)
@@ -4131,18 +4148,21 @@ From %c"
     ;; (setq org-agenda-columns-add-appointments-to-effort-sum t)
 
     ;; show dated entries in the global `todo' list
-    (setq org-agenda-todo-ignore-with-date nil) ;!! tricky setting
+    (setq org-agenda-todo-ignore-with-date nil)
+                                        ;!! tricky setting
 
     ;; show entries with a time stamp in the global `todo' list
     (setq org-agenda-todo-ignore-timestamp nil)
 
     ;; 10.3.2 don't show scheduled entries in the global `todo' list
-    (setq org-agenda-todo-ignore-scheduled 'future) ;!! tricky setting
+    (setq org-agenda-todo-ignore-scheduled 'future)
+                                        ;!! tricky setting
     (setq org-agenda-todo-ignore-scheduled nil)
 
     ;; 10.3.2 don't show entries scheduled in the future in the global
     ;; `todo' list (until they are within the warning period)
-    (setq org-agenda-todo-ignore-deadlines 'near) ;!! tricky setting
+    (setq org-agenda-todo-ignore-deadlines 'near)
+                                        ;!! tricky setting
     (setq org-agenda-todo-ignore-deadlines nil)
 
     ;; 10.3.2 check also the sublevels of a TODO entry for TODO entries,
@@ -4444,9 +4464,11 @@ From %c"
   (leuven--section "10.6 (org)Custom agenda views")
 
   (with-eval-after-load "org-agenda"
-    (let ((leuven-org-agenda-views "~/src/emacs-leuven/org-custom-agenda-views.el"))
+    (let ((leuven-org-agenda-views
+           "~/src/emacs-leuven/org-custom-agenda-views.el"))
       (when (file-exists-p leuven-org-agenda-views)
-        (load-file leuven-org-agenda-views)))) ; with-eval-after-load "org-agenda" ends here
+        (load-file leuven-org-agenda-views))))
+                                        ; with-eval-after-load "org-agenda" ends here
 
   (defun leuven-org-todo-list-current-dir ()
     "Produce a view from all Org files in the current directory."
@@ -4473,8 +4495,8 @@ From %c"
 
   (leuven--section "10.7 (org)Exporting Agenda Views")
 
-  ;; 10.7 alist of variable/value pairs that should be active during
-  ;; agenda export
+  ;; 10.7 alist of variable/value pairs that should be active during agenda
+  ;; export
   (setq org-agenda-exporter-settings
         '((ps-number-of-columns 1)      ; 2?
           (ps-landscape-mode t)
@@ -4506,8 +4528,8 @@ From %c"
 
     (defun leuven-org-agenda-mark-done-and-add-followup ()
       "Mark the current TODO as done and add another task after it.
-    Creates it at the same level as the previous task, so it's better to use
-    this with to-do items than with projects or headings."
+Creates it at the same level as the previous task, so it's better to use
+this with to-do items than with projects or headings."
       (interactive)
       (org-agenda-todo "DONE")
       (org-agenda-switch-to)
@@ -4518,8 +4540,8 @@ From %c"
 
     (defun leuven-org-agenda-new ()
       "Create a new note or task at the current agenda item.
-    Creates it at the same level as the previous task, so it's better to use
-    this with to-do items than with projects or headings."
+Creates it at the same level as the previous task, so it's better to use
+this with to-do items than with projects or headings."
       (interactive)
       (org-agenda-switch-to)
       (org-capture 0))
@@ -4541,8 +4563,8 @@ From %c"
   (with-eval-after-load "org"
     (message "... Org Markup")
 
-    ;;??? change the face of a headline (as an additional information) if
-    ;; it is marked DONE (to face `org-headline-done')
+    ;;??? change the face of a headline (as an additional information) if it is
+    ;; marked DONE (to face `org-headline-done')
     (setq org-fontify-done-headline t)
 
     ;; 11.1 hide the emphasis marker characters
@@ -8721,7 +8743,7 @@ From %c"
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140819.1404]--")
+(message "* --[ Loaded Emacs Leuven 20140819.1514]--")
 
 (provide 'emacs-leuven)
 
