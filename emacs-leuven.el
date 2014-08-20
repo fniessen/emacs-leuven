@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140819.1513
+;; Version: 20140819.2120
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140819.1513]--")
+(message "* --[ Loading Emacs Leuven 20140819.2120]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -2253,9 +2253,30 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "20.5 (emacs)Change Window")
 
+  (defun leuven-delete-other-windows ()
+    "Cycle between 1 window, 2 vertically and 2 horizontally splitted windows."
+    (interactive)
+    (let ((splitter
+           (if (= (car (window-edges (selected-window)))
+                  (car (window-edges (next-window))))
+               'split-window-horizontally
+             'split-window-vertically)))
+      (cond ((= (count-windows) 1)
+             (delete-other-windows)
+             (split-window-vertically)
+             (set-window-buffer (next-window) (nth 2 (buffer-list))))
+            ((and (> (count-windows) 1)
+                  (equal splitter 'split-window-horizontally))
+             (delete-other-windows)
+             (funcall splitter)
+             (set-window-buffer (next-window) (nth 2 (buffer-list))))
+            ((and (> (count-windows) 1)
+                  (equal splitter 'split-window-vertically))
+             (delete-other-windows)))))
+
   ;; delete all windows in the selected frame except the selected window
   (global-set-key
-    (kbd "<f5>") 'delete-other-windows)
+    (kbd "<f5>") 'leuven-delete-other-windows)
 
   ;; enlarge or shrink windows more easily than with `C-x {', `C-x }' and the
   ;; like
@@ -2692,7 +2713,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (add-hook 'text-mode-hook 'auto-fill-mode)
 
   ;; graphically indicate the fill column
-  (when (try-require 'fill-column-indicator)
+  (when (try-require 'fill-column-indicator-XXX)
 
     ;; color used to draw the fill-column rule
     (setq fci-rule-color "#FFE0E0")
@@ -8743,7 +8764,7 @@ this with to-do items than with projects or headings."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140819.1514]--")
+(message "* --[ Loaded Emacs Leuven 20140819.2121]--")
 
 (provide 'emacs-leuven)
 

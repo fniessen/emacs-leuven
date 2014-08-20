@@ -3561,9 +3561,30 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 
   (leuven--section "20.5 (emacs)Change Window")
 
+  (defun leuven-delete-other-windows ()
+    "Cycle between 1 window, 2 vertically and 2 horizontally splitted windows."
+    (interactive)
+    (let ((splitter
+           (if (= (car (window-edges (selected-window)))
+                  (car (window-edges (next-window))))
+               'split-window-horizontally
+             'split-window-vertically)))
+      (cond ((= (count-windows) 1)
+             (delete-other-windows)
+             (split-window-vertically)
+             (set-window-buffer (next-window) (nth 2 (buffer-list))))
+            ((and (> (count-windows) 1)
+                  (equal splitter 'split-window-horizontally))
+             (delete-other-windows)
+             (funcall splitter)
+             (set-window-buffer (next-window) (nth 2 (buffer-list))))
+            ((and (> (count-windows) 1)
+                  (equal splitter 'split-window-vertically))
+             (delete-other-windows)))))
+
   ;; delete all windows in the selected frame except the selected window
   (global-set-key
-    (kbd "<f5>") 'delete-other-windows)
+    (kbd "<f5>") 'leuven-delete-other-windows)
 
   ;; enlarge or shrink windows more easily than with `C-x {', `C-x }' and the
   ;; like
@@ -4264,7 +4285,7 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 
 #+begin_src emacs-lisp
   ;; graphically indicate the fill column
-  (when (try-require 'fill-column-indicator)
+  (when (try-require 'fill-column-indicator-XXX)
 
     ;; color used to draw the fill-column rule
     (setq fci-rule-color "#FFE0E0")
