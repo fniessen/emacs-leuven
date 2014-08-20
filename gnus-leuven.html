@@ -457,7 +457,8 @@
                       <span class=
 "org-comment-delimiter">;; </span><span class="org-comment">(nnimap-stream ssl)</span>
 
-                      (nnimap-split-methods 'nnimap-split-fancy) <span class=
+                      (nnimap-split-methods 'nnimap-split-fancy)
+                                        <span class=
 "org-comment-delimiter">; </span><span class="org-comment"><span class=
 "org-leuven-highlight">XXX</span></span><span class=
 "org-comment"> when (try-require 'bbdb-gnus)...</span>
@@ -513,9 +514,11 @@
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment"><span class=
 "org-leuven-highlight">WARNING</span></span><span class=
-"org-comment"> As Gnus has no record of which groups are new and which are old,</span>
+"org-comment"> As Gnus has no record of which groups are new and which are</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">the automatic new newsgroups subscription methods becomes meaningless</span>
+"org-comment">old, the automatic new newsgroups subscription methods becomes</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">meaningless</span>
       (setq gnus-save-killed-list nil)
 
       <span class="org-comment-delimiter">;; </span><span class=
@@ -607,8 +610,8 @@
 "org-comment">Gnus will only know about the groups in my `</span><span class=
 "org-comment"><span class="org-constant">.newsrc</span></span><span class=
 "org-comment">' file</span>
-      (setq gnus-read-active-file nil) <span class=
-"org-comment-delimiter">;; </span><span class="org-comment">speed-up</span>
+      (setq gnus-read-active-file nil)  <span class=
+"org-comment-delimiter">; </span><span class="org-comment">speed-up</span>
 
       (message <span class="org-string">"1 Starting Gnus... Done"</span>))
 </pre>
@@ -777,9 +780,9 @@
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">groups that should always be listed in the group buffer (even when</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">there no unread articles in the groups)</span>
+"org-comment">there are no unread articles in the groups)</span>
       (setq gnus-permanently-visible-groups nil) <span class=
-"org-comment-delimiter">;; </span><span class="org-comment">= none</span>
+"org-comment-delimiter">; </span><span class="org-comment">= none</span>
 </pre>
           </div>
         </div>
@@ -882,9 +885,9 @@
       (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">turn off the column number in the group buffer, and</span>
+"org-comment">turn off the column number in the group buffer, and remove the binding</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">remove the binding of `C-c C-x', used by Org clocking commands</span>
+"org-comment">of `C-c C-x', used by Org clocking commands</span>
       (add-hook 'gnus-group-mode-hook
                 (<span class="org-keyword">lambda</span> ()
                   (<span class="org-keyword">progn</span>
@@ -1001,15 +1004,15 @@
              <span class="org-string">"\n"</span>))
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">string indicating that the current article has the same subject as</span>
+"org-comment">string indicating that the current article has the same subject as the</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">the previous</span>
+"org-comment">previous</span>
       (setq gnus-summary-same-subject <span class="org-string">""</span>)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">strings indicating that the current article has the same subject as</span>
+"org-comment">strings indicating that the current article has the same subject as the</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">the previous</span>
+"org-comment">previous</span>
       (<span class="org-keyword">if</span> (and (char-displayable-p ?\u25A3)
                                         <span class=
 "org-comment-delimiter">; </span><span class=
@@ -1331,10 +1334,17 @@
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">entering of articles from the cache</span>
       (setq gnus-cache-enter-articles '(ticked dormant unread read))
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">simple setup for your convenience, if you are using `</span><span class="org-comment"><span class="org-constant">nnimap</span></span><span class="org-comment">' from</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">home, over a dialup connection</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">simple setup for your convenience, if</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">you are using `</span><span class="org-comment"><span class=
+"org-constant">nnimap</span></span><span class=
+"org-comment">' from home, over</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">a dialup connection</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">removing of articles from the cache</span>
@@ -1765,9 +1775,9 @@
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">&gt; `</span><span class="org-comment"><span class=
 "org-constant">http://groups.google.com/groups?selm=</span></span><span class=
-"org-comment">' to get the target URL, but this</span>
+"org-comment">' to get the target URL, but</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">&gt; does not work reliably.</span>
+"org-comment">&gt; this does not work reliably.</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">auxiliary article mode commands for Gnus</span>
@@ -1926,9 +1936,7 @@
 "org-comment">(add-to-list 'mm-automatic-external-display "text/html")</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">do not treat inline images as real attachments (display them,</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">instead)</span>
+"org-comment">do not treat inline images as real attachments (display them, instead)</span>
       (add-to-list 'mm-attachment-override-types <span class=
 "org-string">"image/.*"</span>)
                                         <span class=
@@ -2093,12 +2101,15 @@
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">preferred coding systems for encoding outgoing messages</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">ensure that utf-8 is chosen over iso-latin-9 and latin-1, if possible</span>
       (setq mm-coding-system-priorities
             '(utf-8
               iso-latin-9
-              iso-latin-1))
+              iso-latin-1))             <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">ensure that utf-8 is chosen over</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">iso-latin-9 and latin-1, if possible</span>
 </pre>
           </div>
         </div>
@@ -2118,8 +2129,6 @@
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">choose the right MIME type when sending an attachment</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">MIME content-types keyed by file extensions</span>
       (eval-after-load <span class="org-string">"mailcap"</span>
         '(<span class="org-keyword">progn</span>
            (add-to-list 'mailcap-mime-extensions
@@ -2128,7 +2137,11 @@
            (add-to-list 'mailcap-mime-extensions
                         '(<span class="org-string">".ppt"</span> . <span class=
 "org-string">"application/vnd.ms-powerpoint"</span>))))
-
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">MIME content-types keyed by file</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">extensions</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">&gt; which settings do you have to see PDF attachments as text,</span>
@@ -2243,13 +2256,14 @@
 "org-comment">** 5.2 (info "(gnus)Posting Server")</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">control the hostname sent in the first EHLO or HELO command sent to</span>
+"org-comment">control the hostname sent in the first EHLO or HELO command sent to the</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">the server (client sends `EHLO CLARK.smtpmail-local-domain')</span>
-      (setq smtpmail-local-domain <span class=
+"org-comment">server (client sends `EHLO CLARK.smtpmail-local-domain')</span>
+      (setq smtpmail-local-domain
+            <span class=
 "org-string">"i-did-not-set--mail-host-address--so-tickle-me"</span>)
-                                        <span class=
-"org-comment-delimiter">;         </span><span class=
+            <span class=
+"org-comment-delimiter">;;              </span><span class=
 "org-comment">^^^^^^^^^^^^^^^^^</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
@@ -2269,9 +2283,9 @@
       (setq smtpmail-debug-info t)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">send the SMTP VERB command (enabling verbose information from the</span>
+"org-comment">send the SMTP VERB command (enabling verbose information from the SMTP</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">SMTP server)</span>
+"org-comment">server)</span>
       (setq smtpmail-debug-verb t)
 </pre>
           </div>
@@ -2377,9 +2391,9 @@
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">an alternative to `</span><span class="org-comment"><span class=
 "org-constant">gnus-posting-styles</span></span><span class=
-"org-comment">', if you want to change</span>
+"org-comment">', if you want to change accounts</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">accounts on the fly while composing messages</span>
+"org-comment">on the fly while composing messages</span>
       (autoload 'gnus-alias-determine-identity <span class=
 "org-string">"gnus-alias"</span> nil t)
       (add-hook 'message-setup-hook 'gnus-alias-determine-identity)
@@ -2883,9 +2897,9 @@
 "org-string">:"</span>))
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">subject of article with 'Fwd:' prepended to it, for forwarded</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">messages</span>
+"org-comment">subject of article with `</span><span class=
+"org-comment"><span class="org-constant">Fwd:</span></span><span class=
+"org-comment">' prepended to it, for forwarded messages</span>
       (setq message-make-forward-subject-function
             'message-forward-subject-fwd)
 
@@ -2913,10 +2927,17 @@
 "org-comment">name of file containing the signature</span>
       (setq message-signature-file <span class=
 "org-string">"~/Mail/signatures/johndoe"</span>)
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">this file must exist (otherwise, you get misplaced headers when</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">switching between personalities (see `</span><span class=
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">this file must exist (otherwise, you</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">get misplaced headers when switching</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">between personalities (see</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">`</span><span class=
 "org-comment"><span class="org-constant">gnus-alias</span></span><span class=
 "org-comment">')</span>
 
@@ -3589,11 +3610,12 @@
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">disable the Gnus agent (used for "offline" reading)</span>
-      (setq gnus-agent nil) <span class=
-"org-comment-delimiter">;; </span><span class=
-"org-comment">prevent being unable to delete some mails from</span>
-                            <span class=
-"org-comment-delimiter">;; </span><span class="org-comment">your inbox</span>
+      (setq gnus-agent nil)             <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">prevent being unable to delete some</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">mails from your inbox</span>
 
       (message <span class="org-string">"6 Select Methods... Done"</span>))
 </pre>
@@ -3662,7 +3684,7 @@
           </div>
 
           <p>I also have some more rules that score things up if they mention
-          my name or other things I’m interested in. =)</p>
+          my name or other things I’m interested in.</p>
 
           <p>Maybe a score file with this in it?</p>
           <pre class="example">

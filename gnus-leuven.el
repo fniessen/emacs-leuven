@@ -123,7 +123,8 @@
                       ;; (nnimap-server-port 993)
                       ;; (nnimap-stream ssl)
 
-                      (nnimap-split-methods 'nnimap-split-fancy) ; XXX when (try-require 'bbdb-gnus)...
+                      (nnimap-split-methods 'nnimap-split-fancy)
+                                        ; XXX when (try-require 'bbdb-gnus)...
 
                       )
 
@@ -142,8 +143,9 @@
       ;; save you some time at startup and when you do the `g' command
 
       ;; don't save the list of killed groups
-      ;; WARNING As Gnus has no record of which groups are new and which are old,
-      ;; the automatic new newsgroups subscription methods becomes meaningless
+      ;; WARNING As Gnus has no record of which groups are new and which are
+      ;; old, the automatic new newsgroups subscription methods becomes
+      ;; meaningless
       (setq gnus-save-killed-list nil)
 
       ;; make all new groups that come from mail back-ends subscribed
@@ -172,7 +174,7 @@
 ;;** 1.8 (info "(gnus)The Active File")
 
       ;;  Gnus will only know about the groups in my `.newsrc' file
-      (setq gnus-read-active-file nil) ;; speed-up
+      (setq gnus-read-active-file nil)  ; speed-up
 
       (message "1 Starting Gnus... Done"))
 
@@ -249,8 +251,8 @@
 ;;** 2.11 (info "(gnus)Listing Groups")
 
       ;; groups that should always be listed in the group buffer (even when
-      ;; there no unread articles in the groups)
-      (setq gnus-permanently-visible-groups nil) ;; = none
+      ;; there are no unread articles in the groups)
+      (setq gnus-permanently-visible-groups nil) ; = none
 
 ;;** 2.15 (info "(gnus)Exiting Gnus")
 
@@ -299,8 +301,8 @@
       ;; keep track of when I last read a group
       (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
 
-      ;; turn off the column number in the group buffer, and
-      ;; remove the binding of `C-c C-x', used by Org clocking commands
+      ;; turn off the column number in the group buffer, and remove the binding
+      ;; of `C-c C-x', used by Org clocking commands
       (add-hook 'gnus-group-mode-hook
                 (lambda ()
                   (progn
@@ -361,12 +363,12 @@
              "%I%s"
              "\n"))
 
-      ;; string indicating that the current article has the same subject as
-      ;; the previous
+      ;; string indicating that the current article has the same subject as the
+      ;; previous
       (setq gnus-summary-same-subject "")
 
-      ;; strings indicating that the current article has the same subject as
-      ;; the previous
+      ;; strings indicating that the current article has the same subject as the
+      ;; previous
       (if (and (char-displayable-p ?\u25A3)
                                         ; white square containg black small square
                (char-displayable-p ?\u2570))
@@ -510,8 +512,9 @@
 
       ;; entering of articles from the cache
       (setq gnus-cache-enter-articles '(ticked dormant unread read))
-      ;; simple setup for your convenience, if you are using `nnimap' from
-      ;; home, over a dialup connection
+                                        ; simple setup for your convenience, if
+                                        ; you are using `nnimap' from home, over
+                                        ; a dialup connection
 
       ;; removing of articles from the cache
       (setq gnus-cache-remove-articles nil)
@@ -726,8 +729,8 @@
       ;; `----
 
       ;; > At the moment, I am appending the `Message-ID' to
-      ;; > `http://groups.google.com/groups?selm=' to get the target URL, but this
-      ;; > does not work reliably.
+      ;; > `http://groups.google.com/groups?selm=' to get the target URL, but
+      ;; > this does not work reliably.
 
       ;; auxiliary article mode commands for Gnus
       (when (try-require 'rs-gnus-article-XXX)
@@ -780,8 +783,7 @@
       ;; ;; MIME type that will be displayed externally automatically
       ;; (add-to-list 'mm-automatic-external-display "text/html")
 
-      ;; do not treat inline images as real attachments (display them,
-      ;; instead)
+      ;; do not treat inline images as real attachments (display them, instead)
       (add-to-list 'mm-attachment-override-types "image/.*")
                                         ; "text/x-vcard"...
 
@@ -868,25 +870,25 @@
 ;;*** 2.4 (info "(emacs-mime)Encoding Customization")
 
       ;; preferred coding systems for encoding outgoing messages
-      ;; ensure that utf-8 is chosen over iso-latin-9 and latin-1, if possible
       (setq mm-coding-system-priorities
             '(utf-8
               iso-latin-9
-              iso-latin-1))
+              iso-latin-1))             ; ensure that utf-8 is chosen over
+                                        ; iso-latin-9 and latin-1, if possible
 
 ;;** 4 (info "(emacs-mime)Basic Functions")
 
 ;;*** 4.12 (info "(emacs-mime)mailcap")
 
       ;; choose the right MIME type when sending an attachment
-      ;; MIME content-types keyed by file extensions
       (eval-after-load "mailcap"
         '(progn
            (add-to-list 'mailcap-mime-extensions
                         '(".doc" . "application/msword"))
            (add-to-list 'mailcap-mime-extensions
                         '(".ppt" . "application/vnd.ms-powerpoint"))))
-
+                                        ; MIME content-types keyed by file
+                                        ; extensions
 
       ;; > which settings do you have to see PDF attachments as text,
       ;; > automagically? Does it work as well for DOC, XLS and PPT?
@@ -933,10 +935,11 @@
 
 ;;** 5.2 (info "(gnus)Posting Server")
 
-      ;; control the hostname sent in the first EHLO or HELO command sent to
-      ;; the server (client sends `EHLO CLARK.smtpmail-local-domain')
-      (setq smtpmail-local-domain "i-did-not-set--mail-host-address--so-tickle-me")
-                                        ;         ^^^^^^^^^^^^^^^^^
+      ;; control the hostname sent in the first EHLO or HELO command sent to the
+      ;; server (client sends `EHLO CLARK.smtpmail-local-domain')
+      (setq smtpmail-local-domain
+            "i-did-not-set--mail-host-address--so-tickle-me")
+            ;;              ^^^^^^^^^^^^^^^^^
 
       ;; make the SMTP library add `@' and the specified domain name to
       ;; recipients specified in the message when they are sent using the RCPT
@@ -948,8 +951,8 @@
       ;; only to debug problems
       (setq smtpmail-debug-info t)
 
-      ;; send the SMTP VERB command (enabling verbose information from the
-      ;; SMTP server)
+      ;; send the SMTP VERB command (enabling verbose information from the SMTP
+      ;; server)
       (setq smtpmail-debug-verb t)
 
 ;; group in which to save the messages you've written
@@ -988,8 +991,8 @@
 
 ;;** 5.6 (info "(gnus)Posting Styles")
 
-      ;; an alternative to `gnus-posting-styles', if you want to change
-      ;; accounts on the fly while composing messages
+      ;; an alternative to `gnus-posting-styles', if you want to change accounts
+      ;; on the fly while composing messages
       (autoload 'gnus-alias-determine-identity "gnus-alias" nil t)
       (add-hook 'message-setup-hook 'gnus-alias-determine-identity)
 
@@ -1148,8 +1151,7 @@
                     "X.*"
                     "\\):"))
 
-      ;; subject of article with 'Fwd:' prepended to it, for forwarded
-      ;; messages
+      ;; subject of article with `Fwd:' prepended to it, for forwarded messages
       (setq message-make-forward-subject-function
             'message-forward-subject-fwd)
 
@@ -1162,8 +1164,10 @@
 
       ;; name of file containing the signature
       (setq message-signature-file "~/Mail/signatures/johndoe")
-      ;; this file must exist (otherwise, you get misplaced headers when
-      ;; switching between personalities (see `gnus-alias')
+                                        ; this file must exist (otherwise, you
+                                        ; get misplaced headers when switching
+                                        ; between personalities (see
+                                        ; `gnus-alias')
 
 ;;*** 2.8 (info "(message)Various Commands")
 
@@ -1523,8 +1527,8 @@
 ;;** 6.8 (info "(gnus)Gnus Unplugged")
 
       ;; disable the Gnus agent (used for "offline" reading)
-      (setq gnus-agent nil) ;; prevent being unable to delete some mails from
-                            ;; your inbox
+      (setq gnus-agent nil)             ; prevent being unable to delete some
+                                        ; mails from your inbox
 
       (message "6 Select Methods... Done"))
 
