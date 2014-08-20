@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140819.2120
+;; Version: 20140820.1017
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140819.2120]--")
+(message "* --[ Loading Emacs Leuven 20140820.1017]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -687,8 +687,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 (leuven--chapter leuven-chapter-11-mark "11 The Mark and the Region"
 
-  ;; inserting text while the mark is active causes the text in the region to
-  ;; be deleted first
+  ;; inserting text while the mark is active causes the text in the region to be
+  ;; deleted first
   (delete-selection-mode 1)
 
 )                                       ; chapter 11 ends here
@@ -751,9 +751,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "12.2 (emacs)Yanking")
 
-  ;; auto-indentation of pasted code in the listed programming modes (fall
-  ;; back to default, non-indented yanking by preceding the yanking
-  ;; command `C-y' with `C-u')
+  ;; auto-indentation of pasted code in the listed programming modes (fall back
+  ;; to default, non-indented yanking by preceding the yanking command `C-y'
+  ;; with `C-u')
   (dolist (command '(yank yank-pop))
     (eval `(defadvice ,command (after leuven-indent-region activate)
              (and (not current-prefix-arg)
@@ -921,7 +921,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; add highlighting keywords for selected major modes *and* all major modes
   ;; derived from them
   (dolist (hook '(prog-mode-hook
-                  ;; text-mode-hook        ; avoid Org
+                  ;; text-mode-hook     ; avoid Org
                   css-mode-hook         ; [parent: fundamental]
                   latex-mode-hook
                   shell-mode-hook       ; [parent: fundamental]
@@ -1290,7 +1290,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                   (message "Turn on Flyspell mode in `%s'" (buffer-name))
                   (flyspell-mode))))
 
-    ;; prevent flyspell from finding mistakes in the code, well in comments and
+    ;; prevent Flyspell from finding mistakes in the code, well in comments and
     ;; strings
     (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
@@ -2254,7 +2254,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "20.5 (emacs)Change Window")
 
   (defun leuven-delete-other-windows ()
-    "Cycle between 1 window, 2 vertically and 2 horizontally splitted windows."
+    "Cycle between 1 window, 2 vertically and 2 horizontally split windows."
     (interactive)
     (let ((splitter
            (if (= (car (window-edges (selected-window)))
@@ -3738,14 +3738,21 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; (require 'org-clock)               ;! needed for trying to automatically
                                         ;! re-clock at Emacs startup
 
+  ;; XXX Under test!
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (require 'org-clock)
+              (setq org-clock-persist t)
+              (org-clock-persistence-insinuate)))
+
   (with-eval-after-load "org-clock"
 
-    ;; 8.4 save both the running clock and the entire clock history when Emacs
-    ;; is closed, and resume it next time Emacs is started up
-    (setq org-clock-persist t)
-
-    ;; 8.4 set up hooks for clock persistence
-    (org-clock-persistence-insinuate)
+    ;; ;; 8.4 save both the running clock and the entire clock history when Emacs
+    ;; ;; is closed, and resume it next time Emacs is started up
+    ;; (setq org-clock-persist t)
+    ;;
+    ;; ;; 8.4 set up hooks for clock persistence
+    ;; (org-clock-persistence-insinuate)
 
     ;; resume clocking task on clock-in if the clock is open
     (setq org-clock-in-resume t)
@@ -6914,7 +6921,7 @@ this with to-do items than with projects or headings."
 
       (with-eval-after-load "auto-complete-config"
 
-        ;; avoid flyspell processes when auto completion is being started
+        ;; avoid Flyspell processes when auto completion is being started
         (ac-flyspell-workaround)
 
         ;; optimize sources to use
@@ -6922,8 +6929,7 @@ this with to-do items than with projects or headings."
 
         ;; change default sources
         (setq-default ac-sources
-                      ;; buffers whom major-mode is same to of a current
-                      ;; buffer
+                      ;; buffers whom major-mode is same to of a current buffer
                       '(ac-source-words-in-same-mode-buffers))
 
         ;; change sources for Emacs Lisp mode
@@ -6998,8 +7004,7 @@ this with to-do items than with projects or headings."
 
     (leuven--section "30.3 (emacs)Dired Deletion")
 
-    ;; recursive deletes allowed, after asking for each directory at top
-    ;; level
+    ;; recursive deletes allowed, after asking for each directory at top level
     (setq dired-recursive-deletes 'top)
 
 ;;** (info "(emacs)Dired Visiting")
@@ -7197,8 +7202,8 @@ this with to-do items than with projects or headings."
   ;; years must be written in full
   (setq diary-abbreviated-year-flag nil)
 
-  ;; set the style of calendar and diary dates to ISO (how to interpret
-  ;; the dates)
+  ;; set the style of calendar and diary dates to ISO (how to interpret the
+  ;; dates)
   (setq calendar-date-style 'iso)
 
   ;; week in the calendar begins on Monday
@@ -7296,8 +7301,8 @@ this with to-do items than with projects or headings."
     ;; enable appointment notification, several minutes beforehand
     (add-hook 'diary-hook 'appt-make-list)
 
-    ;; keep your appointment list clean: if you delete an appointment from
-    ;; your Org agenda file, delete the corresponding alert
+    ;; keep your appointment list clean: if you delete an appointment from your
+    ;; Org agenda file, delete the corresponding alert
     (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
       "Clear the existing `appt-time-msg-list'."
       (setq appt-time-msg-list nil))
@@ -7306,13 +7311,13 @@ this with to-do items than with projects or headings."
     ;; agenda buffer is (re)built
     (add-hook 'org-agenda-finalize-hook
               'org-agenda-to-appt)      ;! don't use the `org-agenda-mode-hook'
-                                        ;! because the Org agenda files would
-                                        ;! be opened once by
-                                        ;! `org-agenda-to-appt', and then
-                                        ;! killed by `org-release-buffers'
-                                        ;! (because `org-agenda-to-appt' closes
-                                        ;! all the files it opened itself -- as
-                                        ;! they weren't already opened), to be
+                                        ;! because the Org agenda files would be
+                                        ;! opened once by `org-agenda-to-appt',
+                                        ;! and then killed by
+                                        ;! `org-release-buffers' (because
+                                        ;! `org-agenda-to-appt' closes all the
+                                        ;! files it opened itself -- as they
+                                        ;! weren't already opened), to be
                                         ;! finally re-opened!
 
     ;; add today's appointments (found in `org-agenda-files') each time such a
@@ -7413,7 +7418,8 @@ this with to-do items than with projects or headings."
   (setq send-mail-function 'smtpmail-send-it)
 
   ;; default SMTP server (overriden by `smtpmail-smtp-server')
-  (setq smtpmail-default-smtp-server "smtp") ; SMTP process must be running there
+  (setq smtpmail-default-smtp-server "smtp")
+                                        ; SMTP process must be running there
 
 )                                       ; chapter 32 ends here
 
@@ -7427,8 +7433,7 @@ this with to-do items than with projects or headings."
       (interactive)
       (switch-or-start 'gnus "*Group*")))
 
-  ;; directory beneath which additional per-user Gnus-specific files are
-  ;; placed
+  ;; directory beneath which additional per-user Gnus-specific files are placed
   (setq gnus-directory "~/.gnus.d/")    ; this should end with a directory
                                         ; separator
 
@@ -7485,13 +7490,12 @@ this with to-do items than with projects or headings."
 
     ;; enable the various package-specific BBDB functions
     (bbdb-initialize 'gnus 'message)
-    ;; - add bindings for the default keys to Gnus and configure Gnus to
-    ;;   notify the BBDB when new messages are loaded (required if the
-    ;;   BBDB is to be able to display BBDB entries for messages displayed
-    ;;   in Gnus)
+    ;; - add bindings for the default keys to Gnus and configure Gnus to notify
+    ;;   the BBDB when new messages are loaded (required if the BBDB is to be
+    ;;   able to display BBDB entries for messages displayed in Gnus)
     ;;
-    ;; - add a binding for `M-TAB' to Message mode.  This will enable
-    ;;   completion of addresses based on BBDB records
+    ;; - add a binding for `M-TAB' to Message mode.  This will enable completion
+    ;;   of addresses based on BBDB records
 
     ;; what do we do when invoking bbdb interactively (`:' to display sender)
     (setq bbdb-mua-update-interactive-p '(query . create))
@@ -7527,8 +7531,8 @@ this with to-do items than with projects or headings."
     ;; display the poster's name from the BBDB if we have one
     (setq bbdb/gnus-summary-prefer-real-names t)
 
-    ;; replace the information provided in the From header with data from
-    ;; the BBDB if we have one
+    ;; replace the information provided in the From header with data from the
+    ;; BBDB if we have one
     (setq bbdb/gnus-summary-prefer-bbdb-data t)
 
     (setq bbdb/gnus-summary-show-bbdb-names t)
@@ -7616,9 +7620,9 @@ this with to-do items than with projects or headings."
 
   (leuven--section "35.1 (emacs)Navigation")
 
-  ;; `doc-view' integrates with the usual bookmark facility.  So simply
-  ;; use `C-x r m' (`bookmark-set') to jump back to the last page you've
-  ;; read in a PDF document.
+  ;; `doc-view' integrates with the usual bookmark facility.  So simply use
+  ;; `C-x r m' (`bookmark-set') to jump back to the last page you've read in
+  ;; a PDF document.
 
   ;; antiword will be run on every `.doc' file you open
   ;; TODO sudo aptitude install antiword (or via Cygwin setup)
@@ -7855,9 +7859,9 @@ this with to-do items than with projects or headings."
   ;; managing multiple terminal buffers in Emacs
   ;; (and fixing some troubles of `term-mode': key bindings, etc.)
 
-  ;; "multi-term on POSIX hosts has let me switch from using screen, with
-  ;; one Emacs screen and lots of shell screens; to just using Emacs, with
-  ;; lots of terminals inside it."
+  ;; "multi-term on POSIX hosts has let me switch from using screen, with one
+  ;; Emacs screen and lots of shell screens; to just using Emacs, with lots of
+  ;; terminals inside it."
 
   ;; (when (locate-library "multi-term")
   ;;
@@ -7897,8 +7901,8 @@ this with to-do items than with projects or headings."
   (add-to-list 'same-window-regexps "^\\*ssh-.*\\*\\(\\|<[0-9]+>\\)")
   (autoload 'ssh "ssh"
     "Open a network login connection via `ssh'." t)
-    ;; this is to run ESS remotely on another computer in my own Emacs, or
-    ;; just plain old reading remote files
+    ;; this is to run ESS remotely on another computer in my own Emacs, or just
+    ;; plain old reading remote files
 
   ;; See http://emacs.1067599.n5.nabble.com/SSH-inside-Emacs-td225528.html
   ;; - plink (with `dumb' terminal option?) as interactive shell
@@ -8050,7 +8054,7 @@ this with to-do items than with projects or headings."
           (setq ps-printer-name t)
 
           ;; name of program for printing a PostScript file
-          ;; tell Emacs where ghostscript print utility is located
+          ;; tell Emacs where Ghostscript print utility is located
           (setq ps-lpr-command gsprint-program)
 
           ;; list of extra switches to pass to `ps-lpr-command'
@@ -8345,9 +8349,8 @@ this with to-do items than with projects or headings."
       (define-key w3m-mode-map
         (kbd "U") 'leuven-w3m-goto-url)
 
-      ;; fix inappropriate key bindings for moving from place to place in a
-      ;; page (let the cursor keys behave normally, don't jump from link to
-      ;; link)
+      ;; fix inappropriate key bindings for moving from place to place in a page
+      ;; (let the cursor keys behave normally, don't jump from link to link)
       (define-key w3m-mode-map
         (kbd "<up>") 'previous-line)
       (define-key w3m-mode-map
@@ -8383,15 +8386,14 @@ this with to-do items than with projects or headings."
 
 ;;*** 5.1 General Variables
 
-      ;; send referers only when both the current page and the target
-      ;; page are provided by the same server
+      ;; send referers only when both the current page and the target page are
+      ;; provided by the same server
       (setq w3m-add-referer 'lambda)
 
       ;; home page
       (setq w3m-home-page "http://www.emacswiki.org/")
 
-      ;; number of steps in columns used when scrolling a window
-      ;; horizontally
+      ;; number of steps in columns used when scrolling a window horizontally
       (setq w3m-horizontal-shift-columns 1)  ; 2
 
       ;; proxy settings
@@ -8548,8 +8550,8 @@ this with to-do items than with projects or headings."
   (setq gc-cons-threshold 3500000)      ; make Gnus fast
                                         ; from (info "(gnus)FAQ 9-2")
 
-  ;; don't display messages at start and end of garbage collection (as it
-  ;; hides too many interesting messages)
+  ;; don't display messages at start and end of garbage collection (as it hides
+  ;; too many interesting messages)
   (setq garbage-collection-messages nil)
 
 ;;** 48.3 (info "(emacs)Variables")
@@ -8764,7 +8766,7 @@ this with to-do items than with projects or headings."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140819.2121]--")
+(message "* --[ Loaded Emacs Leuven 20140820.1018]--")
 
 (provide 'emacs-leuven)
 

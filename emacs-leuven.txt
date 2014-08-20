@@ -17,10 +17,10 @@
 
 * Description
 
-Emacs can be very difficult for the beginner, as many of the default choices
-may seem (and sometimes are) ugly or awkward.
+Emacs can be very difficult for the beginner, as many of the default choices may
+seem (and sometimes are) ugly or awkward.
 
-But -- that's the joy of Emacs -- nearly everything can be adjusted! Hence,
+But -- that's the joy of Emacs -- nearly everything can be adjusted!  Hence,
 this set of customizations to "short-cut" that initial process.
 
 * Header
@@ -245,10 +245,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 Adding the right Lisp directories to your ~load-path~ (list of directories where
 Emacs Lisp libraries -- ~.el~ and ~.elc~ files -- are installed) must be the very
-*first thing* in your =.emacs= file, before the first time packages are required,
-to make sure that you're not picking up bits and pieces from older files
-(bundled with Emacs, and loaded before the path to the *newest* versions are
-set).
+*first thing* in your =.emacs= file, before the first time packages are required, to
+make sure that you're not picking up bits and pieces from older files (bundled
+with Emacs, and loaded before the path to the *newest* versions are set).
 
 The most important directories are the last to be added to ~load-path~ (so that
 they become the first of the list)!
@@ -509,6 +508,12 @@ See function ~--find-program~ at http://www.visualco.de/src/elisp/.emacs.el.html
 
 * Emacs Lisp Packages
 
+Another *first thing* in your init script should be ~(package-initialize)~ so that
+customization of Org variables (for example) doesn't auto-load the old version
+that came with Emacs.
+
+If you require something from Org mode, it must be after ~package-initialize~.
+
 ** The Package Menu Buffer
 
 #+begin_src emacs-lisp
@@ -523,7 +528,7 @@ To upgrade packages after running ~package-list-packages~, type:
 - ~x~ (/eXecute the installs and deletions/).
 
 When it's done installing all the packages, you delete the obsolete packages by
-hit ~y~ (/Yes/) when asked.
+hitting ~y~ (/Yes/) when asked.
 
 ** Package Installation
 
@@ -533,8 +538,8 @@ hit ~y~ (/Yes/) when asked.
 In Marmalade, the developers themselves do the packaging.  In MELPA, packages
 are generated programmatically from upstream Git-based sources.
 
-Note -- The Marmalade repository is not recommended by Flycheck (due to
-frequent outages).
+Note -- The Marmalade repository is not recommended by Flycheck (due to frequent
+outages).
 
 #+begin_src emacs-lisp
 ;;** 47.2 Package Installation
@@ -777,8 +782,8 @@ Though, it does load the full Org mode right from the start...
 ** Editing in the Minibuffer
 
 If the output is short enough to display in the echo area (which is determined
-by the variables ~resize-mini-windows~ and ~max-mini-window-height~), it is shown
-in echo area.
+by the variables ~resize-mini-windows~ and ~max-mini-window-height~), it is shown in
+echo area.
 
 #+begin_src emacs-lisp
 ;;** 8.3 (info "(emacs)Minibuffer Edit")ing
@@ -853,8 +858,8 @@ remind myself of rarely used rectangle commands: ~C-x r C-h~.
 
 FYI, ~catman~ create the database files that are used by ~apropos~ or ~man -k~.
 
-Note about PHP documentation lookup -- PHP Mode has a nice feature to lookup
-the function's definition in PHP's manual in your web browser (~M-x
+Note about PHP documentation lookup -- PHP Mode has a nice feature to lookup the
+function's definition in PHP's manual in your web browser (~M-x
 php-search-documentation~ or ~C-c C-f~).  You can combine it with Emacs-w3m to get
 the relevant manual page without leaving Emacs.
 
@@ -918,8 +923,8 @@ space).  To display the message log, execute the command ~M-x show-message-log~.
 
 The utility ~install-info~ is used to maintain the =info/dir= file.
 
-~C-h K~ goes to the node in the Emacs manual describing the command bound to a
-key.
+~C-h K~ goes to the node in the Emacs manual describing the command bound to
+a key.
 
 In a manual, these key bindings will make your life easier:
 
@@ -967,13 +972,13 @@ When Info is called, the variable ~Info-directory-list~ is populated from:
 The best would be to set the ~INFOPATH~ environment variable so that you see the
 same manuals outside of Emacs, in the same shell from which you invoke Emacs.
 
-However, as EmacsW32 doesn't see that Cygwin environment variable (it would
-well work with a Windows environment variable), I prefer to try and put the
-Windows configuration inside the Emacs configuration files.
+However, as EmacsW32 doesn't see that Cygwin environment variable (it would well
+work with a Windows environment variable), I prefer to try and put the Windows
+configuration inside the Emacs configuration files.
 
-Normally, ~Info-directory-list~ is not intended to be settable by the user. But
-we must do so if we want to force our Info manuals before the standard ones
-(from Emacs).
+Normally, ~Info-directory-list~ is not intended to be settable by the user. But we
+must do so if we want to force our Info manuals before the standard ones (from
+Emacs).
 
 #+begin_src emacs-lisp
   (with-eval-after-load "info"
@@ -1061,8 +1066,8 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
 ** Operating on the Region
 
 #+begin_src emacs-lisp
-  ;; inserting text while the mark is active causes the text in the region to
-  ;; be deleted first
+  ;; inserting text while the mark is active causes the text in the region to be
+  ;; deleted first
   (delete-selection-mode 1)
 #+end_src
 
@@ -1139,9 +1144,9 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
 
   (leuven--section "12.2 (emacs)Yanking")
 
-  ;; auto-indentation of pasted code in the listed programming modes (fall
-  ;; back to default, non-indented yanking by preceding the yanking
-  ;; command `C-y' with `C-u')
+  ;; auto-indentation of pasted code in the listed programming modes (fall back
+  ;; to default, non-indented yanking by preceding the yanking command `C-y'
+  ;; with `C-u')
   (dolist (command '(yank yank-pop))
     (eval `(defadvice ,command (after leuven-indent-region activate)
              (and (not current-prefix-arg)
@@ -1193,8 +1198,8 @@ columns intact, use ~kill-rectangle~ and ~yank-rectangle~.
 To delete whitespace in each of the lines on the specified rectangle, use
 ~M-x delete-whitespace-rectangle~.
 
-Use ~C-x r t STRING <RET>~ to replace each line of a region-rectangle with
-a given string.
+Use ~C-x r t STRING <RET>~ to replace each line of a region-rectangle with a given
+string.
 
 #+begin_note
 On the Emacs trunk, you can do: ~C-x SPC~ <...move around...> ~DEL~ to delete the
@@ -1203,22 +1208,21 @@ rectangle and ~C-x SPC~ <...move around...> ~C-t~ to invoke ~string-rectangle~.
 
 ** CUA Bindings
 
-CUA mode sets up key bindings used in many other applications (~C-x~, ~C-c~, ~C-v~
-and ~C-z~).
+CUA mode sets up key bindings used in many other applications (~C-x~, ~C-c~, ~C-v~ and
+~C-z~).
 
-The ~C-x~ and ~C-c~ keys only do cut and copy when the region is active, so in
-most cases, they do not conflict with the normal function of these prefix
-keys.
+The ~C-x~ and ~C-c~ keys only do cut and copy when the region is active, so in most
+cases, they do not conflict with the normal function of these prefix keys.
 
-If you really need to perform a command which starts with one of the prefix
-keys even when the region is active, you have three options:
+If you really need to perform a command which starts with one of the prefix keys
+even when the region is active, you have three options:
 
 - press the prefix key twice very quickly (within 0.2 seconds),
 - press the prefix key and the following key within 0.2 seconds, or
 - use the Shift key with the prefix key, i.e. ~C-S-x~ or ~C-S-c~.
 
-You can customize ~cua-enable-cua-keys~ to completely disable the CUA bindings,
-or ~cua-prefix-override-inhibit-delay~ to change the prefix fallback behavior.
+You can customize ~cua-enable-cua-keys~ to completely disable the CUA bindings, or
+~cua-prefix-override-inhibit-delay~ to change the prefix fallback behavior.
 
 CUA mode also provides enhanced rectangle support with visible rectangle
 highlighting.  Check out [[http://www.vimeo.com/1168225?pg=embed&sec=1168225][Emacs Column Editing on Vimeo]].
@@ -1275,12 +1279,11 @@ Jump between configuration files
 
 ** Bookmarks
 
-Bookmarks are *persistent* and they have *names*; not /markers/.  Bookmarked
-positions can also be *relocated* (found) if they move slightly because of text
-changes.
+Bookmarks are *persistent* and they have *names*; not /markers/.  Bookmarked positions
+can also be *relocated* (found) if they move slightly because of text changes.
 
-To navigate to a bookmark (linking to a file or directory), just press ~C-x r
-b~.  You'll be prompted for the bookmark name, and it will open that file or
+To navigate to a bookmark (linking to a file or directory), just press ~C-x r b~.
+You'll be prompted for the bookmark name, and it will open that file or
 directory.
 
 #+begin_src emacs-lisp
@@ -1483,7 +1486,7 @@ modes run ~prog-mode-hook~, prior to running their own mode hooks.
   ;; add highlighting keywords for selected major modes *and* all major modes
   ;; derived from them
   (dolist (hook '(prog-mode-hook
-                  ;; text-mode-hook        ; avoid Org
+                  ;; text-mode-hook     ; avoid Org
                   css-mode-hook         ; [parent: fundamental]
                   latex-mode-hook
                   shell-mode-hook       ; [parent: fundamental]
@@ -1840,8 +1843,8 @@ Isearch has a binding which deletes all the non-matching characters from the
 search string: ~C-g~ (not a very intuitive binding, because it's usually
 associated with aborting operations, not with correcting things).
 
-If you hit ~M-e~ (to edit the search string), the cursor is moved to the
-mismatch position.
+If you hit ~M-e~ (to edit the search string), the cursor is moved to the mismatch
+position.
 
 Since Emacs 24.3:
 - ~M-s _~ starts a symbol (identifier) incremental search.
@@ -1884,20 +1887,21 @@ Since Emacs 24.3:
         (turn-on-fuzzy-isearch))))
 #+end_src
 
-When search-invisible is t, perform-replace can replace matches
-in any invisible text, but does not display it when prompting the
-user for confirmation.
+#+begin_note
+When search-invisible is t, perform-replace can replace matches in any invisible
+text, but does not display it when prompting the user for confirmation.
 
-When search-invisible is 'open, perform-replace can replace matches
-only in hidden text (invisible through an overlay), and displays it
-when prompting the user.
+When search-invisible is 'open, perform-replace can replace matches only in
+hidden text (invisible through an overlay), and displays it when prompting the
+user.
 
-We lack a way to reveal truly invisible text when performing a search
-and replace.  The URL of a bracket link in Org is an example of such
-truly invisible text.
+We lack a way to reveal truly invisible text when performing a search and
+replace.  The URL of a bracket link in Org is an example of such truly invisible
+text.
 
-Juri's solution to add 'open-all could also be used in perform-replace
-to let the user see truly invisible matches before replacing them.
+Juri's solution to add 'open-all could also be used in perform-replace to let
+the user see truly invisible matches before replacing them.
+#+end_note
 
 ** Regexp Search
 
@@ -1933,8 +1937,8 @@ Optimize regexps with =regexp-opt.el=.
 
 *** IELM                                                              :noexport:
 
-In IELM, list the input line, followed by the first nine substrings matches,
-to debug regexp searches (in IELM)
+In IELM, list the input line, followed by the first nine substrings matches, to
+debug regexp searches (in IELM)
 
 Example:
 
@@ -1972,13 +1976,13 @@ ELISP> (save-excursion (set-buffer "BUFFER")
 
 ** Replacement Commands
 
-Pass the string or the regexp directly to ~query-replace~, so you can't mangle
-it on the way, by pressing ~M-%~ while at the ~I-search:~ prompt.
+Pass the string or the regexp directly to ~query-replace~, so you can't mangle it
+on the way, by pressing ~M-%~ while at the ~I-search:~ prompt.
 
 ** Other Search-and-Loop Commands
 
-~M-x flush-lines~ (or ~delete-matching-lines~) deletes each line that contains a
-match for REGEXP.
+~M-x flush-lines~ (or ~delete-matching-lines~) deletes each line that contains
+a match for REGEXP.
 
 #+begin_src emacs-lisp
 ;;** 15.11 (info "(emacs)Other Repeating Search") Commands
@@ -2131,7 +2135,7 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; prevent flyspell from finding mistakes in the code, well in comments and
+    ;; prevent Flyspell from finding mistakes in the code, well in comments and
     ;; strings
     (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 #+end_src
@@ -3562,7 +3566,7 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
   (leuven--section "20.5 (emacs)Change Window")
 
   (defun leuven-delete-other-windows ()
-    "Cycle between 1 window, 2 vertically and 2 horizontally splitted windows."
+    "Cycle between 1 window, 2 vertically and 2 horizontally split windows."
     (interactive)
     (let ((splitter
            (if (= (car (window-edges (selected-window)))
@@ -5786,14 +5790,21 @@ Alternative to requiring org-clock in every Emacs session.
   ;; (require 'org-clock)               ;! needed for trying to automatically
                                         ;! re-clock at Emacs startup
 
+  ;; XXX Under test!
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (require 'org-clock)
+              (setq org-clock-persist t)
+              (org-clock-persistence-insinuate)))
+
   (with-eval-after-load "org-clock"
 
-    ;; 8.4 save both the running clock and the entire clock history when Emacs
-    ;; is closed, and resume it next time Emacs is started up
-    (setq org-clock-persist t)
-
-    ;; 8.4 set up hooks for clock persistence
-    (org-clock-persistence-insinuate)
+    ;; ;; 8.4 save both the running clock and the entire clock history when Emacs
+    ;; ;; is closed, and resume it next time Emacs is started up
+    ;; (setq org-clock-persist t)
+    ;;
+    ;; ;; 8.4 set up hooks for clock persistence
+    ;; (org-clock-persistence-insinuate)
 
     ;; resume clocking task on clock-in if the clock is open
     (setq org-clock-in-resume t)
@@ -10823,9 +10834,9 @@ Stefan?).
 #+end_info
 
 Auto-complete uses the variable ~ac-modes~ to decide whether to enable
-auto-completion in a particular mode; by default, ~org-mode~ (which interprets
-the ~<tab>~ key) is not present in this list. So, to enable auto-completion in
-Org mode, simply add it to the ~ac-modes~:
+auto-completion in a particular mode; by default, ~org-mode~ (which interprets the
+~<tab>~ key) is not present in this list. So, to enable auto-completion in Org
+mode, simply add it to the ~ac-modes~:
 
 #+begin_example
 (add-to-list 'ac-modes 'org-mode)
@@ -10849,7 +10860,7 @@ There are other ways to select candidates:
 
       (with-eval-after-load "auto-complete-config"
 
-        ;; avoid flyspell processes when auto completion is being started
+        ;; avoid Flyspell processes when auto completion is being started
         (ac-flyspell-workaround)
 
         ;; optimize sources to use
@@ -10857,8 +10868,7 @@ There are other ways to select candidates:
 
         ;; change default sources
         (setq-default ac-sources
-                      ;; buffers whom major-mode is same to of a current
-                      ;; buffer
+                      ;; buffers whom major-mode is same to of a current buffer
                       '(ac-source-words-in-same-mode-buffers))
 
         ;; change sources for Emacs Lisp mode
@@ -10956,8 +10966,7 @@ interface).
 
     (leuven--section "30.3 (emacs)Dired Deletion")
 
-    ;; recursive deletes allowed, after asking for each directory at top
-    ;; level
+    ;; recursive deletes allowed, after asking for each directory at top level
     (setq dired-recursive-deletes 'top)
 #+end_src
 
@@ -11009,33 +11018,34 @@ Single Dired buffer.
 On top of the traditional ways, there are also these add-ons which open files
 using external programs (such as PDF viewers), based on their extension.
 
-One advantage is that using the traditional ~!~ (or ~X~) switch with Dired locks
-up Emacs until you close the other program.  These add-ons do not and leave
-Emacs free for continued used.
+One advantage is that using the traditional ~!~ (or ~X~) switch with Dired locks up
+Emacs until you close the other program.  These add-ons do not and leave Emacs
+free for continued used.
 
-*************** Alternative
-Nowadays, there's at least the built-in ~dired-do-async-shell-command~, bound
-to ~&~.
+#+begin_note
+Alternative
 
-In addition to what others have mentioned, if you are on MS Windows
-then, after loading `w32-browser.el' and `dired+.el', you can use
-item `Open Associated Windows App' in the `Single' menu to open a
-file with the associated program.
+Nowadays, there's at least the built-in ~dired-do-async-shell-command~, bound to
+~&~.
 
-Same thing for the marked files, using `Open Associated Windows
-Apps' in menus `Multiple' and `Multiple > Marked Here and Below'.
+In addition to what others have mentioned, if you are on MS Windows then, after
+loading `w32-browser.el' and `dired+.el', you can use item `Open Associated
+Windows App' in the `Single' menu to open a file with the associated program.
 
-And you can use item `Single' > `Open in Windows Explorer' to open
-a file or folder in Windows Explorer.
+Same thing for the marked files, using `Open Associated Windows Apps' in menus
+`Multiple' and `Multiple > Marked Here and Below'.
 
-You can also right-click on a file and pick `Open Associated
-Windows App' or `Open in Windows Explorer'.
+And you can use item `Single' > `Open in Windows Explorer' to open a file or
+folder in Windows Explorer.
+
+You can also right-click on a file and pick `Open Associated Windows App' or
+`Open in Windows Explorer'.
 
 There are key bindings for these as well:
 
 `M-RET' or `mouse-2' - open with associated program
 `C-RET' - open in Explorer
-*************** END
+#+end_note
 
 *************** TODO Read http://www.piprime.fr/1302/plus-qu-un-explorateur-de-fichiers-le-mode-dired-d-emacs/
 
@@ -11071,16 +11081,15 @@ If ~xdg-open~ is not available, one can replace it with ~gnome-open~ or ~kde-ope
   (kbd "F") 'dired-launch-command)
 #+end_src
 
-> These days, there are mature programs for launching an arbitrary file with
-> an appropriate viewer: run-mailcap (which is mature to the point of
-> obsolescence) and xdg-open on GNU systems; open on Mac OS X; start on MS
-> Windows).
+> These days, there are mature programs for launching an arbitrary file with an
+> appropriate viewer: run-mailcap (which is mature to the point of obsolescence)
+> and xdg-open on GNU systems; open on Mac OS X; start on MS Windows).
 
-It would be a bad idea to use 'start' on Windows: it has too many
-quirks regarding quoting of its command line.  Instead, just invoke
-the existing primitive w32-shell-execute with the 'open' verb.  As a
-nice side effect, this will support Unicode file names, something that
-is currently impossible when you invoke an external command.
+It would be a bad idea to use 'start' on Windows: it has too many quirks
+regarding quoting of its command line.  Instead, just invoke the existing
+primitive w32-shell-execute with the 'open' verb.  As a nice side effect, this
+will support Unicode file names, something that is currently impossible when you
+invoke an external command.
 
 **** Ask a WWW browser to display file
 
@@ -11129,8 +11138,8 @@ For those under Windows:
           (kbd "E") 'w32-dired-open-files-externally)))
 #+end_src
 
-It works for files as well as for directories.  It opens the Windows explorer
-for the *current directory* when invoked on ~.~ (correct) or ~..~ (bug!!).
+XXX It works for files as well as for directories.  It opens the Windows
+explorer for the *current directory* when invoked on ~.~ (correct) or ~..~ (bug!!).
 
 *** Open file with w3m
 
@@ -11220,11 +11229,10 @@ For searches in Dired, see ~dired-do-search~ (~A~).
 
 ** Editing the Dired Buffer
 
-~Wdired~ mode is great for renaming (a lot of) files in a directory, as it
-allows editing the Dired buffer like a text file, using all the power of
-Emacs.  That is, one can use keyboard macros, search and replace, rectangle
-mode (great for adding prefixes to file names), flip mode bits with the mouse,
-etc.!
+~Wdired~ mode is great for renaming (a lot of) files in a directory, as it allows
+editing the Dired buffer like a text file, using all the power of Emacs.  That
+is, one can use keyboard macros, search and replace, rectangle mode (great for
+adding prefixes to file names), flip mode bits with the mouse, etc.!
 
 To enter it, type ~C-x C-q~.
 
@@ -11279,11 +11287,11 @@ For more information, see:
       (setq image-dired-thumb-margin 4))
 #+end_src
 
-The following code block is currently disabled, because it causes problems
-with Org and PDF LaTeX: when we've opened the TeX file, to compile it from
-LaTeX because an error has been reported (with no details), then the TeX file
-blocks the next automatic exports (~C-u C-c C-e~), asking for confirmation
-because the TeX buffer is open...
+The following code block is currently disabled, because it causes problems with
+Org and PDF LaTeX: when we've opened the TeX file, to compile it from LaTeX
+because an error has been reported (with no details), then the TeX file blocks
+the next automatic exports (~C-u C-c C-e~), asking for confirmation because the
+TeX buffer is open...
 
 #+begin_example
 Reverting buffer `prestations/'.
@@ -11331,8 +11339,8 @@ Extra Dired functionality
 
 ** Dired+
 
-Library ~Dired+~ lets you act on sets of marked files in subdirs, recursively,
-for example.
+Library ~Dired+~ lets you act on sets of marked files in subdirs, recursively, for
+example.
 
 #+begin_src emacs-lisp
 ;;** Dired+
@@ -11398,8 +11406,8 @@ for example.
   ;; years must be written in full
   (setq diary-abbreviated-year-flag nil)
 
-  ;; set the style of calendar and diary dates to ISO (how to interpret
-  ;; the dates)
+  ;; set the style of calendar and diary dates to ISO (how to interpret the
+  ;; dates)
   (setq calendar-date-style 'iso)
 
   ;; week in the calendar begins on Monday
@@ -11452,9 +11460,9 @@ for example.
 
 ** Diary
 
-The Emacs diary keeps track of appointments or other events on a daily basis,
-in conjunction with the calendar.  To use the diary feature, you must first
-create a "diary file" containing a list of events and their dates.
+The Emacs diary keeps track of appointments or other events on a daily basis, in
+conjunction with the calendar.  To use the diary feature, you must first create
+a "diary file" containing a list of events and their dates.
 
 But [[id:737b836b-ac1f-4120-94ca-c9e0282268f0][Org]] outperforms it!
 
@@ -11532,8 +11540,8 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; keep your appointment list clean: if you delete an appointment from
-    ;; your Org agenda file, delete the corresponding alert
+    ;; keep your appointment list clean: if you delete an appointment from your
+    ;; Org agenda file, delete the corresponding alert
     (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
       "Clear the existing `appt-time-msg-list'."
       (setq appt-time-msg-list nil))
@@ -11542,13 +11550,13 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
     ;; agenda buffer is (re)built
     (add-hook 'org-agenda-finalize-hook
               'org-agenda-to-appt)      ;! don't use the `org-agenda-mode-hook'
-                                        ;! because the Org agenda files would
-                                        ;! be opened once by
-                                        ;! `org-agenda-to-appt', and then
-                                        ;! killed by `org-release-buffers'
-                                        ;! (because `org-agenda-to-appt' closes
-                                        ;! all the files it opened itself -- as
-                                        ;! they weren't already opened), to be
+                                        ;! because the Org agenda files would be
+                                        ;! opened once by `org-agenda-to-appt',
+                                        ;! and then killed by
+                                        ;! `org-release-buffers' (because
+                                        ;! `org-agenda-to-appt' closes all the
+                                        ;! files it opened itself -- as they
+                                        ;! weren't already opened), to be
                                         ;! finally re-opened!
 
     ;; add today's appointments (found in `org-agenda-files') each time such a
@@ -11583,8 +11591,8 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
   (setq calendar-mark-holidays-flag t)
 #+end_src
 
-After the calendar is loaded, ~calendar-holidays~ is the list of notable days
-for the command ~M-x holidays~.
+After the calendar is loaded, ~calendar-holidays~ is the list of notable days for
+the command ~M-x holidays~.
 
 #+begin_src emacs-lisp
   (defun leuven-insert-current-date (prefix)
@@ -11675,7 +11683,8 @@ Minimal configuration for sending a bug report, for example.
   (setq send-mail-function 'smtpmail-send-it)
 
   ;; default SMTP server (overriden by `smtpmail-smtp-server')
-  (setq smtpmail-default-smtp-server "smtp") ; SMTP process must be running there
+  (setq smtpmail-default-smtp-server "smtp")
+                                        ; SMTP process must be running there
 
 )                                       ; chapter 32 ends here
 #+end_src
@@ -11693,8 +11702,7 @@ Minimal configuration for sending a bug report, for example.
       (interactive)
       (switch-or-start 'gnus "*Group*")))
 
-  ;; directory beneath which additional per-user Gnus-specific files are
-  ;; placed
+  ;; directory beneath which additional per-user Gnus-specific files are placed
   (setq gnus-directory "~/.gnus.d/")    ; this should end with a directory
                                         ; separator
 
@@ -11757,13 +11765,12 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
 
     ;; enable the various package-specific BBDB functions
     (bbdb-initialize 'gnus 'message)
-    ;; - add bindings for the default keys to Gnus and configure Gnus to
-    ;;   notify the BBDB when new messages are loaded (required if the
-    ;;   BBDB is to be able to display BBDB entries for messages displayed
-    ;;   in Gnus)
+    ;; - add bindings for the default keys to Gnus and configure Gnus to notify
+    ;;   the BBDB when new messages are loaded (required if the BBDB is to be
+    ;;   able to display BBDB entries for messages displayed in Gnus)
     ;;
-    ;; - add a binding for `M-TAB' to Message mode.  This will enable
-    ;;   completion of addresses based on BBDB records
+    ;; - add a binding for `M-TAB' to Message mode.  This will enable completion
+    ;;   of addresses based on BBDB records
 
     ;; what do we do when invoking bbdb interactively (`:' to display sender)
     (setq bbdb-mua-update-interactive-p '(query . create))
@@ -11807,8 +11814,8 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
     ;; display the poster's name from the BBDB if we have one
     (setq bbdb/gnus-summary-prefer-real-names t)
 
-    ;; replace the information provided in the From header with data from
-    ;; the BBDB if we have one
+    ;; replace the information provided in the From header with data from the
+    ;; BBDB if we have one
     (setq bbdb/gnus-summary-prefer-bbdb-data t)
 
     (setq bbdb/gnus-summary-show-bbdb-names t)
@@ -11903,11 +11910,12 @@ which interface with Skype to make a phone call.
 
 If ~doc-view~ is not showing the PDF files as images in Emacs, it may be
 because:
+
 - no PNG support is available in Emacs (see [[id:9432da83-fa9d-4466-a4da-57f33d662bbd][Images]]), or
 - some conversion utility for PDF files (Ghostscript) is not on your ~PATH~.
 
-In that case, ~doc-view~ falls back to show you the plain text contents of the
-PDF if ~doc-view-pdftotext-program~ is on your ~PATH~.
+In that case, ~doc-view~ falls back to show you the plain text contents of the PDF
+if ~doc-view-pdftotext-program~ is on your ~PATH~.
 
 #+begin_src emacs-lisp
 ;;* 35 (info "(emacs)Document View")
@@ -11924,9 +11932,9 @@ PDF if ~doc-view-pdftotext-program~ is on your ~PATH~.
 
   (leuven--section "35.1 (emacs)Navigation")
 
-  ;; `doc-view' integrates with the usual bookmark facility.  So simply
-  ;; use `C-x r m' (`bookmark-set') to jump back to the last page you've
-  ;; read in a PDF document.
+  ;; `doc-view' integrates with the usual bookmark facility.  So simply use
+  ;; `C-x r m' (`bookmark-set') to jump back to the last page you've read in
+  ;; a PDF document.
 #+end_src
 
 ** Conversion
@@ -12037,12 +12045,12 @@ See customizations at http://snarfed.org/why_i_run_shells_inside_emacs.
 
 ** Single Shell
 
-~M-!~ (~shell-command~) reads a line of text using the minibuffer and executes it
-as a shell command, in a subshell made just for that command.
+~M-!~ (~shell-command~) reads a line of text using the minibuffer and executes it as
+a shell command, in a subshell made just for that command.
 
-~M-|~ (~shell-command-on-region~) passes the contents of the region as the
-standard input to the shell command.  By prefixing it with ~C-u~, it deletes the
-old region and *replaces* it with the output from the shell command.
+~M-|~ (~shell-command-on-region~) passes the contents of the region as the standard
+input to the shell command.  By prefixing it with ~C-u~, it deletes the old region
+and *replaces* it with the output from the shell command.
 
 #+begin_src emacs-lisp
 ;;** 36.1 Single Shell
@@ -12313,10 +12321,10 @@ character-at-a-time input.  Each line is typed in full and only sent when ~<RET>
 is pressed.  To see proof, run the ~tty~ command in a Shell mode buffer, and its
 output will be ~not a tty~.
 
-Note that it may seem that this is not true because you can perform
-command-line editing with ~C-b~, ~C-f~, etc.  But this is only because ~shell-mode~
-itself simulates the typical command-line editing features of shells like Bash,
-Zsh, etc. using Emacs own internal editing capabilities.
+Note that it may seem that this is not true because you can perform command-line
+editing with ~C-b~, ~C-f~, etc.  But this is only because ~shell-mode~ itself
+simulates the typical command-line editing features of shells like Bash, Zsh,
+etc. using Emacs own internal editing capabilities.
 
 Anyway, you can:
 
@@ -12324,8 +12332,7 @@ Anyway, you can:
 - copy stuff into the kill ring or
 - use the rectangle functions.
 
-Or you might just prefer the Emacs key bindings over the ones your shell
-offers.
+Or you might just prefer the Emacs key bindings over the ones your shell offers.
 
 On the other hand, *Term mode* provides a proper *terminal emulator* (though not as
 good as the good old ~xterm~).  You must use it for applications that are
@@ -12337,8 +12344,8 @@ interactive with your terminal (such as the command ~top~).
   to decrease / increase volume.
 
 You can switch to *line mode* (~C-c C-j~) when you need Term to /basically/ act like
-a Shell mode buffer, and move around the buffer pretty much like anywhere
-else in Emacs.  Copy / kill-ring commands, ~isearch~, etc. do work.
+a Shell mode buffer, and move around the buffer pretty much like anywhere else
+in Emacs.  Copy / kill-ring commands, ~isearch~, etc. do work.
 
 Then, you can use ~C-c C-k~ to switch back to *character mode*, the default, which
 is like your normal *terminal* emulator except the escape key.
@@ -12362,9 +12369,9 @@ Note that ~TERM~ is different in both environments:
   ;; managing multiple terminal buffers in Emacs
   ;; (and fixing some troubles of `term-mode': key bindings, etc.)
 
-  ;; "multi-term on POSIX hosts has let me switch from using screen, with
-  ;; one Emacs screen and lots of shell screens; to just using Emacs, with
-  ;; lots of terminals inside it."
+  ;; "multi-term on POSIX hosts has let me switch from using screen, with one
+  ;; Emacs screen and lots of shell screens; to just using Emacs, with lots of
+  ;; terminals inside it."
 
   ;; (when (locate-library "multi-term")
   ;;
@@ -12416,8 +12423,8 @@ Note that ~TERM~ is different in both environments:
   (add-to-list 'same-window-regexps "^\\*ssh-.*\\*\\(\\|<[0-9]+>\\)")
   (autoload 'ssh "ssh"
     "Open a network login connection via `ssh'." t)
-    ;; this is to run ESS remotely on another computer in my own Emacs, or
-    ;; just plain old reading remote files
+    ;; this is to run ESS remotely on another computer in my own Emacs, or just
+    ;; plain old reading remote files
 
   ;; See http://emacs.1067599.n5.nabble.com/SSH-inside-Emacs-td225528.html
   ;; - plink (with `dumb' terminal option?) as interactive shell
@@ -12428,8 +12435,8 @@ Note that ~TERM~ is different in both environments:
 
 ** Serial Terminal
 
-Since GNU Emacs 23, there's now support for serial port access.  The new
-command ~serial-term~ starts an interactive terminal on a serial port.
+Since GNU Emacs 23, there's now support for serial port access.  The new command
+~serial-term~ starts an interactive terminal on a serial port.
 
 ** Helper for GNU Emacs on w32
 
@@ -12549,8 +12556,8 @@ It was inspired by Erik Iverson's ~ess-R-object-tooltip~.
 
 * Using Emacs Server
 
-The Emacs version you're using and the ~emacsclient~ version you're using must
-be from the *same Emacs version*...  If the latter is not the cause of a refused
+The Emacs version you're using and the ~emacsclient~ version you're using must be
+from the *same Emacs version*...  If the latter is not the cause of a refused
 connection, re-try ~M-x server-start~ in Emacs.
 
 
@@ -12614,8 +12621,8 @@ You can print without faces (i.e. no colour) with ~ps-print-buffer~.
 
 You may wish to set ~ps-print-landscape~ to ~t~.
 
-See (info "(emacs)Windows Printing") for several methods of correctly setting
-up printing on Windows.
+See ~(info "(emacs)Windows Printing")~ for several methods of correctly setting up
+printing on Windows.
 
 #+begin_src emacs-lisp
 ;;* 38 (info "(emacs)Printing")
@@ -12678,7 +12685,7 @@ up printing on Windows.
           (setq ps-printer-name t)
 
           ;; name of program for printing a PostScript file
-          ;; tell Emacs where ghostscript print utility is located
+          ;; tell Emacs where Ghostscript print utility is located
           (setq ps-lpr-command gsprint-program)
 
           ;; list of extra switches to pass to `ps-lpr-command'
@@ -12919,9 +12926,8 @@ up printing on Windows.
            (kbd "C-c g s") 'google)
 #+end_src
 
-If you know how to build the right url to the documentation of a given
-operator, you can just replace the google url with the right one in the
-following code:
+If you know how to build the right url to the documentation of a given operator,
+you can just replace the google url with the right one in the following code:
 
 # (defun w3m-active-region-or-url-at-point (&optional default=current)
 #   "Return an active region or a url around the cursor.
@@ -13024,9 +13030,8 @@ browser*: you can open the current page in your graphical browser by hitting ~M~
       (define-key w3m-mode-map
         (kbd "U") 'leuven-w3m-goto-url)
 
-      ;; fix inappropriate key bindings for moving from place to place in a
-      ;; page (let the cursor keys behave normally, don't jump from link to
-      ;; link)
+      ;; fix inappropriate key bindings for moving from place to place in a page
+      ;; (let the cursor keys behave normally, don't jump from link to link)
       (define-key w3m-mode-map
         (kbd "<up>") 'previous-line)
       (define-key w3m-mode-map
@@ -13064,15 +13069,14 @@ browser*: you can open the current page in your graphical browser by hitting ~M~
 #+begin_src emacs-lisp
 ;;*** 5.1 General Variables
 
-      ;; send referers only when both the current page and the target
-      ;; page are provided by the same server
+      ;; send referers only when both the current page and the target page are
+      ;; provided by the same server
       (setq w3m-add-referer 'lambda)
 
       ;; home page
       (setq w3m-home-page "http://www.emacswiki.org/")
 
-      ;; number of steps in columns used when scrolling a window
-      ;; horizontally
+      ;; number of steps in columns used when scrolling a window horizontally
       (setq w3m-horizontal-shift-columns 1)  ; 2
 
       ;; proxy settings
@@ -13227,8 +13231,8 @@ Emacs 24 custom themes allow loading multiple themes simultaneously.  If you
 don't want the previous theme to stay in effect, you will need to unload it
 first.
 
-Install Leuven Theme via the [[*Emacs%20Lisp%20Packages][Emacs Lisp Packages]] (or use the one bundled in
-GNU Emacs 24.4)
+Install Leuven Theme via the [[*Emacs%20Lisp%20Packages][Emacs Lisp Packages]] (or use the one bundled in GNU
+Emacs 24.4)
 
 #+begin_src emacs-lisp
 ;;* 48 (info "(emacs)Customization")
@@ -13287,8 +13291,8 @@ particular color...
   (setq gc-cons-threshold 3500000)      ; make Gnus fast
                                         ; from (info "(gnus)FAQ 9-2")
 
-  ;; don't display messages at start and end of garbage collection (as it
-  ;; hides too many interesting messages)
+  ;; don't display messages at start and end of garbage collection (as it hides
+  ;; too many interesting messages)
   (setq garbage-collection-messages nil)
 #+end_src
 
@@ -13461,21 +13465,26 @@ To check if some font is available in Emacs do following:
 1. Switch to the ~*scratch*~ buffer.
 
 2. Type
-   ~(prin1-to-string (x-list-fonts "font-you-want-to-check or pattern"))~.
 
-3. Place the cursor after the last closing paren and hit ~C-j~.  List of
-   the names of available fonts matching given pattern will appear in the
-   current buffer (~*scratch*~).
+   ~(prin1-to-string (x-list-fonts "font-you-want-to-check or pattern"))~
+
+3. Place the cursor after the last closing paren and hit ~C-j~.  List of the names
+   of available fonts matching given pattern will appear in the current buffer
+   (~*scratch*~).
 
 4. For listing of all available fonts, use
+
    ~(prin1-to-string (x-list-fonts "*"))~
+
    or
+
    ~(dolist (i (x-list-fonts "*")) (princ i) (terpri))~
+
    for a better output.
 
-Under Linux, use the ~xfontsel~ utility (or the command-line ~xlsfonts~) to try
-out different fonts.  After choosing a font, click the select button in
-~xfontsel~ window.  This will copy font name you choose to copy & paste buffer.
+Under Linux, use the ~xfontsel~ utility (or the command-line ~xlsfonts~) to try out
+different fonts.  After choosing a font, click the select button in ~xfontsel~
+window.  This will copy font name you choose to copy & paste buffer.
 
 Now Emacs should start with that font.
 
@@ -13488,13 +13497,15 @@ Now Emacs should start with that font.
 For reasons unknown to me, Emacs takes a long time to change fonts in an X
 environment.
 
-Rather than using ~(set-default-font ...)~ in =.emacs=, stick the font definition
-in your =.Xresources= file (key 'Emacs*font') and then use ~xrdb -load~ to
-activate it.  You will find that startup time is greatly improved!
+Rather than using ~(set-default-font ...)~ in =.emacs=, stick the font definition in
+your =.Xresources= file (key 'Emacs*font') and then use ~xrdb -load~ to activate it.
+You will find that startup time is greatly improved!
 
-Edit your =~/.Xresources= file to have a line with "Emacs.font".  Then do a ~xrdb
--merge ~/.Xresources~ or restart your X11 to validate the modification.  I let
-Emacs do this for me:
+Edit your =~/.Xresources= file to have a line with "Emacs.font".  Then do a
+
+~xrdb -merge ~/.Xresources~
+
+or restart your X11 to validate the modification.  I let Emacs do this for me:
 
 #+begin_src emacs-lisp
   (defun merge-x-resources ()
@@ -13522,8 +13533,8 @@ Fonts that have a good UTF-8 coverage are:
 - FreeMono (FreeSans, FreeSerif)
 - Monospace
 
-None of them has all four variants, some have regular (medium) and bold or
-light and regular, one regular and oblique.
+None of them has all four variants, some have regular (medium) and bold or light
+and regular, one regular and oblique.
 
 *** Anti-aliasing
 
@@ -13736,9 +13747,8 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 ;;*** 3.1 Channels
 
     ;; When other people say things in buffers that are currently buried (no
-    ;; window is showing them), the mode line will now show you the
-    ;; abbreviated channel or nick name.  Use `C-c C-SPC' to switch to these
-    ;; buffers.
+    ;; window is showing them), the mode line will now show you the abbreviated
+    ;; channel or nick name.  Use `C-c C-SPC' to switch to these buffers.
 
 ;;*** 3.3 Keywords
 
@@ -13867,8 +13877,8 @@ Eventually have a look as well at ~input-decode-map~.
 
 * Reporting Bugs
 
-To get a backtrace when a specific regexp is displayed in the echo area
-(through calls to message), set the variable ~debug-on-message~.
+To get a backtrace when a specific regexp is displayed in the echo area (through
+calls to message), set the variable ~debug-on-message~.
 
 #+begin_src emacs-lisp
 ;; Recovery from Problems
@@ -13958,10 +13968,10 @@ Report all errors with:
   characters. The first line should not be wider than 67 characters or it will
   look bad in the output of apropos.
 
-  You can fill the text if that looks good. However, rather than blindly
-  filling the entire documentation string, you can often make it much more
-  readable by choosing certain line breaks with care. Use blank lines between
-  topics if the documentation string is long.
+  You can fill the text if that looks good. However, rather than blindly filling
+  the entire documentation string, you can often make it much more readable by
+  choosing certain line breaks with care. Use blank lines between topics if the
+  documentation string is long.
 
 - Do not indent subsequent lines of a documentation string so that the text is
   lined up in the source code with the text of the first line. This looks nice
@@ -13985,14 +13995,14 @@ starting Emacs with ~emacs -q~, set up your ~load-path~, and then evaluate
   (require 'some-package))
 #+end_src
 
-The first number appearing in the echo area will be the time needed to run
-that command.
+The first number appearing in the echo area will be the time needed to run that
+command.
 
-Use autoloads, which delay the loading of the complete package until one of
-the interactive functions is used.
+Use autoloads, which delay the loading of the complete package until one of the
+interactive functions is used.
 
-If you want to set options which need to be evaluated after a package is
-loaded, you can use ~eval-after-load~.
+If you want to set options which need to be evaluated after a package is loaded,
+you can use ~eval-after-load~.
 
 ** Timings from my system
 
