@@ -1014,7 +1014,37 @@
 
               <li><a href="#sec-40-13">Helper for GNU Emacs on w32</a></li>
 
-              <li><a href="#sec-40-14">Emacs Speaks Statistics (ESS)</a></li>
+              <li>
+                <a href="#sec-40-14">Emacs Speaks Statistics (ESS)</a>
+
+                <ul>
+                  <li><a href="#sec-40-14-1">2 Installing ESS on your
+                  system</a></li>
+
+                  <li><a href="#sec-40-14-2">3 Interacting with statistical
+                  programs</a></li>
+
+                  <li><a href="#sec-40-14-3">5 Sending code to the ESS
+                  process</a></li>
+
+                  <li><a href="#sec-40-14-4">7 Editing objects and
+                  functions</a></li>
+
+                  <li><a href="#sec-40-14-5">10 Developing with ESS</a></li>
+
+                  <li>
+                    <a href="#sec-40-14-6">11 Other ESS features and tools</a>
+
+                    <ul>
+                      <li><a href="#sec-40-14-6-1">Describe object at
+                      point</a></li>
+                    </ul>
+                  </li>
+
+                  <li><a href="#sec-40-14-7">12 Overview of ESS features for
+                  the S family</a></li>
+                </ul>
+              </li>
 
               <li><a href="#sec-40-15">Proced</a></li>
             </ul>
@@ -1174,7 +1204,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140820.1019</span>
+"org-comment">Version: 20140821.1658</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1297,7 +1327,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140820.1019]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140821.1658]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">uptimes</span>
@@ -2425,10 +2455,17 @@
   (setq next-line-add-newlines nil)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">move point to a given line number (XEmacs default)</span>
-  (GNUEmacs
-    (global-set-key
-      (kbd <span class="org-string">"M-g"</span>) 'goto-line))
+"org-comment">;; move point to a given line number (XEmacs default)</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(GNUEmacs</span>
+  <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(global-set-key</span>
+  <span class="org-comment-delimiter">;;     </span><span class=
+"org-comment">(kbd "M-g") 'goto-line))          ; overrides `M-g n' (next-</span><span class="org-comment"><span class="org-leuven-highlight">error</span></span><span class="org-comment">) and</span>
+  <span class=
+"org-comment-delimiter">;;                                       </span><span class="org-comment">; `M-g p' (previous-</span><span class="org-comment"><span class="org-leuven-highlight">error</span></span><span class="org-comment">)... while it's</span>
+  <span class=
+"org-comment-delimiter">;;                                       </span><span class="org-comment">; also on `M-g g'...</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">print the current buffer line number</span>
@@ -17490,7 +17527,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-leuven-highlight">error</span></span><span class="org-comment"> message</span>
   (global-set-key
     (kbd <span class="org-string">"&lt;f10&gt;"</span>) 'next-<span class=
-"org-leuven-highlight">error</span>)
+"org-leuven-highlight">error</span>)          <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">also on `C-x `' and `M-g n'</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">display the previous compiler </span><span class=
@@ -17498,7 +17537,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-leuven-highlight">error</span></span><span class="org-comment"> message</span>
   (global-set-key
     (kbd <span class=
-"org-string">"&lt;S-f10&gt;"</span>) 'previous-<span class="org-leuven-highlight">error</span>)
+"org-string">"&lt;S-f10&gt;"</span>) 'previous-<span class="org-leuven-highlight">error</span>)    <span class="org-comment-delimiter">; </span><span class="org-comment">also on `M-g p'</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">display the first compiler </span><span class=
@@ -19461,9 +19500,6 @@ TAGS:
             try-expand-dabbrev-visible  <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">visible (parts of all) buffers</span>
-            try-expand-dabbrev-all-buffers <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">all opened buffers</span>
             try-expand-dabbrev-from-kill <span class=
 "org-comment-delimiter">; </span><span class="org-comment">kill ring</span>
             try-complete-file-name-partially <span class=
@@ -19486,9 +19522,6 @@ TAGS:
             try-expand-dabbrev          <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">current buffer</span>
-            try-expand-dabbrev-all-buffers <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">all opened buffers</span>
             try-expand-dabbrev-from-kill)) <span class=
 "org-comment-delimiter">; </span><span class="org-comment">kill ring</span>
 
@@ -22391,8 +22424,15 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         <h3 id="sec-40-14">Emacs Speaks Statistics (ESS)</h3>
 
         <div class="outline-text-3" id="text-40-14">
-          <p><a href=
-          "http://ess.r-project.org/Manual/ess.html">http://ess.r-project.org/Manual/ess.html</a></p>
+          <p>See:</p>
+
+          <ul class="org-ul">
+            <li><a href=
+            "http://ess.r-project.org/Manual/ess.html">http://ess.r-project.org/Manual/ess.html</a>,</li>
+
+            <li><a href=
+            "http://www.emacswiki.org/emacs/EmacsSpeaksStatistics">http://www.emacswiki.org/emacs/EmacsSpeaksStatistics</a>.</li>
+          </ul>
 
           <p>To run statistical processes under ESS, Windows users will need to
           make sure that the directories for <code>R</code> and
@@ -22408,14 +22448,14 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
             <li>Pressing underscore twice inserts a literal underscore.</li>
           </ul>
+        </div>
 
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">accented characters on graphics</span>
-  (add-to-list 'process-coding-system-alist
-               '(<span class="org-string">"R.*"</span> . iso-latin-1))
+        <div id="outline-container-sec-40-14-1" class="outline-4">
+          <h4 id="sec-40-14-1">2 Installing ESS on your system</h4>
 
+          <div class="outline-text-4" id="text-40-14-1">
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
   (leuven--section <span class="org-string">"Utilities -- ESS"</span>)
 
   (add-to-list 'auto-mode-alist '(<span class=
@@ -22428,40 +22468,98 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (autoload 'R-mode <span class="org-string">"ess-site"</span>
     <span class="org-doc">"Major mode for editing R source."</span> t)
 </pre>
+            </div>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">accented characters on graphics</span>
+  (add-to-list 'process-coding-system-alist
+               '(<span class="org-string">"R.*"</span> . iso-latin-1))
+</pre>
+            </div>
           </div>
+        </div>
 
-          <p>Customize variables for ESS (set these variables <b>before</b>
-          loading <code>ess-site</code>).</p>
+        <div id="outline-container-sec-40-14-2" class="outline-4">
+          <h4 id="sec-40-14-2">3 Interacting with statistical programs</h4>
 
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
+          <div class="outline-text-4" id="text-40-14-2">
+            <p>Customize variables for ESS (set these variables <b>before</b>
+            loading <code>ess-site</code>).</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">number of seconds to highlight the evaluated region</span>
-  (setq ess-blink-delay .6)
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">start R in current working directory, don't ask user</span>
+"org-comment">3.5 start R in current working directory, don't ask user</span>
   (setq ess-ask-for-ess-directory nil)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">default ESS indentation style</span>
-  (setq ess-default-style 'DEFAULT)
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">new inferior ESS process appears in another window in the current frame</span>
+"org-comment">3.5 new inferior ESS process appears in another window in the current frame</span>
   (setq inferior-ess-same-window nil)
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; add to list of prefixes recognized by ESS</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq ess-r-versions '("R-3.0.2"))    ; R-current</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; matching versions will appear after doing M-x R &lt;tab&gt; &lt;tab&gt;</span>
 </pre>
+            </div>
           </div>
+        </div>
 
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
+        <div id="outline-container-sec-40-14-3" class="outline-4">
+          <h4 id="sec-40-14-3">5 Sending code to the ESS process</h4>
+
+          <div class="outline-text-4" id="text-40-14-3">
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">display input commands in the process buffer</span>
+  (setq ess-eval-visibly 'nowait)       <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">avoid Emacs hanging on large</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">evaluations</span>
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">number of seconds to highlight the evaluated region</span>
+  (setq ess-blink-delay .6)
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-40-14-4" class="outline-4">
+          <h4 id="sec-40-14-4">7 Editing objects and functions</h4>
+
+          <div class="outline-text-4" id="text-40-14-4">
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">7.4 default ESS indentation style</span>
+  (setq ess-default-style 'DEFAULT)
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-40-14-5" class="outline-4">
+          <h4 id="sec-40-14-5">10 Developing with ESS</h4>
+
+          <div class="outline-text-4" id="text-40-14-5">
+            <p>See</p>
+
+            <ul class="org-ul">
+              <li><a href=
+              "http://code.google.com/p/ess-tracebug/">http://code.google.com/p/ess-tracebug/</a></li>
+
+              <li><a href=
+              "http://code.google.com/p/ess-tracebug/wiki/GettingStarted">http://code.google.com/p/ess-tracebug/wiki/GettingStarted</a>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-40-14-6" class="outline-4">
+          <h4 id="sec-40-14-6">11 Other ESS features and tools</h4>
+
+          <div class="outline-text-4" id="text-40-14-6">
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">ESS: Emacs Speaks Statistics</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
@@ -22475,36 +22573,43 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
     )
 </pre>
+            </div>
           </div>
 
-          <p>See <a href=
-          "http://www.emacswiki.org/emacs/EmacsSpeaksStatistics">http://www.emacswiki.org/emacs/EmacsSpeaksStatistics</a>.</p>
+          <div id="outline-container-sec-40-14-6-1" class="outline-5">
+            <h5 id="sec-40-14-6-1">Describe object at point</h5>
 
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">ESS[</span><span class="org-comment"><span class=
-"org-leuven-highlight">BUG</span></span><span class=
-"org-comment">S] dialect</span>
-  (<span class="org-keyword">require</span> '<span class=
-"org-constant">ess-bugs-d</span>)
+            <div class="outline-text-5" id="text-40-14-6-1">
+              <p>Get info for object at point, and display it in an electric
+              buffer with the command <code>ess-describe-object-at-point</code>
+              (bound to <code>C-c C-d C-e</code>, repeat <code>C-e</code> or
+              <code>e</code> to cycle between <code>str()</code>,
+              <code>head()</code>, <code>tail()</code> and
+              <code>summary()</code>). Use <code>other-window</code> to switch
+              to <code>*ess-describe*</code> window.</p>
 
+              <p>It was inspired by Erik Iverson’s
+              <code>ess-R-object-tooltip</code>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-40-14-7" class="outline-4">
+          <h4 id="sec-40-14-7">12 Overview of ESS features for the S
+          family</h4>
+
+          <div class="outline-text-4" id="text-40-14-7">
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">avoid Emacs hanging on large evaluations</span>
-  (setq ess-eval-visibly 'nowait)
+"org-comment">;; 12.2 add to list of prefixes recognized by ESS</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq ess-r-versions '("R-3.0.2"))    ; R-current</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">;; matching versions will appear after doing M-x R &lt;tab&gt; &lt;tab&gt;</span>
 </pre>
+            </div>
           </div>
-
-          <p>Get info for object at point, and display it in an electric buffer
-          with the command <code>ess-describe-object-at-point</code> (bound to
-          <code>C-c C-d C-e</code>, repeat <code>C-e</code> or <code>e</code>
-          to cycle between <code>str()</code>, <code>head()</code>,
-          <code>tail()</code> and <code>summary()</code>). Use
-          <code>other-window</code> to switch to <code>*ess-describe*</code>
-          window.</p>
-
-          <p>It was inspired by Erik Iverson’s
-          <code>ess-R-object-tooltip</code>.</p>
         </div>
       </div>
 
@@ -24720,7 +24825,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140820.1019]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140821.1658]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

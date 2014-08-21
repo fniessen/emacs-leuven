@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140820.1017
+;; Version: 20140821.1656
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140820.1017]--")
+(message "* --[ Loading Emacs Leuven 20140821.1656]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -521,10 +521,12 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; don't add newlines to end of buffer when scrolling
   (setq next-line-add-newlines nil)
 
-  ;; move point to a given line number (XEmacs default)
-  (GNUEmacs
-    (global-set-key
-      (kbd "M-g") 'goto-line))
+  ;; ;; move point to a given line number (XEmacs default)
+  ;; (GNUEmacs
+  ;;   (global-set-key
+  ;;     (kbd "M-g") 'goto-line))          ; overrides `M-g n' (next-error) and
+  ;;                                       ; `M-g p' (previous-error)... while it's
+  ;;                                       ; also on `M-g g'...
 
   ;; print the current buffer line number
   (global-set-key
@@ -6247,11 +6249,11 @@ this with to-do items than with projects or headings."
 
   ;; display the next compiler error message
   (global-set-key
-    (kbd "<f10>") 'next-error)
+    (kbd "<f10>") 'next-error)          ; also on `C-x `' and `M-g n'
 
   ;; display the previous compiler error message
   (global-set-key
-    (kbd "<S-f10>") 'previous-error)
+    (kbd "<S-f10>") 'previous-error)    ; also on `M-g p'
 
   ;; display the first compiler error message
   (global-set-key
@@ -6888,7 +6890,6 @@ this with to-do items than with projects or headings."
     (setq hippie-expand-try-functions-list
           '(try-expand-dabbrev          ; current buffer
             try-expand-dabbrev-visible  ; visible (parts of all) buffers
-            try-expand-dabbrev-all-buffers ; all opened buffers
             try-expand-dabbrev-from-kill ; kill ring
             try-complete-file-name-partially ; file names
             try-complete-file-name
@@ -6904,7 +6905,6 @@ this with to-do items than with projects or headings."
             try-complete-file-name
             try-expand-all-abbrevs      ; abbreviations
             try-expand-dabbrev          ; current buffer
-            try-expand-dabbrev-all-buffers ; all opened buffers
             try-expand-dabbrev-from-kill)) ; kill ring
 
     ;; integrate YASnippet with `hippie-expand'
@@ -7916,10 +7916,6 @@ this with to-do items than with projects or headings."
     ;;   (when (try-require 'cygwin-mount)
     ;;     (cygwin-mount-activate)))
 
-  ;; accented characters on graphics
-  (add-to-list 'process-coding-system-alist
-               '("R.*" . iso-latin-1))
-
   (leuven--section "Utilities -- ESS")
 
   (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
@@ -7930,21 +7926,18 @@ this with to-do items than with projects or headings."
   (autoload 'R-mode "ess-site"
     "Major mode for editing R source." t)
 
-  ;; number of seconds to highlight the evaluated region
-  (setq ess-blink-delay .6)
+  ;; accented characters on graphics
+  (add-to-list 'process-coding-system-alist
+               '("R.*" . iso-latin-1))
 
-  ;; start R in current working directory, don't ask user
+  ;; 3.5 start R in current working directory, don't ask user
   (setq ess-ask-for-ess-directory nil)
 
-  ;; default ESS indentation style
-  (setq ess-default-style 'DEFAULT)
-
-  ;; new inferior ESS process appears in another window in the current frame
+  ;; 3.5 new inferior ESS process appears in another window in the current frame
   (setq inferior-ess-same-window nil)
 
-  ;; ;; add to list of prefixes recognized by ESS
-  ;; (setq ess-r-versions '("R-3.0.2"))    ; R-current
-  ;; ;; matching versions will appear after doing M-x R <tab> <tab>
+  ;; 7.4 default ESS indentation style
+  (setq ess-default-style 'DEFAULT)
 
   ;; ESS: Emacs Speaks Statistics
   (with-eval-after-load "ess-site"
@@ -7954,6 +7947,10 @@ this with to-do items than with projects or headings."
     (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
 
     )
+
+  ;; ;; 12.2 add to list of prefixes recognized by ESS
+  ;; (setq ess-r-versions '("R-3.0.2"))    ; R-current
+  ;; ;; matching versions will appear after doing M-x R <tab> <tab>
 
 ;;* Proced
 
@@ -8766,7 +8763,7 @@ this with to-do items than with projects or headings."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140820.1018]--")
+(message "* --[ Loaded Emacs Leuven 20140821.1657]--")
 
 (provide 'emacs-leuven)
 

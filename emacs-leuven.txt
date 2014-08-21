@@ -736,10 +736,12 @@ Though, it does load the full Org mode right from the start...
   ;; don't add newlines to end of buffer when scrolling
   (setq next-line-add-newlines nil)
 
-  ;; move point to a given line number (XEmacs default)
-  (GNUEmacs
-    (global-set-key
-      (kbd "M-g") 'goto-line))
+  ;; ;; move point to a given line number (XEmacs default)
+  ;; (GNUEmacs
+  ;;   (global-set-key
+  ;;     (kbd "M-g") 'goto-line))          ; overrides `M-g n' (next-error) and
+  ;;                                       ; `M-g p' (previous-error)... while it's
+  ;;                                       ; also on `M-g g'...
 
   ;; print the current buffer line number
   (global-set-key
@@ -9617,11 +9619,11 @@ it runs Bash with lots of debug output.
 
   ;; display the next compiler error message
   (global-set-key
-    (kbd "<f10>") 'next-error)
+    (kbd "<f10>") 'next-error)          ; also on `C-x `' and `M-g n'
 
   ;; display the previous compiler error message
   (global-set-key
-    (kbd "<S-f10>") 'previous-error)
+    (kbd "<S-f10>") 'previous-error)    ; also on `M-g p'
 
   ;; display the first compiler error message
   (global-set-key
@@ -10798,7 +10800,6 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
     (setq hippie-expand-try-functions-list
           '(try-expand-dabbrev          ; current buffer
             try-expand-dabbrev-visible  ; visible (parts of all) buffers
-            try-expand-dabbrev-all-buffers ; all opened buffers
             try-expand-dabbrev-from-kill ; kill ring
             try-complete-file-name-partially ; file names
             try-complete-file-name
@@ -10814,7 +10815,6 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
             try-complete-file-name
             try-expand-all-abbrevs      ; abbreviations
             try-expand-dabbrev          ; current buffer
-            try-expand-dabbrev-all-buffers ; all opened buffers
             try-expand-dabbrev-from-kill)) ; kill ring
 
     ;; integrate YASnippet with `hippie-expand'
@@ -12457,7 +12457,9 @@ See =w32-settings.el= for more!
 
 ** Emacs Speaks Statistics (ESS)
 
-http://ess.r-project.org/Manual/ess.html
+See:
+- http://ess.r-project.org/Manual/ess.html,
+- http://www.emacswiki.org/emacs/EmacsSpeaksStatistics.
 
 To run statistical processes under ESS, Windows users will need to make sure
 that the directories for ~R~ and ~Rterm~ are in their ~PATH~ environment variable.
@@ -12468,11 +12470,9 @@ Magic underscore (~_~):
 - Pressing underscore once inserts ~<-~.
 - Pressing underscore twice inserts a literal underscore.
 
-#+begin_src emacs-lisp
-  ;; accented characters on graphics
-  (add-to-list 'process-coding-system-alist
-               '("R.*" . iso-latin-1))
+*** 2 Installing ESS on your system
 
+#+begin_src emacs-lisp
   (leuven--section "Utilities -- ESS")
 
   (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
@@ -12484,25 +12484,49 @@ Magic underscore (~_~):
     "Major mode for editing R source." t)
 #+end_src
 
+#+begin_src emacs-lisp
+  ;; accented characters on graphics
+  (add-to-list 'process-coding-system-alist
+               '("R.*" . iso-latin-1))
+#+end_src
+
+*** 3 Interacting with statistical programs
+
 Customize variables for ESS (set these variables *before* loading ~ess-site~).
 
 #+begin_src emacs-lisp
-  ;; number of seconds to highlight the evaluated region
-  (setq ess-blink-delay .6)
-
-  ;; start R in current working directory, don't ask user
+  ;; 3.5 start R in current working directory, don't ask user
   (setq ess-ask-for-ess-directory nil)
 
-  ;; default ESS indentation style
-  (setq ess-default-style 'DEFAULT)
-
-  ;; new inferior ESS process appears in another window in the current frame
+  ;; 3.5 new inferior ESS process appears in another window in the current frame
   (setq inferior-ess-same-window nil)
-
-  ;; ;; add to list of prefixes recognized by ESS
-  ;; (setq ess-r-versions '("R-3.0.2"))    ; R-current
-  ;; ;; matching versions will appear after doing M-x R <tab> <tab>
 #+end_src
+
+*** 5 Sending code to the ESS process
+
+#+begin_src emacs-lisp :tangle no
+  ;; display input commands in the process buffer
+  (setq ess-eval-visibly 'nowait)       ; avoid Emacs hanging on large
+                                        ; evaluations
+
+  ;; number of seconds to highlight the evaluated region
+  (setq ess-blink-delay .6)
+#+end_src
+
+*** 7 Editing objects and functions
+
+#+begin_src emacs-lisp
+  ;; 7.4 default ESS indentation style
+  (setq ess-default-style 'DEFAULT)
+#+end_src
+
+*** 10 Developing with ESS
+
+See
+- http://code.google.com/p/ess-tracebug/
+- http://code.google.com/p/ess-tracebug/wiki/GettingStarted.
+
+*** 11 Other ESS features and tools
 
 #+begin_src emacs-lisp
   ;; ESS: Emacs Speaks Statistics
@@ -12515,15 +12539,7 @@ Customize variables for ESS (set these variables *before* loading ~ess-site~).
     )
 #+end_src
 
-See http://www.emacswiki.org/emacs/EmacsSpeaksStatistics.
-
-#+begin_src emacs-lisp :tangle no
-  ;; ESS[BUGS] dialect
-  (require 'ess-bugs-d)
-
-  ;; avoid Emacs hanging on large evaluations
-  (setq ess-eval-visibly 'nowait)
-#+end_src
+**** Describe object at point
 
 Get info for object at point, and display it in an electric buffer with the
 command ~ess-describe-object-at-point~ (bound to ~C-c C-d C-e~, repeat ~C-e~ or ~e~ to
@@ -12531,6 +12547,14 @@ cycle between ~str()~, ~head()~, ~tail()~ and ~summary()~).  Use ~other-window~ 
 to ~*ess-describe*~ window.
 
 It was inspired by Erik Iverson's ~ess-R-object-tooltip~.
+
+*** 12 Overview of ESS features for the S family
+
+#+begin_src emacs-lisp
+  ;; ;; 12.2 add to list of prefixes recognized by ESS
+  ;; (setq ess-r-versions '("R-3.0.2"))    ; R-current
+  ;; ;; matching versions will appear after doing M-x R <tab> <tab>
+#+end_src
 
 ** Proced
 
@@ -12608,7 +12632,6 @@ and see
 http://blog.jr0cket.co.uk/2012/10/using-emacs-24-server-on-mac-osx-for.html
 for ideas about having the right ~emacsclient~ used to connect to the Emacs
 server.
-
 *************** END
 
 * Printing Hard Copies
