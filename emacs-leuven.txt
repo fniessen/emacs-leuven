@@ -728,6 +728,12 @@ Though, it does load the full Org mode right from the start...
 - M-r ::
      ~move-to-window-line~.
 
+- ~M-g g~ ::
+     Move point to the beginning of line number /N/ (~goto-line~).
+
+     Under XEmacs, this was bound by default to ~M-g~. But we cannot do that in
+     GNU Emacs as ~M-g~ is a prefix key here...
+
 #+begin_src emacs-lisp
 ;;** 7.2 (info "(emacs)Moving Point") Location
 
@@ -735,13 +741,6 @@ Though, it does load the full Org mode right from the start...
 
   ;; don't add newlines to end of buffer when scrolling
   (setq next-line-add-newlines nil)
-
-  ;; ;; move point to a given line number (XEmacs default)
-  ;; (GNUEmacs
-  ;;   (global-set-key
-  ;;     (kbd "M-g") 'goto-line))          ; overrides `M-g n' (next-error) and
-  ;;                                       ; `M-g p' (previous-error)... while it's
-  ;;                                       ; also on `M-g g'...
 
   ;; print the current buffer line number
   (global-set-key

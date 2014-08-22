@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DATE:      2012-06-22
-#+Time-stamp: <2014-05-22 Thu 15:11>
+#+Time-stamp: <2014-08-22 Fri 16:36>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en
@@ -159,79 +159,78 @@ Global key bindings.
 
 I still have to sort them out, by mode (when applicable).
 
-| Shortcut            | What it runs                       |
-|---------------------+------------------------------------|
-| <                   | scroll-calendar-right              |
-| <C-backspace>       | backward-kill-word                 |
-| <C-down>            | comint-next-input                  |
-| <C-S-down>          | shrink-window                      |
-| <C-S-left>          | enlarge-window-horizontally        |
-| <C-S-right>         | shrink-window-horizontally         |
-| <C-S-tab>           | w3m-previous-buffer                |
-| <C-S-up>            | enlarge-window                     |
-| <C-tab>             | w3m-next-buffer                    |
-| <C-up>              | comint-previous-input              |
-| <down>              | comint-next-input                  |
-| <down>              | next-line                          |
-| <left>              | speedbar-contract-line             |
-| <left>              | backward-char                      |
-| <next>              | pager-page-down                    |
-| <prior>             | pager-page-up                      |
-| <right>             | speedbar-expand-line               |
-| <right>             | forward-char                       |
-| <S-return>          | leuven-ess-eval                    |
-| <tab>               | w3m-next-anchor                    |
-| <up>                | comint-previous-input              |
-| <up>                | previous-line                      |
-| >                   | scroll-calendar-left               |
-| C-$                 | flyspell-buffer                    |
-| C-*                 | leuven-hlt-highlight-current-word  |
-| C-=                 | compare-windows                    |
-| C-c !               | shell                              |
-| C-c .               | leuven-insert-current-date         |
-| C-c \vert           | leuven-toggle-window-split         |
-| C-c ^               | sort-lines                         |
-| C-c C-c             | tidy-buffer                        |
-| C-c C-x nil         |                                    |
-| C-c d l             | dictionary-lookup-definition       |
-| C-c d m             | dictionary-match-words             |
-| C-c d s             | dictionary-search                  |
-| C-c g g             | leuven-google-search               |
-| C-c g r             | leuven-google-search-region        |
-| C-c g s             | google                             |
-| C-c g w             | leuven-google-search-word-at-point |
-| C-c n               |                                    |
-| C-c o               | helm-occur                         |
-| C-c q               | boxquote-region                    |
-| C-c s               | yas-insert-snippet                 |
-| C-c t               | toggle-truncate-lines              |
-| C-c T               | multi-term                         |
-| C-c z               | toggle-full-screen                 |
-| C-c ~               | leuven-swap-windows                |
-| C-h A               | apropos-variable                   |
-| C-h E               | elisp-index-search                 |
-| C-M-$               | leuven-flyspell-toggle-dictionary  |
-| C-o                 | leuven--isearch-occur              |
-| C-o                 | occur                              |
-| C-S-n               | hlt-next-highlight                 |
-| C-S-p               | hlt-previous-highlight             |
-| C-t                 | w3m-new-tab                        |
-| C-w                 | w3m-delete-buffer                  |
-| C-x b               | helm-buffers-list                  |
-| C-x C-b             | electric-buffer-list               |
-| C-x C-b             | ibuffer                            |
-| C-x p               | proced                             |
-| C-x r b             | helm-bookmark-ext                  |
-| C-x r l             | helm-bookmarks                     |
-| F                   | w3m-view-next-page                 |
-| f                   | leuven-w3m-go-to-link-number       |
-| M--                 | ess-smart-underscore               |
-| M-g                 | goto-line                          |
-| M-G                 | what-line                          |
-| M-o                 |                                    |
-| M-p                 | ps-print-buffer-with-faces         |
-| M-x                 | helm-M-x                           |
-| U                   | leuven-w3m-goto-url                |
+| Shortcut      | What it runs                       |
+|---------------+------------------------------------|
+| <             | scroll-calendar-right              |
+| <C-backspace> | backward-kill-word                 |
+| <C-down>      | comint-next-input                  |
+| <C-S-down>    | shrink-window                      |
+| <C-S-left>    | enlarge-window-horizontally        |
+| <C-S-right>   | shrink-window-horizontally         |
+| <C-S-tab>     | w3m-previous-buffer                |
+| <C-S-up>      | enlarge-window                     |
+| <C-tab>       | w3m-next-buffer                    |
+| <C-up>        | comint-previous-input              |
+| <down>        | comint-next-input                  |
+| <down>        | next-line                          |
+| <left>        | speedbar-contract-line             |
+| <left>        | backward-char                      |
+| <next>        | pager-page-down                    |
+| <prior>       | pager-page-up                      |
+| <right>       | speedbar-expand-line               |
+| <right>       | forward-char                       |
+| <S-return>    | leuven-ess-eval                    |
+| <tab>         | w3m-next-anchor                    |
+| <up>          | comint-previous-input              |
+| <up>          | previous-line                      |
+| >             | scroll-calendar-left               |
+| C-$           | flyspell-buffer                    |
+| C-*           | leuven-hlt-highlight-current-word  |
+| C-=           | compare-windows                    |
+| C-c !         | shell                              |
+| C-c .         | leuven-insert-current-date         |
+| C-c \vert         | leuven-toggle-window-split         |
+| C-c ^         | sort-lines                         |
+| C-c C-c       | tidy-buffer                        |
+| C-c C-x nil   |                                    |
+| C-c d l       | dictionary-lookup-definition       |
+| C-c d m       | dictionary-match-words             |
+| C-c d s       | dictionary-search                  |
+| C-c g g       | leuven-google-search               |
+| C-c g r       | leuven-google-search-region        |
+| C-c g s       | google                             |
+| C-c g w       | leuven-google-search-word-at-point |
+| C-c n         |                                    |
+| C-c o         | helm-occur                         |
+| C-c q         | boxquote-region                    |
+| C-c s         | yas-insert-snippet                 |
+| C-c t         | toggle-truncate-lines              |
+| C-c T         | multi-term                         |
+| C-c z         | toggle-full-screen                 |
+| C-c ~         | leuven-swap-windows                |
+| C-h A         | apropos-variable                   |
+| C-h E         | elisp-index-search                 |
+| C-M-$         | leuven-flyspell-toggle-dictionary  |
+| C-o           | leuven--isearch-occur              |
+| C-o           | occur                              |
+| C-S-n         | hlt-next-highlight                 |
+| C-S-p         | hlt-previous-highlight             |
+| C-t           | w3m-new-tab                        |
+| C-w           | w3m-delete-buffer                  |
+| C-x b         | helm-buffers-list                  |
+| C-x C-b       | electric-buffer-list               |
+| C-x C-b       | ibuffer                            |
+| C-x p         | proced                             |
+| C-x r b       | helm-bookmark-ext                  |
+| C-x r l       | helm-bookmarks                     |
+| F             | w3m-view-next-page                 |
+| f             | leuven-w3m-go-to-link-number       |
+| M--           | ess-smart-underscore               |
+| M-G           | what-line                          |
+| M-o           |                                    |
+| M-p           | ps-print-buffer-with-faces         |
+| M-x           | helm-M-x                           |
+| U             | leuven-w3m-goto-url                |
 
 ** License
 

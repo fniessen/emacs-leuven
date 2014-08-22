@@ -1228,7 +1228,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140822.1533</span>
+"org-comment">Version: 20140822.1638</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1351,7 +1351,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140822.1533]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140822.1638]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">uptimes</span>
@@ -2463,7 +2463,20 @@
           <dl class="org-dl">
             <dt>M-r</dt>
 
-            <dd><code>move-to-window-line</code>.</dd>
+            <dd>
+              <p><code>move-to-window-line</code>.</p>
+            </dd>
+
+            <dt><code>M-g g</code></dt>
+
+            <dd>
+              <p>Move point to the beginning of line number <i>N</i>
+              (<code>goto-line</code>).</p>
+
+              <p>Under XEmacs, this was bound by default to <code>M-g</code>.
+              But we cannot do that in GNU Emacs as <code>M-g</code> is a
+              prefix key here…</p>
+            </dd>
           </dl>
 
           <div class="org-src-container">
@@ -2477,19 +2490,6 @@
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">don't add newlines to end of buffer when scrolling</span>
   (setq next-line-add-newlines nil)
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; move point to a given line number (XEmacs default)</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(GNUEmacs</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(global-set-key</span>
-  <span class="org-comment-delimiter">;;     </span><span class=
-"org-comment">(kbd "M-g") 'goto-line))          ; overrides `M-g n' (next-</span><span class="org-comment"><span class="org-leuven-highlight">error</span></span><span class="org-comment">) and</span>
-  <span class=
-"org-comment-delimiter">;;                                       </span><span class="org-comment">; `M-g p' (previous-</span><span class="org-comment"><span class="org-leuven-highlight">error</span></span><span class="org-comment">)... while it's</span>
-  <span class=
-"org-comment-delimiter">;;                                       </span><span class="org-comment">; also on `M-g g'...</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">print the current buffer line number</span>
@@ -24893,7 +24893,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140822.1534]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140822.1638]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

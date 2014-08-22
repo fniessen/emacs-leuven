@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140822.1532
+;; Version: 20140822.1636
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140822.1532]--")
+(message "* --[ Loading Emacs Leuven 20140822.1636]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -520,13 +520,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; don't add newlines to end of buffer when scrolling
   (setq next-line-add-newlines nil)
-
-  ;; ;; move point to a given line number (XEmacs default)
-  ;; (GNUEmacs
-  ;;   (global-set-key
-  ;;     (kbd "M-g") 'goto-line))          ; overrides `M-g n' (next-error) and
-  ;;                                       ; `M-g p' (previous-error)... while it's
-  ;;                                       ; also on `M-g g'...
 
   ;; print the current buffer line number
   (global-set-key
@@ -8759,7 +8752,7 @@ this with to-do items than with projects or headings."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140822.1533]--")
+(message "* --[ Loaded Emacs Leuven 20140822.1637]--")
 
 (provide 'emacs-leuven)
 
