@@ -2465,6 +2465,9 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
 
 ** Saving Files
 
+You can define a *shadow file* group to automatically upload local files to
+a remote location.
+
 #+begin_src emacs-lisp
 ;;** 18.3 (info "(emacs)Saving") Files
 
@@ -2960,6 +2963,8 @@ machine editing your cron file on the remote.
     ;; that host afterwards.  It is important to know that the given
     ;; method is applied on the host which has been reached so far.  The
     ;; trick is to think from the end.
+
+    ;; /ssh:user1@host|sudo:user2@host:
 
 ;;** 4.12 (info "(tramp)Password handling") for several connections
 
@@ -12098,17 +12103,32 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 
 ** Shell Mode
 
+*** Re-submitting commands from the transcript
+
 - ~RET~ ::
      *Execute* the *command on* the *current line*.
 
 - ~TAB~ ::
      *Complete* current command, file name or variable name.
 
-- ~C-c C-d~ ::
-     Send ~EOF~ character.
+*** Entering commands and fixing mistakes
 
 - ~C-c C-u~ ::
      Erase current line (equivalent to ~C-u~ in Unix shells).
+
+*** Manipulating the output from the last command
+
+- ~C-c C-o~ ::
+     *Delete output* (only) *from last command*.
+
+- ~C-c C-r~ ::
+     Move *first line of output* from your last command *to top of window*.
+
+# - ~C-c C-e~ ::
+#      Move *last line of output* from your last command *to bottom of window*,
+#      showing the maximum of the output.
+
+*** Sending signals
 
 - ~C-c C-c~ ::
      Interrupt current job (equivalent to ~C-c~ in Unix shells, ~BREAK~ signal).
@@ -12117,15 +12137,8 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
      Suspend or stop current job (equivalent to ~C-z~ in Unix shells, ~STOP~
      signal).
 
-- ~C-c C-o~ ::
-     *Delete output* (only) *from last command*.
-
-- ~C-c C-r~ ::
-     Move *first line of output* from your last command *to top of window*.
-
-- ~C-c C-e~ ::
-     Move *last line of output* from your last command *to bottom of window*,
-     showing the maximum of the output.
+- ~C-c C-d~ ::
+     Send ~EOF~ character.
 
 #+begin_src emacs-lisp
 ;;** 36.3 Shell Mode
@@ -12194,21 +12207,6 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 ;; )
 #+end_src
 
-*************** TODO Fix case when 2 Shell buffers are run in the same dir (same name error!)
-
-#+begin_src emacs-lisp
-  (defun leuven--rename-buffer-to-curdir (&optional _string)
-    "Change Shell buffer's name to current directory."
-    (rename-buffer (concat "*shell " default-directory "*")))
-
-  (add-hook 'shell-mode-hook
-            (lambda ()
-              (leuven--rename-buffer-to-curdir)
-              (add-hook 'comint-output-filter-functions
-                        'leuven--rename-buffer-to-curdir nil t)))
-                                        ; local to Shell comint
-#+end_src
-
 If you ever tried to run a program like ~git~ under ~M-x shell~, you will have come
 across the warning "terminal is not fully functional" followed by unusable
 behavior.  This is because ~git~ sends its output through a pager (probably ~less~),
@@ -12241,6 +12239,8 @@ solves this problem:
 
 ** History
 
+*** Command History
+
 - ~M-p~ (or ~<C-up>~) ::
      Fetch the next *earlier* old command (~comint-previous-input~), but doesn't
      execute it.
@@ -12255,17 +12255,13 @@ solves this problem:
 - ~C-c C-l~ ::
      Display the current buffer's *history* of shell commands.
 
+*** Manipulating the transcript: Viewing older commands
+
 - ~C-c C-p~ ::
      Move to *previous command prompt*.
 
 - ~C-c C-n~ ::
      Move to *next command prompt*.
-
-#+begin_src emacs-lisp
-;;** 36.5 History
-
-  (leuven--section "36.5 History")
-#+end_src
 
 ** Directory Tracking
 
@@ -12273,6 +12269,21 @@ solves this problem:
 ;;** 36.6 Directory Tracking
 
   (leuven--section "36.6 Directory Tracking")
+#+end_src
+
+*************** TODO Fix case when 2 Shell buffers are run in the same dir (same name error!)
+
+#+begin_src emacs-lisp
+  (defun leuven--rename-buffer-to-curdir (&optional _string)
+    "Change Shell buffer's name to current directory."
+    (rename-buffer (concat "*shell " default-directory "*")))
+
+  (add-hook 'shell-mode-hook
+            (lambda ()
+              (leuven--rename-buffer-to-curdir)
+              (add-hook 'comint-output-filter-functions
+                        'leuven--rename-buffer-to-curdir nil t)))
+                                        ; local to Shell comint
 #+end_src
 
 ** Options
@@ -12290,6 +12301,8 @@ solves this problem:
    :PROPERTIES:
    :ID:       d12c2e1e-8147-4b39-8128-aaa70fbf4657
    :END:
+
+Full terminal emulation is available.
 
 #+begin_src emacs-lisp
 ;;** 36.8 Terminal emulator
@@ -12338,10 +12351,14 @@ On the other hand, *Term mode* provides a proper *terminal emulator* (though not
 good as the good old ~xterm~).  You must use it for applications that are
 interactive with your terminal (such as the command ~top~).
 
-  Note -- In Shell mode, use ~M-x proced~ instead of ~top~.
+#+begin_note
+In Shell mode, use ~M-x proced~ instead of ~top~.
+#+end_note
 
-  Note -- ~MPlayer~ commands do not work in the Emacs shell.  Use ~term~ for ~/~ and ~*~
-  to decrease / increase volume.
+#+begin_note
+~MPlayer~ commands do not work in the Emacs shell.  Use ~term~ for ~/~ and ~*~ to
+decrease / increase volume.
+#+end_note
 
 You can switch to *line mode* (~C-c C-j~) when you need Term to /basically/ act like
 a Shell mode buffer, and move around the buffer pretty much like anywhere else
@@ -12477,6 +12494,7 @@ Magic underscore (~_~):
 
   (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
 
+  ;; ESS: Emacs Speaks Statistics
   (autoload 'R "ess-site"
     "Call 'R', the 'GNU S' system from the R Foundation." t)
 
@@ -12529,14 +12547,11 @@ See
 *** 11 Other ESS features and tools
 
 #+begin_src emacs-lisp
-  ;; ESS: Emacs Speaks Statistics
   (with-eval-after-load "ess-site"
 
     ;; use eldoc to report R function names
     (require 'ess-eldoc)
-    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
-
-    )
+    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc))
 #+end_src
 
 **** Describe object at point

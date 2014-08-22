@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140821.1656
+;; Version: 20140822.1532
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140821.1656]--")
+(message "* --[ Loading Emacs Leuven 20140822.1532]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1796,6 +1796,8 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; that host afterwards.  It is important to know that the given
     ;; method is applied on the host which has been reached so far.  The
     ;; trick is to think from the end.
+
+    ;; /ssh:user1@host|sudo:user2@host:
 
 ;;** 4.12 (info "(tramp)Password handling") for several connections
 
@@ -7806,17 +7808,6 @@ this with to-do items than with projects or headings."
 
 ;; )
 
-  (defun leuven--rename-buffer-to-curdir (&optional _string)
-    "Change Shell buffer's name to current directory."
-    (rename-buffer (concat "*shell " default-directory "*")))
-
-  (add-hook 'shell-mode-hook
-            (lambda ()
-              (leuven--rename-buffer-to-curdir)
-              (add-hook 'comint-output-filter-functions
-                        'leuven--rename-buffer-to-curdir nil t)))
-                                        ; local to Shell comint
-
   (setenv "PAGER" "/usr/bin/cat")
 
 ;;** 36.4 Shell Prompts
@@ -7833,13 +7824,20 @@ this with to-do items than with projects or headings."
   ;;   )
   ;; (add-hook 'comint-mode-hook 'set-shell-prompt-regexp)
 
-;;** 36.5 History
-
-  (leuven--section "36.5 History")
-
 ;;** 36.6 Directory Tracking
 
   (leuven--section "36.6 Directory Tracking")
+
+  (defun leuven--rename-buffer-to-curdir (&optional _string)
+    "Change Shell buffer's name to current directory."
+    (rename-buffer (concat "*shell " default-directory "*")))
+
+  (add-hook 'shell-mode-hook
+            (lambda ()
+              (leuven--rename-buffer-to-curdir)
+              (add-hook 'comint-output-filter-functions
+                        'leuven--rename-buffer-to-curdir nil t)))
+                                        ; local to Shell comint
 
 ;;** 36.7 Options
 
@@ -7920,6 +7918,7 @@ this with to-do items than with projects or headings."
 
   (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
 
+  ;; ESS: Emacs Speaks Statistics
   (autoload 'R "ess-site"
     "Call 'R', the 'GNU S' system from the R Foundation." t)
 
@@ -7939,14 +7938,11 @@ this with to-do items than with projects or headings."
   ;; 7.4 default ESS indentation style
   (setq ess-default-style 'DEFAULT)
 
-  ;; ESS: Emacs Speaks Statistics
   (with-eval-after-load "ess-site"
 
     ;; use eldoc to report R function names
     (require 'ess-eldoc)
-    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
-
-    )
+    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc))
 
   ;; ;; 12.2 add to list of prefixes recognized by ESS
   ;; (setq ess-r-versions '("R-3.0.2"))    ; R-current
@@ -8763,7 +8759,7 @@ this with to-do items than with projects or headings."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140821.1657]--")
+(message "* --[ Loaded Emacs Leuven 20140822.1533]--")
 
 (provide 'emacs-leuven)
 

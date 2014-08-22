@@ -992,11 +992,35 @@
 
               <li><a href="#sec-40-2">Interactive Shell</a></li>
 
-              <li><a href="#sec-40-3">Shell Mode</a></li>
+              <li>
+                <a href="#sec-40-3">Shell Mode</a>
+
+                <ul>
+                  <li><a href="#sec-40-3-1">Re-submitting commands from the
+                  transcript</a></li>
+
+                  <li><a href="#sec-40-3-2">Entering commands and fixing
+                  mistakes</a></li>
+
+                  <li><a href="#sec-40-3-3">Manipulating the output from the
+                  last command</a></li>
+
+                  <li><a href="#sec-40-3-4">Sending signals</a></li>
+                </ul>
+              </li>
 
               <li><a href="#sec-40-4">Shell Prompts</a></li>
 
-              <li><a href="#sec-40-5">History</a></li>
+              <li>
+                <a href="#sec-40-5">History</a>
+
+                <ul>
+                  <li><a href="#sec-40-5-1">Command History</a></li>
+
+                  <li><a href="#sec-40-5-2">Manipulating the transcript:
+                  Viewing older commands</a></li>
+                </ul>
+              </li>
 
               <li><a href="#sec-40-6">Directory Tracking</a></li>
 
@@ -1204,7 +1228,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140821.1658</span>
+"org-comment">Version: 20140822.1533</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1327,7 +1351,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140821.1658]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140822.1533]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">uptimes</span>
@@ -5368,6 +5392,9 @@
         <h3 id="sec-20-3">Saving Files</h3>
 
         <div class="outline-text-3" id="text-20-3">
+          <p>You can define a <b>shadow file</b> group to automatically upload
+          local files to a remote location.</p>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -6172,6 +6199,9 @@ M-: (executable-find "diff") RET
 "org-comment">method is applied on the host which has been reached so far.  The</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">trick is to think from the end.</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">/ssh:user1@host|sudo:user2@host:</span>
 
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** 4.12 (info "(tramp)Password handling") for several connections</span>
@@ -21793,54 +21823,79 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       <div id="outline-container-sec-40-3" class="outline-3">
         <h3 id="sec-40-3">Shell Mode</h3>
 
-        <div class="outline-text-3" id="text-40-3">
-          <dl class="org-dl">
-            <dt><code>RET</code></dt>
+        <div class="outline-text-3" id="text-40-3"></div>
 
-            <dd><b>Execute</b> the <b>command on</b> the <b>current
-            line</b>.</dd>
+        <div id="outline-container-sec-40-3-1" class="outline-4">
+          <h4 id="sec-40-3-1">Re-submitting commands from the transcript</h4>
 
-            <dt><code>TAB</code></dt>
+          <div class="outline-text-4" id="text-40-3-1">
+            <dl class="org-dl">
+              <dt><code>RET</code></dt>
 
-            <dd><b>Complete</b> current command, file name or variable
-            name.</dd>
+              <dd><b>Execute</b> the <b>command on</b> the <b>current
+              line</b>.</dd>
 
-            <dt><code>C-c C-d</code></dt>
+              <dt><code>TAB</code></dt>
 
-            <dd>Send <code>EOF</code> character.</dd>
+              <dd><b>Complete</b> current command, file name or variable
+              name.</dd>
+            </dl>
+          </div>
+        </div>
 
-            <dt><code>C-c C-u</code></dt>
+        <div id="outline-container-sec-40-3-2" class="outline-4">
+          <h4 id="sec-40-3-2">Entering commands and fixing mistakes</h4>
 
-            <dd>Erase current line (equivalent to <code>C-u</code> in Unix
-            shells).</dd>
+          <div class="outline-text-4" id="text-40-3-2">
+            <dl class="org-dl">
+              <dt><code>C-c C-u</code></dt>
 
-            <dt><code>C-c C-c</code></dt>
+              <dd>Erase current line (equivalent to <code>C-u</code> in Unix
+              shells).</dd>
+            </dl>
+          </div>
+        </div>
 
-            <dd>Interrupt current job (equivalent to <code>C-c</code> in Unix
-            shells, <code>BREAK</code> signal).</dd>
+        <div id="outline-container-sec-40-3-3" class="outline-4">
+          <h4 id="sec-40-3-3">Manipulating the output from the last
+          command</h4>
 
-            <dt><code>C-c C-z</code></dt>
+          <div class="outline-text-4" id="text-40-3-3">
+            <dl class="org-dl">
+              <dt><code>C-c C-o</code></dt>
 
-            <dd>Suspend or stop current job (equivalent to <code>C-z</code> in
-            Unix shells, <code>STOP</code> signal).</dd>
+              <dd><b>Delete output</b> (only) <b>from last command</b>.</dd>
 
-            <dt><code>C-c C-o</code></dt>
+              <dt><code>C-c C-r</code></dt>
 
-            <dd><b>Delete output</b> (only) <b>from last command</b>.</dd>
+              <dd>Move <b>first line of output</b> from your last command <b>to
+              top of window</b>.</dd>
+            </dl>
+          </div>
+        </div>
 
-            <dt><code>C-c C-r</code></dt>
+        <div id="outline-container-sec-40-3-4" class="outline-4">
+          <h4 id="sec-40-3-4">Sending signals</h4>
 
-            <dd>Move <b>first line of output</b> from your last command <b>to
-            top of window</b>.</dd>
+          <div class="outline-text-4" id="text-40-3-4">
+            <dl class="org-dl">
+              <dt><code>C-c C-c</code></dt>
 
-            <dt><code>C-c C-e</code></dt>
+              <dd>Interrupt current job (equivalent to <code>C-c</code> in Unix
+              shells, <code>BREAK</code> signal).</dd>
 
-            <dd>Move <b>last line of output</b> from your last command <b>to
-            bottom of window</b>, showing the maximum of the output.</dd>
-          </dl>
+              <dt><code>C-c C-z</code></dt>
 
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
+              <dd>Suspend or stop current job (equivalent to <code>C-z</code>
+              in Unix shells, <code>STOP</code> signal).</dd>
+
+              <dt><code>C-c C-d</code></dt>
+
+              <dd>Send <code>EOF</code> character.</dd>
+            </dl>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** 36.3 Shell Mode</span>
 
@@ -21946,55 +22001,25 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">)</span>
 </pre>
-          </div>
+            </div>
 
-          <table class="inlinetask" width="100%">
-            <tr>
-              <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
+            <p>If you ever tried to run a program like <code>git</code> under
+            <code>M-x shell</code>, you will have come across the warning
+            “terminal is not fully functional” followed by unusable behavior.
+            This is because <code>git</code> sends its output through a pager
+            (probably <code>less</code>), which requires a real <a href=
+            "#sec-40-8">terminal emulator</a>.</p>
 
-              <td width="100%"><b>Fix case when 2 Shell buffers are run in the
-              same dir (same name error!)</b><br /></td>
-            </tr>
-          </table>
+            <p>Setting the <code>PAGER</code> environment variable to
+            <code>/bin/cat</code> (but only inside Emacs) solves this
+            problem:</p>
 
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">defun</span> <span class=
-"org-function-name">leuven--rename-buffer-to-curdir</span> (<span class=
-"org-type">&amp;optional</span> _string)
-    <span class=
-"org-doc">"Change Shell buffer's name to current directory."</span>
-    (rename-buffer (concat <span class=
-"org-string">"*shell "</span> default-directory <span class=
-"org-string">"*"</span>)))
-
-  (add-hook 'shell-mode-hook
-            (<span class="org-keyword">lambda</span> ()
-              (leuven--rename-buffer-to-curdir)
-              (add-hook 'comint-output-filter-functions
-                        'leuven--rename-buffer-to-curdir nil t)))
-                                        <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">local to Shell comint</span>
-</pre>
-          </div>
-
-          <p>If you ever tried to run a program like <code>git</code> under
-          <code>M-x shell</code>, you will have come across the warning
-          “terminal is not fully functional” followed by unusable behavior.
-          This is because <code>git</code> sends its output through a pager
-          (probably <code>less</code>), which requires a real <a href=
-          "#sec-40-8">terminal emulator</a>.</p>
-
-          <p>Setting the <code>PAGER</code> environment variable to
-          <code>/bin/cat</code> (but only inside Emacs) solves this
-          problem:</p>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
   (setenv <span class="org-string">"PAGER"</span> <span class=
 "org-string">"/usr/bin/cat"</span>)
 </pre>
+            </div>
           </div>
         </div>
       </div>
@@ -22037,43 +22062,51 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       <div id="outline-container-sec-40-5" class="outline-3">
         <h3 id="sec-40-5">History</h3>
 
-        <div class="outline-text-3" id="text-40-5">
-          <dl class="org-dl">
-            <dt><code>M-p</code> (or <code>&lt;C-up&gt;</code>)</dt>
+        <div class="outline-text-3" id="text-40-5"></div>
 
-            <dd>Fetch the next <b>earlier</b> old command
-            (<code>comint-previous-input</code>), but doesn’t execute it.</dd>
+        <div id="outline-container-sec-40-5-1" class="outline-4">
+          <h4 id="sec-40-5-1">Command History</h4>
 
-            <dt><code>M-n</code> (or <code>&lt;C-down&gt;</code>)</dt>
+          <div class="outline-text-4" id="text-40-5-1">
+            <dl class="org-dl">
+              <dt><code>M-p</code> (or <code>&lt;C-up&gt;</code>)</dt>
 
-            <dd>Fetch the next <b>later</b> old command
-            (<code>comint-next-input</code>), but doesn’t execute it.</dd>
+              <dd>Fetch the next <b>earlier</b> old command
+              (<code>comint-previous-input</code>), but doesn’t execute
+              it.</dd>
 
-            <dt><code>M-r</code></dt>
+              <dt><code>M-n</code> (or <code>&lt;C-down&gt;</code>)</dt>
 
-            <dd>Begin an incremental <b>regexp search of old commands</b>.</dd>
+              <dd>Fetch the next <b>later</b> old command
+              (<code>comint-next-input</code>), but doesn’t execute it.</dd>
 
-            <dt><code>C-c C-l</code></dt>
+              <dt><code>M-r</code></dt>
 
-            <dd>Display the current buffer’s <b>history</b> of shell
-            commands.</dd>
+              <dd>Begin an incremental <b>regexp search of old
+              commands</b>.</dd>
 
-            <dt><code>C-c C-p</code></dt>
+              <dt><code>C-c C-l</code></dt>
 
-            <dd>Move to <b>previous command prompt</b>.</dd>
+              <dd>Display the current buffer’s <b>history</b> of shell
+              commands.</dd>
+            </dl>
+          </div>
+        </div>
 
-            <dt><code>C-c C-n</code></dt>
+        <div id="outline-container-sec-40-5-2" class="outline-4">
+          <h4 id="sec-40-5-2">Manipulating the transcript: Viewing older
+          commands</h4>
 
-            <dd>Move to <b>next command prompt</b>.</dd>
-          </dl>
+          <div class="outline-text-4" id="text-40-5-2">
+            <dl class="org-dl">
+              <dt><code>C-c C-p</code></dt>
 
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-<span class="org-comment-delimiter">;;</span><span class=
-"org-comment">** 36.5 History</span>
+              <dd>Move to <b>previous command prompt</b>.</dd>
 
-  (leuven--section <span class="org-string">"36.5 History"</span>)
-</pre>
+              <dt><code>C-c C-n</code></dt>
+
+              <dd>Move to <b>next command prompt</b>.</dd>
+            </dl>
           </div>
         </div>
       </div>
@@ -22088,6 +22121,37 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment">** 36.6 Directory Tracking</span>
 
   (leuven--section <span class="org-string">"36.6 Directory Tracking"</span>)
+</pre>
+          </div>
+
+          <table class="inlinetask" width="100%">
+            <tr>
+              <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
+
+              <td width="100%"><b>Fix case when 2 Shell buffers are run in the
+              same dir (same name error!)</b><br /></td>
+            </tr>
+          </table>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">defun</span> <span class=
+"org-function-name">leuven--rename-buffer-to-curdir</span> (<span class=
+"org-type">&amp;optional</span> _string)
+    <span class=
+"org-doc">"Change Shell buffer's name to current directory."</span>
+    (rename-buffer (concat <span class=
+"org-string">"*shell "</span> default-directory <span class=
+"org-string">"*"</span>)))
+
+  (add-hook 'shell-mode-hook
+            (<span class="org-keyword">lambda</span> ()
+              (leuven--rename-buffer-to-curdir)
+              (add-hook 'comint-output-filter-functions
+                        'leuven--rename-buffer-to-curdir nil t)))
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">local to Shell comint</span>
 </pre>
           </div>
         </div>
@@ -22119,6 +22183,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         "ID-d12c2e1e-8147-4b39-8128-aaa70fbf4657"></a>Terminal emulator</h3>
 
         <div class="outline-text-3" id="text-40-8">
+          <p>Full terminal emulation is available.</p>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -22188,12 +22254,16 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           You must use it for applications that are interactive with your
           terminal (such as the command <code>top</code>).</p>
 
-          <p>Note – In Shell mode, use <code>M-x proced</code> instead of
-          <code>top</code>.</p>
+          <div class="note">
+            <p>In Shell mode, use <code>M-x proced</code> instead of
+            <code>top</code>.</p>
+          </div>
 
-          <p>Note – <code>MPlayer</code> commands do not work in the Emacs
-          shell. Use <code>term</code> for <code>/</code> and <code>*</code> to
-          decrease / increase volume.</p>
+          <div class="note">
+            <p><code>MPlayer</code> commands do not work in the Emacs shell.
+            Use <code>term</code> for <code>/</code> and <code>*</code> to
+            decrease / increase volume.</p>
+          </div>
 
           <p>You can switch to <b>line mode</b> (<code>C-c C-j</code>) when you
           need Term to <i>basically</i> act like a Shell mode buffer, and move
@@ -22461,6 +22531,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (add-to-list 'auto-mode-alist '(<span class=
 "org-string">"\\.[rR]\\'"</span> . R-mode))
 
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">ESS: Emacs Speaks Statistics</span>
   (autoload 'R <span class="org-string">"ess-site"</span>
     <span class=
 "org-doc">"Call 'R', the 'GNU S' system from the R Foundation."</span> t)
@@ -22560,8 +22632,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           <div class="outline-text-4" id="text-40-14-6">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">ESS: Emacs Speaks Statistics</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"ess-site"</span>
 
@@ -22569,9 +22639,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment">use eldoc to report R function names</span>
     (<span class="org-keyword">require</span> '<span class=
 "org-constant">ess-eldoc</span>)
-    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
-
-    )
+    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc))
 </pre>
             </div>
           </div>
@@ -24825,7 +24893,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140821.1658]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140822.1534]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
