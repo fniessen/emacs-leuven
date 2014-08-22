@@ -807,12 +807,12 @@
 
       ;; use `w3m' browser (if installed) to render HTML-only mails
       (setq mm-text-html-renderer
-            (cond ((executable-find "w3m") 'w3m) ;; or `gnus-w3m'?
-                  (t 'html2text))) ;; Emacs built-in
+            (cond ((executable-find "w3m") 'w3m) ; or `gnus-w3m'?
+                  (t 'html2text)))      ; Emacs built-in
 
       ;; recent Gnusae have a built-in HTML renderer which even (somewhat)
       ;; handles CSS
-      (setq mm-text-html-renderer 'shr)
+      (setq mm-text-html-renderer 'shr) ; eww-backend?
 
 
       (eval-after-load "w3m"
@@ -917,11 +917,11 @@
       ;; format specification for the article mode line
       (setq gnus-article-mode-line-format "%S%m")
 
-      (message "4 Article Buffer... Done"))
+      ;; make `C-c C-f' active from within messages
+      (define-key gnus-article-mode-map
+        (kbd "C-c C-f") 'gnus-summary-mail-forward)
 
-;; make C-c C-f active from within messages
-(define-key gnus-article-mode-map
-  (kbd "C-c C-f") 'gnus-summary-mail-forward)
+      (message "4 Article Buffer... Done"))
 
 ;;* 5 (info "(gnus)Composing Messages")
 

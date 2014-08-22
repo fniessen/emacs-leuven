@@ -1982,18 +1982,19 @@
             (<span class=
 "org-keyword">cond</span> ((executable-find <span class=
 "org-string">"w3m"</span>) 'w3m) <span class=
-"org-comment-delimiter">;; </span><span class=
+"org-comment-delimiter">; </span><span class=
 "org-comment">or `</span><span class="org-comment"><span class=
 "org-constant">gnus-w3m</span></span><span class="org-comment">'?</span>
-                  (t 'html2text))) <span class=
-"org-comment-delimiter">;; </span><span class=
+                  (t 'html2text)))      <span class=
+"org-comment-delimiter">; </span><span class=
 "org-comment">Emacs built-in</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">recent Gnusae have a built-in HTML renderer which even (somewhat)</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">handles CSS</span>
-      (setq mm-text-html-renderer 'shr)
+      (setq mm-text-html-renderer 'shr) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">eww-backend?</span>
 
 
       (eval-after-load <span class="org-string">"w3m"</span>
@@ -2198,17 +2199,22 @@
 "org-comment">format specification for the article mode line</span>
       (setq gnus-article-mode-line-format <span class=
 "org-string">"%S%m"</span>)
-
-      (message <span class="org-string">"4 Article Buffer... Done"</span>))
 </pre>
         </div>
 
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
-<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">make C-c C-f active from within messages</span>
-(define-key gnus-article-mode-map
-  (kbd <span class="org-string">"C-c C-f"</span>) 'gnus-summary-mail-forward)
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">make `C-c C-f' active from within messages</span>
+      (define-key gnus-article-mode-map
+        (kbd <span class=
+"org-string">"C-c C-f"</span>) 'gnus-summary-mail-forward)
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+      (message <span class="org-string">"4 Article Buffer... Done"</span>))
 </pre>
         </div>
       </div>
