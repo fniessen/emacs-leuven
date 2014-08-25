@@ -111,6 +111,10 @@ this set of customizations to "short-cut" that initial process.
 
 (message "* --[ Loading Emacs Leuven <<current-time()>>]--")
 
+;; turn on Common Lisp support
+(eval-when-compile (require 'cl))       ; provide useful things like `loop' and
+                                        ; `setf'
+
 ;; uptimes
 (when (string-match "XEmacs" (version))
   ;; XEmacs doesn't have `float-time'
@@ -121,10 +125,6 @@ this set of customizations to "short-cut" that initial process.
 
 (defconst leuven-before-time (float-time)
   "Value of `float-time' before loading the Emacs Leuven library.")
-
-;; turn on Common Lisp support
-(eval-when-compile (require 'cl))       ; provide useful things like `loop' and
-                                        ; `setf'
 #+end_src
 
 #+begin_src emacs-lisp
@@ -12093,30 +12093,30 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 
 ** Shell Mode
 
-*** Re-submitting commands from the transcript
-
-- ~RET~ ::
-     *Execute* the *command on* the *current line*.
-
-- ~TAB~ ::
-     *Complete* current command, file name or variable name.
-
 *** Entering commands and fixing mistakes
 
+- ~RET~ ::
+     *Execute* the *command (on* the *current line)*.
+
 - ~C-c C-u~ ::
-     Erase current line (equivalent to ~C-u~ in Unix shells).
+     *Delete input* from the prompt to point (equivalent to ~C-u~ in Unix shells).
+
+*** Completion of filenames
+
+- ~M-?~ ::
+     Display a list of possible completions for the filename at point.
 
 *** Manipulating the output from the last command
-
-- ~C-c C-o~ ::
-     *Delete output* (only) *from last command*.
-
-- ~C-c C-r~ ::
-     Move *first line of output* from your last command *to top of window*.
 
 # - ~C-c C-e~ ::
 #      Move *last line of output* from your last command *to bottom of window*,
 #      showing the maximum of the output.
+
+- ~C-c C-r~ ::
+     *Show output* from last command (move first line of output to top of window).
+
+- ~C-c C-o~ ::
+     *Delete output* (only) from last command.
 
 *** Sending signals
 
@@ -12135,7 +12135,7 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 
   (leuven--section "36.3 Shell Mode")
 
-  ;; general command-interpreter-in-a-buffer stuff (lisp, shell, R, ...)
+  ;; general command-interpreter-in-a-buffer stuff (lisp, shell, R, python, ...)
   ;; (when (try-require 'comint)
 
     ;; comint prompt is read only
@@ -12145,15 +12145,17 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
     (setq-default comint-input-ignoredups t)
 
     ;; input to interpreter causes windows showing the buffer to scroll
-    ;; (inserting at the bottom)
+    ;; (insert at the bottom)
     (setq-default comint-scroll-to-bottom-on-input t)
 
     ;; output to interpreter causes windows showing the buffer to scroll
+    ;; (add output at the bottom)
     (setq-default comint-move-point-for-output t)
 
-    ;; maximum size in lines for Comint buffers (if the function
-    ;; `comint-truncate-buffer' is on `comint-output-filter-functions')
-    (setq comint-buffer-maximum-size (* 5 1024))
+    ;; maximum size in lines for Comint buffers
+    (setq comint-buffer-maximum-size (* 5 1024)) ; if the function
+                                        ; `comint-truncate-buffer' is added to
+                                        ; `comint-output-filter-functions'
 
     ;; size of the input history ring
     (setq comint-input-ring-size 1000)
@@ -12167,32 +12169,15 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
     ;; show completion list when ambiguous
     (setq comint-completion-autolist t)
 
-    ;; use the `up' and `down' arrow keys to traverse through the previous
-    ;; commands
-    (defun leuven--up-down-keys ()
-      "Customize the Shell mode."
-      ;; (local-set-key
-      ;;   (kbd "<up>") 'comint-previous-input)
-      ;; (local-set-key
-      ;;   (kbd "<down>") 'comint-next-input)
-      ;; (local-set-key
-      ;;   (kbd "<C-up>") 'comint-previous-matching-input-from-input)
-      ;; (local-set-key
-      ;;   (kbd "<C-down>") 'comint-next-matching-input-from-input)
-      (local-set-key
-        (kbd "<up>") 'comint-previous-matching-input-from-input)
-      (local-set-key
-        (kbd "<down>") 'comint-next-matching-input-from-input))
-
-    (add-hook 'comint-mode-hook 'leuven--up-down-keys)
-
-    (defun leuven-comint-clear ()
+    (defun leuven-comint-clear-buffer ()
       "Clear the Comint buffer."
       (interactive)
       (let ((comint-buffer-maximum-size 0))
         (comint-truncate-buffer)))
 
-    (global-set-key (kbd "C-x ! c") 'leuven-comint-clear)
+    (with-eval-after-load "comint"
+      (define-key comint-mode-map
+        (kbd "C-c C-k") 'leuven-comint-clear-buffer))
 
 ;; )
 #+end_src
@@ -12207,25 +12192,58 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
   ;; regexp to match prompts in the inferior shell
   (setq shell-prompt-pattern "^[^#$%>\n]*[#$%>] *")
 
-  ;; regexp to recognize prompts in the inferior process (only used if the
-  ;; variable `comint-use-prompt-regexp' is non-nil)
-  ;; (defun set-shell-prompt-regexp ()
-    (setq comint-prompt-regexp shell-prompt-pattern)
-  ;;   )
-  ;; (add-hook 'comint-mode-hook 'set-shell-prompt-regexp)
+  ;; regexp to recognize prompts in the inferior process
+  (setq comint-prompt-regexp shell-prompt-pattern)
+                                        ;! only used if the variable
+                                        ;! `comint-use-prompt-regexp' is non-nil
 #+end_src
 
 ** History
 
+#+begin_src emacs-lisp
+;;** 36.5 Shell Command History
+
+  (leuven--section "36.5 Shell Command History")
+
+  (with-eval-after-load "comint"
+
+    ;; cycle backwards/forwards through input history
+    (define-key comint-mode-map
+      (kbd "C-p") 'comint-previous-input) ; Shell
+    (define-key comint-mode-map
+      (kbd "<up>") 'comint-previous-input) ; Shell + RStudio
+    (define-key comint-mode-map
+      (kbd "C-n") 'comint-next-input)   ; Shell
+    (define-key comint-mode-map
+      (kbd "<down>") 'comint-next-input) ; Shell + RStudio
+
+    ;; search backwards/forwards through input history for match for current
+    ;; input
+    (define-key comint-mode-map
+      (kbd "M-p") 'comint-previous-matching-input-from-input) ; Shell
+    (define-key comint-mode-map
+      (kbd "<C-up>") 'comint-previous-matching-input-from-input) ; RStudio
+    (define-key comint-mode-map
+      (kbd "M-n") 'comint-next-matching-input-from-input) ; Shell
+    (define-key comint-mode-map
+      (kbd "<C-down>") 'comint-next-matching-input-from-input)) ; RStudio
+#+end_src
+
 *** Command History
 
+- ~C-p~ (or ~<up>~) ::
+     Fetch the next *earlier* command in the history (doesn't execute it).
+
+- ~C-n~ (or ~<down>~) ::
+     Fetch the next *later* command in the history (doesn't execute it).
+
 - ~M-p~ (or ~<C-up>~) ::
-     Fetch the next *earlier* old command (~comint-previous-input~), but doesn't
-     execute it.
+     Fetch the next *earlier* command in the history matching the string typed so
+     far (doesn't execute it).
 
 - ~M-n~ (or ~<C-down>~) ::
-     Fetch the next *later* old command (~comint-next-input~), but doesn't execute
-     it.
+     Fetch the next *later* command in the history matching the string typed so
+     far (doesn't execute it).
 
 - ~M-r~ ::
      Begin an incremental *regexp search of old commands*.
@@ -12236,10 +12254,10 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 *** Manipulating the transcript: Viewing older commands
 
 - ~C-c C-p~ ::
-     Move to *previous command prompt*.
+     Move point to *previous command prompt*.
 
 - ~C-c C-n~ ::
-     Move to *next command prompt*.
+     Move point to *next command prompt*.
 
 ** Directory Tracking
 
@@ -12354,11 +12372,11 @@ In Shell mode, use ~M-x proced~ instead of ~top~.
 decrease / increase volume.
 #+end_note
 
-You can switch to *line mode* (~C-c C-j~) when you need Term to /basically/ act like
+You can *switch to line mode* (~C-c C-j~) when you need Term to /basically/ act like
 a Shell mode buffer, and move around the buffer pretty much like anywhere else
 in Emacs.  Copy / kill-ring commands, ~isearch~, etc. do work.
 
-Then, you can use ~C-c C-k~ to switch back to *character mode*, the default, which
+Then, you can use ~C-c C-k~ to *switch* back *to character mode*, the default, which
 is like your normal *terminal* emulator except the escape key.
 
 It's wrong to think that ~M-x term~ captures everything it seems (which would
@@ -12375,6 +12393,9 @@ Try also to use ~M-x ansi-term~ that is much better than ~term~:
 Note that ~TERM~ is different in both environments:
 - In ~M-x shell~, ~TERM=emacs~
 - In ~M-x term~,  ~TERM=eterm-color~
+
+MultiTerm (http://www.emacswiki.org/emacs/MultiTerm) works much better than
+shell or term.
 
 #+begin_src emacs-lisp
   ;; managing multiple terminal buffers in Emacs
@@ -12505,6 +12526,11 @@ Customize variables for ESS (set these variables *before* loading ~ess-site~).
   ;; 3.5 new inferior ESS process appears in another window in the current frame
   (setq inferior-ess-same-window nil)
 #+end_src
+
+*** 4 Interacting with the ESS process
+
+- ~inferior-ess-mode-map~ for R console only
+- ~comint-mode-map~ for Shell console as well
 
 *** 5 Sending code to the ESS process
 
@@ -13298,6 +13324,8 @@ particular color...
       (when (try-require 'color-theme-leuven)
         (color-theme-leuven)))
 
+    ;; save whatever changes you make to the faces (colors and other font
+    ;; properties)
     (setq options-save-faces t))
 #+end_src
 

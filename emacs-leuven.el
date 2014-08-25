@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140825.1038
+;; Version: 20140825.1421
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,11 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140825.1038]--")
+(message "* --[ Loading Emacs Leuven 20140825.1421]--")
+
+;; turn on Common Lisp support
+(eval-when-compile (require 'cl))       ; provide useful things like `loop' and
+                                        ; `setf'
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -84,10 +88,6 @@
 
 (defconst leuven-before-time (float-time)
   "Value of `float-time' before loading the Emacs Leuven library.")
-
-;; turn on Common Lisp support
-(eval-when-compile (require 'cl))       ; provide useful things like `loop' and
-                                        ; `setf'
 
 ;;; User Customizable Internal Variables
 
@@ -7735,7 +7735,7 @@ this with to-do items than with projects or headings."
 
   (leuven--section "36.3 Shell Mode")
 
-  ;; general command-interpreter-in-a-buffer stuff (lisp, shell, R, ...)
+  ;; general command-interpreter-in-a-buffer stuff (lisp, shell, R, python, ...)
   ;; (when (try-require 'comint)
 
     ;; comint prompt is read only
@@ -7745,15 +7745,17 @@ this with to-do items than with projects or headings."
     (setq-default comint-input-ignoredups t)
 
     ;; input to interpreter causes windows showing the buffer to scroll
-    ;; (inserting at the bottom)
+    ;; (insert at the bottom)
     (setq-default comint-scroll-to-bottom-on-input t)
 
     ;; output to interpreter causes windows showing the buffer to scroll
+    ;; (add output at the bottom)
     (setq-default comint-move-point-for-output t)
 
-    ;; maximum size in lines for Comint buffers (if the function
-    ;; `comint-truncate-buffer' is on `comint-output-filter-functions')
-    (setq comint-buffer-maximum-size (* 5 1024))
+    ;; maximum size in lines for Comint buffers
+    (setq comint-buffer-maximum-size (* 5 1024)) ; if the function
+                                        ; `comint-truncate-buffer' is added to
+                                        ; `comint-output-filter-functions'
 
     ;; size of the input history ring
     (setq comint-input-ring-size 1000)
@@ -7767,32 +7769,15 @@ this with to-do items than with projects or headings."
     ;; show completion list when ambiguous
     (setq comint-completion-autolist t)
 
-    ;; use the `up' and `down' arrow keys to traverse through the previous
-    ;; commands
-    (defun leuven--up-down-keys ()
-      "Customize the Shell mode."
-      ;; (local-set-key
-      ;;   (kbd "<up>") 'comint-previous-input)
-      ;; (local-set-key
-      ;;   (kbd "<down>") 'comint-next-input)
-      ;; (local-set-key
-      ;;   (kbd "<C-up>") 'comint-previous-matching-input-from-input)
-      ;; (local-set-key
-      ;;   (kbd "<C-down>") 'comint-next-matching-input-from-input)
-      (local-set-key
-        (kbd "<up>") 'comint-previous-matching-input-from-input)
-      (local-set-key
-        (kbd "<down>") 'comint-next-matching-input-from-input))
-
-    (add-hook 'comint-mode-hook 'leuven--up-down-keys)
-
-    (defun leuven-comint-clear ()
+    (defun leuven-comint-clear-buffer ()
       "Clear the Comint buffer."
       (interactive)
       (let ((comint-buffer-maximum-size 0))
         (comint-truncate-buffer)))
 
-    (global-set-key (kbd "C-x ! c") 'leuven-comint-clear)
+    (with-eval-after-load "comint"
+      (define-key comint-mode-map
+        (kbd "C-c C-k") 'leuven-comint-clear-buffer))
 
 ;; )
 
@@ -7803,12 +7788,37 @@ this with to-do items than with projects or headings."
   ;; regexp to match prompts in the inferior shell
   (setq shell-prompt-pattern "^[^#$%>\n]*[#$%>] *")
 
-  ;; regexp to recognize prompts in the inferior process (only used if the
-  ;; variable `comint-use-prompt-regexp' is non-nil)
-  ;; (defun set-shell-prompt-regexp ()
-    (setq comint-prompt-regexp shell-prompt-pattern)
-  ;;   )
-  ;; (add-hook 'comint-mode-hook 'set-shell-prompt-regexp)
+  ;; regexp to recognize prompts in the inferior process
+  (setq comint-prompt-regexp shell-prompt-pattern)
+                                        ;! only used if the variable
+                                        ;! `comint-use-prompt-regexp' is non-nil
+
+;;** 36.5 Shell Command History
+
+  (leuven--section "36.5 Shell Command History")
+
+  (with-eval-after-load "comint"
+
+    ;; cycle backwards/forwards through input history
+    (define-key comint-mode-map
+      (kbd "C-p") 'comint-previous-input) ; Shell
+    (define-key comint-mode-map
+      (kbd "<up>") 'comint-previous-input) ; Shell + RStudio
+    (define-key comint-mode-map
+      (kbd "C-n") 'comint-next-input)   ; Shell
+    (define-key comint-mode-map
+      (kbd "<down>") 'comint-next-input) ; Shell + RStudio
+
+    ;; search backwards/forwards through input history for match for current
+    ;; input
+    (define-key comint-mode-map
+      (kbd "M-p") 'comint-previous-matching-input-from-input) ; Shell
+    (define-key comint-mode-map
+      (kbd "<C-up>") 'comint-previous-matching-input-from-input) ; RStudio
+    (define-key comint-mode-map
+      (kbd "M-n") 'comint-next-matching-input-from-input) ; Shell
+    (define-key comint-mode-map
+      (kbd "<C-down>") 'comint-next-matching-input-from-input)) ; RStudio
 
 ;;** 36.6 Directory Tracking
 
@@ -8514,6 +8524,8 @@ this with to-do items than with projects or headings."
       (when (try-require 'color-theme-leuven)
         (color-theme-leuven)))
 
+    ;; save whatever changes you make to the faces (colors and other font
+    ;; properties)
     (setq options-save-faces t))
 
   ;; ;; limit serving to catch infinite recursions for you before they
@@ -8743,7 +8755,7 @@ this with to-do items than with projects or headings."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140825.1039]--")
+(message "* --[ Loaded Emacs Leuven 20140825.1422]--")
 
 (provide 'emacs-leuven)
 
