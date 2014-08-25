@@ -1459,7 +1459,7 @@ modes run ~prog-mode-hook~, prior to running their own mode hooks.
 #+begin_src emacs-lisp
   ;; highlight FIXME notes
   (defvar leuven-highlight-keywords
-    "\\(TODO\\|FIXME\\|XXX\\|BUG\\|[Ee]rror\\|ERROR\\|[Ww]arning\\|WARNING\\)"
+    "\\(TODO\\|FIXME\\|XXX\\|BUG\\)"
     "Patterns to highlight.")
 
   (defvar leuven-highlight-keywords-in-org
@@ -1525,8 +1525,8 @@ See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
   (leuven--section "14.13 (emacs)Highlight Interactively by Matching")
 #+end_src
 
-You can use *Hi Lock* (part of Emacs since version 21) to highlight a regexp
-(identical tokens) throughout a buffer.
+You can use *Hi Lock* (part of Emacs) to highlight a regexp (identical tokens)
+throughout a buffer.
 
 - ~M-x hi-lock-mode <RET>~ ::
      Enable or disable Hi Lock mode.
@@ -3869,9 +3869,9 @@ See ~(display-pixel-width)~:
        ".w" "README"))
 
     ;; bind the arrow keys in the speedbar tree
-    (define-key speedbar-key-map
+    (define-key speedbar-mode-map
       (kbd "<right>") 'speedbar-expand-line)
-    (define-key speedbar-key-map
+    (define-key speedbar-mode-map
       (kbd "<left>") 'speedbar-contract-line)
 
     ;; parameters to use when creating the speedbar frame in Emacs
@@ -5166,7 +5166,7 @@ See also [[*Sparse%20trees][Sparse trees]] for behavior when revealing a locatio
   (setq org-cycle-include-plain-lists nil) ;; 'integrate?
 
   ;; an empty line does not end all plain list levels
-  (setq org-empty-line-terminates-plain-lists nil)
+  (setq org-list-empty-line-terminates-plain-lists nil)
 #+end_src
 
 *** Footnotes
@@ -5871,8 +5871,8 @@ Alternative to requiring org-clock in every Emacs session.
 
     ;; time included for the mode line clock is all time clocked into this
     ;; task today
-    (setq org-clock-modeline-total 'today)
-    (setq org-clock-modeline-total 'all)
+    (setq org-clock-mode-line-total 'today)
+    (setq org-clock-mode-line-total 'all)
 
     ;; get an alert (notification) when your planned time is over
     (setq org-clock-sound "~/Public/Music/Sounds/alarm.wav")
@@ -13954,7 +13954,7 @@ calls to message), set the variable ~debug-on-message~.
 (when leuven-load-verbose
   (message "| Chapter | Time |")
   (message "|---------+------|")
-  (mapcar (lambda (el)
+  (mapcar (lambda (el)                  ; FIXME use mapc or dolist
             (message el))
           (nreverse leuven--load-times-list))
   (message "|---------+------|")

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140825.1421
+;; Version: 20140825.1650
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140825.1421]--")
+(message "* --[ Loading Emacs Leuven 20140825.1650]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -888,7 +888,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; highlight FIXME notes
   (defvar leuven-highlight-keywords
-    "\\(TODO\\|FIXME\\|XXX\\|BUG\\|[Ee]rror\\|ERROR\\|[Ww]arning\\|WARNING\\)"
+    "\\(TODO\\|FIXME\\|XXX\\|BUG\\)"
     "Patterns to highlight.")
 
   (defvar leuven-highlight-keywords-in-org
@@ -2473,9 +2473,9 @@ Last time is saved in global variable `leuven--before-section-time'."
        ".w" "README"))
 
     ;; bind the arrow keys in the speedbar tree
-    (define-key speedbar-key-map
+    (define-key speedbar-mode-map
       (kbd "<right>") 'speedbar-expand-line)
-    (define-key speedbar-key-map
+    (define-key speedbar-mode-map
       (kbd "<left>") 'speedbar-contract-line)
 
     ;; parameters to use when creating the speedbar frame in Emacs
@@ -3308,7 +3308,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (setq org-cycle-include-plain-lists nil) ;; 'integrate?
 
   ;; an empty line does not end all plain list levels
-  (setq org-empty-line-terminates-plain-lists nil)
+  (setq org-list-empty-line-terminates-plain-lists nil)
 
 ;;** (info "(org)Footnotes")
 
@@ -3810,8 +3810,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; time included for the mode line clock is all time clocked into this
     ;; task today
-    (setq org-clock-modeline-total 'today)
-    (setq org-clock-modeline-total 'all)
+    (setq org-clock-mode-line-total 'today)
+    (setq org-clock-mode-line-total 'all)
 
     ;; get an alert (notification) when your planned time is over
     (setq org-clock-sound "~/Public/Music/Sounds/alarm.wav")
@@ -8744,7 +8744,7 @@ this with to-do items than with projects or headings."
 (when leuven-load-verbose
   (message "| Chapter | Time |")
   (message "|---------+------|")
-  (mapcar (lambda (el)
+  (mapcar (lambda (el)                  ; FIXME use mapc or dolist
             (message el))
           (nreverse leuven--load-times-list))
   (message "|---------+------|")
@@ -8755,7 +8755,7 @@ this with to-do items than with projects or headings."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140825.1422]--")
+(message "* --[ Loaded Emacs Leuven 20140825.1651]--")
 
 (provide 'emacs-leuven)
 

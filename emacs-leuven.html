@@ -1232,7 +1232,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140825.1423</span>
+"org-comment">Version: 20140825.1651</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1355,7 +1355,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140825.1423]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140825.1651]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -3726,25 +3726,6 @@
 "org-string"><span class=
 "org-regexp-grouping-backslash">\\</span></span><span class=
 "org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">[Ee]rror</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string"><span class="org-leuven-highlight">ERROR</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">[Ww]arning</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string"><span class=
-"org-leuven-highlight">WARNING</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
 "org-regexp-grouping-construct">)</span></span><span class=
 "org-string">"</span>
     <span class="org-doc">"Patterns to highlight."</span>)
@@ -3873,8 +3854,8 @@
 </pre>
           </div>
 
-          <p>You can use <b>Hi Lock</b> (part of Emacs since version 21) to
-          highlight a regexp (identical tokens) throughout a buffer.</p>
+          <p>You can use <b>Hi Lock</b> (part of Emacs) to highlight a regexp
+          (identical tokens) throughout a buffer.</p>
 
           <dl class="org-dl">
             <dt><code>M-x hi-lock-mode &lt;RET&gt;</code></dt>
@@ -7693,10 +7674,10 @@ M-: (executable-find "diff") RET
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">bind the arrow keys in the speedbar tree</span>
-    (define-key speedbar-key-map
+    (define-key speedbar-mode-map
       (kbd <span class=
 "org-string">"&lt;right&gt;"</span>) 'speedbar-expand-line)
-    (define-key speedbar-key-map
+    (define-key speedbar-mode-map
       (kbd <span class=
 "org-string">"&lt;left&gt;"</span>) 'speedbar-contract-line)
 
@@ -9921,7 +9902,7 @@ M-: (executable-find "diff") RET
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">an empty line does not end all plain list levels</span>
-  (setq org-empty-line-terminates-plain-lists nil)
+  (setq org-list-empty-line-terminates-plain-lists nil)
 </pre>
             </div>
           </div>
@@ -11150,8 +11131,8 @@ M-: (executable-find "diff") RET
 "org-comment">time included for the mode line clock is all time clocked into this</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">task today</span>
-    (setq org-clock-modeline-total 'today)
-    (setq org-clock-modeline-total 'all)
+    (setq org-clock-mode-line-total 'today)
+    (setq org-clock-mode-line-total 'all)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">get an alert (notification) when your planned time is over</span>
@@ -24878,7 +24859,11 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 (<span class="org-keyword">when</span> leuven-load-verbose
   (message <span class="org-string">"| Chapter | Time |"</span>)
   (message <span class="org-string">"|---------+------|"</span>)
-  (mapcar (<span class="org-keyword">lambda</span> (el)
+  (mapcar (<span class=
+"org-keyword">lambda</span> (el)                  <span class=
+"org-comment-delimiter">; </span><span class="org-comment"><span class=
+"org-leuven-highlight">FIXME</span></span><span class=
+"org-comment"> use mapc or dolist</span>
             (message el))
           (nreverse leuven--load-times-list))
   (message <span class="org-string">"|---------+------|"</span>)
@@ -24928,7 +24913,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140825.1423]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140825.1652]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
