@@ -908,24 +908,22 @@
                 </ul>
               </li>
 
-              <li><a href="#sec-35-4">Dired Marks vs. Flags</a></li>
+              <li><a href="#sec-35-4">Operating on Files</a></li>
 
-              <li><a href="#sec-35-5">Operating on Files</a></li>
+              <li><a href="#sec-35-5">Updating the Dired Buffer</a></li>
 
-              <li><a href="#sec-35-6">Updating the Dired Buffer</a></li>
+              <li><a href="#sec-35-6">Dired and <code>find</code></a></li>
 
-              <li><a href="#sec-35-7">Dired and <code>find</code></a></li>
+              <li><a href="#sec-35-7">Editing the Dired Buffer</a></li>
 
-              <li><a href="#sec-35-8">Editing the Dired Buffer</a></li>
-
-              <li><a href="#sec-35-9">Viewing Image Thumbnails in
+              <li><a href="#sec-35-8">Viewing Image Thumbnails in
               Dired</a></li>
 
-              <li><a href="#sec-35-10">Dired Extra</a></li>
+              <li><a href="#sec-35-9">Dired Extra</a></li>
 
-              <li><a href="#sec-35-11">Dired+</a></li>
+              <li><a href="#sec-35-10">Dired+</a></li>
 
-              <li><a href="#sec-35-12">Emulation of <code>ls</code> on
+              <li><a href="#sec-35-11">Emulation of <code>ls</code> on
               MS-Windows</a></li>
             </ul>
           </li>
@@ -1024,53 +1022,57 @@
 
               <li><a href="#sec-40-6">Directory Tracking</a></li>
 
-              <li><a href="#sec-40-7">Options</a></li>
+              <li>
+                <a href="#sec-40-7">Options</a>
+
+                <ul>
+                  <li><a href="#sec-40-7-1">Paging in Shell</a></li>
+                </ul>
+              </li>
 
               <li><a href="#sec-40-8">Terminal emulator</a></li>
 
               <li><a href="#sec-40-9">Term Mode</a></li>
 
-              <li><a href="#sec-40-10">Paging in Term</a></li>
+              <li><a href="#sec-40-10">Remote Host</a></li>
 
-              <li><a href="#sec-40-11">Remote Host</a></li>
+              <li><a href="#sec-40-11">Serial Terminal</a></li>
 
-              <li><a href="#sec-40-12">Serial Terminal</a></li>
-
-              <li><a href="#sec-40-13">Helper for GNU Emacs on w32</a></li>
+              <li><a href="#sec-40-12">Helper for GNU Emacs on w32</a></li>
 
               <li>
-                <a href="#sec-40-14">Emacs Speaks Statistics (ESS)</a>
+                <a href="#sec-40-13">Emacs Speaks Statistics (ESS)</a>
 
                 <ul>
-                  <li><a href="#sec-40-14-1">2 Installing ESS on your
+                  <li><a href="#sec-40-13-1">2 Installing ESS on your
                   system</a></li>
 
-                  <li><a href="#sec-40-14-2">3 Interacting with statistical
+                  <li><a href="#sec-40-13-2">3 Interacting with statistical
                   programs</a></li>
 
-                  <li><a href="#sec-40-14-3">5 Sending code to the ESS
+                  <li><a href="#sec-40-13-3">5 Sending code to the ESS
                   process</a></li>
 
-                  <li><a href="#sec-40-14-4">7 Editing objects and
+                  <li><a href="#sec-40-13-4">7 Editing objects and
                   functions</a></li>
 
-                  <li><a href="#sec-40-14-5">10 Developing with ESS</a></li>
+                  <li><a href="#sec-40-13-5">10 Developing with ESS</a></li>
 
                   <li>
-                    <a href="#sec-40-14-6">11 Other ESS features and tools</a>
+                    <a href="#sec-40-13-6">11 Other ESS features and tools</a>
 
                     <ul>
-                      <li><a href="#sec-40-14-6-1">Describe object at
+                      <li><a href="#sec-40-13-6-1">Describe object at
                       point</a></li>
                     </ul>
                   </li>
 
-                  <li><a href="#sec-40-14-7">12 Overview of ESS features for
+                  <li><a href="#sec-40-13-7">12 Overview of ESS features for
                   the S family</a></li>
                 </ul>
               </li>
 
-              <li><a href="#sec-40-15">Proced</a></li>
+              <li><a href="#sec-40-14">Proced</a></li>
             </ul>
           </li>
 
@@ -1228,7 +1230,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140822.1638</span>
+"org-comment">Version: 20140825.1039</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1351,7 +1353,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140822.1638]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140825.1039]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">uptimes</span>
@@ -5507,7 +5509,7 @@
 
   (GNUEmacs
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">update the copyright notice in current buffer</span>
+"org-comment">update the copyright notice to indicate the current year</span>
     (add-hook 'before-save-hook 'copyright-update))
 </pre>
           </div>
@@ -20111,27 +20113,9 @@ TAGS:
       </div>
 
       <div id="outline-container-sec-35-4" class="outline-3">
-        <h3 id="sec-35-4">Dired Marks vs. Flags</h3>
+        <h3 id="sec-35-4">Operating on Files</h3>
 
         <div class="outline-text-3" id="text-35-4">
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-    (<span class="org-keyword">defun</span> <span class=
-"org-function-name">leuven-make-executable</span> ()
-      <span class=
-"org-doc">"Make a script executable, from the buffer in which you edit it."</span>
-      (interactive)
-      (shell-command (concat <span class=
-"org-string">"chmod +x "</span> buffer-file-name)))
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="outline-container-sec-35-5" class="outline-3">
-        <h3 id="sec-35-5">Operating on Files</h3>
-
-        <div class="outline-text-3" id="text-35-5">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -20152,10 +20136,10 @@ TAGS:
         </div>
       </div>
 
-      <div id="outline-container-sec-35-6" class="outline-3">
-        <h3 id="sec-35-6">Updating the Dired Buffer</h3>
+      <div id="outline-container-sec-35-5" class="outline-3">
+        <h3 id="sec-35-5">Updating the Dired Buffer</h3>
 
-        <div class="outline-text-3" id="text-35-6">
+        <div class="outline-text-3" id="text-35-5">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -20176,10 +20160,10 @@ TAGS:
         </div>
       </div>
 
-      <div id="outline-container-sec-35-7" class="outline-3">
-        <h3 id="sec-35-7">Dired and <code>find</code></h3>
+      <div id="outline-container-sec-35-6" class="outline-3">
+        <h3 id="sec-35-6">Dired and <code>find</code></h3>
 
-        <div class="outline-text-3" id="text-35-7">
+        <div class="outline-text-3" id="text-35-6">
           <p>For searches in Dired, see <code>dired-do-search</code>
           (<code>A</code>).</p>
 
@@ -20243,10 +20227,10 @@ TAGS:
         </div>
       </div>
 
-      <div id="outline-container-sec-35-8" class="outline-3">
-        <h3 id="sec-35-8">Editing the Dired Buffer</h3>
+      <div id="outline-container-sec-35-7" class="outline-3">
+        <h3 id="sec-35-7">Editing the Dired Buffer</h3>
 
-        <div class="outline-text-3" id="text-35-8">
+        <div class="outline-text-3" id="text-35-7">
           <p><code>Wdired</code> mode is great for renaming (a lot of) files in
           a directory, as it allows editing the Dired buffer like a text file,
           using all the power of Emacs. That is, one can use keyboard macros,
@@ -20276,10 +20260,10 @@ TAGS:
         </div>
       </div>
 
-      <div id="outline-container-sec-35-9" class="outline-3">
-        <h3 id="sec-35-9">Viewing Image Thumbnails in Dired</h3>
+      <div id="outline-container-sec-35-8" class="outline-3">
+        <h3 id="sec-35-8">Viewing Image Thumbnails in Dired</h3>
 
-        <div class="outline-text-3" id="text-35-9">
+        <div class="outline-text-3" id="text-35-8">
           <p><code>M-x image-dired</code> and choose a directory with
           images.</p>
 
@@ -20373,10 +20357,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         </div>
       </div>
 
-      <div id="outline-container-sec-35-10" class="outline-3">
-        <h3 id="sec-35-10">Dired Extra</h3>
+      <div id="outline-container-sec-35-9" class="outline-3">
+        <h3 id="sec-35-9">Dired Extra</h3>
 
-        <div class="outline-text-3" id="text-35-10">
+        <div class="outline-text-3" id="text-35-9">
           <p>Extra Dired functionality</p>
 
           <ul class="org-ul">
@@ -20426,10 +20410,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         </div>
       </div>
 
-      <div id="outline-container-sec-35-11" class="outline-3">
-        <h3 id="sec-35-11">Dired+</h3>
+      <div id="outline-container-sec-35-10" class="outline-3">
+        <h3 id="sec-35-10">Dired+</h3>
 
-        <div class="outline-text-3" id="text-35-11">
+        <div class="outline-text-3" id="text-35-10">
           <p>Library <code>Dired+</code> lets you act on sets of marked files
           in subdirs, recursively, for example.</p>
 
@@ -20458,10 +20442,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         </div>
       </div>
 
-      <div id="outline-container-sec-35-12" class="outline-3">
-        <h3 id="sec-35-12">Emulation of <code>ls</code> on MS-Windows</h3>
+      <div id="outline-container-sec-35-11" class="outline-3">
+        <h3 id="sec-35-11">Emulation of <code>ls</code> on MS-Windows</h3>
 
-        <div class="outline-text-3" id="text-35-12">
+        <div class="outline-text-3" id="text-35-11">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -22002,24 +21986,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment">)</span>
 </pre>
             </div>
-
-            <p>If you ever tried to run a program like <code>git</code> under
-            <code>M-x shell</code>, you will have come across the warning
-            “terminal is not fully functional” followed by unusable behavior.
-            This is because <code>git</code> sends its output through a pager
-            (probably <code>less</code>), which requires a real <a href=
-            "#sec-40-8">terminal emulator</a>.</p>
-
-            <p>Setting the <code>PAGER</code> environment variable to
-            <code>/bin/cat</code> (but only inside Emacs) solves this
-            problem:</p>
-
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-  (setenv <span class="org-string">"PAGER"</span> <span class=
-"org-string">"/usr/bin/cat"</span>)
-</pre>
-            </div>
           </div>
         </div>
       </div>
@@ -22128,8 +22094,12 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             <tr>
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
 
-              <td width="100%"><b>Fix case when 2 Shell buffers are run in the
-              same dir (same name error!)</b><br /></td>
+              <td width="100%">
+                <b>Fix case when 2 Shell buffers are run in the same dir (same
+                name error!)</b><br />
+
+                <p>apply: Buffer name `*shell d:/Users/fni/*’ is in use</p>
+              </td>
             </tr>
           </table>
 
@@ -22174,6 +22144,30 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment-delimiter">; </span><span class=
 "org-comment">for Linux (not needed for Cygwin)</span>
 </pre>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-40-7-1" class="outline-4">
+          <h4 id="sec-40-7-1">Paging in Shell</h4>
+
+          <div class="outline-text-4" id="text-40-7-1">
+            <p>If you ever tried to run a program like <code>git</code> under
+            <code>M-x shell</code>, you will have come across the warning
+            “terminal is not fully functional” followed by unusable behavior.
+            This is because <code>git</code> sends its output through a pager
+            (probably <code>less</code>), which requires a real <a href=
+            "#sec-40-8">terminal emulator</a>.</p>
+
+            <p>Setting the <code>PAGER</code> environment variable to
+            <code>/bin/cat</code> (but only inside Emacs) solves this
+            problem:</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  (setenv <span class="org-string">"PAGER"</span> <span class=
+"org-string">"/usr/bin/cat"</span>)
+</pre>
+            </div>
           </div>
         </div>
       </div>
@@ -22383,30 +22377,15 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       </div>
 
       <div id="outline-container-sec-40-10" class="outline-3">
-        <h3 id="sec-40-10">Paging in Term</h3>
+        <h3 id="sec-40-10">Remote Host</h3>
 
         <div class="outline-text-3" id="text-40-10">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
-"org-comment">** 36.10 Paging in Term</span>
+"org-comment">** 36.10 Remote Host Shell</span>
 
-  (leuven--section <span class="org-string">"36.10 Paging in Term"</span>)
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="outline-container-sec-40-11" class="outline-3">
-        <h3 id="sec-40-11">Remote Host</h3>
-
-        <div class="outline-text-3" id="text-40-11">
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-<span class="org-comment-delimiter">;;</span><span class=
-"org-comment">** 36.11 Remote Host</span>
-
-  (leuven--section <span class="org-string">"36.11 Remote Host"</span>)
+  (leuven--section <span class="org-string">"36.10 Remote Host Shell"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">load ssh.el file</span>
@@ -22451,20 +22430,20 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         </div>
       </div>
 
-      <div id="outline-container-sec-40-12" class="outline-3">
-        <h3 id="sec-40-12">Serial Terminal</h3>
+      <div id="outline-container-sec-40-11" class="outline-3">
+        <h3 id="sec-40-11">Serial Terminal</h3>
 
-        <div class="outline-text-3" id="text-40-12">
+        <div class="outline-text-3" id="text-40-11">
           <p>Since GNU Emacs 23, there’s now support for serial port access.
           The new command <code>serial-term</code> starts an interactive
           terminal on a serial port.</p>
         </div>
       </div>
 
-      <div id="outline-container-sec-40-13" class="outline-3">
-        <h3 id="sec-40-13">Helper for GNU Emacs on w32</h3>
+      <div id="outline-container-sec-40-12" class="outline-3">
+        <h3 id="sec-40-12">Helper for GNU Emacs on w32</h3>
 
-        <div class="outline-text-3" id="text-40-13">
+        <div class="outline-text-3" id="text-40-12">
           <p>Let Emacs, for example, find the program
           <code>/usr/bin/w3m</code>.</p>
 
@@ -22490,10 +22469,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         </div>
       </div>
 
-      <div id="outline-container-sec-40-14" class="outline-3">
-        <h3 id="sec-40-14">Emacs Speaks Statistics (ESS)</h3>
+      <div id="outline-container-sec-40-13" class="outline-3">
+        <h3 id="sec-40-13">Emacs Speaks Statistics (ESS)</h3>
 
-        <div class="outline-text-3" id="text-40-14">
+        <div class="outline-text-3" id="text-40-13">
           <p>See:</p>
 
           <ul class="org-ul">
@@ -22520,10 +22499,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           </ul>
         </div>
 
-        <div id="outline-container-sec-40-14-1" class="outline-4">
-          <h4 id="sec-40-14-1">2 Installing ESS on your system</h4>
+        <div id="outline-container-sec-40-13-1" class="outline-4">
+          <h4 id="sec-40-13-1">2 Installing ESS on your system</h4>
 
-          <div class="outline-text-4" id="text-40-14-1">
+          <div class="outline-text-4" id="text-40-13-1">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   (leuven--section <span class="org-string">"Utilities -- ESS"</span>)
@@ -22553,10 +22532,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           </div>
         </div>
 
-        <div id="outline-container-sec-40-14-2" class="outline-4">
-          <h4 id="sec-40-14-2">3 Interacting with statistical programs</h4>
+        <div id="outline-container-sec-40-13-2" class="outline-4">
+          <h4 id="sec-40-13-2">3 Interacting with statistical programs</h4>
 
-          <div class="outline-text-4" id="text-40-14-2">
+          <div class="outline-text-4" id="text-40-13-2">
             <p>Customize variables for ESS (set these variables <b>before</b>
             loading <code>ess-site</code>).</p>
 
@@ -22574,10 +22553,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           </div>
         </div>
 
-        <div id="outline-container-sec-40-14-3" class="outline-4">
-          <h4 id="sec-40-14-3">5 Sending code to the ESS process</h4>
+        <div id="outline-container-sec-40-13-3" class="outline-4">
+          <h4 id="sec-40-13-3">5 Sending code to the ESS process</h4>
 
-          <div class="outline-text-4" id="text-40-14-3">
+          <div class="outline-text-4" id="text-40-13-3">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
@@ -22596,10 +22575,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           </div>
         </div>
 
-        <div id="outline-container-sec-40-14-4" class="outline-4">
-          <h4 id="sec-40-14-4">7 Editing objects and functions</h4>
+        <div id="outline-container-sec-40-13-4" class="outline-4">
+          <h4 id="sec-40-13-4">7 Editing objects and functions</h4>
 
-          <div class="outline-text-4" id="text-40-14-4">
+          <div class="outline-text-4" id="text-40-13-4">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
@@ -22610,10 +22589,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           </div>
         </div>
 
-        <div id="outline-container-sec-40-14-5" class="outline-4">
-          <h4 id="sec-40-14-5">10 Developing with ESS</h4>
+        <div id="outline-container-sec-40-13-5" class="outline-4">
+          <h4 id="sec-40-13-5">10 Developing with ESS</h4>
 
-          <div class="outline-text-4" id="text-40-14-5">
+          <div class="outline-text-4" id="text-40-13-5">
             <p>See</p>
 
             <ul class="org-ul">
@@ -22626,10 +22605,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           </div>
         </div>
 
-        <div id="outline-container-sec-40-14-6" class="outline-4">
-          <h4 id="sec-40-14-6">11 Other ESS features and tools</h4>
+        <div id="outline-container-sec-40-13-6" class="outline-4">
+          <h4 id="sec-40-13-6">11 Other ESS features and tools</h4>
 
-          <div class="outline-text-4" id="text-40-14-6">
+          <div class="outline-text-4" id="text-40-13-6">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   (<span class="org-keyword">with-eval-after-load</span> <span class=
@@ -22644,10 +22623,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             </div>
           </div>
 
-          <div id="outline-container-sec-40-14-6-1" class="outline-5">
-            <h5 id="sec-40-14-6-1">Describe object at point</h5>
+          <div id="outline-container-sec-40-13-6-1" class="outline-5">
+            <h5 id="sec-40-13-6-1">Describe object at point</h5>
 
-            <div class="outline-text-5" id="text-40-14-6-1">
+            <div class="outline-text-5" id="text-40-13-6-1">
               <p>Get info for object at point, and display it in an electric
               buffer with the command <code>ess-describe-object-at-point</code>
               (bound to <code>C-c C-d C-e</code>, repeat <code>C-e</code> or
@@ -22662,11 +22641,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           </div>
         </div>
 
-        <div id="outline-container-sec-40-14-7" class="outline-4">
-          <h4 id="sec-40-14-7">12 Overview of ESS features for the S
+        <div id="outline-container-sec-40-13-7" class="outline-4">
+          <h4 id="sec-40-13-7">12 Overview of ESS features for the S
           family</h4>
 
-          <div class="outline-text-4" id="text-40-14-7">
+          <div class="outline-text-4" id="text-40-13-7">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
@@ -22681,10 +22660,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         </div>
       </div>
 
-      <div id="outline-container-sec-40-15" class="outline-3">
-        <h3 id="sec-40-15">Proced</h3>
+      <div id="outline-container-sec-40-14" class="outline-3">
+        <h3 id="sec-40-14">Proced</h3>
 
-        <div class="outline-text-3" id="text-40-15">
+        <div class="outline-text-3" id="text-40-14">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -24893,7 +24872,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140822.1638]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140825.1040]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

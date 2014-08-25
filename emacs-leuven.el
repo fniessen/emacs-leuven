@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140822.1636
+;; Version: 20140825.1038
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140822.1636]--")
+(message "* --[ Loading Emacs Leuven 20140825.1038]--")
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -1548,7 +1548,7 @@ Last time is saved in global variable `leuven--before-section-time'."
    (setq-default time-stamp-format "%:y-%02m-%02d %3a %02H:%02M"))
 
   (GNUEmacs
-    ;; update the copyright notice in current buffer
+    ;; update the copyright notice to indicate the current year
     (add-hook 'before-save-hook 'copyright-update))
 
 ;;** 18.4 (info "(emacs)Reverting") a Buffer
@@ -7062,11 +7062,6 @@ this with to-do items than with projects or headings."
       (define-key dired-mode-map
         "W" 'dired-find-w3m))
 
-    (defun leuven-make-executable ()
-      "Make a script executable, from the buffer in which you edit it."
-      (interactive)
-      (shell-command (concat "chmod +x " buffer-file-name)))
-
 ;;** (info "(emacs)Operating on Files")
 
     (leuven--section "30.7 (emacs)Operating on Files")
@@ -7801,8 +7796,6 @@ this with to-do items than with projects or headings."
 
 ;; )
 
-  (setenv "PAGER" "/usr/bin/cat")
-
 ;;** 36.4 Shell Prompts
 
   (leuven--section "36.4 Shell Prompts")
@@ -7838,6 +7831,8 @@ this with to-do items than with projects or headings."
 
   ;; disable command echoing
   (setq-default comint-process-echoes t) ; for Linux (not needed for Cygwin)
+
+  (setenv "PAGER" "/usr/bin/cat")
 
 ;;** 36.8 Terminal emulator
 
@@ -7880,13 +7875,9 @@ this with to-do items than with projects or headings."
       (interactive)
       (switch-or-start 'shell "*shell*")))
 
-;;** 36.10 Paging in Term
+;;** 36.10 Remote Host Shell
 
-  (leuven--section "36.10 Paging in Term")
-
-;;** 36.11 Remote Host
-
-  (leuven--section "36.11 Remote Host")
+  (leuven--section "36.10 Remote Host Shell")
 
   ;; load ssh.el file
   (add-to-list 'same-window-regexps "^\\*ssh-.*\\*\\(\\|<[0-9]+>\\)")
@@ -8752,7 +8743,7 @@ this with to-do items than with projects or headings."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140822.1637]--")
+(message "* --[ Loaded Emacs Leuven 20140825.1039]--")
 
 (provide 'emacs-leuven)
 

@@ -2530,7 +2530,7 @@ Update time stamps (and copyright notice) automatically.
    (setq-default time-stamp-format "%:y-%02m-%02d %3a %02H:%02M"))
 
   (GNUEmacs
-    ;; update the copyright notice in current buffer
+    ;; update the copyright notice to indicate the current year
     (add-hook 'before-save-hook 'copyright-update))
 #+end_src
 
@@ -11162,15 +11162,6 @@ See news "Opening html-File in Dired with w3m" for extra info.
         "W" 'dired-find-w3m))
 #+end_src
 
-** Dired Marks vs. Flags
-
-#+begin_src emacs-lisp
-    (defun leuven-make-executable ()
-      "Make a script executable, from the buffer in which you edit it."
-      (interactive)
-      (shell-command (concat "chmod +x " buffer-file-name)))
-#+end_src
-
 ** Operating on Files
 
 #+begin_src emacs-lisp
@@ -12206,18 +12197,6 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 ;; )
 #+end_src
 
-If you ever tried to run a program like ~git~ under ~M-x shell~, you will have come
-across the warning "terminal is not fully functional" followed by unusable
-behavior.  This is because ~git~ sends its output through a pager (probably ~less~),
-which requires a real [[id:d12c2e1e-8147-4b39-8128-aaa70fbf4657][terminal emulator]].
-
-Setting the ~PAGER~ environment variable to =/bin/cat= (but only inside Emacs)
-solves this problem:
-
-#+begin_src emacs-lisp
-  (setenv "PAGER" "/usr/bin/cat")
-#+end_src
-
 ** Shell Prompts
 
 #+begin_src emacs-lisp
@@ -12271,6 +12250,8 @@ solves this problem:
 #+end_src
 
 *************** TODO Fix case when 2 Shell buffers are run in the same dir (same name error!)
+apply: Buffer name `*shell d:/Users/fni/*' is in use
+*************** END
 
 #+begin_src emacs-lisp
   (defun leuven--rename-buffer-to-curdir (&optional _string)
@@ -12294,6 +12275,20 @@ solves this problem:
 
   ;; disable command echoing
   (setq-default comint-process-echoes t) ; for Linux (not needed for Cygwin)
+#+end_src
+
+*** Paging in Shell
+
+If you ever tried to run a program like ~git~ under ~M-x shell~, you will have come
+across the warning "terminal is not fully functional" followed by unusable
+behavior.  This is because ~git~ sends its output through a pager (probably ~less~),
+which requires a real [[id:d12c2e1e-8147-4b39-8128-aaa70fbf4657][terminal emulator]].
+
+Setting the ~PAGER~ environment variable to =/bin/cat= (but only inside Emacs)
+solves this problem:
+
+#+begin_src emacs-lisp
+  (setenv "PAGER" "/usr/bin/cat")
 #+end_src
 
 ** Terminal emulator
@@ -12420,20 +12415,12 @@ Note that ~TERM~ is different in both environments:
       (switch-or-start 'shell "*shell*")))
 #+end_src
 
-** Paging in Term
-
-#+begin_src emacs-lisp
-;;** 36.10 Paging in Term
-
-  (leuven--section "36.10 Paging in Term")
-#+end_src
-
 ** Remote Host
 
 #+begin_src emacs-lisp
-;;** 36.11 Remote Host
+;;** 36.10 Remote Host Shell
 
-  (leuven--section "36.11 Remote Host")
+  (leuven--section "36.10 Remote Host Shell")
 
   ;; load ssh.el file
   (add-to-list 'same-window-regexps "^\\*ssh-.*\\*\\(\\|<[0-9]+>\\)")
