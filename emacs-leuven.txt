@@ -10689,7 +10689,7 @@ into a specified *expansion*.
 ** Controlling Abbrev Expansion
 
 For complex templates, I use ~YASnippet~.  For example, new file templates (where
-it's lisp evaluation is handy), class and function templates with docblocks,
+it's Lisp evaluation is handy), class and function templates with docblocks,
 etc. I use it to reduce the repetitious parts of programming, and let me focus
 on getting things done.
 
@@ -10697,6 +10697,8 @@ on getting things done.
 multiple snippet with same name.  It will also expand snippets containing
 non-word-constituent characters, which ~abbrev~ can't.  So I can't have ~@p~ expand
 to ~@param~ with ~abbrev~, but I can with ~YASnippet~.
+
+XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-configuration.el
 
 #+begin_src emacs-lisp
 ;;** 29.3 Controlling (info "(emacs)Expanding Abbrevs")
@@ -10709,34 +10711,17 @@ to ~@param~ with ~abbrev~, but I can with ~YASnippet~.
     (when (try-require 'yasnippet)
 #+end_src
 
-See [[id:366386cb-9c4f-4d61-b676-e742e6277587][Interaction between Org and other packages]].
+*** Installation
 
 #+begin_src emacs-lisp
-      ;;! make sure you initialise YASnippet *before* Org mode
-      (when (featurep 'org)
-        (message "(Error) Org is already loaded -> Too late to init YASnippet!")
-        (sit-for 3))
-
-      (defun yas-org-very-safe-expand ()
-        (let ((yas-fallback-behavior 'return-nil))
-          (yas-expand)))
-
-      ;; allow YASnippet to do its thing in Org files
-      (add-hook 'org-mode-hook
-                (lambda ()
-                  ;; YASnippet (using the new org-cycle hooks)
-                  (add-to-list 'org-tab-first-hook
-                               'yas-org-very-safe-expand)
-
-                  ;; When enabled, problem with inserting letter `t' in
-                  ;; YASnippet fields
-                  ;; (define-key yas-keymap
-                  ;;   (kbd "tab") 'yas-next-field)
-                                        ; `yas-next-field-or-maybe-expand'?
-                  ))
+      ;; enable the YASnippet menu and expansion in *all* buffers
+      (yas-global-mode 1)
 #+end_src
 
-~yas-snippet-dirs~ is assumed to contain *directories of modes* with snippets.
+*** Organizing snippets
+
+Where are the snippets?  ~yas-snippet-dirs~ is assumed to contain *directories of
+modes* with snippets.
 
 By default, put *your own snippets* in the directory =~/.emacs.d/snippets=.
 
@@ -10762,29 +10747,30 @@ By default, put *your own snippets* in the directory =~/.emacs.d/snippets=.
       (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
 #+end_src
 
-#+begin_src emacs-lisp
-      ;; enable the YASnippet menu and tab-trigger expansion in *all*
-      ;; buffers
-      (yas-global-mode 1)
+*** Expanding snippets
 
-      ;; ;; text that will be used in menu to represent the trigger
-      ;; (setq yas-trigger-symbol " <tab>")
+#+begin_src emacs-lisp
+      ;; bind `yas-expand' to SPC
+      (define-key yas-minor-mode-map (kbd "<tab>") nil)
+      (define-key yas-minor-mode-map (kbd "TAB") nil)
+      (define-key yas-minor-mode-map (kbd "SPC") 'yas-expand)
+
+      ;; insert snippet at point
+      (global-set-key (kbd "C-c s") 'yas-insert-snippet)
+
+      ;; UI for selecting snippet when there are multiple candidates
+      (setq yas-prompt-functions '(yas-dropdown-prompt))
 #+end_src
+
+*** Writing snippets
 
 After editing your snippets:
 - ~M-x yas-recompile-all~ to compile all snippets,
 - ~M-x yas-reload-all~ to reload them all.
 
-;; https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-configuration.el
-;; https://earthserver.com/Setting_up_a_C%2B%2B11_development_environment_on_Linux_with_Clang_and_Emacs
-
 Automatically reload snippets after saving.
 
 #+begin_src emacs-lisp
-      (add-hook 'snippet-mode-hook
-                (lambda ()
-                  (setq require-final-newline nil)))
-
       ;; automatically reload snippets after saving
       (defun recompile-and-reload-all-snippets ()
         (interactive)
@@ -10794,8 +10780,45 @@ Automatically reload snippets after saving.
           (message "Reloaded all snippets")))
 
       (add-hook 'after-save-hook 'recompile-and-reload-all-snippets)
+#+end_src
 
-      (global-set-key (kbd "C-c s") 'yas-insert-snippet)))
+*** Frequently Asked Questions
+
+Why is there an extra newline?
+
+#+begin_src emacs-lisp
+      (add-hook 'snippet-mode-hook
+                (lambda ()
+                  (setq require-final-newline nil)))
+#+end_src
+
+Why doesn't TAB expand a snippet?
+
+See [[id:366386cb-9c4f-4d61-b676-e742e6277587][Interaction between Org and other packages]].
+
+#+begin_src emacs-lisp
+      ;;! make sure you initialise YASnippet *before* Org mode
+      (when (featurep 'org)
+        (message "(Error) Org is already loaded -> Too late to init YASnippet!")
+        (sit-for 3))
+
+      (defun yas-org-very-safe-expand ()
+        (let ((yas-fallback-behavior 'return-nil))
+          (yas-expand)))
+
+      ;; allow YASnippet to do its thing in Org files
+      (add-hook 'org-mode-hook
+                (lambda ()
+                  ;; YASnippet (using the new org-cycle hooks)
+                  (add-to-list 'org-tab-first-hook
+                               'yas-org-very-safe-expand)
+
+                  ;; When enabled, problem with inserting letter `t' in
+                  ;; YASnippet fields
+                  ;; (define-key yas-keymap
+                  ;;   (kbd "tab") 'yas-next-field)
+                                        ; `yas-next-field-or-maybe-expand'?
+                  ))))
 #+end_src
 
 ** Dynamic Abbrev Expansion

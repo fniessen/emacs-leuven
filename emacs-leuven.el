@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140826.2038
+;; Version: 20140826.2127
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140826.2038]--")
+(message "* --[ Loading Emacs Leuven 20140826.2127]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -6834,28 +6834,8 @@ up before you execute another command."
     ;; use the "standard" package (NOT `yasnippet-bundle'!)
     (when (try-require 'yasnippet)
 
-      ;;! make sure you initialise YASnippet *before* Org mode
-      (when (featurep 'org)
-        (message "(Error) Org is already loaded -> Too late to init YASnippet!")
-        (sit-for 3))
-
-      (defun yas-org-very-safe-expand ()
-        (let ((yas-fallback-behavior 'return-nil))
-          (yas-expand)))
-
-      ;; allow YASnippet to do its thing in Org files
-      (add-hook 'org-mode-hook
-                (lambda ()
-                  ;; YASnippet (using the new org-cycle hooks)
-                  (add-to-list 'org-tab-first-hook
-                               'yas-org-very-safe-expand)
-
-                  ;; When enabled, problem with inserting letter `t' in
-                  ;; YASnippet fields
-                  ;; (define-key yas-keymap
-                  ;;   (kbd "tab") 'yas-next-field)
-                                        ; `yas-next-field-or-maybe-expand'?
-                  ))
+      ;; enable the YASnippet menu and expansion in *all* buffers
+      (yas-global-mode 1)
 
       (defvar leuven-yasnippet-my-snippets-dir
         "~/src/yasnippet/snippets"
@@ -6877,16 +6857,16 @@ up before you execute another command."
       ;; use Snippet mode for files with a `yasnippet' extension
       (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
 
-      ;; enable the YASnippet menu and tab-trigger expansion in *all*
-      ;; buffers
-      (yas-global-mode 1)
+      ;; bind `yas-expand' to SPC
+      (define-key yas-minor-mode-map (kbd "<tab>") nil)
+      (define-key yas-minor-mode-map (kbd "TAB") nil)
+      (define-key yas-minor-mode-map (kbd "SPC") 'yas-expand)
 
-      ;; ;; text that will be used in menu to represent the trigger
-      ;; (setq yas-trigger-symbol " <tab>")
+      ;; insert snippet at point
+      (global-set-key (kbd "C-c s") 'yas-insert-snippet)
 
-      (add-hook 'snippet-mode-hook
-                (lambda ()
-                  (setq require-final-newline nil)))
+      ;; UI for selecting snippet when there are multiple candidates
+      (setq yas-prompt-functions '(yas-dropdown-prompt))
 
       ;; automatically reload snippets after saving
       (defun recompile-and-reload-all-snippets ()
@@ -6898,7 +6878,32 @@ up before you execute another command."
 
       (add-hook 'after-save-hook 'recompile-and-reload-all-snippets)
 
-      (global-set-key (kbd "C-c s") 'yas-insert-snippet)))
+      (add-hook 'snippet-mode-hook
+                (lambda ()
+                  (setq require-final-newline nil)))
+
+      ;;! make sure you initialise YASnippet *before* Org mode
+      (when (featurep 'org)
+        (message "(Error) Org is already loaded -> Too late to init YASnippet!")
+        (sit-for 3))
+
+      (defun yas-org-very-safe-expand ()
+        (let ((yas-fallback-behavior 'return-nil))
+          (yas-expand)))
+
+      ;; allow YASnippet to do its thing in Org files
+      (add-hook 'org-mode-hook
+                (lambda ()
+                  ;; YASnippet (using the new org-cycle hooks)
+                  (add-to-list 'org-tab-first-hook
+                               'yas-org-very-safe-expand)
+
+                  ;; When enabled, problem with inserting letter `t' in
+                  ;; YASnippet fields
+                  ;; (define-key yas-keymap
+                  ;;   (kbd "tab") 'yas-next-field)
+                                        ; `yas-next-field-or-maybe-expand'?
+                  ))))
 
 ;;** 29.7 (info "(emacs)Dabbrev Customization")
 
@@ -8799,7 +8804,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140826.2039]--")
+(message "* --[ Loaded Emacs Leuven 20140826.2128]--")
 
 (provide 'emacs-leuven)
 
