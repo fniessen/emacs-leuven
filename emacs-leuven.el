@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140826.1517
+;; Version: 20140826.2038
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140826.1517]--")
+(message "* --[ Loading Emacs Leuven 20140826.2038]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -1912,6 +1912,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; maximum number of items that will be saved
     (setq recentf-max-saved-items 100)  ; just 20 is too recent
+
+    ;; file to save the recent list into
+    (setq recentf-save-file "~/.emacs.d/.recentf")
 
     ;; (when using Tramp) turn off the cleanup feature of `recentf'
     (setq recentf-auto-cleanup 'never)  ; disable before we start recentf!
@@ -6948,18 +6951,28 @@ up before you execute another command."
 
       (with-eval-after-load "auto-complete-config"
 
-        ;; avoid Flyspell processes when auto completion is being started
-        (ac-flyspell-workaround)
-
-        ;; optimize sources to use
+        ;; 6.1 optimize sources to use
         (ac-config-default)
 
-        ;; change default sources
+        ;; 7.5 select candidates with `C-n/C-p' only when completion menu is
+        ;; displayed
+        (setq ac-use-menu-map t)
+        (define-key ac-menu-map (kbd "C-n") 'ac-next)
+        (define-key ac-menu-map (kbd "C-p") 'ac-previous)
+
+        ;; unbind some keys (inconvenient in iESS buffers)
+        (define-key ac-completing-map (kbd "M-n") nil)
+        (define-key ac-completing-map (kbd "M-p") nil)
+
+        ;; 7.8 enable auto-complete-mode automatically for Sword mode
+        (add-to-list 'ac-modes 'sword-mode) ; brand new mode
+
+        ;; 7.12 change default sources
         (setq-default ac-sources
                       ;; buffers whom major-mode is same to of a current buffer
                       '(ac-source-words-in-same-mode-buffers))
 
-        ;; change sources for Emacs Lisp mode
+        ;; 7.13 change sources for Emacs Lisp mode
         (add-hook 'emacs-lisp-mode-hook
                   (lambda ()
                     (setq ac-sources
@@ -6967,46 +6980,21 @@ up before you execute another command."
                             ac-source-words-in-buffer
                             ac-source-symbols))))
 
-        ;; delay to completions will be available
+        ;; 8.1 delay to completions will be available
         (setq ac-delay 0)               ; faster than default 0.1
 
-        ;; ;; completion menu will be automatically shown
+        ;; ;; 8.2 completion menu will be automatically shown
         ;; (setq ac-auto-show-menu 0.5)
 
-        ;; limit on number of candidates
+        ;; 8.16 limit on number of candidates
         (setq ac-candidate-limit 100)
 
-        ;; ;; use quick help
-        ;; (setq ac-use-quick-help t)
-
-        ;; ;; start auto-completion at current point
-        ;; (define-key ac-mode-map
-        ;;   (kbd "M-TAB") 'auto-complete)
-
-        ;; try expand
+        ;; bind `ac-complete' to tab
         (define-key ac-completing-map
-          (kbd "<tab>") 'ac-expand)
+          (kbd "<tab>") 'ac-complete)
 
-        (define-key ac-completing-map
-          (kbd "C-?") 'ac-quick-help)
-
-        ;; enable auto-complete-mode automatically for Sword mode
-        (add-to-list 'ac-modes 'sword-mode)
-
-        ;; ;; Less anoying settings
-        ;; ;; http://cx4a.org/software/auto-complete/manual.html#Not_to_complete_automatically
-        ;; (setq ac-use-menu-map t)
-        ;; (define-key ac-menu-map "\C-n" 'ac-next)
-        ;; (define-key ac-menu-map "\C-p" 'ac-previous)
-        ;; ;;
-        ;; ;; http://www.emacswiki.org/emacs/ESSAuto-complete
-        ;; (define-key ac-completing-map [tab] 'ac-complete)
-        ;; ;; (define-key ac-completing-map [tab] nil)
-        ;; (define-key ac-completing-map [return] 'ac-complete)    ; configured again at end
-        ;; ;;
-        ;; ;; Trigger key
-        ;; ;; http://cx4a.org/software/auto-complete/manual.html#Trigger_Key
-        ;; (ac-set-trigger-key "TAB")
+        ;; 11.1 avoid Flyspell processes when auto completion is being started
+        (ac-flyspell-workaround)
 
         )))
 
@@ -8811,7 +8799,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140826.1518]--")
+(message "* --[ Loaded Emacs Leuven 20140826.2039]--")
 
 (provide 'emacs-leuven)
 

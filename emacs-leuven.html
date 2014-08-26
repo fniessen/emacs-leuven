@@ -1234,7 +1234,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140826.1518</span>
+"org-comment">Version: 20140826.2039</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1357,7 +1357,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140826.1518]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140826.2039]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -6427,6 +6427,11 @@ M-: (executable-find "diff") RET
     (setq recentf-max-saved-items 100)  <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">just 20 is too recent</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">file to save the recent list into</span>
+    (setq recentf-save-file <span class=
+"org-string">"~/.emacs.d/.recentf"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(when using Tramp) turn off the cleanup feature of `</span><span class="org-comment"><span class="org-constant">recentf</span></span><span class="org-comment">'</span>
@@ -19540,10 +19545,26 @@ TAGS:
 (add-to-list 'ac-modes 'org-mode)
 </pre>
 
-            <p>Auto start vs. <code>M-/</code>.</p>
+            <p>Popups:</p>
+
+            <ul class="org-ul">
+              <li>Completion menu</li>
+
+              <li>Quick help (tooltip)</li>
+            </ul>
 
             <p>According to the settings, completion is done by
-            <code>TAB</code> or <code>RET</code>.</p>
+            <code>TAB</code> or <code>RET</code>:</p>
+
+            <dl class="org-dl">
+              <dt><code>ac-expand</code> (<code>TAB</code>)</dt>
+
+              <dd>Select candidates in cycle.</dd>
+
+              <dt><code>ac-complete</code> (<code>RET</code>)</dt>
+
+              <dd>Complete a selected candidate immediately.</dd>
+            </dl>
 
             <p>There are other ways to select candidates:</p>
 
@@ -19569,22 +19590,43 @@ TAGS:
 "org-string">"auto-complete-config"</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">avoid Flyspell processes when auto completion is being started</span>
-        (ac-flyspell-workaround)
-
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">optimize sources to use</span>
+"org-comment">6.1 optimize sources to use</span>
         (ac-config-default)
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">change default sources</span>
+"org-comment">7.5 select candidates with `</span><span class=
+"org-comment"><span class="org-constant">C-n/C-p</span></span><span class=
+"org-comment">' only when completion menu is</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">displayed</span>
+        (setq ac-use-menu-map t)
+        (define-key ac-menu-map (kbd <span class=
+"org-string">"C-n"</span>) 'ac-next)
+        (define-key ac-menu-map (kbd <span class=
+"org-string">"C-p"</span>) 'ac-previous)
+
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">unbind some keys (inconvenient in iESS buffers)</span>
+        (define-key ac-completing-map (kbd <span class=
+"org-string">"M-n"</span>) nil)
+        (define-key ac-completing-map (kbd <span class=
+"org-string">"M-p"</span>) nil)
+
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">7.8 enable auto-complete-mode automatically for Sword mode</span>
+        (add-to-list 'ac-modes 'sword-mode) <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">brand new mode</span>
+
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">7.12 change default sources</span>
         (setq-default ac-sources
                       <span class=
 "org-comment-delimiter">;; </span><span class="org-comment">buffers whom major-mode is same to of a current buffer</span>
                       '(ac-source-words-in-same-mode-buffers))
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">change sources for Emacs Lisp mode</span>
+"org-comment">7.13 change sources for Emacs Lisp mode</span>
         (add-hook 'emacs-lisp-mode-hook
                   (<span class="org-keyword">lambda</span> ()
                     (setq ac-sources
@@ -19593,72 +19635,30 @@ TAGS:
                             ac-source-symbols))))
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">delay to completions will be available</span>
+"org-comment">8.1 delay to completions will be available</span>
         (setq ac-delay 0)               <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">faster than default 0.1</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; completion menu will be automatically shown</span>
+"org-comment">;; 8.2 completion menu will be automatically shown</span>
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(setq ac-auto-show-menu 0.5)</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">limit on number of candidates</span>
+"org-comment">8.16 limit on number of candidates</span>
         (setq ac-candidate-limit 100)
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; use quick help</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq ac-use-quick-help t)</span>
-
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; start auto-completion at current point</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(define-key ac-mode-map</span>
-        <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(kbd "M-TAB") 'auto-complete)</span>
-
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">try expand</span>
+"org-comment">bind `</span><span class="org-comment"><span class=
+"org-constant">ac-complete</span></span><span class=
+"org-comment">' to tab</span>
         (define-key ac-completing-map
-          (kbd <span class="org-string">"&lt;tab&gt;"</span>) 'ac-expand)
-
-        (define-key ac-completing-map
-          (kbd <span class="org-string">"C-?"</span>) 'ac-quick-help)
+          (kbd <span class="org-string">"&lt;tab&gt;"</span>) 'ac-complete)
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable auto-complete-mode automatically for Sword mode</span>
-        (add-to-list 'ac-modes 'sword-mode)
-
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; Less anoying settings</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; http://cx4a.org/software/auto-complete/manual.html#Not_to_complete_automatically</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq ac-use-menu-map t)</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(define-key ac-menu-map "\C-n" 'ac-next)</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(define-key ac-menu-map "\C-p" 'ac-previous)</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;;</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; http://www.emacswiki.org/emacs/ESSAuto-complete</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(define-key ac-completing-map [tab] 'ac-complete)</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; (define-key ac-completing-map [tab] nil)</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(define-key ac-completing-map [return] 'ac-complete)    ; configured again at end</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;;</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; Trigger key</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; http://cx4a.org/software/auto-complete/manual.html#Trigger_Key</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(ac-set-trigger-key "TAB")</span>
+"org-comment">11.1 avoid Flyspell processes when auto completion is being started</span>
+        (ac-flyspell-workaround)
 
         )))
 </pre>
@@ -24912,7 +24912,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140826.1519]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140826.2040]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
