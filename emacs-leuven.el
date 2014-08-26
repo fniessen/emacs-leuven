@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140825.1650
+;; Version: 20140826.1458
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140825.1650]--")
+(message "* --[ Loading Emacs Leuven 20140826.1458]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -411,11 +411,11 @@ Last time is saved in global variable `leuven--before-section-time'."
       (defcustom leuven-elpa-packages
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
           csv-mode dictionary dired+ dired-single ess fill-column-indicator
-          flycheck fuzzy git-commit-mode graphviz-dot-mode helm htmlize
-          idle-require info+ interaction-log ledger-mode leuven-theme org-mime
-          pager rainbow-mode redo+ sml-modeline tidy yasnippet
-          ;; jabber multi-term
-          ;; paredit redshank w3m
+          flycheck fuzzy git-commit-mode graphviz-dot-mode helm helm-R htmlize
+          idle-require info+ interaction-log ledger-mode leuven-theme
+          multiple-cursors org-mime pager rainbow-mode redo+ sml-modeline tidy
+          yasnippet
+          ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
         :group 'emacs-leuven
@@ -685,6 +685,23 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; inserting text while the mark is active causes the text in the region to be
   ;; deleted first
   (delete-selection-mode 1)
+
+;; multiple cursors for Emacs
+(when (require 'multiple-cursors)
+
+  ;; add a cursor to each (continuous) line in the current region
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+
+  ;; add a cursor and region at the next part of the buffer forwards that
+  ;; matches the current region
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+
+  ;; add a cursor and region at the next part of the buffer backwards that
+  ;; matches the current region
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+
+  ;; mark all parts of the buffer that matches the current region
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
 
 )                                       ; chapter 11 ends here
 
@@ -1068,6 +1085,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "14.20 (emacs)The Cursor Display")
 
+  ;; cursor to use
+  (setq-default cursor-type 'bar)
+
   ;; cursor of the selected window blinks
   (XEmacs
     (blink-cursor-mode))
@@ -1099,8 +1119,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   (global-set-key
     (kbd "C-c t") 'toggle-truncate-lines)
 
-  ;; respect the value of `truncate-lines' in all windows less than the
-  ;; full width of the frame
+  ;; respect the value of `truncate-lines' in all windows less than the full
+  ;; width of the frame
   (setq truncate-partial-width-windows nil)
 
 ;;** 14.23 (info "(emacs)Display Custom")ization
@@ -1999,19 +2019,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       ;; time that the user has to be idle for, before candidates from
       ;; DELAYED sources are collected
-      (setq helm-idle-delay 0.1)
-      ;; useful for sources involving heavy operations, so that
-      ;; candidates from the source are not retrieved unnecessarily if
-      ;; the user keeps typing
+      (setq helm-idle-delay 0.1)        ; useful for sources involving heavy
+                                        ; operations, so that candidates from
+                                        ; the source are not retrieved
+                                        ; unnecessarily if the user keeps typing
 
       ;; time that the user has to be idle for, before ALL candidates
       ;; are collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.1)
-      ;; also effective for NON-DELAYED sources
-
-      ;; do not show more candidates than this limit from individual
-      ;; sources
-      (setq helm-candidate-number-limit 100) ; more than one screen page
+      (setq helm-input-idle-delay 0.1)  ; also effective for NON-DELAYED sources
 
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
@@ -2022,8 +2037,8 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; don't truncate buffer names
       (setq helm-buffer-max-length nil)
 
-      ;; allow to call M-x R with helm-M-x without waiting for 2+ chars
-      (setq helm-M-x-requires-pattern 0)
+      ;; save command even when it fails
+      (setq helm-M-x-always-save-history t)
 
       (defun helm-toggle-debug ()
         "Toggle Helm debug on/off."
@@ -6074,6 +6089,12 @@ this with to-do items than with projects or headings."
 
   (leuven--section "26.6 (emacs)Documentation Lookup")
 
+  ;; idle time to wait before printing documentation
+  (setq eldoc-idle-delay 0.2)
+
+  ;; resize echo area to fit documentation
+  (setq eldoc-echo-area-use-multiline-p t)
+
   ;; show the function arglist or the variable docstring in the echo area
   (GNUEmacs
     (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
@@ -6167,32 +6188,19 @@ this with to-do items than with projects or headings."
 
   (leuven--section "27.1 Running (emacs)Compilations under Emacs")
 
-  ;; http://www.emacswiki.org/emacs-en/eproject allows to define projects, and
-  ;; in each project to define menu commands and shortcut keys as you like.
-  ;; For example:
-  ;;
-  ;; make (f9)               : `-in src make' OR `make'
-  ;; clean (C-f9)            : `rm -vf src/emacs-23.* etc/DOC* && make clean' OR `make clean'
-  ;; run (f8)                : `src/emacs' OR `./my-program'
-  ;; stop (C-f8)             : `-e kill-compilation'
-  ;; ---
-  ;; configure               : `./configure'
-  ;; install                 : `echo root-pass | sudo -S make install'
-
-
   ;; invoke a compiler with the same command as in the last invocation of
   ;; `compile'
   (autoload 'recompile "compile"
     "Re-compile the program including the current buffer." t)
+
   (global-set-key
     (kbd "<f9>") 'recompile)
 
-  ;; scroll the `*compilation*' buffer window to follow output as it
-  ;; appears
+  ;; scroll the `*compilation*' buffer window to follow output as it appears
   (setq compilation-scroll-output t)
 
   ;; number of lines in a compilation window
-  (setq compilation-window-height (* 2 5))
+  (setq compilation-window-height 8)
 
   ;; ;; I also don't like that the compilation window sticks around after
   ;; ;; a successful compile.  After all, most of the time, all I care
@@ -6208,7 +6216,6 @@ this with to-do items than with projects or headings."
   ;;           (run-at-time 0.5 nil 'delete-windows-on buf)
   ;;           (message "NO COMPILATION ERRORS!"))))
 
-
   (GNUEmacs
     (defun cc-goto-first-error( buffer exit-condition )
       (with-current-buffer buffer
@@ -6217,7 +6224,6 @@ this with to-do items than with projects or headings."
         (beep)))
 
     (add-to-list 'compilation-finish-functions 'cc-goto-first-error))
-
 
   (defvar make-clean-command "make clean all"
     "*Command used by the `make-clean' function.")
@@ -6298,15 +6304,43 @@ this with to-do items than with projects or headings."
   ;; modern on-the-fly syntax checking
   (when (try-require 'flycheck)
 
-    ;; how many seconds to wait before checking syntax automatically
-    (setq flycheck-idle-change-delay 2)
-
     ;; enable Flycheck mode in all buffers
     (add-hook 'after-init-hook #'global-flycheck-mode)
 
-    ;; ;; show the error list for the current buffer (for wide screens)
-    ;; (add-hook 'flycheck-mode-hook 'flycheck-list-errors)
-    )
+    (defun magnars/adjust-flycheck-automatic-syntax-eagerness ()
+      "Adjust how often we check for errors based on if there are any.
+
+This lets us fix any errors as quickly as possible, but in
+a clean buffer we're an order of magnitude laxer about checking."
+      (setq flycheck-idle-change-delay
+            (if flycheck-current-errors 2 30)))
+
+    ;; Each buffer get its local `flycheck-idle-change-delay' because of the
+    ;; buffer-sensitive adjustment above.
+    (make-variable-buffer-local 'flycheck-idle-change-delay)
+
+    (add-hook 'flycheck-after-syntax-check-hook
+              'magnars/adjust-flycheck-automatic-syntax-eagerness)
+
+    ;; Remove newline checks, since they would trigger an immediate check when
+    ;; we want the `flycheck-idle-change-delay' to be in effect while editing.
+    (setq flycheck-check-syntax-automatically
+          '(save
+            idle-change
+            ;; new-line
+            ;; mode-enabled
+            ))
+
+    (defun flycheck-handle-idle-change ()
+      "Handle an expired idle time since the last change.
+
+This is an overwritten version of the original
+flycheck-handle-idle-change, which removes the forced deferred.
+Timers should only trigger inbetween commands in a single
+threaded system and the forced deferred makes errors never show
+up before you execute another command."
+      (flycheck-clear-idle-change-timer)
+      (flycheck-buffer-automatically 'idle-change)))
 
 ;;** 27.6 Running (info "(emacs)Debuggers") Under Emacs
 
@@ -6935,23 +6969,17 @@ this with to-do items than with projects or headings."
                             ac-source-words-in-buffer
                             ac-source-symbols))))
 
-        ;; enable auto-complete-mode automatically for Sword mode
-        (add-to-list 'ac-modes 'sword-mode)
+        ;; delay to completions will be available
+        (setq ac-delay 0)               ; faster than default 0.1
 
-        ;; ;; delay to completions will be available
-        ;; (setq ac-delay 0.2)
-
-        ;; completion menu will be automatically shown
-        (setq ac-auto-show-menu 0.5)
+        ;; ;; completion menu will be automatically shown
+        ;; (setq ac-auto-show-menu 0.5)
 
         ;; limit on number of candidates
         (setq ac-candidate-limit 100)
 
-        ;; delay to show quick help
-        (setq ac-quick-help-delay 1.0)
-
-        ;; max height of candidate menu
-        (setq ac-menu-height 12)
+        ;; ;; use quick help
+        ;; (setq ac-use-quick-help t)
 
         ;; ;; start auto-completion at current point
         ;; (define-key ac-mode-map
@@ -6964,16 +6992,25 @@ this with to-do items than with projects or headings."
         (define-key ac-completing-map
           (kbd "C-?") 'ac-quick-help)
 
-        ;; show a lastly completed candidate help in a "quick help" form
-        (define-key ac-mode-map
-          (kbd "C-c h") 'ac-last-quick-help)
+        ;; enable auto-complete-mode automatically for Sword mode
+        (add-to-list 'ac-modes 'sword-mode)
 
-        ;; show a lastly completed candidate help in a "buffer help" form.
-        ;; If you give an argument by `C-u', its help buffer will not disappear
-        ;; automatically.
-        (define-key ac-mode-map
-          (kbd "C-c H") 'ac-last-help)
-)))
+        ;; ;; Less anoying settings
+        ;; ;; http://cx4a.org/software/auto-complete/manual.html#Not_to_complete_automatically
+        ;; (setq ac-use-menu-map t)
+        ;; (define-key ac-menu-map "\C-n" 'ac-next)
+        ;; (define-key ac-menu-map "\C-p" 'ac-previous)
+        ;; ;;
+        ;; ;; http://www.emacswiki.org/emacs/ESSAuto-complete
+        ;; (define-key ac-completing-map [tab] 'ac-complete)
+        ;; ;; (define-key ac-completing-map [tab] nil)
+        ;; (define-key ac-completing-map [return] 'ac-complete)    ; configured again at end
+        ;; ;;
+        ;; ;; Trigger key
+        ;; ;; http://cx4a.org/software/auto-complete/manual.html#Trigger_Key
+        ;; (ac-set-trigger-key "TAB")
+
+        )))
 
 )                                       ; chapter 29 ends here
 
@@ -7735,7 +7772,8 @@ this with to-do items than with projects or headings."
 
   (leuven--section "36.3 Shell Mode")
 
-  ;; general command-interpreter-in-a-buffer stuff (lisp, shell, R, python, ...)
+  ;; general command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
+  ;; Python, ...)
   ;; (when (try-require 'comint)
 
     ;; comint prompt is read only
@@ -7756,9 +7794,6 @@ this with to-do items than with projects or headings."
     (setq comint-buffer-maximum-size (* 5 1024)) ; if the function
                                         ; `comint-truncate-buffer' is added to
                                         ; `comint-output-filter-functions'
-
-    ;; size of the input history ring
-    (setq comint-input-ring-size 1000)
 
     ;; strip `^M' characters
     (add-to-list 'process-coding-system-alist
@@ -7797,6 +7832,12 @@ this with to-do items than with projects or headings."
 
   (leuven--section "36.5 Shell Command History")
 
+  ;; rejects short commands
+  (setq comint-input-filter
+    #'(lambda (str)
+        (and (not (string-match "\\`\\s *\\'" str))
+             (> (length str) 2))))      ; ignore '!!' and kin
+
   (with-eval-after-load "comint"
 
     ;; cycle backwards/forwards through input history
@@ -7818,7 +7859,20 @@ this with to-do items than with projects or headings."
     (define-key comint-mode-map
       (kbd "M-n") 'comint-next-matching-input-from-input) ; Shell
     (define-key comint-mode-map
-      (kbd "<C-down>") 'comint-next-matching-input-from-input)) ; RStudio
+      (kbd "<C-down>") 'comint-next-matching-input-from-input) ; RStudio
+
+    ;; (define-key comint-mode-map
+    ;;   (kbd "C-c C-l") 'ess-comint-input-ring)
+    ;;
+    ;; (defun ess-comint-input-ring ()
+    ;;   "Predefined `helm' that provide completion of `comint' history."
+    ;;   (interactive)
+    ;;   (helm :sources 'helm-source-comint-input-ring
+    ;;         :input (buffer-substring-no-properties (comint-line-beginning-position)
+    ;;                                                (point-at-eol))
+    ;;         :buffer "*helm comint history*"))
+
+    )
 
 ;;** 36.6 Directory Tracking
 
@@ -7936,7 +7990,11 @@ this with to-do items than with projects or headings."
 
     ;; use eldoc to report R function names
     (require 'ess-eldoc)
-    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc))
+    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
+
+    ;; helm-sources and some utilities for GNU R
+    (when (locate-library "helm")
+      (try-require 'helm-R)))
 
   ;; ;; 12.2 add to list of prefixes recognized by ESS
   ;; (setq ess-r-versions '("R-3.0.2"))    ; R-current
@@ -8755,7 +8813,7 @@ this with to-do items than with projects or headings."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140825.1651]--")
+(message "* --[ Loaded Emacs Leuven 20140826.1459]--")
 
 (provide 'emacs-leuven)
 

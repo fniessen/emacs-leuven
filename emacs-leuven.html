@@ -125,6 +125,8 @@
               <li><a href="#sec-13-1">Commands to Mark Textual Objects</a></li>
 
               <li><a href="#sec-13-2">Operating on the Region</a></li>
+
+              <li><a href="#sec-13-3">Multiple selections</a></li>
             </ul>
           </li>
 
@@ -279,7 +281,7 @@
                 <ul>
                   <li><a href="#sec-20-12-1">FFAP</a></li>
 
-                  <li><a href="#sec-20-12-2">Helm</a></li>
+                  <li><a href="#sec-20-12-2">Helm (Anything successor)</a></li>
 
                   <li><a href="#sec-20-12-3">Image mode</a></li>
                 </ul>
@@ -1232,7 +1234,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140825.1651</span>
+"org-comment">Version: 20140826.1459</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1355,7 +1357,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140825.1651]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140826.1459]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -1656,9 +1658,7 @@
                (file-directory-p this-directory))
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment"><span class="org-leuven-highlight">TODO</span></span><span class=
-"org-comment"> Add </span><span class="org-comment"><span class=
-"org-leuven-highlight">warning</span></span><span class=
-"org-comment"> if directory does not exist</span>
+"org-comment"> Add warning if directory does not exist</span>
       (<span class=
 "org-keyword">let*</span> ((this-directory (expand-file-name this-directory)))
 
@@ -1776,7 +1776,7 @@
                                             <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">conditional expressions</span>
-        (file-<span class="org-leuven-highlight">error</span>
+        (file-error
          (message <span class="org-string">"Requiring `</span><span class=
 "org-string"><span class="org-constant">%s</span></span><span class=
 "org-string">'... missing"</span> feature)
@@ -1965,18 +1965,14 @@
     (<span class="org-keyword">if</span> file
         (<span class="org-keyword">if</span> (file-executable-p file)
             file
-          (message <span class="org-string">"(</span><span class=
-"org-string"><span class=
-"org-leuven-highlight">warning</span></span><span class=
-"org-string">) Can't find executable `</span><span class=
+          (message <span class=
+"org-string">"(warning) Can't find executable `</span><span class=
 "org-string"><span class="org-constant">%s</span></span><span class=
 "org-string">'"</span> file)
           <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">sleep 1.5 s so that you can see the </span><span class=
-"org-comment"><span class="org-leuven-highlight">warning</span></span>
+"org-comment">sleep 1.5 s so that you can see the warning</span>
           (sit-for 1.5))
-      (<span class="org-warning"><span class=
-"org-leuven-highlight">error</span></span> <span class=
+      (<span class="org-warning">error</span> <span class=
 "org-string">"Missing argument to \"leuven--file-exists-and-executable-p\""</span>)))
 
 <span class="org-comment-delimiter">;;</span><span class=
@@ -1997,9 +1993,7 @@
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">ensure that the echo area is always visible during the early stage of</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">startup (useful in case of </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class="org-comment">)</span>
+"org-comment">startup (useful in case of error)</span>
   (modify-all-frames-parameters
    '((height . 32)))
 
@@ -2041,16 +2035,13 @@
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">get the backtrace when uncaught </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class="org-comment">s occur</span>
-  (setq debug-on-<span class=
-"org-leuven-highlight">error</span> t)               <span class=
+"org-comment">get the backtrace when uncaught errors occur</span>
+  (setq debug-on-error t)               <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">will be unset at the end</span>
 
   (XEmacs
-    (setq stack-trace-on-<span class="org-leuven-highlight">error</span> t))
+    (setq stack-trace-on-error t))
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">hit `</span><span class="org-comment"><span class=
@@ -2177,13 +2168,12 @@
 "org-variable-name">leuven-elpa-packages</span>
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
           csv-mode dictionary dired+ dired-single ess fill-column-indicator
-          flycheck fuzzy git-commit-mode graphviz-dot-mode helm htmlize
-          idle-require info+ interaction-log ledger-mode leuven-theme org-mime
-          pager rainbow-mode redo+ sml-modeline tidy yasnippet
+          flycheck fuzzy git-commit-mode graphviz-dot-mode helm helm-R htmlize
+          idle-require info+ interaction-log ledger-mode leuven-theme
+          multiple-cursors org-mime pager rainbow-mode redo+ sml-modeline tidy
+          yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">jabber multi-term</span>
-          <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">paredit redshank w3m</span>
+"org-comment">jabber multi-term paredit redshank w3m</span>
           )
         <span class=
 "org-doc">"A list of packages to ensure are installed at Emacs startup."</span>
@@ -2229,9 +2219,7 @@
 "org-string">"Install ELPA package `</span><span class=
 "org-string"><span class="org-constant">%s</span></span><span class=
 "org-string">'? "</span> pkg))
-                (<span class="org-keyword">ignore-</span><span class=
-"org-keyword"><span class=
-"org-leuven-highlight">error</span></span><span class="org-keyword">s</span>
+                (<span class="org-keyword">ignore-errors</span>
                   (package-install pkg))
                                         <span class=
 "org-comment-delimiter">; </span><span class=
@@ -2297,8 +2285,7 @@
 "org-constant">idle-require</span></span><span class="org-comment">'</span>
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">idle-require</span> (feature <span class=
-"org-type">&amp;optional</span> file no<span class=
-"org-leuven-highlight">error</span>)
+"org-type">&amp;optional</span> file noerror)
       (try-require feature)))
 
   (add-hook 'after-init-hook
@@ -3020,6 +3007,49 @@
   (delete-selection-mode 1)
 </pre>
           </div>
+        </div>
+      </div>
+
+      <div id="outline-container-sec-13-3" class="outline-3">
+        <h3 id="sec-13-3">Multiple selections</h3>
+
+        <div class="outline-text-3" id="text-13-3">
+          <p>You can <a href="http://www.emacsrocks.com/e13.html">watch an
+          intro to multiple-cursors at Emacs Rocks</a>.</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">multiple cursors for Emacs</span>
+(<span class="org-keyword">when</span> (<span class=
+"org-keyword">require</span> '<span class=
+"org-constant">multiple-cursors</span>)
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">add a cursor to each (continuous) line in the current region</span>
+  (global-set-key (kbd <span class=
+"org-string">"C-S-c C-S-c"</span>) 'mc/edit-lines)
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">add a cursor and region at the next part of the buffer forwards that</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">matches the current region</span>
+  (global-set-key (kbd <span class=
+"org-string">"C-&gt;"</span>) 'mc/mark-next-like-this)
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">add a cursor and region at the next part of the buffer backwards that</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">matches the current region</span>
+  (global-set-key (kbd <span class=
+"org-string">"C-&lt;"</span>) 'mc/mark-previous-like-this)
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">mark all parts of the buffer that matches the current region</span>
+  (global-set-key (kbd <span class=
+"org-string">"C-c C-&lt;"</span>) 'mc/mark-all-like-this))
+</pre>
+          </div>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -3135,10 +3165,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment"><span class="org-leuven-highlight">XXX</span></span><span class=
-"org-comment"> perf 2.00 s requiring bytecomp and </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">warning</span></span><span class=
-"org-comment">s...</span>
+"org-comment"> perf 2.00 s requiring bytecomp and warnings...</span>
 </pre>
           </div>
         </div>
@@ -3763,9 +3790,7 @@
 "org-builtin">:background</span> <span class="org-string">"#FFFF88"</span>)))
     <span class="org-doc">"Face for making </span><span class=
 "org-doc"><span class="org-leuven-highlight">FIXME</span></span><span class=
-"org-doc"> and other </span><span class="org-doc"><span class=
-"org-leuven-highlight">warning</span></span><span class=
-"org-doc">s stand out."</span>)
+"org-doc"> and other warnings stand out."</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">add highlighting keywords for selected major modes only</span>
@@ -4217,6 +4242,10 @@
 "org-string">"14.20 (emacs)The Cursor Display"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">cursor to use</span>
+  (setq-default cursor-type 'bar)
+
+  <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">cursor of the selected window blinks</span>
   (XEmacs
     (blink-cursor-mode))
@@ -4275,9 +4304,9 @@
 "org-comment">respect the value of `</span><span class=
 "org-comment"><span class=
 "org-constant">truncate-lines</span></span><span class=
-"org-comment">' in all windows less than the</span>
+"org-comment">' in all windows less than the full</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">full width of the frame</span>
+"org-comment">width of the frame</span>
   (setq truncate-partial-width-windows nil)
 </pre>
           </div>
@@ -4394,7 +4423,7 @@
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment"><span class=
-"org-leuven-highlight">FIXME</span></span><span class="org-comment"> </span><span class="org-comment"><span class="org-leuven-highlight">Error</span></span><span class="org-comment"> when selecting search string from kill ring (`</span><span class="org-comment"><span class="org-constant">M-p</span></span><span class="org-comment">')</span>
+"org-leuven-highlight">FIXME</span></span><span class="org-comment"> Error when selecting search string from kill ring (`</span><span class="org-comment"><span class="org-constant">M-p</span></span><span class="org-comment">')</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; always exit searches at the beginning of the expression found</span>
   <span class="org-comment-delimiter">;; </span><span class=
@@ -4749,7 +4778,7 @@
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">ispell-region-or-buffer</span> ()
       <span class=
-"org-doc">"Interactively check the current region or buffer for spelling </span><span class="org-doc"><span class="org-leuven-highlight">error</span></span><span class="org-doc">s."</span>
+"org-doc">"Interactively check the current region or buffer for spelling errors."</span>
       (interactive)
       (<span class="org-keyword">if</span> mark-active
           (<span class="org-keyword">if</span> (&lt; (mark) (point))
@@ -4986,13 +5015,11 @@
 "org-string">"flyspell"</span>
 
      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't consider that a word repeated twice is an </span><span class="org-comment"><span class="org-leuven-highlight">error</span></span>
+"org-comment">don't consider that a word repeated twice is an error</span>
      (setq flyspell-mark-duplications-flag nil)
 
      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">fix the "enabling flyspell mode gave an </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class="org-comment">" bug</span>
+"org-comment">fix the "enabling flyspell mode gave an error" bug</span>
      (setq flyspell-issue-welcome-flag nil)
 
      <span class="org-comment-delimiter">;; </span><span class=
@@ -5719,8 +5746,7 @@
                 (diff-refine-hunk)))    <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">... when this does it.</span>
-          (<span class="org-warning"><span class=
-"org-leuven-highlight">error</span></span> nil))
+          (<span class="org-warning">error</span> nil))
         (run-at-time 0.0 nil
                      (<span class="org-keyword">lambda</span> ()
                        (<span class=
@@ -6293,25 +6319,16 @@ M-: (executable-find "diff") RET
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
     (<span class="org-keyword">defun</span> <span class=
-"org-function-name">leuven-find-file-sudo-header-</span><span class=
-"org-function-name"><span class="org-leuven-highlight">warning</span></span> ()
-      <span class="org-doc">"*Display a </span><span class=
-"org-doc"><span class="org-leuven-highlight">warning</span></span><span class=
-"org-doc"> in header line of the current buffer."</span>
-      (<span class="org-keyword">let*</span> ((<span class=
-"org-leuven-highlight">warning</span> <span class=
-"org-string">"</span><span class="org-string"><span class=
-"org-leuven-highlight">WARNING</span></span><span class=
-"org-string">: EDITING FILE WITH ROOT PRIVILEGES!"</span>)
-             (space (+ 6 (- (frame-width) (length <span class=
-"org-leuven-highlight">warning</span>))))
+"org-function-name">leuven-find-file-sudo-header-warning</span> ()
+      <span class=
+"org-doc">"*Display a warning in header line of the current buffer."</span>
+      (<span class="org-keyword">let*</span> ((warning <span class=
+"org-string">"WARNING: EDITING FILE WITH ROOT PRIVILEGES!"</span>)
+             (space (+ 6 (- (frame-width) (length warning))))
              (bracket (make-string (/ space 2) ?-))
-             (<span class=
-"org-leuven-highlight">warning</span> (concat bracket <span class=
-"org-leuven-highlight">warning</span> bracket)))
+             (warning (concat bracket warning bracket)))
         (setq header-line-format
-              (propertize <span class=
-"org-leuven-highlight">warning</span> 'face 'header-line))))
+              (propertize warning 'face 'header-line))))
 
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-find-file-sudo</span> (filename)
@@ -6319,8 +6336,7 @@ M-: (executable-find "diff") RET
       (interactive <span class="org-string">"F"</span>)
       (set-buffer (find-file (concat <span class=
 "org-string">"/sudo::"</span> filename)))
-      (leuven-find-file-sudo-header-<span class=
-"org-leuven-highlight">warning</span>))
+      (leuven-find-file-sudo-header-warning))
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; </span><span class="org-comment"><span class=
@@ -6463,7 +6479,8 @@ M-: (executable-find "diff") RET
 
         <div id="outline-container-sec-20-12-2" class="outline-4">
           <h4 id="sec-20-12-2"><a id="ID-59418189-b87e-45a2-b128-5cbdc8a16430"
-          name="ID-59418189-b87e-45a2-b128-5cbdc8a16430"></a>Helm</h4>
+          name="ID-59418189-b87e-45a2-b128-5cbdc8a16430"></a>Helm (Anything
+          successor)</h4>
 
           <div class="outline-text-4" id="text-20-12-2">
             <p>For Helm documentation, see the <a href=
@@ -6709,13 +6726,18 @@ M-: (executable-find "diff") RET
 "org-comment">time that the user has to be idle for, before candidates from</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">DELAYED sources are collected</span>
-      (setq helm-idle-delay 0.1)
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">useful for sources involving heavy operations, so that</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">candidates from the source are not retrieved unnecessarily if</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">the user keeps typing</span>
+      (setq helm-idle-delay 0.1)        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">useful for sources involving heavy</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">operations, so that candidates from</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">the source are not retrieved</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">unnecessarily if the user keeps typing</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">time that the user has to be idle for, before ALL candidates</span>
@@ -6723,17 +6745,9 @@ M-: (executable-find "diff") RET
 "org-comment">are collected (&gt;= `</span><span class=
 "org-comment"><span class=
 "org-constant">helm-idle-delay</span></span><span class="org-comment">')</span>
-      (setq helm-input-idle-delay 0.1)
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">also effective for NON-DELAYED sources</span>
-
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">do not show more candidates than this limit from individual</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">sources</span>
-      (setq helm-candidate-number-limit 100) <span class=
+      (setq helm-input-idle-delay 0.1)  <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">more than one screen page</span>
+"org-comment">also effective for NON-DELAYED sources</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; don't save history information to file</span>
@@ -6751,8 +6765,8 @@ M-: (executable-find "diff") RET
       (setq helm-buffer-max-length nil)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">allow to call M-x R with helm-M-x without waiting for 2+ chars</span>
-      (setq helm-M-x-requires-pattern 0)
+"org-comment">save command even when it fails</span>
+      (setq helm-M-x-always-save-history t)
 
       (<span class="org-keyword">defun</span> <span class=
 "org-function-name">helm-toggle-debug</span> ()
@@ -7886,9 +7900,7 @@ M-: (executable-find "diff") RET
   (setenv <span class="org-string">"LANG"</span> <span class=
 "org-string">"en_US.utf8"</span>)          <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">for svn not to report </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">warning</span></span><span class="org-comment">s</span>
+"org-comment">for svn not to report warnings</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">system locale to use for formatting time values</span>
@@ -8941,9 +8953,7 @@ M-: (executable-find "diff") RET
   (<span class="org-keyword">defun</span> <span class=
 "org-function-name">org-cycle-local</span> ()
     (interactive)
-    (<span class="org-keyword">ignore-</span><span class=
-"org-keyword"><span class=
-"org-leuven-highlight">error</span></span><span class="org-keyword">s</span>
+    (<span class="org-keyword">ignore-errors</span>
       (end-of-defun)
       (beginning-of-defun))
     (org-cycle))
@@ -9616,14 +9626,10 @@ M-: (executable-find "diff") RET
 "org-string">":info:"</span> tags-string)
                            <span class="org-string">"color=yellow!40"</span>)
                           ((string-match <span class=
-"org-string">":</span><span class="org-string"><span class=
-"org-leuven-highlight">warning</span></span><span class=
-"org-string">:"</span> tags-string)
+"org-string">":warning:"</span> tags-string)
                            <span class="org-string">"color=orange!40"</span>)
                           ((string-match <span class=
-"org-string">":</span><span class="org-string"><span class=
-"org-leuven-highlight">error</span></span><span class=
-"org-string">:"</span> tags-string)
+"org-string">":error:"</span> tags-string)
                            <span class="org-string">"color=red!40"</span>)
                           (t <span class="org-string">""</span>))
                   <span class="org-string">""</span>))
@@ -10921,16 +10927,13 @@ M-: (executable-find "diff") RET
                 <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">number of days before expiration during which a deadline becomes active</span>
-  (setq org-deadline-<span class="org-leuven-highlight">warning</span>-days 7)
+  (setq org-deadline-warning-days 7)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">skip deadline pre</span><span class="org-comment"><span class=
-"org-leuven-highlight">warning</span></span><span class=
-"org-comment"> (up to 7 days before the actual deadline)</span>
+"org-comment">skip deadline prewarning (up to 7 days before the actual deadline)</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">when entry is also scheduled</span>
-  (setq org-agenda-skip-deadline-pre<span class=
-"org-leuven-highlight">warning</span>-if-scheduled 7)
+  (setq org-agenda-skip-deadline-prewarning-if-scheduled 7)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">don't show deadlines when the corresponding item is done</span>
@@ -11174,8 +11177,7 @@ M-: (executable-find "diff") RET
           (org-clock-out)
         t))                             <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">only fails on keyboard quit or </span><span class=
-"org-comment"><span class="org-leuven-highlight">error</span></span>
+"org-comment">only fails on keyboard quit or error</span>
 
     (add-hook 'kill-emacs-query-functions 'leuven--org-query-clock-out)
 
@@ -12077,8 +12079,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 </pre>
             </div>
 
-            <p><code>C-c a t</code> should show <b>all</b> the TODO items…
-            but…</p>
+            <p><code>C-c a t</code> should show <b>all</b> the
+            <code>TODO</code> items… but…</p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -12127,10 +12129,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">`</span><span class="org-comment"><span class=
 "org-constant">todo</span></span><span class=
-"org-comment">' list (until they are within the </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">warning</span></span><span class=
-"org-comment"> period)</span>
+"org-comment">' list (until they are within the warning period)</span>
     (setq org-agenda-todo-ignore-deadlines 'near)
                                         <span class=
 "org-comment-delimiter">;</span><span class=
@@ -12305,10 +12304,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             (0.8571 . leuven-org-deadline-tomorrow) <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">= 6/7, see `</span><span class="org-comment"><span class=
-"org-constant">org-deadline-</span></span><span class=
-"org-comment"><span class="org-constant"><span class=
-"org-leuven-highlight">warning</span></span></span><span class=
-"org-comment"><span class="org-constant">-days</span></span><span class=
+"org-constant">org-deadline-warning-days</span></span><span class=
 "org-comment">'</span>
             (0.0000 . leuven-org-deadline-future)))
 
@@ -12487,9 +12483,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-function-name">leuven--compact-follow</span> ()
     <span class=
 "org-doc">"Make the view compact, then show the necessary minimum."</span>
-    (<span class="org-keyword">ignore-</span><span class=
-"org-keyword"><span class=
-"org-leuven-highlight">error</span></span><span class="org-keyword">s</span>
+    (<span class="org-keyword">ignore-errors</span>
       (<span class="org-keyword">save-excursion</span>
         (<span class="org-keyword">while</span> (org-up-heading-safe))
         (hide-subtree)))
@@ -12624,7 +12618,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             </div>
 
             <p>Contextual auto-exclusion for tags in the Agenda view. For
-            example, I use the following tags for TODOs:</p>
+            example, I use the following tags for <code>TODO</code>:</p>
 
             <dl class="org-dl">
               <dt>Phone</dt>
@@ -13168,8 +13162,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"import"</span> nil nil nil name)
               (message <span class=
 "org-string">"Taking screenshot...done"</span>))
-          (<span class="org-warning"><span class=
-"org-leuven-highlight">error</span></span> <span class=
+          (<span class="org-warning">error</span> <span class=
 "org-string">"Cannot create image file"</span>)))
       (insert (concat <span class="org-string">"[["</span> name <span class=
 "org-string">"]]"</span>))
@@ -13602,8 +13595,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
                                              <span class=
 "org-string">"tidy -config ~/.tidyrc"</span>
                                              t t <span class=
-"org-string">"*Tidy </span><span class="org-string"><span class=
-"org-leuven-highlight">error</span></span><span class="org-string">s*"</span>)
+"org-string">"*Tidy errors*"</span>)
                     (buffer-string))))
             (message <span class="org-string">"Tidy'fying... Done"</span>)
             new-contents)))
@@ -14599,14 +14591,13 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (setq org-babel-no-eval-on-ctrl-c-ctrl-c t)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">languages for which Org-babel will raise literate programming </span><span class="org-comment"><span class="org-leuven-highlight">error</span></span><span class="org-comment">s when</span>
+"org-comment">languages for which Org-babel will raise literate programming errors when</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">noweb references can not be resolved.</span>
 
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"ob-core"</span>
-    (add-to-list 'org-babel-noweb-<span class=
-"org-leuven-highlight">error</span>-langs <span class=
+    (add-to-list 'org-babel-noweb-error-langs <span class=
 "org-string">"emacs-lisp"</span>))
 </pre>
             </div>
@@ -14620,17 +14611,12 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">debugging sbe calls</span>
   (<span class="org-keyword">defadvice</span> <span class=
 "org-function-name">org-sbe</span> (around get-err-msg activate)
-    <span class="org-doc">"Issue messages at </span><span class=
-"org-doc"><span class="org-leuven-highlight">error</span></span><span class=
-"org-doc">s."</span>
+    <span class="org-doc">"Issue messages at errors."</span>
     (<span class="org-keyword">condition-case</span> err
         (<span class="org-keyword">progn</span>
       ad-do-it)
-      (<span class="org-warning"><span class=
-"org-leuven-highlight">error</span></span>
-       (message <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">Error</span></span><span class=
-"org-string"> in org-sbe: %S"</span> err)
+      (<span class="org-warning">error</span>
+       (message <span class="org-string">"Error in org-sbe: %S"</span> err)
        (<span class="org-warning">signal</span> (car err) (cdr err)))))
 </pre>
             </div>
@@ -15507,7 +15493,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
          (format <span class="org-string">"\\%s{%s}"</span> path desc)))))
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">add background color by using custom links like [[bgcolor:red][</span><span class="org-comment"><span class="org-leuven-highlight">Warning</span></span><span class="org-comment">!]]</span>
+"org-comment">add background color by using custom links like [[bgcolor:red][Warning!]]</span>
     (org-add-link-type
       <span class="org-string">"bgcolor"</span> nil
       (<span class="org-keyword">lambda</span> (path desc format)
@@ -15740,24 +15726,16 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     <span class="org-doc">"Simple mode for colorizing LaTeX output."</span>
     (set (make-local-variable 'font-lock-defaults)
          '(((<span class="org-string">"^!.*"</span> .
-             compilation-<span class=
-"org-leuven-highlight">error</span>-face)    <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">LaTeX </span><span class="org-comment"><span class=
-"org-leuven-highlight">error</span></span>
+             compilation-error-face)    <span class=
+"org-comment-delimiter">; </span><span class="org-comment">LaTeX error</span>
             (<span class="org-string">"^-+$"</span> .
              compilation-info-face)     <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">Latexmk separator</span>
-            (<span class="org-string">"^Package .* </span><span class=
-"org-string"><span class=
-"org-leuven-highlight">Warning</span></span><span class=
-"org-string">: .*"</span> .
-             compilation-<span class=
-"org-leuven-highlight">warning</span>-face)
+            (<span class="org-string">"^Package .* Warning: .*"</span> .
+             compilation-warning-face)
             (<span class="org-string">"Reference .* undefined"</span> .
-             compilation-<span class=
-"org-leuven-highlight">warning</span>-face)
+             compilation-warning-face)
             (<span class="org-string">"^</span><span class=
 "org-string"><span class=
 "org-regexp-grouping-backslash">\\</span></span><span class=
@@ -15781,10 +15759,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-regexp-grouping-construct">)</span></span><span class=
 "org-string">.*"</span> .
              font-lock-string-face)
-            (<span class="org-string">"^LaTeX Font </span><span class=
-"org-string"><span class=
-"org-leuven-highlight">Warning</span></span><span class=
-"org-string">:"</span> .
+            (<span class="org-string">"^LaTeX Font Warning:"</span> .
              font-lock-string-face)
             <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">...</span>
@@ -16713,8 +16688,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-function-name">try-to-add-imenu</span> ()
         (<span class="org-keyword">condition-case</span> nil
             (imenu-add-to-menubar <span class="org-string">"Imenu"</span>)
-          (<span class="org-warning"><span class=
-"org-leuven-highlight">error</span></span> nil)))
+          (<span class="org-warning">error</span> nil)))
       (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
       <span class="org-comment-delimiter">;; </span><span class=
@@ -17011,6 +16985,14 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"26.6 (emacs)Documentation Lookup"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">idle time to wait before printing documentation</span>
+  (setq eldoc-idle-delay 0.2)
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">resize echo area to fit documentation</span>
+  (setq eldoc-echo-area-use-multiline-p t)
+
+  <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">show the function arglist or the variable docstring in the echo area</span>
   (GNUEmacs
     (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
@@ -17041,7 +17023,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
         "ID-a36b1dbd-1d05-4ff2-b19a-167e50c4f1f7"></a>Hideshow minor mode</h3>
 
         <div class="outline-text-3" id="text-31-7">
-          <p>TODO See <a href=
+          <p>XXX See <a href=
           "http://stackoverflow.com/questions/2399612/why-is-there-no-code-folding-in-emacs">
           http://stackoverflow.com/questions/2399612/why-is-there-no-code-folding-in-emacs</a></p>
 
@@ -17336,14 +17318,11 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment"><span class="org-leuven-highlight">XXX</span></span><span class=
-"org-comment"> add </span><span class="org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class=
-"org-comment">s to mode line</span>
+"org-comment"> add errors to mode line</span>
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven--flymake-show-help</span> ()
-      <span class="org-doc">"Display the </span><span class=
-"org-doc"><span class="org-leuven-highlight">error</span></span><span class=
-"org-doc"> output of the current line in the mode line."</span>
+      <span class=
+"org-doc">"Display the error output of the current line in the mode line."</span>
       (<span class=
 "org-keyword">when</span> (get-char-property (point) 'flymake-overlay)
         (<span class=
@@ -17379,36 +17358,6 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"27.1 Running (emacs)Compilations under Emacs"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">http://www.emacswiki.org/emacs-en/eproject allows to define projects, and</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">in each project to define menu commands and shortcut keys as you like.</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">For example:</span>
-  <span class="org-comment-delimiter">;;</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">make (f9)               : `-in src make' OR `</span><span class=
-"org-comment"><span class="org-constant">make</span></span><span class=
-"org-comment">'</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">clean (C-f9)            : `rm -vf src/emacs-23.* etc/DOC* &amp;&amp; make clean' OR `make clean'</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">run (f8)                : `</span><span class=
-"org-comment"><span class="org-constant">src/emacs</span></span><span class=
-"org-comment">' OR `</span><span class="org-comment"><span class=
-"org-constant">./my-program</span></span><span class="org-comment">'</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">stop (C-f8)             : `-e kill-compilation'</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">---</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">configure               : `</span><span class=
-"org-comment"><span class="org-constant">./configure</span></span><span class=
-"org-comment">'</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">install                 : `echo root-pass | sudo -S make install'</span>
-
-
-  <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">invoke a compiler with the same command as in the last invocation of</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">`</span><span class="org-comment"><span class=
@@ -17416,20 +17365,19 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (autoload 'recompile <span class="org-string">"compile"</span>
     <span class=
 "org-doc">"Re-compile the program including the current buffer."</span> t)
+
   (global-set-key
     (kbd <span class="org-string">"&lt;f9&gt;"</span>) 'recompile)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">scroll the `</span><span class="org-comment"><span class=
 "org-constant">*compilation*</span></span><span class=
-"org-comment">' buffer window to follow output as it</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">appears</span>
+"org-comment">' buffer window to follow output as it appears</span>
   (setq compilation-scroll-output t)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">number of lines in a compilation window</span>
-  (setq compilation-window-height (* 2 5))
+  (setq compilation-window-height 8)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; I also don't like that the compilation window sticks around after</span>
@@ -17440,8 +17388,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; compilation window go away, only if there was no compilation</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; </span><span class="org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class="org-comment">s:</span>
+"org-comment">;; errors:</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(setq compilation-finish-function</span>
   <span class="org-comment-delimiter">;;       </span><span class=
@@ -17449,37 +17396,25 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   <span class="org-comment-delimiter">;;         </span><span class=
 "org-comment">(if (string-match "exited abnormally" str)</span>
   <span class="org-comment-delimiter">;;             </span><span class=
-"org-comment">;; there were </span><span class="org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class="org-comment">s</span>
+"org-comment">;; there were errors</span>
   <span class="org-comment-delimiter">;;             </span><span class=
-"org-comment">(message "Compilation </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class="org-comment">s, press C-x ` to visit")</span>
+"org-comment">(message "Compilation errors, press C-x ` to visit")</span>
   <span class="org-comment-delimiter">;;           </span><span class=
-"org-comment">;; no </span><span class="org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class=
-"org-comment">s, make compilation window go away in 0.5 sec</span>
+"org-comment">;; no errors, make compilation window go away in 0.5 sec</span>
   <span class="org-comment-delimiter">;;           </span><span class=
 "org-comment">(run-at-time 0.5 nil 'delete-windows-on buf)</span>
   <span class="org-comment-delimiter">;;           </span><span class=
-"org-comment">(message "NO COMPILATION </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">ERROR</span></span><span class="org-comment">S!"))))</span>
-
+"org-comment">(message "NO COMPILATION ERRORS!"))))</span>
 
   (GNUEmacs
     (<span class="org-keyword">defun</span> <span class=
-"org-function-name">cc-goto-first-</span><span class=
-"org-function-name"><span class=
-"org-leuven-highlight">error</span></span>( buffer exit-condition )
+"org-function-name">cc-goto-first-error</span>( buffer exit-condition )
       (<span class="org-keyword">with-current-buffer</span> buffer
         (goto-char (point-min))
-        (compilation-next-<span class="org-leuven-highlight">error</span> 1)
+        (compilation-next-error 1)
         (beep)))
 
-    (add-to-list 'compilation-finish-functions 'cc-goto-first-<span class=
-"org-leuven-highlight">error</span>))
-
+    (add-to-list 'compilation-finish-functions 'cc-goto-first-error))
 
   (<span class="org-keyword">defvar</span> <span class=
 "org-variable-name">make-clean-command</span> <span class=
@@ -17503,8 +17438,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"Command: "</span> make-clean-command)))
     (save-some-buffers (not compilation-ask-about-save) nil)
     (compile-internal make-clean-command <span class=
-"org-string">"No more </span><span class="org-string"><span class=
-"org-leuven-highlight">error</span></span><span class="org-string">s"</span>))
+"org-string">"No more errors"</span>))
 
   (global-set-key
     (kbd <span class="org-string">"&lt;S-f9&gt;"</span>) 'make-clean)
@@ -17530,37 +17464,29 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"27.2 (emacs)Compilation Mode"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">automatically jump to the first </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class="org-comment"> during compilation</span>
-  (setq compilation-auto-jump-to-first-<span class=
-"org-leuven-highlight">error</span> t)
+"org-comment">automatically jump to the first error during compilation</span>
+  (setq compilation-auto-jump-to-first-error t)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">display the next compiler </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class="org-comment"> message</span>
+"org-comment">display the next compiler error message</span>
   (global-set-key
-    (kbd <span class="org-string">"&lt;f10&gt;"</span>) 'next-<span class=
-"org-leuven-highlight">error</span>)          <span class=
+    (kbd <span class=
+"org-string">"&lt;f10&gt;"</span>) 'next-error)          <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">also on `C-x `' and `M-g n'</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">display the previous compiler </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class="org-comment"> message</span>
+"org-comment">display the previous compiler error message</span>
   (global-set-key
     (kbd <span class=
-"org-string">"&lt;S-f10&gt;"</span>) 'previous-<span class="org-leuven-highlight">error</span>)    <span class="org-comment-delimiter">; </span><span class="org-comment">also on `M-g p'</span>
+"org-string">"&lt;S-f10&gt;"</span>) 'previous-error)    <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">also on `M-g p'</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">display the first compiler </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class="org-comment"> message</span>
+"org-comment">display the first compiler error message</span>
   (global-set-key
-    (kbd <span class="org-string">"&lt;C-f10&gt;"</span>) 'first-<span class=
-"org-leuven-highlight">error</span>)
+    (kbd <span class="org-string">"&lt;C-f10&gt;"</span>) 'first-error)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">highlight and parse the whole compilation output as soon as it</span>
@@ -17685,6 +17611,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
         <h3 id="sec-32-4">Finding Syntax Errors On The Fly</h3>
 
         <div class="outline-text-3" id="text-32-4">
+          <p>“Flymake done right”</p>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -17697,30 +17625,66 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (<span class="org-keyword">when</span> (try-require 'flycheck)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">how many seconds to wait before checking syntax automatically</span>
-    (setq flycheck-idle-change-delay 2)
-
-    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">enable Flycheck mode in all buffers</span>
     (add-hook 'after-init-hook #'global-flycheck-mode)
 
+    (<span class="org-keyword">defun</span> <span class=
+"org-function-name">magnars/adjust-flycheck-automatic-syntax-eagerness</span> ()
+      <span class=
+"org-doc">"Adjust how often we check for errors based on if there are any.</span>
+
+<span class=
+"org-doc">This lets us fix any errors as quickly as possible, but in</span>
+<span class=
+"org-doc">a clean buffer we're an order of magnitude laxer about checking."</span>
+      (setq flycheck-idle-change-delay
+            (<span class=
+"org-keyword">if</span> flycheck-current-errors 2 30)))
+
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; show the </span><span class="org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class=
-"org-comment"> list for the current buffer (for wide screens)</span>
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(add-hook 'flycheck-mode-hook 'flycheck-list-</span><span class=
+"org-comment">Each buffer get its local `</span><span class=
 "org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class="org-comment">s)</span>
-    )
+"org-constant">flycheck-idle-change-delay</span></span><span class=
+"org-comment">' because of the</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">buffer-sensitive adjustment above.</span>
+    (make-variable-buffer-local 'flycheck-idle-change-delay)
+
+    (add-hook 'flycheck-after-syntax-check-hook
+              'magnars/adjust-flycheck-automatic-syntax-eagerness)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Remove newline checks, since they would trigger an immediate check when</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">we want the `</span><span class="org-comment"><span class=
+"org-constant">flycheck-idle-change-delay</span></span><span class=
+"org-comment">' to be in effect while editing.</span>
+    (setq flycheck-check-syntax-automatically
+          '(save
+            idle-change
+            <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">new-line</span>
+            <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">mode-enabled</span>
+            ))
+
+    (<span class="org-keyword">defun</span> <span class=
+"org-function-name">flycheck-handle-idle-change</span> ()
+      <span class=
+"org-doc">"Handle an expired idle time since the last change.</span>
+
+<span class="org-doc">This is an overwritten version of the original</span>
+<span class=
+"org-doc">flycheck-handle-idle-change, which removes the forced deferred.</span>
+<span class=
+"org-doc">Timers should only trigger inbetween commands in a single</span>
+<span class=
+"org-doc">threaded system and the forced deferred makes errors never show</span>
+<span class="org-doc">up before you execute another command."</span>
+      (flycheck-clear-idle-change-timer)
+      (flycheck-buffer-automatically 'idle-change)))
 </pre>
           </div>
-
-          <p>If FlyCheck is taking too much time, see <a href=
-          "https://github.com/magnars/.emacs.d/blob/master/setup-flycheck.el">https://github.com/magnars/.emacs.d/blob/master/setup-flycheck.el</a>
-          for a smart way to reduce the time: <b>only check FlyCheck every 30s
-          on clean buffers</b> (adjust the time to 30 s in buffers with no
-          errors, and to 0.5 s for the others)…</p>
         </div>
       </div>
 
@@ -19185,7 +19149,7 @@ TAGS:
     (<span class="org-keyword">provide</span> '<span class=
 "org-constant">semantic-load</span>)
 
-    (setq stack-trace-on-<span class="org-leuven-highlight">error</span> t)
+    (setq stack-trace-on-error t)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">don't show tip of the day at start time of ECB</span>
@@ -19314,9 +19278,8 @@ TAGS:
 "org-comment">! make sure you initialise YASnippet *before* Org mode</span>
       (<span class="org-keyword">when</span> (<span class=
 "org-keyword">featurep</span> '<span class="org-constant">org</span>)
-        (message <span class="org-string">"(</span><span class=
-"org-string"><span class="org-leuven-highlight">Error</span></span><span class=
-"org-string">) Org is already loaded -&gt; Too late to init YASnippet!"</span>)
+        (message <span class=
+"org-string">"(Error) Org is already loaded -&gt; Too late to init YASnippet!"</span>)
         (sit-for 3))
 
       (<span class="org-keyword">defun</span> <span class=
@@ -19630,29 +19593,24 @@ TAGS:
                             ac-source-symbols))))
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable auto-complete-mode automatically for Sword mode</span>
-        (add-to-list 'ac-modes 'sword-mode)
+"org-comment">delay to completions will be available</span>
+        (setq ac-delay 0)               <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">faster than default 0.1</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; delay to completions will be available</span>
+"org-comment">;; completion menu will be automatically shown</span>
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq ac-delay 0.2)</span>
-
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">completion menu will be automatically shown</span>
-        (setq ac-auto-show-menu 0.5)
+"org-comment">(setq ac-auto-show-menu 0.5)</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">limit on number of candidates</span>
         (setq ac-candidate-limit 100)
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">delay to show quick help</span>
-        (setq ac-quick-help-delay 1.0)
-
+"org-comment">;; use quick help</span>
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">max height of candidate menu</span>
-        (setq ac-menu-height 12)
+"org-comment">(setq ac-use-quick-help t)</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; start auto-completion at current point</span>
@@ -19670,21 +19628,39 @@ TAGS:
           (kbd <span class="org-string">"C-?"</span>) 'ac-quick-help)
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">show a lastly completed candidate help in a "quick help" form</span>
-        (define-key ac-mode-map
-          (kbd <span class="org-string">"C-c h"</span>) 'ac-last-quick-help)
+"org-comment">enable auto-complete-mode automatically for Sword mode</span>
+        (add-to-list 'ac-modes 'sword-mode)
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">show a lastly completed candidate help in a "buffer help" form.</span>
+"org-comment">;; Less anoying settings</span>
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">If you give an argument by `</span><span class=
-"org-comment"><span class="org-constant">C-u</span></span><span class=
-"org-comment">', its help buffer will not disappear</span>
+"org-comment">;; http://cx4a.org/software/auto-complete/manual.html#Not_to_complete_automatically</span>
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">automatically.</span>
-        (define-key ac-mode-map
-          (kbd <span class="org-string">"C-c H"</span>) 'ac-last-help)
-)))
+"org-comment">(setq ac-use-menu-map t)</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(define-key ac-menu-map "\C-n" 'ac-next)</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(define-key ac-menu-map "\C-p" 'ac-previous)</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">;;</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">;; http://www.emacswiki.org/emacs/ESSAuto-complete</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(define-key ac-completing-map [tab] 'ac-complete)</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">;; (define-key ac-completing-map [tab] nil)</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(define-key ac-completing-map [return] 'ac-complete)    ; configured again at end</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">;;</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">;; Trigger key</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">;; http://cx4a.org/software/auto-complete/manual.html#Trigger_Key</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(ac-set-trigger-key "TAB")</span>
+
+        )))
 </pre>
             </div>
 
@@ -20299,10 +20275,7 @@ TAGS:
 "org-string">"image-dired"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">maximum number of files to show before </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">warning</span></span><span class=
-"org-comment"> the user</span>
+"org-comment">maximum number of files to show before warning the user</span>
       (setq image-dired-show-all-from-dir-max-files 100)
 
       <span class="org-comment-delimiter">;; </span><span class=
@@ -20641,11 +20614,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-string">"appt"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">send the first </span><span class="org-comment"><span class=
-"org-leuven-highlight">warning</span></span><span class=
-"org-comment"> 60 minutes before an appointment</span>
-    (setq appt-message-<span class=
-"org-leuven-highlight">warning</span>-time 60) <span class=
+"org-comment">send the first warning 60 minutes before an appointment</span>
+    (setq appt-message-warning-time 60) <span class=
 "org-comment-delimiter">; </span><span class="org-comment">[default: 12]</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -21082,9 +21052,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment">* (info "(bbdb)Installation")</span>
 
   (<span class="org-keyword">unless</span> (<span class=
-"org-keyword">ignore-</span><span class="org-keyword"><span class=
-"org-leuven-highlight">error</span></span><span class=
-"org-keyword">s</span> (load-library <span class=
+"org-keyword">ignore-errors</span> (load-library <span class=
 "org-string">"bbdb-autoloads"</span>)) <span class=
 "org-comment-delimiter">; </span><span class="org-comment">"hand-made"</span>
     (autoload 'bbdb <span class="org-string">"bbdb-com"</span>
@@ -21729,9 +21697,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment-delimiter">; </span><span class=
 "org-comment">must be in the `</span><span class="org-comment"><span class=
 "org-constant">PATH</span></span><span class="org-comment">'</span>
-        (or (<span class="org-keyword">ignore-</span><span class=
-"org-keyword"><span class=
-"org-leuven-highlight">error</span></span><span class="org-keyword">s</span>
+        (or (<span class="org-keyword">ignore-errors</span>
               (file-name-nondirectory (or (executable-find <span class=
 "org-string">"zsh"</span>)
                                           (executable-find <span class=
@@ -21869,7 +21835,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (leuven--section <span class="org-string">"36.3 Shell Mode"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">general command-interpreter-in-a-buffer stuff (lisp, shell, R, python, ...)</span>
+"org-comment">general command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Python, ...)</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(when (try-require 'comint)</span>
 
@@ -21908,10 +21876,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment"><span class=
 "org-constant">comint-output-filter-functions</span></span><span class=
 "org-comment">'</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">size of the input history ring</span>
-    (setq comint-input-ring-size 1000)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">strip `</span><span class="org-comment"><span class=
@@ -21993,6 +21957,16 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (leuven--section <span class=
 "org-string">"36.5 Shell Command History"</span>)
 
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">rejects short commands</span>
+  (setq comint-input-filter
+    #'(<span class="org-keyword">lambda</span> (str)
+        (and (not (string-match <span class=
+"org-string">"\\`\\s *\\'"</span> str))
+             (&gt; (length str) 2))))      <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">ignore '!!' and kin</span>
+
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"comint"</span>
 
@@ -22033,7 +22007,33 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment-delimiter">; </span><span class="org-comment">Shell</span>
     (define-key comint-mode-map
       (kbd <span class=
-"org-string">"&lt;C-down&gt;"</span>) 'comint-next-matching-input-from-input)) <span class="org-comment-delimiter">; </span><span class="org-comment">RStudio</span>
+"org-string">"&lt;C-down&gt;"</span>) 'comint-next-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">RStudio</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(define-key comint-mode-map</span>
+    <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(kbd "C-c C-l") 'ess-comint-input-ring)</span>
+    <span class="org-comment-delimiter">;;</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(defun ess-comint-input-ring ()</span>
+    <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">"Predefined `</span><span class="org-comment"><span class=
+"org-constant">helm</span></span><span class=
+"org-comment">' that provide completion of `</span><span class=
+"org-comment"><span class="org-constant">comint</span></span><span class=
+"org-comment">' history."</span>
+    <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(interactive)</span>
+    <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(helm :sources 'helm-source-comint-input-ring</span>
+    <span class="org-comment-delimiter">;;         </span><span class=
+"org-comment">:input (buffer-substring-no-properties (comint-line-beginning-position)</span>
+    <span class=
+"org-comment-delimiter">;;                                                </span><span class="org-comment">(point-at-eol))</span>
+    <span class="org-comment-delimiter">;;         </span><span class=
+"org-comment">:buffer "*helm comint history*"))</span>
+
+    )
 </pre>
           </div>
         </div>
@@ -22651,7 +22651,13 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment">use eldoc to report R function names</span>
     (<span class="org-keyword">require</span> '<span class=
 "org-constant">ess-eldoc</span>)
-    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc))
+    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">helm-sources and some utilities for GNU R</span>
+    (<span class="org-keyword">when</span> (locate-library <span class=
+"org-string">"helm"</span>)
+      (try-require 'helm-R)))
 </pre>
             </div>
           </div>
@@ -22960,9 +22966,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       (setq ps-lpr-switches '(<span class="org-string">"raw"</span>)))
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq ps-</span><span class="org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class=
-"org-comment">-handler-message 'system)</span>
+"org-comment">(setq ps-error-handler-message 'system)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">size of paper to format for</span>
@@ -23823,9 +23827,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-string">"48 Customization"</span>
 
   (GNUEmacs24
-    (<span class="org-keyword">ignore-</span><span class=
-"org-keyword"><span class=
-"org-leuven-highlight">error</span></span><span class="org-keyword">s</span>
+    (<span class="org-keyword">ignore-errors</span>
       (load-theme 'leuven t)))
 </pre>
         </div>
@@ -24834,11 +24836,8 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 "org-string">"99 Debugging"</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">get the backtrace when uncaught </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">error</span></span><span class="org-comment">s occur</span>
-  (setq debug-on-<span class=
-"org-leuven-highlight">error</span> nil))            <span class=
+"org-comment">get the backtrace when uncaught errors occur</span>
+  (setq debug-on-error nil))            <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">was set to `t' at beginning of buffer</span>
 </pre>
@@ -24913,7 +24912,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140825.1652]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140826.1500]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
