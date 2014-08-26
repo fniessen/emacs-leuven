@@ -1234,7 +1234,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140826.1459</span>
+"org-comment">Version: 20140826.1518</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1357,7 +1357,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140826.1459]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140826.1518]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -5827,6 +5827,14 @@ M-: (executable-find "diff") RET
 "org-string">"ediff"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">ignore space</span>
+    (setq ediff-diff-options (concat ediff-diff-options <span class=
+"org-string">" -w"</span>))
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">add new options after the default ones</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">skip over difference regions that differ only in white space and line</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">breaks</span>
@@ -5870,8 +5878,9 @@ M-: (executable-find "diff") RET
 
           <p>As bonus, it even works for remote directories.</p>
 
-          <p>CAUTION – <code>ediff-directories</code> does not list files in
-          one directory with no corresponding files in the other directory.</p>
+          <p><b>CAUTION --</b> <code>ediff-directories</code> does not list
+          files in one directory with no corresponding files in the other
+          directory.</p>
         </div>
       </div>
 
@@ -6393,20 +6402,14 @@ M-: (executable-find "diff") RET
 "org-comment-delimiter">;</span><span class=
 "org-comment">! `</span><span class="org-comment"><span class=
 "org-constant">recentf</span></span><span class="org-comment">'</span>
-
         '(
           <span class=
 "org-string">"~$"</span>                          <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">Emacs (and others) backup</span>
-          <span class=
-"org-string">"\\.log$"</span>                     <span class=
-"org-comment-delimiter">; </span><span class="org-comment">LaTeX</span>
-          <span class=
-"org-string">"\\.toc$"</span>                     <span class=
-"org-comment-delimiter">; </span><span class="org-comment">LaTeX</span>
-          <span class=
-"org-string">"\\.aux$"</span>                     <span class=
+          <span class="org-string">"\\.aux$"</span> <span class=
+"org-string">"\\.log$"</span> <span class=
+"org-string">"\\.toc$"</span> <span class=
 "org-comment-delimiter">; </span><span class="org-comment">LaTeX</span>
           <span class="org-string">"/tmp/"</span>
           ))
@@ -6421,12 +6424,9 @@ M-: (executable-find "diff") RET
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">maximum number of items that will be saved</span>
-    (setq recentf-max-saved-items 100)
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">file to save the recent list into</span>
-    (setq recentf-save-file <span class=
-"org-string">"~/.emacs.d/.recentf"</span>)
+    (setq recentf-max-saved-items 100)  <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">just 20 is too recent</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(when using Tramp) turn off the cleanup feature of `</span><span class="org-comment"><span class="org-constant">recentf</span></span><span class="org-comment">'</span>
@@ -24912,7 +24912,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140826.1500]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140826.1519]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

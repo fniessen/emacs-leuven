@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140826.1458
+;; Version: 20140826.1517
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140826.1458]--")
+(message "* --[ Loading Emacs Leuven 20140826.1517]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -1705,6 +1705,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (with-eval-after-load "ediff"
 
+    ;; ignore space
+    (setq ediff-diff-options (concat ediff-diff-options " -w"))
+                                        ; add new options after the default ones
+
     ;; skip over difference regions that differ only in white space and line
     ;; breaks
     ;; (setq-default ediff-ignore-similar-regions  t)
@@ -1894,12 +1898,9 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; filenames excluded from the recent list
   (setq recentf-exclude                 ;! has to be set before your require
                                         ;! `recentf'
-
         '(
           "~$"                          ; Emacs (and others) backup
-          "\\.log$"                     ; LaTeX
-          "\\.toc$"                     ; LaTeX
-          "\\.aux$"                     ; LaTeX
+          "\\.aux$" "\\.log$" "\\.toc$" ; LaTeX
           "/tmp/"
           ))
 
@@ -1910,10 +1911,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (with-eval-after-load "recentf"
 
     ;; maximum number of items that will be saved
-    (setq recentf-max-saved-items 100)
-
-    ;; file to save the recent list into
-    (setq recentf-save-file "~/.emacs.d/.recentf")
+    (setq recentf-max-saved-items 100)  ; just 20 is too recent
 
     ;; (when using Tramp) turn off the cleanup feature of `recentf'
     (setq recentf-auto-cleanup 'never)  ; disable before we start recentf!
@@ -8813,7 +8811,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140826.1459]--")
+(message "* --[ Loaded Emacs Leuven 20140826.1518]--")
 
 (provide 'emacs-leuven)
 

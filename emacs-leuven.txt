@@ -2748,6 +2748,10 @@ In Ediff, press:
 
   (with-eval-after-load "ediff"
 
+    ;; ignore space
+    (setq ediff-diff-options (concat ediff-diff-options " -w"))
+                                        ; add new options after the default ones
+
     ;; skip over difference regions that differ only in white space and line
     ;; breaks
     ;; (setq-default ediff-ignore-similar-regions  t)
@@ -2779,7 +2783,7 @@ hit ~RET~ on such a pair.
 
 As bonus, it even works for remote directories.
 
-CAUTION -- ~ediff-directories~ does not list files in one directory with no
+*CAUTION --* ~ediff-directories~ does not list files in one directory with no
 corresponding files in the other directory.
 
 ** Miscellaneous File Operations
@@ -3095,12 +3099,9 @@ root using the ~sudo~ tramp method.
   ;; filenames excluded from the recent list
   (setq recentf-exclude                 ;! has to be set before your require
                                         ;! `recentf'
-
         '(
           "~$"                          ; Emacs (and others) backup
-          "\\.log$"                     ; LaTeX
-          "\\.toc$"                     ; LaTeX
-          "\\.aux$"                     ; LaTeX
+          "\\.aux$" "\\.log$" "\\.toc$" ; LaTeX
           "/tmp/"
           ))
 
@@ -3111,10 +3112,7 @@ root using the ~sudo~ tramp method.
   (with-eval-after-load "recentf"
 
     ;; maximum number of items that will be saved
-    (setq recentf-max-saved-items 100)
-
-    ;; file to save the recent list into
-    (setq recentf-save-file "~/.emacs.d/.recentf")
+    (setq recentf-max-saved-items 100)  ; just 20 is too recent
 
     ;; (when using Tramp) turn off the cleanup feature of `recentf'
     (setq recentf-auto-cleanup 'never)  ; disable before we start recentf!
