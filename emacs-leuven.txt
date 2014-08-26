@@ -10975,6 +10975,10 @@ There are other ways to select candidates:
         (define-key ac-completing-map
           (kbd "<tab>") 'ac-complete)
 
+        ;; bind `ac-complete' to right arrow
+        (define-key ac-completing-map
+          (kbd "<right>") 'ac-complete)
+
         ;; 11.1 avoid Flyspell processes when auto completion is being started
         (ac-flyspell-workaround)
 

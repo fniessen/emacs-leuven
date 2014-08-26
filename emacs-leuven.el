@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140826.2127
+;; Version: 20140826.2332
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140826.2127]--")
+(message "* --[ Loading Emacs Leuven 20140826.2332]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -6998,6 +6998,10 @@ up before you execute another command."
         (define-key ac-completing-map
           (kbd "<tab>") 'ac-complete)
 
+        ;; bind `ac-complete' to right arrow
+        (define-key ac-completing-map
+          (kbd "<right>") 'ac-complete)
+
         ;; 11.1 avoid Flyspell processes when auto completion is being started
         (ac-flyspell-workaround)
 
@@ -8804,7 +8808,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140826.2128]--")
+(message "* --[ Loaded Emacs Leuven 20140826.2333]--")
 
 (provide 'emacs-leuven)
 

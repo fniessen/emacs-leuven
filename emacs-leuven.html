@@ -1248,7 +1248,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140826.2129</span>
+"org-comment">Version: 20140826.2333</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1371,7 +1371,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140826.2129]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140826.2333]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -19720,6 +19720,13 @@ TAGS:
           (kbd <span class="org-string">"&lt;tab&gt;"</span>) 'ac-complete)
 
         <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">bind `</span><span class="org-comment"><span class=
+"org-constant">ac-complete</span></span><span class=
+"org-comment">' to right arrow</span>
+        (define-key ac-completing-map
+          (kbd <span class="org-string">"&lt;right&gt;"</span>) 'ac-complete)
+
+        <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">11.1 avoid Flyspell processes when auto completion is being started</span>
         (ac-flyspell-workaround)
 
@@ -24975,7 +24982,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140826.2129]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140826.2334]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
