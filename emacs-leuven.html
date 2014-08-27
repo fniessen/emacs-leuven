@@ -201,7 +201,8 @@
             <a href="#sec-17">Searching and Replacement</a>
 
             <ul>
-              <li><a href="#sec-17-1">Incremental Search</a></li>
+              <li><a href="#sec-17-1">Incremental Search (aka “Live
+              Search”)</a></li>
 
               <li><a href="#sec-17-2">Regexp Search</a></li>
 
@@ -876,7 +877,17 @@
 
                   <li><a href="#sec-34-1-4">Writing snippets</a></li>
 
-                  <li><a href="#sec-34-1-5">Frequently Asked Questions</a></li>
+                  <li>
+                    <a href="#sec-34-1-5">Frequently Asked Questions</a>
+
+                    <ul>
+                      <li><a href="#sec-34-1-5-1">Why is there an extra
+                      newline?</a></li>
+
+                      <li><a href="#sec-34-1-5-2">Why doesn’t TAB expand a
+                      snippet?</a></li>
+                    </ul>
+                  </li>
                 </ul>
               </li>
 
@@ -1095,9 +1106,6 @@
                       <li><a href="#sec-40-13-7-6">Code folding</a></li>
                     </ul>
                   </li>
-
-                  <li><a href="#sec-40-13-8">12 Overview of ESS features for
-                  the S family</a></li>
                 </ul>
               </li>
 
@@ -1259,7 +1267,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140827.1526</span>
+"org-comment">Version: 20140827.1610</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1382,7 +1390,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140827.1526]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140827.1610]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -4431,7 +4439,7 @@
       </div>
 
       <div id="outline-container-sec-17-1" class="outline-3">
-        <h3 id="sec-17-1">Incremental Search</h3>
+        <h3 id="sec-17-1">Incremental Search (aka “Live Search”)</h3>
 
         <div class="outline-text-3" id="text-17-1">
           <p>Have a look at the “Standard Isearch Keys” on <a href=
@@ -19404,7 +19412,9 @@ TAGS:
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">insert snippet at point</span>
       (global-set-key (kbd <span class=
-"org-string">"C-c s"</span>) 'yas-insert-snippet)
+"org-string">"C-c s"</span>) 'yas-insert-snippet) <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">also on `C-c &amp; C-s'</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">UI for selecting snippet when there are multiple candidates</span>
@@ -19418,6 +19428,16 @@ TAGS:
           <h4 id="sec-34-1-4">Writing snippets</h4>
 
           <div class="outline-text-4" id="text-34-1-4">
+            <dl class="org-dl">
+              <dt><code>C-c &amp; C-n</code></dt>
+
+              <dd><code>yas-new-snippet</code></dd>
+
+              <dt><code>C-c &amp; C-v</code></dt>
+
+              <dd><code>yas-visit-snippet-file</code></dd>
+            </dl>
+
             <p>After editing your snippets:</p>
 
             <ul class="org-ul">
@@ -19450,24 +19470,31 @@ TAGS:
         <div id="outline-container-sec-34-1-5" class="outline-4">
           <h4 id="sec-34-1-5">Frequently Asked Questions</h4>
 
-          <div class="outline-text-4" id="text-34-1-5">
-            <p>Why is there an extra newline?</p>
+          <div class="outline-text-4" id="text-34-1-5"></div>
 
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
+          <div id="outline-container-sec-34-1-5-1" class="outline-5">
+            <h5 id="sec-34-1-5-1">Why is there an extra newline?</h5>
+
+            <div class="outline-text-5" id="text-34-1-5-1">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
       (add-hook 'snippet-mode-hook
                 (<span class="org-keyword">lambda</span> ()
                   (setq require-final-newline nil)))
 </pre>
+              </div>
             </div>
+          </div>
 
-            <p>Why doesn’t TAB expand a snippet?</p>
+          <div id="outline-container-sec-34-1-5-2" class="outline-5">
+            <h5 id="sec-34-1-5-2">Why doesn’t TAB expand a snippet?</h5>
 
-            <p>See <a href="#sec-28-14-6">Interaction between Org and other
-            packages</a>.</p>
+            <div class="outline-text-5" id="text-34-1-5-2">
+              <p>See <a href="#sec-28-14-6">Interaction between Org and other
+              packages</a>.</p>
 
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
       <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">! make sure you initialise YASnippet *before* Org mode</span>
       (<span class="org-keyword">when</span> (<span class=
@@ -19506,6 +19533,7 @@ TAGS:
 "org-comment">'?</span>
                   ))))
 </pre>
+              </div>
             </div>
           </div>
         </div>
@@ -20567,7 +20595,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           (<span class="org-keyword">lambda</span> ()
 
             <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Auto-refresh dired on file change</span>
+"org-comment">auto-refresh Dired on file change</span>
             (auto-revert-mode)
             (setq-default auto-revert-interval 1)))
 </pre>
@@ -22765,21 +22793,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             <li><a href=
             "http://www.emacswiki.org/emacs/EmacsSpeaksStatistics">http://www.emacswiki.org/emacs/EmacsSpeaksStatistics</a>.</li>
           </ul>
-
-          <p>To run statistical processes under ESS, Windows users will need to
-          make sure that the directories for <code>R</code> and
-          <code>Rterm</code> are in their <code>PATH</code> environment
-          variable.</p>
-
-          <p>Start an R session with <code>M-x R</code>.</p>
-
-          <p>Magic underscore (<code>_</code>):</p>
-
-          <ul class="org-ul">
-            <li>Pressing underscore once inserts <code>&lt;-</code>.</li>
-
-            <li>Pressing underscore twice inserts a literal underscore.</li>
-          </ul>
         </div>
 
         <div id="outline-container-sec-40-13-1" class="outline-4">
@@ -22790,9 +22803,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
               <pre class="src src-emacs-lisp">
   (leuven--section <span class="org-string">"Utilities -- ESS"</span>)
 
-  (add-to-list 'auto-mode-alist '(<span class=
-"org-string">"\\.[rR]\\'"</span> . R-mode))
-
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">ESS: Emacs Speaks Statistics</span>
   (autoload 'R <span class="org-string">"ess-site"</span>
@@ -22801,15 +22811,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
   (autoload 'R-mode <span class="org-string">"ess-site"</span>
     <span class="org-doc">"Major mode for editing R source."</span> t)
-</pre>
-            </div>
 
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">accented characters on graphics</span>
-  (add-to-list 'process-coding-system-alist
-               '(<span class="org-string">"R.*"</span> . iso-latin-1))
+  (add-to-list 'auto-mode-alist '(<span class=
+"org-string">"\\.[rR]\\'"</span> . R-mode))
 </pre>
             </div>
           </div>
@@ -22819,18 +22823,36 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           <h4 id="sec-40-13-2">3 Interacting with statistical programs</h4>
 
           <div class="outline-text-4" id="text-40-13-2">
-            <p>Customize variables for ESS (set these variables <b>before</b>
-            loading <code>ess-site</code>).</p>
+            <p>Start an R session with <code>M-x R</code>.</p>
+
+            <div class="note">
+              <p>To run statistical processes under ESS, Windows users will
+              need to make sure that the directories for <code>R</code> and
+              <code>Rterm</code> are in their <code>PATH</code> environment
+              variable.</p>
+            </div>
+
+            <p><b>Customize</b> variables for ESS (set these variables
+            <b>before</b> loading <code>ess-site</code>).</p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">3.5 start R in current working directory, don't ask user</span>
+"org-comment">start R in current working directory, don't ask user</span>
   (setq ess-ask-for-ess-directory nil)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">3.5 new inferior ESS process appears in another window in the current frame</span>
+"org-comment">new inferior ESS process appears in another window in the current frame</span>
   (setq inferior-ess-same-window nil)
+</pre>
+            </div>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">accented characters on graphics</span>
+  (add-to-list 'process-coding-system-alist
+               '(<span class="org-string">"R.*"</span> . iso-latin-1))
 </pre>
             </div>
           </div>
@@ -22855,16 +22877,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">display input commands in the process buffer</span>
-  (setq ess-eval-visibly 'nowait)       <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">but avoid Emacs hanging on large</span>
-                                        <span class=
-"org-comment-delimiter">; </span><span class="org-comment">evaluations</span>
-
+"org-comment">;; display input commands in the process buffer</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">number of seconds to highlight the evaluated region</span>
-  (setq ess-blink-delay .6)
+"org-comment">(setq ess-eval-visibly 'nowait)       ; but avoid Emacs hanging on large</span>
+  <span class=
+"org-comment-delimiter">;;                                       </span><span class="org-comment">; evaluations</span>
 </pre>
             </div>
           </div>
@@ -22874,10 +22891,18 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           <h4 id="sec-40-13-5">7 Editing objects and functions</h4>
 
           <div class="outline-text-4" id="text-40-13-5">
+            <p>Smart underscore:</p>
+
+            <ul class="org-ul">
+              <li>Pressing underscore once inserts <code>&lt;-</code>.</li>
+
+              <li>Pressing underscore twice inserts a literal underscore.</li>
+            </ul>
+
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">7.4 default ESS indentation style</span>
+"org-comment">default ESS indentation style</span>
   (setq ess-default-style 'DEFAULT)
 </pre>
             </div>
@@ -22897,6 +22922,14 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
               <li><a href=
               "http://code.google.com/p/ess-tracebug/wiki/GettingStarted">http://code.google.com/p/ess-tracebug/wiki/GettingStarted</a>.</li>
             </ul>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">activate ess-tracebug every time r session starts</span>
+  (add-hook 'ess-post-run-hook 'ess-tracebug)
+</pre>
+            </div>
           </div>
         </div>
 
@@ -22977,6 +23010,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-doc">"View *R* objects in a dired-like buffer."</span> t)
 </pre>
               </div>
+
+              <p>You could prefer to have the <code>*R dired*</code> buffer in
+              a separate frame. Check out
+              <code>special-display-buffer-names</code>.</p>
             </div>
           </div>
 
@@ -23023,24 +23060,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     )
 </pre>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="outline-container-sec-40-13-8" class="outline-4">
-          <h4 id="sec-40-13-8">12 Overview of ESS features for the S
-          family</h4>
-
-          <div class="outline-text-4" id="text-40-13-8">
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; 12.2 add to list of prefixes recognized by ESS</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq ess-r-versions '("R-3.0.2"))    ; R-current</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; matching versions will appear after doing M-x R &lt;tab&gt; &lt;tab&gt;</span>
-</pre>
             </div>
           </div>
         </div>
@@ -25259,7 +25278,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140827.1527]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140827.1610]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

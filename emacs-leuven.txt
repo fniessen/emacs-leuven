@@ -1871,7 +1871,7 @@ screencasts.
 (leuven--chapter leuven-chapter-15-search "15 Searching and Replacement"
 #+end_src
 
-** Incremental Search
+** Incremental Search (aka "Live Search")
 
 Have a look at the "Standard Isearch Keys" on
 http://www.emacswiki.org/emacs/IncrementalSearch
@@ -10768,13 +10768,19 @@ By default, put *your own snippets* in the directory =~/.emacs.d/snippets=.
       (define-key yas-minor-mode-map (kbd "SPC") 'yas-expand)
 
       ;; insert snippet at point
-      (global-set-key (kbd "C-c s") 'yas-insert-snippet)
+      (global-set-key (kbd "C-c s") 'yas-insert-snippet) ; also on `C-c & C-s'
 
       ;; UI for selecting snippet when there are multiple candidates
       (setq yas-prompt-functions '(yas-dropdown-prompt))
 #+end_src
 
 *** Writing snippets
+
+- ~C-c & C-n~ ::
+    ~yas-new-snippet~
+
+- ~C-c & C-v~ ::
+    ~yas-visit-snippet-file~
 
 After editing your snippets:
 - ~M-x yas-recompile-all~ to compile all snippets,
@@ -10796,7 +10802,7 @@ Automatically reload snippets after saving.
 
 *** Frequently Asked Questions
 
-Why is there an extra newline?
+**** Why is there an extra newline?
 
 #+begin_src emacs-lisp
       (add-hook 'snippet-mode-hook
@@ -10804,7 +10810,7 @@ Why is there an extra newline?
                   (setq require-final-newline nil)))
 #+end_src
 
-Why doesn't TAB expand a snippet?
+**** Why doesn't TAB expand a snippet?
 
 See [[id:366386cb-9c4f-4d61-b676-e742e6277587][Interaction between Org and other packages]].
 
@@ -11457,7 +11463,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 (add-hook 'dired-mode-hook
           (lambda ()
 
-            ;; Auto-refresh dired on file change
+            ;; auto-refresh Dired on file change
             (auto-revert-mode)
             (setq-default auto-revert-interval 1)))
 #+end_src
@@ -12662,21 +12668,10 @@ See:
 - http://ess.r-project.org/Manual/ess.html,
 - http://www.emacswiki.org/emacs/EmacsSpeaksStatistics.
 
-To run statistical processes under ESS, Windows users will need to make sure
-that the directories for ~R~ and ~Rterm~ are in their ~PATH~ environment variable.
-
-Start an R session with ~M-x R~.
-
-Magic underscore (~_~):
-- Pressing underscore once inserts ~<-~.
-- Pressing underscore twice inserts a literal underscore.
-
 *** 2 Installing ESS on your system
 
 #+begin_src emacs-lisp
   (leuven--section "Utilities -- ESS")
-
-  (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
 
   ;; ESS: Emacs Speaks Statistics
   (autoload 'R "ess-site"
@@ -12684,24 +12679,33 @@ Magic underscore (~_~):
 
   (autoload 'R-mode "ess-site"
     "Major mode for editing R source." t)
+
+  (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
+#+end_src
+
+*** 3 Interacting with statistical programs
+
+Start an R session with ~M-x R~.
+
+#+begin_note
+To run statistical processes under ESS, Windows users will need to make sure
+that the directories for ~R~ and ~Rterm~ are in their ~PATH~ environment variable.
+#+end_note
+
+*Customize* variables for ESS (set these variables *before* loading ~ess-site~).
+
+#+begin_src emacs-lisp
+  ;; start R in current working directory, don't ask user
+  (setq ess-ask-for-ess-directory nil)
+
+  ;; new inferior ESS process appears in another window in the current frame
+  (setq inferior-ess-same-window nil)
 #+end_src
 
 #+begin_src emacs-lisp
   ;; accented characters on graphics
   (add-to-list 'process-coding-system-alist
                '("R.*" . iso-latin-1))
-#+end_src
-
-*** 3 Interacting with statistical programs
-
-Customize variables for ESS (set these variables *before* loading ~ess-site~).
-
-#+begin_src emacs-lisp
-  ;; 3.5 start R in current working directory, don't ask user
-  (setq ess-ask-for-ess-directory nil)
-
-  ;; 3.5 new inferior ESS process appears in another window in the current frame
-  (setq inferior-ess-same-window nil)
 #+end_src
 
 *** 4 Interacting with the ESS process
@@ -12711,19 +12715,20 @@ Customize variables for ESS (set these variables *before* loading ~ess-site~).
 
 *** 5 Sending code to the ESS process
 
-#+begin_src emacs-lisp :tangle no
-  ;; display input commands in the process buffer
-  (setq ess-eval-visibly 'nowait)       ; but avoid Emacs hanging on large
-                                        ; evaluations
-
-  ;; number of seconds to highlight the evaluated region
-  (setq ess-blink-delay .6)
+#+begin_src emacs-lisp
+  ;; ;; display input commands in the process buffer
+  ;; (setq ess-eval-visibly 'nowait)       ; but avoid Emacs hanging on large
+  ;;                                       ; evaluations
 #+end_src
 
 *** 7 Editing objects and functions
 
+Smart underscore:
+- Pressing underscore once inserts ~<-~.
+- Pressing underscore twice inserts a literal underscore.
+
 #+begin_src emacs-lisp
-  ;; 7.4 default ESS indentation style
+  ;; default ESS indentation style
   (setq ess-default-style 'DEFAULT)
 #+end_src
 
@@ -12732,6 +12737,11 @@ Customize variables for ESS (set these variables *before* loading ~ess-site~).
 See
 - http://code.google.com/p/ess-tracebug/
 - http://code.google.com/p/ess-tracebug/wiki/GettingStarted.
+
+#+begin_src emacs-lisp :tangle no
+  ;; activate ess-tracebug every time r session starts
+  (add-hook 'ess-post-run-hook 'ess-tracebug)
+#+end_src
 
 *** 11 Other ESS features and tools
 
@@ -12776,6 +12786,9 @@ With your point on the line of a variable,
       "View *R* objects in a dired-like buffer." t)
 #+end_src
 
+You could prefer to have the ~*R dired*~ buffer in a separate frame.  Check out
+~special-display-buffer-names~.
+
 **** Interaction with Org mode
 
 **** Helm
@@ -12799,14 +12812,6 @@ With your point on the line of a variable,
         (hs-minor-mode t)))
 
     )
-#+end_src
-
-*** 12 Overview of ESS features for the S family
-
-#+begin_src emacs-lisp
-  ;; ;; 12.2 add to list of prefixes recognized by ESS
-  ;; (setq ess-r-versions '("R-3.0.2"))    ; R-current
-  ;; ;; matching versions will appear after doing M-x R <tab> <tab>
 #+end_src
 
 ** Proced

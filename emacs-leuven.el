@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140827.1525
+;; Version: 20140827.1608
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140827.1525]--")
+(message "* --[ Loading Emacs Leuven 20140827.1608]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -6863,7 +6863,7 @@ up before you execute another command."
       (define-key yas-minor-mode-map (kbd "SPC") 'yas-expand)
 
       ;; insert snippet at point
-      (global-set-key (kbd "C-c s") 'yas-insert-snippet)
+      (global-set-key (kbd "C-c s") 'yas-insert-snippet) ; also on `C-c & C-s'
 
       ;; UI for selecting snippet when there are multiple candidates
       (setq yas-prompt-functions '(yas-dropdown-prompt))
@@ -8012,8 +8012,6 @@ up before you execute another command."
 
   (leuven--section "Utilities -- ESS")
 
-  (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
-
   ;; ESS: Emacs Speaks Statistics
   (autoload 'R "ess-site"
     "Call 'R', the 'GNU S' system from the R Foundation." t)
@@ -8021,17 +8019,23 @@ up before you execute another command."
   (autoload 'R-mode "ess-site"
     "Major mode for editing R source." t)
 
+  (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
+
+  ;; start R in current working directory, don't ask user
+  (setq ess-ask-for-ess-directory nil)
+
+  ;; new inferior ESS process appears in another window in the current frame
+  (setq inferior-ess-same-window nil)
+
   ;; accented characters on graphics
   (add-to-list 'process-coding-system-alist
                '("R.*" . iso-latin-1))
 
-  ;; 3.5 start R in current working directory, don't ask user
-  (setq ess-ask-for-ess-directory nil)
+  ;; ;; display input commands in the process buffer
+  ;; (setq ess-eval-visibly 'nowait)       ; but avoid Emacs hanging on large
+  ;;                                       ; evaluations
 
-  ;; 3.5 new inferior ESS process appears in another window in the current frame
-  (setq inferior-ess-same-window nil)
-
-  ;; 7.4 default ESS indentation style
+  ;; default ESS indentation style
   (setq ess-default-style 'DEFAULT)
 
   (with-eval-after-load "ess-site"
@@ -8054,10 +8058,6 @@ up before you execute another command."
         (hs-minor-mode t)))
 
     )
-
-  ;; ;; 12.2 add to list of prefixes recognized by ESS
-  ;; (setq ess-r-versions '("R-3.0.2"))    ; R-current
-  ;; ;; matching versions will appear after doing M-x R <tab> <tab>
 
 ;;* Proced
 
@@ -8872,7 +8872,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140827.1526]--")
+(message "* --[ Loaded Emacs Leuven 20140827.1609]--")
 
 (provide 'emacs-leuven)
 
