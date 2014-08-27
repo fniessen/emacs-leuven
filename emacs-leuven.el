@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140827.1320
+;; Version: 20140827.1525
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140827.1320]--")
+(message "* --[ Loading Emacs Leuven 20140827.1525]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -8036,13 +8036,24 @@ up before you execute another command."
 
   (with-eval-after-load "ess-site"
 
-    ;; use eldoc to report R function names
-    (require 'ess-eldoc)
-    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
+    ;; prototype object browser for R, looks like dired mode
+    (autoload 'ess-rdired "ess-rdired"
+      "View *R* objects in a dired-like buffer." t)
 
     ;; helm-sources and some utilities for GNU R
     (when (locate-library "helm")
-      (try-require 'helm-R)))
+      (try-require 'helm-R))
+
+    ;; code folding in ess mode
+    (add-hook 'ess-mode-hook
+      (lambda()
+        (local-set-key (kbd "C-c <right>") 'hs-show-block)
+        (local-set-key (kbd "C-c <left>")  'hs-hide-block)
+        (local-set-key (kbd "C-c <up>")    'hs-hide-all)
+        (local-set-key (kbd "C-c <down>")  'hs-show-all)
+        (hs-minor-mode t)))
+
+    )
 
   ;; ;; 12.2 add to list of prefixes recognized by ESS
   ;; (setq ess-r-versions '("R-3.0.2"))    ; R-current
@@ -8861,7 +8872,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140827.1321]--")
+(message "* --[ Loaded Emacs Leuven 20140827.1526]--")
 
 (provide 'emacs-leuven)
 

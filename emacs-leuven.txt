@@ -1610,10 +1610,20 @@ much easier to follow some key variables through a block of code.
 ** Window Fringes
 
 #+begin_src emacs-lisp :tangle no
-(when (window-system)
-  (require 'git-gutter))
+  (when (window-system)
+    (try-require 'git-gutter))
 
-(global-git-gutter-mode +1)
+  (setq git-gutter:disabled-modes '(asm-mode image-mode))
+
+  ;; update frequency: uncomment this when Emacs/GitGutter slows.
+  ;; (setq git-gutter:update-threshold 1)
+  ;; (setq git-gutter:update-hooks '(after-save-hook after-revert-hook))
+
+  (setq git-gutter:hide-gutter t)         ; Hide gutter if there are no changes
+  (setq git-gutter:diff-option "-w") ; Pass option to 'git diff' command: -w: ignore all spaces
+  (setq git-gutter:verbosity 0)           ; Log/Message Level
+
+  (global-git-gutter-mode +1)
 #+end_src
 
 ** Displaying Boundaries
@@ -9328,6 +9338,8 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
 ** Documentation Lookup
 
+Function argument hint.
+
 #+begin_src emacs-lisp
 ;;** 26.6 (info "(emacs)Documentation") Lookup
 
@@ -12701,7 +12713,7 @@ Customize variables for ESS (set these variables *before* loading ~ess-site~).
 
 #+begin_src emacs-lisp :tangle no
   ;; display input commands in the process buffer
-  (setq ess-eval-visibly 'nowait)       ; avoid Emacs hanging on large
+  (setq ess-eval-visibly 'nowait)       ; but avoid Emacs hanging on large
                                         ; evaluations
 
   ;; number of seconds to highlight the evaluated region
@@ -12723,26 +12735,71 @@ See
 
 *** 11 Other ESS features and tools
 
-#+begin_src emacs-lisp
-  (with-eval-after-load "ess-site"
-
-    ;; use eldoc to report R function names
-    (require 'ess-eldoc)
-    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
-
-    ;; helm-sources and some utilities for GNU R
-    (when (locate-library "helm")
-      (try-require 'helm-R)))
-#+end_src
-
 **** Describe object at point
 
 Get info for object at point, and display it in an electric buffer with the
 command ~ess-describe-object-at-point~ (bound to ~C-c C-d C-e~, repeat ~C-e~ or ~e~ to
-cycle between ~str()~, ~head()~, ~tail()~ and ~summary()~).  Use ~other-window~ to switch
-to ~*ess-describe*~ window.
+cycle between ~str()~, ~head()~, ~tail()~ and ~summary()~).
+
+Use ~other-window~ to switch to ~*ess-describe*~ window.
 
 It was inspired by Erik Iverson's ~ess-R-object-tooltip~.
+
+**** ElDoc
+
+Since ESS v12.02, ElDoc functionality (to report R function arguments) has been
+moved into the core, and is active by default; so you don't need to configure
+anything...
+
+When you visit a R mode, ElDoc will be turned on.  However, you will *first need
+to associate the R buffer with an R process* so that args can be looked up --
+otherwise, ElDoc will silently not report anything.
+
+So, e.g. try:
+1. ~C-x C-f somefile.R~
+2. ~M-x R~ (so that =somefile.R= is associated with ~*R*~)
+3. ElDoc should then work.
+
+**** Rdired
+
+With your point on the line of a variable,
+
+- ~p~ will plot the object,
+- ~v~ will view it, and
+- ~d~ will mark the object for deletion (~x~ will actually perform the deletion).
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "ess-site"
+
+    ;; prototype object browser for R, looks like dired mode
+    (autoload 'ess-rdired "ess-rdired"
+      "View *R* objects in a dired-like buffer." t)
+#+end_src
+
+**** Interaction with Org mode
+
+**** Helm
+
+#+begin_src emacs-lisp
+    ;; helm-sources and some utilities for GNU R
+    (when (locate-library "helm")
+      (try-require 'helm-R))
+#+end_src
+
+**** Code folding
+
+#+begin_src emacs-lisp
+    ;; code folding in ess mode
+    (add-hook 'ess-mode-hook
+      (lambda()
+        (local-set-key (kbd "C-c <right>") 'hs-show-block)
+        (local-set-key (kbd "C-c <left>")  'hs-hide-block)
+        (local-set-key (kbd "C-c <up>")    'hs-hide-all)
+        (local-set-key (kbd "C-c <down>")  'hs-show-all)
+        (hs-minor-mode t)))
+
+    )
+#+end_src
 
 *** 12 Overview of ESS features for the S family
 

@@ -1082,6 +1082,17 @@
                     <ul>
                       <li><a href="#sec-40-13-7-1">Describe object at
                       point</a></li>
+
+                      <li><a href="#sec-40-13-7-2">ElDoc</a></li>
+
+                      <li><a href="#sec-40-13-7-3">Rdired</a></li>
+
+                      <li><a href="#sec-40-13-7-4">Interaction with Org
+                      mode</a></li>
+
+                      <li><a href="#sec-40-13-7-5">Helm</a></li>
+
+                      <li><a href="#sec-40-13-7-6">Code folding</a></li>
                     </ul>
                   </li>
 
@@ -1248,7 +1259,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140827.1321</span>
+"org-comment">Version: 20140827.1526</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1371,7 +1382,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140827.1321]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140827.1526]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -3993,11 +4004,30 @@
         <div class="outline-text-3" id="text-16-6">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-(<span class="org-keyword">when</span> (window-system)
-  (<span class="org-keyword">require</span> '<span class=
-"org-constant">git-gutter</span>))
+  (<span class="org-keyword">when</span> (window-system)
+    (try-require 'git-gutter))
 
-(global-git-gutter-mode +1)
+  (setq git-gutter:disabled-modes '(asm-mode image-mode))
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">update frequency: uncomment this when Emacs/GitGutter slows.</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq git-gutter:update-threshold 1)</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq git-gutter:update-hooks '(after-save-hook after-revert-hook))</span>
+
+  (setq git-gutter:hide-gutter t)         <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Hide gutter if there are no changes</span>
+  (setq git-gutter:diff-option <span class=
+"org-string">"-w"</span>) <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Pass option to 'git diff' command: -w: ignore all spaces</span>
+  (setq git-gutter:verbosity 0)           <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Log/Message Level</span>
+
+  (global-git-gutter-mode +1)
 </pre>
           </div>
         </div>
@@ -16995,6 +17025,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
         <h3 id="sec-31-6">Documentation Lookup</h3>
 
         <div class="outline-text-3" id="text-31-6">
+          <p>Function argument hint.</p>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -22826,7 +22858,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment">display input commands in the process buffer</span>
   (setq ess-eval-visibly 'nowait)       <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">avoid Emacs hanging on large</span>
+"org-comment">but avoid Emacs hanging on large</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class="org-comment">evaluations</span>
 
@@ -22871,26 +22903,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         <div id="outline-container-sec-40-13-7" class="outline-4">
           <h4 id="sec-40-13-7">11 Other ESS features and tools</h4>
 
-          <div class="outline-text-4" id="text-40-13-7">
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ess-site"</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">use eldoc to report R function names</span>
-    (<span class="org-keyword">require</span> '<span class=
-"org-constant">ess-eldoc</span>)
-    (add-hook 'inferior-ess-mode-hook 'ess-use-eldoc)
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">helm-sources and some utilities for GNU R</span>
-    (<span class="org-keyword">when</span> (locate-library <span class=
-"org-string">"helm"</span>)
-      (try-require 'helm-R)))
-</pre>
-            </div>
-          </div>
+          <div class="outline-text-4" id="text-40-13-7"></div>
 
           <div id="outline-container-sec-40-13-7-1" class="outline-5">
             <h5 id="sec-40-13-7-1">Describe object at point</h5>
@@ -22901,11 +22914,115 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
               (bound to <code>C-c C-d C-e</code>, repeat <code>C-e</code> or
               <code>e</code> to cycle between <code>str()</code>,
               <code>head()</code>, <code>tail()</code> and
-              <code>summary()</code>). Use <code>other-window</code> to switch
-              to <code>*ess-describe*</code> window.</p>
+              <code>summary()</code>).</p>
+
+              <p>Use <code>other-window</code> to switch to
+              <code>*ess-describe*</code> window.</p>
 
               <p>It was inspired by Erik Iverson’s
               <code>ess-R-object-tooltip</code>.</p>
+            </div>
+          </div>
+
+          <div id="outline-container-sec-40-13-7-2" class="outline-5">
+            <h5 id="sec-40-13-7-2">ElDoc</h5>
+
+            <div class="outline-text-5" id="text-40-13-7-2">
+              <p>Since ESS v12.02, ElDoc functionality (to report R function
+              arguments) has been moved into the core, and is active by
+              default; so you don’t need to configure anything…</p>
+
+              <p>When you visit a R mode, ElDoc will be turned on. However, you
+              will <b>first need to associate the R buffer with an R
+              process</b> so that args can be looked up – otherwise, ElDoc will
+              silently not report anything.</p>
+
+              <p>So, e.g. try:</p>
+
+              <ol class="org-ol">
+                <li><code>C-x C-f somefile.R</code></li>
+
+                <li><code>M-x R</code> (so that <code>somefile.R</code> is
+                associated with <code>*R*</code>)</li>
+
+                <li>ElDoc should then work.</li>
+              </ol>
+            </div>
+          </div>
+
+          <div id="outline-container-sec-40-13-7-3" class="outline-5">
+            <h5 id="sec-40-13-7-3">Rdired</h5>
+
+            <div class="outline-text-5" id="text-40-13-7-3">
+              <p>With your point on the line of a variable,</p>
+
+              <ul class="org-ul">
+                <li><code>p</code> will plot the object,</li>
+
+                <li><code>v</code> will view it, and</li>
+
+                <li><code>d</code> will mark the object for deletion
+                (<code>x</code> will actually perform the deletion).</li>
+              </ul>
+
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"ess-site"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">prototype object browser for R, looks like dired mode</span>
+    (autoload 'ess-rdired <span class="org-string">"ess-rdired"</span>
+      <span class=
+"org-doc">"View *R* objects in a dired-like buffer."</span> t)
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div id="outline-container-sec-40-13-7-4" class="outline-5">
+            <h5 id="sec-40-13-7-4">Interaction with Org mode</h5>
+          </div>
+
+          <div id="outline-container-sec-40-13-7-5" class="outline-5">
+            <h5 id="sec-40-13-7-5">Helm</h5>
+
+            <div class="outline-text-5" id="text-40-13-7-5">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">helm-sources and some utilities for GNU R</span>
+    (<span class="org-keyword">when</span> (locate-library <span class=
+"org-string">"helm"</span>)
+      (try-require 'helm-R))
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div id="outline-container-sec-40-13-7-6" class="outline-5">
+            <h5 id="sec-40-13-7-6">Code folding</h5>
+
+            <div class="outline-text-5" id="text-40-13-7-6">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">code folding in ess mode</span>
+    (add-hook 'ess-mode-hook
+      (<span class="org-keyword">lambda</span>()
+        (local-set-key (kbd <span class=
+"org-string">"C-c &lt;right&gt;"</span>) 'hs-show-block)
+        (local-set-key (kbd <span class=
+"org-string">"C-c &lt;left&gt;"</span>)  'hs-hide-block)
+        (local-set-key (kbd <span class=
+"org-string">"C-c &lt;up&gt;"</span>)    'hs-hide-all)
+        (local-set-key (kbd <span class=
+"org-string">"C-c &lt;down&gt;"</span>)  'hs-show-all)
+        (hs-minor-mode t)))
+
+    )
+</pre>
+              </div>
             </div>
           </div>
         </div>
@@ -25142,7 +25259,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140827.1322]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140827.1527]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
