@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140827.1136
+;; Version: 20140827.1320
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140827.1136]--")
+(message "* --[ Loading Emacs Leuven 20140827.1320]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -6974,6 +6974,16 @@ up before you execute another command."
         (define-key ac-completing-map (kbd "M-n") nil)
         (define-key ac-completing-map (kbd "M-p") nil)
 
+        ;; add other modes into `ac-modes'
+        (setq ac-modes
+              (append ac-modes
+                      '(change-log-mode
+                        org-mode
+                        prog-mode       ; programming modes
+                        snippet-mode
+                        sql-mode
+                        text-mode)))
+
         ;; 7.8 enable auto-complete-mode automatically for Sword mode
         (add-to-list 'ac-modes 'sword-mode) ; brand new mode
 
@@ -6981,6 +6991,40 @@ up before you execute another command."
         (setq-default ac-sources
                       ;; buffers whom major-mode is same to of a current buffer
                       '(ac-source-words-in-same-mode-buffers))
+
+        ;; set default auto-complete source
+        (setq ac-sources                ; snippet
+              '(ac-source-yasnippet
+                                        ; template
+                ;; ac-source-template
+                                        ; abbrev
+                ac-source-abbrev
+                ac-source-dabbrev
+                                        ; filename
+                ac-source-filename
+                ac-source-files-in-current-dir
+                                        ; programming
+                ac-source-semantic
+                ;; ac-source-semantic-raw
+                                        ; tags
+                ;; ac-source-etags
+                ;; ac-source-gtags
+                ac-source-variables
+                ac-source-functions
+                ac-source-symbols
+                                        ; chunk
+                ;; ac-source-chunk-list
+                                        ; buffer
+                ac-source-words-in-buffer
+                ac-source-words-in-same-mode-buffers
+                                        ; dictionary
+                ;; ac-source-dictionary
+                ;; ac-source-dictionary-chunk
+                                        ; spell
+                ;; ac-source-ispell
+                ;; ac-source-entity
+                                        ; features
+                ac-source-features))
 
         ;; 7.13 change sources for Emacs Lisp mode
         (add-hook 'emacs-lisp-mode-hook
@@ -7014,9 +7058,7 @@ up before you execute another command."
           (kbd "<right>") 'ac-complete)
 
         ;; 11.1 avoid Flyspell processes when auto completion is being started
-        (ac-flyspell-workaround)
-
-        )))
+        (ac-flyspell-workaround))))
 
 )                                       ; chapter 29 ends here
 
@@ -8819,7 +8861,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140827.1137]--")
+(message "* --[ Loaded Emacs Leuven 20140827.1321]--")
 
 (provide 'emacs-leuven)
 

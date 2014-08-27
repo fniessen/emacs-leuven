@@ -10910,8 +10910,20 @@ mode, simply add it to the ~ac-modes~:
 #+end_example
 
 Popups:
+
 - *Completion menu*
-- *Quick help* (tooltip)
+
+  Candidates suffix:
+  + (nothing) -- means it is buffer string cache complete.
+  + ~v~ -- Variable
+  + ~f~ -- Function
+  + ~s~ -- Symbol
+  + ~c~ -- Constant
+  + ~a~ -- Abbrev, yasnippet
+  + ~d~ -- Dictionary, environment variable (e.g. LC_CTYPE)
+  + ~m~ -- Module
+
+- *Quick help* (tooltip appearing at the side of the completion menu)
 
 According to the settings, completion is done by ~TAB~ or ~RET~:
 
@@ -10929,7 +10941,7 @@ There are other ways to select candidates:
 Other operations are enabled temporarily when completion is started:
 
 - ~C-s~ (~ac-isearch~) ::
-     Filter completion candidates.
+     *Filter* completion candidates.
 
 - ~<C-down>~ or ~C-M-n~ (~ac-quick-help-scroll-down~) ::
      Scroll down quick help.
@@ -10938,11 +10950,13 @@ Other operations are enabled temporarily when completion is started:
      Scroll up quick help.
 
 - ~<f1>~ (or ~C-?~, ~ac-help~) ::
-     Show additional help (for functions, arguments and objects) in electrical
-     buffer.
+     Show additional *help* (for functions, arguments and objects) in electrical
+     *buffer*.
+
+     Use ~C-M-v~ (or ~C-M-S-v~) to scroll down (or up).
 
 - ~<M-f1>~ (or ~C-M-?~, ~ac-persist-help~) ::
-     Show additional help in persistent buffer.
+     Show additional *help* in *persistent buffer*.
 
 Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-complete-work-with-yasnippet-and-abbrev][How to make auto-complete work with yasnippet and abbrev?]]
 
@@ -10971,6 +10985,16 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
         (define-key ac-completing-map (kbd "M-n") nil)
         (define-key ac-completing-map (kbd "M-p") nil)
 
+        ;; add other modes into `ac-modes'
+        (setq ac-modes
+              (append ac-modes
+                      '(change-log-mode
+                        org-mode
+                        prog-mode       ; programming modes
+                        snippet-mode
+                        sql-mode
+                        text-mode)))
+
         ;; 7.8 enable auto-complete-mode automatically for Sword mode
         (add-to-list 'ac-modes 'sword-mode) ; brand new mode
 
@@ -10978,6 +11002,40 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
         (setq-default ac-sources
                       ;; buffers whom major-mode is same to of a current buffer
                       '(ac-source-words-in-same-mode-buffers))
+
+        ;; set default auto-complete source
+        (setq ac-sources                ; snippet
+              '(ac-source-yasnippet
+                                        ; template
+                ;; ac-source-template
+                                        ; abbrev
+                ac-source-abbrev
+                ac-source-dabbrev
+                                        ; filename
+                ac-source-filename
+                ac-source-files-in-current-dir
+                                        ; programming
+                ac-source-semantic
+                ;; ac-source-semantic-raw
+                                        ; tags
+                ;; ac-source-etags
+                ;; ac-source-gtags
+                ac-source-variables
+                ac-source-functions
+                ac-source-symbols
+                                        ; chunk
+                ;; ac-source-chunk-list
+                                        ; buffer
+                ac-source-words-in-buffer
+                ac-source-words-in-same-mode-buffers
+                                        ; dictionary
+                ;; ac-source-dictionary
+                ;; ac-source-dictionary-chunk
+                                        ; spell
+                ;; ac-source-ispell
+                ;; ac-source-entity
+                                        ; features
+                ac-source-features))
 
         ;; 7.13 change sources for Emacs Lisp mode
         (add-hook 'emacs-lisp-mode-hook
@@ -11011,9 +11069,7 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
           (kbd "<right>") 'ac-complete)
 
         ;; 11.1 avoid Flyspell processes when auto completion is being started
-        (ac-flyspell-workaround)
-
-        )))
+        (ac-flyspell-workaround))))
 #+end_src
 
 #+begin_src emacs-lisp

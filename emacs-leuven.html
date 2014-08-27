@@ -1248,7 +1248,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140827.1138</span>
+"org-comment">Version: 20140827.1321</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1371,7 +1371,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140827.1138]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140827.1321]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -19617,9 +19617,36 @@ TAGS:
             <p>Popups:</p>
 
             <ul class="org-ul">
-              <li><b>Completion menu</b></li>
+              <li>
+                <p><b>Completion menu</b></p>
 
-              <li><b>Quick help</b> (tooltip)</li>
+                <p>Candidates suffix:</p>
+
+                <ul class="org-ul">
+                  <li>(nothing) – means it is buffer string cache
+                  complete.</li>
+
+                  <li><code>v</code> – Variable</li>
+
+                  <li><code>f</code> – Function</li>
+
+                  <li><code>s</code> – Symbol</li>
+
+                  <li><code>c</code> – Constant</li>
+
+                  <li><code>a</code> – Abbrev, yasnippet</li>
+
+                  <li><code>d</code> – Dictionary, environment variable (e.g.
+                  LC_CTYPE)</li>
+
+                  <li><code>m</code> – Module</li>
+                </ul>
+              </li>
+
+              <li>
+                <p><b>Quick help</b> (tooltip appearing at the side of the
+                completion menu)</p>
+              </li>
             </ul>
 
             <p>According to the settings, completion is done by
@@ -19651,28 +19678,41 @@ TAGS:
             <dl class="org-dl">
               <dt><code>C-s</code> (<code>ac-isearch</code>)</dt>
 
-              <dd>Filter completion candidates.</dd>
+              <dd>
+                <p><b>Filter</b> completion candidates.</p>
+              </dd>
 
               <dt><code>&lt;C-down&gt;</code> or <code>C-M-n</code>
               (<code>ac-quick-help-scroll-down</code>)</dt>
 
-              <dd>Scroll down quick help.</dd>
+              <dd>
+                <p>Scroll down quick help.</p>
+              </dd>
 
               <dt><code>&lt;C-up&gt;</code> or <code>C-M-p</code>
               (<code>ac-quick-help-scroll-up</code>)</dt>
 
-              <dd>Scroll up quick help.</dd>
+              <dd>
+                <p>Scroll up quick help.</p>
+              </dd>
 
               <dt><code>&lt;f1&gt;</code> (or <code>C-?</code>,
               <code>ac-help</code>)</dt>
 
-              <dd>Show additional help (for functions, arguments and objects)
-              in electrical buffer.</dd>
+              <dd>
+                <p>Show additional <b>help</b> (for functions, arguments and
+                objects) in electrical <b>buffer</b>.</p>
+
+                <p>Use <code>C-M-v</code> (or <code>C-M-S-v</code>) to scroll
+                down (or up).</p>
+              </dd>
 
               <dt><code>&lt;M-f1&gt;</code> (or <code>C-M-?</code>,
               <code>ac-persist-help</code>)</dt>
 
-              <dd>Show additional help in persistent buffer.</dd>
+              <dd>
+                <p>Show additional <b>help</b> in <b>persistent buffer</b>.</p>
+              </dd>
             </dl>
 
             <p>Eventually, see <a href=
@@ -19721,6 +19761,21 @@ TAGS:
 "org-string">"M-p"</span>) nil)
 
         <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">add other modes into `</span><span class=
+"org-comment"><span class="org-constant">ac-modes</span></span><span class=
+"org-comment">'</span>
+        (setq ac-modes
+              (append ac-modes
+                      '(change-log-mode
+                        org-mode
+                        prog-mode       <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">programming modes</span>
+                        snippet-mode
+                        sql-mode
+                        text-mode)))
+
+        <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">7.8 enable auto-complete-mode automatically for Sword mode</span>
         (add-to-list 'ac-modes 'sword-mode) <span class=
 "org-comment-delimiter">; </span><span class=
@@ -19732,6 +19787,61 @@ TAGS:
                       <span class=
 "org-comment-delimiter">;; </span><span class="org-comment">buffers whom major-mode is same to of a current buffer</span>
                       '(ac-source-words-in-same-mode-buffers))
+
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">set default auto-complete source</span>
+        (setq ac-sources                <span class=
+"org-comment-delimiter">; </span><span class="org-comment">snippet</span>
+              '(ac-source-yasnippet
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">template</span>
+                <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">ac-source-template</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">abbrev</span>
+                ac-source-abbrev
+                ac-source-dabbrev
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">filename</span>
+                ac-source-filename
+                ac-source-files-in-current-dir
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">programming</span>
+                ac-source-semantic
+                <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">ac-source-semantic-raw</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">tags</span>
+                <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">ac-source-etags</span>
+                <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">ac-source-gtags</span>
+                ac-source-variables
+                ac-source-functions
+                ac-source-symbols
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">chunk</span>
+                <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">ac-source-chunk-list</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">buffer</span>
+                ac-source-words-in-buffer
+                ac-source-words-in-same-mode-buffers
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">dictionary</span>
+                <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">ac-source-dictionary</span>
+                <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">ac-source-dictionary-chunk</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">spell</span>
+                <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">ac-source-ispell</span>
+                <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">ac-source-entity</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">features</span>
+                ac-source-features))
 
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">7.13 change sources for Emacs Lisp mode</span>
@@ -19780,9 +19890,7 @@ TAGS:
 
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">11.1 avoid Flyspell processes when auto completion is being started</span>
-        (ac-flyspell-workaround)
-
-        )))
+        (ac-flyspell-workaround))))
 </pre>
             </div>
 
@@ -25034,7 +25142,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140827.1138]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140827.1322]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
