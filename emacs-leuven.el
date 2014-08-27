@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140827.1828
+;; Version: 20140827.1954
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140827.1828]--")
+(message "* --[ Loading Emacs Leuven 20140827.1954]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -1009,13 +1009,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (GNUEmacs
     ;; whitespace mode
-    (add-hook 'text-mode-hook
-              (lambda ()
-                (whitespace-mode 1)))
+    (add-hook 'text-mode-hook 'whitespace-mode)
 
-    (add-hook 'prog-mode-hook
-              (lambda ()
-                (whitespace-mode 1)))
+    (add-hook 'prog-mode-hook 'whitespace-mode)
 
     (with-eval-after-load "whitespace"
 
@@ -2062,9 +2058,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; show image files as images (not as semi-random bits)
   (GNUEmacs
-    (add-hook 'find-file-hook
-              (lambda ()
-                (auto-image-file-mode 1))))
+    (add-hook 'find-file-hook 'auto-image-file-mode))
 
 )                                       ; chapter 18 ends here
 
@@ -3856,8 +3850,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         (unless (equal effort "")
           (org-set-property "Effort" effort)))))
 
-  (add-hook 'org-clock-in-prepare-hook
-            'leuven--org-ask-effort)
+  (add-hook 'org-clock-in-prepare-hook 'leuven--org-ask-effort)
 
 ;;* 9 (info "(org)Capture - Refile - Archive")
 
@@ -4963,8 +4956,7 @@ this with to-do items than with projects or headings."
                   "xelatex -interaction=nonstopmode -output-directory=%o %f")))))
 
     ;; hook run before parsing an export buffer
-    (add-hook 'org-export-before-parsing-hook
-              'leuven--change-pdflatex-program)
+    (add-hook 'org-export-before-parsing-hook 'leuven--change-pdflatex-program)
 
     ;; export source code using `listings' (instead of `verbatim')
     (setq org-latex-listings t)
@@ -5027,8 +5019,7 @@ this with to-do items than with projects or headings."
                    '("frenchb" "babel") t))
 
     ;; hook run before parsing an export buffer
-    (add-hook 'org-export-before-parsing-hook
-              'leuven--change-pdflatex-packages)
+    (add-hook 'org-export-before-parsing-hook 'leuven--change-pdflatex-packages)
 
     ;; 12.6.5 default position for LaTeX figures
     (setq org-latex-default-figure-position "!htbp")
@@ -5938,9 +5929,7 @@ this with to-do items than with projects or headings."
                 ;; when `html-mode-hook' is called from `html-helper-mode'
                 (hl-tags-mode 1)))
 
-    (add-hook 'nxml-mode-hook
-              (lambda ()
-                (hl-tags-mode 1))))
+    (add-hook 'nxml-mode-hook 'hl-tags-mode))
 
 )                                       ; chapter 25 ends here
 
@@ -6099,9 +6088,7 @@ this with to-do items than with projects or headings."
   (leuven--section "26.7 (emacs)Hideshow minor mode")
 
   ;; enable Hideshow (code folding) for programming modes
-  (add-hook 'prog-mode-hook
-            (lambda ()
-              (hs-minor-mode 1)))
+  (add-hook 'prog-mode-hook 'hs-minor-mode)
 
   (with-eval-after-load "hideshow"
 
@@ -6287,7 +6274,7 @@ this with to-do items than with projects or headings."
   (when (try-require 'flycheck)
 
     ;; enable Flycheck mode in all buffers
-    (add-hook 'after-init-hook #'global-flycheck-mode)
+    (add-hook 'after-init-hook 'global-flycheck-mode)
 
     (defun magnars/adjust-flycheck-automatic-syntax-eagerness ()
       "Adjust how often we check for errors based on if there are any.
@@ -6716,11 +6703,9 @@ up before you execute another command."
 
     ;; XXX if prog-mode, then Semantic will be launched after Emacs init, as
     ;; the scratch buffer is in Emacs Lisp...
-    (add-hook 'java-mode-hook
-              (lambda ()
-                ;; enable parser features (Semantic mode) and install a
-                ;; `Development' menu on the menu-bar
-                (semantic-mode 1)))
+    (add-hook 'java-mode-hook 'semantic-mode) ; enable parser features (Semantic
+                                        ; mode) and install a `Development' menu
+                                        ; on the menu-bar
 
     ;; ;; smart completion, and display of information for tags & classes
     ;; (require 'semantic/ia)
@@ -7365,8 +7350,8 @@ up before you execute another command."
 
     ;; add today's appointments (found in `org-agenda-files') each time the
     ;; agenda buffer is (re)built
-    (add-hook 'org-agenda-finalize-hook
-              'org-agenda-to-appt)      ;! don't use the `org-agenda-mode-hook'
+    (add-hook 'org-agenda-finalize-hook 'org-agenda-to-appt)
+                                        ;! don't use the `org-agenda-mode-hook'
                                         ;! because the Org agenda files would be
                                         ;! opened once by `org-agenda-to-appt',
                                         ;! and then killed by
@@ -8852,7 +8837,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140827.1829]--")
+(message "* --[ Loaded Emacs Leuven 20140827.1955]--")
 
 (provide 'emacs-leuven)
 

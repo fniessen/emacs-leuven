@@ -1675,13 +1675,9 @@ characters over the default mechanism of ~nobreak-char-display~ and
 #+begin_src emacs-lisp
   (GNUEmacs
     ;; whitespace mode
-    (add-hook 'text-mode-hook
-              (lambda ()
-                (whitespace-mode 1)))
+    (add-hook 'text-mode-hook 'whitespace-mode)
 
-    (add-hook 'prog-mode-hook
-              (lambda ()
-                (whitespace-mode 1)))
+    (add-hook 'prog-mode-hook 'whitespace-mode)
 
     (with-eval-after-load "whitespace"
 
@@ -3356,9 +3352,7 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 
   ;; show image files as images (not as semi-random bits)
   (GNUEmacs
-    (add-hook 'find-file-hook
-              (lambda ()
-                (auto-image-file-mode 1))))
+    (add-hook 'find-file-hook 'auto-image-file-mode))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -5947,8 +5941,7 @@ When clocking in, ask for a time estimate if the property is not yet defined.
         (unless (equal effort "")
           (org-set-property "Effort" effort)))))
 
-  (add-hook 'org-clock-in-prepare-hook
-            'leuven--org-ask-effort)
+  (add-hook 'org-clock-in-prepare-hook 'leuven--org-ask-effort)
 #+end_src
 
 ** Capture - Refile - Archive
@@ -7503,8 +7496,7 @@ of the files produced by LaTeX (~org-latex-logfiles-extensions~) are removed.
                   "xelatex -interaction=nonstopmode -output-directory=%o %f")))))
 
     ;; hook run before parsing an export buffer
-    (add-hook 'org-export-before-parsing-hook
-              'leuven--change-pdflatex-program)
+    (add-hook 'org-export-before-parsing-hook 'leuven--change-pdflatex-program)
 #+end_src
 
 You can easily customize this variable on a per file basis.  If you seldom use
@@ -7613,8 +7605,7 @@ What about ~apacite~ and ~tikz~ in ~org-latex-packages-alist~?
                    '("frenchb" "babel") t))
 
     ;; hook run before parsing an export buffer
-    (add-hook 'org-export-before-parsing-hook
-              'leuven--change-pdflatex-packages)
+    (add-hook 'org-export-before-parsing-hook 'leuven--change-pdflatex-packages)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -9086,15 +9077,12 @@ Some key bindings:
   ;; highlight the current SGML tag context
   (when (try-require 'hl-tags-mode)
 
-    (add-hook 'html-mode-hook
-              (lambda ()
-                (require 'sgml-mode)
-                ;; when `html-mode-hook' is called from `html-helper-mode'
-                (hl-tags-mode 1)))
+    (require 'sgml-mode)
 
-    (add-hook 'nxml-mode-hook
-              (lambda ()
-                (hl-tags-mode 1))))
+    (add-hook 'html-mode-hook 'hl-tags-mode)
+              ; when `html-mode-hook' is called from `html-helper-mode'
+
+    (add-hook 'nxml-mode-hook 'hl-tags-mode))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -9374,9 +9362,7 @@ programming modes.
   (leuven--section "26.7 (emacs)Hideshow minor mode")
 
   ;; enable Hideshow (code folding) for programming modes
-  (add-hook 'prog-mode-hook
-            (lambda ()
-              (hs-minor-mode 1)))
+  (add-hook 'prog-mode-hook 'hs-minor-mode)
 
   (with-eval-after-load "hideshow"
 
@@ -9715,7 +9701,7 @@ See ~leuven-helm-grep-org-files~.
   (when (try-require 'flycheck)
 
     ;; enable Flycheck mode in all buffers
-    (add-hook 'after-init-hook #'global-flycheck-mode)
+    (add-hook 'after-init-hook 'global-flycheck-mode)
 
     (defun magnars/adjust-flycheck-automatic-syntax-eagerness ()
       "Adjust how often we check for errors based on if there are any.
@@ -10507,11 +10493,9 @@ The commands to display *symbol references* are:
 
     ;; XXX if prog-mode, then Semantic will be launched after Emacs init, as
     ;; the scratch buffer is in Emacs Lisp...
-    (add-hook 'java-mode-hook
-              (lambda ()
-                ;; enable parser features (Semantic mode) and install a
-                ;; `Development' menu on the menu-bar
-                (semantic-mode 1)))
+    (add-hook 'java-mode-hook 'semantic-mode) ; enable parser features (Semantic
+                                        ; mode) and install a `Development' menu
+                                        ; on the menu-bar
 
     ;; ;; smart completion, and display of information for tags & classes
     ;; (require 'semantic/ia)
@@ -11694,8 +11678,8 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
 
     ;; add today's appointments (found in `org-agenda-files') each time the
     ;; agenda buffer is (re)built
-    (add-hook 'org-agenda-finalize-hook
-              'org-agenda-to-appt)      ;! don't use the `org-agenda-mode-hook'
+    (add-hook 'org-agenda-finalize-hook 'org-agenda-to-appt)
+                                        ;! don't use the `org-agenda-mode-hook'
                                         ;! because the Org agenda files would be
                                         ;! opened once by `org-agenda-to-appt',
                                         ;! and then killed by

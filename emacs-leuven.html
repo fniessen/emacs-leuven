@@ -1279,7 +1279,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140827.1829</span>
+"org-comment">Version: 20140827.1956</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1402,7 +1402,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140827.1829]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140827.1956]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -4140,13 +4140,9 @@
   (GNUEmacs
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">whitespace mode</span>
-    (add-hook 'text-mode-hook
-              (<span class="org-keyword">lambda</span> ()
-                (whitespace-mode 1)))
+    (add-hook 'text-mode-hook 'whitespace-mode)
 
-    (add-hook 'prog-mode-hook
-              (<span class="org-keyword">lambda</span> ()
-                (whitespace-mode 1)))
+    (add-hook 'prog-mode-hook 'whitespace-mode)
 
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"whitespace"</span>
@@ -6915,9 +6911,7 @@ M-: (executable-find "diff") RET
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">show image files as images (not as semi-random bits)</span>
   (GNUEmacs
-    (add-hook 'find-file-hook
-              (<span class="org-keyword">lambda</span> ()
-                (auto-image-file-mode 1))))
+    (add-hook 'find-file-hook 'auto-image-file-mode))
 </pre>
             </div>
 
@@ -11285,8 +11279,7 @@ M-: (executable-find "diff") RET
           (org-set-property <span class=
 "org-string">"Effort"</span> effort)))))
 
-  (add-hook 'org-clock-in-prepare-hook
-            'leuven--org-ask-effort)
+  (add-hook 'org-clock-in-prepare-hook 'leuven--org-ask-effort)
 </pre>
             </div>
           </div>
@@ -13952,8 +13945,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">hook run before parsing an export buffer</span>
-    (add-hook 'org-export-before-parsing-hook
-              'leuven--change-pdflatex-program)
+    (add-hook 'org-export-before-parsing-hook 'leuven--change-pdflatex-program)
 </pre>
             </div>
 
@@ -14146,8 +14138,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">hook run before parsing an export buffer</span>
-    (add-hook 'org-export-before-parsing-hook
-              'leuven--change-pdflatex-packages)
+    (add-hook 'org-export-before-parsing-hook 'leuven--change-pdflatex-packages)
 </pre>
             </div>
 
@@ -16629,20 +16620,17 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">highlight the current SGML tag context</span>
   (<span class="org-keyword">when</span> (try-require 'hl-tags-mode)
 
-    (add-hook 'html-mode-hook
-              (<span class="org-keyword">lambda</span> ()
-                (<span class="org-keyword">require</span> '<span class=
+    (<span class="org-keyword">require</span> '<span class=
 "org-constant">sgml-mode</span>)
-                <span class="org-comment-delimiter">;; </span><span class=
+
+    (add-hook 'html-mode-hook 'hl-tags-mode)
+              <span class="org-comment-delimiter">; </span><span class=
 "org-comment">when `</span><span class="org-comment"><span class=
 "org-constant">html-mode-hook</span></span><span class=
 "org-comment">' is called from `</span><span class="org-comment"><span class=
 "org-constant">html-helper-mode</span></span><span class="org-comment">'</span>
-                (hl-tags-mode 1)))
 
-    (add-hook 'nxml-mode-hook
-              (<span class="org-keyword">lambda</span> ()
-                (hl-tags-mode 1))))
+    (add-hook 'nxml-mode-hook 'hl-tags-mode))
 </pre>
           </div>
 
@@ -17106,9 +17094,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">enable Hideshow (code folding) for programming modes</span>
-  (add-hook 'prog-mode-hook
-            (<span class="org-keyword">lambda</span> ()
-              (hs-minor-mode 1)))
+  (add-hook 'prog-mode-hook 'hs-minor-mode)
 
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"hideshow"</span>
@@ -17683,7 +17669,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">enable Flycheck mode in all buffers</span>
-    (add-hook 'after-init-hook #'global-flycheck-mode)
+    (add-hook 'after-init-hook 'global-flycheck-mode)
 
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">magnars/adjust-flycheck-automatic-syntax-eagerness</span> ()
@@ -19006,15 +18992,17 @@ TAGS:
 "org-comment"> if prog-mode, then Semantic will be launched after Emacs init, as</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">the scratch buffer is in Emacs Lisp...</span>
-    (add-hook 'java-mode-hook
-              (<span class="org-keyword">lambda</span> ()
-                <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable parser features (Semantic mode) and install a</span>
-                <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">`</span><span class="org-comment"><span class=
-"org-constant">Development</span></span><span class=
-"org-comment">' menu on the menu-bar</span>
-                (semantic-mode 1)))
+    (add-hook 'java-mode-hook 'semantic-mode) <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">enable parser features (Semantic</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">mode) and install a `</span><span class=
+"org-comment"><span class="org-constant">Development</span></span><span class=
+"org-comment">' menu</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">on the menu-bar</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; smart completion, and display of information for tags &amp; classes</span>
@@ -21020,8 +21008,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment">') each time the</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">agenda buffer is (re)built</span>
-    (add-hook 'org-agenda-finalize-hook
-              'org-agenda-to-appt)      <span class=
+    (add-hook 'org-agenda-finalize-hook 'org-agenda-to-appt)
+                                        <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">! don't use the `</span><span class="org-comment"><span class=
 "org-constant">org-agenda-mode-hook</span></span><span class=
@@ -25296,7 +25284,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140827.1830]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140827.1956]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
