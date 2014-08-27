@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140826.2332
+;; Version: 20140827.1136
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140826.2332]--")
+(message "* --[ Loading Emacs Leuven 20140827.1136]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -6947,6 +6947,8 @@ up before you execute another command."
 
       (add-to-list 'hippie-expand-try-functions-list
                     'yas-hippie-try-expand)))
+                                        ; makes more sense when placed at the
+                                        ; top of the list
 
   (GNUEmacs
 
@@ -6956,11 +6958,14 @@ up before you execute another command."
 
       (with-eval-after-load "auto-complete-config"
 
+        ;; ;; 5.4 completion will be started automatically by inserting 2 characters
+        ;; (setq ac-auto-start 2)
+
         ;; 6.1 optimize sources to use
         (ac-config-default)
 
-        ;; 7.5 select candidates with `C-n/C-p' only when completion menu is
-        ;; displayed
+        ;; 7.5 use `C-n/C-p' to select candidates (only when completion menu is
+        ;; displayed)
         (setq ac-use-menu-map t)
         (define-key ac-menu-map (kbd "C-n") 'ac-next)
         (define-key ac-menu-map (kbd "C-p") 'ac-previous)
@@ -6988,17 +6993,23 @@ up before you execute another command."
         ;; 8.1 delay to completions will be available
         (setq ac-delay 0)               ; faster than default 0.1
 
-        ;; ;; 8.2 completion menu will be automatically shown
-        ;; (setq ac-auto-show-menu 0.5)
+        ;; 8.2 completion menu will be automatically shown
+        (setq ac-auto-show-menu 0.2)    ; or 0.8?
+
+        ;; 8.13 delay to show quick help
+        (setq ac-quick-help-delay 0.5)
+
+        ;; 8.15 max height of quick help
+        (setq ac-quick-help-height 10)  ; same as `ac-menu-height'
 
         ;; 8.16 limit on number of candidates
         (setq ac-candidate-limit 100)
 
-        ;; bind `ac-complete' to tab
+        ;; completion by TAB
         (define-key ac-completing-map
           (kbd "<tab>") 'ac-complete)
 
-        ;; bind `ac-complete' to right arrow
+        ;; completion by right arrow
         (define-key ac-completing-map
           (kbd "<right>") 'ac-complete)
 
@@ -8808,7 +8819,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140826.2333]--")
+(message "* --[ Loaded Emacs Leuven 20140827.1137]--")
 
 (provide 'emacs-leuven)
 

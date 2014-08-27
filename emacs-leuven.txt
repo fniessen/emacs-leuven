@@ -10887,6 +10887,8 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
 
       (add-to-list 'hippie-expand-try-functions-list
                     'yas-hippie-try-expand)))
+                                        ; makes more sense when placed at the
+                                        ; top of the list
 #+end_src
 
 *** Auto-Complete ("IntelliSensy" completion when writing code)
@@ -10908,12 +10910,12 @@ mode, simply add it to the ~ac-modes~:
 #+end_example
 
 Popups:
-- Completion menu
-- Quick help (tooltip)
+- *Completion menu*
+- *Quick help* (tooltip)
 
 According to the settings, completion is done by ~TAB~ or ~RET~:
 
-- ~ac-expand~ (~TAB~) ::
+- ~ac-expand~ (~TAB~, by default) ::
      Select candidates in cycle.
 
 - ~ac-complete~ (~RET~) ::
@@ -10922,7 +10924,27 @@ According to the settings, completion is done by ~TAB~ or ~RET~:
 There are other ways to select candidates:
 - ~M-1~ to select candidate 1,
 - ~M-2~ to select candidate 2,
-- and so on.
+- and so on (until 9).
+
+Other operations are enabled temporarily when completion is started:
+
+- ~C-s~ (~ac-isearch~) ::
+     Filter completion candidates.
+
+- ~<C-down>~ or ~C-M-n~ (~ac-quick-help-scroll-down~) ::
+     Scroll down quick help.
+
+- ~<C-up>~ or ~C-M-p~ (~ac-quick-help-scroll-up~) ::
+     Scroll up quick help.
+
+- ~<f1>~ (or ~C-?~, ~ac-help~) ::
+     Show additional help (for functions, arguments and objects) in electrical
+     buffer.
+
+- ~<M-f1>~ (or ~C-M-?~, ~ac-persist-help~) ::
+     Show additional help in persistent buffer.
+
+Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-complete-work-with-yasnippet-and-abbrev][How to make auto-complete work with yasnippet and abbrev?]]
 
 #+begin_src emacs-lisp
   (GNUEmacs
@@ -10933,11 +10955,14 @@ There are other ways to select candidates:
 
       (with-eval-after-load "auto-complete-config"
 
+        ;; ;; 5.4 completion will be started automatically by inserting 2 characters
+        ;; (setq ac-auto-start 2)
+
         ;; 6.1 optimize sources to use
         (ac-config-default)
 
-        ;; 7.5 select candidates with `C-n/C-p' only when completion menu is
-        ;; displayed
+        ;; 7.5 use `C-n/C-p' to select candidates (only when completion menu is
+        ;; displayed)
         (setq ac-use-menu-map t)
         (define-key ac-menu-map (kbd "C-n") 'ac-next)
         (define-key ac-menu-map (kbd "C-p") 'ac-previous)
@@ -10965,17 +10990,23 @@ There are other ways to select candidates:
         ;; 8.1 delay to completions will be available
         (setq ac-delay 0)               ; faster than default 0.1
 
-        ;; ;; 8.2 completion menu will be automatically shown
-        ;; (setq ac-auto-show-menu 0.5)
+        ;; 8.2 completion menu will be automatically shown
+        (setq ac-auto-show-menu 0.2)    ; or 0.8?
+
+        ;; 8.13 delay to show quick help
+        (setq ac-quick-help-delay 0.5)
+
+        ;; 8.15 max height of quick help
+        (setq ac-quick-help-height 10)  ; same as `ac-menu-height'
 
         ;; 8.16 limit on number of candidates
         (setq ac-candidate-limit 100)
 
-        ;; bind `ac-complete' to tab
+        ;; completion by TAB
         (define-key ac-completing-map
           (kbd "<tab>") 'ac-complete)
 
-        ;; bind `ac-complete' to right arrow
+        ;; completion by right arrow
         (define-key ac-completing-map
           (kbd "<right>") 'ac-complete)
 

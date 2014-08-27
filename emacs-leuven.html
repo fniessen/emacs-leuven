@@ -1248,7 +1248,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140826.2333</span>
+"org-comment">Version: 20140827.1138</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1371,7 +1371,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140826.2333]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140827.1138]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -19580,6 +19580,12 @@ TAGS:
 
       (add-to-list 'hippie-expand-try-functions-list
                     'yas-hippie-try-expand)))
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">makes more sense when placed at the</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">top of the list</span>
 </pre>
             </div>
           </div>
@@ -19611,16 +19617,16 @@ TAGS:
             <p>Popups:</p>
 
             <ul class="org-ul">
-              <li>Completion menu</li>
+              <li><b>Completion menu</b></li>
 
-              <li>Quick help (tooltip)</li>
+              <li><b>Quick help</b> (tooltip)</li>
             </ul>
 
             <p>According to the settings, completion is done by
             <code>TAB</code> or <code>RET</code>:</p>
 
             <dl class="org-dl">
-              <dt><code>ac-expand</code> (<code>TAB</code>)</dt>
+              <dt><code>ac-expand</code> (<code>TAB</code>, by default)</dt>
 
               <dd>Select candidates in cycle.</dd>
 
@@ -19636,8 +19642,42 @@ TAGS:
 
               <li><code>M-2</code> to select candidate 2,</li>
 
-              <li>and so on.</li>
+              <li>and so on (until 9).</li>
             </ul>
+
+            <p>Other operations are enabled temporarily when completion is
+            started:</p>
+
+            <dl class="org-dl">
+              <dt><code>C-s</code> (<code>ac-isearch</code>)</dt>
+
+              <dd>Filter completion candidates.</dd>
+
+              <dt><code>&lt;C-down&gt;</code> or <code>C-M-n</code>
+              (<code>ac-quick-help-scroll-down</code>)</dt>
+
+              <dd>Scroll down quick help.</dd>
+
+              <dt><code>&lt;C-up&gt;</code> or <code>C-M-p</code>
+              (<code>ac-quick-help-scroll-up</code>)</dt>
+
+              <dd>Scroll up quick help.</dd>
+
+              <dt><code>&lt;f1&gt;</code> (or <code>C-?</code>,
+              <code>ac-help</code>)</dt>
+
+              <dd>Show additional help (for functions, arguments and objects)
+              in electrical buffer.</dd>
+
+              <dt><code>&lt;M-f1&gt;</code> (or <code>C-M-?</code>,
+              <code>ac-persist-help</code>)</dt>
+
+              <dd>Show additional help in persistent buffer.</dd>
+            </dl>
+
+            <p>Eventually, see <a href=
+            "http://stackoverflow.com/questions/19900949/how-to-make-auto-complete-work-with-yasnippet-and-abbrev">
+            How to make auto-complete work with yasnippet and abbrev?</a></p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -19653,15 +19693,20 @@ TAGS:
 "org-string">"auto-complete-config"</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">;; 5.4 completion will be started automatically by inserting 2 characters</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq ac-auto-start 2)</span>
+
+        <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">6.1 optimize sources to use</span>
         (ac-config-default)
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">7.5 select candidates with `</span><span class=
-"org-comment"><span class="org-constant">C-n/C-p</span></span><span class=
-"org-comment">' only when completion menu is</span>
+"org-comment">7.5 use `</span><span class="org-comment"><span class=
+"org-constant">C-n/C-p</span></span><span class=
+"org-comment">' to select candidates (only when completion menu is</span>
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">displayed</span>
+"org-comment">displayed)</span>
         (setq ac-use-menu-map t)
         (define-key ac-menu-map (kbd <span class=
 "org-string">"C-n"</span>) 'ac-next)
@@ -19704,25 +19749,32 @@ TAGS:
 "org-comment">faster than default 0.1</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; 8.2 completion menu will be automatically shown</span>
+"org-comment">8.2 completion menu will be automatically shown</span>
+        (setq ac-auto-show-menu 0.2)    <span class=
+"org-comment-delimiter">; </span><span class="org-comment">or 0.8?</span>
+
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq ac-auto-show-menu 0.5)</span>
+"org-comment">8.13 delay to show quick help</span>
+        (setq ac-quick-help-delay 0.5)
+
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">8.15 max height of quick help</span>
+        (setq ac-quick-help-height 10)  <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">same as `</span><span class="org-comment"><span class=
+"org-constant">ac-menu-height</span></span><span class="org-comment">'</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">8.16 limit on number of candidates</span>
         (setq ac-candidate-limit 100)
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">bind `</span><span class="org-comment"><span class=
-"org-constant">ac-complete</span></span><span class=
-"org-comment">' to tab</span>
+"org-comment">completion by TAB</span>
         (define-key ac-completing-map
           (kbd <span class="org-string">"&lt;tab&gt;"</span>) 'ac-complete)
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">bind `</span><span class="org-comment"><span class=
-"org-constant">ac-complete</span></span><span class=
-"org-comment">' to right arrow</span>
+"org-comment">completion by right arrow</span>
         (define-key ac-completing-map
           (kbd <span class="org-string">"&lt;right&gt;"</span>) 'ac-complete)
 
@@ -24982,7 +25034,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140826.2334]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140827.1138]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
