@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140827.1608
+;; Version: 20140827.1828
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140827.1608]--")
+(message "* --[ Loading Emacs Leuven 20140827.1828]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -2290,21 +2290,6 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; delete all windows in the selected frame except the selected window
   (global-set-key
     (kbd "<f5>") 'leuven-delete-other-windows)
-
-  ;; enlarge or shrink windows more easily than with `C-x {', `C-x }' and the
-  ;; like
-  (global-set-key
-    (kbd "<C-S-up>") 'enlarge-window)
-  (global-set-key
-    (kbd "<C-S-down>") 'shrink-window)
-  (global-set-key
-    (kbd "<C-S-left>") 'enlarge-window-horizontally)
-  (global-set-key
-    (kbd "<C-S-right>") 'shrink-window-horizontally)
-
-  ;; make all visible windows the same height (approximately)
-  (global-set-key
-    (kbd "<C-f6>") 'balance-windows)
 
   ;; swap 2 windows
   (defun leuven-swap-windows ()
@@ -6113,26 +6098,22 @@ this with to-do items than with projects or headings."
 
   (leuven--section "26.7 (emacs)Hideshow minor mode")
 
-  ;; enable hideshow for programming modes
+  ;; enable Hideshow (code folding) for programming modes
   (add-hook 'prog-mode-hook
             (lambda ()
               (hs-minor-mode 1)))
 
-  ;; Especially after changing a couple of those really awkward
-  ;; key bindings with `@' in the middle.
-  ;; Changing: C-c @ c-s  to C-c s  (hs-show-block)
-  ;;           C-c @ c-h  to C-c h  (hs-hide-block)
-  ;; Seems not to collide with anything when in cperl-mode at least.
+  (with-eval-after-load "hideshow"
 
-  ;; (define-key hs-minor-mode-map (kbd "C-c C-M-h") 'hs-hide-all)
-  ;; (define-key hs-minor-mode-map (kbd "C-c C-M-s") 'hs-show-all)
-
-  ;; (global-set-key (kbd "C-c @ @") 'hs-hide-all)
-  ;; (global-set-key (kbd "C-c @ @") 'hs-show-all)
-  (global-set-key
-    (kbd "C-c @ h") 'hs-hide-block)
-  (global-set-key
-    (kbd "C-c @ s") 'hs-show-block)
+    ;; change those really awkward key bindings with `@' in the middle
+    (define-key hs-minor-mode-map
+      (kbd "<C-S-left>") 'hs-hide-block) ; `C-c @ C-h'
+    (define-key hs-minor-mode-map
+      (kbd "<C-S-right>") 'hs-show-block) ; `C-c @ C-s'
+    (define-key hs-minor-mode-map
+      (kbd "<C-S-up>") 'hs-hide-all)    ; `C-c @ C-M-h'
+    (define-key hs-minor-mode-map
+      (kbd "<C-S-down>") 'hs-show-all)) ; `C-c @ C-M-s'
 
 ;;** 26.8 (info "(emacs)Symbol Completion")
 
@@ -8040,6 +8021,14 @@ up before you execute another command."
 
   (with-eval-after-load "ess-site"
 
+    ;; code folding in ESS mode
+    (add-hook 'ess-mode-hook 'hs-minor-mode)
+
+    ;; enable auto-completion of arguments
+    (add-hook 'ess-mode-hook
+              (lambda ()
+                (add-to-list 'ac-sources 'ac-source-R-args)))
+
     ;; prototype object browser for R, looks like dired mode
     (autoload 'ess-rdired "ess-rdired"
       "View *R* objects in a dired-like buffer." t)
@@ -8048,16 +8037,7 @@ up before you execute another command."
     (when (locate-library "helm")
       (try-require 'helm-R))
 
-    ;; code folding in ess mode
-    (add-hook 'ess-mode-hook
-      (lambda()
-        (local-set-key (kbd "C-c <right>") 'hs-show-block)
-        (local-set-key (kbd "C-c <left>")  'hs-hide-block)
-        (local-set-key (kbd "C-c <up>")    'hs-hide-all)
-        (local-set-key (kbd "C-c <down>")  'hs-show-all)
-        (hs-minor-mode t)))
-
-    )
+)
 
 ;;* Proced
 
@@ -8872,7 +8852,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140827.1609]--")
+(message "* --[ Loaded Emacs Leuven 20140827.1829]--")
 
 (provide 'emacs-leuven)
 

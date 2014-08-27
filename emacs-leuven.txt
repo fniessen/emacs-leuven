@@ -1076,6 +1076,11 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
 
 You can [[http://www.emacsrocks.com/e13.html][watch an intro to multiple-cursors at Emacs Rocks]].
 
+In other editors:
+
+- https://docs.c9.io/multiple_cursors.html
+- http://komodoide.com/screencasts/watch/87286656-multiple-selections/
+
 #+begin_src emacs-lisp
 ;; multiple cursors for Emacs
 (when (require 'multiple-cursors)
@@ -3627,21 +3632,6 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
   ;; delete all windows in the selected frame except the selected window
   (global-set-key
     (kbd "<f5>") 'leuven-delete-other-windows)
-
-  ;; enlarge or shrink windows more easily than with `C-x {', `C-x }' and the
-  ;; like
-  (global-set-key
-    (kbd "<C-S-up>") 'enlarge-window)
-  (global-set-key
-    (kbd "<C-S-down>") 'shrink-window)
-  (global-set-key
-    (kbd "<C-S-left>") 'enlarge-window-horizontally)
-  (global-set-key
-    (kbd "<C-S-right>") 'shrink-window-horizontally)
-
-  ;; make all visible windows the same height (approximately)
-  (global-set-key
-    (kbd "<C-f6>") 'balance-windows)
 
   ;; swap 2 windows
   (defun leuven-swap-windows ()
@@ -9372,8 +9362,8 @@ Function argument hint.
 
 XXX See http://stackoverflow.com/questions/2399612/why-is-there-no-code-folding-in-emacs
 
-You can have block-oriented *folding* in programming modes: Hideshow
-distinguishes end-of-block.
+Hideshow can *fold* (i.e. hide and un-hide) logical blocks of *code* in many
+programming modes.
 
 ~hs-minor-mode.el~ collapses code for a lot of languages, not only Lisp.  See
 [[id:42ad895e-c049-4710-a877-5014a7f6acfc][outline-minor-mode]] as well.
@@ -9383,32 +9373,27 @@ distinguishes end-of-block.
 
   (leuven--section "26.7 (emacs)Hideshow minor mode")
 
-  ;; enable hideshow for programming modes
+  ;; enable Hideshow (code folding) for programming modes
   (add-hook 'prog-mode-hook
             (lambda ()
               (hs-minor-mode 1)))
 
-  ;; Especially after changing a couple of those really awkward
-  ;; key bindings with `@' in the middle.
-  ;; Changing: C-c @ c-s  to C-c s  (hs-show-block)
-  ;;           C-c @ c-h  to C-c h  (hs-hide-block)
-  ;; Seems not to collide with anything when in cperl-mode at least.
+  (with-eval-after-load "hideshow"
 
-  ;; (define-key hs-minor-mode-map (kbd "C-c C-M-h") 'hs-hide-all)
-  ;; (define-key hs-minor-mode-map (kbd "C-c C-M-s") 'hs-show-all)
-
-  ;; (global-set-key (kbd "C-c @ @") 'hs-hide-all)
-  ;; (global-set-key (kbd "C-c @ @") 'hs-show-all)
-  (global-set-key
-    (kbd "C-c @ h") 'hs-hide-block)
-  (global-set-key
-    (kbd "C-c @ s") 'hs-show-block)
+    ;; change those really awkward key bindings with `@' in the middle
+    (define-key hs-minor-mode-map
+      (kbd "<C-S-left>") 'hs-hide-block) ; `C-c @ C-h'
+    (define-key hs-minor-mode-map
+      (kbd "<C-S-right>") 'hs-show-block) ; `C-c @ C-s'
+    (define-key hs-minor-mode-map
+      (kbd "<C-S-up>") 'hs-hide-all)    ; `C-c @ C-M-h'
+    (define-key hs-minor-mode-map
+      (kbd "<C-S-down>") 'hs-show-all)) ; `C-c @ C-M-s'
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-  ;; if hideshowvis is not installed, do not attempt to configure it,
-  ;; as this will prevent packages (including hideshowvis itself)
-  ;; from compiling
+  ;; if hideshowvis is not installed, do not attempt to configure it, as this
+  ;; will prevent packages (including hideshowvis itself) from compiling
   (when (and (display-graphic-p)
              (try-require 'hideshowvis))
 
@@ -12732,6 +12717,28 @@ Smart underscore:
   (setq ess-default-style 'DEFAULT)
 #+end_src
 
+**** Code folding
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "ess-site"
+
+    ;; code folding in ESS mode
+    (add-hook 'ess-mode-hook 'hs-minor-mode)
+#+end_src
+
+*** 9 Completion
+
+**** Integration with auto-complete package
+
+#+begin_src emacs-lisp
+    ;; enable auto-completion of arguments
+    (add-hook 'ess-mode-hook
+              (lambda ()
+                (add-to-list 'ac-sources 'ac-source-R-args)))
+#+end_src
+
+XXX See https://github.com/cofi/dotfiles/blob/master/emacs.d/config/cofi-completion.el
+
 *** 10 Developing with ESS
 
 See
@@ -12739,8 +12746,8 @@ See
 - http://code.google.com/p/ess-tracebug/wiki/GettingStarted.
 
 #+begin_src emacs-lisp :tangle no
-  ;; activate ess-tracebug every time r session starts
-  (add-hook 'ess-post-run-hook 'ess-tracebug)
+    ;; activate ess-tracebug every time r session starts
+    (add-hook 'ess-post-run-hook 'ess-tracebug)
 #+end_src
 
 *** 11 Other ESS features and tools
@@ -12779,8 +12786,6 @@ With your point on the line of a variable,
 - ~d~ will mark the object for deletion (~x~ will actually perform the deletion).
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "ess-site"
-
     ;; prototype object browser for R, looks like dired mode
     (autoload 'ess-rdired "ess-rdired"
       "View *R* objects in a dired-like buffer." t)
@@ -12799,19 +12804,8 @@ You could prefer to have the ~*R dired*~ buffer in a separate frame.  Check out
       (try-require 'helm-R))
 #+end_src
 
-**** Code folding
-
 #+begin_src emacs-lisp
-    ;; code folding in ess mode
-    (add-hook 'ess-mode-hook
-      (lambda()
-        (local-set-key (kbd "C-c <right>") 'hs-show-block)
-        (local-set-key (kbd "C-c <left>")  'hs-hide-block)
-        (local-set-key (kbd "C-c <up>")    'hs-hide-all)
-        (local-set-key (kbd "C-c <down>")  'hs-show-all)
-        (hs-minor-mode t)))
-
-    )
+)
 #+end_src
 
 ** Proced

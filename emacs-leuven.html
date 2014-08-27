@@ -1082,28 +1082,40 @@
                   <li><a href="#sec-40-13-4">5 Sending code to the ESS
                   process</a></li>
 
-                  <li><a href="#sec-40-13-5">7 Editing objects and
-                  functions</a></li>
-
-                  <li><a href="#sec-40-13-6">10 Developing with ESS</a></li>
-
                   <li>
-                    <a href="#sec-40-13-7">11 Other ESS features and tools</a>
+                    <a href="#sec-40-13-5">7 Editing objects and functions</a>
 
                     <ul>
-                      <li><a href="#sec-40-13-7-1">Describe object at
+                      <li><a href="#sec-40-13-5-1">Code folding</a></li>
+                    </ul>
+                  </li>
+
+                  <li>
+                    <a href="#sec-40-13-6">9 Completion</a>
+
+                    <ul>
+                      <li><a href="#sec-40-13-6-1">Integration with
+                      auto-complete package</a></li>
+                    </ul>
+                  </li>
+
+                  <li><a href="#sec-40-13-7">10 Developing with ESS</a></li>
+
+                  <li>
+                    <a href="#sec-40-13-8">11 Other ESS features and tools</a>
+
+                    <ul>
+                      <li><a href="#sec-40-13-8-1">Describe object at
                       point</a></li>
 
-                      <li><a href="#sec-40-13-7-2">ElDoc</a></li>
+                      <li><a href="#sec-40-13-8-2">ElDoc</a></li>
 
-                      <li><a href="#sec-40-13-7-3">Rdired</a></li>
+                      <li><a href="#sec-40-13-8-3">Rdired</a></li>
 
-                      <li><a href="#sec-40-13-7-4">Interaction with Org
+                      <li><a href="#sec-40-13-8-4">Interaction with Org
                       mode</a></li>
 
-                      <li><a href="#sec-40-13-7-5">Helm</a></li>
-
-                      <li><a href="#sec-40-13-7-6">Code folding</a></li>
+                      <li><a href="#sec-40-13-8-5">Helm</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -1267,7 +1279,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140827.1610</span>
+"org-comment">Version: 20140827.1829</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1390,7 +1402,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140827.1610]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140827.1829]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -3049,6 +3061,17 @@
         <div class="outline-text-3" id="text-13-3">
           <p>You can <a href="http://www.emacsrocks.com/e13.html">watch an
           intro to multiple-cursors at Emacs Rocks</a>.</p>
+
+          <p>In other editors:</p>
+
+          <ul class="org-ul">
+            <li><a href=
+            "https://docs.c9.io/multiple_cursors.html">https://docs.c9.io/multiple_cursors.html</a></li>
+
+            <li><a href=
+            "http://komodoide.com/screencasts/watch/87286656-multiple-selections/">
+            http://komodoide.com/screencasts/watch/87286656-multiple-selections/</a></li>
+          </ul>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -7329,26 +7352,6 @@ M-: (executable-find "diff") RET
   (global-set-key
     (kbd <span class=
 "org-string">"&lt;f5&gt;"</span>) 'leuven-delete-other-windows)
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enlarge or shrink windows more easily than with `C-x {', `C-x }' and the</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">like</span>
-  (global-set-key
-    (kbd <span class="org-string">"&lt;C-S-up&gt;"</span>) 'enlarge-window)
-  (global-set-key
-    (kbd <span class="org-string">"&lt;C-S-down&gt;"</span>) 'shrink-window)
-  (global-set-key
-    (kbd <span class=
-"org-string">"&lt;C-S-left&gt;"</span>) 'enlarge-window-horizontally)
-  (global-set-key
-    (kbd <span class=
-"org-string">"&lt;C-S-right&gt;"</span>) 'shrink-window-horizontally)
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">make all visible windows the same height (approximately)</span>
-  (global-set-key
-    (kbd <span class="org-string">"&lt;C-f6&gt;"</span>) 'balance-windows)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">swap 2 windows</span>
@@ -17086,8 +17089,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
           "http://stackoverflow.com/questions/2399612/why-is-there-no-code-folding-in-emacs">
           http://stackoverflow.com/questions/2399612/why-is-there-no-code-folding-in-emacs</a></p>
 
-          <p>You can have block-oriented <b>folding</b> in programming modes:
-          Hideshow distinguishes end-of-block.</p>
+          <p>Hideshow can <b>fold</b> (i.e. hide and un-hide) logical blocks of
+          <b>code</b> in many programming modes.</p>
 
           <p><code>hs-minor-mode.el</code> collapses code for a lot of
           languages, not only Lisp. See <a href=
@@ -17102,46 +17105,41 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"26.7 (emacs)Hideshow minor mode"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable hideshow for programming modes</span>
+"org-comment">enable Hideshow (code folding) for programming modes</span>
   (add-hook 'prog-mode-hook
             (<span class="org-keyword">lambda</span> ()
               (hs-minor-mode 1)))
 
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Especially after changing a couple of those really awkward</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">key bindings with `@' in the middle.</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Changing: C-c @ c-s  to C-c s  (hs-show-block)</span>
-  <span class="org-comment-delimiter">;;           </span><span class=
-"org-comment">C-c @ c-h  to C-c h  (hs-hide-block)</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Seems not to collide with anything when in cperl-mode at least.</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"hideshow"</span>
 
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(define-key hs-minor-mode-map (kbd "C-c C-M-h") 'hs-hide-all)</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(define-key hs-minor-mode-map (kbd "C-c C-M-s") 'hs-show-all)</span>
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(global-set-key (kbd "C-c @ @") 'hs-hide-all)</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(global-set-key (kbd "C-c @ @") 'hs-show-all)</span>
-  (global-set-key
-    (kbd <span class="org-string">"C-c @ h"</span>) 'hs-hide-block)
-  (global-set-key
-    (kbd <span class="org-string">"C-c @ s"</span>) 'hs-show-block)
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">change those really awkward key bindings with `@' in the middle</span>
+    (define-key hs-minor-mode-map
+      (kbd <span class=
+"org-string">"&lt;C-S-left&gt;"</span>) 'hs-hide-block) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-h'</span>
+    (define-key hs-minor-mode-map
+      (kbd <span class=
+"org-string">"&lt;C-S-right&gt;"</span>) 'hs-show-block) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-s'</span>
+    (define-key hs-minor-mode-map
+      (kbd <span class=
+"org-string">"&lt;C-S-up&gt;"</span>) 'hs-hide-all)    <span class=
+"org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-M-h'</span>
+    (define-key hs-minor-mode-map
+      (kbd <span class=
+"org-string">"&lt;C-S-down&gt;"</span>) 'hs-show-all)) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-M-s'</span>
 </pre>
           </div>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">if hideshowvis is not installed, do not attempt to configure it,</span>
+"org-comment">if hideshowvis is not installed, do not attempt to configure it, as this</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">as this will prevent packages (including hideshowvis itself)</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">from compiling</span>
+"org-comment">will prevent packages (including hideshowvis itself) from compiling</span>
   (<span class="org-keyword">when</span> (and (display-graphic-p)
              (try-require 'hideshowvis))
 
@@ -22907,12 +22905,55 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 </pre>
             </div>
           </div>
+
+          <div id="outline-container-sec-40-13-5-1" class="outline-5">
+            <h5 id="sec-40-13-5-1">Code folding</h5>
+
+            <div class="outline-text-5" id="text-40-13-5-1">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"ess-site"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">code folding in ESS mode</span>
+    (add-hook 'ess-mode-hook 'hs-minor-mode)
+</pre>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div id="outline-container-sec-40-13-6" class="outline-4">
-          <h4 id="sec-40-13-6">10 Developing with ESS</h4>
+          <h4 id="sec-40-13-6">9 Completion</h4>
 
-          <div class="outline-text-4" id="text-40-13-6">
+          <div class="outline-text-4" id="text-40-13-6"></div>
+
+          <div id="outline-container-sec-40-13-6-1" class="outline-5">
+            <h5 id="sec-40-13-6-1">Integration with auto-complete package</h5>
+
+            <div class="outline-text-5" id="text-40-13-6-1">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">enable auto-completion of arguments</span>
+    (add-hook 'ess-mode-hook
+              (<span class="org-keyword">lambda</span> ()
+                (add-to-list 'ac-sources 'ac-source-R-args)))
+</pre>
+              </div>
+
+              <p>XXX See <a href=
+              "https://github.com/cofi/dotfiles/blob/master/emacs.d/config/cofi-completion.el">
+              https://github.com/cofi/dotfiles/blob/master/emacs.d/config/cofi-completion.el</a></p>
+            </div>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-40-13-7" class="outline-4">
+          <h4 id="sec-40-13-7">10 Developing with ESS</h4>
+
+          <div class="outline-text-4" id="text-40-13-7">
             <p>See</p>
 
             <ul class="org-ul">
@@ -22925,23 +22966,23 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">activate ess-tracebug every time r session starts</span>
-  (add-hook 'ess-post-run-hook 'ess-tracebug)
+    (add-hook 'ess-post-run-hook 'ess-tracebug)
 </pre>
             </div>
           </div>
         </div>
 
-        <div id="outline-container-sec-40-13-7" class="outline-4">
-          <h4 id="sec-40-13-7">11 Other ESS features and tools</h4>
+        <div id="outline-container-sec-40-13-8" class="outline-4">
+          <h4 id="sec-40-13-8">11 Other ESS features and tools</h4>
 
-          <div class="outline-text-4" id="text-40-13-7"></div>
+          <div class="outline-text-4" id="text-40-13-8"></div>
 
-          <div id="outline-container-sec-40-13-7-1" class="outline-5">
-            <h5 id="sec-40-13-7-1">Describe object at point</h5>
+          <div id="outline-container-sec-40-13-8-1" class="outline-5">
+            <h5 id="sec-40-13-8-1">Describe object at point</h5>
 
-            <div class="outline-text-5" id="text-40-13-7-1">
+            <div class="outline-text-5" id="text-40-13-8-1">
               <p>Get info for object at point, and display it in an electric
               buffer with the command <code>ess-describe-object-at-point</code>
               (bound to <code>C-c C-d C-e</code>, repeat <code>C-e</code> or
@@ -22957,10 +22998,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             </div>
           </div>
 
-          <div id="outline-container-sec-40-13-7-2" class="outline-5">
-            <h5 id="sec-40-13-7-2">ElDoc</h5>
+          <div id="outline-container-sec-40-13-8-2" class="outline-5">
+            <h5 id="sec-40-13-8-2">ElDoc</h5>
 
-            <div class="outline-text-5" id="text-40-13-7-2">
+            <div class="outline-text-5" id="text-40-13-8-2">
               <p>Since ESS v12.02, ElDoc functionality (to report R function
               arguments) has been moved into the core, and is active by
               default; so you don’t need to configure anything…</p>
@@ -22983,10 +23024,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             </div>
           </div>
 
-          <div id="outline-container-sec-40-13-7-3" class="outline-5">
-            <h5 id="sec-40-13-7-3">Rdired</h5>
+          <div id="outline-container-sec-40-13-8-3" class="outline-5">
+            <h5 id="sec-40-13-8-3">Rdired</h5>
 
-            <div class="outline-text-5" id="text-40-13-7-3">
+            <div class="outline-text-5" id="text-40-13-8-3">
               <p>With your point on the line of a variable,</p>
 
               <ul class="org-ul">
@@ -23000,9 +23041,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ess-site"</span>
-
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">prototype object browser for R, looks like dired mode</span>
     (autoload 'ess-rdired <span class="org-string">"ess-rdired"</span>
@@ -23017,14 +23055,14 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             </div>
           </div>
 
-          <div id="outline-container-sec-40-13-7-4" class="outline-5">
-            <h5 id="sec-40-13-7-4">Interaction with Org mode</h5>
+          <div id="outline-container-sec-40-13-8-4" class="outline-5">
+            <h5 id="sec-40-13-8-4">Interaction with Org mode</h5>
           </div>
 
-          <div id="outline-container-sec-40-13-7-5" class="outline-5">
-            <h5 id="sec-40-13-7-5">Helm</h5>
+          <div id="outline-container-sec-40-13-8-5" class="outline-5">
+            <h5 id="sec-40-13-8-5">Helm</h5>
 
-            <div class="outline-text-5" id="text-40-13-7-5">
+            <div class="outline-text-5" id="text-40-13-8-5">
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
@@ -23034,30 +23072,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       (try-require 'helm-R))
 </pre>
               </div>
-            </div>
-          </div>
 
-          <div id="outline-container-sec-40-13-7-6" class="outline-5">
-            <h5 id="sec-40-13-7-6">Code folding</h5>
-
-            <div class="outline-text-5" id="text-40-13-7-6">
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">code folding in ess mode</span>
-    (add-hook 'ess-mode-hook
-      (<span class="org-keyword">lambda</span>()
-        (local-set-key (kbd <span class=
-"org-string">"C-c &lt;right&gt;"</span>) 'hs-show-block)
-        (local-set-key (kbd <span class=
-"org-string">"C-c &lt;left&gt;"</span>)  'hs-hide-block)
-        (local-set-key (kbd <span class=
-"org-string">"C-c &lt;up&gt;"</span>)    'hs-hide-all)
-        (local-set-key (kbd <span class=
-"org-string">"C-c &lt;down&gt;"</span>)  'hs-show-all)
-        (hs-minor-mode t)))
-
-    )
+)
 </pre>
               </div>
             </div>
@@ -25278,7 +25296,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140827.1610]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140827.1830]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
