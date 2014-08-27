@@ -9077,10 +9077,11 @@ Some key bindings:
   ;; highlight the current SGML tag context
   (when (try-require 'hl-tags-mode)
 
-    (require 'sgml-mode)
-
-    (add-hook 'html-mode-hook 'hl-tags-mode)
-              ; when `html-mode-hook' is called from `html-helper-mode'
+    (add-hook 'html-mode-hook
+              (lambda ()
+                (require 'sgml-mode)
+                ;; when `html-mode-hook' is called from `html-helper-mode'
+                (hl-tags-mode 1)))
 
     (add-hook 'nxml-mode-hook 'hl-tags-mode))
 #+end_src
@@ -9374,7 +9375,25 @@ programming modes.
     (define-key hs-minor-mode-map
       (kbd "<C-S-up>") 'hs-hide-all)    ; `C-c @ C-M-h'
     (define-key hs-minor-mode-map
-      (kbd "<C-S-down>") 'hs-show-all)) ; `C-c @ C-M-s'
+      (kbd "<C-S-down>") 'hs-show-all)  ; `C-c @ C-M-s'
+
+    (defcustom hs-face 'hs-face
+      "*Specify the face to to use for the hidden region indicator"
+      :type 'face
+      :group 'hideshow)
+
+    (defface hs-face
+      '((t (:box (:line-width 1 :color "#999999")
+            :foreground "#999999" :background "#FFF8C0")))
+      "Face to hightlight the ... area of hidden regions"
+      :group 'hideshow)
+
+    (defun display-code-line-counts (ov)
+      (when (eq 'code (overlay-get ov 'hs))
+        (overlay-put ov 'display
+                     (propertize "..." 'face 'hs-face))))
+
+    (setq hs-set-up-overlay 'display-code-line-counts))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -9410,25 +9429,11 @@ programming modes.
       "Face used to highlight the fringe on folded regions"
       :group 'hideshow)
 
-    (defcustom hs-face 'hs-face
-      "*Specify the face to to use for the hidden region indicator"
-      :type 'face
-      :group 'hideshow)
-
-    (defface hs-face
-      '((t (:box (:line-width 1 :color "#999999")
-            :foreground "#999999" :background "#FFF8C0")))
-      "Face to hightlight the ... area of hidden regions"
-      :group 'hideshow)
-
     (defun display-code-line-counts (ov)
       (when (eq 'code (overlay-get ov 'hs))
         (let* ((marker-string "*fringe-dummy*")
                (marker-length (length marker-string))
-               (display-string
-                ;; (format "(%d)..."
-                ;; (count-lines (overlay-start ov) (overlay-end ov)))
-                "..."))
+               (display-string "..."))
           (overlay-put ov 'help-echo "Hidden text. C-c,= to show")
           (put-text-property 0 marker-length
                              'display (list 'left-fringe

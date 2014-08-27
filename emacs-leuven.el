@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140827.1954
+;; Version: 20140827.2049
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140827.1954]--")
+(message "* --[ Loading Emacs Leuven 20140827.2049]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -6100,7 +6100,25 @@ this with to-do items than with projects or headings."
     (define-key hs-minor-mode-map
       (kbd "<C-S-up>") 'hs-hide-all)    ; `C-c @ C-M-h'
     (define-key hs-minor-mode-map
-      (kbd "<C-S-down>") 'hs-show-all)) ; `C-c @ C-M-s'
+      (kbd "<C-S-down>") 'hs-show-all)  ; `C-c @ C-M-s'
+
+    (defcustom hs-face 'hs-face
+      "*Specify the face to to use for the hidden region indicator"
+      :type 'face
+      :group 'hideshow)
+
+    (defface hs-face
+      '((t (:box (:line-width 1 :color "#999999")
+            :foreground "#999999" :background "#FFF8C0")))
+      "Face to hightlight the ... area of hidden regions"
+      :group 'hideshow)
+
+    (defun display-code-line-counts (ov)
+      (when (eq 'code (overlay-get ov 'hs))
+        (overlay-put ov 'display
+                     (propertize "..." 'face 'hs-face))))
+
+    (setq hs-set-up-overlay 'display-code-line-counts))
 
 ;;** 26.8 (info "(emacs)Symbol Completion")
 
@@ -8837,7 +8855,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140827.1955]--")
+(message "* --[ Loaded Emacs Leuven 20140827.2049]--")
 
 (provide 'emacs-leuven)
 
