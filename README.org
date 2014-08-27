@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DATE:      2012-06-22
-#+Time-stamp: <2014-08-25 Mon 12:16>
+#+Time-stamp: <2014-08-27 Wed 17:21>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en
@@ -164,11 +164,11 @@ I still have to sort them out, by mode (when applicable).
 | <             | scroll-calendar-right                     |
 | <C-backspace> | backward-kill-word                        |
 | <C-down>      | comint-next-matching-input-from-input     |
-| <C-S-down>    | shrink-window                             |
-| <C-S-left>    | enlarge-window-horizontally               |
-| <C-S-right>   | shrink-window-horizontally                |
+| <C-S-left>    | hs-hide-block                             |
+| <C-S-right>   | hs-show-block                             |
+| <C-S-up>      | hs-hide-all                               |
+| <C-S-down>    | hs-show-all                               |
 | <C-S-tab>     | w3m-previous-buffer                       |
-| <C-S-up>      | enlarge-window                            |
 | <C-tab>       | w3m-next-buffer                           |
 | <C-up>        | comint-previous-matching-input-from-input |
 | <down>        | comint-next-input                         |
@@ -185,7 +185,7 @@ I still have to sort them out, by mode (when applicable).
 | C-=           | compare-windows                           |
 | C-c !         | shell                                     |
 | C-c .         | leuven-insert-current-date                |
-| C-c \vert         | leuven-toggle-window-split                |
+| C-c \vert     | leuven-toggle-window-split                |
 | C-c ^         | sort-lines                                |
 | C-c C-c       | tidy-buffer                               |
 | C-c C-x nil   |                                           |
