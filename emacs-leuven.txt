@@ -8861,6 +8861,8 @@ AUCTeX is fantastic, and RefTeX just makes things better.
 To fill in ~\ref{}~ and ~\cite{}~ commands, you can use ~C-c &~
 (~reftex-view-crossref~).
 
+XXX Conflict with YASnippet.
+
 A Table of Contents of the entire (multifile) document with browsing
 capabilities is available with ~C-c =~.  Hitting ~l~ there will show all the
 labels and cites.
@@ -10716,9 +10718,23 @@ XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-con
 
 *** Installation
 
+**** Use YASnippet as a global minor mode
+
 #+begin_src emacs-lisp
-      ;; enable the YASnippet menu and expansion in *all* buffers
+      ;; enable YASnippet in all buffers
       (yas-global-mode 1)
+#+end_src
+
+**** Use ~yas-minor-mode~ on a per-buffer basis
+
+#+begin_src emacs-lisp :tangle no
+      ;; load the snippet tables
+      (yas-reload-all)
+
+      ;; enable YASnippet in programming modes only
+      (add-hook 'prog-mode-hook
+                '(lambda ()
+                   (yas-minor-mode)))
 #+end_src
 
 *** Organizing snippets
@@ -10777,8 +10793,8 @@ By default, put *your own snippets* in the directory =~/.emacs.d/snippets=.
 
 See http://cupfullofcode.com/snippet-expansion-with-yasnippet/.
 
-- ~C-c & C-n~ ::
-    ~yas-new-snippet~
+- ~C-c & C-n~ (~yas-new-snippet~) ::
+     Creates a new snippet, pre-filled out with the basic structure.
 
 - ~C-c & C-v~ ::
     ~yas-visit-snippet-file~
@@ -10808,37 +10824,39 @@ Automatically reload snippets after saving.
 #+begin_src emacs-lisp
       (add-hook 'snippet-mode-hook
                 (lambda ()
-                  (setq require-final-newline nil)))
+                  (setq require-final-newline nil)))))
 #+end_src
 
 **** Why doesn't TAB expand a snippet?
 
-See [[id:366386cb-9c4f-4d61-b676-e742e6277587][Interaction between Org and other packages]].
+1. Check the mode line to see if there's ~yas~. If not, then try ~M-x
+   yas-minor-mode~ to manually turn on the minor mode and try to expand the
+   snippet again.
 
-#+begin_src emacs-lisp
-      ;;! make sure you initialise YASnippet *before* Org mode
-      (when (featurep 'org)
-        (message "(Error) Org is already loaded -> Too late to init YASnippet!")
-        (sit-for 3))
+   If it works, then, you can add the following code to your =.emacs= before
+   loading YASnippet:
 
-      (defun yas-org-very-safe-expand ()
-        (let ((yas-fallback-behavior 'return-nil))
-          (yas-expand)))
+   #+begin_example
+   (add-hook 'the-major-mode-hook 'yas-minor-mode-on)
+   #+end_example
 
-      ;; allow YASnippet to do its thing in Org files
-      (add-hook 'org-mode-hook
-                (lambda ()
-                  ;; YASnippet (using the new org-cycle hooks)
-                  (add-to-list 'org-tab-first-hook
-                               'yas-org-very-safe-expand)
+   where ~the-major-mode~ is the major mode in which ~yas-minor-mode~ isn't enabled
+   by default.
 
-                  ;; When enabled, problem with inserting letter `t' in
-                  ;; YASnippet fields
-                  ;; (define-key yas-keymap
-                  ;;   (kbd "tab") 'yas-next-field)
-                                        ; `yas-next-field-or-maybe-expand'?
-                  ))))
-#+end_src
+   You can also use the command ~M-x yas-global-mode~ to turn on YASnippet
+   automatically for all major modes.
+
+2. If ~yas-minor-mode~ is on but the snippet still not expanded, then try to see
+   what command is bound to the ~TAB~ key: press ~C-h k~ and then press ~TAB~. Emacs
+   will show you the result.
+
+   You'll see a buffer prompted by Emacs saying that ~TAB~ runs the command "...".
+   Alternatively, you might see ~<tab>~ runs the command "...". Note the
+   difference between ~TAB~ and ~<tab>~ where the latter has priority.
+
+   If you see ~<tab>~ bound to a command other than ~yas-expand~ (e.g. in org-mode),
+   you can try a work around. See
+   https://github.com/capitaomorte/yasnippet/blob/master/doc/faq.org.
 
 ** Dynamic Abbrev Expansion
    :PROPERTIES:

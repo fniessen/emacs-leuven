@@ -869,7 +869,18 @@
                 <a href="#sec-34-1">Controlling Abbrev Expansion</a>
 
                 <ul>
-                  <li><a href="#sec-34-1-1">Installation</a></li>
+                  <li>
+                    <a href="#sec-34-1-1">Installation</a>
+
+                    <ul>
+                      <li><a href="#sec-34-1-1-1">Use YASnippet as a global
+                      minor mode</a></li>
+
+                      <li><a href="#sec-34-1-1-2">Use
+                      <code>yas-minor-mode</code> on a per-buffer
+                      basis</a></li>
+                    </ul>
+                  </li>
 
                   <li><a href="#sec-34-1-2">Organizing snippets</a></li>
 
@@ -1281,7 +1292,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140828.2052</span>
+"org-comment">Version: 20140828.2130</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1404,7 +1415,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140828.2052]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140828.2130]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -16264,6 +16275,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
           you can use <code>C-c &amp;</code>
           (<code>reftex-view-crossref</code>).</p>
 
+          <p>XXX Conflict with YASnippet.</p>
+
           <p>A Table of Contents of the entire (multifile) document with
           browsing capabilities is available with <code>C-c =</code>. Hitting
           <code>l</code> there will show all the labels and cites.</p>
@@ -19363,13 +19376,40 @@ TAGS:
         <div id="outline-container-sec-34-1-1" class="outline-4">
           <h4 id="sec-34-1-1">Installation</h4>
 
-          <div class="outline-text-4" id="text-34-1-1">
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
+          <div class="outline-text-4" id="text-34-1-1"></div>
+
+          <div id="outline-container-sec-34-1-1-1" class="outline-5">
+            <h5 id="sec-34-1-1-1">Use YASnippet as a global minor mode</h5>
+
+            <div class="outline-text-5" id="text-34-1-1-1">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable the YASnippet menu and expansion in *all* buffers</span>
+"org-comment">enable YASnippet in all buffers</span>
       (yas-global-mode 1)
 </pre>
+              </div>
+            </div>
+          </div>
+
+          <div id="outline-container-sec-34-1-1-2" class="outline-5">
+            <h5 id="sec-34-1-1-2">Use <code>yas-minor-mode</code> on a
+            per-buffer basis</h5>
+
+            <div class="outline-text-5" id="text-34-1-1-2">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">load the snippet tables</span>
+      (yas-reload-all)
+
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">enable YASnippet in programming modes only</span>
+      (add-hook 'prog-mode-hook
+                '(<span class="org-keyword">lambda</span> ()
+                   (yas-minor-mode)))
+</pre>
+              </div>
             </div>
           </div>
         </div>
@@ -19471,9 +19511,11 @@ TAGS:
             "http://cupfullofcode.com/snippet-expansion-with-yasnippet/">http://cupfullofcode.com/snippet-expansion-with-yasnippet/</a>.</p>
 
             <dl class="org-dl">
-              <dt><code>C-c &amp; C-n</code></dt>
+              <dt><code>C-c &amp; C-n</code>
+              (<code>yas-new-snippet</code>)</dt>
 
-              <dd><code>yas-new-snippet</code></dd>
+              <dd>Creates a new snippet, pre-filled out with the basic
+              structure.</dd>
 
               <dt><code>C-c &amp; C-v</code></dt>
 
@@ -19522,7 +19564,7 @@ TAGS:
                 <pre class="src src-emacs-lisp">
       (add-hook 'snippet-mode-hook
                 (<span class="org-keyword">lambda</span> ()
-                  (setq require-final-newline nil)))
+                  (setq require-final-newline nil)))))
 </pre>
               </div>
             </div>
@@ -19532,50 +19574,47 @@ TAGS:
             <h5 id="sec-34-1-5-2">Why doesn’t TAB expand a snippet?</h5>
 
             <div class="outline-text-5" id="text-34-1-5-2">
-              <p>See <a href="#sec-28-14-6">Interaction between Org and other
-              packages</a>.</p>
+              <ol class="org-ol">
+                <li>
+                  <p>Check the mode line to see if there’s <code>yas</code>. If
+                  not, then try <code>M-x yas-minor-mode</code> to manually
+                  turn on the minor mode and try to expand the snippet
+                  again.</p>
 
-              <div class="org-src-container">
-                <pre class="src src-emacs-lisp">
-      <span class="org-comment-delimiter">;;</span><span class=
-"org-comment">! make sure you initialise YASnippet *before* Org mode</span>
-      (<span class="org-keyword">when</span> (<span class=
-"org-keyword">featurep</span> '<span class="org-constant">org</span>)
-        (message <span class=
-"org-string">"(Error) Org is already loaded -&gt; Too late to init YASnippet!"</span>)
-        (sit-for 3))
-
-      (<span class="org-keyword">defun</span> <span class=
-"org-function-name">yas-org-very-safe-expand</span> ()
-        (<span class=
-"org-keyword">let</span> ((yas-fallback-behavior 'return-nil))
-          (yas-expand)))
-
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">allow YASnippet to do its thing in Org files</span>
-      (add-hook 'org-mode-hook
-                (<span class="org-keyword">lambda</span> ()
-                  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">YASnippet (using the new org-cycle hooks)</span>
-                  (add-to-list 'org-tab-first-hook
-                               'yas-org-very-safe-expand)
-
-                  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">When enabled, problem with inserting letter `t' in</span>
-                  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">YASnippet fields</span>
-                  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(define-key yas-keymap</span>
-                  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(kbd "tab") 'yas-next-field)</span>
-                                        <span class=
-"org-comment-delimiter">; </span><span class="org-comment">`</span><span class=
-"org-comment"><span class=
-"org-constant">yas-next-field-or-maybe-expand</span></span><span class=
-"org-comment">'?</span>
-                  ))))
+                  <p>If it works, then, you can add the following code to your
+                  <code>.emacs</code> before loading YASnippet:</p>
+                  <pre class="example">
+(add-hook 'the-major-mode-hook 'yas-minor-mode-on)
 </pre>
-              </div>
+
+                  <p>where <code>the-major-mode</code> is the major mode in
+                  which <code>yas-minor-mode</code> isn’t enabled by
+                  default.</p>
+
+                  <p>You can also use the command <code>M-x
+                  yas-global-mode</code> to turn on YASnippet automatically for
+                  all major modes.</p>
+                </li>
+
+                <li>
+                  <p>If <code>yas-minor-mode</code> is on but the snippet still
+                  not expanded, then try to see what command is bound to the
+                  <code>TAB</code> key: press <code>C-h k</code> and then press
+                  <code>TAB</code>. Emacs will show you the result.</p>
+
+                  <p>You’ll see a buffer prompted by Emacs saying that
+                  <code>TAB</code> runs the command “…”. Alternatively, you
+                  might see <code>&lt;tab&gt;</code> runs the command “…”. Note
+                  the difference between <code>TAB</code> and
+                  <code>&lt;tab&gt;</code> where the latter has priority.</p>
+
+                  <p>If you see <code>&lt;tab&gt;</code> bound to a command
+                  other than <code>yas-expand</code> (e.g. in org-mode), you
+                  can try a work around. See <a href=
+                  "https://github.com/capitaomorte/yasnippet/blob/master/doc/faq.org">
+                  https://github.com/capitaomorte/yasnippet/blob/master/doc/faq.org</a>.</p>
+                </li>
+              </ol>
             </div>
           </div>
         </div>
@@ -25378,7 +25417,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140828.2053]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140828.2131]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

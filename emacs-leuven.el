@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140828.2051
+;; Version: 20140828.2129
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140828.2051]--")
+(message "* --[ Loading Emacs Leuven 20140828.2129]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -6827,7 +6827,7 @@ up before you execute another command."
     ;; use the "standard" package (NOT `yasnippet-bundle'!)
     (when (try-require 'yasnippet)
 
-      ;; enable the YASnippet menu and expansion in *all* buffers
+      ;; enable YASnippet in all buffers
       (yas-global-mode 1)
 
       (defvar leuven-yasnippet-my-snippets-dir
@@ -6881,30 +6881,7 @@ up before you execute another command."
 
       (add-hook 'snippet-mode-hook
                 (lambda ()
-                  (setq require-final-newline nil)))
-
-      ;;! make sure you initialise YASnippet *before* Org mode
-      (when (featurep 'org)
-        (message "(Error) Org is already loaded -> Too late to init YASnippet!")
-        (sit-for 3))
-
-      (defun yas-org-very-safe-expand ()
-        (let ((yas-fallback-behavior 'return-nil))
-          (yas-expand)))
-
-      ;; allow YASnippet to do its thing in Org files
-      (add-hook 'org-mode-hook
-                (lambda ()
-                  ;; YASnippet (using the new org-cycle hooks)
-                  (add-to-list 'org-tab-first-hook
-                               'yas-org-very-safe-expand)
-
-                  ;; When enabled, problem with inserting letter `t' in
-                  ;; YASnippet fields
-                  ;; (define-key yas-keymap
-                  ;;   (kbd "tab") 'yas-next-field)
-                                        ; `yas-next-field-or-maybe-expand'?
-                  ))))
+                  (setq require-final-newline nil)))))
 
 ;;** 29.7 (info "(emacs)Dabbrev Customization")
 
@@ -8860,7 +8837,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140828.2052]--")
+(message "* --[ Loaded Emacs Leuven 20140828.2130]--")
 
 (provide 'emacs-leuven)
 
