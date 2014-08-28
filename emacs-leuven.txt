@@ -3219,6 +3219,9 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
     ;; open Helm (QuickSilver-like candidate-selection framework)
     (when (try-require 'helm-config)
 
+      ;; various functions for Helm (Shell history, etc.)
+      (require 'helm-misc)
+
       (when (and running-ms-windows
                  (executable-find "es"))
                                         ; we could check for it in
@@ -10772,6 +10775,8 @@ By default, put *your own snippets* in the directory =~/.emacs.d/snippets=.
 
 *** Writing snippets
 
+See http://cupfullofcode.com/snippet-expansion-with-yasnippet/.
+
 - ~C-c & C-n~ ::
     ~yas-new-snippet~
 
@@ -12404,18 +12409,10 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
     (define-key comint-mode-map
       (kbd "<C-down>") 'comint-next-matching-input-from-input) ; RStudio
 
-    ;; (define-key comint-mode-map
-    ;;   (kbd "C-c C-l") 'ess-comint-input-ring)
-    ;;
-    ;; (defun ess-comint-input-ring ()
-    ;;   "Predefined `helm' that provide completion of `comint' history."
-    ;;   (interactive)
-    ;;   (helm :sources 'helm-source-comint-input-ring
-    ;;         :input (buffer-substring-no-properties (comint-line-beginning-position)
-    ;;                                                (point-at-eol))
-    ;;         :buffer "*helm comint history*"))
-
-    )
+    (when (featurep 'helm-misc)
+      ;; provide completion of `comint' history
+      (define-key comint-mode-map
+        (kbd "C-c C-l") 'helm-comint-input-ring)))
 #+end_src
 
 *** Command History

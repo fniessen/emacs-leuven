@@ -1281,7 +1281,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140828.1523</span>
+"org-comment">Version: 20140828.1550</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1404,7 +1404,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140828.1523]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140828.1550]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -6668,6 +6668,11 @@ M-: (executable-find "diff") RET
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">open Helm (QuickSilver-like candidate-selection framework)</span>
     (<span class="org-keyword">when</span> (try-require 'helm-config)
+
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">various functions for Helm (Shell history, etc.)</span>
+      (<span class="org-keyword">require</span> '<span class=
+"org-constant">helm-misc</span>)
 
       (<span class="org-keyword">when</span> (and running-ms-windows
                  (executable-find <span class="org-string">"es"</span>))
@@ -19461,6 +19466,9 @@ TAGS:
           <h4 id="sec-34-1-4">Writing snippets</h4>
 
           <div class="outline-text-4" id="text-34-1-4">
+            <p>See <a href=
+            "http://cupfullofcode.com/snippet-expansion-with-yasnippet/">http://cupfullofcode.com/snippet-expansion-with-yasnippet/</a>.</p>
+
             <dl class="org-dl">
               <dt><code>C-c &amp; C-n</code></dt>
 
@@ -22358,31 +22366,15 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       (kbd <span class=
 "org-string">"&lt;C-down&gt;"</span>) 'comint-next-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">RStudio</span>
 
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(define-key comint-mode-map</span>
-    <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(kbd "C-c C-l") 'ess-comint-input-ring)</span>
-    <span class="org-comment-delimiter">;;</span>
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(defun ess-comint-input-ring ()</span>
-    <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">"Predefined `</span><span class="org-comment"><span class=
-"org-constant">helm</span></span><span class=
-"org-comment">' that provide completion of `</span><span class=
+    (<span class="org-keyword">when</span> (<span class=
+"org-keyword">featurep</span> '<span class="org-constant">helm-misc</span>)
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">provide completion of `</span><span class=
 "org-comment"><span class="org-constant">comint</span></span><span class=
-"org-comment">' history."</span>
-    <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(interactive)</span>
-    <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(helm :sources 'helm-source-comint-input-ring</span>
-    <span class="org-comment-delimiter">;;         </span><span class=
-"org-comment">:input (buffer-substring-no-properties (comint-line-beginning-position)</span>
-    <span class=
-"org-comment-delimiter">;;                                                </span><span class="org-comment">(point-at-eol))</span>
-    <span class="org-comment-delimiter">;;         </span><span class=
-"org-comment">:buffer "*helm comint history*"))</span>
-
-    )
+"org-comment">' history</span>
+      (define-key comint-mode-map
+        (kbd <span class=
+"org-string">"C-c C-l"</span>) 'helm-comint-input-ring)))
 </pre>
           </div>
         </div>
@@ -25362,7 +25354,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140828.1523]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140828.1551]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

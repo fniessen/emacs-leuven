@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140828.1521
+;; Version: 20140828.1549
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140828.1521]--")
+(message "* --[ Loading Emacs Leuven 20140828.1549]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -1940,6 +1940,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; open Helm (QuickSilver-like candidate-selection framework)
     (when (try-require 'helm-config)
+
+      ;; various functions for Helm (Shell history, etc.)
+      (require 'helm-misc)
 
       (when (and running-ms-windows
                  (executable-find "es"))
@@ -7895,18 +7898,10 @@ up before you execute another command."
     (define-key comint-mode-map
       (kbd "<C-down>") 'comint-next-matching-input-from-input) ; RStudio
 
-    ;; (define-key comint-mode-map
-    ;;   (kbd "C-c C-l") 'ess-comint-input-ring)
-    ;;
-    ;; (defun ess-comint-input-ring ()
-    ;;   "Predefined `helm' that provide completion of `comint' history."
-    ;;   (interactive)
-    ;;   (helm :sources 'helm-source-comint-input-ring
-    ;;         :input (buffer-substring-no-properties (comint-line-beginning-position)
-    ;;                                                (point-at-eol))
-    ;;         :buffer "*helm comint history*"))
-
-    )
+    (when (featurep 'helm-misc)
+      ;; provide completion of `comint' history
+      (define-key comint-mode-map
+        (kbd "C-c C-l") 'helm-comint-input-ring)))
 
 ;;** 36.6 Directory Tracking
 
@@ -8857,7 +8852,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140828.1522]--")
+(message "* --[ Loaded Emacs Leuven 20140828.1550]--")
 
 (provide 'emacs-leuven)
 
