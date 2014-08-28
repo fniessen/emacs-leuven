@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140827.2049
+;; Version: 20140828.1134
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140827.2049]--")
+(message "* --[ Loading Emacs Leuven 20140828.1134]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -410,11 +410,11 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (defcustom leuven-elpa-packages
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
-          csv-mode dictionary dired+ dired-single ess fill-column-indicator
-          flycheck fuzzy git-commit-mode graphviz-dot-mode helm helm-R htmlize
-          idle-require info+ interaction-log ledger-mode leuven-theme
-          multiple-cursors org-mime pager rainbow-mode redo+ sml-modeline tidy
-          yasnippet
+          company csv-mode dictionary dired+ dired-single ess
+          fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
+          helm helm-R htmlize idle-require info+ interaction-log ledger-mode
+          leuven-theme multiple-cursors org-mime pager rainbow-mode redo+
+          sml-modeline tidy yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -6291,6 +6291,9 @@ this with to-do items than with projects or headings."
   ;; modern on-the-fly syntax checking
   (when (try-require 'flycheck)
 
+    ;; indicate errors and warnings via icons in the right fringe
+    (setq flycheck-indication-mode 'right-fringe)
+
     ;; enable Flycheck mode in all buffers
     (add-hook 'after-init-hook 'global-flycheck-mode)
 
@@ -6300,7 +6303,9 @@ this with to-do items than with projects or headings."
 This lets us fix any errors as quickly as possible, but in
 a clean buffer we're an order of magnitude laxer about checking."
       (setq flycheck-idle-change-delay
-            (if flycheck-current-errors 2 30)))
+            (if (assq 'error (flycheck-count-errors flycheck-current-errors))
+                2
+              30)))
 
     ;; Each buffer get its local `flycheck-idle-change-delay' because of the
     ;; buffer-sensitive adjustment above.
@@ -6687,12 +6692,12 @@ up before you execute another command."
 
     (setq semantic-default-submodes
           '(
-            ;; turn Semantic DB mode on (Semantic parsers store the
-            ;; results of parsing source code in a database file, which can
-            ;; be saved for future Emacs sessions)
+            ;; turn Semantic DB mode on (Semantic parsers store the results of
+            ;; parsing source code in a database file, which can be saved for
+            ;; future Emacs sessions)
             global-semanticdb-minor-mode
 
-            ;; the idle scheduler with automatically reparse buffers in idle
+            ;; the idle scheduler will automatically reparse buffers in idle
             ;; time
             global-semantic-idle-scheduler-mode ; [minimum-features]
 
@@ -6700,16 +6705,16 @@ up before you execute another command."
             ;; (~ ElDoc)
             global-semantic-idle-summary-mode ; [code-helpers]
 
-            ;; display a tooltip with a list of possible completions near
-            ;; the cursor
+            ;; display a tooltip with a list of possible completions near the
+            ;; cursor
             global-semantic-idle-completions-mode ; [gaudy-code-helpers]
 
             ;; turn Semantic MRU Bookmarks on (keep track of the Most
             ;; Recently Used tags)
             global-semantic-mru-bookmark-mode
 
-            ;; enable Semantic-Stickyfunc mode (display a header line that
-            ;; shows the declaration line of the function or tag)
+            ;; enable Semantic-Stickyfunc mode (display a header line that shows
+            ;; the declaration line of the function or tag)
             global-semantic-stickyfunc-mode ; [gaudy-code-helpers]
 
             ;; enable Semantic-Highlight-Func mode
@@ -6937,7 +6942,7 @@ up before you execute another command."
   (GNUEmacs
 
     ;; Auto Completion
-    (when (locate-library "auto-complete-config")
+    (when (locate-library "auto-complete-config-XXX")
       (idle-require 'auto-complete-config)
 
       (with-eval-after-load "auto-complete-config"
@@ -6945,8 +6950,12 @@ up before you execute another command."
         ;; ;; 5.4 completion will be started automatically by inserting 2 characters
         ;; (setq ac-auto-start 2)
 
-        ;; 6.1 optimize sources to use
-        (ac-config-default)
+        ;; 6.1 set a list of sources to use (by default + for some major modes)
+        (ac-config-default)             ; ... and enable Auto-Complete mode in
+                                        ; all buffers
+
+        ;; disable Auto-Complete mode in all buffers
+        (global-auto-complete-mode -1)
 
         ;; 7.5 use `C-n/C-p' to select candidates (only when completion menu is
         ;; displayed)
@@ -6970,53 +6979,6 @@ up before you execute another command."
 
         ;; 7.8 enable auto-complete-mode automatically for Sword mode
         (add-to-list 'ac-modes 'sword-mode) ; brand new mode
-
-        ;; 7.12 change default sources
-        (setq-default ac-sources
-                      ;; buffers whom major-mode is same to of a current buffer
-                      '(ac-source-words-in-same-mode-buffers))
-
-        ;; set default auto-complete source
-        (setq ac-sources                ; snippet
-              '(ac-source-yasnippet
-                                        ; template
-                ;; ac-source-template
-                                        ; abbrev
-                ac-source-abbrev
-                ac-source-dabbrev
-                                        ; filename
-                ac-source-filename
-                ac-source-files-in-current-dir
-                                        ; programming
-                ac-source-semantic
-                ;; ac-source-semantic-raw
-                                        ; tags
-                ;; ac-source-etags
-                ;; ac-source-gtags
-                ac-source-variables
-                ac-source-functions
-                ac-source-symbols
-                                        ; chunk
-                ;; ac-source-chunk-list
-                                        ; buffer
-                ac-source-words-in-buffer
-                ac-source-words-in-same-mode-buffers
-                                        ; dictionary
-                ;; ac-source-dictionary
-                ;; ac-source-dictionary-chunk
-                                        ; spell
-                ;; ac-source-ispell
-                ;; ac-source-entity
-                                        ; features
-                ac-source-features))
-
-        ;; 7.13 change sources for Emacs Lisp mode
-        (add-hook 'emacs-lisp-mode-hook
-                  (lambda ()
-                    (setq ac-sources
-                          '(ac-source-words-in-same-mode-buffers
-                            ac-source-words-in-buffer
-                            ac-source-symbols))))
 
         ;; 8.1 delay to completions will be available
         (setq ac-delay 0)               ; faster than default 0.1
@@ -7043,6 +7005,21 @@ up before you execute another command."
 
         ;; 11.1 avoid Flyspell processes when auto completion is being started
         (ac-flyspell-workaround))))
+
+  ;; modular text completion framework
+  (when (try-require 'company)
+
+    ;; minimum prefix length for idle completion
+    (setq company-minimum-prefix-length 2)
+
+    ;; start completion immediately
+    (setq company-idle-delay 0)
+
+    ;; show quick-access numbers for the first ten candidates
+    (setq company-show-numbers t)
+
+    ;; enable Company mode in all buffers
+    (add-hook 'after-init-hook 'global-company-mode))
 
 )                                       ; chapter 29 ends here
 
@@ -8855,7 +8832,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140827.2049]--")
+(message "* --[ Loaded Emacs Leuven 20140828.1135]--")
 
 (provide 'emacs-leuven)
 
