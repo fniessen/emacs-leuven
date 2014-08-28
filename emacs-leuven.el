@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140828.1134
+;; Version: 20140828.1151
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140828.1134]--")
+(message "* --[ Loading Emacs Leuven 20140828.1151]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -6846,13 +6846,21 @@ up before you execute another command."
       ;; use Snippet mode for files with a `yasnippet' extension
       (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
 
+      ;; insert snippet at point
+      (global-set-key (kbd "C-c s") 'yas-insert-snippet) ; also on `C-c & C-s'
+
       ;; bind `yas-expand' to SPC
       (define-key yas-minor-mode-map (kbd "<tab>") nil)
       (define-key yas-minor-mode-map (kbd "TAB") nil)
       (define-key yas-minor-mode-map (kbd "SPC") 'yas-expand)
 
-      ;; insert snippet at point
-      (global-set-key (kbd "C-c s") 'yas-insert-snippet) ; also on `C-c & C-s'
+      ;; don't expand when you are typing in a string or comment
+      (add-hook 'prog-mode-hook
+                '(lambda ()
+                   (setq yas-buffer-local-condition
+                         '(if (nth 8 (syntax-ppss)) ; non-nil if in a string or comment
+                              '(require-snippet-condition . force-in-comment)
+                            t))))
 
       ;; UI for selecting snippet when there are multiple candidates
       (setq yas-prompt-functions '(yas-dropdown-prompt))
@@ -8832,7 +8840,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140828.1135]--")
+(message "* --[ Loaded Emacs Leuven 20140828.1152]--")
 
 (provide 'emacs-leuven)
 

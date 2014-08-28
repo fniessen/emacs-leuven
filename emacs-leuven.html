@@ -1281,7 +1281,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140828.1135</span>
+"org-comment">Version: 20140828.1152</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1404,7 +1404,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140828.1135]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140828.1152]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -19419,6 +19419,13 @@ TAGS:
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
       <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">insert snippet at point</span>
+      (global-set-key (kbd <span class=
+"org-string">"C-c s"</span>) 'yas-insert-snippet) <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">also on `C-c &amp; C-s'</span>
+
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">bind `</span><span class="org-comment"><span class=
 "org-constant">yas-expand</span></span><span class=
 "org-comment">' to SPC</span>
@@ -19430,11 +19437,16 @@ TAGS:
 "org-string">"SPC"</span>) 'yas-expand)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">insert snippet at point</span>
-      (global-set-key (kbd <span class=
-"org-string">"C-c s"</span>) 'yas-insert-snippet) <span class=
+"org-comment">don't expand when you are typing in a string or comment</span>
+      (add-hook 'prog-mode-hook
+                '(<span class="org-keyword">lambda</span> ()
+                   (setq yas-buffer-local-condition
+                         '(<span class=
+"org-keyword">if</span> (nth 8 (syntax-ppss)) <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">also on `C-c &amp; C-s'</span>
+"org-comment">non-nil if in a string or comment</span>
+                              '(require-snippet-condition . force-in-comment)
+                            t))))
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">UI for selecting snippet when there are multiple candidates</span>
@@ -25309,7 +25321,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140828.1136]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140828.1153]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
