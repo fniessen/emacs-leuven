@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140828.1336
+;; Version: 20140828.1502
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140828.1336]--")
+(message "* --[ Loading Emacs Leuven 20140828.1502]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -6074,7 +6074,8 @@ this with to-do items than with projects or headings."
   (GNUEmacs
     (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
     (add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
-    (add-hook 'ielm-mode-hook 'eldoc-mode))
+    (add-hook 'ielm-mode-hook 'eldoc-mode)
+    (add-hook 'eval-expression-minibuffer-setup-hook 'eldoc-mode))
 
   ;; highlight the arguments in `font-lock-variable-name-face'
   (defun leuven--frob-eldoc-argument-list (string)
@@ -8856,7 +8857,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140828.1337]--")
+(message "* --[ Loaded Emacs Leuven 20140828.1503]--")
 
 (provide 'emacs-leuven)
 
