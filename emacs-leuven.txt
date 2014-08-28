@@ -10958,8 +10958,8 @@ Other operations are enabled temporarily when completion is started:
      Scroll up quick help.
 
 - ~<f1>~ (or ~C-?~, ~ac-help~) ::
-     Show additional *help* (for functions, arguments and objects) in electrical
-     *buffer*.
+     Show additional *help* (for functions, arguments and objects) in *temporary
+     buffer*.
 
      Use ~C-M-v~ (or ~C-M-S-v~) to scroll down (or up).
 
@@ -11075,16 +11075,19 @@ available completions and filter as well.
     (define-key company-active-map (kbd "C-n") 'company-select-next)
     (define-key company-active-map (kbd "C-p") 'company-select-previous)
 
-    (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
-
-    (define-key company-active-map (kbd "C-v") 'company-show-location)
-    (define-key company-active-map (kbd "C-g") '(lambda ()
-                                                   (interactive)
-                                                   (company-abort)))
-
     ;; unbind some keys (inconvenient in Comint buffers)
     (define-key company-active-map (kbd "M-n") nil)
-    (define-key company-active-map (kbd "M-p") nil))
+    (define-key company-active-map (kbd "M-p") nil)
+
+    ;; completion by TAB
+    (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
+
+    ;; completion by right arrow
+    (define-key company-active-map (kbd "<right>") 'company-complete-selection)
+
+    ;; abort
+    (define-key company-active-map (kbd "C-g") 'company-abort)
+    (define-key company-active-map (kbd "<left>") 'company-abort))
 #+end_src
 
 #+begin_src emacs-lisp

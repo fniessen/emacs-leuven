@@ -1281,7 +1281,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140828.1322</span>
+"org-comment">Version: 20140828.1337</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1404,7 +1404,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140828.1322]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140828.1337]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -19788,7 +19788,7 @@ TAGS:
 
               <dd>
                 <p>Show additional <b>help</b> (for functions, arguments and
-                objects) in electrical <b>buffer</b>.</p>
+                objects) in <b>temporary buffer</b>.</p>
 
                 <p>Use <code>C-M-v</code> (or <code>C-M-S-v</code>) to scroll
                 down (or up).</p>
@@ -19977,22 +19977,29 @@ TAGS:
     (define-key company-active-map (kbd <span class=
 "org-string">"C-p"</span>) 'company-select-previous)
 
-    (define-key company-active-map (kbd <span class=
-"org-string">"&lt;tab&gt;"</span>) 'company-complete-selection)
-
-    (define-key company-active-map (kbd <span class=
-"org-string">"C-v"</span>) 'company-show-location)
-    (define-key company-active-map (kbd <span class=
-"org-string">"C-g"</span>) '(<span class="org-keyword">lambda</span> ()
-                                                   (interactive)
-                                                   (company-abort)))
-
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">unbind some keys (inconvenient in Comint buffers)</span>
     (define-key company-active-map (kbd <span class=
 "org-string">"M-n"</span>) nil)
     (define-key company-active-map (kbd <span class=
-"org-string">"M-p"</span>) nil))
+"org-string">"M-p"</span>) nil)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">completion by TAB</span>
+    (define-key company-active-map (kbd <span class=
+"org-string">"&lt;tab&gt;"</span>) 'company-complete-selection)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">completion by right arrow</span>
+    (define-key company-active-map (kbd <span class=
+"org-string">"&lt;right&gt;"</span>) 'company-complete-selection)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">abort</span>
+    (define-key company-active-map (kbd <span class=
+"org-string">"C-g"</span>) 'company-abort)
+    (define-key company-active-map (kbd <span class=
+"org-string">"&lt;left&gt;"</span>) 'company-abort))
 </pre>
             </div>
 
@@ -25345,7 +25352,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140828.1323]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140828.1338]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

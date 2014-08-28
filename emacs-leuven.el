@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140828.1321
+;; Version: 20140828.1336
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140828.1321]--")
+(message "* --[ Loading Emacs Leuven 20140828.1336]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -7031,16 +7031,19 @@ up before you execute another command."
     (define-key company-active-map (kbd "C-n") 'company-select-next)
     (define-key company-active-map (kbd "C-p") 'company-select-previous)
 
-    (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
-
-    (define-key company-active-map (kbd "C-v") 'company-show-location)
-    (define-key company-active-map (kbd "C-g") '(lambda ()
-                                                   (interactive)
-                                                   (company-abort)))
-
     ;; unbind some keys (inconvenient in Comint buffers)
     (define-key company-active-map (kbd "M-n") nil)
-    (define-key company-active-map (kbd "M-p") nil))
+    (define-key company-active-map (kbd "M-p") nil)
+
+    ;; completion by TAB
+    (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
+
+    ;; completion by right arrow
+    (define-key company-active-map (kbd "<right>") 'company-complete-selection)
+
+    ;; abort
+    (define-key company-active-map (kbd "C-g") 'company-abort)
+    (define-key company-active-map (kbd "<left>") 'company-abort))
 
 )                                       ; chapter 29 ends here
 
@@ -8853,7 +8856,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140828.1322]--")
+(message "* --[ Loaded Emacs Leuven 20140828.1337]--")
 
 (provide 'emacs-leuven)
 
