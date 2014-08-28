@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140828.1549
+;; Version: 20140828.1628
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140828.1549]--")
+(message "* --[ Loading Emacs Leuven 20140828.1628]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -6301,22 +6301,23 @@ this with to-do items than with projects or headings."
     ;; enable Flycheck mode in all buffers
     (add-hook 'after-init-hook 'global-flycheck-mode)
 
-    (defun magnars/adjust-flycheck-automatic-syntax-eagerness ()
+    (defun leuven--adjust-flycheck-automatic-syntax-eagerness ()
       "Adjust how often we check for errors based on if there are any.
 
 This lets us fix any errors as quickly as possible, but in
 a clean buffer we're an order of magnitude laxer about checking."
       (setq flycheck-idle-change-delay
             (if (assq 'error (flycheck-count-errors flycheck-current-errors))
-                2
-              30)))
+                ; only check for REAL errors (original source: Magnars)
+                1
+              20)))
 
     ;; Each buffer get its local `flycheck-idle-change-delay' because of the
     ;; buffer-sensitive adjustment above.
     (make-variable-buffer-local 'flycheck-idle-change-delay)
 
     (add-hook 'flycheck-after-syntax-check-hook
-              'magnars/adjust-flycheck-automatic-syntax-eagerness)
+              'leuven--adjust-flycheck-automatic-syntax-eagerness)
 
     ;; Remove newline checks, since they would trigger an immediate check when
     ;; we want the `flycheck-idle-change-delay' to be in effect while editing.
@@ -6324,8 +6325,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           '(save
             idle-change
             ;; new-line
-            ;; mode-enabled
-            ))
+            mode-enabled))
 
     (defun flycheck-handle-idle-change ()
       "Handle an expired idle time since the last change.
@@ -8852,7 +8852,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140828.1550]--")
+(message "* --[ Loaded Emacs Leuven 20140828.1628]--")
 
 (provide 'emacs-leuven)
 

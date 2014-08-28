@@ -1281,7 +1281,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140828.1550</span>
+"org-comment">Version: 20140828.1629</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1404,7 +1404,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140828.1550]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140828.1629]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -17700,7 +17700,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     (add-hook 'after-init-hook 'global-flycheck-mode)
 
     (<span class="org-keyword">defun</span> <span class=
-"org-function-name">magnars/adjust-flycheck-automatic-syntax-eagerness</span> ()
+"org-function-name">leuven--adjust-flycheck-automatic-syntax-eagerness</span> ()
       <span class=
 "org-doc">"Adjust how often we check for errors based on if there are any.</span>
 
@@ -17711,8 +17711,10 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
       (setq flycheck-idle-change-delay
             (<span class=
 "org-keyword">if</span> (assq 'error (flycheck-count-errors flycheck-current-errors))
-                2
-              30)))
+                <span class="org-comment-delimiter">; </span><span class=
+"org-comment">only check for REAL errors (original source: Magnars)</span>
+                1
+              20)))
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Each buffer get its local `</span><span class=
@@ -17724,7 +17726,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     (make-variable-buffer-local 'flycheck-idle-change-delay)
 
     (add-hook 'flycheck-after-syntax-check-hook
-              'magnars/adjust-flycheck-automatic-syntax-eagerness)
+              'leuven--adjust-flycheck-automatic-syntax-eagerness)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Remove newline checks, since they would trigger an immediate check when</span>
@@ -17737,9 +17739,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             idle-change
             <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">new-line</span>
-            <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">mode-enabled</span>
-            ))
+            mode-enabled))
 
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">flycheck-handle-idle-change</span> ()
@@ -25354,7 +25354,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140828.1551]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140828.1629]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

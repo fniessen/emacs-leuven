@@ -9721,22 +9721,23 @@ the code immediately as you are editing it.
     ;; enable Flycheck mode in all buffers
     (add-hook 'after-init-hook 'global-flycheck-mode)
 
-    (defun magnars/adjust-flycheck-automatic-syntax-eagerness ()
+    (defun leuven--adjust-flycheck-automatic-syntax-eagerness ()
       "Adjust how often we check for errors based on if there are any.
 
 This lets us fix any errors as quickly as possible, but in
 a clean buffer we're an order of magnitude laxer about checking."
       (setq flycheck-idle-change-delay
             (if (assq 'error (flycheck-count-errors flycheck-current-errors))
-                2
-              30)))
+                ; only check for REAL errors (original source: Magnars)
+                1
+              20)))
 
     ;; Each buffer get its local `flycheck-idle-change-delay' because of the
     ;; buffer-sensitive adjustment above.
     (make-variable-buffer-local 'flycheck-idle-change-delay)
 
     (add-hook 'flycheck-after-syntax-check-hook
-              'magnars/adjust-flycheck-automatic-syntax-eagerness)
+              'leuven--adjust-flycheck-automatic-syntax-eagerness)
 
     ;; Remove newline checks, since they would trigger an immediate check when
     ;; we want the `flycheck-idle-change-delay' to be in effect while editing.
@@ -9744,8 +9745,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           '(save
             idle-change
             ;; new-line
-            ;; mode-enabled
-            ))
+            mode-enabled))
 
     (defun flycheck-handle-idle-change ()
       "Handle an expired idle time since the last change.
