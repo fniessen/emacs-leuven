@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140828.1502
+;; Version: 20140828.1521
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140828.1502]--")
+(message "* --[ Loading Emacs Leuven 20140828.1521]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -6959,9 +6959,9 @@ up before you execute another command."
         ;; ;; 5.4 completion will be started automatically by inserting 2 characters
         ;; (setq ac-auto-start 2)
 
-        ;; ;; 6.1 set a list of sources to use (by default + for some major modes)
-        ;; (ac-config-default)             ; ... and enable Auto-Complete mode in
-        ;;                                 ; all buffers
+        ;; 6.1 set a list of sources to use (by default + for some major modes)
+        (ac-config-default)             ; ... and enable Auto-Complete mode in
+                                        ; all buffers
 
         ;; 7.5 use `C-n/C-p' to select candidates (only when completion menu is
         ;; displayed)
@@ -7013,7 +7013,7 @@ up before you execute another command."
         (ac-flyspell-workaround))))
 
   ;; modular text completion framework
-  (when (try-require 'company)
+  (when (try-require 'company-XXX)
 
     ;; minimum prefix length for idle completion
     (setq company-minimum-prefix-length 2)
@@ -8857,7 +8857,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140828.1503]--")
+(message "* --[ Loaded Emacs Leuven 20140828.1522]--")
 
 (provide 'emacs-leuven)
 

@@ -10981,9 +10981,9 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
         ;; ;; 5.4 completion will be started automatically by inserting 2 characters
         ;; (setq ac-auto-start 2)
 
-        ;; ;; 6.1 set a list of sources to use (by default + for some major modes)
-        ;; (ac-config-default)             ; ... and enable Auto-Complete mode in
-        ;;                                 ; all buffers
+        ;; 6.1 set a list of sources to use (by default + for some major modes)
+        (ac-config-default)             ; ... and enable Auto-Complete mode in
+                                        ; all buffers
 
         ;; 7.5 use `C-n/C-p' to select candidates (only when completion menu is
         ;; displayed)
@@ -11057,7 +11057,7 @@ available completions and filter as well.
 
 #+begin_src emacs-lisp
   ;; modular text completion framework
-  (when (try-require 'company)
+  (when (try-require 'company-XXX)
 
     ;; minimum prefix length for idle completion
     (setq company-minimum-prefix-length 2)
@@ -11089,6 +11089,11 @@ available completions and filter as well.
     ;; abort
     (define-key company-active-map (kbd "C-g") 'company-abort)
     (define-key company-active-map (kbd "<left>") 'company-abort))
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+    (setq company-idle-delay nil)
+    (global-set-key (kbd "<tab>") 'company-complete-selection)
 #+end_src
 
 #+begin_src emacs-lisp
