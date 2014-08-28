@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140828.2129
+;; Version: 20140828.2232
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140828.2129]--")
+(message "* --[ Loading Emacs Leuven 20140828.2232]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -6970,7 +6970,7 @@ up before you execute another command."
         (setq ac-delay 0)               ; faster than default 0.1
 
         ;; 8.2 completion menu will be automatically shown
-        (setq ac-auto-show-menu 0.2)    ; or 0.8?
+        (setq ac-auto-show-menu 0.2)    ; [default: 0.8]
 
         ;; 8.13 delay to show quick help
         (setq ac-quick-help-delay 0.5)
@@ -6981,13 +6981,18 @@ up before you execute another command."
         ;; 8.16 limit on number of candidates
         (setq ac-candidate-limit 100)
 
+        ;; (setq ac-disable-inline t)
+        ;; (setq ac-candidate-menu-min 0)
+
         ;; completion by TAB
-        (define-key ac-completing-map
-          (kbd "<tab>") 'ac-complete)
+        (define-key ac-completing-map (kbd "<tab>") 'ac-complete)
 
         ;; completion by right arrow
-        (define-key ac-completing-map
-          (kbd "<right>") 'ac-complete)
+        (define-key ac-completing-map (kbd "<right>") 'ac-complete)
+
+        ;; abort
+        (define-key ac-completing-map (kbd "C-g") 'ac-stop)
+        (define-key ac-completing-map (kbd "<left>") 'ac-stop)
 
         ;; 11.1 avoid Flyspell processes when auto completion is being started
         (ac-flyspell-workaround))))
@@ -8008,11 +8013,6 @@ up before you execute another command."
     ;; code folding in ESS mode
     (add-hook 'ess-mode-hook 'hs-minor-mode)
 
-    ;; enable auto-completion of arguments
-    (add-hook 'ess-mode-hook
-              (lambda ()
-                (add-to-list 'ac-sources 'ac-source-R-args)))
-
     ;; prototype object browser for R, looks like dired mode
     (autoload 'ess-rdired "ess-rdired"
       "View *R* objects in a dired-like buffer." t)
@@ -8837,7 +8837,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140828.2130]--")
+(message "* --[ Loaded Emacs Leuven 20140828.2233]--")
 
 (provide 'emacs-leuven)
 

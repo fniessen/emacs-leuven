@@ -1292,7 +1292,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140828.2130</span>
+"org-comment">Version: 20140828.2233</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1415,7 +1415,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140828.2130]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140828.2233]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -19930,7 +19930,8 @@ TAGS:
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">8.2 completion menu will be automatically shown</span>
         (setq ac-auto-show-menu 0.2)    <span class=
-"org-comment-delimiter">; </span><span class="org-comment">or 0.8?</span>
+"org-comment-delimiter">; </span><span class=
+"org-comment">[default: 0.8]</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">8.13 delay to show quick help</span>
@@ -19948,14 +19949,26 @@ TAGS:
         (setq ac-candidate-limit 100)
 
         <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq ac-disable-inline t)</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq ac-candidate-menu-min 0)</span>
+
+        <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">completion by TAB</span>
-        (define-key ac-completing-map
-          (kbd <span class="org-string">"&lt;tab&gt;"</span>) 'ac-complete)
+        (define-key ac-completing-map (kbd <span class=
+"org-string">"&lt;tab&gt;"</span>) 'ac-complete)
 
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">completion by right arrow</span>
-        (define-key ac-completing-map
-          (kbd <span class="org-string">"&lt;right&gt;"</span>) 'ac-complete)
+        (define-key ac-completing-map (kbd <span class=
+"org-string">"&lt;right&gt;"</span>) 'ac-complete)
+
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">abort</span>
+        (define-key ac-completing-map (kbd <span class=
+"org-string">"C-g"</span>) 'ac-stop)
+        (define-key ac-completing-map (kbd <span class=
+"org-string">"&lt;left&gt;"</span>) 'ac-stop)
 
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">11.1 avoid Flyspell processes when auto completion is being started</span>
@@ -23047,20 +23060,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             <div class="outline-text-5" id="text-40-13-6-1">
               <p>Note – R docs are not in Info format. Though, they are
               available via the quick help of Auto-Complete.</p>
-
-              <div class="org-src-container">
-                <pre class="src src-emacs-lisp">
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable auto-completion of arguments</span>
-    (add-hook 'ess-mode-hook
-              (<span class="org-keyword">lambda</span> ()
-                (add-to-list 'ac-sources 'ac-source-R-args)))
-</pre>
-              </div>
-
-              <p>XXX See <a href=
-              "https://github.com/cofi/dotfiles/blob/master/emacs.d/config/cofi-completion.el">
-              https://github.com/cofi/dotfiles/blob/master/emacs.d/config/cofi-completion.el</a></p>
             </div>
           </div>
         </div>
@@ -25417,7 +25416,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140828.2131]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140828.2234]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
@@ -25537,19 +25536,19 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 
           <div class="org-src-container">
             <pre class="src src-sh">
-<span class="org-builtin">time</span> emacs -f kill-emacs 2&gt;&amp;1
+time emacs -f kill-emacs 2&gt;&amp;1
 </pre>
           </div>
 
           <div class="org-src-container">
             <pre class="src src-sh">
-<span class="org-builtin">time</span> emacs -q -f kill-emacs 2&gt;&amp;1
+time emacs -q -f kill-emacs 2&gt;&amp;1
 </pre>
           </div>
 
           <div class="org-src-container">
             <pre class="src src-sh">
-<span class="org-builtin">time</span> emacs -Q -f kill-emacs 2&gt;&amp;1
+time emacs -Q -f kill-emacs 2&gt;&amp;1
 </pre>
           </div>
 
