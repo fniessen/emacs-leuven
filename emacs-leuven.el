@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140828.1151
+;; Version: 20140828.1321
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140828.1151]--")
+(message "* --[ Loading Emacs Leuven 20140828.1321]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -6950,7 +6950,7 @@ up before you execute another command."
   (GNUEmacs
 
     ;; Auto Completion
-    (when (locate-library "auto-complete-config-XXX")
+    (when (locate-library "auto-complete-config")
       (idle-require 'auto-complete-config)
 
       (with-eval-after-load "auto-complete-config"
@@ -6958,12 +6958,9 @@ up before you execute another command."
         ;; ;; 5.4 completion will be started automatically by inserting 2 characters
         ;; (setq ac-auto-start 2)
 
-        ;; 6.1 set a list of sources to use (by default + for some major modes)
-        (ac-config-default)             ; ... and enable Auto-Complete mode in
-                                        ; all buffers
-
-        ;; disable Auto-Complete mode in all buffers
-        (global-auto-complete-mode -1)
+        ;; ;; 6.1 set a list of sources to use (by default + for some major modes)
+        ;; (ac-config-default)             ; ... and enable Auto-Complete mode in
+        ;;                                 ; all buffers
 
         ;; 7.5 use `C-n/C-p' to select candidates (only when completion menu is
         ;; displayed)
@@ -6971,7 +6968,7 @@ up before you execute another command."
         (define-key ac-menu-map (kbd "C-n") 'ac-next)
         (define-key ac-menu-map (kbd "C-p") 'ac-previous)
 
-        ;; unbind some keys (inconvenient in iESS buffers)
+        ;; unbind some keys (inconvenient in Comint buffers)
         (define-key ac-completing-map (kbd "M-n") nil)
         (define-key ac-completing-map (kbd "M-p") nil)
 
@@ -7027,7 +7024,23 @@ up before you execute another command."
     (setq company-show-numbers t)
 
     ;; enable Company mode in all buffers
-    (add-hook 'after-init-hook 'global-company-mode))
+    (add-hook 'after-init-hook 'global-company-mode)
+
+    ;; use `C-n/C-p' to select candidates (only when completion menu is
+    ;; displayed)
+    (define-key company-active-map (kbd "C-n") 'company-select-next)
+    (define-key company-active-map (kbd "C-p") 'company-select-previous)
+
+    (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
+
+    (define-key company-active-map (kbd "C-v") 'company-show-location)
+    (define-key company-active-map (kbd "C-g") '(lambda ()
+                                                   (interactive)
+                                                   (company-abort)))
+
+    ;; unbind some keys (inconvenient in Comint buffers)
+    (define-key company-active-map (kbd "M-n") nil)
+    (define-key company-active-map (kbd "M-p") nil))
 
 )                                       ; chapter 29 ends here
 
@@ -8840,7 +8853,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140828.1152]--")
+(message "* --[ Loaded Emacs Leuven 20140828.1322]--")
 
 (provide 'emacs-leuven)
 

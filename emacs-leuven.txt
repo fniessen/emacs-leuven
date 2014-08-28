@@ -10972,7 +10972,7 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
   (GNUEmacs
 
     ;; Auto Completion
-    (when (locate-library "auto-complete-config-XXX")
+    (when (locate-library "auto-complete-config")
       (idle-require 'auto-complete-config)
 
       (with-eval-after-load "auto-complete-config"
@@ -10980,12 +10980,9 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
         ;; ;; 5.4 completion will be started automatically by inserting 2 characters
         ;; (setq ac-auto-start 2)
 
-        ;; 6.1 set a list of sources to use (by default + for some major modes)
-        (ac-config-default)             ; ... and enable Auto-Complete mode in
-                                        ; all buffers
-
-        ;; disable Auto-Complete mode in all buffers
-        (global-auto-complete-mode -1)
+        ;; ;; 6.1 set a list of sources to use (by default + for some major modes)
+        ;; (ac-config-default)             ; ... and enable Auto-Complete mode in
+        ;;                                 ; all buffers
 
         ;; 7.5 use `C-n/C-p' to select candidates (only when completion menu is
         ;; displayed)
@@ -10993,7 +10990,7 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
         (define-key ac-menu-map (kbd "C-n") 'ac-next)
         (define-key ac-menu-map (kbd "C-p") 'ac-previous)
 
-        ;; unbind some keys (inconvenient in iESS buffers)
+        ;; unbind some keys (inconvenient in Comint buffers)
         (define-key ac-completing-map (kbd "M-n") nil)
         (define-key ac-completing-map (kbd "M-p") nil)
 
@@ -11053,7 +11050,9 @@ When the completion candidates are shown, press ~<f1>~ to display the
 documentation for the selected candidate, or ~C-w~ to see its source. Not all
 back-ends support this.
 
-To use ~company-mode~ in all buffers, add the following line to your init file:
+company-mode has a unique take on auto-completion where it will reject
+keystrokes if it doesn't match any possibilities. It can also search
+available completions and filter as well.
 
 #+begin_src emacs-lisp
   ;; modular text completion framework
@@ -11069,7 +11068,23 @@ To use ~company-mode~ in all buffers, add the following line to your init file:
     (setq company-show-numbers t)
 
     ;; enable Company mode in all buffers
-    (add-hook 'after-init-hook 'global-company-mode))
+    (add-hook 'after-init-hook 'global-company-mode)
+
+    ;; use `C-n/C-p' to select candidates (only when completion menu is
+    ;; displayed)
+    (define-key company-active-map (kbd "C-n") 'company-select-next)
+    (define-key company-active-map (kbd "C-p") 'company-select-previous)
+
+    (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
+
+    (define-key company-active-map (kbd "C-v") 'company-show-location)
+    (define-key company-active-map (kbd "C-g") '(lambda ()
+                                                   (interactive)
+                                                   (company-abort)))
+
+    ;; unbind some keys (inconvenient in Comint buffers)
+    (define-key company-active-map (kbd "M-n") nil)
+    (define-key company-active-map (kbd "M-p") nil))
 #+end_src
 
 #+begin_src emacs-lisp

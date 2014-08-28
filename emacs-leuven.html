@@ -1281,7 +1281,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140828.1152</span>
+"org-comment">Version: 20140828.1322</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1404,7 +1404,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140828.1152]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140828.1322]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -19813,8 +19813,7 @@ TAGS:
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Auto Completion</span>
     (<span class="org-keyword">when</span> (locate-library <span class=
-"org-string">"auto-complete-config-</span><span class="org-string"><span class=
-"org-leuven-highlight">XXX</span></span><span class="org-string">"</span>)
+"org-string">"auto-complete-config"</span>)
       (idle-require 'auto-complete-config)
 
       (<span class="org-keyword">with-eval-after-load</span> <span class=
@@ -19826,16 +19825,12 @@ TAGS:
 "org-comment">(setq ac-auto-start 2)</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">6.1 set a list of sources to use (by default + for some major modes)</span>
-        (ac-config-default)             <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">... and enable Auto-Complete mode in</span>
-                                        <span class=
-"org-comment-delimiter">; </span><span class="org-comment">all buffers</span>
-
+"org-comment">;; 6.1 set a list of sources to use (by default + for some major modes)</span>
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">disable Auto-Complete mode in all buffers</span>
-        (global-auto-complete-mode -1)
+"org-comment">(ac-config-default)             ; ... and enable Auto-Complete mode in</span>
+        <span class=
+"org-comment-delimiter">;;                                 </span><span class=
+"org-comment">; all buffers</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">7.5 use `</span><span class="org-comment"><span class=
@@ -19850,7 +19845,7 @@ TAGS:
 "org-string">"C-p"</span>) 'ac-previous)
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">unbind some keys (inconvenient in iESS buffers)</span>
+"org-comment">unbind some keys (inconvenient in Comint buffers)</span>
         (define-key ac-completing-map (kbd <span class=
 "org-string">"M-n"</span>) nil)
         (define-key ac-completing-map (kbd <span class=
@@ -19945,8 +19940,9 @@ TAGS:
             selected candidate, or <code>C-w</code> to see its source. Not all
             back-ends support this.</p>
 
-            <p>To use <code>company-mode</code> in all buffers, add the
-            following line to your init file:</p>
+            <p>company-mode has a unique take on auto-completion where it will
+            reject keystrokes if it doesn’t match any possibilities. It can
+            also search available completions and filter as well.</p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -19968,7 +19964,35 @@ TAGS:
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">enable Company mode in all buffers</span>
-    (add-hook 'after-init-hook 'global-company-mode))
+    (add-hook 'after-init-hook 'global-company-mode)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">use `</span><span class="org-comment"><span class=
+"org-constant">C-n/C-p</span></span><span class=
+"org-comment">' to select candidates (only when completion menu is</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">displayed)</span>
+    (define-key company-active-map (kbd <span class=
+"org-string">"C-n"</span>) 'company-select-next)
+    (define-key company-active-map (kbd <span class=
+"org-string">"C-p"</span>) 'company-select-previous)
+
+    (define-key company-active-map (kbd <span class=
+"org-string">"&lt;tab&gt;"</span>) 'company-complete-selection)
+
+    (define-key company-active-map (kbd <span class=
+"org-string">"C-v"</span>) 'company-show-location)
+    (define-key company-active-map (kbd <span class=
+"org-string">"C-g"</span>) '(<span class="org-keyword">lambda</span> ()
+                                                   (interactive)
+                                                   (company-abort)))
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">unbind some keys (inconvenient in Comint buffers)</span>
+    (define-key company-active-map (kbd <span class=
+"org-string">"M-n"</span>) nil)
+    (define-key company-active-map (kbd <span class=
+"org-string">"M-p"</span>) nil))
 </pre>
             </div>
 
@@ -25321,7 +25345,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140828.1153]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140828.1323]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
