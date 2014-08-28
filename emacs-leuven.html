@@ -1281,7 +1281,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140828.1629</span>
+"org-comment">Version: 20140828.2052</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1404,7 +1404,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140828.1629]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140828.2052]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -17692,8 +17692,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (<span class="org-keyword">when</span> (try-require 'flycheck)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">indicate errors and warnings via icons in the right fringe</span>
-    (setq flycheck-indication-mode 'right-fringe)
+"org-comment">;; indicate errors and warnings via icons in the right fringe</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq flycheck-indication-mode 'right-fringe)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">enable Flycheck mode in all buffers</span>
@@ -19932,6 +19933,10 @@ TAGS:
             <p>The best alternative to Auto-Complete seems to be Company
             mode.</p>
 
+            <p>See <a href=
+            "https://github.com/company-mode/company-mode/issues/68">https://github.com/company-mode/company-mode/issues/68</a>
+            for a <b>feature comparison</b> between both.</p>
+
             <p>Completion will start automatically after you type a few
             letters. Use <code>M-n</code> and <code>M-p</code> to select,
             <code>&lt;return&gt;</code> to complete or <code>&lt;tab&gt;</code>
@@ -19973,8 +19978,20 @@ TAGS:
     (setq company-show-numbers t)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable Company mode in all buffers</span>
+"org-comment">enable Company mode in all buffers ...</span>
     (add-hook 'after-init-hook 'global-company-mode)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">... except in some modes</span>
+    (setq company-global-modes
+          '(not ess-mode                <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">in (i)ESS buffers, Auto-Complete is</span>
+                inferior-ess-mode       <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">enabled by default</span>
+                magit-status-mode
+                help-mode))
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">use `</span><span class="org-comment"><span class=
@@ -20012,6 +20029,9 @@ TAGS:
 "org-string">"&lt;left&gt;"</span>) 'company-abort))
 </pre>
             </div>
+
+            <p>XXX What about company-search-candidates vs
+            company-filter-candidates?</p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -22986,6 +23006,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             <h5 id="sec-40-13-6-1">Integration with auto-complete package</h5>
 
             <div class="outline-text-5" id="text-40-13-6-1">
+              <p>Note – R docs are not in Info format. Though, they are
+              available via the quick help of Auto-Complete.</p>
+
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
@@ -24402,6 +24425,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (setq safe-local-variable-values
         '((TeX-master . t)
           (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
+          (flycheck-emacs-lisp-initialize-packages . t)
           (flyspell-mode . -1)
           (flyspell-mode . 1)
           (ispell-local-dictionary . <span class=
@@ -25354,7 +25378,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140828.1629]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140828.2053]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
@@ -25370,6 +25394,8 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 "org-comment">ispell-local-dictionary: "american"</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">flycheck-emacs-lisp-initialize-packages: t</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">End:</span>
 

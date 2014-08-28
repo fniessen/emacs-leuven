@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140828.1628
+;; Version: 20140828.2051
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140828.1628]--")
+(message "* --[ Loading Emacs Leuven 20140828.2051]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -6295,8 +6295,8 @@ this with to-do items than with projects or headings."
   ;; modern on-the-fly syntax checking
   (when (try-require 'flycheck)
 
-    ;; indicate errors and warnings via icons in the right fringe
-    (setq flycheck-indication-mode 'right-fringe)
+    ;; ;; indicate errors and warnings via icons in the right fringe
+    ;; (setq flycheck-indication-mode 'right-fringe)
 
     ;; enable Flycheck mode in all buffers
     (add-hook 'after-init-hook 'global-flycheck-mode)
@@ -7027,8 +7027,15 @@ up before you execute another command."
     ;; show quick-access numbers for the first ten candidates
     (setq company-show-numbers t)
 
-    ;; enable Company mode in all buffers
+    ;; enable Company mode in all buffers ...
     (add-hook 'after-init-hook 'global-company-mode)
+
+    ;; ... except in some modes
+    (setq company-global-modes
+          '(not ess-mode                ; in (i)ESS buffers, Auto-Complete is
+                inferior-ess-mode       ; enabled by default
+                magit-status-mode
+                help-mode))
 
     ;; use `C-n/C-p' to select candidates (only when completion menu is
     ;; displayed)
@@ -8655,6 +8662,7 @@ up before you execute another command."
   (setq safe-local-variable-values
         '((TeX-master . t)
           (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
+          (flycheck-emacs-lisp-initialize-packages . t)
           (flyspell-mode . -1)
           (flyspell-mode . 1)
           (ispell-local-dictionary . "american")
@@ -8852,7 +8860,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140828.1628]--")
+(message "* --[ Loaded Emacs Leuven 20140828.2052]--")
 
 (provide 'emacs-leuven)
 
@@ -8862,6 +8870,7 @@ up before you execute another command."
 ;; coding: utf-8
 ;; ispell-local-dictionary: "american"
 ;; eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))
+;; flycheck-emacs-lisp-initialize-packages: t
 ;; End:
 
 ;;; emacs-leuven.el ends here

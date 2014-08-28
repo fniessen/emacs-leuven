@@ -9715,8 +9715,8 @@ the code immediately as you are editing it.
   ;; modern on-the-fly syntax checking
   (when (try-require 'flycheck)
 
-    ;; indicate errors and warnings via icons in the right fringe
-    (setq flycheck-indication-mode 'right-fringe)
+    ;; ;; indicate errors and warnings via icons in the right fringe
+    ;; (setq flycheck-indication-mode 'right-fringe)
 
     ;; enable Flycheck mode in all buffers
     (add-hook 'after-init-hook 'global-flycheck-mode)
@@ -11044,6 +11044,9 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
 
 The best alternative to Auto-Complete seems to be Company mode.
 
+See https://github.com/company-mode/company-mode/issues/68 for a *feature
+comparison* between both.
+
 Completion will start automatically after you type a few letters. Use ~M-n~ and
 ~M-p~ to select, ~<return>~ to complete or ~<tab>~ to complete the common part. Search
 through the completions with ~C-s~, ~C-r~ and ~C-o~. Press ~M-(digit)~ to quickly
@@ -11073,8 +11076,15 @@ available completions and filter as well.
     ;; show quick-access numbers for the first ten candidates
     (setq company-show-numbers t)
 
-    ;; enable Company mode in all buffers
+    ;; enable Company mode in all buffers ...
     (add-hook 'after-init-hook 'global-company-mode)
+
+    ;; ... except in some modes
+    (setq company-global-modes
+          '(not ess-mode                ; in (i)ESS buffers, Auto-Complete is
+                inferior-ess-mode       ; enabled by default
+                magit-status-mode
+                help-mode))
 
     ;; use `C-n/C-p' to select candidates (only when completion menu is
     ;; displayed)
@@ -11095,6 +11105,8 @@ available completions and filter as well.
     (define-key company-active-map (kbd "C-g") 'company-abort)
     (define-key company-active-map (kbd "<left>") 'company-abort))
 #+end_src
+
+XXX What about company-search-candidates vs company-filter-candidates?
 
 #+begin_src emacs-lisp :tangle no
     (setq company-idle-delay nil)
@@ -12748,6 +12760,9 @@ Smart underscore:
 
 **** Integration with auto-complete package
 
+Note -- R docs are not in Info format.  Though, they are available via the quick
+help of Auto-Complete.
+
 #+begin_src emacs-lisp
     ;; enable auto-completion of arguments
     (add-hook 'ess-mode-hook
@@ -13614,6 +13629,7 @@ particular color...
   (setq safe-local-variable-values
         '((TeX-master . t)
           (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
+          (flycheck-emacs-lisp-initialize-packages . t)
           (flyspell-mode . -1)
           (flyspell-mode . 1)
           (ispell-local-dictionary . "american")
@@ -14245,6 +14261,7 @@ calls to message), set the variable ~debug-on-message~.
 ;; coding: utf-8
 ;; ispell-local-dictionary: "american"
 ;; eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))
+;; flycheck-emacs-lisp-initialize-packages: t
 ;; End:
 
 ;;; emacs-leuven.el ends here
