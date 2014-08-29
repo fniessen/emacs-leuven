@@ -1294,7 +1294,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140829.1506</span>
+"org-comment">Version: 20140829.1530</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1417,7 +1417,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140829.1506]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140829.1530]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -2229,8 +2229,8 @@
           company csv-mode dictionary dired+ dired-single ess
           fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
           helm helm-R htmlize idle-require info+ interaction-log ledger-mode
-          leuven-theme multiple-cursors org-mime pager rainbow-mode redo+
-          sml-modeline tidy yasnippet
+          leuven-theme multi-term multiple-cursors org-mime pager rainbow-mode
+          redo+ sml-modeline tidy yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">jabber multi-term paredit redshank w3m</span>
           )
@@ -22749,27 +22749,23 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">terminals inside it."</span>
 
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(when (locate-library "multi-term")</span>
-  <span class="org-comment-delimiter">;;</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(autoload 'multi-term "multi-term"</span>
-  <span class="org-comment-delimiter">;;     </span><span class=
-"org-comment">"Create new term buffer." t)</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(autoload 'multi-term-next "multi-term"</span>
-  <span class="org-comment-delimiter">;;     </span><span class=
-"org-comment">"Go to the next term buffer." t)</span>
-  <span class="org-comment-delimiter">;;</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(setq multi-term-program shell-file-name)</span>
-  <span class="org-comment-delimiter">;;</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">;; (global-set-key (kbd "C-c t") 'multi-term-next)</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(global-set-key</span>
-  <span class="org-comment-delimiter">;;     </span><span class=
-"org-comment">(kbd "C-c T") 'multi-term))       ; create a new one</span>
+  (<span class="org-keyword">when</span> (locate-library <span class=
+"org-string">"multi-term"</span>)
+
+    (autoload 'multi-term <span class="org-string">"multi-term"</span>
+      <span class="org-doc">"Create new term buffer."</span> t)
+    (autoload 'multi-term-next <span class="org-string">"multi-term"</span>
+      <span class="org-doc">"Go to the next term buffer."</span> t)
+
+    (setq multi-term-program shell-file-name)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "C-c t") 'multi-term-next)</span>
+    (global-set-key
+      (kbd <span class=
+"org-string">"C-c T"</span>) 'multi-term))       <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">create a new one</span>
 </pre>
           </div>
 
@@ -25423,7 +25419,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140829.1509]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140829.1533]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

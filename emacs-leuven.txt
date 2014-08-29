@@ -569,8 +569,8 @@ outages).
           company csv-mode dictionary dired+ dired-single ess
           fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
           helm helm-R htmlize idle-require info+ interaction-log ledger-mode
-          leuven-theme multiple-cursors org-mime pager rainbow-mode redo+
-          sml-modeline tidy yasnippet
+          leuven-theme multi-term multiple-cursors org-mime pager rainbow-mode
+          redo+ sml-modeline tidy yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -12676,18 +12676,18 @@ shell or term.
   ;; Emacs screen and lots of shell screens; to just using Emacs, with lots of
   ;; terminals inside it."
 
-  ;; (when (locate-library "multi-term")
-  ;;
-  ;;   (autoload 'multi-term "multi-term"
-  ;;     "Create new term buffer." t)
-  ;;   (autoload 'multi-term-next "multi-term"
-  ;;     "Go to the next term buffer." t)
-  ;;
-  ;;   (setq multi-term-program shell-file-name)
-  ;;
-  ;;   ;; (global-set-key (kbd "C-c t") 'multi-term-next)
-  ;;   (global-set-key
-  ;;     (kbd "C-c T") 'multi-term))       ; create a new one
+  (when (locate-library "multi-term")
+
+    (autoload 'multi-term "multi-term"
+      "Create new term buffer." t)
+    (autoload 'multi-term-next "multi-term"
+      "Go to the next term buffer." t)
+
+    (setq multi-term-program shell-file-name)
+
+    ;; (global-set-key (kbd "C-c t") 'multi-term-next)
+    (global-set-key
+      (kbd "C-c T") 'multi-term))       ; create a new one
 #+end_src
 
 *************** TODO Try /visual/ commands (like ~top~ or ~less~) in ~multi-term~
