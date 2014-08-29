@@ -4344,7 +4344,7 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 #+begin_src emacs-lisp
   ;; graphically indicate the fill column
   (try-require 'fill-column-indicator-XXX)
-  (with-eval-after-load "fill-column-indicator"
+  (with-eval-after-load "fill-column-indicator-XXX"
 
     ;; color used to draw the fill-column rule
     (setq fci-rule-color "#FFE0E0")
@@ -10834,6 +10834,36 @@ By default, put *your own snippets* in the directory =~/.emacs.d/snippets=.
 
       ;; UI for selecting snippet when there are multiple candidates
       (setq yas-prompt-functions '(yas-dropdown-prompt))
+#+end_src
+
+Display all available snippets with ~M-x yas-describe-tables~.
+
+See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippet.
+
+#+begin_src emacs-lisp
+      (defvar lawlist-context-menu-map
+        (let ((map (make-sparse-keymap "Context Menu")))
+          (define-key map [help-for-help] (cons "Help" 'help-for-help))
+          (define-key map [seperator-two] '(menu-item "--"))
+          (define-key map [my-menu] (cons "LAWLIST" (make-sparse-keymap "My Menu")))
+          (define-key map [my-menu 01] (cons "Next Line" 'next-line))
+          (define-key map [my-menu 02] (cons "Previous Line" 'previous-line))
+          (define-key map [seperator-one] '(menu-item "--"))
+        map) "Keymap for the LAWLIST context menu.")
+
+      (defun lawlist-popup-context-menu  (event &optional prefix)
+        "Popup a context menu."
+        (interactive "@e \nP")
+          (define-key lawlist-context-menu-map [lawlist-major-mode-menu]
+            `(menu-item ,(symbol-name major-mode)
+              ,(mouse-menu-major-mode-map) :visible t))
+          (define-key lawlist-context-menu-map (vector major-mode)
+            `(menu-item ,(concat "YAS " (symbol-name major-mode))
+              ,(gethash major-mode yas--menu-table)
+                :visible (yas--show-menu-p ',major-mode)))
+          (popup-menu lawlist-context-menu-map event prefix))
+
+      (global-set-key [mouse-3] 'lawlist-popup-context-menu)
 #+end_src
 
 *** Writing snippets

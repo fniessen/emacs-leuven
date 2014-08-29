@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140829.1528
+;; Version: 20140829.1546
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140829.1528]--")
+(message "* --[ Loading Emacs Leuven 20140829.1546]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -2730,7 +2730,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; graphically indicate the fill column
   (try-require 'fill-column-indicator-XXX)
-  (with-eval-after-load "fill-column-indicator"
+  (with-eval-after-load "fill-column-indicator-XXX"
 
     ;; color used to draw the fill-column rule
     (setq fci-rule-color "#FFE0E0")
@@ -6906,6 +6906,30 @@ up before you execute another command."
       ;; UI for selecting snippet when there are multiple candidates
       (setq yas-prompt-functions '(yas-dropdown-prompt))
 
+      (defvar lawlist-context-menu-map
+        (let ((map (make-sparse-keymap "Context Menu")))
+          (define-key map [help-for-help] (cons "Help" 'help-for-help))
+          (define-key map [seperator-two] '(menu-item "--"))
+          (define-key map [my-menu] (cons "LAWLIST" (make-sparse-keymap "My Menu")))
+          (define-key map [my-menu 01] (cons "Next Line" 'next-line))
+          (define-key map [my-menu 02] (cons "Previous Line" 'previous-line))
+          (define-key map [seperator-one] '(menu-item "--"))
+        map) "Keymap for the LAWLIST context menu.")
+
+      (defun lawlist-popup-context-menu  (event &optional prefix)
+        "Popup a context menu."
+        (interactive "@e \nP")
+          (define-key lawlist-context-menu-map [lawlist-major-mode-menu]
+            `(menu-item ,(symbol-name major-mode)
+              ,(mouse-menu-major-mode-map) :visible t))
+          (define-key lawlist-context-menu-map (vector major-mode)
+            `(menu-item ,(concat "YAS " (symbol-name major-mode))
+              ,(gethash major-mode yas--menu-table)
+                :visible (yas--show-menu-p ',major-mode)))
+          (popup-menu lawlist-context-menu-map event prefix))
+
+      (global-set-key [mouse-3] 'lawlist-popup-context-menu)
+
       ;; automatically reload snippets after saving
       (defun recompile-and-reload-all-snippets ()
         (interactive)
@@ -8881,7 +8905,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140829.1529]--")
+(message "* --[ Loaded Emacs Leuven 20140829.1546]--")
 
 (provide 'emacs-leuven)
 

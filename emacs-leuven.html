@@ -1294,7 +1294,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140829.1530</span>
+"org-comment">Version: 20140829.1547</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1417,7 +1417,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140829.1530]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140829.1547]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -8529,7 +8529,9 @@ M-: (executable-find "diff") RET
   (try-require 'fill-column-indicator-<span class=
 "org-leuven-highlight">XXX</span>)
   (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"fill-column-indicator"</span>
+"org-string">"fill-column-indicator-</span><span class=
+"org-string"><span class="org-leuven-highlight">XXX</span></span><span class=
+"org-string">"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">color used to draw the fill-column rule</span>
@@ -19517,6 +19519,53 @@ TAGS:
       (setq yas-prompt-functions '(yas-dropdown-prompt))
 </pre>
             </div>
+
+            <p>Display all available snippets with <code>M-x
+            yas-describe-tables</code>.</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+      (<span class="org-keyword">defvar</span> <span class=
+"org-variable-name">lawlist-context-menu-map</span>
+        (<span class=
+"org-keyword">let</span> ((map (make-sparse-keymap <span class=
+"org-string">"Context Menu"</span>)))
+          (define-key map [help-for-help] (cons <span class=
+"org-string">"Help"</span> 'help-for-help))
+          (define-key map [seperator-two] '(menu-item <span class=
+"org-string">"--"</span>))
+          (define-key map [my-menu] (cons <span class=
+"org-string">"LAWLIST"</span> (make-sparse-keymap <span class=
+"org-string">"My Menu"</span>)))
+          (define-key map [my-menu 01] (cons <span class=
+"org-string">"Next Line"</span> 'next-line))
+          (define-key map [my-menu 02] (cons <span class=
+"org-string">"Previous Line"</span> 'previous-line))
+          (define-key map [seperator-one] '(menu-item <span class=
+"org-string">"--"</span>))
+        map) <span class=
+"org-doc">"Keymap for the LAWLIST context menu."</span>)
+
+      (<span class="org-keyword">defun</span> <span class=
+"org-function-name">lawlist-popup-context-menu</span>  (event <span class=
+"org-type">&amp;optional</span> prefix)
+        <span class="org-doc">"Popup a context menu."</span>
+        (interactive <span class="org-string">"@e \nP"</span>)
+          (define-key lawlist-context-menu-map [lawlist-major-mode-menu]
+            `(menu-item ,(symbol-name major-mode)
+              ,(mouse-menu-major-mode-map) <span class=
+"org-builtin">:visible</span> t))
+          (define-key lawlist-context-menu-map (vector major-mode)
+            `(menu-item ,(concat <span class=
+"org-string">"YAS "</span> (symbol-name major-mode))
+              ,(gethash major-mode yas--menu-table)
+                <span class=
+"org-builtin">:visible</span> (yas--show-menu-p ',major-mode)))
+          (popup-menu lawlist-context-menu-map event prefix))
+
+      (global-set-key [mouse-3] 'lawlist-popup-context-menu)
+</pre>
+            </div>
           </div>
         </div>
 
@@ -25419,7 +25468,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140829.1533]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140829.1550]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
