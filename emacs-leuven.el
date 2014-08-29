@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140829.1230
+;; Version: 20140829.1412
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140829.1230]--")
+(message "* --[ Loading Emacs Leuven 20140829.1412]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -3004,8 +3004,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; autoload functions
   (GNUEmacs
-    (unless (try-require 'org-loaddefs)
-      (try-require 'org-install)))      ; obsolete since Emacs 24.3
+    (try-require 'org-loaddefs))
 
   ;; getting started
   (GNUEmacs
@@ -3778,8 +3777,8 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; resume clocking task on clock-in if the clock is open
     (setq org-clock-in-resume t)
 
-    ;; number of clock tasks to remember in history: 1-9A-Z
-    (setq org-clock-history-length 35)
+    ;; number of clock tasks to remember in history
+    (setq org-clock-history-length 35)  ; 1-9A-Z
 
     ;; 8.4.2 include the current clocking task time in clock reports
     (setq org-clock-report-include-clocking-task t)
@@ -5413,6 +5412,11 @@ this with to-do items than with projects or headings."
   (leuven--section "15.10 (org)Interaction")
 
   (with-eval-after-load "org"
+
+    ;; support shift-selection for making and enlarging regions when the cursor
+    ;; is not in a special context
+    (setq org-support-shift-select t)
+
     ;; maximum level for Imenu access to Org-mode headlines
     (setq org-imenu-depth 3)
 
@@ -8879,7 +8883,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140829.1231]--")
+(message "* --[ Loaded Emacs Leuven 20140829.1413]--")
 
 (provide 'emacs-leuven)
 

@@ -126,7 +126,9 @@
 
               <li><a href="#sec-13-2">Operating on the Region</a></li>
 
-              <li><a href="#sec-13-3">Multiple selections</a></li>
+              <li><a href="#sec-13-3">Shift Selection</a></li>
+
+              <li><a href="#sec-13-4">Multiple selections</a></li>
             </ul>
           </li>
 
@@ -1292,7 +1294,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140829.1231</span>
+"org-comment">Version: 20140829.1414</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1415,7 +1417,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140829.1231]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140829.1414]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -3085,9 +3087,17 @@
       </div>
 
       <div id="outline-container-sec-13-3" class="outline-3">
-        <h3 id="sec-13-3">Multiple selections</h3>
+        <h3 id="sec-13-3">Shift Selection</h3>
 
         <div class="outline-text-3" id="text-13-3">
+          Shifted motion keys activate the mark momentarily.
+        </div>
+      </div>
+
+      <div id="outline-container-sec-13-4" class="outline-3">
+        <h3 id="sec-13-4">Multiple selections</h3>
+
+        <div class="outline-text-3" id="text-13-4">
           <p>You can <a href="http://www.emacsrocks.com/e13.html">watch an
           intro to multiple-cursors at Emacs Rocks</a>.</p>
 
@@ -6589,6 +6599,8 @@ M-: (executable-find "diff") RET
             "https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el">
             Helm configuration file of Thierry Volpiatto</a>!</p>
 
+            <p>The prefix for Helm commands is <code>C-x c</code>.</p>
+
             <p>With <code>helm-M-x</code>, to pass prefix arguments to the
             command you want to run, you have to type <code>C-u</code>
             <b>after</b> typing <code>M-x</code>.</p>
@@ -9215,10 +9227,7 @@ M-: (executable-find "diff") RET
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">autoload functions</span>
   (GNUEmacs
-    (<span class="org-keyword">unless</span> (try-require 'org-loaddefs)
-      (try-require 'org-install)))      <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">obsolete since Emacs 24.3</span>
+    (try-require 'org-loaddefs))
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">getting started</span>
@@ -11130,8 +11139,9 @@ M-: (executable-find "diff") RET
     (setq org-clock-in-resume t)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">number of clock tasks to remember in history: 1-9A-Z</span>
-    (setq org-clock-history-length 35)
+"org-comment">number of clock tasks to remember in history</span>
+    (setq org-clock-history-length 35)  <span class=
+"org-comment-delimiter">; </span><span class="org-comment">1-9A-Z</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">8.4.2 include the current clocking task time in clock reports</span>
@@ -15170,6 +15180,13 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
               <pre class="src src-emacs-lisp">
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"org"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">support shift-selection for making and enlarging regions when the cursor</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">is not in a special context</span>
+    (setq org-support-shift-select t)
+
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">maximum level for Imenu access to Org-mode headlines</span>
     (setq org-imenu-depth 3)
@@ -25407,7 +25424,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140829.1231]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140829.1414]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

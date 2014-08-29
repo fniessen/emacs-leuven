@@ -1089,6 +1089,10 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
   (delete-selection-mode 1)
 #+end_src
 
+** Shift Selection
+
+Shifted motion keys activate the mark momentarily.
+
 ** Multiple selections
 
 You can [[http://www.emacsrocks.com/e13.html][watch an intro to multiple-cursors at Emacs Rocks]].
@@ -3186,6 +3190,8 @@ Nice guide: http://tuhdo.github.io/helm-intro.html.
 For Helm documentation, see the [[https://github.com/emacs-helm/helm/wiki][Emacs-helm wiki]] and the [[https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el][Helm configuration file
 of Thierry Volpiatto]]!
 
+The prefix for Helm commands is ~C-x c~.
+
 With ~helm-M-x~, to pass prefix arguments to the command you want to run, you
 have to type ~C-u~ *after* typing ~M-x~.
 
@@ -4754,8 +4760,7 @@ work and tasks with Org mode.
 
   ;; autoload functions
   (GNUEmacs
-    (unless (try-require 'org-loaddefs)
-      (try-require 'org-install)))      ; obsolete since Emacs 24.3
+    (try-require 'org-loaddefs))
 
   ;; getting started
   (GNUEmacs
@@ -5862,8 +5867,8 @@ Alternative to requiring org-clock in every Emacs session.
     ;; resume clocking task on clock-in if the clock is open
     (setq org-clock-in-resume t)
 
-    ;; number of clock tasks to remember in history: 1-9A-Z
-    (setq org-clock-history-length 35)
+    ;; number of clock tasks to remember in history
+    (setq org-clock-history-length 35)  ; 1-9A-Z
 
     ;; 8.4.2 include the current clocking task time in clock reports
     (setq org-clock-report-include-clocking-task t)
@@ -8242,6 +8247,11 @@ For security reasons, evaluation is not turned on by default.
 
 #+begin_src emacs-lisp
   (with-eval-after-load "org"
+
+    ;; support shift-selection for making and enlarging regions when the cursor
+    ;; is not in a special context
+    (setq org-support-shift-select t)
+
     ;; maximum level for Imenu access to Org-mode headlines
     (setq org-imenu-depth 3)
 
