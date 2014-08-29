@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140828.2232
+;; Version: 20140829.1230
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140828.2232]--")
+(message "* --[ Loading Emacs Leuven 20140829.1230]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -393,7 +393,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; simple package system for GNU Emacs
   (GNUEmacs
-    (when (try-require 'package)
+    (try-require 'package)
+    (with-eval-after-load "package"
 
       ;; archives from which to fetch
       (setq package-archives
@@ -621,6 +622,21 @@ Last time is saved in global variable `leuven--before-section-time'."
   (global-set-key
     (kbd "<f1>") 'info)
 
+  (defun describe-symbol-at-point ()
+    "Get help for the symbol at point."
+    (interactive)
+    (let ((sym (intern-soft (current-word))))
+      (unless
+          (cond ((null sym))
+                ((not (eq t (help-function-arglist sym)))
+                 (describe-function sym))
+                ((boundp sym)
+                 (describe-variable sym)))
+        (message "nothing"))))
+
+  (global-set-key
+    (kbd "<f1>") 'describe-symbol-at-point)
+
   ;; display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
   ;; have documentation in Info)
@@ -639,7 +655,8 @@ Last time is saved in global variable `leuven--before-section-time'."
               ,@Info-directory-list)))
 
     (GNUEmacs
-      (when (try-require 'info+)
+      (try-require 'info+)
+      (with-eval-after-load "info+"
 
         ;; show breadcrumbs in the header line
         (setq Info-breadcrumbs-in-header-flag t)
@@ -828,7 +845,8 @@ Last time is saved in global variable `leuven--before-section-time'."
     (setq bookmark-save-flag 1)
 
     ;; extensions to standard library `bookmark.el'
-    (when (try-require 'bookmark+)
+    (try-require 'bookmark+)
+    (with-eval-after-load "bookmark+"
 
       ;; automatically highlight bookmarks when set
       (setq bmkp-auto-light-when-set 'any-bookmark)
@@ -843,7 +861,8 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ; vanilla Emacs
 
   ;; quickly jump to a position in the current view
-  (when (try-require 'ace-jump-mode)
+  (try-require 'ace-jump-mode)
+  (with-eval-after-load "ace-jump-mode"
     (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
 
 )                                       ; chapter 13 ends here
@@ -1050,7 +1069,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   (setq mode-line-in-non-selected-windows t)
 
   ;; show buffer position like a scroll bar in mode line
-  (when (try-require 'sml-modeline)
+  (try-require 'sml-modeline)
+  (with-eval-after-load "sml-modeline"
 
     ;; mode line indicator total length
     (setq sml-modeline-len 10)
@@ -1387,7 +1407,8 @@ Last time is saved in global variable `leuven--before-section-time'."
      (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)))
 
   ;; client for rfc2229 dictionary servers
-  (when (try-require "dictionary-autoloads")
+  (try-require "dictionary-autoloads")
+  (with-eval-after-load "dictionary-autoloads"
 
     (global-set-key
       (kbd "C-c d s") 'dictionary-search)
@@ -1939,7 +1960,8 @@ Last time is saved in global variable `leuven--before-section-time'."
     (leuven--section "Helm")
 
     ;; open Helm (QuickSilver-like candidate-selection framework)
-    (when (try-require 'helm-config)
+    (try-require 'helm-config)
+    (with-eval-after-load "helm-config"
 
       ;; various functions for Helm (Shell history, etc.)
       (require 'helm-misc)
@@ -1952,15 +1974,13 @@ Last time is saved in global variable `leuven--before-section-time'."
         ;; sort locate results by full path
         (setq helm-locate-command "es -s %s %s"))
 
-      (global-set-key
-        (kbd "<f3>") 'helm-for-files)   ; better than `helm-find-files'
+      (global-set-key (kbd "<f3>") 'helm-for-files)
+                                        ; better than `helm-find-files'
 
-      (global-set-key
-        (kbd "M-x") 'helm-M-x)
+      (global-set-key (kbd "M-x") 'helm-M-x)
 
       ;; buffers only
-      (global-set-key
-        (kbd "C-x b") 'helm-buffers-list)
+      (global-set-key (kbd "C-x b") 'helm-buffers-list)
 
       (defun leuven-helm-org-prog-menu ()
         "Jump to a place in the buffer using an Index menu.
@@ -1971,8 +1991,7 @@ Last time is saved in global variable `leuven--before-section-time'."
             (helm-org-headlines)
           (helm-imenu)))
 
-      (global-set-key
-        (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
+      (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
                                         ; and `C-c =' (like in RefTeX)?
 
       (defun leuven-helm-grep-org-files ()
@@ -1985,19 +2004,13 @@ Last time is saved in global variable `leuven--before-section-time'."
                                           :skip-subdirs t)))
           (helm-do-grep-1 files)))
 
-      ;; activate (a better version of) `occur' easily globally
-      (global-set-key
-        (kbd "C-o") 'helm-occur)
+      ;; better version of `occur'
+      (global-set-key (kbd "C-o") 'helm-occur)
 
-      (global-set-key
-        (kbd "C-x r l") 'helm-bookmarks)
+      (global-set-key (kbd "C-x r l") 'helm-bookmarks)
 
       ;; install from https://github.com/thierryvolpiatto/emacs-bmk-ext
-      (global-set-key
-        (kbd "C-x r b") 'helm-bookmark-ext)
-
-      ;; ;; prefix key for all Helm commands in the global map
-      ;; (setq helm-command-prefix-key "C-c C-f") ; [default: "C-x c"]
+      (global-set-key (kbd "C-x r b") 'helm-bookmark-ext)
 
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
@@ -2005,11 +2018,21 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; always display `helm-buffer' in current window
       (setq helm-split-window-default-side 'same)
 
+;; open helm buffer in another window
+(setq helm-split-window-default-side 'other)
+
+;; open helm buffer inside current window, not occupy whole other window
+(setq helm-split-window-in-side-p t)
+
+;; move to end or beginning of source when reaching top or bottom of source.
+(setq helm-move-to-line-cycle-in-source t)
+
       (defface leuven-separator
         '((t (:weight bold :foreground "slate gray")))
         "Face used to display state NEW.")
 
-      ;; candidates separator of `multiline' source
+      ;; candidates separator of `multiline' source (such as
+      ;; `helm-show-kill-ring')
       (setq helm-candidate-separator
             (propertize "--separator-------------------------------"
                         'face 'leuven-separator))
@@ -2019,14 +2042,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       ;; time that the user has to be idle for, before candidates from
       ;; DELAYED sources are collected
-      (setq helm-idle-delay 0.1)        ; useful for sources involving heavy
+      (setq helm-idle-delay 0.01)       ; useful for sources involving heavy
                                         ; operations, so that candidates from
                                         ; the source are not retrieved
                                         ; unnecessarily if the user keeps typing
 
       ;; time that the user has to be idle for, before ALL candidates
       ;; are collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.1)  ; also effective for NON-DELAYED sources
+      (setq helm-input-idle-delay 0.01) ; also effective for NON-DELAYED sources
 
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
@@ -2034,8 +2057,8 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; don't show only basename of candidates in `helm-find-files'
       (setq helm-ff-transformer-show-only-basename nil)
 
-      ;; don't truncate buffer names
-      (setq helm-buffer-max-length nil)
+      ;; ;; don't truncate buffer names
+      ;; (setq helm-buffer-max-length nil)
 
       ;; save command even when it fails
       (setq helm-M-x-always-save-history t)
@@ -2708,7 +2731,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   (add-hook 'text-mode-hook 'auto-fill-mode)
 
   ;; graphically indicate the fill column
-  (when (try-require 'fill-column-indicator-XXX)
+  (try-require 'fill-column-indicator-XXX)
+  (with-eval-after-load "fill-column-indicator"
 
     ;; color used to draw the fill-column rule
     (setq fci-rule-color "#FFE0E0")
@@ -2809,7 +2833,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; ;; make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
     ;; ;; mode outline navigation (written by Carsten Dominik)
-    ;; (when (try-require 'outline-magic)
+    ;; (try-require 'outline-magic)
+    ;; (with-eval-after-load "outline-magic"
     ;;   (add-hook 'outline-minor-mode-hook
     ;;             (lambda ()
     ;;               (define-key outline-minor-mode-map
@@ -3134,7 +3159,8 @@ Last time is saved in global variable `leuven--before-section-time'."
     (message "... Org Headlines")
 
     ;; insert an inline task (independent of outline hierarchy)
-    (when (try-require 'org-inlinetask) ; needed
+    (try-require 'org-inlinetask) ; needed
+    (with-eval-after-load "org-inlinetask"
 
       ;; initial state (TODO keyword) of inline tasks
       (setq org-inlinetask-default-state "TODO")
@@ -5420,7 +5446,8 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "org"
     (message "... Org Crypt")
 
-    (when (try-require 'org-crypt)      ; loads org, gnus-sum, etc...
+    (try-require 'org-crypt)            ; loads org, gnus-sum, etc...
+    (with-eval-after-load "org-crypt"
 
       ;; encrypt all entries before saving
       (org-crypt-use-before-save-magic)
@@ -5524,7 +5551,8 @@ this with to-do items than with projects or headings."
     (message "... Org Mime")
 
     ;; using Org mode to send buffer/subtree per mail
-    (when (try-require 'org-mime)
+    (try-require 'org-mime)
+    (with-eval-after-load "org-mime"
 
       (add-hook 'org-mode-hook
                 (lambda ()
@@ -5613,7 +5641,8 @@ this with to-do items than with projects or headings."
   ;; (with-eval-after-load "org"
   ;;   (message "... Org Effectiveness")
   ;;
-  ;;   (when (try-require 'org-effectiveness)
+  ;;   (try-require 'org-effectiveness)
+  ;;   (with-eval-after-load "org-effectiveness"
   ;;
   ;;     (add-hook 'org-mode-hook
   ;;               (lambda ()
@@ -5924,7 +5953,8 @@ this with to-do items than with projects or headings."
       ;; XXX (normally bound to `rng-validate-mode')
 
   ;; highlight the current SGML tag context
-  (when (try-require 'hl-tags-mode)
+  (try-require 'hl-tags-mode)
+  (with-eval-after-load "hl-tags-mode"
 
     (add-hook 'html-mode-hook
               (lambda ()
@@ -5954,7 +5984,8 @@ this with to-do items than with projects or headings."
 
   (GNUEmacs
     ;; making buffer indexes as menus
-    (when (try-require 'imenu)          ; awesome!
+    (try-require 'imenu)                ; awesome!
+    (with-eval-after-load "imenu"
 
       ;; automatically add Imenu to the menu bar in /any/ mode that supports it
       (defun try-to-add-imenu ()
@@ -6293,7 +6324,8 @@ this with to-do items than with projects or headings."
   (leuven--section "27.5 (emacs)Flymake")
 
   ;; modern on-the-fly syntax checking
-  (when (try-require 'flycheck)
+  (try-require 'flycheck)
+  (with-eval-after-load "flycheck"
 
     ;; ;; indicate errors and warnings via icons in the right fringe
     ;; (setq flycheck-indication-mode 'right-fringe)
@@ -6483,7 +6515,8 @@ up before you execute another command."
   (with-eval-after-load "vc-git"
 
     ;; major mode for editing git commit messages
-    (when (try-require 'git-commit-mode)
+    (try-require 'git-commit-mode)
+    (with-eval-after-load "git-commit-mode"
 
       ;; turn on on-the-fly spell-checking
       (add-hook 'git-commit-mode-hook 'flyspell-mode)
@@ -6661,7 +6694,8 @@ up before you execute another command."
   (with-eval-after-load "etags"
 
     ;; select from multiple tags
-    (when (try-require 'etags-select)
+    (try-require 'etags-select)
+    (with-eval-after-load "etags-select"
 
       ;; do a `find-tag-at-point', and display all exact matches
       (global-set-key
@@ -6825,7 +6859,8 @@ up before you execute another command."
   ;; Yet Another Snippet extension for Emacs
   (GNUEmacs
     ;; use the "standard" package (NOT `yasnippet-bundle'!)
-    (when (try-require 'yasnippet)
+    (try-require 'yasnippet)
+    (with-eval-after-load "yasnippet"
 
       ;; enable YASnippet in all buffers
       (yas-global-mode 1)
@@ -6998,7 +7033,8 @@ up before you execute another command."
         (ac-flyspell-workaround))))
 
   ;; modular text completion framework
-  (when (try-require 'company-XXX)
+  (try-require 'company-XXX)
+  (with-eval-after-load "company"
 
     ;; minimum prefix length for idle completion
     (setq company-minimum-prefix-length 2)
@@ -7075,7 +7111,8 @@ up before you execute another command."
 
     ;; reuse the current Dired directory buffer to visit another directory
     ;; (limit Dired to 1 single buffer)
-    (when (try-require 'dired-single)
+    (try-require 'dired-single)
+    (with-eval-after-load "dired-single"
 
       (define-key dired-mode-map
         (kbd "<return>") 'dired-single-buffer)
@@ -7800,7 +7837,8 @@ up before you execute another command."
 
   ;; general command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
   ;; Python, ...)
-  ;; (when (try-require 'comint)
+  ;; (try-require 'comint)
+  ;; (with-eval-after-load "comint"
 
     ;; comint prompt is read only
     (setq comint-prompt-read-only t)
@@ -7977,7 +8015,8 @@ up before you execute another command."
     ;; ;; let Emacs recognize Cygwin paths (e.g. /usr/local/lib)
     ;; (when (and running-ms-windows
     ;;            (executable-find "mount")) ; Cygwin bin directory found
-    ;;   (when (try-require 'cygwin-mount)
+    ;;   (try-require 'cygwin-mount)
+    ;;   (with-eval-after-load "cygwin-mount"
     ;;     (cygwin-mount-activate)))
 
   (leuven--section "Utilities -- ESS")
@@ -8508,7 +8547,8 @@ up before you execute another command."
                     w3m-content-type-alist))
 
       ;; toggle a minor mode showing link numbers
-      (when (try-require 'w3m-lnum)
+      (try-require 'w3m-lnum)
+      (with-eval-after-load "w3m-lnum"
 
         (defun leuven-w3m-go-to-link-number ()
           "Turn on link numbers and ask for one to go to."
@@ -8590,7 +8630,8 @@ up before you execute another command."
 
   (XEmacs
     ;; the real color theme functions
-    (when (try-require 'color-theme-autoloads)
+    (try-require 'color-theme-autoloads)
+    (with-eval-after-load "color-theme-autoloads"
 
       ;; `color-theme-print' allows to keep what you see
 
@@ -8602,7 +8643,8 @@ up before you execute another command."
       (setq color-theme-is-global t)
 
       ;; set my default color theme
-      (when (try-require 'color-theme-leuven)
+      (try-require 'color-theme-leuven)
+      (with-eval-after-load "color-theme-leuven"
         (color-theme-leuven)))
 
     ;; save whatever changes you make to the faces (colors and other font
@@ -8837,7 +8879,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140828.2233]--")
+(message "* --[ Loaded Emacs Leuven 20140829.1231]--")
 
 (provide 'emacs-leuven)
 

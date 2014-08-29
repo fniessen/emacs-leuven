@@ -548,7 +548,8 @@ outages).
 
   ;; simple package system for GNU Emacs
   (GNUEmacs
-    (when (try-require 'package)
+    (try-require 'package)
+    (with-eval-after-load "package"
 
       ;; archives from which to fetch
       (setq package-archives
@@ -956,6 +957,21 @@ In a manual, these key bindings will make your life easier:
   (global-set-key
     (kbd "<f1>") 'info)
 
+  (defun describe-symbol-at-point ()
+    "Get help for the symbol at point."
+    (interactive)
+    (let ((sym (intern-soft (current-word))))
+      (unless
+          (cond ((null sym))
+                ((not (eq t (help-function-arglist sym)))
+                 (describe-function sym))
+                ((boundp sym)
+                 (describe-variable sym)))
+        (message "nothing"))))
+
+  (global-set-key
+    (kbd "<f1>") 'describe-symbol-at-point)
+
   ;; display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
   ;; have documentation in Info)
@@ -1003,7 +1019,8 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
 
 #+begin_src emacs-lisp
     (GNUEmacs
-      (when (try-require 'info+)
+      (try-require 'info+)
+      (with-eval-after-load "info+"
 
         ;; show breadcrumbs in the header line
         (setq Info-breadcrumbs-in-header-flag t)
@@ -1365,7 +1382,8 @@ Key bindings:
 
 #+begin_src emacs-lisp
     ;; extensions to standard library `bookmark.el'
-    (when (try-require 'bookmark+)
+    (try-require 'bookmark+)
+    (with-eval-after-load "bookmark+"
 
       ;; automatically highlight bookmarks when set
       (setq bmkp-auto-light-when-set 'any-bookmark)
@@ -1384,7 +1402,8 @@ Key bindings:
 
 #+begin_src emacs-lisp
   ;; quickly jump to a position in the current view
-  (when (try-require 'ace-jump-mode)
+  (try-require 'ace-jump-mode)
+  (with-eval-after-load "ace-jump-mode"
     (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
 #+end_src
 
@@ -1746,7 +1765,8 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
 
 #+begin_src emacs-lisp
   ;; show buffer position like a scroll bar in mode line
-  (when (try-require 'sml-modeline)
+  (try-require 'sml-modeline)
+  (with-eval-after-load "sml-modeline"
 
     ;; mode line indicator total length
     (setq sml-modeline-len 10)
@@ -2312,7 +2332,8 @@ of possible corrections for misspelled word before point.
 
 #+begin_src emacs-lisp
   ;; client for rfc2229 dictionary servers
-  (when (try-require "dictionary-autoloads")
+  (try-require "dictionary-autoloads")
+  (with-eval-after-load "dictionary-autoloads"
 
     (global-set-key
       (kbd "C-c d s") 'dictionary-search)
@@ -3160,6 +3181,8 @@ root using the ~sudo~ tramp method.
     :ID:       59418189-b87e-45a2-b128-5cbdc8a16430
     :END:
 
+Nice guide: http://tuhdo.github.io/helm-intro.html.
+
 For Helm documentation, see the [[https://github.com/emacs-helm/helm/wiki][Emacs-helm wiki]] and the [[https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el][Helm configuration file
 of Thierry Volpiatto]]!
 
@@ -3217,7 +3240,8 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
     (leuven--section "Helm")
 
     ;; open Helm (QuickSilver-like candidate-selection framework)
-    (when (try-require 'helm-config)
+    (try-require 'helm-config)
+    (with-eval-after-load "helm-config"
 
       ;; various functions for Helm (Shell history, etc.)
       (require 'helm-misc)
@@ -3230,15 +3254,13 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
         ;; sort locate results by full path
         (setq helm-locate-command "es -s %s %s"))
 
-      (global-set-key
-        (kbd "<f3>") 'helm-for-files)   ; better than `helm-find-files'
+      (global-set-key (kbd "<f3>") 'helm-for-files)
+                                        ; better than `helm-find-files'
 
-      (global-set-key
-        (kbd "M-x") 'helm-M-x)
+      (global-set-key (kbd "M-x") 'helm-M-x)
 
       ;; buffers only
-      (global-set-key
-        (kbd "C-x b") 'helm-buffers-list)
+      (global-set-key (kbd "C-x b") 'helm-buffers-list)
 
       (defun leuven-helm-org-prog-menu ()
         "Jump to a place in the buffer using an Index menu.
@@ -3249,8 +3271,7 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
             (helm-org-headlines)
           (helm-imenu)))
 
-      (global-set-key
-        (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
+      (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
                                         ; and `C-c =' (like in RefTeX)?
 
       (defun leuven-helm-grep-org-files ()
@@ -3263,19 +3284,13 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
                                           :skip-subdirs t)))
           (helm-do-grep-1 files)))
 
-      ;; activate (a better version of) `occur' easily globally
-      (global-set-key
-        (kbd "C-o") 'helm-occur)
+      ;; better version of `occur'
+      (global-set-key (kbd "C-o") 'helm-occur)
 
-      (global-set-key
-        (kbd "C-x r l") 'helm-bookmarks)
+      (global-set-key (kbd "C-x r l") 'helm-bookmarks)
 
       ;; install from https://github.com/thierryvolpiatto/emacs-bmk-ext
-      (global-set-key
-        (kbd "C-x r b") 'helm-bookmark-ext)
-
-      ;; ;; prefix key for all Helm commands in the global map
-      ;; (setq helm-command-prefix-key "C-c C-f") ; [default: "C-x c"]
+      (global-set-key (kbd "C-x r b") 'helm-bookmark-ext)
 
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
@@ -3283,11 +3298,21 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
       ;; always display `helm-buffer' in current window
       (setq helm-split-window-default-side 'same)
 
+;; open helm buffer in another window
+(setq helm-split-window-default-side 'other)
+
+;; open helm buffer inside current window, not occupy whole other window
+(setq helm-split-window-in-side-p t)
+
+;; move to end or beginning of source when reaching top or bottom of source.
+(setq helm-move-to-line-cycle-in-source t)
+
       (defface leuven-separator
         '((t (:weight bold :foreground "slate gray")))
         "Face used to display state NEW.")
 
-      ;; candidates separator of `multiline' source
+      ;; candidates separator of `multiline' source (such as
+      ;; `helm-show-kill-ring')
       (setq helm-candidate-separator
             (propertize "--separator-------------------------------"
                         'face 'leuven-separator))
@@ -3297,14 +3322,14 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 
       ;; time that the user has to be idle for, before candidates from
       ;; DELAYED sources are collected
-      (setq helm-idle-delay 0.1)        ; useful for sources involving heavy
+      (setq helm-idle-delay 0.01)       ; useful for sources involving heavy
                                         ; operations, so that candidates from
                                         ; the source are not retrieved
                                         ; unnecessarily if the user keeps typing
 
       ;; time that the user has to be idle for, before ALL candidates
       ;; are collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.1)  ; also effective for NON-DELAYED sources
+      (setq helm-input-idle-delay 0.01) ; also effective for NON-DELAYED sources
 
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
@@ -3312,8 +3337,8 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
       ;; don't show only basename of candidates in `helm-find-files'
       (setq helm-ff-transformer-show-only-basename nil)
 
-      ;; don't truncate buffer names
-      (setq helm-buffer-max-length nil)
+      ;; ;; don't truncate buffer names
+      ;; (setq helm-buffer-max-length nil)
 
       ;; save command even when it fails
       (setq helm-M-x-always-save-history t)
@@ -4314,7 +4339,8 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 
 #+begin_src emacs-lisp
   ;; graphically indicate the fill column
-  (when (try-require 'fill-column-indicator-XXX)
+  (try-require 'fill-column-indicator-XXX)
+  (with-eval-after-load "fill-column-indicator"
 
     ;; color used to draw the fill-column rule
     (setq fci-rule-color "#FFE0E0")
@@ -4454,7 +4480,8 @@ You can use ~org-cycle~ in other modes, with ~outline-minor-mode~.
 
     ;; ;; make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
     ;; ;; mode outline navigation (written by Carsten Dominik)
-    ;; (when (try-require 'outline-magic)
+    ;; (try-require 'outline-magic)
+    ;; (with-eval-after-load "outline-magic"
     ;;   (add-hook 'outline-minor-mode-hook
     ;;             (lambda ()
     ;;               (define-key outline-minor-mode-map
@@ -4966,7 +4993,8 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
     (message "... Org Headlines")
 
     ;; insert an inline task (independent of outline hierarchy)
-    (when (try-require 'org-inlinetask) ; needed
+    (try-require 'org-inlinetask) ; needed
+    (with-eval-after-load "org-inlinetask"
 
       ;; initial state (TODO keyword) of inline tasks
       (setq org-inlinetask-default-state "TODO")
@@ -8259,7 +8287,8 @@ C-r~ (fits nicely with the meaning of "reveal").
   (with-eval-after-load "org"
     (message "... Org Crypt")
 
-    (when (try-require 'org-crypt)      ; loads org, gnus-sum, etc...
+    (try-require 'org-crypt)            ; loads org, gnus-sum, etc...
+    (with-eval-after-load "org-crypt"
 
       ;; encrypt all entries before saving
       (org-crypt-use-before-save-magic)
@@ -8409,7 +8438,8 @@ the mail message:
     (message "... Org Mime")
 
     ;; using Org mode to send buffer/subtree per mail
-    (when (try-require 'org-mime)
+    (try-require 'org-mime)
+    (with-eval-after-load "org-mime"
 
       (add-hook 'org-mode-hook
                 (lambda ()
@@ -8521,7 +8551,8 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
   ;; (with-eval-after-load "org"
   ;;   (message "... Org Effectiveness")
   ;;
-  ;;   (when (try-require 'org-effectiveness)
+  ;;   (try-require 'org-effectiveness)
+  ;;   (with-eval-after-load "org-effectiveness"
   ;;
   ;;     (add-hook 'org-mode-hook
   ;;               (lambda ()
@@ -9080,7 +9111,8 @@ Some key bindings:
 
 #+begin_src emacs-lisp
   ;; highlight the current SGML tag context
-  (when (try-require 'hl-tags-mode)
+  (try-require 'hl-tags-mode)
+  (with-eval-after-load "hl-tags-mode"
 
     (add-hook 'html-mode-hook
               (lambda ()
@@ -9143,7 +9175,8 @@ XXX Autoloaded?
 
   (GNUEmacs
     ;; making buffer indexes as menus
-    (when (try-require 'imenu)          ; awesome!
+    (try-require 'imenu)                ; awesome!
+    (with-eval-after-load "imenu"
 
       ;; automatically add Imenu to the menu bar in /any/ mode that supports it
       (defun try-to-add-imenu ()
@@ -9715,7 +9748,8 @@ the code immediately as you are editing it.
   (leuven--section "27.5 (emacs)Flymake")
 
   ;; modern on-the-fly syntax checking
-  (when (try-require 'flycheck)
+  (try-require 'flycheck)
+  (with-eval-after-load "flycheck"
 
     ;; ;; indicate errors and warnings via icons in the right fringe
     ;; (setq flycheck-indication-mode 'right-fringe)
@@ -10051,7 +10085,8 @@ Show the diff we are about to commit: ~C-c C-d~.
   (with-eval-after-load "vc-git"
 
     ;; major mode for editing git commit messages
-    (when (try-require 'git-commit-mode)
+    (try-require 'git-commit-mode)
+    (with-eval-after-load "git-commit-mode"
 
       ;; turn on on-the-fly spell-checking
       (add-hook 'git-commit-mode-hook 'flyspell-mode)
@@ -10389,7 +10424,8 @@ To continue searching for next match, use ~M-,~.
   (with-eval-after-load "etags"
 
     ;; select from multiple tags
-    (when (try-require 'etags-select)
+    (try-require 'etags-select)
+    (with-eval-after-load "etags-select"
 
       ;; do a `find-tag-at-point', and display all exact matches
       (global-set-key
@@ -10626,7 +10662,8 @@ Keyboard navigation:
 #+begin_src emacs-lisp :tangle no
   ;; Emacs Code Browser
   (custom-set-variables '(ecb-options-version "2.40"))
-  (when (try-require 'ecb-autoloads)
+  (try-require 'ecb-autoloads)
+  (with-eval-after-load "ecb-autoloads"
 
     ;; trick for starting ECB 2.40 (with CEDET merged in Emacs since 23.2)
     (GNUEmacs
@@ -10661,7 +10698,8 @@ narrows down the list as you type substrings.  Tastes differ, but I for one
 really like this.
 
 #+begin_src emacs-lisp :tangle no
-   (when (try-require 'eassist)
+   (try-require 'eassist)
+   (with-eval-after-load "eassist"
 
      (defun leuven--c-mode-eassist ()
        (local-set-key
@@ -10713,7 +10751,8 @@ XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-con
   ;; Yet Another Snippet extension for Emacs
   (GNUEmacs
     ;; use the "standard" package (NOT `yasnippet-bundle'!)
-    (when (try-require 'yasnippet)
+    (try-require 'yasnippet)
+    (with-eval-after-load "yasnippet"
 #+end_src
 
 *** Installation
@@ -11088,7 +11127,8 @@ available completions and filter as well.
 
 #+begin_src emacs-lisp
   ;; modular text completion framework
-  (when (try-require 'company-XXX)
+  (try-require 'company-XXX)
+  (with-eval-after-load "company"
 
     ;; minimum prefix length for idle completion
     (setq company-minimum-prefix-length 2)
@@ -11208,7 +11248,8 @@ Single Dired buffer.
 
     ;; reuse the current Dired directory buffer to visit another directory
     ;; (limit Dired to 1 single buffer)
-    (when (try-require 'dired-single)
+    (try-require 'dired-single)
+    (with-eval-after-load "dired-single"
 
       (define-key dired-mode-map
         (kbd "<return>") 'dired-single-buffer)
@@ -12349,7 +12390,8 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 
   ;; general command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
   ;; Python, ...)
-  ;; (when (try-require 'comint)
+  ;; (try-require 'comint)
+  ;; (with-eval-after-load "comint"
 
     ;; comint prompt is read only
     (setq comint-prompt-read-only t)
@@ -12694,7 +12736,8 @@ with Gnus...*
     ;; ;; let Emacs recognize Cygwin paths (e.g. /usr/local/lib)
     ;; (when (and running-ms-windows
     ;;            (executable-find "mount")) ; Cygwin bin directory found
-    ;;   (when (try-require 'cygwin-mount)
+    ;;   (try-require 'cygwin-mount)
+    ;;   (with-eval-after-load "cygwin-mount"
     ;;     (cygwin-mount-activate)))
 #+end_src
 
@@ -13448,7 +13491,8 @@ browser*: you can open the current page in your graphical browser by hitting ~M~
                     w3m-content-type-alist))
 
       ;; toggle a minor mode showing link numbers
-      (when (try-require 'w3m-lnum)
+      (try-require 'w3m-lnum)
+      (with-eval-after-load "w3m-lnum"
 
         (defun leuven-w3m-go-to-link-number ()
           "Turn on link numbers and ask for one to go to."
@@ -13586,7 +13630,8 @@ particular color...
 #+begin_src emacs-lisp
   (XEmacs
     ;; the real color theme functions
-    (when (try-require 'color-theme-autoloads)
+    (try-require 'color-theme-autoloads)
+    (with-eval-after-load "color-theme-autoloads"
 
       ;; `color-theme-print' allows to keep what you see
 
@@ -13598,7 +13643,8 @@ particular color...
       (setq color-theme-is-global t)
 
       ;; set my default color theme
-      (when (try-require 'color-theme-leuven)
+      (try-require 'color-theme-leuven)
+      (with-eval-after-load "color-theme-leuven"
         (color-theme-leuven)))
 
     ;; save whatever changes you make to the faces (colors and other font
@@ -14089,7 +14135,8 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
             "org" "beamer" "ledger" "tikz"))
 
     ;; add IRC color support to LUI
-    (when (try-require 'lui-irc-colors)
+    (try-require 'lui-irc-colors)
+    (with-eval-after-load "lui-irc-colors"
       (add-to-list 'lui-pre-output-hook 'lui-irc-colors))
 
 ;;** 4 Hacking and Tweaking
@@ -14105,7 +14152,8 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 
     (setq circe-highlight-nick-type 'occurrence)
 
-    (when (try-require 'circe-highlight-all-nicks)
+    (try-require 'circe-highlight-all-nicks)
+    (with-eval-after-load "circe-highlight-all-nicks"
       (enable-circe-highlight-all-nicks))
 
     ;; format for messages to queries or channels
@@ -14122,7 +14170,8 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 
 #+begin_src emacs-lisp :tangle no
   ;; Jabber (GTalk)
-  (when (try-require 'jabber-autoloads-XXX)
+  (try-require 'jabber-autoloads-XXX)
+  (with-eval-after-load "jabber-autoloads"
     (setq jabber-account-list '(("johndoe@example.com"
                                  (:network-server . "talk.google.com")
                                  (:connection-type . ssl)

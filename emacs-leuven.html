@@ -1292,7 +1292,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140828.2233</span>
+"org-comment">Version: 20140829.1231</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1415,7 +1415,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140828.2233]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140829.1231]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -2065,12 +2065,9 @@
           <tr>
             <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
 
-            <td width="100%">
-              <b>Function for finding executables</b><br />
-
-              <p>See function <code>--find-program</code> at <a href=
-              "http://www.visualco.de/src/elisp/.emacs.el.html">http://www.visualco.de/src/elisp/.emacs.el.html</a>.</p>
-            </td>
+            <td width="100%"><b>Function for finding executables</b><br />
+            See function <code>--find-program</code> at <a href=
+            "http://www.visualco.de/src/elisp/.emacs.el.html">http://www.visualco.de/src/elisp/.emacs.el.html</a>.</td>
           </tr>
         </table>
       </div>
@@ -2191,7 +2188,9 @@
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">simple package system for GNU Emacs</span>
   (GNUEmacs
-    (<span class="org-keyword">when</span> (try-require 'package)
+    (try-require 'package)
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"package"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">archives from which to fetch</span>
@@ -2512,9 +2511,7 @@
           <dl class="org-dl">
             <dt>M-r</dt>
 
-            <dd>
-              <p><code>move-to-window-line</code>.</p>
-            </dd>
+            <dd><code>move-to-window-line</code>.</dd>
 
             <dt><code>M-g g</code></dt>
 
@@ -2879,6 +2876,23 @@
   (global-set-key
     (kbd <span class="org-string">"&lt;f1&gt;"</span>) 'info)
 
+  (<span class="org-keyword">defun</span> <span class=
+"org-function-name">describe-symbol-at-point</span> ()
+    <span class="org-doc">"Get help for the symbol at point."</span>
+    (interactive)
+    (<span class="org-keyword">let</span> ((sym (intern-soft (current-word))))
+      (<span class="org-keyword">unless</span>
+          (<span class="org-keyword">cond</span> ((null sym))
+                ((not (eq t (help-function-arglist sym)))
+                 (describe-function sym))
+                ((boundp sym)
+                 (describe-variable sym)))
+        (message <span class="org-string">"nothing"</span>))))
+
+  (global-set-key
+    (kbd <span class=
+"org-string">"&lt;f1&gt;"</span>) 'describe-symbol-at-point)
+
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">display symbol definitions, as found in the relevant manual</span>
   <span class="org-comment-delimiter">;; </span><span class=
@@ -2946,7 +2960,9 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
     (GNUEmacs
-      (<span class="org-keyword">when</span> (try-require 'info+)
+      (try-require 'info+)
+      (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"info+"</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">show breadcrumbs in the header line</span>
@@ -3274,9 +3290,8 @@
           <h4 id="sec-14-2-1">Yanking Earlier Kills</h4>
 
           <div class="outline-text-4" id="text-14-2-1">
-            <p>Interactively insert items from kill ring with <code>M-x
-            helm-show-kill-ring</code> (see <a href=
-            "#sec-20-12-2">Helm</a>).</p>
+            Interactively insert items from kill ring with <code>M-x
+            helm-show-kill-ring</code> (see <a href="#sec-20-12-2">Helm</a>).
           </div>
         </div>
       </div>
@@ -3353,10 +3368,10 @@
           of a region-rectangle with a given string.</p>
 
           <div class="note">
-            <p>On the Emacs trunk, you can do: <code>C-x SPC</code> &lt;…move
+            On the Emacs trunk, you can do: <code>C-x SPC</code> &lt;…move
             around…&gt; <code>DEL</code> to delete the rectangle and <code>C-x
             SPC</code> &lt;…move around…&gt; <code>C-t</code> to invoke
-            <code>string-rectangle</code>.</p>
+            <code>string-rectangle</code>.
           </div>
         </div>
       </div>
@@ -3583,7 +3598,9 @@
 "org-comment">extensions to standard library `</span><span class=
 "org-comment"><span class="org-constant">bookmark.el</span></span><span class=
 "org-comment">'</span>
-    (<span class="org-keyword">when</span> (try-require 'bookmark+)
+    (try-require 'bookmark+)
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"bookmark+"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">automatically highlight bookmarks when set</span>
@@ -3617,7 +3634,9 @@
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">quickly jump to a position in the current view</span>
-  (<span class="org-keyword">when</span> (try-require 'ace-jump-mode)
+  (try-require 'ace-jump-mode)
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"ace-jump-mode"</span>
     (define-key global-map (kbd <span class=
 "org-string">"C-c SPC"</span>) 'ace-jump-mode))
 </pre>
@@ -4030,13 +4049,11 @@
             <tr>
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
 
-              <td width="100%">
-                <b>Use rainbow colors for word highlighting</b><br />
-
-                <p>Use <code>highlight-symbol</code> which chooses rainbow
-                colors automatically and makes it much easier to follow some
-                key variables through a block of code.</p>
-              </td>
+              <td width="100%"><b>Use rainbow colors for word
+              highlighting</b><br />
+              Use <code>highlight-symbol</code> which chooses rainbow colors
+              automatically and makes it much easier to follow some key
+              variables through a block of code.</td>
             </tr>
           </table>
         </div>
@@ -4263,7 +4280,9 @@
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">show buffer position like a scroll bar in mode line</span>
-  (<span class="org-keyword">when</span> (try-require 'sml-modeline)
+  (try-require 'sml-modeline)
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"sml-modeline"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">mode line indicator total length</span>
@@ -4652,10 +4671,9 @@
         <h3 id="sec-17-4">Replacement Commands</h3>
 
         <div class="outline-text-3" id="text-17-4">
-          <p>Pass the string or the regexp directly to
-          <code>query-replace</code>, so you can’t mangle it on the way, by
-          pressing <code>M-%</code> while at the <code>I-search:</code>
-          prompt.</p>
+          Pass the string or the regexp directly to <code>query-replace</code>,
+          so you can’t mangle it on the way, by pressing <code>M-%</code> while
+          at the <code>I-search:</code> prompt.
         </div>
       </div>
 
@@ -5169,8 +5187,9 @@
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">client for rfc2229 dictionary servers</span>
-  (<span class="org-keyword">when</span> (try-require <span class=
-"org-string">"dictionary-autoloads"</span>)
+  (try-require <span class="org-string">"dictionary-autoloads"</span>)
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"dictionary-autoloads"</span>
 
     (global-set-key
       (kbd <span class="org-string">"C-c d s"</span>) 'dictionary-search)
@@ -6025,13 +6044,9 @@ M-: (executable-find "diff") RET
           <p>History:</p>
 
           <ol class="org-ol">
-            <li>
-              <p>mailcrypt</p>
-            </li>
+            <li>mailcrypt</li>
 
-            <li>
-              <p>PGG</p>
-            </li>
+            <li>PGG</li>
 
             <li>
               <p>EasyPG (= epg) is a GnuPG interface for Emacs.</p>
@@ -6045,10 +6060,8 @@ M-: (executable-find "diff") RET
               <p>It has two aspects:</p>
 
               <ul class="org-ul">
-                <li>
-                  <p>convenient tools which allow to use GnuPG from Emacs
-                  (EasyPG Assistant), and</p>
-                </li>
+                <li>convenient tools which allow to use GnuPG from Emacs
+                (EasyPG Assistant), and</li>
 
                 <li>
                   <p>a fully functional interface library to GnuPG (EasyPG
@@ -6059,12 +6072,9 @@ M-: (executable-find "diff") RET
                       <td valign="top"><b><span class=
                       "todo TODO">TODO</span></b></td>
 
-                      <td width="100%">
-                        <b>Fetch the key automatically</b><br />
-
-                        <p>Set the <code>keyserver</code> entry in the
-                        <code>~/.gnupg/gpg.conf</code> file properly.</p>
-                      </td>
+                      <td width="100%"><b>Fetch the key automatically</b><br />
+                      Set the <code>keyserver</code> entry in the
+                      <code>~/.gnupg/gpg.conf</code> file properly.</td>
                     </tr>
                   </table>
                 </li>
@@ -6142,11 +6152,9 @@ M-: (executable-find "diff") RET
                 <td valign="top"><b><span class=
                 "todo TODO">TODO</span></b></td>
 
-                <td width="100%">
-                  <b>Check out why network share aren’t accessible</b><br />
-
-                  <p>I should be able to open <i>/CAUCHY/fsd</i>…</p>
-                </td>
+                <td width="100%"><b>Check out why network share aren’t
+                accessible</b><br />
+                I should be able to open <i>/CAUCHY/fsd</i>…</td>
               </tr>
             </table>
 
@@ -6572,6 +6580,9 @@ M-: (executable-find "diff") RET
           successor)</h4>
 
           <div class="outline-text-4" id="text-20-12-2">
+            <p>Nice guide: <a href=
+            "http://tuhdo.github.io/helm-intro.html">http://tuhdo.github.io/helm-intro.html</a>.</p>
+
             <p>For Helm documentation, see the <a href=
             "https://github.com/emacs-helm/helm/wiki">Emacs-helm wiki</a> and
             the <a href=
@@ -6587,21 +6598,15 @@ M-: (executable-find "diff") RET
             info.</p>
 
             <ul class="org-ul">
-              <li>
-                <p>Narrow the list by typing some patterns (use the <b>space as
-                separator</b> for multiple patterns),</p>
-              </li>
+              <li>Narrow the list by typing some patterns (use the <b>space as
+              separator</b> for multiple patterns),</li>
 
-              <li>
-                <p>Select an element with <code>&lt;Up&gt;</code> /
-                <code>&lt;Down&gt;</code> / <code>&lt;PageUp&gt;</code> /
-                <code>&lt;PageDown&gt;</code> / <code>C-p</code> /
-                <code>C-n</code> / <code>C-v</code> / <code>M-v</code>,</p>
-              </li>
+              <li>Select an element with <code>&lt;Up&gt;</code> /
+              <code>&lt;Down&gt;</code> / <code>&lt;PageUp&gt;</code> /
+              <code>&lt;PageDown&gt;</code> / <code>C-p</code> /
+              <code>C-n</code> / <code>C-v</code> / <code>M-v</code>,</li>
 
-              <li>
-                <p>Choose with <code>&lt;RET&gt;</code>.</p>
-              </li>
+              <li>Choose with <code>&lt;RET&gt;</code>.</li>
 
               <li>
                 <p><code>C-z</code> executes an action without quitting the
@@ -6610,8 +6615,7 @@ M-: (executable-find "diff") RET
                 <p>For <code>helm-find-files</code>:</p>
 
                 <ul class="org-ul">
-                  <li>
-                    <p>On a regular file,</p>
+                  <li>On a regular file,
 
                     <ol class="org-ol">
                       <li>First hit on <code>C-z</code> expands the file
@@ -6625,8 +6629,7 @@ M-: (executable-find "diff") RET
                     </ol>
                   </li>
 
-                  <li>
-                    <p>On image files (<code>.jpg</code>, etc..)</p>
+                  <li>On image files (<code>.jpg</code>, etc..)
 
                     <ol class="org-ol">
                       <li>Second hit (or <code>C-u C-z</code>) displays the
@@ -6678,7 +6681,9 @@ M-: (executable-find "diff") RET
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">open Helm (QuickSilver-like candidate-selection framework)</span>
-    (<span class="org-keyword">when</span> (try-require 'helm-config)
+    (try-require 'helm-config)
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"helm-config"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">various functions for Helm (Shell history, etc.)</span>
@@ -6699,20 +6704,19 @@ M-: (executable-find "diff") RET
         (setq helm-locate-command <span class=
 "org-string">"es -s %s %s"</span>))
 
-      (global-set-key
-        (kbd <span class=
-"org-string">"&lt;f3&gt;"</span>) 'helm-for-files)   <span class=
+      (global-set-key (kbd <span class=
+"org-string">"&lt;f3&gt;"</span>) 'helm-for-files)
+                                        <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">better than `</span><span class="org-comment"><span class=
 "org-constant">helm-find-files</span></span><span class="org-comment">'</span>
 
-      (global-set-key
-        (kbd <span class="org-string">"M-x"</span>) 'helm-M-x)
+      (global-set-key (kbd <span class="org-string">"M-x"</span>) 'helm-M-x)
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">buffers only</span>
-      (global-set-key
-        (kbd <span class="org-string">"C-x b"</span>) 'helm-buffers-list)
+      (global-set-key (kbd <span class=
+"org-string">"C-x b"</span>) 'helm-buffers-list)
 
       (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-helm-org-prog-menu</span> ()
@@ -6726,8 +6730,7 @@ M-: (executable-find "diff") RET
             (helm-org-headlines)
           (helm-imenu)))
 
-      (global-set-key
-        (kbd <span class=
+      (global-set-key (kbd <span class=
 "org-string">"&lt;f4&gt;"</span>) 'leuven-helm-org-prog-menu) <span class=
 "org-comment-delimiter">; </span><span class="org-comment">awesome</span>
                                         <span class=
@@ -6767,24 +6770,17 @@ M-: (executable-find "diff") RET
           (helm-do-grep-1 files)))
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">activate (a better version of) `</span><span class=
-"org-comment"><span class="org-constant">occur</span></span><span class=
-"org-comment">' easily globally</span>
-      (global-set-key
-        (kbd <span class="org-string">"C-o"</span>) 'helm-occur)
+"org-comment">better version of `</span><span class="org-comment"><span class=
+"org-constant">occur</span></span><span class="org-comment">'</span>
+      (global-set-key (kbd <span class="org-string">"C-o"</span>) 'helm-occur)
 
-      (global-set-key
-        (kbd <span class="org-string">"C-x r l"</span>) 'helm-bookmarks)
+      (global-set-key (kbd <span class=
+"org-string">"C-x r l"</span>) 'helm-bookmarks)
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">install from https://github.com/thierryvolpiatto/emacs-bmk-ext</span>
-      (global-set-key
-        (kbd <span class="org-string">"C-x r b"</span>) 'helm-bookmark-ext)
-
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; prefix key for all Helm commands in the global map</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq helm-command-prefix-key "C-c C-f") ; [default: "C-x c"]</span>
+      (global-set-key (kbd <span class=
+"org-string">"C-x r b"</span>) 'helm-bookmark-ext)
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">use the *current window* (no popup) to show the candidates</span>
@@ -6796,6 +6792,18 @@ M-: (executable-find "diff") RET
 "org-comment">' in current window</span>
       (setq helm-split-window-default-side 'same)
 
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">open helm buffer in another window</span>
+(setq helm-split-window-default-side 'other)
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">open helm buffer inside current window, not occupy whole other window</span>
+(setq helm-split-window-in-side-p t)
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">move to end or beginning of source when reaching top or bottom of source.</span>
+(setq helm-move-to-line-cycle-in-source t)
+
       (<span class="org-keyword">defface</span> <span class=
 "org-variable-name">leuven-separator</span>
         '((t (<span class="org-builtin">:weight</span> bold <span class=
@@ -6806,7 +6814,11 @@ M-: (executable-find "diff") RET
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">candidates separator of `</span><span class=
 "org-comment"><span class="org-constant">multiline</span></span><span class=
-"org-comment">' source</span>
+"org-comment">' source (such as</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">`</span><span class="org-comment"><span class=
+"org-constant">helm-show-kill-ring</span></span><span class=
+"org-comment">')</span>
       (setq helm-candidate-separator
             (propertize <span class=
 "org-string">"--separator-------------------------------"</span>
@@ -6820,7 +6832,7 @@ M-: (executable-find "diff") RET
 "org-comment">time that the user has to be idle for, before candidates from</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">DELAYED sources are collected</span>
-      (setq helm-idle-delay 0.1)        <span class=
+      (setq helm-idle-delay 0.01)       <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">useful for sources involving heavy</span>
                                         <span class=
@@ -6839,7 +6851,7 @@ M-: (executable-find "diff") RET
 "org-comment">are collected (&gt;= `</span><span class=
 "org-comment"><span class=
 "org-constant">helm-idle-delay</span></span><span class="org-comment">')</span>
-      (setq helm-input-idle-delay 0.1)  <span class=
+      (setq helm-input-idle-delay 0.01) <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">also effective for NON-DELAYED sources</span>
 
@@ -6855,8 +6867,9 @@ M-: (executable-find "diff") RET
       (setq helm-ff-transformer-show-only-basename nil)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't truncate buffer names</span>
-      (setq helm-buffer-max-length nil)
+"org-comment">;; don't truncate buffer names</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq helm-buffer-max-length nil)</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">save command even when it fails</span>
@@ -8423,11 +8436,9 @@ M-: (executable-find "diff") RET
           French punctuation:</p>
 
           <ul class="org-ul">
-            <li>
-              <p><b>No-break thin space</b> (<code>202F</code>), known in
-              Unicode as “Narrow No-Break Space”, required before
-              <code>?</code>, <code>!</code> and <code>;</code>.</p>
-            </li>
+            <li><b>No-break thin space</b> (<code>202F</code>), known in
+            Unicode as “Narrow No-Break Space”, required before <code>?</code>,
+            <code>!</code> and <code>;</code>.</li>
 
             <li>
               <p><b>No-break space</b> (<code>00A0</code>), required before
@@ -8504,9 +8515,10 @@ M-: (executable-find "diff") RET
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">graphically indicate the fill column</span>
-  (<span class=
-"org-keyword">when</span> (try-require 'fill-column-indicator-<span class=
+  (try-require 'fill-column-indicator-<span class=
 "org-leuven-highlight">XXX</span>)
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"fill-column-indicator"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">color used to draw the fill-column rule</span>
@@ -8716,7 +8728,9 @@ M-: (executable-find "diff") RET
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; mode outline navigation (written by Carsten Dominik)</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(when (try-require 'outline-magic)</span>
+"org-comment">(try-require 'outline-magic)</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(with-eval-after-load "outline-magic"</span>
     <span class="org-comment-delimiter">;;   </span><span class=
 "org-comment">(add-hook 'outline-minor-mode-hook</span>
     <span class="org-comment-delimiter">;;             </span><span class=
@@ -9616,9 +9630,10 @@ M-: (executable-find "diff") RET
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">insert an inline task (independent of outline hierarchy)</span>
-    (<span class=
-"org-keyword">when</span> (try-require 'org-inlinetask) <span class=
+    (try-require 'org-inlinetask) <span class=
 "org-comment-delimiter">; </span><span class="org-comment">needed</span>
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"org-inlinetask"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">initial state (</span><span class="org-comment"><span class=
@@ -9813,14 +9828,11 @@ M-: (executable-find "diff") RET
                 <td valign="top"><b><span class=
                 "todo TODO">TODO</span></b></td>
 
-                <td width="100%">
-                  <b>Fix Error during redisplay</b><br />
-
-                  <p>(eval (org-propertize (org-display-outline-path nil t " /
-                  " t) (quote face) (quote mode-line-emphasis) (quote
-                  help-echo) “Outline path”)) signaled (wrong-type-argument
-                  stringp nil)</p>
-                </td>
+                <td width="100%"><b>Fix Error during redisplay</b><br />
+                (eval (org-propertize (org-display-outline-path nil t " / " t)
+                (quote face) (quote mode-line-emphasis) (quote help-echo)
+                “Outline path”)) signaled (wrong-type-argument stringp
+                nil)</td>
               </tr>
             </table>
 
@@ -11059,12 +11071,9 @@ M-: (executable-find "diff") RET
                 <td valign="top"><b><span class=
                 "todo TODO">TODO</span></b></td>
 
-                <td width="100%">
-                  <b>Resume clocks when opening the first Org file</b><br />
-
-                  <p>Alternative to requiring org-clock in every Emacs
-                  session.</p>
-                </td>
+                <td width="100%"><b>Resume clocks when opening the first Org
+                file</b><br />
+                Alternative to requiring org-clock in every Emacs session.</td>
               </tr>
             </table>
 
@@ -11508,27 +11517,19 @@ M-: (executable-find "diff") RET
               <dl class="org-dl">
                 <dt>Email subject</dt>
 
-                <dd>
-                  <p>Task name.</p>
-                </dd>
+                <dd>Task name.</dd>
 
                 <dt>Person in the <code>From:</code> field</dt>
 
-                <dd>
-                  <p>Task creator.</p>
-                </dd>
+                <dd>Task creator.</dd>
 
                 <dt>Person(s) in the <code>To:</code> field</dt>
 
-                <dd>
-                  <p>Task assignee(s).</p>
-                </dd>
+                <dd>Task assignee(s).</dd>
 
                 <dt>Email body (or selected region)</dt>
 
-                <dd>
-                  <p>Inserted into the task’s description.</p>
-                </dd>
+                <dd>Inserted into the task’s description.</dd>
 
                 <dt>Email attachment(s)</dt>
 
@@ -12503,13 +12504,10 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
                 <td valign="top"><b><span class=
                 "todo TODO">TODO</span></b></td>
 
-                <td width="100%">
-                  <b>refile.org should come first</b><br />
-
-                  <p>Current workaround: added <code>#+CATEGORY: @refile</code>
-                  at the end of that file (the <code>@</code> symbol is
-                  alphabetically before the letters)</p>
-                </td>
+                <td width="100%"><b>refile.org should come first</b><br />
+                Current workaround: added <code>#+CATEGORY: @refile</code> at
+                the end of that file (the <code>@</code> symbol is
+                alphabetically before the letters)</td>
               </tr>
             </table>
 
@@ -14335,10 +14333,10 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
           <p>Publish related Org mode files as a website.</p>
 
           <div class="warning">
-            <p>It can be used for generating different PDF files from the same
+            It can be used for generating different PDF files from the same
             source file… See <a href=
             "http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-9-2">
-            9.2 The Multiple Export Case</a>.</p>
+            9.2 The Multiple Export Case</a>.
           </div>
 
           <div class="org-src-container">
@@ -14909,9 +14907,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
           <div class="outline-text-4" id="text-28-14-1">
             <div class="note">
-              <p>The <code>leuven--org-switch-dictionary</code> function is
-              called as well on each code block (at least, in emails that are
-              being read), in buffers called <code>*fontification*</code>.</p>
+              The <code>leuven--org-switch-dictionary</code> function is called
+              as well on each code block (at least, in emails that are being
+              read), in buffers called <code>*fontification*</code>.
             </div>
 
             <div class="org-src-container">
@@ -15242,10 +15240,11 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"org"</span>
     (message <span class="org-string">"... Org Crypt"</span>)
 
-    (<span class=
-"org-keyword">when</span> (try-require 'org-crypt)      <span class=
+    (try-require 'org-crypt)            <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">loads org, gnus-sum, etc...</span>
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"org-crypt"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">encrypt all entries before saving</span>
@@ -15487,7 +15486,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">using Org mode to send buffer/subtree per mail</span>
-    (<span class="org-keyword">when</span> (try-require 'org-mime)
+    (try-require 'org-mime)
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"org-mime"</span>
 
       (add-hook 'org-mode-hook
                 (<span class="org-keyword">lambda</span> ()
@@ -15672,7 +15673,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">(message "... Org Effectiveness")</span>
   <span class="org-comment-delimiter">;;</span>
   <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(when (try-require 'org-effectiveness)</span>
+"org-comment">(try-require 'org-effectiveness)</span>
+  <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(with-eval-after-load "org-effectiveness"</span>
   <span class="org-comment-delimiter">;;</span>
   <span class="org-comment-delimiter">;;     </span><span class=
 "org-comment">(add-hook 'org-mode-hook</span>
@@ -15691,7 +15694,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
           <h4 id="sec-28-19-2">Org-notmuch</h4>
 
           <div class="outline-text-4" id="text-28-19-2">
-            <p>Link emails from Org files.</p>
+            Link emails from Org files.
           </div>
         </div>
 
@@ -16152,12 +16155,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             <tr>
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
 
-              <td width="100%">
-                <b>TeX-doc does not provide a list of available keywords for
-                completion</b><br />
-
-                <p>Nor a default when point is on a command name…</p>
-              </td>
+              <td width="100%"><b>TeX-doc does not provide a list of available
+              keywords for completion</b><br />
+              Nor a default when point is on a command name…</td>
             </tr>
           </table>
 
@@ -16638,7 +16638,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">highlight the current SGML tag context</span>
-  (<span class="org-keyword">when</span> (try-require 'hl-tags-mode)
+  (try-require 'hl-tags-mode)
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"hl-tags-mode"</span>
 
     (add-hook 'html-mode-hook
               (<span class="org-keyword">lambda</span> ()
@@ -16747,9 +16749,10 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (GNUEmacs
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">making buffer indexes as menus</span>
-    (<span class=
-"org-keyword">when</span> (try-require 'imenu)          <span class=
+    (try-require 'imenu)                <span class=
 "org-comment-delimiter">; </span><span class="org-comment">awesome!</span>
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"imenu"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">automatically add Imenu to the menu bar in /any/ mode that supports it</span>
@@ -16998,9 +17001,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             </div>
 
             <ul class="org-ul">
-              <li>
-                <p>autopair</p>
-              </li>
+              <li>autopair</li>
 
               <li>
                 <p>smartparens</p>
@@ -17702,7 +17703,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">modern on-the-fly syntax checking</span>
-  (<span class="org-keyword">when</span> (try-require 'flycheck)
+  (try-require 'flycheck)
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"flycheck"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; indicate errors and warnings via icons in the right fringe</span>
@@ -18212,16 +18215,14 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
               <tr>
                 <td valign="top"></td>
 
-                <td width="100%">
-                  <b>Lisp expression in mode-line-format</b><br />
-
-                  <p>The Lisp expressions supported in
-                  <code>mode-line-format</code> are those documented in the
-                  manual, and nothing else. In particular, the
-                  <code>:eval</code> part must appear explicitly, and any
-                  symbol stands for its value (which is not eval’ed). IOW, a
-                  full-blown Lisp evaluation there is not implemented…</p>
-                </td>
+                <td width="100%"><b>Lisp expression in
+                mode-line-format</b><br />
+                The Lisp expressions supported in <code>mode-line-format</code>
+                are those documented in the manual, and nothing else. In
+                particular, the <code>:eval</code> part must appear explicitly,
+                and any symbol stands for its value (which is not eval’ed).
+                IOW, a full-blown Lisp evaluation there is not
+                implemented…</td>
               </tr>
             </table>
           </div>
@@ -18259,7 +18260,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">major mode for editing git commit messages</span>
-    (<span class="org-keyword">when</span> (try-require 'git-commit-mode)
+    (try-require 'git-commit-mode)
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"git-commit-mode"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on on-the-fly spell-checking</span>
@@ -18647,20 +18650,16 @@ etags --langdef=shell --regex-shell=<span class=
 
             <dt>Cscope</dt>
 
-            <dd>
-              <p>C, but flexible enough to support C++ and Java, and to be used
-              as a generalized “grep database”.</p>
-            </dd>
+            <dd>C, but flexible enough to support C++ and Java, and to be used
+            as a generalized “grep database”.</dd>
 
             <dt>ebrowse</dt>
 
-            <dd>
-              <p>For C++, you will be better off with ebrowse, a program that
-              also comes with Emacs. It understands C++ much better than etags
-              does, and provides similar commands (so you don’t lose anything).
-              Check out the Ebrowse manual, which is part of the Emacs
-              distribution, for details.</p>
-            </dd>
+            <dd>For C++, you will be better off with ebrowse, a program that
+            also comes with Emacs. It understands C++ much better than etags
+            does, and provides similar commands (so you don’t lose anything).
+            Check out the Ebrowse manual, which is part of the Emacs
+            distribution, for details.</dd>
 
             <dt>GNU Idutils</dt>
 
@@ -18827,7 +18826,9 @@ TAGS:
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">select from multiple tags</span>
-    (<span class="org-keyword">when</span> (try-require 'etags-select)
+    (try-require 'etags-select)
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"etags-select"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">do a `</span><span class="org-comment"><span class=
@@ -18925,10 +18926,8 @@ TAGS:
               <dt><a href=
               "http://www.gnu.org/software/emacs/manual/semantic.html">Semantic</a></dt>
 
-              <dd>
-                <p>A <b>parser</b> and code analyzer which provides <b>smart
-                completion</b> (“Intellisense”).</p>
-              </dd>
+              <dd>A <b>parser</b> and code analyzer which provides <b>smart
+              completion</b> (“Intellisense”).</dd>
 
               <dt>EDE</dt>
 
@@ -18941,17 +18940,13 @@ TAGS:
 
               <dt>SRecode</dt>
 
-              <dd>
-                <p>A template / <b>code generation</b> system which can convert
-                tags from semantic back into code.</p>
-              </dd>
+              <dd>A template / <b>code generation</b> system which can convert
+              tags from semantic back into code.</dd>
 
               <dt>COGRE (COnnected GRaph Editor)</dt>
 
-              <dd>
-                <p>A <b>UML diagram editor</b> which can generate code from a
-                class diagram that you draw in Emacs.</p>
-              </dd>
+              <dd>A <b>UML diagram editor</b> which can generate code from a
+              class diagram that you draw in Emacs.</dd>
             </dl>
 
             <p>See <a href=
@@ -19228,7 +19223,9 @@ TAGS:
 "org-comment">Emacs Code Browser</span>
   (custom-set-variables '(ecb-options-version <span class=
 "org-string">"2.40"</span>))
-  (<span class="org-keyword">when</span> (try-require 'ecb-autoloads)
+  (try-require 'ecb-autoloads)
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"ecb-autoloads"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">trick for starting ECB 2.40 (with CEDET merged in Emacs since 23.2)</span>
@@ -19283,7 +19280,9 @@ TAGS:
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-   (<span class="org-keyword">when</span> (try-require 'eassist)
+   (try-require 'eassist)
+   (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"eassist"</span>
 
      (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven--c-mode-eassist</span> ()
@@ -19368,7 +19367,9 @@ TAGS:
 "org-comment"><span class=
 "org-constant">yasnippet-bundle</span></span><span class=
 "org-comment">'!)</span>
-    (<span class="org-keyword">when</span> (try-require 'yasnippet)
+    (try-require 'yasnippet)
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"yasnippet"</span>
 </pre>
           </div>
         </div>
@@ -19779,10 +19780,8 @@ TAGS:
                 </ul>
               </li>
 
-              <li>
-                <p><b>Quick help</b> (tooltip appearing at the side of the
-                completion menu)</p>
-              </li>
+              <li><b>Quick help</b> (tooltip appearing at the side of the
+              completion menu)</li>
             </ul>
 
             <p>According to the settings, completion is done by
@@ -19814,23 +19813,17 @@ TAGS:
             <dl class="org-dl">
               <dt><code>C-s</code> (<code>ac-isearch</code>)</dt>
 
-              <dd>
-                <p><b>Filter</b> completion candidates.</p>
-              </dd>
+              <dd><b>Filter</b> completion candidates.</dd>
 
               <dt><code>&lt;C-down&gt;</code> or <code>C-M-n</code>
               (<code>ac-quick-help-scroll-down</code>)</dt>
 
-              <dd>
-                <p>Scroll down quick help.</p>
-              </dd>
+              <dd>Scroll down quick help.</dd>
 
               <dt><code>&lt;C-up&gt;</code> or <code>C-M-p</code>
               (<code>ac-quick-help-scroll-up</code>)</dt>
 
-              <dd>
-                <p>Scroll up quick help.</p>
-              </dd>
+              <dd>Scroll up quick help.</dd>
 
               <dt><code>&lt;f1&gt;</code> (or <code>C-?</code>,
               <code>ac-help</code>)</dt>
@@ -19846,9 +19839,7 @@ TAGS:
               <dt><code>&lt;M-f1&gt;</code> (or <code>C-M-?</code>,
               <code>ac-persist-help</code>)</dt>
 
-              <dd>
-                <p>Show additional <b>help</b> in <b>persistent buffer</b>.</p>
-              </dd>
+              <dd>Show additional <b>help</b> in <b>persistent buffer</b>.</dd>
             </dl>
 
             <p>Eventually, see <a href=
@@ -20014,8 +20005,9 @@ TAGS:
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">modular text completion framework</span>
-  (<span class="org-keyword">when</span> (try-require 'company-<span class=
-"org-leuven-highlight">XXX</span>)
+  (try-require 'company-<span class="org-leuven-highlight">XXX</span>)
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"company"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">minimum prefix length for idle completion</span>
@@ -20124,10 +20116,10 @@ TAGS:
         ring.</p>
 
         <div class="note">
-          <p>If you want to insert a link to a file in an Org mode document,
-          you can also call <code>org-insert-link</code> (<code>C-c C-l</code>)
+          If you want to insert a link to a file in an Org mode document, you
+          can also call <code>org-insert-link</code> (<code>C-c C-l</code>)
           with a <code>C-u</code> prefix (to get the regular
-          <code>find-file</code> interface).</p>
+          <code>find-file</code> interface).
         </div>
       </div>
 
@@ -20223,7 +20215,9 @@ TAGS:
 "org-comment">reuse the current Dired directory buffer to visit another directory</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(limit Dired to 1 single buffer)</span>
-    (<span class="org-keyword">when</span> (try-require 'dired-single)
+    (try-require 'dired-single)
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"dired-single"</span>
 
       (define-key dired-mode-map
         (kbd <span class=
@@ -20384,10 +20378,8 @@ TAGS:
               <p>It opens the Windows explorer for:</p>
 
               <ul class="org-ul">
-                <li>
-                  <p>the <b>current directory</b> when invoked on
-                  <code>.</code>.</p>
-                </li>
+                <li>the <b>current directory</b> when invoked on
+                <code>.</code>.</li>
 
                 <li>
                   <p>the <b>parent directory</b> when invoked on
@@ -20398,12 +20390,10 @@ TAGS:
                       <td valign="top"><b><span class=
                       "todo TODO">TODO</span></b></td>
 
-                      <td width="100%">
-                        <b>Mapcar on the browse-url function</b><br />
-
-                        <p>See code of
-                        <code>w32-dired-open-files-externally</code>.</p>
-                      </td>
+                      <td width="100%"><b>Mapcar on the browse-url
+                      function</b><br />
+                      See code of
+                      <code>w32-dired-open-files-externally</code>.</td>
                     </tr>
                   </table>
 
@@ -20412,13 +20402,10 @@ TAGS:
                       <td valign="top"><b><span class=
                       "todo TODO">TODO</span></b></td>
 
-                      <td width="100%">
-                        <b><code>C-u &lt;RET&gt;</code> opens dired on Org
-                        link</b><br />
-
-                        <p>We should probably have the same type of key binding
-                        for opening Explorer from Dired.</p>
-                      </td>
+                      <td width="100%"><b><code>C-u &lt;RET&gt;</code> opens
+                      dired on Org link</b><br />
+                      We should probably have the same type of key binding for
+                      opening Explorer from Dired.</td>
                     </tr>
                   </table>
                 </li>
@@ -20749,11 +20736,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           <p>Extra Dired functionality</p>
 
           <ul class="org-ul">
-            <li>
-              <p><code>dired-x</code> has a feature to “guess” the right shell
-              command and the right external viewer for documents (see
-              <code>dired-guess-shell-alist-user</code>)</p>
-            </li>
+            <li><code>dired-x</code> has a feature to “guess” the right shell
+            command and the right external viewer for documents (see
+            <code>dired-guess-shell-alist-user</code>)</li>
 
             <li>
               <p>You can also jump to the Dired buffer corresponding to the
@@ -22268,7 +22253,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Python, ...)</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(when (try-require 'comint)</span>
+"org-comment">(try-require 'comint)</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(with-eval-after-load "comint"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">comint prompt is read only</span>
@@ -22524,12 +22511,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             <tr>
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
 
-              <td width="100%">
-                <b>Fix case when 2 Shell buffers are run in the same dir (same
-                name error!)</b><br />
-
-                <p>apply: Buffer name `*shell d:/Users/fni/*’ is in use</p>
-              </td>
+              <td width="100%"><b>Fix case when 2 Shell buffers are run in the
+              same dir (same name error!)</b><br />
+              apply: Buffer name `*shell d:/Users/fni/*’ is in use</td>
             </tr>
           </table>
 
@@ -22679,14 +22663,14 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           terminal (such as the command <code>top</code>).</p>
 
           <div class="note">
-            <p>In Shell mode, use <code>M-x proced</code> instead of
-            <code>top</code>.</p>
+            In Shell mode, use <code>M-x proced</code> instead of
+            <code>top</code>.
           </div>
 
           <div class="note">
-            <p><code>MPlayer</code> commands do not work in the Emacs shell.
-            Use <code>term</code> for <code>/</code> and <code>*</code> to
-            decrease / increase volume.</p>
+            <code>MPlayer</code> commands do not work in the Emacs shell. Use
+            <code>term</code> for <code>/</code> and <code>*</code> to decrease
+            / increase volume.
           </div>
 
           <p>You can <b>switch to line mode</b> (<code>C-c C-j</code>) when you
@@ -22868,9 +22852,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         <h3 id="sec-40-11">Serial Terminal</h3>
 
         <div class="outline-text-3" id="text-40-11">
-          <p>Since GNU Emacs 23, there’s now support for serial port access.
-          The new command <code>serial-term</code> starts an interactive
-          terminal on a serial port.</p>
+          Since GNU Emacs 23, there’s now support for serial port access. The
+          new command <code>serial-term</code> starts an interactive terminal
+          on a serial port.
         </div>
       </div>
 
@@ -22893,7 +22877,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span class="org-comment-delimiter">;;            </span><span class=
 "org-comment">(executable-find "mount")) ; Cygwin bin directory found</span>
     <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(when (try-require 'cygwin-mount)</span>
+"org-comment">(try-require 'cygwin-mount)</span>
+    <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(with-eval-after-load "cygwin-mount"</span>
     <span class="org-comment-delimiter">;;     </span><span class=
 "org-comment">(cygwin-mount-activate)))</span>
 </pre>
@@ -22907,7 +22893,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         <h3 id="sec-40-13">Emacs Speaks Statistics (ESS)</h3>
 
         <div class="outline-text-3" id="text-40-13">
-          <p>See:</p>
+          See:
 
           <ul class="org-ul">
             <li><a href=
@@ -22949,10 +22935,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             <p>Start an R session with <code>M-x R</code>.</p>
 
             <div class="note">
-              <p>To run statistical processes under ESS, Windows users will
-              need to make sure that the directories for <code>R</code> and
+              To run statistical processes under ESS, Windows users will need
+              to make sure that the directories for <code>R</code> and
               <code>Rterm</code> are in their <code>PATH</code> environment
-              variable.</p>
+              variable.
             </div>
 
             <p><b>Customize</b> variables for ESS (set these variables
@@ -23058,8 +23044,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             <h5 id="sec-40-13-6-1">Integration with auto-complete package</h5>
 
             <div class="outline-text-5" id="text-40-13-6-1">
-              <p>Note – R docs are not in Info format. Though, they are
-              available via the quick help of Auto-Complete.</p>
+              Note – R docs are not in Info format. Though, they are available
+              via the quick help of Auto-Complete.
             </div>
           </div>
         </div>
@@ -24144,7 +24130,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">toggle a minor mode showing link numbers</span>
-      (<span class="org-keyword">when</span> (try-require 'w3m-lnum)
+      (try-require 'w3m-lnum)
+      (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"w3m-lnum"</span>
 
         (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-w3m-go-to-link-number</span> ()
@@ -24195,8 +24183,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           <h4 id="sec-45-1-2">EWW (Emacs Web Browser)</h4>
 
           <div class="outline-text-4" id="text-45-1-2">
-            <p><code>eww</code> is the new web-browser for Emacs. See <a href=
-            "http://lars.ingebrigtsen.no/2013/06/eww.html">http://lars.ingebrigtsen.no/2013/06/eww.html</a>.</p>
+            <code>eww</code> is the new web-browser for Emacs. See <a href=
+            "http://lars.ingebrigtsen.no/2013/06/eww.html">http://lars.ingebrigtsen.no/2013/06/eww.html</a>.
           </div>
         </div>
       </div>
@@ -24366,7 +24354,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (XEmacs
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">the real color theme functions</span>
-    (<span class="org-keyword">when</span> (try-require 'color-theme-autoloads)
+    (try-require 'color-theme-autoloads)
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"color-theme-autoloads"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">`</span><span class="org-comment"><span class=
@@ -24384,7 +24374,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">set my default color theme</span>
-      (<span class="org-keyword">when</span> (try-require 'color-theme-leuven)
+      (try-require 'color-theme-leuven)
+      (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"color-theme-leuven"</span>
         (color-theme-leuven)))
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -24741,9 +24733,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
           <p>To check if some font is available in Emacs do following:</p>
 
           <ol class="org-ol">
-            <li>
-              <p>Switch to the <code>*scratch*</code> buffer.</p>
-            </li>
+            <li>Switch to the <code>*scratch*</code> buffer.</li>
 
             <li>
               <p>Type</p>
@@ -24752,12 +24742,10 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
               or pattern"))</code></p>
             </li>
 
-            <li>
-              <p>Place the cursor after the last closing paren and hit
-              <code>C-j</code>. List of the names of available fonts matching
-              given pattern will appear in the current buffer
-              (<code>*scratch*</code>).</p>
-            </li>
+            <li>Place the cursor after the last closing paren and hit
+            <code>C-j</code>. List of the names of available fonts matching
+            given pattern will appear in the current buffer
+            (<code>*scratch*</code>).</li>
 
             <li>
               <p>For listing of all available fonts, use</p>
@@ -24861,9 +24849,9 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
           <h4 id="sec-48-1-2">Anti-aliasing</h4>
 
           <div class="outline-text-4" id="text-48-1-2">
-            <p>To see if anti-aliasing is active, use <code>xmag</code> (under
+            To see if anti-aliasing is active, use <code>xmag</code> (under
             Linux) or any of the other magnifier applications. The fonts should
-            have gray edges.</p>
+            have gray edges.
           </div>
         </div>
 
@@ -24974,7 +24962,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
       <h2 id="sec-49">Calc</h2>
 
       <div class="outline-text-2" id="text-49">
-        <p><code>C-x *</code> invokes the GNU Emacs Calculator.</p>
+        <code>C-x *</code> invokes the GNU Emacs Calculator.
       </div>
 
       <div id="outline-container-sec-49-1" class="outline-3">
@@ -24986,7 +24974,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
           <h4 id="sec-49-1-1">Basic Commands</h4>
 
           <div class="outline-text-4" id="text-49-1-1">
-            <p>Start the Calc: <code>C-x * c</code>.</p>
+            Start the Calc: <code>C-x * c</code>.
           </div>
         </div>
 
@@ -24994,8 +24982,8 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
           <h4 id="sec-49-1-2">“Quick Calculator” Mode</h4>
 
           <div class="outline-text-4" id="text-49-1-2">
-            <p>Run the Calculator in the minibuffer: <code>C-x * q</code>
-            (<code>M-x quick-calc</code>).</p>
+            Run the Calculator in the minibuffer: <code>C-x * q</code>
+            (<code>M-x quick-calc</code>).
           </div>
         </div>
       </div>
@@ -25146,7 +25134,9 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">add IRC color support to LUI</span>
-    (<span class="org-keyword">when</span> (try-require 'lui-irc-colors)
+    (try-require 'lui-irc-colors)
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"lui-irc-colors"</span>
       (add-to-list 'lui-pre-output-hook 'lui-irc-colors))
 
 <span class="org-comment-delimiter">;;</span><span class=
@@ -25169,8 +25159,9 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 
     (setq circe-highlight-nick-type 'occurrence)
 
-    (<span class=
-"org-keyword">when</span> (try-require 'circe-highlight-all-nicks)
+    (try-require 'circe-highlight-all-nicks)
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"circe-highlight-all-nicks"</span>
       (enable-circe-highlight-all-nicks))
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -25196,9 +25187,9 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
           <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Jabber (GTalk)</span>
-  (<span class=
-"org-keyword">when</span> (try-require 'jabber-autoloads-<span class=
-"org-leuven-highlight">XXX</span>)
+  (try-require 'jabber-autoloads-<span class="org-leuven-highlight">XXX</span>)
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"jabber-autoloads"</span>
     (setq jabber-account-list '((<span class=
 "org-string">"johndoe@example.com"</span>
                                  (<span class=
@@ -25416,7 +25407,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140828.2234]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140829.1231]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
@@ -25536,19 +25527,19 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 
           <div class="org-src-container">
             <pre class="src src-sh">
-time emacs -f kill-emacs 2&gt;&amp;1
+<span class="org-builtin">time</span> emacs -f kill-emacs 2&gt;&amp;1
 </pre>
           </div>
 
           <div class="org-src-container">
             <pre class="src src-sh">
-time emacs -q -f kill-emacs 2&gt;&amp;1
+<span class="org-builtin">time</span> emacs -q -f kill-emacs 2&gt;&amp;1
 </pre>
           </div>
 
           <div class="org-src-container">
             <pre class="src src-sh">
-time emacs -Q -f kill-emacs 2&gt;&amp;1
+<span class="org-builtin">time</span> emacs -Q -f kill-emacs 2&gt;&amp;1
 </pre>
           </div>
 
