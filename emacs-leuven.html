@@ -1294,7 +1294,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140829.1414</span>
+"org-comment">Version: 20140829.1506</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1417,7 +1417,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140829.1414]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140829.1506]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -6799,22 +6799,21 @@ M-: (executable-find "diff") RET
       (setq helm-full-frame nil)
 
       <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">;; open helm buffer in another window</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq helm-split-window-default-side 'other)</span>
+
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">always display `</span><span class="org-comment"><span class=
 "org-constant">helm-buffer</span></span><span class=
 "org-comment">' in current window</span>
       (setq helm-split-window-default-side 'same)
 
-<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">open helm buffer in another window</span>
-(setq helm-split-window-default-side 'other)
-
-<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">open helm buffer inside current window, not occupy whole other window</span>
-(setq helm-split-window-in-side-p t)
-
-<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">move to end or beginning of source when reaching top or bottom of source.</span>
-(setq helm-move-to-line-cycle-in-source t)
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">move to end or beginning of source when reaching top or bottom of</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">source</span>
+      (setq helm-move-to-line-cycle-in-source t)
 
       (<span class="org-keyword">defface</span> <span class=
 "org-variable-name">leuven-separator</span>
@@ -6844,7 +6843,7 @@ M-: (executable-find "diff") RET
 "org-comment">time that the user has to be idle for, before candidates from</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">DELAYED sources are collected</span>
-      (setq helm-idle-delay 0.01)       <span class=
+      (setq helm-idle-delay 0.05)       <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">useful for sources involving heavy</span>
                                         <span class=
@@ -6863,7 +6862,7 @@ M-: (executable-find "diff") RET
 "org-comment">are collected (&gt;= `</span><span class=
 "org-comment"><span class=
 "org-constant">helm-idle-delay</span></span><span class="org-comment">')</span>
-      (setq helm-input-idle-delay 0.01) <span class=
+      (setq helm-input-idle-delay 0.05) <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">also effective for NON-DELAYED sources</span>
 
@@ -25424,7 +25423,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140829.1414]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140829.1509]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

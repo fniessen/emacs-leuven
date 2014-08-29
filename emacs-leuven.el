@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140829.1412
+;; Version: 20140829.1504
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140829.1412]--")
+(message "* --[ Loading Emacs Leuven 20140829.1504]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -2015,17 +2015,15 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
 
+      ;; ;; open helm buffer in another window
+      ;; (setq helm-split-window-default-side 'other)
+
       ;; always display `helm-buffer' in current window
       (setq helm-split-window-default-side 'same)
 
-;; open helm buffer in another window
-(setq helm-split-window-default-side 'other)
-
-;; open helm buffer inside current window, not occupy whole other window
-(setq helm-split-window-in-side-p t)
-
-;; move to end or beginning of source when reaching top or bottom of source.
-(setq helm-move-to-line-cycle-in-source t)
+      ;; move to end or beginning of source when reaching top or bottom of
+      ;; source
+      (setq helm-move-to-line-cycle-in-source t)
 
       (defface leuven-separator
         '((t (:weight bold :foreground "slate gray")))
@@ -2042,14 +2040,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       ;; time that the user has to be idle for, before candidates from
       ;; DELAYED sources are collected
-      (setq helm-idle-delay 0.01)       ; useful for sources involving heavy
+      (setq helm-idle-delay 0.05)       ; useful for sources involving heavy
                                         ; operations, so that candidates from
                                         ; the source are not retrieved
                                         ; unnecessarily if the user keeps typing
 
       ;; time that the user has to be idle for, before ALL candidates
       ;; are collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.01) ; also effective for NON-DELAYED sources
+      (setq helm-input-idle-delay 0.05) ; also effective for NON-DELAYED sources
 
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
@@ -8883,7 +8881,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140829.1413]--")
+(message "* --[ Loaded Emacs Leuven 20140829.1505]--")
 
 (provide 'emacs-leuven)
 

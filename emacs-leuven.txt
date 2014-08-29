@@ -3301,17 +3301,15 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
 
+      ;; ;; open helm buffer in another window
+      ;; (setq helm-split-window-default-side 'other)
+
       ;; always display `helm-buffer' in current window
       (setq helm-split-window-default-side 'same)
 
-;; open helm buffer in another window
-(setq helm-split-window-default-side 'other)
-
-;; open helm buffer inside current window, not occupy whole other window
-(setq helm-split-window-in-side-p t)
-
-;; move to end or beginning of source when reaching top or bottom of source.
-(setq helm-move-to-line-cycle-in-source t)
+      ;; move to end or beginning of source when reaching top or bottom of
+      ;; source
+      (setq helm-move-to-line-cycle-in-source t)
 
       (defface leuven-separator
         '((t (:weight bold :foreground "slate gray")))
@@ -3328,14 +3326,14 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 
       ;; time that the user has to be idle for, before candidates from
       ;; DELAYED sources are collected
-      (setq helm-idle-delay 0.01)       ; useful for sources involving heavy
+      (setq helm-idle-delay 0.05)       ; useful for sources involving heavy
                                         ; operations, so that candidates from
                                         ; the source are not retrieved
                                         ; unnecessarily if the user keeps typing
 
       ;; time that the user has to be idle for, before ALL candidates
       ;; are collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.01) ; also effective for NON-DELAYED sources
+      (setq helm-input-idle-delay 0.05) ; also effective for NON-DELAYED sources
 
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
