@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140829.1546
+;; Version: 20140829.1824
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140829.1546]--")
+(message "* --[ Loading Emacs Leuven 20140829.1824]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -1602,6 +1602,10 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; key binding
   (global-set-key
     (kbd "<C-f12>") 'leuven-revert-buffer-without-query)
+
+  ;; ;; enable Global Auto-Revert mode
+  ;; (global-auto-revert-mode 1)           ; can generate an awful lot of network
+  ;;                                       ; traffic
 
 ;;** 18.6 (info "(emacs)Auto Save"): Protection Against Disasters
 
@@ -4728,7 +4732,7 @@ this with to-do items than with projects or headings."
                                           ; `org-update-all-dblocks'
                                           ; `org-table-iterate-buffer-tables'
         (when (derived-mode-p 'org-mode)
-          (org-babel-execute-buffer)
+          ;; (org-babel-execute-buffer)   ; XXX why should we execute all code blocks?
           (let ((before-save-hook nil))
             (save-buffer))
           (org-babel-tangle)
@@ -6906,6 +6910,8 @@ up before you execute another command."
       ;; UI for selecting snippet when there are multiple candidates
       (setq yas-prompt-functions '(yas-dropdown-prompt))
 
+      (global-set-key (kbd "C-c & C-l") 'yas-describe-tables)
+
       (defvar lawlist-context-menu-map
         (let ((map (make-sparse-keymap "Context Menu")))
           (define-key map [help-for-help] (cons "Help" 'help-for-help))
@@ -7060,7 +7066,7 @@ up before you execute another command."
 
   ;; modular text completion framework
   (try-require 'company-XXX)
-  (with-eval-after-load "company"
+  (with-eval-after-load "company-XXX"
 
     ;; minimum prefix length for idle completion
     (setq company-minimum-prefix-length 2)
@@ -8905,7 +8911,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140829.1546]--")
+(message "* --[ Loaded Emacs Leuven 20140829.1825]--")
 
 (provide 'emacs-leuven)
 

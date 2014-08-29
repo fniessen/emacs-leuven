@@ -2613,6 +2613,10 @@ Update time stamps (and copyright notice) automatically.
   ;; key binding
   (global-set-key
     (kbd "<C-f12>") 'leuven-revert-buffer-without-query)
+
+  ;; ;; enable Global Auto-Revert mode
+  ;; (global-auto-revert-mode 1)           ; can generate an awful lot of network
+  ;;                                       ; traffic
 #+end_src
 
 ** Auto-Saving: Protection Against Disasters
@@ -7231,7 +7235,7 @@ launched from Dired?
                                           ; `org-update-all-dblocks'
                                           ; `org-table-iterate-buffer-tables'
         (when (derived-mode-p 'org-mode)
-          (org-babel-execute-buffer)
+          ;; (org-babel-execute-buffer)   ; XXX why should we execute all code blocks?
           (let ((before-save-hook nil))
             (save-buffer))
           (org-babel-tangle)
@@ -10838,6 +10842,10 @@ By default, put *your own snippets* in the directory =~/.emacs.d/snippets=.
 
 Display all available snippets with ~M-x yas-describe-tables~.
 
+#+begin_src emacs-lisp
+      (global-set-key (kbd "C-c & C-l") 'yas-describe-tables)
+#+end_src
+
 See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippet.
 
 #+begin_src emacs-lisp
@@ -11166,7 +11174,7 @@ available completions and filter as well.
 #+begin_src emacs-lisp
   ;; modular text completion framework
   (try-require 'company-XXX)
-  (with-eval-after-load "company"
+  (with-eval-after-load "company-XXX"
 
     ;; minimum prefix length for idle completion
     (setq company-minimum-prefix-length 2)
@@ -14209,7 +14217,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 #+begin_src emacs-lisp :tangle no
   ;; Jabber (GTalk)
   (try-require 'jabber-autoloads-XXX)
-  (with-eval-after-load "jabber-autoloads"
+  (with-eval-after-load "jabber-autoloads-XXX"
     (setq jabber-account-list '(("johndoe@example.com"
                                  (:network-server . "talk.google.com")
                                  (:connection-type . ssl)

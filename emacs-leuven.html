@@ -1294,7 +1294,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140829.1547</span>
+"org-comment">Version: 20140829.1825</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1417,7 +1417,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140829.1547]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140829.1825]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -5668,6 +5668,13 @@
   (global-set-key
     (kbd <span class=
 "org-string">"&lt;C-f12&gt;"</span>) 'leuven-revert-buffer-without-query)
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">;; enable Global Auto-Revert mode</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-auto-revert-mode 1)           ; can generate an awful lot of network</span>
+  <span class=
+"org-comment-delimiter">;;                                       </span><span class="org-comment">; traffic</span>
 </pre>
           </div>
         </div>
@@ -13464,7 +13471,10 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-constant">org-table-iterate-buffer-tables</span></span><span class=
 "org-comment">'</span>
         (<span class="org-keyword">when</span> (derived-mode-p 'org-mode)
-          (org-babel-execute-buffer)
+          <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(org-babel-execute-buffer)   ; </span><span class=
+"org-comment"><span class="org-leuven-highlight">XXX</span></span><span class=
+"org-comment"> why should we execute all code blocks?</span>
           (<span class="org-keyword">let</span> ((before-save-hook nil))
             (save-buffer))
           (org-babel-tangle)
@@ -19525,6 +19535,17 @@ TAGS:
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
+      (global-set-key (kbd <span class=
+"org-string">"C-c &amp; C-l"</span>) 'yas-describe-tables)
+</pre>
+            </div>
+
+            <p>See <a href=
+            "http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippet">
+            http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippet</a>.</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
       (<span class="org-keyword">defvar</span> <span class=
 "org-variable-name">lawlist-context-menu-map</span>
         (<span class=
@@ -20072,7 +20093,8 @@ TAGS:
 "org-comment">modular text completion framework</span>
   (try-require 'company-<span class="org-leuven-highlight">XXX</span>)
   (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"company"</span>
+"org-string">"company-</span><span class="org-string"><span class=
+"org-leuven-highlight">XXX</span></span><span class="org-string">"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">minimum prefix length for idle completion</span>
@@ -25250,7 +25272,8 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 "org-comment">Jabber (GTalk)</span>
   (try-require 'jabber-autoloads-<span class="org-leuven-highlight">XXX</span>)
   (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"jabber-autoloads"</span>
+"org-string">"jabber-autoloads-</span><span class="org-string"><span class=
+"org-leuven-highlight">XXX</span></span><span class="org-string">"</span>
     (setq jabber-account-list '((<span class=
 "org-string">"johndoe@example.com"</span>
                                  (<span class=
@@ -25468,7 +25491,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140829.1550]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140829.1826]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
