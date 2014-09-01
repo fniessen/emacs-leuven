@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140901.0923
+;; Version: 20140901.1143
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140901.0923]--")
+(message "* --[ Loading Emacs Leuven 20140901.1143]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -4942,8 +4942,8 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "ox-latex"
 
     ;; markup for TODO keywords and for tags, as a printf format
-    (defun org-latex-format-headline (todo todo-type priority text tags)
-      "Default format function for an headline."
+    (defun org-latex-format-headline (todo todo-type priority text tags info)
+      "Default function for formatting the headline's text."
       (concat (when todo
                 (format "{%s\\textbf{\\textsc{\\textsf{%s}}}} "
                         (cond ((equal todo-type 'todo) "\\color{red}")
@@ -8918,7 +8918,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140901.0924]--")
+(message "* --[ Loaded Emacs Leuven 20140901.1143]--")
 
 (provide 'emacs-leuven)
 

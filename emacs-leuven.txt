@@ -112,8 +112,7 @@ this set of customizations to "short-cut" that initial process.
 (message "* --[ Loading Emacs Leuven <<current-time()>>]--")
 
 ;; turn on Common Lisp support
-(eval-when-compile (require 'cl))       ; provide useful things like `loop' and
-                                        ; `setf'
+(eval-when-compile (require 'cl))       ; provide useful things like `setf'
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -3200,6 +3199,31 @@ of Thierry Volpiatto]]!
 
 The prefix for Helm commands is ~C-x c~.
 
+Since I use Helm, I never bother to remember the structure of my working
+directory. And that's the point: I don't have to remember such trivial details
+and I can focus my mind on other more important things.
+
+Here is another example that make sure of Helm interface nicely:
+helm-semantic-or-imenu. Demo:
+http://tuhdo.github.io/static/part3/helm-semantic-or-imenu.gif
+
+You can think of it as an outline tree in regular IDE, but Helm makes it
+interactive, and fast. I can ask question like "is there something that is
+function and has int in it that the function name contains memory?".
+
+Here is another demo on Helm's homepage: https://github.com/emacs-helm/helm#advanced-usage
+
+Finally, the strings in Helm are not just strings; they are regexp and I think
+they are more powerful then normal fuzzy matcher.
+
+Helm allows you to do interesting things with its interactive interface. For
+example:
+
+- interactive grep: http://tuhdo.github.io/static/live_grep.gif
+- interactive occur: http://tuhdo.github.io/static/part3/helm-occur.gif
+- interactive kill ring: http://tuhdo.github.io/static/part3/helm-kill-ring.gif
+- interactive mark ring: http://tuhdo.github.io/helm-intro.html#sec-15
+
 With ~helm-M-x~, to pass prefix arguments to the command you want to run, you
 have to type ~C-u~ *after* typing ~M-x~.
 
@@ -3384,6 +3408,14 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
   ~helm-match-plugin.el~.
 
 *** Image mode
+
+AFAICT you need to eval something like
+
+    (setq image-type-header-regexps '((".*" . imagemagick)))
+
+to be able to resize images in image-mode with imagemagick (for example, from
+the "Image" menu).  If resizing works for you when visiting an image file,
+I guess your imagemagick support is ok.
 
 *************** TODO auto-image-file-mode in find-file-hook for performance reasons!?
 
@@ -7485,8 +7517,8 @@ capabilities.
   (with-eval-after-load "ox-latex"
 
     ;; markup for TODO keywords and for tags, as a printf format
-    (defun org-latex-format-headline (todo todo-type priority text tags)
-      "Default format function for an headline."
+    (defun org-latex-format-headline (todo todo-type priority text tags info)
+      "Default function for formatting the headline's text."
       (concat (when todo
                 (format "{%s\\textbf{\\textsc{\\textsf{%s}}}} "
                         (cond ((equal todo-type 'todo) "\\color{red}")

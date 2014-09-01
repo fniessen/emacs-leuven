@@ -1294,7 +1294,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140901.0924</span>
+"org-comment">Version: 20140901.1144</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1417,7 +1417,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140901.0924]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140901.1144]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -6614,6 +6614,48 @@ M-: (executable-find "diff") RET
 
             <p>The prefix for Helm commands is <code>C-x c</code>.</p>
 
+            <p>Since I use Helm, I never bother to remember the structure of my
+            working directory. And that’s the point: I don’t have to remember
+            such trivial details and I can focus my mind on other more
+            important things.</p>
+
+            <p>Here is another example that make sure of Helm interface nicely:
+            helm-semantic-or-imenu. Demo: <img src=
+            "http://tuhdo.github.io/static/part3/helm-semantic-or-imenu.gif"
+            alt="helm-semantic-or-imenu.gif" /></p>
+
+            <p>You can think of it as an outline tree in regular IDE, but Helm
+            makes it interactive, and fast. I can ask question like “is there
+            something that is function and has int in it that the function name
+            contains memory?”.</p>
+
+            <p>Here is another demo on Helm’s homepage: <a href=
+            "https://github.com/emacs-helm/helm#advanced-usage">https://github.com/emacs-helm/helm#advanced-usage</a></p>
+
+            <p>Finally, the strings in Helm are not just strings; they are
+            regexp and I think they are more powerful then normal fuzzy
+            matcher.</p>
+
+            <p>Helm allows you to do interesting things with its interactive
+            interface. For example:</p>
+
+            <ul class="org-ul">
+              <li>interactive grep: <img src=
+              "http://tuhdo.github.io/static/live_grep.gif" alt=
+              "live_grep.gif" /></li>
+
+              <li>interactive occur: <img src=
+              "http://tuhdo.github.io/static/part3/helm-occur.gif" alt=
+              "helm-occur.gif" /></li>
+
+              <li>interactive kill ring: <img src=
+              "http://tuhdo.github.io/static/part3/helm-kill-ring.gif" alt=
+              "helm-kill-ring.gif" /></li>
+
+              <li>interactive mark ring: <a href=
+              "http://tuhdo.github.io/helm-intro.html#sec-15">http://tuhdo.github.io/helm-intro.html#sec-15</a></li>
+            </ul>
+
             <p>With <code>helm-M-x</code>, to pass prefix arguments to the
             command you want to run, you have to type <code>C-u</code>
             <b>after</b> typing <code>M-x</code>.</p>
@@ -6949,6 +6991,14 @@ M-: (executable-find "diff") RET
           <h4 id="sec-20-12-3">Image mode</h4>
 
           <div class="outline-text-4" id="text-20-12-3">
+            <p>AFAICT you need to eval something like</p>
+
+            <p>(setq image-type-header-regexps '((“.*” . imagemagick)))</p>
+
+            <p>to be able to resize images in image-mode with imagemagick (for
+            example, from the “Image” menu). If resizing works for you when
+            visiting an image file, I guess your imagemagick support is ok.</p>
+
             <table class="inlinetask" width="100%">
               <tr>
                 <td valign="top"><b><span class=
@@ -13899,8 +13949,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-leuven-highlight">TODO</span></span><span class=
 "org-comment"> keywords and for tags, as a printf format</span>
     (<span class="org-keyword">defun</span> <span class=
-"org-function-name">org-latex-format-headline</span> (todo todo-type priority text tags)
-      <span class="org-doc">"Default format function for an headline."</span>
+"org-function-name">org-latex-format-headline</span> (todo todo-type priority text tags info)
+      <span class=
+"org-doc">"Default function for formatting the headline's text."</span>
       (concat (<span class="org-keyword">when</span> todo
                 (format <span class=
 "org-string">"{%s\\textbf{\\textsc{\\textsf{%s}}}} "</span>
@@ -25504,7 +25555,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140901.0925]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140901.1144]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
