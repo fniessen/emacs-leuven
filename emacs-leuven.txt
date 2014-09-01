@@ -572,8 +572,8 @@ outages).
           company csv-mode dictionary dired+ dired-single ess
           fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
           helm htmlize idle-require info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager rainbow-mode redo+ tidy
-          unbound yasnippet
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          redo+ tidy unbound yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."

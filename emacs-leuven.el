@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140901.1432
+;; Version: 20140901.1458
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140901.1432]--")
+(message "* --[ Loading Emacs Leuven 20140901.1458]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -417,8 +417,8 @@ Last time is saved in global variable `leuven--before-section-time'."
           company csv-mode dictionary dired+ dired-single ess
           fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
           helm htmlize idle-require info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager rainbow-mode redo+ tidy
-          unbound yasnippet
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          redo+ tidy unbound yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -8918,7 +8918,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140901.1433]--")
+(message "* --[ Loaded Emacs Leuven 20140901.1459]--")
 
 (provide 'emacs-leuven)
 
