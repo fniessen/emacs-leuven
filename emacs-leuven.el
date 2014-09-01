@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140829.1824
+;; Version: 20140901.0923
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140829.1824]--")
+(message "* --[ Loading Emacs Leuven 20140901.0923]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `loop' and
@@ -288,6 +288,10 @@ Last time is saved in global variable `leuven--before-section-time'."
     (list 'if running-ms-windows
           (cons 'progn body)))
 
+  (defmacro Cygwin (&rest body)
+    (list 'if running-cygwin
+          (cons 'progn body)))
+
   (defmacro GNULinux (&rest body)
     (list 'if running-gnu-linux
           (cons 'progn body)))
@@ -415,7 +419,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
           helm helm-R htmlize idle-require info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors org-mime pager rainbow-mode
-          redo+ sml-modeline tidy yasnippet
+          redo+ sml-modeline tidy unbound yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -8053,6 +8057,9 @@ up before you execute another command."
 
   (leuven--section "Utilities -- ESS")
 
+  (Cygwin
+    (setq ess-program-files "c:/PROGRA~2")) ; XXX What if we use R from Cygwin?
+
   ;; ESS: Emacs Speaks Statistics
   (autoload 'R "ess-site"
     "Call 'R', the 'GNU S' system from the R Foundation." t)
@@ -8911,7 +8918,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140829.1825]--")
+(message "* --[ Loaded Emacs Leuven 20140901.0924]--")
 
 (provide 'emacs-leuven)
 

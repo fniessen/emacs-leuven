@@ -398,6 +398,10 @@ distro) without impacting on stuff you have added by hand.
     (list 'if running-ms-windows
           (cons 'progn body)))
 
+  (defmacro Cygwin (&rest body)
+    (list 'if running-cygwin
+          (cons 'progn body)))
+
   (defmacro GNULinux (&rest body)
     (list 'if running-gnu-linux
           (cons 'progn body)))
@@ -570,7 +574,7 @@ outages).
           fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
           helm helm-R htmlize idle-require info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors org-mime pager rainbow-mode
-          redo+ sml-modeline tidy yasnippet
+          redo+ sml-modeline tidy unbound yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -12799,6 +12803,9 @@ See:
 
 #+begin_src emacs-lisp
   (leuven--section "Utilities -- ESS")
+
+  (Cygwin
+    (setq ess-program-files "c:/PROGRA~2")) ; XXX What if we use R from Cygwin?
 
   ;; ESS: Emacs Speaks Statistics
   (autoload 'R "ess-site"

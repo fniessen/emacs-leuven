@@ -1294,7 +1294,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140829.1825</span>
+"org-comment">Version: 20140901.0924</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1417,7 +1417,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140829.1825]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140901.0924]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -1938,6 +1938,12 @@
           (cons 'progn body)))
 
   (<span class="org-keyword">defmacro</span> <span class=
+"org-function-name">Cygwin</span> (<span class=
+"org-type">&amp;rest</span> body)
+    (list 'if running-cygwin
+          (cons 'progn body)))
+
+  (<span class="org-keyword">defmacro</span> <span class=
 "org-function-name">GNULinux</span> (<span class=
 "org-type">&amp;rest</span> body)
     (list 'if running-gnu-linux
@@ -2230,7 +2236,7 @@
           fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
           helm helm-R htmlize idle-require info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors org-mime pager rainbow-mode
-          redo+ sml-modeline tidy yasnippet
+          redo+ sml-modeline tidy unbound yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">jabber multi-term paredit redshank w3m</span>
           )
@@ -22995,6 +23001,13 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
               <pre class="src src-emacs-lisp">
   (leuven--section <span class="org-string">"Utilities -- ESS"</span>)
 
+  (Cygwin
+    (setq ess-program-files <span class=
+"org-string">"c:/PROGRA~2"</span>)) <span class=
+"org-comment-delimiter">; </span><span class="org-comment"><span class=
+"org-leuven-highlight">XXX</span></span><span class=
+"org-comment"> What if we use R from Cygwin?</span>
+
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">ESS: Emacs Speaks Statistics</span>
   (autoload 'R <span class="org-string">"ess-site"</span>
@@ -25491,7 +25504,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140829.1826]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140901.0925]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
