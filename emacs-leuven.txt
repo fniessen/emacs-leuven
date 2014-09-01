@@ -571,9 +571,9 @@ outages).
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
           company csv-mode dictionary dired+ dired-single ess
           fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
-          helm helm-R htmlize idle-require info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors org-mime pager rainbow-mode
-          redo+ sml-modeline tidy unbound yasnippet
+          helm htmlize idle-require info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager rainbow-mode redo+ tidy
+          unbound yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -1780,6 +1780,13 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
 
     (sml-modeline-mode))
 #+end_src
+
+#+begin_src emacs-lisp
+  ;; theme `smart-mode-line' should use
+  (setq sml/theme 'respectful)
+#+end_src
+
+XXX See Emacs Powerline!!!
 
 ** How Text Is Displayed
 
@@ -3985,7 +3992,9 @@ See ~(display-pixel-width)~:
   (leuven--section "21.12 (emacs)Scroll Bars")
 
   (if (and (display-graphic-p)
-           (fboundp 'sml-modeline-mode))
+           (or (featurep 'sml-modeline)
+               (featurep 'smart-mode-line)
+               (featurep 'powerline)))
 
       ;; turn scroll bar off
       (scroll-bar-mode -1)
@@ -12973,14 +12982,6 @@ Or have it dedicated in a window.  Check out
 https://github.com/emacsmirror/dedicated.
 
 **** Interaction with Org mode
-
-**** Helm
-
-#+begin_src emacs-lisp
-    ;; helm-sources and some utilities for GNU R
-    (when (locate-library "helm")
-      (try-require 'helm-R))
-#+end_src
 
 #+begin_src emacs-lisp
 )

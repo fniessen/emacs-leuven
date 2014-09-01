@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140901.1143
+;; Version: 20140901.1432
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,11 +72,10 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140901.1143]--")
+(message "* --[ Loading Emacs Leuven 20140901.1432]--")
 
 ;; turn on Common Lisp support
-(eval-when-compile (require 'cl))       ; provide useful things like `loop' and
-                                        ; `setf'
+(eval-when-compile (require 'cl))       ; provide useful things like `setf'
 
 ;; uptimes
 (when (string-match "XEmacs" (version))
@@ -417,9 +416,9 @@ Last time is saved in global variable `leuven--before-section-time'."
         '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
           company csv-mode dictionary dired+ dired-single ess
           fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
-          helm helm-R htmlize idle-require info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors org-mime pager rainbow-mode
-          redo+ sml-modeline tidy unbound yasnippet
+          helm htmlize idle-require info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager rainbow-mode redo+ tidy
+          unbound yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -1080,6 +1079,9 @@ Last time is saved in global variable `leuven--before-section-time'."
     (setq sml-modeline-len 10)
 
     (sml-modeline-mode))
+
+  ;; theme `smart-mode-line' should use
+  (setq sml/theme 'respectful)
 
 ;;** 14.19 How (info "(emacs)Text Display")ed
 
@@ -2524,7 +2526,9 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "21.12 (emacs)Scroll Bars")
 
   (if (and (display-graphic-p)
-           (fboundp 'sml-modeline-mode))
+           (or (featurep 'sml-modeline)
+               (featurep 'smart-mode-line)
+               (featurep 'powerline)))
 
       ;; turn scroll bar off
       (scroll-bar-mode -1)
@@ -8095,10 +8099,6 @@ up before you execute another command."
     (autoload 'ess-rdired "ess-rdired"
       "View *R* objects in a dired-like buffer." t)
 
-    ;; helm-sources and some utilities for GNU R
-    (when (locate-library "helm")
-      (try-require 'helm-R))
-
 )
 
 ;;* Proced
@@ -8918,7 +8918,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140901.1143]--")
+(message "* --[ Loaded Emacs Leuven 20140901.1433]--")
 
 (provide 'emacs-leuven)
 
