@@ -357,17 +357,14 @@ distro) without impacting on stuff you have added by hand.
 * Environment
 
 #+begin_src emacs-lisp :tangle no
-(list system-configuration system-type window-system)
+(list system-type window-system)
 #+end_src
 
 #+results:
-| i386-mingw-nt5.1.2600 | windows-nt | w32 |
+| cygwin | w32 |
 
 - ~system-type~ ::
      ~darwin~, ~gnu/linux~, ~cygwin~.
-
-- ~system-configuration~ ::
-     ~i686-pc-linux-gnu~, ~i686-pc-cygwin~.
 
 - ~window-system~ ::
      ~nil~, ~w32~, ~x~, ~mac~.  Use ~(display-graphic-p)~ in conditions.
@@ -381,51 +378,42 @@ distro) without impacting on stuff you have added by hand.
 
   (leuven--section "Type of OS")
 
-  (defconst running-ms-windows
-    (eq system-type 'windows-nt)
-    "Running a native Microsoft Windows version of Emacs.")
-
-  (defconst running-cygwin
-    (eq system-type 'cygwin)
-    "Running a Cygwin version of Emacs.")
-
-  (defconst running-gnu-linux
+  (defconst linuxp
     (eq system-type 'gnu/linux)
     "Running a GNU/Linux version of Emacs.")
 
-  (defmacro MSWindows (&rest body)
-    (list 'if running-ms-windows
-          (cons 'progn body)))
+  (defconst macp
+    (eq system-type 'darwin)
+    "Running a Mac OS version of Emacs.")
 
-  (defmacro Cygwin (&rest body)
-    (list 'if running-cygwin
-          (cons 'progn body)))
+  (defconst win32p
+    (eq system-type 'windows-nt)
+    "Running a native Microsoft Windows version of Emacs.")
 
-  (defmacro GNULinux (&rest body)
-    (list 'if running-gnu-linux
-          (cons 'progn body)))
-
-;;** Window system
-
-  (leuven--section "Window system")
-
-  (defconst running-x-window
-    (eq window-system 'x)
-    "Running X Window System.")
-
-  (defmacro XWindow (&rest body)
-    "Execute any number of forms if running X Window System."
-    (list 'if running-x-window
-          (cons 'progn body)))
+  (defconst cygwinp
+    (eq system-type 'cygwin)
+    "Running a Cygwin version of Emacs.")
 
 ;;** MS Windows
 
   ;; FIXME The path is not correct under Cygwin Emacs (gsprint.exe not found)
   (defconst windows-program-files-dir   ; sys-path
-    (if running-ms-windows
+    (if win32p
         (file-name-as-directory (getenv "PROGRAMFILES"))
       "/usr/local/bin/")
     "Defines the default Windows Program Files folder.")
+
+;;** Window system
+
+  (leuven--section "Window system")
+
+  (defconst consolep
+    (eq window-system nil)
+    "Running a character-only terminal.")
+
+  (defconst x-window-p
+    (eq window-system 'x)
+    "Running a X Window system.")
 
 ;;** Testing Emacs versions
 
@@ -1004,7 +992,7 @@ Emacs).
   (with-eval-after-load "info"
     ;; list of directories to search for Info documentation files (in the order
     ;; they are listed)
-    (when running-ms-windows
+    (when win32p
       (setq Info-directory-list
             `(,(expand-file-name
                 (concat (file-name-directory (locate-library "org"))
@@ -3010,7 +2998,7 @@ machine editing your cron file on the remote.
 
     ;; default transfer method
     (setq tramp-default-method          ; [default: "scp"]
-          (cond (running-ms-windows
+          (cond (win32p
                  ;; (issues with Cygwin `ssh' which does not cooperate
                  ;; with Emacs processes -> use `plink' from PuTTY, it
                  ;; definitely does work under Windows)
@@ -3055,7 +3043,7 @@ machine editing your cron file on the remote.
 
     ;; string used for end of line in rsh connections
     (setq tramp-rsh-end-of-line         ; [default: "\n"]
-          (cond (running-ms-windows "\n")
+          (cond (win32p "\n")
                 (t "\r")))
 
 ;;** 4.16 (info "(tramp)Auto-save and Backup") configuration
@@ -3315,7 +3303,7 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
       ;; various functions for Helm (Shell history, etc.)
       (require 'helm-misc)
 
-      (when (and running-ms-windows
+      (when (and (or win32p cygwinp)
                  (executable-find "es"))
                                         ; we could check for it in
                                         ; (concat (getenv "USERPROFILE") "/Downloads")
@@ -3918,20 +3906,20 @@ one.
 
   (leuven--section "21.7 (emacs)Frame Commands")
 
-  (XWindow
-   (defun toggle-fullscreen ()
-     "Toggle between full screen and partial screen display on X11."
-     (interactive)
-     ;; WM must support EWMH
-     ;; http://standards.freedesktop.org/wm-spec/wm-spec-latest.html
-     (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-                            '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
+  (when x-window-p
+    (defun toggle-fullscreen ()
+      "Toggle between full screen and partial screen display on X11."
+      (interactive)
+      ;; WM must support EWMH
+      ;; http://standards.freedesktop.org/wm-spec/wm-spec-latest.html
+      (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+                             '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
 
-   (global-set-key
-     (kbd "C-c z") 'toggle-fullscreen))
+    (global-set-key
+      (kbd "C-c z") 'toggle-fullscreen))
 
   (GNUEmacs
-    (when running-ms-windows
+    (when win32p
       (defun w32-maximize-frame ()
         "Maximize the current frame."
         (interactive)
@@ -4182,7 +4170,7 @@ XXX Declare PDF files as binary
   (GNUEmacs
     ;; to copy and paste to and from Emacs through the clipboard (with
     ;; coding system conversion)
-    (cond (running-ms-windows
+    (cond (win32p
            (set-selection-coding-system 'compound-text-with-extensions))
           (t
            (set-selection-coding-system 'utf-8))))
@@ -8875,7 +8863,7 @@ SumatraPDF as your PDF viewer.
 
       ;; use a saner PDF viewer (evince, SumatraPDF)
       (setcdr (assoc "^pdf$" TeX-output-view-style)
-              (cond (running-ms-windows
+              (cond (win32p
                      `("." (concat "\"" ,sumatrapdf-command "\" %o")))
                     ;; under Windows, we could open the PDF file with
                     ;; `start "" xxx.pdf' (in a command prompt)
@@ -8888,7 +8876,7 @@ SumatraPDF as your PDF viewer.
                      `("SumatraPDF"
                        (concat "\"" ,sumatrapdf-command "\" %o"))))
 
-      (when running-ms-windows
+      (when win32p
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '("SumatraPDF")))
 #+end_src
@@ -8954,7 +8942,7 @@ LaTeX file, ~preview-latex~ gives you a ~Preview~ menu.
 
         ;; path to `gs' command (for format conversions)
         (setq preview-gs-command
-          (cond (running-ms-windows
+          (cond (win32p
                  (or (executable-find "gswin32c.exe")
                      "C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"))
                                         ; default value
@@ -11495,7 +11483,7 @@ For those under Windows:
 #+begin_src emacs-lisp
     ;; open files using Windows associations
     (GNUEmacs
-      (when running-ms-windows
+      (when win32p
         (defun w32-dired-open-files-externally (&optional arg)
           "In Dired, open the marked files (or directories) with the default
         Windows tool."
@@ -12433,7 +12421,7 @@ and *replaces* it with the output from the shell command.
               (file-name-nondirectory (or (executable-find "zsh")
                                           (executable-find "bash")
                                           (executable-find "sh"))))
-            (when running-ms-windows "cmdproxy.exe")))
+            (when win32p "cmdproxy.exe")))
 
   ;; use `shell-file-name' as the default shell
   (setenv "SHELL" shell-file-name)
@@ -12803,7 +12791,7 @@ shell or term.
   ;; ;; run an inferior shell, with I/O through buffer `*shell*'
   ;; (global-set-key
   ;;   (kbd "C-c !")
-  ;;   (cond (running-ms-windows 'shell)
+  ;;   (cond (win32p 'shell)
   ;;         (t 'term)))
 
   ;; toggle to and from the `*shell*' buffer
@@ -12849,7 +12837,7 @@ with Gnus...*
 
 #+begin_src emacs-lisp
     ;; ;; let Emacs recognize Cygwin paths (e.g. /usr/local/lib)
-    ;; (when (and running-ms-windows
+    ;; (when (and win32p
     ;;            (executable-find "mount")) ; Cygwin bin directory found
     ;;   (try-require 'cygwin-mount)
     ;;   (with-eval-after-load "cygwin-mount"
@@ -12869,7 +12857,7 @@ See:
 #+begin_src emacs-lisp
   (leuven--section "Utilities -- ESS")
 
-  (Cygwin
+  (when cygwinp
     (setq ess-program-files "c:/PROGRA~2")) ; XXX What if we use R from Cygwin?
 
   ;; ESS: Emacs Speaks Statistics
@@ -13122,7 +13110,7 @@ printing on Windows.
 
     ;; name of a printer to which data is sent for printing
     (setq printer-name
-          (cond (running-ms-windows "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
+          (cond (win32p "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
                 (t t))))
 
   (defun leuven-ps-print-buffer-with-faces-query ()
@@ -13133,7 +13121,7 @@ printing on Windows.
 
   ;; generate and print a PostScript image of the buffer
   (GNUEmacs
-    (when running-ms-windows
+    (when win32p
       ;; override `Print Screen' globally used as a hotkey by Windows
       (w32-register-hot-key (kbd "<snapshot>"))
       (global-set-key
@@ -13290,7 +13278,7 @@ printing on Windows.
   (setq browse-url-browser-function
         (if (not (display-graphic-p))
             'w3m-browse-url
-          (if running-ms-windows
+          (if win32p
               'browse-url-default-windows-browser
             'browse-url-generic)))
   ;; (setq browse-url-browser-function
@@ -13305,7 +13293,7 @@ printing on Windows.
   ;; ;; name of the browser program used by `browse-url-generic'
   ;; (setq browse-url-generic-program
   ;;       (when (and (display-graphic-p)
-  ;;                  (not running-ms-windows))
+  ;;                  (not win32p))
   ;;         (executable-find "firefox"))) ; could be `google-chrome'
 
   (defun leuven--browse (url)
@@ -14006,7 +13994,7 @@ or restart your X11 to validate the modification.  I let Emacs do this for me:
 
 #+begin_src emacs-lisp
   ;; allow any scalable font
-  (when running-ms-windows
+  (when win32p
     (setq scalable-fonts-allowed t))
 #+end_src
 
