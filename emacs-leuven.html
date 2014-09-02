@@ -1292,7 +1292,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140902.1626</span>
+"org-comment">Version: 20140902.1652</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1415,7 +1415,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140902.1626]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140902.1652]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -1874,25 +1874,6 @@
       <div class="outline-text-2" id="text-5">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
-(list system-type window-system)
-</pre>
-        </div>
-
-        <dl class="org-dl">
-          <dt><code>system-type</code></dt>
-
-          <dd><code>darwin</code>, <code>gnu/linux</code>,
-          <code>cygwin</code>.</dd>
-
-          <dt><code>window-system</code></dt>
-
-          <dd><code>nil</code>, <code>w32</code>, <code>x</code>,
-          <code>mac</code>. Use <code>(display-graphic-p)</code> in
-          conditions.</dd>
-        </dl>
-
-        <div class="org-src-container">
-          <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">* Environment</span>
 
@@ -1940,7 +1921,14 @@
       <span class="org-string">"/usr/local/bin/"</span>)
     <span class=
 "org-doc">"Defines the default Windows Program Files folder."</span>)
+</pre>
+        </div>
 
+        <p>Use <code>(display-graphic-p)</code> (instead of
+        <code>window-system</code>) in conditions.</p>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** Window system</span>
 
@@ -6956,7 +6944,7 @@ M-: (executable-find "diff") RET
 "org-comment">time that the user has to be idle for, before candidates from</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">DELAYED sources are collected</span>
-      (setq helm-idle-delay 0.05)       <span class=
+      (setq helm-idle-delay 0.03)       <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">useful for sources involving heavy</span>
                                         <span class=
@@ -6975,7 +6963,7 @@ M-: (executable-find "diff") RET
 "org-comment">are collected (&gt;= `</span><span class=
 "org-constant"><span class=
 "org-comment">helm-idle-delay</span></span><span class="org-comment">')</span>
-      (setq helm-input-idle-delay 0.05) <span class=
+      (setq helm-input-idle-delay 0.03) <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">also effective for NON-DELAYED sources</span>
 
@@ -22967,12 +22955,19 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
               <pre class="src src-emacs-lisp">
   (leuven--section <span class="org-string">"Utilities -- ESS"</span>)
 
-  (<span class="org-keyword">when</span> cygwinp
-    (setq ess-program-files <span class=
-"org-string">"c:/PROGRA~2"</span>)) <span class=
+  (<span class=
+"org-keyword">when</span> cygwinp                         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
 "org-comment"> What if we use R from Cygwin?</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">safe 8.3 name for 32-bit programs</span>
+    (setq ess-program-files <span class="org-string">"c:/PROGRA~2"</span>)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">safe (no embedded blanks) 8.3 name for 64-bit programs</span>
+    (setq ess-program-files-64 <span class="org-string">"c:/PROGRA~1"</span>))
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">ESS: Emacs Speaks Statistics</span>
@@ -25446,7 +25441,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140902.1626]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140902.1652]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140902.1625
+;; Version: 20140902.1651
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140902.1625]--")
+(message "* --[ Loading Emacs Leuven 20140902.1651]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -2046,14 +2046,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       ;; time that the user has to be idle for, before candidates from
       ;; DELAYED sources are collected
-      (setq helm-idle-delay 0.05)       ; useful for sources involving heavy
+      (setq helm-idle-delay 0.03)       ; useful for sources involving heavy
                                         ; operations, so that candidates from
                                         ; the source are not retrieved
                                         ; unnecessarily if the user keeps typing
 
       ;; time that the user has to be idle for, before ALL candidates
       ;; are collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.05) ; also effective for NON-DELAYED sources
+      (setq helm-input-idle-delay 0.03) ; also effective for NON-DELAYED sources
 
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
@@ -8064,8 +8064,13 @@ up before you execute another command."
 
   (leuven--section "Utilities -- ESS")
 
-  (when cygwinp
-    (setq ess-program-files "c:/PROGRA~2")) ; XXX What if we use R from Cygwin?
+  (when cygwinp                         ; XXX What if we use R from Cygwin?
+
+    ;; safe 8.3 name for 32-bit programs
+    (setq ess-program-files "c:/PROGRA~2")
+
+    ;; safe (no embedded blanks) 8.3 name for 64-bit programs
+    (setq ess-program-files-64 "c:/PROGRA~1"))
 
   ;; ESS: Emacs Speaks Statistics
   (autoload 'R "ess-site"
@@ -8925,7 +8930,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140902.1625]--")
+(message "* --[ Loaded Emacs Leuven 20140902.1652]--")
 
 (provide 'emacs-leuven)
 

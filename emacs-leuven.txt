@@ -356,19 +356,6 @@ distro) without impacting on stuff you have added by hand.
 
 * Environment
 
-#+begin_src emacs-lisp :tangle no
-(list system-type window-system)
-#+end_src
-
-#+results:
-| cygwin | w32 |
-
-- ~system-type~ ::
-     ~darwin~, ~gnu/linux~, ~cygwin~.
-
-- ~window-system~ ::
-     ~nil~, ~w32~, ~x~, ~mac~.  Use ~(display-graphic-p)~ in conditions.
-
 #+begin_src emacs-lisp
 ;;* Environment
 
@@ -402,7 +389,11 @@ distro) without impacting on stuff you have added by hand.
         (file-name-as-directory (getenv "PROGRAMFILES"))
       "/usr/local/bin/")
     "Defines the default Windows Program Files folder.")
+#+end_src
 
+Use ~(display-graphic-p)~ (instead of ~window-system~) in conditions.
+
+#+begin_src emacs-lisp
 ;;** Window system
 
   (leuven--section "Window system")
@@ -3412,14 +3403,14 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 
       ;; time that the user has to be idle for, before candidates from
       ;; DELAYED sources are collected
-      (setq helm-idle-delay 0.05)       ; useful for sources involving heavy
+      (setq helm-idle-delay 0.03)       ; useful for sources involving heavy
                                         ; operations, so that candidates from
                                         ; the source are not retrieved
                                         ; unnecessarily if the user keeps typing
 
       ;; time that the user has to be idle for, before ALL candidates
       ;; are collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.05) ; also effective for NON-DELAYED sources
+      (setq helm-input-idle-delay 0.03) ; also effective for NON-DELAYED sources
 
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
@@ -12904,8 +12895,13 @@ See:
 #+begin_src emacs-lisp
   (leuven--section "Utilities -- ESS")
 
-  (when cygwinp
-    (setq ess-program-files "c:/PROGRA~2")) ; XXX What if we use R from Cygwin?
+  (when cygwinp                         ; XXX What if we use R from Cygwin?
+
+    ;; safe 8.3 name for 32-bit programs
+    (setq ess-program-files "c:/PROGRA~2")
+
+    ;; safe (no embedded blanks) 8.3 name for 64-bit programs
+    (setq ess-program-files-64 "c:/PROGRA~1"))
 
   ;; ESS: Emacs Speaks Statistics
   (autoload 'R "ess-site"
