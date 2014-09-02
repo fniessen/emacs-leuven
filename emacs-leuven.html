@@ -1292,7 +1292,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140902.1652</span>
+"org-comment">Version: 20140902.1717</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1415,7 +1415,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140902.1652]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140902.1717]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -22955,20 +22955,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
               <pre class="src src-emacs-lisp">
   (leuven--section <span class="org-string">"Utilities -- ESS"</span>)
 
-  (<span class=
-"org-keyword">when</span> cygwinp                         <span class=
-"org-comment-delimiter">; </span><span class=
-"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
-"org-comment"> What if we use R from Cygwin?</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">safe 8.3 name for 32-bit programs</span>
-    (setq ess-program-files <span class="org-string">"c:/PROGRA~2"</span>)
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">safe (no embedded blanks) 8.3 name for 64-bit programs</span>
-    (setq ess-program-files-64 <span class="org-string">"c:/PROGRA~1"</span>))
-
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">ESS: Emacs Speaks Statistics</span>
   (autoload 'R <span class="org-string">"ess-site"</span>
@@ -22993,9 +22979,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
             <div class="note">
               To run statistical processes under ESS, Windows users will need
-              to make sure that the directories for <code>R</code> and
-              <code>Rterm</code> are in their <code>PATH</code> environment
-              variable.
+              to make sure that the directories for <code>R</code> or
+              <code>Rterm</code> (see <code>inferior-R-program-name</code>) are
+              in their <code>PATH</code> environment variable.
             </div>
 
             <p><b>Customize</b> variables for ESS (set these variables
@@ -23010,6 +22996,30 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">new inferior ESS process appears in another window in the current frame</span>
   (setq inferior-ess-same-window nil)
+</pre>
+            </div>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  (<span class=
+"org-keyword">when</span> cygwinp                         <span class=
+"org-comment-delimiter">; </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
+"org-comment"> What if we use R from Cygwin?</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">safe 8.3 name for 32-bit programs</span>
+    (setq ess-program-files <span class="org-string">"c:/PROGRA~2"</span>)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">safe 8.3 name for 64-bit programs</span>
+    (setq ess-program-files-64 <span class="org-string">"c:/PROGRA~1"</span>)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">program name for invoking an inferior ESS with `M-x R'</span>
+    (setq inferior-R-program-name
+          <span class=
+"org-string">"C:/Program Files/R/R-3.1.0/bin/i386/Rterm.exe"</span>))
 </pre>
             </div>
 
@@ -25441,7 +25451,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140902.1652]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140902.1717]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

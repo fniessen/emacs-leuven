@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140902.1651
+;; Version: 20140902.1716
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140902.1651]--")
+(message "* --[ Loading Emacs Leuven 20140902.1716]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -8064,14 +8064,6 @@ up before you execute another command."
 
   (leuven--section "Utilities -- ESS")
 
-  (when cygwinp                         ; XXX What if we use R from Cygwin?
-
-    ;; safe 8.3 name for 32-bit programs
-    (setq ess-program-files "c:/PROGRA~2")
-
-    ;; safe (no embedded blanks) 8.3 name for 64-bit programs
-    (setq ess-program-files-64 "c:/PROGRA~1"))
-
   ;; ESS: Emacs Speaks Statistics
   (autoload 'R "ess-site"
     "Call 'R', the 'GNU S' system from the R Foundation." t)
@@ -8086,6 +8078,18 @@ up before you execute another command."
 
   ;; new inferior ESS process appears in another window in the current frame
   (setq inferior-ess-same-window nil)
+
+  (when cygwinp                         ; XXX What if we use R from Cygwin?
+
+    ;; safe 8.3 name for 32-bit programs
+    (setq ess-program-files "c:/PROGRA~2")
+
+    ;; safe 8.3 name for 64-bit programs
+    (setq ess-program-files-64 "c:/PROGRA~1")
+
+    ;; program name for invoking an inferior ESS with `M-x R'
+    (setq inferior-R-program-name
+          "C:/Program Files/R/R-3.1.0/bin/i386/Rterm.exe"))
 
   ;; accented characters on graphics
   (add-to-list 'process-coding-system-alist
@@ -8930,7 +8934,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140902.1652]--")
+(message "* --[ Loaded Emacs Leuven 20140902.1717]--")
 
 (provide 'emacs-leuven)
 
