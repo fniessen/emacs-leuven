@@ -409,7 +409,7 @@ distro) without impacting on stuff you have added by hand.
 
   (defconst consolep
     (eq window-system nil)
-    "Running a character-only terminal.")
+    "Running a text-only terminal.")
 
   (defconst x-window-p
     (eq window-system 'x)
@@ -1767,6 +1767,8 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
     ;; mode line indicator total length
     (setq sml-modeline-len 10)
 
+    (setq sml/no-confirm-load-theme t)
+
     (sml-modeline-mode))
 #+end_src
 
@@ -1778,7 +1780,7 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
 See Emacs Powerline.
 
 #+begin_src emacs-lisp
-  (powerline-default-theme)
+  (add-hook 'after-init-hook 'powerline-default-theme)
 #+end_src
 
 ** How Text Is Displayed
@@ -3246,6 +3248,35 @@ I think helm-find-files is much better than stock ido-find-file or even ido-find
   externally, switch to eshell, grep, diff...
 - Helm is compatible with both Linux and Windows path. Ido can't; you have to
   drop into stock find-file.
+
+In `helm-find-file', you may want to try using the left arrow to go to the
+parent directory!
+
+Grep in Helm is interactive, unlike the stock grep/rgrep. Demo:
+http://tuhdo.github.io/static/live_grep.gif
+
+No package does any of this:
+
+- Live grep: http://tuhdo.github.io/static/live_grep.gif
+- A live outline tree for jumping to function/variable in current file:
+
++ Demo 1: http://tuhdo.github.io/static/part3/helm-semantic-or-imenu.gif
++ Demo 2:
+https://cloud.githubusercontent.com/assets/4818719/4102208/cda8f392-311e-11e4-9c83-e68df38ef68e.gif
+
+- Show local/global mark ring with nice highlighting of major modes:
+http://tuhdo.github.io/static/part3/helm-all-mark-rings.gif
+
+- Interactively select color and faces: http://tuhdo.github.io/static/part3/helm-color.gif
+
+- Interactive Eshell history, certainly superior to the stock C-c C-l:
+http://tuhdo.github.io/static/part3/helm-eshell-history.gif . I store a large
+amount of eshell/shell history, so I want a quick way to narrow down.
+
+helm-find-files can even find file at point. That is, you don't need to remember
+ffap as well. If you write Emacs lisp, move point over the required file and
+execute helm-find-files, it will prompt the file location and you simply RET to
+enter. All in once nice package.
 
 With ~helm-M-x~, to pass prefix arguments to the command you want to run, you
 have to type ~C-u~ *after* typing ~M-x~.
@@ -8285,6 +8316,18 @@ For security reasons, evaluation is not turned on by default.
     (setq org-confirm-babel-evaluate nil))
 #+end_src
 
+#+begin_src emacs-lisp :eval yes
+  ;; change the color of code blocks while they are being executed
+  (defadvice org-babel-execute-src-block (around progress nil activate)
+    (set-face-attribute 'org-block-background nil :background "PaleVioletRed1")
+    (message "Evaluating code block...")
+    ad-do-it
+    (set-face-attribute 'org-block-background nil :background "#FFFFE0"))
+#+end_src
+
+#+results:
+: org-babel-execute-src-block
+
 *** A cleaner outline view
 
 #+begin_src emacs-lisp
@@ -13280,11 +13323,15 @@ printing on Windows.
 
   ;; default browser started when you click on some URL in the buffer
   (setq browse-url-browser-function
-        (if (not (display-graphic-p))
-            'w3m-browse-url
-          (if win32p
-              'browse-url-default-windows-browser
-            'browse-url-generic)))
+        (cond ((or win32p cygwinp)
+               'browse-url-default-windows-browser)
+              (macp
+               'browse-url-default-macosx-browser)
+              ((not (display-graphic-p)) ; console
+               'w3m-browse-url)
+              (t
+               'browse-url-generic)))
+
   ;; (setq browse-url-browser-function
   ;;       '(("file:///usr/share/doc/hyperspec/" . w3m-browse-url)
   ;;         ("emacswiki.org" . w3m-browse-url)

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140902.1520
+;; Version: 20140902.1625
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140902.1520]--")
+(message "* --[ Loading Emacs Leuven 20140902.1625]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -302,7 +302,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (defconst consolep
     (eq window-system nil)
-    "Running a character-only terminal.")
+    "Running a text-only terminal.")
 
   (defconst x-window-p
     (eq window-system 'x)
@@ -1070,12 +1070,14 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; mode line indicator total length
     (setq sml-modeline-len 10)
 
+    (setq sml/no-confirm-load-theme t)
+
     (sml-modeline-mode))
 
   ;; theme `smart-mode-line' should use
   (setq sml/theme 'respectful)
 
-  (powerline-default-theme)
+  (add-hook 'after-init-hook 'powerline-default-theme)
 
 ;;** 14.19 How (info "(emacs)Text Display")ed
 
@@ -5403,6 +5405,13 @@ this with to-do items than with projects or headings."
     ;;!! don't be prompted on every code block evaluation
     (setq org-confirm-babel-evaluate nil))
 
+  ;; change the color of code blocks while they are being executed
+  (defadvice org-babel-execute-src-block (around progress nil activate)
+    (set-face-attribute 'org-block-background nil :background "PaleVioletRed1")
+    (message "Evaluating code block...")
+    ad-do-it
+    (set-face-attribute 'org-block-background nil :background "#FFFFE0"))
+
 ;;** 15.8 A (info "(org)Clean view")
 
   (with-eval-after-load "org"
@@ -8303,11 +8312,15 @@ up before you execute another command."
 
   ;; default browser started when you click on some URL in the buffer
   (setq browse-url-browser-function
-        (if (not (display-graphic-p))
-            'w3m-browse-url
-          (if win32p
-              'browse-url-default-windows-browser
-            'browse-url-generic)))
+        (cond ((or win32p cygwinp)
+               'browse-url-default-windows-browser)
+              (macp
+               'browse-url-default-macosx-browser)
+              ((not (display-graphic-p)) ; console
+               'w3m-browse-url)
+              (t
+               'browse-url-generic)))
+
   ;; (setq browse-url-browser-function
   ;;       '(("file:///usr/share/doc/hyperspec/" . w3m-browse-url)
   ;;         ("emacswiki.org" . w3m-browse-url)
@@ -8912,7 +8925,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140902.1521]--")
+(message "* --[ Loaded Emacs Leuven 20140902.1625]--")
 
 (provide 'emacs-leuven)
 

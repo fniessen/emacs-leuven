@@ -1292,7 +1292,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140902.1521</span>
+"org-comment">Version: 20140902.1626</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1415,7 +1415,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140902.1521]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140902.1626]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -1949,7 +1949,7 @@
   (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">consolep</span>
     (eq window-system nil)
-    <span class="org-doc">"Running a character-only terminal."</span>)
+    <span class="org-doc">"Running a text-only terminal."</span>)
 
   (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">x-window-p</span>
@@ -4263,6 +4263,8 @@
 "org-comment">mode line indicator total length</span>
     (setq sml-modeline-len 10)
 
+    (setq sml/no-confirm-load-theme t)
+
     (sml-modeline-mode))
 </pre>
           </div>
@@ -4281,7 +4283,7 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (powerline-default-theme)
+  (add-hook 'after-init-hook 'powerline-default-theme)
 </pre>
           </div>
         </div>
@@ -6652,6 +6654,67 @@ M-: (executable-find "diff") RET
               <li>Helm is compatible with both Linux and Windows path. Ido
               can’t; you have to drop into stock find-file.</li>
             </ul>
+
+            <p>In `helm-find-file’, you may want to try using the left arrow to
+            go to the parent directory!</p>
+
+            <p>Grep in Helm is interactive, unlike the stock grep/rgrep. Demo:
+            <img src="http://tuhdo.github.io/static/live_grep.gif" alt=
+            "live_grep.gif" /></p>
+
+            <p>No package does any of this:</p>
+
+            <ul class="org-ul">
+              <li>Live grep: <img src=
+              "http://tuhdo.github.io/static/live_grep.gif" alt=
+              "live_grep.gif" /></li>
+
+              <li>A live outline tree for jumping to function/variable in
+              current file:</li>
+
+              <li>Demo 1: <img src=
+              "http://tuhdo.github.io/static/part3/helm-semantic-or-imenu.gif"
+              alt="helm-semantic-or-imenu.gif" /></li>
+
+              <li>Demo 2:</li>
+            </ul>
+
+            <div class="figure">
+              <p><img src=
+              "https://cloud.githubusercontent.com/assets/4818719/4102208/cda8f392-311e-11e4-9c83-e68df38ef68e.gif"
+              alt="cda8f392-311e-11e4-9c83-e68df38ef68e.gif" /></p>
+            </div>
+
+            <ul class="org-ul">
+              <li>Show local/global mark ring with nice highlighting of major
+              modes:</li>
+            </ul>
+
+            <div class="figure">
+              <p><img src=
+              "http://tuhdo.github.io/static/part3/helm-all-mark-rings.gif"
+              alt="helm-all-mark-rings.gif" /></p>
+            </div>
+
+            <ul class="org-ul">
+              <li>Interactively select color and faces: <img src=
+              "http://tuhdo.github.io/static/part3/helm-color.gif" alt=
+              "helm-color.gif" /></li>
+
+              <li>Interactive Eshell history, certainly superior to the stock
+              C-c C-l:</li>
+            </ul>
+
+            <p><img src=
+            "http://tuhdo.github.io/static/part3/helm-eshell-history.gif" alt=
+            "helm-eshell-history.gif" /> . I store a large amount of
+            eshell/shell history, so I want a quick way to narrow down.</p>
+
+            <p>helm-find-files can even find file at point. That is, you don’t
+            need to remember ffap as well. If you write Emacs lisp, move point
+            over the required file and execute helm-find-files, it will prompt
+            the file location and you simply RET to enter. All in once nice
+            package.</p>
 
             <p>With <code>helm-M-x</code>, to pass prefix arguments to the
             command you want to run, you have to type <code>C-u</code>
@@ -15127,6 +15190,22 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">!! don't be prompted on every code block evaluation</span>
     (setq org-confirm-babel-evaluate nil))
+</pre>
+            </div>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">change the color of code blocks while they are being executed</span>
+  (<span class="org-keyword">defadvice</span> <span class=
+"org-function-name">org-babel-execute-src-block</span> (around progress nil activate)
+    (set-face-attribute 'org-block-background nil <span class=
+"org-builtin">:background</span> <span class=
+"org-string">"PaleVioletRed1"</span>)
+    (message <span class="org-string">"Evaluating code block..."</span>)
+    ad-do-it
+    (set-face-attribute 'org-block-background nil <span class=
+"org-builtin">:background</span> <span class="org-string">"#FFFFE0"</span>))
 </pre>
             </div>
           </div>
@@ -23613,11 +23692,16 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">default browser started when you click on some URL in the buffer</span>
   (setq browse-url-browser-function
-        (<span class="org-keyword">if</span> (not (display-graphic-p))
-            'w3m-browse-url
-          (<span class="org-keyword">if</span> win32p
-              'browse-url-default-windows-browser
-            'browse-url-generic)))
+        (<span class="org-keyword">cond</span> ((or win32p cygwinp)
+               'browse-url-default-windows-browser)
+              (macp
+               'browse-url-default-macosx-browser)
+              ((not (display-graphic-p)) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">console</span>
+               'w3m-browse-url)
+              (t
+               'browse-url-generic)))
+
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(setq browse-url-browser-function</span>
   <span class="org-comment-delimiter">;;       </span><span class=
@@ -25362,7 +25446,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140902.1521]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140902.1626]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
