@@ -1107,7 +1107,8 @@ In other editors:
 
 #+begin_src emacs-lisp
 ;; multiple cursors for Emacs
-(when (require 'multiple-cursors)
+(try-require 'multiple-cursors)
+(with-eval-after-load "multiple-cursors"
 
   ;; add a cursor to each (continuous) line in the current region
   (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
@@ -3230,6 +3231,29 @@ example:
 - interactive occur: http://tuhdo.github.io/static/part3/helm-occur.gif
 - interactive kill ring: http://tuhdo.github.io/static/part3/helm-kill-ring.gif
 - interactive mark ring: http://tuhdo.github.io/helm-intro.html#sec-15
+
+I think helm-find-files is much better than stock ido-find-file or even ido-find-file because:
+
+- It has fuzzy matching by default. You have to install flx to get fuzzy
+  matching in ido.
+- Some people find that Ido horizontal listing is messy, so they create
+  `ido-vertical-mode` for cleaner looking. With Helm, you get this by default
+  with its interface. If you worry the Helm buffer is a bit big, you can always
+  customize its size.
+- It has highlighting on candidates depend on types: directory has a color,
+  plain file has a color, executable has a color, shell script has a color.
+- Depends on what file type your highlighting candidate is, Helm opens it
+  appropriately. For example, if you RET on a directory, Helm opens dired; if
+  you RET on a file, Helm opens that file. You can also customize the
+  application to open the files. Stock find-file at least can open directory;
+  Ido simply can't.
+- You can open multiple files with helm-find-files by marking with C-SPC and
+  press RET. If you want to everything at current directory, you can use M-a to
+  mark all then RET. You can even use wildcard expression like stock find-file
+- Helm has a list of actions to apply on your files: checksum file, open file
+  externally, switch to eshell, grep, diff...
+- Helm is compatible with both Linux and Windows path. Ido can't; you have to
+  drop into stock find-file.
 
 With ~helm-M-x~, to pass prefix arguments to the command you want to run, you
 have to type ~C-u~ *after* typing ~M-x~.

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140901.1458
+;; Version: 20140902.1221
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140901.1458]--")
+(message "* --[ Loading Emacs Leuven 20140902.1221]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -707,7 +707,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   (delete-selection-mode 1)
 
 ;; multiple cursors for Emacs
-(when (require 'multiple-cursors)
+(try-require 'multiple-cursors)
+(with-eval-after-load "multiple-cursors"
 
   ;; add a cursor to each (continuous) line in the current region
   (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
@@ -8918,7 +8919,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140901.1459]--")
+(message "* --[ Loaded Emacs Leuven 20140902.1222]--")
 
 (provide 'emacs-leuven)
 
