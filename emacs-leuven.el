@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140902.1516
+;; Version: 20140902.1520
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140902.1516]--")
+(message "* --[ Loading Emacs Leuven 20140902.1520]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1074,6 +1074,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; theme `smart-mode-line' should use
   (setq sml/theme 'respectful)
+
+  (powerline-default-theme)
 
 ;;** 14.19 How (info "(emacs)Text Display")ed
 
@@ -8910,7 +8912,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140902.1517]--")
+(message "* --[ Loaded Emacs Leuven 20140902.1521]--")
 
 (provide 'emacs-leuven)
 

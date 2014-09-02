@@ -1775,7 +1775,11 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
   (setq sml/theme 'respectful)
 #+end_src
 
-XXX See Emacs Powerline!!!
+See Emacs Powerline.
+
+#+begin_src emacs-lisp
+  (powerline-default-theme)
+#+end_src
 
 ** How Text Is Displayed
 
