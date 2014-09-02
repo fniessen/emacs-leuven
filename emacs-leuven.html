@@ -1292,7 +1292,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140902.1507</span>
+"org-comment">Version: 20140902.1517</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1415,7 +1415,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140902.1507]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140902.1517]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -7655,9 +7655,8 @@ M-: (executable-find "diff") RET
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">title bar display of visible frames</span>
   (setq frame-title-format
-        (format <span class="org-string">"Emacs %s%s of %s - PID: %d"</span>
-                <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(capitalize (symbol-name system-type))</span>
+        (format <span class="org-string">"%s Emacs %s%s of %s - PID: %d"</span>
+                (capitalize (symbol-name system-type))
                 emacs-version
                 (<span class=
 "org-keyword">if</span> (and (boundp 'emacs-repository-version)
@@ -25357,7 +25356,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140902.1508]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140902.1517]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

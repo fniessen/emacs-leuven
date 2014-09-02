@@ -3867,8 +3867,8 @@ one.
 #+begin_src emacs-lisp
   ;; title bar display of visible frames
   (setq frame-title-format
-        (format "Emacs %s%s of %s - PID: %d"
-                ;; (capitalize (symbol-name system-type))
+        (format "%s Emacs %s%s of %s - PID: %d"
+                (capitalize (symbol-name system-type))
                 emacs-version
                 (if (and (boundp 'emacs-repository-version)
                          emacs-repository-version)
