@@ -8334,9 +8334,7 @@ For security reasons, evaluation is not turned on by default.
     "Create an overlay indicating when code block is running."
     (let ((ol (make-overlay (org-element-property :begin (org-element-at-point))
                             (org-element-property :end (org-element-at-point)))))
-      (overlay-put ol 'face '(foreground-color . "blue"))
-      ;; (set-face-attribute 'org-block-background nil :background "PaleVioletRed1")
-      (message "Evaluating code block...")
+      (overlay-put ol 'face '(background-color . "thistle1"))
       ad-do-it
       (delete-overlay ol)))
 #+end_src

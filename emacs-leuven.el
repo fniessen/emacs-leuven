@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140903.1111
+;; Version: 20140903.1125
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140903.1111]--")
+(message "* --[ Loading Emacs Leuven 20140903.1125]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -5410,9 +5410,7 @@ this with to-do items than with projects or headings."
     "Create an overlay indicating when code block is running."
     (let ((ol (make-overlay (org-element-property :begin (org-element-at-point))
                             (org-element-property :end (org-element-at-point)))))
-      (overlay-put ol 'face '(foreground-color . "blue"))
-      ;; (set-face-attribute 'org-block-background nil :background "PaleVioletRed1")
-      (message "Evaluating code block...")
+      (overlay-put ol 'face '(background-color . "thistle1"))
       ad-do-it
       (delete-overlay ol)))
 
@@ -8939,7 +8937,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140903.1111]--")
+(message "* --[ Loaded Emacs Leuven 20140903.1125]--")
 
 (provide 'emacs-leuven)
 
