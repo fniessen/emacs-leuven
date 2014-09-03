@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140903.1137
+;; Version: 20140903.1227
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140903.1137]--")
+(message "* --[ Loading Emacs Leuven 20140903.1227]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -456,18 +456,21 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 )                                       ; chapter 47 ends here
 
-  (if (try-require 'idle-require)
+  ;; load elisp libraries while Emacs is idle
+  (try-require 'idle-require)
 
-      (progn
-        ;; idle time in seconds after which autoload functions will be loaded
-        (setq idle-require-idle-delay 5)
-
-        ;; time in seconds between automatically loaded functions
-        (setq idle-require-load-break 2))
-
-    ;; fail-safe for `idle-require'
+  ;; fail-safe for `idle-require'
+  (if (not (featurep 'idle-require))
     (defun idle-require (feature &optional file noerror)
       (try-require feature)))
+
+  (with-eval-after-load "idle-require"
+
+    ;; idle time in seconds after which autoload functions will be loaded
+    (setq idle-require-idle-delay 5)
+
+    ;; time in seconds between automatically loaded functions
+    (setq idle-require-load-break 2))
 
   (add-hook 'after-init-hook
             (lambda ()
@@ -493,8 +496,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 (leuven--chapter leuven-chapter-6-exiting "6 Exiting Emacs"
 
   ;; quit with Alt + F4
-  (global-set-key
-    (kbd "<M-f4>") 'save-buffers-kill-terminal)
+  (global-set-key (kbd "<M-f4>") 'save-buffers-kill-terminal)
 
 )                                       ; chapter 6 ends here
 
@@ -517,22 +519,19 @@ Last time is saved in global variable `leuven--before-section-time'."
   (setq next-line-add-newlines nil)
 
   ;; print the current buffer line number
-  (global-set-key
-    (kbd "M-G") 'what-line)
+  (global-set-key (kbd "M-G") 'what-line)
 
 ;;** 7.4 (info "(emacs)Basic Undo")ing Changes
 
   (leuven--section "7.4 (emacs)Basic Undoing Changes")
 
   ;; undo some previous changes
-  (global-set-key
-    (kbd "<f11>") 'undo)
+  (global-set-key (kbd "<f11>") 'undo)
 
   ;; redo the most recent undo
   (when (locate-library "redo+")
     (autoload 'redo "redo+" "Redo the the most recent undo." t)
-    (global-set-key
-      (kbd "<S-f11>") 'redo))
+    (global-set-key (kbd "<S-f11>") 'redo))
 
 )                                       ; chapter 7 ends here
 
@@ -591,8 +590,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (describe-function major-mode))
 
   ;; look up subject in (the indices of the) Emacs Lisp manual
-  (global-set-key
-    (kbd "C-h E") 'elisp-index-search)
+  (global-set-key (kbd "C-h E") 'elisp-index-search)
 
 ;;** 10.4 (info "(emacs)Apropos")
 
@@ -605,16 +603,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; show variables whose name matches the pattern
   (GNUEmacs
-    (global-set-key
-      (kbd "C-h A") 'apropos-variable))
+    (global-set-key (kbd "C-h A") 'apropos-variable))
 
 ;;** 10.8 (info "(emacs)Misc Help")
 
   (leuven--section "10.8 (emacs)Misc Help")
 
   ;; enter Info documentation browser
-  (global-set-key
-    (kbd "<f1>") 'info)
+  (global-set-key (kbd "<f1>") 'info)
 
   (defun describe-symbol-at-point ()
     "Get help for the symbol at point."
@@ -628,14 +624,12 @@ Last time is saved in global variable `leuven--before-section-time'."
                  (describe-variable sym)))
         (message "nothing"))))
 
-  (global-set-key
-    (kbd "<f1>") 'describe-symbol-at-point)
+  (global-set-key (kbd "<f1>") 'describe-symbol-at-point)
 
   ;; display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
   ;; have documentation in Info)
-  (global-set-key
-    (kbd "<C-f1>") 'info-lookup-symbol)
+  (global-set-key (kbd "<C-f1>") 'info-lookup-symbol)
 
   (with-eval-after-load "info"
     ;; list of directories to search for Info documentation files (in the order
@@ -673,8 +667,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     )
 
   ;; get a Unix manual page of the item under point
-  (global-set-key
-    (kbd "<S-f1>") 'man-follow)
+  (global-set-key (kbd "<S-f1>") 'man-follow)
 
   (with-eval-after-load "man"
     ;; make the manpage the current buffer in the current window
@@ -881,10 +874,8 @@ Last time is saved in global variable `leuven--before-section-time'."
     (autoload 'pager-page-down "pager"
       "Like scroll-up, but moves a fixed amount of lines." t)
 
-    (global-set-key
-      (kbd "<prior>") 'pager-page-up)
-    (global-set-key
-      (kbd "<next>") 'pager-page-down))
+    (global-set-key (kbd "<prior>") 'pager-page-up)
+    (global-set-key (kbd "<next>") 'pager-page-down))
 
 ;;** 14.3 (info "(emacs)Auto Scrolling")
 
@@ -989,8 +980,7 @@ Last time is saved in global variable `leuven--before-section-time'."
             (unhighlight-regexp (regexp-quote cword))))))
 
     ;; emulation of Vim's `*' search
-    (global-set-key
-      (kbd "C-*") 'leuven-highlight-current-word))
+    (global-set-key (kbd "C-*") 'leuven-highlight-current-word))
 
 ;;** 14.15 (info "(emacs)Displaying Boundaries")
 
@@ -1134,8 +1124,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; switch wrap mode from "wrap long lines to next screen line" (continued
   ;; line) to "non-wrap", or vice-versa
-  (global-set-key
-    (kbd "C-c t") 'toggle-truncate-lines)
+  (global-set-key (kbd "C-c t") 'toggle-truncate-lines)
 
   ;; respect the value of `truncate-lines' in all windows less than the full
   ;; width of the frame
@@ -1242,8 +1231,7 @@ Last time is saved in global variable `leuven--before-section-time'."
          (regexp-quote isearch-string)))))
 
   ;; activate `occur' easily while at the `I-search:' prompt
-  (define-key isearch-mode-map
-    (kbd "C-o") 'leuven-isearch-occur)
+  (define-key isearch-mode-map (kbd "C-o") 'leuven-isearch-occur)
 
   (when (locate-library "color-moccur")
 
@@ -1304,10 +1292,8 @@ Last time is saved in global variable `leuven--before-section-time'."
           (ispell-buffer)))
 
     ;; key bindings (or `C-c i' prefix key binding?)
-    (global-set-key
-      (kbd "C-$") 'ispell-region-or-buffer)
-    (global-set-key
-      (kbd "C-M-$") 'ispell-change-dictionary)
+    (global-set-key (kbd "C-$") 'ispell-region-or-buffer)
+    (global-set-key (kbd "C-M-$") 'ispell-change-dictionary)
 
     ;; ;; default dictionary to use (if `ispell-local-dictionary' is nil, that
     ;; ;; is if there is no local dictionary to use in the buffer)
@@ -1399,10 +1385,8 @@ Last time is saved in global variable `leuven--before-section-time'."
            (flyspell-buffer))))
 
      ;; key bindings
-     (global-set-key
-       (kbd "C-$") 'flyspell-buffer)
-     (global-set-key
-       (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary)
+     (global-set-key (kbd "C-$") 'flyspell-buffer)
+     (global-set-key (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary)
 
      ;; spell-check your XHTML (by adding `nxml-text-face' to the list of
      ;; faces corresponding to text in programming-mode buffers)
@@ -1412,12 +1396,9 @@ Last time is saved in global variable `leuven--before-section-time'."
   (try-require "dictionary-autoloads")
   (with-eval-after-load "dictionary-autoloads"
 
-    (global-set-key
-      (kbd "C-c d s") 'dictionary-search)
-    (global-set-key
-      (kbd "C-c d l") 'dictionary-lookup-definition)
-    (global-set-key
-      (kbd "C-c d m") 'dictionary-match-words)
+    (global-set-key (kbd "C-c d s") 'dictionary-search)
+    (global-set-key (kbd "C-c d l") 'dictionary-lookup-definition)
+    (global-set-key (kbd "C-c d m") 'dictionary-match-words)
 
     (with-eval-after-load "dictionary"
 
@@ -1480,32 +1461,27 @@ Last time is saved in global variable `leuven--before-section-time'."
   (defun leuven-kmacro-turn-on-recording ()
     "Start recording a keyboard macro and toggle functionality of key binding."
     (interactive)
-    (global-set-key
-      (kbd "<S-f8>") 'leuven-kmacro-turn-off-recording)
+    (global-set-key (kbd "<S-f8>") 'leuven-kmacro-turn-off-recording)
     (kmacro-start-macro nil))
 
   (defun leuven-kmacro-turn-off-recording ()
     "Stop recording a keyboard macro and toggle functionality of key binding."
     (interactive)
-    (global-set-key
-      (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
+    (global-set-key (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
     (kmacro-end-macro nil))
 
   ;; start/stop recording a keyboard macro
-  (global-set-key
-    (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
+  (global-set-key (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
 
   ;; execute the most recent keyboard macro
-  (global-set-key
-    (kbd "<f8>") 'kmacro-call-macro)
+  (global-set-key (kbd "<f8>") 'kmacro-call-macro)
 
 ;;** 17.5 Name and (info "(emacs)Save Keyboard Macro")s
 
   (leuven--section "17.5 (emacs)Name and Save Keyboard Macros")
 
   ;; assign a name to the last keyboard macro defined
-  (global-set-key
-    (kbd "<C-f8>") 'kmacro-name-last-macro)
+  (global-set-key (kbd "<C-f8>") 'kmacro-name-last-macro)
 
 )                                       ; chapter 17 ends here
 
@@ -1534,16 +1510,14 @@ Last time is saved in global variable `leuven--before-section-time'."
                (- (float-time) find-file-time-start))))
 
   ;; visit a file
-  (global-set-key
-    (kbd "<f3>") 'find-file)
+  (global-set-key (kbd "<f3>") 'find-file)
 
 ;;** 18.3 (info "(emacs)Saving") Files
 
   (leuven--section "18.3 (emacs)Saving Files")
 
   ;; make your changes permanent
-  (global-set-key
-    (kbd "<f2>") 'save-buffer)
+  (global-set-key (kbd "<f2>") 'save-buffer)
 
   ;; make numbered backups
   (setq version-control t)
@@ -1602,8 +1576,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (message "Buffer is up to date with file on disk"))
 
   ;; key binding
-  (global-set-key
-    (kbd "<C-f12>") 'leuven-revert-buffer-without-query)
+  (global-set-key (kbd "<C-f12>") 'leuven-revert-buffer-without-query)
 
   ;; ;; enable Global Auto-Revert mode
   ;; (global-auto-revert-mode 1)           ; can generate an awful lot of network
@@ -1674,8 +1647,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (setq diff-switches "-u")
 
   ;; compare text in current window with text in next window
-  (global-set-key
-    (kbd "C-=") 'compare-windows)
+  (global-set-key (kbd "C-=") 'compare-windows)
 
 ;;** 18.10 (info "(emacs)Diff Mode")
 
@@ -1951,8 +1923,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "FFAP")
 
   ;; visit a file
-  (global-set-key
-    (kbd "<f3>") 'find-file-at-point)
+  (global-set-key (kbd "<f3>") 'find-file-at-point)
 
   ;; find file (or URL) at point
   (with-eval-after-load "ffap"
@@ -2124,14 +2095,14 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "19.2 (emacs)List Buffers")
 
   ;; rebind `C-x C-b'
-  (global-set-key
-    (kbd "C-x C-b") 'electric-buffer-list)
-  ;; `buffer-menu' moves point in the window which lists your buffers
-  ;; `electric-buffer-list' pops up a buffer describing the set of buffers
+  (global-set-key (kbd "C-x C-b") 'electric-buffer-list)
+                                        ; `buffer-menu' moves point in the
+                                        ; window which lists your buffers
+                                        ; `electric-buffer-list' pops up
+                                        ; a buffer describing the set of buffers
 
   ;; operate on buffers like Dired
-  (global-set-key
-    (kbd "C-x C-b") 'ibuffer)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
 
   (with-eval-after-load "ibuffer"
 
@@ -2228,16 +2199,15 @@ Last time is saved in global variable `leuven--before-section-time'."
     (kill-buffer nil))
 
   ;; key binding
-  (global-set-key
-    (kbd "<S-f12>") 'leuven-kill-this-buffer-without-query)
+  (global-set-key (kbd "<S-f12>") 'leuven-kill-this-buffer-without-query)
 
 ;;** 19.5 (info "(emacs)Several Buffers")
 
   (leuven--section "19.5 (emacs)Several Buffers")
 
   ;; put the current buffer at the end of the list of all buffers
-  (global-set-key
-    (kbd "<f12>") 'bury-buffer)         ; conflict when GDB'ing Emacs under
+  (global-set-key (kbd "<f12>") 'bury-buffer)
+                                        ; conflict when GDB'ing Emacs under
                                         ; Win32
 
 ;;** 19.7 (info "(emacs)Buffer Convenience") and Customization of Buffer Handling
@@ -2276,8 +2246,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "20.3 (emacs)Other Window")
 
   ;; cycle through all windows on current frame
-  (global-set-key
-    (kbd "<f6>") 'other-window)
+  (global-set-key (kbd "<f6>") 'other-window)
 
   ;; reverse operation of `C-x o' (or `f6')
   (global-set-key
@@ -2312,8 +2281,7 @@ Last time is saved in global variable `leuven--before-section-time'."
              (delete-other-windows)))))
 
   ;; delete all windows in the selected frame except the selected window
-  (global-set-key
-    (kbd "<f5>") 'leuven-delete-other-windows)
+  (global-set-key (kbd "<f5>") 'leuven-delete-other-windows)
 
   ;; swap 2 windows
   (defun leuven-swap-windows ()
@@ -2333,8 +2301,7 @@ Last time is saved in global variable `leuven--before-section-time'."
              (set-window-start wind-1 start-2)
              (set-window-start wind-2 start-1)))))
 
-  (global-set-key
-    (kbd "C-c ~") 'leuven-swap-windows)
+  (global-set-key (kbd "C-c ~") 'leuven-swap-windows)
 
   (defun leuven-toggle-window-split ()
     "Toggle between vertical and horizontal split.
@@ -2366,8 +2333,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                (select-window first-win)
                (if this-win-2nd (other-window 1)))))))
 
-  (global-set-key
-    (kbd "C-c |") 'leuven-toggle-window-split)
+  (global-set-key (kbd "C-c |") 'leuven-toggle-window-split)
 
 ;;** 20.6 (info "(emacs)Displaying Buffers")
 
@@ -2453,8 +2419,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                              '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
 
-    (global-set-key
-      (kbd "C-c z") 'toggle-fullscreen))
+    (global-set-key (kbd "C-c z") 'toggle-fullscreen))
 
   (GNUEmacs
     (when win32p
@@ -2462,18 +2427,15 @@ Last time is saved in global variable `leuven--before-section-time'."
         "Maximize the current frame."
         (interactive)
         (w32-send-sys-command 61488)
-        (global-set-key
-          (kbd "C-c z") 'w32-restore-frame))
+        (global-set-key (kbd "C-c z") 'w32-restore-frame))
 
-      (global-set-key
-        (kbd "C-c z") 'w32-maximize-frame)
+      (global-set-key (kbd "C-c z") 'w32-maximize-frame)
 
       (defun w32-restore-frame ()
         "Restore a minimized frame."
         (interactive)
         (w32-send-sys-command 61728)
-        (global-set-key
-          (kbd "C-c z") 'w32-maximize-frame))))
+        (global-set-key (kbd "C-c z") 'w32-maximize-frame))))
 
 ;;** 21.9 (info "(emacs)Speedbar")
 
@@ -2498,10 +2460,8 @@ Last time is saved in global variable `leuven--before-section-time'."
        ".w" "README"))
 
     ;; bind the arrow keys in the speedbar tree
-    (define-key speedbar-mode-map
-      (kbd "<right>") 'speedbar-expand-line)
-    (define-key speedbar-mode-map
-      (kbd "<left>") 'speedbar-contract-line)
+    (define-key speedbar-mode-map (kbd "<right>") 'speedbar-expand-line)
+    (define-key speedbar-mode-map (kbd "<left>") 'speedbar-contract-line)
 
     ;; parameters to use when creating the speedbar frame in Emacs
     (setq speedbar-frame-parameters '((width . 30)
@@ -2692,8 +2652,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; GNU Emacs default for killing back to the beginning of a word
   (XEmacs
-    (global-set-key
-      (kbd "<C-backspace>") 'backward-kill-word))
+    (global-set-key (kbd "<C-backspace>") 'backward-kill-word))
 
 ;;** 25.2 (info "(emacs)Sentences")
 
@@ -2707,8 +2666,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (interactive)
     (insert-char ?\u00A0))
 
-  (global-set-key
-    (kbd "S-SPC") 'leuven-nbsp-command)
+  (global-set-key (kbd "S-SPC") 'leuven-nbsp-command)
 
 ;;** 25.5 (info "(emacs)Filling") Text
 
@@ -2920,8 +2878,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;;     (define-key outline-minor-mode-map [(control tab)] 'org-cycle)
   ;;     (define-key outline-minor-mode-map [(shift tab)] 'org-global-cycle))) ; backtab?
 
-  (global-set-key
-    (kbd "<S-tab>") 'org-cycle) ; that works (but on level 1+)
+  (global-set-key (kbd "<S-tab>") 'org-cycle) ; that works (but on level 1+)
   ;; TODO Look at org-cycle-global and local below, they work better, but
   ;; still on level 1+
   ;; TODO Replace it by a function which alternatively does `hide-body' and
@@ -2937,8 +2894,9 @@ Last time is saved in global variable `leuven--before-section-time'."
     (interactive)
     (org-cycle t))
 
-  (global-set-key                       ; XXX ok on Emacs Lisp, not on LaTeX
-    (kbd "C-M-]") 'org-cycle-global)    ; <S-tab>?
+  (global-set-key (kbd "C-M-]") 'org-cycle-global)
+                                        ; XXX ok on Emacs Lisp, not on LaTeX
+                                        ; <S-tab>?
 
   ;; (defun org-cycle-local ()
   ;;   (interactive)
@@ -2953,8 +2911,8 @@ Last time is saved in global variable `leuven--before-section-time'."
       (beginning-of-defun))
     (org-cycle))
 
-  (global-set-key                       ; XXX ok on Emacs Lisp, not on LaTeX
-    (kbd "M-]") 'org-cycle-local)
+  (global-set-key (kbd "M-]") 'org-cycle-local)
+                                        ; XXX ok on Emacs Lisp, not on LaTeX
 
 ;; C-M-] and M-] fold the whole buffer or the current defun.
 
@@ -2964,8 +2922,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;;   (try-require 'fold-dwim-org))
 
   ;; 25.8.2
-  (global-set-key
-    (kbd "<M-f6>") 'visible-mode)
+  (global-set-key (kbd "<M-f6>") 'visible-mode)
 
 ;;** (info "(emacs-goodies-el)boxquote")
 
@@ -2977,8 +2934,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (autoload 'boxquote-region "boxquote"
       "Draw a box around the left hand side of a region bounding START and END." t)
 
-    (global-set-key
-      (kbd "C-c q") 'boxquote-region)
+    (global-set-key (kbd "C-c q") 'boxquote-region)
 
     (with-eval-after-load "boxquote"
       (setq boxquote-top-and-tail "────")
@@ -3018,25 +2974,19 @@ Last time is saved in global variable `leuven--before-section-time'."
     (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
     (add-to-list 'auto-mode-alist '("\\.org_archive\\'" . org-mode)))
 
-  (define-key global-map
-    (kbd "C-c l") 'org-store-link)
-  (define-key global-map
-    (kbd "C-c c") 'org-capture)
-  (define-key global-map
-    (kbd "C-c a") 'org-agenda)
-  (define-key global-map
-    (kbd "C-c b") 'org-switchb)
+  (define-key global-map (kbd "C-c l") 'org-store-link)
+  (define-key global-map (kbd "C-c c") 'org-capture)
+  (define-key global-map (kbd "C-c a") 'org-agenda)
+  (define-key global-map (kbd "C-c b") 'org-switchb)
 
   ;; using links outside Org
-  (global-set-key
-    (kbd "C-c L") 'org-insert-link-global)
-  (global-set-key
-    (kbd "C-c O") 'org-open-at-point-global)
+  (global-set-key (kbd "C-c L") 'org-insert-link-global)
+  (global-set-key (kbd "C-c O") 'org-open-at-point-global)
 
   (with-eval-after-load "org"
     ;; display the Org mode manual in Info mode
-    (define-key global-map
-      (kbd "C-h o") 'org-info))         ; not autoloaded
+    (define-key global-map (kbd "C-h o") 'org-info))
+                                        ; XXX not autoloaded
 
   ;; These variables need to be set before org.el is loaded...
 
@@ -3164,7 +3114,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (message "... Org Headlines")
 
     ;; insert an inline task (independent of outline hierarchy)
-    (try-require 'org-inlinetask) ; needed
+    (try-require 'org-inlinetask)       ; needed
     (with-eval-after-load "org-inlinetask"
 
       ;; initial state (TODO keyword) of inline tasks
@@ -3299,8 +3249,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           (org-reveal t)
         (org-show-siblings)))
 
-    (define-key org-mode-map
-      (kbd "C-c C-r") 'leuven-org-reveal))
+    (define-key org-mode-map (kbd "C-c C-r") 'leuven-org-reveal))
 
 ;;** (info "(org)Structure editing")
 
@@ -3345,8 +3294,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; use `C-c C-x f' to add a footnote, to go back to the message
   ;; *and* to go to a footnote
-  (global-set-key
-    (kbd "C-c C-x f") 'org-footnote-action)
+  (global-set-key (kbd "C-c C-x f") 'org-footnote-action)
 
 ;;* 3 (info "(org)Tables")
 
@@ -3753,12 +3701,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "8.4 (org)Clocking work time")
 
-  (global-set-key
-    (kbd "C-c C-x C-i") 'org-clock-in)
-  (global-set-key
-    (kbd "C-c C-x C-j") 'org-clock-goto)
-  (global-set-key
-    (kbd "C-c C-x C-o") 'org-clock-out)
+  (global-set-key (kbd "C-c C-x C-i") 'org-clock-in)
+  (global-set-key (kbd "C-c C-x C-j") 'org-clock-goto)
+  (global-set-key (kbd "C-c C-x C-o") 'org-clock-out)
 
   ;; the time clocking code for Org mode
   ;; (require 'org-clock)               ;! needed for trying to automatically
@@ -3816,8 +3761,7 @@ Last time is saved in global variable `leuven--before-section-time'."
             (org-clock-in nil))
         (org-clock-out)))
 
-    (global-set-key
-      (kbd "C-c C-x C-q") 'leuven-org-clock-in-interrupted-task)
+    (global-set-key (kbd "C-c C-x C-q") 'leuven-org-clock-in-interrupted-task)
 
     ;; 8.4.3 resolve open clocks if the user is idle more than 120 minutes
     (setq org-clock-idle-time 120)
@@ -4541,8 +4485,7 @@ From %c"
       (org-todo-list)))
 
   ;; "TODO list" without asking for a directory
-  (global-set-key
-    (kbd "<C-f3>") 'leuven-org-todo-list-current-dir)
+  (global-set-key (kbd "<C-f3>") 'leuven-org-todo-list-current-dir)
 
 ;;** 10.7 (info "(org)Exporting Agenda Views")
 
@@ -4600,8 +4543,7 @@ this with to-do items than with projects or headings."
       (org-capture 0))
 
     ;; ;; new key assignment (overrides `org-agenda-next-item')
-    ;; (define-key org-agenda-mode-map
-    ;;   "N" 'leuven-org-agenda-new)
+    ;; (define-key org-agenda-mode-map "N" 'leuven-org-agenda-new)
   )
 
 ;;* 11 (info "(org)Markup")
@@ -4708,8 +4650,7 @@ this with to-do items than with projects or headings."
     ;; libraries in this list will be loaded once the export framework is needed
     (setq org-export-backends '(ascii html icalendar latex odt))
 
-    ;; (define-key org-mode-map
-    ;;   (kbd "C-c C-e") 'org-export-dispatch)
+    ;; (define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch)
 
     ;; XXX temporary (until Org 8 is bundled within Emacs)
     (define-key org-mode-map
@@ -4752,8 +4693,7 @@ this with to-do items than with projects or headings."
               (message "PDF is up to date with Org file")))
           (beep))))
 
-    (define-key org-mode-map
-      (kbd "<f9>") 'org-save-buffer-and-do-related))
+    (define-key org-mode-map (kbd "<f9>") 'org-save-buffer-and-do-related))
 
 ;;** 12.2 (info "(org)Export options")
 
@@ -4914,8 +4854,7 @@ this with to-do items than with projects or headings."
     (setq htmlize-convert-nonascii-to-entities nil)
 
     ;; key binding
-    (global-set-key
-      (kbd "M-P") 'htmlize-buffer)
+    (global-set-key (kbd "M-P") 'htmlize-buffer)
 
     )                                   ; with-eval-after-load "htmlize" ends here
 
@@ -4925,8 +4864,7 @@ this with to-do items than with projects or headings."
       "Convert buffer to html preserving faces and view in web browser." t)
 
     ;; same key binding as Org export to HTML (open in browser)
-    (global-set-key
-      (kbd "C-c C-e h o") 'htmlize-view-buffer)
+    (global-set-key (kbd "C-c C-e h o") 'htmlize-view-buffer)
 
     ;; view current buffer as html in web browser
     (with-eval-after-load "htmlize-view"
@@ -5203,14 +5141,12 @@ this with to-do items than with projects or headings."
   ;;         (indent-region arg)))
   ;;
   ;;   ;; make `C-c C-v C-x C-M-\' more convenient
-  ;;   (define-key org-mode-map
-  ;;     (kbd "C-M-\\") 'leuven-org-indent-region))
+  ;;   (define-key org-mode-map (kbd "C-M-\\") 'leuven-org-indent-region))
 
   ;; prevent auto-filling in src blocks
   (setq org-src-prevent-auto-filling t)
 
-  (global-set-key
-    (kbd "C-c C-v C-d") 'org-babel-demarcate-block)
+  (global-set-key (kbd "C-c C-v C-d") 'org-babel-demarcate-block)
 
   (defvar only-code-overlays nil
     "Overlays hiding non-code blocks.")
@@ -5389,10 +5325,8 @@ this with to-do items than with projects or headings."
     (setq w32-pass-apps-to-system nil)
     (setq w32-apps-modifier 'hyper) ; Apps key
 
-    (define-key org-mode-map
-      (kbd "H-e") 'org-babel-execute-maybe)
-    (define-key org-mode-map
-      (kbd "H-t") 'org-babel-tangle)
+    (define-key org-mode-map (kbd "H-e") 'org-babel-execute-maybe)
+    (define-key org-mode-map (kbd "H-t") 'org-babel-tangle)
 
     )
 
@@ -5563,8 +5497,7 @@ this with to-do items than with projects or headings."
         (unless (looking-at "=") (insert-and-inherit "="))))))
 
   ;; must be in eval-after-load "org"?
-  ;; (define-key org-mode-map
-  ;;   (kbd "=") 'insert-one-equal-or-two)
+  ;; (define-key org-mode-map (kbd "=") 'insert-one-equal-or-two)
 
   (with-eval-after-load "org"
     (message "... Org Mime")
@@ -5794,8 +5727,7 @@ this with to-do items than with projects or headings."
 
       ;; rebind the "compile command" to default command from `C-c C-c'
       ;; (in LaTeX mode only)
-      (define-key LaTeX-mode-map
-        (kbd "<f9>") 'TeX-default)
+      (define-key LaTeX-mode-map (kbd "<f9>") 'TeX-default)
 
       ;; use PDF mode by default (instead of DVI)
       (setq-default TeX-PDF-mode t)
@@ -5963,13 +5895,12 @@ this with to-do items than with projects or headings."
 
     ;; remove the binding of `C-c C-x' (`nxml-insert-xml-declaration'), used
     ;; by Org timeclocking commands
-    (define-key nxml-mode-map
-      (kbd "C-c C-x") nil)
+    (define-key nxml-mode-map (kbd "C-c C-x") nil)
 
     ;; view the buffer contents in a browser
-    (define-key nxml-mode-map
-      (kbd "C-c C-v") 'browse-url-of-buffer))
-      ;; XXX (normally bound to `rng-validate-mode')
+    (define-key nxml-mode-map (kbd "C-c C-v") 'browse-url-of-buffer))
+                                        ; XXX normally bound to
+                                        ; `rng-validate-mode'
 
   ;; highlight the current SGML tag context
   (try-require 'hl-tags-mode)
@@ -6092,8 +6023,7 @@ this with to-do items than with projects or headings."
     (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
           ((looking-at "\\s\)") (forward-char 1) (backward-list 1))))
 
-  (global-set-key
-    (kbd "C-)") 'match-paren)
+  (global-set-key (kbd "C-)") 'match-paren)
 
   (electric-pair-mode 1)
 
@@ -6147,14 +6077,14 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "hideshow"
 
     ;; change those really awkward key bindings with `@' in the middle
-    (define-key hs-minor-mode-map
-      (kbd "<C-M-S-left>") 'hs-hide-block) ; `C-c @ C-h'
-    (define-key hs-minor-mode-map
-      (kbd "<C-M-S-right>") 'hs-show-block) ; `C-c @ C-s'
-    (define-key hs-minor-mode-map
-      (kbd "<C-M-S-up>") 'hs-hide-all)  ; `C-c @ C-M-h'
-    (define-key hs-minor-mode-map
-      (kbd "<C-M-S-down>") 'hs-show-all) ; `C-c @ C-M-s'
+    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") 'hs-hide-block)
+                                        ; `C-c @ C-h'
+    (define-key hs-minor-mode-map (kbd "<C-M-S-right>") 'hs-show-block)
+                                        ; `C-c @ C-s'
+    (define-key hs-minor-mode-map (kbd "<C-M-S-up>") 'hs-hide-all)
+                                        ; `C-c @ C-M-h'
+    (define-key hs-minor-mode-map (kbd "<C-M-S-down>") 'hs-show-all)
+                                        ; `C-c @ C-M-s'
 
     (defcustom hs-face 'hs-face
       "*Specify the face to to use for the hidden region indicator"
@@ -6234,8 +6164,7 @@ this with to-do items than with projects or headings."
   (autoload 'recompile "compile"
     "Re-compile the program including the current buffer." t)
 
-  (global-set-key
-    (kbd "<f9>") 'recompile)
+  (global-set-key (kbd "<f9>") 'recompile)
 
   ;; scroll the `*compilation*' buffer window to follow output as it appears
   (setq compilation-scroll-output t)
@@ -6279,8 +6208,7 @@ this with to-do items than with projects or headings."
     (save-some-buffers (not compilation-ask-about-save) nil)
     (compile-internal make-clean-command "No more errors"))
 
-  (global-set-key
-    (kbd "<S-f9>") 'make-clean)
+  (global-set-key (kbd "<S-f9>") 'make-clean)
 
 ;;** 27.2 (info "(emacs)Compilation Mode")
 
@@ -6290,16 +6218,15 @@ this with to-do items than with projects or headings."
   (setq compilation-auto-jump-to-first-error t)
 
   ;; display the next compiler error message
-  (global-set-key
-    (kbd "<f10>") 'next-error)          ; also on `C-x `' and `M-g n'
+  (global-set-key (kbd "<f10>") 'next-error)
+                                        ; also on `C-x `' and `M-g n'
 
   ;; display the previous compiler error message
-  (global-set-key
-    (kbd "<S-f10>") 'previous-error)    ; also on `M-g p'
+  (global-set-key (kbd "<S-f10>") 'previous-error)
+                                        ; also on `M-g p'
 
   ;; display the first compiler error message
-  (global-set-key
-    (kbd "<C-f10>") 'first-error)
+  (global-set-key (kbd "<C-f10>") 'first-error)
 
   ;; highlight and parse the whole compilation output as soon as it
   ;; arrives
@@ -6323,8 +6250,7 @@ this with to-do items than with projects or headings."
   (setq grep-find-use-xargs 'gnu)
 
   ;; run `grep' via `find', with user-friendly interface
-  (global-set-key
-    (kbd "C-c 3") 'rgrep)
+  (global-set-key (kbd "C-c 3") 'rgrep)
 
   ;; 10.3.5 Org keyword search
   (defun leuven-grep-org-files (regexp &optional context)
@@ -6419,8 +6345,7 @@ up before you execute another command."
       (hl-line-mode -1)
       (top-level))
 
-    (define-key edebug-mode-map
-      [remap top-level] 'leuven-edebug-quit))
+    (define-key edebug-mode-map [remap top-level] 'leuven-edebug-quit))
 
 ;;** 27.8 (info "(emacs)Lisp Libraries") for Emacs
 
@@ -6478,8 +6403,7 @@ up before you execute another command."
   ;;     (call-interactively 'lisp-complete-symbol)))
   ;;
   ;; (with-eval-after-load "lisp-mode"
-  ;;   (define-key emacs-lisp-mode-map
-  ;;     (kbd "<tab>") 'elisp-indent-or-complete))
+  ;;   (define-key emacs-lisp-mode-map (kbd "<tab>") 'elisp-indent-or-complete))
 
 )                                       ; chapter 27 ends here
 
@@ -6569,8 +6493,7 @@ up before you execute another command."
       (vc-dir dname)))
 
   ;; vc status without asking for a directory
-  (global-set-key
-    (kbd "<C-f9>") 'leuven-vc-jump)
+  (global-set-key (kbd "<C-f9>") 'leuven-vc-jump)
 
   ;; hide up-to-date and unregistered files
   (add-hook  'vc-dir-mode-hook
@@ -6669,8 +6592,7 @@ up before you execute another command."
                                                      "HEAD" nil "HEAD")
                                         ""))))))
 
-    (define-key vc-prefix-map
-      (kbd "=") 'leuven-vc-diff))
+    (define-key vc-prefix-map (kbd "=") 'leuven-vc-diff))
 
 ;;** 28.2 (info "(emacs)Change Log")
 
@@ -6717,8 +6639,7 @@ up before you execute another command."
     (with-eval-after-load "etags-select"
 
       ;; do a `find-tag-at-point', and display all exact matches
-      (global-set-key
-        (kbd "M-?") 'etags-select-find-tag-at-point)))
+      (global-set-key (kbd "M-?") 'etags-select-find-tag-at-point)))
 
   ;; find the definition of the Emacs Lisp function or variable near point
   (GNUEmacs
@@ -6973,8 +6894,7 @@ up before you execute another command."
   ;;   (setq dabbrev-case-replace nil))
 
   ;; expand text trying various ways to find its expansion
-  (global-set-key
-    (kbd "M-/") 'hippie-expand)
+  (global-set-key (kbd "M-/") 'hippie-expand)
 
   (with-eval-after-load "hippie-exp"
 
@@ -7159,11 +7079,9 @@ up before you execute another command."
     (try-require 'dired-single)
     (with-eval-after-load "dired-single"
 
-      (define-key dired-mode-map
-        (kbd "<return>") 'dired-single-buffer)
+      (define-key dired-mode-map (kbd "<return>") 'dired-single-buffer)
 
-      (define-key dired-mode-map
-        (kbd "<mouse-1>") 'dired-single-buffer-mouse)
+      (define-key dired-mode-map (kbd "<mouse-1>") 'dired-single-buffer-mouse)
 
       (define-key dired-mode-map
         (kbd "^")
@@ -7177,8 +7095,7 @@ up before you execute another command."
           (interactive)
           (dired-single-buffer ".."))))
 
-    (define-key dired-mode-map
-      (kbd "e") 'browse-url-of-dired-file) ; <C-RET>?
+    (define-key dired-mode-map (kbd "e") 'browse-url-of-dired-file) ; <C-RET>?
 
     ;; open files using Windows associations
     (GNUEmacs
@@ -7193,8 +7110,7 @@ up before you execute another command."
            (dired-get-marked-files nil arg)))
 
         ;; bind it to `E' in Dired mode
-        (define-key dired-mode-map
-          (kbd "E") 'w32-dired-open-files-externally)))
+        (define-key dired-mode-map (kbd "E") 'w32-dired-open-files-externally)))
 
     ;; open current file with w3m
     (when (executable-find "w3m")
@@ -7204,8 +7120,7 @@ up before you execute another command."
         (w3m-find-file (file-name-sans-versions (dired-get-filename) t)))
 
       ;; add a binding "W" -> `dired-find-w3m' to Dired
-      (define-key dired-mode-map
-        "W" 'dired-find-w3m))
+      (define-key dired-mode-map "W" 'dired-find-w3m))
 
 ;;** (info "(emacs)Operating on Files")
 
@@ -7238,8 +7153,7 @@ up before you execute another command."
 ;; (when Cygwin... XXX
     ;; search for files with names matching a wild card pattern and Dired
     ;; the output
-    (global-set-key
-      (kbd "C-c 1") 'find-name-dired)
+    (global-set-key (kbd "C-c 1") 'find-name-dired)
       ;; case insensitive if `read-file-name-completion-ignore-case' is non-nil
 
     ;; `find-grep-dired' case insensitivity
@@ -7247,8 +7161,7 @@ up before you execute another command."
 
     ;; search for files with contents matching a wild card pattern and Dired
     ;; the output
-    (global-set-key
-      (kbd "C-c 2") 'find-grep-dired)
+    (global-set-key (kbd "C-c 2") 'find-grep-dired)
 
 ;;** (info "(emacs)Wdired")
 
@@ -7359,10 +7272,8 @@ up before you execute another command."
   ;; fix foolish calendar-mode scrolling after loading `calendar.el'
   (add-hook 'calendar-load-hook
             (lambda ()
-              (define-key calendar-mode-map
-                (kbd ">") 'scroll-calendar-left)
-              (define-key calendar-mode-map
-                (kbd "<") 'scroll-calendar-right)))
+              (define-key calendar-mode-map (kbd ">") 'scroll-calendar-left)
+              (define-key calendar-mode-map (kbd "<") 'scroll-calendar-right)))
 
 ;;** 31.7 Times of (info "(emacs)Sunrise/Sunset")
 
@@ -7490,8 +7401,7 @@ up before you execute another command."
                         ((equal prefix '(16)) "%Y-%m-%d %a %H:%M"))))
       (insert (format-time-string format))))
 
-  (global-set-key
-    (kbd "C-c .") 'leuven-insert-current-date)
+  (global-set-key (kbd "C-c .") 'leuven-insert-current-date)
 
 ;;* Calendar view framework on Emacs
 
@@ -7609,8 +7519,7 @@ up before you execute another command."
       "Hook BBDB into `message-mode'."))
 
   ;; search the BBDB
-  (global-set-key
-    (kbd "<C-f11>") 'bbdb)
+  (global-set-key (kbd "<C-f11>") 'bbdb)
 
   (with-eval-after-load "bbdb"
 
@@ -7920,8 +7829,7 @@ up before you execute another command."
         (comint-truncate-buffer)))
 
     (with-eval-after-load "comint"
-      (define-key comint-mode-map
-        (kbd "C-c C-k") 'leuven-comint-clear-buffer))
+      (define-key comint-mode-map (kbd "C-c C-k") 'leuven-comint-clear-buffer))
 
 ;; )
 
@@ -8024,8 +7932,7 @@ up before you execute another command."
     (setq multi-term-program shell-file-name)
 
     ;; (global-set-key (kbd "C-c t") 'multi-term-next)
-    (global-set-key
-      (kbd "C-c T") 'multi-term))       ; create a new one
+    (global-set-key (kbd "C-c T") 'multi-term)) ; create a new one
 
   ;; ;; run an inferior shell, with I/O through buffer `*shell*'
   ;; (global-set-key
@@ -8119,8 +8026,7 @@ up before you execute another command."
 ;;* Proced
 
   ;; start Proced in a similar manner to Dired
-  (global-set-key
-    (kbd "C-x p") 'proced)
+  (global-set-key (kbd "C-x p") 'proced)
 
   (with-eval-after-load "proced"
 
@@ -8191,8 +8097,7 @@ up before you execute another command."
       (global-set-key
         (kbd "<snapshot>") 'leuven-ps-print-buffer-with-faces-query)))
 
-  (global-set-key
-    (kbd "M-p") 'leuven-ps-print-buffer-with-faces-query)
+  (global-set-key (kbd "M-p") 'leuven-ps-print-buffer-with-faces-query)
 
   (XEmacs
     (setq toolbar-print-function 'ps-print-buffer-with-faces))
@@ -8287,8 +8192,7 @@ up before you execute another command."
 (leuven--chapter leuven-chapter-39-sorting "39 Sorting Text"
 
   ;; key binding
-  (global-set-key
-    (kbd "C-c ^") 'sort-lines)
+  (global-set-key (kbd "C-c ^") 'sort-lines)
 
 )                                       ; chapter 39 ends here
 
@@ -8333,20 +8237,9 @@ up before you execute another command."
               (t
                'browse-url-generic)))
 
-  ;; (setq browse-url-browser-function
-  ;;       '(("file:///usr/share/doc/hyperspec/" . w3m-browse-url)
-  ;;         ("emacswiki.org" . w3m-browse-url)
-  ;;         ("lispdoc.com" . w3m-browse-url)
-  ;;         ( "." . browse-url-firefox)))
-  ;; that let me use `w3m' for EmacsWiki/Common Lisp documentation and
-  ;; Firefox otherwise.
-
-  ;; TODO Check if this is needed, or must be fixed/adapted
-  ;; ;; name of the browser program used by `browse-url-generic'
-  ;; (setq browse-url-generic-program
-  ;;       (when (and (display-graphic-p)
-  ;;                  (not win32p))
-  ;;         (executable-find "firefox"))) ; could be `google-chrome'
+  ;; name of the browser program used by `browse-url-generic'
+  (setq browse-url-generic-program (executable-find "firefox"))
+                                        ; could be `google-chrome'
 
   (defun leuven--browse (url)
     "If prefix is specified, use the system default browser, else use the
@@ -8374,72 +8267,69 @@ up before you execute another command."
 
   (leuven--section "Web search")
 
-  (when t                               ; (try-require 'browse-url)
+  (defconst leuven--google-maxlen (* 32 7)
+    "Maximum length of search string to send.
+  This prevents you from accidentally sending a 5 MB query string.")
 
-    (defconst leuven--google-maxlen (* 32 7)
-      "Maximum length of search string to send.
-    This prevents you from accidentally sending a 5 MB query string.")
+  (defun leuven-google-search ()
+    "Prompt for a query in the minibuffer, launch the web browser and
+  query Google."
+    (interactive)
+    (let ((query (read-from-minibuffer "Google Search: ")))
+      (browse-url (concat "http://www.google.com/search?q="
+                          (url-hexify-string query)))))
 
-    (defun leuven-google-search ()
-      "Prompt for a query in the minibuffer, launch the web browser and
-    query Google."
-      (interactive)
-      (let ((query (read-from-minibuffer "Google Search: ")))
-        (browse-url (concat "http://www.google.com/search?q="
-                            (url-hexify-string query)))))
+  ;; (defun google-it (search-string)
+  ;;   "Search for SEARCH-STRING on Google."
+  ;;   (interactive "sSearch for: ")
+  ;;   (browse-url (concat "http://www.google.com/search?q="
+  ;;                   (url-hexify-string
+  ;;                     (encode-coding-string search-string 'utf-8)))))
 
-    ;; (defun google-it (search-string)
-    ;;   "Search for SEARCH-STRING on Google."
-    ;;   (interactive "sSearch for: ")
-    ;;   (browse-url (concat "http://www.google.com/search?q="
-    ;;                   (url-hexify-string
-    ;;                     (encode-coding-string search-string 'utf-8)))))
+  (defun leuven-google-search-word-at-point ()
+    "Google the word at point."
+    (interactive)
+    (browse-url
+     (concat "http://www.google.com/search?q=" (find-tag-default))))
 
-    (defun leuven-google-search-word-at-point ()
-      "Google the word at point."
-      (interactive)
-      (browse-url
-       (concat "http://www.google.com/search?q=" (find-tag-default))))
+  (defun leuven-google-search-region (prefix start end)
+    "Create a search URL and send it to the web browser."
+    (interactive "P\nr")
+    (if (> (- end start) leuven--google-maxlen)
+        (message "Search string too long!")
+      (let ((query (buffer-substring-no-properties start end)))
+        (browse-url
+         (concat "http://www.google.com/search?q="
+                 (url-hexify-string query))))))
 
-    (defun leuven-google-search-region (prefix start end)
-      "Create a search URL and send it to the web browser."
-      (interactive "P\nr")
-      (if (> (- end start) leuven--google-maxlen)
-          (message "Search string too long!")
-        (let ((query (buffer-substring-no-properties start end)))
-          (browse-url
-           (concat "http://www.google.com/search?q="
-                   (url-hexify-string query))))))
-
-    ;; (defun google-search-selection ()
-    ;;   "Create a Google search URL and send it to your web browser."
-    ;;   (interactive)
-    ;;   (let (start end term url)
-    ;;     (if (or (not (fboundp 'region-exists-p)) (region-exists-p))
-    ;;         (progn
-    ;;           (setq start (region-beginning)
-    ;;                 end   (region-end))
-    ;;           (if (> (- start end) leuven--google-maxlen)
-    ;;               (setq term (buffer-substring
-    ;;                           start (+ start leuven--google-maxlen)))
-    ;;             (setq term (buffer-substring start end)))
-    ;;           (google-it term))
-    ;;       (beep)
-    ;;       (message "Region not active"))))
+  ;; (defun google-search-selection ()
+  ;;   "Create a Google search URL and send it to your web browser."
+  ;;   (interactive)
+  ;;   (let (start end term url)
+  ;;     (if (or (not (fboundp 'region-exists-p)) (region-exists-p))
+  ;;         (progn
+  ;;           (setq start (region-beginning)
+  ;;                 end   (region-end))
+  ;;           (if (> (- start end) leuven--google-maxlen)
+  ;;               (setq term (buffer-substring
+  ;;                           start (+ start leuven--google-maxlen)))
+  ;;             (setq term (buffer-substring start end)))
+  ;;           (google-it term))
+  ;;       (beep)
+  ;;       (message "Region not active"))))
 
 
-         (defun google (what)
-           "Use Google to search for WHAT."
-           (interactive "sSearch: ")
-           (save-window-excursion
-             (delete-other-windows)
-             (let ((dir default-directory))
-               (w3m-browse-url (concat "http://www.google.com/search?q="
-                                       (w3m-url-encode-string what)))
-               (cd dir)
-               (recursive-edit))))
-         (global-set-key
-           (kbd "C-c g s") 'google)
+       (defun google (what)
+         "Use Google to search for WHAT."
+         (interactive "sSearch: ")
+         (save-window-excursion
+           (delete-other-windows)
+           (let ((dir default-directory))
+             (w3m-browse-url (concat "http://www.google.com/search?q="
+                                     (w3m-url-encode-string what)))
+             (cd dir)
+             (recursive-edit))))
+       (global-set-key (kbd "C-c g s") 'google)
 
   (defun pm/region-or-word (prompt)
     "Read a string from the minibuffer, prompting with PROMPT.
@@ -8458,23 +8348,21 @@ up before you execute another command."
     (interactive (pm/region-or-word "Google: "))
     (browse-url (concat "http://google.com/search?num=100&q=" string)))
 
-    (defvar leuven--google-prefix-map (make-sparse-keymap)
-      "Keymap for my Google commands.")
+  (defvar leuven--google-prefix-map (make-sparse-keymap)
+    "Keymap for my Google commands.")
 
-    ;;     (global-set-key (kbd "M-s") 'leuven-google-search-region)
+  ;;     (global-set-key (kbd "M-s") 'leuven-google-search-region)
 
-    (global-set-key
-      (kbd "C-c g") leuven--google-prefix-map)
+  (global-set-key (kbd "C-c g") leuven--google-prefix-map)
 
-    (define-key leuven--google-prefix-map
-      (kbd "g") 'leuven-google-search)
+  (define-key leuven--google-prefix-map
+    (kbd "g") 'leuven-google-search)
 
-    (define-key leuven--google-prefix-map
-      (kbd "w") 'leuven-google-search-word-at-point)
+  (define-key leuven--google-prefix-map
+    (kbd "w") 'leuven-google-search-word-at-point)
 
-    (define-key leuven--google-prefix-map
-      (kbd "r") 'leuven-google-search-region)
-)
+  (define-key leuven--google-prefix-map
+    (kbd "r") 'leuven-google-search-region)
 
 ;;** Emacs-w3m
 
@@ -8488,7 +8376,8 @@ up before you execute another command."
     ;; I don't want `/usr/bin/w3m' (which requires `cygwin-mount')
 
     ;; `w3m' slows down the startup process dramatically
-    (unless (try-require 'w3m-autoloads)
+    (try-require 'w3m-autoloads)
+    (if (not (featurep 'w3m-autoloads))
       (autoload 'w3m "w3m"
         "Visit the WWW page using w3m." t)
       (autoload 'w3m-find-file "w3m"
@@ -8511,43 +8400,32 @@ up before you execute another command."
       ;; cursor down the lines of an HTML email (in Gnus)
       (setq w3m-minor-mode-map nil)
 
-      (define-key w3m-mode-map
-        (kbd "U") 'leuven-w3m-goto-url)
+      (define-key w3m-mode-map (kbd "U") 'leuven-w3m-goto-url)
 
       ;; fix inappropriate key bindings for moving from place to place in a page
       ;; (let the cursor keys behave normally, don't jump from link to link)
-      (define-key w3m-mode-map
-        (kbd "<up>") 'previous-line)
-      (define-key w3m-mode-map
-        (kbd "<down>") 'next-line)
-      (define-key w3m-mode-map
-        (kbd "<left>") 'backward-char)
-      (define-key w3m-mode-map
-        (kbd "<right>") 'forward-char)
+      (define-key w3m-mode-map (kbd "<up>") 'previous-line)
+      (define-key w3m-mode-map (kbd "<down>") 'next-line)
+      (define-key w3m-mode-map (kbd "<left>") 'backward-char)
+      (define-key w3m-mode-map (kbd "<right>") 'forward-char)
 
-      (define-key w3m-mode-map
-        (kbd "<tab>") 'w3m-next-anchor)
+      (define-key w3m-mode-map (kbd "<tab>") 'w3m-next-anchor)
 
       ;; moving from page to page
-      (define-key w3m-mode-map
-        (kbd "F") 'w3m-view-next-page)
+      (define-key w3m-mode-map (kbd "F") 'w3m-view-next-page)
 
 ;;*** 3.5 Using Tabs
 
-      (define-key w3m-mode-map
-        (kbd "<C-tab>") 'w3m-next-buffer)
-      (define-key w3m-mode-map
-        (kbd "<C-S-tab>") 'w3m-previous-buffer)
+      (define-key w3m-mode-map (kbd "<C-tab>") 'w3m-next-buffer)
+      (define-key w3m-mode-map (kbd "<C-S-tab>") 'w3m-previous-buffer)
 
       (defun w3m-new-tab ()
         (interactive)
         (w3m-copy-buffer nil nil nil t))
 
-      (define-key w3m-mode-map
-        (kbd "C-t") 'w3m-new-tab)
+      (define-key w3m-mode-map (kbd "C-t") 'w3m-new-tab)
 
-      (define-key w3m-mode-map
-        (kbd "C-w") 'w3m-delete-buffer)
+      (define-key w3m-mode-map (kbd "C-w") 'w3m-delete-buffer)
 
 ;;*** 5.1 General Variables
 
@@ -8619,8 +8497,7 @@ up before you execute another command."
               (when (not active) (w3m-lnum-mode))
               (w3m-view-this-url))))
 
-        (define-key w3m-mode-map
-          (kbd "f") 'leuven-w3m-go-to-link-number)
+        (define-key w3m-mode-map (kbd "f") 'leuven-w3m-go-to-link-number)
 
         ;; enable link numbering mode by default
         (add-hook 'w3m-mode-hook 'w3m-lnum-mode))
@@ -8670,8 +8547,7 @@ up before you execute another command."
   (with-eval-after-load "menu-bar"
 
     ;; get rid of the Games in the Tools menu
-    (define-key menu-bar-tools-menu
-      [games] nil))
+    (define-key menu-bar-tools-menu [games] nil))
 
 )                                       ; chapter 46 ends here
 
@@ -8859,8 +8735,7 @@ up before you execute another command."
 
   ;; divide key (needed in GNU Emacs for Windows)
   (GNUEmacs
-    (global-set-key
-      (kbd "<kp-divide>") (kbd "/")))
+    (global-set-key (kbd "<kp-divide>") (kbd "/")))
 
   ;; numeric keypad (needed in XEmacs for Windows)
   (XEmacs
@@ -8937,7 +8812,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140903.1137]--")
+(message "* --[ Loaded Emacs Leuven 20140903.1228]--")
 
 (provide 'emacs-leuven)
 
