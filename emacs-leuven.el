@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140903.1125
+;; Version: 20140903.1137
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140903.1125]--")
+(message "* --[ Loading Emacs Leuven 20140903.1137]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -6148,13 +6148,13 @@ this with to-do items than with projects or headings."
 
     ;; change those really awkward key bindings with `@' in the middle
     (define-key hs-minor-mode-map
-      (kbd "<C-S-left>") 'hs-hide-block) ; `C-c @ C-h'
+      (kbd "<C-M-S-left>") 'hs-hide-block) ; `C-c @ C-h'
     (define-key hs-minor-mode-map
-      (kbd "<C-S-right>") 'hs-show-block) ; `C-c @ C-s'
+      (kbd "<C-M-S-right>") 'hs-show-block) ; `C-c @ C-s'
     (define-key hs-minor-mode-map
-      (kbd "<C-S-up>") 'hs-hide-all)    ; `C-c @ C-M-h'
+      (kbd "<C-M-S-up>") 'hs-hide-all)  ; `C-c @ C-M-h'
     (define-key hs-minor-mode-map
-      (kbd "<C-S-down>") 'hs-show-all)  ; `C-c @ C-M-s'
+      (kbd "<C-M-S-down>") 'hs-show-all) ; `C-c @ C-M-s'
 
     (defcustom hs-face 'hs-face
       "*Specify the face to to use for the hidden region indicator"
@@ -8937,7 +8937,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140903.1125]--")
+(message "* --[ Loaded Emacs Leuven 20140903.1137]--")
 
 (provide 'emacs-leuven)
 

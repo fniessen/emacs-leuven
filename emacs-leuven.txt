@@ -9538,13 +9538,13 @@ programming modes.
 
     ;; change those really awkward key bindings with `@' in the middle
     (define-key hs-minor-mode-map
-      (kbd "<C-S-left>") 'hs-hide-block) ; `C-c @ C-h'
+      (kbd "<C-M-S-left>") 'hs-hide-block) ; `C-c @ C-h'
     (define-key hs-minor-mode-map
-      (kbd "<C-S-right>") 'hs-show-block) ; `C-c @ C-s'
+      (kbd "<C-M-S-right>") 'hs-show-block) ; `C-c @ C-s'
     (define-key hs-minor-mode-map
-      (kbd "<C-S-up>") 'hs-hide-all)    ; `C-c @ C-M-h'
+      (kbd "<C-M-S-up>") 'hs-hide-all)  ; `C-c @ C-M-h'
     (define-key hs-minor-mode-map
-      (kbd "<C-S-down>") 'hs-show-all)  ; `C-c @ C-M-s'
+      (kbd "<C-M-S-down>") 'hs-show-all) ; `C-c @ C-M-s'
 
     (defcustom hs-face 'hs-face
       "*Specify the face to to use for the hidden region indicator"
