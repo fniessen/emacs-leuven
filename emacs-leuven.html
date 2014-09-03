@@ -1292,7 +1292,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140903.1228</span>
+"org-comment">Version: 20140903.1520</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1415,7 +1415,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140903.1228]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140903.1520]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -20256,12 +20256,11 @@ TAGS:
 "org-constant"><span class="org-comment">ls</span></span><span class=
 "org-comment">' for Dired</span>
     (setq dired-listing-switches
-          <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">"-a -F --group-directories-first -l -p --time-style=long-iso"</span>
-          <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">causes display problems on Windows</span>
-          <span class="org-string">"-a -F -l -p"</span>
-          )
+          (<span class="org-keyword">cond</span> (win32p
+                 <span class="org-string">"-a -F -l -p"</span>)
+                (t
+                 <span class=
+"org-string">"-a -F --group-directories-first -l -p --time-style=long-iso"</span>)))
 </pre>
           </div>
         </div>
@@ -25420,7 +25419,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140903.1228]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140903.1520]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

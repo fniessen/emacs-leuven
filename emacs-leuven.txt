@@ -11285,10 +11285,10 @@ interface).
 
     ;; switches passed to `ls' for Dired
     (setq dired-listing-switches
-          ;; "-a -F --group-directories-first -l -p --time-style=long-iso"
-          ;; causes display problems on Windows
-          "-a -F -l -p"
-          )
+          (cond (win32p
+                 "-a -F -l -p")
+                (t
+                 "-a -F --group-directories-first -l -p --time-style=long-iso")))
 #+end_src
 
 ** Deleting Files with Dired
