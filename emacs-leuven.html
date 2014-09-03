@@ -1292,7 +1292,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140903.1038</span>
+"org-comment">Version: 20140903.1112</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1415,7 +1415,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140903.1038]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140903.1112]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -23055,10 +23055,12 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (setq ess-program-files-64 <span class="org-string">"c:/PROGRA~1"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">program name for invoking an inferior ESS with `M-x R'</span>
-    (setq inferior-R-program-name
-          <span class=
-"org-string">"C:/Program Files/R/R-3.1.0/bin/i386/Rterm.exe"</span>))
+"org-comment">;; program name for invoking an inferior ESS with `M-x R'</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq inferior-R-program-name</span>
+    <span class="org-comment-delimiter">;;       </span><span class=
+"org-comment">"c:/PROGRA~1/R/R-3.1.0/bin/i386/Rterm.exe")</span>
+    )
 </pre>
             </div>
 
@@ -25490,7 +25492,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140903.1038]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140903.1112]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

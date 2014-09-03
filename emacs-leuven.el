@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140903.1037
+;; Version: 20140903.1111
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140903.1037]--")
+(message "* --[ Loading Emacs Leuven 20140903.1111]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -8091,9 +8091,10 @@ up before you execute another command."
     ;; safe 8.3 name for 64-bit programs
     (setq ess-program-files-64 "c:/PROGRA~1")
 
-    ;; program name for invoking an inferior ESS with `M-x R'
-    (setq inferior-R-program-name
-          "C:/Program Files/R/R-3.1.0/bin/i386/Rterm.exe"))
+    ;; ;; program name for invoking an inferior ESS with `M-x R'
+    ;; (setq inferior-R-program-name
+    ;;       "c:/PROGRA~1/R/R-3.1.0/bin/i386/Rterm.exe")
+    )
 
   ;; accented characters on graphics
   (add-to-list 'process-coding-system-alist
@@ -8938,7 +8939,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140903.1038]--")
+(message "* --[ Loaded Emacs Leuven 20140903.1111]--")
 
 (provide 'emacs-leuven)
 
