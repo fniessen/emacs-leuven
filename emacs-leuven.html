@@ -1292,7 +1292,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140902.1717</span>
+"org-comment">Version: 20140903.1038</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1415,7 +1415,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140902.1717]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140903.1038]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -4413,7 +4413,7 @@
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">echo what I'm typing *immediately*</span>
-  (setq echo-keystrokes 0.1)
+  (setq echo-keystrokes 0.01)
 </pre>
           </div>
 
@@ -6645,6 +6645,38 @@ M-: (executable-find "diff") RET
 
             <p>In `helm-find-file’, you may want to try using the left arrow to
             go to the parent directory!</p>
+
+            <p>You can reassign &lt;tab&gt; only during `helm-find-file’. The
+            `helm-find-file’ almost looks like Dired and I assign “^” for going
+            up. Minor side effect is you cannot type in “^” without using
+            C-q.</p>
+
+            <p>Sometimes you want to hit &lt;tab&gt; for
+            `helm-selection-action’; however, you chose not to happen. Now look
+            for substitute for &lt;tab&gt;. Something not &lt;tab&gt; can be
+            “C-z”, “C-&lt;tab&gt;”, and “&lt;SPC&gt;.</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+(define-key helm-find-files-map (kbd <span class=
+"org-string">"&lt;tab&gt;"</span>)    'helm-execute-persistent-action)
+(define-key helm-find-files-map (kbd <span class=
+"org-string">"C-&lt;tab&gt;"</span>)  'helm-select-action)
+(define-key helm-find-files-map (kbd <span class=
+"org-string">"C-z"</span>)      'helm-select-action)
+(define-key helm-find-files-map (kbd <span class=
+"org-string">"&lt;SPC&gt;"</span>)    'helm-select-action)
+(define-key helm-find-files-map (kbd <span class=
+"org-string">"&lt;return&gt;"</span>) 'helm-confirm-and-exit-minibuffer)
+(define-key helm-find-files-map (kbd <span class=
+"org-string">"^"</span>)        'helm-find-files-up-one-level)
+</pre>
+            </div>
+
+            <p>In helm-find-files, you can alway invoke helm-ff-do-grep with
+            C-s or C-u C-s for recursive searching. Probably helm-projectile
+            can replace helm-find-files more if it has this feature? I think
+            you can do this by reusing projectile-grep.</p>
 
             <p>Grep in Helm is interactive, unlike the stock grep/rgrep. Demo:
             <img src="http://tuhdo.github.io/static/live_grep.gif" alt=
@@ -15187,13 +15219,20 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">change the color of code blocks while they are being executed</span>
   (<span class="org-keyword">defadvice</span> <span class=
 "org-function-name">org-babel-execute-src-block</span> (around progress nil activate)
-    (set-face-attribute 'org-block-background nil <span class=
-"org-builtin">:background</span> <span class=
-"org-string">"PaleVioletRed1"</span>)
-    (message <span class="org-string">"Evaluating code block..."</span>)
-    ad-do-it
-    (set-face-attribute 'org-block-background nil <span class=
-"org-builtin">:background</span> <span class="org-string">"#FFFFE0"</span>))
+    <span class=
+"org-doc">"Create an overlay indicating when code block is running."</span>
+    (<span class=
+"org-keyword">let</span> ((ol (make-overlay (org-element-property <span class=
+"org-builtin">:begin</span> (org-element-at-point))
+                            (org-element-property <span class=
+"org-builtin">:end</span> (org-element-at-point)))))
+      (overlay-put ol 'face '(foreground-color . <span class=
+"org-string">"blue"</span>))
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(set-face-attribute 'org-block-background nil :background "PaleVioletRed1")</span>
+      (message <span class="org-string">"Evaluating code block..."</span>)
+      ad-do-it
+      (delete-overlay ol)))
 </pre>
             </div>
           </div>
@@ -25451,7 +25490,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140902.1717]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140903.1038]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

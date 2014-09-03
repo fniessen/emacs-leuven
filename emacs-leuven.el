@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140902.1716
+;; Version: 20140903.1037
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140902.1716]--")
+(message "* --[ Loading Emacs Leuven 20140903.1037]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1146,7 +1146,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "14.23 (emacs)Display Customization")
 
   ;; echo what I'm typing *immediately*
-  (setq echo-keystrokes 0.1)
+  (setq echo-keystrokes 0.01)
 
   ;; exhaustive log of interactions with Emacs (display keystrokes, etc.)
   (with-eval-after-load "interaction-log"
@@ -5407,10 +5407,14 @@ this with to-do items than with projects or headings."
 
   ;; change the color of code blocks while they are being executed
   (defadvice org-babel-execute-src-block (around progress nil activate)
-    (set-face-attribute 'org-block-background nil :background "PaleVioletRed1")
-    (message "Evaluating code block...")
-    ad-do-it
-    (set-face-attribute 'org-block-background nil :background "#FFFFE0"))
+    "Create an overlay indicating when code block is running."
+    (let ((ol (make-overlay (org-element-property :begin (org-element-at-point))
+                            (org-element-property :end (org-element-at-point)))))
+      (overlay-put ol 'face '(foreground-color . "blue"))
+      ;; (set-face-attribute 'org-block-background nil :background "PaleVioletRed1")
+      (message "Evaluating code block...")
+      ad-do-it
+      (delete-overlay ol)))
 
 ;;** 15.8 A (info "(org)Clean view")
 
@@ -8934,7 +8938,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140902.1717]--")
+(message "* --[ Loaded Emacs Leuven 20140903.1038]--")
 
 (provide 'emacs-leuven)
 

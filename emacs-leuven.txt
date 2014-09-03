@@ -1856,7 +1856,7 @@ See Emacs Powerline.
   (leuven--section "14.23 (emacs)Display Customization")
 
   ;; echo what I'm typing *immediately*
-  (setq echo-keystrokes 0.1)
+  (setq echo-keystrokes 0.01)
 #+end_src
 
 Display pressed keyboard shortcuts on screen during presentations or
@@ -3242,6 +3242,27 @@ I think helm-find-files is much better than stock ido-find-file or even ido-find
 
 In `helm-find-file', you may want to try using the left arrow to go to the
 parent directory!
+
+You can reassign <tab> only during `helm-find-file'.  The
+`helm-find-file' almost looks like Dired and I assign "^" for going
+up.  Minor side effect is you cannot type in "^" without using C-q.
+
+Sometimes you want to hit <tab> for `helm-selection-action'; however,
+you chose not to happen.  Now look for substitute for <tab>.
+Something not <tab> can be "C-z", "C-<tab>", and "<SPC>.
+
+#+begin_src emacs-lisp :tangle Nor
+(define-key helm-find-files-map (kbd "<tab>")    'helm-execute-persistent-action)
+(define-key helm-find-files-map (kbd "C-<tab>")  'helm-select-action)
+(define-key helm-find-files-map (kbd "C-z")      'helm-select-action)
+(define-key helm-find-files-map (kbd "<SPC>")    'helm-select-action)
+(define-key helm-find-files-map (kbd "<return>") 'helm-confirm-and-exit-minibuffer)
+(define-key helm-find-files-map (kbd "^")        'helm-find-files-up-one-level)
+#+end_src
+
+In helm-find-files, you can alway invoke helm-ff-do-grep with C-s or C-u C-s for
+recursive searching. Probably helm-projectile can replace helm-find-files more
+if it has this feature? I think you can do this by reusing projectile-grep.
 
 Grep in Helm is interactive, unlike the stock grep/rgrep. Demo:
 http://tuhdo.github.io/static/live_grep.gif
@@ -8307,17 +8328,18 @@ For security reasons, evaluation is not turned on by default.
     (setq org-confirm-babel-evaluate nil))
 #+end_src
 
-#+begin_src emacs-lisp :eval yes
+#+begin_src emacs-lisp
   ;; change the color of code blocks while they are being executed
   (defadvice org-babel-execute-src-block (around progress nil activate)
-    (set-face-attribute 'org-block-background nil :background "PaleVioletRed1")
-    (message "Evaluating code block...")
-    ad-do-it
-    (set-face-attribute 'org-block-background nil :background "#FFFFE0"))
+    "Create an overlay indicating when code block is running."
+    (let ((ol (make-overlay (org-element-property :begin (org-element-at-point))
+                            (org-element-property :end (org-element-at-point)))))
+      (overlay-put ol 'face '(foreground-color . "blue"))
+      ;; (set-face-attribute 'org-block-background nil :background "PaleVioletRed1")
+      (message "Evaluating code block...")
+      ad-do-it
+      (delete-overlay ol)))
 #+end_src
-
-#+results:
-: org-babel-execute-src-block
 
 *** A cleaner outline view
 
