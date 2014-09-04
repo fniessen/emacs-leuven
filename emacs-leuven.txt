@@ -1763,7 +1763,25 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
 
 See Emacs Powerline.
 
+See https://powerline.readthedocs.org/en/latest/overview.html#vim-statusline for screenshots.
+
+See https://github.com/bling/vim-airline for the original author.
+
 #+begin_src emacs-lisp
+(defface powerline-evil-modified-face
+  '((((class color))
+     (:background "red" :foreground "black" :weight bold))
+    (t (:weight bold)))
+  "Face to fontify modified files."
+  :group 'powerline)
+
+(defface powerline-evil-normal-face
+  '((((class color))
+     (:background "green" :foreground "black" :weight bold))
+    (t (:weight bold)))
+  "Face to fontify unchanged files."
+  :group 'powerline)
+
 (defun powerline-leuven-theme ()
   "Setup the leuven mode-line."
   (interactive)
@@ -1781,6 +1799,11 @@ See Emacs Powerline.
                                                            powerline-default-separator
                                                            (cdr powerline-default-separator-dir))))
                           (lhs (list (powerline-vc face1 'r)
+                                     ;; (when (and (buffer-file-name (current-buffer)) vc-mode)
+                                     ;;   (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
+                                     ;;       (powerline-vc powerline-evil-modified-face 'r)
+                                     ;;     (powerline-vc powerline-evil-normal-face 'r)))
+
                                      (funcall separator-left face1 mode-line)
                                      (powerline-raw "%*" nil 'l)
 
@@ -1800,9 +1823,11 @@ See Emacs Powerline.
                                      (powerline-raw " " face1)
                                      (funcall separator-left face1 face2)
                                      (powerline-minor-modes face2 'l)
-                                     (powerline-narrow face2 'l)))
-                          (rhs (list (powerline-raw global-mode-string face2 'r)
-                                     (funcall separator-right face2 face1)
+                                     (powerline-narrow face2 'l)
+                                     (powerline-raw " " face2)
+                                     (funcall separator-left face2 mode-line)))
+                          (rhs (list (powerline-raw global-mode-string mode-line 'r)
+                                     (funcall separator-right mode-line face1)
                                      (powerline-raw "%l" face1 'l)
                                      (powerline-raw ", " face1 'l)
                                      (powerline-raw "%c" face1 'r)
@@ -1810,9 +1835,22 @@ See Emacs Powerline.
                                      (powerline-raw " ")
                                      (powerline-raw "%4p of" nil 'r)
                                      (powerline-buffer-size nil 'l)
-                                     (powerline-hud face2 face1))))
+                                     (powerline-raw " ")
+
+                                     (powerline-raw (let ((dict (and (featurep 'ispell)
+                                                                     (not buffer-read-only)
+                                                                     (or ispell-local-dictionary
+                                                                         ispell-dictionary
+                                                                         "nil" ; default dictionary
+                                                                         ))))
+                                                      (and dict
+                                                           (concat (substring dict 0 2) " ")))
+                                                    face2 'l)
+
+                                     ;; (powerline-hud face2 face1)
+                                     )))
                      (concat (powerline-render lhs)
-                             (powerline-fill face2 (powerline-width rhs))
+                             (powerline-fill mode-line (powerline-width rhs))
                              (powerline-render rhs)))))))
 
 (add-hook 'after-init-hook 'powerline-leuven-theme)
@@ -10137,10 +10175,8 @@ tooltip over the VC indicator also says more explicitly.
         (defun vc-icon ()
           "Display a colored icon indicating the vc status of the current file."
           (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name))
-                          (concat leuven--directory
-                                  "Pictures/NormalIcon.png")
-                        (concat leuven--directory
-                                "Pictures/ModifiedIcon.png")))
+                          (concat leuven--directory "Pictures/NormalIcon.png")
+                        (concat leuven--directory "Pictures/ModifiedIcon.png")))
                 (bg-colour (face-attribute 'mode-line :background)))
             (propertize
              "  "

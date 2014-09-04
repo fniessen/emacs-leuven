@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140904.2154
+;; Version: 20140904.2337
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140904.2154]--")
+(message "* --[ Loading Emacs Leuven 20140904.2337]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1070,6 +1070,20 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; theme `smart-mode-line' should use
     (setq sml/theme 'respectful))
 
+(defface powerline-evil-modified-face
+  '((((class color))
+     (:background "red" :foreground "black" :weight bold))
+    (t (:weight bold)))
+  "Face to fontify modified files."
+  :group 'powerline)
+
+(defface powerline-evil-normal-face
+  '((((class color))
+     (:background "green" :foreground "black" :weight bold))
+    (t (:weight bold)))
+  "Face to fontify unchanged files."
+  :group 'powerline)
+
 (defun powerline-leuven-theme ()
   "Setup the leuven mode-line."
   (interactive)
@@ -1087,6 +1101,11 @@ Last time is saved in global variable `leuven--before-section-time'."
                                                            powerline-default-separator
                                                            (cdr powerline-default-separator-dir))))
                           (lhs (list (powerline-vc face1 'r)
+                                     ;; (when (and (buffer-file-name (current-buffer)) vc-mode)
+                                     ;;   (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
+                                     ;;       (powerline-vc powerline-evil-modified-face 'r)
+                                     ;;     (powerline-vc powerline-evil-normal-face 'r)))
+
                                      (funcall separator-left face1 mode-line)
                                      (powerline-raw "%*" nil 'l)
 
@@ -1106,9 +1125,11 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      (powerline-raw " " face1)
                                      (funcall separator-left face1 face2)
                                      (powerline-minor-modes face2 'l)
-                                     (powerline-narrow face2 'l)))
-                          (rhs (list (powerline-raw global-mode-string face2 'r)
-                                     (funcall separator-right face2 face1)
+                                     (powerline-narrow face2 'l)
+                                     (powerline-raw " " face2)
+                                     (funcall separator-left face2 mode-line)))
+                          (rhs (list (powerline-raw global-mode-string mode-line 'r)
+                                     (funcall separator-right mode-line face1)
                                      (powerline-raw "%l" face1 'l)
                                      (powerline-raw ", " face1 'l)
                                      (powerline-raw "%c" face1 'r)
@@ -1116,9 +1137,22 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      (powerline-raw " ")
                                      (powerline-raw "%4p of" nil 'r)
                                      (powerline-buffer-size nil 'l)
-                                     (powerline-hud face2 face1))))
+                                     (powerline-raw " ")
+
+                                     (powerline-raw (let ((dict (and (featurep 'ispell)
+                                                                     (not buffer-read-only)
+                                                                     (or ispell-local-dictionary
+                                                                         ispell-dictionary
+                                                                         "nil" ; default dictionary
+                                                                         ))))
+                                                      (and dict
+                                                           (concat (substring dict 0 2) " ")))
+                                                    face2 'l)
+
+                                     ;; (powerline-hud face2 face1)
+                                     )))
                      (concat (powerline-render lhs)
-                             (powerline-fill face2 (powerline-width rhs))
+                             (powerline-fill mode-line (powerline-width rhs))
                              (powerline-render rhs)))))))
 
 (add-hook 'after-init-hook 'powerline-leuven-theme)
@@ -6485,10 +6519,8 @@ up before you execute another command."
         (defun vc-icon ()
           "Display a colored icon indicating the vc status of the current file."
           (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name))
-                          (concat leuven--directory
-                                  "Pictures/NormalIcon.png")
-                        (concat leuven--directory
-                                "Pictures/ModifiedIcon.png")))
+                          (concat leuven--directory "Pictures/NormalIcon.png")
+                        (concat leuven--directory "Pictures/ModifiedIcon.png")))
                 (bg-colour (face-attribute 'mode-line :background)))
             (propertize
              "  "
@@ -8884,7 +8916,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140904.2154]--")
+(message "* --[ Loaded Emacs Leuven 20140904.2338]--")
 
 (provide 'emacs-leuven)
 

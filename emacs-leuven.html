@@ -1294,7 +1294,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140904.2155</span>
+"org-comment">Version: 20140904.2338</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1417,7 +1417,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140904.2155]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140904.2338]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -4274,8 +4274,39 @@
 
           <p>See Emacs Powerline.</p>
 
+          <p>See <a href=
+          "https://powerline.readthedocs.org/en/latest/overview.html#vim-statusline">
+          https://powerline.readthedocs.org/en/latest/overview.html#vim-statusline</a>
+          for screenshots.</p>
+
+          <p>See <a href=
+          "https://github.com/bling/vim-airline">https://github.com/bling/vim-airline</a>
+          for the original author.</p>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
+(<span class="org-keyword">defface</span> <span class=
+"org-variable-name">powerline-evil-modified-face</span>
+  '((((class color))
+     (<span class="org-builtin">:background</span> <span class=
+"org-string">"red"</span> <span class=
+"org-builtin">:foreground</span> <span class=
+"org-string">"black"</span> <span class="org-builtin">:weight</span> bold))
+    (t (<span class="org-builtin">:weight</span> bold)))
+  <span class="org-doc">"Face to fontify modified files."</span>
+  <span class="org-builtin">:group</span> 'powerline)
+
+(<span class="org-keyword">defface</span> <span class=
+"org-variable-name">powerline-evil-normal-face</span>
+  '((((class color))
+     (<span class="org-builtin">:background</span> <span class=
+"org-string">"green"</span> <span class=
+"org-builtin">:foreground</span> <span class=
+"org-string">"black"</span> <span class="org-builtin">:weight</span> bold))
+    (t (<span class="org-builtin">:weight</span> bold)))
+  <span class="org-doc">"Face to fontify unchanged files."</span>
+  <span class="org-builtin">:group</span> 'powerline)
+
 (<span class="org-keyword">defun</span> <span class=
 "org-function-name">powerline-leuven-theme</span> ()
   <span class="org-doc">"Setup the leuven mode-line."</span>
@@ -4300,6 +4331,19 @@
                                                            powerline-default-separator
                                                            (cdr powerline-default-separator-dir))))
                           (lhs (list (powerline-vc face1 'r)
+                                     <span class=
+"org-comment-delimiter">;; </span><span class=
+"org-comment">(when (and (buffer-file-name (current-buffer)) vc-mode)</span>
+                                     <span class=
+"org-comment-delimiter">;;   </span><span class=
+"org-comment">(if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))</span>
+                                     <span class=
+"org-comment-delimiter">;;       </span><span class=
+"org-comment">(powerline-vc powerline-evil-modified-face 'r)</span>
+                                     <span class=
+"org-comment-delimiter">;;     </span><span class=
+"org-comment">(powerline-vc powerline-evil-normal-face 'r)))</span>
+
                                      (funcall separator-left face1 mode-line)
                                      (powerline-raw <span class=
 "org-string">"%*"</span> nil 'l)
@@ -4324,9 +4368,12 @@
 "org-string">" "</span> face1)
                                      (funcall separator-left face1 face2)
                                      (powerline-minor-modes face2 'l)
-                                     (powerline-narrow face2 'l)))
-                          (rhs (list (powerline-raw global-mode-string face2 'r)
-                                     (funcall separator-right face2 face1)
+                                     (powerline-narrow face2 'l)
+                                     (powerline-raw <span class=
+"org-string">" "</span> face2)
+                                     (funcall separator-left face2 mode-line)))
+                          (rhs (list (powerline-raw global-mode-string mode-line 'r)
+                                     (funcall separator-right mode-line face1)
                                      (powerline-raw <span class=
 "org-string">"%l"</span> face1 'l)
                                      (powerline-raw <span class=
@@ -4339,9 +4386,27 @@
                                      (powerline-raw <span class=
 "org-string">"%4p of"</span> nil 'r)
                                      (powerline-buffer-size nil 'l)
-                                     (powerline-hud face2 face1))))
+                                     (powerline-raw <span class=
+"org-string">" "</span>)
+
+                                     (powerline-raw (<span class=
+"org-keyword">let</span> ((dict (and (<span class=
+"org-keyword">featurep</span> '<span class="org-constant">ispell</span>)
+                                                                     (not buffer-read-only)
+                                                                     (or ispell-local-dictionary
+                                                                         ispell-dictionary
+                                                                         <span class="org-string">"nil"</span> <span class="org-comment-delimiter">; </span><span class="org-comment">default dictionary</span>
+                                                                         ))))
+                                                      (and dict
+                                                           (concat (substring dict 0 2) <span class="org-string">" "</span>)))
+                                                    face2 'l)
+
+                                     <span class=
+"org-comment-delimiter">;; </span><span class=
+"org-comment">(powerline-hud face2 face1)</span>
+                                     )))
                      (concat (powerline-render lhs)
-                             (powerline-fill face2 (powerline-width rhs))
+                             (powerline-fill mode-line (powerline-width rhs))
                              (powerline-render rhs)))))))
 
 (add-hook 'after-init-hook 'powerline-leuven-theme)
@@ -18308,11 +18373,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-doc">"Display a colored icon indicating the vc status of the current file."</span>
           (<span class="org-keyword">let</span> ((icon (<span class=
 "org-keyword">if</span> (vc-workfile-unchanged-p (buffer-file-name))
-                          (concat leuven--directory
-                                  <span class=
+                          (concat leuven--directory <span class=
 "org-string">"Pictures/NormalIcon.png"</span>)
-                        (concat leuven--directory
-                                <span class=
+                        (concat leuven--directory <span class=
 "org-string">"Pictures/ModifiedIcon.png"</span>)))
                 (bg-colour (face-attribute 'mode-line <span class=
 "org-builtin">:background</span>)))
@@ -25535,7 +25598,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140904.2155]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140904.2339]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
