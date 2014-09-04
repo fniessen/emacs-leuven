@@ -3689,29 +3689,22 @@ I guess your imagemagick support is ok.
 
   (leuven--section "20.5 (emacs)Change Window")
 
-  (defun leuven-delete-other-windows ()
-    "Cycle between 1 window, 2 vertically and 2 horizontally split windows."
+  (defun leuven-delete-or-split-window ()
+    "Cycle between 1 window and 2 windows."
     (interactive)
-    (let ((splitter
-           (if (= (car (window-edges (selected-window)))
-                  (car (window-edges (next-window))))
-               'split-window-horizontally
-             'split-window-vertically)))
-      (cond ((= (count-windows) 1)
-             (delete-other-windows)
-             (split-window-vertically)
-             (set-window-buffer (next-window) (nth 2 (buffer-list))))
-            ((and (> (count-windows) 1)
-                  (equal splitter 'split-window-horizontally))
-             (delete-other-windows)
-             (funcall splitter)
-             (set-window-buffer (next-window) (nth 2 (buffer-list))))
-            ((and (> (count-windows) 1)
-                  (equal splitter 'split-window-vertically))
-             (delete-other-windows)))))
+    (cond ((= (count-windows) 1)
+           (delete-other-windows)
+           (if (> (frame-width) 160)
+               (split-window-horizontally)
+             (split-window-vertically))
+           (set-window-buffer (next-window) (other-buffer))
+           ;; (other-window 1)
+           )
+          (t
+           (delete-other-windows))))
 
   ;; delete all windows in the selected frame except the selected window
-  (global-set-key (kbd "<f5>") 'leuven-delete-other-windows)
+  (global-set-key (kbd "<f5>") 'leuven-delete-or-split-window)
 
   ;; swap 2 windows
   (defun leuven-swap-windows ()
@@ -11152,6 +11145,9 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
 
       ;; completion by TAB
       (define-key ac-completing-map (kbd "<tab>") 'ac-complete)
+
+      ;; completion by RET
+      (define-key ac-completing-map (kbd "<return>") 'ac-complete)
 
       ;; completion by right arrow
       (define-key ac-completing-map (kbd "<right>") 'ac-complete)
