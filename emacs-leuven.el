@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140904.2018
+;; Version: 20140904.2154
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140904.2018]--")
+(message "* --[ Loading Emacs Leuven 20140904.2154]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -2295,16 +2295,28 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "20.5 (emacs)Change Window")
 
   (defun leuven-delete-or-split-window ()
-    "Cycle between 1 window and 2 windows."
+    "Cycle between 1 window and 2 windows.
+
+  When splitting the window, the cursor is moved to the other
+  window, as it makes more sense to do something there first.
+
+  The window's contents is unchanged by default.
+
+  Do you want to see another part of the same file, you've
+  nothing to do.
+
+  Do you want to see the last file you were visiting,
+  simply bury the current buffer (f12).
+
+  Do you want to go back to the first window, switch to it (f6)."
     (interactive)
     (cond ((= (count-windows) 1)
            (delete-other-windows)
            (if (> (frame-width) 160)
                (split-window-horizontally)
              (split-window-vertically))
-           (set-window-buffer (next-window) (other-buffer))
-           ;; (other-window 1)
-           )
+           ;; (set-window-buffer (next-window) (other-buffer))
+           (other-window 1))
           (t
            (delete-other-windows))))
 
@@ -8872,7 +8884,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140904.2018]--")
+(message "* --[ Loaded Emacs Leuven 20140904.2154]--")
 
 (provide 'emacs-leuven)
 
