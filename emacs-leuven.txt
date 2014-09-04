@@ -453,10 +453,11 @@ Use ~(display-graphic-p)~ (instead of ~window-system~) in conditions.
     ;; migration)
     (setq load-home-init-file t))
 
-  ;; ensure that the echo area is always visible during the early stage of
-  ;; startup (useful in case of error)
-  (modify-all-frames-parameters
-   '((height . 32)))
+  (GNUEmacs
+    ;; ensure that the echo area is always visible during the early stage of
+    ;; startup (useful in case of error)
+    (modify-all-frames-parameters
+     '((height . 32))))
 
 )                                       ; chapter 0 ends here
 #+end_src
@@ -3374,14 +3375,14 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 
       ;; time that the user has to be idle for, before candidates from
       ;; DELAYED sources are collected
-      (setq helm-idle-delay 0.03)       ; useful for sources involving heavy
+      (setq helm-idle-delay 0.04)       ; useful for sources involving heavy
                                         ; operations, so that candidates from
                                         ; the source are not retrieved
                                         ; unnecessarily if the user keeps typing
 
       ;; time that the user has to be idle for, before ALL candidates
       ;; are collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.03) ; also effective for NON-DELAYED sources
+      (setq helm-input-idle-delay 0.04) ; also effective for NON-DELAYED sources
 
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
@@ -12789,6 +12790,16 @@ with Gnus...*
 #+end_src
 
 See =w32-settings.el= for more!
+
+** Helper for Cygwin Emacs
+
+#+begin_src emacs-lisp
+    ;; let Emacs recognize Windows paths (e.g. C:/Program Files/)
+    (when cygwinp
+      (try-require 'windows-path)
+      (with-eval-after-load "windows-path"
+        (windows-path-activate)))
+#+end_src
 
 ** Emacs Speaks Statistics (ESS)
 

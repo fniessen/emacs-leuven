@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140904.1437
+;; Version: 20140904.1505
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140904.1437]--")
+(message "* --[ Loading Emacs Leuven 20140904.1505]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -355,10 +355,11 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; migration)
     (setq load-home-init-file t))
 
-  ;; ensure that the echo area is always visible during the early stage of
-  ;; startup (useful in case of error)
-  (modify-all-frames-parameters
-   '((height . 32)))
+  (GNUEmacs
+    ;; ensure that the echo area is always visible during the early stage of
+    ;; startup (useful in case of error)
+    (modify-all-frames-parameters
+     '((height . 32))))
 
 )                                       ; chapter 0 ends here
 
@@ -2000,14 +2001,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       ;; time that the user has to be idle for, before candidates from
       ;; DELAYED sources are collected
-      (setq helm-idle-delay 0.03)       ; useful for sources involving heavy
+      (setq helm-idle-delay 0.04)       ; useful for sources involving heavy
                                         ; operations, so that candidates from
                                         ; the source are not retrieved
                                         ; unnecessarily if the user keeps typing
 
       ;; time that the user has to be idle for, before ALL candidates
       ;; are collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.03) ; also effective for NON-DELAYED sources
+      (setq helm-input-idle-delay 0.04) ; also effective for NON-DELAYED sources
 
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
@@ -6792,8 +6793,8 @@ up before you execute another command."
       ;; enable YASnippet in all buffers
       (yas-global-mode 1)
 
-      ;; root directories that store the snippets
-      (let ((my-snippets                ; my personal additional YASnippets
+      ;; add root directories that store the snippets
+      (let ((leuven-snippets            ; additional YASnippets
              (concat leuven--directory "snippets"))
             (org-snippets
              (concat leuven-local-repos-directory "yasnippet-org-mode")))
@@ -6801,8 +6802,8 @@ up before you execute another command."
         (when (file-directory-p org-snippets)
           (add-to-list 'yas-snippet-dirs org-snippets))
 
-        (when (file-directory-p my-snippets)
-          (add-to-list 'yas-snippet-dirs my-snippets)))
+        (when (file-directory-p leuven-snippets)
+          (add-to-list 'yas-snippet-dirs leuven-snippets)))
                                         ; the first element (inserted last) is
                                         ; always the user-created snippets
                                         ; directory
@@ -7956,6 +7957,12 @@ up before you execute another command."
     ;;   (with-eval-after-load "cygwin-mount"
     ;;     (cygwin-mount-activate)))
 
+    ;; let Emacs recognize Windows paths (e.g. C:/Program Files/)
+    (when cygwinp
+      (try-require 'windows-path)
+      (with-eval-after-load "windows-path"
+        (windows-path-activate)))
+
   (leuven--section "Utilities -- ESS")
 
   ;; ESS: Emacs Speaks Statistics
@@ -8805,7 +8812,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140904.1437]--")
+(message "* --[ Loaded Emacs Leuven 20140904.1505]--")
 
 (provide 'emacs-leuven)
 
