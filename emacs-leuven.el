@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140904.1143
+;; Version: 20140904.1437
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140904.1143]--")
+(message "* --[ Loading Emacs Leuven 20140904.1437]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -6792,22 +6792,20 @@ up before you execute another command."
       ;; enable YASnippet in all buffers
       (yas-global-mode 1)
 
-      (defvar leuven-yasnippet-my-snippets-dir
-        "~/src/yasnippet/snippets"
-        "Directory containing my personal additional YASnippets.")
-
       ;; root directories that store the snippets
-      (let ((my-snippets
-             leuven-yasnippet-my-snippets-dir)
+      (let ((my-snippets                ; my personal additional YASnippets
+             (concat leuven--directory "snippets"))
             (org-snippets
              (concat leuven-local-repos-directory "yasnippet-org-mode")))
 
         (when (file-directory-p org-snippets)
           (add-to-list 'yas-snippet-dirs org-snippets))
 
-        ;; the first element is always the user-created snippets directory
         (when (file-directory-p my-snippets)
           (add-to-list 'yas-snippet-dirs my-snippets)))
+                                        ; the first element (inserted last) is
+                                        ; always the user-created snippets
+                                        ; directory
 
       ;; use Snippet mode for files with a `yasnippet' extension
       (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
@@ -8807,7 +8805,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140904.1143]--")
+(message "* --[ Loaded Emacs Leuven 20140904.1437]--")
 
 (provide 'emacs-leuven)
 

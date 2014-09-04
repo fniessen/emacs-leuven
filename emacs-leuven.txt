@@ -10814,22 +10814,20 @@ modes* with snippets.
 By default, put *your own snippets* in the directory =~/.emacs.d/snippets=.
 
 #+begin_src emacs-lisp
-      (defvar leuven-yasnippet-my-snippets-dir
-        "~/src/yasnippet/snippets"
-        "Directory containing my personal additional YASnippets.")
-
-      ;; root directories that store the snippets
-      (let ((my-snippets
-             leuven-yasnippet-my-snippets-dir)
+      ;; add root directories that store the snippets
+      (let ((leuven-snippets            ; additional YASnippets
+             (concat leuven--directory "snippets"))
             (org-snippets
              (concat leuven-local-repos-directory "yasnippet-org-mode")))
 
         (when (file-directory-p org-snippets)
           (add-to-list 'yas-snippet-dirs org-snippets))
 
-        ;; the first element is always the user-created snippets directory
-        (when (file-directory-p my-snippets)
-          (add-to-list 'yas-snippet-dirs my-snippets)))
+        (when (file-directory-p leuven-snippets)
+          (add-to-list 'yas-snippet-dirs leuven-snippets)))
+                                        ; the first element (inserted last) is
+                                        ; always the user-created snippets
+                                        ; directory
 
       ;; use Snippet mode for files with a `yasnippet' extension
       (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
