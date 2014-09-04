@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140903.1519
+;; Version: 20140904.1143
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140903.1519]--")
+(message "* --[ Loading Emacs Leuven 20140904.1143]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1053,8 +1053,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; use inactive face for mode line in non-selected windows
   (setq mode-line-in-non-selected-windows t)
 
-  ;; show buffer position like a scroll bar in mode line
-  (try-require 'sml-modeline)
+  ;; ;; show buffer position like a scroll bar in mode line
+  ;; (try-require 'sml-modeline)
   (with-eval-after-load "sml-modeline"
 
     ;; mode line indicator total length
@@ -1064,8 +1064,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (sml-modeline-mode))
 
-  ;; theme `smart-mode-line' should use
-  (setq sml/theme 'respectful)
+  (with-eval-after-load "smart-mode-modeline"
+
+    ;; theme `smart-mode-line' should use
+    (setq sml/theme 'respectful))
 
   (add-hook 'after-init-hook 'powerline-default-theme)
 
@@ -1188,10 +1190,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (add-hook 'isearch-mode-hook
                 (lambda ()
-                  (require 'fuzzy)))
+                  (require 'fuzzy))))
 
-      (with-eval-after-load "fuzzy"
-        (turn-on-fuzzy-isearch))))
+    (with-eval-after-load "fuzzy"
+      (turn-on-fuzzy-isearch)))
 
 ;;** 15.5 (info "(emacs)Regexp Search")
 
@@ -1398,33 +1400,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (global-set-key (kbd "C-c d s") 'dictionary-search)
     (global-set-key (kbd "C-c d l") 'dictionary-lookup-definition)
-    (global-set-key (kbd "C-c d m") 'dictionary-match-words)
+    (global-set-key (kbd "C-c d m") 'dictionary-match-words))
 
-    (with-eval-after-load "dictionary"
+  (with-eval-after-load "dictionary"
 
-      (global-dictionary-tooltip-mode 1)
-
-      ;; ;; server contacted for searching the dictionary
-      ;; (setq dictionary-server "localhost")
-
-      ;; ;; connect via a HTTP proxy (using the CONNECT command)
-      ;; (setq dictionary-use-http-proxy t)
-      ;;
-      ;; ;; name of the HTTP proxy to use
-      ;; (setq dictionary-proxy-server "hellman") ; XXX
-      ;;
-      ;; ;; port of the proxy server
-      ;; (setq dictionary-proxy-port 8080) ; XXX
-
-      ;; use proxy
-      (setq url-proxy-services          ;! Emacs expects just hostname and port
-                                        ;! in `url-proxy-services',
-                                        ;! NOT prefixed with "http://"
-            `(("http"     . ,(getenv "http_proxy"))
-              ("ftp"      . ,(getenv "http_proxy"))
-              ("no_proxy" . "^.*example.com")))
-              ;; disable proxy for some hosts
-    ))
+    ;; enable/disable the tooltip support for all buffers
+    (if consolep
+        (global-dictionary-tooltip-mode 0)
+      (global-dictionary-tooltip-mode 1)))
 
   ;; XXX excellent!
   (defun leuven-answers-define ()
@@ -2518,7 +2501,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "21.17 (emacs)Tooltips")
 
   ;; disable Tooltip mode (use the echo area for help and GUD tooltips)
-  (tooltip-mode -1)
+  (unless consolep (tooltip-mode -1))
 
 )                                       ; chapter 21 ends here
 
@@ -2886,9 +2869,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; from Bastien
 
-  ;; XXX 2010-06-21 Conflicts with outline-minor-mode bindings
-  ;; add a hook to use `orgstruct-mode' in Emacs Lisp buffers
-  (add-hook 'emacs-lisp-mode-hook 'orgstruct-mode)
+  ;; ;; XXX 2010-06-21 Conflicts with outline-minor-mode bindings
+  ;; ;; add a hook to use `orgstruct-mode' in Emacs Lisp buffers
+  ;; (add-hook 'emacs-lisp-mode-hook 'orgstruct-mode)
 
   (defun org-cycle-global ()
     (interactive)
@@ -2934,14 +2917,14 @@ Last time is saved in global variable `leuven--before-section-time'."
     (autoload 'boxquote-region "boxquote"
       "Draw a box around the left hand side of a region bounding START and END." t)
 
-    (global-set-key (kbd "C-c q") 'boxquote-region)
+    (global-set-key (kbd "C-c q") 'boxquote-region))
 
-    (with-eval-after-load "boxquote"
-      (setq boxquote-top-and-tail "────")
-      (setq boxquote-title-format " %s")
-      (setq boxquote-top-corner    "  ╭")
-      (setq boxquote-side          "  │ ")
-      (setq boxquote-bottom-corner "  ╰")))
+  (with-eval-after-load "boxquote"
+    (setq boxquote-top-and-tail  "────")
+    (setq boxquote-title-format  " %s")
+    (setq boxquote-top-corner    "  ╭")
+    (setq boxquote-side          "  │ ")
+    (setq boxquote-bottom-corner "  ╰"))
 
 ;;** (info "phonetic")
 
@@ -3114,93 +3097,94 @@ Last time is saved in global variable `leuven--before-section-time'."
     (message "... Org Headlines")
 
     ;; insert an inline task (independent of outline hierarchy)
-    (try-require 'org-inlinetask)       ; needed
-    (with-eval-after-load "org-inlinetask"
+    (try-require 'org-inlinetask))      ; needed
 
-      ;; initial state (TODO keyword) of inline tasks
-      (setq org-inlinetask-default-state "TODO")
+  (with-eval-after-load "org-inlinetask"
 
-      ;; template for inline tasks in HTML exporter
-      (defun leuven--org-html-format-inlinetask (todo todo-type priority title
-                                                 tags contents)
-        "Format an inline task element for HTML export."
-        (let ((todo-kw
-               (if todo
-                   (format "<span class=\"%s %s\">%s</span> " todo-type todo todo)
-                 ""))
-              (full-title-w/o-todo-kw
-               (concat
-                (when priority (format "[#%c] " priority))
-                title
-                (when tags
-                  (concat "&nbsp;&nbsp;&nbsp;"
-                          "<span class=\"tag\">"
-                          (mapconcat (lambda (tag)
-                                       (concat "<span class= \"" tag "\">" tag
-                                               "</span>"))
-                                     tags
-                                     "&nbsp;")
-                          "</span>")))))
-          (concat "<table class=\"inlinetask\" width=\"100%\">"
-                    "<tr>"
-                      "<td valign=\"top\"><b>" todo-kw "</b></td>"
-                      "<td width=\"100%\"><b>" full-title-w/o-todo-kw "</b><br />"
-                        (or contents "") "</td>"
-                    "</tr>"
-                  "</table>")))
+    ;; initial state (TODO keyword) of inline tasks
+    (setq org-inlinetask-default-state "TODO")
 
-      ;; function called to format an inlinetask in HTML code
-      (setq org-html-format-inlinetask-function
-            'leuven--org-html-format-inlinetask)
+    ;; template for inline tasks in HTML exporter
+    (defun leuven--org-html-format-inlinetask (todo todo-type priority title
+                                               tags contents)
+      "Format an inline task element for HTML export."
+      (let ((todo-kw
+             (if todo
+                 (format "<span class=\"%s %s\">%s</span> " todo-type todo todo)
+               ""))
+            (full-title-w/o-todo-kw
+             (concat
+              (when priority (format "[#%c] " priority))
+              title
+              (when tags
+                (concat "&nbsp;&nbsp;&nbsp;"
+                        "<span class=\"tag\">"
+                        (mapconcat (lambda (tag)
+                                     (concat "<span class= \"" tag "\">" tag
+                                             "</span>"))
+                                   tags
+                                   "&nbsp;")
+                        "</span>")))))
+        (concat "<table class=\"inlinetask\" width=\"100%\">"
+                  "<tr>"
+                    "<td valign=\"top\"><b>" todo-kw "</b></td>"
+                    "<td width=\"100%\"><b>" full-title-w/o-todo-kw "</b><br />"
+                      (or contents "") "</td>"
+                  "</tr>"
+                "</table>")))
 
-      ;; template for inline tasks in LaTeX exporter
-      (defun leuven--org-latex-format-inlinetask (todo todo-type priority title
-                                                  tags contents)
-        "Format an inline task element for LaTeX export."
-        (let* ((tags-string (format ":%s:" (mapconcat 'identity tags ":")))
-               (opt-color
-                (if tags
-                    (cond ((string-match ":info:" tags-string)
-                           "color=yellow!40")
-                          ((string-match ":warning:" tags-string)
-                           "color=orange!40")
-                          ((string-match ":error:" tags-string)
-                           "color=red!40")
-                          (t ""))
-                  ""))
-               (full-title
-                (concat
-                 (when todo
-                   (format "{\\color{red}\\textbf{\\textsf{\\textsc{%s}}}} "
-                           todo))
-                 (when priority
-                   (format "\\textsf{\\framebox{\\#%c}} " priority))
-                 title
-                 (when tags
-                   (format "\\hfill{}:%s:"
-                           (mapconcat 'identity tags ":")))))
-               (opt-rule
-                (if contents
-                    "\\\\ \\rule[.3em]{\\textwidth}{0.2pt}\n"
-                  ""))
-               (opt-contents
-                (or contents "")))
-          ;; this requires the `todonotes' package
-          (format (concat "\\todo[inline,caption={},%s]{\n"
-                          "  %s\n"
-                          "  %s"
-                          "  %s"
-                          "}")
-                  opt-color
-                  full-title
-                  opt-rule
-                  opt-contents)))
+    ;; function called to format an inlinetask in HTML code
+    (setq org-html-format-inlinetask-function
+          'leuven--org-html-format-inlinetask)
 
-      ;; function called to format an inlinetask in LaTeX code
-      (setq org-latex-format-inlinetask-function
-            'leuven--org-latex-format-inlinetask))
+    ;; template for inline tasks in LaTeX exporter
+    (defun leuven--org-latex-format-inlinetask (todo todo-type priority title
+                                                tags contents)
+      "Format an inline task element for LaTeX export."
+      (let* ((tags-string (format ":%s:" (mapconcat 'identity tags ":")))
+             (opt-color
+              (if tags
+                  (cond ((string-match ":info:" tags-string)
+                         "color=yellow!40")
+                        ((string-match ":warning:" tags-string)
+                         "color=orange!40")
+                        ((string-match ":error:" tags-string)
+                         "color=red!40")
+                        (t ""))
+                ""))
+             (full-title
+              (concat
+               (when todo
+                 (format "{\\color{red}\\textbf{\\textsf{\\textsc{%s}}}} "
+                         todo))
+               (when priority
+                 (format "\\textsf{\\framebox{\\#%c}} " priority))
+               title
+               (when tags
+                 (format "\\hfill{}:%s:"
+                         (mapconcat 'identity tags ":")))))
+             (opt-rule
+              (if contents
+                  "\\\\ \\rule[.3em]{\\textwidth}{0.2pt}\n"
+                ""))
+             (opt-contents
+              (or contents "")))
+        ;; this requires the `todonotes' package
+        (format (concat "\\todo[inline,caption={},%s]{\n"
+                        "  %s\n"
+                        "  %s"
+                        "  %s"
+                        "}")
+                opt-color
+                full-title
+                opt-rule
+                opt-contents)))
 
-    )                                   ; with-eval-after-load "org" ends here
+    ;; function called to format an inlinetask in LaTeX code
+    (setq org-latex-format-inlinetask-function
+          'leuven--org-latex-format-inlinetask)
+
+    )                                   ; with-eval-after-load "org-inlinetask" ends here
 
 ;;** (info "(org)Visibility cycling")
 
@@ -5399,14 +5383,15 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "org"
     (message "... Org Crypt")
 
-    (try-require 'org-crypt)            ; loads org, gnus-sum, etc...
-    (with-eval-after-load "org-crypt"
+    (try-require 'org-crypt))           ; loads org, gnus-sum, etc...
 
-      ;; encrypt all entries before saving
-      (org-crypt-use-before-save-magic)
+  (with-eval-after-load "org-crypt"
 
-      ;; which tag is used to mark headings to be encrypted
-      (setq org-tags-exclude-from-inheritance '("crypt"))))
+    ;; encrypt all entries before saving
+    (org-crypt-use-before-save-magic)
+
+    ;; which tag is used to mark headings to be encrypted
+    (setq org-tags-exclude-from-inheritance '("crypt")))
 
   (defun leuven-scramble-contents ()
     (interactive)
@@ -5503,30 +5488,31 @@ this with to-do items than with projects or headings."
     (message "... Org Mime")
 
     ;; using Org mode to send buffer/subtree per mail
-    (try-require 'org-mime)
-    (with-eval-after-load "org-mime"
+    (try-require 'org-mime))
 
-      (add-hook 'org-mode-hook
-                (lambda ()
-                  (local-set-key
-                    (kbd "C-c m") 'org-mime-subtree)))
+  (with-eval-after-load "org-mime"
 
-      (defun leuven-mail-subtree ()
-        (interactive)
-        (org-agenda-goto)
-        (org-mime-subtree))
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (local-set-key
+                  (kbd "C-c m") 'org-mime-subtree)))
 
-      (add-hook 'org-agenda-mode-hook
-                (lambda ()
-                  (local-set-key
-                    (kbd "C-c m") 'leuven-mail-subtree)))
+    (defun leuven-mail-subtree ()
+      (interactive)
+      (org-agenda-goto)
+      (org-mime-subtree))
 
-      ;; add a `mail_composed' property with the current time when
-      ;; `org-mime-subtree' is called
-      (add-hook 'org-mime-send-subtree-hook
-                (lambda ()
-                  (org-entry-put (point) "mail_composed"
-                                 (current-time-string))))))
+    (add-hook 'org-agenda-mode-hook
+              (lambda ()
+                (local-set-key
+                  (kbd "C-c m") 'leuven-mail-subtree)))
+
+    ;; add a `mail_composed' property with the current time when
+    ;; `org-mime-subtree' is called
+    (add-hook 'org-mime-send-subtree-hook
+              (lambda ()
+                (org-entry-put (point) "mail_composed"
+                               (current-time-string)))))
 
 ;;** A.3 (info "(org)Adding hyperlink types")
 
@@ -6415,12 +6401,11 @@ up before you execute another command."
 
   (leuven--section "28.1 (emacs)Version Control")
 
-  ;; (try-require 'vc)                     ; for defining function `vc-switches'
-  ;;                                       ; (XXX autoload?)
-
 ;;*** 28.1.2 (info "(emacs)VC Mode Line")
 
   (leuven--section "28.1.2 Version Control and the Mode Line")
+
+  ;; (defpowerline powerline-vc (when (and (buffer-file-name (current-buffer)) vc-mode) (format-mode-line '(vc-mode vc-mode))))
 
   (with-eval-after-load "vc"
 
@@ -6458,16 +6443,17 @@ up before you execute another command."
   (with-eval-after-load "vc-git"
 
     ;; major mode for editing git commit messages
-    (try-require 'git-commit-mode)
-    (with-eval-after-load "git-commit-mode"
+    (try-require 'git-commit-mode))
 
-      ;; turn on on-the-fly spell-checking
-      (add-hook 'git-commit-mode-hook 'flyspell-mode)
+  (with-eval-after-load "git-commit-mode"
 
-      ;; turn off save-place
-      (add-hook 'git-commit-mode-hook
-                (lambda ()
-                  (toggle-save-place 0)))))
+    ;; turn on on-the-fly spell-checking
+    (add-hook 'git-commit-mode-hook 'flyspell-mode)
+
+    ;; turn off save-place
+    (add-hook 'git-commit-mode-hook
+              (lambda ()
+                (toggle-save-place 0))))
 
 ;;*** 28.1.6 (info "(emacs)Old Revisions")
 
@@ -6635,11 +6621,12 @@ up before you execute another command."
   (with-eval-after-load "etags"
 
     ;; select from multiple tags
-    (try-require 'etags-select)
-    (with-eval-after-load "etags-select"
+    (try-require 'etags-select))
 
-      ;; do a `find-tag-at-point', and display all exact matches
-      (global-set-key (kbd "M-?") 'etags-select-find-tag-at-point)))
+  (with-eval-after-load "etags-select"
+
+    ;; do a `find-tag-at-point', and display all exact matches
+    (global-set-key (kbd "M-?") 'etags-select-find-tag-at-point))
 
   ;; find the definition of the Emacs Lisp function or variable near point
   (GNUEmacs
@@ -6932,70 +6919,70 @@ up before you execute another command."
 
     ;; Auto Completion
     (when (locate-library "auto-complete-config")
-      (idle-require 'auto-complete-config)
+      (idle-require 'auto-complete-config))
 
-      (with-eval-after-load "auto-complete-config"
+    (with-eval-after-load "auto-complete-config"
 
-        ;; ;; 5.4 completion will be started automatically by inserting 2 characters
-        ;; (setq ac-auto-start 2)
+      ;; ;; 5.4 completion will be started automatically by inserting 2 characters
+      ;; (setq ac-auto-start 2)
 
-        ;; 6.1 set a list of sources to use (by default + for some major modes)
-        (ac-config-default)             ; ... and enable Auto-Complete mode in
-                                        ; all buffers
+      ;; 6.1 set a list of sources to use (by default + for some major modes)
+      (ac-config-default)             ; ... and enable Auto-Complete mode in all
+                                      ; buffers
 
-        ;; 7.5 use `C-n/C-p' to select candidates (only when completion menu is
-        ;; displayed)
-        (setq ac-use-menu-map t)
-        (define-key ac-menu-map (kbd "C-n") 'ac-next)
-        (define-key ac-menu-map (kbd "C-p") 'ac-previous)
+      ;; 7.5 use `C-n/C-p' to select candidates (only when completion menu is
+      ;; displayed)
+      (setq ac-use-menu-map t)
+      (define-key ac-menu-map (kbd "C-n") 'ac-next)
+      (define-key ac-menu-map (kbd "C-p") 'ac-previous)
 
-        ;; unbind some keys (inconvenient in Comint buffers)
-        (define-key ac-completing-map (kbd "M-n") nil)
-        (define-key ac-completing-map (kbd "M-p") nil)
+      ;; unbind some keys (inconvenient in Comint buffers)
+      (define-key ac-completing-map (kbd "M-n") nil)
+      (define-key ac-completing-map (kbd "M-p") nil)
 
-        ;; add other modes into `ac-modes'
-        (setq ac-modes
-              (append ac-modes
-                      '(change-log-mode
-                        org-mode
-                        prog-mode       ; programming modes
-                        snippet-mode
-                        sql-mode
-                        text-mode)))
+      ;; add other modes into `ac-modes'
+      (setq ac-modes
+            (append ac-modes
+                    '(change-log-mode
+                      org-mode
+                      prog-mode       ; programming modes
+                      snippet-mode
+                      sql-mode
+                      text-mode)))
 
-        ;; 7.8 enable auto-complete-mode automatically for Sword mode
-        (add-to-list 'ac-modes 'sword-mode) ; brand new mode
+      ;; 7.8 enable auto-complete-mode automatically for Sword mode
+      (add-to-list 'ac-modes 'sword-mode) ; brand new mode
 
-        ;; 8.1 delay to completions will be available
-        (setq ac-delay 0)               ; faster than default 0.1
+      ;; 8.1 delay to completions will be available
+      (setq ac-delay 0)               ; faster than default 0.1
 
-        ;; 8.2 completion menu will be automatically shown
-        (setq ac-auto-show-menu 0.2)    ; [default: 0.8]
+      ;; 8.2 completion menu will be automatically shown
+      (setq ac-auto-show-menu 0.2)    ; [default: 0.8]
 
-        ;; 8.13 delay to show quick help
-        (setq ac-quick-help-delay 0.5)
+      ;; 8.13 delay to show quick help
+      (setq ac-quick-help-delay 0.5)
 
-        ;; 8.15 max height of quick help
-        (setq ac-quick-help-height 10)  ; same as `ac-menu-height'
+      ;; 8.15 max height of quick help
+      (setq ac-quick-help-height 10)  ; same as `ac-menu-height'
 
-        ;; 8.16 limit on number of candidates
-        (setq ac-candidate-limit 100)
+      ;; 8.16 limit on number of candidates
+      (setq ac-candidate-limit 100)
 
-        ;; (setq ac-disable-inline t)
-        ;; (setq ac-candidate-menu-min 0)
+      ;; (setq ac-disable-inline t)
+      ;; (setq ac-candidate-menu-min 0)
 
-        ;; completion by TAB
-        (define-key ac-completing-map (kbd "<tab>") 'ac-complete)
+      ;; completion by TAB
+      (define-key ac-completing-map (kbd "<tab>") 'ac-complete)
 
-        ;; completion by right arrow
-        (define-key ac-completing-map (kbd "<right>") 'ac-complete)
+      ;; completion by right arrow
+      (define-key ac-completing-map (kbd "<right>") 'ac-complete)
 
-        ;; abort
-        (define-key ac-completing-map (kbd "C-g") 'ac-stop)
-        (define-key ac-completing-map (kbd "<left>") 'ac-stop)
+      ;; abort
+      (define-key ac-completing-map (kbd "C-g") 'ac-stop)
+      (define-key ac-completing-map (kbd "<left>") 'ac-stop)
 
-        ;; 11.1 avoid Flyspell processes when auto completion is being started
-        (ac-flyspell-workaround))))
+      ;; 11.1 avoid Flyspell processes when auto completion is being started
+      (ac-flyspell-workaround)))
 
   ;; modular text completion framework
   (try-require 'company-XXX)
@@ -7988,7 +7975,7 @@ up before you execute another command."
   ;; new inferior ESS process appears in another window in the current frame
   (setq inferior-ess-same-window nil)
 
-  (when cygwinp                         ; XXX What if we use R from Cygwin?
+  (when cygwinp                         ; using R from Cygwin
 
     ;; safe 8.3 name for 32-bit programs
     (setq ess-program-files "c:/PROGRA~2")
@@ -7996,10 +7983,8 @@ up before you execute another command."
     ;; safe 8.3 name for 64-bit programs
     (setq ess-program-files-64 "c:/PROGRA~1")
 
-    ;; ;; program name for invoking an inferior ESS with `M-x R'
-    ;; (setq inferior-R-program-name
-    ;;       "c:/PROGRA~1/R/R-3.1.0/bin/i386/Rterm.exe")
-    )
+    ;; program name for invoking an inferior ESS with `M-x R'
+    (setq inferior-R-program-name "R")) ; [default: Rterm]
 
   ;; accented characters on graphics
   (add-to-list 'process-coding-system-alist
@@ -8221,6 +8206,15 @@ up before you execute another command."
 ;;* 45 (info "(emacs)Hyperlinking")
 
 (leuven--chapter leuven-chapter-45-hyperlinking "45 Hyperlinking and Navigation Features"
+
+  ;; use proxy
+  (setq url-proxy-services              ;! Emacs expects just hostname and port
+                                        ;! in `url-proxy-services', NOT prefixed
+                                        ;! with "http://"
+        `(("http"     . ,(getenv "http_proxy"))
+          ("ftp"      . ,(getenv "http_proxy"))
+          ("no_proxy" . "^.*example.com")))
+          ;; disable proxy for some hosts
 
 ;;** pass a URL to a WWW browser
 
@@ -8616,6 +8610,7 @@ up before you execute another command."
         '((TeX-master . t)
           (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
           (flycheck-emacs-lisp-initialize-packages . t)
+          (flycheck-mode . nil)
           (flyspell-mode . -1)
           (flyspell-mode . 1)
           (ispell-local-dictionary . "american")
@@ -8812,7 +8807,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140903.1519]--")
+(message "* --[ Loaded Emacs Leuven 20140904.1143]--")
 
 (provide 'emacs-leuven)
 
@@ -8822,6 +8817,7 @@ up before you execute another command."
 ;; coding: utf-8
 ;; ispell-local-dictionary: "american"
 ;; eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))
+;; flycheck-mode: nil
 ;; flycheck-emacs-lisp-initialize-packages: t
 ;; End:
 

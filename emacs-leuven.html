@@ -1292,7 +1292,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140903.1520</span>
+"org-comment">Version: 20140904.1144</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1415,7 +1415,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140903.1520]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140904.1144]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -4242,8 +4242,9 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">show buffer position like a scroll bar in mode line</span>
-  (try-require 'sml-modeline)
+"org-comment">;; show buffer position like a scroll bar in mode line</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(try-require 'sml-modeline)</span>
   (with-eval-after-load <span class="org-string">"sml-modeline"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -4258,11 +4259,13 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
+  (with-eval-after-load <span class="org-string">"smart-mode-modeline"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">theme `</span><span class="org-constant"><span class=
 "org-comment">smart-mode-line</span></span><span class=
 "org-comment">' should use</span>
-  (setq sml/theme 'respectful)
+    (setq sml/theme 'respectful))
 </pre>
           </div>
 
@@ -4548,10 +4551,10 @@
       (add-hook 'isearch-mode-hook
                 (<span class="org-keyword">lambda</span> ()
                   (<span class="org-keyword">require</span> '<span class=
-"org-constant">fuzzy</span>)))
+"org-constant">fuzzy</span>))))
 
-      (with-eval-after-load <span class="org-string">"fuzzy"</span>
-        (turn-on-fuzzy-isearch))))
+    (with-eval-after-load <span class="org-string">"fuzzy"</span>
+      (turn-on-fuzzy-isearch)))
 </pre>
           </div>
 
@@ -5171,58 +5174,15 @@
     (global-set-key (kbd <span class=
 "org-string">"C-c d l"</span>) 'dictionary-lookup-definition)
     (global-set-key (kbd <span class=
-"org-string">"C-c d m"</span>) 'dictionary-match-words)
+"org-string">"C-c d m"</span>) 'dictionary-match-words))
 
-    (with-eval-after-load <span class="org-string">"dictionary"</span>
+  (with-eval-after-load <span class="org-string">"dictionary"</span>
 
-      (global-dictionary-tooltip-mode 1)
-
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; server contacted for searching the dictionary</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq dictionary-server "localhost")</span>
-
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; connect via a HTTP proxy (using the CONNECT command)</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq dictionary-use-http-proxy t)</span>
-      <span class="org-comment-delimiter">;;</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; name of the HTTP proxy to use</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq dictionary-proxy-server "hellman") ; </span><span class=
-"org-leuven-highlight"><span class="org-comment">XXX</span></span>
-      <span class="org-comment-delimiter">;;</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; port of the proxy server</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq dictionary-proxy-port 8080) ; </span><span class=
-"org-leuven-highlight"><span class="org-comment">XXX</span></span>
-
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">use proxy</span>
-      (setq url-proxy-services          <span class=
-"org-comment-delimiter">;</span><span class=
-"org-comment">! Emacs expects just hostname and port</span>
-                                        <span class=
-"org-comment-delimiter">;</span><span class=
-"org-comment">! in `</span><span class="org-constant"><span class=
-"org-comment">url-proxy-services</span></span><span class=
-"org-comment">',</span>
-                                        <span class=
-"org-comment-delimiter">;</span><span class=
-"org-comment">! NOT prefixed with "http://"</span>
-            `((<span class=
-"org-string">"http"</span>     . ,(getenv <span class=
-"org-string">"http_proxy"</span>))
-              (<span class=
-"org-string">"ftp"</span>      . ,(getenv <span class=
-"org-string">"http_proxy"</span>))
-              (<span class="org-string">"no_proxy"</span> . <span class=
-"org-string">"^.*example.com"</span>)))
-              <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">disable proxy for some hosts</span>
-    ))
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">enable/disable the tooltip support for all buffers</span>
+    (<span class="org-keyword">if</span> consolep
+        (global-dictionary-tooltip-mode 0)
+      (global-dictionary-tooltip-mode 1)))
 </pre>
           </div>
 
@@ -8035,7 +7995,7 @@ M-: (executable-find "diff") RET
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">disable Tooltip mode (use the echo area for help and GUD tooltips)</span>
-  (tooltip-mode -1)
+  (<span class="org-keyword">unless</span> consolep (tooltip-mode -1))
 </pre>
           </div>
 
@@ -9139,13 +9099,16 @@ M-: (executable-find "diff") RET
 "org-comment">from Bastien</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
+"org-comment">;; </span><span class="org-leuven-highlight"><span class=
+"org-comment">XXX</span></span><span class=
 "org-comment"> 2010-06-21 Conflicts with outline-minor-mode bindings</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">add a hook to use `</span><span class="org-constant"><span class=
+"org-comment">;; add a hook to use `</span><span class=
+"org-constant"><span class=
 "org-comment">orgstruct-mode</span></span><span class=
 "org-comment">' in Emacs Lisp buffers</span>
-  (add-hook 'emacs-lisp-mode-hook 'orgstruct-mode)
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(add-hook 'emacs-lisp-mode-hook 'orgstruct-mode)</span>
 
   (<span class="org-keyword">defun</span> <span class=
 "org-function-name">org-cycle-global</span> ()
@@ -9253,14 +9216,14 @@ M-: (executable-find "diff") RET
 "org-doc">"Draw a box around the left hand side of a region bounding START and END."</span> t)
 
     (global-set-key (kbd <span class=
-"org-string">"C-c q"</span>) 'boxquote-region)
+"org-string">"C-c q"</span>) 'boxquote-region))
 
-    (with-eval-after-load <span class="org-string">"boxquote"</span>
-      (setq boxquote-top-and-tail <span class="org-string">"────"</span>)
-      (setq boxquote-title-format <span class="org-string">" %s"</span>)
-      (setq boxquote-top-corner    <span class="org-string">"  ╭"</span>)
-      (setq boxquote-side          <span class="org-string">"  │ "</span>)
-      (setq boxquote-bottom-corner <span class="org-string">"  ╰"</span>)))
+  (with-eval-after-load <span class="org-string">"boxquote"</span>
+    (setq boxquote-top-and-tail  <span class="org-string">"────"</span>)
+    (setq boxquote-title-format  <span class="org-string">" %s"</span>)
+    (setq boxquote-top-corner    <span class="org-string">"  ╭"</span>)
+    (setq boxquote-side          <span class="org-string">"  │ "</span>)
+    (setq boxquote-bottom-corner <span class="org-string">"  ╰"</span>))
 </pre>
           </div>
 
@@ -9759,138 +9722,138 @@ M-: (executable-find "diff") RET
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">insert an inline task (independent of outline hierarchy)</span>
-    (try-require 'org-inlinetask)       <span class=
+    (try-require 'org-inlinetask))      <span class=
 "org-comment-delimiter">; </span><span class="org-comment">needed</span>
-    (with-eval-after-load <span class="org-string">"org-inlinetask"</span>
 
-      <span class="org-comment-delimiter">;; </span><span class=
+  (with-eval-after-load <span class="org-string">"org-inlinetask"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">initial state (</span><span class=
 "org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
 "org-comment"> keyword) of inline tasks</span>
-      (setq org-inlinetask-default-state <span class=
+    (setq org-inlinetask-default-state <span class=
 "org-string">"</span><span class="org-leuven-highlight"><span class=
 "org-string">TODO</span></span><span class="org-string">"</span>)
 
-      <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">template for inline tasks in HTML exporter</span>
-      (<span class="org-keyword">defun</span> <span class=
+    (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven--org-html-format-inlinetask</span> (todo todo-type priority title
-                                                 tags contents)
-        <span class=
+                                               tags contents)
+      <span class=
 "org-doc">"Format an inline task element for HTML export."</span>
-        (<span class="org-keyword">let</span> ((todo-kw
-               (<span class="org-keyword">if</span> todo
-                   (format <span class=
+      (<span class="org-keyword">let</span> ((todo-kw
+             (<span class="org-keyword">if</span> todo
+                 (format <span class=
 "org-string">"&lt;span class=\"%s %s\"&gt;%s&lt;/span&gt; "</span> todo-type todo todo)
-                 <span class="org-string">""</span>))
-              (full-title-w/o-todo-kw
-               (concat
-                (<span class=
+               <span class="org-string">""</span>))
+            (full-title-w/o-todo-kw
+             (concat
+              (<span class=
 "org-keyword">when</span> priority (format <span class=
 "org-string">"[#%c] "</span> priority))
-                title
-                (<span class="org-keyword">when</span> tags
-                  (concat <span class=
+              title
+              (<span class="org-keyword">when</span> tags
+                (concat <span class=
 "org-string">"&amp;nbsp;&amp;nbsp;&amp;nbsp;"</span>
-                          <span class=
+                        <span class=
 "org-string">"&lt;span class=\"tag\"&gt;"</span>
-                          (mapconcat (<span class=
+                        (mapconcat (<span class=
 "org-keyword">lambda</span> (tag)
-                                       (concat <span class=
+                                     (concat <span class=
 "org-string">"&lt;span class= \""</span> tag <span class=
 "org-string">"\"&gt;"</span> tag
-                                               <span class=
+                                             <span class=
 "org-string">"&lt;/span&gt;"</span>))
-                                     tags
-                                     <span class=
+                                   tags
+                                   <span class=
 "org-string">"&amp;nbsp;"</span>)
-                          <span class="org-string">"&lt;/span&gt;"</span>)))))
-          (concat <span class=
+                        <span class="org-string">"&lt;/span&gt;"</span>)))))
+        (concat <span class=
 "org-string">"&lt;table class=\"inlinetask\" width=\"100%\"&gt;"</span>
-                    <span class="org-string">"&lt;tr&gt;"</span>
-                      <span class=
+                  <span class="org-string">"&lt;tr&gt;"</span>
+                    <span class=
 "org-string">"&lt;td valign=\"top\"&gt;&lt;b&gt;"</span> todo-kw <span class=
 "org-string">"&lt;/b&gt;&lt;/td&gt;"</span>
-                      <span class=
+                    <span class=
 "org-string">"&lt;td width=\"100%\"&gt;&lt;b&gt;"</span> full-title-w/o-todo-kw <span class="org-string">"&lt;/b&gt;&lt;br /&gt;"</span>
-                        (or contents <span class=
+                      (or contents <span class=
 "org-string">""</span>) <span class="org-string">"&lt;/td&gt;"</span>
-                    <span class="org-string">"&lt;/tr&gt;"</span>
-                  <span class="org-string">"&lt;/table&gt;"</span>)))
+                  <span class="org-string">"&lt;/tr&gt;"</span>
+                <span class="org-string">"&lt;/table&gt;"</span>)))
 
-      <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">function called to format an inlinetask in HTML code</span>
-      (setq org-html-format-inlinetask-function
-            'leuven--org-html-format-inlinetask)
+    (setq org-html-format-inlinetask-function
+          'leuven--org-html-format-inlinetask)
 
-      <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">template for inline tasks in LaTeX exporter</span>
-      (<span class="org-keyword">defun</span> <span class=
+    (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven--org-latex-format-inlinetask</span> (todo todo-type priority title
-                                                  tags contents)
-        <span class=
+                                                tags contents)
+      <span class=
 "org-doc">"Format an inline task element for LaTeX export."</span>
-        (<span class=
-"org-keyword">let*</span> ((tags-string (format <span class=
+      (<span class="org-keyword">let*</span> ((tags-string (format <span class=
 "org-string">":%s:"</span> (mapconcat 'identity tags <span class=
 "org-string">":"</span>)))
-               (opt-color
-                (<span class="org-keyword">if</span> tags
-                    (<span class=
+             (opt-color
+              (<span class="org-keyword">if</span> tags
+                  (<span class=
 "org-keyword">cond</span> ((string-match <span class=
 "org-string">":info:"</span> tags-string)
-                           <span class="org-string">"color=yellow!40"</span>)
-                          ((string-match <span class=
+                         <span class="org-string">"color=yellow!40"</span>)
+                        ((string-match <span class=
 "org-string">":warning:"</span> tags-string)
-                           <span class="org-string">"color=orange!40"</span>)
-                          ((string-match <span class=
+                         <span class="org-string">"color=orange!40"</span>)
+                        ((string-match <span class=
 "org-string">":error:"</span> tags-string)
-                           <span class="org-string">"color=red!40"</span>)
-                          (t <span class="org-string">""</span>))
-                  <span class="org-string">""</span>))
-               (full-title
-                (concat
-                 (<span class="org-keyword">when</span> todo
-                   (format <span class=
+                         <span class="org-string">"color=red!40"</span>)
+                        (t <span class="org-string">""</span>))
+                <span class="org-string">""</span>))
+             (full-title
+              (concat
+               (<span class="org-keyword">when</span> todo
+                 (format <span class=
 "org-string">"{\\color{red}\\textbf{\\textsf{\\textsc{%s}}}} "</span>
-                           todo))
-                 (<span class="org-keyword">when</span> priority
-                   (format <span class=
+                         todo))
+               (<span class="org-keyword">when</span> priority
+                 (format <span class=
 "org-string">"\\textsf{\\framebox{\\#%c}} "</span> priority))
-                 title
-                 (<span class="org-keyword">when</span> tags
-                   (format <span class="org-string">"\\hfill{}:%s:"</span>
-                           (mapconcat 'identity tags <span class=
+               title
+               (<span class="org-keyword">when</span> tags
+                 (format <span class="org-string">"\\hfill{}:%s:"</span>
+                         (mapconcat 'identity tags <span class=
 "org-string">":"</span>)))))
-               (opt-rule
-                (<span class="org-keyword">if</span> contents
-                    <span class=
+             (opt-rule
+              (<span class="org-keyword">if</span> contents
+                  <span class=
 "org-string">"\\\\ \\rule[.3em]{\\textwidth}{0.2pt}\n"</span>
-                  <span class="org-string">""</span>))
-               (opt-contents
-                (or contents <span class="org-string">""</span>)))
-          <span class="org-comment-delimiter">;; </span><span class=
+                <span class="org-string">""</span>))
+             (opt-contents
+              (or contents <span class="org-string">""</span>)))
+        <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">this requires the `</span><span class="org-constant"><span class=
 "org-comment">todonotes</span></span><span class="org-comment">' package</span>
-          (format (concat <span class=
+        (format (concat <span class=
 "org-string">"\\todo[inline,caption={},%s]{\n"</span>
-                          <span class="org-string">"  %s\n"</span>
-                          <span class="org-string">"  %s"</span>
-                          <span class="org-string">"  %s"</span>
-                          <span class="org-string">"}"</span>)
-                  opt-color
-                  full-title
-                  opt-rule
-                  opt-contents)))
+                        <span class="org-string">"  %s\n"</span>
+                        <span class="org-string">"  %s"</span>
+                        <span class="org-string">"  %s"</span>
+                        <span class="org-string">"}"</span>)
+                opt-color
+                full-title
+                opt-rule
+                opt-contents)))
 
-      <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">function called to format an inlinetask in LaTeX code</span>
-      (setq org-latex-format-inlinetask-function
-            'leuven--org-latex-format-inlinetask))
+    (setq org-latex-format-inlinetask-function
+          'leuven--org-latex-format-inlinetask)
 
     )                                   <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">with-eval-after-load "org" ends here</span>
+"org-comment">with-eval-after-load "org-inlinetask" ends here</span>
 </pre>
             </div>
 
@@ -15332,19 +15295,20 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (with-eval-after-load <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Crypt"</span>)
 
-    (try-require 'org-crypt)            <span class=
+    (try-require 'org-crypt))           <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">loads org, gnus-sum, etc...</span>
-    (with-eval-after-load <span class="org-string">"org-crypt"</span>
 
-      <span class="org-comment-delimiter">;; </span><span class=
+  (with-eval-after-load <span class="org-string">"org-crypt"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">encrypt all entries before saving</span>
-      (org-crypt-use-before-save-magic)
+    (org-crypt-use-before-save-magic)
 
-      <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">which tag is used to mark headings to be encrypted</span>
-      (setq org-tags-exclude-from-inheritance '(<span class=
-"org-string">"crypt"</span>))))
+    (setq org-tags-exclude-from-inheritance '(<span class=
+"org-string">"crypt"</span>)))
 </pre>
             </div>
           </div>
@@ -15574,40 +15538,41 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">using Org mode to send buffer/subtree per mail</span>
-    (try-require 'org-mime)
-    (with-eval-after-load <span class="org-string">"org-mime"</span>
+    (try-require 'org-mime))
 
-      (add-hook 'org-mode-hook
-                (<span class="org-keyword">lambda</span> ()
-                  (local-set-key
-                    (kbd <span class=
+  (with-eval-after-load <span class="org-string">"org-mime"</span>
+
+    (add-hook 'org-mode-hook
+              (<span class="org-keyword">lambda</span> ()
+                (local-set-key
+                  (kbd <span class=
 "org-string">"C-c m"</span>) 'org-mime-subtree)))
 
-      (<span class="org-keyword">defun</span> <span class=
+    (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-mail-subtree</span> ()
-        (interactive)
-        (org-agenda-goto)
-        (org-mime-subtree))
+      (interactive)
+      (org-agenda-goto)
+      (org-mime-subtree))
 
-      (add-hook 'org-agenda-mode-hook
-                (<span class="org-keyword">lambda</span> ()
-                  (local-set-key
-                    (kbd <span class=
+    (add-hook 'org-agenda-mode-hook
+              (<span class="org-keyword">lambda</span> ()
+                (local-set-key
+                  (kbd <span class=
 "org-string">"C-c m"</span>) 'leuven-mail-subtree)))
 
-      <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">add a `</span><span class="org-constant"><span class=
 "org-comment">mail_composed</span></span><span class=
 "org-comment">' property with the current time when</span>
-      <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">`</span><span class="org-constant"><span class=
 "org-comment">org-mime-subtree</span></span><span class=
 "org-comment">' is called</span>
-      (add-hook 'org-mime-send-subtree-hook
-                (<span class="org-keyword">lambda</span> ()
-                  (org-entry-put (point) <span class=
+    (add-hook 'org-mime-send-subtree-hook
+              (<span class="org-keyword">lambda</span> ()
+                (org-entry-put (point) <span class=
 "org-string">"mail_composed"</span>
-                                 (current-time-string))))))
+                               (current-time-string)))))
 </pre>
           </div>
         </div>
@@ -18207,11 +18172,6 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   (leuven--section <span class=
 "org-string">"28.1 (emacs)Version Control"</span>)
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(try-require 'vc)                     ; for defining function `</span><span class="org-constant"><span class="org-comment">vc-switches</span></span><span class="org-comment">'</span>
-  <span class=
-"org-comment-delimiter">;;                                       </span><span class="org-comment">; (</span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> autoload?)</span>
 </pre>
           </div>
         </div>
@@ -18233,6 +18193,9 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   (leuven--section <span class=
 "org-string">"28.1.2 Version Control and the Mode Line"</span>)
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(defpowerline powerline-vc (when (and (buffer-file-name (current-buffer)) vc-mode) (format-mode-line '(vc-mode vc-mode))))</span>
 
   (with-eval-after-load <span class="org-string">"vc"</span>
 
@@ -18328,18 +18291,19 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">major mode for editing git commit messages</span>
-    (try-require 'git-commit-mode)
-    (with-eval-after-load <span class="org-string">"git-commit-mode"</span>
+    (try-require 'git-commit-mode))
 
-      <span class="org-comment-delimiter">;; </span><span class=
+  (with-eval-after-load <span class="org-string">"git-commit-mode"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on on-the-fly spell-checking</span>
-      (add-hook 'git-commit-mode-hook 'flyspell-mode)
+    (add-hook 'git-commit-mode-hook 'flyspell-mode)
 
-      <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn off save-place</span>
-      (add-hook 'git-commit-mode-hook
-                (<span class="org-keyword">lambda</span> ()
-                  (toggle-save-place 0)))))
+    (add-hook 'git-commit-mode-hook
+              (<span class="org-keyword">lambda</span> ()
+                (toggle-save-place 0))))
 </pre>
             </div>
           </div>
@@ -18890,15 +18854,16 @@ TAGS:
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">select from multiple tags</span>
-    (try-require 'etags-select)
-    (with-eval-after-load <span class="org-string">"etags-select"</span>
+    (try-require 'etags-select))
 
-      <span class="org-comment-delimiter">;; </span><span class=
+  (with-eval-after-load <span class="org-string">"etags-select"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">do a `</span><span class="org-constant"><span class=
 "org-comment">find-tag-at-point</span></span><span class=
 "org-comment">', and display all exact matches</span>
-      (global-set-key (kbd <span class=
-"org-string">"M-?"</span>) 'etags-select-find-tag-at-point)))
+    (global-set-key (kbd <span class=
+"org-string">"M-?"</span>) 'etags-select-find-tag-at-point))
 </pre>
             </div>
           </div>
@@ -19966,116 +19931,116 @@ TAGS:
 "org-comment">Auto Completion</span>
     (<span class="org-keyword">when</span> (locate-library <span class=
 "org-string">"auto-complete-config"</span>)
-      (idle-require 'auto-complete-config)
+      (idle-require 'auto-complete-config))
 
-      (with-eval-after-load <span class=
+    (with-eval-after-load <span class=
 "org-string">"auto-complete-config"</span>
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; 5.4 completion will be started automatically by inserting 2 characters</span>
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(setq ac-auto-start 2)</span>
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">6.1 set a list of sources to use (by default + for some major modes)</span>
-        (ac-config-default)             <span class=
+      (ac-config-default)             <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">... and enable Auto-Complete mode in</span>
-                                        <span class=
-"org-comment-delimiter">; </span><span class="org-comment">all buffers</span>
+"org-comment">... and enable Auto-Complete mode in all</span>
+                                      <span class=
+"org-comment-delimiter">; </span><span class="org-comment">buffers</span>
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">7.5 use `</span><span class="org-constant"><span class=
 "org-comment">C-n/C-p</span></span><span class=
 "org-comment">' to select candidates (only when completion menu is</span>
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">displayed)</span>
-        (setq ac-use-menu-map t)
-        (define-key ac-menu-map (kbd <span class=
+      (setq ac-use-menu-map t)
+      (define-key ac-menu-map (kbd <span class=
 "org-string">"C-n"</span>) 'ac-next)
-        (define-key ac-menu-map (kbd <span class=
+      (define-key ac-menu-map (kbd <span class=
 "org-string">"C-p"</span>) 'ac-previous)
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">unbind some keys (inconvenient in Comint buffers)</span>
-        (define-key ac-completing-map (kbd <span class=
+      (define-key ac-completing-map (kbd <span class=
 "org-string">"M-n"</span>) nil)
-        (define-key ac-completing-map (kbd <span class=
+      (define-key ac-completing-map (kbd <span class=
 "org-string">"M-p"</span>) nil)
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">add other modes into `</span><span class=
 "org-constant"><span class="org-comment">ac-modes</span></span><span class=
 "org-comment">'</span>
-        (setq ac-modes
-              (append ac-modes
-                      '(change-log-mode
-                        org-mode
-                        prog-mode       <span class=
+      (setq ac-modes
+            (append ac-modes
+                    '(change-log-mode
+                      org-mode
+                      prog-mode       <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">programming modes</span>
-                        snippet-mode
-                        sql-mode
-                        text-mode)))
+                      snippet-mode
+                      sql-mode
+                      text-mode)))
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">7.8 enable auto-complete-mode automatically for Sword mode</span>
-        (add-to-list 'ac-modes 'sword-mode) <span class=
+      (add-to-list 'ac-modes 'sword-mode) <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">brand new mode</span>
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">8.1 delay to completions will be available</span>
-        (setq ac-delay 0)               <span class=
+      (setq ac-delay 0)               <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">faster than default 0.1</span>
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">8.2 completion menu will be automatically shown</span>
-        (setq ac-auto-show-menu 0.2)    <span class=
+      (setq ac-auto-show-menu 0.2)    <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">[default: 0.8]</span>
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">8.13 delay to show quick help</span>
-        (setq ac-quick-help-delay 0.5)
+      (setq ac-quick-help-delay 0.5)
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">8.15 max height of quick help</span>
-        (setq ac-quick-help-height 10)  <span class=
+      (setq ac-quick-help-height 10)  <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">same as `</span><span class="org-constant"><span class=
 "org-comment">ac-menu-height</span></span><span class="org-comment">'</span>
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">8.16 limit on number of candidates</span>
-        (setq ac-candidate-limit 100)
+      (setq ac-candidate-limit 100)
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(setq ac-disable-inline t)</span>
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(setq ac-candidate-menu-min 0)</span>
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">completion by TAB</span>
-        (define-key ac-completing-map (kbd <span class=
+      (define-key ac-completing-map (kbd <span class=
 "org-string">"&lt;tab&gt;"</span>) 'ac-complete)
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">completion by right arrow</span>
-        (define-key ac-completing-map (kbd <span class=
+      (define-key ac-completing-map (kbd <span class=
 "org-string">"&lt;right&gt;"</span>) 'ac-complete)
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">abort</span>
-        (define-key ac-completing-map (kbd <span class=
+      (define-key ac-completing-map (kbd <span class=
 "org-string">"C-g"</span>) 'ac-stop)
-        (define-key ac-completing-map (kbd <span class=
+      (define-key ac-completing-map (kbd <span class=
 "org-string">"&lt;left&gt;"</span>) 'ac-stop)
 
-        <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">11.1 avoid Flyspell processes when auto completion is being started</span>
-        (ac-flyspell-workaround))))
+      (ac-flyspell-workaround)))
 </pre>
             </div>
           </div>
@@ -23006,8 +22971,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   (<span class=
 "org-keyword">when</span> cygwinp                         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
-"org-comment"> What if we use R from Cygwin?</span>
+"org-comment">using R from Cygwin</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">safe 8.3 name for 32-bit programs</span>
@@ -23018,12 +22982,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (setq ess-program-files-64 <span class="org-string">"c:/PROGRA~1"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; program name for invoking an inferior ESS with `M-x R'</span>
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq inferior-R-program-name</span>
-    <span class="org-comment-delimiter">;;       </span><span class=
-"org-comment">"c:/PROGRA~1/R/R-3.1.0/bin/i386/Rterm.exe")</span>
-    )
+"org-comment">program name for invoking an inferior ESS with `M-x R'</span>
+    (setq inferior-R-program-name <span class=
+"org-string">"R"</span>)) <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">[default: Rterm]</span>
 </pre>
             </div>
 
@@ -23684,6 +23647,32 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
 (leuven--chapter leuven-chapter-45-hyperlinking <span class=
 "org-string">"45 Hyperlinking and Navigation Features"</span>
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">use proxy</span>
+  (setq url-proxy-services              <span class=
+"org-comment-delimiter">;</span><span class=
+"org-comment">! Emacs expects just hostname and port</span>
+                                        <span class=
+"org-comment-delimiter">;</span><span class=
+"org-comment">! in `</span><span class="org-constant"><span class=
+"org-comment">url-proxy-services</span></span><span class=
+"org-comment">', NOT prefixed</span>
+                                        <span class=
+"org-comment-delimiter">;</span><span class=
+"org-comment">! with "http://"</span>
+        `((<span class="org-string">"http"</span>     . ,(getenv <span class=
+"org-string">"http_proxy"</span>))
+          (<span class="org-string">"ftp"</span>      . ,(getenv <span class=
+"org-string">"http_proxy"</span>))
+          (<span class="org-string">"no_proxy"</span> . <span class=
+"org-string">"^.*example.com"</span>)))
+          <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">disable proxy for some hosts</span>
 </pre>
         </div>
 
@@ -24471,6 +24460,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
         '((TeX-master . t)
           (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
           (flycheck-emacs-lisp-initialize-packages . t)
+          (flycheck-mode . nil)
           (flyspell-mode . -1)
           (flyspell-mode . 1)
           (ispell-local-dictionary . <span class=
@@ -25419,7 +25409,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140903.1520]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140904.1144]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
@@ -25435,6 +25425,8 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 "org-comment">ispell-local-dictionary: "american"</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">flycheck-mode: nil</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">flycheck-emacs-lisp-initialize-packages: t</span>
 <span class="org-comment-delimiter">;; </span><span class=
