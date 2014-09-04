@@ -2321,19 +2321,19 @@ Use the ~-C~ option which will ConsiderCamelCaseToBeCorrect.
 Add language indicator.
 
 #+begin_src emacs-lisp
-      (setq-default mode-line-format
-                    (cons
-                     '(:eval
-                       (let ((dict (and (featurep 'ispell)
-                                        (not buffer-read-only)
-                                        (or ispell-local-dictionary
-                                            ispell-dictionary
-                                            "--" ; default dictionary
-                                            ))))
-                         (and dict
-                              (propertize (concat " " (substring dict 0 2))
-                                          'face 'mode-line-highlight))))
-                     (default-value 'mode-line-format)))
+      ;; (setq-default mode-line-format
+      ;;               (cons
+      ;;                '(:eval
+      ;;                  (let ((dict (and (featurep 'ispell)
+      ;;                                   (not buffer-read-only)
+      ;;                                   (or ispell-local-dictionary
+      ;;                                       ispell-dictionary
+      ;;                                       "--" ; default dictionary
+      ;;                                       ))))
+      ;;                    (and dict
+      ;;                         (propertize (concat " " (substring dict 0 2))
+      ;;                                     'face 'mode-line-highlight))))
+      ;;                (default-value 'mode-line-format)))
 #+end_src
 
 #+begin_src emacs-lisp

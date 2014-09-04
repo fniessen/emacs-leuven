@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140904.2337
+;; Version: 20140904.2341
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140904.2337]--")
+(message "* --[ Loading Emacs Leuven 20140904.2341]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1419,19 +1419,19 @@ Last time is saved in global variable `leuven--before-section-time'."
         (setq ispell-really-aspell nil)
         (setq ispell-really-hunspell nil)))
 
-      (setq-default mode-line-format
-                    (cons
-                     '(:eval
-                       (let ((dict (and (featurep 'ispell)
-                                        (not buffer-read-only)
-                                        (or ispell-local-dictionary
-                                            ispell-dictionary
-                                            "--" ; default dictionary
-                                            ))))
-                         (and dict
-                              (propertize (concat " " (substring dict 0 2))
-                                          'face 'mode-line-highlight))))
-                     (default-value 'mode-line-format)))
+      ;; (setq-default mode-line-format
+      ;;               (cons
+      ;;                '(:eval
+      ;;                  (let ((dict (and (featurep 'ispell)
+      ;;                                   (not buffer-read-only)
+      ;;                                   (or ispell-local-dictionary
+      ;;                                       ispell-dictionary
+      ;;                                       "--" ; default dictionary
+      ;;                                       ))))
+      ;;                    (and dict
+      ;;                         (propertize (concat " " (substring dict 0 2))
+      ;;                                     'face 'mode-line-highlight))))
+      ;;                (default-value 'mode-line-format)))
 
       )
 
@@ -8916,7 +8916,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140904.2338]--")
+(message "* --[ Loaded Emacs Leuven 20140904.2341]--")
 
 (provide 'emacs-leuven)
 
