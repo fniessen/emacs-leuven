@@ -1294,7 +1294,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140904.1649</span>
+"org-comment">Version: 20140904.2019</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1417,7 +1417,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140904.1649]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140904.2019]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -4276,7 +4276,75 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (add-hook 'after-init-hook 'powerline-default-theme)
+(<span class="org-keyword">defun</span> <span class=
+"org-function-name">powerline-leuven-theme</span> ()
+  <span class="org-doc">"Setup the leuven mode-line."</span>
+  (interactive)
+  (setq-default mode-line-format
+                '(<span class="org-string">"%e"</span>
+                  (<span class="org-builtin">:eval</span>
+                   (<span class=
+"org-keyword">let*</span> ((active (powerline-selected-window-active))
+                          (mode-line (<span class=
+"org-keyword">if</span> active 'mode-line 'mode-line-inactive))
+                          (face1 (<span class=
+"org-keyword">if</span> active 'powerline-active1 'powerline-inactive1))
+                          (face2 (<span class=
+"org-keyword">if</span> active 'powerline-active2 'powerline-inactive2))
+                          (separator-left (intern (format <span class=
+"org-string">"powerline-%s-%s"</span>
+                                                          powerline-default-separator
+                                                          (car powerline-default-separator-dir))))
+                          (separator-right (intern (format <span class=
+"org-string">"powerline-%s-%s"</span>
+                                                           powerline-default-separator
+                                                           (cdr powerline-default-separator-dir))))
+                          (lhs (list (powerline-vc face1 'r)
+                                     (funcall separator-left face1 mode-line)
+                                     (powerline-raw <span class=
+"org-string">"%*"</span> nil 'l)
+
+                                     (powerline-raw mode-line-mule-info nil 'l)
+
+                                     (powerline-buffer-id nil 'l)
+
+                                     (<span class=
+"org-keyword">when</span> (and (boundp 'which-func-mode) which-func-mode)
+                                       (powerline-raw which-func-format nil 'l))
+
+                                     (powerline-raw <span class=
+"org-string">" "</span>)
+                                     (funcall separator-left mode-line face1)
+                                     (<span class=
+"org-keyword">when</span> (boundp 'erc-modified-channels-object)
+                                       (powerline-raw erc-modified-channels-object face1 'l))
+                                     (powerline-major-mode face1 'l)
+                                     (powerline-process face1)
+                                     (powerline-raw <span class=
+"org-string">" "</span> face1)
+                                     (funcall separator-left face1 face2)
+                                     (powerline-minor-modes face2 'l)
+                                     (powerline-narrow face2 'l)))
+                          (rhs (list (powerline-raw global-mode-string face2 'r)
+                                     (funcall separator-right face2 face1)
+                                     (powerline-raw <span class=
+"org-string">"%l"</span> face1 'l)
+                                     (powerline-raw <span class=
+"org-string">", "</span> face1 'l)
+                                     (powerline-raw <span class=
+"org-string">"%c"</span> face1 'r)
+                                     (funcall separator-right face1 mode-line)
+                                     (powerline-raw <span class=
+"org-string">" "</span>)
+                                     (powerline-raw <span class=
+"org-string">"%4p of"</span> nil 'r)
+                                     (powerline-buffer-size nil 'l)
+                                     (powerline-hud face2 face1))))
+                     (concat (powerline-render lhs)
+                             (powerline-fill face2 (powerline-width rhs))
+                             (powerline-render rhs)))))))
+
+(add-hook 'after-init-hook 'powerline-leuven-theme)
 </pre>
           </div>
         </div>
@@ -8634,7 +8702,26 @@ M-: (executable-find "diff") RET
     (<span class="org-keyword">define-globalized-minor-mode</span> <span class=
 "org-function-name">global-fci-mode</span> fci-mode
       (<span class="org-keyword">lambda</span> () (fci-mode 1)))
-    (global-fci-mode 1))
+    (global-fci-mode 1)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">avoid fci-mode and auto-complete popups</span>
+    (<span class="org-keyword">defvar</span> <span class=
+"org-variable-name">sanityinc/fci-mode-suppressed</span> nil)
+    (<span class="org-keyword">defadvice</span> <span class=
+"org-function-name">popup-create</span> (before suppress-fci-mode activate)
+      <span class="org-doc">"Suspend fci-mode while popups are visible"</span>
+      (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-mode)
+      (<span class="org-keyword">when</span> fci-mode
+        (turn-off-fci-mode)))
+    (<span class="org-keyword">defadvice</span> <span class=
+"org-function-name">popup-delete</span> (after restore-fci-mode activate)
+      <span class=
+"org-doc">"Restore fci-mode when all popups have closed"</span>
+      (<span class=
+"org-keyword">when</span> (and (not popup-instances) sanityinc/fci-mode-suppressed)
+        (setq sanityinc/fci-mode-suppressed nil)
+        (turn-on-fci-mode))))
 </pre>
           </div>
 
@@ -25431,7 +25518,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140904.1650]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140904.2019]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

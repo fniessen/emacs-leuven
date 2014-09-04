@@ -1764,7 +1764,58 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
 See Emacs Powerline.
 
 #+begin_src emacs-lisp
-  (add-hook 'after-init-hook 'powerline-default-theme)
+(defun powerline-leuven-theme ()
+  "Setup the leuven mode-line."
+  (interactive)
+  (setq-default mode-line-format
+                '("%e"
+                  (:eval
+                   (let* ((active (powerline-selected-window-active))
+                          (mode-line (if active 'mode-line 'mode-line-inactive))
+                          (face1 (if active 'powerline-active1 'powerline-inactive1))
+                          (face2 (if active 'powerline-active2 'powerline-inactive2))
+                          (separator-left (intern (format "powerline-%s-%s"
+                                                          powerline-default-separator
+                                                          (car powerline-default-separator-dir))))
+                          (separator-right (intern (format "powerline-%s-%s"
+                                                           powerline-default-separator
+                                                           (cdr powerline-default-separator-dir))))
+                          (lhs (list (powerline-vc face1 'r)
+                                     (funcall separator-left face1 mode-line)
+                                     (powerline-raw "%*" nil 'l)
+
+                                     (powerline-raw mode-line-mule-info nil 'l)
+
+                                     (powerline-buffer-id nil 'l)
+
+                                     (when (and (boundp 'which-func-mode) which-func-mode)
+                                       (powerline-raw which-func-format nil 'l))
+
+                                     (powerline-raw " ")
+                                     (funcall separator-left mode-line face1)
+                                     (when (boundp 'erc-modified-channels-object)
+                                       (powerline-raw erc-modified-channels-object face1 'l))
+                                     (powerline-major-mode face1 'l)
+                                     (powerline-process face1)
+                                     (powerline-raw " " face1)
+                                     (funcall separator-left face1 face2)
+                                     (powerline-minor-modes face2 'l)
+                                     (powerline-narrow face2 'l)))
+                          (rhs (list (powerline-raw global-mode-string face2 'r)
+                                     (funcall separator-right face2 face1)
+                                     (powerline-raw "%l" face1 'l)
+                                     (powerline-raw ", " face1 'l)
+                                     (powerline-raw "%c" face1 'r)
+                                     (funcall separator-right face1 mode-line)
+                                     (powerline-raw " ")
+                                     (powerline-raw "%4p of" nil 'r)
+                                     (powerline-buffer-size nil 'l)
+                                     (powerline-hud face2 face1))))
+                     (concat (powerline-render lhs)
+                             (powerline-fill face2 (powerline-width rhs))
+                             (powerline-render rhs)))))))
+
+(add-hook 'after-init-hook 'powerline-leuven-theme)
 #+end_src
 
 ** How Text Is Displayed
@@ -4397,7 +4448,20 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
     ;; enable fci-mode as a global minor mode
     (define-globalized-minor-mode global-fci-mode fci-mode
       (lambda () (fci-mode 1)))
-    (global-fci-mode 1))
+    (global-fci-mode 1)
+
+    ;; avoid fci-mode and auto-complete popups
+    (defvar sanityinc/fci-mode-suppressed nil)
+    (defadvice popup-create (before suppress-fci-mode activate)
+      "Suspend fci-mode while popups are visible"
+      (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-mode)
+      (when fci-mode
+        (turn-off-fci-mode)))
+    (defadvice popup-delete (after restore-fci-mode activate)
+      "Restore fci-mode when all popups have closed"
+      (when (and (not popup-instances) sanityinc/fci-mode-suppressed)
+        (setq sanityinc/fci-mode-suppressed nil)
+        (turn-on-fci-mode))))
 #+end_src
 
 #+begin_src emacs-lisp

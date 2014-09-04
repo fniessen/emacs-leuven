@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140904.1648
+;; Version: 20140904.2018
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140904.1648]--")
+(message "* --[ Loading Emacs Leuven 20140904.2018]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1070,7 +1070,58 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; theme `smart-mode-line' should use
     (setq sml/theme 'respectful))
 
-  (add-hook 'after-init-hook 'powerline-default-theme)
+(defun powerline-leuven-theme ()
+  "Setup the leuven mode-line."
+  (interactive)
+  (setq-default mode-line-format
+                '("%e"
+                  (:eval
+                   (let* ((active (powerline-selected-window-active))
+                          (mode-line (if active 'mode-line 'mode-line-inactive))
+                          (face1 (if active 'powerline-active1 'powerline-inactive1))
+                          (face2 (if active 'powerline-active2 'powerline-inactive2))
+                          (separator-left (intern (format "powerline-%s-%s"
+                                                          powerline-default-separator
+                                                          (car powerline-default-separator-dir))))
+                          (separator-right (intern (format "powerline-%s-%s"
+                                                           powerline-default-separator
+                                                           (cdr powerline-default-separator-dir))))
+                          (lhs (list (powerline-vc face1 'r)
+                                     (funcall separator-left face1 mode-line)
+                                     (powerline-raw "%*" nil 'l)
+
+                                     (powerline-raw mode-line-mule-info nil 'l)
+
+                                     (powerline-buffer-id nil 'l)
+
+                                     (when (and (boundp 'which-func-mode) which-func-mode)
+                                       (powerline-raw which-func-format nil 'l))
+
+                                     (powerline-raw " ")
+                                     (funcall separator-left mode-line face1)
+                                     (when (boundp 'erc-modified-channels-object)
+                                       (powerline-raw erc-modified-channels-object face1 'l))
+                                     (powerline-major-mode face1 'l)
+                                     (powerline-process face1)
+                                     (powerline-raw " " face1)
+                                     (funcall separator-left face1 face2)
+                                     (powerline-minor-modes face2 'l)
+                                     (powerline-narrow face2 'l)))
+                          (rhs (list (powerline-raw global-mode-string face2 'r)
+                                     (funcall separator-right face2 face1)
+                                     (powerline-raw "%l" face1 'l)
+                                     (powerline-raw ", " face1 'l)
+                                     (powerline-raw "%c" face1 'r)
+                                     (funcall separator-right face1 mode-line)
+                                     (powerline-raw " ")
+                                     (powerline-raw "%4p of" nil 'r)
+                                     (powerline-buffer-size nil 'l)
+                                     (powerline-hud face2 face1))))
+                     (concat (powerline-render lhs)
+                             (powerline-fill face2 (powerline-width rhs))
+                             (powerline-render rhs)))))))
+
+(add-hook 'after-init-hook 'powerline-leuven-theme)
 
 ;;** 14.19 How (info "(emacs)Text Display")ed
 
@@ -2687,7 +2738,20 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; enable fci-mode as a global minor mode
     (define-globalized-minor-mode global-fci-mode fci-mode
       (lambda () (fci-mode 1)))
-    (global-fci-mode 1))
+    (global-fci-mode 1)
+
+    ;; avoid fci-mode and auto-complete popups
+    (defvar sanityinc/fci-mode-suppressed nil)
+    (defadvice popup-create (before suppress-fci-mode activate)
+      "Suspend fci-mode while popups are visible"
+      (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-mode)
+      (when fci-mode
+        (turn-off-fci-mode)))
+    (defadvice popup-delete (after restore-fci-mode activate)
+      "Restore fci-mode when all popups have closed"
+      (when (and (not popup-instances) sanityinc/fci-mode-suppressed)
+        (setq sanityinc/fci-mode-suppressed nil)
+        (turn-on-fci-mode))))
 
   (defun leuven-replace-nbsp-by-spc ()
     "Replace all nbsp by normal spaces."
@@ -8808,7 +8872,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140904.1649]--")
+(message "* --[ Loaded Emacs Leuven 20140904.2018]--")
 
 (provide 'emacs-leuven)
 
