@@ -1768,16 +1768,30 @@ See https://powerline.readthedocs.org/en/latest/overview.html#vim-statusline for
 See https://github.com/bling/vim-airline for the original author.
 
 #+begin_src emacs-lisp
-(defface powerline-evil-modified-face
+(defface powerline-modified-face
   '((((class color))
      (:background "red" :foreground "black" :weight bold))
     (t (:weight bold)))
   "Face to fontify modified files."
   :group 'powerline)
 
-(defface powerline-evil-normal-face
+(defface powerline-normal-face
   '((((class color))
      (:background "green" :foreground "black" :weight bold))
+    (t (:weight bold)))
+  "Face to fontify unchanged files."
+  :group 'powerline)
+
+(defface powerline-default-dictionary-face
+  '((((class color))
+     (:background "#8A2BE2" :foreground "black" :weight bold))
+    (t (:weight bold)))
+  "Face to fontify modified files."
+  :group 'powerline)
+
+(defface powerline-other-dictionary-face
+  '((((class color))
+     (:background "yellow" :foreground "black" :weight bold))
     (t (:weight bold)))
   "Face to fontify unchanged files."
   :group 'powerline)
@@ -1801,8 +1815,8 @@ See https://github.com/bling/vim-airline for the original author.
                           (lhs (list (powerline-vc face1 'r)
                                      ;; (when (and (buffer-file-name (current-buffer)) vc-mode)
                                      ;;   (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
-                                     ;;       (powerline-vc powerline-evil-modified-face 'r)
-                                     ;;     (powerline-vc powerline-evil-normal-face 'r)))
+                                     ;;       (powerline-vc powerline-modified-face 'r)
+                                     ;;     (powerline-vc powerline-normal-face 'r)))
 
                                      (funcall separator-left face1 mode-line)
                                      (powerline-raw "%*" nil 'l)
@@ -1837,15 +1851,24 @@ See https://github.com/bling/vim-airline for the original author.
                                      (powerline-buffer-size nil 'l)
                                      (powerline-raw " ")
 
-                                     (powerline-raw (let ((dict (and (featurep 'ispell)
-                                                                     (not buffer-read-only)
-                                                                     (or ispell-local-dictionary
-                                                                         ispell-dictionary
-                                                                         "nil" ; default dictionary
-                                                                         ))))
-                                                      (and dict
-                                                           (concat (substring dict 0 2) " ")))
-                                                    face2 'l)
+                                     (let ((dict (and (featurep 'ispell)
+                                                      (not buffer-read-only)
+                                                      (or ispell-local-dictionary
+                                                          ispell-dictionary
+                                                          "nil" ; default dictionary
+                                                          ))))
+                                       (cond ((equal dict "francais")
+                                              (powerline-raw
+                                               (concat (substring dict 0 2) " ")
+                                               'powerline-default-dictionary-face 'l))
+                                             (dict
+                                              (powerline-raw
+                                               (concat (substring dict 0 2) " ")
+                                               'powerline-other-dictionary-face
+                                                      'l))
+                                             (t
+                                              (powerline-raw "%%%% "
+                                               'powerline-default-dictionary-face 'l))))
 
                                      ;; (powerline-hud face2 face1)
                                      )))

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140904.2341
+;; Version: 20140905.1101
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140904.2341]--")
+(message "* --[ Loading Emacs Leuven 20140905.1101]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1070,16 +1070,30 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; theme `smart-mode-line' should use
     (setq sml/theme 'respectful))
 
-(defface powerline-evil-modified-face
+(defface powerline-modified-face
   '((((class color))
      (:background "red" :foreground "black" :weight bold))
     (t (:weight bold)))
   "Face to fontify modified files."
   :group 'powerline)
 
-(defface powerline-evil-normal-face
+(defface powerline-normal-face
   '((((class color))
      (:background "green" :foreground "black" :weight bold))
+    (t (:weight bold)))
+  "Face to fontify unchanged files."
+  :group 'powerline)
+
+(defface powerline-default-dictionary-face
+  '((((class color))
+     (:background "#8A2BE2" :foreground "black" :weight bold))
+    (t (:weight bold)))
+  "Face to fontify modified files."
+  :group 'powerline)
+
+(defface powerline-other-dictionary-face
+  '((((class color))
+     (:background "yellow" :foreground "black" :weight bold))
     (t (:weight bold)))
   "Face to fontify unchanged files."
   :group 'powerline)
@@ -1103,8 +1117,8 @@ Last time is saved in global variable `leuven--before-section-time'."
                           (lhs (list (powerline-vc face1 'r)
                                      ;; (when (and (buffer-file-name (current-buffer)) vc-mode)
                                      ;;   (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
-                                     ;;       (powerline-vc powerline-evil-modified-face 'r)
-                                     ;;     (powerline-vc powerline-evil-normal-face 'r)))
+                                     ;;       (powerline-vc powerline-modified-face 'r)
+                                     ;;     (powerline-vc powerline-normal-face 'r)))
 
                                      (funcall separator-left face1 mode-line)
                                      (powerline-raw "%*" nil 'l)
@@ -1139,15 +1153,24 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      (powerline-buffer-size nil 'l)
                                      (powerline-raw " ")
 
-                                     (powerline-raw (let ((dict (and (featurep 'ispell)
-                                                                     (not buffer-read-only)
-                                                                     (or ispell-local-dictionary
-                                                                         ispell-dictionary
-                                                                         "nil" ; default dictionary
-                                                                         ))))
-                                                      (and dict
-                                                           (concat (substring dict 0 2) " ")))
-                                                    face2 'l)
+                                     (let ((dict (and (featurep 'ispell)
+                                                      (not buffer-read-only)
+                                                      (or ispell-local-dictionary
+                                                          ispell-dictionary
+                                                          "nil" ; default dictionary
+                                                          ))))
+                                       (cond ((equal dict "francais")
+                                              (powerline-raw
+                                               (concat (substring dict 0 2) " ")
+                                               'powerline-default-dictionary-face 'l))
+                                             (dict
+                                              (powerline-raw
+                                               (concat (substring dict 0 2) " ")
+                                               'powerline-other-dictionary-face
+                                                      'l))
+                                             (t
+                                              (powerline-raw "%%%% "
+                                               'powerline-default-dictionary-face 'l))))
 
                                      ;; (powerline-hud face2 face1)
                                      )))
@@ -8916,7 +8939,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140904.2341]--")
+(message "* --[ Loaded Emacs Leuven 20140905.1102]--")
 
 (provide 'emacs-leuven)
 
