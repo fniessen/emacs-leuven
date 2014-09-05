@@ -1294,7 +1294,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140905.1102</span>
+"org-comment">Version: 20140905.2054</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1417,7 +1417,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140905.1102]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140905.2054]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -4352,7 +4352,7 @@
 "org-string">"powerline-%s-%s"</span>
                                                            powerline-default-separator
                                                            (cdr powerline-default-separator-dir))))
-                          (lhs (list (powerline-vc face1 'r)
+                          (lhs (list
                                      <span class=
 "org-comment-delimiter">;; </span><span class=
 "org-comment">(when (and (buffer-file-name (current-buffer)) vc-mode)</span>
@@ -4366,7 +4366,11 @@
 "org-comment-delimiter">;;     </span><span class=
 "org-comment">(powerline-vc powerline-normal-face 'r)))</span>
 
-                                     (funcall separator-left face1 mode-line)
+                                     (powerline-vc face1 'r)
+                                     (<span class=
+"org-keyword">when</span> (and (buffer-file-name (current-buffer)) vc-mode)
+                                       (funcall separator-left face1 mode-line))
+
                                      (powerline-raw <span class=
 "org-string">"%*"</span> nil 'l)
 
@@ -4406,10 +4410,11 @@
                                      (powerline-raw <span class=
 "org-string">" "</span>)
                                      (powerline-raw <span class=
-"org-string">"%4p of"</span> nil 'r)
-                                     (powerline-buffer-size nil 'l)
+"org-string">"%4p"</span> nil 'r)
+                                     (funcall separator-right mode-line face2)
+                                     (powerline-buffer-size face2 'l)
                                      (powerline-raw <span class=
-"org-string">" "</span>)
+"org-string">" "</span> face2)
 
                                      (<span class=
 "org-keyword">let</span> ((dict (and (<span class=
@@ -17956,7 +17961,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">modern on-the-fly syntax checking</span>
-  (try-require 'flycheck)
+  (try-require 'flycheck-<span class="org-leuven-highlight">XXX</span>)
   (with-eval-after-load <span class="org-string">"flycheck"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -25645,7 +25650,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140905.1102]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140905.2054]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

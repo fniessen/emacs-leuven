@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140905.1101
+;; Version: 20140905.2053
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140905.1101]--")
+(message "* --[ Loading Emacs Leuven 20140905.2053]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1114,13 +1114,16 @@ Last time is saved in global variable `leuven--before-section-time'."
                           (separator-right (intern (format "powerline-%s-%s"
                                                            powerline-default-separator
                                                            (cdr powerline-default-separator-dir))))
-                          (lhs (list (powerline-vc face1 'r)
+                          (lhs (list
                                      ;; (when (and (buffer-file-name (current-buffer)) vc-mode)
                                      ;;   (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
                                      ;;       (powerline-vc powerline-modified-face 'r)
                                      ;;     (powerline-vc powerline-normal-face 'r)))
 
-                                     (funcall separator-left face1 mode-line)
+                                     (powerline-vc face1 'r)
+                                     (when (and (buffer-file-name (current-buffer)) vc-mode)
+                                       (funcall separator-left face1 mode-line))
+
                                      (powerline-raw "%*" nil 'l)
 
                                      (powerline-raw mode-line-mule-info nil 'l)
@@ -1149,9 +1152,10 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      (powerline-raw "%c" face1 'r)
                                      (funcall separator-right face1 mode-line)
                                      (powerline-raw " ")
-                                     (powerline-raw "%4p of" nil 'r)
-                                     (powerline-buffer-size nil 'l)
-                                     (powerline-raw " ")
+                                     (powerline-raw "%4p" nil 'r)
+                                     (funcall separator-right mode-line face2)
+                                     (powerline-buffer-size face2 'l)
+                                     (powerline-raw " " face2)
 
                                      (let ((dict (and (featurep 'ispell)
                                                       (not buffer-read-only)
@@ -6382,7 +6386,7 @@ this with to-do items than with projects or headings."
   (leuven--section "27.5 (emacs)Flymake")
 
   ;; modern on-the-fly syntax checking
-  (try-require 'flycheck)
+  (try-require 'flycheck-XXX)
   (with-eval-after-load "flycheck"
 
     ;; ;; indicate errors and warnings via icons in the right fringe
@@ -8939,7 +8943,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140905.1102]--")
+(message "* --[ Loaded Emacs Leuven 20140905.2054]--")
 
 (provide 'emacs-leuven)
 

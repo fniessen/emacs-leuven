@@ -1812,13 +1812,16 @@ See https://github.com/bling/vim-airline for the original author.
                           (separator-right (intern (format "powerline-%s-%s"
                                                            powerline-default-separator
                                                            (cdr powerline-default-separator-dir))))
-                          (lhs (list (powerline-vc face1 'r)
+                          (lhs (list
                                      ;; (when (and (buffer-file-name (current-buffer)) vc-mode)
                                      ;;   (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
                                      ;;       (powerline-vc powerline-modified-face 'r)
                                      ;;     (powerline-vc powerline-normal-face 'r)))
 
-                                     (funcall separator-left face1 mode-line)
+                                     (powerline-vc face1 'r)
+                                     (when (and (buffer-file-name (current-buffer)) vc-mode)
+                                       (funcall separator-left face1 mode-line))
+
                                      (powerline-raw "%*" nil 'l)
 
                                      (powerline-raw mode-line-mule-info nil 'l)
@@ -1847,9 +1850,10 @@ See https://github.com/bling/vim-airline for the original author.
                                      (powerline-raw "%c" face1 'r)
                                      (funcall separator-right face1 mode-line)
                                      (powerline-raw " ")
-                                     (powerline-raw "%4p of" nil 'r)
-                                     (powerline-buffer-size nil 'l)
-                                     (powerline-raw " ")
+                                     (powerline-raw "%4p" nil 'r)
+                                     (funcall separator-right mode-line face2)
+                                     (powerline-buffer-size face2 'l)
+                                     (powerline-raw " " face2)
 
                                      (let ((dict (and (featurep 'ispell)
                                                       (not buffer-read-only)
@@ -9914,7 +9918,7 @@ the code immediately as you are editing it.
   (leuven--section "27.5 (emacs)Flymake")
 
   ;; modern on-the-fly syntax checking
-  (try-require 'flycheck)
+  (try-require 'flycheck-XXX)
   (with-eval-after-load "flycheck"
 
     ;; ;; indicate errors and warnings via icons in the right fringe
