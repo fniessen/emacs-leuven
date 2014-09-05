@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140905.2053
+;; Version: 20140905.2253
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140905.2053]--")
+(message "* --[ Loading Emacs Leuven 20140905.2253]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1084,16 +1084,30 @@ Last time is saved in global variable `leuven--before-section-time'."
   "Face to fontify unchanged files."
   :group 'powerline)
 
-(defface powerline-default-dictionary-face
+(defface powerline-default-dictionary-active-face
   '((((class color))
      (:background "#8A2BE2" :foreground "black" :weight bold))
     (t (:weight bold)))
   "Face to fontify modified files."
   :group 'powerline)
 
-(defface powerline-other-dictionary-face
+(defface powerline-default-dictionary-inactive-face
+  '((((class color))
+     (:background "thistle" :foreground "black" :weight bold))
+    (t (:weight bold)))
+  "Face to fontify modified files."
+  :group 'powerline)
+
+(defface powerline-other-dictionary-active-face
   '((((class color))
      (:background "yellow" :foreground "black" :weight bold))
+    (t (:weight bold)))
+  "Face to fontify unchanged files."
+  :group 'powerline)
+
+(defface powerline-other-dictionary-inactive-face
+  '((((class color))
+     (:background "LightYellow1" :foreground "black" :weight bold))
     (t (:weight bold)))
   "Face to fontify unchanged files."
   :group 'powerline)
@@ -1108,6 +1122,8 @@ Last time is saved in global variable `leuven--before-section-time'."
                           (mode-line (if active 'mode-line 'mode-line-inactive))
                           (face1 (if active 'powerline-active1 'powerline-inactive1))
                           (face2 (if active 'powerline-active2 'powerline-inactive2))
+                          (default-dictionary-face (if active 'powerline-default-dictionary-active-face 'powerline-default-dictionary-inactive-face))
+                          (other-dictionary-face (if active 'powerline-other-dictionary-active-face 'powerline-other-dictionary-inactive-face))
                           (separator-left (intern (format "powerline-%s-%s"
                                                           powerline-default-separator
                                                           (car powerline-default-separator-dir))))
@@ -1166,15 +1182,14 @@ Last time is saved in global variable `leuven--before-section-time'."
                                        (cond ((equal dict "francais")
                                               (powerline-raw
                                                (concat (substring dict 0 2) " ")
-                                               'powerline-default-dictionary-face 'l))
+                                               default-dictionary-face 'l))
                                              (dict
                                               (powerline-raw
                                                (concat (substring dict 0 2) " ")
-                                               'powerline-other-dictionary-face
-                                                      'l))
+                                               other-dictionary-face 'l))
                                              (t
                                               (powerline-raw "%%%% "
-                                               'powerline-default-dictionary-face 'l))))
+                                               default-dictionary-face 'l))))
 
                                      ;; (powerline-hud face2 face1)
                                      )))
@@ -8943,7 +8958,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140905.2054]--")
+(message "* --[ Loaded Emacs Leuven 20140905.2253]--")
 
 (provide 'emacs-leuven)
 

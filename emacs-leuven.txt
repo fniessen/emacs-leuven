@@ -1782,16 +1782,30 @@ See https://github.com/bling/vim-airline for the original author.
   "Face to fontify unchanged files."
   :group 'powerline)
 
-(defface powerline-default-dictionary-face
+(defface powerline-default-dictionary-active-face
   '((((class color))
      (:background "#8A2BE2" :foreground "black" :weight bold))
     (t (:weight bold)))
   "Face to fontify modified files."
   :group 'powerline)
 
-(defface powerline-other-dictionary-face
+(defface powerline-default-dictionary-inactive-face
+  '((((class color))
+     (:background "thistle" :foreground "black" :weight bold))
+    (t (:weight bold)))
+  "Face to fontify modified files."
+  :group 'powerline)
+
+(defface powerline-other-dictionary-active-face
   '((((class color))
      (:background "yellow" :foreground "black" :weight bold))
+    (t (:weight bold)))
+  "Face to fontify unchanged files."
+  :group 'powerline)
+
+(defface powerline-other-dictionary-inactive-face
+  '((((class color))
+     (:background "LightYellow1" :foreground "black" :weight bold))
     (t (:weight bold)))
   "Face to fontify unchanged files."
   :group 'powerline)
@@ -1806,6 +1820,8 @@ See https://github.com/bling/vim-airline for the original author.
                           (mode-line (if active 'mode-line 'mode-line-inactive))
                           (face1 (if active 'powerline-active1 'powerline-inactive1))
                           (face2 (if active 'powerline-active2 'powerline-inactive2))
+                          (default-dictionary-face (if active 'powerline-default-dictionary-active-face 'powerline-default-dictionary-inactive-face))
+                          (other-dictionary-face (if active 'powerline-other-dictionary-active-face 'powerline-other-dictionary-inactive-face))
                           (separator-left (intern (format "powerline-%s-%s"
                                                           powerline-default-separator
                                                           (car powerline-default-separator-dir))))
@@ -1864,15 +1880,14 @@ See https://github.com/bling/vim-airline for the original author.
                                        (cond ((equal dict "francais")
                                               (powerline-raw
                                                (concat (substring dict 0 2) " ")
-                                               'powerline-default-dictionary-face 'l))
+                                               default-dictionary-face 'l))
                                              (dict
                                               (powerline-raw
                                                (concat (substring dict 0 2) " ")
-                                               'powerline-other-dictionary-face
-                                                      'l))
+                                               other-dictionary-face 'l))
                                              (t
                                               (powerline-raw "%%%% "
-                                               'powerline-default-dictionary-face 'l))))
+                                               default-dictionary-face 'l))))
 
                                      ;; (powerline-hud face2 face1)
                                      )))
