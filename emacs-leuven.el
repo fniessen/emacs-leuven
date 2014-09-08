@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140905.2253
+;; Version: 20140908.2101
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140905.2253]--")
+(message "* --[ Loading Emacs Leuven 20140908.2101]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -405,12 +405,12 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ; and load `<pkg>-autoloads.el'
 
       (defcustom leuven-elpa-packages
-        '(ace-jump-mode auctex auto-complete bbdb bookmark+ boxquote calfw circe
-          company csv-mode dictionary dired+ dired-single ess
-          fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
-          helm htmlize idle-require info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          redo+ tidy unbound yasnippet
+        '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
+          boxquote calfw circe company csv-mode dictionary diminish dired+
+          dired-single ess fill-column-indicator flycheck fuzzy git-commit-mode
+          graphviz-dot-mode guide-key helm htmlize idle-require info+
+          interaction-log ledger-mode leuven-theme multi-term multiple-cursors
+          pager powerline rainbow-mode redo+ tidy unbound yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -878,6 +878,11 @@ Last time is saved in global variable `leuven--before-section-time'."
     (global-set-key (kbd "<prior>") 'pager-page-up)
     (global-set-key (kbd "<next>") 'pager-page-down))
 
+  ;; annoying arrows mode
+  (try-require 'annoying-arrows-mode)
+  (with-eval-after-load "annoying-arrows-mode"
+    (global-annoying-arrows-mode))
+
 ;;** 14.3 (info "(emacs)Auto Scrolling")
 
   (leuven--section "14.3 (emacs)Auto Scrolling")
@@ -1051,8 +1056,15 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; show the column number in each mode line
   (column-number-mode 1)
 
-  ;; use inactive face for mode line in non-selected windows
-  (setq mode-line-in-non-selected-windows t)
+  ;; ;; use inactive face for mode line in non-selected windows
+  ;; (setq mode-line-in-non-selected-windows t)
+
+  ;; unclutter the mode line
+  (when (try-require 'diminish-XXX)
+    (with-eval-after-load "yasnippet"   (diminish 'yas-minor-mode))
+    (with-eval-after-load "eldoc"       (diminish 'eldoc-mode))
+    (with-eval-after-load "paredit"     (diminish 'paredit-mode))
+    (with-eval-after-load "smartparens" (diminish 'smartparens-mode)))
 
   ;; ;; show buffer position like a scroll bar in mode line
   ;; (try-require 'sml-modeline)
@@ -1072,14 +1084,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 (defface powerline-modified-face
   '((((class color))
-     (:background "red" :foreground "black" :weight bold))
+     (:background "#FFA335" :foreground "black" :weight bold))
     (t (:weight bold)))
   "Face to fontify modified files."
   :group 'powerline)
 
 (defface powerline-normal-face
   '((((class color))
-     (:background "green" :foreground "black" :weight bold))
+     (:background "#4F9D03" :foreground "black" :weight bold))
     (t (:weight bold)))
   "Face to fontify unchanged files."
   :group 'powerline)
@@ -1131,14 +1143,16 @@ Last time is saved in global variable `leuven--before-section-time'."
                                                            powerline-default-separator
                                                            (cdr powerline-default-separator-dir))))
                           (lhs (list
-                                     ;; (when (and (buffer-file-name (current-buffer)) vc-mode)
-                                     ;;   (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
-                                     ;;       (powerline-vc powerline-modified-face 'r)
-                                     ;;     (powerline-vc powerline-normal-face 'r)))
-
-                                     (powerline-vc face1 'r)
                                      (when (and (buffer-file-name (current-buffer)) vc-mode)
-                                       (funcall separator-left face1 mode-line))
+                                       (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
+                                           (powerline-vc 'powerline-normal-face 'r)
+                                         (powerline-vc 'powerline-modified-face 'r)))
+
+                                     (when (and (buffer-file-name (current-buffer)) vc-mode)
+                                       (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
+                                           (funcall separator-left 'powerline-normal-face mode-line)
+                                         (funcall separator-left 'powerline-modified-face mode-line)))
+                                     ;; (powerline-vc face1 'r)
 
                                      (powerline-raw "%*" nil 'l)
 
@@ -1173,23 +1187,22 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      (powerline-buffer-size face2 'l)
                                      (powerline-raw " " face2)
 
-                                     (let ((dict (and (featurep 'ispell)
-                                                      (not buffer-read-only)
-                                                      (or ispell-local-dictionary
-                                                          ispell-dictionary
-                                                          "nil" ; default dictionary
-                                                          ))))
-                                       (cond ((equal dict "francais")
-                                              (powerline-raw
-                                               (concat (substring dict 0 2) " ")
-                                               default-dictionary-face 'l))
-                                             (dict
-                                              (powerline-raw
-                                               (concat (substring dict 0 2) " ")
-                                               other-dictionary-face 'l))
-                                             (t
-                                              (powerline-raw "%%%% "
-                                               default-dictionary-face 'l))))
+                                     ;; (let ((dict (and (featurep 'ispell)
+                                     ;;                  (or ispell-local-dictionary
+                                     ;;                      ispell-dictionary
+                                     ;;                      "--" ; default dictionary
+                                     ;;                      ))))
+                                     ;;   (cond ((or (equal dict "francais") (equal dict "--"))
+                                     ;;          (powerline-raw
+                                     ;;           (concat (substring dict 0 2) " ")
+                                     ;;           default-dictionary-face 'l))
+                                     ;;         (buffer-read-only
+                                     ;;          (powerline-raw "%%%% "
+                                     ;;           default-dictionary-face 'l))
+                                     ;;         (t
+                                     ;;          (powerline-raw
+                                     ;;           (concat (substring dict 0 2) " ")
+                                     ;;           other-dictionary-face 'l))))
 
                                      ;; (powerline-hud face2 face1)
                                      )))
@@ -6551,28 +6564,26 @@ up before you execute another command."
 
   (leuven--section "28.1.2 Version Control and the Mode Line")
 
-  ;; (defpowerline powerline-vc (when (and (buffer-file-name (current-buffer)) vc-mode) (format-mode-line '(vc-mode vc-mode))))
-
-  (with-eval-after-load "vc"
-
-    (GNUEmacs
-      (when (image-type-available-p 'png)
-        ;; http://www.emacswiki.org/emacs/VcIcon
-        (defun vc-icon ()
-          "Display a colored icon indicating the vc status of the current file."
-          (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name))
-                          (concat leuven--directory "Pictures/NormalIcon.png")
-                        (concat leuven--directory "Pictures/ModifiedIcon.png")))
-                (bg-colour (face-attribute 'mode-line :background)))
-            (propertize
-             "  "
-             'display (find-image `((:type png
-                                     :file ,icon
-                                     :ascent center
-                                     :background ,bg-colour))))))
-
-        (setq-default mode-line-format
-                      (push '(vc-mode (:eval (vc-icon))) mode-line-format)))))
+  ;; (with-eval-after-load "vc"
+  ;;
+  ;;   (GNUEmacs
+  ;;     (when (image-type-available-p 'png)
+  ;;       ;; http://www.emacswiki.org/emacs/VcIcon
+  ;;       (defun vc-icon ()
+  ;;         "Display a colored icon indicating the vc status of the current file."
+  ;;         (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name))
+  ;;                         (concat leuven--directory "Pictures/NormalIcon.png")
+  ;;                       (concat leuven--directory "Pictures/ModifiedIcon.png")))
+  ;;               (bg-colour (face-attribute 'mode-line :background)))
+  ;;           (propertize
+  ;;            "  "
+  ;;            'display (find-image `((:type png
+  ;;                                    :file ,icon
+  ;;                                    :ascent center
+  ;;                                    :background ,bg-colour))))))
+  ;;
+  ;;       (setq-default mode-line-format
+  ;;                     (push '(vc-mode (:eval (vc-icon))) mode-line-format)))))
 
 ;;*** 28.1.4 (info "(emacs)Log Buffer")
 
@@ -7066,7 +7077,8 @@ up before you execute another command."
     (with-eval-after-load "auto-complete-config"
 
       ;; ;; 5.4 completion will be started automatically by inserting 2 characters
-      ;; (setq ac-auto-start 2)
+      ;; (setq ac-auto-start 2)          ; also applies on arguments after opening
+      ;;                                 ; parenthesis in ESS
 
       ;; 6.1 set a list of sources to use (by default + for some major modes)
       (ac-config-default)             ; ... and enable Auto-Complete mode in all
@@ -8153,6 +8165,9 @@ up before you execute another command."
     ;; code folding in ESS mode
     (add-hook 'ess-mode-hook 'hs-minor-mode)
 
+    ;; suffix appended by `ac-source-R-args' to candidates
+    (setq ess-ac-R-argument-suffix "=")
+
     ;; prototype object browser for R, looks like dired mode
     (autoload 'ess-rdired "ess-rdired"
       "View *R* objects in a dired-like buffer." t)
@@ -8841,6 +8856,23 @@ up before you execute another command."
      (delete-window)
      (setq truncate-lines t)))
 
+;; guide the following key bindings automatically and dynamically
+(when (try-require 'guide-key)
+
+  (setq guide-key/guide-key-sequence
+        '("C-x r" "C-x v" "C-x 8"
+          (org-mode "C-c C-x")
+          (outline-minor-mode "C-c @")))
+
+  (setq guide-key/idle-delay 0.1)
+
+  (setq guide-key/recursive-key-sequence-flag t)
+
+  (setq guide-key/popup-window-position 'bottom)
+
+  ;; enable guide-key-mode
+  (guide-key-mode 1))
+
 ;;** 48.5 The (info "(emacs)Syntax") Table
 
   (leuven--section "48.5 The (emacs)Syntax Table")
@@ -8878,6 +8910,12 @@ up before you execute another command."
 ;;* App G Emacs and (info "(emacs)Microsoft Windows/MS-DOS")
 
 (leuven--chapter leuven-chapter-AppG-ms-dos "Appendix G Emacs and MS-DOS"
+
+  ;; ;; read the Caps Lock key as <capslock>
+  ;; (setq w32-enable-caps-lock nil)
+  ;;
+  ;; ;; map the Caps Lock key to Control
+  ;; (define-key function-key-map (kbd "<capslock>") 'event-apply-control-modifier)
 
   ;; divide key (needed in GNU Emacs for Windows)
   (GNUEmacs
@@ -8958,7 +8996,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140905.2253]--")
+(message "* --[ Loaded Emacs Leuven 20140908.2101]--")
 
 (provide 'emacs-leuven)
 
