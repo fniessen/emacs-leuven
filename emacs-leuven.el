@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140908.2101
+;; Version: 20140909.1220
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140908.2101]--")
+(message "* --[ Loading Emacs Leuven 20140909.1220]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -6571,7 +6571,7 @@ up before you execute another command."
   ;;       ;; http://www.emacswiki.org/emacs/VcIcon
   ;;       (defun vc-icon ()
   ;;         "Display a colored icon indicating the vc status of the current file."
-  ;;         (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name))
+  ;;         (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
   ;;                         (concat leuven--directory "Pictures/NormalIcon.png")
   ;;                       (concat leuven--directory "Pictures/ModifiedIcon.png")))
   ;;               (bg-colour (face-attribute 'mode-line :background)))
@@ -8860,11 +8860,23 @@ up before you execute another command."
 (when (try-require 'guide-key)
 
   (setq guide-key/guide-key-sequence
-        '("C-x r" "C-x v" "C-x 8"
+        '("C-c"
+          "C-x 4"                       ; other window
+          "C-x 5"                       ; other frame
+          "C-x 8"                       ; unicode
+          "C-x RET"                     ; coding system
+          "C-x a"                       ; abbrev
+          "C-x c"                       ; helm
+          "C-x n"                       ; narrow
+          "C-x p"                       ; bmkp
+          "C-x r"                       ; register + rectangle
+          "C-x v"                       ; vc
+          "M-g"                         ; goto + error
+          "M-s"                         ; occur + highlight
           (org-mode "C-c C-x")
           (outline-minor-mode "C-c @")))
 
-  (setq guide-key/idle-delay 0.1)
+  ;; (setq guide-key/idle-delay 0.3)
 
   (setq guide-key/recursive-key-sequence-flag t)
 
@@ -8996,7 +9008,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140908.2101]--")
+(message "* --[ Loaded Emacs Leuven 20140909.1221]--")
 
 (provide 'emacs-leuven)
 

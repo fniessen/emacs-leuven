@@ -1294,7 +1294,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140908.2102</span>
+"org-comment">Version: 20140909.1221</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1417,7 +1417,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140908.2102]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140909.1221]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -18464,7 +18464,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
             <dt><code>C-x v v</code></dt>
 
-            <dd>Take appropriate action (add, commit).</dd>
+            <dd>Take appropriate “next” action (add, commit).</dd>
           </dl>
 
           <div class="org-src-container">
@@ -18510,7 +18510,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   <span class="org-comment-delimiter">;;         </span><span class=
 "org-comment">"Display a colored icon indicating the vc status of the current file."</span>
   <span class="org-comment-delimiter">;;         </span><span class=
-"org-comment">(let ((icon (if (vc-workfile-unchanged-p (buffer-file-name))</span>
+"org-comment">(let ((icon (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))</span>
   <span class=
 "org-comment-delimiter">;;                         </span><span class=
 "org-comment">(concat leuven--directory "Pictures/NormalIcon.png")</span>
@@ -25004,12 +25004,50 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 (<span class="org-keyword">when</span> (try-require 'guide-key)
 
   (setq guide-key/guide-key-sequence
-        '(<span class="org-string">"C-x r"</span> <span class=
-"org-string">"C-x v"</span> <span class="org-string">"C-x 8"</span>
+        '(<span class="org-string">"C-c"</span>
+          <span class=
+"org-string">"C-x 4"</span>                       <span class=
+"org-comment-delimiter">; </span><span class="org-comment">other window</span>
+          <span class=
+"org-string">"C-x 5"</span>                       <span class=
+"org-comment-delimiter">; </span><span class="org-comment">other frame</span>
+          <span class=
+"org-string">"C-x 8"</span>                       <span class=
+"org-comment-delimiter">; </span><span class="org-comment">unicode</span>
+          <span class=
+"org-string">"C-x RET"</span>                     <span class=
+"org-comment-delimiter">; </span><span class="org-comment">coding system</span>
+          <span class=
+"org-string">"C-x a"</span>                       <span class=
+"org-comment-delimiter">; </span><span class="org-comment">abbrev</span>
+          <span class=
+"org-string">"C-x c"</span>                       <span class=
+"org-comment-delimiter">; </span><span class="org-comment">helm</span>
+          <span class=
+"org-string">"C-x n"</span>                       <span class=
+"org-comment-delimiter">; </span><span class="org-comment">narrow</span>
+          <span class=
+"org-string">"C-x p"</span>                       <span class=
+"org-comment-delimiter">; </span><span class="org-comment">bmkp</span>
+          <span class=
+"org-string">"C-x r"</span>                       <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">register + rectangle</span>
+          <span class=
+"org-string">"C-x v"</span>                       <span class=
+"org-comment-delimiter">; </span><span class="org-comment">vc</span>
+          <span class=
+"org-string">"M-g"</span>                         <span class=
+"org-comment-delimiter">; </span><span class="org-comment">goto + error</span>
+          <span class=
+"org-string">"M-s"</span>                         <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">occur + highlight</span>
           (org-mode <span class="org-string">"C-c C-x"</span>)
           (outline-minor-mode <span class="org-string">"C-c @"</span>)))
 
-  (setq guide-key/idle-delay 0.1)
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq guide-key/idle-delay 0.3)</span>
 
   (setq guide-key/recursive-key-sequence-flag t)
 
@@ -25800,7 +25838,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140908.2102]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140909.1222]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

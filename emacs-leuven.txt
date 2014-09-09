@@ -10213,7 +10213,7 @@ Version control systems that interact with Emacs in a generic way.
      Open Dired buffer in VC-mode.
 
 - ~C-x v v~ ::
-     Take appropriate action (add, commit).
+     Take appropriate "next" action (add, commit).
 
 #+begin_src emacs-lisp
 ;;** 28.1 (info "(emacs)Version Control")
@@ -10239,7 +10239,7 @@ tooltip over the VC indicator also says more explicitly.
   ;;       ;; http://www.emacswiki.org/emacs/VcIcon
   ;;       (defun vc-icon ()
   ;;         "Display a colored icon indicating the vc status of the current file."
-  ;;         (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name))
+  ;;         (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
   ;;                         (concat leuven--directory "Pictures/NormalIcon.png")
   ;;                       (concat leuven--directory "Pictures/ModifiedIcon.png")))
   ;;               (bg-colour (face-attribute 'mode-line :background)))
@@ -14024,11 +14024,23 @@ See as well Print keybindings (pkb).
 (when (try-require 'guide-key)
 
   (setq guide-key/guide-key-sequence
-        '("C-x r" "C-x v" "C-x 8"
+        '("C-c"
+          "C-x 4"                       ; other window
+          "C-x 5"                       ; other frame
+          "C-x 8"                       ; unicode
+          "C-x RET"                     ; coding system
+          "C-x a"                       ; abbrev
+          "C-x c"                       ; helm
+          "C-x n"                       ; narrow
+          "C-x p"                       ; bmkp
+          "C-x r"                       ; register + rectangle
+          "C-x v"                       ; vc
+          "M-g"                         ; goto + error
+          "M-s"                         ; occur + highlight
           (org-mode "C-c C-x")
           (outline-minor-mode "C-c @")))
 
-  (setq guide-key/idle-delay 0.1)
+  ;; (setq guide-key/idle-delay 0.3)
 
   (setq guide-key/recursive-key-sequence-flag t)
 
