@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140909.1340
+;; Version: 20140909.2023
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140909.1340]--")
+(message "* --[ Loading Emacs Leuven 20140909.2023]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -698,6 +698,9 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; add a cursor to each (continuous) line in the current region
   (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 
+  (global-set-key (kbd "C-S-c C-e") 'mc/edit-ends-of-lines)
+  (global-set-key (kbd "C-S-c C-a") 'mc/edit-beginnings-of-lines)
+
   ;; add a cursor and region at the next part of the buffer forwards that
   ;; matches the current region
   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
@@ -1290,8 +1293,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (interaction-log-mode 1)
 
     ;; hotkey for showing the log buffer
-    (global-set-key
-      (kbd "C-h C-l")
+    (global-set-key (kbd "C-h C-l")
       (lambda ()
         (interactive)
         (display-buffer ilog-buffer-name))))
@@ -1364,17 +1366,15 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "15.10 (emacs)Other Repeating Search Commands")
 
-  (defun leuven-isearch-occur ()
-    "Invoke `occur' from within `isearch'."
-    (interactive)
-    (let ((case-fold-search isearch-case-fold-search))
-      (occur
-       (if isearch-regexp
-           isearch-string
-         (regexp-quote isearch-string)))))
-
-  ;; activate `occur' easily while at the `I-search:' prompt
-  (define-key isearch-mode-map (kbd "C-o") 'leuven-isearch-occur)
+  ;; invoke `occur' easily from within `isearch'
+  (define-key isearch-mode-map (kbd "C-o")
+    (lambda ()
+      (interactive)
+      (let ((case-fold-search isearch-case-fold-search))
+        (occur
+         (if isearch-regexp
+             isearch-string
+           (regexp-quote isearch-string))))))
 
   (when (locate-library "color-moccur")
 
@@ -2373,8 +2373,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (global-set-key (kbd "<f6>") 'other-window)
 
   ;; reverse operation of `C-x o' (or `f6')
-  (global-set-key
-    (kbd "<S-f6>")
+  (global-set-key (kbd "<S-f6>")
     (lambda ()
       (interactive)
       (other-window -1)))
@@ -2762,6 +2761,8 @@ Last time is saved in global variable `leuven--before-section-time'."
       (mark-whole-buffer)
       (indent-for-tab-command)))
 
+  (global-set-key (kbd "C-x \\") 'align-regexp)
+
 ;;** 24.3 TABs vs. (info "(emacs)Just Spaces")
 
   (leuven--section "24.3 TABs vs. (emacs)Just Spaces")
@@ -2838,7 +2839,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; enable fci-mode as a global minor mode
     (define-globalized-minor-mode global-fci-mode fci-mode
-      (lambda () (fci-mode 1)))
+      (lambda ()
+        (fci-mode 1)))
     (global-fci-mode 1)
 
     ;; avoid fci-mode and auto-complete popups
@@ -4796,8 +4798,7 @@ this with to-do items than with projects or headings."
     ;; (define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch)
 
     ;; XXX temporary (until Org 8 is bundled within Emacs)
-    (define-key org-mode-map
-      (kbd "C-c C-e")
+    (define-key org-mode-map (kbd "C-c C-e")
       (lambda (&optional arg)
         (interactive "P")
         (if (fboundp 'org-export-dispatch)
@@ -6269,8 +6270,7 @@ mouse-3: go to end") "]"))
   (leuven--section "26.8 (emacs)Symbol Completion")
 
   ;; when you hit `<C-tab>', call the command normally bound to `<M-tab>'
-  (global-set-key
-    (kbd "<C-tab>")
+  (global-set-key (kbd "<C-tab>")
     (lambda ()
       (interactive)
       (call-interactively (key-binding (kbd "<M-tab>")))))
@@ -6528,6 +6528,15 @@ up before you execute another command."
   ;; maximum length of lists to print in the result of the evaluation
   ;; commands before abbreviating them
   (setq eval-expression-print-length nil) ; no limit
+
+  (defun eval-and-replace ()
+    "Replace the preceding sexp with its value."
+    (interactive)
+    (let ((value (eval (preceding-sexp))))
+      (kill-sexp -1)
+      (insert (format "%S" value))))
+
+  (global-set-key (kbd "C-c e") 'eval-and-replace)
 
 ;;** 27.10 Lisp Interaction Buffers
 
@@ -7242,14 +7251,12 @@ up before you execute another command."
 
       (define-key dired-mode-map (kbd "<mouse-1>") 'dired-single-buffer-mouse)
 
-      (define-key dired-mode-map
-        (kbd "^")
+      (define-key dired-mode-map (kbd "^")
         (lambda ()
           (interactive)
           (dired-single-buffer "..")))
 
-      (define-key dired-mode-map
-        (kbd "C-x C-j")
+      (define-key dired-mode-map (kbd "C-x C-j")
         (lambda ()
           (interactive)
           (dired-single-buffer ".."))))
@@ -7631,8 +7638,7 @@ up before you execute another command."
 
 (leuven--chapter leuven-chapter-34-gnus "34 Gnus"
 
-  (global-set-key
-    (kbd "C-c n")
+  (global-set-key (kbd "C-c n")
     (lambda ()
       (interactive)
       (switch-or-start 'gnus "*Group*")))
@@ -8100,8 +8106,7 @@ up before you execute another command."
   ;;         (t 'term)))
 
   ;; toggle to and from the `*shell*' buffer
-  (global-set-key
-    (kbd "C-!")
+  (global-set-key (kbd "C-!")
     (lambda ()
       (interactive)
       (switch-or-start 'shell "*shell*")))
@@ -9023,7 +9028,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140909.1341]--")
+(message "* --[ Loaded Emacs Leuven 20140909.2024]--")
 
 (provide 'emacs-leuven)
 

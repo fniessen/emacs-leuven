@@ -1075,6 +1075,7 @@ You can [[http://www.emacsrocks.com/e13.html][watch an intro to multiple-cursors
 
 In other editors:
 
+- https://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html
 - https://docs.c9.io/multiple_cursors.html
 - http://komodoide.com/screencasts/watch/87286656-multiple-selections/
 
@@ -1082,10 +1083,25 @@ In other editors:
 ;; multiple cursors for Emacs
 (try-require 'multiple-cursors)
 (with-eval-after-load "multiple-cursors"
+#+end_src
 
+*** Splitting the selection into lines
+
+Select a block of lines, and then split it into many selections, one per line.
+
+#+begin_src emacs-lisp
   ;; add a cursor to each (continuous) line in the current region
   (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 
+  (global-set-key (kbd "C-S-c C-e") 'mc/edit-ends-of-lines)
+  (global-set-key (kbd "C-S-c C-a") 'mc/edit-beginnings-of-lines)
+#+end_src
+
+*** Quick add next/previous
+
+Add the next or previous occurrence of the current word to the selection.
+
+#+begin_src emacs-lisp
   ;; add a cursor and region at the next part of the buffer forwards that
   ;; matches the current region
   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
@@ -1093,10 +1109,20 @@ In other editors:
   ;; add a cursor and region at the next part of the buffer backwards that
   ;; matches the current region
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+#+end_src
 
+*** Find All
+
+Add all occurrences of the current word to the selection.
+
+#+begin_src emacs-lisp
   ;; mark all parts of the buffer that matches the current region
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
 #+end_src
+
+*** Single Selection
+
+To go from multiple selections to a single selection, press ~C-g~.
 
 #+begin_src emacs-lisp
 )                                       ; chapter 11 ends here
@@ -2016,8 +2042,7 @@ screencasts.
     (interaction-log-mode 1)
 
     ;; hotkey for showing the log buffer
-    (global-set-key
-      (kbd "C-h C-l")
+    (global-set-key (kbd "C-h C-l")
       (lambda ()
         (interactive)
         (display-buffer ilog-buffer-name))))
@@ -2186,17 +2211,15 @@ a match for REGEXP.
 
   (leuven--section "15.10 (emacs)Other Repeating Search Commands")
 
-  (defun leuven-isearch-occur ()
-    "Invoke `occur' from within `isearch'."
-    (interactive)
-    (let ((case-fold-search isearch-case-fold-search))
-      (occur
-       (if isearch-regexp
-           isearch-string
-         (regexp-quote isearch-string)))))
-
-  ;; activate `occur' easily while at the `I-search:' prompt
-  (define-key isearch-mode-map (kbd "C-o") 'leuven-isearch-occur)
+  ;; invoke `occur' easily from within `isearch'
+  (define-key isearch-mode-map (kbd "C-o")
+    (lambda ()
+      (interactive)
+      (let ((case-fold-search isearch-case-fold-search))
+        (occur
+         (if isearch-regexp
+             isearch-string
+           (regexp-quote isearch-string))))))
 #+end_src
 
 Occur Edit mode applies edits made in ~*Occur*~ buffers to the original buffers.
@@ -3826,8 +3849,7 @@ I guess your imagemagick support is ok.
   (global-set-key (kbd "<f6>") 'other-window)
 
   ;; reverse operation of `C-x o' (or `f6')
-  (global-set-key
-    (kbd "<S-f6>")
+  (global-set-key (kbd "<S-f6>")
     (lambda ()
       (interactive)
       (other-window -1)))
@@ -4440,6 +4462,10 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
       (indent-for-tab-command)))
 #+end_src
 
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-x \\") 'align-regexp)
+#+end_src
+
 ** Tabs vs. Spaces
 
 #+begin_src emacs-lisp
@@ -4559,7 +4585,8 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 
     ;; enable fci-mode as a global minor mode
     (define-globalized-minor-mode global-fci-mode fci-mode
-      (lambda () (fci-mode 1)))
+      (lambda ()
+        (fci-mode 1)))
     (global-fci-mode 1)
 
     ;; avoid fci-mode and auto-complete popups
@@ -7388,8 +7415,7 @@ To list all available entities, run ~M-x org-entities-help~.
     ;; (define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch)
 
     ;; XXX temporary (until Org 8 is bundled within Emacs)
-    (define-key org-mode-map
-      (kbd "C-c C-e")
+    (define-key org-mode-map (kbd "C-c C-e")
       (lambda (&optional arg)
         (interactive "P")
         (if (fboundp 'org-export-dispatch)
@@ -9749,8 +9775,7 @@ In that case, you should:
 
 #+begin_src emacs-lisp
   ;; when you hit `<C-tab>', call the command normally bound to `<M-tab>'
-  (global-set-key
-    (kbd "<C-tab>")
+  (global-set-key (kbd "<C-tab>")
     (lambda ()
       (interactive)
       (call-interactively (key-binding (kbd "<M-tab>")))))
@@ -10133,6 +10158,17 @@ To (attempt to) cleanly reevaluate a buffer of Emacs Lisp code, use
   ;; maximum length of lists to print in the result of the evaluation
   ;; commands before abbreviating them
   (setq eval-expression-print-length nil) ; no limit
+#+end_src
+
+#+begin_src emacs-lisp
+  (defun eval-and-replace ()
+    "Replace the preceding sexp with its value."
+    (interactive)
+    (let ((value (eval (preceding-sexp))))
+      (kill-sexp -1)
+      (insert (format "%S" value))))
+
+  (global-set-key (kbd "C-c e") 'eval-and-replace)
 #+end_src
 
 ** Lisp Interaction Buffers
@@ -10901,9 +10937,8 @@ Keyboard navigation:
     ;; don't show tip of the day at start time of ECB
     (setq ecb-tip-of-the-day nil)
 
-    ;; toggle activation of ECB (between `ecb-activate' and
-    ;; `ecb-deactivate')
-    (global-set-key (kbd "C-c e") 'ecb-minor-mode)
+    ;; ;; toggle activation of ECB (between `ecb-activate' and `ecb-deactivate')
+    ;; (global-set-key (kbd "C-c e") 'ecb-minor-mode)
 
     ;; (global-set-key (kbd "<M-left>") 'ecb-goto-window-methods)
     ;; (global-set-key (kbd "<M-right>") 'ecb-goto-window-edit1)
@@ -10922,12 +10957,10 @@ really like this.
    (with-eval-after-load "eassist"
 
      (defun leuven--c-mode-eassist ()
-       (local-set-key
-         (kbd "C-c t") 'eassist-switch-h-cpp)
-       (local-set-key
-         (kbd "C-x t") 'eassist-switch-h-cpp)
-       (local-set-key
-         (kbd "C-c e") 'eassist-list-methods))
+       (local-set-key (kbd "C-c t") 'eassist-switch-h-cpp)
+       (local-set-key (kbd "C-x t") 'eassist-switch-h-cpp)
+       ;; (local-set-key (kbd "C-c e") 'eassist-list-methods)
+       )
 
      (add-hook 'c-mode-common-hook 'leuven--c-mode-eassist))
 #+end_src
@@ -11512,14 +11545,12 @@ XXX RET does not (always) work properly in Cygwin Emacs.
 
       (define-key dired-mode-map (kbd "<mouse-1>") 'dired-single-buffer-mouse)
 
-      (define-key dired-mode-map
-        (kbd "^")
+      (define-key dired-mode-map (kbd "^")
         (lambda ()
           (interactive)
           (dired-single-buffer "..")))
 
-      (define-key dired-mode-map
-        (kbd "C-x C-j")
+      (define-key dired-mode-map (kbd "C-x C-j")
         (lambda ()
           (interactive)
           (dired-single-buffer ".."))))
@@ -12190,8 +12221,7 @@ Minimal configuration for sending a bug report, for example.
 
 (leuven--chapter leuven-chapter-34-gnus "34 Gnus"
 
-  (global-set-key
-    (kbd "C-c n")
+  (global-set-key (kbd "C-c n")
     (lambda ()
       (interactive)
       (switch-or-start 'gnus "*Group*")))
@@ -12935,8 +12965,7 @@ shell or term.
   ;;         (t 'term)))
 
   ;; toggle to and from the `*shell*' buffer
-  (global-set-key
-    (kbd "C-!")
+  (global-set-key (kbd "C-!")
     (lambda ()
       (interactive)
       (switch-or-start 'shell "*shell*")))
@@ -14359,8 +14388,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
     (circe "irc.freenode.net" "6667" "freenode"))
 
   ;; ... upon hitting `C-c i'
-  (global-set-key
-    (kbd "C-c i")
+  (global-set-key (kbd "C-c i")
     (lambda ()
       (interactive)
       (switch-or-start 'leuven-irc-connect

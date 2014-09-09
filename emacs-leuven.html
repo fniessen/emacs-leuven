@@ -128,7 +128,20 @@
 
               <li><a href="#sec-13-3">Shift Selection</a></li>
 
-              <li><a href="#sec-13-4">Multiple selections</a></li>
+              <li>
+                <a href="#sec-13-4">Multiple selections</a>
+
+                <ul>
+                  <li><a href="#sec-13-4-1">Splitting the selection into
+                  lines</a></li>
+
+                  <li><a href="#sec-13-4-2">Quick add next/previous</a></li>
+
+                  <li><a href="#sec-13-4-3">Find All</a></li>
+
+                  <li><a href="#sec-13-4-4">Single Selection</a></li>
+                </ul>
+              </li>
             </ul>
           </li>
 
@@ -1294,7 +1307,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140909.1341</span>
+"org-comment">Version: 20140909.2024</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1417,7 +1430,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140909.1341]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140909.2024]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -3069,6 +3082,10 @@
 
           <ul class="org-ul">
             <li><a href=
+            "https://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html">
+            https://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html</a></li>
+
+            <li><a href=
             "https://docs.c9.io/multiple_cursors.html">https://docs.c9.io/multiple_cursors.html</a></li>
 
             <li><a href=
@@ -3082,12 +3099,42 @@
 "org-comment">multiple cursors for Emacs</span>
 (try-require 'multiple-cursors)
 (with-eval-after-load <span class="org-string">"multiple-cursors"</span>
+</pre>
+          </div>
+        </div>
 
+        <div id="outline-container-sec-13-4-1" class="outline-4">
+          <h4 id="sec-13-4-1">Splitting the selection into lines</h4>
+
+          <div class="outline-text-4" id="text-13-4-1">
+            <p>Select a block of lines, and then split it into many selections,
+            one per line.</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">add a cursor to each (continuous) line in the current region</span>
   (global-set-key (kbd <span class=
 "org-string">"C-S-c C-S-c"</span>) 'mc/edit-lines)
 
+  (global-set-key (kbd <span class=
+"org-string">"C-S-c C-e"</span>) 'mc/edit-ends-of-lines)
+  (global-set-key (kbd <span class=
+"org-string">"C-S-c C-a"</span>) 'mc/edit-beginnings-of-lines)
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-13-4-2" class="outline-4">
+          <h4 id="sec-13-4-2">Quick add next/previous</h4>
+
+          <div class="outline-text-4" id="text-13-4-2">
+            <p>Add the next or previous occurrence of the current word to the
+            selection.</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">add a cursor and region at the next part of the buffer forwards that</span>
   <span class="org-comment-delimiter">;; </span><span class=
@@ -3101,20 +3148,42 @@
 "org-comment">matches the current region</span>
   (global-set-key (kbd <span class=
 "org-string">"C-&lt;"</span>) 'mc/mark-previous-like-this)
+</pre>
+            </div>
+          </div>
+        </div>
 
+        <div id="outline-container-sec-13-4-3" class="outline-4">
+          <h4 id="sec-13-4-3">Find All</h4>
+
+          <div class="outline-text-4" id="text-13-4-3">
+            <p>Add all occurrences of the current word to the selection.</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">mark all parts of the buffer that matches the current region</span>
   (global-set-key (kbd <span class=
 "org-string">"C-c C-&lt;"</span>) 'mc/mark-all-like-this))
 </pre>
+            </div>
           </div>
+        </div>
 
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
+        <div id="outline-container-sec-13-4-4" class="outline-4">
+          <h4 id="sec-13-4-4">Single Selection</h4>
+
+          <div class="outline-text-4" id="text-13-4-4">
+            <p>To go from multiple selections to a single selection, press
+            <code>C-g</code>.</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
 )                                       <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">chapter 11 ends here</span>
 </pre>
+            </div>
           </div>
         </div>
       </div>
@@ -4695,8 +4764,7 @@
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">hotkey for showing the log buffer</span>
-    (global-set-key
-      (kbd <span class="org-string">"C-h C-l"</span>)
+    (global-set-key (kbd <span class="org-string">"C-h C-l"</span>)
       (<span class="org-keyword">lambda</span> ()
         (interactive)
         (display-buffer ilog-buffer-name))))
@@ -4932,28 +5000,21 @@
   (leuven--section <span class=
 "org-string">"15.10 (emacs)Other Repeating Search Commands"</span>)
 
-  (<span class="org-keyword">defun</span> <span class=
-"org-function-name">leuven-isearch-occur</span> ()
-    <span class="org-doc">"Invoke `</span><span class=
-"org-constant"><span class="org-doc">occur</span></span><span class=
-"org-doc">' from within `</span><span class="org-constant"><span class=
-"org-doc">isearch</span></span><span class="org-doc">'."</span>
-    (interactive)
-    (<span class=
-"org-keyword">let</span> ((case-fold-search isearch-case-fold-search))
-      (occur
-       (<span class="org-keyword">if</span> isearch-regexp
-           isearch-string
-         (regexp-quote isearch-string)))))
-
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">activate `</span><span class="org-constant"><span class=
+"org-comment">invoke `</span><span class="org-constant"><span class=
 "org-comment">occur</span></span><span class=
-"org-comment">' easily while at the `</span><span class=
-"org-constant"><span class="org-comment">I-search:</span></span><span class=
-"org-comment">' prompt</span>
-  (define-key isearch-mode-map (kbd <span class=
-"org-string">"C-o"</span>) 'leuven-isearch-occur)
+"org-comment">' easily from within `</span><span class=
+"org-constant"><span class="org-comment">isearch</span></span><span class=
+"org-comment">'</span>
+  (define-key isearch-mode-map (kbd <span class="org-string">"C-o"</span>)
+    (<span class="org-keyword">lambda</span> ()
+      (interactive)
+      (<span class=
+"org-keyword">let</span> ((case-fold-search isearch-case-fold-search))
+        (occur
+         (<span class="org-keyword">if</span> isearch-regexp
+             isearch-string
+           (regexp-quote isearch-string))))))
 </pre>
           </div>
 
@@ -7694,8 +7755,7 @@ M-: (executable-find "diff") RET
 "org-comment">reverse operation of `C-x o' (or `</span><span class=
 "org-constant"><span class="org-comment">f6</span></span><span class=
 "org-comment">')</span>
-  (global-set-key
-    (kbd <span class="org-string">"&lt;S-f6&gt;"</span>)
+  (global-set-key (kbd <span class="org-string">"&lt;S-f6&gt;"</span>)
     (<span class="org-keyword">lambda</span> ()
       (interactive)
       (other-window -1)))
@@ -8710,6 +8770,12 @@ M-: (executable-find "diff") RET
       (indent-for-tab-command)))
 </pre>
           </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  (global-set-key (kbd <span class="org-string">"C-x \\"</span>) 'align-regexp)
+</pre>
+          </div>
         </div>
       </div>
 
@@ -8913,7 +8979,8 @@ M-: (executable-find "diff") RET
 "org-comment">enable fci-mode as a global minor mode</span>
     (<span class="org-keyword">define-globalized-minor-mode</span> <span class=
 "org-function-name">global-fci-mode</span> fci-mode
-      (<span class="org-keyword">lambda</span> () (fci-mode 1)))
+      (<span class="org-keyword">lambda</span> ()
+        (fci-mode 1)))
     (global-fci-mode 1)
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -13716,8 +13783,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
 "org-comment"> temporary (until Org 8 is bundled within Emacs)</span>
-    (define-key org-mode-map
-      (kbd <span class="org-string">"C-c C-e"</span>)
+    (define-key org-mode-map (kbd <span class="org-string">"C-c C-e"</span>)
       (<span class="org-keyword">lambda</span> (<span class=
 "org-type">&amp;optional</span> arg)
         (interactive <span class="org-string">"P"</span>)
@@ -17673,8 +17739,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">', call the command normally bound to `</span><span class=
 "org-constant"><span class=
 "org-comment">&lt;M-tab&gt;</span></span><span class="org-comment">'</span>
-  (global-set-key
-    (kbd <span class="org-string">"&lt;C-tab&gt;"</span>)
+  (global-set-key (kbd <span class="org-string">"&lt;C-tab&gt;"</span>)
     (<span class="org-keyword">lambda</span> ()
       (interactive)
       (call-interactively (key-binding (kbd <span class=
@@ -18328,6 +18393,21 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">commands before abbreviating them</span>
   (setq eval-expression-print-length nil) <span class=
 "org-comment-delimiter">; </span><span class="org-comment">no limit</span>
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">defun</span> <span class=
+"org-function-name">eval-and-replace</span> ()
+    <span class="org-doc">"Replace the preceding sexp with its value."</span>
+    (interactive)
+    (<span class="org-keyword">let</span> ((value (eval (preceding-sexp))))
+      (kill-sexp -1)
+      (insert (format <span class="org-string">"%S"</span> value))))
+
+  (global-set-key (kbd <span class=
+"org-string">"C-c e"</span>) 'eval-and-replace)
 </pre>
           </div>
         </div>
@@ -19611,14 +19691,12 @@ TAGS:
     (setq ecb-tip-of-the-day nil)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">toggle activation of ECB (between `</span><span class=
+"org-comment">;; toggle activation of ECB (between `</span><span class=
 "org-constant"><span class="org-comment">ecb-activate</span></span><span class=
-"org-comment">' and</span>
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">`</span><span class="org-constant"><span class=
+"org-comment">' and `</span><span class="org-constant"><span class=
 "org-comment">ecb-deactivate</span></span><span class="org-comment">')</span>
-    (global-set-key (kbd <span class=
-"org-string">"C-c e"</span>) 'ecb-minor-mode)
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "C-c e") 'ecb-minor-mode)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(global-set-key (kbd "&lt;M-left&gt;") 'ecb-goto-window-methods)</span>
@@ -19644,12 +19722,13 @@ TAGS:
 
      (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven--c-mode-eassist</span> ()
-       (local-set-key
-         (kbd <span class="org-string">"C-c t"</span>) 'eassist-switch-h-cpp)
-       (local-set-key
-         (kbd <span class="org-string">"C-x t"</span>) 'eassist-switch-h-cpp)
-       (local-set-key
-         (kbd <span class="org-string">"C-c e"</span>) 'eassist-list-methods))
+       (local-set-key (kbd <span class=
+"org-string">"C-c t"</span>) 'eassist-switch-h-cpp)
+       (local-set-key (kbd <span class=
+"org-string">"C-x t"</span>) 'eassist-switch-h-cpp)
+       <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(local-set-key (kbd "C-c e") 'eassist-list-methods)</span>
+       )
 
      (add-hook 'c-mode-common-hook 'leuven--c-mode-eassist))
 </pre>
@@ -20650,14 +20729,13 @@ TAGS:
       (define-key dired-mode-map (kbd <span class=
 "org-string">"&lt;mouse-1&gt;"</span>) 'dired-single-buffer-mouse)
 
-      (define-key dired-mode-map
-        (kbd <span class="org-string">"^"</span>)
+      (define-key dired-mode-map (kbd <span class="org-string">"^"</span>)
         (<span class="org-keyword">lambda</span> ()
           (interactive)
           (dired-single-buffer <span class="org-string">".."</span>)))
 
-      (define-key dired-mode-map
-        (kbd <span class="org-string">"C-x C-j"</span>)
+      (define-key dired-mode-map (kbd <span class=
+"org-string">"C-x C-j"</span>)
         (<span class="org-keyword">lambda</span> ()
           (interactive)
           (dired-single-buffer <span class="org-string">".."</span>))))
@@ -21828,8 +21906,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 (leuven--chapter leuven-chapter-34-gnus <span class=
 "org-string">"34 Gnus"</span>
 
-  (global-set-key
-    (kbd <span class="org-string">"C-c n"</span>)
+  (global-set-key (kbd <span class="org-string">"C-c n"</span>)
     (<span class="org-keyword">lambda</span> ()
       (interactive)
       (switch-or-start 'gnus <span class="org-string">"*Group*"</span>)))
@@ -23142,8 +23219,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment">toggle to and from the `</span><span class=
 "org-constant"><span class="org-comment">*shell*</span></span><span class=
 "org-comment">' buffer</span>
-  (global-set-key
-    (kbd <span class="org-string">"C-!"</span>)
+  (global-set-key (kbd <span class="org-string">"C-!"</span>)
     (<span class="org-keyword">lambda</span> ()
       (interactive)
       (switch-or-start 'shell <span class="org-string">"*shell*"</span>)))
@@ -25492,8 +25568,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">... upon hitting `C-c i'</span>
-  (global-set-key
-    (kbd <span class="org-string">"C-c i"</span>)
+  (global-set-key (kbd <span class="org-string">"C-c i"</span>)
     (<span class="org-keyword">lambda</span> ()
       (interactive)
       (switch-or-start 'leuven-irc-connect
@@ -25866,7 +25941,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140909.1342]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140909.2025]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
