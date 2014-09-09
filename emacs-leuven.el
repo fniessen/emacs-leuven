@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140909.1220
+;; Version: 20140909.1340
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140909.1220]--")
+(message "* --[ Loading Emacs Leuven 20140909.1340]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -6094,6 +6094,21 @@ this with to-do items than with projects or headings."
 
     ;; (try-require 'imenu+)
 
+  (defun my-which-func-current ()
+    (let ((current (gethash (selected-window) which-func-table)))
+      (if current
+          (truncate-string-to-width current 24 nil nil "...")
+        which-func-unknown)))
+
+  (setq which-func-format
+        `("[" (:propertize (:eval (my-which-func-current))
+                           local-map ,which-func-keymap
+                           face which-func
+                           mouse-face mode-line-highlight
+                           help-echo "mouse-1: go to beginning\n\
+mouse-2: toggle rest visibility\n\
+mouse-3: go to end") "]"))
+
 ;;** 26.3 (info "(emacs)Program Indent")ation
 
     (leuven--section "26.3 (emacs)Program Indentation")
@@ -9008,7 +9023,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140909.1221]--")
+(message "* --[ Loaded Emacs Leuven 20140909.1341]--")
 
 (provide 'emacs-leuven)
 

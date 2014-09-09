@@ -1294,7 +1294,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140909.1221</span>
+"org-comment">Version: 20140909.1341</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1417,7 +1417,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140909.1221]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140909.1341]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -17115,6 +17115,34 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">(try-require 'imenu+)</span>
 </pre>
           </div>
+
+          <p>Truncate the current function name:</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">defun</span> <span class=
+"org-function-name">my-which-func-current</span> ()
+    (<span class=
+"org-keyword">let</span> ((current (gethash (selected-window) which-func-table)))
+      (<span class="org-keyword">if</span> current
+          (truncate-string-to-width current 24 nil nil <span class=
+"org-string">"..."</span>)
+        which-func-unknown)))
+
+  (setq which-func-format
+        `(<span class="org-string">"["</span> (<span class=
+"org-builtin">:propertize</span> (<span class=
+"org-builtin">:eval</span> (my-which-func-current))
+                           local-map ,which-func-keymap
+                           face which-func
+                           mouse-face mode-line-highlight
+                           help-echo <span class=
+"org-string">"mouse-1: go to beginning\n\</span>
+<span class="org-string">mouse-2: toggle rest visibility\n\</span>
+<span class="org-string">mouse-3: go to end"</span>) <span class=
+"org-string">"]"</span>))
+</pre>
+          </div>
         </div>
       </div>
 
@@ -25838,7 +25866,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140909.1222]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140909.1342]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
