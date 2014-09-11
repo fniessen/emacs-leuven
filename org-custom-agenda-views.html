@@ -247,64 +247,59 @@
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">display calendar for 7 days</span>
   (global-set-key
-    (kbd <span class="org-string">"&lt;M-f7&gt;"</span>) (kbd <span class=
+    (kbd <span class="org-string">"&lt;C-f7&gt;"</span>) (kbd <span class=
 "org-string">"C-c a r c 7"</span>))
 
   (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven-org-completed-date-regexp</span>
     (concat <span class="org-string">" </span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">(</span></span><span class=
-"org-string">"</span>
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">(</span></span><span class="org-string">"</span>
             <span class="org-string">"CLOSED: \\[%Y-%m-%d"</span>
             <span class="org-string">"</span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">"</span>
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">|</span></span><span class="org-string">"</span>
             <span class="org-string">"- State \"</span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">(</span></span><span class=
-"org-string">DONE</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">CANX</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">)</span></span><span class=
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">(</span></span><span class="org-string">DONE</span><span class=
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">|</span></span><span class="org-string">CANX</span><span class=
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">)</span></span><span class=
 "org-string">\" * from .* \\[%Y-%m-%d"</span>
             <span class="org-string">"</span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">"</span>
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">|</span></span><span class="org-string">"</span>
             <span class="org-string">"- State .* -&gt;  *\"</span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">(</span></span><span class=
-"org-string">DONE</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">CANX</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">)</span></span><span class=
-"org-string">\" * \\[%Y-%m-%d"</span>
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">(</span></span><span class="org-string">DONE</span><span class=
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">|</span></span><span class="org-string">CANX</span><span class=
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">)</span></span><span class="org-string">\" * \\[%Y-%m-%d"</span>
             <span class="org-string">"</span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">)</span></span><span class=
-"org-string"> "</span>)
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">)</span></span><span class="org-string"> "</span>)
     <span class="org-doc">"Matches any completion time stamp."</span>)
 </pre>
         </div>
@@ -394,10 +389,9 @@
         </div>
 
         <div class="note">
-          <p>Puisque l’on peut facilement filter par catégorie, on peut
-          imaginer qu’il est <b>inutile de trier par catégorie</b> : il suffit
-          de faire <code>&lt;</code> pour voir toutes les tâches d’une
-          catégorie.</p>
+          Puisque l’on peut facilement filter par catégorie, on peut imaginer
+          qu’il est <b>inutile de trier par catégorie</b> : il suffit de faire
+          <code>&lt;</code> pour voir toutes les tâches d’une catégorie.
         </div>
 
         <p>You should be able to work with Org items with the mapping and
@@ -467,10 +461,8 @@
           mean. For example, start every morning by:</p>
 
           <ul class="org-ul">
-            <li>
-              <p>scheduling tasks to another day if you already know it can’t
-              be completed before that date,</p>
-            </li>
+            <li>scheduling tasks to another day if you already know it can’t be
+            completed before that date,</li>
 
             <li>
               <p>moving tasks to Someday if you just don’t know if/when it will
@@ -480,13 +472,9 @@
               = someday task!]</p>
             </li>
 
-            <li>
-              <p>delegating, and</p>
-            </li>
+            <li>delegating, and</li>
 
-            <li>
-              <p>of course completing tasks.</p>
-            </li>
+            <li>of course completing tasks.</li>
           </ul>
 
           <p>Completed tasks stay displayed in their own section until the end
@@ -523,8 +511,8 @@
 "org-string">"COLLECTBOX"</span>)
                          (org-agenda-files (list ,org-default-notes-file))))
                   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">list of all </span><span class="org-comment"><span class=
-"org-leuven-highlight">TODO</span></span><span class=
+"org-comment">list of all </span><span class=
+"org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
 "org-comment"> entries with deadline today</span>
                   (tags-todo <span class=
 "org-string">"DEADLINE=\"&lt;+0d&gt;\""</span>
@@ -534,8 +522,8 @@
                                '(org-agenda-skip-entry-if 'notdeadline))
                               (org-agenda-sorting-strategy '(priority-down))))
                   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">list of all </span><span class="org-comment"><span class=
-"org-leuven-highlight">TODO</span></span><span class=
+"org-comment">list of all </span><span class=
+"org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
 "org-comment"> entries with deadline before today</span>
                   (tags-todo <span class=
 "org-string">"DEADLINE&lt;\"&lt;+0d&gt;\""</span>
@@ -586,15 +574,15 @@
                            (org-agenda-start-on-weekday nil)
                            (org-agenda-time-grid nil)))
                   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">list of all </span><span class="org-comment"><span class=
-"org-leuven-highlight">TODO</span></span><span class=
+"org-comment">list of all </span><span class=
+"org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
 "org-comment"> entries completed today</span>
                   (todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">|DONE|CANX"</span> <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">includes repeated tasks (back in </span><span class=
-"org-comment"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
 "org-comment">)</span>
                              ((org-agenda-overriding-header <span class=
 "org-string">"COMPLETED TODAY"</span>)
@@ -665,12 +653,10 @@
             <tr>
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
 
-              <td width="100%">
-                <b>Rajouter les SCHEDULED today dans la hotlist ?</b><br />
-
-                <p>Déjà le cas pour les tâches avec DEADLINE. Pas pour les
-                autres.</p>
-              </td>
+              <td width="100%"><b>Rajouter les SCHEDULED today dans la hotlist
+              ?</b><br />
+              Déjà le cas pour les tâches avec DEADLINE. Pas pour les
+              autres.</td>
             </tr>
           </table>
 
@@ -678,12 +664,9 @@
             <tr>
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
 
-              <td width="100%">
-                <b>Tasks with a DEADLINE and a <code>-0d</code> specifier are
-                shown</b><br />
-
-                <p>We said “get it out my way for now”, nope?</p>
-              </td>
+              <td width="100%"><b>Tasks with a DEADLINE and a <code>-0d</code>
+              specifier are shown</b><br />
+              We said “get it out my way for now”, nope?</td>
             </tr>
           </table>
 
@@ -721,7 +704,7 @@
 "org-comment">((org-agenda-overriding-header "...FLAGGED...")))</span>
                   )
                  ((org-agenda-todo-ignore-scheduled 'future)
-                  (org-agenda-sorting-strategy '(deadline-up)))) t) <span class="org-comment-delimiter">; </span><span class="org-comment"><span class="org-leuven-highlight">FIXME</span></span><span class="org-comment"> sort not OK</span>
+                  (org-agenda-sorting-strategy '(deadline-up)))) t) <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">FIXME</span></span><span class="org-comment"> sort not OK</span>
 </pre>
           </div>
 
@@ -772,7 +755,7 @@
 "org-comment">((org-agenda-overriding-header "...FLAGGED...")))</span>
                   )
                  ((org-agenda-todo-ignore-scheduled 'future)
-                  (org-agenda-sorting-strategy '(deadline-up)))) t) <span class="org-comment-delimiter">; </span><span class="org-comment"><span class="org-leuven-highlight">FIXME</span></span><span class="org-comment"> sort not OK</span>
+                  (org-agenda-sorting-strategy '(deadline-up)))) t) <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">FIXME</span></span><span class="org-comment"> sort not OK</span>
 </pre>
           </div>
 
@@ -794,9 +777,9 @@
 
         <div class="outline-text-3" id="text-5-4">
           <div class="warning">
-            <p>A deadline with no scheduling information has an implicit
-            scheduled date equal to the deadline date (or, in some tools like
-            Azendoo, to today!).</p>
+            A deadline with no scheduling information has an implicit scheduled
+            date equal to the deadline date (or, in some tools like Azendoo, to
+            today!).
           </div>
         </div>
       </div>
@@ -841,7 +824,7 @@
           <h4 id="sec-6-1-1">Sorted by due date</h4>
 
           <div class="outline-text-4" id="text-6-1-1">
-            <p>All <b>tasks</b>, grouped by <b>due date</b>:</p>
+            All <b>tasks</b>, grouped by <b>due date</b>:
 
             <ul class="org-ul">
               <li>Overdue</li>
@@ -918,36 +901,36 @@
 "org-comment-delimiter">;;              </span><span class=
 "org-comment">'(org-agenda-skip-entry-if 'deadline))))</span>
                   (tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">={STRT}"</span>
                              ((org-agenda-overriding-header <span class=
 "org-string">"NO DUE DATE / STARTED"</span>)
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'deadline))))
                   (tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
-"org-string">&lt;&gt;{STRT</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">WAIT</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">SDAY}"</span>
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
+"org-string">&lt;&gt;{STRT</span><span class=
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">|</span></span><span class="org-string">WAIT</span><span class=
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">|</span></span><span class="org-string">SDAY}"</span>
                              ((org-agenda-overriding-header <span class=
 "org-string">"NO DUE DATE / NEXT"</span>)
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'deadline))))
                   (tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">={WAIT}"</span>
                              ((org-agenda-overriding-header <span class=
 "org-string">"NO DUE DATE / WAITING FOR"</span>)
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'deadline))))
                   (tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">={SDAY}"</span>
                              ((org-agenda-overriding-header <span class=
 "org-string">"NO DUE DATE / SOMEDAY"</span>)
@@ -1004,12 +987,9 @@
                   <td valign="top"><b><span class=
                   "todo TODO">TODO</span></b></td>
 
-                  <td width="100%">
-                    <b>Tasks with a long pre-warning do not appear in the first
-                    block</b><br />
-
-                    <p>Well in every other one!!! Bad.</p>
-                  </td>
+                  <td width="100%"><b>Tasks with a long pre-warning do not
+                  appear in the first block</b><br />
+                  Well in every other one!!! Bad.</td>
                 </tr>
               </table>
 
@@ -1022,9 +1002,9 @@
                           ((org-agenda-overriding-header <span class=
 "org-string">"Today"</span>)
                            <span class=
-"org-comment-delimiter">;; </span><span class="org-comment"><span class=
-"org-leuven-highlight">FIXME</span></span><span class=
-"org-comment"> We don't see "timed" DEADLINE</span>
+"org-comment-delimiter">;; </span><span class=
+"org-leuven-highlight"><span class=
+"org-comment">FIXME</span></span><span class="org-comment"> We don't see "timed" DEADLINE</span>
                            (org-agenda-skip-function
                             (<span class="org-keyword">lambda</span> ()
                               (<span class=
@@ -1039,8 +1019,7 @@
 "org-keyword">progn</span> (outline-next-heading) (point))))))
                            (org-agenda-skip-scheduled-if-deadline-is-shown t)
                            (org-agenda-span 'day)
-                           (org-deadline-<span class=
-"org-leuven-highlight">warning</span>-days 0)))
+                           (org-deadline-warning-days 0)))
                   (agenda <span class="org-string">""</span>
                           ((org-agenda-entry-types '(<span class=
 "org-builtin">:deadline</span>))
@@ -1048,15 +1027,13 @@
 "org-string">"Tomorrow"</span>)
                            (org-agenda-skip-function
                             '(leuven--skip-entry-unless-deadline-in-n-days-or-more 1))
-                           (org-deadline-<span class=
-"org-leuven-highlight">warning</span>-days 1)))
+                           (org-deadline-warning-days 1)))
                   (agenda <span class="org-string">""</span>
                           ((org-agenda-overriding-header <span class=
 "org-string">"Next 5 days"</span>)
                            (org-agenda-skip-function
                             '(leuven--skip-entry-unless-deadline-in-n-days-or-more 2))
-                           (org-deadline-<span class=
-"org-leuven-highlight">warning</span>-days 7)))
+                           (org-deadline-warning-days 7)))
                   (agenda <span class="org-string">""</span>
                           ((org-agenda-format-date <span class=
 "org-string">""</span>)
@@ -1064,8 +1041,7 @@
 "org-string">"Next 3 weeks"</span>)
                            (org-agenda-skip-function
                             '(leuven--skip-entry-unless-deadline-in-n-days-or-more 7))
-                           (org-deadline-<span class=
-"org-leuven-highlight">warning</span>-days 28))))
+                           (org-deadline-warning-days 28))))
                  ((org-agenda-deadline-faces '((0.0 . default)))
                   (org-agenda-clockreport-mode nil)
                   (org-agenda-format-date <span class="org-string">""</span>)
@@ -1163,8 +1139,8 @@
                 <pre class="src src-emacs-lisp">
   (add-to-list 'org-agenda-custom-commands
                '(<span class="org-string">"ra3"</span> <span class=
-"org-string">"Agenda for all </span><span class="org-string"><span class=
-"org-leuven-highlight">TODO</span></span><span class=
+"org-string">"Agenda for all </span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string"> entries"</span>
                  ((agenda <span class="org-string">""</span>
                           ((org-agenda-format-date <span class=
@@ -1173,8 +1149,7 @@
 "org-string">"Past due"</span>)
                            (org-agenda-skip-function
                             'leuven--skip-entry-unless-overdue-deadline)
-                           (org-deadline-<span class=
-"org-leuven-highlight">warning</span>-days 0)))
+                           (org-deadline-warning-days 0)))
                   (agenda <span class="org-string">""</span>
                           ((org-agenda-format-date <span class=
 "org-string">""</span>)
@@ -1184,8 +1159,7 @@
                             'leuven--skip-entry-if-past-deadline)
                            (org-agenda-span 2)
                            (org-agenda-use-time-grid t)
-                           (org-deadline-<span class=
-"org-leuven-highlight">warning</span>-days 0)))
+                           (org-deadline-warning-days 0)))
                   (agenda <span class="org-string">""</span>
                           ((org-agenda-format-date <span class=
 "org-string">""</span>)
@@ -1193,8 +1167,7 @@
 "org-string">"Next 12 days"</span>)
                            (org-agenda-skip-function
                             '(leuven--skip-entry-unless-deadline-in-n-days-or-more 2))
-                           (org-deadline-<span class=
-"org-leuven-highlight">warning</span>-days 14)))
+                           (org-deadline-warning-days 14)))
                   (todo <span class="org-string">""</span>
                         ((org-agenda-overriding-header <span class=
 "org-string">"Later"</span>)
@@ -1212,9 +1185,8 @@
                   (org-agenda-span 'day)
                   (org-agenda-use-time-grid nil)
                   (org-agenda-sorting-strategy '(deadline-up)) <span class=
-"org-comment-delimiter">; </span><span class="org-comment"><span class=
-"org-leuven-highlight">FIXME</span></span><span class=
-"org-comment"> sort does not work in "Past due", well in "Next 12 days"</span>
+"org-comment-delimiter">; </span><span class=
+"org-leuven-highlight"><span class="org-comment">FIXME</span></span><span class="org-comment"> sort does not work in "Past due", well in "Next 12 days"</span>
                   (org-agenda-write-buffer-name <span class=
 "org-string">"List Review"</span>))
                  <span class=
@@ -1370,15 +1342,15 @@
                `(<span class="org-string">"rC"</span> <span class=
 "org-string">"Completed view"</span>
                  (<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">list of all </span><span class="org-comment"><span class=
-"org-leuven-highlight">TODO</span></span><span class=
+"org-comment">list of all </span><span class=
+"org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
 "org-comment"> entries completed yesterday</span>
                   (todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">|DONE|CANX"</span> <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">includes repeated tasks (back in </span><span class=
-"org-comment"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
 "org-comment">)</span>
                              ((org-agenda-overriding-header
                                (concat <span class=
@@ -1395,15 +1367,15 @@
                                  (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 1))))
                               (org-agenda-sorting-strategy '(priority-down))))
                   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">list of all </span><span class="org-comment"><span class=
-"org-leuven-highlight">TODO</span></span><span class=
+"org-comment">list of all </span><span class=
+"org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
 "org-comment"> entries completed 2 days ago</span>
                   (todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">|DONE|CANX"</span> <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">includes repeated tasks (back in </span><span class=
-"org-comment"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
 "org-comment">)</span>
                              ((org-agenda-overriding-header
                                (concat <span class=
@@ -1416,15 +1388,15 @@
                                  (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 2))))
                               (org-agenda-sorting-strategy '(priority-down))))
                   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">list of all </span><span class="org-comment"><span class=
-"org-leuven-highlight">TODO</span></span><span class=
+"org-comment">list of all </span><span class=
+"org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
 "org-comment"> entries completed 3 days ago</span>
                   (todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">|DONE|CANX"</span> <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">includes repeated tasks (back in </span><span class=
-"org-comment"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
 "org-comment">)</span>
                              ((org-agenda-overriding-header
                                (concat <span class=
@@ -1504,11 +1476,9 @@
             <tr>
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
 
-              <td width="100%">
-                <b>Add report “Recently added/completed/modified”</b><br />
-
-                <p>Recently done.</p>
-              </td>
+              <td width="100%"><b>Add report “Recently
+              added/completed/modified”</b><br />
+              Recently done.</td>
             </tr>
           </table>
 
@@ -1553,10 +1523,10 @@
 
         <div class="outline-text-3" id="text-6-6">
           <div class="note">
-            <p><code>org-timeline</code> has weaknesses and although not
+            <code>org-timeline</code> has weaknesses and although not
             officially deprecated, should be best avoided. See Carsten’s
             comments in <a href=
-            "http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465">http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465</a></p>
+            "http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465">http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465</a>
           </div>
 
           <p>Track time.</p>
@@ -1618,15 +1588,11 @@
           <p>Take a moment to plan your day:</p>
 
           <ul class="org-ul">
-            <li>
-              <p>Recently created (possible actions: today, later, done,
-              delete)</p>
-            </li>
+            <li>Recently created (possible actions: today, later, done,
+            delete)</li>
 
-            <li>
-              <p>No due date (possible actions: tomorrow, in 2 days, next week,
-              someday)</p>
-            </li>
+            <li>No due date (possible actions: tomorrow, in 2 days, next week,
+            someday)</li>
 
             <li>
               <p>Scheduled today (possible actions: today, later, done,
@@ -1678,7 +1644,7 @@
                  (
                   (tags <span class=
 "org-string">"CATEGORY={@Collect}&amp;LEVEL=2|</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">={NEW}"</span>
                         ((org-agenda-overriding-header <span class=
 "org-string">"NEW TASKS"</span>)))
@@ -1699,8 +1665,7 @@
                            (org-agenda-start-day <span class=
 "org-string">"-1w"</span>) <span class=
 "org-comment-delimiter">; </span><span class="org-comment">recently done</span>
-                           (org-deadline-<span class=
-"org-leuven-highlight">warning</span>-days 0)))
+                           (org-deadline-warning-days 0)))
 
                   (agenda <span class="org-string">""</span>
                           ((org-agenda-overriding-header <span class=
@@ -1708,10 +1673,9 @@
                            (org-agenda-span 'month)
                            (org-agenda-start-day <span class=
 "org-string">"+0d"</span>)
-                           (org-deadline-<span class=
-"org-leuven-highlight">warning</span>-days 0) <span class=
-"org-comment-delimiter">; </span><span class="org-comment"><span class=
-"org-leuven-highlight">XXX</span></span>
+                           (org-deadline-warning-days 0) <span class=
+"org-comment-delimiter">; </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span>
                            ))
 
                   (todo <span class="org-string">"PROJ"</span>
@@ -1719,8 +1683,8 @@
 "org-string">"PROJECT LIST"</span>)))
 
                   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">FIXME</span></span><span class="org-comment"> we should show which tasks (don't) have CLOCK lines: archived vs. deleted</span>
+"org-leuven-highlight"><span class=
+"org-comment">FIXME</span></span><span class="org-comment"> we should show which tasks (don't) have CLOCK lines: archived vs. deleted</span>
                   (todo <span class="org-string">"DONE|PROJDONE"</span>
                         ((org-agenda-overriding-header
                           <span class=
@@ -1738,11 +1702,11 @@
                          (org-agenda-todo-ignore-scheduled nil)))
 
                   (todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">"</span>        <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">don't include items from CollectBox! </span><span class=
-"org-comment"><span class="org-leuven-highlight">XXX</span></span>
+"org-leuven-highlight"><span class="org-comment">XXX</span></span>
                         ((org-agenda-overriding-header <span class=
 "org-string">"ACTION LIST"</span>)))
 
@@ -1795,11 +1759,11 @@
                '(<span class="org-string">"rN"</span> <span class=
 "org-string">"Next"</span>
                  tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">&lt;&gt;{SDAY}"</span>
                  ((org-agenda-overriding-header <span class=
-"org-string">"List of all </span><span class="org-string"><span class=
-"org-leuven-highlight">TODO</span></span><span class=
+"org-string">"List of all </span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string"> entries with no due date (no SDAY)"</span>)
                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
                   (org-agenda-sorting-strategy '(priority-down)))) t)
@@ -1834,11 +1798,11 @@
                '(<span class="org-string">"F"</span> <span class=
 "org-string">"Future"</span>
                  tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">&lt;&gt;{SDAY}+DEADLINE&gt;\"&lt;+0d&gt;\""</span>
                  ((org-agenda-overriding-header <span class=
-"org-string">"List of all </span><span class="org-string"><span class=
-"org-leuven-highlight">TODO</span></span><span class=
+"org-string">"List of all </span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string"> entries with future due date (no SDAY)"</span>)
                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
                   (org-agenda-sorting-strategy '(priority-down)))) t)
@@ -1849,8 +1813,8 @@
             <pre class="src src-emacs-lisp">
   (add-to-list 'org-agenda-custom-commands
                '(<span class="org-string">"F"</span> <span class=
-"org-string">"List </span><span class="org-string"><span class=
-"org-leuven-highlight">TODO</span></span><span class=
+"org-string">"List </span><span class="org-leuven-highlight"><span class=
+"org-string">TODO</span></span><span class=
 "org-string"> entries scheduled for the future"</span>
                  todo <span class="org-string">""</span>
                  ((org-agenda-todo-ignore-scheduled 'past)
@@ -1895,11 +1859,11 @@
                '(<span class="org-string">"rW"</span> <span class=
 "org-string">"Waiting for"</span>
                  tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">={WAIT}"</span>
                  ((org-agenda-overriding-header <span class=
 "org-string">"Waiting for"</span>)
-                  (org-agenda-sorting-strategy '(deadline-up)))) t) <span class="org-comment-delimiter">; </span><span class="org-comment"><span class="org-leuven-highlight">FIXME</span></span><span class="org-comment"> does not work</span>
+                  (org-agenda-sorting-strategy '(deadline-up)))) t) <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">FIXME</span></span><span class="org-comment"> does not work</span>
 </pre>
           </div>
         </div>
@@ -1997,11 +1961,10 @@
 "org-string">"Assigned to me"</span>
                  tags ,(concat <span class=
 "org-string">"Assignee={"</span> user-login-name <span class=
-"org-string">"</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">"</span>
+"org-string">"</span><span class="org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">|</span></span><span class="org-string">"</span>
                                user-mail-address <span class=
 "org-string">"}"</span>)
                  ((org-agenda-overriding-header <span class=
@@ -2071,7 +2034,7 @@ This notification has been sent to you via Azendoo, do not reply.
       <h2 id="sec-9">EXPORT</h2>
 
       <div class="outline-text-2" id="text-9">
-        <p>Exporting your personal or team task lists.</p>
+        Exporting your personal or team task lists.
       </div>
 
       <div id="outline-container-sec-9-1" class="outline-3">
@@ -2084,8 +2047,8 @@ This notification has been sent to you via Azendoo, do not reply.
           specified files in one step: <code>C-c a e</code>.</p>
 
           <div class="note">
-            <p>To create PDF output, the GhostScript <code>ps2pdf</code>
-            utility must be installed on the system.</p>
+            To create PDF output, the GhostScript <code>ps2pdf</code> utility
+            must be installed on the system.
           </div>
 
           <p>FIXME Changes</p>
@@ -2252,8 +2215,8 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
                  search <span class="org-string">""</span>
                  ((org-agenda-text-search-extra-files
                    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">FIXME</span></span><span class="org-comment"> Add `</span><span class="org-comment"><span class="org-constant">agenda-archives</span></span><span class="org-comment">'</span>
+"org-leuven-highlight"><span class=
+"org-comment">FIXME</span></span><span class="org-comment"> Add `</span><span class="org-constant"><span class="org-comment">agenda-archives</span></span><span class="org-comment">'</span>
                    leuven-org-search-extra-files))) t)
 </pre>
           </div>
@@ -2271,14 +2234,14 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
             <pre class="src src-emacs-lisp">
   (add-to-list 'org-agenda-custom-commands
                '(<span class="org-string">"RS"</span> <span class=
-"org-string">"Like s, but only </span><span class="org-string"><span class=
-"org-leuven-highlight">TODO</span></span><span class=
+"org-string">"Like s, but only </span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string"> entries"</span>
                  search <span class="org-string">""</span>
                  ((org-agenda-text-search-extra-files
                    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment"><span class=
-"org-leuven-highlight">FIXME</span></span><span class="org-comment"> Add `</span><span class="org-comment"><span class="org-constant">agenda-archives</span></span><span class="org-comment">'</span>
+"org-leuven-highlight"><span class=
+"org-comment">FIXME</span></span><span class="org-comment"> Add `</span><span class="org-constant"><span class="org-comment">agenda-archives</span></span><span class="org-comment">'</span>
                    leuven-org-search-extra-files))) t)
 </pre>
           </div>
@@ -2312,32 +2275,28 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">create a sparse tree (current buffer only) with all entries containing</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">the word `</span><span class="org-comment"><span class=
-"org-constant"><span class=
-"org-leuven-highlight">TODO</span></span></span><span class=
-"org-comment">', `</span><span class="org-comment"><span class=
-"org-constant"><span class=
-"org-leuven-highlight">FIXME</span></span></span><span class=
-"org-comment">' or `</span><span class="org-comment"><span class=
-"org-constant"><span class=
-"org-leuven-highlight">XXX</span></span></span><span class=
+"org-comment">the word `</span><span class="org-leuven-highlight"><span class=
+"org-constant"><span class="org-comment">TODO</span></span></span><span class=
+"org-comment">', `</span><span class="org-leuven-highlight"><span class=
+"org-constant"><span class="org-comment">FIXME</span></span></span><span class=
+"org-comment">' or `</span><span class="org-leuven-highlight"><span class=
+"org-constant"><span class="org-comment">XXX</span></span></span><span class=
 "org-comment">'</span>
   (add-to-list 'org-agenda-custom-commands
                '(<span class="org-string">"1"</span> <span class=
 "org-string">"Task markers (in current buffer)"</span>
                  occur-tree <span class="org-string">"\\&lt;</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string"><span class="org-leuven-highlight">FIXME</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string"><span class="org-leuven-highlight">XXX</span></span><span class=
-"org-string">\\&gt;"</span>) t)
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">|</span></span><span class="org-leuven-highlight"><span class=
+"org-string">FIXME</span></span><span class=
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">|</span></span><span class="org-leuven-highlight"><span class=
+"org-string">XXX</span></span><span class="org-string">\\&gt;"</span>) t)
 </pre>
         </div>
       </div>
@@ -2351,14 +2310,15 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
           <pre class="src src-emacs-lisp">
   (add-to-list 'org-agenda-custom-commands
                '(<span class="org-string">"Ee"</span> <span class=
-"org-string">"Print reports (</span><span class="org-string"><span class=
-"org-leuven-highlight">TODO</span></span><span class="org-string">)"</span>
+"org-string">"Print reports (</span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
+"org-string">)"</span>
                  <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">See ThinkingRock examples</span>
                  ((agenda <span class="org-string">""</span>
                           ((org-agenda-overriding-header <span class=
-"org-string">"Scheduled </span><span class="org-string"><span class=
-"org-leuven-highlight">TODO</span></span><span class="org-string">'s"</span>)
+"org-string">"Scheduled </span><span class="org-leuven-highlight"><span class=
+"org-string">TODO</span></span><span class="org-string">'s"</span>)
                            (org-agenda-prefix-format <span class=
 "org-string">"%8e "</span>)
                            (org-agenda-skip-function
@@ -2371,8 +2331,8 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
                   (tags-todo <span class="org-string">"thisweek"</span>
                              ((org-agenda-overriding-iding-header
                                <span class=
-"org-string">"Unscheduled </span><span class="org-string"><span class=
-"org-leuven-highlight">TODO</span></span><span class=
+"org-string">"Unscheduled </span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">'s; also tasks (from which todo's were generated)"</span>)
                               (org-agenda-prefix-format <span class=
 "org-string">"%-7e"</span>)
@@ -2434,10 +2394,10 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
   <span class="org-comment-delimiter">;;              </span><span class=
 "org-comment">'("AF" "Agenda of upcoming due dates (6 months)"</span>
   <span class="org-comment-delimiter">;;                </span><span class=
-"org-comment">;; </span><span class="org-comment"><span class=
-"org-leuven-highlight">FIXME</span></span><span class=
+"org-comment">;; </span><span class="org-leuven-highlight"><span class=
+"org-comment">FIXME</span></span><span class=
 "org-comment"> We don't see DEADLINE with `</span><span class=
-"org-comment"><span class="org-constant">-1m</span></span><span class=
+"org-constant"><span class="org-comment">-1m</span></span><span class=
 "org-comment">' (or so)</span>
   <span class="org-comment-delimiter">;;                </span><span class=
 "org-comment">;; specifications (if they are more than 1m ahead of now)!</span>
@@ -2452,9 +2412,7 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
   <span class="org-comment-delimiter">;;                 </span><span class=
 "org-comment">(org-agenda-time-grid nil)</span>
   <span class="org-comment-delimiter">;;                 </span><span class=
-"org-comment">(org-deadline-</span><span class="org-comment"><span class=
-"org-leuven-highlight">warning</span></span><span class=
-"org-comment">-days 183))) t)</span>
+"org-comment">(org-deadline-warning-days 183))) t)</span>
   <span class="org-comment-delimiter">;;              </span><span class=
 "org-comment">;; Some SCHEDULED are shown (when paired with a deadline and</span>
   <span class="org-comment-delimiter">;;              </span><span class=
@@ -2482,7 +2440,7 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
            (org-agenda-todo-keyword-format <span class=
 "org-string">""</span>)))
     (todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">"</span>
           ((org-agenda-sorting-strategy '(tag-up))
            (org-agenda-show-inherited-tags nil)
@@ -2519,8 +2477,7 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
              ))
     (agenda <span class="org-string">""</span>
             ((org-agenda-span 'day)
-             (org-deadline-<span class=
-"org-leuven-highlight">warning</span>-days 7)
+             (org-deadline-warning-days 7)
              (org-agenda-time-grid nil)
              (org-agenda-include-diary nil)
              (org-agenda-todo-keyword-format <span class=
@@ -2533,7 +2490,7 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
              (org-agenda-prefix-format <span class=
 "org-string">"%t %s"</span>)))
     (todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">|STRT"</span>
           ((org-agenda-sorting-strategy '(tag-up priority-down))
            (org-agenda-todo-ignore-with-date t)))
@@ -2569,16 +2526,11 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
 
       <div class="outline-text-2" id="text-16">
         <ul class="org-ul">
-          <li>
-            <p>Entries with no TODO keyword, but well with a DEADLINE.</p>
-          </li>
+          <li>Entries with no TODO keyword, but well with a DEADLINE.</li>
 
-          <li>
-            <p>Scheduled date, but no deadline</p>
-          </li>
+          <li>Scheduled date, but no deadline</li>
 
-          <li>
-            <p>Scheduled date and deadline</p>
+          <li>Scheduled date and deadline
 
             <ul class="org-ul">
               <li>on the same date</li>
@@ -2587,17 +2539,11 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
             </ul>
           </li>
 
-          <li>
-            <p>No scheduled date, well a deadline</p>
-          </li>
+          <li>No scheduled date, well a deadline</li>
 
-          <li>
-            <p>SDAY with a deadline date</p>
-          </li>
+          <li>SDAY with a deadline date</li>
 
-          <li>
-            <p>Entries with “timed” dates</p>
-          </li>
+          <li>Entries with “timed” dates</li>
         </ul>
       </div>
     </div>
@@ -2653,7 +2599,7 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
                  '(<span class="org-string">"1"</span> <span class=
 "org-string">"Inbox"</span>
                    tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">={NEW}"</span>
                    ((org-agenda-overriding-header <span class=
 "org-string">"Inbox"</span>)
@@ -2674,16 +2620,16 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
                  '(<span class="org-string">"3"</span> <span class=
 "org-string">"Next"</span>
                    tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
-"org-string">&lt;&gt;{NEW</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">SDAY</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">WAIT}"</span>
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
+"org-string">&lt;&gt;{NEW</span><span class=
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">|</span></span><span class="org-string">SDAY</span><span class=
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">|</span></span><span class="org-string">WAIT}"</span>
                    ((org-agenda-overriding-header <span class=
 "org-string">"Next"</span>)
                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
@@ -2702,7 +2648,7 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
                  '(<span class="org-string">"6"</span> <span class=
 "org-string">"Someday"</span>
                    tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">={SDAY}"</span>
                    ((org-agenda-overriding-header <span class=
 "org-string">"Someday"</span>)
@@ -2712,7 +2658,7 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
                  '(<span class="org-string">"7"</span> <span class=
 "org-string">"Waiting for"</span>
                    tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">={WAIT}"</span>
                    ((org-agenda-overriding-header <span class=
 "org-string">"Waiting for"</span>)
@@ -2740,7 +2686,7 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
                                                      (800 1000 1200 1400 1600 1800 2000)))))
 
                    (tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">={NEW}"</span>
                                ((org-agenda-overriding-header <span class=
 "org-string">"Inbox"</span>)
@@ -2753,16 +2699,16 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
                                 (org-agenda-sorting-strategy '(deadline-up))))
 
                    (tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
-"org-string">&lt;&gt;{NEW</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">SDAY</span><span class="org-string"><span class=
-"org-regexp-grouping-backslash">\\</span></span><span class=
-"org-string"><span class=
-"org-regexp-grouping-construct">|</span></span><span class=
-"org-string">WAIT}"</span>
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
+"org-string">&lt;&gt;{NEW</span><span class=
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">|</span></span><span class="org-string">SDAY</span><span class=
+"org-regexp-grouping-backslash"><span class=
+"org-string">\\</span></span><span class=
+"org-regexp-grouping-construct"><span class=
+"org-string">|</span></span><span class="org-string">WAIT}"</span>
                                ((org-agenda-overriding-header <span class=
 "org-string">"Next"</span>)
                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
@@ -2775,7 +2721,7 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
                                 (org-agenda-sorting-strategy '(deadline-up))))
 
                    (tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">={SDAY}"</span>
                                ((org-agenda-overriding-header <span class=
 "org-string">"Someday"</span>)
@@ -2783,7 +2729,7 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">ignore DEADLINE &lt; tomorrow</span>
                    (tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">={WAIT}"</span>
                                ((org-agenda-overriding-header <span class=
 "org-string">"Waiting for"</span>)
@@ -2813,7 +2759,7 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
                  '(<span class="org-string">"E1"</span> <span class=
 "org-string">"Someday with a SCHEDULED date"</span>
                    tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">={SDAY}"</span>
                    ((org-agenda-overriding-header <span class=
 "org-string">"Someday"</span>)
@@ -2847,7 +2793,7 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
                  '(<span class="org-string">"E7"</span> <span class=
 "org-string">"Delegated"</span>
                    tags-todo <span class="org-string">"</span><span class=
-"org-string"><span class="org-leuven-highlight">TODO</span></span><span class=
+"org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">={WAIT}"</span>
                    ((org-agenda-overriding-header <span class=
 "org-string">"Waiting For"</span>)

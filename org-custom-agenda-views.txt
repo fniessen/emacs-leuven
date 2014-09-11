@@ -12,7 +12,7 @@
 
 #+SETUPFILE: ~/src/org-style/setup/bigblow-local-abs.setup
 
-* Private Notes                                                      :noexport:
+* Private Notes                                                       :noexport:
 
 At the beginning, we've put way to many tasks either as scheduled or deadline
 because the unique interaction with Org mode was via the agenda view, and we
@@ -35,12 +35,14 @@ such an update via =C-u C-u C-c C-d=.
 
 Overall count: 6 projects.
 
-* Tasks                                                              :noexport:
+* Tasks                                                               :noexport:
 
 ** TODO Convert <+0d> into <today>
 
 Check first that all the correct tasks are shown, the ones with a time part and
 the ones without...
+
+** TODO Si restriction à un fichier (TODO-Org.org), f7 montre les tâches comme venant du collectbox!
 
 ** TODO Voir s'il faut montrer les tâches quel que soit leur niveau
 
@@ -74,7 +76,7 @@ tout en ne polluant pas trop les agendas (et les comptes de tâches).
 
   ;; display calendar for 7 days
   (global-set-key
-    (kbd "<M-f7>") (kbd "C-c a r c 7"))
+    (kbd "<C-f7>") (kbd "C-c a r c 7"))
 
   (defconst leuven-org-completed-date-regexp
     (concat " \\("
@@ -1677,7 +1679,7 @@ devraient être considérés comme erronés...
 ;;; org-custom-agenda-views.el ends here
 #+end_src
 
-* Notes                                                              :noexport:
+* Notes                                                               :noexport:
   :PROPERTIES:
   :tangle:   no
   :END:

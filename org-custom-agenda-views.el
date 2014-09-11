@@ -16,7 +16,7 @@
 
   ;; display calendar for 7 days
   (global-set-key
-    (kbd "<M-f7>") (kbd "C-c a r c 7"))
+    (kbd "<C-f7>") (kbd "C-c a r c 7"))
 
   (defconst leuven-org-completed-date-regexp
     (concat " \\("
