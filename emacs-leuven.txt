@@ -630,50 +630,20 @@ cancelable; hence, we put it out of a "chapter".
                 (idle-require-mode 1))))
 #+end_src
 
-** TODO Check Org mode version
-
-The following block checks for the Org mode version, and warns the user if not
-equal to 8 or more.
-
-Though, it does load the full Org mode right from the start...
-
-#+begin_src emacs-lisp :tangle no
-;; version info
-(let ((org-install-dir (file-name-directory (locate-library "org-loaddefs")))
-      (org-dir (file-name-directory (locate-library "org")))) ; org.(el|elc)
-  (message "Org mode version %s (org @ %s)"
-           (org-version)
-           (if (string= org-dir org-install-dir)
-               org-install-dir
-             (concat "mixed installation! " org-install-dir " and " org-dir)
-             (sit-for 1.5))))
-
-(unless (string-match "^8" (org-version))
-  (message (concat "This version of Org mode is no longer supported.  "
-                   "Please upgrade to 8 or later"))
-  (sit-for 1.5))
-#+end_src
-
 * The Organization of the Screen
 
 #+begin_src emacs-lisp
 ;;* 1 The Organization of the (info "(emacs)Screen")
 
 (leuven--chapter leuven-chapter-1-screen "1 The Organization of the Screen"
-#+end_src
 
-** The Echo Area
-
-#+begin_src emacs-lisp
 ;;** 1.2 The (info "(emacs)Echo Area")
 
   (leuven--section "1.2 (emacs) The Echo Area")
 
   ;; don't truncate the message log buffer when it becomes large
   (setq message-log-max t)
-#+end_src
 
-#+begin_src emacs-lisp
 )                                       ; chapter 1 ends here
 #+end_src
 
@@ -847,13 +817,13 @@ function's definition in PHP's manual in your web browser (~M-x
 php-search-documentation~ or ~C-c C-f~).  You can combine it with Emacs-w3m to get
 the relevant manual page without leaving Emacs.
 
+*Close* the help buffer by pressing ~Q~.
+
 #+begin_src emacs-lisp
 ;;* 10 (info "(emacs)Help")
 
 (leuven--chapter leuven-chapter-10-help "10 Help"
 #+end_src
-
-*Close* the help buffer by pressing ~Q~.
 
 ** Help Summary
 
@@ -861,10 +831,6 @@ the relevant manual page without leaving Emacs.
 ;;** 10.1 (info "(emacs)Help Summary")
 
   (leuven--section "10.1 (emacs)Help Summary")
-
-  ;; find convenient unbound keystrokes (undefined key bindings)
-  (autoload 'describe-unbound-keys "unbound"
-    "Display a list of unbound keystrokes of complexity no greater than MAX." t)
 
   ;; avoid the description of all minor modes
   (defun describe-major-mode ()
@@ -925,7 +891,7 @@ In a manual, these key bindings will make your life easier:
 - ~i~ ::
      *Search for a topic in this manual's Index* and go to index entry.
 
-- s ::
+- ~s~ ::
      *Search for a regexp* and select node it's found in.
 
 #+begin_src emacs-lisp
@@ -1036,7 +1002,9 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
   ;; decode and browse Unix man-pages "W.o. (without) Man"
   (with-eval-after-load "woman"
     (defalias 'man 'woman))
+#+end_src
 
+#+begin_src emacs-lisp
 )                                       ; chapter 10 ends here
 #+end_src
 
@@ -1234,9 +1202,6 @@ Interactively insert items from kill ring with ~M-x helm-show-kill-ring~ (see
 
   ;; copy/paste with Gnome desktop
   (GNUEmacs
-    ;; ;; cutting and pasting uses the clipboard
-    ;; (setq x-select-enable-clipboard t) ; default in Emacs 24
-
     ;; make cut, copy and paste (keys and menu bar items) use the clipboard
     (menu-bar-enable-clipboard))
 #+end_src
@@ -1267,8 +1232,9 @@ Use ~C-x r t STRING <RET>~ to replace each line of a region-rectangle with a giv
 string.
 
 #+begin_note
-On the Emacs trunk, you can do: ~C-x SPC~ <...move around...> ~DEL~ to delete the
-rectangle and ~C-x SPC~ <...move around...> ~C-t~ to invoke ~string-rectangle~.
+On the Emacs trunk, you can do:
+- ~C-x SPC~ <...move around...> ~DEL~ to delete the rectangle and
+- ~C-x SPC~ <...move around...> ~C-t~ to invoke ~string-rectangle~.
 #+end_note
 
 ** CUA Bindings
@@ -1314,13 +1280,13 @@ highlighting.  Check out [[http://www.vimeo.com/1168225?pg=embed&sec=1168225][Em
   ;; (global-set-key [C-f4] (lambda () (interactive) (point-to-register ?4)))
 
   ;; (defun jump-to-register-other (reg)
-  ;; (other-window 1)
-  ;; (jump-to-register reg)
-  ;; (hilit-recenter (/ (window-height) 2)))
-
+  ;;   (other-window 1)
+  ;;   (jump-to-register reg)
+  ;;   (hilit-recenter (/ (window-height) 2)))
+  ;;
   ;; (defun jump-to-register-here (reg)
-  ;; (jump-to-register reg)
-  ;; (hilit-recenter (/ (window-height) 2)))
+  ;;   (jump-to-register reg)
+  ;;   (hilit-recenter (/ (window-height) 2)))
 
   ;; ;; Move to saved position with F1 F2 F3 and F4
   ;; (global-set-key [f1] (lambda () (interactive) (jump-to-register-here ?1)))
@@ -1449,11 +1415,13 @@ Key bindings:
 
   ;; better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
   ;; place the point at the same place)
-  (when (locate-library "pager")
+  (with-eval-after-load "pager-autoloads"
     (autoload 'pager-page-up "pager"
       "Like scroll-down, but moves a fixed amount of lines." t)
     (autoload 'pager-page-down "pager"
       "Like scroll-up, but moves a fixed amount of lines." t)
+                                        ; These autoloads aren't defined in
+                                        ; `pager-autoloads'!
 
     (global-set-key (kbd "<prior>") 'pager-page-up)
     (global-set-key (kbd "<next>") 'pager-page-down))
@@ -1514,7 +1482,9 @@ Key bindings:
 ;;** 14.12 (info "(emacs)Font Lock")
 
   (leuven--section "14.12 (emacs)Font Lock")
+#+end_src
 
+#+begin_src emacs-lisp
   (XEmacs
     ;; stop showing that annoying progress bar when fontifying
     (setq progress-feedback-use-echo-area nil)
@@ -1523,8 +1493,9 @@ Key bindings:
     (font-lock-mode))
 #+end_src
 
-All text-based major modes run ~text-mode-hook~, and all programming language
-modes run ~prog-mode-hook~, prior to running their own mode hooks.
+Prior to running their own mode hooks,
+- all text-based major modes run ~text-mode-hook~, and
+- all programming language modes run ~prog-mode-hook~.
 
 #+begin_src emacs-lisp
   ;; highlight FIXME notes
@@ -1651,17 +1622,19 @@ much easier to follow some key variables through a block of code.
   (when (display-graphic-p)
     (try-require 'git-gutter))
 
-  (setq git-gutter:disabled-modes '(asm-mode image-mode))
+  (with-eval-after-load "git-gutter"
 
-  ;; update frequency: uncomment this when Emacs/GitGutter slows.
-  ;; (setq git-gutter:update-threshold 1)
-  ;; (setq git-gutter:update-hooks '(after-save-hook after-revert-hook))
+    (setq git-gutter:disabled-modes '(asm-mode image-mode))
 
-  (setq git-gutter:hide-gutter t)         ; Hide gutter if there are no changes
-  (setq git-gutter:diff-option "-w") ; Pass option to 'git diff' command: -w: ignore all spaces
-  (setq git-gutter:verbosity 0)           ; Log/Message Level
+    ;; update frequency: uncomment this when Emacs/GitGutter slows.
+    ;; (setq git-gutter:update-threshold 1)
+    ;; (setq git-gutter:update-hooks '(after-save-hook after-revert-hook))
 
-  (global-git-gutter-mode +1)
+    (setq git-gutter:hide-gutter t)         ; Hide gutter if there are no changes
+    (setq git-gutter:diff-option "-w") ; Pass option to 'git diff' command: -w: ignore all spaces
+    (setq git-gutter:verbosity 0)           ; Log/Message Level
+
+    (global-git-gutter-mode +1))
 #+end_src
 
 ** Displaying Boundaries
@@ -1672,7 +1645,7 @@ much easier to follow some key variables through a block of code.
   (leuven--section "14.15 (emacs)Displaying Boundaries")
 
   ;; visually indicate buffer boundaries and scrolling in the fringe
-  (setq indicate-buffer-boundaries t)   ; 'left
+  (setq-default indicate-buffer-boundaries t) ; 'left
 #+end_src
 
 ** Useless Whitespace
@@ -1709,7 +1682,6 @@ characters over the default mechanism of ~nobreak-char-display~ and
   (GNUEmacs
     ;; whitespace mode
     (add-hook 'text-mode-hook 'whitespace-mode)
-
     (add-hook 'prog-mode-hook 'whitespace-mode)
 
     (with-eval-after-load "whitespace"
@@ -1952,30 +1924,6 @@ See https://github.com/bling/vim-airline for the original author.
 (add-hook 'after-init-hook 'powerline-leuven-theme)
 #+end_src
 
-** How Text Is Displayed
-
-#+begin_src emacs-lisp
-;;** 14.19 How (info "(emacs)Text Display")ed
-
-  (leuven--section "14.19 (emacs)How Text Displayed")
-
-  (defun leuven-dos2unix ()
-    "Convert a plain text file in DOS format to Unix format."
-    (interactive)
-    (save-excursion
-      (goto-char (point-min))
-      (while (search-forward "\r" nil t)
-        (replace-match ""))))
-
-  (defun leuven-unix2dos ()
-    "Convert a plain text file in Unix format to DOS format."
-    (interactive)
-    (save-excursion
-      (goto-char (point-min))
-      (while (search-forward "\n" nil t)
-        (replace-match "\r\n"))))
-#+end_src
-
 ** Displaying the Cursor
 
 #+begin_src emacs-lisp
@@ -1991,19 +1939,13 @@ See https://github.com/bling/vim-airline for the original author.
     (blink-cursor-mode))
 
   (GNUEmacs
-    (defvar leuven-default-cursor-color "black"
-      "Default cursor color.")
-
     ;; using cursor color to indicate some modes (read-only, overwrite and
-    ;; insert modes)
+    ;; normal insert modes)
     (defun leuven--set-cursor-color-according-to-mode ()
       "Change cursor color according to some minor modes."
-      (let ((color (if buffer-read-only
-                       "purple1"
-                     (if overwrite-mode
-                         "red"
-                       ;; normal insert mode
-                       leuven-default-cursor-color))))
+      (let ((color (cond (buffer-read-only "purple1")
+                         (overwrite-mode   "red")
+                         (t                "black"))))
         (set-cursor-color color)))
 
     (add-hook 'post-command-hook 'leuven--set-cursor-color-according-to-mode))
@@ -2041,18 +1983,21 @@ screencasts.
 
 #+begin_src emacs-lisp
   ;; exhaustive log of interactions with Emacs (display keystrokes, etc.)
-  (with-eval-after-load "interaction-log"
+  (with-eval-after-load "interaction-log-autoloads"
+
+    (autoload 'interaction-log-mode "interaction-log"
+      "Global minor mode logging keys, commands, file loads and messages." t)
+                                        ; This autoload isn't defined in
+                                        ; `interaction-log-autoloads'!
 
     ;; ;; maximum number of lines to keep in the *Emacs Log* buffer
     ;; (setq ilog-log-max 10)
-
-    ;; enable logging of keys, commands, file loads and messages
-    (interaction-log-mode 1)
 
     ;; hotkey for showing the log buffer
     (global-set-key (kbd "C-h C-l")
       (lambda ()
         (interactive)
+        (interaction-log-mode 1)
         (display-buffer ilog-buffer-name))))
 #+end_src
 
@@ -2108,17 +2053,6 @@ Since Emacs 24.3:
   ;; scrolling commands are allowed during incremental search (without
   ;; canceling Isearch mode)
   (setq isearch-allow-scroll t)
-
-  (GNUEmacs
-    ;; fuzzy matching utilities (a must-have)
-    (when (locate-library "fuzzy")
-
-      (add-hook 'isearch-mode-hook
-                (lambda ()
-                  (require 'fuzzy))))
-
-    (with-eval-after-load "fuzzy"
-      (turn-on-fuzzy-isearch)))
 #+end_src
 
 #+begin_note
@@ -2136,6 +2070,18 @@ text.
 Juri's solution to add 'open-all could also be used in perform-replace to let
 the user see truly invisible matches before replacing them.
 #+end_note
+
+#+begin_src emacs-lisp
+  (GNUEmacs
+    ;; fuzzy matching utilities (a must-have)
+    (with-eval-after-load "fuzzy-autoloads"
+
+      (autoload 'turn-on-fuzzy-isearch "fuzzy" nil t)
+                                        ; This autoload isn't defined in
+                                        ; `fuzzy-autoloads'!
+
+      (add-hook 'isearch-mode-hook 'turn-on-fuzzy-isearch)))
+#+end_src
 
 ** Regexp Search
 

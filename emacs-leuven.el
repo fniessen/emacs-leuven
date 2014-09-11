@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140911.1403
+;; Version: 20140911.1601
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140911.1403]--")
+(message "* --[ Loading Emacs Leuven 20140911.1601]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -580,10 +580,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "10.1 (emacs)Help Summary")
 
-  ;; find convenient unbound keystrokes (undefined key bindings)
-  (autoload 'describe-unbound-keys "unbound"
-    "Display a list of unbound keystrokes of complexity no greater than MAX." t)
-
   ;; avoid the description of all minor modes
   (defun describe-major-mode ()
     "Describe only `major-mode'."
@@ -798,9 +794,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; copy/paste with Gnome desktop
   (GNUEmacs
-    ;; ;; cutting and pasting uses the clipboard
-    ;; (setq x-select-enable-clipboard t) ; default in Emacs 24
-
     ;; make cut, copy and paste (keys and menu bar items) use the clipboard
     (menu-bar-enable-clipboard))
 
@@ -818,13 +811,13 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; (global-set-key [C-f4] (lambda () (interactive) (point-to-register ?4)))
 
   ;; (defun jump-to-register-other (reg)
-  ;; (other-window 1)
-  ;; (jump-to-register reg)
-  ;; (hilit-recenter (/ (window-height) 2)))
-
+  ;;   (other-window 1)
+  ;;   (jump-to-register reg)
+  ;;   (hilit-recenter (/ (window-height) 2)))
+  ;;
   ;; (defun jump-to-register-here (reg)
-  ;; (jump-to-register reg)
-  ;; (hilit-recenter (/ (window-height) 2)))
+  ;;   (jump-to-register reg)
+  ;;   (hilit-recenter (/ (window-height) 2)))
 
   ;; ;; Move to saved position with F1 F2 F3 and F4
   ;; (global-set-key [f1] (lambda () (interactive) (jump-to-register-here ?1)))
@@ -881,11 +874,13 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
   ;; place the point at the same place)
-  (when (locate-library "pager")
+  (with-eval-after-load "pager-autoloads"
     (autoload 'pager-page-up "pager"
       "Like scroll-down, but moves a fixed amount of lines." t)
     (autoload 'pager-page-down "pager"
       "Like scroll-up, but moves a fixed amount of lines." t)
+                                        ; These autoloads aren't defined in
+                                        ; `pager-autoloads'!
 
     (global-set-key (kbd "<prior>") 'pager-page-up)
     (global-set-key (kbd "<next>") 'pager-page-down))
@@ -999,7 +994,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "14.15 (emacs)Displaying Boundaries")
 
   ;; visually indicate buffer boundaries and scrolling in the fringe
-  (setq indicate-buffer-boundaries t)   ; 'left
+  (setq-default indicate-buffer-boundaries t) ; 'left
 
 ;;** 14.16 (info "(emacs)Useless Whitespace")
 
@@ -1026,7 +1021,6 @@ Last time is saved in global variable `leuven--before-section-time'."
   (GNUEmacs
     ;; whitespace mode
     (add-hook 'text-mode-hook 'whitespace-mode)
-
     (add-hook 'prog-mode-hook 'whitespace-mode)
 
     (with-eval-after-load "whitespace"
@@ -1224,26 +1218,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 (add-hook 'after-init-hook 'powerline-leuven-theme)
 
-;;** 14.19 How (info "(emacs)Text Display")ed
-
-  (leuven--section "14.19 (emacs)How Text Displayed")
-
-  (defun leuven-dos2unix ()
-    "Convert a plain text file in DOS format to Unix format."
-    (interactive)
-    (save-excursion
-      (goto-char (point-min))
-      (while (search-forward "\r" nil t)
-        (replace-match ""))))
-
-  (defun leuven-unix2dos ()
-    "Convert a plain text file in Unix format to DOS format."
-    (interactive)
-    (save-excursion
-      (goto-char (point-min))
-      (while (search-forward "\n" nil t)
-        (replace-match "\r\n"))))
-
 ;;** 14.20 The (info "(emacs)Cursor Display")
 
   (leuven--section "14.20 (emacs)The Cursor Display")
@@ -1256,19 +1230,13 @@ Last time is saved in global variable `leuven--before-section-time'."
     (blink-cursor-mode))
 
   (GNUEmacs
-    (defvar leuven-default-cursor-color "black"
-      "Default cursor color.")
-
     ;; using cursor color to indicate some modes (read-only, overwrite and
-    ;; insert modes)
+    ;; normal insert modes)
     (defun leuven--set-cursor-color-according-to-mode ()
       "Change cursor color according to some minor modes."
-      (let ((color (if buffer-read-only
-                       "purple1"
-                     (if overwrite-mode
-                         "red"
-                       ;; normal insert mode
-                       leuven-default-cursor-color))))
+      (let ((color (cond (buffer-read-only "purple1")
+                         (overwrite-mode   "red")
+                         (t                "black"))))
         (set-cursor-color color)))
 
     (add-hook 'post-command-hook 'leuven--set-cursor-color-according-to-mode))
@@ -1293,18 +1261,21 @@ Last time is saved in global variable `leuven--before-section-time'."
   (setq echo-keystrokes 0.01)
 
   ;; exhaustive log of interactions with Emacs (display keystrokes, etc.)
-  (with-eval-after-load "interaction-log"
+  (with-eval-after-load "interaction-log-autoloads"
+
+    (autoload 'interaction-log-mode "interaction-log"
+      "Global minor mode logging keys, commands, file loads and messages." t)
+                                        ; This autoload isn't defined in
+                                        ; `interaction-log-autoloads'!
 
     ;; ;; maximum number of lines to keep in the *Emacs Log* buffer
     ;; (setq ilog-log-max 10)
-
-    ;; enable logging of keys, commands, file loads and messages
-    (interaction-log-mode 1)
 
     ;; hotkey for showing the log buffer
     (global-set-key (kbd "C-h C-l")
       (lambda ()
         (interactive)
+        (interaction-log-mode 1)
         (display-buffer ilog-buffer-name))))
 
 )                                       ; chapter 14 ends here
@@ -1338,14 +1309,13 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (GNUEmacs
     ;; fuzzy matching utilities (a must-have)
-    (when (locate-library "fuzzy")
+    (with-eval-after-load "fuzzy-autoloads"
 
-      (add-hook 'isearch-mode-hook
-                (lambda ()
-                  (require 'fuzzy))))
+      (autoload 'turn-on-fuzzy-isearch "fuzzy" nil t)
+                                        ; This autoload isn't defined in
+                                        ; `fuzzy-autoloads'!
 
-    (with-eval-after-load "fuzzy"
-      (turn-on-fuzzy-isearch)))
+      (add-hook 'isearch-mode-hook 'turn-on-fuzzy-isearch)))
 
 ;;** 15.5 (info "(emacs)Regexp Search")
 
@@ -9047,7 +9017,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140911.1404]--")
+(message "* --[ Loaded Emacs Leuven 20140911.1602]--")
 
 (provide 'emacs-leuven)
 
