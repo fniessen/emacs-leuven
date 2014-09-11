@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140911.1601
+;; Version: 20140911.1623
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140911.1601]--")
+(message "* --[ Loading Emacs Leuven 20140911.1623]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -530,7 +530,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (global-set-key (kbd "<f11>") 'undo)
 
   ;; redo the most recent undo
-  (when (locate-library "redo+")
+  (with-eval-after-load "redo+-autoloads"
     (autoload 'redo "redo+" "Redo the the most recent undo." t)
     (global-set-key (kbd "<S-f11>") 'redo))
 
@@ -2708,12 +2708,11 @@ Last time is saved in global variable `leuven--before-section-time'."
   (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
 
   ;; major mode for editing comma-separated value files
-  (when (locate-library "csv-mode")
+  (with-eval-after-load "csv-mode-autoloads"
 
-    (autoload 'csv-mode "csv-mode"
-      "Major mode for editing comma-separated value files." t)
+    (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode)))
 
-    (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
+  (with-eval-after-load "csv-mode"
 
     ;; field separators: a list of *single-character* strings
     (setq csv-separators '("," ";")))
@@ -3051,12 +3050,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "(emacs-goodies-el)boxquote")
 
-  (when (locate-library "boxquote")
-
-    ;; quote text with a semi-box
-    (autoload 'boxquote-region "boxquote"
-      "Draw a box around the left hand side of a region bounding START and END." t)
-
+  (with-eval-after-load "boxquote-autoloads"
     (global-set-key (kbd "C-c q") 'boxquote-region))
 
   (with-eval-after-load "boxquote"
@@ -5969,35 +5963,26 @@ this with to-do items than with projects or headings."
 
   (leuven--section "25.11 (emacs)HTML Mode")
 
-  (when (and (locate-library "tidy")
-             (executable-find "tidy"))
+  (with-eval-after-load "tidy-autoloads"
+    (when (executable-find "tidy")
 
-    (autoload 'tidy-buffer "tidy"
-      "Run Tidy HTML parser on current buffer." t)
-    (autoload 'tidy-parse-config-file "tidy"
-      "Parse the `tidy-config-file'." t)
-    (autoload 'tidy-save-settings "tidy"
-      "Save settings to `tidy-config-file'." t)
-    (autoload 'tidy-build-menu  "tidy"
-      "Install an options menu for HTML Tidy." t)
+      (defun leuven--html-mode-hook ()
+        "Customize html(-helper)-mode."
 
-    (defun leuven--html-mode-hook ()
-      "Customize html(-helper)-mode."
+        ;; set up a "tidy" menu in the menu bar
+        (when (boundp 'html-mode-map)
+          (tidy-build-menu html-mode-map))
+        (when (boundp 'html-helper-mode-map)
+          (tidy-build-menu html-helper-mode-map))
 
-      ;; set up a "tidy" menu in the menu bar
-      (when (boundp 'html-mode-map)
-        (tidy-build-menu html-mode-map))
-      (when (boundp 'html-helper-mode-map)
-        (tidy-build-menu html-helper-mode-map))
+        ;; bind the key sequence `C-c C-c' to `tidy-buffer'
+        (local-set-key
+          (kbd "C-c C-c") 'tidy-buffer)
 
-      ;; bind the key sequence `C-c C-c' to `tidy-buffer'
-      (local-set-key
-        (kbd "C-c C-c") 'tidy-buffer)
+        (setq sgml-validate-command "tidy"))
 
-      (setq sgml-validate-command "tidy"))
-
-    ;; also run from `html-helper-mode'
-    (add-hook 'html-mode-hook 'leuven--html-mode-hook))
+      ;; also run from `html-helper-mode'
+      (add-hook 'html-mode-hook 'leuven--html-mode-hook)))
 
   (when (locate-library "html-helper-mode")
 
@@ -8076,17 +8061,14 @@ up before you execute another command."
   ;; Emacs screen and lots of shell screens; to just using Emacs, with lots of
   ;; terminals inside it."
 
-  (when (locate-library "multi-term")
-
-    (autoload 'multi-term "multi-term"
-      "Create new term buffer." t)
-    (autoload 'multi-term-next "multi-term"
-      "Go to the next term buffer." t)
-
-    (setq multi-term-program shell-file-name)
+  (with-eval-after-load "multi-term-autoloads"
 
     ;; (global-set-key (kbd "C-c t") 'multi-term-next)
     (global-set-key (kbd "C-c T") 'multi-term)) ; create a new one
+
+  (with-eval-after-load "multi-term"
+
+    (setq multi-term-program shell-file-name))
 
   ;; ;; run an inferior shell, with I/O through buffer `*shell*'
   ;; (global-set-key
@@ -9017,7 +8999,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140911.1602]--")
+(message "* --[ Loaded Emacs Leuven 20140911.1624]--")
 
 (provide 'emacs-leuven)
 

@@ -713,7 +713,7 @@ cancelable; hence, we put it out of a "chapter".
   (global-set-key (kbd "<f11>") 'undo)
 
   ;; redo the most recent undo
-  (when (locate-library "redo+")
+  (with-eval-after-load "redo+-autoloads"
     (autoload 'redo "redo+" "Redo the the most recent undo." t)
     (global-set-key (kbd "<S-f11>") 'redo))
 #+end_src
@@ -4359,12 +4359,11 @@ Instead of superseding the binding in ~auto-mode-alist~, you can replace it
   (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
 
   ;; major mode for editing comma-separated value files
-  (when (locate-library "csv-mode")
+  (with-eval-after-load "csv-mode-autoloads"
 
-    (autoload 'csv-mode "csv-mode"
-      "Major mode for editing comma-separated value files." t)
+    (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode)))
 
-    (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
+  (with-eval-after-load "csv-mode"
 
     ;; field separators: a list of *single-character* strings
     (setq csv-separators '("," ";")))
@@ -4881,12 +4880,7 @@ Use Unicode characters.
 
   (leuven--section "(emacs-goodies-el)boxquote")
 
-  (when (locate-library "boxquote")
-
-    ;; quote text with a semi-box
-    (autoload 'boxquote-region "boxquote"
-      "Draw a box around the left hand side of a region bounding START and END." t)
-
+  (with-eval-after-load "boxquote-autoloads"
     (global-set-key (kbd "C-c q") 'boxquote-region))
 
   (with-eval-after-load "boxquote"
@@ -9174,35 +9168,26 @@ works quite well for editing HTML4 documents (whose tags don't have to close).
 Plug [[http://tidy.sourceforge.net/][HTML Tidy]] with ~tidy.el~.
 
 #+begin_src emacs-lisp
-  (when (and (locate-library "tidy")
-             (executable-find "tidy"))
+  (with-eval-after-load "tidy-autoloads"
+    (when (executable-find "tidy")
 
-    (autoload 'tidy-buffer "tidy"
-      "Run Tidy HTML parser on current buffer." t)
-    (autoload 'tidy-parse-config-file "tidy"
-      "Parse the `tidy-config-file'." t)
-    (autoload 'tidy-save-settings "tidy"
-      "Save settings to `tidy-config-file'." t)
-    (autoload 'tidy-build-menu  "tidy"
-      "Install an options menu for HTML Tidy." t)
+      (defun leuven--html-mode-hook ()
+        "Customize html(-helper)-mode."
 
-    (defun leuven--html-mode-hook ()
-      "Customize html(-helper)-mode."
+        ;; set up a "tidy" menu in the menu bar
+        (when (boundp 'html-mode-map)
+          (tidy-build-menu html-mode-map))
+        (when (boundp 'html-helper-mode-map)
+          (tidy-build-menu html-helper-mode-map))
 
-      ;; set up a "tidy" menu in the menu bar
-      (when (boundp 'html-mode-map)
-        (tidy-build-menu html-mode-map))
-      (when (boundp 'html-helper-mode-map)
-        (tidy-build-menu html-helper-mode-map))
+        ;; bind the key sequence `C-c C-c' to `tidy-buffer'
+        (local-set-key
+          (kbd "C-c C-c") 'tidy-buffer)
 
-      ;; bind the key sequence `C-c C-c' to `tidy-buffer'
-      (local-set-key
-        (kbd "C-c C-c") 'tidy-buffer)
+        (setq sgml-validate-command "tidy"))
 
-      (setq sgml-validate-command "tidy"))
-
-    ;; also run from `html-helper-mode'
-    (add-hook 'html-mode-hook 'leuven--html-mode-hook))
+      ;; also run from `html-helper-mode'
+      (add-hook 'html-mode-hook 'leuven--html-mode-hook)))
 #+end_src
 
 *** html-helper-mode
@@ -12912,17 +12897,14 @@ shell or term.
   ;; Emacs screen and lots of shell screens; to just using Emacs, with lots of
   ;; terminals inside it."
 
-  (when (locate-library "multi-term")
-
-    (autoload 'multi-term "multi-term"
-      "Create new term buffer." t)
-    (autoload 'multi-term-next "multi-term"
-      "Go to the next term buffer." t)
-
-    (setq multi-term-program shell-file-name)
+  (with-eval-after-load "multi-term-autoloads"
 
     ;; (global-set-key (kbd "C-c t") 'multi-term-next)
     (global-set-key (kbd "C-c T") 'multi-term)) ; create a new one
+
+  (with-eval-after-load "multi-term"
+
+    (setq multi-term-program shell-file-name))
 #+end_src
 
 *************** TODO Try /visual/ commands (like ~top~ or ~less~) in ~multi-term~
