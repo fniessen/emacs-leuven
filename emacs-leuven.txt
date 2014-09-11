@@ -292,16 +292,16 @@ need to load a single file that define autoloaded functions.
    (concat leuven--directory "site-lisp"))
 #+end_src
 
-~leuven-local-repos-directory~ is where you put Emacs Git/SVN/CSV repositories.
+~leuven--local-repos-directory~ is where you put Emacs Git/SVN/CSV repositories.
 
 #+begin_src emacs-lisp
-  (defvar leuven-local-repos-directory "~/Public/Repositories/"
+  (defvar leuven--local-repos-directory "~/Public/Repositories/"
     "Directory containing additional Emacs Lisp public repositories.")
 
   (leuven-add-to-load-path
-   (concat leuven-local-repos-directory "babel"))
+   (concat leuven--local-repos-directory "babel"))
   (leuven-add-to-load-path
-   (concat leuven-local-repos-directory "emacs-bookmark-extension"))
+   (concat leuven--local-repos-directory "emacs-bookmark-extension"))
 #+end_src
 
 *************** TODO Specify variables using `defcustom'
@@ -314,7 +314,7 @@ It also means you can do a complete re-install of Emacs (or even your Linux
 distro) without impacting on stuff you have added by hand.
 
 #+begin_src emacs-lisp
-  (defvar leuven-user-lisp-directory "~/.emacs.d/lisp/"
+  (defvar leuven-user-lisp-directory (concat user-emacs-directory "lisp/")
     "Directory containing personal additional Emacs Lisp packages.")
 
   (leuven-add-to-load-path leuven-user-lisp-directory)
@@ -1081,8 +1081,7 @@ In other editors:
 
 #+begin_src emacs-lisp
 ;; multiple cursors for Emacs
-(try-require 'multiple-cursors)
-(with-eval-after-load "multiple-cursors"
+(with-eval-after-load "multiple-cursors-autoloads"
 #+end_src
 
 *** Splitting the selection into lines
@@ -1117,7 +1116,20 @@ Add all occurrences of the current word to the selection.
 
 #+begin_src emacs-lisp
   ;; mark all parts of the buffer that matches the current region
-  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+  (global-set-key (kbd "C-c *") 'mc/mark-all-like-this)
+#+end_src
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended)
+  (global-set-key (kbd "C-S-SPC") 'set-rectangular-region-anchor)
+  (global-set-key (kbd "C-M-=") 'mc/insert-numbers)
+  (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+
+  (global-set-key (kbd "C-c <return>") 'mc/mark-more-like-this-extended)
+  (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "s-SPC") 'set-rectangular-region-anchor))
 #+end_src
 
 *** Single Selection
@@ -1347,7 +1359,7 @@ directory.
   (with-eval-after-load "bookmark"
 
     ;; where to save the bookmarks
-    (setq bookmark-default-file "~/.emacs.d/bookmarks.bmk")
+    (setq bookmark-default-file (concat user-emacs-directory "bookmarks.bmk"))
                                         ;! a .txt extension would load Org at
                                         ;! the time `bookmark' is required!
 
@@ -1409,8 +1421,7 @@ Key bindings:
 
 #+begin_src emacs-lisp
   ;; quickly jump to a position in the current view
-  (try-require 'ace-jump-mode)
-  (with-eval-after-load "ace-jump-mode"
+  (with-eval-after-load "ace-jump-mode-autoloads"
     (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
 #+end_src
 
@@ -1566,14 +1577,6 @@ See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
 
     ;; stealth fontification should show status messages
     (setq jit-lock-stealth-verbose t))
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; colorize color names in buffers
-  (GNUEmacs
-    (when (locate-library "rainbow-mode")
-      (autoload 'rainbow-mode "rainbow-mode"
-        "Colorize strings that represent colors." t)))
 #+end_src
 
 ** Interactive Highlighting
@@ -1769,19 +1772,23 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
 
   ;; show the column number in each mode line
   (column-number-mode 1)
-
-  ;; ;; use inactive face for mode line in non-selected windows
-  ;; (setq mode-line-in-non-selected-windows t)
-
 #+end_src
 
 #+begin_src emacs-lisp
   ;; unclutter the mode line
-  (when (try-require 'diminish-XXX)
-    (with-eval-after-load "yasnippet"   (diminish 'yas-minor-mode))
-    (with-eval-after-load "eldoc"       (diminish 'eldoc-mode))
-    (with-eval-after-load "paredit"     (diminish 'paredit-mode))
-    (with-eval-after-load "smartparens" (diminish 'smartparens-mode)))
+  (with-eval-after-load "diminish-autoloads"
+    (with-eval-after-load "abbrev"      (diminish 'abbrev-mode "Ab"))
+    (with-eval-after-load "checkdoc"    (diminish 'checkdoc-minor-mode " Cd"))
+    (with-eval-after-load "company"     (diminish 'company-mode "Cmp"))
+    ;; (with-eval-after-load "eldoc"       (diminish 'eldoc-mode))
+    ;; (with-eval-after-load "flycheck"    (diminish 'flycheck-mode))
+    ;; (with-eval-after-load "flyspell"    (diminish 'flyspell-mode))
+    ;; (with-eval-after-load "glasses"     (diminish 'glasses-mode))
+    (with-eval-after-load "paredit"     (diminish 'paredit-mode " Pe"))
+    ;; (with-eval-after-load "redshank"    (diminish 'redshank-mode))
+    ;; (with-eval-after-load "smartparens" (diminish 'smartparens-mode))
+    ;; (with-eval-after-load "whitespace"  (diminish 'whitespace-mode))
+    (with-eval-after-load "yasnippet"   (diminish 'yas-minor-mode " Y")))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1885,6 +1892,7 @@ See https://github.com/bling/vim-airline for the original author.
                                          (funcall separator-left 'powerline-modified-face mode-line)))
                                      ;; (powerline-vc face1 'r)
 
+                                     ;; XXX Put the * in red!
                                      (powerline-raw "%*" nil 'l)
 
                                      (powerline-raw mode-line-mule-info nil 'l)
@@ -3277,7 +3285,7 @@ root using the ~sudo~ tramp method.
     (setq recentf-max-saved-items 100)  ; just 20 is too recent
 
     ;; file to save the recent list into
-    (setq recentf-save-file "~/.emacs.d/.recentf")
+    (setq recentf-save-file (concat user-emacs-directory ".recentf"))
 
     ;; (when using Tramp) turn off the cleanup feature of `recentf'
     (setq recentf-auto-cleanup 'never)  ; disable before we start recentf!
@@ -3309,6 +3317,9 @@ root using the ~sudo~ tramp method.
     :PROPERTIES:
     :ID:       59418189-b87e-45a2-b128-5cbdc8a16430
     :END:
+
+XXX Sort this section following
+https://github.com/emacs-helm/helm/wiki#generalhelmcommands and following.
 
 Nice guide: http://tuhdo.github.io/helm-intro.html.
 
@@ -4698,7 +4709,7 @@ Outline is line-oriented and does not distinguish end-of-block.
   (leuven--section "25.8 (emacs)Outline Mode")
 #+end_src
 
-*** outline-minor-mode
+*** TODO outline-minor-mode (inside plain latex-mode as well)
 
 Though Outline minor mode has NOTHING to do with folding of code as such, some
 people have the following code in their ~ruby-mode-hook~ to enable code folding
@@ -9084,15 +9095,15 @@ Nor a default when point is on a command name...
 
       ;; directory containing automatically generated TeX information
       (setq TeX-auto-global
-            ;; must end with a slash
-            "~/.emacs.d/auctex-auto-generated-info/")
+            (concat user-emacs-directory "auctex-auto-generated-info/"))
+                                        ; must end with a slash
 
 ;;*** 5.5.3 (info "(auctex)Automatic Local") Customization for a Directory
 
       (leuven--section "5.5.3 (auctex)Automatic Local Customization for a Directory")
 
       ;; directory containing automatically generated TeX information
-      (setq TeX-auto-local "~/.emacs.d/auctex-auto-generated-info/")
+      (setq TeX-auto-local (concat user-emacs-directory "auctex-auto-generated-info/"))
                                         ; must end with a slash
 #+end_src
 
@@ -9568,18 +9579,12 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
 #+begin_src emacs-lisp :tangle no
   ;; minor mode for editing parentheses
-  (when (locate-library "paredit")
+  (with-eval-after-load "paredit-autoloads"
 
-    (autoload 'enable-paredit-mode "paredit"
-      "Minor mode for pseudo-structurally editing Lisp code." t)
-
-    (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+    (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
 
     ;; Common Lisp editing extensions
-    (when (locate-library "redshank")   ; requires `paredit'
-
-      (autoload 'redshank-mode "redshank"
-        "Minor mode for restructuring Lisp code (i.e., refactoring)." t)
+    (with-eval-after-load "redshank"    ; requires `paredit'
 
       (add-hook 'emacs-lisp-mode-hook 'redshank-mode)))
 #+end_src
@@ -9684,9 +9689,8 @@ programming modes.
       :group 'hideshow)
 
     (defface hs-face
-      '((t (:box (:line-width 1 :color "#999999")
-            :foreground "#999999" :background "#FFF8C0")))
-      "Face to hightlight the ... area of hidden regions"
+      '((t (:foreground "white" :background "#CBCBCB")))
+      "Face to hightlight the \"...\" area of hidden regions"
       :group 'hideshow)
 
     (defun display-code-line-counts (ov)
@@ -10984,6 +10988,8 @@ into a specified *expansion*.
 
 ** Controlling Abbrev Expansion
 
+Inspired by [[http://macromates.com/][TextMate]].
+
 For complex templates, I use ~YASnippet~.  For example, new file templates (where
 it's Lisp evaluation is handy), class and function templates with docblocks,
 etc. I use it to reduce the repetitious parts of programming, and let me focus
@@ -11000,15 +11006,15 @@ XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-con
 ;;** 29.3 Controlling (info "(emacs)Expanding Abbrevs")
 
   (leuven--section "29.3 Controlling Expanding Abbrevs")
-
-  ;; Yet Another Snippet extension for Emacs
-  (GNUEmacs
-    ;; use the "standard" package (NOT `yasnippet-bundle'!)
-    (try-require 'yasnippet)
-    (with-eval-after-load "yasnippet"
 #+end_src
 
 *** Installation
+
+#+begin_src emacs-lisp
+  ;; Yet Another Snippet extension for Emacs
+  (GNUEmacs
+    (with-eval-after-load "yasnippet-autoloads"
+#+end_src
 
 **** Use YASnippet as a global minor mode
 
@@ -11020,13 +11026,21 @@ XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-con
 **** Use ~yas-minor-mode~ on a per-buffer basis
 
 #+begin_src emacs-lisp :tangle no
-      ;; load the snippet tables
-      (yas-reload-all)
-
       ;; enable YASnippet in programming modes only
       (add-hook 'prog-mode-hook
                 '(lambda ()
                    (yas-minor-mode)))
+#+end_src
+
+#+begin_src emacs-lisp
+    )
+#+end_src
+
+#+begin_src emacs-lisp
+    (with-eval-after-load "yasnippet"
+
+      ;; ;; load the snippet tables
+      ;; (yas-reload-all)               ; in double? (see Messages buffer)
 #+end_src
 
 *** Organizing snippets
@@ -11041,7 +11055,7 @@ By default, put *your own snippets* in the directory =~/.emacs.d/snippets=.
       (let ((leuven-snippets            ; additional YASnippets
              (concat leuven--directory "snippets"))
             (org-snippets
-             (concat leuven-local-repos-directory "yasnippet-org-mode")))
+             (concat leuven--local-repos-directory "yasnippet-org-mode")))
 
         (when (file-directory-p org-snippets)
           (add-to-list 'yas-snippet-dirs org-snippets))
@@ -11060,7 +11074,7 @@ By default, put *your own snippets* in the directory =~/.emacs.d/snippets=.
 
 #+begin_src emacs-lisp
       ;; insert snippet at point
-      (global-set-key (kbd "C-c s") 'yas-insert-snippet) ; also on `C-c & C-s'
+      (global-set-key (kbd "C-c y i") 'yas-insert-snippet) ; also on `C-c & C-s'
 
       ;; bind `yas-expand' to SPC
       (define-key yas-minor-mode-map (kbd "<tab>") nil)
@@ -11082,7 +11096,15 @@ By default, put *your own snippets* in the directory =~/.emacs.d/snippets=.
 Display all available snippets with ~M-x yas-describe-tables~.
 
 #+begin_src emacs-lisp
-      (global-set-key (kbd "C-c & C-l") 'yas-describe-tables)
+      (global-set-key (kbd "C-c y l") 'yas-describe-tables)
+#+end_src
+
+Other key bindings:
+
+#+begin_src emacs-lisp
+      (global-set-key (kbd "C-c y n") 'yas-new-snippet)
+      (global-set-key (kbd "C-c y r") 'yas-reload-all)
+      (global-set-key (kbd "C-c y v") 'yas-visit-snippet-file)
 #+end_src
 
 See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippet.
@@ -11319,18 +11341,20 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
   (GNUEmacs
 
     ;; Auto Completion
-    (when (locate-library "auto-complete-config")
+    (with-eval-after-load "auto-complete-autoloads"
       (idle-require 'auto-complete-config))
 
     (with-eval-after-load "auto-complete-config"
 
+      ;; 6.1 set a list of sources to use (by default + for some major modes)
+      (ac-config-default))            ; ... and enable Auto-Complete mode in all
+                                      ; buffers
+
+    (with-eval-after-load "auto-complete"
+
       ;; ;; 5.4 completion will be started automatically by inserting 2 characters
       ;; (setq ac-auto-start 2)          ; also applies on arguments after opening
       ;;                                 ; parenthesis in ESS
-
-      ;; 6.1 set a list of sources to use (by default + for some major modes)
-      (ac-config-default)             ; ... and enable Auto-Complete mode in all
-                                      ; buffers
 
       ;; 7.5 use `C-n/C-p' to select candidates (only when completion menu is
       ;; displayed)
@@ -11416,7 +11440,7 @@ available completions and filter as well.
 #+begin_src emacs-lisp
   ;; modular text completion framework
   (try-require 'company-XXX)
-  (with-eval-after-load "company-XXX"
+  (with-eval-after-load "company"
 
     ;; minimum prefix length for idle completion
     (setq company-minimum-prefix-length 2)
@@ -13442,7 +13466,7 @@ printing on Windows.
 
     ;; name of the file that records `save-place-alist' value
     (setq save-place-file
-          (convert-standard-filename "~/.emacs.d/.places"))
+          (convert-standard-filename (concat user-emacs-directory ".places")))
                                         ;! a .txt extension would load `org' at
                                         ;! the time Emacs is killed (if not
                                         ;! already loaded)!
@@ -14489,7 +14513,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 
     (setq jabber-use-global-history nil)
 
-    (setq jabber-history-dir "~/.emacs.d/jabber")
+    (setq jabber-history-dir (concat user-emacs-directory "jabber"))
 
     (setq jabber-vcard-avatars-retrieve nil)
 

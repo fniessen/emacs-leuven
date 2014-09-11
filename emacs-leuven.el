@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140909.2023
+;; Version: 20140911.1403
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140909.2023]--")
+(message "* --[ Loading Emacs Leuven 20140911.1403]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -222,15 +222,15 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven-add-to-load-path
    (concat leuven--directory "site-lisp"))
 
-  (defvar leuven-local-repos-directory "~/Public/Repositories/"
+  (defvar leuven--local-repos-directory "~/Public/Repositories/"
     "Directory containing additional Emacs Lisp public repositories.")
 
   (leuven-add-to-load-path
-   (concat leuven-local-repos-directory "babel"))
+   (concat leuven--local-repos-directory "babel"))
   (leuven-add-to-load-path
-   (concat leuven-local-repos-directory "emacs-bookmark-extension"))
+   (concat leuven--local-repos-directory "emacs-bookmark-extension"))
 
-  (defvar leuven-user-lisp-directory "~/.emacs.d/lisp/"
+  (defvar leuven-user-lisp-directory (concat user-emacs-directory "lisp/")
     "Directory containing personal additional Emacs Lisp packages.")
 
   (leuven-add-to-load-path leuven-user-lisp-directory)
@@ -692,8 +692,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (delete-selection-mode 1)
 
 ;; multiple cursors for Emacs
-(try-require 'multiple-cursors)
-(with-eval-after-load "multiple-cursors"
+(with-eval-after-load "multiple-cursors-autoloads"
 
   ;; add a cursor to each (continuous) line in the current region
   (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
@@ -710,7 +709,18 @@ Last time is saved in global variable `leuven--before-section-time'."
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 
   ;; mark all parts of the buffer that matches the current region
-  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+  (global-set-key (kbd "C-c *") 'mc/mark-all-like-this)
+
+  (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended)
+  (global-set-key (kbd "C-S-SPC") 'set-rectangular-region-anchor)
+  (global-set-key (kbd "C-M-=") 'mc/insert-numbers)
+  (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+
+  (global-set-key (kbd "C-c <return>") 'mc/mark-more-like-this-extended)
+  (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "s-SPC") 'set-rectangular-region-anchor))
 
 )                                       ; chapter 11 ends here
 
@@ -829,7 +839,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (with-eval-after-load "bookmark"
 
     ;; where to save the bookmarks
-    (setq bookmark-default-file "~/.emacs.d/bookmarks.bmk")
+    (setq bookmark-default-file (concat user-emacs-directory "bookmarks.bmk"))
                                         ;! a .txt extension would load Org at
                                         ;! the time `bookmark' is required!
 
@@ -853,8 +863,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ; vanilla Emacs
 
   ;; quickly jump to a position in the current view
-  (try-require 'ace-jump-mode)
-  (with-eval-after-load "ace-jump-mode"
+  (with-eval-after-load "ace-jump-mode-autoloads"
     (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
 
 )                                       ; chapter 13 ends here
@@ -964,12 +973,6 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; stealth fontification should show status messages
     (setq jit-lock-stealth-verbose t))
 
-  ;; colorize color names in buffers
-  (GNUEmacs
-    (when (locate-library "rainbow-mode")
-      (autoload 'rainbow-mode "rainbow-mode"
-        "Colorize strings that represent colors." t)))
-
 ;;** 14.13 (info "(emacs)Highlight Interactively") by Matching
 
   (leuven--section "14.13 (emacs)Highlight Interactively by Matching")
@@ -1059,15 +1062,20 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; show the column number in each mode line
   (column-number-mode 1)
 
-  ;; ;; use inactive face for mode line in non-selected windows
-  ;; (setq mode-line-in-non-selected-windows t)
-
   ;; unclutter the mode line
-  (when (try-require 'diminish-XXX)
-    (with-eval-after-load "yasnippet"   (diminish 'yas-minor-mode))
-    (with-eval-after-load "eldoc"       (diminish 'eldoc-mode))
-    (with-eval-after-load "paredit"     (diminish 'paredit-mode))
-    (with-eval-after-load "smartparens" (diminish 'smartparens-mode)))
+  (with-eval-after-load "diminish-autoloads"
+    (with-eval-after-load "abbrev"      (diminish 'abbrev-mode "Ab"))
+    (with-eval-after-load "checkdoc"    (diminish 'checkdoc-minor-mode " Cd"))
+    (with-eval-after-load "company"     (diminish 'company-mode "Cmp"))
+    ;; (with-eval-after-load "eldoc"       (diminish 'eldoc-mode))
+    ;; (with-eval-after-load "flycheck"    (diminish 'flycheck-mode))
+    ;; (with-eval-after-load "flyspell"    (diminish 'flyspell-mode))
+    ;; (with-eval-after-load "glasses"     (diminish 'glasses-mode))
+    (with-eval-after-load "paredit"     (diminish 'paredit-mode " Pe"))
+    ;; (with-eval-after-load "redshank"    (diminish 'redshank-mode))
+    ;; (with-eval-after-load "smartparens" (diminish 'smartparens-mode))
+    ;; (with-eval-after-load "whitespace"  (diminish 'whitespace-mode))
+    (with-eval-after-load "yasnippet"   (diminish 'yas-minor-mode " Y")))
 
   ;; ;; show buffer position like a scroll bar in mode line
   ;; (try-require 'sml-modeline)
@@ -1157,6 +1165,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                          (funcall separator-left 'powerline-modified-face mode-line)))
                                      ;; (powerline-vc face1 'r)
 
+                                     ;; XXX Put the * in red!
                                      (powerline-raw "%*" nil 'l)
 
                                      (powerline-raw mode-line-mule-info nil 'l)
@@ -2033,7 +2042,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (setq recentf-max-saved-items 100)  ; just 20 is too recent
 
     ;; file to save the recent list into
-    (setq recentf-save-file "~/.emacs.d/.recentf")
+    (setq recentf-save-file (concat user-emacs-directory ".recentf"))
 
     ;; (when using Tramp) turn off the cleanup feature of `recentf'
     (setq recentf-auto-cleanup 'never)  ; disable before we start recentf!
@@ -5931,15 +5940,15 @@ this with to-do items than with projects or headings."
 
       ;; directory containing automatically generated TeX information
       (setq TeX-auto-global
-            ;; must end with a slash
-            "~/.emacs.d/auctex-auto-generated-info/")
+            (concat user-emacs-directory "auctex-auto-generated-info/"))
+                                        ; must end with a slash
 
 ;;*** 5.5.3 (info "(auctex)Automatic Local") Customization for a Directory
 
       (leuven--section "5.5.3 (auctex)Automatic Local Customization for a Directory")
 
       ;; directory containing automatically generated TeX information
-      (setq TeX-auto-local "~/.emacs.d/auctex-auto-generated-info/")
+      (setq TeX-auto-local (concat user-emacs-directory "auctex-auto-generated-info/"))
                                         ; must end with a slash
 
 ;;** (info "(preview-latex)Top")
@@ -6253,9 +6262,8 @@ mouse-3: go to end") "]"))
       :group 'hideshow)
 
     (defface hs-face
-      '((t (:box (:line-width 1 :color "#999999")
-            :foreground "#999999" :background "#FFF8C0")))
-      "Face to hightlight the ... area of hidden regions"
+      '((t (:foreground "white" :background "#CBCBCB")))
+      "Face to hightlight the \"...\" area of hidden regions"
       :group 'hideshow)
 
     (defun display-code-line-counts (ov)
@@ -6964,18 +6972,23 @@ up before you execute another command."
 
   ;; Yet Another Snippet extension for Emacs
   (GNUEmacs
-    ;; use the "standard" package (NOT `yasnippet-bundle'!)
-    (try-require 'yasnippet)
-    (with-eval-after-load "yasnippet"
+    (with-eval-after-load "yasnippet-autoloads"
 
       ;; enable YASnippet in all buffers
       (yas-global-mode 1)
+
+    )
+
+    (with-eval-after-load "yasnippet"
+
+      ;; ;; load the snippet tables
+      ;; (yas-reload-all)               ; in double? (see Messages buffer)
 
       ;; add root directories that store the snippets
       (let ((leuven-snippets            ; additional YASnippets
              (concat leuven--directory "snippets"))
             (org-snippets
-             (concat leuven-local-repos-directory "yasnippet-org-mode")))
+             (concat leuven--local-repos-directory "yasnippet-org-mode")))
 
         (when (file-directory-p org-snippets)
           (add-to-list 'yas-snippet-dirs org-snippets))
@@ -6990,7 +7003,7 @@ up before you execute another command."
       (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
 
       ;; insert snippet at point
-      (global-set-key (kbd "C-c s") 'yas-insert-snippet) ; also on `C-c & C-s'
+      (global-set-key (kbd "C-c y i") 'yas-insert-snippet) ; also on `C-c & C-s'
 
       ;; bind `yas-expand' to SPC
       (define-key yas-minor-mode-map (kbd "<tab>") nil)
@@ -7008,7 +7021,11 @@ up before you execute another command."
       ;; UI for selecting snippet when there are multiple candidates
       (setq yas-prompt-functions '(yas-dropdown-prompt))
 
-      (global-set-key (kbd "C-c & C-l") 'yas-describe-tables)
+      (global-set-key (kbd "C-c y l") 'yas-describe-tables)
+
+      (global-set-key (kbd "C-c y n") 'yas-new-snippet)
+      (global-set-key (kbd "C-c y r") 'yas-reload-all)
+      (global-set-key (kbd "C-c y v") 'yas-visit-snippet-file)
 
       (defvar lawlist-context-menu-map
         (let ((map (make-sparse-keymap "Context Menu")))
@@ -7095,18 +7112,20 @@ up before you execute another command."
   (GNUEmacs
 
     ;; Auto Completion
-    (when (locate-library "auto-complete-config")
+    (with-eval-after-load "auto-complete-autoloads"
       (idle-require 'auto-complete-config))
 
     (with-eval-after-load "auto-complete-config"
 
+      ;; 6.1 set a list of sources to use (by default + for some major modes)
+      (ac-config-default))            ; ... and enable Auto-Complete mode in all
+                                      ; buffers
+
+    (with-eval-after-load "auto-complete"
+
       ;; ;; 5.4 completion will be started automatically by inserting 2 characters
       ;; (setq ac-auto-start 2)          ; also applies on arguments after opening
       ;;                                 ; parenthesis in ESS
-
-      ;; 6.1 set a list of sources to use (by default + for some major modes)
-      (ac-config-default)             ; ... and enable Auto-Complete mode in all
-                                      ; buffers
 
       ;; 7.5 use `C-n/C-p' to select candidates (only when completion menu is
       ;; displayed)
@@ -7167,7 +7186,7 @@ up before you execute another command."
 
   ;; modular text completion framework
   (try-require 'company-XXX)
-  (with-eval-after-load "company-XXX"
+  (with-eval-after-load "company"
 
     ;; minimum prefix length for idle completion
     (setq company-minimum-prefix-length 2)
@@ -8379,7 +8398,7 @@ up before you execute another command."
 
     ;; name of the file that records `save-place-alist' value
     (setq save-place-file
-          (convert-standard-filename "~/.emacs.d/.places"))
+          (convert-standard-filename (concat user-emacs-directory ".places")))
                                         ;! a .txt extension would load `org' at
                                         ;! the time Emacs is killed (if not
                                         ;! already loaded)!
@@ -9028,7 +9047,7 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140909.2024]--")
+(message "* --[ Loaded Emacs Leuven 20140911.1404]--")
 
 (provide 'emacs-leuven)
 
