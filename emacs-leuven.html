@@ -1308,7 +1308,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140912.1423</span>
+"org-comment">Version: 20140912.1655</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1431,7 +1431,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140912.1423]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140912.1655]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -9604,9 +9604,9 @@ M-: (executable-find "diff") RET
 "org-string">"boxquote"</span>
     (setq boxquote-top-and-tail  <span class="org-string">"────"</span>)
     (setq boxquote-title-format  <span class="org-string">" %s"</span>)
-    (setq boxquote-top-corner    <span class="org-string">"  ╭"</span>)
+    (setq boxquote-top-corner    <span class="org-string">"  ┌"</span>)
     (setq boxquote-side          <span class="org-string">"  │ "</span>)
-    (setq boxquote-bottom-corner <span class="org-string">"  ╰"</span>))
+    (setq boxquote-bottom-corner <span class="org-string">"  └"</span>))
 </pre>
           </div>
 
@@ -10042,14 +10042,17 @@ M-: (executable-find "diff") RET
 "org-comment">ellipsis to use in the Org mode outline</span>
     (setq org-ellipsis
           (<span class=
-"org-keyword">if</span> (char-displayable-p ?\u25B7) <span class=
+"org-keyword">if</span> (char-displayable-p ?\u25BA) <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">white right-pointing triangle</span>
-              <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">this test takes ~ 0.40s; hence, wrapped in eval-after-load</span>
+"org-comment">this test takes ~ 0.40s hence,</span>
+                                           <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">wrapped in `</span><span class="org-constant"><span class=
+"org-comment">eval-after-load</span></span><span class="org-comment">'</span>
               <span class=
-"org-string">" \u25B7"</span>                 <span class=
-"org-comment-delimiter">; </span><span class="org-comment">string</span>
+"org-string">" \u25BA"</span>                 <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">string (black right-pointing pointer)</span>
             'org-ellipsis)))            <span class=
 "org-comment-delimiter">; </span><span class="org-comment">face</span>
 
@@ -26115,7 +26118,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140912.1424]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140912.1656]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

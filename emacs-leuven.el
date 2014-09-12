@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140912.1422
+;; Version: 20140912.1654
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140912.1422]--")
+(message "* --[ Loading Emacs Leuven 20140912.1654]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -3039,9 +3039,9 @@ Last time is saved in global variable `leuven--before-section-time'."
   (with-eval-after-load "boxquote"
     (setq boxquote-top-and-tail  "────")
     (setq boxquote-title-format  " %s")
-    (setq boxquote-top-corner    "  ╭")
+    (setq boxquote-top-corner    "  ┌")
     (setq boxquote-side          "  │ ")
-    (setq boxquote-bottom-corner "  ╰"))
+    (setq boxquote-bottom-corner "  └"))
 
 ;;** (info "phonetic")
 
@@ -3186,9 +3186,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; ellipsis to use in the Org mode outline
     (setq org-ellipsis
-          (if (char-displayable-p ?\u25B7) ; white right-pointing triangle
-              ;; this test takes ~ 0.40s; hence, wrapped in eval-after-load
-              " \u25B7"                 ; string
+          (if (char-displayable-p ?\u25BA) ; this test takes ~ 0.40s hence,
+                                           ; wrapped in `eval-after-load'
+              " \u25BA"                 ; string (black right-pointing pointer)
             'org-ellipsis)))            ; face
 
   ;; <RET> follows links (except in tables, where you must use `C-c C-o')
@@ -8988,7 +8988,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140912.1423]--")
+(message "* --[ Loaded Emacs Leuven 20140912.1655]--")
 
 (provide 'emacs-leuven)
 

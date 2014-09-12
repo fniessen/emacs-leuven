@@ -4885,9 +4885,9 @@ Use Unicode characters.
   (with-eval-after-load "boxquote"
     (setq boxquote-top-and-tail  "────")
     (setq boxquote-title-format  " %s")
-    (setq boxquote-top-corner    "  ╭")
+    (setq boxquote-top-corner    "  ┌")
     (setq boxquote-side          "  │ ")
-    (setq boxquote-bottom-corner "  ╰"))
+    (setq boxquote-bottom-corner "  └"))
 #+end_src
 
 In Gnus, you can mark some region with enclosing tags by pressing ~C-c M-m~
@@ -5140,9 +5140,9 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 
     ;; ellipsis to use in the Org mode outline
     (setq org-ellipsis
-          (if (char-displayable-p ?\u25B7) ; white right-pointing triangle
-              ;; this test takes ~ 0.40s; hence, wrapped in eval-after-load
-              " \u25B7"                 ; string
+          (if (char-displayable-p ?\u25BA) ; this test takes ~ 0.40s hence,
+                                           ; wrapped in `eval-after-load'
+              " \u25BA"                 ; string (black right-pointing pointer)
             'org-ellipsis)))            ; face
 
   ;; <RET> follows links (except in tables, where you must use `C-c C-o')
