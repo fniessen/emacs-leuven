@@ -7917,7 +7917,7 @@ add it to ~org-export-backends~.
 
     (when cygwinp
       (setcdr (assoc "LibreOffice" org-odt-convert-processes)
-              "soffice --headless --convert-to %f%x --outdir $(cygpath -w %d) $(cygpath -w %i)")))
+              "soffice --headless --convert-to %f%x --outdir \"$(cygpath -m %d)\" \"$(cygpath -m %i)\"")))
 #+end_src
 
 ** Publishing

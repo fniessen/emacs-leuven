@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140912.1146
+;; Version: 20140912.1422
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140912.1146]--")
+(message "* --[ Loading Emacs Leuven 20140912.1422]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -5143,7 +5143,7 @@ this with to-do items than with projects or headings."
 
     (when cygwinp
       (setcdr (assoc "LibreOffice" org-odt-convert-processes)
-              "soffice --headless --convert-to %f%x --outdir $(cygpath -w %d) $(cygpath -w %i)")))
+              "soffice --headless --convert-to %f%x --outdir \"$(cygpath -m %d)\" \"$(cygpath -m %i)\"")))
 
 ;;* 13 (info "(org)Publishing")
 
@@ -8988,7 +8988,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140912.1147]--")
+(message "* --[ Loaded Emacs Leuven 20140912.1423]--")
 
 (provide 'emacs-leuven)
 
