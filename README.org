@@ -1,7 +1,7 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DATE:      2012-06-22
-#+Time-stamp: <2014-08-27 Wed 17:21>
+#+Time-stamp: <2014-09-11 Thu 20:37>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en
@@ -11,10 +11,12 @@
 * Emacs Leuven
 
 Looking for an Emacs *configuration file* with many packages already enabled and
-a more pleasant set of defaults?  Here's the place to find one!
+a more *pleasant set of defaults*?  Here's the place to find one!
 
 The "Emacs Leuven" configuration file is packaged as an Emacs Lisp library, and
 ready to be used by you.
+
+And it is optimized to keep the *Emacs startup time* fast (around *2 seconds*)!
 
 ** Download
 
