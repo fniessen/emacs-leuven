@@ -1644,7 +1644,7 @@ much easier to follow some key variables through a block of code.
   (leuven--section "14.15 (emacs)Displaying Boundaries")
 
   ;; visually indicate buffer boundaries and scrolling in the fringe
-  (setq-default indicate-buffer-boundaries t) ; 'left
+  (setq-default indicate-buffer-boundaries '((top . left) (t . right)))
 #+end_src
 
 ** Useless Whitespace
@@ -7913,7 +7913,11 @@ add it to ~org-export-backends~.
   (with-eval-after-load "ox-odt"
 
     ;; convert "odt" format to "doc" format
-    (setq org-odt-preferred-output-format "doc"))
+    (setq org-odt-preferred-output-format "doc")
+
+    (when cygwinp
+      (setcdr (assoc "LibreOffice" org-odt-convert-processes)
+              "soffice --headless --convert-to %f%x --outdir $(cygpath -w %d) $(cygpath -w %i)")))
 #+end_src
 
 ** Publishing

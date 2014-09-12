@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140912.0950
+;; Version: 20140912.1146
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140912.0950]--")
+(message "* --[ Loading Emacs Leuven 20140912.1146]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -993,7 +993,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "14.15 (emacs)Displaying Boundaries")
 
   ;; visually indicate buffer boundaries and scrolling in the fringe
-  (setq-default indicate-buffer-boundaries t) ; 'left
+  (setq-default indicate-buffer-boundaries '((top . left) (t . right)))
 
 ;;** 14.16 (info "(emacs)Useless Whitespace")
 
@@ -5139,7 +5139,11 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "ox-odt"
 
     ;; convert "odt" format to "doc" format
-    (setq org-odt-preferred-output-format "doc"))
+    (setq org-odt-preferred-output-format "doc")
+
+    (when cygwinp
+      (setcdr (assoc "LibreOffice" org-odt-convert-processes)
+              "soffice --headless --convert-to %f%x --outdir $(cygpath -w %d) $(cygpath -w %i)")))
 
 ;;* 13 (info "(org)Publishing")
 
@@ -8984,7 +8988,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140912.0951]--")
+(message "* --[ Loaded Emacs Leuven 20140912.1147]--")
 
 (provide 'emacs-leuven)
 
