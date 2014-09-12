@@ -247,48 +247,58 @@
             <a href="#sec-20">Files Handling</a>
 
             <ul>
-              <li><a href="#sec-20-1">File Names</a></li>
+              <li><a href="#sec-20-1">Visiting Files</a></li>
 
-              <li><a href="#sec-20-2">Visiting Files</a></li>
+              <li><a href="#sec-20-2">Saving Files</a></li>
 
-              <li><a href="#sec-20-3">Saving Files</a></li>
+              <li><a href="#sec-20-3">Reverting a Buffer</a></li>
 
-              <li><a href="#sec-20-4">Reverting a Buffer</a></li>
-
-              <li><a href="#sec-20-5">Auto-Saving: Protection Against
+              <li><a href="#sec-20-4">Auto-Saving: Protection Against
               Disasters</a></li>
 
-              <li><a href="#sec-20-6">Comparing Files</a></li>
+              <li><a href="#sec-20-5">Comparing Files</a></li>
 
-              <li><a href="#sec-20-7">Diff Mode</a></li>
+              <li><a href="#sec-20-6">Diff Mode</a></li>
 
-              <li><a href="#sec-20-8">Miscellaneous File Operations</a></li>
+              <li><a href="#sec-20-7">Miscellaneous File Operations</a></li>
 
-              <li><a href="#sec-20-9">Accessing Compressed Files</a></li>
+              <li><a href="#sec-20-8">Accessing Compressed Files</a></li>
 
-              <li><a href="#sec-20-10">Auto Encryption</a></li>
+              <li><a href="#sec-20-9">Auto Encryption</a></li>
 
               <li>
-                <a href="#sec-20-11">Remote Files</a>
+                <a href="#sec-20-10">Remote Files</a>
 
                 <ul>
-                  <li><a href="#sec-20-11-1">Ange-FTP</a></li>
+                  <li><a href="#sec-20-10-1">Ange-FTP</a></li>
 
-                  <li><a href="#sec-20-11-2">TRAMP</a></li>
+                  <li><a href="#sec-20-10-2">TRAMP</a></li>
 
-                  <li><a href="#sec-20-11-3">TEST Find file as root</a></li>
+                  <li><a href="#sec-20-10-3">TEST Find file as root</a></li>
                 </ul>
               </li>
 
               <li>
-                <a href="#sec-20-12">Convenience Features for Finding Files</a>
+                <a href="#sec-20-11">Convenience Features for Finding Files</a>
 
                 <ul>
-                  <li><a href="#sec-20-12-1">FFAP</a></li>
+                  <li><a href="#sec-20-11-1">FFAP</a></li>
 
-                  <li><a href="#sec-20-12-2">Helm (Anything successor)</a></li>
+                  <li>
+                    <a href="#sec-20-11-2">Helm (Anything successor)</a>
 
-                  <li><a href="#sec-20-12-3">Image mode</a></li>
+                    <ul>
+                      <li><a href="#sec-20-11-2-1">Helm Find Files</a></li>
+
+                      <li><a href="#sec-20-11-2-2">Helm M-x</a></li>
+
+                      <li><a href="#sec-20-11-2-3">Helm locate</a></li>
+
+                      <li><a href="#sec-20-11-2-4">Helm for buffers</a></li>
+                    </ul>
+                  </li>
+
+                  <li><a href="#sec-20-11-3">Image mode</a></li>
                 </ul>
               </li>
             </ul>
@@ -1298,7 +1308,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140911.1625</span>
+"org-comment">Version: 20140912.0951</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1421,7 +1431,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140911.1625]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140912.0951]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -2492,8 +2502,6 @@
 "org-comment">redo the most recent undo</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"redo+-autoloads"</span>
-    (autoload 'redo <span class="org-string">"redo+"</span> <span class=
-"org-doc">"Redo the the most recent undo."</span> t)
     (global-set-key (kbd <span class=
 "org-string">"&lt;S-f11&gt;"</span>) 'redo))
 </pre>
@@ -3300,7 +3308,7 @@
           <div class="outline-text-4" id="text-14-2-1">
             <p>Interactively insert items from kill ring with <code>M-x
             helm-show-kill-ring</code> (see <a href=
-            "#sec-20-12-2">Helm</a>).</p>
+            "#sec-20-11-2">Helm</a>).</p>
           </div>
         </div>
       </div>
@@ -5688,29 +5696,9 @@
       </div>
 
       <div id="outline-container-sec-20-1" class="outline-3">
-        <h3 id="sec-20-1">File Names</h3>
+        <h3 id="sec-20-1">Visiting Files</h3>
 
         <div class="outline-text-3" id="text-20-1">
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-<span class="org-comment-delimiter">;;</span><span class=
-"org-comment">** 18.1 (info "(emacs)File Names")</span>
-
-  (leuven--section <span class="org-string">"18.1 (emacs)File Names"</span>)
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; name of default directory</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq default-directory (concat (getenv "HOME") "/"))</span>
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="outline-container-sec-20-2" class="outline-3">
-        <h3 id="sec-20-2">Visiting Files</h3>
-
-        <div class="outline-text-3" id="text-20-2">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -5741,10 +5729,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-20-3" class="outline-3">
-        <h3 id="sec-20-3">Saving Files</h3>
+      <div id="outline-container-sec-20-2" class="outline-3">
+        <h3 id="sec-20-2">Saving Files</h3>
 
-        <div class="outline-text-3" id="text-20-3">
+        <div class="outline-text-3" id="text-20-2">
           <p>You can define a <b>shadow file</b> group to automatically upload
           local files to a remote location.</p>
 
@@ -5867,10 +5855,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-20-4" class="outline-3">
-        <h3 id="sec-20-4">Reverting a Buffer</h3>
+      <div id="outline-container-sec-20-3" class="outline-3">
+        <h3 id="sec-20-3">Reverting a Buffer</h3>
 
-        <div class="outline-text-3" id="text-20-4">
+        <div class="outline-text-3" id="text-20-3">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -5907,10 +5895,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-20-5" class="outline-3">
-        <h3 id="sec-20-5">Auto-Saving: Protection Against Disasters</h3>
+      <div id="outline-container-sec-20-4" class="outline-3">
+        <h3 id="sec-20-4">Auto-Saving: Protection Against Disasters</h3>
 
-        <div class="outline-text-3" id="text-20-5">
+        <div class="outline-text-3" id="text-20-4">
           <p>How to get Emacs to auto-save to your local disk
           (<code>#file#</code>).</p>
 
@@ -6024,10 +6012,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-20-6" class="outline-3">
-        <h3 id="sec-20-6">Comparing Files</h3>
+      <div id="outline-container-sec-20-5" class="outline-3">
+        <h3 id="sec-20-5">Comparing Files</h3>
 
-        <div class="outline-text-3" id="text-20-6">
+        <div class="outline-text-3" id="text-20-5">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -6054,10 +6042,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-20-7" class="outline-3">
-        <h3 id="sec-20-7">Diff Mode</h3>
+      <div id="outline-container-sec-20-6" class="outline-3">
+        <h3 id="sec-20-6">Diff Mode</h3>
 
-        <div class="outline-text-3" id="text-20-7">
+        <div class="outline-text-3" id="text-20-6">
           <p>In Diff mode, I can <b>select a hunk and apply it (in
           reverse)</b>. Nice following <code>C-x v =</code> to show what’s
           changed, and decide to reverse a change.</p>
@@ -6230,10 +6218,10 @@ M-: (executable-find "diff") RET
         </div>
       </div>
 
-      <div id="outline-container-sec-20-8" class="outline-3">
-        <h3 id="sec-20-8">Miscellaneous File Operations</h3>
+      <div id="outline-container-sec-20-7" class="outline-3">
+        <h3 id="sec-20-7">Miscellaneous File Operations</h3>
 
-        <div class="outline-text-3" id="text-20-8">
+        <div class="outline-text-3" id="text-20-7">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -6250,10 +6238,10 @@ M-: (executable-find "diff") RET
         </div>
       </div>
 
-      <div id="outline-container-sec-20-9" class="outline-3">
-        <h3 id="sec-20-9">Accessing Compressed Files</h3>
+      <div id="outline-container-sec-20-8" class="outline-3">
+        <h3 id="sec-20-8">Accessing Compressed Files</h3>
 
-        <div class="outline-text-3" id="text-20-9">
+        <div class="outline-text-3" id="text-20-8">
           <ul class="org-ul">
             <li>Display the <b>contents</b> of the archive</li>
 
@@ -6280,10 +6268,10 @@ M-: (executable-find "diff") RET
         </div>
       </div>
 
-      <div id="outline-container-sec-20-10" class="outline-3">
-        <h3 id="sec-20-10">Auto Encryption</h3>
+      <div id="outline-container-sec-20-9" class="outline-3">
+        <h3 id="sec-20-9">Auto Encryption</h3>
 
-        <div class="outline-text-3" id="text-20-10">
+        <div class="outline-text-3" id="text-20-9">
           <p>History:</p>
 
           <ol class="org-ol">
@@ -6375,10 +6363,10 @@ M-: (executable-find "diff") RET
         </div>
       </div>
 
-      <div id="outline-container-sec-20-11" class="outline-3">
-        <h3 id="sec-20-11">Remote Files</h3>
+      <div id="outline-container-sec-20-10" class="outline-3">
+        <h3 id="sec-20-10">Remote Files</h3>
 
-        <div class="outline-text-3" id="text-20-11">
+        <div class="outline-text-3" id="text-20-10">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -6389,10 +6377,10 @@ M-: (executable-find "diff") RET
           </div>
         </div>
 
-        <div id="outline-container-sec-20-11-1" class="outline-4">
-          <h4 id="sec-20-11-1">Ange-FTP</h4>
+        <div id="outline-container-sec-20-10-1" class="outline-4">
+          <h4 id="sec-20-10-1">Ange-FTP</h4>
 
-          <div class="outline-text-4" id="text-20-11-1">
+          <div class="outline-text-4" id="text-20-10-1">
             <table class="inlinetask" width="100%">
               <tr>
                 <td valign="top"><b><span class=
@@ -6428,10 +6416,10 @@ M-: (executable-find "diff") RET
           </div>
         </div>
 
-        <div id="outline-container-sec-20-11-2" class="outline-4">
-          <h4 id="sec-20-11-2">TRAMP</h4>
+        <div id="outline-container-sec-20-10-2" class="outline-4">
+          <h4 id="sec-20-10-2">TRAMP</h4>
 
-          <div class="outline-text-4" id="text-20-11-2">
+          <div class="outline-text-4" id="text-20-10-2">
             <p>(other protocols than just FTP)</p>
 
             <p><code>/method:user@host:/path/file</code></p>
@@ -6652,10 +6640,10 @@ M-: (executable-find "diff") RET
           </div>
         </div>
 
-        <div id="outline-container-sec-20-11-3" class="outline-4">
-          <h4 id="sec-20-11-3">TEST Find file as root</h4>
+        <div id="outline-container-sec-20-10-3" class="outline-4">
+          <h4 id="sec-20-10-3">TEST Find file as root</h4>
 
-          <div class="outline-text-4" id="text-20-11-3">
+          <div class="outline-text-4" id="text-20-10-3">
             <p>You can just do <code>C-x C-f
             /sudo:user@localhost:/foo/bar/baz.txt &lt;RET&gt;</code>.</p>
 
@@ -6720,10 +6708,10 @@ M-: (executable-find "diff") RET
         </div>
       </div>
 
-      <div id="outline-container-sec-20-12" class="outline-3">
-        <h3 id="sec-20-12">Convenience Features for Finding Files</h3>
+      <div id="outline-container-sec-20-11" class="outline-3">
+        <h3 id="sec-20-11">Convenience Features for Finding Files</h3>
 
-        <div class="outline-text-3" id="text-20-12">
+        <div class="outline-text-3" id="text-20-11">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -6790,10 +6778,10 @@ M-: (executable-find "diff") RET
           </div>
         </div>
 
-        <div id="outline-container-sec-20-12-1" class="outline-4">
-          <h4 id="sec-20-12-1">FFAP</h4>
+        <div id="outline-container-sec-20-11-1" class="outline-4">
+          <h4 id="sec-20-11-1">FFAP</h4>
 
-          <div class="outline-text-4" id="text-20-12-1">
+          <div class="outline-text-4" id="text-20-11-1">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   (leuven--section <span class="org-string">"FFAP"</span>)
@@ -6821,12 +6809,12 @@ M-: (executable-find "diff") RET
           </div>
         </div>
 
-        <div id="outline-container-sec-20-12-2" class="outline-4">
-          <h4 id="sec-20-12-2"><a id="ID-59418189-b87e-45a2-b128-5cbdc8a16430"
+        <div id="outline-container-sec-20-11-2" class="outline-4">
+          <h4 id="sec-20-11-2"><a id="ID-59418189-b87e-45a2-b128-5cbdc8a16430"
           name="ID-59418189-b87e-45a2-b128-5cbdc8a16430"></a>Helm (Anything
           successor)</h4>
 
-          <div class="outline-text-4" id="text-20-12-2">
+          <div class="outline-text-4" id="text-20-11-2">
             <p>XXX Sort this section following <a href=
             "https://github.com/emacs-helm/helm/wiki#generalhelmcommands">https://github.com/emacs-helm/helm/wiki#generalhelmcommands</a>
             and following.</p>
@@ -7107,15 +7095,58 @@ M-: (executable-find "diff") RET
     (try-require 'helm-config)
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"helm-config"</span>
+</pre>
+            </div>
+          </div>
+
+          <div id="outline-container-sec-20-11-2-1" class="outline-5">
+            <h5 id="sec-20-11-2-1">Helm Find Files</h5>
+
+            <div class="outline-text-5" id="text-20-11-2-1">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">don't show only basename of candidates in `</span><span class=
+"org-constant"><span class=
+"org-comment">helm-find-files</span></span><span class="org-comment">'</span>
+      (setq helm-ff-transformer-show-only-basename nil)
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div id="outline-container-sec-20-11-2-2" class="outline-5">
+            <h5 id="sec-20-11-2-2">Helm M-x</h5>
+
+            <div class="outline-text-5" id="text-20-11-2-2">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
+      (global-set-key (kbd <span class="org-string">"M-x"</span>) 'helm-M-x)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">various functions for Helm (Shell history, etc.)</span>
-      (<span class="org-keyword">require</span> '<span class=
-"org-constant">helm-misc</span>)
+"org-comment">save command even when it fails</span>
+      (setq helm-M-x-always-save-history t)
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div id="outline-container-sec-20-11-2-3" class="outline-5">
+            <h5 id="sec-20-11-2-3">Helm locate</h5>
+
+            <div class="outline-text-5" id="text-20-11-2-3">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
+      (global-set-key (kbd <span class=
+"org-string">"&lt;f3&gt;"</span>) 'helm-for-files)
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">better than `</span><span class="org-constant"><span class=
+"org-comment">helm-find-files</span></span><span class="org-comment">'</span>
 
       (<span class="org-keyword">when</span> (and (or win32p cygwinp)
-                 (executable-find <span class="org-string">"es"</span>))
-                                        <span class=
+                 (executable-find <span class=
+"org-string">"es"</span>))<span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">we could check for it in</span>
                                         <span class=
@@ -7126,21 +7157,35 @@ M-: (executable-find "diff") RET
 "org-comment">sort locate results by full path</span>
         (setq helm-locate-command <span class=
 "org-string">"es -s %s %s"</span>))
+</pre>
+              </div>
+            </div>
+          </div>
 
-      (global-set-key (kbd <span class=
-"org-string">"&lt;f3&gt;"</span>) 'helm-for-files)
-                                        <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">better than `</span><span class="org-constant"><span class=
-"org-comment">helm-find-files</span></span><span class="org-comment">'</span>
+          <div id="outline-container-sec-20-11-2-4" class="outline-5">
+            <h5 id="sec-20-11-2-4">Helm for buffers</h5>
 
-      (global-set-key (kbd <span class="org-string">"M-x"</span>) 'helm-M-x)
-
+            <div class="outline-text-5" id="text-20-11-2-4">
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">buffers only</span>
       (global-set-key (kbd <span class=
 "org-string">"C-x b"</span>) 'helm-buffers-list)
+</pre>
+              </div>
 
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">various functions for Helm (Shell history, etc.)</span>
+      (<span class="org-keyword">require</span> '<span class=
+"org-constant">helm-misc</span>)
+</pre>
+              </div>
+
+              <div class="org-src-container">
+                <pre class="src src-emacs-lisp">
       (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-helm-org-prog-menu</span> ()
         <span class=
@@ -7282,30 +7327,8 @@ M-: (executable-find "diff") RET
 "org-comment">(remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't show only basename of candidates in `</span><span class=
-"org-constant"><span class=
-"org-comment">helm-find-files</span></span><span class="org-comment">'</span>
-      (setq helm-ff-transformer-show-only-basename nil)
-
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; don't truncate buffer names</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq helm-buffer-max-length nil)</span>
-
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">save command even when it fails</span>
-      (setq helm-M-x-always-save-history t)
-
-      (<span class="org-keyword">defun</span> <span class=
-"org-function-name">helm-toggle-debug</span> ()
-        <span class="org-doc">"Toggle Helm debug on/off."</span>
-        (interactive)
-        (setq helm-debug (not helm-debug))
-        (message <span class="org-string">"Helm debug %s"</span> (<span class=
-"org-keyword">if</span> helm-debug
-                                     <span class="org-string">"enabled"</span>
-                                   <span class=
-"org-string">"disabled"</span>)))))
+"org-comment">don't truncate buffer names</span>
+      (setq helm-buffer-max-length nil)))
 
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"helm"</span>
@@ -7326,26 +7349,28 @@ M-: (executable-find "diff") RET
 "org-comment">(helm-adaptative-mode 1)</span>
     )
 </pre>
+              </div>
+
+              <ul class="org-ul">
+                <li><code>volatile</code> means your candidates are recomputed
+                each time you enter a character in pattern (cached candidates
+                are not reused). Async sources are by essence volatile.</li>
+
+                <li><code>delayed</code> means your candidates are computed
+                after <code>helm-input-idle-delay</code> seconds.</li>
+
+                <li><code>no-matchplugin</code> means to not use the multi
+                regexp matching provided by
+                <code>helm-match-plugin.el</code>.</li>
+              </ul>
             </div>
-
-            <ul class="org-ul">
-              <li><code>volatile</code> means your candidates are recomputed
-              each time you enter a character in pattern (cached candidates are
-              not reused). Async sources are by essence volatile.</li>
-
-              <li><code>delayed</code> means your candidates are computed after
-              <code>helm-input-idle-delay</code> seconds.</li>
-
-              <li><code>no-matchplugin</code> means to not use the multi regexp
-              matching provided by <code>helm-match-plugin.el</code>.</li>
-            </ul>
           </div>
         </div>
 
-        <div id="outline-container-sec-20-12-3" class="outline-4">
-          <h4 id="sec-20-12-3">Image mode</h4>
+        <div id="outline-container-sec-20-11-3" class="outline-4">
+          <h4 id="sec-20-11-3">Image mode</h4>
 
-          <div class="outline-text-4" id="text-20-12-3">
+          <div class="outline-text-4" id="text-20-11-3">
             <p>AFAICT you need to eval something like</p>
 
             <p>(setq image-type-header-regexps '((“.*” . imagemagick)))</p>
@@ -17508,6 +17533,15 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
               <li>autopair</li>
             </ul>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  (add-hook 'prog-mode-hook
+            (<span class="org-keyword">lambda</span> ()
+              (setq autopair-autowrap t)
+              (autopair-global-mode t)))
+</pre>
+            </div>
           </div>
         </div>
       </div>
@@ -26068,15 +26102,15 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
-(message <span class=
-"org-string">"Emacs initialization: %s"</span> (emacs-init-time))
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(message "Emacs startup time: %s" (emacs-init-time))</span>
 </pre>
         </div>
 
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140911.1625]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140912.0952]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

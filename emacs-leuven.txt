@@ -714,7 +714,6 @@ cancelable; hence, we put it out of a "chapter".
 
   ;; redo the most recent undo
   (with-eval-after-load "redo+-autoloads"
-    (autoload 'redo "redo+" "Redo the the most recent undo." t)
     (global-set-key (kbd "<S-f11>") 'redo))
 #+end_src
 
@@ -2572,17 +2571,6 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
 (leuven--chapter leuven-chapter-18-files "18 Files Handling"
 #+end_src
 
-** File Names
-
-#+begin_src emacs-lisp
-;;** 18.1 (info "(emacs)File Names")
-
-  (leuven--section "18.1 (emacs)File Names")
-
-  ;; ;; name of default directory
-  ;; (setq default-directory (concat (getenv "HOME") "/"))
-#+end_src
-
 ** Visiting Files
 
 #+begin_src emacs-lisp
@@ -3428,26 +3416,51 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
     ;; open Helm (QuickSilver-like candidate-selection framework)
     (try-require 'helm-config)
     (with-eval-after-load "helm-config"
+#+end_src
 
-      ;; various functions for Helm (Shell history, etc.)
-      (require 'helm-misc)
+**** Helm Find Files
+
+#+begin_src emacs-lisp
+      ;; don't show only basename of candidates in `helm-find-files'
+      (setq helm-ff-transformer-show-only-basename nil)
+#+end_src
+
+**** Helm M-x
+
+#+begin_src emacs-lisp
+      (global-set-key (kbd "M-x") 'helm-M-x)
+
+      ;; save command even when it fails
+      (setq helm-M-x-always-save-history t)
+#+end_src
+
+**** Helm locate
+
+#+begin_src emacs-lisp
+      (global-set-key (kbd "<f3>") 'helm-for-files)
+                                        ; better than `helm-find-files'
 
       (when (and (or win32p cygwinp)
-                 (executable-find "es"))
-                                        ; we could check for it in
+                 (executable-find "es")); we could check for it in
                                         ; (concat (getenv "USERPROFILE") "/Downloads")
 
         ;; sort locate results by full path
         (setq helm-locate-command "es -s %s %s"))
+#+end_src
 
-      (global-set-key (kbd "<f3>") 'helm-for-files)
-                                        ; better than `helm-find-files'
+**** Helm for buffers
 
-      (global-set-key (kbd "M-x") 'helm-M-x)
-
+#+begin_src emacs-lisp
       ;; buffers only
       (global-set-key (kbd "C-x b") 'helm-buffers-list)
+#+end_src
 
+#+begin_src emacs-lisp
+      ;; various functions for Helm (Shell history, etc.)
+      (require 'helm-misc)
+#+end_src
+
+#+begin_src emacs-lisp
       (defun leuven-helm-org-prog-menu ()
         "Jump to a place in the buffer using an Index menu.
       For Org mode buffers, show Org headlines.
@@ -3518,22 +3531,8 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
 
-      ;; don't show only basename of candidates in `helm-find-files'
-      (setq helm-ff-transformer-show-only-basename nil)
-
-      ;; ;; don't truncate buffer names
-      ;; (setq helm-buffer-max-length nil)
-
-      ;; save command even when it fails
-      (setq helm-M-x-always-save-history t)
-
-      (defun helm-toggle-debug ()
-        "Toggle Helm debug on/off."
-        (interactive)
-        (setq helm-debug (not helm-debug))
-        (message "Helm debug %s" (if helm-debug
-                                     "enabled"
-                                   "disabled")))))
+      ;; don't truncate buffer names
+      (setq helm-buffer-max-length nil)))
 
   (with-eval-after-load "helm"
     ;; ;; enable generic Helm completion (for all functions in Emacs that use
@@ -9529,6 +9528,13 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
 - autopair
 
+#+begin_src emacs-lisp :tangle no
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (setq autopair-autowrap t)
+              (autopair-global-mode t)))
+#+end_src
+
 ** Manipulating Comments
 
 #+begin_src emacs-lisp
@@ -14580,8 +14586,8 @@ calls to message), set the variable ~debug-on-message~.
   t)
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
-(message "Emacs initialization: %s" (emacs-init-time))
+#+begin_src emacs-lisp
+;; (message "Emacs startup time: %s" (emacs-init-time))
 #+end_src
 
 #+begin_src emacs-lisp :noweb yes

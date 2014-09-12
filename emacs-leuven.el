@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140911.1623
+;; Version: 20140912.0950
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140911.1623]--")
+(message "* --[ Loading Emacs Leuven 20140912.0950]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -531,7 +531,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; redo the most recent undo
   (with-eval-after-load "redo+-autoloads"
-    (autoload 'redo "redo+" "Redo the the most recent undo." t)
     (global-set-key (kbd "<S-f11>") 'redo))
 
 )                                       ; chapter 7 ends here
@@ -1592,13 +1591,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 (leuven--chapter leuven-chapter-18-files "18 Files Handling"
 
-;;** 18.1 (info "(emacs)File Names")
-
-  (leuven--section "18.1 (emacs)File Names")
-
-  ;; ;; name of default directory
-  ;; (setq default-directory (concat (getenv "HOME") "/"))
-
 ;;** 18.2 (info "(emacs)Visiting") Files
 
   (leuven--section "18.2 (emacs)Visiting Files")
@@ -2043,24 +2035,29 @@ Last time is saved in global variable `leuven--before-section-time'."
     (try-require 'helm-config)
     (with-eval-after-load "helm-config"
 
-      ;; various functions for Helm (Shell history, etc.)
-      (require 'helm-misc)
+      ;; don't show only basename of candidates in `helm-find-files'
+      (setq helm-ff-transformer-show-only-basename nil)
+
+      (global-set-key (kbd "M-x") 'helm-M-x)
+
+      ;; save command even when it fails
+      (setq helm-M-x-always-save-history t)
+
+      (global-set-key (kbd "<f3>") 'helm-for-files)
+                                        ; better than `helm-find-files'
 
       (when (and (or win32p cygwinp)
-                 (executable-find "es"))
-                                        ; we could check for it in
+                 (executable-find "es")); we could check for it in
                                         ; (concat (getenv "USERPROFILE") "/Downloads")
 
         ;; sort locate results by full path
         (setq helm-locate-command "es -s %s %s"))
 
-      (global-set-key (kbd "<f3>") 'helm-for-files)
-                                        ; better than `helm-find-files'
-
-      (global-set-key (kbd "M-x") 'helm-M-x)
-
       ;; buffers only
       (global-set-key (kbd "C-x b") 'helm-buffers-list)
+
+      ;; various functions for Helm (Shell history, etc.)
+      (require 'helm-misc)
 
       (defun leuven-helm-org-prog-menu ()
         "Jump to a place in the buffer using an Index menu.
@@ -2132,22 +2129,8 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
 
-      ;; don't show only basename of candidates in `helm-find-files'
-      (setq helm-ff-transformer-show-only-basename nil)
-
-      ;; ;; don't truncate buffer names
-      ;; (setq helm-buffer-max-length nil)
-
-      ;; save command even when it fails
-      (setq helm-M-x-always-save-history t)
-
-      (defun helm-toggle-debug ()
-        "Toggle Helm debug on/off."
-        (interactive)
-        (setq helm-debug (not helm-debug))
-        (message "Helm debug %s" (if helm-debug
-                                     "enabled"
-                                   "disabled")))))
+      ;; don't truncate buffer names
+      (setq helm-buffer-max-length nil)))
 
   (with-eval-after-load "helm"
     ;; ;; enable generic Helm completion (for all functions in Emacs that use
@@ -8999,7 +8982,9 @@ up before you execute another command."
          (- (float-time) leuven-before-time))
 (sit-for 0.3)
 
-(message "* --[ Loaded Emacs Leuven 20140911.1624]--")
+;; (message "Emacs startup time: %s" (emacs-init-time))
+
+(message "* --[ Loaded Emacs Leuven 20140912.0951]--")
 
 (provide 'emacs-leuven)
 
