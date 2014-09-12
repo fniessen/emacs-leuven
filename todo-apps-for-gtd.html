@@ -18,7 +18,7 @@
   <link rel="stylesheet" type="text/css" href=
   "http://www.pirilampo.org/styles/bigblow/css/hideshow.css" />
 <script type="text/javascript" src=
-"http://www.pirilampo.org/styles/bigblow/js/jquery-1.9.1.min.js">
+"http://www.pirilampo.org/styles/bigblow/js/jquery-1.11.0.min.js">
 </script>
 <script type="text/javascript" src=
 "http://www.pirilampo.org/styles/bigblow/js/jquery-ui-1.10.2.min.js">
@@ -28,6 +28,9 @@
 </script>
 <script type="text/javascript" src=
 "http://www.pirilampo.org/styles/bigblow/js/jquery.scrollTo-1.4.3.1-min.js">
+</script>
+<script type="text/javascript" src=
+"http://www.pirilampo.org/styles/bigblow/js/jquery.zclip.min.js">
 </script>
 <script type="text/javascript" src=
 "http://www.pirilampo.org/styles/bigblow/js/bigblow.js">
@@ -916,8 +919,7 @@
               (unfinished + finished)</p>
             </li>
 
-            <li>
-              <p>Assigned to me</p>
+            <li>Assigned to me
 
               <ul class="org-ul">
                 <li>Assigned to me and unfinished (sorted by ‘work planned’
@@ -928,9 +930,7 @@
               </ul>
             </li>
 
-            <li>
-              <p>Someday (= Tasks to organize)</p>
-            </li>
+            <li>Someday (= Tasks to organize)</li>
 
             <li>
               <p>Finished</p>
@@ -1152,8 +1152,7 @@
 
           <div class="outline-text-4" id="text-5-1-4">
             <ul class="org-ul">
-              <li>
-                <p>Someday Categories:</p>
+              <li>Someday Categories:
 
                 <ul class="org-ul">
                   <li>Checklist</li>
@@ -1182,9 +1181,7 @@
                 </ul>
               </li>
 
-              <li>
-                <p>Tickler Same categories as for the Someday items</p>
-              </li>
+              <li>Tickler Same categories as for the Someday items</li>
             </ul>
           </div>
         </div>
@@ -1239,8 +1236,7 @@
 
           <div class="outline-text-4" id="text-5-1-9">
             <ul class="org-ul">
-              <li>
-                <p>Project Info</p>
+              <li>Project Info
 
                 <ul class="org-ul">
                   <li>Short Description</li>
@@ -1257,17 +1253,11 @@
                 </ul>
               </li>
 
-              <li>
-                <p>Notes</p>
-              </li>
+              <li>Notes</li>
 
-              <li>
-                <p>Actions</p>
-              </li>
+              <li>Actions</li>
 
-              <li>
-                <p>Email</p>
-              </li>
+              <li>Email</li>
             </ul>
           </div>
         </div>
@@ -1422,18 +1412,20 @@
           <p>Tasks views:</p>
 
           <ul class="org-ul">
-            <li>Active</li>
+            <li><b>Active</b></li>
 
-            <li>Starred (= with an explicit priority)</li>
+            <li><b>Starred</b> (= with an explicit priority)</li>
 
-            <li>Completed</li>
+            <li><b>Completed</b></li>
 
-            <li>Due today (only today)</li>
+            <li><b>Due today</b> (only today)</li>
 
             <li>Due this week (only for current week: from Monday to Sunday
             included)</li>
 
-            <li>Late (all overdue + today)</li>
+            <li><b>Late</b> (all overdue + today)</li>
+
+            <li><b>All</b> (= Active + Completed?)</li>
 
             <li>Assigned to me</li>
 
@@ -1488,6 +1480,15 @@
             <p><a href=
             "http://blog.producteev.com/post/38326716677/gtd-up-close-part-i-labeling-your-workspace">
             http://blog.producteev.com/post/38326716677/gtd-up-close-part-i-labeling-your-workspace</a></p>
+          </div>
+        </div>
+
+        <div id="outline-container-sec-9-1-3" class="outline-4">
+          <h4 id="sec-9-1-3"><span class="section-number-4">9.1.3</span> Email
+          Reminder</h4>
+
+          <div class="outline-text-4" id="text-9-1-3">
+            <p>“Deadline reached for: XXX”</p>
           </div>
         </div>
       </div>
@@ -1635,20 +1636,13 @@
 
           <div class="outline-text-4" id="text-9-5-2">
             <ul class="org-ul">
-              <li>
-                <p><b>Inbox</b></p>
-              </li>
+              <li><b>Inbox</b></li>
 
-              <li>
-                <p><b>Today</b> (when SCHEDULED = today)</p>
-              </li>
+              <li><b>Today</b> (when SCHEDULED = today)</li>
 
-              <li>
-                <p><b>Next</b></p>
-              </li>
+              <li><b>Next</b></li>
 
-              <li>
-                <p>Scheduled (sorted by scheduled date)</p>
+              <li>Scheduled (sorted by scheduled date)
 
                 <ul class="org-ul">
                   <li>Scheduled for [future, SCHEDULED &gt; today] review
@@ -1667,9 +1661,7 @@
                 </ul>
               </li>
 
-              <li>
-                <p><b>Someday</b></p>
-              </li>
+              <li><b>Someday</b></li>
             </ul>
           </div>
         </div>
@@ -1944,8 +1936,7 @@
           <p><a href="https://do.com/">https://do.com/</a></p>
 
           <ol class="org-ol">
-            <li>
-              <p>Tasks (assigned to you), sorted by:</p>
+            <li>Tasks (assigned to you), sorted by:
 
               <ul class="org-ul">
                 <li>Section (= default)</li>
@@ -1956,22 +1947,14 @@
               </ul>
             </li>
 
-            <li>
-              <p>Projects (and tasks assigned to others)</p>
-            </li>
+            <li>Projects (and tasks assigned to others)</li>
 
-            <li>
-              <p>Notes (capture minutes, thoughts, ideas)</p>
-            </li>
+            <li>Notes (capture minutes, thoughts, ideas)</li>
 
-            <li>
-              <p>Contacts</p>
-            </li>
+            <li>Contacts</li>
 
-            <li>
-              <p>Deals (worth $123): LEAD, QUALIFIED, QUOTE, NEGOTIATE,
-              CLOSE</p>
-            </li>
+            <li>Deals (worth $123): LEAD, QUALIFIED, QUOTE, NEGOTIATE,
+            CLOSE</li>
           </ol>
         </div>
       </div>
@@ -2224,7 +2207,7 @@
               <dt>project</dt>
 
               <dd>
-                <p>A series of actions to realise a <b>goal</b>.</p>
+                A series of actions to realise a <b>goal</b>.
 
                 <ul class="org-ul">
                   <li>do <b>not</b> have a <i>context</i>.</li>
@@ -2241,7 +2224,7 @@
               <dt>actions</dt>
 
               <dd>
-                <p>Something tangible, you can do it.</p>
+                Something tangible, you can do it.
 
                 <ul class="org-ul">
                   <li>need one out of a list of allowable <i>contexts</i> to be
@@ -2265,23 +2248,17 @@
 
               <dt>context</dt>
 
-              <dd>
-                <p>Is an environment that allow/prevent you to do some kind of
-                <i>actions</i>.</p>
-              </dd>
+              <dd>Is an environment that allow/prevent you to do some kind of
+              <i>actions</i>.</dd>
 
               <dt>area</dt>
 
-              <dd>
-                <p>Is a short for ‘area of responsibility’.</p>
-              </dd>
+              <dd>Is a short for ‘area of responsibility’.</dd>
 
               <dt>realm</dt>
 
-              <dd>
-                <p>Is a way to group/select all related <i>projects</i> and
-                <i>actions</i> in one go.</p>
-              </dd>
+              <dd>Is a way to group/select all related <i>projects</i> and
+              <i>actions</i> in one go.</dd>
             </dl>
           </div>
         </div>

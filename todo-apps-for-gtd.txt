@@ -607,17 +607,19 @@ http://www.producteev.com/
 
 Tasks views:
 
-- Active
+- *Active*
 
-- Starred (= with an explicit priority)
+- *Starred* (= with an explicit priority)
 
-- Completed
+- *Completed*
 
-- Due today (only today)
+- *Due today* (only today)
 
 - Due this week (only for current week: from Monday to Sunday included)
 
-- Late (all overdue + today)
+- *Late* (all overdue + today)
+
+- *All* (= Active + Completed?)
 
 - Assigned to me
 
@@ -645,6 +647,10 @@ Ordered by:
 *** Documentation
 
 http://blog.producteev.com/post/38326716677/gtd-up-close-part-i-labeling-your-workspace
+
+*** Email Reminder
+
+"Deadline reached for: XXX"
 
 ** Nirvana
 
@@ -1216,7 +1222,7 @@ http://www.atlassian.com/software/greenhopper/overview
 
 What's clear is that TODO color must be different from STARTED...
 
-*** Jira and Greenhopper (from Peter Ross)                               :mail:
+*** Jira and Greenhopper (from Peter Ross)                                :mail:
    [2013-01-31 Thu 06:01]
 
 #+begin_verse
