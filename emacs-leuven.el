@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140915.1136
+;; Version: 20140915.1500
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140915.1136]--")
+(message "* --[ Loading Emacs Leuven 20140915.1500]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -179,7 +179,7 @@ Save execution times in the global list `leuven--load-times-list'."
                     (concat "| " ,chaptername " "
                             "| " this-chapter-time " |")))))
 
-(defvar leuven--before-section-time
+(defvar leuven--before-section-time (float-time)
   "Value of `float-time' before loading some section.")
 
 (defun leuven--section (sectionname &optional end-of-chapter)
@@ -374,7 +374,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (setq stack-trace-on-error t))
 
   ;; hit `C-g' while it's frozen to get an Emacs Lisp backtrace
-  (setq debug-on-quit nil)
+  (setq debug-on-quit t)                ; will be unset at the end
 
 )                                       ; chapter 0 ends here
 
@@ -2031,33 +2031,26 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (leuven--section "Helm")
 
-    ;; open Helm (QuickSilver-like candidate-selection framework)
-    (try-require 'helm-config)
-    (with-eval-after-load "helm-config"
+    (with-eval-after-load "helm-autoloads"
 
-      ;; don't show only basename of candidates in `helm-find-files'
-      (setq helm-ff-transformer-show-only-basename nil)
+      ;; open Helm (QuickSilver-like candidate-selection framework)
+      (require 'helm-config)            ; [helm-command-prefix-key: "C-x c"]
+
+      ;; better version of `occur'
+      (global-set-key (kbd "C-o") 'helm-occur)
 
       (global-set-key (kbd "M-x") 'helm-M-x)
-
-      ;; save command even when it fails
-      (setq helm-M-x-always-save-history t)
 
       (global-set-key (kbd "<f3>") 'helm-for-files)
                                         ; better than `helm-find-files'
 
-      (when (and (or win32p cygwinp)
-                 (executable-find "es")); we could check for it in
-                                        ; (concat (getenv "USERPROFILE") "/Downloads")
-
-        ;; sort locate results by full path
-        (setq helm-locate-command "es -s %s %s"))
-
       ;; buffers only
       (global-set-key (kbd "C-x b") 'helm-buffers-list)
 
-      ;; various functions for Helm (Shell history, etc.)
-      (require 'helm-misc)
+      (global-set-key (kbd "C-x r l") 'helm-bookmarks)
+
+      ;; install from https://github.com/thierryvolpiatto/emacs-bmk-ext
+      (global-set-key (kbd "C-x r b") 'helm-bookmark-ext)
 
       (defun leuven-helm-org-prog-menu ()
         "Jump to a place in the buffer using an Index menu.
@@ -2070,33 +2063,23 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
                                         ; and `C-c =' (like in RefTeX)?
+    )
 
-      (defun leuven-helm-grep-org-files ()
-        "Launch grep on Org files in `~/org'."
-        (interactive)
-        (let ((files (helm-walk-directory "~/org"
-                                          :path 'full
-                                          :directories nil
-                                          :match ".*\\.\\(org\\|txt\\)$"
-                                          :skip-subdirs t)))
-          (helm-do-grep-1 files)))
+    (with-eval-after-load "helm"
 
-      ;; better version of `occur'
-      (global-set-key (kbd "C-o") 'helm-occur)
-
-      (global-set-key (kbd "C-x r l") 'helm-bookmarks)
-
-      ;; install from https://github.com/thierryvolpiatto/emacs-bmk-ext
-      (global-set-key (kbd "C-x r b") 'helm-bookmark-ext)
+      ;; various functions for Helm (Shell history, etc.)
+      (require 'helm-misc)
+      ;; for multi-line items in e.g. minibuffer history, match entire items,
+      ;; not individual lines within items.
 
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
 
-      ;; ;; open helm buffer in another window
-      ;; (setq helm-split-window-default-side 'other)
+      ;; open helm buffer in another window
+      (setq helm-split-window-default-side 'other)
 
-      ;; always display `helm-buffer' in current window
-      (setq helm-split-window-default-side 'same)
+      ;; ;; always display `helm-buffer' in current window
+      ;; (setq helm-split-window-default-side 'same)
 
       ;; move to end or beginning of source when reaching top or bottom of
       ;; source
@@ -2117,29 +2100,63 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       ;; time that the user has to be idle for, before candidates from
       ;; DELAYED sources are collected
-      (setq helm-idle-delay 0.04)       ; useful for sources involving heavy
+      (setq helm-idle-delay 0.03)       ; useful for sources involving heavy
                                         ; operations, so that candidates from
                                         ; the source are not retrieved
                                         ; unnecessarily if the user keeps typing
 
       ;; time that the user has to be idle for, before ALL candidates
       ;; are collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.04) ; also effective for NON-DELAYED sources
+      (setq helm-input-idle-delay 0.03) ; also effective for NON-DELAYED sources
 
-      ;; ;; don't save history information to file
-      ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
+      ;; ;; enable generic Helm completion (for all functions in Emacs that use
+      ;; ;; `completing-read' or `read-file-name' and friends)
+      ;; (helm-mode 1)
+
+      ;; ;; enable adaptative sorting in all sources
+      ;; (helm-adaptative-mode 1)
+      )
+
+    (with-eval-after-load "helm-files"
+
+      ;; don't show only basename of candidates in `helm-find-files'
+      (setq helm-ff-transformer-show-only-basename nil))
+
+    (with-eval-after-load "helm-grep"
+
+      (defun leuven-helm-grep-org-files ()
+        "Launch grep on Org files in `~/org'."
+        (interactive)
+        (let ((files (helm-walk-directory "~/org"
+                                          :path 'full
+                                          :directories nil
+                                          :match ".*\\.\\(org\\|txt\\)$"
+                                          :skip-subdirs t)))
+          (helm-do-grep-1 files))))
+
+    (with-eval-after-load "helm-command"
+
+      ;; save command even when it fails
+      (setq helm-M-x-always-save-history t))
+
+    (with-eval-after-load "helm-locate"
+
+      (when (and (or win32p cygwinp)
+                 (executable-find "es")); we could check for it in
+                                        ; (concat (getenv "USERPROFILE") "/Downloads")
+
+        ;; sort locate results by full path
+        (setq helm-locate-command "es -s %s %s")))
+
+    (with-eval-after-load "helm-buffers"
 
       ;; don't truncate buffer names
-      (setq helm-buffer-max-length nil)))
+      (setq helm-buffer-max-length nil))
 
-  (with-eval-after-load "helm"
-    ;; ;; enable generic Helm completion (for all functions in Emacs that use
-    ;; ;; `completing-read' or `read-file-name' and friends)
-    ;; (helm-mode 1)
-
-    ;; ;; enable adaptative sorting in all sources
-    ;; (helm-adaptative-mode 1)
-    )
+  (with-eval-after-load "helm-adaptive"
+      ;; ;; don't save history information to file
+      ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
+  ))
 
   (leuven--section "Image mode")
 
@@ -8951,8 +8968,7 @@ up before you execute another command."
 ;;* Profiler
 
   (setq profiler-report-cpu-line-format
-    '((100 left)
-                                        ; The 100 above is increased from the
+    '((100 left)                        ; The 100 above is increased from the
                                         ; default of 50 to allow the deeply
                                         ; nested call tree to be seen.
       (24 right ((19 right)
@@ -8965,7 +8981,10 @@ up before you execute another command."
 (leuven--chapter leuven-chapter-99-debugging "99 Debugging"
 
   ;; get the backtrace when uncaught errors occur
-  (setq debug-on-error nil))            ; was set to `t' at beginning of buffer
+  (setq debug-on-error nil)             ; was set to `t' at beginning of file
+
+  ;; hit `C-g' while it's frozen to get an Emacs Lisp backtrace
+  (setq debug-on-quit nil))             ; was set to `t' at beginning of file
 
 (when (and (string-match "GNU Emacs" (version))
            leuven-load-verbose)
@@ -8988,7 +9007,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140915.1137]--")
+(message "* --[ Loaded Emacs Leuven 20140915.1501]--")
 
 (provide 'emacs-leuven)
 
