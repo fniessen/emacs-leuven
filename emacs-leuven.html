@@ -1310,7 +1310,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140915.1501</span>
+"org-comment">Version: 20140915.1941</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1433,7 +1433,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140915.1501]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140915.1941]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -4314,6 +4314,10 @@
 "org-comment">unclutter the mode line</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"diminish-autoloads"</span>
+    (diminish 'auto-fill-function <span class="org-string">" F"</span>)
+    (diminish 'isearch-mode (string 32 ?\u279c))
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(diminish-on-load hs-minor-mode-hook hs-minor-mode)</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"abbrev"</span>      (diminish 'abbrev-mode <span class=
 "org-string">"Ab"</span>))
@@ -4325,10 +4329,11 @@
 "org-string">"Cmp"</span>))
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(with-eval-after-load "eldoc"       (diminish 'eldoc-mode))</span>
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(with-eval-after-load "flycheck"    (diminish 'flycheck-mode))</span>
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(with-eval-after-load "flyspell"    (diminish 'flyspell-mode))</span>
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"flycheck"</span>    (diminish 'flycheck-mode <span class=
+"org-string">" fC"</span>))
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"flyspell"</span>    (diminish 'flyspell-mode (string 32 ?\u2708)))
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(with-eval-after-load "glasses"     (diminish 'glasses-mode))</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
@@ -4343,38 +4348,6 @@
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"yasnippet"</span>   (diminish 'yas-minor-mode <span class=
 "org-string">" Y"</span>)))
-</pre>
-          </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; show buffer position like a scroll bar in mode line</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(try-require 'sml-modeline)</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"sml-modeline"</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">mode line indicator total length</span>
-    (setq sml-modeline-len 10)
-
-    (setq sml/no-confirm-load-theme t)
-
-    (sml-modeline-mode))
-</pre>
-          </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"smart-mode-modeline"</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">theme `</span><span class="org-constant"><span class=
-"org-comment">smart-mode-line</span></span><span class=
-"org-comment">' should use</span>
-    (setq sml/theme 'respectful))
 </pre>
           </div>
 
@@ -4490,11 +4463,15 @@
                                                            (cdr powerline-default-separator-dir))))
                           (lhs (list
                                      (<span class=
-"org-keyword">when</span> (and (buffer-file-name (current-buffer)) vc-mode)
+"org-keyword">when</span> (and (fboundp 'vc-switches) (buffer-file-name (current-buffer)) vc-mode)
                                        (<span class=
 "org-keyword">if</span> (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
                                            (powerline-vc 'powerline-normal-face 'r)
                                          (powerline-vc 'powerline-modified-face 'r)))
+
+                                     (<span class=
+"org-keyword">when</span> (and (not (fboundp 'vc-switches)) (buffer-file-name (current-buffer)) vc-mode)
+                                       (powerline-vc face1 'r))
 
                                      (<span class=
 "org-keyword">when</span> (and (buffer-file-name (current-buffer)) vc-mode)
@@ -4502,9 +4479,6 @@
 "org-keyword">if</span> (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
                                            (funcall separator-left 'powerline-normal-face mode-line)
                                          (funcall separator-left 'powerline-modified-face mode-line)))
-                                     <span class=
-"org-comment-delimiter">;; </span><span class=
-"org-comment">(powerline-vc face1 'r)</span>
 
                                      <span class=
 "org-comment-delimiter">;; </span><span class=
@@ -6801,11 +6775,14 @@ M-: (executable-find "diff") RET
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">function called to fetch an URL</span>
-    (setq ffap-url-fetcher 'browse-url))
-    <span class="org-comment-delimiter">;; </span><span class=
+    (setq ffap-url-fetcher 'browse-url))<span class=
+"org-comment-delimiter">; </span><span class=
 "org-comment">could be `</span><span class="org-constant"><span class=
 "org-comment">browse-url-emacs</span></span><span class=
-"org-comment">' or `</span><span class="org-constant"><span class=
+"org-comment">' or</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">`</span><span class=
+"org-constant"><span class=
 "org-comment">w3m-browse-url</span></span><span class="org-comment">'</span>
 </pre>
             </div>
@@ -8319,12 +8296,8 @@ M-: (executable-find "diff") RET
   (leuven--section <span class="org-string">"21.12 (emacs)Scroll Bars"</span>)
 
   (<span class="org-keyword">if</span> (and (display-graphic-p)
-           (or (<span class="org-keyword">featurep</span> '<span class=
-"org-constant">sml-modeline</span>)
-               (<span class="org-keyword">featurep</span> '<span class=
-"org-constant">smart-mode-line</span>)
-               (<span class="org-keyword">featurep</span> '<span class=
-"org-constant">powerline</span>)))
+           (<span class="org-keyword">featurep</span> '<span class=
+"org-constant">powerline</span>))
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn scroll bar off</span>
@@ -8553,6 +8526,36 @@ M-: (executable-find "diff") RET
   (set-input-mode (car (current-input-mode))
                   (nth 1 (current-input-mode))
                   0)
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">defun</span> <span class=
+"org-function-name">list-unicode-display</span> (<span class=
+"org-type">&amp;optional</span> regexp)
+    <span class=
+"org-doc">"Display a list of unicode characters and their names in a buffer."</span>
+    (interactive <span class="org-string">"sRegexp (default \".*\"): "</span>)
+    (<span class="org-keyword">let*</span> ((regexp (or regexp <span class=
+"org-string">".*"</span>))
+           (case-fold-search t)
+           (cmp (<span class=
+"org-keyword">lambda</span> (x y) (&lt; (cdr x) (cdr y))))
+           <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">alist like ("name" . code-point)</span>
+           (char-alist (sort (cl-remove-if-not (<span class=
+"org-keyword">lambda</span> (x) (string-match regexp (car x)))
+                                               (ucs-names))
+                             cmp)))
+      (with-help-window <span class="org-string">"*Unicode characters*"</span>
+        (<span class="org-keyword">with-current-buffer</span> standard-output
+          (<span class="org-keyword">dolist</span> (c char-alist)
+            (insert (format <span class=
+"org-string">"0x%06X\t"</span> (cdr c)))
+            (insert (cdr c))
+            (insert (format <span class=
+"org-string">"\t%s\n"</span> (car c))))))))
 </pre>
           </div>
         </div>
@@ -17314,6 +17317,10 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
       (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
       <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">string to display in the mode line when current function is unknown</span>
+      (setq which-func-unknown <span class="org-string">""</span>)
+
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">show current function in mode line (based on Imenu)</span>
       (which-function-mode 1)))         <span class=
 "org-comment-delimiter">; </span><span class=
@@ -22133,6 +22140,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">package to compose an outgoing mail (Message, with Gnus paraphernalia)</span>
     (setq mail-user-agent 'gnus-user-agent)
+
     (XEmacs
       (setq toolbar-mail-reader 'gnus))
 
@@ -24280,7 +24288,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment">' value</span>
     (setq save-place-file
           (convert-standard-filename (concat user-emacs-directory <span class=
-"org-string">".places"</span>)))
+"org-string">".places"</span>))))
                                         <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">! a .txt extension would load `</span><span class=
@@ -24292,10 +24300,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
                                         <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">! already loaded)!</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">do not make backups of master save-place file</span>
-    (setq save-place-version-control <span class="org-string">"never"</span>))
 
 )                                       <span class=
 "org-comment-delimiter">; </span><span class=
@@ -24377,40 +24381,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment-delimiter">; </span><span class=
 "org-comment">could be `</span><span class="org-constant"><span class=
 "org-comment">google-chrome</span></span><span class="org-comment">'</span>
-
-  (<span class="org-keyword">defun</span> <span class=
-"org-function-name">leuven--browse</span> (url)
-    <span class=
-"org-doc">"If prefix is specified, use the system default browser, else use the</span>
-<span class="org-doc">  configured Emacs one."</span>
-    (<span class="org-keyword">require</span> '<span class=
-"org-constant">browse-url</span>)
-    (<span class="org-keyword">if</span> current-prefix-arg
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">open in your desktop browser (firefox here)</span>
-        (<span class=
-"org-keyword">when</span> url (browse-url-default-browser url))
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">open using your Emacs browser (whatever that is configured to)</span>
-      (<span class=
-"org-keyword">if</span> url (browse-url url) (call-interactively 'browse-url))))
-
-  (<span class="org-keyword">defun</span> <span class=
-"org-function-name">leuven-browse-url</span> (<span class=
-"org-type">&amp;optional</span> url)
-    <span class="org-doc">"Browse the URL passed in."</span>
-    (interactive)
-    (<span class="org-keyword">require</span> '<span class=
-"org-constant">w3m</span>)
-    (<span class="org-keyword">require</span> '<span class=
-"org-constant">browse-url</span>)
-    (setq url (or url
-                  (w3m-url-valid (w3m-anchor))
-                  (browse-url-url-at-point)
-                  (find-tag-default)))
-    (setq url (read-string (format <span class=
-"org-string">"URL \"%s\" :"</span> url) url nil url))
-    (leuven--browse url))
 </pre>
         </div>
 
@@ -25793,8 +25763,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
   (global-set-key (kbd <span class="org-string">"C-c i"</span>)
     (<span class="org-keyword">lambda</span> ()
       (interactive)
-      (switch-or-start 'leuven-irc-connect
-                       <span class=
+      (switch-or-start 'leuven-irc-connect <span class=
 "org-string">"irc.freenode.net:6667"</span>)))
 
   (<span class="org-keyword">with-eval-after-load</span> <span class=
@@ -26098,9 +26067,11 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 "org-comment">hit `</span><span class="org-constant"><span class=
 "org-comment">C-g</span></span><span class=
 "org-comment">' while it's frozen to get an Emacs Lisp backtrace</span>
-  (setq debug-on-quit nil))             <span class=
+  (setq debug-on-quit nil)              <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">was set to `t' at beginning of file</span>
+
+  (setq debug-on-entry 'user-error))
 </pre>
         </div>
 
@@ -26172,7 +26143,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140915.1502]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140915.1942]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

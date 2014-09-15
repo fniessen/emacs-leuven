@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140915.1500
+;; Version: 20140915.1940
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140915.1500]--")
+(message "* --[ Loading Emacs Leuven 20140915.1940]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1057,34 +1057,21 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; unclutter the mode line
   (with-eval-after-load "diminish-autoloads"
+    (diminish 'auto-fill-function " F")
+    (diminish 'isearch-mode (string 32 ?\u279c))
+    ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
     (with-eval-after-load "abbrev"      (diminish 'abbrev-mode "Ab"))
     (with-eval-after-load "checkdoc"    (diminish 'checkdoc-minor-mode " Cd"))
     (with-eval-after-load "company"     (diminish 'company-mode "Cmp"))
     ;; (with-eval-after-load "eldoc"       (diminish 'eldoc-mode))
-    ;; (with-eval-after-load "flycheck"    (diminish 'flycheck-mode))
-    ;; (with-eval-after-load "flyspell"    (diminish 'flyspell-mode))
+    (with-eval-after-load "flycheck"    (diminish 'flycheck-mode " fC"))
+    (with-eval-after-load "flyspell"    (diminish 'flyspell-mode (string 32 ?\u2708)))
     ;; (with-eval-after-load "glasses"     (diminish 'glasses-mode))
     (with-eval-after-load "paredit"     (diminish 'paredit-mode " Pe"))
     ;; (with-eval-after-load "redshank"    (diminish 'redshank-mode))
     ;; (with-eval-after-load "smartparens" (diminish 'smartparens-mode))
     ;; (with-eval-after-load "whitespace"  (diminish 'whitespace-mode))
     (with-eval-after-load "yasnippet"   (diminish 'yas-minor-mode " Y")))
-
-  ;; ;; show buffer position like a scroll bar in mode line
-  ;; (try-require 'sml-modeline)
-  (with-eval-after-load "sml-modeline"
-
-    ;; mode line indicator total length
-    (setq sml-modeline-len 10)
-
-    (setq sml/no-confirm-load-theme t)
-
-    (sml-modeline-mode))
-
-  (with-eval-after-load "smart-mode-modeline"
-
-    ;; theme `smart-mode-line' should use
-    (setq sml/theme 'respectful))
 
 (defface powerline-modified-face
   '((((class color))
@@ -1147,16 +1134,18 @@ Last time is saved in global variable `leuven--before-section-time'."
                                                            powerline-default-separator
                                                            (cdr powerline-default-separator-dir))))
                           (lhs (list
-                                     (when (and (buffer-file-name (current-buffer)) vc-mode)
+                                     (when (and (fboundp 'vc-switches) (buffer-file-name (current-buffer)) vc-mode)
                                        (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
                                            (powerline-vc 'powerline-normal-face 'r)
                                          (powerline-vc 'powerline-modified-face 'r)))
+
+                                     (when (and (not (fboundp 'vc-switches)) (buffer-file-name (current-buffer)) vc-mode)
+                                       (powerline-vc face1 'r))
 
                                      (when (and (buffer-file-name (current-buffer)) vc-mode)
                                        (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
                                            (funcall separator-left 'powerline-normal-face mode-line)
                                          (funcall separator-left 'powerline-modified-face mode-line)))
-                                     ;; (powerline-vc face1 'r)
 
                                      ;; XXX Put the * in red!
                                      (powerline-raw "%*" nil 'l)
@@ -2024,8 +2013,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   (with-eval-after-load "ffap"
 
     ;; function called to fetch an URL
-    (setq ffap-url-fetcher 'browse-url))
-    ;; could be `browse-url-emacs' or `w3m-browse-url'
+    (setq ffap-url-fetcher 'browse-url)); could be `browse-url-emacs' or
+                                        ; `w3m-browse-url'
 
   (GNUEmacs
 
@@ -2589,9 +2578,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "21.12 (emacs)Scroll Bars")
 
   (if (and (display-graphic-p)
-           (or (featurep 'sml-modeline)
-               (featurep 'smart-mode-line)
-               (featurep 'powerline)))
+           (featurep 'powerline))
 
       ;; turn scroll bar off
       (scroll-bar-mode -1)
@@ -2656,6 +2643,23 @@ Last time is saved in global variable `leuven--before-section-time'."
   (set-input-mode (car (current-input-mode))
                   (nth 1 (current-input-mode))
                   0)
+
+  (defun list-unicode-display (&optional regexp)
+    "Display a list of unicode characters and their names in a buffer."
+    (interactive "sRegexp (default \".*\"): ")
+    (let* ((regexp (or regexp ".*"))
+           (case-fold-search t)
+           (cmp (lambda (x y) (< (cdr x) (cdr y))))
+           ;; alist like ("name" . code-point)
+           (char-alist (sort (cl-remove-if-not (lambda (x) (string-match regexp (car x)))
+                                               (ucs-names))
+                             cmp)))
+      (with-help-window "*Unicode characters*"
+        (with-current-buffer standard-output
+          (dolist (c char-alist)
+            (insert (format "0x%06X\t" (cdr c)))
+            (insert (cdr c))
+            (insert (format "\t%s\n" (car c))))))))
 
 ;;** 22.7 (info "(emacs)Recognize Coding") Systems
 
@@ -6058,6 +6062,9 @@ this with to-do items than with projects or headings."
           (error nil)))
       (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
+      ;; string to display in the mode line when current function is unknown
+      (setq which-func-unknown "")
+
       ;; show current function in mode line (based on Imenu)
       (which-function-mode 1)))         ; ~ Stickyfunc mode (in header line)
 
@@ -7630,6 +7637,7 @@ up before you execute another command."
 
     ;; package to compose an outgoing mail (Message, with Gnus paraphernalia)
     (setq mail-user-agent 'gnus-user-agent)
+
     (XEmacs
       (setq toolbar-mail-reader 'gnus))
 
@@ -8354,13 +8362,10 @@ up before you execute another command."
 
     ;; name of the file that records `save-place-alist' value
     (setq save-place-file
-          (convert-standard-filename (concat user-emacs-directory ".places")))
+          (convert-standard-filename (concat user-emacs-directory ".places"))))
                                         ;! a .txt extension would load `org' at
                                         ;! the time Emacs is killed (if not
                                         ;! already loaded)!
-
-    ;; do not make backups of master save-place file
-    (setq save-place-version-control "never"))
 
 )                                       ; chapter 42 ends here
 
@@ -8395,28 +8400,6 @@ up before you execute another command."
   ;; name of the browser program used by `browse-url-generic'
   (setq browse-url-generic-program (executable-find "firefox"))
                                         ; could be `google-chrome'
-
-  (defun leuven--browse (url)
-    "If prefix is specified, use the system default browser, else use the
-  configured Emacs one."
-    (require 'browse-url)
-    (if current-prefix-arg
-        ;; open in your desktop browser (firefox here)
-        (when url (browse-url-default-browser url))
-      ;; open using your Emacs browser (whatever that is configured to)
-      (if url (browse-url url) (call-interactively 'browse-url))))
-
-  (defun leuven-browse-url (&optional url)
-    "Browse the URL passed in."
-    (interactive)
-    (require 'w3m)
-    (require 'browse-url)
-    (setq url (or url
-                  (w3m-url-valid (w3m-anchor))
-                  (browse-url-url-at-point)
-                  (find-tag-default)))
-    (setq url (read-string (format "URL \"%s\" :" url) url nil url))
-    (leuven--browse url))
 
 ;;** Web search
 
@@ -8984,7 +8967,9 @@ up before you execute another command."
   (setq debug-on-error nil)             ; was set to `t' at beginning of file
 
   ;; hit `C-g' while it's frozen to get an Emacs Lisp backtrace
-  (setq debug-on-quit nil))             ; was set to `t' at beginning of file
+  (setq debug-on-quit nil)              ; was set to `t' at beginning of file
+
+  (setq debug-on-entry 'user-error))
 
 (when (and (string-match "GNU Emacs" (version))
            leuven-load-verbose)
@@ -9007,7 +8992,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140915.1501]--")
+(message "* --[ Loaded Emacs Leuven 20140915.1941]--")
 
 (provide 'emacs-leuven)
 

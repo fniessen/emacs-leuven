@@ -1748,38 +1748,21 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
 #+begin_src emacs-lisp
   ;; unclutter the mode line
   (with-eval-after-load "diminish-autoloads"
+    (diminish 'auto-fill-function " F")
+    (diminish 'isearch-mode (string 32 ?\u279c))
+    ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
     (with-eval-after-load "abbrev"      (diminish 'abbrev-mode "Ab"))
     (with-eval-after-load "checkdoc"    (diminish 'checkdoc-minor-mode " Cd"))
     (with-eval-after-load "company"     (diminish 'company-mode "Cmp"))
     ;; (with-eval-after-load "eldoc"       (diminish 'eldoc-mode))
-    ;; (with-eval-after-load "flycheck"    (diminish 'flycheck-mode))
-    ;; (with-eval-after-load "flyspell"    (diminish 'flyspell-mode))
+    (with-eval-after-load "flycheck"    (diminish 'flycheck-mode " fC"))
+    (with-eval-after-load "flyspell"    (diminish 'flyspell-mode (string 32 ?\u2708)))
     ;; (with-eval-after-load "glasses"     (diminish 'glasses-mode))
     (with-eval-after-load "paredit"     (diminish 'paredit-mode " Pe"))
     ;; (with-eval-after-load "redshank"    (diminish 'redshank-mode))
     ;; (with-eval-after-load "smartparens" (diminish 'smartparens-mode))
     ;; (with-eval-after-load "whitespace"  (diminish 'whitespace-mode))
     (with-eval-after-load "yasnippet"   (diminish 'yas-minor-mode " Y")))
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; ;; show buffer position like a scroll bar in mode line
-  ;; (try-require 'sml-modeline)
-  (with-eval-after-load "sml-modeline"
-
-    ;; mode line indicator total length
-    (setq sml-modeline-len 10)
-
-    (setq sml/no-confirm-load-theme t)
-
-    (sml-modeline-mode))
-#+end_src
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "smart-mode-modeline"
-
-    ;; theme `smart-mode-line' should use
-    (setq sml/theme 'respectful))
 #+end_src
 
 See Emacs Powerline.
@@ -1852,16 +1835,18 @@ See https://github.com/bling/vim-airline for the original author.
                                                            powerline-default-separator
                                                            (cdr powerline-default-separator-dir))))
                           (lhs (list
-                                     (when (and (buffer-file-name (current-buffer)) vc-mode)
+                                     (when (and (fboundp 'vc-switches) (buffer-file-name (current-buffer)) vc-mode)
                                        (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
                                            (powerline-vc 'powerline-normal-face 'r)
                                          (powerline-vc 'powerline-modified-face 'r)))
+
+                                     (when (and (not (fboundp 'vc-switches)) (buffer-file-name (current-buffer)) vc-mode)
+                                       (powerline-vc face1 'r))
 
                                      (when (and (buffer-file-name (current-buffer)) vc-mode)
                                        (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
                                            (funcall separator-left 'powerline-normal-face mode-line)
                                          (funcall separator-left 'powerline-modified-face mode-line)))
-                                     ;; (powerline-vc face1 'r)
 
                                      ;; XXX Put the * in red!
                                      (powerline-raw "%*" nil 'l)
@@ -3243,8 +3228,8 @@ root using the ~sudo~ tramp method.
   (with-eval-after-load "ffap"
 
     ;; function called to fetch an URL
-    (setq ffap-url-fetcher 'browse-url))
-    ;; could be `browse-url-emacs' or `w3m-browse-url'
+    (setq ffap-url-fetcher 'browse-url)); could be `browse-url-emacs' or
+                                        ; `w3m-browse-url'
 #+end_src
 
 *** Helm (Anything successor)
@@ -4146,9 +4131,7 @@ See ~(display-pixel-width)~:
   (leuven--section "21.12 (emacs)Scroll Bars")
 
   (if (and (display-graphic-p)
-           (or (featurep 'sml-modeline)
-               (featurep 'smart-mode-line)
-               (featurep 'powerline)))
+           (featurep 'powerline))
 
       ;; turn scroll bar off
       (scroll-bar-mode -1)
@@ -4281,6 +4264,25 @@ To see all the non-ASCII characters you can type with the ~C-x 8~ prefix, type
   (set-input-mode (car (current-input-mode))
                   (nth 1 (current-input-mode))
                   0)
+#+end_src
+
+#+begin_src emacs-lisp
+  (defun list-unicode-display (&optional regexp)
+    "Display a list of unicode characters and their names in a buffer."
+    (interactive "sRegexp (default \".*\"): ")
+    (let* ((regexp (or regexp ".*"))
+           (case-fold-search t)
+           (cmp (lambda (x y) (< (cdr x) (cdr y))))
+           ;; alist like ("name" . code-point)
+           (char-alist (sort (cl-remove-if-not (lambda (x) (string-match regexp (car x)))
+                                               (ucs-names))
+                             cmp)))
+      (with-help-window "*Unicode characters*"
+        (with-current-buffer standard-output
+          (dolist (c char-alist)
+            (insert (format "0x%06X\t" (cdr c)))
+            (insert (cdr c))
+            (insert (format "\t%s\n" (car c))))))))
 #+end_src
 
 ** Recognizing Coding Systems
@@ -9387,6 +9389,9 @@ XXX Autoloaded?
           (error nil)))
       (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
+      ;; string to display in the mode line when current function is unknown
+      (setq which-func-unknown "")
+
       ;; show current function in mode line (based on Imenu)
       (which-function-mode 1)))         ; ~ Stickyfunc mode (in header line)
 
@@ -12221,6 +12226,7 @@ Minimal configuration for sending a bug report, for example.
 
     ;; package to compose an outgoing mail (Message, with Gnus paraphernalia)
     (setq mail-user-agent 'gnus-user-agent)
+
     (XEmacs
       (setq toolbar-mail-reader 'gnus))
 
@@ -13425,13 +13431,10 @@ printing on Windows.
 
     ;; name of the file that records `save-place-alist' value
     (setq save-place-file
-          (convert-standard-filename (concat user-emacs-directory ".places")))
+          (convert-standard-filename (concat user-emacs-directory ".places"))))
                                         ;! a .txt extension would load `org' at
                                         ;! the time Emacs is killed (if not
                                         ;! already loaded)!
-
-    ;; do not make backups of master save-place file
-    (setq save-place-version-control "never"))
 
 )                                       ; chapter 42 ends here
 #+end_src
@@ -13474,28 +13477,6 @@ printing on Windows.
   ;; name of the browser program used by `browse-url-generic'
   (setq browse-url-generic-program (executable-find "firefox"))
                                         ; could be `google-chrome'
-
-  (defun leuven--browse (url)
-    "If prefix is specified, use the system default browser, else use the
-  configured Emacs one."
-    (require 'browse-url)
-    (if current-prefix-arg
-        ;; open in your desktop browser (firefox here)
-        (when url (browse-url-default-browser url))
-      ;; open using your Emacs browser (whatever that is configured to)
-      (if url (browse-url url) (call-interactively 'browse-url))))
-
-  (defun leuven-browse-url (&optional url)
-    "Browse the URL passed in."
-    (interactive)
-    (require 'w3m)
-    (require 'browse-url)
-    (setq url (or url
-                  (w3m-url-valid (w3m-anchor))
-                  (browse-url-url-at-point)
-                  (find-tag-default)))
-    (setq url (read-string (format "URL \"%s\" :" url) url nil url))
-    (leuven--browse url))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -14374,8 +14355,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
   (global-set-key (kbd "C-c i")
     (lambda ()
       (interactive)
-      (switch-or-start 'leuven-irc-connect
-                       "irc.freenode.net:6667")))
+      (switch-or-start 'leuven-irc-connect "irc.freenode.net:6667")))
 
   (with-eval-after-load "circe"
 
@@ -14571,7 +14551,9 @@ calls to message), set the variable ~debug-on-message~.
   (setq debug-on-error nil)             ; was set to `t' at beginning of file
 
   ;; hit `C-g' while it's frozen to get an Emacs Lisp backtrace
-  (setq debug-on-quit nil))             ; was set to `t' at beginning of file
+  (setq debug-on-quit nil)              ; was set to `t' at beginning of file
+
+  (setq debug-on-entry 'user-error))
 #+end_src
 
 #+begin_src emacs-lisp
