@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140912.1654
+;; Version: 20140915.1136
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140912.1654]--")
+(message "* --[ Loading Emacs Leuven 20140915.1136]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -3187,7 +3187,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; ellipsis to use in the Org mode outline
     (setq org-ellipsis
           (if (char-displayable-p ?\u25BA) ; this test takes ~ 0.40s hence,
-                                           ; wrapped in `eval-after-load'
+                                           ; wrapped in `with-eval-after-load'
               " \u25BA"                 ; string (black right-pointing pointer)
             'org-ellipsis)))            ; face
 
@@ -3943,7 +3943,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; 9.1.2 default target for storing notes
   (setq org-default-notes-file          ; inbox for collecting [default: "~/.notes"]
-        (concat org-directory "/refile.org"))
+        (concat org-directory "/notes.org"))
 
   ;; 9.1.2 templates for the creation of capture buffers
 
@@ -3954,7 +3954,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (add-to-list 'org-capture-templates
                  `("t" "Task" entry
-                   (file+headline ,org-default-notes-file "Tasks")
+                   (file+headline ,(concat org-directory "/refile.org") "Tasks")
                    "* NEW %^{Task}%?
 
 %i"
@@ -3971,7 +3971,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (add-to-list 'org-capture-templates
                  `("a" "Appt" entry
-                   (file+headline ,org-default-notes-file "Calendar")
+                   (file+headline ,(concat org-directory "/refile.org") "Calendar")
                    "* %^{Appointment}%?
 %^T
 
@@ -3997,7 +3997,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (add-to-list 'org-capture-templates
                  `("mt" "Create a TODO Action + edit" entry
-                   (file+headline ,org-default-notes-file "Email") ; #+FILETAGS: :mail:
+                   (file+headline ,(concat org-directory "/refile.org") "Email") ; #+FILETAGS: :mail:
                    "* TODO %^{Creating action}%? (from %:fromname)
    %:date-timestamp-inactive
 
@@ -4010,7 +4010,7 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("mr" "Create a TODO Action Remind 3" entry
-                   (file+headline ,org-default-notes-file "Email") ; #+FILETAGS: :mail:
+                   (file+headline ,(concat org-directory "/refile.org") "Email") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
    SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \"\")
    %:date-timestamp-inactive
@@ -4024,20 +4024,20 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("p" "Phone call" entry
-                   (file+headline ,org-default-notes-file "Phone calls")
+                   (file+headline ,(concat org-directory "/refile.org") "Phone calls")
                    "* %?"
                    :empty-lines 1 :clock-in t :clock-resume t) t)
 
     (add-to-list 'org-capture-templates
                  `("i" "interruption" entry
-                   (file ,org-default-notes-file)
+                   (file ,(concat org-directory "/refile.org"))
                    "A TEMPLATE HERE"
                    :clock-in t :clock-resume t) t)
 
     ;; thought
     (add-to-list 'org-capture-templates
                  `("n" "Note" entry
-                   (file+headline ,(concat org-directory "/notes.org") "Notes")
+                   (file+headline ,org-default-notes-file "Notes")
                    "* %^{Thought}%?
 
 %i"
@@ -4046,7 +4046,7 @@ From %a"
     ;; shopping list (stuff to buy)
     (add-to-list 'org-capture-templates
                  `("b" "Buy" checkitem
-                   (file+headline ,org-default-notes-file "Shopping")) t)
+                   (file+headline ,(concat org-directory "/refile.org") "Shopping")) t)
 
     ;; add a note to the currently clocked task
     (add-to-list 'org-capture-templates
@@ -4078,7 +4078,7 @@ From %a"
 %i%?") t)
 
     ;;          ("w" "org-protocol" entry
-    ;;           (file ,org-default-notes-file)
+    ;;           (file ,(concat org-directory "/refile.org"))
     ;;           "* TODO Review %c
     ;; %U"
     ;;           :immediate-finish t :clock-in t :clock-resume t)
@@ -8988,7 +8988,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140912.1655]--")
+(message "* --[ Loaded Emacs Leuven 20140915.1137]--")
 
 (provide 'emacs-leuven)
 

@@ -158,7 +158,7 @@ The CollectBox is the default place where you collect your thoughts.
   (add-to-list 'org-agenda-custom-commands
                `("cb" "CollectBox"
                  alltodo ""
-                 ((org-agenda-files (list ,org-default-notes-file)))) t)
+                 ((org-agenda-files (list ,(concat org-directory "/refile.org"))))) t)
 #+end_src
 
 * FOCUS
@@ -206,7 +206,7 @@ because:
                            (org-agenda-span 'day)))
                   (tags-todo "LEVEL=2"
                         ((org-agenda-overriding-header "COLLECTBOX")
-                         (org-agenda-files (list ,org-default-notes-file))))
+                         (org-agenda-files (list ,(concat org-directory "/refile.org")))))
                   ;; list of all TODO entries with deadline today
                   (tags-todo "DEADLINE=\"<+0d>\""
                              ((org-agenda-overriding-header "DUE TODAY")
@@ -1168,6 +1168,22 @@ help you getting started in the morning.
 See http://www.randomsample.de/dru5/node/61
 
 : /usr/bin/yes p | /usr/local/bin/emacs -batch -l ~/.emacs -eval '(org-batch-agenda "#")' 2>/dev/null | /usr/bin/mailx -s'Stuck projects' me@example.com
+
+** Email the agenda buffer
+
+#+begin_src emacs-lisp :tangle no
+(defun email-buffer ()
+  "Send region as the body of an email."
+  (interactive)
+  (let ((content (buffer-string)))
+    (compose-mail)
+    (message-goto-body)
+    (insert content)
+    (message-goto-to)))
+#+end_src
+
+Just run that from your agenda, and then fill in email addresses and
+subject, and send.
 
 * EXPORT
 

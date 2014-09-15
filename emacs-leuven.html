@@ -1308,7 +1308,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140912.1655</span>
+"org-comment">Version: 20140915.1137</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1431,7 +1431,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140912.1655]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140915.1137]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -10048,7 +10048,8 @@ M-: (executable-find "diff") RET
                                            <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">wrapped in `</span><span class="org-constant"><span class=
-"org-comment">eval-after-load</span></span><span class="org-comment">'</span>
+"org-comment">with-eval-after-load</span></span><span class=
+"org-comment">'</span>
               <span class=
 "org-string">" \u25BA"</span>                 <span class=
 "org-comment-delimiter">; </span><span class=
@@ -11847,7 +11848,7 @@ M-: (executable-find "diff") RET
   (setq org-default-notes-file          <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">inbox for collecting [default: "~/.notes"]</span>
-        (concat org-directory <span class="org-string">"/refile.org"</span>))
+        (concat org-directory <span class="org-string">"/notes.org"</span>))
 </pre>
             </div>
 
@@ -11921,8 +11922,8 @@ M-: (executable-find "diff") RET
     (add-to-list 'org-capture-templates
                  `(<span class="org-string">"t"</span> <span class=
 "org-string">"Task"</span> entry
-                   (file+headline ,org-default-notes-file <span class=
-"org-string">"Tasks"</span>)
+                   (file+headline ,(concat org-directory <span class=
+"org-string">"/refile.org"</span>) <span class="org-string">"Tasks"</span>)
                    <span class="org-string">"* NEW %^{Task}%?</span>
 
 <span class="org-string">%i"</span>
@@ -11944,8 +11945,8 @@ M-: (executable-find "diff") RET
     (add-to-list 'org-capture-templates
                  `(<span class="org-string">"a"</span> <span class=
 "org-string">"Appt"</span> entry
-                   (file+headline ,org-default-notes-file <span class=
-"org-string">"Calendar"</span>)
+                   (file+headline ,(concat org-directory <span class=
+"org-string">"/refile.org"</span>) <span class="org-string">"Calendar"</span>)
                    <span class="org-string">"* %^{Appointment}%?</span>
 <span class="org-string">%^T</span>
 
@@ -12072,7 +12073,8 @@ M-: (executable-find "diff") RET
 "org-string">"Create a </span><span class="org-leuven-highlight"><span class=
 "org-string">TODO</span></span><span class=
 "org-string"> Action + edit"</span> entry
-                   (file+headline ,org-default-notes-file <span class=
+                   (file+headline ,(concat org-directory <span class=
+"org-string">"/refile.org"</span>) <span class=
 "org-string">"Email"</span>) <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">#+FILETAGS: :mail:</span>
@@ -12093,7 +12095,8 @@ M-: (executable-find "diff") RET
 "org-string">"Create a </span><span class="org-leuven-highlight"><span class=
 "org-string">TODO</span></span><span class=
 "org-string"> Action Remind 3"</span> entry
-                   (file+headline ,org-default-notes-file <span class=
+                   (file+headline ,(concat org-directory <span class=
+"org-string">"/refile.org"</span>) <span class=
 "org-string">"Email"</span>) <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">#+FILETAGS: :mail:</span>
@@ -12127,7 +12130,8 @@ M-: (executable-find "diff") RET
     (add-to-list 'org-capture-templates
                  `(<span class="org-string">"p"</span> <span class=
 "org-string">"Phone call"</span> entry
-                   (file+headline ,org-default-notes-file <span class=
+                   (file+headline ,(concat org-directory <span class=
+"org-string">"/refile.org"</span>) <span class=
 "org-string">"Phone calls"</span>)
                    <span class="org-string">"* %?"</span>
                    <span class="org-builtin">:empty-lines</span> 1 <span class=
@@ -12137,7 +12141,8 @@ M-: (executable-find "diff") RET
     (add-to-list 'org-capture-templates
                  `(<span class="org-string">"i"</span> <span class=
 "org-string">"interruption"</span> entry
-                   (file ,org-default-notes-file)
+                   (file ,(concat org-directory <span class=
+"org-string">"/refile.org"</span>))
                    <span class="org-string">"A TEMPLATE HERE"</span>
                    <span class="org-builtin">:clock-in</span> t <span class=
 "org-builtin">:clock-resume</span> t) t)
@@ -12151,8 +12156,8 @@ M-: (executable-find "diff") RET
     (add-to-list 'org-capture-templates
                  `(<span class="org-string">"n"</span> <span class=
 "org-string">"Note"</span> entry
-                   (file+headline ,(concat org-directory <span class=
-"org-string">"/notes.org"</span>) <span class="org-string">"Notes"</span>)
+                   (file+headline ,org-default-notes-file <span class=
+"org-string">"Notes"</span>)
                    <span class="org-string">"* %^{Thought}%?</span>
 
 <span class="org-string">%i"</span>
@@ -12163,7 +12168,8 @@ M-: (executable-find "diff") RET
     (add-to-list 'org-capture-templates
                  `(<span class="org-string">"b"</span> <span class=
 "org-string">"Buy"</span> checkitem
-                   (file+headline ,org-default-notes-file <span class=
+                   (file+headline ,(concat org-directory <span class=
+"org-string">"/refile.org"</span>) <span class=
 "org-string">"Shopping"</span>)) t)
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -12210,7 +12216,7 @@ M-: (executable-find "diff") RET
     <span class="org-comment-delimiter">;;          </span><span class=
 "org-comment">("w" "org-protocol" entry</span>
     <span class="org-comment-delimiter">;;           </span><span class=
-"org-comment">(file ,org-default-notes-file)</span>
+"org-comment">(file ,(concat org-directory "/refile.org"))</span>
     <span class="org-comment-delimiter">;;           </span><span class=
 "org-comment">"* </span><span class="org-leuven-highlight"><span class=
 "org-comment">TODO</span></span><span class="org-comment"> Review %c</span>
@@ -26118,7 +26124,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140912.1656]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140915.1137]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

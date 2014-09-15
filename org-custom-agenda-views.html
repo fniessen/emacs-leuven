@@ -146,6 +146,8 @@
               <li><a href="#sec-8-1">Task assigned</a></li>
 
               <li><a href="#sec-8-2">Email list</a></li>
+
+              <li><a href="#sec-8-3">Email the agenda buffer</a></li>
             </ul>
           </li>
 
@@ -389,9 +391,10 @@
         </div>
 
         <div class="note">
-          Puisque l’on peut facilement filter par catégorie, on peut imaginer
-          qu’il est <b>inutile de trier par catégorie</b> : il suffit de faire
-          <code>&lt;</code> pour voir toutes les tâches d’une catégorie.
+          <p>Puisque l’on peut facilement filter par catégorie, on peut
+          imaginer qu’il est <b>inutile de trier par catégorie</b> : il suffit
+          de faire <code>&lt;</code> pour voir toutes les tâches d’une
+          catégorie.</p>
         </div>
 
         <p>You should be able to work with Org items with the mapping and
@@ -433,7 +436,8 @@
                `(<span class="org-string">"cb"</span> <span class=
 "org-string">"CollectBox"</span>
                  alltodo <span class="org-string">""</span>
-                 ((org-agenda-files (list ,org-default-notes-file)))) t)
+                 ((org-agenda-files (list ,(concat org-directory <span class=
+"org-string">"/refile.org"</span>))))) t)
 </pre>
           </div>
         </div>
@@ -509,7 +513,7 @@
                   (tags-todo <span class="org-string">"LEVEL=2"</span>
                         ((org-agenda-overriding-header <span class=
 "org-string">"COLLECTBOX"</span>)
-                         (org-agenda-files (list ,org-default-notes-file))))
+                         (org-agenda-files (list ,(concat org-directory <span class="org-string">"/refile.org"</span>)))))
                   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">list of all </span><span class=
 "org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
@@ -653,10 +657,12 @@
             <tr>
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
 
-              <td width="100%"><b>Rajouter les SCHEDULED today dans la hotlist
-              ?</b><br />
-              Déjà le cas pour les tâches avec DEADLINE. Pas pour les
-              autres.</td>
+              <td width="100%">
+                <b>Rajouter les SCHEDULED today dans la hotlist ?</b><br />
+
+                <p>Déjà le cas pour les tâches avec DEADLINE. Pas pour les
+                autres.</p>
+              </td>
             </tr>
           </table>
 
@@ -664,9 +670,12 @@
             <tr>
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
 
-              <td width="100%"><b>Tasks with a DEADLINE and a <code>-0d</code>
-              specifier are shown</b><br />
-              We said “get it out my way for now”, nope?</td>
+              <td width="100%">
+                <b>Tasks with a DEADLINE and a <code>-0d</code> specifier are
+                shown</b><br />
+
+                <p>We said “get it out my way for now”, nope?</p>
+              </td>
             </tr>
           </table>
 
@@ -777,9 +786,9 @@
 
         <div class="outline-text-3" id="text-5-4">
           <div class="warning">
-            A deadline with no scheduling information has an implicit scheduled
-            date equal to the deadline date (or, in some tools like Azendoo, to
-            today!).
+            <p>A deadline with no scheduling information has an implicit
+            scheduled date equal to the deadline date (or, in some tools like
+            Azendoo, to today!).</p>
           </div>
         </div>
       </div>
@@ -824,7 +833,7 @@
           <h4 id="sec-6-1-1">Sorted by due date</h4>
 
           <div class="outline-text-4" id="text-6-1-1">
-            All <b>tasks</b>, grouped by <b>due date</b>:
+            <p>All <b>tasks</b>, grouped by <b>due date</b>:</p>
 
             <ul class="org-ul">
               <li>Overdue</li>
@@ -987,9 +996,12 @@
                   <td valign="top"><b><span class=
                   "todo TODO">TODO</span></b></td>
 
-                  <td width="100%"><b>Tasks with a long pre-warning do not
-                  appear in the first block</b><br />
-                  Well in every other one!!! Bad.</td>
+                  <td width="100%">
+                    <b>Tasks with a long pre-warning do not appear in the first
+                    block</b><br />
+
+                    <p>Well in every other one!!! Bad.</p>
+                  </td>
                 </tr>
               </table>
 
@@ -1476,9 +1488,11 @@
             <tr>
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
 
-              <td width="100%"><b>Add report “Recently
-              added/completed/modified”</b><br />
-              Recently done.</td>
+              <td width="100%">
+                <b>Add report “Recently added/completed/modified”</b><br />
+
+                <p>Recently done.</p>
+              </td>
             </tr>
           </table>
 
@@ -1523,10 +1537,10 @@
 
         <div class="outline-text-3" id="text-6-6">
           <div class="note">
-            <code>org-timeline</code> has weaknesses and although not
+            <p><code>org-timeline</code> has weaknesses and although not
             officially deprecated, should be best avoided. See Carsten’s
             comments in <a href=
-            "http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465">http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465</a>
+            "http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465">http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465</a></p>
           </div>
 
           <p>Track time.</p>
@@ -2028,13 +2042,36 @@ This notification has been sent to you via Azendoo, do not reply.
 </pre>
         </div>
       </div>
+
+      <div id="outline-container-sec-8-3" class="outline-3">
+        <h3 id="sec-8-3">Email the agenda buffer</h3>
+
+        <div class="outline-text-3" id="text-8-3">
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+(<span class="org-keyword">defun</span> <span class=
+"org-function-name">email-buffer</span> ()
+  <span class="org-doc">"Send region as the body of an email."</span>
+  (interactive)
+  (<span class="org-keyword">let</span> ((content (buffer-string)))
+    (compose-mail)
+    (message-goto-body)
+    (insert content)
+    (message-goto-to)))
+</pre>
+          </div>
+
+          <p>Just run that from your agenda, and then fill in email addresses
+          and subject, and send.</p>
+        </div>
+      </div>
     </div>
 
     <div id="outline-container-sec-9" class="outline-2">
       <h2 id="sec-9">EXPORT</h2>
 
       <div class="outline-text-2" id="text-9">
-        Exporting your personal or team task lists.
+        <p>Exporting your personal or team task lists.</p>
       </div>
 
       <div id="outline-container-sec-9-1" class="outline-3">
@@ -2047,8 +2084,8 @@ This notification has been sent to you via Azendoo, do not reply.
           specified files in one step: <code>C-c a e</code>.</p>
 
           <div class="note">
-            To create PDF output, the GhostScript <code>ps2pdf</code> utility
-            must be installed on the system.
+            <p>To create PDF output, the GhostScript <code>ps2pdf</code>
+            utility must be installed on the system.</p>
           </div>
 
           <p>FIXME Changes</p>

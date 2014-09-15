@@ -38,7 +38,7 @@
   (add-to-list 'org-agenda-custom-commands
                `("cb" "CollectBox"
                  alltodo ""
-                 ((org-agenda-files (list ,org-default-notes-file)))) t)
+                 ((org-agenda-files (list ,(concat org-directory "/refile.org"))))) t)
 
   (add-to-list 'org-agenda-custom-commands
                '("f" . "FOCUS...") t)
@@ -57,7 +57,7 @@
                            (org-agenda-span 'day)))
                   (tags-todo "LEVEL=2"
                         ((org-agenda-overriding-header "COLLECTBOX")
-                         (org-agenda-files (list ,org-default-notes-file))))
+                         (org-agenda-files (list ,(concat org-directory "/refile.org")))))
                   ;; list of all TODO entries with deadline today
                   (tags-todo "DEADLINE=\"<+0d>\""
                              ((org-agenda-overriding-header "DUE TODAY")
