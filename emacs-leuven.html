@@ -1310,7 +1310,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140915.1941</span>
+"org-comment">Version: 20140916.1657</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1433,7 +1433,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140915.1941]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140916.1657]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -2219,7 +2219,7 @@
           dired-single ess fill-column-indicator flycheck fuzzy git-commit-mode
           graphviz-dot-mode guide-key helm htmlize idle-require info+
           interaction-log ledger-mode leuven-theme multi-term multiple-cursors
-          pager powerline rainbow-mode redo+ tidy unbound yasnippet
+          pager powerline rainbow-mode redo+ tidy unbound undo-tree yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">jabber multi-term paredit redshank w3m</span>
           )
@@ -2508,6 +2508,16 @@
 "org-string">"redo+-autoloads"</span>
     (global-set-key (kbd <span class=
 "org-string">"&lt;S-f11&gt;"</span>) 'redo))
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"undo-tree-autoloads"</span>
+    (global-undo-tree-mode t)
+    (setq undo-tree-visualizer-relative-timestamps t)
+    (setq undo-tree-visualizer-timestamps t))
 </pre>
           </div>
 
@@ -4331,9 +4341,10 @@
 "org-comment">(with-eval-after-load "eldoc"       (diminish 'eldoc-mode))</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"flycheck"</span>    (diminish 'flycheck-mode <span class=
-"org-string">" fC"</span>))
+"org-string">" Fc"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"flyspell"</span>    (diminish 'flyspell-mode (string 32 ?\u2708)))
+"org-string">"flyspell"</span>    (diminish 'flyspell-mode <span class=
+"org-string">" Fs"</span>))
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(with-eval-after-load "glasses"     (diminish 'glasses-mode))</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
@@ -26143,7 +26154,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140915.1942]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140916.1658]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

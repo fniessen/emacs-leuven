@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140915.1940
+;; Version: 20140916.1656
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140915.1940]--")
+(message "* --[ Loading Emacs Leuven 20140916.1656]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -410,7 +410,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           dired-single ess fill-column-indicator flycheck fuzzy git-commit-mode
           graphviz-dot-mode guide-key helm htmlize idle-require info+
           interaction-log ledger-mode leuven-theme multi-term multiple-cursors
-          pager powerline rainbow-mode redo+ tidy unbound yasnippet
+          pager powerline rainbow-mode redo+ tidy unbound undo-tree yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -532,6 +532,11 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; redo the most recent undo
   (with-eval-after-load "redo+-autoloads"
     (global-set-key (kbd "<S-f11>") 'redo))
+
+  (with-eval-after-load "undo-tree-autoloads"
+    (global-undo-tree-mode t)
+    (setq undo-tree-visualizer-relative-timestamps t)
+    (setq undo-tree-visualizer-timestamps t))
 
 )                                       ; chapter 7 ends here
 
@@ -1064,8 +1069,8 @@ Last time is saved in global variable `leuven--before-section-time'."
     (with-eval-after-load "checkdoc"    (diminish 'checkdoc-minor-mode " Cd"))
     (with-eval-after-load "company"     (diminish 'company-mode "Cmp"))
     ;; (with-eval-after-load "eldoc"       (diminish 'eldoc-mode))
-    (with-eval-after-load "flycheck"    (diminish 'flycheck-mode " fC"))
-    (with-eval-after-load "flyspell"    (diminish 'flyspell-mode (string 32 ?\u2708)))
+    (with-eval-after-load "flycheck"    (diminish 'flycheck-mode " Fc"))
+    (with-eval-after-load "flyspell"    (diminish 'flyspell-mode " Fs"))
     ;; (with-eval-after-load "glasses"     (diminish 'glasses-mode))
     (with-eval-after-load "paredit"     (diminish 'paredit-mode " Pe"))
     ;; (with-eval-after-load "redshank"    (diminish 'redshank-mode))
@@ -8992,7 +8997,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140915.1941]--")
+(message "* --[ Loaded Emacs Leuven 20140916.1657]--")
 
 (provide 'emacs-leuven)
 

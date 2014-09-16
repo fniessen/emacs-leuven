@@ -553,7 +553,7 @@ outages).
           dired-single ess fill-column-indicator flycheck fuzzy git-commit-mode
           graphviz-dot-mode guide-key helm htmlize idle-require info+
           interaction-log ledger-mode leuven-theme multi-term multiple-cursors
-          pager powerline rainbow-mode redo+ tidy unbound yasnippet
+          pager powerline rainbow-mode redo+ tidy unbound undo-tree yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -715,6 +715,13 @@ cancelable; hence, we put it out of a "chapter".
   ;; redo the most recent undo
   (with-eval-after-load "redo+-autoloads"
     (global-set-key (kbd "<S-f11>") 'redo))
+#+end_src
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "undo-tree-autoloads"
+    (global-undo-tree-mode t)
+    (setq undo-tree-visualizer-relative-timestamps t)
+    (setq undo-tree-visualizer-timestamps t))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1755,8 +1762,8 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
     (with-eval-after-load "checkdoc"    (diminish 'checkdoc-minor-mode " Cd"))
     (with-eval-after-load "company"     (diminish 'company-mode "Cmp"))
     ;; (with-eval-after-load "eldoc"       (diminish 'eldoc-mode))
-    (with-eval-after-load "flycheck"    (diminish 'flycheck-mode " fC"))
-    (with-eval-after-load "flyspell"    (diminish 'flyspell-mode (string 32 ?\u2708)))
+    (with-eval-after-load "flycheck"    (diminish 'flycheck-mode " Fc"))
+    (with-eval-after-load "flyspell"    (diminish 'flyspell-mode " Fs"))
     ;; (with-eval-after-load "glasses"     (diminish 'glasses-mode))
     (with-eval-after-load "paredit"     (diminish 'paredit-mode " Pe"))
     ;; (with-eval-after-load "redshank"    (diminish 'redshank-mode))
