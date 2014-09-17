@@ -1310,7 +1310,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140917.1212</span>
+"org-comment">Version: 20140917.2152</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1433,7 +1433,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140917.1212]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140917.2152]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -4643,15 +4643,6 @@
   (leuven--section <span class=
 "org-string">"14.20 (emacs)The Cursor Display"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">cursor to use</span>
-  (setq-default cursor-type 'bar)
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">cursor of the selected window blinks</span>
-  (XEmacs
-    (blink-cursor-mode))
-
   (GNUEmacs
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">using cursor color to indicate some modes (read-only, overwrite and</span>
@@ -4671,6 +4662,19 @@
         (set-cursor-color color)))
 
     (add-hook 'post-command-hook 'leuven--set-cursor-color-according-to-mode))
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">cursor to use</span>
+  (setq-default cursor-type 'bar)
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">cursor of the selected window blinks</span>
+  (XEmacs
+    (blink-cursor-mode))
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">toggle line highlighting in all buffers (Global Hl-Line mode)</span>
+  (global-hl-line-mode 1)
 </pre>
           </div>
         </div>
@@ -7252,7 +7256,7 @@ M-: (executable-find "diff") RET
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">collected (&gt;= `</span><span class="org-constant"><span class=
 "org-comment">helm-idle-delay</span></span><span class="org-comment">')</span>
-      (setq helm-input-idle-delay 0.04) <span class=
+      (setq helm-input-idle-delay 0.05) <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">also effective for NON-DELAYED sources</span>
 
@@ -20574,7 +20578,8 @@ TAGS:
 "org-comment">Auto Completion</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"auto-complete-autoloads"</span>
-      (idle-require 'auto-complete-config))
+      (idle-require 'auto-complete-config-<span class=
+"org-leuven-highlight">XXX</span>))
 
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"auto-complete-config"</span>
@@ -20736,7 +20741,7 @@ TAGS:
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">modular text completion framework</span>
-  (try-require 'company-<span class="org-leuven-highlight">XXX</span>)
+  (try-require 'company)
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"company"</span>
 
@@ -20802,6 +20807,23 @@ TAGS:
 "org-string">"C-g"</span>) 'company-abort)
     (define-key company-active-map (kbd <span class=
 "org-string">"&lt;left&gt;"</span>) 'company-abort))
+</pre>
+            </div>
+
+            <p>GOODBYE… complete with good|…</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"company-dabbrev"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">don't ignore case when collecting completion candidates</span>
+    (setq company-dabbrev-ignore-case nil)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">don't downcase the returned candidates</span>
+    (setq company-dabbrev-downcase nil))
 </pre>
             </div>
 
@@ -26178,7 +26200,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140917.1212]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140917.2152]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

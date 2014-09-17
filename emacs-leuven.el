@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140917.1210
+;; Version: 20140917.2150
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140917.1210]--")
+(message "* --[ Loading Emacs Leuven 20140917.2150]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1227,13 +1227,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "14.20 (emacs)The Cursor Display")
 
-  ;; cursor to use
-  (setq-default cursor-type 'bar)
-
-  ;; cursor of the selected window blinks
-  (XEmacs
-    (blink-cursor-mode))
-
   (GNUEmacs
     ;; using cursor color to indicate some modes (read-only, overwrite and
     ;; normal insert modes)
@@ -1245,6 +1238,16 @@ Last time is saved in global variable `leuven--before-section-time'."
         (set-cursor-color color)))
 
     (add-hook 'post-command-hook 'leuven--set-cursor-color-according-to-mode))
+
+  ;; cursor to use
+  (setq-default cursor-type 'bar)
+
+  ;; cursor of the selected window blinks
+  (XEmacs
+    (blink-cursor-mode))
+
+  ;; toggle line highlighting in all buffers (Global Hl-Line mode)
+  (global-hl-line-mode 1)
 
 ;;** 14.21 (info "(emacs)Line Truncation")
 
@@ -2110,7 +2113,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       ;; time that the user has to be idle for, before ALL candidates are
       ;; collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.04) ; also effective for NON-DELAYED sources
+      (setq helm-input-idle-delay 0.05) ; also effective for NON-DELAYED sources
 
       ;; ;; enable generic Helm completion (for all functions in Emacs that use
       ;; ;; `completing-read' or `read-file-name' and friends)
@@ -7093,7 +7096,7 @@ up before you execute another command."
 
     ;; Auto Completion
     (with-eval-after-load "auto-complete-autoloads"
-      (idle-require 'auto-complete-config))
+      (idle-require 'auto-complete-config-XXX))
 
     (with-eval-after-load "auto-complete-config"
 
@@ -7165,7 +7168,7 @@ up before you execute another command."
       (ac-flyspell-workaround)))
 
   ;; modular text completion framework
-  (try-require 'company-XXX)
+  (try-require 'company)
   (with-eval-after-load "company"
 
     ;; minimum prefix length for idle completion
@@ -7205,6 +7208,14 @@ up before you execute another command."
     ;; abort
     (define-key company-active-map (kbd "C-g") 'company-abort)
     (define-key company-active-map (kbd "<left>") 'company-abort))
+
+  (with-eval-after-load "company-dabbrev"
+
+    ;; don't ignore case when collecting completion candidates
+    (setq company-dabbrev-ignore-case nil)
+
+    ;; don't downcase the returned candidates
+    (setq company-dabbrev-downcase nil))
 
 )                                       ; chapter 29 ends here
 
@@ -9009,7 +9020,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140917.1211]--")
+(message "* --[ Loaded Emacs Leuven 20140917.2151]--")
 
 (provide 'emacs-leuven)
 
