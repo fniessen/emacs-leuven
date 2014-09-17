@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140917.2226
+;; Version: 20140917.2304
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140917.2226]--")
+(message "* --[ Loading Emacs Leuven 20140917.2304]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1048,9 +1048,12 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       ;; mappings for displaying characters
       (setq whitespace-display-mappings
-            '((space-mark ?\u00A0 [?\u2423] [?.]) ; nbsp - open box (bottom square bracket)
-              (space-mark ?\u202F [?\u00B7] [?.]) ; narrow nbsp - centered dot
-              (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) ; tab - left quote mark
+            '((space-mark ?\u00A0 [?\u2423] [?.]) ; nbsp
+                                        ; open box (bottom square bracket)
+              (space-mark ?\u202F [?\u00B7] [?.]) ; narrow nbsp
+                                        ; centered dot
+              (tab-mark ?\t [?\u25B8 ?\t] [?\\ ?\t]))) ; tab
+                                        ; black right-pointing small triangle
       ))
 
   ;; ;; show zero-width spaces
@@ -9022,7 +9025,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140917.2227]--")
+(message "* --[ Loaded Emacs Leuven 20140917.2305]--")
 
 (provide 'emacs-leuven)
 

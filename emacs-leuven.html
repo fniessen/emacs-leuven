@@ -1310,7 +1310,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140917.2227</span>
+"org-comment">Version: 20140917.2306</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1433,7 +1433,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140917.2227]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140917.2306]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -4255,14 +4255,19 @@
 "org-comment">mappings for displaying characters</span>
       (setq whitespace-display-mappings
             '((space-mark ?\u00A0 [?\u2423] [?.]) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">nbsp</span>
+                                        <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">nbsp - open box (bottom square bracket)</span>
+"org-comment">open box (bottom square bracket)</span>
               (space-mark ?\u202F [?\u00B7] [?.]) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">narrow nbsp</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">centered dot</span>
+              (tab-mark ?\t [?\u25B8 ?\t] [?\\ ?\t]))) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">tab</span>
+                                        <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">narrow nbsp - centered dot</span>
-              (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">tab - left quote mark</span>
+"org-comment">black right-pointing small triangle</span>
       ))
 </pre>
           </div>
@@ -26201,7 +26206,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140917.2228]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140917.2306]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

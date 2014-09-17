@@ -1713,9 +1713,12 @@ characters over the default mechanism of ~nobreak-char-display~ and
 
       ;; mappings for displaying characters
       (setq whitespace-display-mappings
-            '((space-mark ?\u00A0 [?\u2423] [?.]) ; nbsp - open box (bottom square bracket)
-              (space-mark ?\u202F [?\u00B7] [?.]) ; narrow nbsp - centered dot
-              (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))) ; tab - left quote mark
+            '((space-mark ?\u00A0 [?\u2423] [?.]) ; nbsp
+                                        ; open box (bottom square bracket)
+              (space-mark ?\u202F [?\u00B7] [?.]) ; narrow nbsp
+                                        ; centered dot
+              (tab-mark ?\t [?\u25B8 ?\t] [?\\ ?\t]))) ; tab
+                                        ; black right-pointing small triangle
       ))
 #+end_src
 
