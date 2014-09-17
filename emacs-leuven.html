@@ -1310,7 +1310,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140917.2152</span>
+"org-comment">Version: 20140917.2227</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1433,7 +1433,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140917.2152]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140917.2227]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -7204,15 +7204,16 @@ M-: (executable-find "diff") RET
       (setq helm-full-frame nil)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">open helm buffer in another window</span>
+"org-comment">open `</span><span class="org-constant"><span class=
+"org-comment">helm-buffer</span></span><span class=
+"org-comment">' in another window</span>
       (setq helm-split-window-default-side 'other)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; always display `</span><span class="org-constant"><span class=
-"org-comment">helm-buffer</span></span><span class=
-"org-comment">' in current window</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq helm-split-window-default-side 'same)</span>
+"org-comment">default function used for splitting window</span>
+      (setq helm-split-window-preferred-function
+            (<span class="org-keyword">lambda</span> (window)
+              (split-window-sensibly)))
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">move to end or beginning of source when reaching top or bottom of</span>
@@ -26200,7 +26201,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140917.2152]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140917.2228]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

@@ -3478,11 +3478,13 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
 
-      ;; open helm buffer in another window
+      ;; open `helm-buffer' in another window
       (setq helm-split-window-default-side 'other)
 
-      ;; ;; always display `helm-buffer' in current window
-      ;; (setq helm-split-window-default-side 'same)
+      ;; default function used for splitting window
+      (setq helm-split-window-preferred-function
+            (lambda (window)
+              (split-window-sensibly)))
 
       ;; move to end or beginning of source when reaching top or bottom of
       ;; source

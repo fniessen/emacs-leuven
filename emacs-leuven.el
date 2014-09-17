@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140917.2150
+;; Version: 20140917.2226
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140917.2150]--")
+(message "* --[ Loading Emacs Leuven 20140917.2226]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -2084,11 +2084,13 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
 
-      ;; open helm buffer in another window
+      ;; open `helm-buffer' in another window
       (setq helm-split-window-default-side 'other)
 
-      ;; ;; always display `helm-buffer' in current window
-      ;; (setq helm-split-window-default-side 'same)
+      ;; default function used for splitting window
+      (setq helm-split-window-preferred-function
+            (lambda (window)
+              (split-window-sensibly)))
 
       ;; move to end or beginning of source when reaching top or bottom of
       ;; source
@@ -9020,7 +9022,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140917.2151]--")
+(message "* --[ Loaded Emacs Leuven 20140917.2227]--")
 
 (provide 'emacs-leuven)
 
