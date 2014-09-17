@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140916.1656
+;; Version: 20140917.1210
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140916.1656]--")
+(message "* --[ Loading Emacs Leuven 20140917.1210]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -529,13 +529,21 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; undo some previous changes
   (global-set-key (kbd "<f11>") 'undo)
 
-  ;; redo the most recent undo
-  (with-eval-after-load "redo+-autoloads"
-    (global-set-key (kbd "<S-f11>") 'redo))
+  ;; ;; redo the most recent undo
+  ;; (with-eval-after-load "redo+-autoloads"
+  ;;   (global-set-key (kbd "<S-f11>") 'redo))
 
   (with-eval-after-load "undo-tree-autoloads"
-    (global-undo-tree-mode t)
+
+    (global-set-key (kbd "<S-f11>") 'undo-tree-visualize)
+
+    ;; enable Global-Undo-Tree mode
+    (global-undo-tree-mode 1)
+
+    ;; display times relative to current time in visualizer
     (setq undo-tree-visualizer-relative-timestamps t)
+
+    ;; display time-stamps by default in undo-tree visualizer
     (setq undo-tree-visualizer-timestamps t))
 
 )                                       ; chapter 7 ends here
@@ -1065,18 +1073,22 @@ Last time is saved in global variable `leuven--before-section-time'."
     (diminish 'auto-fill-function " F")
     (diminish 'isearch-mode (string 32 ?\u279c))
     ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
-    (with-eval-after-load "abbrev"      (diminish 'abbrev-mode "Ab"))
+    (with-eval-after-load "abbrev"      (diminish 'abbrev-mode " Ab"))
     (with-eval-after-load "checkdoc"    (diminish 'checkdoc-minor-mode " Cd"))
-    (with-eval-after-load "company"     (diminish 'company-mode "Cmp"))
-    ;; (with-eval-after-load "eldoc"       (diminish 'eldoc-mode))
+    (with-eval-after-load "company"     (diminish 'company-mode " Cmp"))
+    (with-eval-after-load "eldoc"       (diminish 'eldoc-mode " Ed"))
     (with-eval-after-load "flycheck"    (diminish 'flycheck-mode " Fc"))
     (with-eval-after-load "flyspell"    (diminish 'flyspell-mode " Fs"))
+    (with-eval-after-load "flyspell"    (diminish 'flyspell-mode " Fs"))
     ;; (with-eval-after-load "glasses"     (diminish 'glasses-mode))
+    (with-eval-after-load "guide-key"   (diminish 'guide-key-mode " Gd"))
     (with-eval-after-load "paredit"     (diminish 'paredit-mode " Pe"))
+    (with-eval-after-load "rainbow"     (diminish 'rainbow-mode " Rb"))
     ;; (with-eval-after-load "redshank"    (diminish 'redshank-mode))
     ;; (with-eval-after-load "smartparens" (diminish 'smartparens-mode))
+    (with-eval-after-load "undo-tree"   (diminish 'undo-tree-mode " u3"))
     ;; (with-eval-after-load "whitespace"  (diminish 'whitespace-mode))
-    (with-eval-after-load "yasnippet"   (diminish 'yas-minor-mode " Y")))
+    (with-eval-after-load "yasnippet"   (diminish 'yas-minor-mode " Ys")))
 
 (defface powerline-modified-face
   '((((class color))
@@ -2092,16 +2104,13 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; suppress displaying sources which are out of screen at first
       (setq helm-quick-update t)
 
-      ;; time that the user has to be idle for, before candidates from
-      ;; DELAYED sources are collected
-      (setq helm-idle-delay 0.03)       ; useful for sources involving heavy
-                                        ; operations, so that candidates from
-                                        ; the source are not retrieved
-                                        ; unnecessarily if the user keeps typing
+      ;; ;; time that the user has to be idle for, before candidates from
+      ;; ;; DELAYED sources are collected
+      ;; (setq helm-idle-delay 0.01)
 
-      ;; time that the user has to be idle for, before ALL candidates
-      ;; are collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.03) ; also effective for NON-DELAYED sources
+      ;; time that the user has to be idle for, before ALL candidates are
+      ;; collected (>= `helm-idle-delay')
+      (setq helm-input-idle-delay 0.04) ; also effective for NON-DELAYED sources
 
       ;; ;; enable generic Helm completion (for all functions in Emacs that use
       ;; ;; `completing-read' or `read-file-name' and friends)
@@ -3997,7 +4006,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (add-to-list 'org-capture-templates
                  `("a" "Appt" entry
-                   (file+headline ,(concat org-directory "/refile.org") "Calendar")
+                   (file+headline ,(concat org-directory "/refile.org") "Events")
                    "* %^{Appointment}%?
 %^T
 
@@ -7435,17 +7444,17 @@ up before you execute another command."
 
   (leuven--section "31.7 Times of (emacs)Sunrise/Sunset")
 
-  ;; calendar functions for solar events
-  (with-eval-after-load "solar"
-
-    ;; name of the calendar location
-    (setq calendar-location-name "Leuven, BE")
-
-    ;; latitude of `calendar-location-name'
-    (setq calendar-latitude 50.88)
-
-    ;; longitude of `calendar-location-name'
-    (setq calendar-longitude 4.70))
+  ;; ;; calendar functions for solar events
+  ;; (with-eval-after-load "solar"
+  ;;
+  ;;   ;; name of the calendar location
+  ;;   (setq calendar-location-name "Leuven, BE")
+  ;;
+  ;;   ;; latitude of `calendar-location-name'
+  ;;   (setq calendar-latitude 50.88)
+  ;;
+  ;;   ;; longitude of `calendar-location-name'
+  ;;   (setq calendar-longitude 4.70))
 
 ;;** 31.11 (info "(emacs)Appointments")
 
@@ -8203,7 +8212,10 @@ up before you execute another command."
 
   ;; use Emacs as a server (with the `emacsclient' program)
   (GNUEmacs
-    (idle-require 'server)              ; after init
+
+    (unless noninteractive
+      (idle-require 'server))           ; after init
+
     (with-eval-after-load "server"
 
       ;; test whether server is (definitely) running, avoiding the message of
@@ -8997,7 +9009,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140916.1657]--")
+(message "* --[ Loaded Emacs Leuven 20140917.1211]--")
 
 (provide 'emacs-leuven)
 

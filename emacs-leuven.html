@@ -1310,7 +1310,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140916.1657</span>
+"org-comment">Version: 20140917.1212</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1433,7 +1433,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140916.1657]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140917.1212]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -2501,13 +2501,17 @@
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">undo some previous changes</span>
   (global-set-key (kbd <span class="org-string">"&lt;f11&gt;"</span>) 'undo)
+</pre>
+          </div>
 
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">redo the most recent undo</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"redo+-autoloads"</span>
-    (global-set-key (kbd <span class=
-"org-string">"&lt;S-f11&gt;"</span>) 'redo))
+"org-comment">;; redo the most recent undo</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(with-eval-after-load "redo+-autoloads"</span>
+  <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(global-set-key (kbd "&lt;S-f11&gt;") 'redo))</span>
 </pre>
           </div>
 
@@ -2515,8 +2519,20 @@
             <pre class="src src-emacs-lisp">
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"undo-tree-autoloads"</span>
-    (global-undo-tree-mode t)
+
+    (global-set-key (kbd <span class=
+"org-string">"&lt;S-f11&gt;"</span>) 'undo-tree-visualize)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">enable Global-Undo-Tree mode</span>
+    (global-undo-tree-mode 1)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">display times relative to current time in visualizer</span>
     (setq undo-tree-visualizer-relative-timestamps t)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">display time-stamps by default in undo-tree visualizer</span>
     (setq undo-tree-visualizer-timestamps t))
 </pre>
           </div>
@@ -4330,35 +4346,48 @@
 "org-comment">(diminish-on-load hs-minor-mode-hook hs-minor-mode)</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"abbrev"</span>      (diminish 'abbrev-mode <span class=
-"org-string">"Ab"</span>))
+"org-string">" Ab"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"checkdoc"</span>    (diminish 'checkdoc-minor-mode <span class=
 "org-string">" Cd"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"company"</span>     (diminish 'company-mode <span class=
-"org-string">"Cmp"</span>))
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(with-eval-after-load "eldoc"       (diminish 'eldoc-mode))</span>
+"org-string">" Cmp"</span>))
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"eldoc"</span>       (diminish 'eldoc-mode <span class=
+"org-string">" Ed"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"flycheck"</span>    (diminish 'flycheck-mode <span class=
 "org-string">" Fc"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"flyspell"</span>    (diminish 'flyspell-mode <span class=
 "org-string">" Fs"</span>))
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"flyspell"</span>    (diminish 'flyspell-mode <span class=
+"org-string">" Fs"</span>))
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(with-eval-after-load "glasses"     (diminish 'glasses-mode))</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"guide-key"</span>   (diminish 'guide-key-mode <span class=
+"org-string">" Gd"</span>))
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"paredit"</span>     (diminish 'paredit-mode <span class=
 "org-string">" Pe"</span>))
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"rainbow"</span>     (diminish 'rainbow-mode <span class=
+"org-string">" Rb"</span>))
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(with-eval-after-load "redshank"    (diminish 'redshank-mode))</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(with-eval-after-load "smartparens" (diminish 'smartparens-mode))</span>
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"undo-tree"</span>   (diminish 'undo-tree-mode <span class=
+"org-string">" u3"</span>))
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(with-eval-after-load "whitespace"  (diminish 'whitespace-mode))</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"yasnippet"</span>   (diminish 'yas-minor-mode <span class=
-"org-string">" Y"</span>)))
+"org-string">" Ys"</span>)))
 </pre>
           </div>
 
@@ -7212,29 +7241,18 @@ M-: (executable-find "diff") RET
       (setq helm-quick-update t)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">time that the user has to be idle for, before candidates from</span>
+"org-comment">;; time that the user has to be idle for, before candidates from</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">DELAYED sources are collected</span>
-      (setq helm-idle-delay 0.03)       <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">useful for sources involving heavy</span>
-                                        <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">operations, so that candidates from</span>
-                                        <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">the source are not retrieved</span>
-                                        <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">unnecessarily if the user keeps typing</span>
+"org-comment">;; DELAYED sources are collected</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq helm-idle-delay 0.01)</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">time that the user has to be idle for, before ALL candidates</span>
+"org-comment">time that the user has to be idle for, before ALL candidates are</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">are collected (&gt;= `</span><span class=
-"org-constant"><span class=
+"org-comment">collected (&gt;= `</span><span class="org-constant"><span class=
 "org-comment">helm-idle-delay</span></span><span class="org-comment">')</span>
-      (setq helm-input-idle-delay 0.03) <span class=
+      (setq helm-input-idle-delay 0.04) <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">also effective for NON-DELAYED sources</span>
 
@@ -12001,7 +12019,7 @@ M-: (executable-find "diff") RET
                  `(<span class="org-string">"a"</span> <span class=
 "org-string">"Appt"</span> entry
                    (file+headline ,(concat org-directory <span class=
-"org-string">"/refile.org"</span>) <span class="org-string">"Calendar"</span>)
+"org-string">"/refile.org"</span>) <span class="org-string">"Events"</span>)
                    <span class="org-string">"* %^{Appointment}%?</span>
 <span class="org-string">%^T</span>
 
@@ -21671,25 +21689,28 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-string">"31.7 Times of (emacs)Sunrise/Sunset"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">calendar functions for solar events</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"solar"</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">name of the calendar location</span>
-    (setq calendar-location-name <span class="org-string">"Leuven, BE"</span>)
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">latitude of `</span><span class="org-constant"><span class=
+"org-comment">;; calendar functions for solar events</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(with-eval-after-load "solar"</span>
+  <span class="org-comment-delimiter">;;</span>
+  <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">;; name of the calendar location</span>
+  <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(setq calendar-location-name "Leuven, BE")</span>
+  <span class="org-comment-delimiter">;;</span>
+  <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">;; latitude of `</span><span class="org-constant"><span class=
 "org-comment">calendar-location-name</span></span><span class=
 "org-comment">'</span>
-    (setq calendar-latitude 50.88)
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">longitude of `</span><span class="org-constant"><span class=
+  <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(setq calendar-latitude 50.88)</span>
+  <span class="org-comment-delimiter">;;</span>
+  <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">;; longitude of `</span><span class="org-constant"><span class=
 "org-comment">calendar-location-name</span></span><span class=
 "org-comment">'</span>
-    (setq calendar-longitude 4.70))
+  <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(setq calendar-longitude 4.70))</span>
 </pre>
           </div>
         </div>
@@ -23954,8 +23975,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-constant"><span class="org-comment">emacsclient</span></span><span class=
 "org-comment">' program)</span>
   (GNUEmacs
-    (idle-require 'server)              <span class=
+
+    (<span class="org-keyword">unless</span> noninteractive
+      (idle-require 'server))           <span class=
 "org-comment-delimiter">; </span><span class="org-comment">after init</span>
+
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"server"</span>
 
@@ -26154,7 +26178,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140916.1658]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140917.1212]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
@@ -26260,6 +26284,10 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 
           <p>If you want to set options which need to be evaluated after a
           package is loaded, you can use <code>eval-after-load</code>.</p>
+
+          <p>With <code>(eval-after-load "pkg-autoloads" ...)</code>, you make
+          sure that you only run code when the package is installed/available
+          through <code>package.el</code>.</p>
         </div>
       </div>
 
