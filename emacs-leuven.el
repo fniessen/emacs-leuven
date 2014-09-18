@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140917.2304
+;; Version: 20140918.0920
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140917.2304]--")
+(message "* --[ Loading Emacs Leuven 20140918.0920]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1052,8 +1052,8 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ; open box (bottom square bracket)
               (space-mark ?\u202F [?\u00B7] [?.]) ; narrow nbsp
                                         ; centered dot
-              (tab-mark ?\t [?\u25B8 ?\t] [?\\ ?\t]))) ; tab
-                                        ; black right-pointing small triangle
+              (tab-mark ?\t [?\u25BA ?\t] [?\\ ?\t]))) ; tab
+                                        ; black right-pointing pointer
       ))
 
   ;; ;; show zero-width spaces
@@ -9025,7 +9025,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140917.2305]--")
+(message "* --[ Loaded Emacs Leuven 20140918.0921]--")
 
 (provide 'emacs-leuven)
 

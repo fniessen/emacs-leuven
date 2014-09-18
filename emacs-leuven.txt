@@ -1717,8 +1717,8 @@ characters over the default mechanism of ~nobreak-char-display~ and
                                         ; open box (bottom square bracket)
               (space-mark ?\u202F [?\u00B7] [?.]) ; narrow nbsp
                                         ; centered dot
-              (tab-mark ?\t [?\u25B8 ?\t] [?\\ ?\t]))) ; tab
-                                        ; black right-pointing small triangle
+              (tab-mark ?\t [?\u25BA ?\t] [?\\ ?\t]))) ; tab
+                                        ; black right-pointing pointer
       ))
 #+end_src
 
