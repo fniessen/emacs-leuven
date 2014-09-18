@@ -1671,8 +1671,8 @@ much easier to follow some key variables through a block of code.
 
   (leuven--section "14.16 (emacs)Useless Whitespace")
 
-  ;; highlight trailing whitespaces in all modes
-  (setq-default show-trailing-whitespace t)
+  ;; ;; highlight trailing whitespaces in all modes
+  ;; (setq-default show-trailing-whitespace t)
 
   ;; nuke all trailing whitespaces in the buffer
   (add-hook 'before-save-hook
@@ -1704,22 +1704,30 @@ characters over the default mechanism of ~nobreak-char-display~ and
 
       ;; which kind of blank is visualized
       (setq whitespace-style
-            '(face trailing tabs
+            '(face
+              trailing
+              tabs
               ;; lines-tail
-              indentation::space space-mark tab-mark))
+              indentation::space
+              space-mark
+              tab-mark))
 
       ;; column beyond which the line is highlighted
       (setq whitespace-line-column 80)
 
       ;; mappings for displaying characters
       (setq whitespace-display-mappings
-            '((space-mark ?\u00A0 [?\u2423] [?.]) ; nbsp
-                                        ; open box (bottom square bracket)
-              (space-mark ?\u202F [?\u00B7] [?.]) ; narrow nbsp
-                                        ; centered dot
-              (tab-mark ?\t [?\u25BA ?\t] [?\\ ?\t]))) ; tab
-                                        ; black right-pointing pointer
-      ))
+            '((space-mark ?\u00A0       ; no-break space
+                          [?\u2423]     ; open box (bottom square bracket)
+                          [?_])         ; spacing underscore
+
+              (space-mark ?\u202F       ; narrow no-break space
+                          [?\u00B7]     ; middle dot
+                          [?.])
+
+              (tab-mark ?\t             ; tabulation
+                        [?\u25BA ?\t]   ; black right-pointing pointer
+                        [?\\ ?\t])))))
 #+end_src
 
 Example :
@@ -11474,7 +11482,15 @@ available completions and filter as well.
     (define-key company-active-map (kbd "<left>") 'company-abort))
 #+end_src
 
-GOODBYE... complete with good|...
+With the following text (where "|" stands for the cursor):
+
+#+begin_example
+GOODBYE
+good|
+#+end_example
+
+- the prefix "good" will match no word (no completion to "goodBYE"!) while
+- the prefix "GOOD" will match "GOODBYE" only.
 
 #+begin_src emacs-lisp
   (with-eval-after-load "company-dabbrev"

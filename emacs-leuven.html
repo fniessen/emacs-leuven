@@ -1310,7 +1310,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140918.0922</span>
+"org-comment">Version: 20140918.1047</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1433,7 +1433,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140918.0922]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140918.1047]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -4191,8 +4191,9 @@
 "org-string">"14.16 (emacs)Useless Whitespace"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">highlight trailing whitespaces in all modes</span>
-  (setq-default show-trailing-whitespace t)
+"org-comment">;; highlight trailing whitespaces in all modes</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq-default show-trailing-whitespace t)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">nuke all trailing whitespaces in the buffer</span>
@@ -4242,10 +4243,14 @@
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">which kind of blank is visualized</span>
       (setq whitespace-style
-            '(face trailing tabs
+            '(face
+              trailing
+              tabs
               <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">lines-tail</span>
-              indentation::space space-mark tab-mark))
+              indentation::space
+              space-mark
+              tab-mark))
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">column beyond which the line is highlighted</span>
@@ -4254,21 +4259,29 @@
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">mappings for displaying characters</span>
       (setq whitespace-display-mappings
-            '((space-mark ?\u00A0 [?\u2423] [?.]) <span class=
-"org-comment-delimiter">; </span><span class="org-comment">nbsp</span>
-                                        <span class=
+            '((space-mark ?\u00A0       <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">no-break space</span>
+                          [?\u2423]     <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">open box (bottom square bracket)</span>
-              (space-mark ?\u202F [?\u00B7] [?.]) <span class=
-"org-comment-delimiter">; </span><span class="org-comment">narrow nbsp</span>
-                                        <span class=
-"org-comment-delimiter">; </span><span class="org-comment">centered dot</span>
-              (tab-mark ?\t [?\u25BA ?\t] [?\\ ?\t]))) <span class=
-"org-comment-delimiter">; </span><span class="org-comment">tab</span>
-                                        <span class=
+                          [?_])         <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">spacing underscore</span>
+
+              (space-mark ?\u202F       <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">narrow no-break space</span>
+                          [?\u00B7]     <span class=
+"org-comment-delimiter">; </span><span class="org-comment">middle dot</span>
+                          [?.])
+
+              (tab-mark ?\t             <span class=
+"org-comment-delimiter">; </span><span class="org-comment">tabulation</span>
+                        [?\u25BA ?\t]   <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">black right-pointing pointer</span>
-      ))
+                        [?\\ ?\t])))))
 </pre>
           </div>
 
@@ -20816,7 +20829,18 @@ TAGS:
 </pre>
             </div>
 
-            <p>GOODBYE… complete with good|…</p>
+            <p>With the following text (where “|” stands for the cursor):</p>
+            <pre class="example">
+GOODBYE
+good|
+</pre>
+
+            <ul class="org-ul">
+              <li>the prefix “good” will match no word (no completion to
+              “goodBYE”!) while</li>
+
+              <li>the prefix “GOOD” will match “GOODBYE” only.</li>
+            </ul>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -26206,7 +26230,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140918.0922]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140918.1048]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

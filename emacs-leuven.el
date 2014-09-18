@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140918.0920
+;; Version: 20140918.1046
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140918.0920]--")
+(message "* --[ Loading Emacs Leuven 20140918.1046]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1012,8 +1012,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "14.16 (emacs)Useless Whitespace")
 
-  ;; highlight trailing whitespaces in all modes
-  (setq-default show-trailing-whitespace t)
+  ;; ;; highlight trailing whitespaces in all modes
+  ;; (setq-default show-trailing-whitespace t)
 
   ;; nuke all trailing whitespaces in the buffer
   (add-hook 'before-save-hook
@@ -1039,22 +1039,30 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       ;; which kind of blank is visualized
       (setq whitespace-style
-            '(face trailing tabs
+            '(face
+              trailing
+              tabs
               ;; lines-tail
-              indentation::space space-mark tab-mark))
+              indentation::space
+              space-mark
+              tab-mark))
 
       ;; column beyond which the line is highlighted
       (setq whitespace-line-column 80)
 
       ;; mappings for displaying characters
       (setq whitespace-display-mappings
-            '((space-mark ?\u00A0 [?\u2423] [?.]) ; nbsp
-                                        ; open box (bottom square bracket)
-              (space-mark ?\u202F [?\u00B7] [?.]) ; narrow nbsp
-                                        ; centered dot
-              (tab-mark ?\t [?\u25BA ?\t] [?\\ ?\t]))) ; tab
-                                        ; black right-pointing pointer
-      ))
+            '((space-mark ?\u00A0       ; no-break space
+                          [?\u2423]     ; open box (bottom square bracket)
+                          [?_])         ; spacing underscore
+
+              (space-mark ?\u202F       ; narrow no-break space
+                          [?\u00B7]     ; middle dot
+                          [?.])
+
+              (tab-mark ?\t             ; tabulation
+                        [?\u25BA ?\t]   ; black right-pointing pointer
+                        [?\\ ?\t])))))
 
   ;; ;; show zero-width spaces
   ;; (font-lock-add-keywords nil
@@ -9025,7 +9033,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140918.0921]--")
+(message "* --[ Loaded Emacs Leuven 20140918.1047]--")
 
 (provide 'emacs-leuven)
 
