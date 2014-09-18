@@ -548,12 +548,13 @@ outages).
                                         ; and load `<pkg>-autoloads.el'
 
       (defcustom leuven-elpa-packages
-        '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
-          boxquote calfw circe company csv-mode dictionary diminish dired+
-          dired-single ess fill-column-indicator flycheck fuzzy git-commit-mode
-          graphviz-dot-mode guide-key helm htmlize idle-require info+
-          interaction-log ledger-mode leuven-theme multi-term multiple-cursors
-          pager powerline rainbow-mode redo+ tidy unbound undo-tree yasnippet
+        '(ace-jump-mode annoying-arrows-mode auctex auto-complete
+          auto-dim-other-buffers bbdb bookmark+ boxquote calfw circe company
+          csv-mode dictionary diminish dired+ dired-single ess
+          fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
+          guide-key helm htmlize idle-require info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          redo+ tidy unbound undo-tree yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -3849,6 +3850,14 @@ I guess your imagemagick support is ok.
     (lambda ()
       (interactive)
       (other-window -1)))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; make non-current buffers less prominent
+  (with-eval-after-load "auto-dim-other-buffers-autoloads"
+    (add-hook 'after-init-hook
+              (lambda ()
+                (auto-dim-other-buffers-mode t))))
 #+end_src
 
 ** Deleting and Rearranging Windows

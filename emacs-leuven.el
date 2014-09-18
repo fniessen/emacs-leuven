@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140918.1137
+;; Version: 20140918.1232
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140918.1137]--")
+(message "* --[ Loading Emacs Leuven 20140918.1232]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -405,12 +405,13 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ; and load `<pkg>-autoloads.el'
 
       (defcustom leuven-elpa-packages
-        '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
-          boxquote calfw circe company csv-mode dictionary diminish dired+
-          dired-single ess fill-column-indicator flycheck fuzzy git-commit-mode
-          graphviz-dot-mode guide-key helm htmlize idle-require info+
-          interaction-log ledger-mode leuven-theme multi-term multiple-cursors
-          pager powerline rainbow-mode redo+ tidy unbound undo-tree yasnippet
+        '(ace-jump-mode annoying-arrows-mode auctex auto-complete
+          auto-dim-other-buffers bbdb bookmark+ boxquote calfw circe company
+          csv-mode dictionary diminish dired+ dired-single ess
+          fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
+          guide-key helm htmlize idle-require info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          redo+ tidy unbound undo-tree yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -2375,6 +2376,12 @@ Last time is saved in global variable `leuven--before-section-time'."
     (lambda ()
       (interactive)
       (other-window -1)))
+
+  ;; make non-current buffers less prominent
+  (with-eval-after-load "auto-dim-other-buffers-autoloads"
+    (add-hook 'after-init-hook
+              (lambda ()
+                (auto-dim-other-buffers-mode t))))
 
 ;;** 20.5 (info "(emacs)Change Window")
 
@@ -9044,7 +9051,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140918.1138]--")
+(message "* --[ Loaded Emacs Leuven 20140918.1233]--")
 
 (provide 'emacs-leuven)
 
