@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140918.1046
+;; Version: 20140918.1137
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140918.1046]--")
+(message "* --[ Loading Emacs Leuven 20140918.1137]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1081,25 +1081,25 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; unclutter the mode line
   (with-eval-after-load "diminish-autoloads"
-    (diminish 'auto-fill-function " F")
+    (diminish 'auto-fill-function " Fl")
     (diminish 'isearch-mode (string 32 ?\u279c))
     ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
-    (with-eval-after-load "abbrev"      (diminish 'abbrev-mode " Ab"))
-    (with-eval-after-load "checkdoc"    (diminish 'checkdoc-minor-mode " Cd"))
-    (with-eval-after-load "company"     (diminish 'company-mode " Cmp"))
-    (with-eval-after-load "eldoc"       (diminish 'eldoc-mode " Ed"))
-    (with-eval-after-load "flycheck"    (diminish 'flycheck-mode " Fc"))
-    (with-eval-after-load "flyspell"    (diminish 'flyspell-mode " Fs"))
-    (with-eval-after-load "flyspell"    (diminish 'flyspell-mode " Fs"))
-    ;; (with-eval-after-load "glasses"     (diminish 'glasses-mode))
-    (with-eval-after-load "guide-key"   (diminish 'guide-key-mode " Gd"))
-    (with-eval-after-load "paredit"     (diminish 'paredit-mode " Pe"))
-    (with-eval-after-load "rainbow"     (diminish 'rainbow-mode " Rb"))
-    ;; (with-eval-after-load "redshank"    (diminish 'redshank-mode))
-    ;; (with-eval-after-load "smartparens" (diminish 'smartparens-mode))
-    (with-eval-after-load "undo-tree"   (diminish 'undo-tree-mode " u3"))
-    ;; (with-eval-after-load "whitespace"  (diminish 'whitespace-mode))
-    (with-eval-after-load "yasnippet"   (diminish 'yas-minor-mode " Ys")))
+    (with-eval-after-load "abbrev"       (diminish 'abbrev-mode " Ab"))
+    (with-eval-after-load "checkdoc"     (diminish 'checkdoc-minor-mode " Cd"))
+    (with-eval-after-load "company"      (diminish 'company-mode " Cp"))
+    (with-eval-after-load "eldoc"        (diminish 'eldoc-mode " Ed"))
+    (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " Fc"))
+    (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " Fs"))
+    (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " Fs"))
+    ;; (with-eval-after-load "glasses"      (diminish 'glasses-mode))
+    (with-eval-after-load "guide-key"    (diminish 'guide-key-mode " Gd"))
+    (with-eval-after-load "paredit"      (diminish 'paredit-mode " Pe"))
+    (with-eval-after-load "rainbow-mode" (diminish 'rainbow-mode " Rb"))
+    ;; (with-eval-after-load "redshank"     (diminish 'redshank-mode))
+    ;; (with-eval-after-load "smartparens"  (diminish 'smartparens-mode))
+    (with-eval-after-load "undo-tree"    (diminish 'undo-tree-mode " u3"))
+    ;; (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
+    (with-eval-after-load "yasnippet"    (diminish 'yas-minor-mode " Ys")))
 
 (defface powerline-modified-face
   '((((class color))
@@ -6283,14 +6283,25 @@ mouse-3: go to end") "]"))
 
   (leuven--section "26.9 (emacs)Glasses minor mode")
 
+  (add-hook 'ess-mode-hook 'glasses-mode)
+  (add-hook 'inferior-ess-mode-hook 'glasses-mode)
+
   (with-eval-after-load "glasses"
+
+    ;; string to be displayed as a visual separator in unreadable identifiers
+    (setq glasses-separator "")
+
+    ;; no display change
+    (setq glasses-original-separator "")
 
     ;; face to be put on capitals of an identifier looked through glasses
     (setq glasses-face 'bold)
 
-    ;; string to be displayed as a visual separator in unreadable
-    ;; identifiers
-    (setq glasses-separator ""))
+    ;; set properties of glasses overlays
+    (glasses-set-overlay-properties)
+
+    ;; no space between an identifier and an opening parenthesis
+    (setq glasses-separate-parentheses-p nil))
 
 )                                       ; chapter 26 ends here
 
@@ -9033,7 +9044,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140918.1047]--")
+(message "* --[ Loaded Emacs Leuven 20140918.1138]--")
 
 (provide 'emacs-leuven)
 

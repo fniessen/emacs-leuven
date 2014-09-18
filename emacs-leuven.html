@@ -1310,7 +1310,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140918.1047</span>
+"org-comment">Version: 20140918.1138</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1433,7 +1433,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140918.1047]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140918.1138]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -4358,53 +4358,53 @@
 "org-comment">unclutter the mode line</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"diminish-autoloads"</span>
-    (diminish 'auto-fill-function <span class="org-string">" F"</span>)
+    (diminish 'auto-fill-function <span class="org-string">" Fl"</span>)
     (diminish 'isearch-mode (string 32 ?\u279c))
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(diminish-on-load hs-minor-mode-hook hs-minor-mode)</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"abbrev"</span>      (diminish 'abbrev-mode <span class=
+"org-string">"abbrev"</span>       (diminish 'abbrev-mode <span class=
 "org-string">" Ab"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"checkdoc"</span>    (diminish 'checkdoc-minor-mode <span class=
+"org-string">"checkdoc"</span>     (diminish 'checkdoc-minor-mode <span class=
 "org-string">" Cd"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"company"</span>     (diminish 'company-mode <span class=
-"org-string">" Cmp"</span>))
+"org-string">"company"</span>      (diminish 'company-mode <span class=
+"org-string">" Cp"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"eldoc"</span>       (diminish 'eldoc-mode <span class=
+"org-string">"eldoc"</span>        (diminish 'eldoc-mode <span class=
 "org-string">" Ed"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"flycheck"</span>    (diminish 'flycheck-mode <span class=
+"org-string">"flycheck"</span>     (diminish 'flycheck-mode <span class=
 "org-string">" Fc"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"flyspell"</span>    (diminish 'flyspell-mode <span class=
+"org-string">"flyspell"</span>     (diminish 'flyspell-mode <span class=
 "org-string">" Fs"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"flyspell"</span>    (diminish 'flyspell-mode <span class=
+"org-string">"flyspell"</span>     (diminish 'flyspell-mode <span class=
 "org-string">" Fs"</span>))
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(with-eval-after-load "glasses"     (diminish 'glasses-mode))</span>
+"org-comment">(with-eval-after-load "glasses"      (diminish 'glasses-mode))</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"guide-key"</span>   (diminish 'guide-key-mode <span class=
+"org-string">"guide-key"</span>    (diminish 'guide-key-mode <span class=
 "org-string">" Gd"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"paredit"</span>     (diminish 'paredit-mode <span class=
+"org-string">"paredit"</span>      (diminish 'paredit-mode <span class=
 "org-string">" Pe"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"rainbow"</span>     (diminish 'rainbow-mode <span class=
+"org-string">"rainbow-mode"</span> (diminish 'rainbow-mode <span class=
 "org-string">" Rb"</span>))
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(with-eval-after-load "redshank"    (diminish 'redshank-mode))</span>
+"org-comment">(with-eval-after-load "redshank"     (diminish 'redshank-mode))</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(with-eval-after-load "smartparens" (diminish 'smartparens-mode))</span>
+"org-comment">(with-eval-after-load "smartparens"  (diminish 'smartparens-mode))</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"undo-tree"</span>   (diminish 'undo-tree-mode <span class=
+"org-string">"undo-tree"</span>    (diminish 'undo-tree-mode <span class=
 "org-string">" u3"</span>))
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(with-eval-after-load "whitespace"  (diminish 'whitespace-mode))</span>
+"org-comment">(with-eval-after-load "whitespace"   (diminish 'whitespace-mode))</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"yasnippet"</span>   (diminish 'yas-minor-mode <span class=
+"org-string">"yasnippet"</span>    (diminish 'yas-minor-mode <span class=
 "org-string">" Ys"</span>)))
 </pre>
           </div>
@@ -17965,18 +17965,31 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (leuven--section <span class=
 "org-string">"26.9 (emacs)Glasses minor mode"</span>)
 
+  (add-hook 'ess-mode-hook 'glasses-mode)
+  (add-hook 'inferior-ess-mode-hook 'glasses-mode)
+
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"glasses"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">string to be displayed as a visual separator in unreadable identifiers</span>
+    (setq glasses-separator <span class="org-string">""</span>)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">no display change</span>
+    (setq glasses-original-separator <span class="org-string">""</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">face to be put on capitals of an identifier looked through glasses</span>
     (setq glasses-face 'bold)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">string to be displayed as a visual separator in unreadable</span>
+"org-comment">set properties of glasses overlays</span>
+    (glasses-set-overlay-properties)
+
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">identifiers</span>
-    (setq glasses-separator <span class="org-string">""</span>))
+"org-comment">no space between an identifier and an opening parenthesis</span>
+    (setq glasses-separate-parentheses-p nil))
 </pre>
           </div>
 
@@ -26230,7 +26243,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140918.1048]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140918.1139]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
