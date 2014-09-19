@@ -550,7 +550,7 @@ outages).
       (defcustom leuven-elpa-packages
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete
           auto-dim-other-buffers bbdb bookmark+ boxquote calfw circe company
-          csv-mode dictionary diminish dired+ dired-single ess
+          csv-mode dictionary diminish dired+ dired-single ess expand-region
           fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
           guide-key helm htmlize idle-require info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
@@ -1042,12 +1042,21 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
      Set mark after end of following *balanced expression* (~mark-sexp~) without
      moving point.
 
+Extend selection by semantic unit:
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "expand-region-autoloads"
+    (global-set-key (kbd "C-@") 'er/expand-region)
+    ;; (global-set-key (kbd "C-M-@") 'er/contract-region)
+    )
+#+end_src
+
 ** Operating on the Region
 
 #+begin_src emacs-lisp
   ;; inserting text while the mark is active causes the text in the region to be
   ;; deleted first
-  (delete-selection-mode 1)
+  (delete-selection-mode 1)             ; overwrite region
 #+end_src
 
 ** Shift Selection
@@ -1065,8 +1074,8 @@ In other editors:
 - http://komodoide.com/screencasts/watch/87286656-multiple-selections/
 
 #+begin_src emacs-lisp
-;; multiple cursors for Emacs
-(with-eval-after-load "multiple-cursors-autoloads"
+  ;; multiple cursors for Emacs
+  (with-eval-after-load "multiple-cursors-autoloads"
 #+end_src
 
 *** Splitting the selection into lines
@@ -1074,11 +1083,11 @@ In other editors:
 Select a block of lines, and then split it into many selections, one per line.
 
 #+begin_src emacs-lisp
-  ;; add a cursor to each (continuous) line in the current region
-  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+    ;; add a cursor to each (continuous) line in the current region
+    (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 
-  (global-set-key (kbd "C-S-c C-e") 'mc/edit-ends-of-lines)
-  (global-set-key (kbd "C-S-c C-a") 'mc/edit-beginnings-of-lines)
+    (global-set-key (kbd "C-S-c C-e") 'mc/edit-ends-of-lines)
+    (global-set-key (kbd "C-S-c C-a") 'mc/edit-beginnings-of-lines)
 #+end_src
 
 *** Quick add next/previous
@@ -1086,13 +1095,13 @@ Select a block of lines, and then split it into many selections, one per line.
 Add the next or previous occurrence of the current word to the selection.
 
 #+begin_src emacs-lisp
-  ;; add a cursor and region at the next part of the buffer forwards that
-  ;; matches the current region
-  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+    ;; add a cursor and region at the next part of the buffer forwards that
+    ;; matches the current region
+    (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 
-  ;; add a cursor and region at the next part of the buffer backwards that
-  ;; matches the current region
-  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+    ;; add a cursor and region at the next part of the buffer backwards that
+    ;; matches the current region
+    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 #+end_src
 
 *** Find All
@@ -1100,26 +1109,41 @@ Add the next or previous occurrence of the current word to the selection.
 Add all occurrences of the current word to the selection.
 
 #+begin_src emacs-lisp
-  ;; mark all parts of the buffer that matches the current region
-  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-  (global-set-key (kbd "C-c *") 'mc/mark-all-like-this)
+    ;; mark all parts of the buffer that matches the current region
+    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+    (global-set-key (kbd "C-c *") 'mc/mark-all-like-this)
 #+end_src
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended)
-  (global-set-key (kbd "C-S-SPC") 'set-rectangular-region-anchor)
-  (global-set-key (kbd "C-M-=") 'mc/insert-numbers)
-  (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+    (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended)
+    (global-set-key (kbd "C-S-SPC") 'set-rectangular-region-anchor)
+    (global-set-key (kbd "C-M-=") 'mc/insert-numbers)
+    (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
 
-  (global-set-key (kbd "C-c <return>") 'mc/mark-more-like-this-extended)
-  (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
-  (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
-  (global-set-key (kbd "s-SPC") 'set-rectangular-region-anchor))
+    (global-set-key (kbd "C-c <return>") 'mc/mark-more-like-this-extended)
+    (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
+    (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
+    (global-set-key (kbd "s-SPC") 'set-rectangular-region-anchor)
+  )
 #+end_src
 
 *** Single Selection
 
 To go from multiple selections to a single selection, press ~C-g~.
+
+#+begin_src emacs-lisp
+  ;; multiple cursors for Emacs
+  (with-eval-after-load "multiple-cursors-core"
+
+    (setq mc/cmds-to-run-for-all
+          '(leuven-fill-paragraph
+            org-beginning-of-line
+            org-end-of-line
+            org-kill-line
+            org-self-insert-command
+            orgtbl-self-insert-command
+            yas-expand)))
+#+end_src
 
 #+begin_src emacs-lisp
 )                                       ; chapter 11 ends here
@@ -1968,7 +1992,7 @@ See https://github.com/bling/vim-airline for the original author.
     (blink-cursor-mode))
 
   ;; toggle line highlighting in all buffers (Global Hl-Line mode)
-  (global-hl-line-mode 1)
+  (global-hl-line-mode 1)               ; XXX Perhaps only in prog-modes?
 #+end_src
 
 ** Truncation of Lines
@@ -9312,8 +9336,10 @@ of things useful for *XHTML* files with mixed content:
 
 Though, it takes a while to load.
 
-web-mode could be another alternative for editing HTML documents embedding
-CSS/JS.
+** web-mode
+
+[[http://web-mode.org/][web-mode]] could be another alternative for editing HTML documents embedding
+CSS/JS and blocks (client/server side).
 
 ** XML
    :PROPERTIES:
@@ -9517,7 +9543,11 @@ things.
     (setq show-paren-ring-bell-on-mismatch t))
   (XEmacs
     (paren-set-mode 'paren))
+#+end_src
 
+See rainbow-delimiters.
+
+#+begin_src emacs-lisp
   ;; highlight surrounding parentheses
   (GNUEmacs
     (autoload 'highlight-parentheses-mode "highlight-parentheses"
@@ -9575,7 +9605,12 @@ Balanced editing: inserting two matching parentheses at once, etc.
   Deleting one bracket doesn't delete the other.  If you want that, install
   ~autopairs~ package.
 
-- paredit is (was?) the thing to use for Emacs Lisp!
+- *smartparens*
+
+  Pair can be simple as parentheses or brackets, or can be programming tokens
+  such as ~if~ ... ~fi~ or ~if~ ... ~end~ in many languages.
+
+- *paredit* is (was?) the thing to use for Emacs Lisp!
 
   Paredit-kill kills text until next paren or double quote!  Also exists now in
   smartparens strict mode...
@@ -9593,11 +9628,6 @@ Balanced editing: inserting two matching parentheses at once, etc.
 #+end_src
 
   Use it in ELisp; use smartparens in other modes (NOT globally!)
-
-- smartparens
-
-  Pair can be simple as parentheses or brackets, or can be programming tokens
-  such as ~if~ ... ~fi~ or ~if~ ... ~end~ in many languages.
 
 - autopair
 
@@ -9816,7 +9846,11 @@ See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard a
     (setq glasses-original-separator "")
 
     ;; face to be put on capitals of an identifier looked through glasses
-    (setq glasses-face 'bold)
+    (make-face 'leuven-glasses-face)
+    (set-face-attribute 'leuven-glasses-face nil :weight 'bold)
+    (setq glasses-face 'leuven-glasses-face)
+                                        ; avoid the black foreground set in
+                                        ; `emacs-leuven-theme' to face `bold'
 
     ;; set properties of glasses overlays
     (glasses-set-overlay-properties)

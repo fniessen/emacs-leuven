@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140918.1232
+;; Version: 20140919.1043
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140918.1232]--")
+(message "* --[ Loading Emacs Leuven 20140919.1043]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -407,7 +407,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       (defcustom leuven-elpa-packages
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete
           auto-dim-other-buffers bbdb bookmark+ boxquote calfw circe company
-          csv-mode dictionary diminish dired+ dired-single ess
+          csv-mode dictionary diminish dired+ dired-single ess expand-region
           fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
           guide-key helm htmlize idle-require info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
@@ -696,40 +696,58 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 (leuven--chapter leuven-chapter-11-mark "11 The Mark and the Region"
 
+  (with-eval-after-load "expand-region-autoloads"
+    (global-set-key (kbd "C-@") 'er/expand-region)
+    ;; (global-set-key (kbd "C-M-@") 'er/contract-region)
+    )
+
   ;; inserting text while the mark is active causes the text in the region to be
   ;; deleted first
-  (delete-selection-mode 1)
+  (delete-selection-mode 1)             ; overwrite region
 
-;; multiple cursors for Emacs
-(with-eval-after-load "multiple-cursors-autoloads"
+  ;; multiple cursors for Emacs
+  (with-eval-after-load "multiple-cursors-autoloads"
 
-  ;; add a cursor to each (continuous) line in the current region
-  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+    ;; add a cursor to each (continuous) line in the current region
+    (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 
-  (global-set-key (kbd "C-S-c C-e") 'mc/edit-ends-of-lines)
-  (global-set-key (kbd "C-S-c C-a") 'mc/edit-beginnings-of-lines)
+    (global-set-key (kbd "C-S-c C-e") 'mc/edit-ends-of-lines)
+    (global-set-key (kbd "C-S-c C-a") 'mc/edit-beginnings-of-lines)
 
-  ;; add a cursor and region at the next part of the buffer forwards that
-  ;; matches the current region
-  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+    ;; add a cursor and region at the next part of the buffer forwards that
+    ;; matches the current region
+    (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 
-  ;; add a cursor and region at the next part of the buffer backwards that
-  ;; matches the current region
-  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+    ;; add a cursor and region at the next part of the buffer backwards that
+    ;; matches the current region
+    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 
-  ;; mark all parts of the buffer that matches the current region
-  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-  (global-set-key (kbd "C-c *") 'mc/mark-all-like-this)
+    ;; mark all parts of the buffer that matches the current region
+    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+    (global-set-key (kbd "C-c *") 'mc/mark-all-like-this)
 
-  (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended)
-  (global-set-key (kbd "C-S-SPC") 'set-rectangular-region-anchor)
-  (global-set-key (kbd "C-M-=") 'mc/insert-numbers)
-  (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+    (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended)
+    (global-set-key (kbd "C-S-SPC") 'set-rectangular-region-anchor)
+    (global-set-key (kbd "C-M-=") 'mc/insert-numbers)
+    (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
 
-  (global-set-key (kbd "C-c <return>") 'mc/mark-more-like-this-extended)
-  (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
-  (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
-  (global-set-key (kbd "s-SPC") 'set-rectangular-region-anchor))
+    (global-set-key (kbd "C-c <return>") 'mc/mark-more-like-this-extended)
+    (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
+    (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
+    (global-set-key (kbd "s-SPC") 'set-rectangular-region-anchor)
+  )
+
+  ;; multiple cursors for Emacs
+  (with-eval-after-load "multiple-cursors-core"
+
+    (setq mc/cmds-to-run-for-all
+          '(leuven-fill-paragraph
+            org-beginning-of-line
+            org-end-of-line
+            org-kill-line
+            org-self-insert-command
+            orgtbl-self-insert-command
+            yas-expand)))
 
 )                                       ; chapter 11 ends here
 
@@ -1259,7 +1277,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (blink-cursor-mode))
 
   ;; toggle line highlighting in all buffers (Global Hl-Line mode)
-  (global-hl-line-mode 1)
+  (global-hl-line-mode 1)               ; XXX Perhaps only in prog-modes?
 
 ;;** 14.21 (info "(emacs)Line Truncation")
 
@@ -6302,7 +6320,11 @@ mouse-3: go to end") "]"))
     (setq glasses-original-separator "")
 
     ;; face to be put on capitals of an identifier looked through glasses
-    (setq glasses-face 'bold)
+    (make-face 'leuven-glasses-face)
+    (set-face-attribute 'leuven-glasses-face nil :weight 'bold)
+    (setq glasses-face 'leuven-glasses-face)
+                                        ; avoid the black foreground set in
+                                        ; `emacs-leuven-theme' to face `bold'
 
     ;; set properties of glasses overlays
     (glasses-set-overlay-properties)
@@ -9051,7 +9073,7 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140918.1233]--")
+(message "* --[ Loaded Emacs Leuven 20140919.1044]--")
 
 (provide 'emacs-leuven)
 

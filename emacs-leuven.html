@@ -751,9 +751,11 @@
 
               <li><a href="#sec-30-2">XHTML</a></li>
 
-              <li><a href="#sec-30-3">XML</a></li>
+              <li><a href="#sec-30-3">web-mode</a></li>
 
-              <li><a href="#sec-30-4">Highlight the closing tag</a></li>
+              <li><a href="#sec-30-4">XML</a></li>
+
+              <li><a href="#sec-30-5">Highlight the closing tag</a></li>
             </ul>
           </li>
 
@@ -1310,7 +1312,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140918.1233</span>
+"org-comment">Version: 20140919.1044</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1433,7 +1435,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140918.1233]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140919.1044]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -2216,7 +2218,7 @@
 "org-variable-name">leuven-elpa-packages</span>
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete
           auto-dim-other-buffers bbdb bookmark+ boxquote calfw circe company
-          csv-mode dictionary diminish dired+ dired-single ess
+          csv-mode dictionary diminish dired+ dired-single ess expand-region
           fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
           guide-key helm htmlize idle-require info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
@@ -3025,6 +3027,20 @@
             <dd>Set mark after end of following <b>balanced expression</b>
             (<code>mark-sexp</code>) without moving point.</dd>
           </dl>
+
+          <p>Extend selection by semantic unit:</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"expand-region-autoloads"</span>
+    (global-set-key (kbd <span class=
+"org-string">"C-@"</span>) 'er/expand-region)
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "C-M-@") 'er/contract-region)</span>
+    )
+</pre>
+          </div>
         </div>
       </div>
 
@@ -3038,7 +3054,9 @@
 "org-comment">inserting text while the mark is active causes the text in the region to be</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">deleted first</span>
-  (delete-selection-mode 1)
+  (delete-selection-mode 1)             <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">overwrite region</span>
 </pre>
           </div>
         </div>
@@ -3076,9 +3094,9 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-<span class="org-comment-delimiter">;; </span><span class=
+  <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">multiple cursors for Emacs</span>
-(<span class="org-keyword">with-eval-after-load</span> <span class=
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"multiple-cursors-autoloads"</span>
 </pre>
           </div>
@@ -3093,14 +3111,14 @@
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">add a cursor to each (continuous) line in the current region</span>
-  (global-set-key (kbd <span class=
+    (global-set-key (kbd <span class=
 "org-string">"C-S-c C-S-c"</span>) 'mc/edit-lines)
 
-  (global-set-key (kbd <span class=
+    (global-set-key (kbd <span class=
 "org-string">"C-S-c C-e"</span>) 'mc/edit-ends-of-lines)
-  (global-set-key (kbd <span class=
+    (global-set-key (kbd <span class=
 "org-string">"C-S-c C-a"</span>) 'mc/edit-beginnings-of-lines)
 </pre>
             </div>
@@ -3116,18 +3134,18 @@
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">add a cursor and region at the next part of the buffer forwards that</span>
-  <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">matches the current region</span>
-  (global-set-key (kbd <span class=
+    (global-set-key (kbd <span class=
 "org-string">"C-&gt;"</span>) 'mc/mark-next-like-this)
 
-  <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">add a cursor and region at the next part of the buffer backwards that</span>
-  <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">matches the current region</span>
-  (global-set-key (kbd <span class=
+    (global-set-key (kbd <span class=
 "org-string">"C-&lt;"</span>) 'mc/mark-previous-like-this)
 </pre>
             </div>
@@ -3142,34 +3160,35 @@
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">mark all parts of the buffer that matches the current region</span>
-  (global-set-key (kbd <span class=
+    (global-set-key (kbd <span class=
 "org-string">"C-c C-&lt;"</span>) 'mc/mark-all-like-this)
-  (global-set-key (kbd <span class=
+    (global-set-key (kbd <span class=
 "org-string">"C-c *"</span>) 'mc/mark-all-like-this)
 </pre>
             </div>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (global-set-key (kbd <span class=
+    (global-set-key (kbd <span class=
 "org-string">"C-&lt;return&gt;"</span>) 'mc/mark-more-like-this-extended)
-  (global-set-key (kbd <span class=
+    (global-set-key (kbd <span class=
 "org-string">"C-S-SPC"</span>) 'set-rectangular-region-anchor)
-  (global-set-key (kbd <span class=
+    (global-set-key (kbd <span class=
 "org-string">"C-M-="</span>) 'mc/insert-numbers)
-  (global-set-key (kbd <span class=
+    (global-set-key (kbd <span class=
 "org-string">"C-S-&lt;mouse-1&gt;"</span>) 'mc/add-cursor-on-click)
 
-  (global-set-key (kbd <span class=
+    (global-set-key (kbd <span class=
 "org-string">"C-c &lt;return&gt;"</span>) 'mc/mark-more-like-this-extended)
-  (global-set-key (kbd <span class=
+    (global-set-key (kbd <span class=
 "org-string">"C-c &gt;"</span>) 'mc/mark-next-like-this)
-  (global-set-key (kbd <span class=
+    (global-set-key (kbd <span class=
 "org-string">"C-c &lt;"</span>) 'mc/mark-previous-like-this)
-  (global-set-key (kbd <span class=
-"org-string">"s-SPC"</span>) 'set-rectangular-region-anchor))
+    (global-set-key (kbd <span class=
+"org-string">"s-SPC"</span>) 'set-rectangular-region-anchor)
+  )
 </pre>
             </div>
           </div>
@@ -3181,6 +3200,24 @@
           <div class="outline-text-4" id="text-13-4-4">
             <p>To go from multiple selections to a single selection, press
             <code>C-g</code>.</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">multiple cursors for Emacs</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"multiple-cursors-core"</span>
+
+    (setq mc/cmds-to-run-for-all
+          '(leuven-fill-paragraph
+            org-beginning-of-line
+            org-end-of-line
+            org-kill-line
+            org-self-insert-command
+            orgtbl-self-insert-command
+            yas-expand)))
+</pre>
+            </div>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -4693,7 +4730,10 @@
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">toggle line highlighting in all buffers (Global Hl-Line mode)</span>
-  (global-hl-line-mode 1)
+  (global-hl-line-mode 1)               <span class=
+"org-comment-delimiter">; </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
+"org-comment"> Perhaps only in prog-modes?</span>
 </pre>
           </div>
         </div>
@@ -17137,7 +17177,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
         <h3 id="sec-30-2">XHTML</h3>
 
         <div class="outline-text-3" id="text-30-2">
-          <p><a href="#sec-30-3">nXML</a> seems to be the most recommended mode
+          <p><a href="#sec-30-4">nXML</a> seems to be the most recommended mode
           to view and edit well-formed <b>XHTML</b> (reformulation of HTML as
           an XML application).</p>
 
@@ -17170,17 +17210,24 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
           </ul>
 
           <p>Though, it takes a while to load.</p>
-
-          <p>web-mode could be another alternative for editing HTML documents
-          embedding CSS/JS.</p>
         </div>
       </div>
 
       <div id="outline-container-sec-30-3" class="outline-3">
-        <h3 id="sec-30-3"><a id="ID-786a2051-476a-4277-82df-d8ebf8ba0e99" name=
-        "ID-786a2051-476a-4277-82df-d8ebf8ba0e99"></a>XML</h3>
+        <h3 id="sec-30-3">web-mode</h3>
 
         <div class="outline-text-3" id="text-30-3">
+          <p><a href="http://web-mode.org/">web-mode</a> could be another
+          alternative for editing HTML documents embedding CSS/JS and blocks
+          (client/server side).</p>
+        </div>
+      </div>
+
+      <div id="outline-container-sec-30-4" class="outline-3">
+        <h3 id="sec-30-4"><a id="ID-786a2051-476a-4277-82df-d8ebf8ba0e99" name=
+        "ID-786a2051-476a-4277-82df-d8ebf8ba0e99"></a>XML</h3>
+
+        <div class="outline-text-3" id="text-30-4">
           <p>nXML mode (default for editing XML files, since GNU Emacs 23.2)
           does:</p>
 
@@ -17248,10 +17295,10 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
         </div>
       </div>
 
-      <div id="outline-container-sec-30-4" class="outline-3">
-        <h3 id="sec-30-4">Highlight the closing tag</h3>
+      <div id="outline-container-sec-30-5" class="outline-3">
+        <h3 id="sec-30-5">Highlight the closing tag</h3>
 
-        <div class="outline-text-3" id="text-30-4">
+        <div class="outline-text-3" id="text-30-5">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
@@ -17515,7 +17562,13 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     (setq show-paren-ring-bell-on-mismatch t))
   (XEmacs
     (paren-set-mode 'paren))
+</pre>
+          </div>
 
+          <p>See rainbow-delimiters.</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">highlight surrounding parentheses</span>
   (GNUEmacs
@@ -17618,7 +17671,16 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
             <ul class="org-ul">
               <li>
-                <p>paredit is (was?) the thing to use for Emacs Lisp!</p>
+                <p><b>smartparens</b></p>
+
+                <p>Pair can be simple as parentheses or brackets, or can be
+                programming tokens such as <code>if</code> … <code>fi</code> or
+                <code>if</code> … <code>end</code> in many languages.</p>
+              </li>
+
+              <li>
+                <p><b>paredit</b> is (was?) the thing to use for Emacs
+                Lisp!</p>
 
                 <p>Paredit-kill kills text until next paren or double quote!
                 Also exists now in smartparens strict mode…</p>
@@ -17650,14 +17712,6 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             globally!)</p>
 
             <ul class="org-ul">
-              <li>
-                <p>smartparens</p>
-
-                <p>Pair can be simple as parentheses or brackets, or can be
-                programming tokens such as <code>if</code> … <code>fi</code> or
-                <code>if</code> … <code>end</code> in many languages.</p>
-              </li>
-
               <li>autopair</li>
             </ul>
 
@@ -17994,7 +18048,19 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">face to be put on capitals of an identifier looked through glasses</span>
-    (setq glasses-face 'bold)
+    (make-face 'leuven-glasses-face)
+    (set-face-attribute 'leuven-glasses-face nil <span class=
+"org-builtin">:weight</span> 'bold)
+    (setq glasses-face 'leuven-glasses-face)
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">avoid the black foreground set in</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">`</span><span class=
+"org-constant"><span class=
+"org-comment">emacs-leuven-theme</span></span><span class=
+"org-comment">' to face `</span><span class="org-constant"><span class=
+"org-comment">bold</span></span><span class="org-comment">'</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">set properties of glasses overlays</span>
@@ -26256,7 +26322,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140918.1234]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140919.1045]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
