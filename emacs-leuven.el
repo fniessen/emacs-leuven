@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140919.1043
+;; Version: 20140922.2254
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140919.1043]--")
+(message "* --[ Loading Emacs Leuven 20140922.2254]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -246,8 +246,8 @@ Last time is saved in global variable `leuven--before-section-time'."
             (if (stringp feature)
                 (load-library feature)
               (require feature))
-            t)                              ; necessary for correct behavior in
-                                            ; conditional expressions
+            t)                          ; necessary for correct behavior in
+                                        ; conditional expressions
         (file-error
          (message "Requiring `%s'... missing" feature)
          nil))))
@@ -405,13 +405,13 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ; and load `<pkg>-autoloads.el'
 
       (defcustom leuven-elpa-packages
-        '(ace-jump-mode annoying-arrows-mode auctex auto-complete
-          auto-dim-other-buffers bbdb bookmark+ boxquote calfw circe company
-          csv-mode dictionary diminish dired+ dired-single ess expand-region
-          fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
-          guide-key helm htmlize idle-require info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          redo+ tidy unbound undo-tree yasnippet
+        '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
+          boxquote calfw circe company csv-mode dictionary diminish dired+
+          dired-single ess expand-region fill-column-indicator flycheck fuzzy
+          git-commit-mode graphviz-dot-mode guide-key helm htmlize idle-require
+          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
+          multi-term multiple-cursors pager powerline rainbow-mode redo+ tidy
+          unbound undo-tree yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -696,8 +696,11 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 (leuven--chapter leuven-chapter-11-mark "11 The Mark and the Region"
 
+  ;; increase selected region by semantic units
   (with-eval-after-load "expand-region-autoloads"
+
     (global-set-key (kbd "C-@") 'er/expand-region)
+    (global-set-key (kbd "C-;") 'er/expand-region)
     ;; (global-set-key (kbd "C-M-@") 'er/contract-region)
     )
 
@@ -740,6 +743,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; multiple cursors for Emacs
   (with-eval-after-load "multiple-cursors-core"
 
+    ;; commands to run for all cursors in multiple-cursors-mode
     (setq mc/cmds-to-run-for-all
           '(leuven-fill-paragraph
             org-beginning-of-line
@@ -1072,7 +1076,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; mappings for displaying characters
       (setq whitespace-display-mappings
             '((space-mark ?\u00A0       ; no-break space
-                          [?\u2423]     ; open box (bottom square bracket)
+                          [?\u25A1]     ; white square
                           [?_])         ; spacing underscore
 
               (space-mark ?\u202F       ; narrow no-break space
@@ -1339,7 +1343,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; (setq search-invisible 'open)       ; XXX
 
     ;; don't re-hide an invisible match right away
-    (setq isearch-hide-immediately nil)) ; XXX
+    (setq isearch-hide-immediately nil)); XXX
 
   ;; scrolling commands are allowed during incremental search (without
   ;; canceling Isearch mode)
@@ -2395,12 +2399,6 @@ Last time is saved in global variable `leuven--before-section-time'."
       (interactive)
       (other-window -1)))
 
-  ;; make non-current buffers less prominent
-  (with-eval-after-load "auto-dim-other-buffers-autoloads"
-    (add-hook 'after-init-hook
-              (lambda ()
-                (auto-dim-other-buffers-mode t))))
-
 ;;** 20.5 (info "(emacs)Change Window")
 
   (leuven--section "20.5 (emacs)Change Window")
@@ -2563,10 +2561,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (when x-window-p
     (defun toggle-fullscreen ()
-      "Toggle between full screen and partial screen display on X11."
+      "Toggle between full screen and partial screen display in X servers."
       (interactive)
-      ;; WM must support EWMH
-      ;; http://standards.freedesktop.org/wm-spec/wm-spec-latest.html
       (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                              '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
 
@@ -3213,31 +3209,18 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (add-hook 'org-mode-hook
             (lambda ()
-              ;; (local-set-key
-              ;;  (kbd "M-n") 'outline-next-visible-heading)
-              ;; (local-set-key
-              ;;  (kbd "M-p") 'outline-previous-visible-heading)
-
               ;; ;; create a binding for `org-show-subtree'
-              ;; (org-defkey org-mode-map
-              ;;             (kbd "C-c C-S-s") 'org-show-subtree)
-              ;; (org-defkey org-mode-map
-              ;;             (kbd "C-c s") 'org-show-subtree)
+              ;; (local-set-key (kbd "C-c C-S-s") 'org-show-subtree)
+              ;; (local-set-key (kbd "C-c s") 'org-show-subtree)
 
-              (local-set-key
-                (kbd "C-c h") 'hide-other)
+              (local-set-key (kbd "C-c h") 'hide-other)
 
               ;; table
-              (local-set-key
-                (kbd "C-M-w") 'org-table-copy-region)
-              (local-set-key
-                (kbd "C-M-y") 'org-table-paste-rectangle)
-              (local-set-key
-                (kbd "C-M-l") 'org-table-sort-lines)
+              (local-set-key (kbd "C-M-w") 'org-table-copy-region)
+              (local-set-key (kbd "C-M-y") 'org-table-paste-rectangle)
 
               ;; remove the binding of `C-c SPC' (in Org tables), used by Ace Jump
-              (local-set-key
-                (kbd "C-c SPC") nil)))
+              (local-set-key (kbd "C-c SPC") nil)))
 
   (with-eval-after-load "org"
     (message "... Org Introduction")
@@ -3405,12 +3388,12 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; Lisp files
   (add-hook 'org-mode-hook
             (lambda ()
-              (local-set-key
-               (kbd "C-M-n") 'outline-next-visible-heading)
-              (local-set-key
-               (kbd "C-M-p") 'outline-previous-visible-heading)
-              (local-set-key
-               (kbd "C-M-u") 'outline-up-heading)))
+              ;; (local-set-key (kbd "M-n") 'outline-next-visible-heading)
+              ;; (local-set-key (kbd "M-p") 'outline-previous-visible-heading)
+              ;;
+              (local-set-key (kbd "C-M-n") 'outline-next-visible-heading)
+              (local-set-key (kbd "C-M-p") 'outline-previous-visible-heading)
+              (local-set-key (kbd "C-M-u") 'outline-up-heading)))
 
   ;; headlines in the current buffer are offered via completion
   ;; (interface also used by the `refile' command)
@@ -5503,12 +5486,21 @@ this with to-do items than with projects or headings."
     (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE"))
 
     (setq w32-pass-apps-to-system nil)
-    (setq w32-apps-modifier 'hyper) ; Apps key
+    (setq w32-apps-modifier 'hyper)     ; Apps key
 
+    ;; run current line (mapped to H-r)
+
+    ;; run from beginning of code block to current line (mapped to H-a?)
+
+    ;; run from current line to end of code block (mapped to H-e?)
+
+    ;; run current code block
+    (define-key org-mode-map (kbd "H-c") 'org-babel-execute-maybe)
     (define-key org-mode-map (kbd "H-e") 'org-babel-execute-maybe)
+
     (define-key org-mode-map (kbd "H-t") 'org-babel-tangle)
 
-    )
+  )
 
 ;;** 15.4 (info "(org)Code evaluation security") issues
 
@@ -5690,8 +5682,7 @@ this with to-do items than with projects or headings."
 
     (add-hook 'org-mode-hook
               (lambda ()
-                (local-set-key
-                  (kbd "C-c m") 'org-mime-subtree)))
+                (local-set-key (kbd "C-c m") 'org-mime-subtree)))
 
     (defun leuven-mail-subtree ()
       (interactive)
@@ -5700,8 +5691,7 @@ this with to-do items than with projects or headings."
 
     (add-hook 'org-agenda-mode-hook
               (lambda ()
-                (local-set-key
-                  (kbd "C-c m") 'leuven-mail-subtree)))
+                (local-set-key (kbd "C-c m") 'leuven-mail-subtree)))
 
     ;; add a `mail_composed' property with the current time when
     ;; `org-mime-subtree' is called
@@ -6039,8 +6029,7 @@ this with to-do items than with projects or headings."
           (tidy-build-menu html-helper-mode-map))
 
         ;; bind the key sequence `C-c C-c' to `tidy-buffer'
-        (local-set-key
-          (kbd "C-c C-c") 'tidy-buffer)
+        (local-set-key (kbd "C-c C-c") 'tidy-buffer)
 
         (setq sgml-validate-command "tidy"))
 
@@ -6093,6 +6082,10 @@ this with to-do items than with projects or headings."
 
 (leuven--chapter leuven-chapter-26-programs "26 Editing Programs"
 
+;; move-line-up on M-up
+
+;; move-line-down on M-down
+
 ;;** 26.1 Major Modes for (info "(emacs)Program Modes")
 
   (leuven--section "26.1 Major Modes for (emacs)Program Modes")
@@ -6110,25 +6103,35 @@ this with to-do items than with projects or headings."
     (try-require 'imenu)                ; awesome!
     (with-eval-after-load "imenu"
 
-      ;; automatically add Imenu to the menu bar in /any/ mode that supports it
+      ;; add Imenu to the menu bar in any mode that supports it
       (defun try-to-add-imenu ()
         (condition-case nil
             (imenu-add-to-menubar "Imenu")
           (error nil)))
       (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
+      ;; bind Imenu from the mouse
+      (GNUEmacs (global-set-key [S-mouse-3] 'imenu))
+      (XEmacs (global-set-key [(shift button3)] 'imenu))
+
       ;; string to display in the mode line when current function is unknown
       (setq which-func-unknown "")
 
       ;; show current function in mode line (based on Imenu)
-      (which-function-mode 1)))         ; ~ Stickyfunc mode (in header line)
+      (which-function-mode 1))         ; ~ Stickyfunc mode (in header line)
 
-    ;; (try-require 'imenu+)
+    ;; helm imenu tag selection across all buffers with the same mode
+    (with-eval-after-load "imenu-anywhere-autoloads"
+
+      ;; `helm' source for `imenu-anywhere'
+      (global-set-key (kbd "C-.") 'helm-imenu-anywhere)))
+                                        ; XXX Conflict with
+                                        ; `flyspell-auto-correct-word'
 
   (defun my-which-func-current ()
     (let ((current (gethash (selected-window) which-func-table)))
       (if current
-          (truncate-string-to-width current 24 nil nil "...")
+          (truncate-string-to-width current 20 nil nil "...")
         which-func-unknown)))
 
   (setq which-func-format
@@ -6154,8 +6157,7 @@ mouse-3: go to end") "]"))
     (GNUEmacs24
       (add-hook 'prog-mode-hook
                 (lambda ()
-                  (local-set-key
-                    (kbd "<return>") 'newline-and-indent))))
+                  (local-set-key (kbd "<return>") 'newline-and-indent))))
 
     ;; (defun back-to-indentation-or-beginning ()
     ;;   (interactive)
@@ -6216,7 +6218,7 @@ mouse-3: go to end") "]"))
 
   (global-set-key (kbd "C-)") 'match-paren)
 
-  (electric-pair-mode 1)
+  ;; (electric-pair-mode 1)
 
 ;;** 26.5 (info "(emacs)Comments")
 
@@ -6269,13 +6271,13 @@ mouse-3: go to end") "]"))
 
     ;; change those really awkward key bindings with `@' in the middle
     (define-key hs-minor-mode-map (kbd "<C-M-S-left>") 'hs-hide-block)
-                                        ; `C-c @ C-h'
+                                        ; `C-c @ C-h' (collapse current fold) M-l in RStudio
     (define-key hs-minor-mode-map (kbd "<C-M-S-right>") 'hs-show-block)
-                                        ; `C-c @ C-s'
+                                        ; `C-c @ C-s' (expand current fold) M-S-l
     (define-key hs-minor-mode-map (kbd "<C-M-S-up>") 'hs-hide-all)
-                                        ; `C-c @ C-M-h'
+                                        ; `C-c @ C-M-h' (collapse all folds) M-o
     (define-key hs-minor-mode-map (kbd "<C-M-S-down>") 'hs-show-all)
-                                        ; `C-c @ C-M-s'
+                                        ; `C-c @ C-M-s' (expand all folds) M-S-o
 
     (defcustom hs-face 'hs-face
       "*Specify the face to to use for the hidden region indicator"
@@ -6855,20 +6857,20 @@ up before you execute another command."
   (GNUEmacs
     (find-function-setup-keys))
 
-(progn
-  (require 'thingatpt)
+  (with-eval-after-load "lisp-mode"
 
-  (defun leuven-find-symbol-at-point ()
-    "Find the definition of the symbol at point."
-    (interactive)
-    (let ((sym (symbol-at-point)))
-      (funcall (pcase sym
-                 ((pred facep)           'find-face)
-                 ((pred symbol-function) 'find-function)
-                 (_                      'find-variable))
-               sym)))
+    (defun leuven-goto-lisp-symbol-at-point ()
+      "Go to the definition of the Emacs Lisp symbol at point."
+      (interactive)
+      (require 'thingatpt)              ; XXX use find-tag instead?
+      (let ((sym (symbol-at-point)))
+        (funcall (pcase sym
+                   ((pred facep)           'find-face)
+                   ((pred symbol-function) 'find-function)
+                   (_                      'find-variable))
+                 sym)))
 
-  (global-set-key (kbd "<S-return>") 'leuven-find-symbol-at-point))
+    (define-key emacs-lisp-mode-map (kbd "M-.") 'leuven-goto-lisp-symbol-at-point))
 
 ;;** 28.4 (info "(emacs)EDE")
 
@@ -7965,7 +7967,7 @@ up before you execute another command."
     (add-to-list 'sh-alias-alist '(sh . bash)))
 
   ;; XXX Test the following (added on 2011-08-03)
-  ;; (when (eq system-type 'windows-nt)
+  ;; (when win32p
   ;;   ;; Workaround for Cygwin shell, when set 'CYGWIN=noglob'.  By default
   ;;   ;; shell-quote-argument' quoted by double '\' chars, this cause failure.
   ;;   (defun shell-quote-argument (argument)
@@ -8976,6 +8978,9 @@ up before you execute another command."
   (when win32p
     (setq scalable-fonts-allowed t))
 
+  (define-key global-map (kbd "C-+") 'text-scale-increase)
+  (define-key global-map (kbd "C--") 'text-scale-decrease)
+
 )
 
 ;;* App G Emacs and (info "(emacs)Microsoft Windows/MS-DOS")
@@ -9073,7 +9078,17 @@ up before you execute another command."
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
-(message "* --[ Loaded Emacs Leuven 20140919.1044]--")
+  (defun leuven-update ()
+    "Update Leuven to its latest version."
+    (interactive)
+    (when (y-or-n-p "Do you want to update Leuven? ")
+      (message "Updating Leuven...")
+      (cd leuven--directory)
+      (shell-command "git pull")
+      (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
+      (message "Update finished. Restart Emacs to complete the process.")))
+
+(message "* --[ Loaded Emacs Leuven 20140922.2255]--")
 
 (provide 'emacs-leuven)
 

@@ -332,8 +332,8 @@ distro) without impacting on stuff you have added by hand.
             (if (stringp feature)
                 (load-library feature)
               (require feature))
-            t)                              ; necessary for correct behavior in
-                                            ; conditional expressions
+            t)                          ; necessary for correct behavior in
+                                        ; conditional expressions
         (file-error
          (message "Requiring `%s'... missing" feature)
          nil))))
@@ -548,13 +548,13 @@ outages).
                                         ; and load `<pkg>-autoloads.el'
 
       (defcustom leuven-elpa-packages
-        '(ace-jump-mode annoying-arrows-mode auctex auto-complete
-          auto-dim-other-buffers bbdb bookmark+ boxquote calfw circe company
-          csv-mode dictionary diminish dired+ dired-single ess expand-region
-          fill-column-indicator flycheck fuzzy git-commit-mode graphviz-dot-mode
-          guide-key helm htmlize idle-require info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          redo+ tidy unbound undo-tree yasnippet
+        '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
+          boxquote calfw circe company csv-mode dictionary diminish dired+
+          dired-single ess expand-region fill-column-indicator flycheck fuzzy
+          git-commit-mode graphviz-dot-mode guide-key helm htmlize idle-require
+          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
+          multi-term multiple-cursors pager powerline rainbow-mode redo+ tidy
+          unbound undo-tree yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -686,7 +686,7 @@ cancelable; hence, we put it out of a "chapter".
      ~move-to-window-line~.
 
 - ~M-g g~ ::
-     Move point to the beginning of line number /N/ (~goto-line~).
+     *Jump to* the beginning of *line* number /N/ (~goto-line~).
 
      Under XEmacs, this was bound by default to ~M-g~. But we cannot do that in
      GNU Emacs as ~M-g~ is a prefix key here...
@@ -1042,11 +1042,12 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
      Set mark after end of following *balanced expression* (~mark-sexp~) without
      moving point.
 
-Extend selection by semantic unit:
-
 #+begin_src emacs-lisp
+  ;; increase selected region by semantic units
   (with-eval-after-load "expand-region-autoloads"
+
     (global-set-key (kbd "C-@") 'er/expand-region)
+    (global-set-key (kbd "C-;") 'er/expand-region)
     ;; (global-set-key (kbd "C-M-@") 'er/contract-region)
     )
 #+end_src
@@ -1135,6 +1136,7 @@ To go from multiple selections to a single selection, press ~C-g~.
   ;; multiple cursors for Emacs
   (with-eval-after-load "multiple-cursors-core"
 
+    ;; commands to run for all cursors in multiple-cursors-mode
     (setq mc/cmds-to-run-for-all
           '(leuven-fill-paragraph
             org-beginning-of-line
@@ -1158,6 +1160,9 @@ To go from multiple selections to a single selection, press ~C-g~.
 #+end_src
 
 ** Deletion and Killing
+
+- ~C-S-backspace~ ::
+     Kill an entire line at once.
 
 #+begin_src emacs-lisp
 ;;** 12.1 (info "(emacs)Deletion and Killing")
@@ -1671,9 +1676,9 @@ much easier to follow some key variables through a block of code.
     ;; (setq git-gutter:update-threshold 1)
     ;; (setq git-gutter:update-hooks '(after-save-hook after-revert-hook))
 
-    (setq git-gutter:hide-gutter t)         ; Hide gutter if there are no changes
-    (setq git-gutter:diff-option "-w") ; Pass option to 'git diff' command: -w: ignore all spaces
-    (setq git-gutter:verbosity 0)           ; Log/Message Level
+    (setq git-gutter:hide-gutter t)     ; Hide gutter if there are no changes
+    (setq git-gutter:diff-option "-w")  ; Pass option to 'git diff' command: -w: ignore all spaces
+    (setq git-gutter:verbosity 0)       ; Log/Message Level
 
     (global-git-gutter-mode +1))
 #+end_src
@@ -1743,7 +1748,7 @@ characters over the default mechanism of ~nobreak-char-display~ and
       ;; mappings for displaying characters
       (setq whitespace-display-mappings
             '((space-mark ?\u00A0       ; no-break space
-                          [?\u2423]     ; open box (bottom square bracket)
+                          [?\u25A1]     ; white square
                           [?_])         ; spacing underscore
 
               (space-mark ?\u202F       ; narrow no-break space
@@ -2092,7 +2097,7 @@ Since Emacs 24.3:
     ;; (setq search-invisible 'open)       ; XXX
 
     ;; don't re-hide an invisible match right away
-    (setq isearch-hide-immediately nil)) ; XXX
+    (setq isearch-hide-immediately nil)); XXX
 
   ;; scrolling commands are allowed during incremental search (without
   ;; canceling Isearch mode)
@@ -3876,14 +3881,6 @@ I guess your imagemagick support is ok.
       (other-window -1)))
 #+end_src
 
-#+begin_src emacs-lisp
-  ;; make non-current buffers less prominent
-  (with-eval-after-load "auto-dim-other-buffers-autoloads"
-    (add-hook 'after-init-hook
-              (lambda ()
-                (auto-dim-other-buffers-mode t))))
-#+end_src
-
 ** Deleting and Rearranging Windows
 
 #+begin_src emacs-lisp
@@ -4108,10 +4105,8 @@ one.
 
   (when x-window-p
     (defun toggle-fullscreen ()
-      "Toggle between full screen and partial screen display on X11."
+      "Toggle between full screen and partial screen display in X servers."
       (interactive)
-      ;; WM must support EWMH
-      ;; http://standards.freedesktop.org/wm-spec/wm-spec-latest.html
       (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                              '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
 
@@ -5173,31 +5168,18 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 #+begin_src emacs-lisp
   (add-hook 'org-mode-hook
             (lambda ()
-              ;; (local-set-key
-              ;;  (kbd "M-n") 'outline-next-visible-heading)
-              ;; (local-set-key
-              ;;  (kbd "M-p") 'outline-previous-visible-heading)
-
               ;; ;; create a binding for `org-show-subtree'
-              ;; (org-defkey org-mode-map
-              ;;             (kbd "C-c C-S-s") 'org-show-subtree)
-              ;; (org-defkey org-mode-map
-              ;;             (kbd "C-c s") 'org-show-subtree)
+              ;; (local-set-key (kbd "C-c C-S-s") 'org-show-subtree)
+              ;; (local-set-key (kbd "C-c s") 'org-show-subtree)
 
-              (local-set-key
-                (kbd "C-c h") 'hide-other)
+              (local-set-key (kbd "C-c h") 'hide-other)
 
               ;; table
-              (local-set-key
-                (kbd "C-M-w") 'org-table-copy-region)
-              (local-set-key
-                (kbd "C-M-y") 'org-table-paste-rectangle)
-              (local-set-key
-                (kbd "C-M-l") 'org-table-sort-lines)
+              (local-set-key (kbd "C-M-w") 'org-table-copy-region)
+              (local-set-key (kbd "C-M-y") 'org-table-paste-rectangle)
 
               ;; remove the binding of `C-c SPC' (in Org tables), used by Ace Jump
-              (local-set-key
-                (kbd "C-c SPC") nil)))
+              (local-set-key (kbd "C-c SPC") nil)))
 #+end_src
 
 *** Activation
@@ -5406,12 +5388,12 @@ full outline path.
   ;; Lisp files
   (add-hook 'org-mode-hook
             (lambda ()
-              (local-set-key
-               (kbd "C-M-n") 'outline-next-visible-heading)
-              (local-set-key
-               (kbd "C-M-p") 'outline-previous-visible-heading)
-              (local-set-key
-               (kbd "C-M-u") 'outline-up-heading)))
+              ;; (local-set-key (kbd "M-n") 'outline-next-visible-heading)
+              ;; (local-set-key (kbd "M-p") 'outline-previous-visible-heading)
+              ;;
+              (local-set-key (kbd "C-M-n") 'outline-next-visible-heading)
+              (local-set-key (kbd "C-M-p") 'outline-previous-visible-heading)
+              (local-set-key (kbd "C-M-u") 'outline-up-heading)))
 #+end_src
 
 Move through an Org file like ~cd~ on a file system with ~org-goto~:
@@ -6720,10 +6702,8 @@ at the end of your =.emacs= file.
 #+begin_example
 (add-hook 'org-mode-hook
           (lambda ()
-            (org-defkey org-mode-map
-                        (kbd "C-c [") 'undefined)
-            (org-defkey org-mode-map
-                        (kbd "C-c ]") 'undefined)))
+            (local-set-key (kbd "C-c [") 'undefined)
+            (local-set-key (kbd "C-c ]") 'undefined)))
 #+end_example
 
 *** The agenda dispatcher
@@ -8454,22 +8434,39 @@ For navigating blocks:
 
 **** Convert Windows Apps key to Hyper
 
-Here are more obvious key bindings (than ~C-c C-v C-e~ and company) using
-"hyper":
-
 #+begin_src emacs-lisp
     (setq w32-pass-apps-to-system nil)
-    (setq w32-apps-modifier 'hyper) ; Apps key
+    (setq w32-apps-modifier 'hyper)     ; Apps key
+#+end_src
 
+Here are more obvious key bindings to *execute* (than ~C-c C-v C-e~ and company)
+using "hyper":
+
+#+begin_src emacs-lisp
+    ;; run current line (mapped to H-r)
+
+    ;; run from beginning of code block to current line (mapped to H-a?)
+
+    ;; run from current line to end of code block (mapped to H-e?)
+
+    ;; run current code block
+    (define-key org-mode-map (kbd "H-c") 'org-babel-execute-maybe)
     (define-key org-mode-map (kbd "H-e") 'org-babel-execute-maybe)
-    (define-key org-mode-map (kbd "H-t") 'org-babel-tangle)
+#+end_src
 
-    )
+To *tangle*:
+
+#+begin_src emacs-lisp
+    (define-key org-mode-map (kbd "H-t") 'org-babel-tangle)
+#+end_src
+
+#+begin_src emacs-lisp
+  )
 #+end_src
 
 *** Code evaluation and security issues
 
-For security reasons, evaluation is not turned on by default.
+For security resons, evaluation is not turned on by default.
 
 #+begin_src emacs-lisp
 ;;** 15.4 (info "(org)Code evaluation security") issues
@@ -8725,8 +8722,7 @@ the mail message:
 
     (add-hook 'org-mode-hook
               (lambda ()
-                (local-set-key
-                  (kbd "C-c m") 'org-mime-subtree)))
+                (local-set-key (kbd "C-c m") 'org-mime-subtree)))
 
     (defun leuven-mail-subtree ()
       (interactive)
@@ -8735,8 +8731,7 @@ the mail message:
 
     (add-hook 'org-agenda-mode-hook
               (lambda ()
-                (local-set-key
-                  (kbd "C-c m") 'leuven-mail-subtree)))
+                (local-set-key (kbd "C-c m") 'leuven-mail-subtree)))
 
     ;; add a `mail_composed' property with the current time when
     ;; `org-mime-subtree' is called
@@ -9274,8 +9269,7 @@ Plug [[http://tidy.sourceforge.net/][HTML Tidy]] with ~tidy.el~.
           (tidy-build-menu html-helper-mode-map))
 
         ;; bind the key sequence `C-c C-c' to `tidy-buffer'
-        (local-set-key
-          (kbd "C-c C-c") 'tidy-buffer)
+        (local-set-key (kbd "C-c C-c") 'tidy-buffer)
 
         (setq sgml-validate-command "tidy"))
 
@@ -9406,6 +9400,10 @@ Some key bindings:
 ;;* 26 Editing (info "(emacs)Programs")
 
 (leuven--chapter leuven-chapter-26-programs "26 Editing Programs"
+
+;; move-line-up on M-up
+
+;; move-line-down on M-down
 #+end_src
 
 ** Major Modes for Programming Languages
@@ -9435,9 +9433,9 @@ Also =who-calls.el=
 
 ** Top-Level Definitions, or Defuns
 
-Imenu is a great tool allowing you to go to a function definition, but only if
-the definition is in the buffer you are currently editing (it won't jump and
-open another file).
+Imenu is a great tool allowing you to *go to a function definition* (by name), but
+only if the definition is in the buffer you are currently editing (it won't jump
+and open another file).
 
 XXX Autoloaded?
 
@@ -9451,29 +9449,39 @@ XXX Autoloaded?
     (try-require 'imenu)                ; awesome!
     (with-eval-after-load "imenu"
 
-      ;; automatically add Imenu to the menu bar in /any/ mode that supports it
+      ;; add Imenu to the menu bar in any mode that supports it
       (defun try-to-add-imenu ()
         (condition-case nil
             (imenu-add-to-menubar "Imenu")
           (error nil)))
       (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
+      ;; bind Imenu from the mouse
+      (GNUEmacs (global-set-key [S-mouse-3] 'imenu))
+      (XEmacs (global-set-key [(shift button3)] 'imenu))
+
       ;; string to display in the mode line when current function is unknown
       (setq which-func-unknown "")
 
       ;; show current function in mode line (based on Imenu)
-      (which-function-mode 1)))         ; ~ Stickyfunc mode (in header line)
+      (which-function-mode 1))         ; ~ Stickyfunc mode (in header line)
 
-    ;; (try-require 'imenu+)
+    ;; helm imenu tag selection across all buffers with the same mode
+    (with-eval-after-load "imenu-anywhere-autoloads"
+
+      ;; `helm' source for `imenu-anywhere'
+      (global-set-key (kbd "C-.") 'helm-imenu-anywhere)))
+                                        ; XXX Conflict with
+                                        ; `flyspell-auto-correct-word'
 #+end_src
 
-Truncate the current function name:
+Truncate the current function name (for the mode line):
 
 #+begin_src emacs-lisp
   (defun my-which-func-current ()
     (let ((current (gethash (selected-window) which-func-table)))
       (if current
-          (truncate-string-to-width current 24 nil nil "...")
+          (truncate-string-to-width current 20 nil nil "...")
         which-func-unknown)))
 
   (setq which-func-format
@@ -9508,8 +9516,7 @@ things.
     (GNUEmacs24
       (add-hook 'prog-mode-hook
                 (lambda ()
-                  (local-set-key
-                    (kbd "<return>") 'newline-and-indent))))
+                  (local-set-key (kbd "<return>") 'newline-and-indent))))
 
     ;; (defun back-to-indentation-or-beginning ()
     ;;   (interactive)
@@ -9599,7 +9606,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
     sensible things
 
 #+begin_src emacs-lisp
-  (electric-pair-mode 1)
+  ;; (electric-pair-mode 1)
 #+end_src
 
   Deleting one bracket doesn't delete the other.  If you want that, install
@@ -9697,8 +9704,8 @@ Function argument hint.
 
 XXX See http://stackoverflow.com/questions/2399612/why-is-there-no-code-folding-in-emacs
 
-Hideshow can *fold* (i.e. hide and un-hide) logical blocks of *code* in many
-programming modes.
+Hideshow can *fold* and unfold (i.e. hide and un-hide) logical blocks of *code* in
+many programming modes.
 
 ~hs-minor-mode.el~ collapses code for a lot of languages, not only Lisp.  See
 [[id:42ad895e-c049-4710-a877-5014a7f6acfc][outline-minor-mode]] as well.
@@ -9715,13 +9722,13 @@ programming modes.
 
     ;; change those really awkward key bindings with `@' in the middle
     (define-key hs-minor-mode-map (kbd "<C-M-S-left>") 'hs-hide-block)
-                                        ; `C-c @ C-h'
+                                        ; `C-c @ C-h' (collapse current fold) M-l in RStudio
     (define-key hs-minor-mode-map (kbd "<C-M-S-right>") 'hs-show-block)
-                                        ; `C-c @ C-s'
+                                        ; `C-c @ C-s' (expand current fold) M-S-l
     (define-key hs-minor-mode-map (kbd "<C-M-S-up>") 'hs-hide-all)
-                                        ; `C-c @ C-M-h'
+                                        ; `C-c @ C-M-h' (collapse all folds) M-o
     (define-key hs-minor-mode-map (kbd "<C-M-S-down>") 'hs-show-all)
-                                        ; `C-c @ C-M-s'
+                                        ; `C-c @ C-M-s' (expand all folds) M-S-o
 
     (defcustom hs-face 'hs-face
       "*Specify the face to to use for the hidden region indicator"
@@ -10581,9 +10588,9 @@ Show the diff we are about to commit: ~C-c C-d~.
                   (2 'change-log-email))))))
 #+end_src
 
-** Tags Tables
+** Tags Tables (navigating code)
 
-Using tags tables is the most generic approach to setup code navigation.  A
+Using tags tables is the most generic approach to setup *code navigation*.  A
 "tag" signifies a language object for which an index entry is available.
 
 Once you've built a ~TAGS~ file (~ctags~ / ~etags~), you can find all commands that
@@ -10671,13 +10678,13 @@ project, by scanning all the source and header files with the ~etags~ command).
 
 For example, you can have a ~TAGS~ Makefile target to do this for you:
 
-#+begin_example
+#+begin_src makefile :tangle no
 TAGS:
 	rm -f TAGS
 	find $$(pwd) \( -name \*.el \
                      -o -name \*.[chCH] \
                      \) -print | /usr/bin/ctags -e -
-#+end_example
+#+end_src
 
 You can create a =TAGS= file by using ~M-x compile <RET> tags <RET>~.
 
@@ -10713,11 +10720,11 @@ After this, you can select the tag file to use with the command
           ))
 #+end_src
 
-*** Finding a Tag
+*** Finding a Tag (go to function definition)
 
-You can *jump to* the first *definition* of a tag (matching your regexp) --
-*according to TAGS file* -- by using ~M-x find-tag~ (bound to ~M-.~).  The default
-tag is the identifier under the cursor.
+You can *go to* the first *definition* of a tag (matching your regexp) -- *according
+to TAGS file* -- by using ~M-x find-tag~ (bound to ~M-.~).  The default tag is the
+identifier under the cursor.
 
 To continue searching for *next definition*, use ~C-u M-.~.
 
@@ -10770,21 +10777,23 @@ another frame.
     (find-function-setup-keys))
 #+end_src
 
+Go to source code for symbol at point:
+
 #+begin_src emacs-lisp
-(progn
-  (require 'thingatpt)
+  (with-eval-after-load "lisp-mode"
 
-  (defun leuven-find-symbol-at-point ()
-    "Find the definition of the symbol at point."
-    (interactive)
-    (let ((sym (symbol-at-point)))
-      (funcall (pcase sym
-                 ((pred facep)           'find-face)
-                 ((pred symbol-function) 'find-function)
-                 (_                      'find-variable))
-               sym)))
+    (defun leuven-goto-lisp-symbol-at-point ()
+      "Go to the definition of the Emacs Lisp symbol at point."
+      (interactive)
+      (require 'thingatpt)              ; XXX use find-tag instead?
+      (let ((sym (symbol-at-point)))
+        (funcall (pcase sym
+                   ((pred facep)           'find-face)
+                   ((pred symbol-function) 'find-function)
+                   (_                      'find-variable))
+                 sym)))
 
-  (global-set-key (kbd "<S-return>") 'leuven-find-symbol-at-point))
+    (define-key emacs-lisp-mode-map (kbd "M-.") 'leuven-goto-lisp-symbol-at-point))
 #+end_src
 
 ** Emacs Development Environment
@@ -11628,8 +11637,6 @@ interface).
 
 Single Dired buffer.
 
-XXX RET does not (always) work properly in Cygwin Emacs.
-
 #+begin_src emacs-lisp
     ;; reuse Dired buffers, by running the command
     ;; `dired-find-alternate-file' (bound to `a') on a directory
@@ -11671,66 +11678,64 @@ Nowadays, there's at least the built-in ~dired-do-async-shell-command~, bound to
 ~&~.
 
 In addition to what others have mentioned, if you are on MS Windows then, after
-loading `w32-browser.el' and `dired+.el', you can use item `Open Associated
-Windows App' in the `Single' menu to open a file with the associated program.
+loading ~w32-browser.el~ and ~dired+.el~, you can use item ~Open Associated Windows
+App~ in the ~Single~ menu to open a file with the associated program.
 
-Same thing for the marked files, using `Open Associated Windows Apps' in menus
-`Multiple' and `Multiple > Marked Here and Below'.
+Same thing for the marked files, using ~Oepn Associated Windows Apps~ in menus
+~Multiple~ and ~Multiple > Marked Here and Below~.
 
-And you can use item `Single' > `Open in Windows Explorer' to open a file or
-folder in Windows Explorer.
+And you can use item ~Single > ~Open in Windows Explorer~ to open a file or folder
+in Windows Explorer.
 
-You can also right-click on a file and pick `Open Associated Windows App' or
-`Open in Windows Explorer'.
+You can also right-click on a file and pick ~Open Associated Windows App~ or ~Open
+in Windows Explorer~.
 
-There are key bindings for these as well:
+There are key bindings for these as wel:
 
-`M-RET' or `mouse-2' - open with associated program
-`C-RET' - open in Explorer
+- ~M-RET~ or ~mouse-2~ :: open with associated proram
+- ~C-RET~ :: open in Explorer
 #+end_note
 
 *************** TODO Read http://www.piprime.fr/1302/plus-qu-un-explorateur-de-fichiers-le-mode-dired-d-emacs/
 
+These days, there are mature programs for launching an arbitrary file with an
+appropriate viewer:
+
+- ~xdg-open~ on GNU systems,
+
+- ~open~ on Mac OS X,
+
+  If ~xdg-open~ is not available, one can replace it with ~gnome-open~ or ~kde-open~.
+
+- ~start~ on MS Windows.
+
+  Though, it is a bad idea to use ~start~ on Windows: it has too many quirks
+  regarding quoting of its command line.  Instead, just invoke the existing
+  primitive ~w32-shell-execute~ with the ~open~ verb.  As a nice side effect, this
+  will support Unicode file names, something that is currently impossible when
+  you invoke an external command.
+
 #+begin_src emacs-lisp :tangle no
 (defun helm-open-file-with-default-tool (file)
   "Open FILE with the default tool on this platform."
-  (let (process-connection-type)
-    (if (eq system-type 'windows-nt)
+  (let ((program (cond (linuxp "xdg-open")
+                       (macp "open")))
+        process-connection-type)
+    (if win32p
         (helm-w32-shell-execute-open-file file)
-        (start-process "helm-open-file-with-default-tool"
-                       nil
-                       (cond ((eq system-type 'gnu/linux)
-                              "xdg-open")
-                             ((or (eq system-type 'darwin) ; Mac OS X
-                                  (eq system-type 'macos)) ; Mac OS 9
-                              "open"))
-                       file))))
+      (start-process "helm-open-file-with-default-tool" nil program file))))
 #+end_src
-
-If ~xdg-open~ is not available, one can replace it with ~gnome-open~ or ~kde-open~.
 
 #+begin_src emacs-lisp :tangle no
 (defun dired-launch-command ()
  (interactive)
- (dired-do-shell-command
-  (case system-type
-    (gnu/linux "gnome-open")            ; right for gnome (ubuntu), not for other systems
-    (darwin "open"))
-  nil
-  (dired-get-marked-files t current-prefix-arg)))
+  (let ((program (cond (linuxp "xdg-open")
+                       (macp "open"))))
+    (dired-do-shell-command program nil
+                            (dired-get-marked-files t current-prefix-arg))))
 
 (define-key dired-mode-map (kbd "F") 'dired-launch-command)
 #+end_src
-
-> These days, there are mature programs for launching an arbitrary file with an
-> appropriate viewer: run-mailcap (which is mature to the point of obsolescence)
-> and xdg-open on GNU systems; open on Mac OS X; start on MS Windows).
-
-It would be a bad idea to use 'start' on Windows: it has too many quirks
-regarding quoting of its command line.  Instead, just invoke the existing
-primitive w32-shell-execute with the 'open' verb.  As a nice side effect, this
-will support Unicode file names, something that is currently impossible when you
-invoke an external command.
 
 **** Ask a WWW browser to display file
 
@@ -12651,7 +12656,7 @@ See customizations at http://snarfed.org/why_i_run_shells_inside_emacs.
     (add-to-list 'sh-alias-alist '(sh . bash)))
 
   ;; XXX Test the following (added on 2011-08-03)
-  ;; (when (eq system-type 'windows-nt)
+  ;; (when win32p
   ;;   ;; Workaround for Cygwin shell, when set 'CYGWIN=noglob'.  By default
   ;;   ;; shell-quote-argument' quoted by double '\' chars, this cause failure.
   ;;   (defun shell-quote-argument (argument)
@@ -12727,7 +12732,8 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
      *Execute* the *command (on* the *current line)*.
 
 - ~C-c C-u~ ::
-     *Delete input* from the prompt to point (equivalent to ~C-u~ in Unix shells).
+     *Delete input* (from the prompt) up to point (equivalent to ~C-u~ in Unix
+     shells).
 
 *** Completion of filenames
 
@@ -14289,7 +14295,6 @@ or restart your X11 to validate the modification.  I let Emacs do this for me:
 Fonts that have a good UTF-8 coverage are:
 
 - DejaVu Sans Mono
-- DejaVu Sans
 - FreeMono (FreeSans, FreeSerif)
 - Monospace
 
@@ -14315,6 +14320,11 @@ There are a few commands to adjust the font sizes:
      Resets to defaults.
 
 Those bindings are global and repeatable, e.g. ~C-x C-+ C-+ C-+~.
+
+#+begin_src emacs-lisp
+  (define-key global-map (kbd "C-+") 'text-scale-increase)
+  (define-key global-map (kbd "C--") 'text-scale-decrease)
+#+end_src
 
 #+begin_src emacs-lisp
 )
@@ -14393,23 +14403,25 @@ To check all image libraries at once:
 #+end_src
 
 #+results:
-| xpm        | nil |
-| png        | t   |
-| jpeg       | t   |
-| tiff       | nil |
-| gif        | nil |
-| svg        | nil |
-| gdk-pixbuf | nil |
-| glib       | nil |
-| gobject    | nil |
-| gnutls     | nil |
-| libxml2    | nil |
-| zlib       | nil |
-
-If missing image libraries bother you, read ~README.W32~ (or ~nt/INSTALL~).
-
-For animated GIF (or multi-page TIFF):
-- ~f~ steps through image frame, and
+| xpm        | nil |     |
+| png        | t   |     |
+| jpeg       | t   |     |
+| tiff       | nil |     |
+| gif        | nil |     |
+| svg        | nil |     |
+| gdk-pix    | xpm | nil |
+| png        | t   |     |
+| jpeg       | t   |     |
+| tiff       | nil |     |
+| gif        | nil |     |
+| svg        | nil |     |
+| gdk-pixbuf | nil |     |
+| glib       | nil |     |
+| gobject    | nil |     |
+| gnutls     | nil |     |
+| libxml2    | nil |     |
+| zlib       | nil |     |
+h image frame, and
 - ~RET~ animates.
 No need for ImageMagick.
 
@@ -14708,6 +14720,20 @@ calls to message), set the variable ~debug-on-message~.
 
 #+begin_src emacs-lisp
 ;; (message "Emacs startup time: %s" (emacs-init-time))
+#+end_src
+
+* Leuven
+
+#+begin_src emacs-lisp
+  (defun leuven-update ()
+    "Update Leuven to its latest version."
+    (interactive)
+    (when (y-or-n-p "Do you want to update Leuven? ")
+      (message "Updating Leuven...")
+      (cd leuven--directory)
+      (shell-command "git pull")
+      (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
+      (message "Update finished. Restart Emacs to complete the process.")))
 #+end_src
 
 #+begin_src emacs-lisp :noweb yes
