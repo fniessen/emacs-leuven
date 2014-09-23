@@ -551,12 +551,12 @@ outages).
 
       (defcustom leuven-elpa-packages
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
-          boxquote calfw circe company csv-mode dictionary diminish dired+
-          dired-single ess expand-region fill-column-indicator flycheck fuzzy
-          git-commit-mode graphviz-dot-mode guide-key helm htmlize idle-require
-          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
-          multi-term multiple-cursors pager powerline rainbow-mode redo+ tidy
-          unbound undo-tree ws-butler yasnippet
+          boxquote calfw circe company csv-mode dictionary diff-hl diminish
+          dired+ dired-single ess expand-region fill-column-indicator flycheck
+          fuzzy git-commit-mode graphviz-dot-mode guide-key helm htmlize
+          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          redo+ tidy unbound undo-tree ws-butler yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."

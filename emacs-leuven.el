@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140923.1614
+;; Version: 20140923.2233
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140923.1614]--")
+(message "* --[ Loading Emacs Leuven 20140923.2233]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -404,12 +404,12 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (defcustom leuven-elpa-packages
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
-          boxquote calfw circe company csv-mode dictionary diminish dired+
-          dired-single ess expand-region fill-column-indicator flycheck fuzzy
-          git-commit-mode graphviz-dot-mode guide-key helm htmlize idle-require
-          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
-          multi-term multiple-cursors pager powerline rainbow-mode redo+ tidy
-          unbound undo-tree ws-butler yasnippet
+          boxquote calfw circe company csv-mode dictionary diff-hl diminish
+          dired+ dired-single ess expand-region fill-column-indicator flycheck
+          fuzzy git-commit-mode graphviz-dot-mode guide-key helm htmlize
+          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          redo+ tidy unbound undo-tree ws-butler yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -9116,7 +9116,7 @@ up before you execute another command."
       (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
       (message "Update finished. Restart Emacs to complete the process.")))
 
-(message "* --[ Loaded Emacs Leuven 20140923.1615]--")
+(message "* --[ Loaded Emacs Leuven 20140923.2234]--")
 
 (provide 'emacs-leuven)
 
