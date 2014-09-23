@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140923.1013
+;; Version: 20140923.1406
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140923.1013]--")
+(message "* --[ Loading Emacs Leuven 20140923.1406]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -393,11 +393,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       ;; archives from which to fetch
       (setq package-archives
-            (append '(("org"       . "http://orgmode.org/elpa/")
-                      ("melpa"     . "http://melpa.milkbox.net/packages/")
-                      ;; ("marmalade" . "http://marmalade-repo.org/packages/")
-                      ;; ("ELPA"      . "http://tromey.com/elpa/")
-                      )
+            (append '(("org"   . "http://orgmode.org/elpa/")
+                      ("melpa" . "http://melpa.milkbox.net/packages/"))
                     package-archives))
 
       ;; load the latest version of all installed packages, and activate them
@@ -411,7 +408,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           git-commit-mode graphviz-dot-mode guide-key helm htmlize idle-require
           imenu-anywhere info+ interaction-log ledger-mode leuven-theme
           multi-term multiple-cursors pager powerline rainbow-mode redo+ tidy
-          unbound undo-tree yasnippet
+          unbound undo-tree ws-butler yasnippet
           ;; jabber multi-term paredit redshank w3m
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -1038,20 +1035,14 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; ;; highlight trailing whitespaces in all modes
   ;; (setq-default show-trailing-whitespace t)
 
-  ;; nuke all trailing whitespaces in the buffer
-  (add-hook 'before-save-hook
-            (lambda ()
-              ;; except for Message mode where "-- " is the signature separator
-              ;; (for when using emacsclient to compose emails and doing C-x #)
-              (unless (eq major-mode 'message-mode)
-                (delete-trailing-whitespace))))
+  ;; unobtrusively remove trailing whitespace
+  (with-eval-after-load "ws-butler-autoloads"
+
+    ;; enable Ws-Butler mode in all buffers
+    (ws-butler-global-mode 1))
 
   ;; visually indicate empty lines after the buffer end in the fringe
   (setq-default indicate-empty-lines t)
-
-  ;; ;; control highlighting of non-ASCII space and hyphen chars, using the
-  ;; ;; `nobreak-space' or `escape-glyph' face respectively
-  ;; (setq nobreak-char-display t)      ; default
 
   (GNUEmacs
     ;; whitespace mode
@@ -1086,6 +1077,10 @@ Last time is saved in global variable `leuven--before-section-time'."
               (tab-mark ?\t             ; tabulation
                         [?\u25BA ?\t]   ; black right-pointing pointer
                         [?\\ ?\t])))))
+
+  ;; ;; control highlighting of non-ASCII space and hyphen chars, using the
+  ;; ;; `nobreak-space' or `escape-glyph' face respectively
+  ;; (setq nobreak-char-display t)      ; default
 
   ;; ;; show zero-width spaces
   ;; (font-lock-add-keywords nil
@@ -1681,7 +1676,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; always use copying to create backup files (don't clobber symlinks)
   (setq backup-by-copying t)
 
-  ;; ensure a file ends in a newline when it is saved
+  ;; ensure newline at the end of file when it is saved
   (setq require-final-newline t)
   ;; TODO Do this only for text and Fundamental modes, because I could
   ;; edit binary files (see `mode-require-final-newline')
@@ -2057,18 +2052,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; enable `recentf' mode
     (recentf-mode 1))
-
-  (leuven--section "FFAP")
-
-  ;; visit a file
-  (global-set-key (kbd "<f3>") 'find-file-at-point)
-
-  ;; find file (or URL) at point
-  (with-eval-after-load "ffap"
-
-    ;; function called to fetch an URL
-    (setq ffap-url-fetcher 'browse-url)); could be `browse-url-emacs' or
-                                        ; `w3m-browse-url'
 
   (GNUEmacs
 
@@ -7975,6 +7958,145 @@ up before you execute another command."
 
 )                                       ; chapter 35 ends here
 
+;;** Emacs-w3m
+
+  (leuven--section "Emacs-w3m")
+
+  ;; only use if `w3m' command is available on system
+  (when (executable-find "w3m")
+
+    ;; name of the executable file of the `w3m' command
+    (setq w3m-command "w3m")
+    ;; I don't want `/usr/bin/w3m' (which requires `cygwin-mount')
+
+    ;; `w3m' slows down the startup process dramatically
+    (try-require 'w3m-autoloads)
+    (if (not (featurep 'w3m-autoloads))
+      (autoload 'w3m "w3m"
+        "Visit the WWW page using w3m." t)
+      (autoload 'w3m-find-file "w3m"
+        "Find a local file using emacs-w3m." t)
+      (autoload 'w3m-browse-url "w3m"
+        "Ask emacs-w3m to show a URL." t))
+
+    (with-eval-after-load "w3m"
+
+;;*** 3.1 Browsing Web Pages
+
+      ;; go ahead, just try it
+      (defun leuven-w3m-goto-url ()
+        "Type in directly the URL to visit (avoiding to hit `C-k')."
+        (interactive)
+        (let ((w3m-current-url ""))
+          (call-interactively 'w3m-goto-url)))
+
+      ;; make w3m stop "stealing" my arrow keys, allowing to move the
+      ;; cursor down the lines of an HTML email (in Gnus)
+      (setq w3m-minor-mode-map nil)
+
+      (define-key w3m-mode-map (kbd "U") 'leuven-w3m-goto-url)
+
+      ;; fix inappropriate key bindings for moving from place to place in a page
+      ;; (let the cursor keys behave normally, don't jump from link to link)
+      (define-key w3m-mode-map (kbd "<up>") 'previous-line)
+      (define-key w3m-mode-map (kbd "<down>") 'next-line)
+      (define-key w3m-mode-map (kbd "<left>") 'backward-char)
+      (define-key w3m-mode-map (kbd "<right>") 'forward-char)
+
+      (define-key w3m-mode-map (kbd "<tab>") 'w3m-next-anchor)
+
+      ;; moving from page to page
+      (define-key w3m-mode-map (kbd "F") 'w3m-view-next-page)
+
+;;*** 3.5 Using Tabs
+
+      (define-key w3m-mode-map (kbd "<C-tab>") 'w3m-next-buffer)
+      (define-key w3m-mode-map (kbd "<C-S-tab>") 'w3m-previous-buffer)
+
+      (defun leuven-w3m-new-tab ()
+        (interactive)
+        (w3m-copy-buffer nil nil nil t))
+
+      (define-key w3m-mode-map (kbd "C-t") 'leuven-w3m-new-tab)
+
+      (define-key w3m-mode-map (kbd "C-w") 'w3m-delete-buffer)
+
+;;*** 5.1 General Variables
+
+      ;; send referers only when both the current page and the target page are
+      ;; provided by the same server
+      (setq w3m-add-referer 'lambda)
+
+      ;; home page
+      (setq w3m-home-page "http://www.emacswiki.org/")
+
+      ;; number of steps in columns used when scrolling a window horizontally
+      (setq w3m-horizontal-shift-columns 1)  ; 2
+
+      ;; proxy settings
+      ;; (setq w3m-command-arguments
+      ;;          (nconc w3m-command-arguments
+      ;;                 '("-o" "http_proxy=proxy:8080")))
+      ;;                          ; FIXME https_proxy for HTTPS support
+
+      (setq w3m-no-proxy-domains '("localhost" "127.0.0.1"))
+
+;;*** 5.2 Image Variables
+
+      ;; always display images
+      (setq w3m-default-display-inline-images t)
+
+      ;; show favicon images if they are available
+      (setq w3m-use-favicon t)
+
+;;*** 5.4 Cookie Variables
+
+      ;; functions for cookie processing
+      (with-eval-after-load "w3m-cookie"
+
+        ;; ask user whether accept bad cookies or not
+        (setq w3m-cookie-accept-bad-cookies 'ask)
+
+        ;; list of trusted domains
+        (setq w3m-cookie-accept-domains
+              '("google.com" "google.be"
+                "yahoo.com" ".yahoo.com" "groups.yahoo.com"
+                "www.dyndns.org")))
+
+      ;; enable cookies (mostly required to use sites such as Gmail)
+      (setq w3m-use-cookies t)
+
+;;*** 5.14 Other Variables
+
+      ;; list of content types, regexps (matching a url or a file
+      ;; name), commands to view contents, and filters to override the
+      ;; content type specified at first
+      (setq w3m-content-type-alist
+            (append '(("text/html" "\\.xhtml\\'" nil nil))
+                    w3m-content-type-alist))
+
+      ;; toggle a minor mode showing link numbers
+      (try-require 'w3m-lnum)
+      (with-eval-after-load "w3m-lnum"
+
+        (defun leuven-w3m-go-to-link-number ()
+          "Turn on link numbers and ask for one to go to."
+          (interactive)
+          (let ((active w3m-lnum-mode))
+            (when (not active) (w3m-lnum-mode))
+            (unwind-protect
+                (w3m-move-numbered-anchor (read-number
+                                           "Anchor number: "))
+              (when (not active) (w3m-lnum-mode))
+              (w3m-view-this-url))))
+
+        (define-key w3m-mode-map (kbd "f") 'leuven-w3m-go-to-link-number)
+
+        ;; enable link numbering mode by default
+        (add-hook 'w3m-mode-hook 'w3m-lnum-mode))
+
+      ))
+
 ;;* 36 Running (info "(emacs)Shell") Commands from Emacs
 
 (leuven--chapter leuven-chapter-36-shell "36 Running Shell Commands from Emacs"
@@ -8502,6 +8624,18 @@ up before you execute another command."
   (setq browse-url-generic-program (executable-find "firefox"))
                                         ; could be `google-chrome'
 
+  (leuven--section "FFAP")
+
+  ;; visit a file
+  (global-set-key (kbd "<f3>") 'find-file-at-point)
+
+  ;; find file (or URL) at point
+  (with-eval-after-load "ffap"
+
+    ;; function called to fetch an URL
+    (setq ffap-url-fetcher 'browse-url)); could be `browse-url-emacs' or
+                                        ; `w3m-browse-url'
+
 ;;** Web search
 
   (leuven--section "Web search")
@@ -8602,146 +8736,6 @@ up before you execute another command."
 
   (define-key leuven--google-prefix-map
     (kbd "r") 'leuven-google-search-region)
-
-;;** Emacs-w3m
-
-  (leuven--section "Emacs-w3m")
-
-  ;; only use if `w3m' command is available on system
-  (when (executable-find "w3m")
-
-    ;; name of the executable file of the `w3m' command
-    (setq w3m-command "w3m")
-    ;; I don't want `/usr/bin/w3m' (which requires `cygwin-mount')
-
-    ;; `w3m' slows down the startup process dramatically
-    (try-require 'w3m-autoloads)
-    (if (not (featurep 'w3m-autoloads))
-      (autoload 'w3m "w3m"
-        "Visit the WWW page using w3m." t)
-      (autoload 'w3m-find-file "w3m"
-        "Find a local file using emacs-w3m." t)
-      (autoload 'w3m-browse-url "w3m"
-        "Ask emacs-w3m to show a URL." t))
-
-    (with-eval-after-load "w3m"
-
-;;*** 3.1 Browsing Web Pages
-
-      ;; go ahead, just try it
-      (defun leuven-w3m-goto-url ()
-        "Type in directly the URL to visit (avoiding to hit `C-k')."
-        (interactive)
-        (let ((w3m-current-url ""))
-          (call-interactively 'w3m-goto-url)))
-
-      ;; make w3m stop "stealing" my arrow keys, allowing to move the
-      ;; cursor down the lines of an HTML email (in Gnus)
-      (setq w3m-minor-mode-map nil)
-
-      (define-key w3m-mode-map (kbd "U") 'leuven-w3m-goto-url)
-
-      ;; fix inappropriate key bindings for moving from place to place in a page
-      ;; (let the cursor keys behave normally, don't jump from link to link)
-      (define-key w3m-mode-map (kbd "<up>") 'previous-line)
-      (define-key w3m-mode-map (kbd "<down>") 'next-line)
-      (define-key w3m-mode-map (kbd "<left>") 'backward-char)
-      (define-key w3m-mode-map (kbd "<right>") 'forward-char)
-
-      (define-key w3m-mode-map (kbd "<tab>") 'w3m-next-anchor)
-
-      ;; moving from page to page
-      (define-key w3m-mode-map (kbd "F") 'w3m-view-next-page)
-
-;;*** 3.5 Using Tabs
-
-      (define-key w3m-mode-map (kbd "<C-tab>") 'w3m-next-buffer)
-      (define-key w3m-mode-map (kbd "<C-S-tab>") 'w3m-previous-buffer)
-
-      (defun w3m-new-tab ()
-        (interactive)
-        (w3m-copy-buffer nil nil nil t))
-
-      (define-key w3m-mode-map (kbd "C-t") 'w3m-new-tab)
-
-      (define-key w3m-mode-map (kbd "C-w") 'w3m-delete-buffer)
-
-;;*** 5.1 General Variables
-
-      ;; send referers only when both the current page and the target page are
-      ;; provided by the same server
-      (setq w3m-add-referer 'lambda)
-
-      ;; home page
-      (setq w3m-home-page "http://www.emacswiki.org/")
-
-      ;; number of steps in columns used when scrolling a window horizontally
-      (setq w3m-horizontal-shift-columns 1)  ; 2
-
-      ;; proxy settings
-      (when (string= (upcase (system-name)) "PC3701")
-        (setq w3m-command-arguments
-                 (nconc w3m-command-arguments
-                        '("-o" "http_proxy=proxy:8080"))))
-                                 ; FIXME https_proxy for HTTPS support
-
-      (setq w3m-no-proxy-domains '("localhost" "127.0.0.1"))
-
-;;*** 5.2 Image Variables
-
-      ;; always display images
-      (setq w3m-default-display-inline-images t)
-
-      ;; show favicon images if they are available
-      (setq w3m-use-favicon t)
-
-;;*** 5.4 Cookie Variables
-
-      ;; functions for cookie processing
-      (with-eval-after-load "w3m-cookie"
-
-        ;; ask user whether accept bad cookies or not
-        (setq w3m-cookie-accept-bad-cookies 'ask)
-
-        ;; list of trusted domains
-        (setq w3m-cookie-accept-domains
-              '("google.com" "google.be"
-                "yahoo.com" ".yahoo.com" "groups.yahoo.com"
-                "www.dyndns.org")))
-
-      ;; enable cookies (mostly required to use sites such as Gmail)
-      (setq w3m-use-cookies t)
-
-;;*** 5.14 Other Variables
-
-      ;; list of content types, regexps (matching a url or a file
-      ;; name), commands to view contents, and filters to override the
-      ;; content type specified at first
-      (setq w3m-content-type-alist
-            (append '(("text/html" "\\.xhtml\\'" nil nil))
-                    w3m-content-type-alist))
-
-      ;; toggle a minor mode showing link numbers
-      (try-require 'w3m-lnum)
-      (with-eval-after-load "w3m-lnum"
-
-        (defun leuven-w3m-go-to-link-number ()
-          "Turn on link numbers and ask for one to go to."
-          (interactive)
-          (let ((active w3m-lnum-mode))
-            (when (not active) (w3m-lnum-mode))
-            (unwind-protect
-                (w3m-move-numbered-anchor (read-number
-                                           "Anchor number: "))
-              (when (not active) (w3m-lnum-mode))
-              (w3m-view-this-url))))
-
-        (define-key w3m-mode-map (kbd "f") 'leuven-w3m-go-to-link-number)
-
-        ;; enable link numbering mode by default
-        (add-hook 'w3m-mode-hook 'w3m-lnum-mode))
-
-      ))
 
 ;;** Babel
 
@@ -9106,7 +9100,7 @@ up before you execute another command."
       (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
       (message "Update finished. Restart Emacs to complete the process.")))
 
-(message "* --[ Loaded Emacs Leuven 20140923.1014]--")
+(message "* --[ Loaded Emacs Leuven 20140923.1407]--")
 
 (provide 'emacs-leuven)
 
@@ -9115,7 +9109,7 @@ up before you execute another command."
 ;; Local Variables:
 ;; coding: utf-8
 ;; ispell-local-dictionary: "american"
-;; eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))
+;; eval: (when (require 'rainbow-mode nil t) (rainbow-mode))
 ;; flycheck-mode: nil
 ;; flycheck-emacs-lisp-initialize-packages: t
 ;; End:
