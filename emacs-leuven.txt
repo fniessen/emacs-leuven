@@ -1666,24 +1666,8 @@ much easier to follow some key variables through a block of code.
 
 ** Window Fringes
 
-#+begin_src emacs-lisp :tangle no
-  (when (display-graphic-p)
-    (try-require 'git-gutter))
-
-  (with-eval-after-load "git-gutter"
-
-    (setq git-gutter:disabled-modes '(asm-mode image-mode))
-
-    ;; update frequency: uncomment this when Emacs/GitGutter slows.
-    ;; (setq git-gutter:update-threshold 1)
-    ;; (setq git-gutter:update-hooks '(after-save-hook after-revert-hook))
-
-    (setq git-gutter:hide-gutter t)     ; Hide gutter if there are no changes
-    (setq git-gutter:diff-option "-w")  ; Pass option to 'git diff' command: -w: ignore all spaces
-    (setq git-gutter:verbosity 0)       ; Log/Message Level
-
-    (global-git-gutter-mode +1))
-#+end_src
+Show an icon in the fringe indicating which lines have been inserted, modified
+or deleted since the last commit.
 
 #+begin_src emacs-lisp
   ;; highlight uncommitted changes
@@ -1693,6 +1677,13 @@ much easier to follow some key variables through a block of code.
     (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
     (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode))
 #+end_src
+
+# ;; Jump to next/previous hunk
+# (global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
+# (global-set-key (kbd "C-x n") 'git-gutter:next-hunk)
+#
+# ;; Revert current hunk
+# (global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
 
 ** Displaying Boundaries
 
@@ -9594,7 +9585,7 @@ things.
     (paren-set-mode 'paren))
 #+end_src
 
-See rainbow-delimiters.
+See ~rainbow-delimiters~.
 
 #+begin_src emacs-lisp
   ;; highlight surrounding parentheses
@@ -12031,6 +12022,13 @@ example.
               (setq diredp-wrap-around-flag nil)
 
               (try-require 'dired+)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "diff-hl-autoloads"
+    (add-hook 'dired-mode-hook
+              (lambda ()
+                (diff-hl-dired-mode 1))))
 #+end_src
 
 ** Emulation of ~ls~ on MS-Windows
