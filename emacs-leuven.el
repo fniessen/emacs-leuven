@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140922.2254
+;; Version: 20140923.1013
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140922.2254]--")
+(message "* --[ Loading Emacs Leuven 20140923.1013]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -6082,9 +6082,26 @@ this with to-do items than with projects or headings."
 
 (leuven--chapter leuven-chapter-26-programs "26 Editing Programs"
 
-;; move-line-up on M-up
+  (defun move-line-up ()
+    "Move the current line up."
+    (interactive)
+    (transpose-lines 1)
+    (forward-line -2))
 
-;; move-line-down on M-down
+  (defun move-line-down ()
+    "Move the current line down."
+    (interactive)
+    (forward-line 1)
+    (transpose-lines 1)
+    (forward-line -1))
+
+  (GNUEmacs24
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (local-set-key (kbd "<M-up>") 'move-line-up)
+                (local-set-key (kbd "<C-S-up>") 'move-line-up)
+                (local-set-key (kbd "<M-down>") 'move-line-down)
+                (local-set-key (kbd "<C-S-down>") 'move-line-down))))
 
 ;;** 26.1 Major Modes for (info "(emacs)Program Modes")
 
@@ -6118,8 +6135,24 @@ this with to-do items than with projects or headings."
       (setq which-func-unknown "")
 
       ;; show current function in mode line (based on Imenu)
-      (which-function-mode 1))         ; ~ Stickyfunc mode (in header line)
+      (which-function-mode 1)           ; ~ Stickyfunc mode (in header line)
 
+      (defun my-which-func-current ()
+        (let ((current (gethash (selected-window) which-func-table)))
+          (if current
+              (truncate-string-to-width current 20 nil nil "...")
+            which-func-unknown)))
+
+      (setq which-func-format
+            `("[" (:propertize (:eval (my-which-func-current))
+                               local-map ,which-func-keymap
+                               face which-func
+                               mouse-face mode-line-highlight
+                               help-echo "mouse-1: go to beginning\n\
+mouse-2: toggle rest visibility\n\
+mouse-3: go to end") "]"))))
+
+  (GNUEmacs
     ;; helm imenu tag selection across all buffers with the same mode
     (with-eval-after-load "imenu-anywhere-autoloads"
 
@@ -6127,21 +6160,6 @@ this with to-do items than with projects or headings."
       (global-set-key (kbd "C-.") 'helm-imenu-anywhere)))
                                         ; XXX Conflict with
                                         ; `flyspell-auto-correct-word'
-
-  (defun my-which-func-current ()
-    (let ((current (gethash (selected-window) which-func-table)))
-      (if current
-          (truncate-string-to-width current 20 nil nil "...")
-        which-func-unknown)))
-
-  (setq which-func-format
-        `("[" (:propertize (:eval (my-which-func-current))
-                           local-map ,which-func-keymap
-                           face which-func
-                           mouse-face mode-line-highlight
-                           help-echo "mouse-1: go to beginning\n\
-mouse-2: toggle rest visibility\n\
-mouse-3: go to end") "]"))
 
 ;;** 26.3 (info "(emacs)Program Indent")ation
 
@@ -6270,7 +6288,7 @@ mouse-3: go to end") "]"))
   (with-eval-after-load "hideshow"
 
     ;; change those really awkward key bindings with `@' in the middle
-    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") 'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") 'hs-hide-block) ; or H-left?
                                         ; `C-c @ C-h' (collapse current fold) M-l in RStudio
     (define-key hs-minor-mode-map (kbd "<C-M-S-right>") 'hs-show-block)
                                         ; `C-c @ C-s' (expand current fold) M-S-l
@@ -9088,7 +9106,7 @@ up before you execute another command."
       (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
       (message "Update finished. Restart Emacs to complete the process.")))
 
-(message "* --[ Loaded Emacs Leuven 20140922.2255]--")
+(message "* --[ Loaded Emacs Leuven 20140923.1014]--")
 
 (provide 'emacs-leuven)
 

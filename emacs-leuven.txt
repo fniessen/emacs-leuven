@@ -9401,9 +9401,26 @@ Some key bindings:
 
 (leuven--chapter leuven-chapter-26-programs "26 Editing Programs"
 
-;; move-line-up on M-up
+  (defun move-line-up ()
+    "Move the current line up."
+    (interactive)
+    (transpose-lines 1)
+    (forward-line -2))
 
-;; move-line-down on M-down
+  (defun move-line-down ()
+    "Move the current line down."
+    (interactive)
+    (forward-line 1)
+    (transpose-lines 1)
+    (forward-line -1))
+
+  (GNUEmacs24
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (local-set-key (kbd "<M-up>") 'move-line-up)
+                (local-set-key (kbd "<C-S-up>") 'move-line-up)
+                (local-set-key (kbd "<M-down>") 'move-line-down)
+                (local-set-key (kbd "<C-S-down>") 'move-line-down))))
 #+end_src
 
 ** Major Modes for Programming Languages
@@ -9434,7 +9451,7 @@ Also =who-calls.el=
 ** Top-Level Definitions, or Defuns
 
 Imenu is a great tool allowing you to *go to a function definition* (by name), but
-only if the definition is in the buffer you are currently editing (it won't jump
+only if the definition is *in the buffer you are currently editing* (it won't jump
 and open another file).
 
 XXX Autoloaded?
@@ -9464,8 +9481,35 @@ XXX Autoloaded?
       (setq which-func-unknown "")
 
       ;; show current function in mode line (based on Imenu)
-      (which-function-mode 1))         ; ~ Stickyfunc mode (in header line)
+      (which-function-mode 1)           ; ~ Stickyfunc mode (in header line)
+#+end_src
 
+Truncate the current function name (for the mode line):
+
+#+begin_src emacs-lisp
+      (defun my-which-func-current ()
+        (let ((current (gethash (selected-window) which-func-table)))
+          (if current
+              (truncate-string-to-width current 20 nil nil "...")
+            which-func-unknown)))
+
+      (setq which-func-format
+            `("[" (:propertize (:eval (my-which-func-current))
+                               local-map ,which-func-keymap
+                               face which-func
+                               mouse-face mode-line-highlight
+                               help-echo "mouse-1: go to beginning\n\
+mouse-2: toggle rest visibility\n\
+mouse-3: go to end") "]"))))
+#+end_src
+
+~helm-imenu-anywhere~ command pops an Helm interface with all the imenu tags
+*across all buffers with the same mode as the current one*.  In a sense, it is
+similar to etag selection, but works only for the open buffers.  This is often
+more convenient as you don't have to explicitly build the etags table.
+
+#+begin_src emacs-lisp
+  (GNUEmacs
     ;; helm imenu tag selection across all buffers with the same mode
     (with-eval-after-load "imenu-anywhere-autoloads"
 
@@ -9473,25 +9517,6 @@ XXX Autoloaded?
       (global-set-key (kbd "C-.") 'helm-imenu-anywhere)))
                                         ; XXX Conflict with
                                         ; `flyspell-auto-correct-word'
-#+end_src
-
-Truncate the current function name (for the mode line):
-
-#+begin_src emacs-lisp
-  (defun my-which-func-current ()
-    (let ((current (gethash (selected-window) which-func-table)))
-      (if current
-          (truncate-string-to-width current 20 nil nil "...")
-        which-func-unknown)))
-
-  (setq which-func-format
-        `("[" (:propertize (:eval (my-which-func-current))
-                           local-map ,which-func-keymap
-                           face which-func
-                           mouse-face mode-line-highlight
-                           help-echo "mouse-1: go to beginning\n\
-mouse-2: toggle rest visibility\n\
-mouse-3: go to end") "]"))
 #+end_src
 
 ** Indentation for Programs
@@ -9721,7 +9746,7 @@ many programming modes.
   (with-eval-after-load "hideshow"
 
     ;; change those really awkward key bindings with `@' in the middle
-    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") 'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") 'hs-hide-block) ; or H-left?
                                         ; `C-c @ C-h' (collapse current fold) M-l in RStudio
     (define-key hs-minor-mode-map (kbd "<C-M-S-right>") 'hs-show-block)
                                         ; `C-c @ C-s' (expand current fold) M-S-l
