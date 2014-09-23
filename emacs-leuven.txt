@@ -4155,7 +4155,7 @@ See ~(display-pixel-width)~:
 
   (leuven--section "21.9 (emacs)Speedbar Frames")
 
-  (unless (locate-library "helm-config") ; helm is better than speedbar!
+  (unless (featurep 'helm-config)       ; helm is better than speedbar!
 
     ;; jump to speedbar frame
     (global-set-key (kbd "<f4>") 'speedbar-get-focus))
@@ -9408,13 +9408,15 @@ Some key bindings:
 
 (leuven--chapter leuven-chapter-26-programs "26 Editing Programs"
 
-  (defun move-line-up ()
+  ;; swap the current and previous line
+  (defun leuven-move-line-up ()
     "Move the current line up."
     (interactive)
     (transpose-lines 1)
     (forward-line -2))
 
-  (defun move-line-down ()
+  ;; swap the current and next line
+  (defun leuven-move-line-down ()
     "Move the current line down."
     (interactive)
     (forward-line 1)
@@ -9424,10 +9426,10 @@ Some key bindings:
   (GNUEmacs24
     (add-hook 'prog-mode-hook
               (lambda ()
-                (local-set-key (kbd "<M-up>") 'move-line-up)
-                (local-set-key (kbd "<C-S-up>") 'move-line-up)
-                (local-set-key (kbd "<M-down>") 'move-line-down)
-                (local-set-key (kbd "<C-S-down>") 'move-line-down))))
+                (local-set-key (kbd "<M-up>") 'leuven-move-line-up)
+                (local-set-key (kbd "<C-S-up>") 'leuven-move-line-up)
+                (local-set-key (kbd "<M-down>") 'leuven-move-line-down)
+                (local-set-key (kbd "<C-S-down>") 'leuven-move-line-down))))
 #+end_src
 
 ** Major Modes for Programming Languages

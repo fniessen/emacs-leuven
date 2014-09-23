@@ -1318,7 +1318,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140923.1555</span>
+"org-comment">Version: 20140923.1615</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1441,7 +1441,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140923.1555]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140923.1615]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -8311,8 +8311,9 @@ M-: (executable-find "diff") RET
   (leuven--section <span class=
 "org-string">"21.9 (emacs)Speedbar Frames"</span>)
 
-  (<span class="org-keyword">unless</span> (locate-library <span class=
-"org-string">"helm-config"</span>) <span class=
+  (<span class="org-keyword">unless</span> (<span class=
+"org-keyword">featurep</span> '<span class=
+"org-constant">helm-config</span>)       <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">helm is better than speedbar!</span>
 
@@ -17342,15 +17343,19 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 (leuven--chapter leuven-chapter-26-programs <span class=
 "org-string">"26 Editing Programs"</span>
 
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">swap the current and previous line</span>
   (<span class="org-keyword">defun</span> <span class=
-"org-function-name">move-line-up</span> ()
+"org-function-name">leuven-move-line-up</span> ()
     <span class="org-doc">"Move the current line up."</span>
     (interactive)
     (transpose-lines 1)
     (forward-line -2))
 
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">swap the current and next line</span>
   (<span class="org-keyword">defun</span> <span class=
-"org-function-name">move-line-down</span> ()
+"org-function-name">leuven-move-line-down</span> ()
     <span class="org-doc">"Move the current line down."</span>
     (interactive)
     (forward-line 1)
@@ -17361,13 +17366,13 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     (add-hook 'prog-mode-hook
               (<span class="org-keyword">lambda</span> ()
                 (local-set-key (kbd <span class=
-"org-string">"&lt;M-up&gt;"</span>) 'move-line-up)
+"org-string">"&lt;M-up&gt;"</span>) 'leuven-move-line-up)
                 (local-set-key (kbd <span class=
-"org-string">"&lt;C-S-up&gt;"</span>) 'move-line-up)
+"org-string">"&lt;C-S-up&gt;"</span>) 'leuven-move-line-up)
                 (local-set-key (kbd <span class=
-"org-string">"&lt;M-down&gt;"</span>) 'move-line-down)
+"org-string">"&lt;M-down&gt;"</span>) 'leuven-move-line-down)
                 (local-set-key (kbd <span class=
-"org-string">"&lt;C-S-down&gt;"</span>) 'move-line-down))))
+"org-string">"&lt;C-S-down&gt;"</span>) 'leuven-move-line-down))))
 </pre>
         </div>
       </div>
@@ -26488,7 +26493,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140923.1555]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140923.1616]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

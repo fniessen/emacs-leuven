@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140923.1553
+;; Version: 20140923.1614
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140923.1553]--")
+(message "* --[ Loading Emacs Leuven 20140923.1614]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -2578,7 +2578,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "21.9 (emacs)Speedbar Frames")
 
-  (unless (locate-library "helm-config") ; helm is better than speedbar!
+  (unless (featurep 'helm-config)       ; helm is better than speedbar!
 
     ;; jump to speedbar frame
     (global-set-key (kbd "<f4>") 'speedbar-get-focus))
@@ -6072,13 +6072,15 @@ this with to-do items than with projects or headings."
 
 (leuven--chapter leuven-chapter-26-programs "26 Editing Programs"
 
-  (defun move-line-up ()
+  ;; swap the current and previous line
+  (defun leuven-move-line-up ()
     "Move the current line up."
     (interactive)
     (transpose-lines 1)
     (forward-line -2))
 
-  (defun move-line-down ()
+  ;; swap the current and next line
+  (defun leuven-move-line-down ()
     "Move the current line down."
     (interactive)
     (forward-line 1)
@@ -6088,10 +6090,10 @@ this with to-do items than with projects or headings."
   (GNUEmacs24
     (add-hook 'prog-mode-hook
               (lambda ()
-                (local-set-key (kbd "<M-up>") 'move-line-up)
-                (local-set-key (kbd "<C-S-up>") 'move-line-up)
-                (local-set-key (kbd "<M-down>") 'move-line-down)
-                (local-set-key (kbd "<C-S-down>") 'move-line-down))))
+                (local-set-key (kbd "<M-up>") 'leuven-move-line-up)
+                (local-set-key (kbd "<C-S-up>") 'leuven-move-line-up)
+                (local-set-key (kbd "<M-down>") 'leuven-move-line-down)
+                (local-set-key (kbd "<C-S-down>") 'leuven-move-line-down))))
 
 ;;** 26.1 Major Modes for (info "(emacs)Program Modes")
 
@@ -9114,7 +9116,7 @@ up before you execute another command."
       (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
       (message "Update finished. Restart Emacs to complete the process.")))
 
-(message "* --[ Loaded Emacs Leuven 20140923.1554]--")
+(message "* --[ Loaded Emacs Leuven 20140923.1615]--")
 
 (provide 'emacs-leuven)
 
