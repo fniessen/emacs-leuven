@@ -1685,6 +1685,15 @@ much easier to follow some key variables through a block of code.
     (global-git-gutter-mode +1))
 #+end_src
 
+#+begin_src emacs-lisp
+  ;; highlight uncommitted changes
+  (with-eval-after-load "diff-hl-autoloads"
+
+    ;; (global-diff-hl-mode)
+    (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
+    (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode))
+#+end_src
+
 ** Displaying Boundaries
 
 #+begin_src emacs-lisp

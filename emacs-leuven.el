@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140923.1420
+;; Version: 20140923.1438
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140923.1420]--")
+(message "* --[ Loading Emacs Leuven 20140923.1438]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1021,6 +1021,13 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; emulation of Vim's `*' search
     (global-set-key (kbd "C-*") 'leuven-highlight-current-word))
+
+  ;; highlight uncommitted changes
+  (with-eval-after-load "diff-hl-autoloads"
+
+    ;; (global-diff-hl-mode)
+    (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
+    (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode))
 
 ;;** 14.15 (info "(emacs)Displaying Boundaries")
 
@@ -9101,7 +9108,7 @@ up before you execute another command."
       (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
       (message "Update finished. Restart Emacs to complete the process.")))
 
-(message "* --[ Loaded Emacs Leuven 20140923.1421]--")
+(message "* --[ Loaded Emacs Leuven 20140923.1439]--")
 
 (provide 'emacs-leuven)
 
