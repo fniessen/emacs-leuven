@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140923.1406
+;; Version: 20140923.1420
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140923.1406]--")
+(message "* --[ Loading Emacs Leuven 20140923.1420]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -85,7 +85,7 @@
     (multiple-value-bind (s0 s1 s2) (current-time)
       (+ (* (float (ash 1 16)) s0) (float s1) (* 0.0000001 s2)))))
 
-(defconst leuven-before-time (float-time)
+(defconst leuven--before-time (float-time)
   "Value of `float-time' before loading the Emacs Leuven library.")
 
 ;;; User Customizable Internal Variables
@@ -271,27 +271,27 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "Type of OS")
 
-  (defconst linuxp
+  (defconst leuven--linux-p
     (eq system-type 'gnu/linux)
     "Running a GNU/Linux version of Emacs.")
 
-  (defconst macp
+  (defconst leuven--mac-p
     (eq system-type 'darwin)
     "Running a Mac OS version of Emacs.")
 
-  (defconst win32p
+  (defconst leuven--win32-p
     (eq system-type 'windows-nt)
     "Running a native Microsoft Windows version of Emacs.")
 
-  (defconst cygwinp
+  (defconst leuven--cygwin-p
     (eq system-type 'cygwin)
     "Running a Cygwin version of Emacs.")
 
 ;;** MS Windows
 
   ;; FIXME The path is not correct under Cygwin Emacs (gsprint.exe not found)
-  (defconst windows-program-files-dir   ; sys-path
-    (if win32p
+  (defconst leuven--windows-program-files-dir   ; sys-path
+    (if leuven--win32-p
         (file-name-as-directory (getenv "PROGRAMFILES"))
       "/usr/local/bin/")
     "Defines the default Windows Program Files folder.")
@@ -300,11 +300,11 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "Window system")
 
-  (defconst consolep
+  (defconst leuven--console-p
     (eq window-system nil)
     "Running a text-only terminal.")
 
-  (defconst x-window-p
+  (defconst leuven--x-window-p
     (eq window-system 'x)
     "Running a X Window system.")
 
@@ -312,26 +312,27 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "Emacs version")
 
-  (defconst running-gnu-emacs
+  (defconst leuven--gnu-emacs-p
     (string-match "GNU Emacs" (version))
     "Running GNU Emacs.")
 
-  (defconst running-xemacs
+  (defconst leuven--xemacs-p
     (string-match "XEmacs" (version))
     "Running XEmacs.")
 
   (defmacro GNUEmacs (&rest body)
     "Execute any number of forms if running GNU Emacs."
-    (list 'if running-gnu-emacs
+    (list 'if leuven--gnu-emacs-p
           (cons 'progn body)))
 
   (defmacro GNUEmacs24 (&rest body)
+    "Execute any number of forms if running GNU Emacs 24."
     (list 'if (string-match "GNU Emacs 24" (version))
           (cons 'progn body)))
 
   (defmacro XEmacs (&rest body)
     "Execute any number of forms if running XEmacs."
-    (list 'if running-xemacs
+    (list 'if leuven--xemacs-p
           (cons 'progn body)))
 
 ;;** Testing file accessibility
@@ -641,7 +642,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (with-eval-after-load "info"
     ;; list of directories to search for Info documentation files (in the order
     ;; they are listed)
-    (when win32p
+    (when leuven--win32-p
       (setq Info-directory-list
             `(,(expand-file-name
                 (concat (file-name-directory (locate-library "org"))
@@ -1562,7 +1563,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (with-eval-after-load "dictionary"
 
     ;; enable/disable the tooltip support for all buffers
-    (if consolep
+    (if leuven--console-p
         (global-dictionary-tooltip-mode 0)
       (global-dictionary-tooltip-mode 1)))
 
@@ -1908,7 +1909,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; default transfer method
     (setq tramp-default-method          ; [default: "scp"]
-          (cond (win32p
+          (cond (leuven--win32-p
                  ;; (issues with Cygwin `ssh' which does not cooperate
                  ;; with Emacs processes -> use `plink' from PuTTY, it
                  ;; definitely does work under Windows)
@@ -1953,7 +1954,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; string used for end of line in rsh connections
     (setq tramp-rsh-end-of-line         ; [default: "\n"]
-          (cond (win32p "\n")
+          (cond (leuven--win32-p "\n")
                 (t "\r")))
 
 ;;** 4.16 (info "(tramp)Auto-save and Backup") configuration
@@ -2166,7 +2167,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (with-eval-after-load "helm-locate"
 
-      (when (and (or win32p cygwinp)
+      (when (and (or leuven--win32-p leuven--cygwin-p)
                  (executable-find "es")); we could check for it in
                                         ; (concat (getenv "USERPROFILE") "/Downloads")
 
@@ -2542,7 +2543,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "21.7 (emacs)Frame Commands")
 
-  (when x-window-p
+  (when leuven--x-window-p
     (defun toggle-fullscreen ()
       "Toggle between full screen and partial screen display in X servers."
       (interactive)
@@ -2552,7 +2553,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (global-set-key (kbd "C-c z") 'toggle-fullscreen))
 
   (GNUEmacs
-    (when win32p
+    (when leuven--win32-p
       (defun w32-maximize-frame ()
         "Maximize the current frame."
         (interactive)
@@ -2646,7 +2647,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "21.17 (emacs)Tooltips")
 
   ;; disable Tooltip mode (use the echo area for help and GUD tooltips)
-  (unless consolep (tooltip-mode -1))
+  (unless leuven--console-p (tooltip-mode -1))
 
 )                                       ; chapter 21 ends here
 
@@ -2712,7 +2713,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (GNUEmacs
     ;; to copy and paste to and from Emacs through the clipboard (with
     ;; coding system conversion)
-    (cond (win32p
+    (cond (leuven--win32-p
            (set-selection-coding-system 'compound-text-with-extensions))
           (t
            (set-selection-coding-system 'utf-8))))
@@ -5183,7 +5184,7 @@ this with to-do items than with projects or headings."
     ;; convert "odt" format to "doc" format
     (setq org-odt-preferred-output-format "doc")
 
-    (when cygwinp
+    (when leuven--cygwin-p
       (setcdr (assoc "LibreOffice" org-odt-convert-processes)
               "soffice --headless --convert-to %f%x --outdir \"$(cygpath -m %d)\" \"$(cygpath -m %i)\"")))
 
@@ -5892,12 +5893,12 @@ this with to-do items than with projects or headings."
       (leuven--section "4.2 (auctex)Viewing the formatted output")
 
       (defvar sumatrapdf-command
-        (concat windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
+        (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
         "Path to the SumatraPDF executable.")
 
       ;; use a saner PDF viewer (evince, SumatraPDF)
       (setcdr (assoc "^pdf$" TeX-output-view-style)
-              (cond (win32p
+              (cond (leuven--win32-p
                      `("." (concat "\"" ,sumatrapdf-command "\" %o")))
                     ;; under Windows, we could open the PDF file with
                     ;; `start "" xxx.pdf' (in a command prompt)
@@ -5910,7 +5911,7 @@ this with to-do items than with projects or headings."
                      `("SumatraPDF"
                        (concat "\"" ,sumatrapdf-command "\" %o"))))
 
-      (when win32p
+      (when leuven--win32-p
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '("SumatraPDF")))
 
@@ -5959,7 +5960,7 @@ this with to-do items than with projects or headings."
 
         ;; path to `gs' command (for format conversions)
         (setq preview-gs-command
-          (cond (win32p
+          (cond (leuven--win32-p
                  (or (executable-find "gswin32c.exe")
                      "C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"))
                                         ; default value
@@ -7288,7 +7289,7 @@ up before you execute another command."
 
     ;; switches passed to `ls' for Dired
     (setq dired-listing-switches
-          (cond (win32p
+          (cond (leuven--win32-p
                  "-a -F -l -p")
                 (t
                  "-a -F --group-directories-first -l -p --time-style=long-iso")))
@@ -7331,7 +7332,7 @@ up before you execute another command."
 
     ;; open files using Windows associations
     (GNUEmacs
-      (when win32p
+      (when leuven--win32-p
         (defun w32-dired-open-files-externally (&optional arg)
           "In Dired, open the marked files (or directories) with the default
         Windows tool."
@@ -8107,7 +8108,7 @@ up before you execute another command."
     (add-to-list 'sh-alias-alist '(sh . bash)))
 
   ;; XXX Test the following (added on 2011-08-03)
-  ;; (when win32p
+  ;; (when leuven--win32-p
   ;;   ;; Workaround for Cygwin shell, when set 'CYGWIN=noglob'.  By default
   ;;   ;; shell-quote-argument' quoted by double '\' chars, this cause failure.
   ;;   (defun shell-quote-argument (argument)
@@ -8138,7 +8139,7 @@ up before you execute another command."
               (file-name-nondirectory (or (executable-find "zsh")
                                           (executable-find "bash")
                                           (executable-find "sh"))))
-            (when win32p "cmdproxy.exe")))
+            (when leuven--win32-p "cmdproxy.exe")))
 
   ;; use `shell-file-name' as the default shell
   (setenv "SHELL" shell-file-name)
@@ -8305,7 +8306,7 @@ up before you execute another command."
   ;; ;; run an inferior shell, with I/O through buffer `*shell*'
   ;; (global-set-key
   ;;   (kbd "C-c !")
-  ;;   (cond (win32p 'shell)
+  ;;   (cond (leuven--win32-p 'shell)
   ;;         (t 'term)))
 
   ;; toggle to and from the `*shell*' buffer
@@ -8332,14 +8333,14 @@ up before you execute another command."
   ;; - MSYS (MinGW)
 
     ;; ;; let Emacs recognize Cygwin paths (e.g. /usr/local/lib)
-    ;; (when (and win32p
+    ;; (when (and leuven--win32-p
     ;;            (executable-find "mount")) ; Cygwin bin directory found
     ;;   (try-require 'cygwin-mount)
     ;;   (with-eval-after-load "cygwin-mount"
     ;;     (cygwin-mount-activate)))
 
     ;; let Emacs recognize Windows paths (e.g. C:/Program Files/)
-    (when cygwinp
+    (when leuven--cygwin-p
       (try-require 'windows-path)
       (with-eval-after-load "windows-path"
         (windows-path-activate)))
@@ -8361,7 +8362,7 @@ up before you execute another command."
   ;; new inferior ESS process appears in another window in the current frame
   (setq inferior-ess-same-window nil)
 
-  (when cygwinp                         ; using R from Cygwin
+  (when leuven--cygwin-p                 ; using R from Cygwin
 
     ;; safe 8.3 name for 32-bit programs
     (setq ess-program-files "c:/PROGRA~2")
@@ -8457,7 +8458,7 @@ up before you execute another command."
 
     ;; name of a printer to which data is sent for printing
     (setq printer-name
-          (cond (win32p "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
+          (cond (leuven--win32-p "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
                 (t t))))
 
   (defun leuven-ps-print-buffer-with-faces-query ()
@@ -8468,7 +8469,7 @@ up before you execute another command."
 
   ;; generate and print a PostScript image of the buffer
   (GNUEmacs
-    (when win32p
+    (when leuven--win32-p
       ;; override `Print Screen' globally used as a hotkey by Windows
       (w32-register-hot-key (kbd "<snapshot>"))
       (global-set-key
@@ -8483,7 +8484,7 @@ up before you execute another command."
   (with-eval-after-load "ps-print"
 
     (defvar gsprint-program
-      (concat windows-program-files-dir "Ghostgum/gsview/gsprint.exe")
+      (concat leuven--windows-program-files-dir "Ghostgum/gsview/gsprint.exe")
       "Defines the Windows path to the gsview executable.")
 
     (leuven--file-exists-and-executable-p gsprint-program)
@@ -8611,9 +8612,9 @@ up before you execute another command."
 
   ;; default browser started when you click on some URL in the buffer
   (setq browse-url-browser-function
-        (cond ((or win32p cygwinp)
+        (cond ((or leuven--win32-p leuven--cygwin-p)
                'browse-url-default-windows-browser)
-              (macp
+              (leuven--mac-p
                'browse-url-default-macosx-browser)
               ((not (display-graphic-p)) ; console
                'w3m-browse-url)
@@ -8987,7 +8988,7 @@ up before you execute another command."
   (add-hook 'after-save-hook 'merge-x-resources)
 
   ;; allow any scalable font
-  (when win32p
+  (when leuven--win32-p
     (setq scalable-fonts-allowed t))
 
   (define-key global-map (kbd "C-+") 'text-scale-increase)
@@ -9085,7 +9086,7 @@ up before you execute another command."
 
 (message "Loading `%s'...done (in %.3f s)"
          load-file-name
-         (- (float-time) leuven-before-time))
+         (- (float-time) leuven--before-time))
 (sit-for 0.3)
 
 ;; (message "Emacs startup time: %s" (emacs-init-time))
@@ -9100,7 +9101,7 @@ up before you execute another command."
       (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
       (message "Update finished. Restart Emacs to complete the process.")))
 
-(message "* --[ Loaded Emacs Leuven 20140923.1407]--")
+(message "* --[ Loaded Emacs Leuven 20140923.1421]--")
 
 (provide 'emacs-leuven)
 

@@ -1318,7 +1318,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140923.1408</span>
+"org-comment">Version: 20140923.1421</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1441,7 +1441,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140923.1408]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140923.1421]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -1470,7 +1470,7 @@
       (+ (* (float (ash 1 16)) s0) (float s1) (* 0.0000001 s2)))))
 
 (<span class="org-keyword">defconst</span> <span class=
-"org-variable-name">leuven-before-time</span> (float-time)
+"org-variable-name">leuven--before-time</span> (float-time)
   <span class="org-doc">"Value of `</span><span class=
 "org-constant"><span class="org-doc">float-time</span></span><span class=
 "org-doc">' before loading the Emacs Leuven library."</span>)
@@ -1910,23 +1910,23 @@
   (leuven--section <span class="org-string">"Type of OS"</span>)
 
   (<span class="org-keyword">defconst</span> <span class=
-"org-variable-name">linuxp</span>
+"org-variable-name">leuven--linux-p</span>
     (eq system-type 'gnu/linux)
     <span class="org-doc">"Running a GNU/Linux version of Emacs."</span>)
 
   (<span class="org-keyword">defconst</span> <span class=
-"org-variable-name">macp</span>
+"org-variable-name">leuven--mac-p</span>
     (eq system-type 'darwin)
     <span class="org-doc">"Running a Mac OS version of Emacs."</span>)
 
   (<span class="org-keyword">defconst</span> <span class=
-"org-variable-name">win32p</span>
+"org-variable-name">leuven--win32-p</span>
     (eq system-type 'windows-nt)
     <span class=
 "org-doc">"Running a native Microsoft Windows version of Emacs."</span>)
 
   (<span class="org-keyword">defconst</span> <span class=
-"org-variable-name">cygwinp</span>
+"org-variable-name">leuven--cygwin-p</span>
     (eq system-type 'cygwin)
     <span class="org-doc">"Running a Cygwin version of Emacs."</span>)
 
@@ -1937,9 +1937,9 @@
 "org-leuven-highlight"><span class=
 "org-comment">FIXME</span></span><span class="org-comment"> The path is not correct under Cygwin Emacs (gsprint.exe not found)</span>
   (<span class="org-keyword">defconst</span> <span class=
-"org-variable-name">windows-program-files-dir</span>   <span class=
+"org-variable-name">leuven--windows-program-files-dir</span>   <span class=
 "org-comment-delimiter">; </span><span class="org-comment">sys-path</span>
-    (<span class="org-keyword">if</span> win32p
+    (<span class="org-keyword">if</span> leuven--win32-p
         (file-name-as-directory (getenv <span class=
 "org-string">"PROGRAMFILES"</span>))
       <span class="org-string">"/usr/local/bin/"</span>)
@@ -1959,12 +1959,12 @@
   (leuven--section <span class="org-string">"Window system"</span>)
 
   (<span class="org-keyword">defconst</span> <span class=
-"org-variable-name">consolep</span>
+"org-variable-name">leuven--console-p</span>
     (eq window-system nil)
     <span class="org-doc">"Running a text-only terminal."</span>)
 
   (<span class="org-keyword">defconst</span> <span class=
-"org-variable-name">x-window-p</span>
+"org-variable-name">leuven--x-window-p</span>
     (eq window-system 'x)
     <span class="org-doc">"Running a X Window system."</span>)
 
@@ -1974,12 +1974,12 @@
   (leuven--section <span class="org-string">"Emacs version"</span>)
 
   (<span class="org-keyword">defconst</span> <span class=
-"org-variable-name">running-gnu-emacs</span>
+"org-variable-name">leuven--gnu-emacs-p</span>
     (string-match <span class="org-string">"GNU Emacs"</span> (version))
     <span class="org-doc">"Running GNU Emacs."</span>)
 
   (<span class="org-keyword">defconst</span> <span class=
-"org-variable-name">running-xemacs</span>
+"org-variable-name">leuven--xemacs-p</span>
     (string-match <span class="org-string">"XEmacs"</span> (version))
     <span class="org-doc">"Running XEmacs."</span>)
 
@@ -1988,12 +1988,14 @@
 "org-type">&amp;rest</span> body)
     <span class=
 "org-doc">"Execute any number of forms if running GNU Emacs."</span>
-    (list 'if running-gnu-emacs
+    (list 'if leuven--gnu-emacs-p
           (cons 'progn body)))
 
   (<span class="org-keyword">defmacro</span> <span class=
 "org-function-name">GNUEmacs24</span> (<span class=
 "org-type">&amp;rest</span> body)
+    <span class=
+"org-doc">"Execute any number of forms if running GNU Emacs 24."</span>
     (list 'if (string-match <span class=
 "org-string">"GNU Emacs 24"</span> (version))
           (cons 'progn body)))
@@ -2003,7 +2005,7 @@
 "org-type">&amp;rest</span> body)
     <span class=
 "org-doc">"Execute any number of forms if running XEmacs."</span>
-    (list 'if running-xemacs
+    (list 'if leuven--xemacs-p
           (cons 'progn body)))
 
 <span class="org-comment-delimiter">;;</span><span class=
@@ -2904,7 +2906,7 @@
 "org-comment">list of directories to search for Info documentation files (in the order</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">they are listed)</span>
-    (<span class="org-keyword">when</span> win32p
+    (<span class="org-keyword">when</span> leuven--win32-p
       (setq Info-directory-list
             `(,(expand-file-name
                 (concat (file-name-directory (locate-library <span class=
@@ -5632,7 +5634,7 @@
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">enable/disable the tooltip support for all buffers</span>
-    (<span class="org-keyword">if</span> consolep
+    (<span class="org-keyword">if</span> leuven--console-p
         (global-dictionary-tooltip-mode 0)
       (global-dictionary-tooltip-mode 1)))
 </pre>
@@ -6614,7 +6616,7 @@ M-: (executable-find "diff") RET
     (setq tramp-default-method          <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">[default: "scp"]</span>
-          (<span class="org-keyword">cond</span> (win32p
+          (<span class="org-keyword">cond</span> (leuven--win32-p
                  <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(issues with Cygwin `</span><span class=
 "org-constant"><span class="org-comment">ssh</span></span><span class=
@@ -6702,7 +6704,7 @@ M-: (executable-find "diff") RET
     (setq tramp-rsh-end-of-line         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">[default: "\n"]</span>
-          (<span class="org-keyword">cond</span> (win32p <span class=
+          (<span class="org-keyword">cond</span> (leuven--win32-p <span class=
 "org-string">"\n"</span>)
                 (t <span class="org-string">"\r"</span>)))
 
@@ -7450,7 +7452,8 @@ M-: (executable-find "diff") RET
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"helm-locate"</span>
 
-      (<span class="org-keyword">when</span> (and (or win32p cygwinp)
+      (<span class=
+"org-keyword">when</span> (and (or leuven--win32-p leuven--cygwin-p)
                  (executable-find <span class=
 "org-string">"es"</span>))<span class=
 "org-comment-delimiter">; </span><span class=
@@ -8250,7 +8253,7 @@ M-: (executable-find "diff") RET
   (leuven--section <span class=
 "org-string">"21.7 (emacs)Frame Commands"</span>)
 
-  (<span class="org-keyword">when</span> x-window-p
+  (<span class="org-keyword">when</span> leuven--x-window-p
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">toggle-fullscreen</span> ()
       <span class=
@@ -8265,7 +8268,7 @@ M-: (executable-find "diff") RET
 "org-string">"C-c z"</span>) 'toggle-fullscreen))
 
   (GNUEmacs
-    (<span class="org-keyword">when</span> win32p
+    (<span class="org-keyword">when</span> leuven--win32-p
       (<span class="org-keyword">defun</span> <span class=
 "org-function-name">w32-maximize-frame</span> ()
         <span class="org-doc">"Maximize the current frame."</span>
@@ -8481,7 +8484,7 @@ M-: (executable-find "diff") RET
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">disable Tooltip mode (use the echo area for help and GUD tooltips)</span>
-  (<span class="org-keyword">unless</span> consolep (tooltip-mode -1))
+  (<span class="org-keyword">unless</span> leuven--console-p (tooltip-mode -1))
 </pre>
           </div>
 
@@ -8720,7 +8723,7 @@ M-: (executable-find "diff") RET
 "org-comment">to copy and paste to and from Emacs through the clipboard (with</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">coding system conversion)</span>
-    (<span class="org-keyword">cond</span> (win32p
+    (<span class="org-keyword">cond</span> (leuven--win32-p
            (set-selection-coding-system 'compound-text-with-extensions))
           (t
            (set-selection-coding-system 'utf-8))))
@@ -14935,7 +14938,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     (setq org-odt-preferred-output-format <span class=
 "org-string">"doc"</span>)
 
-    (<span class="org-keyword">when</span> cygwinp
+    (<span class="org-keyword">when</span> leuven--cygwin-p
       (setcdr (assoc <span class=
 "org-string">"LibreOffice"</span> org-odt-convert-processes)
               <span class=
@@ -16778,7 +16781,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
       (<span class="org-keyword">defvar</span> <span class=
 "org-variable-name">sumatrapdf-command</span>
-        (concat windows-program-files-dir <span class=
+        (concat leuven--windows-program-files-dir <span class=
 "org-string">"SumatraPDF/SumatraPDF.exe"</span>)
         <span class="org-doc">"Path to the SumatraPDF executable."</span>)
 
@@ -16786,7 +16789,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">use a saner PDF viewer (evince, SumatraPDF)</span>
       (setcdr (assoc <span class=
 "org-string">"^pdf$"</span> TeX-output-view-style)
-              (<span class="org-keyword">cond</span> (win32p
+              (<span class="org-keyword">cond</span> (leuven--win32-p
                      `(<span class="org-string">"."</span> (concat <span class=
 "org-string">"\""</span> ,sumatrapdf-command <span class=
 "org-string">"\" %o"</span>)))
@@ -16807,7 +16810,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"\""</span> ,sumatrapdf-command <span class=
 "org-string">"\" %o"</span>))))
 
-      (<span class="org-keyword">when</span> win32p
+      (<span class="org-keyword">when</span> leuven--win32-p
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '(<span class="org-string">"SumatraPDF"</span>)))
 </pre>
@@ -16922,7 +16925,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">gs</span></span><span class=
 "org-comment">' command (for format conversions)</span>
         (setq preview-gs-command
-          (<span class="org-keyword">cond</span> (win32p
+          (<span class="org-keyword">cond</span> (leuven--win32-p
                  (or (executable-find <span class=
 "org-string">"gswin32c.exe"</span>)
                      <span class=
@@ -21109,7 +21112,7 @@ good|
 "org-constant"><span class="org-comment">ls</span></span><span class=
 "org-comment">' for Dired</span>
     (setq dired-listing-switches
-          (<span class="org-keyword">cond</span> (win32p
+          (<span class="org-keyword">cond</span> (leuven--win32-p
                  <span class="org-string">"-a -F -l -p"</span>)
                 (t
                  <span class=
@@ -21301,10 +21304,11 @@ good|
   <span class=
 "org-doc">"Open FILE with the default tool on this platform."</span>
   (<span class="org-keyword">let</span> ((program (<span class=
-"org-keyword">cond</span> (linuxp <span class="org-string">"xdg-open"</span>)
-                       (macp <span class="org-string">"open"</span>)))
+"org-keyword">cond</span> (leuven--linux-p <span class=
+"org-string">"xdg-open"</span>)
+                       (leuven--mac-p <span class="org-string">"open"</span>)))
         process-connection-type)
-    (<span class="org-keyword">if</span> win32p
+    (<span class="org-keyword">if</span> leuven--win32-p
         (helm-w32-shell-execute-open-file file)
       (start-process <span class=
 "org-string">"helm-open-file-with-default-tool"</span> nil program file))))
@@ -21317,8 +21321,10 @@ good|
 "org-function-name">dired-launch-command</span> ()
  (interactive)
   (<span class="org-keyword">let</span> ((program (<span class=
-"org-keyword">cond</span> (linuxp <span class="org-string">"xdg-open"</span>)
-                       (macp <span class="org-string">"open"</span>))))
+"org-keyword">cond</span> (leuven--linux-p <span class=
+"org-string">"xdg-open"</span>)
+                       (leuven--mac-p <span class=
+"org-string">"open"</span>))))
     (dired-do-shell-command program nil
                             (dired-get-marked-files t current-prefix-arg))))
 
@@ -21399,7 +21405,7 @@ good|
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">open files using Windows associations</span>
     (GNUEmacs
-      (<span class="org-keyword">when</span> win32p
+      (<span class="org-keyword">when</span> leuven--win32-p
         (<span class="org-keyword">defun</span> <span class=
 "org-function-name">w32-dired-open-files-externally</span> (<span class=
 "org-type">&amp;optional</span> arg)
@@ -23247,7 +23253,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
 "org-comment"> Test the following (added on 2011-08-03)</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(when win32p</span>
+"org-comment">(when leuven--win32-p</span>
   <span class="org-comment-delimiter">;;   </span><span class=
 "org-comment">;; Workaround for Cygwin shell, when set 'CYGWIN=noglob'.  By default</span>
   <span class="org-comment-delimiter">;;   </span><span class=
@@ -23323,7 +23329,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-string">"bash"</span>)
                                           (executable-find <span class=
 "org-string">"sh"</span>))))
-            (<span class="org-keyword">when</span> win32p <span class=
+            (<span class="org-keyword">when</span> leuven--win32-p <span class=
 "org-string">"cmdproxy.exe"</span>)))
 
   <span class="org-comment-delimiter">;; </span><span class=
@@ -23975,7 +23981,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span class="org-comment-delimiter">;;   </span><span class=
 "org-comment">(kbd "C-c !")</span>
   <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(cond (win32p 'shell)</span>
+"org-comment">(cond (leuven--win32-p 'shell)</span>
   <span class="org-comment-delimiter">;;         </span><span class=
 "org-comment">(t 'term)))</span>
 
@@ -24072,7 +24078,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; let Emacs recognize Cygwin paths (e.g. /usr/local/lib)</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(when (and win32p</span>
+"org-comment">(when (and leuven--win32-p</span>
     <span class="org-comment-delimiter">;;            </span><span class=
 "org-comment">(executable-find "mount")) ; Cygwin bin directory found</span>
     <span class="org-comment-delimiter">;;   </span><span class=
@@ -24096,7 +24102,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">let Emacs recognize Windows paths (e.g. C:/Program Files/)</span>
-    (<span class="org-keyword">when</span> cygwinp
+    (<span class="org-keyword">when</span> leuven--cygwin-p
       (try-require 'windows-path)
       (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"windows-path"</span>
@@ -24176,7 +24182,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   (<span class=
-"org-keyword">when</span> cygwinp                         <span class=
+"org-keyword">when</span> leuven--cygwin-p                 <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">using R from Cygwin</span>
 
@@ -24608,7 +24614,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">name of a printer to which data is sent for printing</span>
     (setq printer-name
-          (<span class="org-keyword">cond</span> (win32p <span class=
+          (<span class="org-keyword">cond</span> (leuven--win32-p <span class=
 "org-string">"//PRINT-SERVER/Brother HL-4150CDN"</span>) <span class=
 "org-comment-delimiter">; </span><span class=
 "org-leuven-highlight"><span class="org-comment">XXX</span></span>
@@ -24625,7 +24631,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">generate and print a PostScript image of the buffer</span>
   (GNUEmacs
-    (<span class="org-keyword">when</span> win32p
+    (<span class="org-keyword">when</span> leuven--win32-p
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">override `Print Screen' globally used as a hotkey by Windows</span>
       (w32-register-hot-key (kbd <span class=
@@ -24647,7 +24653,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
     (<span class="org-keyword">defvar</span> <span class=
 "org-variable-name">gsprint-program</span>
-      (concat windows-program-files-dir <span class=
+      (concat leuven--windows-program-files-dir <span class=
 "org-string">"Ghostgum/gsview/gsprint.exe"</span>)
       <span class=
 "org-doc">"Defines the Windows path to the gsview executable."</span>)
@@ -24913,9 +24919,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">default browser started when you click on some URL in the buffer</span>
   (setq browse-url-browser-function
-        (<span class="org-keyword">cond</span> ((or win32p cygwinp)
+        (<span class=
+"org-keyword">cond</span> ((or leuven--win32-p leuven--cygwin-p)
                'browse-url-default-windows-browser)
-              (macp
+              (leuven--mac-p
                'browse-url-default-macosx-browser)
               ((not (display-graphic-p)) <span class=
 "org-comment-delimiter">; </span><span class="org-comment">console</span>
@@ -25843,7 +25850,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">allow any scalable font</span>
-  (<span class="org-keyword">when</span> win32p
+  (<span class="org-keyword">when</span> leuven--win32-p
     (setq scalable-fonts-allowed t))
 </pre>
           </div>
@@ -26424,7 +26431,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 "org-constant"><span class="org-string">%s</span></span><span class=
 "org-string">'...done (in %.3f s)"</span>
          load-file-name
-         (- (float-time) leuven-before-time))
+         (- (float-time) leuven--before-time))
 (sit-for 0.3)
 </pre>
         </div>
@@ -26484,7 +26491,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140923.1408]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140923.1422]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
