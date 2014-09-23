@@ -2753,9 +2753,8 @@ Update time stamps (and copyright notice) automatically.
   ;; key binding
   (global-set-key (kbd "<C-f12>") 'leuven-revert-buffer-without-query)
 
-  ;; ;; enable Global Auto-Revert mode
-  ;; (global-auto-revert-mode 1)           ; can generate an awful lot of network
-  ;;                                       ; traffic
+  ;; enable Global Auto-Revert mode
+  (global-auto-revert-mode 1)           ; can generate a lot of network traffic
 #+end_src
 
 ** Auto-Saving: Protection Against Disasters
@@ -13810,8 +13809,10 @@ printing on Windows.
 #+begin_src emacs-lisp
   (leuven--section "FFAP")
 
-  ;; visit a file
-  (global-set-key (kbd "<f3>") 'find-file-at-point)
+  (unless (featurep 'helm-config)
+
+    ;; visit a file
+    (global-set-key (kbd "<f3>") 'find-file-at-point))
 
   ;; find file (or URL) at point
   (with-eval-after-load "ffap"

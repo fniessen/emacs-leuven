@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140923.1509
+;; Version: 20140923.1553
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140923.1509]--")
+(message "* --[ Loading Emacs Leuven 20140923.1553]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1719,9 +1719,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; key binding
   (global-set-key (kbd "<C-f12>") 'leuven-revert-buffer-without-query)
 
-  ;; ;; enable Global Auto-Revert mode
-  ;; (global-auto-revert-mode 1)           ; can generate an awful lot of network
-  ;;                                       ; traffic
+  ;; enable Global Auto-Revert mode
+  (global-auto-revert-mode 1)           ; can generate a lot of network traffic
 
 ;;** 18.6 (info "(emacs)Auto Save"): Protection Against Disasters
 
@@ -8639,8 +8638,10 @@ up before you execute another command."
 
   (leuven--section "FFAP")
 
-  ;; visit a file
-  (global-set-key (kbd "<f3>") 'find-file-at-point)
+  (unless (featurep 'helm-config)
+
+    ;; visit a file
+    (global-set-key (kbd "<f3>") 'find-file-at-point))
 
   ;; find file (or URL) at point
   (with-eval-after-load "ffap"
@@ -9113,7 +9114,7 @@ up before you execute another command."
       (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
       (message "Update finished. Restart Emacs to complete the process.")))
 
-(message "* --[ Loaded Emacs Leuven 20140923.1510]--")
+(message "* --[ Loaded Emacs Leuven 20140923.1554]--")
 
 (provide 'emacs-leuven)
 
