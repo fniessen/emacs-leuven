@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140924.1527
+;; Version: 20140924.1823
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140924.1527]--")
+(message "* --[ Loading Emacs Leuven 20140924.1823]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -2157,12 +2157,12 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; collected (>= `helm-idle-delay')
       (setq helm-input-idle-delay 0.05) ; also effective for NON-DELAYED sources
 
+      ;; enable adaptive sorting in all sources
+      (helm-adaptive-mode 1)
+
       ;; ;; enable generic Helm completion (for all functions in Emacs that use
       ;; ;; `completing-read' or `read-file-name' and friends)
       ;; (helm-mode 1)
-
-      ;; ;; enable adaptative sorting in all sources
-      ;; (helm-adaptative-mode 1)
       )
 
     (with-eval-after-load "helm-files"
@@ -2201,10 +2201,10 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; don't truncate buffer names
       (setq helm-buffer-max-length nil))
 
-    (with-eval-after-load "helm-adaptive"
-      ;; ;; don't save history information to file
-      ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
-      )
+    ;; (with-eval-after-load "helm-adaptive"
+    ;;
+    ;;   ;; don't save history information to file
+    ;;   (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history))
 
     ;; efficiently hopping squeezed lines powered by Helm interface
     ;; (= Helm occur + Follow mode!)
@@ -2221,7 +2221,8 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; when doing Isearch, hand the word over to helm-swoop
       (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
 
-      (define-key dired-mode-map (kbd "M-i") 'helm-swoop))
+      (with-eval-after-load "dired"
+        (define-key dired-mode-map (kbd "M-i") 'helm-swoop)))
 
     (with-eval-after-load "helm-swoop"
 
@@ -9163,7 +9164,7 @@ up before you execute another command."
       (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
       (message "Update finished. Restart Emacs to complete the process.")))
 
-(message "* --[ Loaded Emacs Leuven 20140924.1528]--")
+(message "* --[ Loaded Emacs Leuven 20140924.1824]--")
 
 (provide 'emacs-leuven)
 

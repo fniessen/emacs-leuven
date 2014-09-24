@@ -3581,12 +3581,12 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
       ;; collected (>= `helm-idle-delay')
       (setq helm-input-idle-delay 0.05) ; also effective for NON-DELAYED sources
 
+      ;; enable adaptive sorting in all sources
+      (helm-adaptive-mode 1)
+
       ;; ;; enable generic Helm completion (for all functions in Emacs that use
       ;; ;; `completing-read' or `read-file-name' and friends)
       ;; (helm-mode 1)
-
-      ;; ;; enable adaptative sorting in all sources
-      ;; (helm-adaptative-mode 1)
       )
 #+end_src
 
@@ -3650,10 +3650,10 @@ projects.
 #+end_src
 
 #+begin_src emacs-lisp
-    (with-eval-after-load "helm-adaptive"
-      ;; ;; don't save history information to file
-      ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
-      )
+    ;; (with-eval-after-load "helm-adaptive"
+    ;;
+    ;;   ;; don't save history information to file
+    ;;   (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history))
 #+end_src
 
 **** Helm swoop
@@ -3674,7 +3674,8 @@ projects.
       ;; when doing Isearch, hand the word over to helm-swoop
       (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
 
-      (define-key dired-mode-map (kbd "M-i") 'helm-swoop))
+      (with-eval-after-load "dired"
+        (define-key dired-mode-map (kbd "M-i") 'helm-swoop)))
 
     (with-eval-after-load "helm-swoop"
 

@@ -1320,7 +1320,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140924.1528</span>
+"org-comment">Version: 20140924.1824</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1443,7 +1443,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140924.1528]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140924.1824]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -7375,6 +7375,10 @@ M-: (executable-find "diff") RET
 "org-comment">also effective for NON-DELAYED sources</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">enable adaptive sorting in all sources</span>
+      (helm-adaptive-mode 1)
+
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; enable generic Helm completion (for all functions in Emacs that use</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; `</span><span class="org-constant"><span class=
@@ -7384,11 +7388,6 @@ M-: (executable-find "diff") RET
 "org-comment">' and friends)</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(helm-mode 1)</span>
-
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; enable adaptative sorting in all sources</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(helm-adaptative-mode 1)</span>
       )
 </pre>
             </div>
@@ -7522,13 +7521,13 @@ M-: (executable-find "diff") RET
 
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"helm-adaptive"</span>
-      <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(with-eval-after-load "helm-adaptive"</span>
+    <span class="org-comment-delimiter">;;</span>
+    <span class="org-comment-delimiter">;;   </span><span class=
 "org-comment">;; don't save history information to file</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)</span>
-      )
+    <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(remove-hook 'kill-emacs-hook 'helm-adaptive-save-history))</span>
 </pre>
               </div>
             </div>
@@ -7565,8 +7564,10 @@ M-: (executable-find "diff") RET
       (define-key isearch-mode-map (kbd <span class=
 "org-string">"M-i"</span>) 'helm-swoop-from-isearch)
 
-      (define-key dired-mode-map (kbd <span class=
-"org-string">"M-i"</span>) 'helm-swoop))
+      (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"dired"</span>
+        (define-key dired-mode-map (kbd <span class=
+"org-string">"M-i"</span>) 'helm-swoop)))
 
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"helm-swoop"</span>
@@ -26606,7 +26607,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140924.1529]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140924.1825]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
