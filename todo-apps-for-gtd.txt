@@ -10,6 +10,9 @@
 
 * Summary
 
+To find a good task manager, we recommend this list:
+http://priacta.com/gtdsoftware.
+
 http://www.priacta.com/Articles/Comparison_of_GTD_Software.php
 
 ** Contexts
@@ -582,6 +585,8 @@ http://www.vitalist.com/
 
 https://donedesk.com/
 
+(Closed on October 1st, 2014)
+
 *** Hierarchical tasks or subtasks
 
 Implement hierarchical tasks the way Trog Bar does ("Natural Project
@@ -650,7 +655,9 @@ http://blog.producteev.com/post/38326716677/gtd-up-close-part-i-labeling-your-wo
 
 *** Email Reminder
 
-"Deadline reached for: XXX"
+1 email per task whose deadline is today
+- Subject: Deadline reached for: TASK NAME
+- Body: The deadline for this task is set to DATE
 
 ** Nirvana
 
@@ -868,7 +875,7 @@ http://www.5pmweb.com/
 
 http://www.wrike.com/
 
-** Do
+** Do (from Salesforce)
 
 https://do.com/
 
@@ -970,6 +977,8 @@ See http://getontracks.org/images/uploads/tracks_project_page.png
 for inspiration about colors, etc.
 
 ** Basecamp
+
+https://basecamp.com/help
 
 Headings:
 - Overview
