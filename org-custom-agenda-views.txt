@@ -1257,6 +1257,14 @@ emacs --batch -l ~/.emacs.d/init.el -eval '(org-batch-store-agenda-views)' -kill
 
 * VISUALIZE
 
+See https://basecamp.com/extras for numerous *add-ons to Basecamp*:
+
+- mobile apps
+- time tracking, invoicing, and accounting
+- reporting, charts, planning
+- contracts and proposals
+- etc.
+
 ** Productivity
 
 The *Visualize productivity* view shows a graphical representation of your
@@ -1264,6 +1272,10 @@ productivity in the last 2 weeks.
 
 Productivity trend: barplot, x-axis = day in month (in numeric form), y-axis =
 number of completed tasks.
+
+** Visual report
+
+Stunning report on https://weekdone.com/basecamp/.
 
 * ARCHIVE
 
