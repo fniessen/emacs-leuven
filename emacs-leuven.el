@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140923.2233
+;; Version: 20140924.1527
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140923.2233]--")
+(message "* --[ Loading Emacs Leuven 20140924.1527]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -406,8 +406,8 @@ Last time is saved in global variable `leuven--before-section-time'."
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
           boxquote calfw circe company csv-mode dictionary diff-hl diminish
           dired+ dired-single ess expand-region fill-column-indicator flycheck
-          fuzzy git-commit-mode graphviz-dot-mode guide-key helm htmlize
-          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          fuzzy git-commit-mode graphviz-dot-mode guide-key helm helm-swoop
+          htmlize idle-require imenu-anywhere info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
           redo+ tidy unbound undo-tree ws-butler yasnippet
           ;; jabber multi-term paredit redshank w3m
@@ -748,6 +748,7 @@ Last time is saved in global variable `leuven--before-section-time'."
             org-end-of-line
             org-kill-line
             org-self-insert-command
+            org-yank
             orgtbl-self-insert-command
             yas-expand)))
 
@@ -1025,9 +1026,24 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; highlight uncommitted changes
   (with-eval-after-load "diff-hl-autoloads"
 
-    ;; (global-diff-hl-mode)
-    (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
-    (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode))
+    (global-diff-hl-mode)
+    ;; (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
+    ;; (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
+    )
+
+  (with-eval-after-load "diff-hl"
+
+    ;; jump to next hunk (also on `C-x v ]')
+    (define-key diff-hl-mode-map (kbd "C-x v n") 'diff-hl-next-hunk)
+
+    ;; jump to previous hunk (also on `C-x v [')
+    (define-key diff-hl-mode-map (kbd "C-x v p") 'diff-hl-previous-hunk)
+
+    ;; popup current diff
+    (define-key diff-hl-mode-map (kbd "C-x v =") 'diff-hl-diff-goto-hunk)
+
+    ;; revert current hunk (also on `C-x v n')
+    (define-key diff-hl-mode-map (kbd "C-x v u") 'diff-hl-revert-hunk))
 
 ;;** 14.15 (info "(emacs)Displaying Boundaries")
 
@@ -2116,9 +2132,9 @@ Last time is saved in global variable `leuven--before-section-time'."
             (lambda (window)
               (split-window-sensibly)))
 
-      ;; move to end or beginning of source when reaching top or bottom of
-      ;; source
-      (setq helm-move-to-line-cycle-in-source t)
+      ;; ;; move to end or beginning of source when reaching top or bottom of
+      ;; ;; source
+      ;; (setq helm-move-to-line-cycle-in-source t)
 
       (defface leuven-separator
         '((t (:weight bold :foreground "slate gray")))
@@ -2185,10 +2201,41 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; don't truncate buffer names
       (setq helm-buffer-max-length nil))
 
-  (with-eval-after-load "helm-adaptive"
+    (with-eval-after-load "helm-adaptive"
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
-  ))
+      )
+
+    ;; efficiently hopping squeezed lines powered by Helm interface
+    ;; (= Helm occur + Follow mode!)
+    (with-eval-after-load "helm-swoop-autoloads"
+
+      ;; better version of `occur'
+      (global-set-key (kbd "C-o") 'helm-swoop)
+
+      (global-set-key (kbd "M-i") 'helm-swoop)
+      (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+      (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+      (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+
+      ;; when doing Isearch, hand the word over to helm-swoop
+      (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+
+      (define-key dired-mode-map (kbd "M-i") 'helm-swoop))
+
+    (with-eval-after-load "helm-swoop"
+
+      ;; from `helm-swoop' to `helm-multi-swoop-all'
+      (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+
+      ;; don't slightly boost invoke speed in exchange for text color
+      (setq helm-swoop-speed-or-color t)
+
+      ;; split direction
+      (setq helm-swoop-split-direction 'split-window-horizontally)
+
+      ;; don't save each buffer you edit when editing is complete
+      (setq helm-multi-swoop-edit-save nil)))
 
   (leuven--section "Image mode")
 
@@ -9116,7 +9163,7 @@ up before you execute another command."
       (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
       (message "Update finished. Restart Emacs to complete the process.")))
 
-(message "* --[ Loaded Emacs Leuven 20140923.2234]--")
+(message "* --[ Loaded Emacs Leuven 20140924.1528]--")
 
 (provide 'emacs-leuven)
 

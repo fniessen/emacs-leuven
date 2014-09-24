@@ -553,8 +553,8 @@ outages).
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
           boxquote calfw circe company csv-mode dictionary diff-hl diminish
           dired+ dired-single ess expand-region fill-column-indicator flycheck
-          fuzzy git-commit-mode graphviz-dot-mode guide-key helm htmlize
-          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          fuzzy git-commit-mode graphviz-dot-mode guide-key helm helm-swoop
+          htmlize idle-require imenu-anywhere info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
           redo+ tidy unbound undo-tree ws-butler yasnippet
           ;; jabber multi-term paredit redshank w3m
@@ -1083,7 +1083,8 @@ In other editors:
 
 *** Splitting the selection into lines
 
-Select a block of lines, and then split it into many selections, one per line.
+Make *batch edits* with Multiple Cursors: select a block of lines, and then *split
+the region into lines* which are then *edited simultaneously*.
 
 #+begin_src emacs-lisp
     ;; add a cursor to each (continuous) line in the current region
@@ -1095,7 +1096,8 @@ Select a block of lines, and then split it into many selections, one per line.
 
 *** Quick add next/previous
 
-Add the next or previous occurrence of the current word to the selection.
+Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
+*occurrence of the current word to the selection*.
 
 #+begin_src emacs-lisp
     ;; add a cursor and region at the next part of the buffer forwards that
@@ -1145,6 +1147,7 @@ To go from multiple selections to a single selection, press ~C-g~.
             org-end-of-line
             org-kill-line
             org-self-insert-command
+            org-yank
             orgtbl-self-insert-command
             yas-expand)))
 #+end_src
@@ -1666,24 +1669,43 @@ much easier to follow some key variables through a block of code.
 
 ** Window Fringes
 
-Show an icon in the fringe indicating which lines have been inserted, modified
-or deleted since the last commit.
+Show an icon in the fringe indicating which *lines* have been *edited* (inserted,
+modified or deleted) *since the last commit*.
+
+This feature gives you a really nice at-a-glance view of where you've made
+changes.
 
 #+begin_src emacs-lisp
   ;; highlight uncommitted changes
   (with-eval-after-load "diff-hl-autoloads"
 
-    ;; (global-diff-hl-mode)
-    (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
-    (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode))
+    (global-diff-hl-mode)
+    ;; (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
+    ;; (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
+    )
 #+end_src
 
-# ;; Jump to next/previous hunk
-# (global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
-# (global-set-key (kbd "C-x n") 'git-gutter:next-hunk)
-#
-# ;; Revert current hunk
-# (global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
+Jump between changes:
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "diff-hl"
+
+    ;; jump to next hunk (also on `C-x v ]')
+    (define-key diff-hl-mode-map (kbd "C-x v n") 'diff-hl-next-hunk)
+
+    ;; jump to previous hunk (also on `C-x v [')
+    (define-key diff-hl-mode-map (kbd "C-x v p") 'diff-hl-previous-hunk)
+#+end_src
+
+Act on changes:
+
+#+begin_src emacs-lisp
+    ;; popup current diff
+    (define-key diff-hl-mode-map (kbd "C-x v =") 'diff-hl-diff-goto-hunk)
+
+    ;; revert current hunk (also on `C-x v n')
+    (define-key diff-hl-mode-map (kbd "C-x v u") 'diff-hl-revert-hunk))
+#+end_src
 
 ** Displaying Boundaries
 
@@ -3534,9 +3556,9 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
             (lambda (window)
               (split-window-sensibly)))
 
-      ;; move to end or beginning of source when reaching top or bottom of
-      ;; source
-      (setq helm-move-to-line-cycle-in-source t)
+      ;; ;; move to end or beginning of source when reaching top or bottom of
+      ;; ;; source
+      ;; (setq helm-move-to-line-cycle-in-source t)
 
       (defface leuven-separator
         '((t (:weight bold :foreground "slate gray")))
@@ -3604,6 +3626,9 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 
 **** Helm locate
 
+Use Helm and Everything to *quickly navigate between files*, even in the largest
+projects.
+
 #+begin_src emacs-lisp
     (with-eval-after-load "helm-locate"
 
@@ -3625,10 +3650,45 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 #+end_src
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "helm-adaptive"
+    (with-eval-after-load "helm-adaptive"
       ;; ;; don't save history information to file
       ;; (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history)
-  ))
+      )
+#+end_src
+
+**** Helm swoop
+
+#+begin_src emacs-lisp
+    ;; efficiently hopping squeezed lines powered by Helm interface
+    ;; (= Helm occur + Follow mode!)
+    (with-eval-after-load "helm-swoop-autoloads"
+
+      ;; better version of `occur'
+      (global-set-key (kbd "C-o") 'helm-swoop)
+
+      (global-set-key (kbd "M-i") 'helm-swoop)
+      (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+      (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+      (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+
+      ;; when doing Isearch, hand the word over to helm-swoop
+      (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+
+      (define-key dired-mode-map (kbd "M-i") 'helm-swoop))
+
+    (with-eval-after-load "helm-swoop"
+
+      ;; from `helm-swoop' to `helm-multi-swoop-all'
+      (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+
+      ;; don't slightly boost invoke speed in exchange for text color
+      (setq helm-swoop-speed-or-color t)
+
+      ;; split direction
+      (setq helm-swoop-split-direction 'split-window-horizontally)
+
+      ;; don't save each buffer you edit when editing is complete
+      (setq helm-multi-swoop-edit-save nil)))
 #+end_src
 
 *** Image mode
@@ -11750,25 +11810,25 @@ appropriate viewer:
   you invoke an external command.
 
 #+begin_src emacs-lisp :tangle no
-(defun helm-open-file-with-default-tool (file)
-  "Open FILE with the default tool on this platform."
-  (let ((program (cond (leuven--linux-p "xdg-open")
-                       (leuven--mac-p "open")))
-        process-connection-type)
-    (if leuven--win32-p
-        (helm-w32-shell-execute-open-file file)
-      (start-process "helm-open-file-with-default-tool" nil program file))))
+    (defun helm-open-file-with-default-tool (file)
+      "Open FILE with the default tool on this platform."
+      (let ((program (cond (leuven--linux-p "xdg-open")
+                           (leuven--mac-p "open")))
+            process-connection-type)
+        (if leuven--win32-p
+            (helm-w32-shell-execute-open-file file)
+          (start-process "helm-open-file-with-default-tool" nil program file))))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-(defun dired-launch-command ()
- (interactive)
-  (let ((program (cond (leuven--linux-p "xdg-open")
-                       (leuven--mac-p "open"))))
-    (dired-do-shell-command program nil
-                            (dired-get-marked-files t current-prefix-arg))))
+    (defun dired-launch-command ()
+     (interactive)
+      (let ((program (cond (leuven--linux-p "xdg-open")
+                           (leuven--mac-p "open"))))
+        (dired-do-shell-command program nil
+                                (dired-get-marked-files t current-prefix-arg))))
 
-(define-key dired-mode-map (kbd "F") 'dired-launch-command)
+    (define-key dired-mode-map (kbd "F") 'dired-launch-command)
 #+end_src
 
 **** Ask a WWW browser to display file
