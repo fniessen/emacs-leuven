@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140924.2310
+;; Version: 20140925.0008
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140924.2310]--")
+(message "* --[ Loading Emacs Leuven 20140925.0008]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -409,7 +409,8 @@ Last time is saved in global variable `leuven--before-section-time'."
           fuzzy git-commit-mode google-this graphviz-dot-mode guide-key helm
           helm-swoop htmlize idle-require imenu-anywhere info+ interaction-log
           ledger-mode leuven-theme multi-term multiple-cursors pager powerline
-          rainbow-mode redo+ tidy unbound undo-tree w3m ws-butler yasnippet
+          rainbow-mode redo+ spray tidy unbound undo-tree w3m ws-butler
+          yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -3163,6 +3164,10 @@ Last time is saved in global variable `leuven--before-section-time'."
       "Translate the region according to the phonetic alphabet." t))
 
 )                                       ; chapter 25 ends here
+
+  ;; (with-eval-after-load "spray-autoloads"
+  ;;   (global-set-key (kbd "<f6>") 'spray-mode)
+  ;;   )
 
 ;;* 25.9 Org Mode
 
@@ -9093,7 +9098,7 @@ up before you execute another command."
       (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
       (message "Update finished. Restart Emacs to complete the process.")))
 
-(message "* --[ Loaded Emacs Leuven 20140924.2311]--")
+(message "* --[ Loaded Emacs Leuven 20140925.0009]--")
 
 (provide 'emacs-leuven)
 

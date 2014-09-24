@@ -556,7 +556,8 @@ outages).
           fuzzy git-commit-mode google-this graphviz-dot-mode guide-key helm
           helm-swoop htmlize idle-require imenu-anywhere info+ interaction-log
           ledger-mode leuven-theme multi-term multiple-cursors pager powerline
-          rainbow-mode redo+ tidy unbound undo-tree w3m ws-butler yasnippet
+          rainbow-mode redo+ spray tidy unbound undo-tree w3m ws-butler
+          yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -5072,6 +5073,14 @@ Region Marked>~.
 
 #+begin_src emacs-lisp
 )                                       ; chapter 25 ends here
+#+end_src
+
+** Reading mode
+
+#+begin_src emacs-lisp
+  ;; (with-eval-after-load "spray-autoloads"
+  ;;   (global-set-key (kbd "<f6>") 'spray-mode)
+  ;;   )
 #+end_src
 
 * Org Mode (Getting Things Done)
@@ -10334,6 +10343,11 @@ To (attempt to) cleanly reevaluate a buffer of Emacs Lisp code, use
   (global-set-key (kbd "C-c e") 'eval-and-replace)
 #+end_src
 
+For on-the-fly evaluation/substitution of Emacs Lisp code, see
+https://github.com/Fuco1/litable.
+
+See demo of it: http://www.youtube.com/watch?v=TMoPuv-xXMM.
+
 ** Lisp Interaction Buffers
 
 #+begin_src emacs-lisp
@@ -10783,7 +10797,8 @@ TAGS:
                      \) -print | /usr/bin/ctags -e -
 #+end_src
 
-You can create a =TAGS= file by using ~M-x compile <RET> tags <RET>~.
+You can create a =TAGS= file by using ~M-x compile <RET> tags <RET>~.  Every time
+you changes your source file, you need to regenerate the tag file.
 
 Alternatively,
 
@@ -10851,6 +10866,13 @@ To continue searching for next match, use ~M-,~.
     ;; do a `find-tag-at-point', and display all exact matches
     (global-set-key (kbd "M-?") 'etags-select-find-tag-at-point))
 #+end_src
+
+However, the default Emacs' etag feature is not quite good. You should use etags
+provided by Helm.  Instead of activating ~etags-select-goto-tag~, try
+~helm-etags-select~.  If the project is big, it take some time to load tag file.
+But when it is done, the next search will be very fast.
+
+See http://truongtx.me/2014/04/20/emacs-javascript-completion-and-refactoring/.
 
 *** Find Emacs Lisp symbol definition
 
@@ -11132,6 +11154,17 @@ really like this.
 
 #+begin_src emacs-lisp
 )                                       ; chapter 28 ends here
+#+end_src
+
+*** Refactoring
+
+#+begin_src emacs-lisp :tangle no
+(req-package emr
+  :config
+  (progn (emr-initialize)
+                 (define-key emacs-lisp-mode-map
+                   (kbd "M-RET")
+                   'emr-show-refactor-menu)))
 #+end_src
 
 * Abbrevs
