@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140924.1823
+;; Version: 20140924.2310
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140924.1823]--")
+(message "* --[ Loading Emacs Leuven 20140924.2310]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -406,11 +406,11 @@ Last time is saved in global variable `leuven--before-section-time'."
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
           boxquote calfw circe company csv-mode dictionary diff-hl diminish
           dired+ dired-single ess expand-region fill-column-indicator flycheck
-          fuzzy git-commit-mode graphviz-dot-mode guide-key helm helm-swoop
-          htmlize idle-require imenu-anywhere info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          redo+ tidy unbound undo-tree ws-butler yasnippet
-          ;; jabber multi-term paredit redshank w3m
+          fuzzy git-commit-mode google-this graphviz-dot-mode guide-key helm
+          helm-swoop htmlize idle-require imenu-anywhere info+ interaction-log
+          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
+          rainbow-mode redo+ tidy unbound undo-tree w3m ws-butler yasnippet
+          ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
         :group 'emacs-leuven
@@ -2157,8 +2157,8 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; collected (>= `helm-idle-delay')
       (setq helm-input-idle-delay 0.05) ; also effective for NON-DELAYED sources
 
-      ;; enable adaptive sorting in all sources
-      (helm-adaptive-mode 1)
+      ;; ;; enable adaptive sorting in all sources
+      ;; (helm-adaptive-mode 1)
 
       ;; ;; enable generic Helm completion (for all functions in Emacs that use
       ;; ;; `completing-read' or `read-file-name' and friends)
@@ -6921,7 +6921,7 @@ up before you execute another command."
       "Go to the definition of the Emacs Lisp symbol at point."
       (interactive)
       (require 'thingatpt)              ; XXX use find-tag instead?
-      (let ((sym (symbol-at-point)))
+      (let ((sym (symbol-at-point)))    ; or (find-tag-default) or (current-word)?
         (funcall (pcase sym
                    ((pred facep)           'find-face)
                    ((pred symbol-function) 'find-function)
@@ -8031,16 +8031,7 @@ up before you execute another command."
     (setq w3m-command "w3m")
     ;; I don't want `/usr/bin/w3m' (which requires `cygwin-mount')
 
-    ;; `w3m' slows down the startup process dramatically
-    (try-require 'w3m-autoloads)
-    (if (not (featurep 'w3m-autoloads))
-      (autoload 'w3m "w3m"
-        "Visit the WWW page using w3m." t)
-      (autoload 'w3m-find-file "w3m"
-        "Find a local file using emacs-w3m." t)
-      (autoload 'w3m-browse-url "w3m"
-        "Ask emacs-w3m to show a URL." t))
-
+    ;; an Emacs interface to w3m
     (with-eval-after-load "w3m"
 
 ;;*** 3.1 Browsing Web Pages
@@ -8704,102 +8695,40 @@ up before you execute another command."
 
   (leuven--section "Web search")
 
-  (defconst leuven--google-maxlen (* 32 7)
-    "Maximum length of search string to send.
-  This prevents you from accidentally sending a 5 MB query string.")
+  (with-eval-after-load "google-this-autoloads"
+    (setq google-this-keybind (kbd "C-c g"))
+    (google-this-mode 1))
 
-  (defun leuven-google-search ()
-    "Prompt for a query in the minibuffer, launch the web browser and
-  query Google."
-    (interactive)
-    (let ((query (read-from-minibuffer "Google Search: ")))
-      (browse-url (concat "http://www.google.com/search?q="
-                          (url-hexify-string query)))))
-
-  ;; (defun google-it (search-string)
-  ;;   "Search for SEARCH-STRING on Google."
-  ;;   (interactive "sSearch for: ")
-  ;;   (browse-url (concat "http://www.google.com/search?q="
-  ;;                   (url-hexify-string
-  ;;                     (encode-coding-string search-string 'utf-8)))))
-
-  (defun leuven-google-search-word-at-point ()
-    "Google the word at point."
-    (interactive)
-    (browse-url
-     (concat "http://www.google.com/search?q=" (find-tag-default))))
-
-  (defun leuven-google-search-region (prefix start end)
-    "Create a search URL and send it to the web browser."
-    (interactive "P\nr")
-    (if (> (- end start) leuven--google-maxlen)
-        (message "Search string too long!")
-      (let ((query (buffer-substring-no-properties start end)))
-        (browse-url
-         (concat "http://www.google.com/search?q="
-                 (url-hexify-string query))))))
-
-  ;; (defun google-search-selection ()
-  ;;   "Create a Google search URL and send it to your web browser."
-  ;;   (interactive)
-  ;;   (let (start end term url)
-  ;;     (if (or (not (fboundp 'region-exists-p)) (region-exists-p))
-  ;;         (progn
-  ;;           (setq start (region-beginning)
-  ;;                 end   (region-end))
-  ;;           (if (> (- start end) leuven--google-maxlen)
-  ;;               (setq term (buffer-substring
-  ;;                           start (+ start leuven--google-maxlen)))
-  ;;             (setq term (buffer-substring start end)))
-  ;;           (google-it term))
-  ;;       (beep)
-  ;;       (message "Region not active"))))
-
-
-       (defun google (what)
-         "Use Google to search for WHAT."
-         (interactive "sSearch: ")
-         (save-window-excursion
-           (delete-other-windows)
-           (let ((dir default-directory))
-             (w3m-browse-url (concat "http://www.google.com/search?q="
-                                     (w3m-url-encode-string what)))
-             (cd dir)
-             (recursive-edit))))
-       (global-set-key (kbd "C-c g s") 'google)
-
-  (defun pm/region-or-word (prompt)
-    "Read a string from the minibuffer, prompting with PROMPT.
+  (defun leuven-google-search-active-region-or-word-at-point ()
+    "Create a Google search URL and send it to your web browser.
   If `transient-mark-mode' is non-nil and the mark is active, it defaults to the
-  current region, else to the word at or before point.  This function returns a
-  list (string) for use in `interactive'."
-    (list (read-string prompt (or (and (use-region-p)
-                                       (buffer-substring-no-properties
-                                        (region-beginning) (region-end)))
-                                  (current-word)))))
+  current region, else to the word at or before point."
+    (interactive)
+    (let ((query
+           (if (use-region-p)
+               (buffer-substring-no-properties (region-beginning) (region-end))
+             (find-tag-default))))      ; or (current-word) for word at point?
+      (browse-url
+       (concat
+        "http://www.google.com/search?q="
+        (url-hexify-string query)))))
 
-  (defun pm/google (string)
-    "Ask a WWW browser to Google STRING.
-  Prompt for a string, defaulting to the active region or the current word at or
-  before point."
-    (interactive (pm/region-or-word "Google: "))
-    (browse-url (concat "http://google.com/search?num=100&q=" string)))
+  (defun leuven-duckduckgo-search-active-region-or-word-at-point ()
+    "Create a DuckDuckGo search URL and send it to your web browser.
+  If `transient-mark-mode' is non-nil and the mark is active, it defaults to the
+  current region, else to the word at or before point."
+    (interactive)
+    (let ((query
+           (if (use-region-p)
+               (buffer-substring-no-properties (region-beginning) (region-end))
+             (find-tag-default))))      ; or (current-word) for word at point?
+      (browse-url
+       (concat
+        "https://duckduckgo.com/?q="
+        (url-hexify-string query)))))
 
-  (defvar leuven--google-prefix-map (make-sparse-keymap)
-    "Keymap for my Google commands.")
-
-  ;;     (global-set-key (kbd "M-s") 'leuven-google-search-region)
-
-  (global-set-key (kbd "C-c g") leuven--google-prefix-map)
-
-  (define-key leuven--google-prefix-map
-    (kbd "g") 'leuven-google-search)
-
-  (define-key leuven--google-prefix-map
-    (kbd "w") 'leuven-google-search-word-at-point)
-
-  (define-key leuven--google-prefix-map
-    (kbd "r") 'leuven-google-search-region)
+  (global-set-key (kbd "C-c g G") 'leuven-google-search-active-region-or-word-at-point)
+  (global-set-key (kbd "C-c g D") 'leuven-duckduckgo-search-active-region-or-word-at-point)
 
 ;;** Babel
 
@@ -9164,7 +9093,7 @@ up before you execute another command."
       (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
       (message "Update finished. Restart Emacs to complete the process.")))
 
-(message "* --[ Loaded Emacs Leuven 20140924.1824]--")
+(message "* --[ Loaded Emacs Leuven 20140924.2311]--")
 
 (provide 'emacs-leuven)
 

@@ -1320,7 +1320,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140924.1824</span>
+"org-comment">Version: 20140924.2312</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1443,7 +1443,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140924.1824]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140924.2312]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -2232,12 +2232,12 @@
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
           boxquote calfw circe company csv-mode dictionary diff-hl diminish
           dired+ dired-single ess expand-region fill-column-indicator flycheck
-          fuzzy git-commit-mode graphviz-dot-mode guide-key helm helm-swoop
-          htmlize idle-require imenu-anywhere info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          redo+ tidy unbound undo-tree ws-butler yasnippet
+          fuzzy git-commit-mode google-this graphviz-dot-mode guide-key helm
+          helm-swoop htmlize idle-require imenu-anywhere info+ interaction-log
+          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
+          rainbow-mode redo+ tidy unbound undo-tree w3m ws-butler yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">jabber multi-term paredit redshank w3m</span>
+"org-comment">jabber multi-term paredit redshank</span>
           )
         <span class=
 "org-doc">"A list of packages to ensure are installed at Emacs startup."</span>
@@ -7375,8 +7375,9 @@ M-: (executable-find "diff") RET
 "org-comment">also effective for NON-DELAYED sources</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable adaptive sorting in all sources</span>
-      (helm-adaptive-mode 1)
+"org-comment">;; enable adaptive sorting in all sources</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(helm-adaptive-mode 1)</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; enable generic Helm completion (for all functions in Emacs that use</span>
@@ -7537,6 +7538,9 @@ M-: (executable-find "diff") RET
             <h5 id="sec-20-11-1-6">Helm swoop</h5>
 
             <div class="outline-text-5" id="text-20-11-1-6">
+              <p><a href=
+              "https://github.com/ShingoFukuyama/helm-swoop">https://github.com/ShingoFukuyama/helm-swoop</a></p>
+
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
@@ -19827,7 +19831,10 @@ etags --langdef=shell --regex-shell=<span class=
 "org-comment-delimiter">; </span><span class=
 "org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
 "org-comment"> use find-tag instead?</span>
-      (<span class="org-keyword">let</span> ((sym (symbol-at-point)))
+      (<span class=
+"org-keyword">let</span> ((sym (symbol-at-point)))    <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">or (find-tag-default) or (current-word)?</span>
         (funcall (<span class="org-keyword">pcase</span> sym
                    ((pred facep)           'find-face)
                    ((pred symbol-function) 'find-function)
@@ -23114,20 +23121,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment">cygwin-mount</span></span><span class="org-comment">')</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">`</span><span class="org-constant"><span class=
-"org-comment">w3m</span></span><span class=
-"org-comment">' slows down the startup process dramatically</span>
-    (try-require 'w3m-autoloads)
-    (<span class="org-keyword">if</span> (not (<span class=
-"org-keyword">featurep</span> '<span class=
-"org-constant">w3m-autoloads</span>))
-      (autoload 'w3m <span class="org-string">"w3m"</span>
-        <span class="org-doc">"Visit the WWW page using w3m."</span> t)
-      (autoload 'w3m-find-file <span class="org-string">"w3m"</span>
-        <span class="org-doc">"Find a local file using emacs-w3m."</span> t)
-      (autoload 'w3m-browse-url <span class="org-string">"w3m"</span>
-        <span class="org-doc">"Ask emacs-w3m to show a URL."</span> t))
-
+"org-comment">an Emacs interface to w3m</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"w3m"</span>
 </pre>
@@ -25107,169 +25101,57 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
   (leuven--section <span class="org-string">"Web search"</span>)
 
-  (<span class="org-keyword">defconst</span> <span class=
-"org-variable-name">leuven--google-maxlen</span> (* 32 7)
-    <span class="org-doc">"Maximum length of search string to send.</span>
-<span class=
-"org-doc">  This prevents you from accidentally sending a 5 MB query string."</span>)
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"google-this-autoloads"</span>
+    (setq google-this-keybind (kbd <span class="org-string">"C-c g"</span>))
+    (google-this-mode 1))
 
   (<span class="org-keyword">defun</span> <span class=
-"org-function-name">leuven-google-search</span> ()
+"org-function-name">leuven-google-search-active-region-or-word-at-point</span> ()
     <span class=
-"org-doc">"Prompt for a query in the minibuffer, launch the web browser and</span>
-<span class="org-doc">  query Google."</span>
-    (interactive)
-    (<span class=
-"org-keyword">let</span> ((query (read-from-minibuffer <span class=
-"org-string">"Google Search: "</span>)))
-      (browse-url (concat <span class=
-"org-string">"http://www.google.com/search?q="</span>
-                          (url-hexify-string query)))))
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(defun google-it (search-string)</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">"Search for SEARCH-STRING on Google."</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(interactive "sSearch for: ")</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(browse-url (concat "http://www.google.com/search?q="</span>
-  <span class="org-comment-delimiter">;;                   </span><span class=
-"org-comment">(url-hexify-string</span>
-  <span class=
-"org-comment-delimiter">;;                     </span><span class="org-comment">(encode-coding-string search-string 'utf-8)))))</span>
-
-  (<span class="org-keyword">defun</span> <span class=
-"org-function-name">leuven-google-search-word-at-point</span> ()
-    <span class="org-doc">"Google the word at point."</span>
-    (interactive)
-    (browse-url
-     (concat <span class=
-"org-string">"http://www.google.com/search?q="</span> (find-tag-default))))
-
-  (<span class="org-keyword">defun</span> <span class=
-"org-function-name">leuven-google-search-region</span> (prefix start end)
-    <span class=
-"org-doc">"Create a search URL and send it to the web browser."</span>
-    (interactive <span class="org-string">"P\nr"</span>)
-    (<span class=
-"org-keyword">if</span> (&gt; (- end start) leuven--google-maxlen)
-        (message <span class="org-string">"Search string too long!"</span>)
-      (<span class=
-"org-keyword">let</span> ((query (buffer-substring-no-properties start end)))
-        (browse-url
-         (concat <span class=
-"org-string">"http://www.google.com/search?q="</span>
-                 (url-hexify-string query))))))
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(defun google-search-selection ()</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">"Create a Google search URL and send it to your web browser."</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(interactive)</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(let (start end term url)</span>
-  <span class="org-comment-delimiter">;;     </span><span class=
-"org-comment">(if (or (not (fboundp 'region-exists-p)) (region-exists-p))</span>
-  <span class="org-comment-delimiter">;;         </span><span class=
-"org-comment">(progn</span>
-  <span class="org-comment-delimiter">;;           </span><span class=
-"org-comment">(setq start (region-beginning)</span>
-  <span class="org-comment-delimiter">;;                 </span><span class=
-"org-comment">end   (region-end))</span>
-  <span class="org-comment-delimiter">;;           </span><span class=
-"org-comment">(if (&gt; (- start end) leuven--google-maxlen)</span>
-  <span class="org-comment-delimiter">;;               </span><span class=
-"org-comment">(setq term (buffer-substring</span>
-  <span class=
-"org-comment-delimiter">;;                           </span><span class=
-"org-comment">start (+ start leuven--google-maxlen)))</span>
-  <span class="org-comment-delimiter">;;             </span><span class=
-"org-comment">(setq term (buffer-substring start end)))</span>
-  <span class="org-comment-delimiter">;;           </span><span class=
-"org-comment">(google-it term))</span>
-  <span class="org-comment-delimiter">;;       </span><span class=
-"org-comment">(beep)</span>
-  <span class="org-comment-delimiter">;;       </span><span class=
-"org-comment">(message "Region not active"))))</span>
-
-
-       (<span class="org-keyword">defun</span> <span class=
-"org-function-name">google</span> (what)
-         <span class="org-doc">"Use Google to search for WHAT."</span>
-         (interactive <span class="org-string">"sSearch: "</span>)
-         (<span class="org-keyword">save-window-excursion</span>
-           (delete-other-windows)
-           (<span class="org-keyword">let</span> ((dir default-directory))
-             (w3m-browse-url (concat <span class=
-"org-string">"http://www.google.com/search?q="</span>
-                                     (w3m-url-encode-string what)))
-             (cd dir)
-             (recursive-edit))))
-       (global-set-key (kbd <span class="org-string">"C-c g s"</span>) 'google)
-</pre>
-          </div>
-
-          <p>If you know how to build the right url to the documentation of a
-          given operator, you can just replace the google url with the right
-          one in the following code:</p>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">defun</span> <span class=
-"org-function-name">pm/region-or-word</span> (prompt)
-    <span class=
-"org-doc">"Read a string from the minibuffer, prompting with PROMPT.</span>
+"org-doc">"Create a Google search URL and send it to your web browser.</span>
 <span class="org-doc">  If `</span><span class="org-constant"><span class=
 "org-doc">transient-mark-mode</span></span><span class=
 "org-doc">' is non-nil and the mark is active, it defaults to the</span>
 <span class=
-"org-doc">  current region, else to the word at or before point.  This function returns a</span>
-<span class="org-doc">  list (string) for use in `</span><span class=
-"org-constant"><span class="org-doc">interactive</span></span><span class=
-"org-doc">'."</span>
-    (list (read-string prompt (or (and (use-region-p)
-                                       (buffer-substring-no-properties
-                                        (region-beginning) (region-end)))
-                                  (current-word)))))
+"org-doc">  current region, else to the word at or before point."</span>
+    (interactive)
+    (<span class="org-keyword">let</span> ((query
+           (<span class="org-keyword">if</span> (use-region-p)
+               (buffer-substring-no-properties (region-beginning) (region-end))
+             (find-tag-default))))      <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">or (current-word) for word at point?</span>
+      (browse-url
+       (concat
+        <span class="org-string">"http://www.google.com/search?q="</span>
+        (url-hexify-string query)))))
 
   (<span class="org-keyword">defun</span> <span class=
-"org-function-name">pm/google</span> (string)
-    <span class="org-doc">"Ask a WWW browser to Google STRING.</span>
+"org-function-name">leuven-duckduckgo-search-active-region-or-word-at-point</span> ()
+    <span class=
+"org-doc">"Create a DuckDuckGo search URL and send it to your web browser.</span>
+<span class="org-doc">  If `</span><span class="org-constant"><span class=
+"org-doc">transient-mark-mode</span></span><span class=
+"org-doc">' is non-nil and the mark is active, it defaults to the</span>
 <span class=
-"org-doc">  Prompt for a string, defaulting to the active region or the current word at or</span>
-<span class="org-doc">  before point."</span>
-    (interactive (pm/region-or-word <span class=
-"org-string">"Google: "</span>))
-    (browse-url (concat <span class=
-"org-string">"http://google.com/search?num=100&amp;q="</span> string)))
-</pre>
-          </div>
-
-          <p>(end of interrupt)</p>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">defvar</span> <span class=
-"org-variable-name">leuven--google-prefix-map</span> (make-sparse-keymap)
-    <span class="org-doc">"Keymap for my Google commands."</span>)
-
-  <span class="org-comment-delimiter">;;     </span><span class=
-"org-comment">(global-set-key (kbd "M-s") 'leuven-google-search-region)</span>
+"org-doc">  current region, else to the word at or before point."</span>
+    (interactive)
+    (<span class="org-keyword">let</span> ((query
+           (<span class="org-keyword">if</span> (use-region-p)
+               (buffer-substring-no-properties (region-beginning) (region-end))
+             (find-tag-default))))      <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">or (current-word) for word at point?</span>
+      (browse-url
+       (concat
+        <span class="org-string">"https://duckduckgo.com/?q="</span>
+        (url-hexify-string query)))))
 
   (global-set-key (kbd <span class=
-"org-string">"C-c g"</span>) leuven--google-prefix-map)
-
-  (define-key leuven--google-prefix-map
-    (kbd <span class="org-string">"g"</span>) 'leuven-google-search)
-
-  (define-key leuven--google-prefix-map
-    (kbd <span class=
-"org-string">"w"</span>) 'leuven-google-search-word-at-point)
-
-  (define-key leuven--google-prefix-map
-    (kbd <span class="org-string">"r"</span>) 'leuven-google-search-region)
+"org-string">"C-c g G"</span>) 'leuven-google-search-active-region-or-word-at-point)
+  (global-set-key (kbd <span class=
+"org-string">"C-c g D"</span>) 'leuven-duckduckgo-search-active-region-or-word-at-point)
 </pre>
           </div>
         </div>
@@ -26607,7 +26489,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140924.1825]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140924.2312]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
