@@ -1324,7 +1324,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140925.0010</span>
+"org-comment">Version: 20140925.1036</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1447,7 +1447,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140925.0010]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140925.1036]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -3204,8 +3204,6 @@
 "org-string">"C-S-&lt;mouse-1&gt;"</span>) 'mc/add-cursor-on-click)
 
     (global-set-key (kbd <span class=
-"org-string">"C-c &lt;return&gt;"</span>) 'mc/mark-more-like-this-extended)
-    (global-set-key (kbd <span class=
 "org-string">"C-c &gt;"</span>) 'mc/mark-next-like-this)
     (global-set-key (kbd <span class=
 "org-string">"C-c &lt;"</span>) 'mc/mark-previous-like-this)
@@ -4489,10 +4487,6 @@
 "org-comment">unclutter the mode line</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"diminish-autoloads"</span>
-    (diminish 'auto-fill-function <span class="org-string">" Fl"</span>)
-    (diminish 'isearch-mode (string 32 ?\u279c))
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(diminish-on-load hs-minor-mode-hook hs-minor-mode)</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"abbrev"</span>       (diminish 'abbrev-mode <span class=
 "org-string">" Ab"</span>))
@@ -4512,31 +4506,35 @@
 "org-string">"flyspell"</span>     (diminish 'flyspell-mode <span class=
 "org-string">" Fs"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"flyspell"</span>     (diminish 'flyspell-mode <span class=
-"org-string">" Fs"</span>))
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(with-eval-after-load "glasses"      (diminish 'glasses-mode))</span>
+"org-string">"google-this"</span>  (diminish 'google-this-mode))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"guide-key"</span>    (diminish 'guide-key-mode <span class=
 "org-string">" Gd"</span>))
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"isearch"</span>      (diminish 'isearch-mode (string 32 ?\u279c)))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"paredit"</span>      (diminish 'paredit-mode <span class=
 "org-string">" Pe"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"rainbow-mode"</span> (diminish 'rainbow-mode <span class=
 "org-string">" Rb"</span>))
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"simple"</span>       (diminish 'auto-fill-function))
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"undo-tree"</span>    (diminish 'undo-tree-mode))
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"yasnippet"</span>    (diminish 'yas-minor-mode <span class=
+"org-string">" Ys"</span>)))
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(diminish-on-load hs-minor-mode-hook hs-minor-mode)</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(with-eval-after-load "glasses"      (diminish 'glasses-mode))</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(with-eval-after-load "redshank"     (diminish 'redshank-mode))</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(with-eval-after-load "smartparens"  (diminish 'smartparens-mode))</span>
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"undo-tree"</span>    (diminish 'undo-tree-mode <span class=
-"org-string">" u3"</span>))
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(with-eval-after-load "whitespace"   (diminish 'whitespace-mode))</span>
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"yasnippet"</span>    (diminish 'yas-minor-mode <span class=
-"org-string">" Ys"</span>)))
 </pre>
           </div>
 
@@ -9925,12 +9923,9 @@ M-: (executable-find "diff") RET
         <div class="outline-text-3" id="text-27-8">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(with-eval-after-load "spray-autoloads"</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(global-set-key (kbd "&lt;f6&gt;") 'spray-mode)</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">)</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"spray-autoloads"</span>
+    (global-set-key (kbd <span class="org-string">"C-c s"</span>) 'spray-mode))
 </pre>
           </div>
         </div>
@@ -13592,12 +13587,13 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   (setq org-agenda-compact-blocks nil)
 
   (setq org-agenda-block-separator
-        #(<span class=
-"org-string">"____________________________________________________________________________________________________________________________________"</span>
-          0 132 (face (<span class=
-"org-builtin">:foreground</span> <span class="org-string">"#59ACE2"</span>)))) <span class="org-comment-delimiter">; </span><span class="org-comment">lighter version with #C0E2F4</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(make-string 132 (string-to-char "_"))</span>
+        (propertize (make-string 132 (string-to-char <span class=
+"org-string">"_"</span>))
+                    'face '(<span class=
+"org-builtin">:foreground</span> <span class=
+"org-string">"#59ACE2"</span>))) <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">lighter version with #C0E2F4</span>
 </pre>
             </div>
 
@@ -26547,7 +26543,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140925.0010]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140925.1037]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

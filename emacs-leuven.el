@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140925.0008
+;; Version: 20140925.1034
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140925.0008]--")
+(message "* --[ Loading Emacs Leuven 20140925.1034]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -733,7 +733,6 @@ Last time is saved in global variable `leuven--before-section-time'."
     (global-set-key (kbd "C-M-=") 'mc/insert-numbers)
     (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
 
-    (global-set-key (kbd "C-c <return>") 'mc/mark-more-like-this-extended)
     (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
     (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
     (global-set-key (kbd "s-SPC") 'set-rectangular-region-anchor)
@@ -1124,25 +1123,25 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; unclutter the mode line
   (with-eval-after-load "diminish-autoloads"
-    (diminish 'auto-fill-function " Fl")
-    (diminish 'isearch-mode (string 32 ?\u279c))
-    ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
     (with-eval-after-load "abbrev"       (diminish 'abbrev-mode " Ab"))
     (with-eval-after-load "checkdoc"     (diminish 'checkdoc-minor-mode " Cd"))
     (with-eval-after-load "company"      (diminish 'company-mode " Cp"))
     (with-eval-after-load "eldoc"        (diminish 'eldoc-mode " Ed"))
     (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " Fc"))
     (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " Fs"))
-    (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " Fs"))
-    ;; (with-eval-after-load "glasses"      (diminish 'glasses-mode))
+    (with-eval-after-load "google-this"  (diminish 'google-this-mode))
     (with-eval-after-load "guide-key"    (diminish 'guide-key-mode " Gd"))
+    (with-eval-after-load "isearch"      (diminish 'isearch-mode (string 32 ?\u279c)))
     (with-eval-after-load "paredit"      (diminish 'paredit-mode " Pe"))
     (with-eval-after-load "rainbow-mode" (diminish 'rainbow-mode " Rb"))
+    (with-eval-after-load "simple"       (diminish 'auto-fill-function))
+    (with-eval-after-load "undo-tree"    (diminish 'undo-tree-mode))
+    (with-eval-after-load "yasnippet"    (diminish 'yas-minor-mode " Ys")))
+    ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
+    ;; (with-eval-after-load "glasses"      (diminish 'glasses-mode))
     ;; (with-eval-after-load "redshank"     (diminish 'redshank-mode))
     ;; (with-eval-after-load "smartparens"  (diminish 'smartparens-mode))
-    (with-eval-after-load "undo-tree"    (diminish 'undo-tree-mode " u3"))
     ;; (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
-    (with-eval-after-load "yasnippet"    (diminish 'yas-minor-mode " Ys")))
 
 (defface powerline-modified-face
   '((((class color))
@@ -3165,9 +3164,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 )                                       ; chapter 25 ends here
 
-  ;; (with-eval-after-load "spray-autoloads"
-  ;;   (global-set-key (kbd "<f6>") 'spray-mode)
-  ;;   )
+  (with-eval-after-load "spray-autoloads"
+    (global-set-key (kbd "C-c s") 'spray-mode))
 
 ;;* 25.9 Org Mode
 
@@ -4655,9 +4653,8 @@ From %c"
   (setq org-agenda-compact-blocks nil)
 
   (setq org-agenda-block-separator
-        #("____________________________________________________________________________________________________________________________________"
-          0 132 (face (:foreground "#59ACE2")))) ; lighter version with #C0E2F4
-        ;; (make-string 132 (string-to-char "_"))
+        (propertize (make-string 132 (string-to-char "_"))
+                    'face '(:foreground "#59ACE2"))) ; lighter version with #C0E2F4
 
 ;;** 10.6 (info "(org)Custom agenda views")
 
@@ -9098,7 +9095,7 @@ up before you execute another command."
       (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
       (message "Update finished. Restart Emacs to complete the process.")))
 
-(message "* --[ Loaded Emacs Leuven 20140925.0009]--")
+(message "* --[ Loaded Emacs Leuven 20140925.1035]--")
 
 (provide 'emacs-leuven)
 
