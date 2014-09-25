@@ -554,10 +554,10 @@ outages).
           boxquote calfw circe company csv-mode dictionary diff-hl diminish
           dired+ dired-single ess expand-region fancy-narrow
           fill-column-indicator flycheck fuzzy git-commit-mode google-this
-          graphviz-dot-mode guide-key helm helm-swoop htmlize idle-require
-          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
-          multi-term multiple-cursors pager powerline rainbow-mode redo+ spray
-          tidy unbound undo-tree w3m ws-butler yasnippet
+          graphviz-dot-mode guide-key helm helm-swoop htmlize litable
+          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          redo+ spray tidy unbound undo-tree w3m ws-butler yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -9423,6 +9423,12 @@ Though, it takes a while to load.
 [[http://web-mode.org/][web-mode]] could be another alternative for editing HTML documents embedding
 CSS/JS and blocks (client/server side).
 
+#+begin_src emacs-lisp
+  (with-eval-after-load "web-mode-autoloads"
+    (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode)))
+#+end_src
+
 ** XML
    :PROPERTIES:
    :ID:       786a2051-476a-4277-82df-d8ebf8ba0e99
@@ -10371,6 +10377,13 @@ For on-the-fly evaluation/substitution of Emacs Lisp code, see
 https://github.com/Fuco1/litable.
 
 See demo of it: http://www.youtube.com/watch?v=TMoPuv-xXMM.
+
+#+begin_src emacs-lisp
+  ;; dynamic evaluation replacement with emacs
+  (with-eval-after-load "litable-autoloads"
+
+    (add-hook 'lisp-interaction-mode-hook 'litable-mode))
+#+end_src
 
 ** Lisp Interaction Buffers
 

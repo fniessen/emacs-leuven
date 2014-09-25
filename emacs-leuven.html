@@ -1326,7 +1326,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140925.1809</span>
+"org-comment">Version: 20140925.2010</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1449,7 +1449,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140925.1809]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140925.2010]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -2239,10 +2239,10 @@
           boxquote calfw circe company csv-mode dictionary diff-hl diminish
           dired+ dired-single ess expand-region fancy-narrow
           fill-column-indicator flycheck fuzzy git-commit-mode google-this
-          graphviz-dot-mode guide-key helm helm-swoop htmlize idle-require
-          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
-          multi-term multiple-cursors pager powerline rainbow-mode redo+ spray
-          tidy unbound undo-tree w3m ws-butler yasnippet
+          graphviz-dot-mode guide-key helm helm-swoop htmlize litable
+          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          redo+ spray tidy unbound undo-tree w3m ws-butler yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">jabber multi-term paredit redshank</span>
           )
@@ -17382,6 +17382,17 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
           <p><a href="http://web-mode.org/">web-mode</a> could be another
           alternative for editing HTML documents embedding CSS/JS and blocks
           (client/server side).</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"web-mode-autoloads"</span>
+    (add-to-list 'auto-mode-alist '(<span class=
+"org-string">"\\.jsp\\'"</span> . web-mode))
+    (add-to-list 'auto-mode-alist '(<span class=
+"org-string">"\\.aspx\\'"</span> . web-mode)))
+</pre>
+          </div>
         </div>
       </div>
 
@@ -18978,6 +18989,17 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
           <p>See demo of it: <a href=
           "http://www.youtube.com/watch?v=TMoPuv-xXMM">http://www.youtube.com/watch?v=TMoPuv-xXMM</a>.</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">dynamic evaluation replacement with emacs</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"litable-autoloads"</span>
+
+    (add-hook 'lisp-interaction-mode-hook 'litable-mode))
+</pre>
+          </div>
         </div>
       </div>
 
@@ -26599,7 +26621,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140925.1810]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140925.2010]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

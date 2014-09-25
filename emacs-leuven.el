@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140925.1807
+;; Version: 20140925.2008
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140925.1807]--")
+(message "* --[ Loading Emacs Leuven 20140925.2008]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -407,10 +407,10 @@ Last time is saved in global variable `leuven--before-section-time'."
           boxquote calfw circe company csv-mode dictionary diff-hl diminish
           dired+ dired-single ess expand-region fancy-narrow
           fill-column-indicator flycheck fuzzy git-commit-mode google-this
-          graphviz-dot-mode guide-key helm helm-swoop htmlize idle-require
-          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
-          multi-term multiple-cursors pager powerline rainbow-mode redo+ spray
-          tidy unbound undo-tree w3m ws-butler yasnippet
+          graphviz-dot-mode guide-key helm helm-swoop htmlize litable
+          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          redo+ spray tidy unbound undo-tree w3m ws-butler yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -6104,6 +6104,10 @@ this with to-do items than with projects or headings."
   (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode))
                                         ; alias for `nxml-mode'
 
+  (with-eval-after-load "web-mode-autoloads"
+    (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode)))
+
   (with-eval-after-load "nxml-mode"
 
     ;; remove the binding of `C-c C-x' (`nxml-insert-xml-declaration'), used
@@ -6665,6 +6669,11 @@ up before you execute another command."
       (insert (format "%S" value))))
 
   (global-set-key (kbd "C-c e") 'eval-and-replace)
+
+  ;; dynamic evaluation replacement with emacs
+  (with-eval-after-load "litable-autoloads"
+
+    (add-hook 'lisp-interaction-mode-hook 'litable-mode))
 
 ;;** 27.10 Lisp Interaction Buffers
 
@@ -9110,7 +9119,7 @@ up before you execute another command."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140925.1809]--")
+(message "* --[ Loaded Emacs Leuven 20140925.2009]--")
 
 (provide 'emacs-leuven)
 
