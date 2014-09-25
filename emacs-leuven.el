@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140925.1523
+;; Version: 20140925.1807
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140925.1523]--")
+(message "* --[ Loading Emacs Leuven 20140925.1807]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -812,14 +812,16 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "12.2 (emacs)Yanking")
 
-  ;; auto-indentation of pasted code in the listed programming modes (fall back
-  ;; to default, non-indented yanking by preceding the yanking command `C-y'
-  ;; with `C-u')
-  (dolist (command '(yank yank-pop))
+  ;; auto-indentation of pasted code in the programming modes (fall back to
+  ;; default, non-indented yanking by preceding the yanking command `C-y' with
+  ;; `C-u')
+  (dolist (command '(yank
+                     yank-pop))
     (eval `(defadvice ,command (after leuven-indent-region activate)
-             (and (not current-prefix-arg)
-                  (derived-mode-p 'prog-mode)
-                  (let ((mark-even-if-inactive transient-mark-mode))
+             "Indent `yank'ed text if programming mode (and no prefix)."
+             (let ((mark-even-if-inactive t))
+               (and (not current-prefix-arg)
+                    (derived-mode-p 'prog-mode)
                     (indent-region (region-beginning) (region-end) nil))))))
 
 ;;** 12.3 (info "(emacs)Cut and Paste")
@@ -1134,13 +1136,15 @@ Last time is saved in global variable `leuven--before-section-time'."
     (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " Fc"))
     (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " Fs"))
     (with-eval-after-load "google-this"  (diminish 'google-this-mode))
-    (with-eval-after-load "guide-key"    (diminish 'guide-key-mode " Gd"))
+    (with-eval-after-load "guide-key"    (diminish 'guide-key-mode))
+    (with-eval-after-load "hilit-chg"    (diminish 'highlight-changes-mode))
     (with-eval-after-load "isearch"      (diminish 'isearch-mode (string 32 ?\u279c)))
     (with-eval-after-load "paredit"      (diminish 'paredit-mode " Pe"))
     (with-eval-after-load "rainbow-mode" (diminish 'rainbow-mode " Rb"))
     (with-eval-after-load "simple"       (diminish 'auto-fill-function))
     (with-eval-after-load "undo-tree"    (diminish 'undo-tree-mode))
-    (with-eval-after-load "yasnippet"    (diminish 'yas-minor-mode " Ys")))
+    (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
+    (with-eval-after-load "yasnippet"    (diminish 'yas-minor-mode)))
     ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
     ;; (with-eval-after-load "glasses"      (diminish 'glasses-mode))
     ;; (with-eval-after-load "redshank"     (diminish 'redshank-mode))
@@ -1410,15 +1414,18 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "15.10 (emacs)Other Repeating Search Commands")
 
-  ;; invoke `occur' easily from within `isearch'
-  (define-key isearch-mode-map (kbd "C-o")
-    (lambda ()
-      (interactive)
-      (let ((case-fold-search isearch-case-fold-search))
-        (occur
-         (if isearch-regexp
-             isearch-string
-           (regexp-quote isearch-string))))))
+  ;; ;; invoke `occur' easily from within `isearch'
+  ;; (define-key isearch-mode-map (kbd "C-o")
+  ;;   (lambda ()
+  ;;     (interactive)
+  ;;     (let ((case-fold-search isearch-case-fold-search))
+  ;;       (occur
+  ;;        (if isearch-regexp
+  ;;            isearch-string
+  ;;          (regexp-quote isearch-string))))))
+
+  ;; when doing Isearch, hand the word over to `helm-swoop'
+  (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
 
   (when (locate-library "color-moccur")
 
@@ -2222,7 +2229,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
       (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
 
-      ;; when doing Isearch, hand the word over to helm-swoop
+      ;; when doing Isearch, hand the word over to `helm-swoop'
       (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
 
       (with-eval-after-load "dired"
@@ -6120,6 +6127,18 @@ this with to-do items than with projects or headings."
 
     (add-hook 'nxml-mode-hook 'hl-tags-mode))
 
+;; TODO: Handle media queries
+;; TODO: Handle wrapped lines
+;; TODO: Ignore vendor prefixes
+(defun sort-css-properties ()
+  "Sort CSS properties alphabetically."
+  (interactive)
+  (let ((start (search-forward "{"))
+        (end (search-forward "}")))
+    (when (and start end)
+      (sort-lines nil start end)
+      (sort-declarations))))
+
 )                                       ; chapter 25 ends here
 
 ;;* 26 Editing (info "(emacs)Programs")
@@ -6353,12 +6372,11 @@ mouse-3: go to end") "]"))))
       "Face to hightlight the \"...\" area of hidden regions"
       :group 'hideshow)
 
-    (defun display-code-line-counts (ov)
+    (defun hs-display-code-line-counts (ov)
       (when (eq 'code (overlay-get ov 'hs))
-        (overlay-put ov 'display
-                     (propertize "..." 'face 'hs-face))))
+        (overlay-put ov 'display (propertize "..." 'face 'hs-face))))
 
-    (setq hs-set-up-overlay 'display-code-line-counts))
+    (setq hs-set-up-overlay 'hs-display-code-line-counts))
 
 ;;** 26.8 (info "(emacs)Symbol Completion")
 
@@ -7184,24 +7202,15 @@ up before you execute another command."
     ;; list of expansion functions tried (in order) by `hippie-expand'
     ;; (completion strategy)
     (setq hippie-expand-try-functions-list
-          '(try-expand-dabbrev          ; current buffer
+          '(try-expand-all-abbrevs      ; abbreviations
+            try-expand-dabbrev          ; current buffer
             try-expand-dabbrev-visible  ; visible (parts of all) buffers
             try-expand-dabbrev-from-kill ; kill ring
             try-complete-file-name-partially ; file names
             try-complete-file-name
-            try-expand-all-abbrevs      ; abbreviations
-            try-expand-list
-            try-expand-line
             try-complete-lisp-symbol-partially
             try-complete-lisp-symbol
             try-expand-whole-kill))
-
-    (setq hippie-expand-try-functions-list
-          '(try-complete-file-name-partially ; file names
-            try-complete-file-name
-            try-expand-all-abbrevs      ; abbreviations
-            try-expand-dabbrev          ; current buffer
-            try-expand-dabbrev-from-kill)) ; kill ring
 
     ;; integrate YASnippet with `hippie-expand'
     (with-eval-after-load "yasnippet"
@@ -9101,7 +9110,7 @@ up before you execute another command."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140925.1524]--")
+(message "* --[ Loaded Emacs Leuven 20140925.1809]--")
 
 (provide 'emacs-leuven)
 
