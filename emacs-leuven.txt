@@ -14797,9 +14797,11 @@ calls to message), set the variable ~debug-on-message~.
     (when (y-or-n-p "Do you want to update Leuven? ")
       (message "Updating Leuven...")
       (cd leuven--directory)
-      (shell-command "git pull")
-      (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
-      (message "Update finished. Restart Emacs to complete the process.")))
+      (if (not (= (shell-command "git pull | grep \"Already up-to-date.\"") 0))
+          (progn
+            (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
+            (message "Configuration updated. Restart Emacs to complete the process."))
+        (message "Configuration already up-to-date."))))
 #+end_src
 
 #+begin_src emacs-lisp :noweb yes

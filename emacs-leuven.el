@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140925.1128
+;; Version: 20140925.1523
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140925.1128]--")
+(message "* --[ Loading Emacs Leuven 20140925.1523]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -9095,11 +9095,13 @@ up before you execute another command."
     (when (y-or-n-p "Do you want to update Leuven? ")
       (message "Updating Leuven...")
       (cd leuven--directory)
-      (shell-command "git pull")
-      (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
-      (message "Update finished. Restart Emacs to complete the process.")))
+      (if (not (= (shell-command "git pull | grep \"Already up-to-date.\"") 0))
+          (progn
+            (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
+            (message "Configuration updated. Restart Emacs to complete the process."))
+        (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140925.1129]--")
+(message "* --[ Loaded Emacs Leuven 20140925.1524]--")
 
 (provide 'emacs-leuven)
 

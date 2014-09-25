@@ -1324,7 +1324,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140925.1129</span>
+"org-comment">Version: 20140925.1525</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1447,7 +1447,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140925.1129]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140925.1525]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -26539,18 +26539,22 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 "org-string">"Do you want to update Leuven? "</span>)
       (message <span class="org-string">"Updating Leuven..."</span>)
       (cd leuven--directory)
-      (shell-command <span class="org-string">"git pull"</span>)
-      (byte-recompile-file (concat leuven--directory <span class=
+      (<span class="org-keyword">if</span> (not (= (shell-command <span class=
+"org-string">"git pull | grep \"Already up-to-date.\""</span>) 0))
+          (<span class="org-keyword">progn</span>
+            (byte-recompile-file (concat leuven--directory <span class=
 "org-string">"emacs-leuven.el"</span>) nil 0)
-      (message <span class=
-"org-string">"Update finished. Restart Emacs to complete the process."</span>)))
+            (message <span class=
+"org-string">"Configuration updated. Restart Emacs to complete the process."</span>))
+        (message <span class=
+"org-string">"Configuration already up-to-date."</span>))))
 </pre>
         </div>
 
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140925.1130]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140925.1525]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
