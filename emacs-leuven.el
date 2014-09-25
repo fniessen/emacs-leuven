@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140925.2008
+;; Version: 20140925.2035
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140925.2008]--")
+(message "* --[ Loading Emacs Leuven 20140925.2035]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -839,27 +839,22 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 (leuven--chapter leuven-chapter-13-registers "13 Registers"
 
-  ;; ;; Enable position saving through shortcuts.
-  ;; ;; Save current position with  Ctrl-F1 Ctrl-F2 Ctrl-F3 and Ctrl-F4
-  ;; (global-set-key [C-f1] (lambda () (interactive) (point-to-register ?1)))
-  ;; (global-set-key [C-f2] (lambda () (interactive) (point-to-register ?2)))
-  ;; (global-set-key [C-f3] (lambda () (interactive) (point-to-register ?3)))
-  ;; (global-set-key [C-f4] (lambda () (interactive) (point-to-register ?4)))
+;;** 13.1 (info "(emacs)Position Registers")
 
-  ;; (defun jump-to-register-other (reg)
-  ;;   (other-window 1)
-  ;;   (jump-to-register reg)
-  ;;   (hilit-recenter (/ (window-height) 2)))
-  ;;
-  ;; (defun jump-to-register-here (reg)
-  ;;   (jump-to-register reg)
-  ;;   (hilit-recenter (/ (window-height) 2)))
+  (leuven--section "13.1 (emacs)Position Registers")
 
-  ;; ;; Move to saved position with F1 F2 F3 and F4
-  ;; (global-set-key [f1] (lambda () (interactive) (jump-to-register-here ?1)))
-  ;; (global-set-key [f2] (lambda () (interactive) (jump-to-register-here ?2)))
-  ;; (global-set-key [f3] (lambda () (interactive) (jump-to-register-here ?3)))
-  ;; (global-set-key [f4] (lambda () (interactive) (jump-to-register-here ?4)))
+  (global-set-key (kbd "C-j") 'jump-to-register) ; also on `C-x r j'
+
+  (set-register ?a '(file . "/sudo::/etc/apt/sources.list"))
+  (set-register ?b '(file . "~/.bashrc"))
+  (set-register ?e `(file . ,(concat leuven--directory "emacs-leuven.txt")))
+  (when (file-exists-p "~/org/personal/Personal.org")
+    (set-register ?p '(file . "~/org/personal/Personal.org")))
+  (when (file-exists-p "~/org/refile.org")
+    (set-register ?r '(file . "~/org/refile.org")))
+  (when (file-exists-p "~/org/work/Work.org")
+    (set-register ?w '(file . "~/org/work/Work.org")))
+  (set-register ?z '(file . "~/.zshrc"))
 
 ;;** 13.7 (info "(emacs)Bookmarks")
 
@@ -7213,7 +7208,8 @@ up before you execute another command."
     (setq hippie-expand-try-functions-list
           '(try-expand-all-abbrevs      ; abbreviations
             try-expand-dabbrev          ; current buffer
-            try-expand-dabbrev-visible  ; visible (parts of all) buffers
+            ;; try-expand-dabbrev-visible  ; visible (parts of all) buffers
+            try-expand-dabbrev-all-buffers
             try-expand-dabbrev-from-kill ; kill ring
             try-complete-file-name-partially ; file names
             try-complete-file-name
@@ -9119,7 +9115,7 @@ up before you execute another command."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140925.2009]--")
+(message "* --[ Loaded Emacs Leuven 20140925.2036]--")
 
 (provide 'emacs-leuven)
 

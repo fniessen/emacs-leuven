@@ -1324,41 +1324,29 @@ highlighting.  Check out [[http://www.vimeo.com/1168225?pg=embed&sec=1168225][Em
 ;;* 13 (info "(emacs)Registers")
 
 (leuven--chapter leuven-chapter-13-registers "13 Registers"
-
-  ;; ;; Enable position saving through shortcuts.
-  ;; ;; Save current position with  Ctrl-F1 Ctrl-F2 Ctrl-F3 and Ctrl-F4
-  ;; (global-set-key [C-f1] (lambda () (interactive) (point-to-register ?1)))
-  ;; (global-set-key [C-f2] (lambda () (interactive) (point-to-register ?2)))
-  ;; (global-set-key [C-f3] (lambda () (interactive) (point-to-register ?3)))
-  ;; (global-set-key [C-f4] (lambda () (interactive) (point-to-register ?4)))
-
-  ;; (defun jump-to-register-other (reg)
-  ;;   (other-window 1)
-  ;;   (jump-to-register reg)
-  ;;   (hilit-recenter (/ (window-height) 2)))
-  ;;
-  ;; (defun jump-to-register-here (reg)
-  ;;   (jump-to-register reg)
-  ;;   (hilit-recenter (/ (window-height) 2)))
-
-  ;; ;; Move to saved position with F1 F2 F3 and F4
-  ;; (global-set-key [f1] (lambda () (interactive) (jump-to-register-here ?1)))
-  ;; (global-set-key [f2] (lambda () (interactive) (jump-to-register-here ?2)))
-  ;; (global-set-key [f3] (lambda () (interactive) (jump-to-register-here ?3)))
-  ;; (global-set-key [f4] (lambda () (interactive) (jump-to-register-here ?4)))
 #+end_src
 
-Jump between configuration files
+** Saving Positions in Registers
 
-#+begin_src emacs-lisp :tangle no
-(global-set-key (kbd "C-j") 'jump-to-register)
+Setup registers for files I commonly edit.
 
-(set-register ?a (cons 'file "/sudo::/etc/apt/sources.list"))
-(set-register ?b (cons 'file "~/News/KILL"))
-(set-register ?C (cons 'file "/sudo::/etc/default/console-setup"))
-(set-register ?c (cons 'file "~/.irssi/config"))
-(set-register ?d (cons 'file "~/.emacs-dired"))
-; etc.
+#+begin_src emacs-lisp
+;;** 13.1 (info "(emacs)Position Registers")
+
+  (leuven--section "13.1 (emacs)Position Registers")
+
+  (global-set-key (kbd "C-j") 'jump-to-register) ; also on `C-x r j'
+
+  (set-register ?a '(file . "/sudo::/etc/apt/sources.list"))
+  (set-register ?b '(file . "~/.bashrc"))
+  (set-register ?e `(file . ,(concat leuven--directory "emacs-leuven.txt")))
+  (when (file-exists-p "~/org/personal/Personal.org")
+    (set-register ?p '(file . "~/org/personal/Personal.org")))
+  (when (file-exists-p "~/org/refile.org")
+    (set-register ?r '(file . "~/org/refile.org")))
+  (when (file-exists-p "~/org/work/Work.org")
+    (set-register ?w '(file . "~/org/work/Work.org")))
+  (set-register ?z '(file . "~/.zshrc"))
 #+end_src
 
 ** Bookmarks
@@ -11479,7 +11467,8 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
     (setq hippie-expand-try-functions-list
           '(try-expand-all-abbrevs      ; abbreviations
             try-expand-dabbrev          ; current buffer
-            try-expand-dabbrev-visible  ; visible (parts of all) buffers
+            ;; try-expand-dabbrev-visible  ; visible (parts of all) buffers
+            try-expand-dabbrev-all-buffers
             try-expand-dabbrev-from-kill ; kill ring
             try-complete-file-name-partially ; file names
             try-complete-file-name
