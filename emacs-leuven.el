@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140925.2035
+;; Version: 20140925.2118
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140925.2035]--")
+(message "* --[ Loading Emacs Leuven 20140925.2118]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1422,28 +1422,22 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; when doing Isearch, hand the word over to `helm-swoop'
   (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
 
-  (when (locate-library "color-moccur")
+  (global-unset-key (kbd "M-o"))
 
-    ;; multi-buffer occur (grep) mode
-    (mapc (function
-           (lambda (x)
-             (autoload x "color-moccur" nil t)))
-          '(moccur
-            dmoccur
-            dired-do-moccur
-            Buffer-menu-moccur
-            grep-buffers
-            search-buffers
-            occur-by-moccur
-            isearch-moccur
-            moccur-grep
-            moccur-grep-find)))
+  ;; "multi-occur" easily inside Isearch
+  (define-key isearch-mode-map (kbd "M-o") 'helm-multi-swoop-all)
 
-  ;; multi-buffer occur (grep) mode
-  (with-eval-after-load "color-moccur"
-
-    ;; input word splited by space
-    (setq moccur-split-word t))
+  ;; grep all same extension files from inside isearch
+  (define-key isearch-mode-map (kbd "C-M-o")
+    (lambda ()
+      (interactive)
+      (grep-compute-defaults)
+      (lgrep (if isearch-regexp isearch-string (regexp-quote isearch-string))
+             (if (file-name-extension (buffer-file-name))
+              (format "*.%s" (file-name-extension (buffer-file-name)))
+              "*")
+             default-directory)
+      (isearch-abort)))
 
 )                                       ; chapter 15 ends here
 
@@ -3206,6 +3200,10 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; display the Org mode manual in Info mode
     (define-key global-map (kbd "C-h o") 'org-info))
                                         ; XXX not autoloaded
+
+  (with-eval-after-load "org"
+    ;; unbind `C-j'
+    (define-key org-mode-map (kbd "C-j") nil))
 
   ;; These variables need to be set before org.el is loaded...
 
@@ -9115,7 +9113,7 @@ up before you execute another command."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140925.2036]--")
+(message "* --[ Loaded Emacs Leuven 20140925.2120]--")
 
 (provide 'emacs-leuven)
 

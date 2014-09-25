@@ -216,13 +216,7 @@
 
               <li><a href="#sec-17-4">Replacement Commands</a></li>
 
-              <li>
-                <a href="#sec-17-5">Other Search-and-Loop Commands</a>
-
-                <ul>
-                  <li><a href="#sec-17-5-1">Multi-buffer occur</a></li>
-                </ul>
-              </li>
+              <li><a href="#sec-17-5">Other Search-and-Loop Commands</a></li>
             </ul>
           </li>
 
@@ -1328,7 +1322,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140925.2037</span>
+"org-comment">Version: 20140925.2111</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1451,7 +1445,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140925.2037]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140925.2111]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -5183,69 +5177,38 @@
 "org-comment">'</span>
   (define-key isearch-mode-map (kbd <span class=
 "org-string">"C-o"</span>) 'helm-swoop-from-isearch)
+
+  (global-unset-key (kbd <span class="org-string">"M-o"</span>))
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">"multi-occur" easily inside Isearch</span>
+  (define-key isearch-mode-map (kbd <span class=
+"org-string">"M-o"</span>) 'helm-multi-swoop-all)
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">grep all same extension files from inside isearch</span>
+  (define-key isearch-mode-map (kbd <span class="org-string">"C-M-o"</span>)
+    (<span class="org-keyword">lambda</span> ()
+      (interactive)
+      (grep-compute-defaults)
+      (lgrep (<span class=
+"org-keyword">if</span> isearch-regexp isearch-string (regexp-quote isearch-string))
+             (<span class=
+"org-keyword">if</span> (file-name-extension (buffer-file-name))
+              (format <span class=
+"org-string">"*.%s"</span> (file-name-extension (buffer-file-name)))
+              <span class="org-string">"*"</span>)
+             default-directory)
+      (isearch-abort)))
 </pre>
           </div>
 
-          <p>Occur Edit mode applies edits made in <code>*Occur*</code> buffers
-          to the original buffers. It is bound to <code>e</code> in Occur
-          mode.</p>
-        </div>
-
-        <div id="outline-container-sec-17-5-1" class="outline-4">
-          <h4 id="sec-17-5-1">Multi-buffer occur</h4>
-
-          <div class="outline-text-4" id="text-17-5-1">
-            <table class="inlinetask" width="100%">
-              <tr>
-                <td valign="top"><b><span class=
-                "todo TODO">TODO</span></b></td>
-
-                <td width="100%"><b>Have a look at <a href=
-                "http://www.emacswiki.org/emacs/color-moccur.el">http://www.emacswiki.org/emacs/color-moccur.el</a>
-                for searching regexp in buffer</b><br /></td>
-              </tr>
-            </table>
-
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">when</span> (locate-library <span class=
-"org-string">"color-moccur"</span>)
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">multi-buffer occur (grep) mode</span>
-    (mapc (function
-           (<span class="org-keyword">lambda</span> (x)
-             (autoload x <span class=
-"org-string">"color-moccur"</span> nil t)))
-          '(moccur
-            dmoccur
-            dired-do-moccur
-            Buffer-menu-moccur
-            grep-buffers
-            search-buffers
-            occur-by-moccur
-            isearch-moccur
-            moccur-grep
-            moccur-grep-find)))
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">multi-buffer occur (grep) mode</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"color-moccur"</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">input word splited by space</span>
-    (setq moccur-split-word t))
-</pre>
-            </div>
-
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
 )                                       <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">chapter 15 ends here</span>
 </pre>
-            </div>
           </div>
         </div>
       </div>
@@ -10025,6 +9988,13 @@ M-: (executable-find "diff") RET
 "org-comment-delimiter">; </span><span class=
 "org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
 "org-comment"> not autoloaded</span>
+
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"org"</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">unbind `</span><span class="org-constant"><span class=
+"org-comment">C-j</span></span><span class="org-comment">'</span>
+    (define-key org-mode-map (kbd <span class="org-string">"C-j"</span>) nil))
 </pre>
         </div>
 
@@ -19838,6 +19808,11 @@ etags --langdef=shell --regex-shell=<span class=
 
             <p>Use <code>M-*</code> (<code>M-x pop-tag-mark</code>) to <b>jump
             back</b> to where you last invoked <code>M-.</code>.</p>
+
+            <p>XXX See <a href=
+            "http://marmalade-repo.org/packages/jump-dls">http://marmalade-repo.org/packages/jump-dls</a>
+            to jump to the source of the symbol at point using a number of
+            possible methods, such as semantic, tags, etc.</p>
           </div>
         </div>
 
@@ -26606,7 +26581,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140925.2037]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140925.2112]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

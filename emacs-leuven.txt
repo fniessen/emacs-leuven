@@ -2269,38 +2269,22 @@ a match for REGEXP.
   ;; when doing Isearch, hand the word over to `helm-swoop'
   (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
 
-#+end_src
+  (global-unset-key (kbd "M-o"))
 
-Occur Edit mode applies edits made in ~*Occur*~ buffers to the original buffers.
-It is bound to ~e~ in Occur mode.
+  ;; "multi-occur" easily inside Isearch
+  (define-key isearch-mode-map (kbd "M-o") 'helm-multi-swoop-all)
 
-*** Multi-buffer occur
-
-*************** TODO Have a look at http://www.emacswiki.org/emacs/color-moccur.el for searching regexp in buffer
-
-#+begin_src emacs-lisp
-  (when (locate-library "color-moccur")
-
-    ;; multi-buffer occur (grep) mode
-    (mapc (function
-           (lambda (x)
-             (autoload x "color-moccur" nil t)))
-          '(moccur
-            dmoccur
-            dired-do-moccur
-            Buffer-menu-moccur
-            grep-buffers
-            search-buffers
-            occur-by-moccur
-            isearch-moccur
-            moccur-grep
-            moccur-grep-find)))
-
-  ;; multi-buffer occur (grep) mode
-  (with-eval-after-load "color-moccur"
-
-    ;; input word splited by space
-    (setq moccur-split-word t))
+  ;; grep all same extension files from inside isearch
+  (define-key isearch-mode-map (kbd "C-M-o")
+    (lambda ()
+      (interactive)
+      (grep-compute-defaults)
+      (lgrep (if isearch-regexp isearch-string (regexp-quote isearch-string))
+             (if (file-name-extension (buffer-file-name))
+              (format "*.%s" (file-name-extension (buffer-file-name)))
+              "*")
+             default-directory)
+      (isearch-abort)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3659,6 +3643,9 @@ projects.
 **** Helm swoop
 
 https://github.com/ShingoFukuyama/helm-swoop
+
+# Occur Edit mode applies edits made in ~*Occur*~ buffers to the original buffers.
+# It is bound to ~e~ in Occur mode.
 
 #+begin_src emacs-lisp
     ;; efficiently hopping squeezed lines powered by Helm interface
@@ -5131,6 +5118,10 @@ work and tasks with Org mode.
     ;; display the Org mode manual in Info mode
     (define-key global-map (kbd "C-h o") 'org-info))
                                         ; XXX not autoloaded
+
+  (with-eval-after-load "org"
+    ;; unbind `C-j'
+    (define-key org-mode-map (kbd "C-j") nil))
 #+end_src
 
 These variables need to be set before Org mode is loaded.
@@ -10872,6 +10863,9 @@ To continue searching for *next definition*, use ~C-u M-.~.
 #+end_src
 
 Use ~M-*~ (~M-x pop-tag-mark~) to *jump back* to where you last invoked ~M-.~.
+
+XXX See http://marmalade-repo.org/packages/jump-dls to jump to the source of the
+symbol at point using a number of possible methods, such as semantic, tags, etc.
 
 *** Select from multiple TAGS files
 
