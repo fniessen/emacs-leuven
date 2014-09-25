@@ -552,12 +552,12 @@ outages).
       (defcustom leuven-elpa-packages
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
           boxquote calfw circe company csv-mode dictionary diff-hl diminish
-          dired+ dired-single ess expand-region fill-column-indicator flycheck
-          fuzzy git-commit-mode google-this graphviz-dot-mode guide-key helm
-          helm-swoop htmlize idle-require imenu-anywhere info+ interaction-log
-          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
-          rainbow-mode redo+ spray tidy unbound undo-tree w3m ws-butler
-          yasnippet
+          dired+ dired-single ess expand-region fancy-narrow
+          fill-column-indicator flycheck fuzzy git-commit-mode google-this
+          graphviz-dot-mode guide-key helm helm-swoop htmlize idle-require
+          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
+          multi-term multiple-cursors pager powerline rainbow-mode redo+ spray
+          tidy unbound undo-tree w3m ws-butler yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -1525,6 +1525,9 @@ Key bindings:
 
   ;; enable the use of the command `narrow-to-region' without confirmation
   (put 'narrow-to-region 'disabled nil)
+
+  (with-eval-after-load "fancy-narrow-autoloads"
+    (fancy-narrow-mode))
 #+end_src
 
 ** Font Lock mode
@@ -1805,9 +1808,9 @@ VPATH=		/home/jt/src/cygwin/cygwin-packages/1.7/python-2.6.8-2/python-2.6.8-2/sr
 LDLAST=
 SGI_ABI=
 PYTHON_OBJS=	\
-		Python/pythonrun.o \
+                Python/pythonrun.o \
                 Python/random.o \
-		Python/structmember.o
+                Python/structmember.o
 
 #+begin_src emacs-lisp
   ;; ;; control highlighting of non-ASCII space and hyphen chars, using the
@@ -1856,6 +1859,7 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
     (with-eval-after-load "checkdoc"     (diminish 'checkdoc-minor-mode " Cd"))
     (with-eval-after-load "company"      (diminish 'company-mode " Cp"))
     (with-eval-after-load "eldoc"        (diminish 'eldoc-mode " Ed"))
+    (with-eval-after-load "fancy-narrow" (diminish 'fancy-narrow-mode))
     (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " Fc"))
     (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " Fs"))
     (with-eval-after-load "google-this"  (diminish 'google-this-mode))
@@ -10788,8 +10792,8 @@ For example, you can have a ~TAGS~ Makefile target to do this for you:
 
 #+begin_src makefile :tangle no
 TAGS:
-	rm -f TAGS
-	find $$(pwd) \( -name \*.el \
+        rm -f TAGS
+        find $$(pwd) \( -name \*.el \
                      -o -name \*.[chCH] \
                      \) -print | /usr/bin/ctags -e -
 #+end_src

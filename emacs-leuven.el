@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140925.1034
+;; Version: 20140925.1128
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140925.1034]--")
+(message "* --[ Loading Emacs Leuven 20140925.1128]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -405,12 +405,12 @@ Last time is saved in global variable `leuven--before-section-time'."
       (defcustom leuven-elpa-packages
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
           boxquote calfw circe company csv-mode dictionary diff-hl diminish
-          dired+ dired-single ess expand-region fill-column-indicator flycheck
-          fuzzy git-commit-mode google-this graphviz-dot-mode guide-key helm
-          helm-swoop htmlize idle-require imenu-anywhere info+ interaction-log
-          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
-          rainbow-mode redo+ spray tidy unbound undo-tree w3m ws-butler
-          yasnippet
+          dired+ dired-single ess expand-region fancy-narrow
+          fill-column-indicator flycheck fuzzy git-commit-mode google-this
+          graphviz-dot-mode guide-key helm helm-swoop htmlize idle-require
+          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
+          multi-term multiple-cursors pager powerline rainbow-mode redo+ spray
+          tidy unbound undo-tree w3m ws-butler yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -944,6 +944,9 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; enable the use of the command `narrow-to-region' without confirmation
   (put 'narrow-to-region 'disabled nil)
 
+  (with-eval-after-load "fancy-narrow-autoloads"
+    (fancy-narrow-mode))
+
 ;;** 14.12 (info "(emacs)Font Lock")
 
   (leuven--section "14.12 (emacs)Font Lock")
@@ -1127,6 +1130,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (with-eval-after-load "checkdoc"     (diminish 'checkdoc-minor-mode " Cd"))
     (with-eval-after-load "company"      (diminish 'company-mode " Cp"))
     (with-eval-after-load "eldoc"        (diminish 'eldoc-mode " Ed"))
+    (with-eval-after-load "fancy-narrow" (diminish 'fancy-narrow-mode))
     (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " Fc"))
     (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " Fs"))
     (with-eval-after-load "google-this"  (diminish 'google-this-mode))
@@ -9095,7 +9099,7 @@ up before you execute another command."
       (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
       (message "Update finished. Restart Emacs to complete the process.")))
 
-(message "* --[ Loaded Emacs Leuven 20140925.1035]--")
+(message "* --[ Loaded Emacs Leuven 20140925.1129]--")
 
 (provide 'emacs-leuven)
 
