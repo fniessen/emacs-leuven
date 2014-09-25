@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140925.2118
+;; Version: 20140925.2127
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140925.2118]--")
+(message "* --[ Loading Emacs Leuven 20140925.2127]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1284,16 +1284,20 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "14.20 (emacs)The Cursor Display")
 
   (GNUEmacs
-    ;; using cursor color to indicate some modes (read-only, overwrite and
-    ;; normal insert modes)
-    (defun leuven--set-cursor-color-according-to-mode ()
+    ;; use cursor color and type to indicate some modes (read-only, overwrite
+    ;; and normal insert modes)
+    (defun leuven--set-cursor-according-to-mode ()
       "Change cursor color according to some minor modes."
       (let ((color (cond (buffer-read-only "purple1")
                          (overwrite-mode   "red")
-                         (t                "black"))))
-        (set-cursor-color color)))
+                         (t                "black")))
+            (type (if (null overwrite-mode)
+                      'bar
+                    'box)))
+        (set-cursor-color color)
+        (setq cursor-type type)))
 
-    (add-hook 'post-command-hook 'leuven--set-cursor-color-according-to-mode))
+    (add-hook 'post-command-hook 'leuven--set-cursor-according-to-mode))
 
   ;; cursor to use
   (setq-default cursor-type 'bar)
@@ -9113,7 +9117,7 @@ up before you execute another command."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140925.2120]--")
+(message "* --[ Loaded Emacs Leuven 20140925.2128]--")
 
 (provide 'emacs-leuven)
 

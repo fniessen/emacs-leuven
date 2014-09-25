@@ -2020,16 +2020,20 @@ See https://github.com/bling/vim-airline for the original author.
   (leuven--section "14.20 (emacs)The Cursor Display")
 
   (GNUEmacs
-    ;; using cursor color to indicate some modes (read-only, overwrite and
-    ;; normal insert modes)
-    (defun leuven--set-cursor-color-according-to-mode ()
+    ;; use cursor color and type to indicate some modes (read-only, overwrite
+    ;; and normal insert modes)
+    (defun leuven--set-cursor-according-to-mode ()
       "Change cursor color according to some minor modes."
       (let ((color (cond (buffer-read-only "purple1")
                          (overwrite-mode   "red")
-                         (t                "black"))))
-        (set-cursor-color color)))
+                         (t                "black")))
+            (type (if (null overwrite-mode)
+                      'bar
+                    'box)))
+        (set-cursor-color color)
+        (setq cursor-type type)))
 
-    (add-hook 'post-command-hook 'leuven--set-cursor-color-according-to-mode))
+    (add-hook 'post-command-hook 'leuven--set-cursor-according-to-mode))
 
   ;; cursor to use
   (setq-default cursor-type 'bar)
