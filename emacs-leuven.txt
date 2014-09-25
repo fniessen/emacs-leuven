@@ -658,6 +658,14 @@ cancelable; hence, we put it out of a "chapter".
 
 (leuven--chapter leuven-chapter-6-exiting "6 Exiting Emacs"
 
+  ;; prevent accidentally killing Emacs
+  ;; This will force emacs to ask me if I'm sure that I want to quit.
+  (global-set-key (kbd "C-x C-c")
+    (lambda ()
+      (interactive)
+      (if (y-or-n-p-with-timeout "Do you really want to exit Emacs? " 4 nil)
+          (save-buffers-kill-emacs))))
+
   ;; quit with Alt + F4
   (global-set-key (kbd "<M-f4>") 'save-buffers-kill-terminal)
 
@@ -1662,8 +1670,8 @@ much easier to follow some key variables through a block of code.
 
 ** Window Fringes
 
-Show an icon in the fringe indicating which *lines* have been *edited* (inserted,
-modified or deleted) *since the last commit*.
+Show an icon in the fringe of version-controlled files indicating which *lines*
+have been *edited* (inserted, modified or deleted) *since the last commit*.
 
 This feature gives you a really nice at-a-glance view of where you've made
 changes.
@@ -1672,10 +1680,7 @@ changes.
   ;; highlight uncommitted changes
   (with-eval-after-load "diff-hl-autoloads"
 
-    (global-diff-hl-mode)
-    ;; (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
-    ;; (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
-    )
+    (global-diff-hl-mode))
 #+end_src
 
 Jump between changes:
@@ -2627,7 +2632,7 @@ Assign the last macro to a free key binding of your choice with
 ~kmacro-bind-to-key~ (bound to ~C-x C-k b~).
 
 To *save a named keyboard macro* (with its key binding) for future use, switch to
-your =.emacs= buffer, and run ~C-u M-x insert-kbd-macro~ (if you leave out the ~C-u~,
+your =.emacs= file, and run ~C-u M-x insert-kbd-macro~ (if you leave out the ~C-u~,
 then it will just insert the macro definition without the ~global-set-key~
 sequence).
 
@@ -2762,10 +2767,21 @@ Update time stamps (and copyright notice) automatically.
 
   ;; key binding
   (global-set-key (kbd "<C-f12>") 'leuven-revert-buffer-without-query)
+#+end_src
 
+Turn on auto-revert mode globally.
+
+#+begin_src emacs-lisp
   ;; enable Global Auto-Revert mode
   (global-auto-revert-mode 1)           ; can generate a lot of network traffic
+
+  ;; Global Auto-Revert mode operates on all buffers (Dired, among others)
+  (setq-default global-auto-revert-non-file-buffers t)
 #+end_src
+
+Auto-revert will automatically reload files that have changed outside of Emacs.
+It won't revert a buffer that you've edited inside Emacs, even if the file also
+changes outside.
 
 ** Auto-Saving: Protection Against Disasters
 

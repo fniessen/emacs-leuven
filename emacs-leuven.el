@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140925.2127
+;; Version: 20140925.2209
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140925.2127]--")
+(message "* --[ Loading Emacs Leuven 20140925.2209]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -495,6 +495,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 ;;* 6 (info "(emacs)Exiting") Emacs
 
 (leuven--chapter leuven-chapter-6-exiting "6 Exiting Emacs"
+
+  ;; prevent accidentally killing Emacs
+  ;; This will force emacs to ask me if I'm sure that I want to quit.
+  (global-set-key (kbd "C-x C-c")
+    (lambda ()
+      (interactive)
+      (if (y-or-n-p-with-timeout "Do you really want to exit Emacs? " 4 nil)
+          (save-buffers-kill-emacs))))
 
   ;; quit with Alt + F4
   (global-set-key (kbd "<M-f4>") 'save-buffers-kill-terminal)
@@ -1026,10 +1034,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; highlight uncommitted changes
   (with-eval-after-load "diff-hl-autoloads"
 
-    (global-diff-hl-mode)
-    ;; (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
-    ;; (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
-    )
+    (global-diff-hl-mode))
 
   (with-eval-after-load "diff-hl"
 
@@ -1741,6 +1746,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; enable Global Auto-Revert mode
   (global-auto-revert-mode 1)           ; can generate a lot of network traffic
+
+  ;; Global Auto-Revert mode operates on all buffers (Dired, among others)
+  (setq-default global-auto-revert-non-file-buffers t)
 
 ;;** 18.6 (info "(emacs)Auto Save"): Protection Against Disasters
 
@@ -9117,7 +9125,7 @@ up before you execute another command."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140925.2128]--")
+(message "* --[ Loaded Emacs Leuven 20140925.2210]--")
 
 (provide 'emacs-leuven)
 

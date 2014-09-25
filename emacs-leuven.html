@@ -1322,7 +1322,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140925.2129</span>
+"org-comment">Version: 20140925.2211</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1445,7 +1445,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140925.2129]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140925.2211]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -2414,6 +2414,17 @@
 
 (leuven--chapter leuven-chapter-6-exiting <span class=
 "org-string">"6 Exiting Emacs"</span>
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">prevent accidentally killing Emacs</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">This will force emacs to ask me if I'm sure that I want to quit.</span>
+  (global-set-key (kbd <span class="org-string">"C-x C-c"</span>)
+    (<span class="org-keyword">lambda</span> ()
+      (interactive)
+      (<span class="org-keyword">if</span> (y-or-n-p-with-timeout <span class=
+"org-string">"Do you really want to exit Emacs? "</span> 4 nil)
+          (save-buffers-kill-emacs))))
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">quit with Alt + F4</span>
@@ -4180,9 +4191,9 @@
         <h3 id="sec-16-6">Window Fringes</h3>
 
         <div class="outline-text-3" id="text-16-6">
-          <p>Show an icon in the fringe indicating which <b>lines</b> have been
-          <b>edited</b> (inserted, modified or deleted) <b>since the last
-          commit</b>.</p>
+          <p>Show an icon in the fringe of version-controlled files indicating
+          which <b>lines</b> have been <b>edited</b> (inserted, modified or
+          deleted) <b>since the last commit</b>.</p>
 
           <p>This feature gives you a really nice at-a-glance view of where
           you’ve made changes.</p>
@@ -4194,12 +4205,7 @@
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"diff-hl-autoloads"</span>
 
-    (global-diff-hl-mode)
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)</span>
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)</span>
-    )
+    (global-diff-hl-mode))
 </pre>
           </div>
 
@@ -5796,7 +5802,7 @@
           b</code>).</p>
 
           <p>To <b>save a named keyboard macro</b> (with its key binding) for
-          future use, switch to your <code>.emacs</code> buffer, and run
+          future use, switch to your <code>.emacs</code> file, and run
           <code>C-u M-x insert-kbd-macro</code> (if you leave out the
           <code>C-u</code>, then it will just insert the macro definition
           without the <code>global-set-key</code> sequence).</p>
@@ -6033,14 +6039,28 @@
 "org-comment">key binding</span>
   (global-set-key (kbd <span class=
 "org-string">"&lt;C-f12&gt;"</span>) 'leuven-revert-buffer-without-query)
+</pre>
+          </div>
 
+          <p>Turn on auto-revert mode globally.</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">enable Global Auto-Revert mode</span>
   (global-auto-revert-mode 1)           <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">can generate a lot of network traffic</span>
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Global Auto-Revert mode operates on all buffers (Dired, among others)</span>
+  (setq-default global-auto-revert-non-file-buffers t)
 </pre>
           </div>
+
+          <p>Auto-revert will automatically reload files that have changed
+          outside of Emacs. It won’t revert a buffer that you’ve edited inside
+          Emacs, even if the file also changes outside.</p>
         </div>
       </div>
 
@@ -26585,7 +26605,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140925.2129]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140925.2211]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
