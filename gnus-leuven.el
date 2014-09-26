@@ -369,28 +369,23 @@
 
       ;; strings indicating that the current article has the same subject as the
       ;; previous
-      (if (and (char-displayable-p ?\u25A3)
-                                        ; white square containg black small square
-               (char-displayable-p ?\u2570))
-          ;; See http://www.santagata.us/characters/CharacterEntities.html
-
-          (progn ;; using ASCII tree layout with Unicode chars
-            (setq gnus-sum-thread-tree-root "■ ")
-            (setq gnus-sum-thread-tree-false-root "▣ ")
-            (setq gnus-sum-thread-tree-single-indent "□ ")
-            (setq gnus-sum-thread-tree-vertical "│   ")
+      (if (char-displayable-p ?\u2514)  ; box drawings
+          (progn                        ; tree layout using Unicode characters
+            (setq gnus-sum-thread-tree-root "")
+            (setq gnus-sum-thread-tree-false-root "")
+            (setq gnus-sum-thread-tree-single-indent "")
             (setq gnus-sum-thread-tree-indent "    ")
-            (setq gnus-sum-thread-tree-leaf-with-other "├── ")
-            (setq gnus-sum-thread-tree-single-leaf "└── "))
-
-        (progn ;; using ASCII tree layout
-          (setq gnus-sum-thread-tree-root "* ")
-          (setq gnus-sum-thread-tree-false-root "x ")
-          (setq gnus-sum-thread-tree-single-indent "o ")
-          (setq gnus-sum-thread-tree-vertical "| ")
-          (setq gnus-sum-thread-tree-indent "  ")
-          (setq gnus-sum-thread-tree-leaf-with-other "+-> ")
-          (setq gnus-sum-thread-tree-single-leaf "\\-> ")))
+            (setq gnus-sum-thread-tree-vertical "│   ")
+            (setq gnus-sum-thread-tree-leaf-with-other "├───")
+            (setq gnus-sum-thread-tree-single-leaf "└───"))
+        (progn                          ; tree layout using ASCII characters
+          (setq gnus-sum-thread-tree-root "")
+          (setq gnus-sum-thread-tree-false-root "")
+          (setq gnus-sum-thread-tree-single-indent "")
+          (setq gnus-sum-thread-tree-indent "    ")
+          (setq gnus-sum-thread-tree-vertical "|   ")
+          (setq gnus-sum-thread-tree-leaf-with-other "+---")
+          (setq gnus-sum-thread-tree-single-leaf "+---"))) ; "`---"
 
       (eval-after-load "message"
         '(progn
@@ -476,8 +471,8 @@
       ;; fill in all the gaps to tie loose threads together
       (setq gnus-build-sparse-threads nil) ;; was 'some
 
-      ;; sort the articles within a thread after it has been gathered together
-      (setq gnus-sort-gathered-threads-function 'gnus-thread-sort-by-date)
+      ;; ;; sort the articles within a thread after it has been gathered together
+      ;; (setq gnus-sort-gathered-threads-function 'gnus-thread-sort-by-date)
 
       ;; ;; add some key bindings to the Gnus summary buffer
       ;; (define-key gnus-summary-mode-map
@@ -912,6 +907,11 @@
       ;; sound
       (setq gnus-treat-play-sounds t)
 
+;; from Tassilo Horn, 17/7/14
+(setq shr-color-visible-distance-min 10
+      shr-color-visible-luminance-min 60)
+(setq gnus-treat-fill-article 0)
+
 ;;** 4.6 (info "(gnus)Misc Article")
 
       ;; format specification for the article mode line
@@ -1242,20 +1242,7 @@
         (let ((from (replace-regexp-in-string
                      "[()]\\| ?[^ ]*?@[^ ]* ?" ""
                      (mail-header-from message-reply-headers))))
-          (insert (concat from " wrote:\n"))))
-
-      (defun leuven-message-insert-citation-line ()
-        "Insert preferred citation line."
-        (if message-reply-headers
-            (let* ((from (mail-header-from message-reply-headers))
-                   (head (or
-                          (and
-                           (string-match "[ \t]*<[^>]+>\\'" from)
-                           (replace-match "" nil t from))
-                          (and
-                           (string-match "(\\([^)]+\\))[ \t]*\\'" from)
-                           (match-string 1 from)))))
-              (insert (or head from) " wrote:\n\n"))))
+          (insert from " wrote:\n")))
 
 ;;*** 3.7 (info "(message)Various Message Variables")
 
@@ -1270,7 +1257,7 @@
 
       ;; operates on messages you compose
       (defun leuven--message-mode-hook ()
-        "Enable Org minor modes, auto-fill and auto-complete."
+        "Enable Org minor modes and auto-fill."
 
         ;; ;; prompt for and insert a mail alias
         ;; (local-set-key (kbd "M-a") 'mail-abbrev-insert-alias)
@@ -1301,8 +1288,9 @@
           (set (make-local-variable
           'org-footnote-tag-for-non-org-mode-files) nil))
 
-        (when (try-require 'auto-complete)
-          (auto-complete-mode)))
+        ;; (when (try-require 'auto-complete)
+        ;;   (auto-complete-mode))
+        )
 
       (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append)
 
@@ -1352,18 +1340,18 @@
         ;; split function to use (sorting mails into groups using BBDB)
         (setq nnimap-split-methods 'nnimap-split-fancy)
 
-        ;; for records which don't have gnus-private set, the following rules in
-        ;; split--fancy are invoked
+        ;; for records which don't have `gnus-private' set, the rules in
+        ;; split-fancy are invoked
         (setq bbdb/gnus-split-default-group nil)
 
         ;; specify how to split mail
-        (setq nnimap-split-fancy
+        (setq nnimap-split-fancy        ; XXX vs `nnmail-split-fancy'?
               `(|                       ; split to the *first* match
 
                   ;; mailing lists (in To: or Cc:)
                   (to "foo@bar\\.com" "list.foo")
 
-                  ;; invoke BBDB
+                  ;; invoke BBDB        ; XXX with BBDB v2 and v3?
                   (: (lambda ()
                        (car (bbdb/gnus-split-method))))
 
