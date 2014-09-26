@@ -1322,7 +1322,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140925.2211</span>
+"org-comment">Version: 20140926.1057</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1445,7 +1445,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140925.2211]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140926.1057]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -2238,7 +2238,7 @@
           graphviz-dot-mode guide-key helm helm-swoop htmlize litable
           idle-require imenu-anywhere info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          redo+ spray tidy unbound undo-tree w3m ws-butler yasnippet
+          redo+ spray tidy tomatinho unbound undo-tree w3m ws-butler yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">jabber multi-term paredit redshank</span>
           )
@@ -2797,8 +2797,30 @@
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">show variables whose name matches the pattern</span>
   (GNUEmacs
-    (global-set-key (kbd <span class=
-"org-string">"C-h A"</span>) 'apropos-variable))
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(defun apropos-variable (string)</span>
+    <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">"Like apropos, but lists only symbols that are names of user</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">modifiable variables.  Argument REGEXP is a regular expression.</span>
+    <span class="org-comment-delimiter">;;    </span><span class=
+"org-comment">Returns a list of symbols, and documentation found"</span>
+    <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(interactive "sVariable apropos (regexp): ")</span>
+    <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(let ((message</span>
+    <span class="org-comment-delimiter">;;          </span><span class=
+"org-comment">(let ((standard-output (get-buffer-create "*Help*")))</span>
+    <span class="org-comment-delimiter">;;            </span><span class=
+"org-comment">(print-help-return-message 'identity))))</span>
+    <span class="org-comment-delimiter">;;     </span><span class=
+"org-comment">(if (apropos string  'user-variable-p)</span>
+    <span class="org-comment-delimiter">;;         </span><span class=
+"org-comment">(and message (message message)))))</span>
+
+    (define-key help-map (kbd <span class=
+"org-string">"A"</span>) 'apropos-variable))
 </pre>
           </div>
         </div>
@@ -16541,6 +16563,18 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">chapter 25.9-org-mode ends here</span>
 </pre>
             </div>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"tomatinho-autoloads"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">pomodoro</span>
+    (global-set-key (kbd <span class=
+"org-string">"&lt;S-f4&gt;"</span>) 'tomatinho))
+</pre>
+            </div>
           </div>
         </div>
       </div>
@@ -26605,7 +26639,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140925.2211]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140926.1057]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

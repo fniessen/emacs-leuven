@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140925.2209
+;; Version: 20140926.1055
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140925.2209]--")
+(message "* --[ Loading Emacs Leuven 20140926.1055]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -410,7 +410,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           graphviz-dot-mode guide-key helm helm-swoop htmlize litable
           idle-require imenu-anywhere info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          redo+ spray tidy unbound undo-tree w3m ws-butler yasnippet
+          redo+ spray tidy tomatinho unbound undo-tree w3m ws-butler yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -620,7 +620,19 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; show variables whose name matches the pattern
   (GNUEmacs
-    (global-set-key (kbd "C-h A") 'apropos-variable))
+
+    ;; (defun apropos-variable (string)
+    ;;   "Like apropos, but lists only symbols that are names of user
+    ;; modifiable variables.  Argument REGEXP is a regular expression.
+    ;;    Returns a list of symbols, and documentation found"
+    ;;   (interactive "sVariable apropos (regexp): ")
+    ;;   (let ((message
+    ;;          (let ((standard-output (get-buffer-create "*Help*")))
+    ;;            (print-help-return-message 'identity))))
+    ;;     (if (apropos string  'user-variable-p)
+    ;;         (and message (message message)))))
+
+    (define-key help-map (kbd "A") 'apropos-variable))
 
 ;;** 10.8 (info "(emacs)Misc Help")
 
@@ -5842,6 +5854,11 @@ this with to-do items than with projects or headings."
 
 )                                       ; chapter 25.9-org-mode ends here
 
+  (with-eval-after-load "tomatinho-autoloads"
+
+    ;; pomodoro
+    (global-set-key (kbd "<S-f4>") 'tomatinho))
+
 ;;** 25.10 (info "(emacs)TeX Mode")
 
 (leuven--chapter leuven-chapter-25.10-tex-mode "25.10 TeX Mode"
@@ -9125,7 +9142,7 @@ up before you execute another command."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140925.2210]--")
+(message "* --[ Loaded Emacs Leuven 20140926.1056]--")
 
 (provide 'emacs-leuven)
 
