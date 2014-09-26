@@ -50,13 +50,14 @@
                   (agenda ""
                           ((org-agenda-entry-types '(:timestamp :sexp))
                            (org-agenda-overriding-header
-                            (concat "CALENDAR "
+                            (concat "CALENDAR Today "
                                     (format-time-string "%a %d" (current-time))
                                     ;; #("__________________" 0 12 (face (:foreground "gray")))
                                     ))
                            (org-agenda-span 'day)))
+                  ;; unscheduled new tasks (waiting to be prioritized and scheduled)
                   (tags-todo "LEVEL=2"
-                        ((org-agenda-overriding-header "COLLECTBOX")
+                        ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")
                          (org-agenda-files (list ,(concat org-directory "/refile.org")))))
                   ;; list of all TODO entries with deadline today
                   (tags-todo "DEADLINE=\"<+0d>\""
@@ -348,6 +349,16 @@
                         ((org-agenda-overriding-header "COMPLETED")
                          (org-agenda-sorting-strategy '(priority-down)))))) t)
 
+  ;; show what happened today
+  (add-to-list 'org-agenda-custom-commands
+               '("rt" "Daily Timesheet"
+                 ((agenda ""
+                          ((org-agenda-clockreport-mode t)
+                           (org-agenda-overriding-header "DAILY TIMESHEET")
+                           (org-agenda-log-mode-items '(clock closed))
+                           (org-agenda-show-log 'clockcheck)
+                           (org-agenda-span 'day))))) t)
+
   (add-to-list 'org-agenda-custom-commands
                '("rc" . "Calendar...") t)
 
@@ -448,16 +459,6 @@
                   ;; (org-agenda-use-tag-inheritance nil)
                   (org-agenda-inactive-leader "Inactive:  ")
                   (org-agenda-include-inactive-timestamps t))) t)
-
-  ;; show what happened today
-  (add-to-list 'org-agenda-custom-commands
-               '("rt" "Daily Timesheet"
-                 ((agenda ""
-                          ((org-agenda-clockreport-mode t)
-                           (org-agenda-overriding-header "DAILY TIMESHEET")
-                           (org-agenda-log-mode-items '(clock closed))
-                           (org-agenda-show-log 'clockcheck)
-                           (org-agenda-span 'day))))) t)
 
   (add-to-list 'org-agenda-custom-commands
                '("rw" "Weekly review"

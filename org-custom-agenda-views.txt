@@ -161,7 +161,9 @@ The CollectBox is the default place where you collect your thoughts.
                  ((org-agenda-files (list ,(concat org-directory "/refile.org"))))) t)
 #+end_src
 
-* FOCUS
+* FOCUS on my active tasks
+
+My work = tasks owned by me ("my tasks") + tasks assigned to me.
 
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
@@ -199,13 +201,14 @@ because:
                   (agenda ""
                           ((org-agenda-entry-types '(:timestamp :sexp))
                            (org-agenda-overriding-header
-                            (concat "CALENDAR "
+                            (concat "CALENDAR Today "
                                     (format-time-string "%a %d" (current-time))
                                     ;; #("__________________" 0 12 (face (:foreground "gray")))
                                     ))
                            (org-agenda-span 'day)))
+                  ;; unscheduled new tasks (waiting to be prioritized and scheduled)
                   (tags-todo "LEVEL=2"
-                        ((org-agenda-overriding-header "COLLECTBOX")
+                        ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")
                          (org-agenda-files (list ,(concat org-directory "/refile.org")))))
                   ;; list of all TODO entries with deadline today
                   (tags-todo "DEADLINE=\"<+0d>\""
@@ -450,7 +453,7 @@ A deadline with no scheduling information has an implicit scheduled date equal
 to the deadline date (or, in some tools like Azendoo, to today!).
 #+end_warning
 
-* REVIEW
+* REVIEW my work
 
 See http://www.omnigroup.com/ftp/pub/software/macosx/extras/omnifocus/gtdandomnifocus.pdf
 for mode dedicated solely to review!
@@ -464,7 +467,7 @@ There is one task in each Folder that repeats as often as I need to review that
 Folder. Some Folders I only need to review weekly or monthly. These review
 tasks get the ~gtd~ tag.
 
-** All tasks
+** All active tasks
 
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
@@ -720,6 +723,43 @@ All *tasks*, grouped by *priority*:
                          (org-agenda-sorting-strategy '(priority-down)))))) t)
 #+end_src
 
+** Time tracking
+
+Generate a time tracking report:
+https://confluence.atlassian.com/display/JIRA/Time+Tracking+Report
+
+FIXME Show percent completion
+
+http://www.techsupportalert.com/best-free-project-time-keeping-utility.htm
+
+*************** TODO Add a custom view which is some "bill" to send to your boss/client (table view)
+
+** Timesheet
+
+#+begin_note
+=org-timeline= has weaknesses and although not officially deprecated, should be
+best avoided.  See Carsten's comments in
+http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465
+#+end_note
+
+Track time.
+
+http://www.freshbooks.com/track-your-time
+
+#+begin_src emacs-lisp
+  ;; show what happened today
+  (add-to-list 'org-agenda-custom-commands
+               '("rt" "Daily Timesheet"
+                 ((agenda ""
+                          ((org-agenda-clockreport-mode t)
+                           (org-agenda-overriding-header "DAILY TIMESHEET")
+                           (org-agenda-log-mode-items '(clock closed))
+                           (org-agenda-show-log 'clockcheck)
+                           (org-agenda-span 'day))))) t)
+#+end_src
+
+** Expense reporting
+
 ** Calendar
 
 #+begin_src emacs-lisp
@@ -880,43 +920,6 @@ Recently done.
 
 *************** TODO Items are duplicated because of LOGBOOK + LAST_REPEAT
 *************** END
-
-** Timesheet
-
-#+begin_note
-=org-timeline= has weaknesses and although not officially deprecated, should be
-best avoided.  See Carsten's comments in
-http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465
-#+end_note
-
-Track time.
-
-http://www.freshbooks.com/track-your-time
-
-#+begin_src emacs-lisp
-  ;; show what happened today
-  (add-to-list 'org-agenda-custom-commands
-               '("rt" "Daily Timesheet"
-                 ((agenda ""
-                          ((org-agenda-clockreport-mode t)
-                           (org-agenda-overriding-header "DAILY TIMESHEET")
-                           (org-agenda-log-mode-items '(clock closed))
-                           (org-agenda-show-log 'clockcheck)
-                           (org-agenda-span 'day))))) t)
-#+end_src
-
-** Time tracking
-
-Generate a time tracking report:
-https://confluence.atlassian.com/display/JIRA/Time+Tracking+Report
-
-FIXME Show percent completion
-
-http://www.techsupportalert.com/best-free-project-time-keeping-utility.htm
-
-*************** TODO Add a custom view which is some "bill" to send to your boss/client (table view)
-
-** Expense reporting
 
 ** Daily task review
 
@@ -1111,7 +1114,7 @@ Display:
 - Start Date
 - Completion Date (= deadline)
 
-Comment identifier un projet ?
+Comment identifier un projet ?
 - Identifier les tâches qui ont des sous-tâches?
 - Mettre un tag PROJ?
 - Avoir des tâches dans section "(Single) Actions" ou dans section "Projects"?
@@ -1256,6 +1259,8 @@ emacs --batch -l ~/.emacs.d/init.el -eval '(org-batch-store-agenda-views)' -kill
 #+end_src
 
 * VISUALIZE
+
+Create custom reports with live data.
 
 See https://basecamp.com/extras for numerous *add-ons to Basecamp*:
 
@@ -1613,7 +1618,7 @@ Search any word or regexp within your task name or in the note field:
                                 (org-agenda-sorting-strategy '(deadline-up)))))) t)
 #+end_src
 
-Chercher l'erreur :
+Chercher l'erreur :
 
 - WAIT avec ASSIGNEE property
 - DLGT sans ASSIGNEE property
