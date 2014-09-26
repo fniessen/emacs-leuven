@@ -1041,9 +1041,9 @@
         ;; identity to use when gnus-alias finds an unknown identity
         (setq gnus-alias-unknown-identity-rule 'error)
 
-        ;; default identity (when it isn't able to determine which identity to
-        ;; use)
-        (setq gnus-alias-default-identity "John-Doe-ID")
+        ;; ;; default identity (when it isn't able to determine which identity to
+        ;; ;; use)
+        ;; (setq gnus-alias-default-identity "John-Doe-ID")
 
         ;; old identity is completely removed before the new one is added
         (setq gnus-alias-overlay-identities nil)
