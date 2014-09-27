@@ -381,14 +381,14 @@ Cleanup all Gnus buffers on exit.
 #+begin_src emacs-lisp
 ;;** 2.17 (info "(gnus)Misc Group Stuff")
 
-      (defface gnus-hl-line
-        '((t (:background "#F5F5F5")))  ; #FFFFCC
-        "Face for highlighting the current line with `gnus-hl-line'."
+      (defface highlight-line-gnus
+        '((t (:background "#DAEAFC")))
+        "Face for highlighting the current line with `highlight-line-gnus'."
         :group 'hl-line)
 
       (defun leuven--hl-line-highlight ()
         "Enable line highlighting in the current buffer."
-        (set (make-local-variable 'hl-line-face) 'gnus-hl-line)
+        (set (make-local-variable 'hl-line-face) 'highlight-line-gnus)
         (hl-line-mode 1))
 
       ;; highlight current line in group buffer

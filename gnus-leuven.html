@@ -851,21 +851,20 @@
 "org-comment">** 2.17 (info "(gnus)Misc Group Stuff")</span>
 
       (<span class="org-keyword">defface</span> <span class=
-"org-variable-name">gnus-hl-line</span>
+"org-variable-name">highlight-line-gnus</span>
         '((t (<span class="org-builtin">:background</span> <span class=
-"org-string">"#F5F5F5"</span>)))  <span class=
-"org-comment-delimiter">; </span><span class="org-comment">#FFFFCC</span>
+"org-string">"#DAEAFC"</span>)))
         <span class=
 "org-doc">"Face for highlighting the current line with `</span><span class=
-"org-constant"><span class="org-doc">gnus-hl-line</span></span><span class=
-"org-doc">'."</span>
+"org-constant"><span class=
+"org-doc">highlight-line-gnus</span></span><span class="org-doc">'."</span>
         <span class="org-builtin">:group</span> 'hl-line)
 
       (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven--hl-line-highlight</span> ()
         <span class=
 "org-doc">"Enable line highlighting in the current buffer."</span>
-        (set (make-local-variable 'hl-line-face) 'gnus-hl-line)
+        (set (make-local-variable 'hl-line-face) 'highlight-line-gnus)
         (hl-line-mode 1))
 
       <span class="org-comment-delimiter">;; </span><span class=
