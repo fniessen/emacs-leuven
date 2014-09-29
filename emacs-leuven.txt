@@ -557,7 +557,7 @@ outages).
           goto-chg graphviz-dot-mode guide-key helm helm-swoop htmlize litable
           idle-require imenu-anywhere info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          redo+ spray tidy tomatinho unbound undo-tree w3m ws-butler yasnippet
+          redo+ spray tidy tomatinho unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -1759,7 +1759,7 @@ Make trailing whitespace at the end of a line visible.
 
 Remove trailing whitespace (right trim lines) *in all lines*:
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   ;; nuke all trailing whitespaces in the buffer
   (add-hook 'before-save-hook
             (lambda ()
@@ -1769,15 +1769,7 @@ Remove trailing whitespace (right trim lines) *in all lines*:
                 (delete-trailing-whitespace))))
 #+end_src
 
-Remove trailing whitespace *in edited lines*:
-
-#+begin_src emacs-lisp
-  ;; ;; unobtrusively remove trailing whitespace
-  ;; (with-eval-after-load "ws-butler-autoloads"
-  ;; 
-  ;;   ;; enable Ws-Butler mode in all buffers
-  ;;   (ws-butler-global-mode 1))
-#+end_src
+Remove trailing whitespace *in edited lines* with ~ws-butler~?  Does not work!?
 
 #+begin_src emacs-lisp
   ;; visually indicate empty lines after the buffer end in the fringe
@@ -3598,8 +3590,9 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
       ;; candidates separator of `multiline' source (such as
       ;; `helm-show-kill-ring')
       (setq helm-candidate-separator
-            (propertize "--8<-----------------------separator------------------------>8---"
-                        'face (list :family "Sans Serif" :weight 'bold :foreground "red")))
+            (propertize
+             "--8<-----------------------separator------------------------>8---"
+             'face (list :weight 'bold :foreground "red")))
 
       ;; suppress displaying sources which are out of screen at first
       (setq helm-quick-update t)
@@ -14494,26 +14487,10 @@ To check all image libraries at once:
         dynamic-library-alist)
 #+end_src
 
-#+results:
-| xpm        | nil |     |
-| png        | t   |     |
-| jpeg       | t   |     |
-| tiff       | nil |     |
-| gif        | nil |     |
-| svg        | nil |     |
-| gdk-pix    | xpm | nil |
-| png        | t   |     |
-| jpeg       | t   |     |
-| tiff       | nil |     |
-| gif        | nil |     |
-| svg        | nil |     |
-| gdk-pixbuf | nil |     |
-| glib       | nil |     |
-| gobject    | nil |     |
-| gnutls     | nil |     |
-| libxml2    | nil |     |
-| zlib       | nil |     |
-h image frame, and
+If missing image libraries bother you, read ~README.W32~ (or ~nt/INSTALL~).
+
+For animated GIF (or multi-page TIFF):
+- ~f~ steps through image frame frame, and
 - ~RET~ animates.
 No need for ImageMagick.
 

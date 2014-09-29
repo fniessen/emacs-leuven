@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140929.1234
+;; Version: 20140929.1331
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140929.1234]--")
+(message "* --[ Loading Emacs Leuven 20140929.1331]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -410,7 +410,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           goto-chg graphviz-dot-mode guide-key helm helm-swoop htmlize litable
           idle-require imenu-anywhere info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          redo+ spray tidy tomatinho unbound undo-tree w3m ws-butler yasnippet
+          redo+ spray tidy tomatinho unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -1080,11 +1080,13 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; ;; highlight trailing whitespaces in all modes
   ;; (setq-default show-trailing-whitespace t)
 
-  ;; ;; unobtrusively remove trailing whitespace
-  ;; (with-eval-after-load "ws-butler-autoloads"
-  ;; 
-  ;;   ;; enable Ws-Butler mode in all buffers
-  ;;   (ws-butler-global-mode 1))
+  ;; nuke all trailing whitespaces in the buffer
+  (add-hook 'before-save-hook
+            (lambda ()
+              ;; except for Message mode where "-- " is the signature separator
+              ;; (for when using emacsclient to compose emails and doing C-x #)
+              (unless (eq major-mode 'message-mode)
+                (delete-trailing-whitespace))))
 
   ;; visually indicate empty lines after the buffer end in the fringe
   (setq-default indicate-empty-lines t)
@@ -2166,8 +2168,9 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; candidates separator of `multiline' source (such as
       ;; `helm-show-kill-ring')
       (setq helm-candidate-separator
-            (propertize "--8<-----------------------separator------------------------>8---"
-                        'face (list :family "Sans Serif" :weight 'bold :foreground "red")))
+            (propertize
+             "--8<-----------------------separator------------------------>8---"
+             'face (list :weight 'bold :foreground "red")))
 
       ;; suppress displaying sources which are out of screen at first
       (setq helm-quick-update t)
@@ -9104,7 +9107,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140929.1235]--")
+(message "* --[ Loaded Emacs Leuven 20140929.1333]--")
 
 (provide 'emacs-leuven)
 
