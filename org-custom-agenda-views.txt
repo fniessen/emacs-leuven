@@ -157,7 +157,7 @@ The CollectBox is the default place where you collect your thoughts.
   ;; CollectBox
   (add-to-list 'org-agenda-custom-commands
                `("cb" "CollectBox"
-                 alltodo ""
+                 ((alltodo ""))
                  ((org-agenda-files (list ,(concat org-directory "/refile.org"))))) t)
 #+end_src
 
@@ -442,7 +442,7 @@ minutes. Tasks without a time estimate will NOT show up in this list.
 #+begin_src emacs-lisp :tangle no
   (add-to-list 'org-agenda-custom-commands
                '("fe" "Effort less than 1 hour"
-                 tags-todo "Effort<>{}+Effort<\"1:00\""
+                 ((tags-todo "Effort<>{}+Effort<\"1:00\""))
                  ((org-agenda-todo-ignore-scheduled 'future))) t)
 #+end_src
 
@@ -543,7 +543,7 @@ All *tasks*, grouped by *due date*:
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
                '("ra1" "All Tasks with a due date"
-                 alltodo ""
+                 ((alltodo ""))
                  ((org-agenda-overriding-header "All Tasks (sorted by Due Date)")
                   (org-agenda-skip-function
                    '(org-agenda-skip-entry-if 'notdeadline))
@@ -596,7 +596,7 @@ Well in every other one!!!  Bad.
                             '(leuven--skip-entry-unless-deadline-in-n-days-or-more 7))
                            (org-deadline-warning-days 28))))
                  ((org-agenda-deadline-faces '((0.0 . default)))
-                  (org-agenda-clockreport-mode nil)
+                  (org-agenda-start-with-clockreport-mode nil)
                   (org-agenda-format-date "")
                   (org-agenda-span 'day)
                   (org-agenda-sorting-strategy '(deadline-up))
@@ -689,7 +689,7 @@ Well in every other one!!!  Bad.
                         ((org-agenda-overriding-header "No due date")
                          (org-agenda-skip-function
                           'leuven--skip-entry-if-deadline-or-schedule))))
-                 ((org-agenda-clockreport-mode nil)
+                 ((org-agenda-start-with-clockreport-mode nil)
                   (org-agenda-prefix-format " %i %?-12t% s")
                   (org-agenda-span 'day)
                   (org-agenda-use-time-grid nil)
@@ -747,15 +747,28 @@ Track time.
 http://www.freshbooks.com/track-your-time
 
 #+begin_src emacs-lisp
+  (add-to-list 'org-agenda-custom-commands
+               '("rt" . "Timesheet...") t)
+
   ;; show what happened today
   (add-to-list 'org-agenda-custom-commands
-               '("rt" "Daily Timesheet"
-                 ((agenda ""
-                          ((org-agenda-clockreport-mode t)
-                           (org-agenda-overriding-header "DAILY TIMESHEET")
-                           (org-agenda-log-mode-items '(clock closed))
-                           (org-agenda-show-log 'clockcheck)
-                           (org-agenda-span 'day))))) t)
+               '("rtd" "Daily Timesheet"
+                 ((agenda ""))
+                 ((org-agenda-log-mode-items '(clock closed))
+                  (org-agenda-overriding-header "DAILY TIMESHEET")
+                  (org-agenda-show-log 'clockcheck)
+                  (org-agenda-span 'day)
+                  (org-agenda-start-with-clockreport-mode t))) t)
+
+  ;; show what happened this week
+  (add-to-list 'org-agenda-custom-commands
+               '("rtw" "Weekly Timesheet"
+                 ((agenda ""))
+                 ((org-agenda-overriding-header "WEEKLY TIMESHEET")
+                  (org-agenda-span 'week)
+                  (org-agenda-start-on-weekday 1)
+                  (org-agenda-start-with-clockreport-mode t)
+                  (org-agenda-time-grid nil))) t)
 #+end_src
 
 ** Expense reporting
@@ -772,7 +785,7 @@ FIXME Faire 7 vues agenda "jour" pour avoir un séparateur customizable...
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
                '("rc7" "Events and appointments for 7 days"
-                 agenda ""
+                 ((agenda ""))
                  ((org-agenda-entry-types '(:timestamp :sexp))
                   ;; (org-agenda-overriding-header "Calendar for 7 days")
                   ;; (org-agenda-repeating-timestamp-show-all t)
@@ -782,8 +795,8 @@ FIXME Faire 7 vues agenda "jour" pour avoir un séparateur customizable...
                   (org-agenda-time-grid nil))) t)
 #+end_src
 
-View all your tasks that are due on a certain date in a familiar, calendar-like
-view.
+View all my tasks in a familiar, *calendar*-like view. They appear on the day that
+they are due or scheduled.
 
 #+begin_src emacs-lisp
   ;; calendar view for org-agenda
@@ -867,7 +880,7 @@ The above is more appropriate than:
 #+begin_example
   (add-to-list 'org-agenda-custom-commands
               '("rC" "Recently closed"
-                tags "CLOSED>\"<-2w>\""
+                ((tags "CLOSED>\"<-2w>\""))
                 ((org-agenda-sorting-strategy '(priority-down)))) t)
 #+end_example
 
@@ -906,7 +919,7 @@ Recently done.
   (add-to-list 'org-agenda-custom-commands
                '("rr" "Recent items (past 7 days)"
                  ;; faster than tags
-                 agenda ""
+                 ((agenda ""))
                  ((org-agenda-start-day "-7d")
                   (org-agenda-span 7)
                   (org-agenda-repeating-timestamp-show-all nil)
@@ -946,8 +959,7 @@ Read [[http://gridwriter.com/2012/11/14/omnifocus-series-flags-due-dates-daily-r
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
                '("rw" "Weekly review"
-                 (
-                  (tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
+                 ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
                         ((org-agenda-overriding-header "NEW TASKS")))
 
                   (agenda ""
@@ -1004,7 +1016,7 @@ Read [[http://gridwriter.com/2012/11/14/omnifocus-series-flags-due-dates-daily-r
                          (org-agenda-todo-ignore-deadlines 'all)
                          (org-agenda-todo-ignore-scheduled t)))
 
-                 ;; ((org-agenda-clockreport-mode nil)
+                 ;; ((org-agenda-start-with-clockreport-mode nil)
                  ;;  (org-agenda-prefix-format " %i %?-12t% s")
                  ;;  (org-agenda-write-buffer-name "Weekly task review"))
                  ;; "~/org-weekly-review.html") t)
@@ -1016,7 +1028,7 @@ Read [[http://gridwriter.com/2012/11/14/omnifocus-series-flags-due-dates-daily-r
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
                '("rN" "Next"
-                 tags-todo "TODO<>{SDAY}"
+                 ((tags-todo "TODO<>{SDAY}"))
                  ((org-agenda-overriding-header "List of all TODO entries with no due date (no SDAY)")
                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
                   (org-agenda-sorting-strategy '(priority-down)))) t)
@@ -1043,7 +1055,7 @@ FIXME C'est scheduled qu'il faut checker, plutôt que deadline ?
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
                '("F" "Future"
-                 tags-todo "TODO<>{SDAY}+DEADLINE>\"<+0d>\""
+                 ((tags-todo "TODO<>{SDAY}+DEADLINE>\"<+0d>\""))
                  ((org-agenda-overriding-header "List of all TODO entries with future due date (no SDAY)")
                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
                   (org-agenda-sorting-strategy '(priority-down)))) t)
@@ -1052,7 +1064,7 @@ FIXME C'est scheduled qu'il faut checker, plutôt que deadline ?
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
                '("F" "List TODO entries scheduled for the future"
-                 todo ""
+                 ((todo ""))
                  ((org-agenda-todo-ignore-scheduled 'past)
                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'notscheduled)))) t)
 #+end_src
@@ -1082,7 +1094,7 @@ See other people's tasks.
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
                '("rW" "Waiting for"
-                 tags-todo "TODO={WAIT}"
+                 ((tags-todo "TODO={WAIT}"))
                  ((org-agenda-overriding-header "Waiting for")
                   (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME does not work
 #+end_src
@@ -1102,7 +1114,7 @@ The project type can be specified either in XXX.
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
                '("rP" "Projects"
-                 tags-todo "project-DONE-CANX"
+                 ((tags-todo "project-DONE-CANX"))
                  ((org-agenda-overriding-header "Projects (High Level)")
                   (org-agenda-sorting-strategy nil))) t)
 #+end_src
@@ -1137,8 +1149,8 @@ From Tracks:
   ;; checking tasks that are assigned to me
   (add-to-list 'org-agenda-custom-commands
                `("+a" "Assigned to me"
-                 tags ,(concat "Assignee={" user-login-name "\\|"
-                               user-mail-address "}")
+                 ((tags ,(concat "Assignee={" user-login-name "\\|"
+                                 user-mail-address "}")))
                  ((org-agenda-overriding-header "ASSIGNED TO ME"))) t)
 #+end_src
 
@@ -1225,7 +1237,7 @@ http://orgmode.org/w/?p=org-mode.git;a=blob;f=contrib/scripts/org2hpda;hb=HEAD
   ;; exporting agenda views
   (add-to-list 'org-agenda-custom-commands
                '("Ea"
-                 agenda ""
+                 ((agenda ""))
                  (;; (org-tag-faces nil)
                   (ps-landscape-mode t)
                   (ps-number-of-columns 1))
@@ -1233,7 +1245,7 @@ http://orgmode.org/w/?p=org-mode.git;a=blob;f=contrib/scripts/org2hpda;hb=HEAD
 
   (add-to-list 'org-agenda-custom-commands
                '("Ep" "Call list"
-                 tags-todo "phone"
+                 ((tags-todo "phone"))
                  ((org-agenda-prefix-format " %-20:c [ ] " )
                   (org-agenda-remove-tags t)
                   ;; (org-agenda-with-colors nil)
@@ -1317,7 +1329,7 @@ Search any word or regexp within your task name or in the note field:
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
                '("Rs" "Like s, but with extra files"
-                 search ""
+                 ((search ""))
                  ((org-agenda-text-search-extra-files
                    ;; FIXME Add `agenda-archives'
                    leuven-org-search-extra-files))) t)
@@ -1329,7 +1341,7 @@ Search any word or regexp within your task name or in the note field:
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
                '("RS" "Like s, but only TODO entries"
-                 search ""
+                 ((search ""))
                  ((org-agenda-text-search-extra-files
                    ;; FIXME Add `agenda-archives'
                    leuven-org-search-extra-files))) t)
@@ -1340,7 +1352,7 @@ Search any word or regexp within your task name or in the note field:
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
                '("Rn" "Organize thoughts to refile"
-                 tags "refile|capture"
+                 ((tags "refile|capture"))
                  ((org-agenda-overriding-header "Refile stuff"))) t)
 #+end_src
 
@@ -1351,7 +1363,7 @@ Search any word or regexp within your task name or in the note field:
   ;; the word `TODO', `FIXME' or `XXX'
   (add-to-list 'org-agenda-custom-commands
                '("1" "Task markers (in current buffer)"
-                 occur-tree "\\<TODO\\|FIXME\\|XXX\\>") t)
+                 ((occur-tree "\\<TODO\\|FIXME\\|XXX\\>"))) t)
 #+end_src
 
 * Buggy commands
@@ -1390,7 +1402,7 @@ Search any word or regexp within your task name or in the note field:
   ;; list only priority A tasks for the current day
   (add-to-list 'org-agenda-custom-commands
                '(",A" "Priority #A tasks for today"
-                 agenda ""
+                 ((agenda ""))
                  ((org-agenda-skip-function
                    '(org-agenda-skip-entry-if 'notregexp "\\=.*\\[#A\\]"))
                   (org-agenda-span 'day)
@@ -1400,7 +1412,7 @@ Search any word or regexp within your task name or in the note field:
   ;; list priority A and B tasks for the current day
   (add-to-list 'org-agenda-custom-commands
                '(",B" "Priority #A and #B tasks for today"
-                 agenda ""
+                 ((agenda ""))
                  ((org-agenda-overriding-header
                    "Today's priority #A and #B tasks: ")
                   (org-agenda-skip-function
@@ -1416,7 +1428,7 @@ Search any word or regexp within your task name or in the note field:
   ;;              '("AF" "Agenda of upcoming due dates (6 months)"
   ;;                ;; FIXME We don't see DEADLINE with `-1m' (or so)
   ;;                ;; specifications (if they are more than 1m ahead of now)!
-  ;;                agenda ""
+  ;;                ((agenda ""))
   ;;                ((org-agenda-skip-function
   ;;                  '(org-agenda-skip-entry-if 'notdeadline))
   ;;                 (org-agenda-span 'day)
@@ -1530,7 +1542,7 @@ Search any word or regexp within your task name or in the note field:
 
     (add-to-list 'org-agenda-custom-commands
                  '("0" "Calendar for today" ;; for the events
-                   agenda ""
+                   ((agenda ""))
                    ((org-agenda-overriding-header "Calendar for today")
                     (org-agenda-entry-types '(:timestamp :sexp))
                     (org-agenda-span 'day)
@@ -1541,39 +1553,39 @@ Search any word or regexp within your task name or in the note field:
 
     (add-to-list 'org-agenda-custom-commands
                  '("1" "Inbox"
-                   tags-todo "TODO={NEW}"
+                   ((tags-todo "TODO={NEW}"))
                    ((org-agenda-overriding-header "Inbox")
                     (org-agenda-sorting-strategy '(category-up)))) t)
 
     ;; sorting by ascendant deadline does not work
     (add-to-list 'org-agenda-custom-commands
                  '("2" "Today"
-                   tags-todo "SCHEDULED<\"<tomorrow>\"|DEADLINE<\"<tomorrow>\"" ;; for tasks with a time component for today
+                   ((tags-todo "SCHEDULED<\"<tomorrow>\"|DEADLINE<\"<tomorrow>\"")) ; for tasks with a time component for today
                    ((org-agenda-overriding-header "Today")
                     (org-agenda-sorting-strategy '(deadline-up)))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("3" "Next"
-                   tags-todo "TODO<>{NEW\\|SDAY\\|WAIT}"
+                   ((tags-todo "TODO<>{NEW\\|SDAY\\|WAIT}"))
                    ((org-agenda-overriding-header "Next")
                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
                     (org-agenda-sorting-strategy '(deadline-up)))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("4" "Tomorrow"
-                   tags-todo "SCHEDULED>=\"<+1d>\"+SCHEDULED<\"<+2d>\""
+                   ((tags-todo "SCHEDULED>=\"<+1d>\"+SCHEDULED<\"<+2d>\""))
                    ((org-agenda-overriding-header "Tomorrow")
                     (org-agenda-sorting-strategy '(deadline-up)))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("6" "Someday"
-                   tags-todo "TODO={SDAY}"
+                   ((tags-todo "TODO={SDAY}"))
                    ((org-agenda-overriding-header "Someday")
                     (org-agenda-sorting-strategy '(deadline-up)))) t)
 
     (add-to-list 'org-agenda-custom-commands
                  '("7" "Waiting for"
-                   tags-todo "TODO={WAIT}"
+                   ((tags-todo "TODO={WAIT}"))
                    ((org-agenda-overriding-header "Waiting for")
                     (org-agenda-sorting-strategy '(deadline-up)))) t)
 
@@ -1632,7 +1644,7 @@ Chercher l'erreur :
 
     (add-to-list 'org-agenda-custom-commands
                  '("E1" "Someday with a SCHEDULED date"
-                   tags-todo "TODO={SDAY}"
+                   ((tags-todo "TODO={SDAY}"))
                    ((org-agenda-overriding-header "Someday")
                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'notscheduled))
                     (org-agenda-sorting-strategy '(deadline-up)))) t)
@@ -1657,7 +1669,7 @@ Chercher l'erreur :
 
     (add-to-list 'org-agenda-custom-commands
                  '("E7" "Delegated"
-                   tags-todo "TODO={WAIT}"
+                   ((tags-todo "TODO={WAIT}"))
                    ((org-agenda-overriding-header "Waiting For")
                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
                     (org-agenda-sorting-strategy '(user-defined-up))
