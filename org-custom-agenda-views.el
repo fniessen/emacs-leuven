@@ -37,7 +37,7 @@
   ;; CollectBox
   (add-to-list 'org-agenda-custom-commands
                `("cb" "CollectBox"
-                 alltodo ""
+                 ((alltodo ""))
                  ((org-agenda-files (list ,(concat org-directory "/refile.org"))))) t)
 
   (add-to-list 'org-agenda-custom-commands
@@ -201,7 +201,7 @@
 
   (add-to-list 'org-agenda-custom-commands
                '("ra1" "All Tasks with a due date"
-                 alltodo ""
+                 ((alltodo ""))
                  ((org-agenda-overriding-header "All Tasks (sorted by Due Date)")
                   (org-agenda-skip-function
                    '(org-agenda-skip-entry-if 'notdeadline))
@@ -240,7 +240,7 @@
                             '(leuven--skip-entry-unless-deadline-in-n-days-or-more 7))
                            (org-deadline-warning-days 28))))
                  ((org-agenda-deadline-faces '((0.0 . default)))
-                  (org-agenda-clockreport-mode nil)
+                  (org-agenda-start-with-clockreport-mode nil)
                   (org-agenda-format-date "")
                   (org-agenda-span 'day)
                   (org-agenda-sorting-strategy '(deadline-up))
@@ -327,7 +327,7 @@
                         ((org-agenda-overriding-header "No due date")
                          (org-agenda-skip-function
                           'leuven--skip-entry-if-deadline-or-schedule))))
-                 ((org-agenda-clockreport-mode nil)
+                 ((org-agenda-start-with-clockreport-mode nil)
                   (org-agenda-prefix-format " %i %?-12t% s")
                   (org-agenda-span 'day)
                   (org-agenda-use-time-grid nil)
@@ -349,22 +349,35 @@
                         ((org-agenda-overriding-header "COMPLETED")
                          (org-agenda-sorting-strategy '(priority-down)))))) t)
 
+  (add-to-list 'org-agenda-custom-commands
+               '("rt" . "Timesheet...") t)
+
   ;; show what happened today
   (add-to-list 'org-agenda-custom-commands
-               '("rt" "Daily Timesheet"
-                 ((agenda ""
-                          ((org-agenda-clockreport-mode t)
-                           (org-agenda-overriding-header "DAILY TIMESHEET")
-                           (org-agenda-log-mode-items '(clock closed))
-                           (org-agenda-show-log 'clockcheck)
-                           (org-agenda-span 'day))))) t)
+               '("rtd" "Daily Timesheet"
+                 ((agenda ""))
+                 ((org-agenda-log-mode-items '(clock closed))
+                  (org-agenda-overriding-header "DAILY TIMESHEET")
+                  (org-agenda-show-log 'clockcheck)
+                  (org-agenda-span 'day)
+                  (org-agenda-start-with-clockreport-mode t))) t)
+
+  ;; show what happened this week
+  (add-to-list 'org-agenda-custom-commands
+               '("rtw" "Weekly Timesheet"
+                 ((agenda ""))
+                 ((org-agenda-overriding-header "WEEKLY TIMESHEET")
+                  (org-agenda-span 'week)
+                  (org-agenda-start-on-weekday 1)
+                  (org-agenda-start-with-clockreport-mode t)
+                  (org-agenda-time-grid nil))) t)
 
   (add-to-list 'org-agenda-custom-commands
                '("rc" . "Calendar...") t)
 
   (add-to-list 'org-agenda-custom-commands
                '("rc7" "Events and appointments for 7 days"
-                 agenda ""
+                 ((agenda ""))
                  ((org-agenda-entry-types '(:timestamp :sexp))
                   ;; (org-agenda-overriding-header "Calendar for 7 days")
                   ;; (org-agenda-repeating-timestamp-show-all t)
@@ -449,7 +462,7 @@
   (add-to-list 'org-agenda-custom-commands
                '("rr" "Recent items (past 7 days)"
                  ;; faster than tags
-                 agenda ""
+                 ((agenda ""))
                  ((org-agenda-start-day "-7d")
                   (org-agenda-span 7)
                   (org-agenda-repeating-timestamp-show-all nil)
@@ -462,8 +475,7 @@
 
   (add-to-list 'org-agenda-custom-commands
                '("rw" "Weekly review"
-                 (
-                  (tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
+                 ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
                         ((org-agenda-overriding-header "NEW TASKS")))
 
                   (agenda ""
@@ -520,7 +532,7 @@
                          (org-agenda-todo-ignore-deadlines 'all)
                          (org-agenda-todo-ignore-scheduled t)))
 
-                 ;; ((org-agenda-clockreport-mode nil)
+                 ;; ((org-agenda-start-with-clockreport-mode nil)
                  ;;  (org-agenda-prefix-format " %i %?-12t% s")
                  ;;  (org-agenda-write-buffer-name "Weekly task review"))
                  ;; "~/org-weekly-review.html") t)
@@ -528,20 +540,20 @@
 
   (add-to-list 'org-agenda-custom-commands
                '("rN" "Next"
-                 tags-todo "TODO<>{SDAY}"
+                 ((tags-todo "TODO<>{SDAY}"))
                  ((org-agenda-overriding-header "List of all TODO entries with no due date (no SDAY)")
                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
                   (org-agenda-sorting-strategy '(priority-down)))) t)
 
   (add-to-list 'org-agenda-custom-commands
                '("rW" "Waiting for"
-                 tags-todo "TODO={WAIT}"
+                 ((tags-todo "TODO={WAIT}"))
                  ((org-agenda-overriding-header "Waiting for")
                   (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME does not work
 
   (add-to-list 'org-agenda-custom-commands
                '("rP" "Projects"
-                 tags-todo "project-DONE-CANX"
+                 ((tags-todo "project-DONE-CANX"))
                  ((org-agenda-overriding-header "Projects (High Level)")
                   (org-agenda-sorting-strategy nil))) t)
 
@@ -551,8 +563,8 @@
   ;; checking tasks that are assigned to me
   (add-to-list 'org-agenda-custom-commands
                `("+a" "Assigned to me"
-                 tags ,(concat "Assignee={" user-login-name "\\|"
-                               user-mail-address "}")
+                 ((tags ,(concat "Assignee={" user-login-name "\\|"
+                                 user-mail-address "}")))
                  ((org-agenda-overriding-header "ASSIGNED TO ME"))) t)
 
   (add-to-list 'org-agenda-custom-commands
@@ -561,7 +573,7 @@
   ;; exporting agenda views
   (add-to-list 'org-agenda-custom-commands
                '("Ea"
-                 agenda ""
+                 ((agenda ""))
                  (;; (org-tag-faces nil)
                   (ps-landscape-mode t)
                   (ps-number-of-columns 1))
@@ -569,7 +581,7 @@
 
   (add-to-list 'org-agenda-custom-commands
                '("Ep" "Call list"
-                 tags-todo "phone"
+                 ((tags-todo "phone"))
                  ((org-agenda-prefix-format " %-20:c [ ] " )
                   (org-agenda-remove-tags t)
                   ;; (org-agenda-with-colors nil)
@@ -593,28 +605,28 @@
 
   (add-to-list 'org-agenda-custom-commands
                '("Rs" "Like s, but with extra files"
-                 search ""
+                 ((search ""))
                  ((org-agenda-text-search-extra-files
                    ;; FIXME Add `agenda-archives'
                    leuven-org-search-extra-files))) t)
 
   (add-to-list 'org-agenda-custom-commands
                '("RS" "Like s, but only TODO entries"
-                 search ""
+                 ((search ""))
                  ((org-agenda-text-search-extra-files
                    ;; FIXME Add `agenda-archives'
                    leuven-org-search-extra-files))) t)
 
   (add-to-list 'org-agenda-custom-commands
                '("Rn" "Organize thoughts to refile"
-                 tags "refile|capture"
+                 ((tags "refile|capture"))
                  ((org-agenda-overriding-header "Refile stuff"))) t)
 
   ;; create a sparse tree (current buffer only) with all entries containing
   ;; the word `TODO', `FIXME' or `XXX'
   (add-to-list 'org-agenda-custom-commands
                '("1" "Task markers (in current buffer)"
-                 occur-tree "\\<TODO\\|FIXME\\|XXX\\>") t)
+                 ((occur-tree "\\<TODO\\|FIXME\\|XXX\\>"))) t)
 
 (provide 'org-custom-agenda-views)
 
