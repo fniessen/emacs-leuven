@@ -1218,8 +1218,8 @@
 
 ;;*** 3.4 (info "(message)News Headers")
 
-      ;; domain part of message-Ids
-      (setq message-user-fqdn "somewhere.org") ;; (system-name)
+      ;; masquerade domain part of message-Ids
+      (setq message-user-fqdn "example.com") ; (system-name)
 
       ;; tell Gnus not to generate a sender header on outgoing posts
       ;; (default behavior since Gnus 5.10.0)
