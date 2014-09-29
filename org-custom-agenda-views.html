@@ -1319,7 +1319,8 @@
 "org-string">"DAILY TIMESHEET"</span>)
                   (org-agenda-show-log 'clockcheck)
                   (org-agenda-span 'day)
-                  (org-agenda-start-with-clockreport-mode t))) t)
+                  (org-agenda-start-with-clockreport-mode t)
+                  (org-agenda-time-grid nil))) t)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">show what happened this week</span>
@@ -1327,8 +1328,11 @@
                '(<span class="org-string">"rtw"</span> <span class=
 "org-string">"Weekly Timesheet"</span>
                  ((agenda <span class="org-string">""</span>))
-                 ((org-agenda-overriding-header <span class=
+                 <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">((org-agenda-format-date "")</span>
+                  (org-agenda-overriding-header <span class=
 "org-string">"WEEKLY TIMESHEET"</span>)
+                  (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp))
                   (org-agenda-span 'week)
                   (org-agenda-start-on-weekday 1)
                   (org-agenda-start-with-clockreport-mode t)
@@ -1808,15 +1812,13 @@
           </div>
 
           <div class="note">
-            <p>If you don’t want to show scheduled items, deadlines nor
-            appointments in lists, you can use either
-            <code>(org-agenda-todo-ignore-with-date t)</code>,
+            <p>If you don’t want to show <b>scheduled</b> items,
+            <b>deadlines</b> nor <b>appointments</b> in lists, you can use
+            either <code>(org-agenda-todo-ignore-with-date t)</code> or
             <code>(org-agenda-skip-function '(org-agenda-skip-entry-if
-            'timestamp))</code> or <code>(org-agenda-skip-function
-            '(org-agenda-skip-entry-if 'scheduled 'deadline
             'timestamp))</code>.</p>
 
-            <p>Though, we could make a performance comparison to see whether
+            <p>Though, we should make a performance comparison to see whether
             one is quicker than the other.</p>
           </div>
         </div>

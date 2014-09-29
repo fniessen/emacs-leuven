@@ -758,13 +758,16 @@ http://www.freshbooks.com/track-your-time
                   (org-agenda-overriding-header "DAILY TIMESHEET")
                   (org-agenda-show-log 'clockcheck)
                   (org-agenda-span 'day)
-                  (org-agenda-start-with-clockreport-mode t))) t)
+                  (org-agenda-start-with-clockreport-mode t)
+                  (org-agenda-time-grid nil))) t)
 
   ;; show what happened this week
   (add-to-list 'org-agenda-custom-commands
                '("rtw" "Weekly Timesheet"
                  ((agenda ""))
-                 ((org-agenda-overriding-header "WEEKLY TIMESHEET")
+                 ;; ((org-agenda-format-date "")
+                  (org-agenda-overriding-header "WEEKLY TIMESHEET")
+                  (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp))
                   (org-agenda-span 'week)
                   (org-agenda-start-on-weekday 1)
                   (org-agenda-start-with-clockreport-mode t)
@@ -1035,13 +1038,11 @@ Read [[http://gridwriter.com/2012/11/14/omnifocus-series-flags-due-dates-daily-r
 #+end_src
 
 #+begin_note
-If you don't want to show scheduled items, deadlines nor appointments in lists,
-you can use either =(org-agenda-todo-ignore-with-date t)=,
-=(org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp))= or
-=(org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'deadline
-'timestamp))=.
+If you don't want to show *scheduled* items, *deadlines* nor *appointments* in lists,
+you can use either =(org-agenda-todo-ignore-with-date t)= or
+=(org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp))=.
 
-Though, we could make a performance comparison to see whether one is quicker
+Though, we should make a performance comparison to see whether one is quicker
 than the other.
 #+end_note
 

@@ -360,13 +360,16 @@
                   (org-agenda-overriding-header "DAILY TIMESHEET")
                   (org-agenda-show-log 'clockcheck)
                   (org-agenda-span 'day)
-                  (org-agenda-start-with-clockreport-mode t))) t)
+                  (org-agenda-start-with-clockreport-mode t)
+                  (org-agenda-time-grid nil))) t)
 
   ;; show what happened this week
   (add-to-list 'org-agenda-custom-commands
                '("rtw" "Weekly Timesheet"
                  ((agenda ""))
-                 ((org-agenda-overriding-header "WEEKLY TIMESHEET")
+                 ;; ((org-agenda-format-date "")
+                  (org-agenda-overriding-header "WEEKLY TIMESHEET")
+                  (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp))
                   (org-agenda-span 'week)
                   (org-agenda-start-on-weekday 1)
                   (org-agenda-start-with-clockreport-mode t)
