@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140929.1331
+;; Version: 20140929.2339
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140929.1331]--")
+(message "* --[ Loading Emacs Leuven 20140929.2339]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -394,8 +394,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       ;; archives from which to fetch
       (setq package-archives
-            (append '(("org"   . "http://orgmode.org/elpa/")
-                      ("melpa" . "http://melpa.milkbox.net/packages/"))
+            (append '(("org"          . "http://orgmode.org/elpa/")
+                      ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
+                      ;; ("melpa"        . "http://melpa.milkbox.net/packages/")
+                      )
                     package-archives))
 
       ;; load the latest version of all installed packages, and activate them
@@ -407,10 +409,11 @@ Last time is saved in global variable `leuven--before-section-time'."
           boxquote calfw circe company csv-mode dictionary diff-hl diminish
           dired+ dired-single ess expand-region fancy-narrow
           fill-column-indicator flycheck fuzzy git-commit-mode google-this
-          goto-chg graphviz-dot-mode guide-key helm helm-swoop htmlize litable
-          idle-require imenu-anywhere info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          redo+ spray tidy tomatinho unbound undo-tree w3m yasnippet
+          goto-chg graphviz-dot-mode guide-key helm helm-descbinds helm-swoop
+          htmlize litable idle-require imenu-anywhere info+ interaction-log
+          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
+          rainbow-mode redo+ spray tidy tomatinho unbound undo-tree w3m
+          yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -641,7 +644,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; enter Info documentation browser
   (global-set-key (kbd "<f1>") 'info)
 
-  (defun describe-symbol-at-point ()
+  (defun describe-elisp-symbol-at-point ()
     "Get help for the symbol at point."
     (interactive)
     (let ((sym (intern-soft (current-word))))
@@ -653,7 +656,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                  (describe-variable sym)))
         (message "nothing"))))
 
-  (global-set-key (kbd "<f1>") 'describe-symbol-at-point)
+  (global-set-key (kbd "<f1>") 'describe-elisp-symbol-at-point)
 
   ;; display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
@@ -1092,8 +1095,9 @@ Last time is saved in global variable `leuven--before-section-time'."
   (setq-default indicate-empty-lines t)
 
   (GNUEmacs
-    ;; enable Global Whitespace mode
-    (global-whitespace-mode 1)
+    ;; enable Whitespace mode in all file buffers (not in *vc-dir*, etc.)
+    (add-hook 'text-mode-hook 'whitespace-mode)
+    (add-hook 'prog-mode-hook 'whitespace-mode)
 
     (with-eval-after-load "whitespace"
 
@@ -1148,7 +1152,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (with-eval-after-load "abbrev"       (diminish 'abbrev-mode " Ab"))
     (with-eval-after-load "checkdoc"     (diminish 'checkdoc-minor-mode " Cd"))
     (with-eval-after-load "company"      (diminish 'company-mode " Cp"))
-    (with-eval-after-load "eldoc"        (diminish 'eldoc-mode " Ed"))
+    (with-eval-after-load "eldoc"        (diminish 'eldoc-mode))
     (with-eval-after-load "fancy-narrow" (diminish 'fancy-narrow-mode))
     (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " Fc"))
     (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " Fs"))
@@ -1243,7 +1247,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                          (funcall separator-left 'powerline-modified-face mode-line)))
 
                                      ;; XXX Put the * in red!
-                                     (powerline-raw "%*" nil 'l)
+                                     (powerline-raw "%*" 'error 'l)
 
                                      (powerline-raw mode-line-mule-info nil 'l)
 
@@ -2125,6 +2129,20 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; buffers only
       (global-set-key (kbd "C-x b") 'helm-buffers-list)
 
+;; (global-set-key (kbd "C-h ,") 'helm-apropos)
+;; (global-set-key (kbd "C-h .") 'helm-info-emacs)
+;; (global-set-key (kbd "C-h 4") 'helm-info-elisp)
+;; (global-set-key (kbd "M-5") 'helm-etags-select)
+;; (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+;; (global-set-key (kbd "C-h C--") 'helm-google)
+;; (global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)
+
+(global-set-key (kbd "C-h b") 'helm-descbinds)
+
+(global-set-key (kbd "M-y")                     'helm-show-kill-ring)
+;; (global-set-key (kbd "C-h r") 'helm-info-emacs)
+;; (global-set-key (kbd "C-h d")                   'helm-info-at-point)
+
       (global-set-key (kbd "C-x r l") 'helm-bookmarks)
 
       ;; install from https://github.com/thierryvolpiatto/emacs-bmk-ext
@@ -2225,7 +2243,10 @@ Last time is saved in global variable `leuven--before-section-time'."
     (with-eval-after-load "helm-buffers"
 
       ;; don't truncate buffer names
-      (setq helm-buffer-max-length nil))
+      (setq helm-buffer-max-length nil)
+
+      ;; never show details in buffer list
+      (setq helm-buffer-details-flag nil))
 
     ;; (with-eval-after-load "helm-adaptive"
     ;;
@@ -2238,22 +2259,25 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       ;; better version of `occur'
       (global-set-key (kbd "C-o") 'helm-swoop)
-
-      (global-set-key (kbd "M-i") 'helm-swoop)
-      (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
-      (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
-      (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+      ;; (global-set-key (kbd "M-i") 'helm-swoop)
+      ;; (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+      ;; (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+      ;; (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
 
       ;; when doing Isearch, hand the word over to `helm-swoop'
-      (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+      (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
+      ;; (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
 
       (with-eval-after-load "dired"
-        (define-key dired-mode-map (kbd "M-i") 'helm-swoop)))
+        (define-key dired-mode-map (kbd "C-o") 'helm-swoop)
+        ;; (define-key dired-mode-map (kbd "M-i") 'helm-swoop)
+        ))
 
     (with-eval-after-load "helm-swoop"
 
       ;; from `helm-swoop' to `helm-multi-swoop-all'
-      (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+      (define-key helm-swoop-map (kbd "C-o") 'helm-multi-swoop-all-from-helm-swoop)
+      ;; (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
 
       ;; don't slightly boost invoke speed in exchange for text color
       (setq helm-swoop-speed-or-color t)
@@ -2647,6 +2671,9 @@ Last time is saved in global variable `leuven--before-section-time'."
         (interactive)
         (w32-send-sys-command 61728)
         (global-set-key (kbd "C-c z") 'w32-maximize-frame))))
+
+  ;; maximize Emacs by default
+  (modify-all-frames-parameters '((fullscreen . maximized)))
 
 ;;** 21.9 (info "(emacs)Speedbar")
 
@@ -6299,13 +6326,7 @@ mouse-3: go to end") "]"))))
   (with-eval-after-load "rainbow-delimiters"
 
     ;; enable rainbow-delimiters-mode in Emacs Lisp buffers
-    (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
-
-    ;; enable rainbow-delimiters-mode in Clojure buffers
-    (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
-
-    ;; enable rainbow-delimiters-mode in other Lisp mode buffers
-    (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode))
+    (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode))
 
   ;; jump to matching parenthesis
   (defun leuven-match-paren (arg)
@@ -7290,8 +7311,19 @@ a clean buffer we're an order of magnitude laxer about checking."
       (ac-flyspell-workaround)))
 
   ;; modular text completion framework
-  (try-require 'company)
+  (with-eval-after-load "company-autoloads"
+
+    ;; enable Company mode in all buffers ...
+    (add-hook 'after-init-hook 'global-company-mode))
+
   (with-eval-after-load "company"
+
+    ;; ... except in some modes
+    (setq company-global-modes
+          '(not ess-mode                ; in (i)ESS buffers, Auto-Complete is
+                inferior-ess-mode       ; enabled by default
+                magit-status-mode
+                help-mode))
 
     ;; minimum prefix length for idle completion
     (setq company-minimum-prefix-length 2)
@@ -7301,16 +7333,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; show quick-access numbers for the first ten candidates
     (setq company-show-numbers t)
-
-    ;; enable Company mode in all buffers ...
-    (add-hook 'after-init-hook 'global-company-mode)
-
-    ;; ... except in some modes
-    (setq company-global-modes
-          '(not ess-mode                ; in (i)ESS buffers, Auto-Complete is
-                inferior-ess-mode       ; enabled by default
-                magit-status-mode
-                help-mode))
 
     ;; use `C-n/C-p' to select candidates (only when completion menu is
     ;; displayed)
@@ -7511,6 +7533,9 @@ a clean buffer we're an order of magnitude laxer about checking."
             (lambda ()
               ;; don't hide details in Dired
               (setq diredp-hide-details-initially-flag nil)
+
+              ;; don't display the next Dired buffer the same way as the last
+              (setq diredp-hide-details-propagate-flag nil)
 
               ;; don't wrap "next" command around to buffer beginning
               (setq diredp-wrap-around-flag nil)
@@ -8777,6 +8802,12 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 )
 
+  (with-eval-after-load "google-translate-autoloads"
+
+    (setq google-translate-default-source-language "fr")
+
+    (setq google-translate-default-target-language "en"))
+
 ;;* 46 Other (info "(emacs)Amusements")
 
 (leuven--chapter leuven-chapter-46-amusements "46 Other Amusements"
@@ -9053,12 +9084,14 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* Profiler
 
-  (setq profiler-report-cpu-line-format
-    '((100 left)                        ; The 100 above is increased from the
+  (with-eval-after-load "profiler"
+
+    (setq profiler-report-cpu-line-format
+      '((100 left)                      ; The 100 above is increased from the
                                         ; default of 50 to allow the deeply
                                         ; nested call tree to be seen.
-      (24 right ((19 right)
-                 (5 right)))))
+        (24 right ((19 right)
+                   (5 right))))))
 
 ;; Recovery from Problems
 
@@ -9107,7 +9140,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140929.1333]--")
+(message "* --[ Loaded Emacs Leuven 20140929.2340]--")
 
 (provide 'emacs-leuven)
 
