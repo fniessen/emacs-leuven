@@ -1252,3 +1252,34 @@ From [[gnus:nnimap%2Bmc:INBOX.mc#CAOotw2%3DE69_vt31KxUrfWtV6WTo0iFiE12d9cmPMMN3t
 ** [[http://www.mylifeorganized.net/][MyLifeOrganized]]
 
 ** [[http://taskcoach.org/][Task Coach]]
+
+** LiquidPlanner
+
+http://www.liquidplanner.com/support/videos/5-minute-crash-course/
+
+*Properties*:
+
+- Client
+- Project
+- Folder
+- Package ("ASAP", etc.)
+- Location
+- Team
+- Contract Value
+- Created On <date>
+- Created By <user>
+- Deadline
+- Delay Until
+- Max Effort
+- Logged (= CLOCKSUM, task timer)
+- Remaining Effort = (Remaining Est. Low, Remaining Est. High)
+- Remaining [E] (where "E" = EXPECTED)
+  = (Remaining Est. Low + Remaining Est. High) / 2
+- Total [E]
+- Finish [E]
+
+Note that:
+- Logged + Remaining [E] = Total [E]
+- Logged / Total [E] = % Complete
+
+http://www.liquidplanner.com/support/videos/daily-task-management/
