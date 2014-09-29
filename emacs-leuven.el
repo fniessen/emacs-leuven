@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140926.1055
+;; Version: 20140929.1234
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140926.1055]--")
+(message "* --[ Loading Emacs Leuven 20140929.1234]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -407,7 +407,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           boxquote calfw circe company csv-mode dictionary diff-hl diminish
           dired+ dired-single ess expand-region fancy-narrow
           fill-column-indicator flycheck fuzzy git-commit-mode google-this
-          graphviz-dot-mode guide-key helm helm-swoop htmlize litable
+          goto-chg graphviz-dot-mode guide-key helm helm-swoop htmlize litable
           idle-require imenu-anywhere info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
           redo+ spray tidy tomatinho unbound undo-tree w3m ws-butler yasnippet
@@ -715,11 +715,15 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 (leuven--chapter leuven-chapter-11-mark "11 The Mark and the Region"
 
+  (with-eval-after-load "goto-chg-autoloads"
+    (global-set-key (kbd "C-:") 'goto-last-change))
+
   ;; increase selected region by semantic units
   (with-eval-after-load "expand-region-autoloads"
 
     (global-set-key (kbd "C-@") 'er/expand-region)
-    (global-set-key (kbd "C-;") 'er/expand-region)
+    (global-set-key (kbd "C-;") 'er/expand-region) ; used in `flyspell.el'
+    (global-set-key (kbd "C-'") 'er/expand-region) ; undefined
     ;; (global-set-key (kbd "C-M-@") 'er/contract-region)
     )
 
@@ -1076,19 +1080,18 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; ;; highlight trailing whitespaces in all modes
   ;; (setq-default show-trailing-whitespace t)
 
-  ;; unobtrusively remove trailing whitespace
-  (with-eval-after-load "ws-butler-autoloads"
-
-    ;; enable Ws-Butler mode in all buffers
-    (ws-butler-global-mode 1))
+  ;; ;; unobtrusively remove trailing whitespace
+  ;; (with-eval-after-load "ws-butler-autoloads"
+  ;; 
+  ;;   ;; enable Ws-Butler mode in all buffers
+  ;;   (ws-butler-global-mode 1))
 
   ;; visually indicate empty lines after the buffer end in the fringe
   (setq-default indicate-empty-lines t)
 
   (GNUEmacs
-    ;; whitespace mode
-    (add-hook 'text-mode-hook 'whitespace-mode)
-    (add-hook 'prog-mode-hook 'whitespace-mode)
+    ;; enable Global Whitespace mode
+    (global-whitespace-mode 1)
 
     (with-eval-after-load "whitespace"
 
@@ -1108,7 +1111,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; mappings for displaying characters
       (setq whitespace-display-mappings
             '((space-mark ?\u00A0       ; no-break space
-                          [?\u25A1]     ; white square
+                          [?_]          ; spacing underscore
                           [?_])         ; spacing underscore
 
               (space-mark ?\u202F       ; narrow no-break space
@@ -1181,28 +1184,28 @@ Last time is saved in global variable `leuven--before-section-time'."
   '((((class color))
      (:background "#8A2BE2" :foreground "black" :weight bold))
     (t (:weight bold)))
-  "Face to fontify modified files."
+  "Face to fontify default dictionary in the active buffer."
   :group 'powerline)
 
 (defface powerline-default-dictionary-inactive-face
   '((((class color))
      (:background "thistle" :foreground "black" :weight bold))
     (t (:weight bold)))
-  "Face to fontify modified files."
+  "Face to fontify default dictionary in inactive buffers."
   :group 'powerline)
 
 (defface powerline-other-dictionary-active-face
   '((((class color))
      (:background "yellow" :foreground "black" :weight bold))
     (t (:weight bold)))
-  "Face to fontify unchanged files."
+  "Face to fontify another dictionary in the active buffer."
   :group 'powerline)
 
 (defface powerline-other-dictionary-inactive-face
   '((((class color))
      (:background "LightYellow1" :foreground "black" :weight bold))
     (t (:weight bold)))
-  "Face to fontify unchanged files."
+  "Face to fontify another dictionary in inactive buffers."
   :group 'powerline)
 
 (defun powerline-leuven-theme ()
@@ -1759,8 +1762,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; enable Global Auto-Revert mode
   (global-auto-revert-mode 1)           ; can generate a lot of network traffic
 
-  ;; Global Auto-Revert mode operates on all buffers (Dired, among others)
-  (setq-default global-auto-revert-non-file-buffers t)
+  ;; ;; Global Auto-Revert mode operates on all buffers (Dired, among others)
+  ;; (setq-default global-auto-revert-non-file-buffers t)
 
 ;;** 18.6 (info "(emacs)Auto Save"): Protection Against Disasters
 
@@ -2160,15 +2163,11 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; ;; source
       ;; (setq helm-move-to-line-cycle-in-source t)
 
-      (defface leuven-separator
-        '((t (:weight bold :foreground "slate gray")))
-        "Face used to display state NEW.")
-
       ;; candidates separator of `multiline' source (such as
       ;; `helm-show-kill-ring')
       (setq helm-candidate-separator
-            (propertize "--separator-------------------------------"
-                        'face 'leuven-separator))
+            (propertize "--8<-----------------------separator------------------------>8---"
+                        'face (list :family "Sans Serif" :weight 'bold :foreground "red")))
 
       ;; suppress displaying sources which are out of screen at first
       (setq helm-quick-update t)
@@ -3441,13 +3440,12 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; inhibit startup when preparing agenda buffers -- agenda optimization
   (setq org-agenda-inhibit-startup t)
 
-  ;; (add-hook 'org-mode-hook
-  ;;           (lambda()
-  ;;             (add-to-list 'mode-line-format
-  ;;                          '(:eval (org-propertize
-  ;;                                   (org-display-outline-path nil t " / " t)
-  ;;                                   'face 'mode-line-emphasis
-  ;;                                   'help-echo "Outline path")) t)))
+  (setq w32-pass-apps-to-system nil)
+  (setq w32-apps-modifier 'hyper)       ; Apps key
+
+  (with-eval-after-load "org"
+    ;; create indirect buffer and narrow it to current subtree
+    (define-key org-mode-map (kbd "<H-return>") 'org-tree-to-indirect-buffer))
 
 ;;** (info "(org)Motion")
 
@@ -3788,13 +3786,13 @@ Last time is saved in global variable `leuven--before-section-time'."
                         ("mail"        . ?m)
 
                         ("notbillable" . ?B)
-                        ("now"         . ?N)
                         ;; ("reading" . ?r)
                         ;; ("proj" . ?P)
 
                         ("ARCHIVE"     . ?a) ; speed command + action in task list
                         ("crypt"       . ?C)
-                        ("FLAGGED"     . ??)))
+                        ("FLAGGED"     . ??) ; = ASAP
+                        ))
 
   ;; faces for specific tags
   (setq org-tag-faces
@@ -5167,9 +5165,9 @@ this with to-do items than with projects or headings."
     ;; include the `xcolor' package for colored source code
     (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
 
-    ;; filter for non-breaking spaces
+    ;; filter for no-break spaces
     (defun leuven--latex-filter-nbsp (text backend info)
-      "Convert non-breaking spaces when exporting to LaTeX/Beamer."
+      "Convert no-break spaces when exporting to LaTeX/Beamer."
       (when (memq backend '(latex beamer))
         (replace-regexp-in-string " " "~" text)))
 
@@ -5552,9 +5550,6 @@ this with to-do items than with projects or headings."
 
     (add-to-list 'org-speed-commands-user '("d" org-todo "DONE"))
     (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE"))
-
-    (setq w32-pass-apps-to-system nil)
-    (setq w32-apps-modifier 'hyper)     ; Apps key
 
     ;; run current line (mapped to H-r)
 
@@ -6297,35 +6292,26 @@ mouse-3: go to end") "]"))))
   (XEmacs
     (paren-set-mode 'paren))
 
-  ;; highlight surrounding parentheses
-  (GNUEmacs
-    (autoload 'highlight-parentheses-mode "highlight-parentheses"
-      "Minor mode to highlight the surrounding parentheses." t)
+  ;; highlight nested parens, brackets, braces a different color at each depth
+  (with-eval-after-load "rainbow-delimiters"
 
-    ;; (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
+    ;; enable rainbow-delimiters-mode in Emacs Lisp buffers
+    (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
 
-    (with-eval-after-load "highlight-parentheses"
+    ;; enable rainbow-delimiters-mode in Clojure buffers
+    (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 
-      (define-globalized-minor-mode global-highlight-parentheses-mode
-        highlight-parentheses-mode
-        (lambda ()
-          (highlight-parentheses-mode t)))
-      (global-highlight-parentheses-mode t)
-
-      (setq hl-paren-background-colors
-            '("#FF993F" "#B0FF3F" "#3FFFB0" "#3F99FF"))
-
-      (setq hl-paren-colors
-            '("black" "black" "black" "black"))))
+    ;; enable rainbow-delimiters-mode in other Lisp mode buffers
+    (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode))
 
   ;; jump to matching parenthesis
-  (defun match-paren (arg)
+  (defun leuven-match-paren (arg)
     "Go to the matching parenthesis, if on a parenthesis."
     (interactive "p")
     (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
           ((looking-at "\\s\)") (forward-char 1) (backward-list 1))))
 
-  (global-set-key (kbd "C-)") 'match-paren)
+  (global-set-key (kbd "C-)") 'leuven-match-paren)
 
   ;; (electric-pair-mode 1)
 
@@ -6448,27 +6434,6 @@ mouse-3: go to end") "]"))))
 
 (leuven--chapter leuven-chapter-27-building "27 Compiling and Testing Programs"
 
-  (autoload 'flymake-mode "flymake"
-    "Toggle on-the-fly syntax checking." t)
-
-  (with-eval-after-load "flymake"
-
-    ;; set up `flymake'
-    (defun activate-flymake ()
-      "Activate Flymake when real buffer and you have write access."
-      (when (and (buffer-file-name)
-                 (file-writable-p buffer-file-name))
-        (flymake-mode t)))
-
-    ;; XXX add errors to mode line
-    (defun leuven--flymake-show-help ()
-      "Display the error output of the current line in the mode line."
-      (when (get-char-property (point) 'flymake-overlay)
-        (let ((help (get-char-property (point) 'help-echo)))
-          (if help (message "%s" help)))))
-
-    (add-hook 'post-command-hook 'leuven--flymake-show-help))
-
 ;;** 27.1 Running (info "(emacs)Compilation")s under Emacs
 
   (leuven--section "27.1 Running (emacs)Compilations under Emacs")
@@ -6583,32 +6548,18 @@ mouse-3: go to end") "]"))))
   (leuven--section "27.5 (emacs)Flymake")
 
   ;; modern on-the-fly syntax checking
-  (try-require 'flycheck-XXX)
+  (with-eval-after-load "flycheck-autoloads"
+
+    ;; enable Flycheck mode in all buffers
+    (add-hook 'after-init-hook 'global-flycheck-mode))
+
   (with-eval-after-load "flycheck"
+
+    ;; delay in seconds before displaying errors at point
+    (setq flycheck-display-errors-delay 0.3)
 
     ;; ;; indicate errors and warnings via icons in the right fringe
     ;; (setq flycheck-indication-mode 'right-fringe)
-
-    ;; enable Flycheck mode in all buffers
-    (add-hook 'after-init-hook 'global-flycheck-mode)
-
-    (defun leuven--adjust-flycheck-automatic-syntax-eagerness ()
-      "Adjust how often we check for errors based on if there are any.
-
-This lets us fix any errors as quickly as possible, but in
-a clean buffer we're an order of magnitude laxer about checking."
-      (setq flycheck-idle-change-delay
-            (if (assq 'error (flycheck-count-errors flycheck-current-errors))
-                ; only check for REAL errors (original source: Magnars)
-                1
-              20)))
-
-    ;; Each buffer get its local `flycheck-idle-change-delay' because of the
-    ;; buffer-sensitive adjustment above.
-    (make-variable-buffer-local 'flycheck-idle-change-delay)
-
-    (add-hook 'flycheck-after-syntax-check-hook
-              'leuven--adjust-flycheck-automatic-syntax-eagerness)
 
     ;; Remove newline checks, since they would trigger an immediate check when
     ;; we want the `flycheck-idle-change-delay' to be in effect while editing.
@@ -6618,16 +6569,24 @@ a clean buffer we're an order of magnitude laxer about checking."
             ;; new-line
             mode-enabled))
 
-    (defun flycheck-handle-idle-change ()
-      "Handle an expired idle time since the last change.
+    ;; Each buffer get its local `flycheck-idle-change-delay' because of the
+    ;; buffer-sensitive adjustment above.
+    (make-variable-buffer-local 'flycheck-idle-change-delay)
 
-This is an overwritten version of the original
-flycheck-handle-idle-change, which removes the forced deferred.
-Timers should only trigger inbetween commands in a single
-threaded system and the forced deferred makes errors never show
-up before you execute another command."
-      (flycheck-clear-idle-change-timer)
-      (flycheck-buffer-automatically 'idle-change)))
+    (defun leuven--adjust-flycheck-automatic-syntax-eagerness ()
+      "Adjust how often we check for errors based on if there are any.
+
+This lets us fix any errors as quickly as possible, but in
+a clean buffer we're an order of magnitude laxer about checking."
+      (setq flycheck-idle-change-delay
+            (if (assq 'error (flycheck-count-errors flycheck-current-errors))
+                ; only check for REAL errors (original source: Magnar Sveen)
+                1
+              20)))
+
+    ;; functions to run after each syntax check
+    (add-hook 'flycheck-after-syntax-check-hook
+              'leuven--adjust-flycheck-automatic-syntax-eagerness))
 
 ;;** 27.6 Running (info "(emacs)Debuggers") Under Emacs
 
@@ -7471,6 +7430,9 @@ up before you execute another command."
 ;;** (info "(emacs)Dired Updating")
 
     (leuven--section "30.15 (emacs)Dired Updating")
+
+    ;; automatically revert Dired buffer on revisiting
+    (setq dired-auto-revert-buffer t)
 
     ;; Dired sort
     (try-require 'dired-sort-map)
@@ -9142,7 +9104,7 @@ up before you execute another command."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140926.1056]--")
+(message "* --[ Loaded Emacs Leuven 20140929.1235]--")
 
 (provide 'emacs-leuven)
 

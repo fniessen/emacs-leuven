@@ -113,24 +113,26 @@
             <a href="#sec-13">The Mark and the Region</a>
 
             <ul>
-              <li><a href="#sec-13-1">Commands to Mark Textual Objects</a></li>
+              <li><a href="#sec-13-1">Setting the Mark</a></li>
 
-              <li><a href="#sec-13-2">Operating on the Region</a></li>
+              <li><a href="#sec-13-2">Commands to Mark Textual Objects</a></li>
 
-              <li><a href="#sec-13-3">Shift Selection</a></li>
+              <li><a href="#sec-13-3">Operating on the Region</a></li>
+
+              <li><a href="#sec-13-4">Shift Selection</a></li>
 
               <li>
-                <a href="#sec-13-4">Multiple selections</a>
+                <a href="#sec-13-5">Multiple selections</a>
 
                 <ul>
-                  <li><a href="#sec-13-4-1">Splitting the selection into
+                  <li><a href="#sec-13-5-1">Splitting the selection into
                   lines</a></li>
 
-                  <li><a href="#sec-13-4-2">Quick add next/previous</a></li>
+                  <li><a href="#sec-13-5-2">Quick add next/previous</a></li>
 
-                  <li><a href="#sec-13-4-3">Find All</a></li>
+                  <li><a href="#sec-13-5-3">Find All</a></li>
 
-                  <li><a href="#sec-13-4-4">Single Selection</a></li>
+                  <li><a href="#sec-13-5-4">Single Selection</a></li>
                 </ul>
               </li>
             </ul>
@@ -249,54 +251,56 @@
 
               <li><a href="#sec-20-3">Reverting a Buffer</a></li>
 
-              <li><a href="#sec-20-4">Auto-Saving: Protection Against
+              <li><a href="#sec-20-4">Auto Reverting Non-File Buffers</a></li>
+
+              <li><a href="#sec-20-5">Auto-Saving: Protection Against
               Disasters</a></li>
 
-              <li><a href="#sec-20-5">Comparing Files</a></li>
+              <li><a href="#sec-20-6">Comparing Files</a></li>
 
-              <li><a href="#sec-20-6">Diff Mode</a></li>
+              <li><a href="#sec-20-7">Diff Mode</a></li>
 
-              <li><a href="#sec-20-7">Miscellaneous File Operations</a></li>
+              <li><a href="#sec-20-8">Miscellaneous File Operations</a></li>
 
-              <li><a href="#sec-20-8">Accessing Compressed Files</a></li>
+              <li><a href="#sec-20-9">Accessing Compressed Files</a></li>
 
-              <li><a href="#sec-20-9">Auto Encryption</a></li>
+              <li><a href="#sec-20-10">Auto Encryption</a></li>
 
               <li>
-                <a href="#sec-20-10">Remote Files</a>
+                <a href="#sec-20-11">Remote Files</a>
 
                 <ul>
-                  <li><a href="#sec-20-10-1">Ange-FTP</a></li>
+                  <li><a href="#sec-20-11-1">Ange-FTP</a></li>
 
-                  <li><a href="#sec-20-10-2">TRAMP</a></li>
+                  <li><a href="#sec-20-11-2">TRAMP</a></li>
 
-                  <li><a href="#sec-20-10-3">TEST Find file as root</a></li>
+                  <li><a href="#sec-20-11-3">TEST Find file as root</a></li>
                 </ul>
               </li>
 
               <li>
-                <a href="#sec-20-11">Convenience Features for Finding Files</a>
+                <a href="#sec-20-12">Convenience Features for Finding Files</a>
 
                 <ul>
                   <li>
-                    <a href="#sec-20-11-1">Helm (Anything successor)</a>
+                    <a href="#sec-20-12-1">Helm (Anything successor)</a>
 
                     <ul>
-                      <li><a href="#sec-20-11-1-1">Helm find files</a></li>
+                      <li><a href="#sec-20-12-1-1">Helm find files</a></li>
 
-                      <li><a href="#sec-20-11-1-2">Grep</a></li>
+                      <li><a href="#sec-20-12-1-2">Grep</a></li>
 
-                      <li><a href="#sec-20-11-1-3">Helm M-x</a></li>
+                      <li><a href="#sec-20-12-1-3">Helm M-x</a></li>
 
-                      <li><a href="#sec-20-11-1-4">Helm locate</a></li>
+                      <li><a href="#sec-20-12-1-4">Helm locate</a></li>
 
-                      <li><a href="#sec-20-11-1-5">Helm for buffers</a></li>
+                      <li><a href="#sec-20-12-1-5">Helm for buffers</a></li>
 
-                      <li><a href="#sec-20-11-1-6">Helm swoop</a></li>
+                      <li><a href="#sec-20-12-1-6">Helm swoop</a></li>
                     </ul>
                   </li>
 
-                  <li><a href="#sec-20-11-2">Image mode</a></li>
+                  <li><a href="#sec-20-12-2">Image mode</a></li>
                 </ul>
               </li>
             </ul>
@@ -1322,7 +1326,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140926.1057</span>
+"org-comment">Version: 20140929.1200</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1445,7 +1449,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140926.1057]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140929.1200]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -2235,7 +2239,7 @@
           boxquote calfw circe company csv-mode dictionary diff-hl diminish
           dired+ dired-single ess expand-region fancy-narrow
           fill-column-indicator flycheck fuzzy git-commit-mode google-this
-          graphviz-dot-mode guide-key helm helm-swoop htmlize litable
+          goto-chg graphviz-dot-mode guide-key helm helm-swoop htmlize litable
           idle-require imenu-anywhere info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
           redo+ spray tidy tomatinho unbound undo-tree w3m ws-butler yasnippet
@@ -3062,9 +3066,31 @@
       </div>
 
       <div id="outline-container-sec-13-1" class="outline-3">
-        <h3 id="sec-13-1">Commands to Mark Textual Objects</h3>
+        <h3 id="sec-13-1">Setting the Mark</h3>
 
         <div class="outline-text-3" id="text-13-1">
+          <p>Instead of setting the mark in order to operate on a region, you
+          can also use it to “remember” a position in the buffer (by typing
+          <code>C-&lt;SPC&gt; C-&lt;SPC&gt;</code>), and later jump back there
+          (by typing <code>C-u C-&lt;SPC&gt;</code>).</p>
+
+          <p>Go to the place where you last changed something.</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"goto-chg-autoloads"</span>
+    (global-set-key (kbd <span class=
+"org-string">"C-:"</span>) 'goto-last-change))
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="outline-container-sec-13-2" class="outline-3">
+        <h3 id="sec-13-2">Commands to Mark Textual Objects</h3>
+
+        <div class="outline-text-3" id="text-13-2">
           <dl class="org-dl">
             <dt><code>M-@</code></dt>
 
@@ -3087,7 +3113,13 @@
     (global-set-key (kbd <span class=
 "org-string">"C-@"</span>) 'er/expand-region)
     (global-set-key (kbd <span class=
-"org-string">"C-;"</span>) 'er/expand-region)
+"org-string">"C-;"</span>) 'er/expand-region) <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">used in `</span><span class="org-constant"><span class=
+"org-comment">flyspell.el</span></span><span class="org-comment">'</span>
+    (global-set-key (kbd <span class=
+"org-string">"C-'"</span>) 'er/expand-region) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">undefined</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(global-set-key (kbd "C-M-@") 'er/contract-region)</span>
     )
@@ -3096,10 +3128,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-13-2" class="outline-3">
-        <h3 id="sec-13-2">Operating on the Region</h3>
+      <div id="outline-container-sec-13-3" class="outline-3">
+        <h3 id="sec-13-3">Operating on the Region</h3>
 
-        <div class="outline-text-3" id="text-13-2">
+        <div class="outline-text-3" id="text-13-3">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
@@ -3114,18 +3146,18 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-13-3" class="outline-3">
-        <h3 id="sec-13-3">Shift Selection</h3>
+      <div id="outline-container-sec-13-4" class="outline-3">
+        <h3 id="sec-13-4">Shift Selection</h3>
 
-        <div class="outline-text-3" id="text-13-3">
+        <div class="outline-text-3" id="text-13-4">
           <p>Shifted motion keys activate the mark momentarily.</p>
         </div>
       </div>
 
-      <div id="outline-container-sec-13-4" class="outline-3">
-        <h3 id="sec-13-4">Multiple selections</h3>
+      <div id="outline-container-sec-13-5" class="outline-3">
+        <h3 id="sec-13-5">Multiple selections</h3>
 
-        <div class="outline-text-3" id="text-13-4">
+        <div class="outline-text-3" id="text-13-5">
           <p>You can <a href="http://www.emacsrocks.com/e13.html">watch an
           intro to multiple-cursors at Emacs Rocks</a>.</p>
 
@@ -3154,10 +3186,10 @@
           </div>
         </div>
 
-        <div id="outline-container-sec-13-4-1" class="outline-4">
-          <h4 id="sec-13-4-1">Splitting the selection into lines</h4>
+        <div id="outline-container-sec-13-5-1" class="outline-4">
+          <h4 id="sec-13-5-1">Splitting the selection into lines</h4>
 
-          <div class="outline-text-4" id="text-13-4-1">
+          <div class="outline-text-4" id="text-13-5-1">
             <p>Make <b>batch edits</b> with Multiple Cursors: select a block of
             lines, and then <b>split the region into lines</b> which are then
             <b>edited simultaneously</b>.</p>
@@ -3178,10 +3210,10 @@
           </div>
         </div>
 
-        <div id="outline-container-sec-13-4-2" class="outline-4">
-          <h4 id="sec-13-4-2">Quick add next/previous</h4>
+        <div id="outline-container-sec-13-5-2" class="outline-4">
+          <h4 id="sec-13-5-2">Quick add next/previous</h4>
 
-          <div class="outline-text-4" id="text-13-4-2">
+          <div class="outline-text-4" id="text-13-5-2">
             <p>Use Multiple Cursors to <b>rename variables quickly</b>: <b>add
             the next</b> or previous <b>occurrence of the current word to the
             selection</b>.</p>
@@ -3206,10 +3238,10 @@
           </div>
         </div>
 
-        <div id="outline-container-sec-13-4-3" class="outline-4">
-          <h4 id="sec-13-4-3">Find All</h4>
+        <div id="outline-container-sec-13-5-3" class="outline-4">
+          <h4 id="sec-13-5-3">Find All</h4>
 
-          <div class="outline-text-4" id="text-13-4-3">
+          <div class="outline-text-4" id="text-13-5-3">
             <p>Add all occurrences of the current word to the selection.</p>
 
             <div class="org-src-container">
@@ -3246,10 +3278,10 @@
           </div>
         </div>
 
-        <div id="outline-container-sec-13-4-4" class="outline-4">
-          <h4 id="sec-13-4-4">Single Selection</h4>
+        <div id="outline-container-sec-13-5-4" class="outline-4">
+          <h4 id="sec-13-5-4">Single Selection</h4>
 
-          <div class="outline-text-4" id="text-13-4-4">
+          <div class="outline-text-4" id="text-13-5-4">
             <p>To go from multiple selections to a single selection, press
             <code>C-g</code>.</p>
 
@@ -3440,7 +3472,7 @@
           <div class="outline-text-4" id="text-14-2-1">
             <p>Interactively insert items from kill ring with <code>M-x
             helm-show-kill-ring</code> (see <a href=
-            "#sec-20-11-1">Helm</a>).</p>
+            "#sec-20-12-1">Helm</a>).</p>
           </div>
         </div>
       </div>
@@ -4337,13 +4369,15 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">unobtrusively remove trailing whitespace</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"ws-butler-autoloads"</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable Ws-Butler mode in all buffers</span>
-    (ws-butler-global-mode 1))
+"org-comment">;; unobtrusively remove trailing whitespace</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(with-eval-after-load "ws-butler-autoloads"</span>
+  <span class="org-comment-delimiter">;;</span><span class=
+"org-whitespace-trailing"> </span>
+  <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">;; enable Ws-Butler mode in all buffers</span>
+  <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(ws-butler-global-mode 1))</span>
 </pre>
           </div>
 
@@ -4364,9 +4398,8 @@
             <pre class="src src-emacs-lisp">
   (GNUEmacs
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">whitespace mode</span>
-    (add-hook 'text-mode-hook 'whitespace-mode)
-    (add-hook 'prog-mode-hook 'whitespace-mode)
+"org-comment">enable Global Whitespace mode</span>
+    (global-whitespace-mode 1)
 
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"whitespace"</span>
@@ -4393,8 +4426,9 @@
             '((space-mark ?\u00A0       <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">no-break space</span>
-                          [?\u25A1]     <span class=
-"org-comment-delimiter">; </span><span class="org-comment">white square</span>
+                          [?_]          <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">spacing underscore</span>
                           [?_])         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">spacing underscore</span>
@@ -4601,7 +4635,8 @@
 "org-builtin">:foreground</span> <span class=
 "org-string">"black"</span> <span class="org-builtin">:weight</span> bold))
     (t (<span class="org-builtin">:weight</span> bold)))
-  <span class="org-doc">"Face to fontify modified files."</span>
+  <span class=
+"org-doc">"Face to fontify default dictionary in the active buffer."</span>
   <span class="org-builtin">:group</span> 'powerline)
 
 (<span class="org-keyword">defface</span> <span class=
@@ -4612,7 +4647,8 @@
 "org-builtin">:foreground</span> <span class=
 "org-string">"black"</span> <span class="org-builtin">:weight</span> bold))
     (t (<span class="org-builtin">:weight</span> bold)))
-  <span class="org-doc">"Face to fontify modified files."</span>
+  <span class=
+"org-doc">"Face to fontify default dictionary in inactive buffers."</span>
   <span class="org-builtin">:group</span> 'powerline)
 
 (<span class="org-keyword">defface</span> <span class=
@@ -4623,7 +4659,8 @@
 "org-builtin">:foreground</span> <span class=
 "org-string">"black"</span> <span class="org-builtin">:weight</span> bold))
     (t (<span class="org-builtin">:weight</span> bold)))
-  <span class="org-doc">"Face to fontify unchanged files."</span>
+  <span class=
+"org-doc">"Face to fontify another dictionary in the active buffer."</span>
   <span class="org-builtin">:group</span> 'powerline)
 
 (<span class="org-keyword">defface</span> <span class=
@@ -4634,7 +4671,8 @@
 "org-builtin">:foreground</span> <span class=
 "org-string">"black"</span> <span class="org-builtin">:weight</span> bold))
     (t (<span class="org-builtin">:weight</span> bold)))
-  <span class="org-doc">"Face to fontify unchanged files."</span>
+  <span class=
+"org-doc">"Face to fontify another dictionary in inactive buffers."</span>
   <span class="org-builtin">:group</span> 'powerline)
 </pre>
           </div>
@@ -6073,10 +6111,6 @@
   (global-auto-revert-mode 1)           <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">can generate a lot of network traffic</span>
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Global Auto-Revert mode operates on all buffers (Dired, among others)</span>
-  (setq-default global-auto-revert-non-file-buffers t)
 </pre>
           </div>
 
@@ -6087,9 +6121,27 @@
       </div>
 
       <div id="outline-container-sec-20-4" class="outline-3">
-        <h3 id="sec-20-4">Auto-Saving: Protection Against Disasters</h3>
+        <h3 id="sec-20-4">Auto Reverting Non-File Buffers</h3>
 
         <div class="outline-text-3" id="text-20-4">
+          <p>XXX Commented to avoid the message “Reverting buffer
+          `some-dir/’."</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">;; Global Auto-Revert mode operates on all buffers (Dired, among others)</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq-default global-auto-revert-non-file-buffers t)</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="outline-container-sec-20-5" class="outline-3">
+        <h3 id="sec-20-5">Auto-Saving: Protection Against Disasters</h3>
+
+        <div class="outline-text-3" id="text-20-5">
           <p>How to get Emacs to auto-save to your local disk
           (<code>#file#</code>).</p>
 
@@ -6203,10 +6255,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-20-5" class="outline-3">
-        <h3 id="sec-20-5">Comparing Files</h3>
+      <div id="outline-container-sec-20-6" class="outline-3">
+        <h3 id="sec-20-6">Comparing Files</h3>
 
-        <div class="outline-text-3" id="text-20-5">
+        <div class="outline-text-3" id="text-20-6">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -6233,10 +6285,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-20-6" class="outline-3">
-        <h3 id="sec-20-6">Diff Mode</h3>
+      <div id="outline-container-sec-20-7" class="outline-3">
+        <h3 id="sec-20-7">Diff Mode</h3>
 
-        <div class="outline-text-3" id="text-20-6">
+        <div class="outline-text-3" id="text-20-7">
           <p>In Diff mode, I can <b>select a hunk and apply it (in
           reverse)</b>. Nice following <code>C-x v =</code> to show what’s
           changed, and decide to reverse a change.</p>
@@ -6409,10 +6461,10 @@ M-: (executable-find "diff") RET
         </div>
       </div>
 
-      <div id="outline-container-sec-20-7" class="outline-3">
-        <h3 id="sec-20-7">Miscellaneous File Operations</h3>
+      <div id="outline-container-sec-20-8" class="outline-3">
+        <h3 id="sec-20-8">Miscellaneous File Operations</h3>
 
-        <div class="outline-text-3" id="text-20-7">
+        <div class="outline-text-3" id="text-20-8">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -6429,10 +6481,10 @@ M-: (executable-find "diff") RET
         </div>
       </div>
 
-      <div id="outline-container-sec-20-8" class="outline-3">
-        <h3 id="sec-20-8">Accessing Compressed Files</h3>
+      <div id="outline-container-sec-20-9" class="outline-3">
+        <h3 id="sec-20-9">Accessing Compressed Files</h3>
 
-        <div class="outline-text-3" id="text-20-8">
+        <div class="outline-text-3" id="text-20-9">
           <ul class="org-ul">
             <li>Display the <b>contents</b> of the archive</li>
 
@@ -6459,10 +6511,10 @@ M-: (executable-find "diff") RET
         </div>
       </div>
 
-      <div id="outline-container-sec-20-9" class="outline-3">
-        <h3 id="sec-20-9">Auto Encryption</h3>
+      <div id="outline-container-sec-20-10" class="outline-3">
+        <h3 id="sec-20-10">Auto Encryption</h3>
 
-        <div class="outline-text-3" id="text-20-9">
+        <div class="outline-text-3" id="text-20-10">
           <p>History:</p>
 
           <ol class="org-ol">
@@ -6554,10 +6606,10 @@ M-: (executable-find "diff") RET
         </div>
       </div>
 
-      <div id="outline-container-sec-20-10" class="outline-3">
-        <h3 id="sec-20-10">Remote Files</h3>
+      <div id="outline-container-sec-20-11" class="outline-3">
+        <h3 id="sec-20-11">Remote Files</h3>
 
-        <div class="outline-text-3" id="text-20-10">
+        <div class="outline-text-3" id="text-20-11">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -6568,10 +6620,10 @@ M-: (executable-find "diff") RET
           </div>
         </div>
 
-        <div id="outline-container-sec-20-10-1" class="outline-4">
-          <h4 id="sec-20-10-1">Ange-FTP</h4>
+        <div id="outline-container-sec-20-11-1" class="outline-4">
+          <h4 id="sec-20-11-1">Ange-FTP</h4>
 
-          <div class="outline-text-4" id="text-20-10-1">
+          <div class="outline-text-4" id="text-20-11-1">
             <table class="inlinetask" width="100%">
               <tr>
                 <td valign="top"><b><span class=
@@ -6607,10 +6659,10 @@ M-: (executable-find "diff") RET
           </div>
         </div>
 
-        <div id="outline-container-sec-20-10-2" class="outline-4">
-          <h4 id="sec-20-10-2">TRAMP</h4>
+        <div id="outline-container-sec-20-11-2" class="outline-4">
+          <h4 id="sec-20-11-2">TRAMP</h4>
 
-          <div class="outline-text-4" id="text-20-10-2">
+          <div class="outline-text-4" id="text-20-11-2">
             <p>(other protocols than just FTP)</p>
 
             <p><code>/method:user@host:/path/file</code></p>
@@ -6831,10 +6883,10 @@ M-: (executable-find "diff") RET
           </div>
         </div>
 
-        <div id="outline-container-sec-20-10-3" class="outline-4">
-          <h4 id="sec-20-10-3">TEST Find file as root</h4>
+        <div id="outline-container-sec-20-11-3" class="outline-4">
+          <h4 id="sec-20-11-3">TEST Find file as root</h4>
 
-          <div class="outline-text-4" id="text-20-10-3">
+          <div class="outline-text-4" id="text-20-11-3">
             <p>You can just do <code>C-x C-f
             /sudo:user@localhost:/foo/bar/baz.txt &lt;RET&gt;</code>.</p>
 
@@ -6899,10 +6951,10 @@ M-: (executable-find "diff") RET
         </div>
       </div>
 
-      <div id="outline-container-sec-20-11" class="outline-3">
-        <h3 id="sec-20-11">Convenience Features for Finding Files</h3>
+      <div id="outline-container-sec-20-12" class="outline-3">
+        <h3 id="sec-20-12">Convenience Features for Finding Files</h3>
 
-        <div class="outline-text-3" id="text-20-11">
+        <div class="outline-text-3" id="text-20-12">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -6969,12 +7021,12 @@ M-: (executable-find "diff") RET
           </div>
         </div>
 
-        <div id="outline-container-sec-20-11-1" class="outline-4">
-          <h4 id="sec-20-11-1"><a id="ID-59418189-b87e-45a2-b128-5cbdc8a16430"
+        <div id="outline-container-sec-20-12-1" class="outline-4">
+          <h4 id="sec-20-12-1"><a id="ID-59418189-b87e-45a2-b128-5cbdc8a16430"
           name="ID-59418189-b87e-45a2-b128-5cbdc8a16430"></a>Helm (Anything
           successor)</h4>
 
-          <div class="outline-text-4" id="text-20-11-1">
+          <div class="outline-text-4" id="text-20-12-1">
             <p>XXX Sort this section following <a href=
             "https://github.com/emacs-helm/helm/wiki#generalhelmcommands">https://github.com/emacs-helm/helm/wiki#generalhelmcommands</a>
             and following.</p>
@@ -7358,13 +7410,6 @@ M-: (executable-find "diff") RET
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(setq helm-move-to-line-cycle-in-source t)</span>
 
-      (<span class="org-keyword">defface</span> <span class=
-"org-variable-name">leuven-separator</span>
-        '((t (<span class="org-builtin">:weight</span> bold <span class=
-"org-builtin">:foreground</span> <span class=
-"org-string">"slate gray"</span>)))
-        <span class="org-doc">"Face used to display state NEW."</span>)
-
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">candidates separator of `</span><span class=
 "org-constant"><span class="org-comment">multiline</span></span><span class=
@@ -7375,8 +7420,12 @@ M-: (executable-find "diff") RET
 "org-comment">')</span>
       (setq helm-candidate-separator
             (propertize <span class=
-"org-string">"--separator-------------------------------"</span>
-                        'face 'leuven-separator))
+"org-string">"--8&lt;-----------------------separator------------------------&gt;8---"</span>
+                        'face (list <span class=
+"org-builtin">:family</span> <span class=
+"org-string">"Sans Serif"</span> <span class=
+"org-builtin">:weight</span> 'bold <span class=
+"org-builtin">:foreground</span> <span class="org-string">"red"</span>)))
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">suppress displaying sources which are out of screen at first</span>
@@ -7418,10 +7467,10 @@ M-: (executable-find "diff") RET
             </div>
           </div>
 
-          <div id="outline-container-sec-20-11-1-1" class="outline-5">
-            <h5 id="sec-20-11-1-1">Helm find files</h5>
+          <div id="outline-container-sec-20-12-1-1" class="outline-5">
+            <h5 id="sec-20-12-1-1">Helm find files</h5>
 
-            <div class="outline-text-5" id="text-20-11-1-1">
+            <div class="outline-text-5" id="text-20-12-1-1">
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
     (<span class="org-keyword">with-eval-after-load</span> <span class=
@@ -7437,10 +7486,10 @@ M-: (executable-find "diff") RET
             </div>
           </div>
 
-          <div id="outline-container-sec-20-11-1-2" class="outline-5">
-            <h5 id="sec-20-11-1-2">Grep</h5>
+          <div id="outline-container-sec-20-12-1-2" class="outline-5">
+            <h5 id="sec-20-12-1-2">Grep</h5>
 
-            <div class="outline-text-5" id="text-20-11-1-2">
+            <div class="outline-text-5" id="text-20-12-1-2">
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
     (<span class="org-keyword">with-eval-after-load</span> <span class=
@@ -7481,10 +7530,10 @@ M-: (executable-find "diff") RET
             </div>
           </div>
 
-          <div id="outline-container-sec-20-11-1-3" class="outline-5">
-            <h5 id="sec-20-11-1-3">Helm M-x</h5>
+          <div id="outline-container-sec-20-12-1-3" class="outline-5">
+            <h5 id="sec-20-12-1-3">Helm M-x</h5>
 
-            <div class="outline-text-5" id="text-20-11-1-3">
+            <div class="outline-text-5" id="text-20-12-1-3">
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
     (<span class="org-keyword">with-eval-after-load</span> <span class=
@@ -7498,10 +7547,10 @@ M-: (executable-find "diff") RET
             </div>
           </div>
 
-          <div id="outline-container-sec-20-11-1-4" class="outline-5">
-            <h5 id="sec-20-11-1-4">Helm locate</h5>
+          <div id="outline-container-sec-20-12-1-4" class="outline-5">
+            <h5 id="sec-20-12-1-4">Helm locate</h5>
 
-            <div class="outline-text-5" id="text-20-11-1-4">
+            <div class="outline-text-5" id="text-20-12-1-4">
               <p>Use Helm and Everything to <b>quickly navigate between
               files</b>, even in the largest projects.</p>
 
@@ -7529,10 +7578,10 @@ M-: (executable-find "diff") RET
             </div>
           </div>
 
-          <div id="outline-container-sec-20-11-1-5" class="outline-5">
-            <h5 id="sec-20-11-1-5">Helm for buffers</h5>
+          <div id="outline-container-sec-20-12-1-5" class="outline-5">
+            <h5 id="sec-20-12-1-5">Helm for buffers</h5>
 
-            <div class="outline-text-5" id="text-20-11-1-5">
+            <div class="outline-text-5" id="text-20-12-1-5">
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
     (<span class="org-keyword">with-eval-after-load</span> <span class=
@@ -7558,10 +7607,10 @@ M-: (executable-find "diff") RET
             </div>
           </div>
 
-          <div id="outline-container-sec-20-11-1-6" class="outline-5">
-            <h5 id="sec-20-11-1-6">Helm swoop</h5>
+          <div id="outline-container-sec-20-12-1-6" class="outline-5">
+            <h5 id="sec-20-12-1-6">Helm swoop</h5>
 
-            <div class="outline-text-5" id="text-20-11-1-6">
+            <div class="outline-text-5" id="text-20-12-1-6">
               <p><a href=
               "https://github.com/ShingoFukuyama/helm-swoop">https://github.com/ShingoFukuyama/helm-swoop</a></p>
 
@@ -7628,10 +7677,10 @@ M-: (executable-find "diff") RET
           </div>
         </div>
 
-        <div id="outline-container-sec-20-11-2" class="outline-4">
-          <h4 id="sec-20-11-2">Image mode</h4>
+        <div id="outline-container-sec-20-12-2" class="outline-4">
+          <h4 id="sec-20-12-2">Image mode</h4>
 
-          <div class="outline-text-4" id="text-20-11-2">
+          <div class="outline-text-4" id="text-20-12-2">
             <p>AFAICT you need to eval something like</p>
 
             <p>(setq image-type-header-regexps '((“.*” . imagemagick)))</p>
@@ -9184,12 +9233,12 @@ M-: (executable-find "diff") RET
         <h3 id="sec-27-3">Filling Text</h3>
 
         <div class="outline-text-3" id="text-27-3">
-          <p>There are several <b>non-break space</b> characters required for
+          <p>There are several <b>no-break space</b> characters required for
           French punctuation:</p>
 
           <ul class="org-ul">
             <li><b>No-break thin space</b> (<code>202F</code>), known in
-            Unicode as “Narrow No-Break Space”, required before <code>?</code>,
+            Unicode as “narrow no-break space”, required before <code>?</code>,
             <code>!</code> and <code>;</code>.</li>
 
             <li>
@@ -10570,46 +10619,23 @@ M-: (executable-find "diff") RET
 </pre>
             </div>
 
-            <p>Display outline path in mode line:</p>
-
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(add-hook 'org-mode-hook</span>
-  <span class="org-comment-delimiter">;;           </span><span class=
-"org-comment">(lambda()</span>
-  <span class="org-comment-delimiter">;;             </span><span class=
-"org-comment">(add-to-list 'mode-line-format</span>
-  <span class=
-"org-comment-delimiter">;;                          </span><span class=
-"org-comment">'(:eval (org-propertize</span>
-  <span class=
-"org-comment-delimiter">;;                                   </span><span class="org-comment">(org-display-outline-path nil t " / " t)</span>
-  <span class=
-"org-comment-delimiter">;;                                   </span><span class="org-comment">'face 'mode-line-emphasis</span>
-  <span class=
-"org-comment-delimiter">;;                                   </span><span class="org-comment">'help-echo "Outline path")) t)))</span>
+  (setq w32-pass-apps-to-system nil)
+  (setq w32-apps-modifier 'hyper)       <span class=
+"org-comment-delimiter">; </span><span class="org-comment">Apps key</span>
+
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"org"</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">create indirect buffer and narrow it to current subtree</span>
+    (define-key org-mode-map (kbd <span class=
+"org-string">"&lt;H-return&gt;"</span>) 'org-tree-to-indirect-buffer))
 </pre>
             </div>
 
-            <table class="inlinetask" width="100%">
-              <tr>
-                <td valign="top"><b><span class=
-                "todo TODO">TODO</span></b></td>
-
-                <td width="100%">
-                  <b>Fix Error during redisplay</b><br />
-
-                  <p>(eval (org-propertize (org-display-outline-path nil t " /
-                  " t) (quote face) (quote mode-line-emphasis) (quote
-                  help-echo) “Outline path”)) signaled (wrong-type-argument
-                  stringp nil)</p>
-                </td>
-              </tr>
-            </table>
-
-            <p>Note that <b>Imenu</b> does display the current Org subtree in
-            the mode line, not the full outline path.</p>
+            <p>Note that <b>Imenu</b> does display the current <b>Org
+            subtree</b> in the mode line, not the full outline path.</p>
           </div>
         </div>
 
@@ -11505,7 +11531,6 @@ M-: (executable-find "diff") RET
                         (<span class="org-string">"mail"</span>        . ?m)
 
                         (<span class="org-string">"notbillable"</span> . ?B)
-                        (<span class="org-string">"now"</span>         . ?N)
                         <span class=
 "org-comment-delimiter">;; </span><span class=
 "org-comment">("reading" . ?r)</span>
@@ -11518,7 +11543,10 @@ M-: (executable-find "diff") RET
 "org-comment-delimiter">; </span><span class=
 "org-comment">speed command + action in task list</span>
                         (<span class="org-string">"crypt"</span>       . ?C)
-                        (<span class="org-string">"FLAGGED"</span>     . ??)))
+                        (<span class=
+"org-string">"FLAGGED"</span>     . ??) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">= ASAP</span>
+                        ))
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">faces for specific tags</span>
@@ -12084,6 +12112,15 @@ M-: (executable-find "diff") RET
   (add-hook 'org-clock-in-prepare-hook 'leuven--org-ask-effort)
 </pre>
             </div>
+
+            <p>XXX We could forbid an empty answer to the effort estimate
+            question!</p>
+
+            <p>XXX We could ask for a ranged estimate (best case - worst
+            case).</p>
+
+            <p>XXX When clocking out, show the remaining effort (allows to
+            re-estimate for a better schedule).</p>
           </div>
         </div>
       </div>
@@ -12180,6 +12217,10 @@ M-: (executable-find "diff") RET
 
               <dd>Inactive time stamp with date and time.</dd>
             </dl>
+
+            <p>Looking at the info manual I found the documentation for
+            “immediate-finish”, but not for “jump-to-captured”. I found it in
+            the code and it seems to be exactly what I want.</p>
 
             <p>Use <code>:jump-to-captured</code> to tell capture to jump to
             the note after storing it.</p>
@@ -14779,7 +14820,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             <p>When using the <code>utf8</code> option to <code>inputenc</code>
             (and not <code>utf8x</code> which should be avoided, as it uses
             <code>ucs</code> which is no longer maintained), we have 2
-            solutions to support the UTF-8 <b>non-breaking space</b>:</p>
+            solutions to support the UTF-8 <b>no-break space</b>:</p>
 
             <ul class="org-ul">
               <li>
@@ -14789,11 +14830,11 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
                 <div class="org-src-container">
                   <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">filter for non-breaking spaces</span>
+"org-comment">filter for no-break spaces</span>
   (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven--latex-filter-nbsp</span> (text backend info)
     <span class=
-"org-doc">"Convert non-breaking spaces when exporting to LaTeX/Beamer."</span>
+"org-doc">"Convert no-break spaces when exporting to LaTeX/Beamer."</span>
     (<span class="org-keyword">when</span> (memq backend '(latex beamer))
       (replace-regexp-in-string <span class=
 "org-string">" "</span> <span class="org-string">"~"</span> text)))
@@ -15854,14 +15895,6 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             <h5 id="sec-28-14-3-1">Convert Windows Apps key to Hyper</h5>
 
             <div class="outline-text-5" id="text-28-14-3-1">
-              <div class="org-src-container">
-                <pre class="src src-emacs-lisp">
-    (setq w32-pass-apps-to-system nil)
-    (setq w32-apps-modifier 'hyper)     <span class=
-"org-comment-delimiter">; </span><span class="org-comment">Apps key</span>
-</pre>
-              </div>
-
               <p>Here are more obvious key bindings to <b>execute</b> (than
               <code>C-c C-v C-e</code> and company) using “hyper”:</p>
 
@@ -17847,41 +17880,24 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 </pre>
           </div>
 
-          <p>See <code>rainbow-delimiters</code>.</p>
-
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">highlight surrounding parentheses</span>
-  (GNUEmacs
-    (autoload 'highlight-parentheses-mode <span class=
-"org-string">"highlight-parentheses"</span>
-      <span class=
-"org-doc">"Minor mode to highlight the surrounding parentheses."</span> t)
+"org-comment">highlight nested parens, brackets, braces a different color at each depth</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"rainbow-delimiters"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)</span>
+"org-comment">enable rainbow-delimiters-mode in Emacs Lisp buffers</span>
+    (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
 
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"highlight-parentheses"</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">enable rainbow-delimiters-mode in Clojure buffers</span>
+    (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 
-      (<span class=
-"org-keyword">define-globalized-minor-mode</span> <span class=
-"org-function-name">global-highlight-parentheses-mode</span>
-        highlight-parentheses-mode
-        (<span class="org-keyword">lambda</span> ()
-          (highlight-parentheses-mode t)))
-      (global-highlight-parentheses-mode t)
-
-      (setq hl-paren-background-colors
-            '(<span class="org-string">"#FF993F"</span> <span class=
-"org-string">"#B0FF3F"</span> <span class=
-"org-string">"#3FFFB0"</span> <span class="org-string">"#3F99FF"</span>))
-
-      (setq hl-paren-colors
-            '(<span class="org-string">"black"</span> <span class=
-"org-string">"black"</span> <span class=
-"org-string">"black"</span> <span class="org-string">"black"</span>))))
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">enable rainbow-delimiters-mode in other Lisp mode buffers</span>
+    (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode))
 </pre>
           </div>
         </div>
@@ -17895,7 +17911,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">jump to matching parenthesis</span>
   (<span class="org-keyword">defun</span> <span class=
-"org-function-name">match-paren</span> (arg)
+"org-function-name">leuven-match-paren</span> (arg)
     <span class=
 "org-doc">"Go to the matching parenthesis, if on a parenthesis."</span>
     (interactive <span class="org-string">"p"</span>)
@@ -17904,7 +17920,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
           ((looking-at <span class=
 "org-string">"\\s\)"</span>) (forward-char 1) (backward-list 1))))
 
-  (global-set-key (kbd <span class="org-string">"C-)"</span>) 'match-paren)
+  (global-set-key (kbd <span class=
+"org-string">"C-)"</span>) 'leuven-match-paren)
 </pre>
             </div>
           </div>
@@ -18374,21 +18391,6 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
       <h2 id="sec-32">Compiling and Testing Programs</h2>
 
       <div class="outline-text-2" id="text-32">
-        <p>It is possible to see a warning, while we are programming, if we did
-        a mistake: there’s a CWarn mode for C and C++, but I don’t know about
-        similar features for Java.</p>
-
-        <p>flymake can compile in the background and colorize lines with
-        errors/warnings</p>
-
-        <ul class="org-ul">
-          <li><a href=
-          "http://flymake.sourceforge.net/">http://flymake.sourceforge.net/</a></li>
-
-          <li><a href=
-          "http://www.emacswiki.org/cgi-bin/wiki/JdeeFlymake">http://www.emacswiki.org/cgi-bin/wiki/JdeeFlymake</a></li>
-        </ul>
-
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -18396,39 +18398,6 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
 (leuven--chapter leuven-chapter-27-building <span class=
 "org-string">"27 Compiling and Testing Programs"</span>
-
-  (autoload 'flymake-mode <span class="org-string">"flymake"</span>
-    <span class="org-doc">"Toggle on-the-fly syntax checking."</span> t)
-
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"flymake"</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">set up `</span><span class="org-constant"><span class=
-"org-comment">flymake</span></span><span class="org-comment">'</span>
-    (<span class="org-keyword">defun</span> <span class=
-"org-function-name">activate-flymake</span> ()
-      <span class=
-"org-doc">"Activate Flymake when real buffer and you have write access."</span>
-      (<span class="org-keyword">when</span> (and (buffer-file-name)
-                 (file-writable-p buffer-file-name))
-        (flymake-mode t)))
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
-"org-comment"> add errors to mode line</span>
-    (<span class="org-keyword">defun</span> <span class=
-"org-function-name">leuven--flymake-show-help</span> ()
-      <span class=
-"org-doc">"Display the error output of the current line in the mode line."</span>
-      (<span class=
-"org-keyword">when</span> (get-char-property (point) 'flymake-overlay)
-        (<span class=
-"org-keyword">let</span> ((help (get-char-property (point) 'help-echo)))
-          (<span class="org-keyword">if</span> help (message <span class=
-"org-string">"%s"</span> help)))))
-
-    (add-hook 'post-command-hook 'leuven--flymake-show-help))
 </pre>
         </div>
       </div>
@@ -18708,10 +18677,10 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
         <h3 id="sec-32-4">Finding Syntax Errors On The Fly</h3>
 
         <div class="outline-text-3" id="text-32-4">
-          <p>Perform static code analysis on-the-fly, and highlight warnings
-          and errors in the code immediately as you are editing it.</p>
-
-          <p>“Flymake done right”</p>
+          <p>Flycheck (aka “Flymake done right”) can perform static code
+          analysis <b>on-the-fly</b>, and <b>highlight warnings and errors</b>
+          in the code immediately as you are editing it, if you made a
+          mistake.</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -18722,47 +18691,24 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">modern on-the-fly syntax checking</span>
-  (try-require 'flycheck-<span class="org-leuven-highlight">XXX</span>)
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"flycheck-autoloads"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">enable Flycheck mode in all buffers</span>
+    (add-hook 'after-init-hook 'global-flycheck-mode))
+
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"flycheck"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">delay in seconds before displaying errors at point</span>
+    (setq flycheck-display-errors-delay 0.3)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; indicate errors and warnings via icons in the right fringe</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(setq flycheck-indication-mode 'right-fringe)</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable Flycheck mode in all buffers</span>
-    (add-hook 'after-init-hook 'global-flycheck-mode)
-
-    (<span class="org-keyword">defun</span> <span class=
-"org-function-name">leuven--adjust-flycheck-automatic-syntax-eagerness</span> ()
-      <span class=
-"org-doc">"Adjust how often we check for errors based on if there are any.</span>
-
-<span class=
-"org-doc">This lets us fix any errors as quickly as possible, but in</span>
-<span class=
-"org-doc">a clean buffer we're an order of magnitude laxer about checking."</span>
-      (setq flycheck-idle-change-delay
-            (<span class=
-"org-keyword">if</span> (assq 'error (flycheck-count-errors flycheck-current-errors))
-                <span class="org-comment-delimiter">; </span><span class=
-"org-comment">only check for REAL errors (original source: Magnars)</span>
-                1
-              20)))
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Each buffer get its local `</span><span class=
-"org-constant"><span class=
-"org-comment">flycheck-idle-change-delay</span></span><span class=
-"org-comment">' because of the</span>
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">buffer-sensitive adjustment above.</span>
-    (make-variable-buffer-local 'flycheck-idle-change-delay)
-
-    (add-hook 'flycheck-after-syntax-check-hook
-              'leuven--adjust-flycheck-automatic-syntax-eagerness)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Remove newline checks, since they would trigger an immediate check when</span>
@@ -18777,21 +18723,36 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">new-line</span>
             mode-enabled))
 
-    (<span class="org-keyword">defun</span> <span class=
-"org-function-name">flycheck-handle-idle-change</span> ()
-      <span class=
-"org-doc">"Handle an expired idle time since the last change.</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Each buffer get its local `</span><span class=
+"org-constant"><span class=
+"org-comment">flycheck-idle-change-delay</span></span><span class=
+"org-comment">' because of the</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">buffer-sensitive adjustment above.</span>
+    (make-variable-buffer-local 'flycheck-idle-change-delay)
 
-<span class="org-doc">This is an overwritten version of the original</span>
+    (<span class="org-keyword">defun</span> <span class=
+"org-function-name">leuven--adjust-flycheck-automatic-syntax-eagerness</span> ()
+      <span class=
+"org-doc">"Adjust how often we check for errors based on if there are any.</span>
+
 <span class=
-"org-doc">flycheck-handle-idle-change, which removes the forced deferred.</span>
+"org-doc">This lets us fix any errors as quickly as possible, but in</span>
 <span class=
-"org-doc">Timers should only trigger inbetween commands in a single</span>
-<span class=
-"org-doc">threaded system and the forced deferred makes errors never show</span>
-<span class="org-doc">up before you execute another command."</span>
-      (flycheck-clear-idle-change-timer)
-      (flycheck-buffer-automatically 'idle-change)))
+"org-doc">a clean buffer we're an order of magnitude laxer about checking."</span>
+      (setq flycheck-idle-change-delay
+            (<span class=
+"org-keyword">if</span> (assq 'error (flycheck-count-errors flycheck-current-errors))
+                <span class="org-comment-delimiter">; </span><span class=
+"org-comment">only check for REAL errors (original source: Magnar Sveen)</span>
+                1
+              20)))
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">functions to run after each syntax check</span>
+    (add-hook 'flycheck-after-syntax-check-hook
+              'leuven--adjust-flycheck-automatic-syntax-eagerness))
 </pre>
           </div>
         </div>
@@ -21759,6 +21720,14 @@ good|
     (leuven--section <span class=
 "org-string">"30.15 (emacs)Dired Updating"</span>)
 
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">automatically revert Dired buffer on revisiting</span>
+    (setq dired-auto-revert-buffer t)
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Dired sort</span>
     (try-require 'dired-sort-map)
@@ -26639,7 +26608,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140926.1057]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140929.1201]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
