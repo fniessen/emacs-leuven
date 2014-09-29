@@ -474,12 +474,6 @@
       ;; ;; sort the articles within a thread after it has been gathered together
       ;; (setq gnus-sort-gathered-threads-function 'gnus-thread-sort-by-date)
 
-      ;; ;; add some key bindings to the Gnus summary buffer
-      ;; (define-key gnus-summary-mode-map
-      ;;   (kbd "<C-up>") 'gnus-summary-prev-thread)
-      ;; (define-key gnus-summary-mode-map
-      ;;   (kbd "<C-down>") 'gnus-summary-next-thread)
-
 (define-key gnus-summary-mode-map
   (kbd ">") 'gnus-summary-show-thread)
 (define-key gnus-summary-mode-map
