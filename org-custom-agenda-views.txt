@@ -765,7 +765,8 @@ http://www.freshbooks.com/track-your-time
   (add-to-list 'org-agenda-custom-commands
                '("rtw" "Weekly Timesheet"
                  ((agenda ""))
-                 ;; ((org-agenda-format-date "")
+                 (
+                  ;; (org-agenda-format-date "")
                   (org-agenda-overriding-header "WEEKLY TIMESHEET")
                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp))
                   (org-agenda-span 'week)
@@ -783,7 +784,7 @@ http://www.freshbooks.com/track-your-time
                '("rc" . "Calendar...") t)
 #+end_src
 
-FIXME Faire 7 vues agenda "jour" pour avoir un séparateur customizable...
+FIXME Make 7 agenda "day" views in order to have a customizable separator.
 
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands

@@ -367,7 +367,8 @@
   (add-to-list 'org-agenda-custom-commands
                '("rtw" "Weekly Timesheet"
                  ((agenda ""))
-                 ;; ((org-agenda-format-date "")
+                 (
+                  ;; (org-agenda-format-date "")
                   (org-agenda-overriding-header "WEEKLY TIMESHEET")
                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp))
                   (org-agenda-span 'week)
