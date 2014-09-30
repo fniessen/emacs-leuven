@@ -25,6 +25,11 @@ this set of customizations to "short-cut" that initial process.
 
 * Header
 
+#+name: current-year
+#+begin_src emacs-lisp :eval yes :results silent :tangle no
+(format-time-string "%Y")
+#+end_src
+
 #+name: current-time
 #+begin_src emacs-lisp :eval yes :results silent :tangle no
 (format-time-string "%Y%m%d.%H%M")
@@ -33,7 +38,7 @@ this set of customizations to "short-cut" that initial process.
 #+begin_src emacs-lisp :noweb yes
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2014 Fabrice Niessen
+;; Copyright (C) 1999-<<current-year()>> Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
@@ -11601,7 +11606,7 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
 
     ;; Auto Completion
     (with-eval-after-load "auto-complete-autoloads"
-      (idle-require 'auto-complete-config-XXX))
+      (idle-require 'auto-complete-config))
 
     (with-eval-after-load "auto-complete-config"
 
@@ -11629,6 +11634,7 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
       (setq ac-modes
             (append ac-modes
                     '(change-log-mode
+                      latex-mode
                       org-mode
                       prog-mode       ; programming modes
                       snippet-mode
@@ -11698,7 +11704,7 @@ available completions and filter as well.
 
 #+begin_src emacs-lisp
   ;; modular text completion framework
-  (with-eval-after-load "company-autoloads"
+  (with-eval-after-load "company-autoloads-XXX"
 
     ;; enable Company mode in all buffers ...
     (add-hook 'after-init-hook 'global-company-mode))
@@ -11738,16 +11744,7 @@ available completions and filter as well.
 
     ;; abort
     (define-key company-active-map (kbd "C-g") 'company-abort)
-    (define-key company-active-map (kbd "<left>") 'company-abort)
-#+end_src
-
-#+begin_src emacs-lisp
-    ;; fix "orgtbl-mode is preventing auto-completions"
-    ;; (see https://github.com/company-mode/company-mode/issues/157)
-    (with-eval-after-load "org-table"
-      (push 'orgtbl-self-insert-command company-begin-commands))
-
-    )
+    (define-key company-active-map (kbd "<left>") 'company-abort))
 #+end_src
 
 With the following text (where "|" stands for the cursor):

@@ -1305,6 +1305,14 @@
 
       <div class="outline-text-2" id="text-2">
         <div class="org-src-container">
+          <pre class="src src-emacs-lisp" id="current-year">
+<span class=
+"org-rainbow-delimiters-depth-1">(</span>format-time-string <span class=
+"org-string">"%Y"</span><span class="org-rainbow-delimiters-depth-1">)</span>
+</pre>
+        </div>
+
+        <div class="org-src-container">
           <pre class="src src-emacs-lisp" id="current-time">
 <span class=
 "org-rainbow-delimiters-depth-1">(</span>format-time-string <span class=
@@ -1326,7 +1334,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140930.1524</span>
+"org-comment">Version: 20140930.1707</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1449,7 +1457,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140930.1524]--"</span><span class=
+"org-string">"* --[ Loading Emacs Leuven 20140930.1707]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
@@ -28623,7 +28631,7 @@ etags --langdef=shell --regex-shell=<span class=
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"auto-complete-autoloads"</span>
       <span class=
-"org-rainbow-delimiters-depth-3">(</span>idle-require 'auto-complete-config-<span class="org-leuven-highlight">XXX</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
+"org-rainbow-delimiters-depth-3">(</span>idle-require 'auto-complete-config<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
 
     <span class="org-rainbow-delimiters-depth-2">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
@@ -28690,6 +28698,7 @@ etags --langdef=shell --regex-shell=<span class=
 "org-rainbow-delimiters-depth-4">(</span>append ac-modes
                     '<span class=
 "org-rainbow-delimiters-depth-5">(</span>change-log-mode
+                      latex-mode
                       org-mode
                       prog-mode       <span class=
 "org-comment-delimiter">; </span><span class=
@@ -28814,7 +28823,9 @@ etags --langdef=shell --regex-shell=<span class=
 "org-comment">modular text completion framework</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
-"org-string">"company-autoloads"</span>
+"org-string">"company-autoloads-</span><span class=
+"org-leuven-highlight"><span class="org-string">XXX</span></span><span class=
+"org-string">"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">enable Company mode in all buffers ...</span>
@@ -28888,23 +28899,7 @@ etags --langdef=shell --regex-shell=<span class=
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>define-key company-active-map <span class="org-rainbow-delimiters-depth-3">(</span>kbd <span class="org-string">"C-g"</span><span class="org-rainbow-delimiters-depth-3">)</span> 'company-abort<span class="org-rainbow-delimiters-depth-2">)</span>
     <span class=
-"org-rainbow-delimiters-depth-2">(</span>define-key company-active-map <span class="org-rainbow-delimiters-depth-3">(</span>kbd <span class="org-string">"&lt;left&gt;"</span><span class="org-rainbow-delimiters-depth-3">)</span> 'company-abort<span class="org-rainbow-delimiters-depth-2">)</span>
-</pre>
-            </div>
-
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">fix "orgtbl-mode is preventing auto-completions"</span>
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(see https://github.com/company-mode/company-mode/issues/157)</span>
-    <span class="org-rainbow-delimiters-depth-1">(</span><span class=
-"org-keyword">with-eval-after-load</span> <span class=
-"org-string">"org-table"</span>
-      <span class=
-"org-rainbow-delimiters-depth-2">(</span>push 'orgtbl-self-insert-command company-begin-commands<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-
-    <span class="org-rainbow-delimiters-unmatched">)</span>
+"org-rainbow-delimiters-depth-2">(</span>define-key company-active-map <span class="org-rainbow-delimiters-depth-3">(</span>kbd <span class="org-string">"&lt;left&gt;"</span><span class="org-rainbow-delimiters-depth-3">)</span> 'company-abort<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
             </div>
 
@@ -36034,7 +36029,7 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140930.1525]--"</span><span class=
+"org-string">"* --[ Loaded Emacs Leuven 20140930.1707]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=
