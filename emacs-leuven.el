@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140930.1148
+;; Version: 20140930.1522
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140930.1148]--")
+(message "* --[ Loading Emacs Leuven 20140930.1522]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -709,8 +709,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 (leuven--chapter leuven-chapter-11-mark "11 The Mark and the Region"
 
+  ;; goto last change
   (with-eval-after-load "goto-chg-autoloads"
-    (global-set-key (kbd "C-:") 'goto-last-change))
+    (global-set-key (kbd "<C-S-backspace>") 'goto-last-change))
 
   ;; increase selected region by semantic units
   (with-eval-after-load "expand-region-autoloads"
@@ -1049,7 +1050,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; number of seconds of idle time before highlighting the current symbol
     (setq highlight-symbol-idle-delay 0.5)
 
-    ;; (setq highlight-symbol-colors '("DarkOrange" "DodgerBlue1" "DeepPink1"))
+    (setq highlight-symbol-colors '("#FFCDFF" "#CCCCFF" "#FFB6C6" "#84CFFF"))
 
     ;; temporarily highlight the symbol when using `highlight-symbol-jump'
     ;; family of functions
@@ -7375,7 +7376,14 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; abort
     (define-key company-active-map (kbd "C-g") 'company-abort)
-    (define-key company-active-map (kbd "<left>") 'company-abort))
+    (define-key company-active-map (kbd "<left>") 'company-abort)
+
+    ;; fix "orgtbl-mode is preventing auto-completions"
+    ;; (see https://github.com/company-mode/company-mode/issues/157)
+    (with-eval-after-load "org-table"
+      (push 'orgtbl-self-insert-command company-begin-commands))
+
+    )
 
   (with-eval-after-load "company-dabbrev"
 
@@ -9164,7 +9172,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140930.1149]--")
+(message "* --[ Loaded Emacs Leuven 20140930.1523]--")
 
 (provide 'emacs-leuven)
 

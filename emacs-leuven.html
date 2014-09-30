@@ -12,28 +12,31 @@
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
   <link rel="stylesheet" type="text/css" href=
-  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/htmlize.css" />
+  "http://www.pirilampo.org/styles/bigblow/css/htmlize.css" />
   <link rel="stylesheet" type="text/css" href=
-  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/bigblow.css" />
+  "http://www.pirilampo.org/styles/bigblow/css/bigblow.css" />
   <link rel="stylesheet" type="text/css" href=
-  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/hideshow.css" />
+  "http://www.pirilampo.org/styles/bigblow/css/hideshow.css" />
 <script type="text/javascript" src=
-"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery-1.9.1.min.js">
+"http://www.pirilampo.org/styles/bigblow/js/jquery-1.11.0.min.js">
 </script>
 <script type="text/javascript" src=
-"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery-ui-1.10.2.min.js">
+"http://www.pirilampo.org/styles/bigblow/js/jquery-ui-1.10.2.min.js">
 </script>
 <script type="text/javascript" src=
-"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery.localscroll-min.js">
+"http://www.pirilampo.org/styles/bigblow/js/jquery.localscroll-min.js">
 </script>
 <script type="text/javascript" src=
-"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery.scrollTo-1.4.3.1-min.js">
+"http://www.pirilampo.org/styles/bigblow/js/jquery.scrollTo-1.4.3.1-min.js">
 </script>
 <script type="text/javascript" src=
-"file:///D:/Users/fni/src/org-style/styles/bigblow/js/bigblow.js">
+"http://www.pirilampo.org/styles/bigblow/js/jquery.zclip.min.js">
 </script>
 <script type="text/javascript" src=
-"file:///D:/Users/fni/src/org-style/styles/bigblow/js/hideshow.js">
+"http://www.pirilampo.org/styles/bigblow/js/bigblow.js">
+</script>
+<script type="text/javascript" src=
+"http://www.pirilampo.org/styles/bigblow/js/hideshow.js">
 </script>
 </head>
 
@@ -1272,21 +1275,12 @@
           <li><a href="#sec-55">Leuven</a></li>
 
           <li>
-            <a href="#sec-56">Tasks</a>
+            <a href="#sec-56">Startup time</a>
 
             <ul>
-              <li><a href="#sec-56-1"><span class="todo nilTODO">TODO</span>
-              Automate reporting of style errors</a></li>
-            </ul>
-          </li>
+              <li><a href="#sec-56-1">Context</a></li>
 
-          <li>
-            <a href="#sec-57">Startup time</a>
-
-            <ul>
-              <li><a href="#sec-57-1">Context</a></li>
-
-              <li><a href="#sec-57-2">Timings from my system</a></li>
+              <li><a href="#sec-56-2">Timings from my system</a></li>
             </ul>
           </li>
         </ul>
@@ -1332,7 +1326,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140930.1149</span>
+"org-comment">Version: 20140930.1524</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1455,7 +1449,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140930.1149]--"</span><span class=
+"org-string">"* --[ Loading Emacs Leuven 20140930.1524]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
@@ -3764,17 +3758,20 @@
           <code>C-&lt;SPC&gt; C-&lt;SPC&gt;</code>), and later jump back there
           (by typing <code>C-u C-&lt;SPC&gt;</code>).</p>
 
-          <p>Go to the place where you last changed something.</p>
+          <p><b>Go to</b> the <b>place</b> where you <b>last changed</b>
+          something:</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">goto last change</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"goto-chg-autoloads"</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>global-set-key <span class=
 "org-rainbow-delimiters-depth-3">(</span>kbd <span class=
-"org-string">"C-:"</span><span class=
+"org-string">"&lt;C-S-backspace&gt;"</span><span class=
 "org-rainbow-delimiters-depth-3">)</span> 'goto-last-change<span class=
 "org-rainbow-delimiters-depth-2">)</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
@@ -5255,8 +5252,8 @@
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq highlight-symbol-idle-delay 0.5<span class="org-rainbow-delimiters-depth-2">)</span>
 
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq highlight-symbol-colors '("DarkOrange" "DodgerBlue1" "DeepPink1"))</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>setq highlight-symbol-colors '<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"#FFCDFF"</span> <span class="org-string">"#CCCCFF"</span> <span class="org-string">"#FFB6C6"</span> <span class="org-string">"#84CFFF"</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">temporarily highlight the symbol when using `</span><span class=
@@ -5270,8 +5267,9 @@
 </pre>
           </div>
 
-          <p>Use Auto-Highlight-Symbol to automatically highlight the current
-          symbol (like Eclipse IDE).</p>
+          <p>Use Auto-Highlight-Symbol to automatically <b>highlight</b> all
+          found <b>usages of</b> the <b>symbol at point</b> in the current
+          file.</p>
         </div>
       </div>
 
@@ -24580,6 +24578,10 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-rainbow-delimiters-depth-2">(</span>add-hook 'prog-mode-hook 'rainbow-delimiters-mode<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
           </div>
+
+          <p>To customize it, see <a href=
+          "http://yoo2080.wordpress.com/2013/12/21/small-rainbow-delimiters-tutorial/">
+          http://yoo2080.wordpress.com/2013/12/21/small-rainbow-delimiters-tutorial/</a>.</p>
         </div>
 
         <div id="outline-container-sec-31-4-1" class="outline-4">
@@ -28886,7 +28888,23 @@ etags --langdef=shell --regex-shell=<span class=
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>define-key company-active-map <span class="org-rainbow-delimiters-depth-3">(</span>kbd <span class="org-string">"C-g"</span><span class="org-rainbow-delimiters-depth-3">)</span> 'company-abort<span class="org-rainbow-delimiters-depth-2">)</span>
     <span class=
-"org-rainbow-delimiters-depth-2">(</span>define-key company-active-map <span class="org-rainbow-delimiters-depth-3">(</span>kbd <span class="org-string">"&lt;left&gt;"</span><span class="org-rainbow-delimiters-depth-3">)</span> 'company-abort<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
+"org-rainbow-delimiters-depth-2">(</span>define-key company-active-map <span class="org-rainbow-delimiters-depth-3">(</span>kbd <span class="org-string">"&lt;left&gt;"</span><span class="org-rainbow-delimiters-depth-3">)</span> 'company-abort<span class="org-rainbow-delimiters-depth-2">)</span>
+</pre>
+            </div>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">fix "orgtbl-mode is preventing auto-completions"</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(see https://github.com/company-mode/company-mode/issues/157)</span>
+    <span class="org-rainbow-delimiters-depth-1">(</span><span class=
+"org-keyword">with-eval-after-load</span> <span class=
+"org-string">"org-table"</span>
+      <span class=
+"org-rainbow-delimiters-depth-2">(</span>push 'orgtbl-self-insert-command company-begin-commands<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
+
+    <span class="org-rainbow-delimiters-unmatched">)</span>
 </pre>
             </div>
 
@@ -36016,7 +36034,7 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140930.1150]--"</span><span class=
+"org-string">"* --[ Loaded Emacs Leuven 20140930.1525]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=
@@ -36050,63 +36068,14 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
     </div>
 
     <div id="outline-container-sec-56" class="outline-2">
-      <h2 id="sec-56">Tasks</h2>
+      <h2 id="sec-56">Startup time</h2>
 
       <div class="outline-text-2" id="text-56"></div>
 
       <div id="outline-container-sec-56-1" class="outline-3">
-        <h3 id="sec-56-1"><span class="todo TODO">TODO</span> Automate
-        reporting of style errors</h3>
+        <h3 id="sec-56-1">Context</h3>
 
         <div class="outline-text-3" id="text-56-1">
-          <p>Report all errors with:</p>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-<span class=
-"org-rainbow-delimiters-depth-1">(</span>checkdoc-current-buffer t<span class=
-"org-rainbow-delimiters-depth-1">)</span>
-</pre>
-          </div>
-
-          <ul class="org-ul">
-            <li>
-              <p>Format the documentation string so that it fits in an Emacs
-              window on an 80-column screen. It is a good idea for most lines
-              to be no wider than 60 characters. The first line should not be
-              wider than 67 characters or it will look bad in the output of
-              apropos.</p>
-
-              <p>You can fill the text if that looks good. However, rather than
-              blindly filling the entire documentation string, you can often
-              make it much more readable by choosing certain line breaks with
-              care. Use blank lines between topics if the documentation string
-              is long.</p>
-            </li>
-
-            <li>
-              <p>Do not indent subsequent lines of a documentation string so
-              that the text is lined up in the source code with the text of the
-              first line. This looks nice in the source code, but looks bizarre
-              when users view the documentation.</p>
-
-              <p>Remember that the indentation before the starting double-quote
-              is not part of the string!</p>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div id="outline-container-sec-57" class="outline-2">
-      <h2 id="sec-57">Startup time</h2>
-
-      <div class="outline-text-2" id="text-57"></div>
-
-      <div id="outline-container-sec-57-1" class="outline-3">
-        <h3 id="sec-57-1">Context</h3>
-
-        <div class="outline-text-3" id="text-57-1">
           <p>Identify what parts of your <code>.emacs</code> take so long. You
           can do this e.g. by starting Emacs with <code>emacs -q</code>, set up
           your <code>load-path</code>, and then evaluate</p>
@@ -36137,10 +36106,10 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
         </div>
       </div>
 
-      <div id="outline-container-sec-57-2" class="outline-3">
-        <h3 id="sec-57-2">Timings from my system</h3>
+      <div id="outline-container-sec-56-2" class="outline-3">
+        <h3 id="sec-56-2">Timings from my system</h3>
 
-        <div class="outline-text-3" id="text-57-2">
+        <div class="outline-text-3" id="text-56-2">
           <p>After much optimization…</p>
 
           <p>$ time emacs -f kill-emacs real 0m0.157s user 0m0.140s sys

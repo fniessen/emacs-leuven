@@ -13,7 +13,7 @@
 #+PROPERTY:  padline yes
 #+PROPERTY:  eval never
 
-#+SETUPFILE: ~/src/org-style/setup/bigblow-local-abs.setup
+#+SETUPFILE: ~/src/org-style/setup/bigblow-pirilampo.setup
 
 * Description
 
@@ -1056,11 +1056,12 @@ Instead of setting the mark in order to operate on a region, you can also use it
 to "remember" a position in the buffer (by typing ~C-<SPC> C-<SPC>~), and later
 jump back there (by typing ~C-u C-<SPC>~).
 
-Go to the place where you last changed something.
+*Go to* the *place* where you *last changed* something:
 
 #+begin_src emacs-lisp
+  ;; goto last change
   (with-eval-after-load "goto-chg-autoloads"
-    (global-set-key (kbd "C-:") 'goto-last-change))
+    (global-set-key (kbd "<C-S-backspace>") 'goto-last-change))
 #+end_src
 
 ** Commands to Mark Textual Objects
@@ -1689,15 +1690,15 @@ to follow some key variables through a block of code.
     ;; number of seconds of idle time before highlighting the current symbol
     (setq highlight-symbol-idle-delay 0.5)
 
-    ;; (setq highlight-symbol-colors '("DarkOrange" "DodgerBlue1" "DeepPink1"))
+    (setq highlight-symbol-colors '("#FFCDFF" "#CCCCFF" "#FFB6C6" "#84CFFF"))
 
     ;; temporarily highlight the symbol when using `highlight-symbol-jump'
     ;; family of functions
     (setq highlight-symbol-on-navigation-p t))
 #+end_src
 
-Use Auto-Highlight-Symbol to automatically highlight the current symbol (like
-Eclipse IDE).
+Use Auto-Highlight-Symbol to automatically *highlight* all found *usages of* the
+*symbol at point* in the current file.
 
 ** Window Fringes
 
@@ -9781,6 +9782,9 @@ things.
     (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 #+end_src
 
+To customize it, see
+http://yoo2080.wordpress.com/2013/12/21/small-rainbow-delimiters-tutorial/.
+
 *** Moving in the Parenthesis Structure
 
 #+begin_src emacs-lisp
@@ -11734,7 +11738,16 @@ available completions and filter as well.
 
     ;; abort
     (define-key company-active-map (kbd "C-g") 'company-abort)
-    (define-key company-active-map (kbd "<left>") 'company-abort))
+    (define-key company-active-map (kbd "<left>") 'company-abort)
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; fix "orgtbl-mode is preventing auto-completions"
+    ;; (see https://github.com/company-mode/company-mode/issues/157)
+    (with-eval-after-load "org-table"
+      (push 'orgtbl-self-insert-command company-begin-commands))
+
+    )
 #+end_src
 
 With the following text (where "|" stands for the cursor):
@@ -14887,7 +14900,15 @@ calls to message), set the variable ~debug-on-message~.
 ;;; emacs-leuven.el ends here
 #+end_src
 
-* Tasks
+* Tasks                                                               :noexport:
+
+** TODO Improve documentation of navigation and search
+
+Excellent example:
+http://www.jetbrains.com/resharper/features/navigation_search.html
+
+Other:
+https://support.rstudio.com/hc/en-us/articles/200710523
 
 ** TODO Automate reporting of style errors
    :PROPERTIES:
