@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140929.2339
+;; Version: 20140930.1114
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140929.2339]--")
+(message "* --[ Loading Emacs Leuven 20140930.1114]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -395,9 +395,8 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; archives from which to fetch
       (setq package-archives
             (append '(("org"          . "http://orgmode.org/elpa/")
-                      ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
-                      ;; ("melpa"        . "http://melpa.milkbox.net/packages/")
-                      )
+                      ;; ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
+                      ("melpa"        . "http://melpa.milkbox.net/packages/"))
                     package-archives))
 
       ;; load the latest version of all installed packages, and activate them
@@ -410,10 +409,10 @@ Last time is saved in global variable `leuven--before-section-time'."
           dired+ dired-single ess expand-region fancy-narrow
           fill-column-indicator flycheck fuzzy git-commit-mode google-this
           goto-chg graphviz-dot-mode guide-key helm helm-descbinds helm-swoop
-          htmlize litable idle-require imenu-anywhere info+ interaction-log
-          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
-          rainbow-mode redo+ spray tidy tomatinho unbound undo-tree w3m
-          yasnippet
+          highlight-symbol htmlize litable idle-require imenu-anywhere info+
+          interaction-log ledger-mode leuven-theme multi-term multiple-cursors
+          pager powerline rainbow-mode redo+ spray tidy tomatinho unbound
+          undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -923,6 +922,12 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 (leuven--chapter leuven-chapter-14-display "14 Controlling the Display"
 
+  (defun width-80 ()
+    (interactive)
+    (set-window-margins (selected-window) 0 0)
+    (let ((marginwidth (/ (- (window-width) 80) 2)))
+      (set-window-margins (selected-window) marginwidth marginwidth)))
+
 ;;** 14.1 (info "(emacs)Scrolling")
 
   (leuven--section "14.1 (emacs)Scrolling")
@@ -1033,22 +1038,30 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "14.13 (emacs)Highlight Interactively by Matching")
 
-  (GNUEmacs
-    ;; enable Hi Lock mode for all buffers
-    (global-hi-lock-mode 1)
+  ;; (GNUEmacs
+  ;;   ;; enable Hi Lock mode for all buffers
+  ;;   (global-hi-lock-mode 1))
 
-    (defun leuven-highlight-current-word ()
-      "Highlight the word that point is on throughout the buffer.
-    If already highlighted, unhighlight the word at point."
-      (interactive)
-      (let ((cword (current-word t)))
-        (when cword
-          (if (not (equal (get-text-property (point) 'face) 'highlight))
-              (highlight-regexp (regexp-quote cword) 'highlight)
-            (unhighlight-regexp (regexp-quote cword))))))
+  (with-eval-after-load "highlight-symbol-autoloads"
 
     ;; emulation of Vim's `*' search
-    (global-set-key (kbd "C-*") 'leuven-highlight-current-word))
+    (global-set-key (kbd "C-*") 'highlight-symbol-at-point)
+    ;; (global-set-key (kbd "C-<f4>") 'highlight-symbol-next)
+    ;; (global-set-key (kbd "S-<f4>") 'highlight-symbol-prev)
+    (global-set-key (kbd "C-M-*") 'highlight-symbol-remove-all)
+    ;; (global-set-key (kbd "+") 'highlight-symbol-query-replace)
+    )
+
+  (with-eval-after-load "highlight-symbol"
+
+    ;; number of seconds of idle time before highlighting the current symbol
+    (setq highlight-symbol-idle-delay 0.5)
+
+    ;; (setq highlight-symbol-colors '("DarkOrange" "DodgerBlue1" "DeepPink1"))
+
+    ;; temporarily highlight the symbol when using `highlight-symbol-jump'
+    ;; family of functions
+    (setq highlight-symbol-on-navigation-p t))
 
   ;; highlight uncommitted changes
   (with-eval-after-load "diff-hl-autoloads"
@@ -1154,14 +1167,14 @@ Last time is saved in global variable `leuven--before-section-time'."
     (with-eval-after-load "company"      (diminish 'company-mode " Cp"))
     (with-eval-after-load "eldoc"        (diminish 'eldoc-mode))
     (with-eval-after-load "fancy-narrow" (diminish 'fancy-narrow-mode))
-    (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " Fc"))
-    (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " Fs"))
+    (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC"))
+    (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " fS"))
     (with-eval-after-load "google-this"  (diminish 'google-this-mode))
     (with-eval-after-load "guide-key"    (diminish 'guide-key-mode))
     (with-eval-after-load "hilit-chg"    (diminish 'highlight-changes-mode))
     (with-eval-after-load "isearch"      (diminish 'isearch-mode (string 32 ?\u279c)))
     (with-eval-after-load "paredit"      (diminish 'paredit-mode " Pe"))
-    (with-eval-after-load "rainbow-mode" (diminish 'rainbow-mode " Rb"))
+    (with-eval-after-load "rainbow-mode" (diminish 'rainbow-mode))
     (with-eval-after-load "simple"       (diminish 'auto-fill-function))
     (with-eval-after-load "undo-tree"    (diminish 'undo-tree-mode))
     (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
@@ -1233,21 +1246,29 @@ Last time is saved in global variable `leuven--before-section-time'."
                                                            powerline-default-separator
                                                            (cdr powerline-default-separator-dir))))
                           (lhs (list
-                                     (when (and (fboundp 'vc-switches) (buffer-file-name (current-buffer)) vc-mode)
+                                     ;; vc mode
+                                     (when (and (fboundp 'vc-switches)
+                                                (buffer-file-name (current-buffer))
+                                                vc-mode)
                                        (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
                                            (powerline-vc 'powerline-normal-face 'r)
                                          (powerline-vc 'powerline-modified-face 'r)))
 
-                                     (when (and (not (fboundp 'vc-switches)) (buffer-file-name (current-buffer)) vc-mode)
+                                     (when (and (not (fboundp 'vc-switches))
+                                                (buffer-file-name (current-buffer))
+                                                vc-mode)
                                        (powerline-vc face1 'r))
 
-                                     (when (and (buffer-file-name (current-buffer)) vc-mode)
+                                     (when (and (buffer-file-name (current-buffer))
+                                                vc-mode)
                                        (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
                                            (funcall separator-left 'powerline-normal-face mode-line)
                                          (funcall separator-left 'powerline-modified-face mode-line)))
 
-                                     ;; XXX Put the * in red!
-                                     (powerline-raw "%*" 'error 'l)
+                                     ;; "modified" indicator
+                                     (if (buffer-modified-p)
+                                         (powerline-raw "%*" 'mode-line-emphasis 'l)
+                                       (powerline-raw "%*" nil 'l))
 
                                      (powerline-raw mode-line-mule-info nil 'l)
 
@@ -1769,7 +1790,10 @@ Last time is saved in global variable `leuven--before-section-time'."
   (global-auto-revert-mode 1)           ; can generate a lot of network traffic
 
   ;; ;; Global Auto-Revert mode operates on all buffers (Dired, among others)
-  ;; (setq-default global-auto-revert-non-file-buffers t)
+  ;; (setq global-auto-revert-non-file-buffers t)
+
+  ;; ;; do not generate any messages
+  ;; (setq auto-revert-verbose nil) ; avoid "Reverting buffer `some-dir/'."
 
 ;;** 18.6 (info "(emacs)Auto Save"): Protection Against Disasters
 
@@ -2129,20 +2153,6 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; buffers only
       (global-set-key (kbd "C-x b") 'helm-buffers-list)
 
-;; (global-set-key (kbd "C-h ,") 'helm-apropos)
-;; (global-set-key (kbd "C-h .") 'helm-info-emacs)
-;; (global-set-key (kbd "C-h 4") 'helm-info-elisp)
-;; (global-set-key (kbd "M-5") 'helm-etags-select)
-;; (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
-;; (global-set-key (kbd "C-h C--") 'helm-google)
-;; (global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)
-
-(global-set-key (kbd "C-h b") 'helm-descbinds)
-
-(global-set-key (kbd "M-y")                     'helm-show-kill-ring)
-;; (global-set-key (kbd "C-h r") 'helm-info-emacs)
-;; (global-set-key (kbd "C-h d")                   'helm-info-at-point)
-
       (global-set-key (kbd "C-x r l") 'helm-bookmarks)
 
       ;; install from https://github.com/thierryvolpiatto/emacs-bmk-ext
@@ -2159,6 +2169,21 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
                                         ; and `C-c =' (like in RefTeX)?
+
+      (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+
+;; (global-set-key (kbd "M-5") 'helm-etags-select)
+;; (global-set-key (kbd "C-h ,") 'helm-apropos)
+;; (global-set-key (kbd "C-h .") 'helm-info-emacs)
+;; (global-set-key (kbd "C-h r") 'helm-info-emacs)
+;; (global-set-key (kbd "C-h d") 'helm-info-at-point)
+;; (global-set-key (kbd "C-h 4") 'helm-info-elisp)
+;; (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+;; (global-set-key (kbd "C-h C--") 'helm-google)
+;; (global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)
+
+      (global-set-key (kbd "C-h b") 'helm-descbinds)
+
     )
 
     (with-eval-after-load "helm"
@@ -2167,6 +2192,9 @@ Last time is saved in global variable `leuven--before-section-time'."
       (require 'helm-misc)
       ;; for multi-line items in e.g. minibuffer history, match entire items,
       ;; not individual lines within items.
+
+;; (try-require 'helm-ls-git)
+;; (try-require 'helm-dictionary)
 
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
@@ -6323,10 +6351,10 @@ mouse-3: go to end") "]"))))
     (paren-set-mode 'paren))
 
   ;; highlight nested parens, brackets, braces a different color at each depth
-  (with-eval-after-load "rainbow-delimiters"
+  (with-eval-after-load "rainbow-delimiters-autoloads"
 
-    ;; enable rainbow-delimiters-mode in Emacs Lisp buffers
-    (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode))
+    ;; enable rainbow-delimiters in programming modes
+    (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
   ;; jump to matching parenthesis
   (defun leuven-match-paren (arg)
@@ -6531,8 +6559,10 @@ mouse-3: go to end") "]"))))
   ;; display the first compiler error message
   (global-set-key (kbd "<C-f10>") 'first-error)
 
-  ;; highlight and parse the whole compilation output as soon as it
-  ;; arrives
+  ;; ;; prefer fringe
+  ;; (setq next-error-highlight 'fringe-arrow)
+
+  ;; highlight and parse the whole compilation output as soon as it arrives
   (setq compile-auto-highlight t)
 
 ;;** 27.4 (info "(emacs)Grep Searching") under Emacs
@@ -7217,14 +7247,16 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; (completion strategy)
     (setq hippie-expand-try-functions-list
           '(try-expand-all-abbrevs      ; abbreviations
+
             try-expand-dabbrev          ; current buffer
-            ;; try-expand-dabbrev-visible  ; visible (parts of all) buffers
+            try-expand-dabbrev-visible  ; visible (parts of all) buffers
             try-expand-dabbrev-all-buffers
             try-expand-dabbrev-from-kill ; kill ring
             try-complete-file-name-partially ; file names
             try-complete-file-name
             try-complete-lisp-symbol-partially
             try-complete-lisp-symbol
+
             try-expand-whole-kill))
 
     ;; integrate YASnippet with `hippie-expand'
@@ -9140,7 +9172,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140929.2340]--")
+(message "* --[ Loaded Emacs Leuven 20140930.1115]--")
 
 (provide 'emacs-leuven)
 

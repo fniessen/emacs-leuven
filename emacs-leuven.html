@@ -1329,7 +1329,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140929.2340</span>
+"org-comment">Version: 20140930.1100</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1452,7 +1452,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140929.2340]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20140930.1100]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">turn on Common Lisp support</span>
@@ -2220,12 +2220,11 @@
             (append '((<span class=
 "org-string">"org"</span>          . <span class=
 "org-string">"http://orgmode.org/elpa/"</span>)
-                      (<span class=
-"org-string">"melpa-stable"</span> . <span class=
-"org-string">"http://melpa-stable.milkbox.net/packages/"</span>)
                       <span class=
-"org-comment-delimiter">;; </span><span class="org-comment">("melpa"        . "http://melpa.milkbox.net/packages/")</span>
-                      )
+"org-comment-delimiter">;; </span><span class="org-comment">("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")</span>
+                      (<span class=
+"org-string">"melpa"</span>        . <span class=
+"org-string">"http://melpa.milkbox.net/packages/"</span>))
                     package-archives))
 
       <span class="org-comment-delimiter">;; </span><span class=
@@ -2248,10 +2247,10 @@
           dired+ dired-single ess expand-region fancy-narrow
           fill-column-indicator flycheck fuzzy git-commit-mode google-this
           goto-chg graphviz-dot-mode guide-key helm helm-descbinds helm-swoop
-          htmlize litable idle-require imenu-anywhere info+ interaction-log
-          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
-          rainbow-mode redo+ spray tidy tomatinho unbound undo-tree w3m
-          yasnippet
+          highlight-symbol htmlize litable idle-require imenu-anywhere info+
+          interaction-log ledger-mode leuven-theme multi-term multiple-cursors
+          pager powerline rainbow-mode redo+ spray tidy tomatinho unbound
+          undo-tree w3m yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">jabber multi-term paredit redshank</span>
           )
@@ -4178,75 +4177,78 @@
             <dd>Unhighlight REGEXP.</dd>
           </dl>
 
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(GNUEmacs</span>
+  <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">;; enable Hi Lock mode for all buffers</span>
+  <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(global-hi-lock-mode 1))</span>
+</pre>
+          </div>
+
           <p>It is complementary to the features of the library
-          <b>Highlight</b> (from Drew Adams):</p>
-
-          <dl class="org-dl">
-            <dt><code>hlt-highlight-regexp-region</code></dt>
-
-            <dd>Highlight a REGEXP throughout the region.</dd>
-
-            <dt><code>hlt-unhighlight-region</code></dt>
-
-            <dd>Unhighlight the region.</dd>
-          </dl>
-
-          <p>Comparison:</p>
+          <b>Highlight-symbol</b> (from Nikolaj Schumacher).</p>
 
           <ul class="org-ul">
-            <li>Hi Lock uses text properties, Highlight can use either text
-            properties or overlays (= default, see option
-            <code>hlt-use-overlays-flag</code>). When overlays are used,
-            copying and pasting text will not also paste the highlighting.</li>
+            <li>Hi Lock and Highlight-symbol both use <b>text properties</b>.
+            Copying and pasting text will also paste the highlighting.</li>
 
-            <li>Hi Lock highlights new text as you type it.</li>
+            <li>Hi Lock and Highlight-symbol both <b>highlight new text</b> as
+            you type it.</li>
 
-            <li>Highlight lets you navigate among highlights:
-            <code>hlt-next-highlight</code>,
-            <code>hlt-previous-highlight</code>.</li>
+            <li>Highlight-symbol lets you <b>navigate among highlights</b>:
+            <code>highlight-symbol-next</code>,
+            <code>highlight-symbol-prev</code>.</li>
           </ul>
+
+          <p><code>Highlight-symbol</code> automatically chooses <b>rainbow
+          colors</b> and makes it much easier to follow some key variables
+          through a block of code.</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (GNUEmacs
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable Hi Lock mode for all buffers</span>
-    (global-hi-lock-mode 1)
-
-    (<span class="org-keyword">defun</span> <span class=
-"org-function-name">leuven-highlight-current-word</span> ()
-      <span class=
-"org-doc">"Highlight the word that point is on throughout the buffer.</span>
-<span class=
-"org-doc">    If already highlighted, unhighlight the word at point."</span>
-      (interactive)
-      (<span class="org-keyword">let</span> ((cword (current-word t)))
-        (<span class="org-keyword">when</span> cword
-          (<span class=
-"org-keyword">if</span> (not (equal (get-text-property (point) 'face) 'highlight))
-              (highlight-regexp (regexp-quote cword) 'highlight)
-            (unhighlight-regexp (regexp-quote cword))))))
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"highlight-symbol-autoloads"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">emulation of Vim's `*' search</span>
     (global-set-key (kbd <span class=
-"org-string">"C-*"</span>) 'leuven-highlight-current-word))
+"org-string">"C-*"</span>) 'highlight-symbol-at-point)
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "C-&lt;f4&gt;") 'highlight-symbol-next)</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "S-&lt;f4&gt;") 'highlight-symbol-prev)</span>
+    (global-set-key (kbd <span class=
+"org-string">"C-M-*"</span>) 'highlight-symbol-remove-all)
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "+") 'highlight-symbol-query-replace)</span>
+    )
+
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"highlight-symbol"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">number of seconds of idle time before highlighting the current symbol</span>
+    (setq highlight-symbol-idle-delay 0.5)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq highlight-symbol-colors '("DarkOrange" "DodgerBlue1" "DeepPink1"))</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">temporarily highlight the symbol when using `</span><span class=
+"org-constant"><span class=
+"org-comment">highlight-symbol-jump</span></span><span class=
+"org-comment">'</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">family of functions</span>
+    (setq highlight-symbol-on-navigation-p t))
 </pre>
           </div>
 
-          <table class="inlinetask" width="100%">
-            <tr>
-              <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
-
-              <td width="100%">
-                <b>Use rainbow colors for word highlighting</b><br />
-
-                <p>Use <code>highlight-symbol</code> which chooses rainbow
-                colors automatically and makes it much easier to follow some
-                key variables through a block of code.</p>
-              </td>
-            </tr>
-          </table>
+          <p>Use Auto-Highlight-Symbol to automatically highlight the current
+          symbol (like Eclipse IDE).</p>
         </div>
       </div>
 
@@ -4548,10 +4550,10 @@
 "org-string">"fancy-narrow"</span> (diminish 'fancy-narrow-mode))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"flycheck"</span>     (diminish 'flycheck-mode <span class=
-"org-string">" Fc"</span>))
+"org-string">" fC"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"flyspell"</span>     (diminish 'flyspell-mode <span class=
-"org-string">" Fs"</span>))
+"org-string">" fS"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"google-this"</span>  (diminish 'google-this-mode))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
@@ -4564,8 +4566,7 @@
 "org-string">"paredit"</span>      (diminish 'paredit-mode <span class=
 "org-string">" Pe"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"rainbow-mode"</span> (diminish 'rainbow-mode <span class=
-"org-string">" Rb"</span>))
+"org-string">"rainbow-mode"</span> (diminish 'rainbow-mode))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"simple"</span>       (diminish 'auto-fill-function))
     (<span class="org-keyword">with-eval-after-load</span> <span class=
@@ -4702,19 +4703,26 @@
                                                            powerline-default-separator
                                                            (cdr powerline-default-separator-dir))))
                           (lhs (list
+                                     <span class=
+"org-comment-delimiter">;; </span><span class="org-comment">vc mode</span>
                                      (<span class=
-"org-keyword">when</span> (and (fboundp 'vc-switches) (buffer-file-name (current-buffer)) vc-mode)
+"org-keyword">when</span> (and (fboundp 'vc-switches)
+                                                (buffer-file-name (current-buffer))
+                                                vc-mode)
                                        (<span class=
 "org-keyword">if</span> (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
                                            (powerline-vc 'powerline-normal-face 'r)
                                          (powerline-vc 'powerline-modified-face 'r)))
 
                                      (<span class=
-"org-keyword">when</span> (and (not (fboundp 'vc-switches)) (buffer-file-name (current-buffer)) vc-mode)
+"org-keyword">when</span> (and (not (fboundp 'vc-switches))
+                                                (buffer-file-name (current-buffer))
+                                                vc-mode)
                                        (powerline-vc face1 'r))
 
                                      (<span class=
-"org-keyword">when</span> (and (buffer-file-name (current-buffer)) vc-mode)
+"org-keyword">when</span> (and (buffer-file-name (current-buffer))
+                                                vc-mode)
                                        (<span class=
 "org-keyword">if</span> (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
                                            (funcall separator-left 'powerline-normal-face mode-line)
@@ -4722,10 +4730,13 @@
 
                                      <span class=
 "org-comment-delimiter">;; </span><span class=
-"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
-"org-comment"> Put the * in red!</span>
-                                     (powerline-raw <span class=
-"org-string">"%*"</span> 'error 'l)
+"org-comment">"modified" indicator</span>
+                                     (<span class=
+"org-keyword">if</span> (buffer-modified-p)
+                                         (powerline-raw <span class=
+"org-string">"%*"</span> 'mode-line-emphasis 'l)
+                                       (powerline-raw <span class=
+"org-string">"%*"</span> nil 'l))
 
                                      (powerline-raw mode-line-mule-info nil 'l)
 
@@ -6119,15 +6130,19 @@
         <h3 id="sec-20-4">Auto Reverting Non-File Buffers</h3>
 
         <div class="outline-text-3" id="text-20-4">
-          <p>XXX Commented to avoid the message “Reverting buffer
-          `some-dir/’."</p>
+          <p>XXX See if dired-auto-revert-buffer is sufficient or not.</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; Global Auto-Revert mode operates on all buffers (Dired, among others)</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq-default global-auto-revert-non-file-buffers t)</span>
+"org-comment">(setq global-auto-revert-non-file-buffers t)</span>
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">;; do not generate any messages</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq auto-revert-verbose nil) ; avoid "Reverting buffer `</span><span class="org-constant"><span class="org-comment">some-dir/</span></span><span class="org-comment">'."</span>
 </pre>
           </div>
         </div>
@@ -7310,6 +7325,8 @@ M-: (executable-find "diff") RET
             <p>I use Helm M-x and also the separate Helm Descbinds (C-h b) to
             get a quick key bindings overview.</p>
 
+            <p>XXX Look at helm-dictionary.</p>
+
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   (GNUEmacs
@@ -7345,30 +7362,6 @@ M-: (executable-find "diff") RET
       (global-set-key (kbd <span class=
 "org-string">"C-x b"</span>) 'helm-buffers-list)
 
-<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(global-set-key (kbd "C-h ,") 'helm-apropos)</span>
-<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(global-set-key (kbd "C-h .") 'helm-info-emacs)</span>
-<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(global-set-key (kbd "C-h 4") 'helm-info-elisp)</span>
-<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(global-set-key (kbd "M-5") 'helm-etags-select)</span>
-<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)</span>
-<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(global-set-key (kbd "C-h C--") 'helm-google)</span>
-<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)</span>
-
-(global-set-key (kbd <span class="org-string">"C-h b"</span>) 'helm-descbinds)
-
-(global-set-key (kbd <span class=
-"org-string">"M-y"</span>)                     'helm-show-kill-ring)
-<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(global-set-key (kbd "C-h r") 'helm-info-emacs)</span>
-<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(global-set-key (kbd "C-h d")                   'helm-info-at-point)</span>
-
       (global-set-key (kbd <span class=
 "org-string">"C-x r l"</span>) 'helm-bookmarks)
 
@@ -7395,6 +7388,32 @@ M-: (executable-find "diff") RET
                                         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">and `C-c =' (like in RefTeX)?</span>
+
+      (global-set-key (kbd <span class=
+"org-string">"M-y"</span>) 'helm-show-kill-ring)
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "M-5") 'helm-etags-select)</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "C-h ,") 'helm-apropos)</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "C-h .") 'helm-info-emacs)</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "C-h r") 'helm-info-emacs)</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "C-h d") 'helm-info-at-point)</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "C-h 4") 'helm-info-elisp)</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "C-h C--") 'helm-google)</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)</span>
+
+      (global-set-key (kbd <span class=
+"org-string">"C-h b"</span>) 'helm-descbinds)
+
     )
 </pre>
             </div>
@@ -7412,6 +7431,11 @@ M-: (executable-find "diff") RET
 "org-comment">for multi-line items in e.g. minibuffer history, match entire items,</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">not individual lines within items.</span>
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(try-require 'helm-ls-git)</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(try-require 'helm-dictionary)</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">use the *current window* (no popup) to show the candidates</span>
@@ -17931,11 +17955,11 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">highlight nested parens, brackets, braces a different color at each depth</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"rainbow-delimiters"</span>
+"org-string">"rainbow-delimiters-autoloads"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable rainbow-delimiters-mode in Emacs Lisp buffers</span>
-    (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode))
+"org-comment">enable rainbow-delimiters in programming modes</span>
+    (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 </pre>
           </div>
         </div>
@@ -18539,6 +18563,10 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
         <h3 id="sec-32-2">Compilation Mode</h3>
 
         <div class="outline-text-3" id="text-32-2">
+          <p>When Emacs visits the locus of an error message, it momentarily
+          highlights the relevant source line. The duration of this highlight
+          is determined by the variable <code>next-error-highlight</code>.</p>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -18573,9 +18601,12 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"&lt;C-f10&gt;"</span>) 'first-error)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">highlight and parse the whole compilation output as soon as it</span>
+"org-comment">;; prefer fringe</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">arrives</span>
+"org-comment">(setq next-error-highlight 'fringe-arrow)</span>
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">highlight and parse the whole compilation output as soon as it arrives</span>
   (setq compile-auto-highlight t)
 </pre>
           </div>
@@ -19757,10 +19788,13 @@ etags --langdef=shell --regex-shell=<span class=
             <div class="org-src-container">
               <pre class="src src-makefile">
 <span class="org-makefile-targets">TAGS</span>:
-        rm -f TAGS
-        find $$(pwd) \( -name \*.el \
-                     -o -name \*.[chCH] \
-                     \) -print | /usr/bin/ctags -e -
+<span class="org-whitespace-indentation">        </span>rm -f TAGS
+<span class=
+"org-whitespace-indentation">        </span>find $$(pwd) \( -name \*.el \
+<span class=
+"org-whitespace-indentation">                </span>     -o -name \*.[chCH] \
+<span class=
+"org-whitespace-indentation">                </span>     \) -print | /usr/bin/ctags -e -
 </pre>
             </div>
 
@@ -20850,11 +20884,13 @@ etags --langdef=shell --regex-shell=<span class=
     (setq hippie-expand-try-functions-list
           '(try-expand-all-abbrevs      <span class=
 "org-comment-delimiter">; </span><span class="org-comment">abbreviations</span>
+
             try-expand-dabbrev          <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">current buffer</span>
-            <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">try-expand-dabbrev-visible  ; visible (parts of all) buffers</span>
+            try-expand-dabbrev-visible  <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">visible (parts of all) buffers</span>
             try-expand-dabbrev-all-buffers
             try-expand-dabbrev-from-kill <span class=
 "org-comment-delimiter">; </span><span class="org-comment">kill ring</span>
@@ -20863,6 +20899,7 @@ etags --langdef=shell --regex-shell=<span class=
             try-complete-file-name
             try-complete-lisp-symbol-partially
             try-complete-lisp-symbol
+
             try-expand-whole-kill))
 </pre>
             </div>
@@ -21551,8 +21588,8 @@ good|
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
     (<span class="org-keyword">defun</span> <span class=
-"org-function-name">dired-launch-command</span> ()
-     (interactive)
+"org-function-name">dired-open</span> ()
+      (interactive)
       (<span class="org-keyword">let</span> ((program (<span class=
 "org-keyword">cond</span> (leuven--linux-p <span class=
 "org-string">"xdg-open"</span>)
@@ -21562,7 +21599,7 @@ good|
                                 (dired-get-marked-files t current-prefix-arg))))
 
     (define-key dired-mode-map (kbd <span class=
-"org-string">"F"</span>) 'dired-launch-command)
+"org-string">"F"</span>) 'dired-open)
 </pre>
             </div>
           </div>
@@ -26651,7 +26688,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140929.2341]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20140930.1101]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
