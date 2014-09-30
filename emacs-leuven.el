@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140930.1114
+;; Version: 20140930.1148
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140930.1114]--")
+(message "* --[ Loading Emacs Leuven 20140930.1148]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -497,14 +497,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 ;;* 6 (info "(emacs)Exiting") Emacs
 
 (leuven--chapter leuven-chapter-6-exiting "6 Exiting Emacs"
-
-  ;; prevent accidentally killing Emacs
-  ;; This will force emacs to ask me if I'm sure that I want to quit.
-  (global-set-key (kbd "C-x C-c")
-    (lambda ()
-      (interactive)
-      (if (y-or-n-p-with-timeout "Do you really want to exit Emacs? " 4 nil)
-          (save-buffers-kill-emacs))))
 
   ;; quit with Alt + F4
   (global-set-key (kbd "<M-f4>") 'save-buffers-kill-terminal)
@@ -1266,9 +1258,9 @@ Last time is saved in global variable `leuven--before-section-time'."
                                          (funcall separator-left 'powerline-modified-face mode-line)))
 
                                      ;; "modified" indicator
-                                     (if (buffer-modified-p)
-                                         (powerline-raw "%*" 'mode-line-emphasis 'l)
-                                       (powerline-raw "%*" nil 'l))
+                                     (if (not (buffer-modified-p))
+                                         (powerline-raw "%*" nil 'l)
+                                       (powerline-raw "%*" 'mode-line-emphasis 'l))
 
                                      (powerline-raw mode-line-mule-info nil 'l)
 
@@ -9172,7 +9164,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140930.1115]--")
+(message "* --[ Loaded Emacs Leuven 20140930.1149]--")
 
 (provide 'emacs-leuven)
 

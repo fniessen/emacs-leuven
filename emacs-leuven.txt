@@ -660,14 +660,6 @@ cancelable; hence, we put it out of a "chapter".
 
 (leuven--chapter leuven-chapter-6-exiting "6 Exiting Emacs"
 
-  ;; prevent accidentally killing Emacs
-  ;; This will force emacs to ask me if I'm sure that I want to quit.
-  (global-set-key (kbd "C-x C-c")
-    (lambda ()
-      (interactive)
-      (if (y-or-n-p-with-timeout "Do you really want to exit Emacs? " 4 nil)
-          (save-buffers-kill-emacs))))
-
   ;; quit with Alt + F4
   (global-set-key (kbd "<M-f4>") 'save-buffers-kill-terminal)
 
@@ -1995,9 +1987,9 @@ See https://github.com/bling/vim-airline for the original author.
                                          (funcall separator-left 'powerline-modified-face mode-line)))
 
                                      ;; "modified" indicator
-                                     (if (buffer-modified-p)
-                                         (powerline-raw "%*" 'mode-line-emphasis 'l)
-                                       (powerline-raw "%*" nil 'l))
+                                     (if (not (buffer-modified-p))
+                                         (powerline-raw "%*" nil 'l)
+                                       (powerline-raw "%*" 'mode-line-emphasis 'l))
 
                                      (powerline-raw mode-line-mule-info nil 'l)
 
