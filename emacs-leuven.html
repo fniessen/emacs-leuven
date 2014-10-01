@@ -1326,7 +1326,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141001.1022</span>
+"org-comment">Version: 20141001.1358</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1449,7 +1449,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141001.1022]--"</span><span class=
+"org-string">"* --[ Loading Emacs Leuven 20141001.1358]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
@@ -3754,9 +3754,15 @@
 
         <div class="outline-text-3" id="text-13-1">
           <p>Instead of setting the mark in order to operate on a region, you
-          can also use it to “remember” a position in the buffer (by typing
-          <code>C-&lt;SPC&gt; C-&lt;SPC&gt;</code>), and later jump back there
-          (by typing <code>C-u C-&lt;SPC&gt;</code>).</p>
+          can also use it to:</p>
+
+          <ul class="org-ul">
+            <li><b>“remember” a position</b> in the buffer (by typing
+            <code>C-SPC C-SPC</code>), and</li>
+
+            <li>later <b>jump</b> back <b>to the mark</b> in the buffer (by
+            typing <code>C-u C-SPC</code>).</li>
+          </ul>
 
           <p><b>Go to</b> the <b>place</b> where you <b>last changed</b>
           something:</p>
@@ -3777,6 +3783,9 @@
 "org-rainbow-delimiters-depth-1">)</span>
 </pre>
           </div>
+
+          <p>XXX Look at <code>goto-last-change</code> (from Kevin Rodgers) and
+          <code>goto-last-point</code>.</p>
         </div>
       </div>
 
@@ -5267,9 +5276,22 @@
 </pre>
           </div>
 
-          <p>Use Auto-Highlight-Symbol to automatically <b>highlight</b> all
-          found <b>usages of</b> the <b>symbol at point</b> in the current
-          file.</p>
+          <p>Use Auto-Highlight-Symbol to <b>automatically highlight</b> all
+          found <b>usages of</b> the <b>symbol at point</b> in the current file
+          (if you pause on a symbol). When you move point, the highlighting
+          goes away.</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  <span class="org-rainbow-delimiters-depth-1">(</span><span class=
+"org-keyword">when</span> <span class=
+"org-rainbow-delimiters-depth-2">(</span>try-require 'auto-highlight-symbol<span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>global-auto-highlight-symbol-mode t<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
+</pre>
+          </div>
+
+          <p>XXX Check out <code>light-symbol</code>.</p>
         </div>
       </div>
 
@@ -28623,7 +28645,9 @@ etags --langdef=shell --regex-shell=<span class=
 "org-comment">Auto Completion</span>
     <span class="org-rainbow-delimiters-depth-2">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
-"org-string">"auto-complete-autoloads"</span>
+"org-string">"auto-complete-autoloads-</span><span class=
+"org-leuven-highlight"><span class="org-string">XXX</span></span><span class=
+"org-string">"</span>
       <span class=
 "org-rainbow-delimiters-depth-3">(</span>idle-require 'auto-complete-config<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
 
@@ -28817,9 +28841,7 @@ etags --langdef=shell --regex-shell=<span class=
 "org-comment">modular text completion framework</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
-"org-string">"company-autoloads-</span><span class=
-"org-leuven-highlight"><span class="org-string">XXX</span></span><span class=
-"org-string">"</span>
+"org-string">"company-autoloads"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">enable Company mode in all buffers ...</span>
@@ -34862,6 +34884,7 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-rainbow-delimiters-depth-2">(</span>setq guide-key/guide-key-sequence
         '<span class="org-rainbow-delimiters-depth-3">(</span><span class=
 "org-string">"C-c"</span>
+          <span class="org-string">"C-h"</span>
           <span class=
 "org-string">"C-x 4"</span>                       <span class=
 "org-comment-delimiter">; </span><span class="org-comment">other window</span>
@@ -36023,7 +36046,7 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141001.1023]--"</span><span class=
+"org-string">"* --[ Loaded Emacs Leuven 20141001.1358]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=

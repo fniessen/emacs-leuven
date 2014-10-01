@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141001.1020
+;; Version: 20141001.1356
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141001.1020]--")
+(message "* --[ Loading Emacs Leuven 20141001.1356]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1055,6 +1055,9 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; temporarily highlight the symbol when using `highlight-symbol-jump'
     ;; family of functions
     (setq highlight-symbol-on-navigation-p t))
+
+  (when (try-require 'auto-highlight-symbol)
+    (global-auto-highlight-symbol-mode t))
 
   ;; highlight uncommitted changes
   (with-eval-after-load "diff-hl-autoloads"
@@ -7263,7 +7266,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (GNUEmacs
 
     ;; Auto Completion
-    (with-eval-after-load "auto-complete-autoloads"
+    (with-eval-after-load "auto-complete-autoloads-XXX"
       (idle-require 'auto-complete-config))
 
     (with-eval-after-load "auto-complete-config"
@@ -7337,7 +7340,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (ac-flyspell-workaround)))
 
   ;; modular text completion framework
-  (with-eval-after-load "company-autoloads-XXX"
+  (with-eval-after-load "company-autoloads"
 
     ;; enable Company mode in all buffers ...
     (add-hook 'after-init-hook 'global-company-mode))
@@ -8996,6 +8999,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (setq guide-key/guide-key-sequence
         '("C-c"
+          "C-h"
           "C-x 4"                       ; other window
           "C-x 5"                       ; other frame
           "C-x 8"                       ; unicode
@@ -9166,7 +9170,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20141001.1022]--")
+(message "* --[ Loaded Emacs Leuven 20141001.1357]--")
 
 (provide 'emacs-leuven)
 
