@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20140930.1705
+;; Version: 20141001.1020
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20140930.1705]--")
+(message "* --[ Loading Emacs Leuven 20141001.1020]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -2900,11 +2900,11 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "24.1 (emacs)Indentation Commands and Techniques")
 
-  (defun indent-whole-buffer ()
+  (defun leuven-indent-buffer ()
+    "Indent each nonblank line in the buffer."
     (interactive)
     (save-excursion
-      (mark-whole-buffer)
-      (indent-for-tab-command)))
+      (indent-region (point-min) (point-max) nil)))
 
   (global-set-key (kbd "C-x \\") 'align-regexp)
 
@@ -9166,7 +9166,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20140930.1706]--")
+(message "* --[ Loaded Emacs Leuven 20141001.1022]--")
 
 (provide 'emacs-leuven)
 

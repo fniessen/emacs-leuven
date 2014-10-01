@@ -25,11 +25,6 @@ this set of customizations to "short-cut" that initial process.
 
 * Header
 
-#+name: current-year
-#+begin_src emacs-lisp :eval yes :results silent :tangle no
-(format-time-string "%Y")
-#+end_src
-
 #+name: current-time
 #+begin_src emacs-lisp :eval yes :results silent :tangle no
 (format-time-string "%Y%m%d.%H%M")
@@ -38,7 +33,7 @@ this set of customizations to "short-cut" that initial process.
 #+begin_src emacs-lisp :noweb yes
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-<<current-year()>> Fabrice Niessen
+;; Copyright (C) 1999-2014 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
@@ -4643,19 +4638,19 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
      ~back-to-indentation~.
 
 - ~C-M-\~ ::
-     runs the command ~indent-region~ (which does the job of the imaginary
-     command ~unsuck-html-layout~ in ~html-mode~).
+     Run the command ~indent-region~ (which does the job of the imaginary command
+     ~unsuck-html-layout~ in ~html-mode~).
 
 #+begin_src emacs-lisp
 ;;** 24.1 (info "(emacs)Indentation Commands") and Techniques
 
   (leuven--section "24.1 (emacs)Indentation Commands and Techniques")
 
-  (defun indent-whole-buffer ()
+  (defun leuven-indent-buffer ()
+    "Indent each nonblank line in the buffer."
     (interactive)
     (save-excursion
-      (mark-whole-buffer)
-      (indent-for-tab-command)))
+      (indent-region (point-min) (point-max) nil)))
 #+end_src
 
 #+begin_src emacs-lisp

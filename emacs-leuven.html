@@ -1305,14 +1305,6 @@
 
       <div class="outline-text-2" id="text-2">
         <div class="org-src-container">
-          <pre class="src src-emacs-lisp" id="current-year">
-<span class=
-"org-rainbow-delimiters-depth-1">(</span>format-time-string <span class=
-"org-string">"%Y"</span><span class="org-rainbow-delimiters-depth-1">)</span>
-</pre>
-        </div>
-
-        <div class="org-src-container">
           <pre class="src src-emacs-lisp" id="current-time">
 <span class=
 "org-rainbow-delimiters-depth-1">(</span>format-time-string <span class=
@@ -1334,7 +1326,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20140930.1707</span>
+"org-comment">Version: 20141001.1022</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1457,7 +1449,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20140930.1707]--"</span><span class=
+"org-string">"* --[ Loading Emacs Leuven 20141001.1022]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
@@ -12183,7 +12175,7 @@ M-: (executable-find "diff") RET
 
             <dt><code>C-M-\</code></dt>
 
-            <dd>runs the command <code>indent-region</code> (which does the job
+            <dd>Run the command <code>indent-region</code> (which does the job
             of the imaginary command <code>unsuck-html-layout</code> in
             <code>html-mode</code>).</dd>
           </dl>
@@ -12199,17 +12191,19 @@ M-: (executable-find "diff") RET
 
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">defun</span> <span class=
-"org-function-name">indent-whole-buffer</span> <span class=
+"org-function-name">leuven-indent-buffer</span> <span class=
 "org-rainbow-delimiters-depth-2">()</span>
+    <span class="org-doc">"Indent each nonblank line in the buffer."</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>interactive<span class="org-rainbow-delimiters-depth-2">)</span>
     <span class="org-rainbow-delimiters-depth-2">(</span><span class=
 "org-keyword">save-excursion</span>
       <span class=
-"org-rainbow-delimiters-depth-3">(</span>mark-whole-buffer<span class=
-"org-rainbow-delimiters-depth-3">)</span>
-      <span class=
-"org-rainbow-delimiters-depth-3">(</span>indent-for-tab-command<span class=
+"org-rainbow-delimiters-depth-3">(</span>indent-region <span class=
+"org-rainbow-delimiters-depth-4">(</span>point-min<span class=
+"org-rainbow-delimiters-depth-4">)</span> <span class=
+"org-rainbow-delimiters-depth-4">(</span>point-max<span class=
+"org-rainbow-delimiters-depth-4">)</span> nil<span class=
 "org-rainbow-delimiters-depth-3">)</span><span class=
 "org-rainbow-delimiters-depth-2">)</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
@@ -36029,7 +36023,7 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20140930.1707]--"</span><span class=
+"org-string">"* --[ Loaded Emacs Leuven 20141001.1023]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=
