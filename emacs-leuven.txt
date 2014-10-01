@@ -552,14 +552,14 @@ outages).
 
       (defcustom leuven-elpa-packages
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
-          boxquote calfw circe company csv-mode dictionary diff-hl diminish
-          dired+ dired-single ess expand-region fancy-narrow
-          fill-column-indicator flycheck fuzzy git-commit-mode google-this
-          goto-chg graphviz-dot-mode guide-key helm helm-descbinds helm-swoop
-          highlight-symbol htmlize litable idle-require imenu-anywhere info+
-          interaction-log ledger-mode leuven-theme multi-term multiple-cursors
-          pager powerline rainbow-mode redo+ spray tidy tomatinho unbound
-          undo-tree w3m yasnippet
+          boxquote calfw circe color-identifiers-mode company csv-mode
+          dictionary diff-hl diminish dired+ dired-single ess expand-region
+          fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
+          google-this goto-chg graphviz-dot-mode guide-key helm helm-descbinds
+          helm-swoop highlight-symbol htmlize litable idle-require
+          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
+          multi-term multiple-cursors pager powerline rainbow-mode redo+ spray
+          tidy tomatinho unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -1706,11 +1706,25 @@ Use Auto-Highlight-Symbol to *automatically highlight* all found *usages of* the
 point, the highlighting goes away.
 
 #+begin_src emacs-lisp
+  ;; automatic highlighting current symbol
   (when (try-require 'auto-highlight-symbol)
+
+    ;; add R
+    (add-to-list 'ahs-modes 'ess-mode t)
+
+    ;; toggle Auto-Highlight-Symbol mode in all buffers
     (global-auto-highlight-symbol-mode t))
 #+end_src
 
 XXX Check out ~light-symbol~.
+
+Color Identifiers Mode: *color* every *variable* in its own, consistent color.
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "color-identifiers-mode-autoloads"
+
+    (add-hook 'after-init-hook 'global-color-identifiers-mode))
+#+end_src
 
 ** Window Fringes
 

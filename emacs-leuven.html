@@ -1326,7 +1326,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141001.1358</span>
+"org-comment">Version: 20141001.1645</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1449,7 +1449,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141001.1358]--"</span><span class=
+"org-string">"* --[ Loading Emacs Leuven 20141001.1645]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
@@ -2662,14 +2662,14 @@
 "org-variable-name">leuven-elpa-packages</span>
         '<span class=
 "org-rainbow-delimiters-depth-4">(</span>ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
-          boxquote calfw circe company csv-mode dictionary diff-hl diminish
-          dired+ dired-single ess expand-region fancy-narrow
-          fill-column-indicator flycheck fuzzy git-commit-mode google-this
-          goto-chg graphviz-dot-mode guide-key helm helm-descbinds helm-swoop
-          highlight-symbol htmlize litable idle-require imenu-anywhere info+
-          interaction-log ledger-mode leuven-theme multi-term multiple-cursors
-          pager powerline rainbow-mode redo+ spray tidy tomatinho unbound
-          undo-tree w3m yasnippet
+          boxquote calfw circe color-identifiers-mode company csv-mode
+          dictionary diff-hl diminish dired+ dired-single ess expand-region
+          fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
+          google-this goto-chg graphviz-dot-mode guide-key helm helm-descbinds
+          helm-swoop highlight-symbol htmlize litable idle-require
+          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
+          multi-term multiple-cursors pager powerline rainbow-mode redo+ spray
+          tidy tomatinho unbound undo-tree w3m yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">jabber multi-term paredit redshank</span>
           <span class="org-rainbow-delimiters-depth-4">)</span>
@@ -5283,15 +5283,39 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">automatic highlighting current symbol</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">when</span> <span class=
 "org-rainbow-delimiters-depth-2">(</span>try-require 'auto-highlight-symbol<span class="org-rainbow-delimiters-depth-2">)</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">add R</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>add-to-list 'ahs-modes 'ess-mode t<span class="org-rainbow-delimiters-depth-2">)</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">toggle Auto-Highlight-Symbol mode in all buffers</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>global-auto-highlight-symbol-mode t<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
           </div>
 
           <p>XXX Check out <code>light-symbol</code>.</p>
+
+          <p>Color Identifiers Mode: <b>color</b> every <b>variable</b> in its
+          own, consistent color.</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  <span class="org-rainbow-delimiters-depth-1">(</span><span class=
+"org-keyword">with-eval-after-load</span> <span class=
+"org-string">"color-identifiers-mode-autoloads"</span>
+
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>add-hook 'after-init-hook 'global-color-identifiers-mode<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
+</pre>
+          </div>
         </div>
       </div>
 
@@ -36046,7 +36070,7 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141001.1358]--"</span><span class=
+"org-string">"* --[ Loaded Emacs Leuven 20141001.1645]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=

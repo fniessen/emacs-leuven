@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141001.1356
+;; Version: 20141001.1643
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141001.1356]--")
+(message "* --[ Loading Emacs Leuven 20141001.1643]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -405,14 +405,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (defcustom leuven-elpa-packages
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
-          boxquote calfw circe company csv-mode dictionary diff-hl diminish
-          dired+ dired-single ess expand-region fancy-narrow
-          fill-column-indicator flycheck fuzzy git-commit-mode google-this
-          goto-chg graphviz-dot-mode guide-key helm helm-descbinds helm-swoop
-          highlight-symbol htmlize litable idle-require imenu-anywhere info+
-          interaction-log ledger-mode leuven-theme multi-term multiple-cursors
-          pager powerline rainbow-mode redo+ spray tidy tomatinho unbound
-          undo-tree w3m yasnippet
+          boxquote calfw circe color-identifiers-mode company csv-mode
+          dictionary diff-hl diminish dired+ dired-single ess expand-region
+          fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
+          google-this goto-chg graphviz-dot-mode guide-key helm helm-descbinds
+          helm-swoop highlight-symbol htmlize litable idle-require
+          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
+          multi-term multiple-cursors pager powerline rainbow-mode redo+ spray
+          tidy tomatinho unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -1056,8 +1056,18 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; family of functions
     (setq highlight-symbol-on-navigation-p t))
 
+  ;; automatic highlighting current symbol
   (when (try-require 'auto-highlight-symbol)
+
+    ;; add R
+    (add-to-list 'ahs-modes 'ess-mode t)
+
+    ;; toggle Auto-Highlight-Symbol mode in all buffers
     (global-auto-highlight-symbol-mode t))
+
+  (with-eval-after-load "color-identifiers-mode-autoloads"
+
+    (add-hook 'after-init-hook 'global-color-identifiers-mode))
 
   ;; highlight uncommitted changes
   (with-eval-after-load "diff-hl-autoloads"
@@ -9170,7 +9180,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20141001.1357]--")
+(message "* --[ Loaded Emacs Leuven 20141001.1644]--")
 
 (provide 'emacs-leuven)
 
