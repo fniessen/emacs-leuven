@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141001.2014
+;; Version: 20141001.2035
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141001.2014]--")
+(message "* --[ Loading Emacs Leuven 20141001.2035]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -8534,6 +8534,23 @@ a clean buffer we're an order of magnitude laxer about checking."
             (ess-fl-keyword:= . t)
             (ess-R-fl-keyword:F&T . t)))
 
+    ;; font-lock patterns used in inferior-R-mode buffers
+    (setq inferior-R-font-lock-keywords
+          '((ess-S-fl-keyword:prompt . t) ; default
+            (ess-R-fl-keyword:messages . t) ; default
+            (ess-R-fl-keyword:modifiers . t) ; default
+            (ess-R-fl-keyword:fun-defs . t) ; default
+            (ess-R-fl-keyword:keywords . t) ; default
+            (ess-R-fl-keyword:assign-ops . t) ; default
+            (ess-R-fl-keyword:constants . t) ; default
+            (ess-fl-keyword:matrix-labels . t) ; default
+            (ess-fl-keyword:fun-calls . t)
+            (ess-fl-keyword:numbers . t)
+            (ess-fl-keyword:operators . t)
+            (ess-fl-keyword:delimiters . t)
+            (ess-fl-keyword:= . t)
+            (ess-R-fl-keyword:F&T . t)))
+
     ;; prototype object browser for R, looks like dired mode
     (autoload 'ess-rdired "ess-rdired"
       "View *R* objects in a dired-like buffer." t)
@@ -9194,7 +9211,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20141001.2015]--")
+(message "* --[ Loaded Emacs Leuven 20141001.2036]--")
 
 (provide 'emacs-leuven)
 
