@@ -9701,7 +9701,7 @@ XXX Autoloaded?
       (XEmacs (global-set-key [(shift button3)] 'imenu))
 
       ;; string to display in the mode line when current function is unknown
-      (setq which-func-unknown "")
+      (setq which-func-unknown "(Top Level)")
 
       ;; show current function in mode line (based on Imenu)
       (which-function-mode 1)           ; ~ Stickyfunc mode (in header line)
@@ -13668,6 +13668,24 @@ So, e.g. try:
 1. ~C-x C-f somefile.R~
 2. ~M-x R~ (so that =somefile.R= is associated with ~*R*~)
 3. ElDoc should then work.
+
+**** Highlighting
+
+#+begin_src emacs-lisp
+    ;; font-lock keywords for the R mode
+    (setq ess-R-font-lock-keywords
+          '((ess-R-fl-keyword:modifiers . t) ; default
+            (ess-R-fl-keyword:fun-defs . t) ; default
+            (ess-R-fl-keyword:keywords . t) ; default
+            (ess-R-fl-keyword:assign-ops . t) ; default
+            (ess-R-fl-keyword:constants . t) ; default
+            (ess-fl-keyword:fun-calls . t)
+            (ess-fl-keyword:numbers . t)
+            (ess-fl-keyword:operators . t)
+            (ess-fl-keyword:delimiters . t)
+            (ess-fl-keyword:= . t)
+            (ess-R-fl-keyword:F&T . t)))
+#+end_src
 
 **** Rdired
 
