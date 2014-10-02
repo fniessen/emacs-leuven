@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141001.2035
+;; Version: 20141002.1036
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141001.2035]--")
+(message "* --[ Loading Emacs Leuven 20141002.1036]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -409,7 +409,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
           google-this goto-chg graphviz-dot-mode guide-key helm helm-descbinds
-          helm-swoop highlight-symbol htmlize litable idle-require
+          helm-swoop highlight-symbol htmlize key-chord litable idle-require
           imenu-anywhere info+ interaction-log ledger-mode leuven-theme
           multi-term multiple-cursors pager powerline rainbow-mode redo+ spray
           tidy tomatinho unbound undo-tree w3m yasnippet
@@ -1297,6 +1297,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      (funcall separator-left face2 mode-line)))
                           (rhs (list (powerline-raw global-mode-string mode-line 'r)
                                      (funcall separator-right mode-line face1)
+
                                      (powerline-raw "%l" face1 'l)
                                      (powerline-raw ", " face1 'l)
                                      (powerline-raw "%c" face1 'r)
@@ -3076,6 +3077,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (add-hook 'text-mode-hook 'leuven-smart-punctuation)
   (add-hook 'message-mode-hook 'leuven-smart-punctuation)
+
+  (with-eval-after-load "key-chord-autoloads"
+    (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
+    (key-chord-define-global ">>" (lambda () (interactive) (insert "»"))))
 
 ;;** 25.6 (info "(emacs)Case") Conversion Commands
 
@@ -7312,9 +7317,6 @@ a clean buffer we're an order of magnitude laxer about checking."
                       sql-mode
                       text-mode)))
 
-      ;; 7.8 enable auto-complete-mode automatically for Sword mode
-      (add-to-list 'ac-modes 'sword-mode) ; brand new mode
-
       ;; 8.1 delay to completions will be available
       (setq ac-delay 0)               ; faster than default 0.1
 
@@ -9211,7 +9213,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20141001.2036]--")
+(message "* --[ Loaded Emacs Leuven 20141002.1037]--")
 
 (provide 'emacs-leuven)
 

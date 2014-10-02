@@ -556,7 +556,7 @@ outages).
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
           google-this goto-chg graphviz-dot-mode guide-key helm helm-descbinds
-          helm-swoop highlight-symbol htmlize litable idle-require
+          helm-swoop highlight-symbol htmlize key-chord litable idle-require
           imenu-anywhere info+ interaction-log ledger-mode leuven-theme
           multi-term multiple-cursors pager powerline rainbow-mode redo+ spray
           tidy tomatinho unbound undo-tree w3m yasnippet
@@ -2039,6 +2039,13 @@ See https://github.com/bling/vim-airline for the original author.
                                      (funcall separator-left face2 mode-line)))
                           (rhs (list (powerline-raw global-mode-string mode-line 'r)
                                      (funcall separator-right mode-line face1)
+#+end_src
+
+Line/column replacement. Shows column in red when we go over the 80th character.
+
+See http://www.elliotglaysher.org/emacs/
+
+#+begin_src emacs-lisp
                                      (powerline-raw "%l" face1 'l)
                                      (powerline-raw ", " face1 'l)
                                      (powerline-raw "%c" face1 'r)
@@ -4887,6 +4894,12 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 
   (add-hook 'text-mode-hook 'leuven-smart-punctuation)
   (add-hook 'message-mode-hook 'leuven-smart-punctuation)
+#+end_src
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "key-chord-autoloads"
+    (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
+    (key-chord-define-global ">>" (lambda () (interactive) (insert "»"))))
 #+end_src
 
 ** Case Conversion Commands
@@ -11661,9 +11674,6 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
                       snippet-mode
                       sql-mode
                       text-mode)))
-
-      ;; 7.8 enable auto-complete-mode automatically for Sword mode
-      (add-to-list 'ac-modes 'sword-mode) ; brand new mode
 
       ;; 8.1 delay to completions will be available
       (setq ac-delay 0)               ; faster than default 0.1

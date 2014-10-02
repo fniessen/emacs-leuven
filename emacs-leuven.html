@@ -1328,7 +1328,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141001.2038</span>
+"org-comment">Version: 20141002.1039</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1451,7 +1451,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141001.2038]--"</span><span class=
+"org-string">"* --[ Loading Emacs Leuven 20141002.1039]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
@@ -2668,7 +2668,7 @@
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
           google-this goto-chg graphviz-dot-mode guide-key helm helm-descbinds
-          helm-swoop highlight-symbol htmlize litable idle-require
+          helm-swoop highlight-symbol htmlize key-chord litable idle-require
           imenu-anywhere info+ interaction-log ledger-mode leuven-theme
           multi-term multiple-cursors pager powerline rainbow-mode redo+ spray
           tidy tomatinho unbound undo-tree w3m yasnippet
@@ -6166,35 +6166,46 @@
 "org-rainbow-delimiters-depth-9">(</span>powerline-raw global-mode-string mode-line 'r<span class="org-rainbow-delimiters-depth-9">)</span>
                                      <span class=
 "org-rainbow-delimiters-depth-9">(</span>funcall separator-right mode-line face1<span class="org-rainbow-delimiters-depth-9">)</span>
+</pre>
+          </div>
+
+          <p>Line/column replacement. Shows column in red when we go over the
+          80th character.</p>
+
+          <p>See <a href=
+          "http://www.elliotglaysher.org/emacs/">http://www.elliotglaysher.org/emacs/</a></p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
                                      <span class=
-"org-rainbow-delimiters-depth-9">(</span>powerline-raw <span class=
+"org-rainbow-delimiters-depth-1">(</span>powerline-raw <span class=
 "org-string">"%l"</span> face1 'l<span class=
-"org-rainbow-delimiters-depth-9">)</span>
+"org-rainbow-delimiters-depth-1">)</span>
                                      <span class=
-"org-rainbow-delimiters-depth-9">(</span>powerline-raw <span class=
+"org-rainbow-delimiters-depth-1">(</span>powerline-raw <span class=
 "org-string">", "</span> face1 'l<span class=
-"org-rainbow-delimiters-depth-9">)</span>
+"org-rainbow-delimiters-depth-1">)</span>
                                      <span class=
-"org-rainbow-delimiters-depth-9">(</span>powerline-raw <span class=
+"org-rainbow-delimiters-depth-1">(</span>powerline-raw <span class=
 "org-string">"%c"</span> face1 'r<span class=
-"org-rainbow-delimiters-depth-9">)</span>
+"org-rainbow-delimiters-depth-1">)</span>
                                      <span class=
-"org-rainbow-delimiters-depth-9">(</span>funcall separator-right face1 mode-line<span class="org-rainbow-delimiters-depth-9">)</span>
+"org-rainbow-delimiters-depth-1">(</span>funcall separator-right face1 mode-line<span class="org-rainbow-delimiters-depth-1">)</span>
                                      <span class=
-"org-rainbow-delimiters-depth-9">(</span>powerline-raw <span class=
-"org-string">" "</span><span class="org-rainbow-delimiters-depth-9">)</span>
+"org-rainbow-delimiters-depth-1">(</span>powerline-raw <span class=
+"org-string">" "</span><span class="org-rainbow-delimiters-depth-1">)</span>
                                      <span class=
-"org-rainbow-delimiters-depth-9">(</span>powerline-raw <span class=
+"org-rainbow-delimiters-depth-1">(</span>powerline-raw <span class=
 "org-string">"%4p"</span> nil 'r<span class=
-"org-rainbow-delimiters-depth-9">)</span>
+"org-rainbow-delimiters-depth-1">)</span>
                                      <span class=
-"org-rainbow-delimiters-depth-9">(</span>funcall separator-right mode-line face2<span class="org-rainbow-delimiters-depth-9">)</span>
+"org-rainbow-delimiters-depth-1">(</span>funcall separator-right mode-line face2<span class="org-rainbow-delimiters-depth-1">)</span>
                                      <span class=
-"org-rainbow-delimiters-depth-9">(</span>powerline-buffer-size face2 'l<span class="org-rainbow-delimiters-depth-9">)</span>
+"org-rainbow-delimiters-depth-1">(</span>powerline-buffer-size face2 'l<span class="org-rainbow-delimiters-depth-1">)</span>
                                      <span class=
-"org-rainbow-delimiters-depth-9">(</span>powerline-raw <span class=
+"org-rainbow-delimiters-depth-1">(</span>powerline-raw <span class=
 "org-string">" "</span> face2<span class=
-"org-rainbow-delimiters-depth-9">)</span>
+"org-rainbow-delimiters-depth-1">)</span>
 
                                      <span class=
 "org-comment-delimiter">;; </span><span class=
@@ -6248,27 +6259,21 @@
 "org-comment-delimiter">;; </span><span class=
 "org-comment">(powerline-hud face2 face1)</span>
                                      <span class=
-"org-rainbow-delimiters-depth-8">)</span><span class=
-"org-rainbow-delimiters-depth-7">)</span><span class=
-"org-rainbow-delimiters-depth-6">)</span>
+"org-rainbow-delimiters-unmatched">)))</span>
                      <span class=
-"org-rainbow-delimiters-depth-6">(</span>concat <span class=
-"org-rainbow-delimiters-depth-7">(</span>powerline-render lhs<span class=
-"org-rainbow-delimiters-depth-7">)</span>
+"org-rainbow-delimiters-depth-1">(</span>concat <span class=
+"org-rainbow-delimiters-depth-2">(</span>powerline-render lhs<span class=
+"org-rainbow-delimiters-depth-2">)</span>
                              <span class=
-"org-rainbow-delimiters-depth-7">(</span>powerline-fill mode-line <span class=
-"org-rainbow-delimiters-depth-8">(</span>powerline-width rhs<span class=
-"org-rainbow-delimiters-depth-8">)</span><span class=
-"org-rainbow-delimiters-depth-7">)</span>
-                             <span class=
-"org-rainbow-delimiters-depth-7">(</span>powerline-render rhs<span class=
-"org-rainbow-delimiters-depth-7">)</span><span class=
-"org-rainbow-delimiters-depth-6">)</span><span class=
-"org-rainbow-delimiters-depth-5">)</span><span class=
-"org-rainbow-delimiters-depth-4">)</span><span class=
+"org-rainbow-delimiters-depth-2">(</span>powerline-fill mode-line <span class=
+"org-rainbow-delimiters-depth-3">(</span>powerline-width rhs<span class=
 "org-rainbow-delimiters-depth-3">)</span><span class=
+"org-rainbow-delimiters-depth-2">)</span>
+                             <span class=
+"org-rainbow-delimiters-depth-2">(</span>powerline-render rhs<span class=
 "org-rainbow-delimiters-depth-2">)</span><span class=
-"org-rainbow-delimiters-depth-1">)</span>
+"org-rainbow-delimiters-depth-1">)</span><span class=
+"org-rainbow-delimiters-unmatched">)))))</span>
 
 <span class=
 "org-rainbow-delimiters-depth-1">(</span>add-hook 'after-init-hook 'powerline-leuven-theme<span class="org-rainbow-delimiters-depth-1">)</span>
@@ -12819,6 +12824,41 @@ M-: (executable-find "diff") RET
 "org-rainbow-delimiters-depth-1">(</span>add-hook 'text-mode-hook 'leuven-smart-punctuation<span class="org-rainbow-delimiters-depth-1">)</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>add-hook 'message-mode-hook 'leuven-smart-punctuation<span class="org-rainbow-delimiters-depth-1">)</span>
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  <span class="org-rainbow-delimiters-depth-1">(</span><span class=
+"org-keyword">with-eval-after-load</span> <span class=
+"org-string">"key-chord-autoloads"</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">"&lt;&lt;"</span> <span class=
+"org-rainbow-delimiters-depth-3">(</span><span class=
+"org-keyword">lambda</span> <span class=
+"org-rainbow-delimiters-depth-4">()</span> <span class=
+"org-rainbow-delimiters-depth-4">(</span>interactive<span class=
+"org-rainbow-delimiters-depth-4">)</span> <span class=
+"org-rainbow-delimiters-depth-4">(</span>insert <span class=
+"org-string">"«"</span><span class=
+"org-rainbow-delimiters-depth-4">)</span><span class=
+"org-rainbow-delimiters-depth-3">)</span><span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">"&gt;&gt;"</span> <span class=
+"org-rainbow-delimiters-depth-3">(</span><span class=
+"org-keyword">lambda</span> <span class=
+"org-rainbow-delimiters-depth-4">()</span> <span class=
+"org-rainbow-delimiters-depth-4">(</span>interactive<span class=
+"org-rainbow-delimiters-depth-4">)</span> <span class=
+"org-rainbow-delimiters-depth-4">(</span>insert <span class=
+"org-string">"»"</span><span class=
+"org-rainbow-delimiters-depth-4">)</span><span class=
+"org-rainbow-delimiters-depth-3">)</span><span class=
+"org-rainbow-delimiters-depth-2">)</span><span class=
+"org-rainbow-delimiters-depth-1">)</span>
 </pre>
           </div>
         </div>
@@ -28756,11 +28796,6 @@ etags --langdef=shell --regex-shell=<span class=
 "org-rainbow-delimiters-depth-3">)</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">7.8 enable auto-complete-mode automatically for Sword mode</span>
-      <span class=
-"org-rainbow-delimiters-depth-3">(</span>add-to-list 'ac-modes 'sword-mode<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-comment-delimiter">; </span><span class="org-comment">brand new mode</span>
-
-      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">8.1 delay to completions will be available</span>
       <span class=
 "org-rainbow-delimiters-depth-3">(</span>setq ac-delay 0<span class=
@@ -36147,7 +36182,7 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141001.2039]--"</span><span class=
+"org-string">"* --[ Loaded Emacs Leuven 20141002.1039]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=
