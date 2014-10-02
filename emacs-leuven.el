@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141002.1036
+;; Version: 20141002.1106
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141002.1036]--")
+(message "* --[ Loading Emacs Leuven 20141002.1106]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -497,6 +497,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 ;;* 6 (info "(emacs)Exiting") Emacs
 
 (leuven--chapter leuven-chapter-6-exiting "6 Exiting Emacs"
+
+  ;; unbind "minimize"
+  (global-unset-key (kbd "C-z"))
 
   ;; quit with Alt + F4
   (global-set-key (kbd "<M-f4>") 'save-buffers-kill-terminal)
@@ -9213,7 +9216,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20141002.1037]--")
+(message "* --[ Loaded Emacs Leuven 20141002.1107]--")
 
 (provide 'emacs-leuven)
 
