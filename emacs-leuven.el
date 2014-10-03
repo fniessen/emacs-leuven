@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141003.1131
+;; Version: 20141003.1249
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141003.1131]--")
+(message "* --[ Loading Emacs Leuven 20141003.1249]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -408,11 +408,11 @@ Last time is saved in global variable `leuven--before-section-time'."
           boxquote calfw circe color-identifiers-mode company csv-mode
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
-          google-this goto-chg graphviz-dot-mode guide-key helm helm-descbinds
-          helm-swoop highlight-symbol htmlize key-chord litable idle-require
-          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
-          multi-term multiple-cursors pager powerline rainbow-mode redo+ spray
-          tidy tomatinho unbound undo-tree w3m yasnippet
+          google-this google-translate goto-chg graphviz-dot-mode guide-key helm
+          helm-descbinds helm-swoop highlight-symbol htmlize key-chord litable
+          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          redo+ spray tidy tomatinho unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -1370,9 +1370,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "14.21 (emacs)Line Truncation")
 
-  ;; switch wrap mode from "wrap long lines to next screen line" (continued
-  ;; line) to "non-wrap", or vice-versa
-  (global-set-key (kbd "C-c t") 'toggle-truncate-lines)
+  ;; ;; switch wrap mode from "wrap long lines to next screen line" (continued
+  ;; ;; line) to "non-wrap", or vice-versa
+  ;; (global-set-key (kbd "C-c t") 'toggle-truncate-lines)
 
   ;; respect the value of `truncate-lines' in all windows less than the full
   ;; width of the frame
@@ -8880,11 +8880,19 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 )
 
+  ;; Emacs interface to Google Translate
   (with-eval-after-load "google-translate-autoloads"
 
-    (setq google-translate-default-source-language "fr")
+    ;; translate a text using translation directions
+    (global-set-key "\C-ct" 'google-translate-smooth-translate))
 
-    (setq google-translate-default-target-language "en"))
+  (with-eval-after-load "google-translate-smooth-ui"
+
+    ;; translation directions
+    (setq google-translate-translation-directions-alist
+          '(("fr" . "en") ("en" . "fr")
+            ("fr" . "nl") ("nl" . "fr")
+            ("fr" . "es") ("es" . "fr"))))
 
 ;;* 46 Other (info "(emacs)Amusements")
 
@@ -9219,7 +9227,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20141003.1132]--")
+(message "* --[ Loaded Emacs Leuven 20141003.1250]--")
 
 (provide 'emacs-leuven)
 
