@@ -130,6 +130,30 @@ See http://www.emacswiki.org/emacs/GnusEncryptedAuthInfo.
         (setq auth-source-debug t))
 #+end_src
 
+#+begin_note
+Richard Stallman <rms@gnu.org> writes:
+
+> http://www.theguardian.com/technology/2014/sep/29/londoners-wi-fi-security-herod-clause
+>
+> says that POP3 passwords are sometimes transmitted in plain text.
+>
+> Is plaintext transmission of passwords inherent in POP3
+> or is it optional?
+
+Modern pop3 servers support STARTTLS, and Emacs will upgrade to a TLS
+connection whenever the server supports it.  (If you have an Emacs
+compiled with gnutls support, but I would guess that almost all Emacs
+instances has that.)
+
+Virtually all the Emacs network transports that I know of will upgrade
+to TLS opportunistically, if the servers allow it, so Emacs should send
+no passwords unencrypted.
+
+The only exceptions are HTTP and IRC, unless the latter has been fixed
+lately.  And there are hopefully nobody who does a login that matters
+over HTTP.
+#+end_note
+
 ** Finding the News
 
 Download and *install* of [[http://www.gnu.org/software/gnutls/][GnuTLS library]] may be required.
@@ -1473,33 +1497,11 @@ below to set the variables.
                                         ; get misplaced headers when switching
                                         ; between personalities (see
                                         ; `gnus-alias')
+#+end_src
 
-;;*** 2.8 (info "(message)Various Commands")
+XXX Look at Gnushush to automatically *obfuscate email*, Message-ID, etc.
 
-      (defun leuven-gnus-obfuscate-email (username)
-        "Wrapper for email address obfuscation."
-        (apply 'leuven-mail-obfuscate-address
-               (list username
-                     (cond ((string-equal leuven-system "slac")
-                            "generic@slac.stanford.edu")
-                           ((string-equal leuven-system "gnu")
-                            "generic@gnu.org")
-                           (t
-                            "generic@ast.cam.ac.uk")))))
-
-      (when (require 'gnushush nil t)
-
-        ;; Note headers with total length > 76 chars get folded by
-        ;; rfc2047-fold-region, called from mail-encode-encoded-word-buffer,
-        ;; called from message-send-mail.
-        (setq gnushush-enable-p t
-              ;; Shows up in the headers, so may as well use it.
-              gnushush-fqdn (system-name)
-              gnushush-uid 'random
-              gnushush-sender-header 'none
-              gnushush-user-agent-header
-              "Gnus (www.gnus.org), GNU Emacs (www.gnu.org/software/emacs/)"))
-
+#+begin_src emacs-lisp
 ;;*** 2.11 (info "(message)Spelling")
 
      (defun leuven-message-setup-routine ()
@@ -1527,7 +1529,7 @@ below to set the variables.
 
 ;;*** 3.4 (info "(message)News Headers")
 
-      ;; masquerade domain part of message-Ids
+      ;; masquerade domain part of Message-ID
       (setq message-user-fqdn "example.com") ; (system-name)
 
       ;; tell Gnus not to generate a sender header on outgoing posts
@@ -1782,13 +1784,13 @@ for inserting a citation line in the correct language.
             (concat gnus-directory ".nnmail-cache"))
 
 ;; to use `nnmail-split-fancy-with-parent'
-;; record the message id of every message it sees
+;; record the Message-ID of every message it sees
 (setq nnmail-treat-duplicates 'warn)     ; or `delete'
 
-;; ensure that the message ids are still in the cache
+;; ensure that the Message-ID are still in the cache
 (setq nnmail-message-id-cache-length 5000)
 
-;; record the message ids of moved articles
+;; record the Message-ID of moved articles
 (setq nnmail-cache-accepted-message-ids t)
 #+end_src
 
@@ -1820,7 +1822,7 @@ for inserting a citation line in the correct language.
                 ;; first try the current method
                 current
 
-                ;; find the message-id based on the registry, so that you can
+                ;; find the Message-ID based on the registry, so that you can
                 ;; safely move articles around
                 ;; (nnregistry)
 

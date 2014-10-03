@@ -1163,32 +1163,6 @@
                                         ; between personalities (see
                                         ; `gnus-alias')
 
-;;*** 2.8 (info "(message)Various Commands")
-
-      (defun leuven-gnus-obfuscate-email (username)
-        "Wrapper for email address obfuscation."
-        (apply 'leuven-mail-obfuscate-address
-               (list username
-                     (cond ((string-equal leuven-system "slac")
-                            "generic@slac.stanford.edu")
-                           ((string-equal leuven-system "gnu")
-                            "generic@gnu.org")
-                           (t
-                            "generic@ast.cam.ac.uk")))))
-
-      (when (require 'gnushush nil t)
-
-        ;; Note headers with total length > 76 chars get folded by
-        ;; rfc2047-fold-region, called from mail-encode-encoded-word-buffer,
-        ;; called from message-send-mail.
-        (setq gnushush-enable-p t
-              ;; Shows up in the headers, so may as well use it.
-              gnushush-fqdn (system-name)
-              gnushush-uid 'random
-              gnushush-sender-header 'none
-              gnushush-user-agent-header
-              "Gnus (www.gnus.org), GNU Emacs (www.gnu.org/software/emacs/)"))
-
 ;;*** 2.11 (info "(message)Spelling")
 
      (defun leuven-message-setup-routine ()
@@ -1212,7 +1186,7 @@
 
 ;;*** 3.4 (info "(message)News Headers")
 
-      ;; masquerade domain part of message-Ids
+      ;; masquerade domain part of Message-ID
       (setq message-user-fqdn "example.com") ; (system-name)
 
       ;; tell Gnus not to generate a sender header on outgoing posts
@@ -1454,13 +1428,13 @@
             (concat gnus-directory ".nnmail-cache"))
 
 ;; to use `nnmail-split-fancy-with-parent'
-;; record the message id of every message it sees
+;; record the Message-ID of every message it sees
 (setq nnmail-treat-duplicates 'warn)     ; or `delete'
 
-;; ensure that the message ids are still in the cache
+;; ensure that the Message-ID are still in the cache
 (setq nnmail-message-id-cache-length 5000)
 
-;; record the message ids of moved articles
+;; record the Message-ID of moved articles
 (setq nnmail-cache-accepted-message-ids t)
 
 ;;** 6.4 (info "(gnus)Browsing the Web")
@@ -1488,7 +1462,7 @@
                 ;; first try the current method
                 current
 
-                ;; find the message-id based on the registry, so that you can
+                ;; find the Message-ID based on the registry, so that you can
                 ;; safely move articles around
                 ;; (nnregistry)
 

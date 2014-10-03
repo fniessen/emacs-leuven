@@ -447,6 +447,30 @@
 "org-rainbow-delimiters-depth-2">)</span>
 </pre>
         </div>
+
+        <div class="note">
+          <p>Richard Stallman &lt;rms@gnu.org&gt; writes:</p>
+
+          <p>&gt; <a href=
+          "http://www.theguardian.com/technology/2014/sep/29/londoners-wi-fi-security-herod-clause">
+          http://www.theguardian.com/technology/2014/sep/29/londoners-wi-fi-security-herod-clause</a>
+          &gt; &gt; says that POP3 passwords are sometimes transmitted in plain
+          text. &gt; &gt; Is plaintext transmission of passwords inherent in
+          POP3 &gt; or is it optional?</p>
+
+          <p>Modern pop3 servers support STARTTLS, and Emacs will upgrade to a
+          TLS connection whenever the server supports it. (If you have an Emacs
+          compiled with gnutls support, but I would guess that almost all Emacs
+          instances has that.)</p>
+
+          <p>Virtually all the Emacs network transports that I know of will
+          upgrade to TLS opportunistically, if the servers allow it, so Emacs
+          should send no passwords unencrypted.</p>
+
+          <p>The only exceptions are HTTP and IRC, unless the latter has been
+          fixed lately. And there are hopefully nobody who does a login that
+          matters over HTTP.</p>
+        </div>
       </div>
 
       <div id="outline-container-sec-2-1" class="outline-3">
@@ -3780,70 +3804,14 @@
 "org-comment-delimiter">; </span><span class="org-comment">`</span><span class=
 "org-constant"><span class="org-comment">gnus-alias</span></span><span class=
 "org-comment">')</span>
+</pre>
+          </div>
 
-<span class="org-comment-delimiter">;;</span><span class=
-"org-comment">*** 2.8 (info "(message)Various Commands")</span>
+          <p>XXX Look at Gnushush to automatically <b>obfuscate email</b>,
+          Message-ID, etc.</p>
 
-      <span class="org-rainbow-delimiters-depth-1">(</span><span class=
-"org-keyword">defun</span> <span class=
-"org-function-name">leuven-gnus-obfuscate-email</span> <span class=
-"org-rainbow-delimiters-depth-2">(</span>username<span class=
-"org-rainbow-delimiters-depth-2">)</span>
-        <span class="org-doc">"Wrapper for email address obfuscation."</span>
-        <span class=
-"org-rainbow-delimiters-depth-2">(</span>apply 'leuven-mail-obfuscate-address
-               <span class=
-"org-rainbow-delimiters-depth-3">(</span>list username
-                     <span class=
-"org-rainbow-delimiters-depth-4">(</span><span class=
-"org-keyword">cond</span> <span class=
-"org-rainbow-delimiters-depth-5">(</span><span class=
-"org-rainbow-delimiters-depth-6">(</span>string-equal leuven-system <span class="org-string">"slac"</span><span class="org-rainbow-delimiters-depth-6">)</span>
-                            <span class=
-"org-string">"generic@slac.stanford.edu"</span><span class=
-"org-rainbow-delimiters-depth-5">)</span>
-                           <span class=
-"org-rainbow-delimiters-depth-5">(</span><span class=
-"org-rainbow-delimiters-depth-6">(</span>string-equal leuven-system <span class="org-string">"gnu"</span><span class="org-rainbow-delimiters-depth-6">)</span>
-                            <span class=
-"org-string">"generic@gnu.org"</span><span class=
-"org-rainbow-delimiters-depth-5">)</span>
-                           <span class=
-"org-rainbow-delimiters-depth-5">(</span>t
-                            <span class=
-"org-string">"generic@ast.cam.ac.uk"</span><span class=
-"org-rainbow-delimiters-depth-5">)</span><span class=
-"org-rainbow-delimiters-depth-4">)</span><span class=
-"org-rainbow-delimiters-depth-3">)</span><span class=
-"org-rainbow-delimiters-depth-2">)</span><span class=
-"org-rainbow-delimiters-depth-1">)</span>
-
-      <span class="org-rainbow-delimiters-depth-1">(</span><span class=
-"org-keyword">when</span> <span class=
-"org-rainbow-delimiters-depth-2">(</span><span class=
-"org-keyword">require</span> '<span class=
-"org-constant">gnushush</span> nil t<span class=
-"org-rainbow-delimiters-depth-2">)</span>
-
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Note headers with total length &gt; 76 chars get folded by</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">rfc2047-fold-region, called from mail-encode-encoded-word-buffer,</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">called from message-send-mail.</span>
-        <span class=
-"org-rainbow-delimiters-depth-2">(</span>setq gnushush-enable-p t
-              <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Shows up in the headers, so may as well use it.</span>
-              gnushush-fqdn <span class=
-"org-rainbow-delimiters-depth-3">(</span>system-name<span class=
-"org-rainbow-delimiters-depth-3">)</span>
-              gnushush-uid 'random
-              gnushush-sender-header 'none
-              gnushush-user-agent-header
-              <span class=
-"org-string">"Gnus (www.gnus.org), GNU Emacs (www.gnu.org/software/emacs/)"</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">*** 2.11 (info "(message)Spelling")</span>
 
@@ -3900,7 +3868,7 @@
 "org-comment">*** 3.4 (info "(message)News Headers")</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">masquerade domain part of message-Ids</span>
+"org-comment">masquerade domain part of Message-ID</span>
       <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq message-user-fqdn <span class=
 "org-string">"example.com"</span><span class=
@@ -4446,17 +4414,17 @@
 "org-comment">nnmail-split-fancy-with-parent</span></span><span class=
 "org-comment">'</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">record the message id of every message it sees</span>
+"org-comment">record the Message-ID of every message it sees</span>
 <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq nnmail-treat-duplicates 'warn<span class="org-rainbow-delimiters-depth-1">)</span>     <span class="org-comment-delimiter">; </span><span class="org-comment">or `</span><span class="org-constant"><span class="org-comment">delete</span></span><span class="org-comment">'</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">ensure that the message ids are still in the cache</span>
+"org-comment">ensure that the Message-ID are still in the cache</span>
 <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq nnmail-message-id-cache-length 5000<span class="org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">record the message ids of moved articles</span>
+"org-comment">record the Message-ID of moved articles</span>
 <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq nnmail-cache-accepted-message-ids t<span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
@@ -4529,7 +4497,7 @@
                 current
 
                 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">find the message-id based on the registry, so that you can</span>
+"org-comment">find the Message-ID based on the registry, so that you can</span>
                 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">safely move articles around</span>
                 <span class="org-comment-delimiter">;; </span><span class=
