@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141002.1106
+;; Version: 20141003.1131
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141002.1106]--")
+(message "* --[ Loading Emacs Leuven 20141003.1131]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -4934,7 +4934,7 @@ this with to-do items than with projects or headings."
   (setq org-highlight-latex-and-related '(latex script entities))
 
   ;; show entities as UTF8 characters
-  (setq org-pretty-entities t)
+  (setq org-pretty-entities t)          ; emsp, etc.
 
   ;; ;; pretty entity display doesn't include formatting sub/superscripts
   ;; (setq org-pretty-entities-include-sub-superscripts nil)
@@ -5887,6 +5887,9 @@ this with to-do items than with projects or headings."
                                           ; modifications of the buffer
           (org-align-all-tags)
           (org-update-all-dblocks)
+          (org-table-map-tables (lambda () (org-table-align)) t)
+                                        ; TEMP(Because of bug with pretty entity
+                                        ; emsp)
           (org-table-iterate-buffer-tables)
           (when (file-exists-p (buffer-file-name (current-buffer)))
             (leuven-org-remove-redundant-tags))
@@ -9212,11 +9215,11 @@ a clean buffer we're an order of magnitude laxer about checking."
       (cd leuven--directory)
       (if (not (= (shell-command "git pull | grep \"Already up-to-date.\"") 0))
           (progn
-            (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
+            ;; (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20141002.1107]--")
+(message "* --[ Loaded Emacs Leuven 20141003.1132]--")
 
 (provide 'emacs-leuven)
 

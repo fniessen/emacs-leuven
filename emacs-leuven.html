@@ -1328,7 +1328,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141002.1109</span>
+"org-comment">Version: 20141003.1134</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1451,7 +1451,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141002.1109]--"</span><span class=
+"org-string">"* --[ Loading Emacs Leuven 20141003.1134]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
@@ -7428,6 +7428,25 @@
 "org-rainbow-delimiters-depth-2">(</span>add-to-list 'flyspell-prog-text-faces 'nxml-text-face<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span><span class="org-rainbow-delimiters-unmatched">)</span>
 </pre>
           </div>
+
+          <p>I need often bilingual dictionaries like the excellent leo.org and
+          dict.cc; dict.el with the dict servers is not really an option. At
+          the moment I’m using mostly my mobile phone as portable dictionary
+          but I’d rather want do this within Emacs.</p>
+
+          <p>There seem to be at least 3 solutions:</p>
+
+          <ul class="org-ul">
+            <li>x-dict.el, <a href=
+            "http://www.xsteve.at/prg/python/">http://www.xsteve.at/prg/python/</a></li>
+
+            <li>r-dict.el, <a href=
+            "https://github.com/tsdh/rdictcc">https://github.com/tsdh/rdictcc</a></li>
+
+            <li>eww, but leo.org and dict.cc are barely readable in eww</li>
+          </ul>
+
+          <p>What is working for you?</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -19344,7 +19363,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">show entities as UTF8 characters</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq org-pretty-entities t<span class=
-"org-rainbow-delimiters-depth-1">)</span>
+"org-rainbow-delimiters-depth-1">)</span>          <span class=
+"org-comment-delimiter">; </span><span class="org-comment">emsp, etc.</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; pretty entity display doesn't include formatting sub/superscripts</span>
@@ -22882,6 +22902,20 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
           <span class=
 "org-rainbow-delimiters-depth-5">(</span>org-update-all-dblocks<span class=
 "org-rainbow-delimiters-depth-5">)</span>
+          <span class=
+"org-rainbow-delimiters-depth-5">(</span>org-table-map-tables <span class=
+"org-rainbow-delimiters-depth-6">(</span><span class=
+"org-keyword">lambda</span> <span class=
+"org-rainbow-delimiters-depth-7">()</span> <span class=
+"org-rainbow-delimiters-depth-7">(</span>org-table-align<span class=
+"org-rainbow-delimiters-depth-7">)</span><span class=
+"org-rainbow-delimiters-depth-6">)</span> t<span class=
+"org-rainbow-delimiters-depth-5">)</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">TEMP(Because of bug with pretty entity</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">emsp)</span>
           <span class=
 "org-rainbow-delimiters-depth-5">(</span>org-table-iterate-buffer-tables<span class="org-rainbow-delimiters-depth-5">)</span>
           <span class="org-rainbow-delimiters-depth-5">(</span><span class=
@@ -36169,12 +36203,8 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-rainbow-delimiters-depth-4">)</span>
           <span class="org-rainbow-delimiters-depth-4">(</span><span class=
 "org-keyword">progn</span>
-            <span class=
-"org-rainbow-delimiters-depth-5">(</span>byte-recompile-file <span class=
-"org-rainbow-delimiters-depth-6">(</span>concat leuven--directory <span class=
-"org-string">"emacs-leuven.el"</span><span class=
-"org-rainbow-delimiters-depth-6">)</span> nil 0<span class=
-"org-rainbow-delimiters-depth-5">)</span>
+            <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)</span>
             <span class=
 "org-rainbow-delimiters-depth-5">(</span>message <span class=
 "org-string">"Configuration updated. Restart Emacs to complete the process."</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span>
@@ -36191,7 +36221,7 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141002.1110]--"</span><span class=
+"org-string">"* --[ Loaded Emacs Leuven 20141003.1134]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=

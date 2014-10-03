@@ -2597,6 +2597,19 @@ of possible corrections for misspelled word before point.
      (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)))
 #+end_src
 
+I need often bilingual dictionaries like the excellent leo.org and dict.cc;
+dict.el with the dict servers is not really an option.  At the moment I'm using
+mostly my mobile phone as portable dictionary but I'd rather want do this within
+Emacs.
+
+There seem to be at least 3 solutions:
+
+- x-dict.el, http://www.xsteve.at/prg/python/
+- r-dict.el, https://github.com/tsdh/rdictcc
+- eww, but leo.org and dict.cc are barely readable in eww
+
+What is working for you?
+
 #+begin_src emacs-lisp
   ;; client for rfc2229 dictionary servers
   (try-require "dictionary-autoloads")
@@ -7627,7 +7640,7 @@ To list all available entities, run ~M-x org-entities-help~.
   (setq org-highlight-latex-and-related '(latex script entities))
 
   ;; show entities as UTF8 characters
-  (setq org-pretty-entities t)
+  (setq org-pretty-entities t)          ; emsp, etc.
 
   ;; ;; pretty entity display doesn't include formatting sub/superscripts
   ;; (setq org-pretty-entities-include-sub-superscripts nil)
@@ -9017,6 +9030,9 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
                                           ; modifications of the buffer
           (org-align-all-tags)
           (org-update-all-dblocks)
+          (org-table-map-tables (lambda () (org-table-align)) t)
+                                        ; TEMP(Because of bug with pretty entity
+                                        ; emsp)
           (org-table-iterate-buffer-tables)
           (when (file-exists-p (buffer-file-name (current-buffer)))
             (leuven-org-remove-redundant-tags))
@@ -14944,7 +14960,7 @@ calls to message), set the variable ~debug-on-message~.
       (cd leuven--directory)
       (if (not (= (shell-command "git pull | grep \"Already up-to-date.\"") 0))
           (progn
-            (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
+            ;; (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 #+end_src
