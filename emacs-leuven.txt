@@ -1715,8 +1715,11 @@ point, the highlighting goes away.
     ;; add R
     (add-to-list 'ahs-modes 'ess-mode t)
 
-    ;; toggle Auto-Highlight-Symbol mode in all buffers
-    (global-auto-highlight-symbol-mode t))
+    ;; ;; toggle Auto-Highlight-Symbol mode in all buffers
+    ;; (global-auto-highlight-symbol-mode t)
+
+    ;; toggle Auto-Highlight-Symbol mode in all programming mode buffers
+    (add-hook 'prog-mode-hook 'auto-highlight-symbol-mode))
 #+end_src
 
 XXX Check out ~light-symbol~.
@@ -3595,9 +3598,6 @@ XXX Helm is also very useful to look up Elisp variable/function documentation
 and for finding stuff in the Info Manuals (e.g. helm-info-elisp or
 helm-info-emacs).
 
-I use Helm M-x and also the separate Helm Descbinds (C-h b) to get a quick key
-bindings overview.
-
 XXX Look at helm-dictionary.
 
 #+begin_src emacs-lisp
@@ -3649,9 +3649,13 @@ XXX Look at helm-dictionary.
 ;; (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
 ;; (global-set-key (kbd "C-h C--") 'helm-google)
 ;; (global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)
+#+end_src
 
+Use the separate Helm Descbinds to get a quick *key bindings* overview.  It will
+make your life much easier with million Emacs keys.
+
+#+begin_src emacs-lisp
       (global-set-key (kbd "C-h b") 'helm-descbinds)
-
     )
 #+end_src
 
@@ -3697,7 +3701,7 @@ XXX Look at helm-dictionary.
 
       ;; time that the user has to be idle for, before ALL candidates are
       ;; collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.05) ; also effective for NON-DELAYED sources
+      (setq helm-input-idle-delay 0.06) ; also effective for NON-DELAYED sources
 
       ;; ;; enable adaptive sorting in all sources
       ;; (helm-adaptive-mode 1)
@@ -9987,7 +9991,7 @@ many programming modes.
   (with-eval-after-load "hideshow"
 
     ;; change those really awkward key bindings with `@' in the middle
-    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") 'hs-hide-block) ; or H-left?
+    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") 'hs-hide-block) ; or H-left? or C-c left?
                                         ; `C-c @ C-h' (collapse current fold) M-l in RStudio
     (define-key hs-minor-mode-map (kbd "<C-M-S-right>") 'hs-show-block)
                                         ; `C-c @ C-s' (expand current fold) M-S-l
@@ -14168,6 +14172,9 @@ printing on Windows.
 )
 #+end_src
 
+Switch between different translation directions directly from minibuffer by
+using ~C-n~ and ~C-p~ key bindings.
+
 #+begin_src emacs-lisp
   ;; Emacs interface to Google Translate
   (with-eval-after-load "google-translate-autoloads"
@@ -14175,6 +14182,7 @@ printing on Windows.
     ;; translate a text using translation directions
     (global-set-key "\C-ct" 'google-translate-smooth-translate))
 
+  ;; just another UI to Google
   (with-eval-after-load "google-translate-smooth-ui"
 
     ;; translation directions
@@ -14183,6 +14191,8 @@ printing on Windows.
             ("fr" . "nl") ("nl" . "fr")
             ("fr" . "es") ("es" . "fr"))))
 #+end_src
+
+fniessen
 
 * Other Amusements
 

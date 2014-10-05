@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141003.1249
+;; Version: 20141005.2053
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141003.1249]--")
+(message "* --[ Loading Emacs Leuven 20141005.2053]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1065,8 +1065,11 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; add R
     (add-to-list 'ahs-modes 'ess-mode t)
 
-    ;; toggle Auto-Highlight-Symbol mode in all buffers
-    (global-auto-highlight-symbol-mode t))
+    ;; ;; toggle Auto-Highlight-Symbol mode in all buffers
+    ;; (global-auto-highlight-symbol-mode t)
+
+    ;; toggle Auto-Highlight-Symbol mode in all programming mode buffers
+    (add-hook 'prog-mode-hook 'auto-highlight-symbol-mode))
 
   (with-eval-after-load "color-identifiers-mode-autoloads"
 
@@ -2193,7 +2196,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 ;; (global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)
 
       (global-set-key (kbd "C-h b") 'helm-descbinds)
-
     )
 
     (with-eval-after-load "helm"
@@ -2237,7 +2239,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       ;; time that the user has to be idle for, before ALL candidates are
       ;; collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.05) ; also effective for NON-DELAYED sources
+      (setq helm-input-idle-delay 0.06) ; also effective for NON-DELAYED sources
 
       ;; ;; enable adaptive sorting in all sources
       ;; (helm-adaptive-mode 1)
@@ -6434,7 +6436,7 @@ mouse-3: go to end") "]"))))
   (with-eval-after-load "hideshow"
 
     ;; change those really awkward key bindings with `@' in the middle
-    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") 'hs-hide-block) ; or H-left?
+    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") 'hs-hide-block) ; or H-left? or C-c left?
                                         ; `C-c @ C-h' (collapse current fold) M-l in RStudio
     (define-key hs-minor-mode-map (kbd "<C-M-S-right>") 'hs-show-block)
                                         ; `C-c @ C-s' (expand current fold) M-S-l
@@ -8886,6 +8888,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; translate a text using translation directions
     (global-set-key "\C-ct" 'google-translate-smooth-translate))
 
+  ;; just another UI to Google
   (with-eval-after-load "google-translate-smooth-ui"
 
     ;; translation directions
@@ -9227,7 +9230,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20141003.1250]--")
+(message "* --[ Loaded Emacs Leuven 20141005.2054]--")
 
 (provide 'emacs-leuven)
 

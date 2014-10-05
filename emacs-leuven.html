@@ -1328,7 +1328,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141003.1252</span>
+"org-comment">Version: 20141005.2056</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1451,7 +1451,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141003.1252]--"</span><span class=
+"org-string">"* --[ Loading Emacs Leuven 20141005.2057]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
@@ -5306,9 +5306,14 @@
 "org-rainbow-delimiters-depth-2">(</span>add-to-list 'ahs-modes 'ess-mode t<span class="org-rainbow-delimiters-depth-2">)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">toggle Auto-Highlight-Symbol mode in all buffers</span>
+"org-comment">;; toggle Auto-Highlight-Symbol mode in all buffers</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-auto-highlight-symbol-mode t)</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">toggle Auto-Highlight-Symbol mode in all programming mode buffers</span>
     <span class=
-"org-rainbow-delimiters-depth-2">(</span>global-auto-highlight-symbol-mode t<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
+"org-rainbow-delimiters-depth-2">(</span>add-hook 'prog-mode-hook 'auto-highlight-symbol-mode<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
           </div>
 
@@ -9478,9 +9483,6 @@ M-: (executable-find "diff") RET
             documentation and for finding stuff in the Info Manuals (e.g.
             helm-info-elisp or helm-info-emacs).</p>
 
-            <p>I use Helm M-x and also the separate Helm Descbinds (C-h b) to
-            get a quick key bindings overview.</p>
-
             <p>XXX Look at helm-dictionary.</p>
 
             <div class="org-src-container">
@@ -9616,15 +9618,22 @@ M-: (executable-find "diff") RET
 "org-comment">(global-set-key (kbd "C-h C--") 'helm-google)</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)</span>
+</pre>
+            </div>
 
+            <p>Use the separate Helm Descbinds to get a quick <b>key
+            bindings</b> overview. It will make your life much easier with
+            million Emacs keys.</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
       <span class=
-"org-rainbow-delimiters-depth-3">(</span>global-set-key <span class=
-"org-rainbow-delimiters-depth-4">(</span>kbd <span class=
+"org-rainbow-delimiters-depth-1">(</span>global-set-key <span class=
+"org-rainbow-delimiters-depth-2">(</span>kbd <span class=
 "org-string">"C-h b"</span><span class=
-"org-rainbow-delimiters-depth-4">)</span> 'helm-descbinds<span class=
-"org-rainbow-delimiters-depth-3">)</span>
-
-    <span class="org-rainbow-delimiters-depth-2">)</span>
+"org-rainbow-delimiters-depth-2">)</span> 'helm-descbinds<span class=
+"org-rainbow-delimiters-depth-1">)</span>
+    <span class="org-rainbow-delimiters-unmatched">)</span>
 </pre>
             </div>
 
@@ -9725,7 +9734,7 @@ M-: (executable-find "diff") RET
 "org-comment">collected (&gt;= `</span><span class="org-constant"><span class=
 "org-comment">helm-idle-delay</span></span><span class="org-comment">')</span>
       <span class=
-"org-rainbow-delimiters-depth-2">(</span>setq helm-input-idle-delay 0.05<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-comment-delimiter">; </span><span class="org-comment">also effective for NON-DELAYED sources</span>
+"org-rainbow-delimiters-depth-2">(</span>setq helm-input-idle-delay 0.06<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-comment-delimiter">; </span><span class="org-comment">also effective for NON-DELAYED sources</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; enable adaptive sorting in all sources</span>
@@ -25038,7 +25047,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">change those really awkward key bindings with `@' in the middle</span>
     <span class=
-"org-rainbow-delimiters-depth-2">(</span>define-key hs-minor-mode-map <span class="org-rainbow-delimiters-depth-3">(</span>kbd <span class="org-string">"&lt;C-M-S-left&gt;"</span><span class="org-rainbow-delimiters-depth-3">)</span> 'hs-hide-block<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-comment-delimiter">; </span><span class="org-comment">or H-left?</span>
+"org-rainbow-delimiters-depth-2">(</span>define-key hs-minor-mode-map <span class="org-rainbow-delimiters-depth-3">(</span>kbd <span class="org-string">"&lt;C-M-S-left&gt;"</span><span class="org-rainbow-delimiters-depth-3">)</span> 'hs-hide-block<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-comment-delimiter">; </span><span class="org-comment">or H-left? or C-c left?</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">`C-c @ C-h' (collapse current fold) M-l in RStudio</span>
@@ -34395,6 +34404,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 </pre>
           </div>
 
+          <p>Switch between different translation directions directly from
+          minibuffer by using <code>C-n</code> and <code>C-p</code> key
+          bindings.</p>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
@@ -34411,6 +34424,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-rainbow-delimiters-depth-2">)</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">just another UI to Google</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"google-translate-smooth-ui"</span>
@@ -34443,6 +34458,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-rainbow-delimiters-depth-1">)</span>
 </pre>
           </div>
+
+          <p>fniessen</p>
         </div>
       </div>
     </div>
@@ -36250,7 +36267,7 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141003.1253]--"</span><span class=
+"org-string">"* --[ Loaded Emacs Leuven 20141005.2057]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=
