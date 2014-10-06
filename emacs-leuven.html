@@ -1361,7 +1361,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141006.1238</span>
+"org-comment">Version: 20141006.2323</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1484,7 +1484,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141006.1238]--"</span><span class=
+"org-string">"* --[ Loading Emacs Leuven 20141006.2323]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
@@ -5345,9 +5345,14 @@
 "org-comment">(global-auto-highlight-symbol-mode t)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">toggle Auto-Highlight-Symbol mode in all programming mode buffers</span>
-    <span class=
-"org-rainbow-delimiters-depth-2">(</span>add-hook 'prog-mode-hook 'auto-highlight-symbol-mode<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
+"org-comment">;; toggle Auto-Highlight-Symbol mode in all programming mode buffers</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(add-hook 'prog-mode-hook 'auto-highlight-symbol-mode)</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
+"org-comment"> Add key-chord ** to enable it on demand?</span>
+    <span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
           </div>
 
@@ -12960,8 +12965,12 @@ M-: (executable-find "diff") RET
 "org-string">"key-chord-autoloads"</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>key-chord-mode 1<span class=
-"org-rainbow-delimiters-depth-2">)</span>
+"org-rainbow-delimiters-depth-2">)</span><span class=
+"org-rainbow-delimiters-depth-1">)</span>
 
+  <span class="org-rainbow-delimiters-depth-1">(</span><span class=
+"org-keyword">with-eval-after-load</span> <span class=
+"org-string">"key-chord"</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
 "org-string">"&lt;&lt;"</span> <span class=
@@ -12990,20 +12999,15 @@ M-: (executable-find "diff") RET
 "org-rainbow-delimiters-depth-2">)</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
-"org-string">"hh"</span> 'fill-paragraph<span class=
+"org-string">"jj"</span> 'ace-jump-word-mode<span class=
 "org-rainbow-delimiters-depth-2">)</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
-"org-string">"''"</span> <span class="org-string">"`'\C-b"</span><span class=
+"org-string">"jl"</span> 'ace-jump-line-mode<span class=
 "org-rainbow-delimiters-depth-2">)</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
-"org-string">"dq"</span> <span class="org-string">"\"\"\C-b"</span><span class=
-"org-rainbow-delimiters-depth-2">)</span>
-
-    <span class=
-"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
-"org-string">"uu"</span> 'undo<span class=
+"org-string">"uu"</span> 'undo-tree-visualize<span class=
 "org-rainbow-delimiters-depth-2">)</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
@@ -13011,17 +13015,115 @@ M-: (executable-find "diff") RET
 "org-rainbow-delimiters-depth-2">)</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
-"org-string">"jj"</span> 'ace-jump-word-mode<span class=
+"org-string">"xk"</span> 'kill-buffer<span class=
 "org-rainbow-delimiters-depth-2">)</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">"xx"</span> 'helm-M-x<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">"zz"</span> 'zap-to-char<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">";c"</span> 'org-capture<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">";a"</span> 'org-agenda<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "ac" 'align-current)</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "fc" 'flycheck-mode)</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "fv" (lambda () (interactive) (kill-buffer (buffer-name))))</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "sv" 'save-buffer)</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "M-2") 'highlight-symbol-occur)</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "M-3") (lambda () (interactive) (highlight-symbol-jump -1)))</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(global-set-key (kbd "M-4") (lambda () (interactive) (highlight-symbol-jump 1)))</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "vg" 'vc-git-grep)</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "''" "`'\C-b")</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">"dq"</span> <span class="org-string">"\"\"\C-b"</span><span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">"hh"</span> 'fill-paragraph<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-rainbow-delimiters-depth-2">(</span><span class=
+"org-keyword">when</span> <span class=
+"org-rainbow-delimiters-depth-3">(</span><span class=
+"org-keyword">featurep</span> '<span class=
+"org-constant">ace-window</span><span class=
+"org-rainbow-delimiters-depth-3">)</span> <span class=
+"org-rainbow-delimiters-depth-3">(</span>key-chord-define-global <span class=
 "org-string">"jw"</span> 'ace-window<span class=
+"org-rainbow-delimiters-depth-3">)</span><span class=
 "org-rainbow-delimiters-depth-2">)</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
-"org-string">"jl"</span> 'ace-jump-line-mode<span class=
-"org-rainbow-delimiters-depth-2">)</span><span class=
-"org-rainbow-delimiters-depth-1">)</span>
+"org-string">";d"</span> 'dired-jump-other-window<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define hs-minor-mode-map <span class="org-string">"',"</span> 'hs-hide-block<span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define hs-minor-mode-map <span class="org-string">"'."</span> 'hs-show-block<span class="org-rainbow-delimiters-depth-2">)</span>
+
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">"jj"</span> 'dabbrev-expand<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">"jk"</span>     'dabbrev-expand<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">"JJ"</span> 'find-tag<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">"BB"</span> 'ido-switch-buffer<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">"FF"</span> 'ido-find-file<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">"##"</span> 'server-edit<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">"VV"</span> 'other-window<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">",."</span>     <span class=
+"org-string">"&lt;&gt;\C-b"</span><span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">"''"</span>     <span class=
+"org-string">"`'\C-b"</span><span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>key-chord-define-global <span class=
+"org-string">",,"</span>     'indent-for-comment<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
           </div>
         </div>
@@ -36378,35 +36480,39 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-rainbow-delimiters-depth-3">(</span>cd leuven--directory<span class=
 "org-rainbow-delimiters-depth-3">)</span>
       <span class="org-rainbow-delimiters-depth-3">(</span><span class=
-"org-keyword">if</span> <span class=
-"org-rainbow-delimiters-depth-4">(</span>not <span class=
-"org-rainbow-delimiters-depth-5">(</span>= <span class=
-"org-rainbow-delimiters-depth-6">(</span>shell-command <span class=
-"org-string">"git pull | grep \"Already up-to-date.\""</span><span class=
-"org-rainbow-delimiters-depth-6">)</span> 0<span class=
+"org-keyword">let</span> <span class=
+"org-rainbow-delimiters-depth-4">(</span><span class=
+"org-rainbow-delimiters-depth-5">(</span>ret <span class=
+"org-rainbow-delimiters-depth-6">(</span>shell-command-to-string <span class=
+"org-string">"git pull"</span><span class=
+"org-rainbow-delimiters-depth-6">)</span><span class=
 "org-rainbow-delimiters-depth-5">)</span><span class=
 "org-rainbow-delimiters-depth-4">)</span>
-          <span class="org-rainbow-delimiters-depth-4">(</span><span class=
-"org-keyword">progn</span>
-            <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)</span>
+        <span class="org-rainbow-delimiters-depth-4">(</span><span class=
+"org-keyword">if</span> <span class=
+"org-rainbow-delimiters-depth-5">(</span>string-match <span class=
+"org-string">"Already up-to-date."</span> ret<span class=
+"org-rainbow-delimiters-depth-5">)</span>
             <span class=
 "org-rainbow-delimiters-depth-5">(</span>message <span class=
-"org-string">"Configuration updated. Restart Emacs to complete the process."</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span>
-        <span class=
-"org-rainbow-delimiters-depth-4">(</span>message <span class=
 "org-string">"Configuration already up-to-date."</span><span class=
-"org-rainbow-delimiters-depth-4">)</span><span class=
-"org-rainbow-delimiters-depth-3">)</span><span class=
-"org-rainbow-delimiters-depth-2">)</span><span class=
-"org-rainbow-delimiters-depth-1">)</span>
+"org-rainbow-delimiters-depth-5">)</span>
+          <span class=
+"org-rainbow-delimiters-depth-5">(</span>princ ret<span class=
+"org-rainbow-delimiters-depth-5">)</span>
+          <span class=
+"org-rainbow-delimiters-depth-5">(</span>sit-for 3<span class=
+"org-rainbow-delimiters-depth-5">)</span>
+          <span class=
+"org-rainbow-delimiters-depth-5">(</span>message <span class=
+"org-string">"Configuration updated. Restart Emacs to complete the process."</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
         </div>
 
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141006.1239]--"</span><span class=
+"org-string">"* --[ Loaded Emacs Leuven 20141006.2324]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141006.1235
+;; Version: 20141006.2320
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141006.1235]--")
+(message "* --[ Loading Emacs Leuven 20141006.2320]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -1068,8 +1068,11 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; ;; toggle Auto-Highlight-Symbol mode in all buffers
     ;; (global-auto-highlight-symbol-mode t)
 
-    ;; toggle Auto-Highlight-Symbol mode in all programming mode buffers
-    (add-hook 'prog-mode-hook 'auto-highlight-symbol-mode))
+    ;; ;; toggle Auto-Highlight-Symbol mode in all programming mode buffers
+    ;; (add-hook 'prog-mode-hook 'auto-highlight-symbol-mode)
+
+    ;; XXX Add key-chord ** to enable it on demand?
+    )
 
   (with-eval-after-load "color-identifiers-mode-autoloads"
 
@@ -3094,19 +3097,50 @@ Last time is saved in global variable `leuven--before-section-time'."
   (add-hook 'message-mode-hook 'leuven-smart-punctuation)
 
   (with-eval-after-load "key-chord-autoloads"
-    (key-chord-mode 1)
+    (key-chord-mode 1))
 
+  (with-eval-after-load "key-chord"
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
-    (key-chord-define-global "hh" 'fill-paragraph)
-    (key-chord-define-global "''" "`'\C-b")
-    (key-chord-define-global "dq" "\"\"\C-b")
-
-    (key-chord-define-global "uu" 'undo)
-    (key-chord-define-global "yy" 'browse-kill-ring)
     (key-chord-define-global "jj" 'ace-jump-word-mode)
-    (key-chord-define-global "jw" 'ace-window)
-    (key-chord-define-global "jl" 'ace-jump-line-mode))
+    (key-chord-define-global "jl" 'ace-jump-line-mode)
+    (key-chord-define-global "uu" 'undo-tree-visualize)
+    (key-chord-define-global "yy" 'browse-kill-ring)
+    (key-chord-define-global "xk" 'kill-buffer)
+    (key-chord-define-global "xx" 'helm-M-x)
+    (key-chord-define-global "zz" 'zap-to-char)
+
+    (key-chord-define-global ";c" 'org-capture)
+    (key-chord-define-global ";a" 'org-agenda)
+
+    ;; (key-chord-define-global "ac" 'align-current)
+    ;; (key-chord-define-global "fc" 'flycheck-mode)
+    ;; (key-chord-define-global "fv" (lambda () (interactive) (kill-buffer (buffer-name))))
+    ;; (key-chord-define-global "sv" 'save-buffer)
+    ;; (global-set-key (kbd "M-2") 'highlight-symbol-occur)
+    ;; (global-set-key (kbd "M-3") (lambda () (interactive) (highlight-symbol-jump -1)))
+    ;; (global-set-key (kbd "M-4") (lambda () (interactive) (highlight-symbol-jump 1)))
+    ;; (key-chord-define-global "vg" 'vc-git-grep)
+
+    ;; (key-chord-define-global "''" "`'\C-b")
+    (key-chord-define-global "dq" "\"\"\C-b")
+    (key-chord-define-global "hh" 'fill-paragraph)
+    (when (featurep 'ace-window) (key-chord-define-global "jw" 'ace-window))
+    (key-chord-define-global ";d" 'dired-jump-other-window)
+    (key-chord-define hs-minor-mode-map "'," 'hs-hide-block)
+    (key-chord-define hs-minor-mode-map "'." 'hs-show-block)
+
+    (key-chord-define-global "jj" 'dabbrev-expand)
+    (key-chord-define-global "jk"     'dabbrev-expand)
+    (key-chord-define-global "JJ" 'find-tag)
+    (key-chord-define-global "BB" 'ido-switch-buffer)
+    (key-chord-define-global "FF" 'ido-find-file)
+    (key-chord-define-global "##" 'server-edit)
+    (key-chord-define-global "VV" 'other-window)
+    (key-chord-define-global ",."     "<>\C-b")
+    (key-chord-define-global "''"     "`'\C-b")
+    (key-chord-define-global ",,"     'indent-for-comment)
+    )
 
 ;;** 25.6 (info "(emacs)Case") Conversion Commands
 
@@ -9245,13 +9279,14 @@ a clean buffer we're an order of magnitude laxer about checking."
     (when (y-or-n-p "Do you want to update Leuven? ")
       (message "Updating Leuven...")
       (cd leuven--directory)
-      (if (not (= (shell-command "git pull | grep \"Already up-to-date.\"") 0))
-          (progn
-            ;; (byte-recompile-file (concat leuven--directory "emacs-leuven.el") nil 0)
-            (message "Configuration updated. Restart Emacs to complete the process."))
-        (message "Configuration already up-to-date."))))
+      (let ((ret (shell-command-to-string "git pull")))
+        (if (string-match "Already up-to-date." ret)
+            (message "Configuration already up-to-date.")
+          (princ ret)
+          (sit-for 3)
+          (message "Configuration updated. Restart Emacs to complete the process.")))))
 
-(message "* --[ Loaded Emacs Leuven 20141006.1236]--")
+(message "* --[ Loaded Emacs Leuven 20141006.2321]--")
 
 (provide 'emacs-leuven)
 
