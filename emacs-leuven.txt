@@ -3631,8 +3631,8 @@ XXX Look at helm-dictionary.
 
       (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
-      ;; buffers only
-      (global-set-key (kbd "C-x b") 'helm-buffers-list) ; or `helm-mini'?
+      ;; buffer list
+      (global-set-key (kbd "C-x b") 'helm-mini) ; = `helm-buffers-list' + recents
 
       (global-set-key (kbd "C-x r l") 'helm-bookmarks)
 
@@ -4938,8 +4938,19 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 
 #+begin_src emacs-lisp
   (with-eval-after-load "key-chord-autoloads"
+    (key-chord-mode 1)
+
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
-    (key-chord-define-global ">>" (lambda () (interactive) (insert "»"))))
+    (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
+    (key-chord-define-global "hh" 'fill-paragraph)
+    (key-chord-define-global "''" "`'\C-b")
+    (key-chord-define-global "dq" "\"\"\C-b")
+
+    (key-chord-define-global "uu" 'undo)
+    (key-chord-define-global "yy" 'browse-kill-ring)
+    (key-chord-define-global "jj" 'ace-jump-word-mode)
+    (key-chord-define-global "jw" 'ace-window)
+    (key-chord-define-global "jl" 'ace-jump-line-mode))
 #+end_src
 
 ** Case Conversion Commands

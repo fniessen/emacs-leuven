@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141006.1128
+;; Version: 20141006.1235
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141006.1128]--")
+(message "* --[ Loading Emacs Leuven 20141006.1235]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -2166,8 +2166,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
-      ;; buffers only
-      (global-set-key (kbd "C-x b") 'helm-buffers-list) ; or `helm-mini'?
+      ;; buffer list
+      (global-set-key (kbd "C-x b") 'helm-mini) ; = `helm-buffers-list' + recents
 
       (global-set-key (kbd "C-x r l") 'helm-bookmarks)
 
@@ -3094,8 +3094,19 @@ Last time is saved in global variable `leuven--before-section-time'."
   (add-hook 'message-mode-hook 'leuven-smart-punctuation)
 
   (with-eval-after-load "key-chord-autoloads"
+    (key-chord-mode 1)
+
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
-    (key-chord-define-global ">>" (lambda () (interactive) (insert "»"))))
+    (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
+    (key-chord-define-global "hh" 'fill-paragraph)
+    (key-chord-define-global "''" "`'\C-b")
+    (key-chord-define-global "dq" "\"\"\C-b")
+
+    (key-chord-define-global "uu" 'undo)
+    (key-chord-define-global "yy" 'browse-kill-ring)
+    (key-chord-define-global "jj" 'ace-jump-word-mode)
+    (key-chord-define-global "jw" 'ace-window)
+    (key-chord-define-global "jl" 'ace-jump-line-mode))
 
 ;;** 25.6 (info "(emacs)Case") Conversion Commands
 
@@ -9240,7 +9251,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20141006.1129]--")
+(message "* --[ Loaded Emacs Leuven 20141006.1236]--")
 
 (provide 'emacs-leuven)
 
