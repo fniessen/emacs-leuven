@@ -286,7 +286,7 @@ need to load a single file that define autoloaded functions.
   ;; remember this directory
   (defconst leuven--directory
     (file-name-directory (or load-file-name (buffer-file-name)))
-    "Directory path of Emacs Leuven.")
+    "Directory path of Emacs Leuven installation.")
 
   (leuven-add-to-load-path
    (concat leuven--directory "site-lisp"))
@@ -1908,7 +1908,9 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
   (with-eval-after-load "diminish-autoloads"
     (with-eval-after-load "abbrev"       (diminish 'abbrev-mode " Ab"))
     (with-eval-after-load "checkdoc"     (diminish 'checkdoc-minor-mode " Cd"))
-    (with-eval-after-load "company"      (diminish 'company-mode " Cp"))
+    ;; (with-eval-after-load "company"      (diminish 'company-mode " Cp"))
+                                        ; Company displays the currently used
+                                        ; backend in the mode-line.
     (with-eval-after-load "eldoc"        (diminish 'eldoc-mode))
     (with-eval-after-load "fancy-narrow" (diminish 'fancy-narrow-mode))
     (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC"))
@@ -3506,6 +3508,16 @@ Something not <tab> can be "C-z", "C-<tab>", and "<SPC>.
 (define-key helm-find-files-map (kbd "^")        'helm-find-files-up-one-level)
 #+end_src
 
+#+begin_src emacs-lisp :tangle no
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+(define-key helm-grep-mode-map (kbd "<return>")  'helm-grep-mode-jump-other-window)
+(define-key helm-grep-mode-map (kbd "n")  'helm-grep-mode-jump-other-window-forward)
+(define-key helm-grep-mode-map (kbd "p")  'helm-grep-mode-jump-other-window-backward)
+#+end_src
+
 In helm-find-files, you can alway invoke helm-ff-do-grep with C-s or C-u C-s for
 recursive searching. Probably helm-projectile can replace helm-find-files more
 if it has this feature? I think you can do this by reusing projectile-grep.
@@ -3616,10 +3628,11 @@ XXX Look at helm-dictionary.
       (global-set-key (kbd "M-x") 'helm-M-x)
 
       (global-set-key (kbd "<f3>") 'helm-for-files)
-                                        ; better than `helm-find-files'
+
+      (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
       ;; buffers only
-      (global-set-key (kbd "C-x b") 'helm-buffers-list)
+      (global-set-key (kbd "C-x b") 'helm-buffers-list) ; or `helm-mini'?
 
       (global-set-key (kbd "C-x r l") 'helm-bookmarks)
 
@@ -3718,7 +3731,14 @@ make your life much easier with million Emacs keys.
     (with-eval-after-load "helm-files"
 
       ;; don't show only basename of candidates in `helm-find-files'
-      (setq helm-ff-transformer-show-only-basename nil))
+      (setq helm-ff-transformer-show-only-basename nil)
+
+      ;; search for library in `require' and `declare-function' sexp
+      (setq helm-ff-search-library-in-sexp t)
+
+      ;; ;; use `recentf-list' instead of `file-name-history' in `helm-find-files'
+      ;; (setq helm-ff-file-name-history-use-recentf t)
+      )
 #+end_src
 
 **** Grep
@@ -5441,7 +5461,7 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
     (setq org-ellipsis
           (if (char-displayable-p ?\u25BA) ; this test takes ~ 0.40s hence,
                                            ; wrapped in `with-eval-after-load'
-              " \u25BA"                 ; string (black right-pointing pointer)
+              " \u25BA"                 ; string (black right-pointing pointer) XXX #929490
             'org-ellipsis)))            ; face
 
   ;; <RET> follows links (except in tables, where you must use `C-c C-o')

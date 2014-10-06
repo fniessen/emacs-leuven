@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141005.2053
+;; Version: 20141006.1128
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141005.2053]--")
+(message "* --[ Loading Emacs Leuven 20141006.1128]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -217,7 +217,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; remember this directory
   (defconst leuven--directory
     (file-name-directory (or load-file-name (buffer-file-name)))
-    "Directory path of Emacs Leuven.")
+    "Directory path of Emacs Leuven installation.")
 
   (leuven-add-to-load-path
    (concat leuven--directory "site-lisp"))
@@ -1176,7 +1176,9 @@ Last time is saved in global variable `leuven--before-section-time'."
   (with-eval-after-load "diminish-autoloads"
     (with-eval-after-load "abbrev"       (diminish 'abbrev-mode " Ab"))
     (with-eval-after-load "checkdoc"     (diminish 'checkdoc-minor-mode " Cd"))
-    (with-eval-after-load "company"      (diminish 'company-mode " Cp"))
+    ;; (with-eval-after-load "company"      (diminish 'company-mode " Cp"))
+                                        ; Company displays the currently used
+                                        ; backend in the mode-line.
     (with-eval-after-load "eldoc"        (diminish 'eldoc-mode))
     (with-eval-after-load "fancy-narrow" (diminish 'fancy-narrow-mode))
     (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC"))
@@ -2161,10 +2163,11 @@ Last time is saved in global variable `leuven--before-section-time'."
       (global-set-key (kbd "M-x") 'helm-M-x)
 
       (global-set-key (kbd "<f3>") 'helm-for-files)
-                                        ; better than `helm-find-files'
+
+      (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
       ;; buffers only
-      (global-set-key (kbd "C-x b") 'helm-buffers-list)
+      (global-set-key (kbd "C-x b") 'helm-buffers-list) ; or `helm-mini'?
 
       (global-set-key (kbd "C-x r l") 'helm-bookmarks)
 
@@ -2252,7 +2255,14 @@ Last time is saved in global variable `leuven--before-section-time'."
     (with-eval-after-load "helm-files"
 
       ;; don't show only basename of candidates in `helm-find-files'
-      (setq helm-ff-transformer-show-only-basename nil))
+      (setq helm-ff-transformer-show-only-basename nil)
+
+      ;; search for library in `require' and `declare-function' sexp
+      (setq helm-ff-search-library-in-sexp t)
+
+      ;; ;; use `recentf-list' instead of `file-name-history' in `helm-find-files'
+      ;; (setq helm-ff-file-name-history-use-recentf t)
+      )
 
     (with-eval-after-load "helm-grep"
 
@@ -3389,7 +3399,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (setq org-ellipsis
           (if (char-displayable-p ?\u25BA) ; this test takes ~ 0.40s hence,
                                            ; wrapped in `with-eval-after-load'
-              " \u25BA"                 ; string (black right-pointing pointer)
+              " \u25BA"                 ; string (black right-pointing pointer) XXX #929490
             'org-ellipsis)))            ; face
 
   ;; <RET> follows links (except in tables, where you must use `C-c C-o')
@@ -9230,7 +9240,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration updated. Restart Emacs to complete the process."))
         (message "Configuration already up-to-date."))))
 
-(message "* --[ Loaded Emacs Leuven 20141005.2054]--")
+(message "* --[ Loaded Emacs Leuven 20141006.1129]--")
 
 (provide 'emacs-leuven)
 
