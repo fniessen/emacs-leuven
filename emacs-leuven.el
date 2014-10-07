@@ -3127,8 +3127,9 @@ Last time is saved in global variable `leuven--before-section-time'."
     (key-chord-define-global "hh" 'fill-paragraph)
     (when (featurep 'ace-window) (key-chord-define-global "jw" 'ace-window))
     (key-chord-define-global ";d" 'dired-jump-other-window)
-    (key-chord-define hs-minor-mode-map "'," 'hs-hide-block)
-    (key-chord-define hs-minor-mode-map "'." 'hs-show-block)
+    (with-eval-after-load "hideshow"
+      (key-chord-define hs-minor-mode-map "'," 'hs-hide-block)
+      (key-chord-define hs-minor-mode-map "'." 'hs-show-block))
 
     (key-chord-define-global "jj" 'dabbrev-expand)
     (key-chord-define-global "jk"     'dabbrev-expand)
