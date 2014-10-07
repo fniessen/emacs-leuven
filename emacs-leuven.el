@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141006.2320
+;; Version: 20141007.2132
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141006.2320]--")
+(message "* --[ Loading Emacs Leuven 20141007.2132]--")
 
 ;; turn on Common Lisp support
 (eval-when-compile (require 'cl))       ; provide useful things like `setf'
@@ -412,7 +412,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           helm-descbinds helm-swoop highlight-symbol htmlize key-chord litable
           idle-require imenu-anywhere info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          redo+ spray tidy tomatinho unbound undo-tree w3m yasnippet
+          spray tidy tomatinho unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -534,13 +534,11 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; undo some previous changes
   (global-set-key (kbd "<f11>") 'undo)
 
-  ;; ;; redo the most recent undo
-  ;; (with-eval-after-load "redo+-autoloads"
-  ;;   (global-set-key (kbd "<S-f11>") 'redo))
-
   (with-eval-after-load "undo-tree-autoloads"
 
-    (global-set-key (kbd "<S-f11>") 'undo-tree-visualize)
+    (defalias 'redo 'undo-tree-redo)
+
+    (global-set-key (kbd "<S-f11>") 'redo)
 
     ;; enable Global-Undo-Tree mode
     (global-undo-tree-mode 1)
@@ -3131,16 +3129,15 @@ Last time is saved in global variable `leuven--before-section-time'."
       (key-chord-define hs-minor-mode-map "'," 'hs-hide-block)
       (key-chord-define hs-minor-mode-map "'." 'hs-show-block))
 
-    (key-chord-define-global "jj" 'dabbrev-expand)
-    (key-chord-define-global "jk"     'dabbrev-expand)
+    (key-chord-define-global "jk" 'dabbrev-expand)
     (key-chord-define-global "JJ" 'find-tag)
     (key-chord-define-global "BB" 'ido-switch-buffer)
     (key-chord-define-global "FF" 'ido-find-file)
     (key-chord-define-global "##" 'server-edit)
     (key-chord-define-global "VV" 'other-window)
-    (key-chord-define-global ",."     "<>\C-b")
-    (key-chord-define-global "''"     "`'\C-b")
-    (key-chord-define-global ",,"     'indent-for-comment)
+    (key-chord-define-global ",." "<>\C-b")
+    (key-chord-define-global "''" "`'\C-b")
+    (key-chord-define-global ",," 'indent-for-comment)
     )
 
 ;;** 25.6 (info "(emacs)Case") Conversion Commands
@@ -5462,7 +5459,7 @@ this with to-do items than with projects or headings."
 
     ;; mapping languages to their major mode (for editing the source code block
     ;; with `C-c '')
-    (add-to-list 'org-src-lang-modes
+    (add-to-list 'org-src-lang-modes    ; add new languages
                  '("dot" . graphviz-dot)))
 
   ;; display the source code edit buffer in the current window, keeping
@@ -6318,9 +6315,7 @@ this with to-do items than with projects or headings."
     (add-hook 'prog-mode-hook
               (lambda ()
                 (local-set-key (kbd "<M-up>") 'leuven-move-line-up)
-                (local-set-key (kbd "<C-S-up>") 'leuven-move-line-up)
-                (local-set-key (kbd "<M-down>") 'leuven-move-line-down)
-                (local-set-key (kbd "<C-S-down>") 'leuven-move-line-down))))
+                (local-set-key (kbd "<M-down>") 'leuven-move-line-down))))
 
 ;;** 26.1 Major Modes for (info "(emacs)Program Modes")
 
@@ -6507,7 +6502,7 @@ mouse-3: go to end") "]"))))
       :group 'hideshow)
 
     (defface hs-face
-      '((t (:foreground "white" :background "#CBCBCB")))
+      '((t (:box (:line-width 1 :color "#777777") :foreground "#9A9A6A" :background "#F3F349")))
       "Face to hightlight the \"...\" area of hidden regions"
       :group 'hideshow)
 
@@ -7302,7 +7297,16 @@ a clean buffer we're an order of magnitude laxer about checking."
 
       (add-hook 'snippet-mode-hook
                 (lambda ()
-                  (setq require-final-newline nil)))))
+                  (setq require-final-newline nil)))
+
+      ;; ;; Make the "yas/minor-mode"'s expansion behavior to take input word
+      ;; ;; including hyphen.
+      ;; (setq yas-key-syntaxes '("w_" "w_." "^ "))
+                                        ; [default:
+                                        ; '("w" "w_" "w_." "w_.()"
+                                        ;   yas-try-key-from-whitespace)]
+
+      ))
 
 ;;** 29.7 (info "(emacs)Dabbrev Customization")
 
@@ -7351,14 +7355,15 @@ a clean buffer we're an order of magnitude laxer about checking."
     (with-eval-after-load "auto-complete-config"
 
       ;; 6.1 set a list of sources to use (by default + for some major modes)
-      (ac-config-default))            ; ... and enable Auto-Complete mode in all
-                                      ; buffers
+      (ac-config-default))              ; ... and enable Auto-Complete mode in all
+                                        ; buffers
 
     (with-eval-after-load "auto-complete"
+                                        ; required by ESS
 
       ;; ;; 5.4 completion will be started automatically by inserting 2 characters
-      ;; (setq ac-auto-start 2)          ; also applies on arguments after opening
-      ;;                                 ; parenthesis in ESS
+      ;; (setq ac-auto-start 2)            ; also applies on arguments after opening
+      ;;                                   ; parenthesis in ESS
 
       ;; 7.5 use `C-n/C-p' to select candidates (only when completion menu is
       ;; displayed)
@@ -7405,9 +7410,6 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;; completion by RET
       (define-key ac-completing-map (kbd "<return>") 'ac-complete)
 
-      ;; completion by right arrow
-      (define-key ac-completing-map (kbd "<right>") 'ac-complete)
-
       ;; abort
       (define-key ac-completing-map (kbd "C-g") 'ac-stop)
       (define-key ac-completing-map (kbd "<left>") 'ac-stop)
@@ -7450,9 +7452,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; completion by TAB
     (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
-
-    ;; completion by right arrow
-    (define-key company-active-map (kbd "<right>") 'company-complete-selection)
 
     ;; abort
     (define-key company-active-map (kbd "C-g") 'company-abort)
@@ -9280,14 +9279,14 @@ a clean buffer we're an order of magnitude laxer about checking."
     (when (y-or-n-p "Do you want to update Leuven? ")
       (message "Updating Leuven...")
       (cd leuven--directory)
-      (let ((ret (shell-command-to-string "git pull")))
+      (let ((ret (shell-command-to-string "git pull --verbose --rebase")))
         (if (string-match "Already up-to-date." ret)
             (message "Configuration already up-to-date.")
           (princ ret)
           (sit-for 3)
           (message "Configuration updated. Restart Emacs to complete the process.")))))
 
-(message "* --[ Loaded Emacs Leuven 20141006.2321]--")
+(message "* --[ Loaded Emacs Leuven 20141007.2133]--")
 
 (provide 'emacs-leuven)
 
