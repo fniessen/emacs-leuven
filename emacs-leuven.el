@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141008.2132
+;; Version: 20141008.2205
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141008.2132]--")
+(message "* --[ Loading Emacs Leuven 20141008.2205]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -409,10 +409,11 @@ Last time is saved in global variable `leuven--before-section-time'."
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
           google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-          helm-descbinds helm-swoop highlight-symbol htmlize key-chord litable
-          idle-require imenu-anywhere info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          spray tidy tomatinho unbound undo-tree w3m yasnippet
+          helm-descbinds helm-swoop highlight-parentheses highlight-symbol
+          htmlize key-chord litable idle-require imenu-anywhere info+
+          interaction-log ledger-mode leuven-theme multi-term multiple-cursors
+          pager powerline rainbow-mode spray tidy tomatinho unbound undo-tree
+          w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -7453,7 +7454,30 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; abort
     (define-key company-active-map (kbd "C-g") 'company-abort)
-    (define-key company-active-map (kbd "<left>") 'company-abort))
+    (define-key company-active-map (kbd "<left>") 'company-abort)
+
+    ;; see tab-always-indent
+
+    (defun leuven-indent-or-complete ()
+      "Indent the current line; if point doesn't move, then try to complete."
+      (interactive)
+      (let ((p (point)))
+        ;; (if (minibufferp)
+        ;;     (minibuffer-complete)
+        (call-interactively 'indent-for-tab-command)
+        (when (and (= p (point))
+                   (not (bolp))
+                   (looking-at "\\_>"))
+          (call-interactively 'company-complete-selection))))
+
+    (define-key company-mode-map (kbd "<tab>") 'leuven-indent-or-complete)
+
+    ;; (defun leuven--tab-fix ()
+    ;;   (local-set-key (kbd "<tab>") 'leuven-indent-or-complete))
+    ;;
+    ;; (add-hook 'prog-mode-hook 'leuven--tab-fix)
+
+    )
 
   (with-eval-after-load "company-dabbrev"
 
@@ -7462,27 +7486,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; don't downcase the returned candidates
     (setq company-dabbrev-downcase nil))
-
-  ;; see tab-always-indent
-
-  (defun leuven-indent-or-complete ()
-    "Indent the current line; if point doesn't move, then try to complete."
-    (interactive)
-    (let ((p (point)))
-      ;; (if (minibufferp)
-      ;;     (minibuffer-complete)
-      (call-interactively 'indent-for-tab-command)
-      (when (and (= p (point))
-                 (not (bolp))
-                 (looking-at "\\_>"))
-        (call-interactively 'company-complete-selection))))
-
-  (define-key company-mode-map (kbd "<tab>") 'leuven-indent-or-complete)
-
-  ;; (defun leuven--tab-fix ()
-  ;;   (local-set-key (kbd "<tab>") 'leuven-indent-or-complete))
-  ;;
-  ;; (add-hook 'prog-mode-hook 'leuven--tab-fix)
 
 )                                       ; chapter 29 ends here
 
@@ -9305,7 +9308,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (sit-for 3)
           (message "Configuration updated. Restart Emacs to complete the process.")))))
 
-(message "* --[ Loaded Emacs Leuven 20141008.2133]--")
+(message "* --[ Loaded Emacs Leuven 20141008.2206]--")
 
 (provide 'emacs-leuven)
 

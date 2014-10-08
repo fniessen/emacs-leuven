@@ -1363,7 +1363,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141008.2135</span>
+"org-comment">Version: 20141008.2209</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1486,7 +1486,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141008.2135]--"</span><span class=
+"org-string">"* --[ Loading Emacs Leuven 20141008.2209]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
@@ -2704,10 +2704,11 @@
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
           google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-          helm-descbinds helm-swoop highlight-symbol htmlize key-chord litable
-          idle-require imenu-anywhere info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          spray tidy tomatinho unbound undo-tree w3m yasnippet
+          helm-descbinds helm-swoop highlight-parentheses highlight-symbol
+          htmlize key-chord litable idle-require imenu-anywhere info+
+          interaction-log ledger-mode leuven-theme multi-term multiple-cursors
+          pager powerline rainbow-mode spray tidy tomatinho unbound undo-tree
+          w3m yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">jabber multi-term paredit redshank</span>
           <span class="org-rainbow-delimiters-depth-4">)</span>
@@ -24938,6 +24939,38 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">colors nearest parentheses</span>
+  <span class="org-rainbow-delimiters-depth-1">(</span><span class=
+"org-keyword">with-eval-after-load</span> <span class=
+"org-string">"highlight-parentheses"</span>
+    <span class="org-rainbow-delimiters-depth-2">(</span><span class=
+"org-keyword">define-globalized-minor-mode</span> <span class=
+"org-function-name">global-highlight-parentheses-mode</span>
+      highlight-parentheses-mode
+      <span class="org-rainbow-delimiters-depth-3">(</span><span class=
+"org-keyword">lambda</span> <span class=
+"org-rainbow-delimiters-depth-4">()</span>
+        <span class=
+"org-rainbow-delimiters-depth-4">(</span>highlight-parentheses-mode t<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
+
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>setq hl-paren-colors '<span class=
+"org-rainbow-delimiters-depth-3">(</span><span class=
+"org-string">"red"</span><span class=
+"org-rainbow-delimiters-depth-3">)</span><span class=
+"org-rainbow-delimiters-depth-2">)</span>
+
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>global-highlight-parentheses-mode t<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
+</pre>
+          </div>
+
+          <p>XXX HighlightSexp (= hl-sexp)? XXX HighlightSexps (highlights
+          multiple levels, unlike HighlightSexp).</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">highlight nested parens, brackets, braces a different color at each depth</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
@@ -29284,7 +29317,73 @@ etags --langdef=shell --regex-shell=<span class=
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>define-key company-active-map <span class="org-rainbow-delimiters-depth-3">(</span>kbd <span class="org-string">"C-g"</span><span class="org-rainbow-delimiters-depth-3">)</span> 'company-abort<span class="org-rainbow-delimiters-depth-2">)</span>
     <span class=
-"org-rainbow-delimiters-depth-2">(</span>define-key company-active-map <span class="org-rainbow-delimiters-depth-3">(</span>kbd <span class="org-string">"&lt;left&gt;"</span><span class="org-rainbow-delimiters-depth-3">)</span> 'company-abort<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
+"org-rainbow-delimiters-depth-2">(</span>define-key company-active-map <span class="org-rainbow-delimiters-depth-3">(</span>kbd <span class="org-string">"&lt;left&gt;"</span><span class="org-rainbow-delimiters-depth-3">)</span> 'company-abort<span class="org-rainbow-delimiters-depth-2">)</span>
+</pre>
+            </div>
+
+            <p><b>First</b> run the <b>indent</b> function, then try
+            <b>completion</b> only if it didn’t change anything.</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">see tab-always-indent</span>
+
+    <span class="org-rainbow-delimiters-depth-1">(</span><span class=
+"org-keyword">defun</span> <span class=
+"org-function-name">leuven-indent-or-complete</span> <span class=
+"org-rainbow-delimiters-depth-2">()</span>
+      <span class=
+"org-doc">"Indent the current line; if point doesn't move, then try to complete."</span>
+      <span class=
+"org-rainbow-delimiters-depth-2">(</span>interactive<span class=
+"org-rainbow-delimiters-depth-2">)</span>
+      <span class="org-rainbow-delimiters-depth-2">(</span><span class=
+"org-keyword">let</span> <span class=
+"org-rainbow-delimiters-depth-3">(</span><span class=
+"org-rainbow-delimiters-depth-4">(</span>p <span class=
+"org-rainbow-delimiters-depth-5">(</span>point<span class=
+"org-rainbow-delimiters-depth-5">)</span><span class=
+"org-rainbow-delimiters-depth-4">)</span><span class=
+"org-rainbow-delimiters-depth-3">)</span>
+        <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(if (minibufferp)</span>
+        <span class="org-comment-delimiter">;;     </span><span class=
+"org-comment">(minibuffer-complete)</span>
+        <span class=
+"org-rainbow-delimiters-depth-3">(</span>call-interactively 'indent-for-tab-command<span class="org-rainbow-delimiters-depth-3">)</span>
+        <span class="org-rainbow-delimiters-depth-3">(</span><span class=
+"org-keyword">when</span> <span class=
+"org-rainbow-delimiters-depth-4">(</span>and <span class=
+"org-rainbow-delimiters-depth-5">(</span>= p <span class=
+"org-rainbow-delimiters-depth-6">(</span>point<span class=
+"org-rainbow-delimiters-depth-6">)</span><span class=
+"org-rainbow-delimiters-depth-5">)</span>
+                   <span class=
+"org-rainbow-delimiters-depth-5">(</span>not <span class=
+"org-rainbow-delimiters-depth-6">(</span>bolp<span class=
+"org-rainbow-delimiters-depth-6">)</span><span class=
+"org-rainbow-delimiters-depth-5">)</span>
+                   <span class=
+"org-rainbow-delimiters-depth-5">(</span>looking-at <span class=
+"org-string">"\\_&gt;"</span><span class=
+"org-rainbow-delimiters-depth-5">)</span><span class=
+"org-rainbow-delimiters-depth-4">)</span>
+          <span class=
+"org-rainbow-delimiters-depth-4">(</span>call-interactively 'company-complete-selection<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
+
+    <span class=
+"org-rainbow-delimiters-depth-1">(</span>define-key company-mode-map <span class="org-rainbow-delimiters-depth-2">(</span>kbd <span class="org-string">"&lt;tab&gt;"</span><span class="org-rainbow-delimiters-depth-2">)</span> 'leuven-indent-or-complete<span class="org-rainbow-delimiters-depth-1">)</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(defun leuven--tab-fix ()</span>
+    <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(local-set-key (kbd "&lt;tab&gt;") 'leuven-indent-or-complete))</span>
+    <span class="org-comment-delimiter">;;</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(add-hook 'prog-mode-hook 'leuven--tab-fix)</span>
+
+    <span class="org-rainbow-delimiters-unmatched">)</span>
 </pre>
             </div>
 
@@ -29331,69 +29430,6 @@ good|
 "org-rainbow-delimiters-depth-2">(</span>kbd <span class=
 "org-string">"&lt;tab&gt;"</span><span class=
 "org-rainbow-delimiters-depth-2">)</span> 'company-complete-selection<span class="org-rainbow-delimiters-depth-1">)</span>
-</pre>
-            </div>
-
-            <p><b>First</b> run the <b>indent</b> function, then try
-            <b>completion</b> only if it didn’t change anything.</p>
-
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">see tab-always-indent</span>
-
-  <span class="org-rainbow-delimiters-depth-1">(</span><span class=
-"org-keyword">defun</span> <span class=
-"org-function-name">leuven-indent-or-complete</span> <span class=
-"org-rainbow-delimiters-depth-2">()</span>
-    <span class=
-"org-doc">"Indent the current line; if point doesn't move, then try to complete."</span>
-    <span class=
-"org-rainbow-delimiters-depth-2">(</span>interactive<span class="org-rainbow-delimiters-depth-2">)</span>
-    <span class="org-rainbow-delimiters-depth-2">(</span><span class=
-"org-keyword">let</span> <span class=
-"org-rainbow-delimiters-depth-3">(</span><span class=
-"org-rainbow-delimiters-depth-4">(</span>p <span class=
-"org-rainbow-delimiters-depth-5">(</span>point<span class=
-"org-rainbow-delimiters-depth-5">)</span><span class=
-"org-rainbow-delimiters-depth-4">)</span><span class=
-"org-rainbow-delimiters-depth-3">)</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(if (minibufferp)</span>
-      <span class="org-comment-delimiter">;;     </span><span class=
-"org-comment">(minibuffer-complete)</span>
-      <span class=
-"org-rainbow-delimiters-depth-3">(</span>call-interactively 'indent-for-tab-command<span class="org-rainbow-delimiters-depth-3">)</span>
-      <span class="org-rainbow-delimiters-depth-3">(</span><span class=
-"org-keyword">when</span> <span class=
-"org-rainbow-delimiters-depth-4">(</span>and <span class=
-"org-rainbow-delimiters-depth-5">(</span>= p <span class=
-"org-rainbow-delimiters-depth-6">(</span>point<span class=
-"org-rainbow-delimiters-depth-6">)</span><span class=
-"org-rainbow-delimiters-depth-5">)</span>
-                 <span class=
-"org-rainbow-delimiters-depth-5">(</span>not <span class=
-"org-rainbow-delimiters-depth-6">(</span>bolp<span class=
-"org-rainbow-delimiters-depth-6">)</span><span class=
-"org-rainbow-delimiters-depth-5">)</span>
-                 <span class=
-"org-rainbow-delimiters-depth-5">(</span>looking-at <span class=
-"org-string">"\\_&gt;"</span><span class=
-"org-rainbow-delimiters-depth-5">)</span><span class=
-"org-rainbow-delimiters-depth-4">)</span>
-        <span class=
-"org-rainbow-delimiters-depth-4">(</span>call-interactively 'company-complete-selection<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-
-  <span class=
-"org-rainbow-delimiters-depth-1">(</span>define-key company-mode-map <span class="org-rainbow-delimiters-depth-2">(</span>kbd <span class="org-string">"&lt;tab&gt;"</span><span class="org-rainbow-delimiters-depth-2">)</span> 'leuven-indent-or-complete<span class="org-rainbow-delimiters-depth-1">)</span>
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(defun leuven--tab-fix ()</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(local-set-key (kbd "&lt;tab&gt;") 'leuven-indent-or-complete))</span>
-  <span class="org-comment-delimiter">;;</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(add-hook 'prog-mode-hook 'leuven--tab-fix)</span>
 </pre>
             </div>
 
@@ -36626,7 +36662,7 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141008.2136]--"</span><span class=
+"org-string">"* --[ Loaded Emacs Leuven 20141008.2209]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=

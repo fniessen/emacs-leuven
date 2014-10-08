@@ -556,10 +556,11 @@ outages).
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
           google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-          helm-descbinds helm-swoop highlight-symbol htmlize key-chord litable
-          idle-require imenu-anywhere info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          spray tidy tomatinho unbound undo-tree w3m yasnippet
+          helm-descbinds helm-swoop highlight-parentheses highlight-symbol
+          htmlize key-chord litable idle-require imenu-anywhere info+
+          interaction-log ledger-mode leuven-theme multi-term multiple-cursors
+          pager powerline rainbow-mode spray tidy tomatinho unbound undo-tree
+          w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -9899,6 +9900,22 @@ things.
     (paren-set-mode 'paren))
 #+end_src
 
+#+begin_src emacs-lisp :tangle no
+  ;; colors nearest parentheses
+  (with-eval-after-load "highlight-parentheses"
+    (define-globalized-minor-mode global-highlight-parentheses-mode
+      highlight-parentheses-mode
+      (lambda ()
+        (highlight-parentheses-mode t)))
+
+    (setq hl-paren-colors '("red"))
+
+    (global-highlight-parentheses-mode t))
+#+end_src
+
+XXX HighlightSexp (= hl-sexp)?
+XXX HighlightSexps (highlights multiple levels, unlike HighlightSexp).
+
 #+begin_src emacs-lisp
   ;; highlight nested parens, brackets, braces a different color at each depth
   (with-eval-after-load "rainbow-delimiters-autoloads"
@@ -11870,7 +11887,35 @@ available completions and filter as well.
 
     ;; abort
     (define-key company-active-map (kbd "C-g") 'company-abort)
-    (define-key company-active-map (kbd "<left>") 'company-abort))
+    (define-key company-active-map (kbd "<left>") 'company-abort)
+#+end_src
+
+*First* run the *indent* function, then try *completion* only if it didn't change
+anything.
+
+#+begin_src emacs-lisp
+    ;; see tab-always-indent
+
+    (defun leuven-indent-or-complete ()
+      "Indent the current line; if point doesn't move, then try to complete."
+      (interactive)
+      (let ((p (point)))
+        ;; (if (minibufferp)
+        ;;     (minibuffer-complete)
+        (call-interactively 'indent-for-tab-command)
+        (when (and (= p (point))
+                   (not (bolp))
+                   (looking-at "\\_>"))
+          (call-interactively 'company-complete-selection))))
+
+    (define-key company-mode-map (kbd "<tab>") 'leuven-indent-or-complete)
+
+    ;; (defun leuven--tab-fix ()
+    ;;   (local-set-key (kbd "<tab>") 'leuven-indent-or-complete))
+    ;;
+    ;; (add-hook 'prog-mode-hook 'leuven--tab-fix)
+
+    )
 #+end_src
 
 With the following text (where "|" stands for the cursor):
@@ -11898,32 +11943,6 @@ XXX What about company-search-candidates vs company-filter-candidates?
 #+begin_src emacs-lisp :tangle no
     (setq company-idle-delay nil)
     (global-set-key (kbd "<tab>") 'company-complete-selection)
-#+end_src
-
-*First* run the *indent* function, then try *completion* only if it didn't change
-anything.
-
-#+begin_src emacs-lisp
-  ;; see tab-always-indent
-
-  (defun leuven-indent-or-complete ()
-    "Indent the current line; if point doesn't move, then try to complete."
-    (interactive)
-    (let ((p (point)))
-      ;; (if (minibufferp)
-      ;;     (minibuffer-complete)
-      (call-interactively 'indent-for-tab-command)
-      (when (and (= p (point))
-                 (not (bolp))
-                 (looking-at "\\_>"))
-        (call-interactively 'company-complete-selection))))
-
-  (define-key company-mode-map (kbd "<tab>") 'leuven-indent-or-complete)
-
-  ;; (defun leuven--tab-fix ()
-  ;;   (local-set-key (kbd "<tab>") 'leuven-indent-or-complete))
-  ;;
-  ;; (add-hook 'prog-mode-hook 'leuven--tab-fix)
 #+end_src
 
 #+begin_src emacs-lisp
