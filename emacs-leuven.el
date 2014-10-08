@@ -409,7 +409,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
           google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-          helm-descbinds helm-swoop highlight-parentheses highlight-symbol
+          helm-descbinds helm-swoop highlight-symbol
           htmlize key-chord litable idle-require imenu-anywhere info+
           interaction-log ledger-mode leuven-theme multi-term multiple-cursors
           pager powerline rainbow-mode spray tidy tomatinho unbound undo-tree
