@@ -1363,7 +1363,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141007.2135</span>
+"org-comment">Version: 20141008.2135</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1486,11 +1486,11 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141007.2135]--"</span><span class=
+"org-string">"* --[ Loading Emacs Leuven 20141008.2135]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">turn on Common Lisp support</span>
+"org-comment">Turn on Common Lisp support.</span>
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">eval-when-compile</span> <span class=
 "org-rainbow-delimiters-depth-2">(</span><span class=
@@ -1498,12 +1498,12 @@
 "org-rainbow-delimiters-depth-2">)</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>       <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">provide useful things like `</span><span class=
+"org-comment">Provide useful things like `</span><span class=
 "org-constant"><span class="org-comment">setf</span></span><span class=
-"org-comment">'</span>
+"org-comment">'.</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">uptimes</span>
+"org-comment">Uptimes.</span>
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">when</span> <span class=
 "org-rainbow-delimiters-depth-2">(</span>string-match <span class=
@@ -1514,7 +1514,7 @@
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">XEmacs doesn't have `</span><span class=
 "org-constant"><span class="org-comment">float-time</span></span><span class=
-"org-comment">'</span>
+"org-comment">'.</span>
   <span class="org-rainbow-delimiters-depth-2">(</span><span class=
 "org-keyword">defun</span> <span class=
 "org-function-name">float-time</span> <span class=
@@ -1626,7 +1626,7 @@
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">allow quick include/exclude of setup parts -- DO NOT EDIT the DEFVAR!</span>
+"org-comment">Allow quick include/exclude of setup parts -- DO NOT EDIT the DEFVAR!</span>
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">defvar</span> <span class=
 "org-variable-name">leuven-chapter-0-environment</span> t<span class=
@@ -1855,7 +1855,7 @@
 "org-rainbow-delimiters-depth-5">)</span><span class=
 "org-rainbow-delimiters-depth-4">)</span>
        <span class=
-"org-rainbow-delimiters-depth-4">(</span>setq leuven--before-section-time <span class="org-rainbow-delimiters-depth-5">(</span>float-time<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-comment-delimiter">; </span><span class="org-comment">init section time</span>
+"org-rainbow-delimiters-depth-4">(</span>setq leuven--before-section-time <span class="org-rainbow-delimiters-depth-5">(</span>float-time<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-comment-delimiter">; </span><span class="org-comment">Init section time.</span>
        <span class="org-rainbow-delimiters-depth-4">(</span><span class=
 "org-keyword">progn</span> ,@body<span class=
 "org-rainbow-delimiters-depth-4">)</span>
@@ -1868,7 +1868,7 @@
 "org-rainbow-delimiters-depth-4">)</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">add fake closing section</span>
+"org-comment">Add fake closing section.</span>
        <span class=
 "org-rainbow-delimiters-depth-4">(</span>setq this-chapter-time
              <span class=
@@ -1944,7 +1944,7 @@
 "org-rainbow-delimiters-depth-4">)</span><span class=
 "org-rainbow-delimiters-depth-3">)</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">for next one</span>
+"org-comment">For next one.</span>
     <span class=
 "org-rainbow-delimiters-depth-3">(</span>setq leuven--before-section-time <span class="org-rainbow-delimiters-depth-4">(</span>float-time<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
@@ -1990,7 +1990,7 @@
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">load-path enhancement</span>
+"org-comment">Load-path enhancement.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">defun</span> <span class=
 "org-function-name">leuven-add-to-load-path</span> <span class=
@@ -2054,7 +2054,7 @@
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">remember this directory</span>
+"org-comment">Remember this directory.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--directory</span>
@@ -2134,7 +2134,7 @@
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">require a feature/library if available; if not, fail silently</span>
+"org-comment">Require a feature/library if available; if not, fail silently.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">unless</span> <span class=
 "org-rainbow-delimiters-depth-2">(</span>fboundp 'try-require<span class=
@@ -2167,10 +2167,10 @@
             t<span class=
 "org-rainbow-delimiters-depth-4">)</span>                          <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">necessary for correct behavior in</span>
+"org-comment">Necessary for correct behavior in</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">conditional expressions</span>
+"org-comment">conditional expressions.</span>
         <span class="org-rainbow-delimiters-depth-4">(</span>file-error
          <span class=
 "org-rainbow-delimiters-depth-5">(</span>message <span class=
@@ -2188,14 +2188,14 @@
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">TEMPORARY</span>
+"org-comment">TEMPORARY.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">unless</span> <span class=
 "org-rainbow-delimiters-depth-2">(</span>fboundp 'with-eval-after-load<span class="org-rainbow-delimiters-depth-2">)</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">wrapper around `</span><span class="org-constant"><span class=
+"org-comment">Wrapper around `</span><span class="org-constant"><span class=
 "org-comment">eval-after-load</span></span><span class=
-"org-comment">' (added in GNU Emacs 24.4)</span>
+"org-comment">' (added in GNU Emacs 24.4).</span>
     <span class="org-rainbow-delimiters-depth-2">(</span><span class=
 "org-keyword">defmacro</span> <span class=
 "org-function-name">with-eval-after-load</span> <span class=
@@ -2453,7 +2453,7 @@
 "org-string">'"</span> file<span class=
 "org-rainbow-delimiters-depth-4">)</span>
           <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">sleep 1.5 s so that you can see the warning</span>
+"org-comment">Sleep 1.5 s so that you can see the warning.</span>
           <span class=
 "org-rainbow-delimiters-depth-4">(</span>sit-for 1.5<span class=
 "org-rainbow-delimiters-depth-4">)</span><span class=
@@ -2471,12 +2471,12 @@
 
   <span class="org-rainbow-delimiters-depth-1">(</span>XEmacs
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't load init file from `</span><span class=
+"org-comment">Don't load init file from `</span><span class=
 "org-constant"><span class=
 "org-comment">~/.xemacs/init.el</span></span><span class=
 "org-comment">' (and don't offer its</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">migration)</span>
+"org-comment">migration).</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq load-home-init-file t<span class=
 "org-rainbow-delimiters-depth-2">)</span><span class=
@@ -2484,9 +2484,9 @@
 
   <span class="org-rainbow-delimiters-depth-1">(</span>GNUEmacs
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">ensure that the echo area is always visible during the early stage of</span>
+"org-comment">Ensure that the echo area is always visible during the early stage of</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">startup (useful in case of error)</span>
+"org-comment">startup (useful in case of error).</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>modify-all-frames-parameters
      '<span class="org-rainbow-delimiters-depth-3">(</span><span class=
@@ -2533,26 +2533,26 @@
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">get the backtrace when uncaught errors occur</span>
+"org-comment">Get the backtrace when uncaught errors occur.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq debug-on-error t<span class=
 "org-rainbow-delimiters-depth-1">)</span>               <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">will be unset at the end</span>
+"org-comment">Will be unset at the end.</span>
 
   <span class="org-rainbow-delimiters-depth-1">(</span>XEmacs
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq stack-trace-on-error t<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">hit `</span><span class="org-constant"><span class=
+"org-comment">Hit `</span><span class="org-constant"><span class=
 "org-comment">C-g</span></span><span class=
-"org-comment">' while it's frozen to get an Emacs Lisp backtrace</span>
+"org-comment">' while it's frozen to get an Emacs Lisp backtrace.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq debug-on-quit t<span class=
 "org-rainbow-delimiters-depth-1">)</span>                <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">will be unset at the end</span>
+"org-comment">Will be unset at the end.</span>
 </pre>
         </div>
 
@@ -2648,7 +2648,7 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">simple package system for GNU Emacs</span>
+"org-comment">Simple package system for GNU Emacs.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span>GNUEmacs
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>try-require 'package<span class=
@@ -2658,7 +2658,7 @@
 "org-string">"package"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">archives from which to fetch</span>
+"org-comment">Archives from which to fetch.</span>
       <span class=
 "org-rainbow-delimiters-depth-3">(</span>setq package-archives
             <span class=
@@ -2681,7 +2681,7 @@
 "org-rainbow-delimiters-depth-3">)</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">load the latest version of all installed packages, and activate them</span>
+"org-comment">Load the latest version of all installed packages, and activate them.</span>
       <span class=
 "org-rainbow-delimiters-depth-3">(</span>package-initialize<span class=
 "org-rainbow-delimiters-depth-3">)</span>              <span class=
@@ -2753,9 +2753,9 @@
 "org-rainbow-delimiters-depth-3">)</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">propose to install all the packages specified in `</span><span class="org-constant"><span class="org-comment">leuven-elpa-packages</span></span><span class="org-comment">'</span>
+"org-comment">Propose to install all the packages specified in `</span><span class="org-constant"><span class="org-comment">leuven-elpa-packages</span></span><span class="org-comment">'</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">which are missing</span>
+"org-comment">which are missing.</span>
       <span class="org-rainbow-delimiters-depth-3">(</span><span class=
 "org-keyword">let</span> <span class=
 "org-rainbow-delimiters-depth-4">(</span><span class=
@@ -2764,7 +2764,7 @@
         <span class="org-rainbow-delimiters-depth-4">(</span><span class=
 "org-keyword">when</span> missing-elpa-packages
           <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">download once the ELPA archive description</span>
+"org-comment">Download once the ELPA archive description.</span>
           <span class=
 "org-rainbow-delimiters-depth-5">(</span>package-refresh-contents<span class=
 "org-rainbow-delimiters-depth-5">)</span>    <span class=
@@ -2801,12 +2801,12 @@
 "org-rainbow-delimiters-depth-7">)</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">must be run after initializing</span>
+"org-comment">Must be run after initializing</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class="org-comment">`</span><span class=
 "org-constant"><span class=
 "org-comment">package-initialize</span></span><span class=
-"org-comment">'</span>
+"org-comment">'.</span>
               <span class=
 "org-rainbow-delimiters-depth-7">(</span>message <span class=
 "org-rainbow-delimiters-depth-8">(</span>concat <span class=
@@ -2828,7 +2828,7 @@
 "org-rainbow-delimiters-depth-3">)</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't truncate package names in Emacs package list</span>
+"org-comment">Don't truncate package names in Emacs package list.</span>
       <span class=
 "org-rainbow-delimiters-depth-3">(</span>add-hook 'package-menu-mode-hook
                 <span class=
@@ -2880,14 +2880,14 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">load elisp libraries while Emacs is idle</span>
+"org-comment">Load elisp libraries while Emacs is idle.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>try-require 'idle-require<span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">fail-safe for `</span><span class="org-constant"><span class=
-"org-comment">idle-require</span></span><span class="org-comment">'</span>
+"org-comment">Fail-safe for `</span><span class="org-constant"><span class=
+"org-comment">idle-require</span></span><span class="org-comment">'.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">if</span> <span class=
 "org-rainbow-delimiters-depth-2">(</span>not <span class=
@@ -2913,12 +2913,12 @@
 "org-string">"idle-require"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">idle time in seconds after which autoload functions will be loaded</span>
+"org-comment">Idle time in seconds after which autoload functions will be loaded.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq idle-require-idle-delay 5<span class="org-rainbow-delimiters-depth-2">)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">time in seconds between automatically loaded functions</span>
+"org-comment">Time in seconds between automatically loaded functions.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq idle-require-load-break 2<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
@@ -2932,7 +2932,7 @@
 "org-rainbow-delimiters-depth-4">(</span>fboundp 'idle-require-mode<span class=
 "org-rainbow-delimiters-depth-4">)</span>
                 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">starts loading</span>
+"org-comment">Starts loading.</span>
                 <span class=
 "org-rainbow-delimiters-depth-4">(</span>idle-require-mode 1<span class=
 "org-rainbow-delimiters-depth-4">)</span><span class=
@@ -2966,7 +2966,7 @@
 "org-rainbow-delimiters-depth-2">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't truncate the message log buffer when it becomes large</span>
+"org-comment">Don't truncate the message log buffer when it becomes large.</span>
   <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq message-log-max t<span class=
 "org-rainbow-delimiters-depth-2">)</span>
@@ -2991,7 +2991,7 @@
 "org-rainbow-delimiters-depth-1">(</span>leuven--chapter leuven-chapter-6-exiting <span class="org-string">"6 Exiting Emacs"</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">unbind "minimize"</span>
+"org-comment">Unbind "minimize".</span>
   <span class=
 "org-rainbow-delimiters-depth-2">(</span>global-unset-key <span class=
 "org-rainbow-delimiters-depth-3">(</span>kbd <span class=
@@ -3000,7 +3000,7 @@
 "org-rainbow-delimiters-depth-2">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">quit with Alt + F4</span>
+"org-comment">Quit with Alt + F4.</span>
   <span class=
 "org-rainbow-delimiters-depth-2">(</span>global-set-key <span class=
 "org-rainbow-delimiters-depth-3">(</span>kbd <span class=
@@ -3044,7 +3044,7 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enter characters by their code in octal (for `C-q NNN &lt;RET&gt;')</span>
+"org-comment">Enter characters by their code in octal (for `C-q NNN &lt;RET&gt;').</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq read-quoted-char-radix 8<span class="org-rainbow-delimiters-depth-1">)</span>       <span class="org-comment-delimiter">; </span><span class="org-comment">16 for hexadecimal (for Unicode char)</span>
 </pre>
@@ -3084,12 +3084,12 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't add newlines to end of buffer when scrolling</span>
+"org-comment">Don't add newlines to end of buffer when scrolling.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq next-line-add-newlines nil<span class="org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">print the current buffer line number</span>
+"org-comment">Print the current buffer line number.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>global-set-key <span class=
 "org-rainbow-delimiters-depth-2">(</span>kbd <span class=
@@ -3116,7 +3116,7 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">undo some previous changes</span>
+"org-comment">Undo some previous changes.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>global-set-key <span class=
 "org-rainbow-delimiters-depth-2">(</span>kbd <span class=
@@ -3145,18 +3145,18 @@
 "org-rainbow-delimiters-depth-2">)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable Global-Undo-Tree mode</span>
+"org-comment">Enable Global-Undo-Tree mode.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>global-undo-tree-mode 1<span class=
 "org-rainbow-delimiters-depth-2">)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">display times relative to current time in visualizer</span>
+"org-comment">Display times relative to current time in visualizer.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq undo-tree-visualizer-relative-timestamps t<span class="org-rainbow-delimiters-depth-2">)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">display time-stamps by default in undo-tree visualizer</span>
+"org-comment">Display time-stamps by default in undo-tree visualizer.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq undo-tree-visualizer-timestamps t<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
@@ -3185,7 +3185,7 @@
 "org-rainbow-delimiters-depth-1">(</span>leuven--chapter leuven-chapter-8-minibuffer <span class="org-string">"8 The Minibuffer"</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">how long to display an echo-area message when the minibuffer is active</span>
+"org-comment">How long to display an echo-area message when the minibuffer is active.</span>
   <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq minibuffer-message-timeout 0.5<span class="org-rainbow-delimiters-depth-2">)</span>
 </pre>
@@ -3211,9 +3211,9 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">minibuffer and echo area windows resize vertically as necessary to fit</span>
+"org-comment">Minibuffer and echo area windows resize vertically as necessary to fit</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">the text displayed in them</span>
+"org-comment">the text displayed in them.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq resize-mini-windows t<span class=
 "org-rainbow-delimiters-depth-1">)</span>
@@ -3237,18 +3237,18 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't consider case significant in completion (GNU Emacs default)</span>
+"org-comment">Don't consider case significant in completion (GNU Emacs default).</span>
   <span class="org-rainbow-delimiters-depth-1">(</span>XEmacs
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq completion-ignore-case t<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">ignore case when reading a file name</span>
+"org-comment">Ignore case when reading a file name.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq read-file-name-completion-ignore-case t<span class="org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">ignore case when reading a buffer name</span>
+"org-comment">Ignore case when reading a buffer name.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq read-buffer-completion-ignore-case t<span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
@@ -3257,7 +3257,7 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">provide the same facility of `ls --color' inside Emacs</span>
+"org-comment">Provide the same facility of `ls --color' inside Emacs.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">when</span> <span class=
 "org-rainbow-delimiters-depth-2">(</span>locate-library <span class=
@@ -3369,7 +3369,7 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">avoid the description of all minor modes</span>
+"org-comment">Avoid the description of all minor modes.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">defun</span> <span class=
 "org-function-name">describe-major-mode</span> <span class=
@@ -3383,7 +3383,7 @@
 "org-rainbow-delimiters-depth-2">(</span>describe-function major-mode<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">look up subject in (the indices of the) Emacs Lisp manual</span>
+"org-comment">Look up subject in (the indices of the) Emacs Lisp manual.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>global-set-key <span class=
 "org-rainbow-delimiters-depth-2">(</span>kbd <span class=
@@ -3417,14 +3417,14 @@
 "org-string">"apropos"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">check all variables and non-interactive functions as well</span>
+"org-comment">Check all variables and non-interactive functions as well.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq apropos-do-all t<span class=
 "org-rainbow-delimiters-depth-2">)</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">show variables whose name matches the pattern</span>
+"org-comment">Show variables whose name matches the pattern.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span>GNUEmacs
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -3518,7 +3518,7 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enter Info documentation browser</span>
+"org-comment">Enter Info documentation browser.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>global-set-key <span class=
 "org-rainbow-delimiters-depth-2">(</span>kbd <span class=
@@ -3587,7 +3587,7 @@
 "org-rainbow-delimiters-depth-2">)</span> 'describe-elisp-symbol-at-point<span class="org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">display symbol definitions, as found in the relevant manual</span>
+"org-comment">Display symbol definitions, as found in the relevant manual</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that</span>
   <span class="org-comment-delimiter">;; </span><span class=
@@ -3632,9 +3632,9 @@
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"info"</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">list of directories to search for Info documentation files (in the order</span>
+"org-comment">List of directories to search for Info documentation files (in the order</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">they are listed)</span>
+"org-comment">they are listed).</span>
     <span class="org-rainbow-delimiters-depth-2">(</span><span class=
 "org-keyword">when</span> leuven--win32-p
       <span class=
@@ -3679,12 +3679,12 @@
 "org-string">"info+"</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">show breadcrumbs in the header line</span>
+"org-comment">Show breadcrumbs in the header line.</span>
         <span class=
 "org-rainbow-delimiters-depth-3">(</span>setq Info-breadcrumbs-in-header-flag t<span class="org-rainbow-delimiters-depth-3">)</span>
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't show breadcrumbs in the mode line</span>
+"org-comment">Don't show breadcrumbs in the mode line.</span>
         <span class=
 "org-rainbow-delimiters-depth-3">(</span>setq Info-breadcrumbs-in-mode-line-mode nil<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
@@ -3693,9 +3693,9 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">some info related functions</span>
+"org-comment">Some info related functions (to insert links such as `(info</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(to insert links such as `(info "(message)Insertion Variables")')</span>
+"org-comment">"(message)Insertion Variables")').</span>
     <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">when</span> <span class=
 "org-rainbow-delimiters-depth-2">(</span>locate-library <span class=
@@ -3730,7 +3730,7 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">get a Unix manual page of the item under point</span>
+"org-comment">Get a Unix manual page of the item under point.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>global-set-key <span class=
 "org-rainbow-delimiters-depth-2">(</span>kbd <span class=
@@ -3741,19 +3741,19 @@
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class="org-string">"man"</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">make the manpage the current buffer in the current window</span>
+"org-comment">Make the manpage the current buffer in the current window.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq Man-notify-method 'pushy<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">alias man to woman</span>
+"org-comment">Alias man to woman.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">defalias</span> '<span class=
 "org-function-name">man</span> 'woman<span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">decode and browse Unix man-pages "W.o. (without) Man"</span>
+"org-comment">Decode and browse Unix man-pages "W.o. (without) Man".</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"woman"</span>
@@ -3811,7 +3811,7 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">goto last change</span>
+"org-comment">Goto last change.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"goto-chg-autoloads"</span>
@@ -3849,7 +3849,7 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">increase selected region by semantic units</span>
+"org-comment">Increase selected region by semantic units.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"expand-region-autoloads"</span>
@@ -3867,15 +3867,15 @@
 "org-rainbow-delimiters-depth-3">)</span> 'er/expand-region<span class=
 "org-rainbow-delimiters-depth-2">)</span> <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">used in `</span><span class="org-constant"><span class=
-"org-comment">flyspell.el</span></span><span class="org-comment">'</span>
+"org-comment">Used in `</span><span class="org-constant"><span class=
+"org-comment">flyspell.el</span></span><span class="org-comment">'.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>global-set-key <span class=
 "org-rainbow-delimiters-depth-3">(</span>kbd <span class=
 "org-string">"C-'"</span><span class=
 "org-rainbow-delimiters-depth-3">)</span> 'er/expand-region<span class=
 "org-rainbow-delimiters-depth-2">)</span> <span class=
-"org-comment-delimiter">; </span><span class="org-comment">undefined</span>
+"org-comment-delimiter">; </span><span class="org-comment">Undefined.</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(global-set-key (kbd "C-M-@") 'er/contract-region)</span>
     <span class="org-rainbow-delimiters-depth-1">)</span>
@@ -3891,14 +3891,14 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">inserting text while the mark is active causes the text in the region to be</span>
+"org-comment">Inserting text while the mark is active causes the text in the region to be</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">deleted first</span>
+"org-comment">deleted first.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>delete-selection-mode 1<span class=
 "org-rainbow-delimiters-depth-1">)</span>             <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">overwrite region</span>
+"org-comment">Overwrite region.</span>
 </pre>
           </div>
         </div>
@@ -3937,7 +3937,7 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">multiple cursors for Emacs</span>
+"org-comment">Multiple cursors for Emacs.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"multiple-cursors-autoloads"</span>
@@ -3956,7 +3956,7 @@
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">add a cursor to each (continuous) line in the current region</span>
+"org-comment">Add a cursor to each (continuous) line in the current region.</span>
     <span class=
 "org-rainbow-delimiters-depth-1">(</span>global-set-key <span class=
 "org-rainbow-delimiters-depth-2">(</span>kbd <span class=
@@ -3991,9 +3991,9 @@
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">add a cursor and region at the next part of the buffer forwards that</span>
+"org-comment">Add a cursor and region at the next part of the buffer forwards that</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">matches the current region</span>
+"org-comment">matches the current region.</span>
     <span class=
 "org-rainbow-delimiters-depth-1">(</span>global-set-key <span class=
 "org-rainbow-delimiters-depth-2">(</span>kbd <span class=
@@ -4002,9 +4002,9 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">add a cursor and region at the next part of the buffer backwards that</span>
+"org-comment">Add a cursor and region at the next part of the buffer backwards that</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">matches the current region</span>
+"org-comment">matches the current region.</span>
     <span class=
 "org-rainbow-delimiters-depth-1">(</span>global-set-key <span class=
 "org-rainbow-delimiters-depth-2">(</span>kbd <span class=
@@ -4024,7 +4024,7 @@
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">mark all parts of the buffer that matches the current region</span>
+"org-comment">Mark all parts of the buffer that matches the current region.</span>
     <span class=
 "org-rainbow-delimiters-depth-1">(</span>global-set-key <span class=
 "org-rainbow-delimiters-depth-2">(</span>kbd <span class=
@@ -4097,13 +4097,13 @@
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">multiple cursors for Emacs</span>
+"org-comment">Multiple cursors for Emacs.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"multiple-cursors-core"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">commands to run for all cursors in multiple-cursors-mode</span>
+"org-comment">Commands to run for all cursors in multiple-cursors-mode.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq mc/cmds-to-run-for-all
           '<span class=
@@ -4172,9 +4172,9 @@
 "org-comment">old ([2012-09-07 Fri] remove "compile" after "activate")</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">add the ability to copy or cut the current line without marking it</span>
+"org-comment">Add the ability to copy or cut the current line without marking it</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(no active region) -- idea stolen from SlickEdit</span>
+"org-comment">(no active region) -- idea stolen from SlickEdit.</span>
     <span class="org-rainbow-delimiters-depth-2">(</span><span class=
 "org-keyword">defadvice</span> <span class=
 "org-function-name">kill-ring-save</span> <span class=
@@ -4304,12 +4304,12 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">auto-indentation of pasted code in the programming modes (fall back to</span>
+"org-comment">Auto-indentation of pasted code in the programming modes (fall back to</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">default, non-indented yanking by preceding the yanking command `</span><span class="org-constant"><span class="org-comment">C-y</span></span><span class="org-comment">' with</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">`</span><span class="org-constant"><span class=
-"org-comment">C-u</span></span><span class="org-comment">')</span>
+"org-comment">C-u</span></span><span class="org-comment">').</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">dolist</span> <span class=
 "org-rainbow-delimiters-depth-2">(</span>command '<span class=
@@ -4378,10 +4378,10 @@
 "org-string">"12.3 (emacs)Cut and Paste on Graphical Displays"</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">copy/paste with Gnome desktop</span>
+"org-comment">Copy/paste with Gnome desktop.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span>GNUEmacs
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">make cut, copy and paste (keys and menu bar items) use the clipboard</span>
+"org-comment">Make cut, copy and paste (keys and menu bar items) use the clipboard.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>menu-bar-enable-clipboard<span class=
 "org-rainbow-delimiters-depth-2">)</span><span class=
@@ -4637,7 +4637,7 @@
 "org-string">"bookmark"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">where to save the bookmarks</span>
+"org-comment">Where to save the bookmarks.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq bookmark-default-file <span class="org-rainbow-delimiters-depth-3">(</span>concat user-emacs-directory <span class="org-string">"bookmarks.bmk"</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
                                         <span class=
@@ -4650,7 +4650,7 @@
 "org-comment">' is required!</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">each command that sets a bookmark will also save your bookmarks</span>
+"org-comment">Each command that sets a bookmark will also save your bookmarks.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq bookmark-save-flag 1<span class=
 "org-rainbow-delimiters-depth-2">)</span>
@@ -4705,9 +4705,9 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">extensions to standard library `</span><span class=
+"org-comment">Extensions to standard library `</span><span class=
 "org-constant"><span class="org-comment">bookmark.el</span></span><span class=
-"org-comment">'</span>
+"org-comment">'.</span>
     <span class=
 "org-rainbow-delimiters-depth-1">(</span>try-require 'bookmark+<span class=
 "org-rainbow-delimiters-depth-1">)</span>
@@ -4716,27 +4716,28 @@
 "org-string">"bookmark+"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">automatically highlight bookmarks when set</span>
+"org-comment">Automatically highlight bookmarks when set.</span>
       <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq bmkp-auto-light-when-set 'any-bookmark<span class="org-rainbow-delimiters-depth-2">)</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">automatically highlight bookmarks when jumped to</span>
+"org-comment">Automatically highlight bookmarks when jumped to.</span>
       <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq bmkp-auto-light-when-jump 'any-bookmark<span class="org-rainbow-delimiters-depth-2">)</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't propertize bookmark names to hold full bookmark data</span>
+"org-comment">Don't propertize bookmark names to hold full bookmark data.</span>
       <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq bmkp-propertize-bookmark-names-flag nil<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span><span class="org-rainbow-delimiters-unmatched">)</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">we will often be going back and forth</span>
+"org-comment">We will often be going back and forth</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">between using Bookmark+ and using</span>
                                         <span class=
-"org-comment-delimiter">; </span><span class="org-comment">vanilla Emacs</span>
+"org-comment-delimiter">; </span><span class=
+"org-comment">vanilla Emacs.</span>
 </pre>
           </div>
         </div>
@@ -4749,7 +4750,7 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">quickly jump to a position in the current view</span>
+"org-comment">Quickly jump to a position in the current view.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"ace-jump-mode-autoloads"</span>
@@ -4838,14 +4839,14 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">keep screen position of point when scrolling</span>
+"org-comment">Keep screen position of point when scrolling.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq scroll-preserve-screen-position t<span class="org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">better scrolling in Emacs (doing a &lt;PageDown&gt; followed by a &lt;PageUp&gt; will</span>
+"org-comment">Better scrolling in Emacs (doing a &lt;PageDown&gt; followed by a &lt;PageUp&gt; will</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">place the point at the same place)</span>
+"org-comment">place the point at the same place).</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"pager-autoloads"</span>
@@ -4886,7 +4887,7 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">annoying arrows mode</span>
+"org-comment">Annoying arrows mode.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>try-require 'annoying-arrows-mode<span class="org-rainbow-delimiters-depth-1">)</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
@@ -4916,22 +4917,22 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">scroll only one line at a time (redisplay will never recenter point)</span>
+"org-comment">Scroll only one line at a time (redisplay will never recenter point).</span>
   <span class=
-"org-rainbow-delimiters-depth-1">(</span>setq scroll-conservatively 10000<span class="org-rainbow-delimiters-depth-1">)</span>    <span class="org-comment-delimiter">; </span><span class="org-comment">or `</span><span class="org-constant"><span class="org-comment">most-positive-fixnum</span></span><span class="org-comment">'</span>
+"org-rainbow-delimiters-depth-1">(</span>setq scroll-conservatively 10000<span class="org-rainbow-delimiters-depth-1">)</span>    <span class="org-comment-delimiter">; </span><span class="org-comment">Or `</span><span class="org-constant"><span class="org-comment">most-positive-fixnum</span></span><span class="org-comment">'.</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">number of lines of margin at the top and bottom of a window</span>
+"org-comment">Number of lines of margin at the top and bottom of a window.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq scroll-margin 1<span class=
 "org-rainbow-delimiters-depth-1">)</span> <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">or 3?        ; also for `</span><span class=
+"org-comment">or 3?        ; Also for `</span><span class=
 "org-constant"><span class=
-"org-comment">isearch-forward</span></span><span class="org-comment">'</span>
+"org-comment">isearch-forward</span></span><span class="org-comment">'.</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">scrolling down looks much better</span>
+"org-comment">Scrolling down looks much better.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>setq auto-window-vscroll nil<span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
@@ -4973,10 +4974,10 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable the use of the command `</span><span class=
+"org-comment">Enable the use of the command `</span><span class=
 "org-constant"><span class=
 "org-comment">narrow-to-region</span></span><span class=
-"org-comment">' without confirmation</span>
+"org-comment">' without confirmation.</span>
   <span class=
 "org-rainbow-delimiters-depth-1">(</span>put 'narrow-to-region 'disabled nil<span class="org-rainbow-delimiters-depth-1">)</span>
 
@@ -5012,12 +5013,12 @@
             <pre class="src src-emacs-lisp">
   <span class="org-rainbow-delimiters-depth-1">(</span>XEmacs
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">stop showing that annoying progress bar when fontifying</span>
+"org-comment">Stop showing that annoying progress bar when fontifying.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq progress-feedback-use-echo-area nil<span class="org-rainbow-delimiters-depth-2">)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable Font Lock mode</span>
+"org-comment">Enable Font Lock mode.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>font-lock-mode<span class=
 "org-rainbow-delimiters-depth-2">)</span><span class=
@@ -5117,7 +5118,7 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">add highlighting keywords for selected major modes only</span>
+"org-comment">Add highlighting keywords for selected major modes only.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">dolist</span> <span class=
 "org-rainbow-delimiters-depth-2">(</span>mode '<span class=
@@ -5133,7 +5134,7 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">add highlighting keywords for Org mode only</span>
+"org-comment">Add highlighting keywords for Org mode only.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">dolist</span> <span class=
 "org-rainbow-delimiters-depth-2">(</span>mode '<span class=
@@ -5148,9 +5149,9 @@
 "org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">add highlighting keywords for selected major modes *and* all major modes</span>
+"org-comment">Add highlighting keywords for selected major modes *and* all major modes</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">derived from them</span>
+"org-comment">derived from them.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">dolist</span> <span class=
 "org-rainbow-delimiters-depth-2">(</span>hook '<span class=
@@ -5187,13 +5188,13 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">just-in-time fontification</span>
+"org-comment">Just-in-time fontification.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"jit-lock"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">stealth fontification should show status messages</span>
+"org-comment">Stealth fontification should show status messages.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq jit-lock-stealth-verbose t<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
@@ -5274,7 +5275,7 @@
 "org-string">"highlight-symbol-autoloads"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">emulation of Vim's `*' search</span>
+"org-comment">Emulation of Vim's `*' search.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>global-set-key <span class=
 "org-rainbow-delimiters-depth-3">(</span>kbd <span class=
@@ -5298,7 +5299,7 @@
 "org-string">"highlight-symbol"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">number of seconds of idle time before highlighting the current symbol</span>
+"org-comment">Number of seconds of idle time before highlighting the current symbol.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq highlight-symbol-idle-delay 0.5<span class="org-rainbow-delimiters-depth-2">)</span>
 
@@ -5306,12 +5307,12 @@
 "org-rainbow-delimiters-depth-2">(</span>setq highlight-symbol-colors '<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"#FFCDFF"</span> <span class="org-string">"#CCCCFF"</span> <span class="org-string">"#FFB6C6"</span> <span class="org-string">"#84CFFF"</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">temporarily highlight the symbol when using `</span><span class=
+"org-comment">Temporarily highlight the symbol when using `</span><span class=
 "org-constant"><span class=
 "org-comment">highlight-symbol-jump</span></span><span class=
 "org-comment">'</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">family of functions</span>
+"org-comment">family of functions.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>setq highlight-symbol-on-navigation-p t<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
@@ -5325,7 +5326,7 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">automatic highlighting current symbol</span>
+"org-comment">Automatic highlighting current symbol.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">when</span> <span class=
 "org-rainbow-delimiters-depth-2">(</span>try-require 'auto-highlight-symbol<span class="org-rainbow-delimiters-depth-2">)</span>
@@ -5384,7 +5385,7 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">highlight uncommitted changes</span>
+"org-comment">Highlight uncommitted changes.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"diff-hl-autoloads"</span>
@@ -5405,12 +5406,12 @@
 "org-string">"diff-hl"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">jump to next hunk (also on `C-x v ]')</span>
+"org-comment">Jump to next hunk (also on `C-x v ]').</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>define-key diff-hl-mode-map <span class="org-rainbow-delimiters-depth-3">(</span>kbd <span class="org-string">"C-x v n"</span><span class="org-rainbow-delimiters-depth-3">)</span> 'diff-hl-next-hunk<span class="org-rainbow-delimiters-depth-2">)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">jump to previous hunk (also on `C-x v [')</span>
+"org-comment">Jump to previous hunk (also on `C-x v [').</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>define-key diff-hl-mode-map <span class="org-rainbow-delimiters-depth-3">(</span>kbd <span class="org-string">"C-x v p"</span><span class="org-rainbow-delimiters-depth-3">)</span> 'diff-hl-previous-hunk<span class="org-rainbow-delimiters-depth-2">)</span>
 </pre>
@@ -5421,7 +5422,7 @@
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">popup current diff</span>
+"org-comment">Popup current diff.</span>
     <span class=
 "org-rainbow-delimiters-depth-1">(</span>define-key diff-hl-mode-map <span class="org-rainbow-delimiters-depth-2">(</span>kbd <span class="org-string">"C-x v ="</span><span class="org-rainbow-delimiters-depth-2">)</span> 'diff-hl-diff-goto-hunk<span class="org-rainbow-delimiters-depth-1">)</span>
 
@@ -25104,11 +25105,17 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             <span class="org-rainbow-delimiters-depth-2">(</span><span class=
 "org-keyword">lambda</span> <span class=
 "org-rainbow-delimiters-depth-3">()</span>
+
+              <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Attempts to wrap the selected region.</span>
               <span class=
 "org-rainbow-delimiters-depth-3">(</span>setq autopair-autowrap t<span class=
 "org-rainbow-delimiters-depth-3">)</span>
+
+              <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Enable Autopair-Global mode.</span>
               <span class=
-"org-rainbow-delimiters-depth-3">(</span>autopair-global-mode t<span class=
+"org-rainbow-delimiters-depth-3">(</span>autopair-global-mode 1<span class=
 "org-rainbow-delimiters-depth-3">)</span><span class=
 "org-rainbow-delimiters-depth-2">)</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
@@ -26463,30 +26470,6 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-rainbow-delimiters-depth-2">(</span>add-to-list 'elint-standard-variables 'emacs-major-version<span class="org-rainbow-delimiters-depth-2">)</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>add-to-list 'elint-standard-variables 'window-system<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-</pre>
-          </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(defun elisp-indent-or-complete (&amp;optional arg)</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(interactive "p")</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(call-interactively 'lisp-indent-line)</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(unless (or (looking-back "^\\s-*")</span>
-  <span class="org-comment-delimiter">;;          </span><span class=
-"org-comment">(bolp)</span>
-  <span class="org-comment-delimiter">;;          </span><span class=
-"org-comment">(not (looking-back "[-[:alnum:]_*+/=&lt;&gt;!?]+")))</span>
-  <span class="org-comment-delimiter">;;     </span><span class=
-"org-comment">(call-interactively 'lisp-complete-symbol)))</span>
-  <span class="org-comment-delimiter">;;</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(with-eval-after-load "lisp-mode"</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(define-key emacs-lisp-mode-map (kbd "&lt;tab&gt;") 'elisp-indent-or-complete))</span>
 </pre>
           </div>
         </div>
@@ -29348,6 +29331,69 @@ good|
 "org-rainbow-delimiters-depth-2">(</span>kbd <span class=
 "org-string">"&lt;tab&gt;"</span><span class=
 "org-rainbow-delimiters-depth-2">)</span> 'company-complete-selection<span class="org-rainbow-delimiters-depth-1">)</span>
+</pre>
+            </div>
+
+            <p><b>First</b> run the <b>indent</b> function, then try
+            <b>completion</b> only if it didn’t change anything.</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">see tab-always-indent</span>
+
+  <span class="org-rainbow-delimiters-depth-1">(</span><span class=
+"org-keyword">defun</span> <span class=
+"org-function-name">leuven-indent-or-complete</span> <span class=
+"org-rainbow-delimiters-depth-2">()</span>
+    <span class=
+"org-doc">"Indent the current line; if point doesn't move, then try to complete."</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>interactive<span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-rainbow-delimiters-depth-2">(</span><span class=
+"org-keyword">let</span> <span class=
+"org-rainbow-delimiters-depth-3">(</span><span class=
+"org-rainbow-delimiters-depth-4">(</span>p <span class=
+"org-rainbow-delimiters-depth-5">(</span>point<span class=
+"org-rainbow-delimiters-depth-5">)</span><span class=
+"org-rainbow-delimiters-depth-4">)</span><span class=
+"org-rainbow-delimiters-depth-3">)</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(if (minibufferp)</span>
+      <span class="org-comment-delimiter">;;     </span><span class=
+"org-comment">(minibuffer-complete)</span>
+      <span class=
+"org-rainbow-delimiters-depth-3">(</span>call-interactively 'indent-for-tab-command<span class="org-rainbow-delimiters-depth-3">)</span>
+      <span class="org-rainbow-delimiters-depth-3">(</span><span class=
+"org-keyword">when</span> <span class=
+"org-rainbow-delimiters-depth-4">(</span>and <span class=
+"org-rainbow-delimiters-depth-5">(</span>= p <span class=
+"org-rainbow-delimiters-depth-6">(</span>point<span class=
+"org-rainbow-delimiters-depth-6">)</span><span class=
+"org-rainbow-delimiters-depth-5">)</span>
+                 <span class=
+"org-rainbow-delimiters-depth-5">(</span>not <span class=
+"org-rainbow-delimiters-depth-6">(</span>bolp<span class=
+"org-rainbow-delimiters-depth-6">)</span><span class=
+"org-rainbow-delimiters-depth-5">)</span>
+                 <span class=
+"org-rainbow-delimiters-depth-5">(</span>looking-at <span class=
+"org-string">"\\_&gt;"</span><span class=
+"org-rainbow-delimiters-depth-5">)</span><span class=
+"org-rainbow-delimiters-depth-4">)</span>
+        <span class=
+"org-rainbow-delimiters-depth-4">(</span>call-interactively 'company-complete-selection<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
+
+  <span class=
+"org-rainbow-delimiters-depth-1">(</span>define-key company-mode-map <span class="org-rainbow-delimiters-depth-2">(</span>kbd <span class="org-string">"&lt;tab&gt;"</span><span class="org-rainbow-delimiters-depth-2">)</span> 'leuven-indent-or-complete<span class="org-rainbow-delimiters-depth-1">)</span>
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(defun leuven--tab-fix ()</span>
+  <span class="org-comment-delimiter">;;   </span><span class=
+"org-comment">(local-set-key (kbd "&lt;tab&gt;") 'leuven-indent-or-complete))</span>
+  <span class="org-comment-delimiter">;;</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(add-hook 'prog-mode-hook 'leuven--tab-fix)</span>
 </pre>
             </div>
 
@@ -36580,7 +36626,7 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141007.2136]--"</span><span class=
+"org-string">"* --[ Loaded Emacs Leuven 20141008.2136]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=

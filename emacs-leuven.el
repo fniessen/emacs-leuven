@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141007.2132
+;; Version: 20141008.2132
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,14 +72,14 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141007.2132]--")
+(message "* --[ Loading Emacs Leuven 20141008.2132]--")
 
-;; turn on Common Lisp support
-(eval-when-compile (require 'cl))       ; provide useful things like `setf'
+;; Turn on Common Lisp support.
+(eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
 
-;; uptimes
+;; Uptimes.
 (when (string-match "XEmacs" (version))
-  ;; XEmacs doesn't have `float-time'
+  ;; XEmacs doesn't have `float-time'.
   (defun float-time ()
     "Convert `current-time' to a floating point number."
     (multiple-value-bind (s0 s1 s2) (current-time)
@@ -109,7 +109,7 @@
                           (format-time-string "] ")
                           (ad-get-arg 0)))))
 
-;; allow quick include/exclude of setup parts -- DO NOT EDIT the DEFVAR!
+;; Allow quick include/exclude of setup parts -- DO NOT EDIT the DEFVAR!
 (defvar leuven-chapter-0-environment t) ; required
 (defvar leuven-chapter-0-loading-libraries t) ; required
 (defvar leuven-chapter-0-debugging t)
@@ -169,10 +169,10 @@ Save execution times in the global list `leuven--load-times-list'."
        (when leuven-load-verbose
          (message "** %s" ,chaptername))
        (setq before-chapter-time (float-time))
-       (setq leuven--before-section-time (float-time)) ; init section time
+       (setq leuven--before-section-time (float-time)) ; Init section time.
        (progn ,@body)
        (leuven--section (concat "[" ,chaptername " ends here]") 'end-of-chapter)
-                                        ; add fake closing section
+                                        ; Add fake closing section.
        (setq this-chapter-time
              (format "%.3f" (- (float-time) before-chapter-time)))
        (add-to-list 'leuven--load-times-list
@@ -191,14 +191,14 @@ Last time is saved in global variable `leuven--before-section-time'."
       (when (not (equal this-section-time 0.000))
         (message "    Section time: %.3f s" this-section-time))
       (unless end-of-chapter (message "*** %s" sectionname)))
-    ;; for next one
+    ;; For next one.
     (setq leuven--before-section-time (float-time))))
 
 ;;* Loading Libraries of Lisp Code for Emacs
 
 (leuven--chapter leuven-chapter-0-loading-libraries "0 Loading Libraries"
 
-  ;; load-path enhancement
+  ;; Load-path enhancement.
   (defun leuven-add-to-load-path (this-directory)
     "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
     (when (and this-directory
@@ -214,7 +214,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           (when leuven-load-verbose
             (message "(Info) Added `%s' to `load-path'" this-directory))))))
 
-  ;; remember this directory
+  ;; Remember this directory.
   (defconst leuven--directory
     (file-name-directory (or load-file-name (buffer-file-name)))
     "Directory path of Emacs Leuven installation.")
@@ -235,7 +235,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven-add-to-load-path leuven-user-lisp-directory)
 
-  ;; require a feature/library if available; if not, fail silently
+  ;; Require a feature/library if available; if not, fail silently.
   (unless (fboundp 'try-require)
     (defun try-require (feature)
       "Attempt to load a FEATURE (or library).
@@ -246,15 +246,15 @@ Last time is saved in global variable `leuven--before-section-time'."
             (if (stringp feature)
                 (load-library feature)
               (require feature))
-            t)                          ; necessary for correct behavior in
-                                        ; conditional expressions
+            t)                          ; Necessary for correct behavior in
+                                        ; conditional expressions.
         (file-error
          (message "Requiring `%s'... missing" feature)
          nil))))
 
-  ;; TEMPORARY
+  ;; TEMPORARY.
   (unless (fboundp 'with-eval-after-load)
-    ;; wrapper around `eval-after-load' (added in GNU Emacs 24.4)
+    ;; Wrapper around `eval-after-load' (added in GNU Emacs 24.4).
     (defmacro with-eval-after-load (mode &rest body)
       "`eval-after-load' MODE evaluate BODY."
       (declare (indent defun))
@@ -343,7 +343,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         (if (file-executable-p file)
             file
           (message "(warning) Can't find executable `%s'" file)
-          ;; sleep 1.5 s so that you can see the warning
+          ;; Sleep 1.5 s so that you can see the warning.
           (sit-for 1.5))
       (error "Missing argument to \"leuven--file-exists-and-executable-p\"")))
 
@@ -352,13 +352,13 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "Init")
 
   (XEmacs
-    ;; don't load init file from `~/.xemacs/init.el' (and don't offer its
-    ;; migration)
+    ;; Don't load init file from `~/.xemacs/init.el' (and don't offer its
+    ;; migration).
     (setq load-home-init-file t))
 
   (GNUEmacs
-    ;; ensure that the echo area is always visible during the early stage of
-    ;; startup (useful in case of error)
+    ;; Ensure that the echo area is always visible during the early stage of
+    ;; startup (useful in case of error).
     (modify-all-frames-parameters
      '((height . 32))))
 
@@ -368,14 +368,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 (leuven--chapter leuven-chapter-0-debugging "0 Debugging"
 
-  ;; get the backtrace when uncaught errors occur
-  (setq debug-on-error t)               ; will be unset at the end
+  ;; Get the backtrace when uncaught errors occur.
+  (setq debug-on-error t)               ; Will be unset at the end.
 
   (XEmacs
     (setq stack-trace-on-error t))
 
-  ;; hit `C-g' while it's frozen to get an Emacs Lisp backtrace
-  (setq debug-on-quit t)                ; will be unset at the end
+  ;; Hit `C-g' while it's frozen to get an Emacs Lisp backtrace.
+  (setq debug-on-quit t)                ; Will be unset at the end.
 
 )                                       ; chapter 0 ends here
 
@@ -387,19 +387,19 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "47.2 Package Installation")
 
-  ;; simple package system for GNU Emacs
+  ;; Simple package system for GNU Emacs.
   (GNUEmacs
     (try-require 'package)
     (with-eval-after-load "package"
 
-      ;; archives from which to fetch
+      ;; Archives from which to fetch.
       (setq package-archives
             (append '(("org"          . "http://orgmode.org/elpa/")
                       ;; ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
                       ("melpa"        . "http://melpa.milkbox.net/packages/"))
                     package-archives))
 
-      ;; load the latest version of all installed packages, and activate them
+      ;; Load the latest version of all installed packages, and activate them.
       (package-initialize)              ; add ALL ELPA subdirs to `load-path'
                                         ; and load `<pkg>-autoloads.el'
 
@@ -428,11 +428,11 @@ Last time is saved in global variable `leuven--before-section-time'."
               (push pkg missing-elpa-packages)))
           missing-elpa-packages))
 
-      ;; propose to install all the packages specified in `leuven-elpa-packages'
-      ;; which are missing
+      ;; Propose to install all the packages specified in `leuven-elpa-packages'
+      ;; which are missing.
       (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
         (when missing-elpa-packages
-          ;; download once the ELPA archive description
+          ;; Download once the ELPA archive description.
           (package-refresh-contents)    ; Ensure that the list of packages is
                                         ; up-to-date.  Otherwise, new packages
                                         ; (not present in the cache of the ELPA
@@ -441,13 +441,13 @@ Last time is saved in global variable `leuven--before-section-time'."
             (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
                 (ignore-errors
                   (package-install pkg))
-                                        ; must be run after initializing
-                                        ; `package-initialize'
+                                        ; Must be run after initializing
+                                        ; `package-initialize'.
               (message (concat "Customize `leuven-elpa-packages' to ignore "
                                "the `%s' package at next startup...") pkg)
               (sit-for 1.5)))))
 
-      ;; don't truncate package names in Emacs package list
+      ;; Don't truncate package names in Emacs package list.
       (add-hook 'package-menu-mode-hook
                 (lambda ()
                   (setq tabulated-list-format
@@ -459,26 +459,26 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 )                                       ; chapter 47 ends here
 
-  ;; load elisp libraries while Emacs is idle
+  ;; Load elisp libraries while Emacs is idle.
   (try-require 'idle-require)
 
-  ;; fail-safe for `idle-require'
+  ;; Fail-safe for `idle-require'.
   (if (not (featurep 'idle-require))
     (defun idle-require (feature &optional file noerror)
       (try-require feature)))
 
   (with-eval-after-load "idle-require"
 
-    ;; idle time in seconds after which autoload functions will be loaded
+    ;; Idle time in seconds after which autoload functions will be loaded.
     (setq idle-require-idle-delay 5)
 
-    ;; time in seconds between automatically loaded functions
+    ;; Time in seconds between automatically loaded functions.
     (setq idle-require-load-break 2))
 
   (add-hook 'after-init-hook
             (lambda ()
               (when (fboundp 'idle-require-mode)
-                ;; starts loading
+                ;; Starts loading.
                 (idle-require-mode 1))))
 
 ;;* 1 The Organization of the (info "(emacs)Screen")
@@ -489,7 +489,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "1.2 (emacs) The Echo Area")
 
-  ;; don't truncate the message log buffer when it becomes large
+  ;; Don't truncate the message log buffer when it becomes large.
   (setq message-log-max t)
 
 )                                       ; chapter 1 ends here
@@ -498,10 +498,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 (leuven--chapter leuven-chapter-6-exiting "6 Exiting Emacs"
 
-  ;; unbind "minimize"
+  ;; Unbind "minimize".
   (global-unset-key (kbd "C-z"))
 
-  ;; quit with Alt + F4
+  ;; Quit with Alt + F4.
   (global-set-key (kbd "<M-f4>") 'save-buffers-kill-terminal)
 
 )                                       ; chapter 6 ends here
@@ -514,24 +514,24 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "7.1 (emacs)Inserting Text")
 
-  ;; enter characters by their code in octal (for `C-q NNN <RET>')
+  ;; Enter characters by their code in octal (for `C-q NNN <RET>').
   (setq read-quoted-char-radix 8)       ; 16 for hexadecimal (for Unicode char)
 
 ;;** 7.2 (info "(emacs)Moving Point") Location
 
   (leuven--section "7.2 (emacs)Moving Point Location")
 
-  ;; don't add newlines to end of buffer when scrolling
+  ;; Don't add newlines to end of buffer when scrolling.
   (setq next-line-add-newlines nil)
 
-  ;; print the current buffer line number
+  ;; Print the current buffer line number.
   (global-set-key (kbd "M-G") 'what-line)
 
 ;;** 7.4 (info "(emacs)Basic Undo")ing Changes
 
   (leuven--section "7.4 (emacs)Basic Undoing Changes")
 
-  ;; undo some previous changes
+  ;; Undo some previous changes.
   (global-set-key (kbd "<f11>") 'undo)
 
   (with-eval-after-load "undo-tree-autoloads"
@@ -540,13 +540,13 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (global-set-key (kbd "<S-f11>") 'redo)
 
-    ;; enable Global-Undo-Tree mode
+    ;; Enable Global-Undo-Tree mode.
     (global-undo-tree-mode 1)
 
-    ;; display times relative to current time in visualizer
+    ;; Display times relative to current time in visualizer.
     (setq undo-tree-visualizer-relative-timestamps t)
 
-    ;; display time-stamps by default in undo-tree visualizer
+    ;; Display time-stamps by default in undo-tree visualizer.
     (setq undo-tree-visualizer-timestamps t))
 
 )                                       ; chapter 7 ends here
@@ -555,32 +555,32 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 (leuven--chapter leuven-chapter-8-minibuffer "8 The Minibuffer"
 
-  ;; how long to display an echo-area message when the minibuffer is active
+  ;; How long to display an echo-area message when the minibuffer is active.
   (setq minibuffer-message-timeout 0.5)
 
 ;;** 8.3 (info "(emacs)Minibuffer Edit")ing
 
   (leuven--section "8.3 (emacs)Minibuffer Editing")
 
-  ;; minibuffer and echo area windows resize vertically as necessary to fit
-  ;; the text displayed in them
+  ;; Minibuffer and echo area windows resize vertically as necessary to fit
+  ;; the text displayed in them.
   (setq resize-mini-windows t)
 
 ;;** 8.4 (info "(emacs)Completion")
 
   (leuven--section "8.4 (emacs)Completion")
 
-  ;; don't consider case significant in completion (GNU Emacs default)
+  ;; Don't consider case significant in completion (GNU Emacs default).
   (XEmacs
     (setq completion-ignore-case t))
 
-  ;; ignore case when reading a file name
+  ;; Ignore case when reading a file name.
   (setq read-file-name-completion-ignore-case t)
 
-  ;; ignore case when reading a buffer name
+  ;; Ignore case when reading a buffer name.
   (setq read-buffer-completion-ignore-case t)
 
-  ;; provide the same facility of `ls --color' inside Emacs
+  ;; Provide the same facility of `ls --color' inside Emacs.
   (when (locate-library "dircolors")
     (autoload 'dircolors "dircolors" nil t)
     (add-hook 'completion-list-mode-hook 'dircolors))
@@ -595,13 +595,13 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "10.1 (emacs)Help Summary")
 
-  ;; avoid the description of all minor modes
+  ;; Avoid the description of all minor modes.
   (defun describe-major-mode ()
     "Describe only `major-mode'."
     (interactive)
     (describe-function major-mode))
 
-  ;; look up subject in (the indices of the) Emacs Lisp manual
+  ;; Look up subject in (the indices of the) Emacs Lisp manual.
   (global-set-key (kbd "C-h E") 'elisp-index-search)
 
 ;;** 10.4 (info "(emacs)Apropos")
@@ -610,10 +610,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (with-eval-after-load "apropos"
 
-    ;; check all variables and non-interactive functions as well
+    ;; Check all variables and non-interactive functions as well.
     (setq apropos-do-all t))
 
-  ;; show variables whose name matches the pattern
+  ;; Show variables whose name matches the pattern.
   (GNUEmacs
 
     ;; (defun apropos-variable (string)
@@ -633,7 +633,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "10.8 (emacs)Misc Help")
 
-  ;; enter Info documentation browser
+  ;; Enter Info documentation browser.
   (global-set-key (kbd "<f1>") 'info)
 
   (defun describe-elisp-symbol-at-point ()
@@ -650,14 +650,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (global-set-key (kbd "<f1>") 'describe-elisp-symbol-at-point)
 
-  ;; display symbol definitions, as found in the relevant manual
+  ;; Display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
   ;; have documentation in Info)
   (global-set-key (kbd "<C-f1>") 'info-lookup-symbol)
 
   (with-eval-after-load "info"
-    ;; list of directories to search for Info documentation files (in the order
-    ;; they are listed)
+    ;; List of directories to search for Info documentation files (in the order
+    ;; they are listed).
     (when leuven--win32-p
       (setq Info-directory-list
             `(,(expand-file-name
@@ -670,14 +670,14 @@ Last time is saved in global variable `leuven--before-section-time'."
       (try-require 'info+)
       (with-eval-after-load "info+"
 
-        ;; show breadcrumbs in the header line
+        ;; Show breadcrumbs in the header line.
         (setq Info-breadcrumbs-in-header-flag t)
 
-        ;; don't show breadcrumbs in the mode line
+        ;; Don't show breadcrumbs in the mode line.
         (setq Info-breadcrumbs-in-mode-line-mode nil)))
 
-    ;; some info related functions
-    ;; (to insert links such as `(info "(message)Insertion Variables")')
+    ;; Some info related functions (to insert links such as `(info
+    ;; "(message)Insertion Variables")').
     (when (locate-library "rs-info")
       (autoload 'rs-info-insert-current-node "rs-info"
         "Insert reference to current Info node using STYPE in buffer." t)
@@ -690,17 +690,17 @@ Last time is saved in global variable `leuven--before-section-time'."
       (defalias 'boxquote-info 'rs-info-boxquote))
     )
 
-  ;; get a Unix manual page of the item under point
+  ;; Get a Unix manual page of the item under point.
   (global-set-key (kbd "<S-f1>") 'man-follow)
 
   (with-eval-after-load "man"
-    ;; make the manpage the current buffer in the current window
+    ;; Make the manpage the current buffer in the current window.
     (setq Man-notify-method 'pushy))
 
-  ;; alias man to woman
+  ;; Alias man to woman.
   (defalias 'man 'woman)
 
-  ;; decode and browse Unix man-pages "W.o. (without) Man"
+  ;; Decode and browse Unix man-pages "W.o. (without) Man".
   (with-eval-after-load "woman"
     (defalias 'man 'woman))
 
@@ -710,41 +710,41 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 (leuven--chapter leuven-chapter-11-mark "11 The Mark and the Region"
 
-  ;; goto last change
+  ;; Goto last change.
   (with-eval-after-load "goto-chg-autoloads"
     (global-set-key (kbd "<C-S-backspace>") 'goto-last-change))
 
-  ;; increase selected region by semantic units
+  ;; Increase selected region by semantic units.
   (with-eval-after-load "expand-region-autoloads"
 
     (global-set-key (kbd "C-@") 'er/expand-region)
-    (global-set-key (kbd "C-;") 'er/expand-region) ; used in `flyspell.el'
-    (global-set-key (kbd "C-'") 'er/expand-region) ; undefined
+    (global-set-key (kbd "C-;") 'er/expand-region) ; Used in `flyspell.el'.
+    (global-set-key (kbd "C-'") 'er/expand-region) ; Undefined.
     ;; (global-set-key (kbd "C-M-@") 'er/contract-region)
     )
 
-  ;; inserting text while the mark is active causes the text in the region to be
-  ;; deleted first
-  (delete-selection-mode 1)             ; overwrite region
+  ;; Inserting text while the mark is active causes the text in the region to be
+  ;; deleted first.
+  (delete-selection-mode 1)             ; Overwrite region.
 
-  ;; multiple cursors for Emacs
+  ;; Multiple cursors for Emacs.
   (with-eval-after-load "multiple-cursors-autoloads"
 
-    ;; add a cursor to each (continuous) line in the current region
+    ;; Add a cursor to each (continuous) line in the current region.
     (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 
     (global-set-key (kbd "C-S-c C-e") 'mc/edit-ends-of-lines)
     (global-set-key (kbd "C-S-c C-a") 'mc/edit-beginnings-of-lines)
 
-    ;; add a cursor and region at the next part of the buffer forwards that
-    ;; matches the current region
+    ;; Add a cursor and region at the next part of the buffer forwards that
+    ;; matches the current region.
     (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 
-    ;; add a cursor and region at the next part of the buffer backwards that
-    ;; matches the current region
+    ;; Add a cursor and region at the next part of the buffer backwards that
+    ;; matches the current region.
     (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 
-    ;; mark all parts of the buffer that matches the current region
+    ;; Mark all parts of the buffer that matches the current region.
     (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
     (global-set-key (kbd "C-c *") 'mc/mark-all-like-this)
 
@@ -758,10 +758,10 @@ Last time is saved in global variable `leuven--before-section-time'."
     (global-set-key (kbd "s-SPC") 'set-rectangular-region-anchor)
   )
 
-  ;; multiple cursors for Emacs
+  ;; Multiple cursors for Emacs.
   (with-eval-after-load "multiple-cursors-core"
 
-    ;; commands to run for all cursors in multiple-cursors-mode
+    ;; Commands to run for all cursors in multiple-cursors-mode.
     (setq mc/cmds-to-run-for-all
           '(leuven-fill-paragraph
             org-beginning-of-line
@@ -785,8 +785,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   (GNUEmacs
 ;; old ([2012-09-07 Fri] remove "compile" after "activate")
 
-    ;; add the ability to copy or cut the current line without marking it
-    ;; (no active region) -- idea stolen from SlickEdit
+    ;; Add the ability to copy or cut the current line without marking it
+    ;; (no active region) -- idea stolen from SlickEdit.
     (defadvice kill-ring-save (before leuven-slick-copy activate)
       "When called with no active region, copy the current line instead."
       (interactive
@@ -832,9 +832,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "12.2 (emacs)Yanking")
 
-  ;; auto-indentation of pasted code in the programming modes (fall back to
+  ;; Auto-indentation of pasted code in the programming modes (fall back to
   ;; default, non-indented yanking by preceding the yanking command `C-y' with
-  ;; `C-u')
+  ;; `C-u').
   (dolist (command '(yank
                      yank-pop))
     (eval `(defadvice ,command (after leuven-indent-region activate)
@@ -848,9 +848,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "12.3 (emacs)Cut and Paste on Graphical Displays")
 
-  ;; copy/paste with Gnome desktop
+  ;; Copy/paste with Gnome desktop.
   (GNUEmacs
-    ;; make cut, copy and paste (keys and menu bar items) use the clipboard
+    ;; Make cut, copy and paste (keys and menu bar items) use the clipboard.
     (menu-bar-enable-clipboard))
 
 )                                       ; chapter 12 ends here
@@ -882,31 +882,31 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (with-eval-after-load "bookmark"
 
-    ;; where to save the bookmarks
+    ;; Where to save the bookmarks.
     (setq bookmark-default-file (concat user-emacs-directory "bookmarks.bmk"))
                                         ;! a .txt extension would load Org at
                                         ;! the time `bookmark' is required!
 
-    ;; each command that sets a bookmark will also save your bookmarks
+    ;; Each command that sets a bookmark will also save your bookmarks.
     (setq bookmark-save-flag 1)
 
-    ;; extensions to standard library `bookmark.el'
+    ;; Extensions to standard library `bookmark.el'.
     (try-require 'bookmark+)
     (with-eval-after-load "bookmark+"
 
-      ;; automatically highlight bookmarks when set
+      ;; Automatically highlight bookmarks when set.
       (setq bmkp-auto-light-when-set 'any-bookmark)
 
-      ;; automatically highlight bookmarks when jumped to
+      ;; Automatically highlight bookmarks when jumped to.
       (setq bmkp-auto-light-when-jump 'any-bookmark)
 
-      ;; don't propertize bookmark names to hold full bookmark data
+      ;; Don't propertize bookmark names to hold full bookmark data.
       (setq bmkp-propertize-bookmark-names-flag nil)))
-                                        ; we will often be going back and forth
+                                        ; We will often be going back and forth
                                         ; between using Bookmark+ and using
-                                        ; vanilla Emacs
+                                        ; vanilla Emacs.
 
-  ;; quickly jump to a position in the current view
+  ;; Quickly jump to a position in the current view.
   (with-eval-after-load "ace-jump-mode-autoloads"
     (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
 
@@ -926,11 +926,11 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "14.1 (emacs)Scrolling")
 
-  ;; keep screen position of point when scrolling
+  ;; Keep screen position of point when scrolling.
   (setq scroll-preserve-screen-position t)
 
-  ;; better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
-  ;; place the point at the same place)
+  ;; Better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
+  ;; place the point at the same place).
   (with-eval-after-load "pager-autoloads"
     (autoload 'pager-page-up "pager"
       "Like scroll-down, but moves a fixed amount of lines." t)
@@ -942,7 +942,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (global-set-key (kbd "<prior>") 'pager-page-up)
     (global-set-key (kbd "<next>") 'pager-page-down))
 
-  ;; annoying arrows mode
+  ;; Annoying arrows mode.
   (try-require 'annoying-arrows-mode)
   (with-eval-after-load "annoying-arrows-mode"
     (global-annoying-arrows-mode))
@@ -951,20 +951,20 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "14.3 (emacs)Auto Scrolling")
 
-  ;; scroll only one line at a time (redisplay will never recenter point)
-  (setq scroll-conservatively 10000)    ; or `most-positive-fixnum'
+  ;; Scroll only one line at a time (redisplay will never recenter point).
+  (setq scroll-conservatively 10000)    ; Or `most-positive-fixnum'.
 
-  ;; number of lines of margin at the top and bottom of a window
-  (setq scroll-margin 1) ; or 3?        ; also for `isearch-forward'
+  ;; Number of lines of margin at the top and bottom of a window.
+  (setq scroll-margin 1) ; or 3?        ; Also for `isearch-forward'.
 
-  ;; scrolling down looks much better
+  ;; Scrolling down looks much better.
   (setq auto-window-vscroll nil)
 
 ;;** 14.5 (info "(emacs)Narrowing")
 
   (leuven--section "14.5 (emacs)Narrowing")
 
-  ;; enable the use of the command `narrow-to-region' without confirmation
+  ;; Enable the use of the command `narrow-to-region' without confirmation.
   (put 'narrow-to-region 'disabled nil)
 
   (with-eval-after-load "fancy-narrow-autoloads"
@@ -975,10 +975,10 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "14.12 (emacs)Font Lock")
 
   (XEmacs
-    ;; stop showing that annoying progress bar when fontifying
+    ;; Stop showing that annoying progress bar when fontifying.
     (setq progress-feedback-use-echo-area nil)
 
-    ;; enable Font Lock mode
+    ;; Enable Font Lock mode.
     (font-lock-mode))
 
   ;; highlight FIXME notes
@@ -995,21 +995,21 @@ Last time is saved in global variable `leuven--before-section-time'."
     '((t (:foreground "#CC0000" :background "#FFFF88")))
     "Face for making FIXME and other warnings stand out.")
 
-  ;; add highlighting keywords for selected major modes only
+  ;; Add highlighting keywords for selected major modes only.
   (dolist (mode '(fundamental-mode
                   text-mode))
     (font-lock-add-keywords mode
      `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))
      'end))
 
-  ;; add highlighting keywords for Org mode only
+  ;; Add highlighting keywords for Org mode only.
   (dolist (mode '(org-mode))
     (font-lock-add-keywords mode
      `((,leuven-highlight-keywords-in-org 1 'leuven-highlight-face prepend))
      'end))
 
-  ;; add highlighting keywords for selected major modes *and* all major modes
-  ;; derived from them
+  ;; Add highlighting keywords for selected major modes *and* all major modes
+  ;; derived from them.
   (dolist (hook '(prog-mode-hook
                   ;; text-mode-hook     ; avoid Org
                   css-mode-hook         ; [parent: fundamental]
@@ -1022,10 +1022,10 @@ Last time is saved in global variable `leuven--before-section-time'."
         `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend)) 'end))))
         ;; FIXME                      0                        t          t
 
-  ;; just-in-time fontification
+  ;; Just-in-time fontification.
   (with-eval-after-load "jit-lock"
 
-    ;; stealth fontification should show status messages
+    ;; Stealth fontification should show status messages.
     (setq jit-lock-stealth-verbose t))
 
 ;;** 14.13 (info "(emacs)Highlight Interactively") by Matching
@@ -1038,7 +1038,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (with-eval-after-load "highlight-symbol-autoloads"
 
-    ;; emulation of Vim's `*' search
+    ;; Emulation of Vim's `*' search.
     (global-set-key (kbd "C-*") 'highlight-symbol-at-point)
     ;; (global-set-key (kbd "C-<f4>") 'highlight-symbol-next)
     ;; (global-set-key (kbd "S-<f4>") 'highlight-symbol-prev)
@@ -1048,16 +1048,16 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (with-eval-after-load "highlight-symbol"
 
-    ;; number of seconds of idle time before highlighting the current symbol
+    ;; Number of seconds of idle time before highlighting the current symbol.
     (setq highlight-symbol-idle-delay 0.5)
 
     (setq highlight-symbol-colors '("#FFCDFF" "#CCCCFF" "#FFB6C6" "#84CFFF"))
 
-    ;; temporarily highlight the symbol when using `highlight-symbol-jump'
-    ;; family of functions
+    ;; Temporarily highlight the symbol when using `highlight-symbol-jump'
+    ;; family of functions.
     (setq highlight-symbol-on-navigation-p t))
 
-  ;; automatic highlighting current symbol
+  ;; Automatic highlighting current symbol.
   (when (try-require 'auto-highlight-symbol)
 
     ;; add R
@@ -1076,20 +1076,20 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (add-hook 'after-init-hook 'global-color-identifiers-mode))
 
-  ;; highlight uncommitted changes
+  ;; Highlight uncommitted changes.
   (with-eval-after-load "diff-hl-autoloads"
 
     (global-diff-hl-mode))
 
   (with-eval-after-load "diff-hl"
 
-    ;; jump to next hunk (also on `C-x v ]')
+    ;; Jump to next hunk (also on `C-x v ]').
     (define-key diff-hl-mode-map (kbd "C-x v n") 'diff-hl-next-hunk)
 
-    ;; jump to previous hunk (also on `C-x v [')
+    ;; Jump to previous hunk (also on `C-x v [').
     (define-key diff-hl-mode-map (kbd "C-x v p") 'diff-hl-previous-hunk)
 
-    ;; popup current diff
+    ;; Popup current diff.
     (define-key diff-hl-mode-map (kbd "C-x v =") 'diff-hl-diff-goto-hunk)
 
     ;; revert current hunk (also on `C-x v n')
@@ -6437,6 +6437,15 @@ mouse-3: go to end") "]"))))
 
   ;; (electric-pair-mode 1)
 
+  (add-hook 'prog-mode-hook
+            (lambda ()
+
+              ;; Attempts to wrap the selected region.
+              (setq autopair-autowrap t)
+
+              ;; Enable Autopair-Global mode.
+              (autopair-global-mode 1)))
+
 ;;** 26.5 (info "(emacs)Comments")
 
   (leuven--section "26.5 (emacs)Comments")
@@ -6804,17 +6813,6 @@ a clean buffer we're an order of magnitude laxer about checking."
     (add-to-list 'elint-standard-variables 'buffer-file-coding-system)
     (add-to-list 'elint-standard-variables 'emacs-major-version)
     (add-to-list 'elint-standard-variables 'window-system))
-
-  ;; (defun elisp-indent-or-complete (&optional arg)
-  ;;   (interactive "p")
-  ;;   (call-interactively 'lisp-indent-line)
-  ;;   (unless (or (looking-back "^\\s-*")
-  ;;          (bolp)
-  ;;          (not (looking-back "[-[:alnum:]_*+/=<>!?]+")))
-  ;;     (call-interactively 'lisp-complete-symbol)))
-  ;;
-  ;; (with-eval-after-load "lisp-mode"
-  ;;   (define-key emacs-lisp-mode-map (kbd "<tab>") 'elisp-indent-or-complete))
 
 )                                       ; chapter 27 ends here
 
@@ -7464,6 +7462,27 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; don't downcase the returned candidates
     (setq company-dabbrev-downcase nil))
+
+  ;; see tab-always-indent
+
+  (defun leuven-indent-or-complete ()
+    "Indent the current line; if point doesn't move, then try to complete."
+    (interactive)
+    (let ((p (point)))
+      ;; (if (minibufferp)
+      ;;     (minibuffer-complete)
+      (call-interactively 'indent-for-tab-command)
+      (when (and (= p (point))
+                 (not (bolp))
+                 (looking-at "\\_>"))
+        (call-interactively 'company-complete-selection))))
+
+  (define-key company-mode-map (kbd "<tab>") 'leuven-indent-or-complete)
+
+  ;; (defun leuven--tab-fix ()
+  ;;   (local-set-key (kbd "<tab>") 'leuven-indent-or-complete))
+  ;;
+  ;; (add-hook 'prog-mode-hook 'leuven--tab-fix)
 
 )                                       ; chapter 29 ends here
 
@@ -9286,7 +9305,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (sit-for 3)
           (message "Configuration updated. Restart Emacs to complete the process.")))))
 
-(message "* --[ Loaded Emacs Leuven 20141007.2133]--")
+(message "* --[ Loaded Emacs Leuven 20141008.2133]--")
 
 (provide 'emacs-leuven)
 
