@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141008.2205
+;; Version: 20141009.1438
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141008.2205]--")
+(message "* --[ Loading Emacs Leuven 20141009.1438]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -982,7 +982,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; Enable Font Lock mode.
     (font-lock-mode))
 
-  ;; highlight FIXME notes
+  ;; Highlight FIXME notes.
   (defvar leuven-highlight-keywords
     "\\(TODO\\|FIXME\\|XXX\\|BUG\\)"
     "Patterns to highlight.")
@@ -1093,42 +1093,42 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; Popup current diff.
     (define-key diff-hl-mode-map (kbd "C-x v =") 'diff-hl-diff-goto-hunk)
 
-    ;; revert current hunk (also on `C-x v n')
+    ;; Revert current hunk (also on `C-x v n').
     (define-key diff-hl-mode-map (kbd "C-x v u") 'diff-hl-revert-hunk))
 
 ;;** 14.15 (info "(emacs)Displaying Boundaries")
 
   (leuven--section "14.15 (emacs)Displaying Boundaries")
 
-  ;; visually indicate buffer boundaries and scrolling in the fringe
+  ;; Visually indicate buffer boundaries and scrolling in the fringe.
   (setq-default indicate-buffer-boundaries '((top . left) (t . right)))
 
 ;;** 14.16 (info "(emacs)Useless Whitespace")
 
   (leuven--section "14.16 (emacs)Useless Whitespace")
 
-  ;; ;; highlight trailing whitespaces in all modes
+  ;; ;; Highlight trailing whitespaces in all modes.
   ;; (setq-default show-trailing-whitespace t)
 
-  ;; nuke all trailing whitespaces in the buffer
+  ;; Nuke all trailing whitespaces in the buffer.
   (add-hook 'before-save-hook
             (lambda ()
-              ;; except for Message mode where "-- " is the signature separator
-              ;; (for when using emacsclient to compose emails and doing C-x #)
+              ;; Except for Message mode where "-- " is the signature separator
+              ;; (for when using emacsclient to compose emails and doing C-x #).
               (unless (eq major-mode 'message-mode)
                 (delete-trailing-whitespace))))
 
-  ;; visually indicate empty lines after the buffer end in the fringe
+  ;; Visually indicate empty lines after the buffer end in the fringe.
   (setq-default indicate-empty-lines t)
 
   (GNUEmacs
-    ;; enable Whitespace mode in all file buffers (not in *vc-dir*, etc.)
+    ;; Enable Whitespace mode in all file buffers (not in *vc-dir*, etc.).
     (add-hook 'text-mode-hook 'whitespace-mode)
     (add-hook 'prog-mode-hook 'whitespace-mode)
 
     (with-eval-after-load "whitespace"
 
-      ;; which kind of blank is visualized
+      ;; Which kind of blank is visualized.
       (setq whitespace-style
             '(face
               trailing
@@ -1138,28 +1138,28 @@ Last time is saved in global variable `leuven--before-section-time'."
               space-mark
               tab-mark))
 
-      ;; column beyond which the line is highlighted
+      ;; Column beyond which the line is highlighted.
       (setq whitespace-line-column 80)
 
-      ;; mappings for displaying characters
+      ;; Mappings for displaying characters.
       (setq whitespace-display-mappings
-            '((space-mark ?\u00A0       ; no-break space
-                          [?_]          ; spacing underscore
-                          [?_])         ; spacing underscore
+            '((space-mark ?\u00A0       ; No-break space.
+                          [?_]          ; Spacing underscore.
+                          [?_])         ; Spacing underscore.
 
-              (space-mark ?\u202F       ; narrow no-break space
-                          [?\u00B7]     ; middle dot
+              (space-mark ?\u202F       ; Narrow no-break space.
+                          [?\u00B7]     ; Middle dot.
                           [?.])
 
-              (tab-mark ?\t             ; tabulation
-                        [?\u25BA ?\t]   ; black right-pointing pointer
+              (tab-mark ?\t             ; Tabulation.
+                        [?\u25BA ?\t]   ; Black right-pointing pointer.
                         [?\\ ?\t])))))
 
-  ;; ;; control highlighting of non-ASCII space and hyphen chars, using the
-  ;; ;; `nobreak-space' or `escape-glyph' face respectively
-  ;; (setq nobreak-char-display t)      ; default
+  ;; ;; Control highlighting of non-ASCII space and hyphen chars, using the
+  ;; ;; `nobreak-space' or `escape-glyph' face respectively.
+  ;; (setq nobreak-char-display t)      ; [Default]
 
-  ;; ;; show zero-width spaces
+  ;; ;; Show zero-width spaces.
   ;; (font-lock-add-keywords nil
   ;;  `((,(format "\\(%c\\)" ?\u200B) ; #\ZERO_WIDTH_SPACE
   ;;     (1 (progn (compose-region (match-beginning 1) (match-end 1)
@@ -1171,10 +1171,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "14.18 (emacs)Optional Mode Line Features")
 
-  ;; show the column number in each mode line
+  ;; Show the column number in each mode line.
   (column-number-mode 1)
 
-  ;; unclutter the mode line
+  ;; Unclutter the mode line.
   (with-eval-after-load "diminish-autoloads"
     (with-eval-after-load "abbrev"       (diminish 'abbrev-mode " Ab"))
     (with-eval-after-load "checkdoc"     (diminish 'checkdoc-minor-mode " Cd"))
@@ -1348,8 +1348,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "14.20 (emacs)The Cursor Display")
 
   (GNUEmacs
-    ;; use cursor color and type to indicate some modes (read-only, overwrite
-    ;; and normal insert modes)
+    ;; Use cursor color and type to indicate some modes (read-only, overwrite
+    ;; and normal insert modes).
     (defun leuven--set-cursor-according-to-mode ()
       "Change cursor color according to some minor modes."
       (let ((color (cond (buffer-read-only "purple1")
@@ -1363,36 +1363,36 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (add-hook 'post-command-hook 'leuven--set-cursor-according-to-mode))
 
-  ;; cursor to use
+  ;; Cursor to use.
   (setq-default cursor-type 'bar)
 
-  ;; cursor of the selected window blinks
+  ;; Cursor of the selected window blinks.
   (XEmacs
     (blink-cursor-mode))
 
-  ;; toggle line highlighting in all buffers (Global Hl-Line mode)
+  ;; Toggle line highlighting in all buffers (Global Hl-Line mode).
   (global-hl-line-mode 1)               ; XXX Perhaps only in prog-modes?
 
 ;;** 14.21 (info "(emacs)Line Truncation")
 
   (leuven--section "14.21 (emacs)Line Truncation")
 
-  ;; ;; switch wrap mode from "wrap long lines to next screen line" (continued
-  ;; ;; line) to "non-wrap", or vice-versa
+  ;; ;; Switch wrap mode from "wrap long lines to next screen line" (continued
+  ;; ;; line) to "non-wrap", or vice-versa.
   ;; (global-set-key (kbd "C-c t") 'toggle-truncate-lines)
 
-  ;; respect the value of `truncate-lines' in all windows less than the full
-  ;; width of the frame
+  ;; Respect the value of `truncate-lines' in all windows less than the full
+  ;; width of the frame.
   (setq truncate-partial-width-windows nil)
 
 ;;** 14.23 (info "(emacs)Display Custom")ization
 
   (leuven--section "14.23 (emacs)Display Customization")
 
-  ;; echo what I'm typing *immediately*
+  ;; Echo what I'm typing *immediately*.
   (setq echo-keystrokes 0.01)
 
-  ;; exhaustive log of interactions with Emacs (display keystrokes, etc.)
+  ;; Exhaustive log of interactions with Emacs (display keystrokes, etc.).
   (with-eval-after-load "interaction-log-autoloads"
 
     (autoload 'interaction-log-mode "interaction-log"
@@ -1400,10 +1400,10 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ; This autoload isn't defined in
                                         ; `interaction-log-autoloads'!
 
-    ;; ;; maximum number of lines to keep in the *Emacs Log* buffer
+    ;; ;; Maximum number of lines to keep in the *Emacs Log* buffer.
     ;; (setq ilog-log-max 10)
 
-    ;; hotkey for showing the log buffer
+    ;; Hotkey for showing the log buffer.
     (global-set-key (kbd "C-h C-l")
       (lambda ()
         (interactive)
@@ -1429,10 +1429,10 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;;   (when isearch-forward (goto-char isearch-other-end)))
 
   (GNUEmacs
-    ;; ;; incremental search/query-replace will open the contents
+    ;; ;; Incremental search/query-replace will open the contents.
     ;; (setq search-invisible 'open)       ; XXX
 
-    ;; don't re-hide an invisible match right away
+    ;; Don't re-hide an invisible match right away.
     (setq isearch-hide-immediately nil)); XXX
 
   ;; scrolling commands are allowed during incremental search (without
@@ -1440,7 +1440,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (setq isearch-allow-scroll t)
 
   (GNUEmacs
-    ;; fuzzy matching utilities (a must-have)
+    ;; Fuzzy matching utilities (a must-have).
     (with-eval-after-load "fuzzy-autoloads"
 
       (autoload 'turn-on-fuzzy-isearch "fuzzy" nil t)
@@ -1469,15 +1469,15 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "15.8 (emacs)Search Case")
 
-  ;; searches should ignore case by default (in all buffers that do not
-  ;; override this)
+  ;; Searches should ignore case by default (in all buffers that do not
+  ;; override this).
   (setq-default case-fold-search t)
 
 ;;** 15.11 (info "(emacs)Other Repeating Search") Commands
 
   (leuven--section "15.10 (emacs)Other Repeating Search Commands")
 
-  ;; ;; invoke `occur' easily from within `isearch'
+  ;; ;; Invoke `occur' easily from within `isearch'.
   ;; (define-key isearch-mode-map (kbd "C-o")
   ;;   (lambda ()
   ;;     (interactive)
@@ -1487,12 +1487,12 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;;            isearch-string
   ;;          (regexp-quote isearch-string))))))
 
-  ;; when doing Isearch, hand the word over to `helm-swoop'
+  ;; When doing Isearch, hand the word over to `helm-swoop'.
   (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
 
   (global-unset-key (kbd "M-o"))
 
-  ;; "multi-occur" easily inside Isearch
+  ;; "Multi-occur" easily inside Isearch.
   (define-key isearch-mode-map (kbd "M-o") 'helm-multi-swoop-all)
 
   ;; grep all same extension files from inside isearch
@@ -1517,14 +1517,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "16.4 (emacs)Checking and Correcting Spelling")
 
-  ;; spelling checker program
-  (setq ispell-program-name             ; defined in ispell.el
+  ;; Spelling checker program.
+  (setq ispell-program-name             ; Defined in ispell.el.
         (or (executable-find "aspell")
             (executable-find "ispell")
-            ;; nil                      ; [default: "ispell"]
+            ;; nil                      ; [Default: "ispell"]
             ))
 
-  ;; check if `ispell-program-name' seems correct
+  ;; Check if `ispell-program-name' seems correct.
   (defun ispell-check-program-name ()
     "Ensure that `ispell-program-name' is defined and non-nil."
     (interactive)
@@ -1542,15 +1542,15 @@ Last time is saved in global variable `leuven--before-section-time'."
               (ispell-region (point) (mark)))
           (ispell-buffer)))
 
-    ;; key bindings (or `C-c i' prefix key binding?)
+    ;; Key bindings (or `C-c i' prefix key binding?).
     (global-set-key (kbd "C-$") 'ispell-region-or-buffer)
     (global-set-key (kbd "C-M-$") 'ispell-change-dictionary)
 
-    ;; ;; default dictionary to use (if `ispell-local-dictionary' is nil, that
-    ;; ;; is if there is no local dictionary to use in the buffer)
+    ;; ;; Default dictionary to use (if `ispell-local-dictionary' is nil, that
+    ;; ;; is if there is no local dictionary to use in the buffer).
     ;; (setq ispell-dictionary "american") ; see `sentence-end-double-space'
 
-    ;; enable on-the-fly spell checking
+    ;; Enable on-the-fly spell checking.
     (add-hook 'org-mode-hook
               (lambda ()
                 (if (or (eq (aref (buffer-name) 0) ?\s) ; buffer starting with " *"
@@ -1560,16 +1560,16 @@ Last time is saved in global variable `leuven--before-section-time'."
                   (message "Turn on Flyspell mode in `%s'" (buffer-name))
                   (flyspell-mode))))
 
-    ;; prevent Flyspell from finding mistakes in the code, well in comments and
-    ;; strings
+    ;; Prevent Flyspell from finding mistakes in the code, well in comments and
+    ;; strings.
     (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
     (with-eval-after-load "ispell"
 
-      ;; save the personal dictionary without confirmation
+      ;; Save the personal dictionary without confirmation.
       (setq ispell-silently-savep t)
 
-      ;; extensions and extra switches to pass to the `ispell' program
+      ;; Extensions and extra switches to pass to the `ispell' program.
       (cond
 
        ((string-match "aspell" ispell-program-name)
@@ -1598,24 +1598,24 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       )
 
-    ;; don't use `M-TAB' to auto-correct the current word (only use `C-.')
+    ;; Don't use `M-TAB' to auto-correct the current word (only use `C-.').
     (setq flyspell-use-meta-tab nil)
     ;; FIXME M-TAB is still bound to `flyspell-auto-correct-word' when this
     ;; chunk of code is placed within (with-eval-after-load "flyspell"...)
 
     (with-eval-after-load "flyspell"
 
-     ;; don't consider that a word repeated twice is an error
+     ;; Don't consider that a word repeated twice is an error.
      (setq flyspell-mark-duplications-flag nil)
 
-     ;; fix the "enabling flyspell mode gave an error" bug
+     ;; Fix the "enabling flyspell mode gave an error" bug.
      (setq flyspell-issue-welcome-flag nil)
 
-     ;; ;; don't print messages for every word (when checking the entire buffer)
-     ;; ;; as it causes a (small) slowdown
+     ;; ;; Don't print messages for every word (when checking the entire buffer)
+     ;; ;; as it causes a (small) slowdown.
      ;; (setq flyspell-issue-message-flag nil)
 
-     ;; dash character (`-') is considered as a word delimiter
+     ;; Dash character (`-') is considered as a word delimiter.
      (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
      ;; '("francais" "deutsch8" "norsk")
 
@@ -1631,19 +1631,19 @@ Last time is saved in global variable `leuven--before-section-time'."
          (force-mode-line-update)
          (when flyspell-mode
            ;; (flyspell-delete-all-overlays)
-           ;; if above is executed, the advised `org-mode-flyspell-verify'
-           ;; won't work anymore
+           ;; If above is executed, the advised `org-mode-flyspell-verify'
+           ;; won't work anymore.
            (flyspell-buffer))))
 
-     ;; key bindings
+     ;; Key bindings.
      (global-set-key (kbd "C-$") 'flyspell-buffer)
      (global-set-key (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary)
 
-     ;; spell-check your XHTML (by adding `nxml-text-face' to the list of
-     ;; faces corresponding to text in programming-mode buffers)
+     ;; Spell-check your XHTML (by adding `nxml-text-face' to the list of
+     ;; faces corresponding to text in programming-mode buffers).
      (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)))
 
-  ;; client for rfc2229 dictionary servers
+  ;; Client for rfc2229 dictionary servers.
   (try-require "dictionary-autoloads")
   (with-eval-after-load "dictionary-autoloads"
 
@@ -1653,7 +1653,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (with-eval-after-load "dictionary"
 
-    ;; enable/disable the tooltip support for all buffers
+    ;; Enable/disable the tooltip support for all buffers.
     (if leuven--console-p
         (global-dictionary-tooltip-mode 0)
       (global-dictionary-tooltip-mode 1)))
@@ -1702,17 +1702,17 @@ Last time is saved in global variable `leuven--before-section-time'."
     (global-set-key (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
     (kmacro-end-macro nil))
 
-  ;; start/stop recording a keyboard macro
+  ;; Start/stop recording a keyboard macro.
   (global-set-key (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
 
-  ;; execute the most recent keyboard macro
+  ;; Execute the most recent keyboard macro.
   (global-set-key (kbd "<f8>") 'kmacro-call-macro)
 
 ;;** 17.5 Name and (info "(emacs)Save Keyboard Macro")s
 
   (leuven--section "17.5 (emacs)Name and Save Keyboard Macros")
 
-  ;; assign a name to the last keyboard macro defined
+  ;; Assign a name to the last keyboard macro defined.
   (global-set-key (kbd "<C-f8>") 'kmacro-name-last-macro)
 
 )                                       ; chapter 17 ends here
@@ -1734,66 +1734,66 @@ Last time is saved in global variable `leuven--before-section-time'."
       (message "(Info) Found file %s in %.2f s" filename
                (- (float-time) find-file-time-start))))
 
-  ;; visit a file
+  ;; Visit a file.
   (global-set-key (kbd "<f3>") 'find-file)
 
 ;;** 18.3 (info "(emacs)Saving") Files
 
   (leuven--section "18.3 (emacs)Saving Files")
 
-  ;; make your changes permanent
+  ;; Make your changes permanent.
   (global-set-key (kbd "<f2>") 'save-buffer)
 
-  ;; make numbered backups
+  ;; Make numbered backups.
   (setq version-control t)
 
-  ;; save backup files (i.e., `foo~' or `foo.~i~') in one central location
-  ;; (instead of in the local directory)
+  ;; Save backup files (i.e., `foo~' or `foo.~i~') in one central location
+  ;; (instead of in the local directory).
   (GNUEmacs
-    ;; filenames matching a regexp are backed up in the corresponding
-    ;; directory
+    ;; Filenames matching a regexp are backed up in the corresponding
+    ;; directory.
     (setq backup-directory-alist
-          ;; Emacs will `make-directory' it, if necessary
+          ;; Emacs will `make-directory' it, if necessary.
           '((".*" . "~/.emacs.d/backups/")))) ; regexp => directory mappings
 
-  ;; ;; number of oldest versions to keep when a new numbered backup is made
+  ;; ;; Number of oldest versions to keep when a new numbeRed backup is made.
   ;; (setq kept-old-versions 0)            ; [default: 2]
 
-  ;; number of newest versions to keep when a new numbered backup is made
+  ;; Number of newest versions to keep when a new numbered backup is made.
   (setq kept-new-versions 5)            ; [default: 2]
 
-  ;; don't ask me about deleting excess backup versions
+  ;; Don't ask me about deleting excess backup versions.
   (setq delete-old-versions t)
 
-  ;; always use copying to create backup files (don't clobber symlinks)
+  ;; Always use copying to create backup files (don't clobber symlinks).
   (setq backup-by-copying t)
 
-  ;; ensure newline at the end of file when it is saved
+  ;; Ensure newline at the end of file when it is saved.
   (setq require-final-newline t)
   ;; TODO Do this only for text and Fundamental modes, because I could
   ;; edit binary files (see `mode-require-final-newline')
 
-  ;; update time stamps every time you save a buffer
+  ;; Update time stamps every time you save a buffer.
   (add-hook 'before-save-hook 'time-stamp)
 
-  ;; maintain last change time stamps (`Time-stamp: <>' occurring within
-  ;; the first 8 lines) in files edited by Emacs
+  ;; Maintain last change time stamps (`Time-stamp: <>' occurring within
+  ;; the first 8 lines) in files edited by Emacs.
   (with-eval-after-load "time-stamp"
 
-   ;; format of the string inserted by `M-x time-stamp':
+   ;; Format of the string inserted by `M-x time-stamp':
    ;; `YYYY-MM-DD Day HH:MM' (see `system-time-locale' for non-numeric
-   ;; formatted items of time)
+   ;; formatted items of time).
    (setq-default time-stamp-format "%:y-%02m-%02d %3a %02H:%02M"))
 
   (GNUEmacs
-    ;; update the copyright notice to indicate the current year
+    ;; Update the copyright notice to indicate the current year.
     (add-hook 'before-save-hook 'copyright-update))
 
 ;;** 18.4 (info "(emacs)Reverting") a Buffer
 
   (leuven--section "18.4 (emacs)Reverting a Buffer")
 
-  ;; replace current buffer text with the text of the visited file on disk
+  ;; Replace current buffer text with the text of the visited file on disk.
   (defun leuven-revert-buffer-without-query ()
     "Unconditionally revert current buffer."
     (interactive)
@@ -1803,23 +1803,23 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; key binding
   (global-set-key (kbd "<C-f12>") 'leuven-revert-buffer-without-query)
 
-  ;; enable Global Auto-Revert mode
-  (global-auto-revert-mode 1)           ; can generate a lot of network traffic
+  ;; Enable Global Auto-Revert mode.
+  (global-auto-revert-mode 1)           ; Can generate a lot of network traffic.
 
   ;; ;; Global Auto-Revert mode operates on all buffers (Dired, among others)
   ;; (setq global-auto-revert-non-file-buffers t)
 
-  ;; ;; do not generate any messages
+  ;; ;; Do not generate any messages.
   ;; (setq auto-revert-verbose nil) ; avoid "Reverting buffer `some-dir/'."
 
 ;;** 18.6 (info "(emacs)Auto Save"): Protection Against Disasters
 
   (leuven--section "18.6 (emacs)Auto Save: Protection Against Disasters")
 
-  ;; auto-save every 100 input events
+  ;; Auto-save every 100 input events.
   (setq auto-save-interval 100)         ; [default: 300]
 
-  ;; auto-save after 10 seconds idle time
+  ;; Auto-save after 10 seconds idle time.
   (setq auto-save-timeout 10)           ; [default: 30]
 
   (define-minor-mode sensitive-mode
@@ -1828,19 +1828,19 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   With no argument, this command toggles the mode.  Non-null prefix argument
   turns on the mode.  Null prefix argument turns off the mode."
-    nil                                 ; initial value
-    " Sensitive"                        ; indicator for the mode line
-    nil                                 ; minor mode bindings
+    nil                                 ; Initial value.
+    " Sensitive"                        ; Indicator for the mode line.
+    nil                                 ; Minor mode bindings.
     (if (symbol-value sensitive-mode)
         (progn
-          ;; disable backups
+          ;; Disable backups.
           (set (make-local-variable 'backup-inhibited) t)
-          ;; disable auto-save
+          ;; Disable auto-save.
           (if auto-save-default
               (auto-save-mode -1)))
-      ;; resort to default value of backup-inhibited
+      ;; Resort to default value of backup-inhibited.
       (kill-local-variable 'backup-inhibited)
-      ;; resort to default auto save setting
+      ;; Resort to default auto save setting.
       (if auto-save-default
           (auto-save-mode 1))))
 
@@ -1855,8 +1855,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   (defun leuven--recover-this-file ()
     (let ((warn (not buffer-read-only)))
       (when (and warn
-                 ;; no need to warn if buffer is auto-saved under the name of
-                 ;; the visited file
+                 ;; No need to warn if buffer is auto-saved under the name of
+                 ;; the visited file.
                  (not (and buffer-file-name
                            auto-save-visited-file-name))
                  (file-newer-than-file-p (or buffer-auto-save-file-name
@@ -1873,24 +1873,24 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "18.9 (emacs)Comparing Files")
 
-  ;; default to unified diffs
+  ;; Default to unified diffs.
   (setq diff-switches "-u")
 
-  ;; compare text in current window with text in next window
+  ;; Compare text in current window with text in next window.
   (global-set-key (kbd "C-=") 'compare-windows)
 
 ;;** 18.10 (info "(emacs)Diff Mode")
 
   (leuven--section "18.10 (emacs)Diff Mode")
 
-  ;; mode for viewing/editing context diffs
+  ;; Mode for viewing/editing context diffs.
   (with-eval-after-load "diff-mode"
 
-    ;; highlight the changes with better granularity
+    ;; Highlight the changes with better granularity.
     (defun leuven-diff-make-fine-diffs ()
       "Enable Diff Auto-Refine mode."
       (interactive)
-      (let (diff-auto-refine-mode)      ; avoid refining the hunks redundantly ...
+      (let (diff-auto-refine-mode)      ; Avoid refining the hunks redundantly ...
         (condition-case nil
             (save-excursion
               (goto-char (point-min))
@@ -1901,13 +1901,13 @@ Last time is saved in global variable `leuven--before-section-time'."
         (run-at-time 0.0 nil
                      (lambda ()
                        (if (eq major-mode 'diff-mode)
-                           ;; put back the cursor only if still in a Diff buffer
-                           ;; after the delay
+                           ;; Put back the cursor only if still in a Diff buffer
+                           ;; after the delay.
                            (goto-char (point-min)))))))
 
     (defun leuven--diff-make-fine-diffs-if-necessary ()
       "Auto-refine only the regions of 14,000 bytes or less."
-      ;; check for auto-refine limit
+      ;; Check for auto-refine limit.
       (unless (> (buffer-size) 14000)
         (leuven-diff-make-fine-diffs)))
 
@@ -1930,19 +1930,19 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (with-eval-after-load "ediff"
 
-    ;; ignore space
+    ;; Ignore space.
     (setq ediff-diff-options (concat ediff-diff-options " -w"))
-                                        ; add new options after the default ones
+                                        ; Add new options after the default ones.
 
-    ;; skip over difference regions that differ only in white space and line
-    ;; breaks
+    ;; Skip over difference regions that differ only in white space and line
+    ;; breaks.
     ;; (setq-default ediff-ignore-similar-regions  t)
     ;; XXX Make another key binding (than `E') with that value in a let-bind
 
-    ;; sometimes grab the mouse and put it in the control frame
+    ;; Sometimes grab the mouse and put it in the control frame.
     (setq ediff-grab-mouse 'maybe)
 
-    ;; do everything in one frame
+    ;; Do everything in one frame.
     (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
     ;; split the window (horizontally or vertically) depending on the frame
@@ -7456,27 +7456,6 @@ a clean buffer we're an order of magnitude laxer about checking."
     (define-key company-active-map (kbd "C-g") 'company-abort)
     (define-key company-active-map (kbd "<left>") 'company-abort)
 
-    ;; see tab-always-indent
-
-    (defun leuven-indent-or-complete ()
-      "Indent the current line; if point doesn't move, then try to complete."
-      (interactive)
-      (let ((p (point)))
-        ;; (if (minibufferp)
-        ;;     (minibuffer-complete)
-        (call-interactively 'indent-for-tab-command)
-        (when (and (= p (point))
-                   (not (bolp))
-                   (looking-at "\\_>"))
-          (call-interactively 'company-complete-selection))))
-
-    (define-key company-mode-map (kbd "<tab>") 'leuven-indent-or-complete)
-
-    ;; (defun leuven--tab-fix ()
-    ;;   (local-set-key (kbd "<tab>") 'leuven-indent-or-complete))
-    ;;
-    ;; (add-hook 'prog-mode-hook 'leuven--tab-fix)
-
     )
 
   (with-eval-after-load "company-dabbrev"
@@ -9308,7 +9287,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (sit-for 3)
           (message "Configuration updated. Restart Emacs to complete the process.")))))
 
-(message "* --[ Loaded Emacs Leuven 20141008.2206]--")
+(message "* --[ Loaded Emacs Leuven 20141009.1439]--")
 
 (provide 'emacs-leuven)
 
