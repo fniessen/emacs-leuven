@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141009.1438
+;; Version: 20141009.1935
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141009.1438]--")
+(message "* --[ Loading Emacs Leuven 20141009.1935]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -6413,7 +6413,7 @@ mouse-3: go to end") "]"))))
 
   (leuven--section "26.4 Commands for Editing with (emacs)Parentheses")
 
-  ;; highlight matching paren
+  ;; Highlight matching paren.
   (GNUEmacs
     (show-paren-mode 1)
     (setq show-paren-style 'mixed)
@@ -6421,13 +6421,20 @@ mouse-3: go to end") "]"))))
   (XEmacs
     (paren-set-mode 'paren))
 
-  ;; highlight nested parens, brackets, braces a different color at each depth
-  (with-eval-after-load "rainbow-delimiters-autoloads"
+  ;; Highlight (nearest) surrounding parentheses (abd brackets).
+  (with-eval-after-load "highlight-parentheses"
 
-    ;; enable rainbow-delimiters in programming modes
-    (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+    (define-globalized-minor-mode global-highlight-parentheses-mode
+      highlight-parentheses-mode
+      (lambda ()
+        (highlight-parentheses-mode t)))
 
-  ;; jump to matching parenthesis
+    (setq hl-paren-colors '("red"))
+    (setq hl-paren-background-colors '("white"))
+
+    (global-highlight-parentheses-mode t))
+
+  ;; Jump to matching parenthesis.
   (defun leuven-match-paren (arg)
     "Go to the matching parenthesis, if on a parenthesis."
     (interactive "p")
@@ -9287,7 +9294,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (sit-for 3)
           (message "Configuration updated. Restart Emacs to complete the process.")))))
 
-(message "* --[ Loaded Emacs Leuven 20141009.1439]--")
+(message "* --[ Loaded Emacs Leuven 20141009.1936]--")
 
 (provide 'emacs-leuven)
 

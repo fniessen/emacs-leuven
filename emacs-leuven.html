@@ -1363,7 +1363,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141009.1442</span>
+"org-comment">Version: 20141009.1938</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1486,7 +1486,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141009.1442]--"</span><span class=
+"org-string">"* --[ Loading Emacs Leuven 20141009.1938]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
@@ -7487,6 +7487,18 @@
 
           <p>What is working for you?</p>
 
+          <p>I use eedic and dict/dictd running on my own computer.</p>
+
+          <p>s-d looks up the word under the cursor and displays the result in
+          a second window.</p>
+
+          <p>s-n finds any singleword anagrams of the word under the
+          cursor.</p>
+
+          <p>s-w uses Wordplay by Evans Crisswell to list all words that can be
+          made from the letters in the current word as well as multiword
+          anagrams.</p>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
@@ -9452,6 +9464,80 @@ M-: (executable-find "diff") RET
             over the required file and execute helm-find-files, it will prompt
             the file location and you simply RET to enter. All in once nice
             package.</p>
+
+            <p>Exploring large projects with Projectile and Helm Projectile:
+            <a href=
+            "http://tuhdo.github.io/helm-projectile.html">http://tuhdo.github.io/helm-projectile.html</a></p>
+
+            <p>I wrote this guide after many new changes in Helm Projectile.
+            The new Helm Projectile is not just a single command
+            `helm-projectile` anymore; it can now replace many Projectile “core
+            commands”, such as `projectile-find-file`.</p>
+
+            <p>A few demos:</p>
+
+            <ul class="org-ul">
+              <li>Select and open multiple files,</li>
+            </ul>
+
+            <p><img src=
+            "http://tuhdo.github.io/static/helm-projectile/helm-projectile-find-files-1.gif"
+            alt="helm-projectile-find-files-1.gif" /> : Now we can open
+            multiple files at once with `helm-projectile`. It outweighs Ido</p>
+
+            <ul class="org-ul">
+              <li>flx for finding files, since you can only open one file in
+              Ido. Yes, you can</li>
+            </ul>
+
+            <p>open one file faster in Helm, but when you need to open two or
+            more files, Helm is more suitable for the large.</p>
+
+            <ul class="org-ul">
+              <li>Jump to any file depends on context, even if the file path is
+              in a text file,</li>
+            </ul>
+
+            <div class="figure">
+              <p><img src=
+              "http://tuhdo.github.io/static/helm-projectile/helm-projectile-find-files-dwim-1.gif"
+              alt="helm-projectile-find-files-dwim-1.gif" /></p>
+            </div>
+
+            <ul class="org-ul">
+              <li>Switch between other files with same names but different
+              extensions,</li>
+            </ul>
+
+            <p><img src=
+            "http://tuhdo.github.io/static/helm-projectile/helm-projectile-find-other-file.gif"
+            alt="helm-projectile-find-other-file.gif" /> . Work not only for
+            C/C++ but other languages, and is customizable. You don’t have to
+            configure anything, like adding include paths for the command to
+            search. Everything is automatic. Just use it as it is.</p>
+
+            <ul class="org-ul">
+              <li>Ediff two selected files from helm-projectile-find-file,</li>
+            </ul>
+
+            <p><img src=
+            "http://tuhdo.github.io/static/helm-projectile/helm-projectile-find-file-ediff.gif"
+            alt="helm-projectile-find-file-ediff.gif" />.</p>
+
+            <ul class="org-ul">
+              <li>Invoke Etags while in helm-projectile-find-file session; when
+              in Etags</li>
+            </ul>
+
+            <p>session, you can switch back later to helm-projectile-find-file,
+            <img src=
+            "http://tuhdo.github.io/static/helm-projectile/helm-projectile-etags.gif"
+            alt="helm-projectile-etags.gif" />.</p>
+
+            <ul class="org-ul">
+              <li>You can invoke `helm-do-grep` on any project directory when
+              using a `helm-projectile` command.</li>
+            </ul>
 
             <p>With <code>helm-M-x</code>, to pass prefix arguments to the
             command you want to run, you have to type <code>C-u</code>
@@ -24920,7 +25006,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"26.4 Commands for Editing with (emacs)Parentheses"</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">highlight matching paren</span>
+"org-comment">Highlight matching paren.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span>GNUEmacs
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>show-paren-mode 1<span class=
@@ -24940,10 +25026,11 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">colors nearest parentheses</span>
+"org-comment">Highlight (nearest) surrounding parentheses (abd brackets).</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"highlight-parentheses"</span>
+
     <span class="org-rainbow-delimiters-depth-2">(</span><span class=
 "org-keyword">define-globalized-minor-mode</span> <span class=
 "org-function-name">global-highlight-parentheses-mode</span>
@@ -24960,25 +25047,24 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"red"</span><span class=
 "org-rainbow-delimiters-depth-3">)</span><span class=
 "org-rainbow-delimiters-depth-2">)</span>
+    <span class=
+"org-rainbow-delimiters-depth-2">(</span>setq hl-paren-background-colors '<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"white"</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
 
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>global-highlight-parentheses-mode t<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
           </div>
 
-          <p>XXX HighlightSexp (= hl-sexp)? XXX HighlightSexps (highlights
-          multiple levels, unlike HighlightSexp).</p>
-
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">highlight nested parens, brackets, braces a different color at each depth</span>
+"org-comment">Highlight nested parens, brackets, braces a different color at each depth.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">with-eval-after-load</span> <span class=
 "org-string">"rainbow-delimiters-autoloads"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable rainbow-delimiters in programming modes</span>
+"org-comment">Enable rainbow-delimiters in programming modes.</span>
     <span class=
 "org-rainbow-delimiters-depth-2">(</span>add-hook 'prog-mode-hook 'rainbow-delimiters-mode<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
@@ -24996,7 +25082,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">jump to matching parenthesis</span>
+"org-comment">Jump to matching parenthesis.</span>
   <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 "org-keyword">defun</span> <span class=
 "org-function-name">leuven-match-paren</span> <span class=
@@ -36667,10 +36753,13 @@ M-: <span class="org-rainbow-delimiters-depth-1">(</span><span class=
 </pre>
         </div>
 
+        <p>Please address particular issues or suggestions <b>specifically</b>,
+        using `M-x leuven-send-bug-report’.</p>
+
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-rainbow-delimiters-depth-1">(</span>message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141009.1442]--"</span><span class=
+"org-string">"* --[ Loaded Emacs Leuven 20141009.1939]--"</span><span class=
 "org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class=
