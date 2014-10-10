@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141009.1935
+;; Version: 20141010.1206
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141009.1935]--")
+(message "* --[ Loading Emacs Leuven 20141010.1206]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -2943,7 +2943,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "24.3 TABs vs. (emacs)Just Spaces")
 
-  ;; indentation can't insert TABs
+  ;; Indentation can't insert TABs.
   (setq-default indent-tabs-mode nil)
 
 )                                       ; chapter 24 ends here
@@ -2956,7 +2956,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "25.1 (emacs)Words")
 
-  ;; GNU Emacs default for killing back to the beginning of a word
+  ;; GNU Emacs default for killing back to the beginning of a word.
   (XEmacs
     (global-set-key (kbd "<C-backspace>") 'backward-kill-word))
 
@@ -2964,7 +2964,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "25.2 (emacs)Sentences")
 
-  ;; ;; a single space does end a sentence
+  ;; ;; A single space does end a sentence.
   ;; (setq-default sentence-end-double-space nil) ; see `ispell-dictionary'
 
   (defun leuven-nbsp-command ()
@@ -2978,10 +2978,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "25.5 (emacs)Filling Text")
 
-  ;; line-wrapping beyond that column (when pressing `M-q')
+  ;; Line-wrapping beyond that column (when pressing `M-q').
   (setq-default fill-column 80)
 
-  ;; (un-)fill paragraph
+  ;; (Un-)fill paragraph.
   (defun leuven-fill-paragraph (&optional arg)
     "`M-q' runs the command `fill-paragraph'.
   `C-u M-q' runs \"unfill-paragraph\": it takes a multi-line paragraph and
@@ -2994,32 +2994,32 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (global-set-key (kbd "M-q") 'leuven-fill-paragraph)
 
-  ;; prevent breaking lines just before a punctuation mark such as `?' or `:'
+  ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
   (add-hook 'fill-nobreak-predicate 'fill-french-nobreak-p)
 
-  ;; activate Auto Fill for all text mode buffers
+  ;; Activate Auto Fill for all text mode buffers.
   (add-hook 'text-mode-hook 'auto-fill-mode)
 
-  ;; graphically indicate the fill column
+  ;; Graphically indicate the fill column.
   (try-require 'fill-column-indicator-XXX)
   (with-eval-after-load "fill-column-indicator-XXX"
 
-    ;; color used to draw the fill-column rule
+    ;; Color used to draw the fill-column rule.
     (setq fci-rule-color "#FFE0E0")
 
-    ;; show the fill-column rule as dashes
+    ;; Show the fill-column rule as dashes.
     (setq fci-rule-use-dashes t)
 
-    ;; ratio of dash length to line height
+    ;; Ratio of dash length to line height.
     (setq fci-dash-pattern 0.5)
 
-    ;; enable fci-mode as a global minor mode
+    ;; Enable fci-mode as a global minor mode.
     (define-globalized-minor-mode global-fci-mode fci-mode
       (lambda ()
         (fci-mode 1)))
     (global-fci-mode 1)
 
-    ;; avoid fci-mode and auto-complete popups
+    ;; Avoid fci-mode and auto-complete popups.
     (defvar sanityinc/fci-mode-suppressed nil)
     (defadvice popup-create (before suppress-fci-mode activate)
       "Suspend fci-mode while popups are visible"
@@ -3054,7 +3054,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (interactive)
     (cond
      ((or (bolp) (not (looking-back "'")))
-      ;; insert just one '
+      ;; Insert just one '.
       (self-insert-command 1))
      ((save-excursion
         (backward-char)
@@ -3063,7 +3063,7 @@ Last time is saved in global variable `leuven--before-section-time'."
              (not (looking-back "`"))
              (or (insert-and-inherit "`") t))))
      (t
-      ;; insert `' around following symbol
+      ;; Insert `' around following symbol.
       (delete-char -1)
       (unless (looking-back "`") (insert-and-inherit "`"))
       (save-excursion
@@ -3145,8 +3145,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "25.6 (emacs)Case Conversion Commands")
 
-  ;; enable the use of the commands `downcase-region' and `upcase-region'
-  ;; without confirmation
+  ;; Enable the use of the commands `downcase-region' and `upcase-region'
+  ;; without confirmation.
   (put 'downcase-region 'disabled nil)
   (put 'upcase-region 'disabled nil)
 
@@ -3154,15 +3154,15 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "25.8 (emacs)Outline Mode")
 
-  ;; outline mode commands for Emacs
+  ;; Outline mode commands for Emacs.
   (with-eval-after-load "outline"
 
-    ;; bind the outline minor mode functions to an easy to remember prefix
-    ;; key (more accessible than the horrible prefix `C-c @')
+    ;; Bind the outline minor mode functions to an easy to remember prefix
+    ;; key (more accessible than the horrible prefix `C-c @').
     (setq outline-minor-mode-prefix (kbd "C-c C-o")) ; like in nXML mode
 
-    ;; ;; make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
-    ;; ;; mode outline navigation (written by Carsten Dominik)
+    ;; ;; Make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
+    ;; ;; mode outline navigation (written by Carsten Dominik).
     ;; (try-require 'outline-magic)
     ;; (with-eval-after-load "outline-magic"
     ;;   (add-hook 'outline-minor-mode-hook
@@ -3178,11 +3178,11 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;;               (define-key outline-minor-mode-map
     ;;                 (kbd "<M-down>") 'outline-move-subtree-down))))
 
-    ;; ;; extra support for outline minor mode
+    ;; ;; Extra support for outline minor mode.
     ;; (try-require 'out-xtra)
 
 
-    ;; Org-style folding for a `.emacs' (and much more)
+    ;; Org-style folding for a `.emacs' (and much more).
 
     ;; FIXME This should be in an `eval-after-load' of Org, so that
     ;; `org-level-N' are defined when used
@@ -3196,7 +3196,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         ;; (concat "^" comment-starter "\\*+")))
         (concat "^" comment-starter "[*]+ ")))
 
-    ;; fontify the whole line for headings (with a background color)
+    ;; Fontify the whole line for headings (with a background color).
     (setq org-fontify-whole-heading-line t)
 
     (defun leuven--outline-minor-mode-hook ()
@@ -3282,8 +3282,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 ;; C-M-] and M-] fold the whole buffer or the current defun.
 
-  ;; ;; unified user interface for Emacs folding modes, bound to Org
-  ;; ;; key-strokes
+  ;; ;; Unified user interface for Emacs folding modes, bound to Org key-strokes.
   ;; (GNUEmacs
   ;;   (try-require 'fold-dwim-org))
 
@@ -3308,7 +3307,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "phonetic")
 
-  ;; phonetic spelling
+  ;; Phonetic spelling.
   (when (locate-library "phonetic")
     (autoload 'phonetize-region "phonetic"
       "Translate the region according to the phonetic alphabet." t))
@@ -3328,11 +3327,11 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 ;;** 1.2 (info "(org)Installation")
 
-  ;; autoload functions
+  ;; Autoload functions.
   (GNUEmacs
     (try-require 'org-loaddefs))
 
-  ;; getting started
+  ;; Getting started.
   (GNUEmacs
     (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
     (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
@@ -3343,25 +3342,25 @@ Last time is saved in global variable `leuven--before-section-time'."
   (define-key global-map (kbd "C-c a") 'org-agenda)
   (define-key global-map (kbd "C-c b") 'org-switchb)
 
-  ;; using links outside Org
+  ;; Using links outside Org.
   (global-set-key (kbd "C-c L") 'org-insert-link-global)
   (global-set-key (kbd "C-c O") 'org-open-at-point-global)
 
   (with-eval-after-load "org"
-    ;; display the Org mode manual in Info mode
+    ;; Display the Org mode manual in Info mode.
     (define-key global-map (kbd "C-h o") 'org-info))
                                         ; XXX not autoloaded
 
   (with-eval-after-load "org"
-    ;; unbind `C-j'
+    ;; Unbind `C-j'.
     (define-key org-mode-map (kbd "C-j") nil))
 
   ;; These variables need to be set before org.el is loaded...
 
-  ;; face to be used by `font-lock' for highlighting in Org mode Emacs
+  ;; Face to be used by `font-lock' for highlighting in Org mode Emacs
   ;; buffers, and tags to be used to convert emphasis fontifiers for HTML
-  ;; export
-  (setq org-emphasis-alist              ; remove the strike-through emphasis
+  ;; export.
+  (setq org-emphasis-alist              ; Remove the strike-through emphasis.
         '(("*" bold "<b>" "</b>")
           ("/" italic "<i>" "</i>")
           ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
@@ -3374,48 +3373,48 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;;         ("!" (:weight ultra-bold :foreground "#B40000")) ; = alert in some Wikis
 
   (with-eval-after-load "org"
-    ;; allow both single and double quotes in the border
+    ;; Allow both single and double quotes in the border.
     (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\r\n,")
     (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist)))
 
-  ;; single character alphabetical bullets (a, b, c, ..., X, Y, Z) are allowed
+  ;; Single character alphabetical bullets (a, b, c, ..., X, Y, Z) are allowed.
   (setq org-list-allow-alphabetical t)
 
-  ;; libraries that should (always) be loaded along with `org.el'
-  ;; (loaded when opening the first Org file)
+  ;; Libraries that should (always) be loaded along with `org.el'
+  ;; (loaded when opening the first Org file).
   (setq org-modules nil)
 
-  ;; set the RESET_CHECK_BOXES and LIST_EXPORT_BASENAME properties in items as
-  ;; needed
+  ;; Set the RESET_CHECK_BOXES and LIST_EXPORT_BASENAME properties in items as
+  ;; needed.
   (add-to-list 'org-modules 'org-checklist)
 
-  ;; globally unique ID for Org mode entries (see `org-store-link')
+  ;; Globally unique ID for Org mode entries (see `org-store-link')
   ;; (takes care of automatically creating unique targets for internal
-  ;; links, see `C-h v org-id-link-to-org-use-id <RET>')
+  ;; links, see `C-h v org-id-link-to-org-use-id <RET>').
   (add-to-list 'org-modules 'org-id)
 
-  ;; support for links to Gnus groups and messages from within Org mode
+  ;; Support for links to Gnus groups and messages from within Org mode.
   (add-to-list 'org-modules 'org-gnus)
 
-  ;; habit tracking code for Org mode
+  ;; Habit tracking code for Org mode.
   (add-to-list 'org-modules 'org-habit)
 
-  ;; make sure to turn `org-info' on in order to link to info nodes
+  ;; Make sure to turn `org-info' on in order to link to info nodes.
   (add-to-list 'org-modules 'org-info)
 
   (add-hook 'org-mode-hook
             (lambda ()
-              ;; ;; create a binding for `org-show-subtree'
+              ;; ;; Create a binding for `org-show-subtree'.
               ;; (local-set-key (kbd "C-c C-S-s") 'org-show-subtree)
               ;; (local-set-key (kbd "C-c s") 'org-show-subtree)
 
               (local-set-key (kbd "C-c h") 'hide-other)
 
-              ;; table
+              ;; Table.
               (local-set-key (kbd "C-M-w") 'org-table-copy-region)
               (local-set-key (kbd "C-M-y") 'org-table-paste-rectangle)
 
-              ;; remove the binding of `C-c SPC' (in Org tables), used by Ace Jump
+              ;; Remove the binding of `C-c SPC' (in Org tables), used by Ace Jump.
               (local-set-key (kbd "C-c SPC") nil)))
 
   (with-eval-after-load "org"
@@ -3425,7 +3424,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (leuven--section "1.3 (org)Activation")
 
-    ;; insert the first line setting Org mode in empty files
+    ;; Insert the first line setting Org mode in empty files.
     (setq org-insert-mode-line-in-empty-file t))
 
 ;;* 2 (info "(org)Document Structure")
@@ -3433,50 +3432,50 @@ Last time is saved in global variable `leuven--before-section-time'."
   (with-eval-after-load "org"
     (message "... Org Document Structure")
 
-    ;; improve display of the ellipsis
+    ;; Improve display of the ellipsis.
     (set-face-attribute 'org-ellipsis nil
                         :box '(:line-width 1 :color "#999999")
                         :foreground "#999999" :background "#FFF8C0"
                         :underline nil)
 
-    ;; ellipsis to use in the Org mode outline
+    ;; Ellipsis to use in the Org mode outline.
     (setq org-ellipsis
-          (if (char-displayable-p ?\u25BA) ; this test takes ~ 0.40s hence,
-                                           ; wrapped in `with-eval-after-load'
-              " \u25BA"                 ; string (black right-pointing pointer) XXX #929490
-            'org-ellipsis)))            ; face
+          (if (char-displayable-p ?\u25BA) ; This test takes ~ 0.40s hence,
+                                           ; wrapped in `with-eval-after-load'.
+              " \u25BA"                 ; String (black right-pointing pointer) XXX #929490
+            'org-ellipsis)))            ; Face.
 
-  ;; <RET> follows links (except in tables, where you must use `C-c C-o')
+  ;; <RET> follows links (except in tables, where you must use `C-c C-o').
   (setq org-return-follows-link t)
 
-  ;; blank lines
+  ;; Blank lines.
   (setq org-blank-before-new-entry
-        '(;; insert  a blank line before new heading
+        '(;; Insert  a blank line before new heading.
           (heading . t)
 
-          ;; try to make an intelligent decision whether to insert a
-          ;; blank line or not before a new item
+          ;; Try to make an intelligent decision whether to insert a
+          ;; blank line or not before a new item.
           (plain-list-item . auto)))
 
 ;;** (info "(org)Headlines")
 
   (leuven--section "2.2 (org)Headlines")
 
-  ;; ;; `C-a' and `C-e' behave specially in headlines and items
+  ;; ;; `C-a' and `C-e' behave specially in headlines and items.
   (setq org-special-ctrl-a/e 'reversed)
 
   (with-eval-after-load "org"
     (message "... Org Headlines")
 
-    ;; insert an inline task (independent of outline hierarchy)
-    (try-require 'org-inlinetask))      ; needed
+    ;; Insert an inline task (independent of outline hierarchy).
+    (try-require 'org-inlinetask))      ; Needed.
 
   (with-eval-after-load "org-inlinetask"
 
-    ;; initial state (TODO keyword) of inline tasks
+    ;; Initial state (TODO keyword) of inline tasks.
     (setq org-inlinetask-default-state "TODO")
 
-    ;; template for inline tasks in HTML exporter
+    ;; Template for inline tasks in HTML exporter.
     (defun leuven--org-html-format-inlinetask (todo todo-type priority title
                                                tags contents)
       "Format an inline task element for HTML export."
@@ -3505,11 +3504,11 @@ Last time is saved in global variable `leuven--before-section-time'."
                   "</tr>"
                 "</table>")))
 
-    ;; function called to format an inlinetask in HTML code
+    ;; Function called to format an inlinetask in HTML code.
     (setq org-html-format-inlinetask-function
           'leuven--org-html-format-inlinetask)
 
-    ;; template for inline tasks in LaTeX exporter
+    ;; Template for inline tasks in LaTeX exporter.
     (defun leuven--org-latex-format-inlinetask (todo todo-type priority title
                                                 tags contents)
       "Format an inline task element for LaTeX export."
@@ -3541,7 +3540,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                 ""))
              (opt-contents
               (or contents "")))
-        ;; this requires the `todonotes' package
+        ;; This requires the `todonotes' package.
         (format (concat "\\todo[inline,caption={},%s]{\n"
                         "  %s\n"
                         "  %s"
@@ -3552,7 +3551,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                 opt-rule
                 opt-contents)))
 
-    ;; function called to format an inlinetask in LaTeX code
+    ;; Function called to format an inlinetask in LaTeX code.
     (setq org-latex-format-inlinetask-function
           'leuven--org-latex-format-inlinetask)
 
@@ -3562,25 +3561,25 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "2.3 (org)Visibility cycling")
 
-  ;; do not switch to OVERVIEW at startup
+  ;; Do not switch to OVERVIEW at startup.
   (setq org-startup-folded nil)
 
-  ;; inhibit startup when preparing agenda buffers -- agenda optimization
+  ;; Inhibit startup when preparing agenda buffers -- agenda optimization.
   (setq org-agenda-inhibit-startup t)
 
   (setq w32-pass-apps-to-system nil)
-  (setq w32-apps-modifier 'hyper)       ; Apps key
+  (setq w32-apps-modifier 'hyper)       ; Apps key.
 
   (with-eval-after-load "org"
-    ;; create indirect buffer and narrow it to current subtree
+    ;; Create indirect buffer and narrow it to current subtree.
     (define-key org-mode-map (kbd "<H-return>") 'org-tree-to-indirect-buffer))
 
 ;;** (info "(org)Motion")
 
   (leuven--section "2.4 (org)Motion")
 
-  ;; outline-node based navigation similar to the behavior of paredit-mode in
-  ;; Lisp files
+  ;; Outline-node based navigation similar to the behavior of paredit-mode in
+  ;; Lisp files.
   (add-hook 'org-mode-hook
             (lambda ()
               ;; (local-set-key (kbd "M-n") 'outline-next-visible-heading)
@@ -3590,8 +3589,8 @@ Last time is saved in global variable `leuven--before-section-time'."
               (local-set-key (kbd "C-M-p") 'outline-previous-visible-heading)
               (local-set-key (kbd "C-M-u") 'outline-up-heading)))
 
-  ;; headlines in the current buffer are offered via completion
-  ;; (interface also used by the `refile' command)
+  ;; Headlines in the current buffer are offered via completion
+  ;; (interface also used by the `refile' command).
   (setq org-goto-interface 'outline-path-completion)
 
   (with-eval-after-load "org"
@@ -3617,16 +3616,16 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "2.6 (org)Sparse trees")
 
-  ;; show full hierarchy when revealing a location
+  ;; Show full hierarchy when revealing a location.
   (setq org-show-hierarchy-above t)
 
-  ;; don't show following heading when revealing a location
+  ;; Don't show following heading when revealing a location.
   (setq org-show-following-heading nil)
 
-  ;; don't show all sibling headings when revealing a location
+  ;; Don't show all sibling headings when revealing a location.
   (setq org-show-siblings nil)
 
-  ;; show the entry below a headline when revealing a location
+  ;; Show the entry below a headline when revealing a location.
   (setq org-show-entry-below t)
   (setq org-show-entry-below '((org-goto . t)))
 
@@ -3634,21 +3633,21 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "2.7 (org)Plain lists")
 
-  ;; maximum indentation for the second line of a description list
+  ;; Maximum indentation for the second line of a description list.
   (setq org-description-max-indent 3)
 
-  ;; don't make tab cycle visibility on plain list items
+  ;; Don't make tab cycle visibility on plain list items.
   (setq org-cycle-include-plain-lists nil) ;; 'integrate?
 
-  ;; an empty line does not end all plain list levels
+  ;; An empty line does not end all plain list levels.
   (setq org-list-empty-line-terminates-plain-lists nil)
 
 ;;** (info "(org)Footnotes")
 
   (leuven--section "2.10 (org)Footnotes")
 
-  ;; use `C-c C-x f' to add a footnote, to go back to the message
-  ;; *and* to go to a footnote
+  ;; Use `C-c C-x f' to add a footnote, to go back to the message
+  ;; *and* to go to a footnote.
   (global-set-key (kbd "C-c C-x f") 'org-footnote-action)
 
 ;;* 3 (info "(org)Tables")
@@ -3659,7 +3658,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "3.1 The (org)Built-in table editor")
 
-  ;; default export parameters for `org-table-export'
+  ;; Default export parameters for `org-table-export'.
   (setq org-table-export-default-format "orgtbl-to-csv")
 
 ;;** 3.5 (info "(org)The spreadsheet")
@@ -3667,49 +3666,49 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "3.5 (org)The spreadsheet")
 
   (with-eval-after-load "org-table"
-    ;; some Calc mode settings for use in `calc-eval' for table formulas
+    ;; Some Calc mode settings for use in `calc-eval' for table formulas.
     (setcar (cdr (memq 'calc-float-format org-calc-default-modes))
-            '(float 12)))               ; [default: 8]
+            '(float 12)))               ; [Default: 8]
 
 ;;* 4 (info "(org)Hyperlinks")
 
-  ;; don't hexify URL when creating a link
+  ;; Don't hexify URL when creating a link.
   (setq org-url-hexify-p nil)
 
   (with-eval-after-load "org"
     (message "... Hyperlinks")
 
-    ;; open non-existing files
+    ;; Open non-existing files.
     (setq org-open-non-existing-files t)
 
-    ;; function and arguments to call for following `mailto' links
+    ;; Function and arguments to call for following `mailto' links.
     (setq org-link-mailto-program '(compose-mail "%a" "%s")))
 
-  ;; support for links to Gnus groups and messages from within Org mode
+  ;; Support for links to Gnus groups and messages from within Org mode.
   (with-eval-after-load "org-gnus"
 
-    ;; create web links to Google groups or Gmane (instead of Gnus
-    ;; messages)
+    ;; Create web links to Google groups or Gmane (instead of Gnus
+    ;; messages).
     (setq org-gnus-prefer-web-links t))
 
-  ;; global identifiers for Org-mode entries
+  ;; Global identifiers for Org-mode entries.
   (with-eval-after-load "org-id"
 
-    ;; storing a link to an Org file will use entry IDs
+    ;; Storing a link to an Org file will use entry IDs.
     (setq org-id-link-to-org-use-id
           'create-if-interactive-and-no-custom-id))
 
   (with-eval-after-load "org"
     (message "... Handling links")
 
-    ;; 4.4 show inline images when loading a new Org file
-    (setq org-startup-with-inline-images t) ; invokes org-display-inline-images
+    ;; 4.4 Show inline images when loading a new Org file.
+    (setq org-startup-with-inline-images t) ; Invokes org-display-inline-images.
 
-    ;; 4.4 try to get the width from an #+ATTR.* keyword and fall back on the
-    ;; original width if none is found
+    ;; 4.4 Try to get the width from an #+ATTR.* keyword and fall back on the
+    ;; original width if none is found.
     (setq org-image-actual-width nil)
 
-    ;; shortcut links
+    ;; Shortcut links.
     (setq org-link-abbrev-alist
           '(("cache" .
              "http://www.google.com/search?q=cache:%s")
@@ -3736,18 +3735,18 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "5.1 (org)TODO basics functionality")
 
-  ;; 5.1 select a TODO state and bypass any logging associated with that
+  ;; 5.1 Select a TODO state and bypass any logging associated with that.
   (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
-  ;; some commands act upon headlines in the active region
+  ;; Some commands act upon headlines in the active region.
   (setq org-loop-over-headlines-in-active-region 'start-level)
 
 ;;** 5.2 Use of (info "(org)TODO extensions")
 
   (leuven--section "5.2 Use of (org)TODO extensions")
 
-  ;; list of TODO entry keyword sequences (+ fast access keys and specifiers
-  ;; for state change logging)
+  ;; List of TODO entry keyword sequences (+ fast access keys and specifiers
+  ;; for state change logging).
   (setq org-todo-keywords
         '((sequence "NEW(n!)"           ; proposal, idea (under review)
                     "TODO(t!)"          ; open, not (yet) started
@@ -3770,7 +3769,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (with-eval-after-load "org-faces"
 
-    ;; faces for specific TODO keywords
+    ;; Faces for specific TODO keywords.
     (setq org-todo-keyword-faces
           '(("NEW"  . leuven-org-created-kwd)
             ("TODO" . org-todo)
@@ -3788,7 +3787,7 @@ Last time is saved in global variable `leuven--before-section-time'."
             ("OPENPO" . leuven-org-openpo-kwd)
             ("CLSDPO" . leuven-org-closedpo-kwd)))
 
-    ;; Org standard faces
+    ;; Org standard faces.
     (set-face-attribute 'org-todo nil
                         :weight 'bold :box '(:line-width 1 :color "#D8ABA7")
                         :foreground "#D8ABA7" :background "#FFE6E4")
@@ -3797,7 +3796,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                         :weight 'bold :box '(:line-width 1 :color "#BBBBBB")
                         :foreground "#BBBBBB" :background "#F0F0F0")
 
-    ;; Org non-standard faces
+    ;; Org non-standard faces.
     (defface leuven-org-created-kwd
       '((t (:weight normal :box (:line-width 1 :color "#EEE9C3")
             :foreground "#1A1A1A" :background "#FDFCD8")))
@@ -3841,56 +3840,55 @@ Last time is saved in global variable `leuven--before-section-time'."
             :foreground "#969696" :background "#F2F2EE")))
       "Face used to display CLOSED purchase order."))
 
-  ;; block switching entries to DONE if
+  ;; Block switching entries to DONE if
   ;; 1) there are undone child entries, or
   ;; 2) the parent has an `:ORDERED:' property and there are prior
-  ;;    siblings not yet done
+  ;;    siblings not yet done.
   (setq org-enforce-todo-dependencies t)
 
-  ;; 5.2.7 don't dim blocked tasks in the agenda display -- agenda optimization
+  ;; 5.2.7 Don't dim blocked tasks in the agenda display -- agenda optimization.
   (setq org-agenda-dim-blocked-tasks nil) ; XXX not sure about this one
 
-  ;; block switching the parent to DONE if
-  ;; there are unchecked checkboxes
+  ;; Block switching the parent to DONE if there are unchecked checkboxes.
   (setq org-enforce-todo-checkbox-dependencies t)
 
 ;;** 5.3 (info "(org)Progress logging")
 
   (leuven--section "5.3 (org)Progress logging")
 
-  ;; ;; 5.3.1 don't insert a CLOSED time stamp each time a TODO entry is marked DONE
+  ;; ;; 5.3.1 Don't insert a CLOSED time stamp each time a TODO entry is marked DONE.
   ;; (setq org-log-done nil)
 
-  ;; 5.3.2 the notes will be ordered according to time
+  ;; 5.3.2 The notes will be ordered according to time.
   (setq org-log-states-order-reversed nil)
 
-  ;; 5.3.2 insert state change notes and time stamps into a LOGBOOK drawer
+  ;; 5.3.2 Insert state change notes and time stamps into a LOGBOOK drawer.
   (setq org-log-into-drawer t)          ; should be the DEFAULT!
 
-  ;; ~5.3.2 heading for state change added to entries
+  ;; ~5.3.2 Heading for state change added to entries.
   (with-eval-after-load "org"
     (message "... Progress logging")
 
     (setcdr (assq 'state org-log-note-headings)
-            "State %-12S  ->  %-12s %t")) ; "State old -> new + timestamp"
+            "State %-12S  ->  %-12s %t")) ; "State old -> new + timestamp".
 
   (with-eval-after-load "org-habit"
 
-    ;; show habits for future days
+    ;; Show habits for future days.
     (setq org-habit-show-habits-only-for-today nil)
 
-    ;; use character "heavy check mark" to show completed days on which
-    ;; a task was done
+    ;; Use character "heavy check mark" to show completed days on which a task
+    ;; was done.
     (setq org-habit-completed-glyph ?\u2714)
 
-    ;; use character "heavy quadruple dash vertical" to identify today
+    ;; Use character "heavy quadruple dash vertical" to identify today.
     (setq org-habit-today-glyph ?\u250B))
 
 ;;** 5.5 (info "(org)Breaking down tasks")
 
   (leuven--section "5.5 (org)Breaking down tasks")
 
-  ;; automatically change a TODO entry to DONE when all children are done
+  ;; Automatically change a TODO entry to DONE when all children are done.
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
     (let (org-log-done org-log-states)  ; turn off logging
@@ -3900,10 +3898,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 ;;* 6 (info "(org)Tags")
 
-  ;; column to which tags should be indented in a headline
+  ;; Column to which tags should be indented in a headline.
   (setq org-tags-column -80)
 
-  ;; 6.2 list of tags ("contexts") allowed in Org mode files
+  ;; 6.2 List of tags ("contexts") allowed in Org mode files.
   (setq org-tag-alist '((:startgroup . nil)
                          ("personal"  . ?p)
                          ("work"      . ?w)
@@ -3922,7 +3920,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                         ("FLAGGED"     . ??) ; = ASAP
                         ))
 
-  ;; faces for specific tags
+  ;; Faces for specific tags.
   (setq org-tag-faces
         '(("refile"
            (:slant italic
@@ -3944,10 +3942,10 @@ Last time is saved in global variable `leuven--before-section-time'."
             :foreground "#8774AF"))     ; :background "#DED0EA"
           ))
 
-  ;; 6.2 exit fast tag selection after first change (toggle this with `C-c')
+  ;; 6.2 Exit fast tag selection after first change (toggle this with `C-c').
   (setq org-fast-tag-selection-single-key t)
 
-  ;; remove redundant tags of headlines (from David Maus)
+  ;; Remove redundant tags of headlines (from David Maus).
   (defun leuven-org-remove-redundant-tags ()
     "Remove redundant tags of headlines in current buffer.
   A tag is considered redundant if it is local to a headline and inherited by
@@ -3970,7 +3968,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                  (org-toggle-tag tag 'off)))))
          t nil))))
 
-  ;; ;; always offer completion for all tags of all agenda files
+  ;; ;; Always offer completion for all tags of all agenda files.
   ;; (setq org-complete-tags-always-offer-all-agenda-tags t)
 
 ;;* 7 (info "(org)Properties and Columns")
@@ -3979,7 +3977,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "7.1 (org)Property syntax")
 
-  ;; list of property/value pairs that can be inherited by any entry
+  ;; List of property/value pairs that can be inherited by any entry.
   (setq org-global-properties
         '(("Effort_ALL" .
            "0 0:10 0:30 1:00 2:00 3:00 4:00 5:00 6:00 8:00"
@@ -3991,7 +3989,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "8 (org)Dates and Times")
 
-  ;; insinuate appt if Org mode is loaded
+  ;; Insinuate appt if Org mode is loaded.
   (with-eval-after-load "org"
     (message "... Org Dates and Times")
 
@@ -4001,11 +3999,11 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "8.2 (org)Creating time stamps")
 
-  ;; prefer the future for incomplete dates
+  ;; Prefer the future for incomplete dates.
   (setq org-read-date-prefer-future 'time)
 
-  ;; ;; advise `org-read-date' to bury the calendar buffer after selecting
-  ;; ;; a date, so it is out of the way
+  ;; ;; Advise `org-read-date' to bury the calendar buffer after selecting a date,
+  ;; ;; so it is out of the way.
   ;; (defadvice org-read-date
   ;;   (after leuven-bury-calendar-after-org-read-date
   ;;          (&optional with-time to-time from-string prompt
@@ -4014,42 +4012,42 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;;   (bury-buffer "*Calendar*"))
   ;; (ad-activate 'org-read-date)
 
-  ;; number of minutes to round time stamps to
+  ;; Number of minutes to round time stamps to.
   (setq org-time-stamp-rounding-minutes '(1 1))
 
 ;;** 8.3 (info "(org)Deadlines and scheduling")
 
   (leuven--section "8.3 (org)Deadlines and scheduling")
 
-  ;; information to record when the scheduling date is modified
+  ;; Information to record when the scheduling date is modified.
   (setq org-log-reschedule nil)
 
-  ;; information to record when the deadline date is modified
+  ;; Information to record when the deadline date is modified.
   (setq org-log-redeadline 'time)
 
-  ;; number of days before expiration during which a deadline becomes active
+  ;; Number of days before expiration during which a deadline becomes active.
   (setq org-deadline-warning-days 7)
 
-  ;; skip deadline prewarning (up to 7 days before the actual deadline)
-  ;; when entry is also scheduled
+  ;; Skip deadline prewarning (up to 7 days before the actual deadline) when
+  ;; entry is also scheduled.
   (setq org-agenda-skip-deadline-prewarning-if-scheduled 7)
 
-  ;; don't show deadlines when the corresponding item is done
+  ;; Don't show deadlines when the corresponding item is done.
   (setq org-agenda-skip-deadline-if-done t)
 
-  ;; skip scheduling line if same entry shows because of deadline
+  ;; Skip scheduling line if same entry shows because of deadline.
   (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
 
-  ;; don't show scheduled items in agenda when they are done
+  ;; Don't show scheduled items in agenda when they are done.
   (setq org-agenda-skip-scheduled-if-done t)
 
-  ;; ~8.3 don't select item by time stamp or -range if it is DONE
+  ;; ~8.3 Don't select item by time stamp or -range if it is DONE.
   (setq org-agenda-skip-timestamp-if-done t)
 
-  ;; ;; show all days between the first and the last date
+  ;; ;; Show all days between the first and the last date.
   ;; (setq org-timeline-show-empty-dates t)
 
-  ;; TODO state to which a repeater should return the repeating task
+  ;; TODO state to which a repeater should return the repeating task.
   (setq org-todo-repeat-to-state "TODO")
 
 ;;** 8.4 (info "(org)Clocking work time")
@@ -4060,7 +4058,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (global-set-key (kbd "C-c C-x C-j") 'org-clock-goto)
   (global-set-key (kbd "C-c C-x C-o") 'org-clock-out)
 
-  ;; the time clocking code for Org mode
+  ;; The time clocking code for Org mode.
   ;; (require 'org-clock)               ;! needed for trying to automatically
                                         ;! re-clock at Emacs startup
 
@@ -4073,37 +4071,37 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (with-eval-after-load "org-clock"
 
-    ;; ;; 8.4 save both the running clock and the entire clock history when Emacs
-    ;; ;; is closed, and resume it next time Emacs is started up
+    ;; ;; 8.4 Save both the running clock and the entire clock history when Emacs
+    ;; ;; is closed, and resume it next time Emacs is started up.
     ;; (setq org-clock-persist t)
     ;;
-    ;; ;; 8.4 set up hooks for clock persistence
+    ;; ;; 8.4 Set up hooks for clock persistence.
     ;; (org-clock-persistence-insinuate)
 
-    ;; resume clocking task on clock-in if the clock is open
+    ;; Resume clocking task on clock-in if the clock is open.
     (setq org-clock-in-resume t)
 
-    ;; number of clock tasks to remember in history
+    ;; Number of clock tasks to remember in history.
     (setq org-clock-history-length 35)  ; 1-9A-Z
 
-    ;; 8.4.2 include the current clocking task time in clock reports
+    ;; 8.4.2 Include the current clocking task time in clock reports.
     (setq org-clock-report-include-clocking-task t)
 
-    ;; 8.4.2 format string used when creating CLOCKSUM lines and when generating a
-    ;; time duration (avoid showing days)
+    ;; 8.4.2 Format string used when creating CLOCKSUM lines and when generating
+    ;; a time duration (avoid showing days).
     (setq org-time-clocksum-format
           '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
                                         ; some clocktable functions cannot
                                         ; digest day formats (e.g.,
                                         ; org-clock-time%)
 
-    ;; ;; 8.4.2 use fractional times
+    ;; ;; 8.4.2 Use fractional times.
     ;; (setq org-time-clocksum-use-fractional t)
 
-    ;; format string for the total time cells
+    ;; Format string for the total time cells.
     (setq org-clock-total-time-cell-format "%s")
 
-    ;; format string for the file time cells
+    ;; Format string for the file time cells.
     (setq org-clock-file-time-cell-format "%s")
 
     (defun leuven-org-clock-in-interrupted-task ()
@@ -4118,7 +4116,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (global-set-key (kbd "C-c C-x C-q") 'leuven-org-clock-in-interrupted-task)
 
-    ;; 8.4.3 resolve open clocks if the user is idle more than 120 minutes
+    ;; 8.4.3 Resolve open clocks if the user is idle more than 120 minutes.
     (setq org-clock-idle-time 120)
 
     (defun leuven--org-switch-to-started (kwd)
@@ -4130,31 +4128,31 @@ Last time is saved in global variable `leuven--before-section-time'."
           "STRT"
         nil))
 
-    ;; 8.4.3 set task to todo state STRT while clocking it
+    ;; 8.4.3 Set task to todo state STRT while clocking it.
     (setq org-clock-in-switch-to-state 'leuven--org-switch-to-started)
 
-    ;; clock won't be stopped when the clocked entry is marked DONE
+    ;; Clock won't be stopped when the clocked entry is marked DONE.
     (setq org-clock-out-when-done nil)
 
-    ;; time included for the mode line clock is all time clocked into this
-    ;; task today
+    ;; Time included for the mode line clock is all time clocked into this task
+    ;; today.
     (setq org-clock-mode-line-total 'today)
     (setq org-clock-mode-line-total 'all)
 
-    ;; get an alert (notification) when your planned time is over
+    ;; Get an alert (notification) when your planned time is over.
     (setq org-clock-sound "~/Public/Music/Sounds/alarm.wav")
     ;;! Use start-process to have an external program play the sound to
     ;;! avoid ignored keystrokes until after the sound plays (start-process
     ;;! "ding" nil "play" "~/Public/Music/Sounds/alarm.wav")
 
-    ;; remove the clock line when the resulting time is 0:00
+    ;; Remove the clock line when the resulting time is 0:00.
     (setq org-clock-out-remove-zero-time-clocks t)
 
-    ;; ;; when clocking into a task with a clock entry which has not been
-    ;; ;; closed, resume the clock from that point
+    ;; ;; When clocking into a task with a clock entry which has not been
+    ;; ;; closed, resume the clock from that point.
     ;; (setq org-clock-in-resume t)
 
-    ;; ask the user if they wish to clock out before killing Emacs
+    ;; Ask the user if they wish to clock out before killing Emacs.
     (defun leuven--org-query-clock-out ()
       "Ask the user before clocking out.
     This is a useful function for adding to `kill-emacs-query-functions'."
@@ -4162,7 +4160,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                (funcall 'org-clocking-p)
                (y-or-n-p "You are currently clocking time, clock out? "))
           (org-clock-out)
-        t))                             ; only fails on keyboard quit or error
+        t))                             ; Only fails on keyboard quit or error.
 
     (add-hook 'kill-emacs-query-functions 'leuven--org-query-clock-out)
 
@@ -4172,7 +4170,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "8.5 (org)Effort estimates")
 
-  ;; add an effort estimate on the fly when clocking in
+  ;; Add an effort estimate on the fly when clocking in.
   (defun leuven--org-ask-effort ()
     "Ask for an effort estimate when clocking in."
     (unless (org-entry-get (point) "Effort")
@@ -4189,21 +4187,22 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "9.1 (org)Capture")
 
-  ;; 9.1.2 directory with Org files
+  ;; 9.1.2 Directory with Org files.
   (setq org-directory
-        (directory-file-name            ; this function removes the final slash
+        (directory-file-name            ; This function removes the final slash.
          (cond ((file-directory-p "~/org/") "~/org/")
                (t "~/"))))
 
-  ;; 9.1.2 default target for storing notes
-  (setq org-default-notes-file          ; inbox for collecting [default: "~/.notes"]
+  ;; 9.1.2 Default target for storing notes.
+  (setq org-default-notes-file          ; Inbox for collecting
+                                        ; [Default: "~/.notes"].
         (concat org-directory "/notes.org"))
 
   ;; 9.1.2 templates for the creation of capture buffers
 
   ;; ("Receipt"   ?r "** %^{BriefDesc} %U %^g\n%?"   "~/Personal/finances.org")
 
-  ;; fast note taking in Org mode (the ultimate capture tool)
+  ;; Fast note taking in Org mode (the ultimate capture tool).
   (with-eval-after-load "org-capture"
 
     (add-to-list 'org-capture-templates
@@ -4288,7 +4287,7 @@ From %a"
                    "A TEMPLATE HERE"
                    :clock-in t :clock-resume t) t)
 
-    ;; thought
+    ;; Thought.
     (add-to-list 'org-capture-templates
                  `("n" "Note" entry
                    (file+headline ,org-default-notes-file "Notes")
@@ -4297,12 +4296,12 @@ From %a"
 %i"
                    :empty-lines 1) t)
 
-    ;; shopping list (stuff to buy)
+    ;; Shopping list (stuff to buy).
     (add-to-list 'org-capture-templates
                  `("b" "Buy" checkitem
                    (file+headline ,(concat org-directory "/refile.org") "Shopping")) t)
 
-    ;; add a note to the currently clocked task
+    ;; Add a note to the currently clocked task.
     (add-to-list 'org-capture-templates
                  `("c" "Clock sibling" entry
                    (clock)
@@ -4353,7 +4352,7 @@ From %a"
 From %c"
                    :empty-lines 1 :immediate-finish t) t)
 
-    ;; default `org-capture-templates' key to use
+    ;; Default `org-capture-templates' key to use.
     (setq org-protocol-default-template-key "w")
 
     (defun make-capture-frame ()
@@ -4368,8 +4367,8 @@ From %c"
       ;;       word-wrap t)
       (org-capture))
 
-    ;; make the frame contain a single window (by default, `org-capture'
-    ;; splits the window)
+    ;; Make the frame contain a single window (by default, `org-capture' splits
+    ;; the window).
     (add-hook 'org-capture-mode-hook 'delete-other-windows)
 
     (defadvice org-capture-finalize
@@ -4387,15 +4386,15 @@ From %c"
     )                                   ; with-eval-after-load "org-capture" ends here
 
 ;; bug when C-c C-l
-  ;; ;; 4.6 shortcut links
+  ;; ;; 4.6 Shortcut links.
   ;; (add-to-list 'org-link-abbrev-alist '(("att" . org-attach-expand-link)))
 
   (leuven--section "9.4 (org)Protocols")
 
-  ;; 9.4 capture from Firefox (to store links and text)
+  ;; 9.4 Capture from Firefox (to store links and text).
   (with-eval-after-load "org-protocol"
 
-    ;; map online URL to an existing working file
+    ;; Map online URL to an existing working file.
     (add-to-list 'org-protocol-project-alist
                  '("Worg at http://orgmode.org/worg/"
                    :online-suffix ".html"
@@ -4412,25 +4411,25 @@ From %c"
         nil)
       "List of extra files to be used as targets for refile commands.")
 
-    ;; 9.5 any headline with level <= 3 is a target
+    ;; 9.5 Any headline with level <= 3 is a target.
     (setq org-refile-targets
           `((nil
-             :maxlevel . 4)             ; current file
+             :maxlevel . 4)             ; Current file.
             (,(append org-agenda-files leuven-org-refile-extra-files)
              :maxlevel . 2)))
 
-    ;; cache refile targets to speed up the process
+    ;; Cache refile targets to speed up the process.
     (setq org-refile-use-cache t)
 
-    ;; 9.5 provide refile targets as paths, including the file name
-    ;; (without directory) as level 1 of the path
+    ;; 9.5 Provide refile targets as paths, including the file name (without
+    ;; directory) as level 1 of the path.
     (setq org-refile-use-outline-path 'file)
 
-    ;; 9.5 allow to create new nodes (must be confirmed by the user) as
-    ;; refile targets
+    ;; 9.5 Allow to create new nodes (must be confirmed by the user) as refile
+    ;; targets.
     (setq org-refile-allow-creating-parent-nodes 'confirm)
 
-    ;; refile only within the current buffer
+    ;; Refile only within the current buffer.
     (defun leuven-org-refile-within-current-buffer ()
       "Move the entry at point to another heading in the current buffer."
       (interactive)
@@ -4438,7 +4437,7 @@ From %c"
         (org-refile)))
     ;; FIXME Add a smart key binding
 
-    ;; exclude DONE state tasks from refile targets
+    ;; Exclude DONE state tasks from refile targets.
     (defun bh/verify-refile-target ()
       "Exclude TODO keywords with a DONE state from refile targets."
       (not (member (nth 2 (org-heading-components)) org-done-keywords)))
@@ -4447,7 +4446,7 @@ From %c"
 
     (leuven--section "9.6 (org)Archiving")
 
-    ;; 9.6.1 subtrees should be archived in the current file
+    ;; 9.6.1 Subtrees should be archived in the current file.
     (setq org-archive-location "::* Archive")
 
     )
@@ -4458,17 +4457,17 @@ From %c"
 
   (with-eval-after-load "org-agenda"
 
-    ;; multiple same-day time stamps in entry make multiple agenda lines
+    ;; Multiple same-day time stamps in entry make multiple agenda lines.
     (setq org-agenda-skip-additional-timestamps-same-entry nil)
 
-    ;; show outline path in echo area after line motion (though, may bring
-    ;; some slowness)
+    ;; Show outline path in echo area after line motion (though, may bring some
+    ;; slowness).
     (setq org-agenda-show-outline-path t)
 
-    ;; 10.0 restore the window configuration when exiting the agenda
+    ;; 10.0 Restore the window configuration when exiting the agenda.
     (setq org-agenda-restore-windows-after-quit t)
 
-    ;; ;; speed up agenda by avoiding to update some text properties
+    ;; ;; Speed up agenda by avoiding to update some text properties.
     ;; (setq org-agenda-ignore-drawer-properties '(effort category)) ; org.el
 
 ;;** 10.1 (info "(org)Agenda files")
@@ -4485,93 +4484,93 @@ From %c"
 
     (leuven--section "10.2 (org)Agenda dispatcher")
 
-    ;; enable sticky agenda: `q' key will bury agenda buffers (instead of
-    ;; killing)
+    ;; Enable sticky agenda: `q' key will bury agenda buffers (instead of
+    ;; killing).
     (setq org-agenda-sticky t)
 
 ;;** 10.3 The (info "(org)Built-in agenda views")
 
     (leuven--section "10.3 (org)Built-in agenda views")
 
-    ;; default duration for appointments that only have a starting time
+    ;; Default duration for appointments that only have a starting time.
     (setq org-agenda-default-appointment-duration nil)
 
-    ;; ;; duration of an appointment will add to day effort
+    ;; ;; Duration of an appointment will add to day effort.
     ;; (setq org-agenda-columns-add-appointments-to-effort-sum t)
 
-    ;; show dated entries in the global `todo' list
+    ;; Show dated entries in the global `todo' list.
     (setq org-agenda-todo-ignore-with-date nil)
                                         ;!! tricky setting
 
-    ;; show entries with a time stamp in the global `todo' list
+    ;; Show entries with a time stamp in the global `todo' list.
     (setq org-agenda-todo-ignore-timestamp nil)
 
-    ;; 10.3.2 don't show scheduled entries in the global `todo' list
+    ;; 10.3.2 Don't show scheduled entries in the global `todo' list.
     (setq org-agenda-todo-ignore-scheduled 'future)
-                                        ;!! tricky setting
+                                        ;!! Tricky setting.
     (setq org-agenda-todo-ignore-scheduled nil)
 
-    ;; 10.3.2 don't show entries scheduled in the future in the global
-    ;; `todo' list (until they are within the warning period)
+    ;; 10.3.2 Don't show entries scheduled in the future in the global
+    ;; `todo' list (until they are within the warning period).
     (setq org-agenda-todo-ignore-deadlines 'near)
-                                        ;!! tricky setting
+                                        ;!! Tricky setting.
     (setq org-agenda-todo-ignore-deadlines nil)
 
-    ;; 10.3.2 check also the sublevels of a TODO entry for TODO entries,
-    ;; resulting in potentially much longer `todo' lists
+    ;; 10.3.2 Check also the sublevels of a TODO entry for TODO entries,
+    ;; resulting in potentially much longer `todo' lists.
     (setq org-agenda-todo-list-sublevels t)
 
-    ;; 10.3.3 honor `todo' list `org-agenda-todo-ignore...' options also
-    ;; in the `tags-todo' list
+    ;; 10.3.3 Honor `todo' list `org-agenda-todo-ignore...' options also
+    ;; in the `tags-todo' list.
     (setq org-agenda-tags-todo-honor-ignore-options t)
 
-    ;; ;; highlight current line (may bring some slowness)
+    ;; ;; Highlight current line (may bring some slowness).
     ;; (add-hook 'org-agenda-mode-hook 'hl-line-mode)
 
-    ;; 10.3.5 list of extra files to be searched by text search commands
-    ;; (C-c a s)
+    ;; 10.3.5 List of extra files to be searched by text search commands
+    ;; (C-c a s).
     (setq org-agenda-text-search-extra-files nil) ; org.el
 
     (defvar leuven-org-search-extra-files nil
       "List of extra files to be searched by custom search commands (`R s' and `R S').")
 
-    ;; turn on individual word search (for Google addicts)
+    ;; Turn on individual word search (for Google addicts).
     (setq org-agenda-search-view-always-boolean t
           org-agenda-search-view-search-words-only t)
 
-    ;; match part of a word
+    ;; Match part of a word.
     (setq org-agenda-search-view-force-full-words nil)
 
-    ;; don't search headline for a time-of-day
+    ;; Don't search headline for a time-of-day.
     (setq org-agenda-search-headline-for-time nil)
 
-    ;; 10.3.6 how to identify stuck projects
+    ;; 10.3.6 How to identify stuck projects.
     (setq org-stuck-projects
-          '("+LEVEL=2/-DONE"            ; identify a project
-            ("TODO" "STRT")             ; TODO keywords
-            nil ""))                    ; tags, regexp
+          '("+LEVEL=2/-DONE"            ; Identify a project.
+            ("TODO" "STRT")             ; Todo keywords.
+            nil ""))                    ; Tags, regexp.
 
 ;;** 10.4 (info "(org)Presentation and sorting")
 
     (leuven--section "10.4 (org)Presentation and sorting")
 
-    ;; 10.4 format specifications for the prefix of items in the agenda views
+    ;; 10.4 Format specifications for the prefix of items in the agenda views.
     (setq org-agenda-prefix-format
-          '((agenda   . " %-11s%i %?-12t") ; agenda
-            (timeline . " % s")         ; timeline
-            (todo     . " %i %-12:c")   ; todo, alltodo
-            (tags     . " %i %-12:c")   ; tags, tags-todo, stuck
-            (search   . " %i %-12:c"))) ; search
+          '((agenda   . " %-11s%i %?-12t") ; Agenda.
+            (timeline . " % s")         ; Timeline.
+            (todo     . " %i %-12:c")   ; Todo, alltodo.
+            (tags     . " %i %-12:c")   ; Tags, tags-todo, stuck.
+            (search   . " %i %-12:c"))) ; Search.
 
-    ;; text preceding scheduled items in the agenda view
+    ;; Text preceding scheduled items in the agenda view.
     (setq org-agenda-scheduled-leaders
           '("Scheduled  "
             "           "))
 
-    ;; text preceding item pulled into the agenda by inactive time stamps
+    ;; Text preceding item pulled into the agenda by inactive time stamps.
     (setq org-agenda-inactive-leader "[")
 
-    ;; text preceding deadline items in the agenda view
+    ;; Text preceding deadline items in the agenda view.
     (setq org-agenda-deadline-leaders
           '("Deadline   "
             "In %d d"                   ; or "%d d left"
@@ -4581,7 +4580,7 @@ From %c"
 
   (with-eval-after-load "org-faces"
 
-    ;; faces for showing deadlines in the agenda
+    ;; Faces for showing deadlines in the agenda.
     (setq org-agenda-deadline-faces
           '((1.0001 . leuven-org-deadline-overdue)
             (0.9999 . leuven-org-deadline-today)
@@ -4590,7 +4589,7 @@ From %c"
 
     ;; see http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
 
-    ;; Org non-standard faces
+    ;; Org non-standard faces.
     (defface leuven-org-deadline-overdue
       '((t (:foreground "#F22659")))
       "Face used to highlight tasks whose due date is in the past.")
@@ -4609,18 +4608,18 @@ From %c"
 
   (with-eval-after-load "org-agenda"
 
-    ;; ;; 10.4 column to shift tags to (in agenda items)
+    ;; ;; 10.4 Column to shift tags to (in agenda items).
     ;; (setq org-agenda-tags-column -132)
 
-    ;; right-justify tags in the agenda buffer
+    ;; Right-justify tags in the agenda buffer.
     (defun leuven--org-agenda-right-justify-tags ()
       "Justify the tags to the right border of the agenda window."
       (let ((org-agenda-tags-column (- 2 (window-width))))
         (org-agenda-align-tags)))
     (add-hook 'org-agenda-finalize-hook 'leuven--org-agenda-right-justify-tags)
 
-    ;; type "(" in agenda and todo buffers to show category name and task
-    ;; length for each task
+    ;; Type "(" in agenda and todo buffers to show category name and task
+    ;; length for each task.
     (defvar leuven--org-agenda-show-tasks-details nil)
     (defun leuven-org-agenda-toggle-tasks-details ()
       "Hide/show tasks details (category and time estimate) in agenda views."
@@ -4646,15 +4645,15 @@ From %c"
     (define-key org-agenda-mode-map
       (kbd "(") 'leuven-org-agenda-toggle-tasks-details))
 
-  ;; 10.4.2 settings for time grid for agenda display
+  ;; 10.4.2 Settings for time grid for agenda display.
   (setq org-agenda-time-grid '((daily remove-match)
                                ""
                                (0800 1000 1200 1400 1600 1800 2000)))
 
-  ;; string for the current time marker in the agenda
+  ;; String for the current time marker in the agenda.
   (setq org-agenda-current-time-string "Right now")
 
-  ;; 10.4.3 sorting structure for the agenda items of a single day
+  ;; 10.4.3 Sorting structure for the agenda items of a single day.
   (setq org-agenda-sorting-strategy   ; custom value
         '((agenda time-up category-up priority-down effort-down)
           (todo category-up priority-down effort-down)
@@ -4663,14 +4662,14 @@ From %c"
 
   ;; (setq org-sort-agenda-notime-is-late nil)
 
-  ;; show agenda in the current window, keeping all other windows
+  ;; Show agenda in the current window, keeping all other windows.
   (setq org-agenda-window-setup 'current-window)
 
 ;;** 10.5 (info "(org)Agenda commands")
 
   (leuven--section "10.5 (org)Agenda commands")
 
-  ;; get a compact view during follow mode in the agenda
+  ;; Get a compact view during follow mode in the agenda.
   (defun leuven--compact-follow ()
     "Make the view compact, then show the necessary minimum."
     (ignore-errors
@@ -4688,14 +4687,14 @@ From %c"
   ;; (log check) does not jump to the right line
   ;; (add-hook 'org-agenda-after-show-hook 'leuven--compact-follow)
 
-  ;; 10.5 number of days to include in overview display
+  ;; 10.5 Number of days to include in overview display.
   (setq org-agenda-span 'day)
 
-  ;; always start the overview on the current day
+  ;; Always start the overview on the current day.
   (setq org-agenda-start-on-weekday nil)
 
-  ;; format string for displaying dates in the daily/weekly agenda
-  ;; and in the timeline
+  ;; Format string for displaying dates in the daily/weekly agenda
+  ;; and in the timeline.
   (setq org-agenda-format-date
         (concat                         ; "\n"
                 "%Y-%m-%d" " %a "
@@ -4705,18 +4704,18 @@ From %c"
                 ;; (make-string 1 ?\u25AE)
                 ))
 
-  ;; 10.5 only show clocked entries in agenda log mode (no closed
-  ;; entries, no state changes)
+  ;; 10.5 Only show clocked entries in agenda log mode (no closed
+  ;; entries, no state changes).
   (setq org-agenda-log-mode-items '(clock))
 
-  ;; 10.5 parameters for the clocktable in clockreport mode
+  ;; 10.5 Parameters for the clocktable in clockreport mode.
   (setq org-agenda-clockreport-parameter-plist
         '(:link nil :maxlevel 3 :fileskip0 t))
   (setq org-agenda-clockreport-parameter-plist
         '(:link t :maxlevel 3 :fileskip0 t))
 
-  ;; 10.5 definition of what constitutes a clocking problem (overlapping
-  ;; clock entries, clocking gaps)
+  ;; 10.5 Definition of what constitutes a clocking problem (overlapping
+  ;; clock entries, clocking gaps).
   (setq org-agenda-clock-consistency-checks
         '(:max-duration "10:00"
           :min-duration 0
@@ -4731,23 +4730,23 @@ From %c"
             :box (:line-width 1 :color "#BBDDFF")
             :foreground "black" :background "#D0EDFF"))))
 
-  ;; 10.5 text prepended to the entry text in agenda buffers
+  ;; 10.5 Text prepended to the entry text in agenda buffers.
   (setq org-agenda-entry-text-leaders "               │ ")
 
-  ;; 10.5 file to which to add new entries with the `i' key in agenda and
-  ;; calendar (org.el)
+  ;; 10.5 File to which to add new entries with the `i' key in agenda and
+  ;; calendar (org.el).
   (setq org-agenda-diary-file "~/org/diary.org")
 
-  ;; 10.5? keep filters from one agenda view to the next
+  ;; 10.5? Keep filters from one agenda view to the next.
   (setq org-agenda-persistent-filter t)
 
-  ;; faces for specific Priorities (#A, #B and #C)
+  ;; Faces for specific Priorities (#A, #B and #C).
   (setq org-priority-faces
         '((?A . (:weight bold :foreground "#5F3731" :background "#EFC4C0"))
           (?B . (:foreground "#475443" :background "#D5E1D0"))
           (?C . (:foreground "#2D373F" :background "#C9DBE3"))))
 
-  ;; 10.5 Commands in the agenda buffer
+  ;; 10.5 Commands in the agenda buffer.
   (defun leuven--weekday-p ()
     "Return t if current day is between Monday and Friday."
     (let ((dow (nth 6 (decode-time))))
@@ -4787,7 +4786,7 @@ From %c"
              (or (< hour 8) (> hour 21)))))
          (concat "-" tag)))
 
-  ;;! ensure that `:refile:' tags never will be excluded!
+  ;;! Ensure that `:refile:' tags never will be excluded!
   (defun leuven--org-auto-exclude-function (tag)
     (and (cond
           ((string= tag "personal")
@@ -4801,8 +4800,8 @@ From %c"
 
   (setq org-agenda-auto-exclude-function 'leuven--org-auto-exclude-function)
 
-  ;; make the block agenda more compact (no agenda span name, no week
-  ;; number, no separator line)
+  ;; Make the block agenda more compact (no agenda span name, no week number, no
+  ;; separator line).
   (setq org-agenda-compact-blocks t)
   (setq org-agenda-compact-blocks nil)
 
@@ -4838,15 +4837,15 @@ From %c"
       (message "%s..." org-agenda-overriding-header)
       (org-todo-list)))
 
-  ;; "TODO list" without asking for a directory
+  ;; "TODO list" without asking for a directory.
   (global-set-key (kbd "<C-f3>") 'leuven-org-todo-list-current-dir)
 
 ;;** 10.7 (info "(org)Exporting Agenda Views")
 
   (leuven--section "10.7 (org)Exporting Agenda Views")
 
-  ;; 10.7 alist of variable/value pairs that should be active during agenda
-  ;; export
+  ;; 10.7 Alist of variable/value pairs that should be active during agenda
+  ;; export.
   (setq org-agenda-exporter-settings
         '((ps-number-of-columns 1)      ; 2?
           (ps-landscape-mode t)
@@ -4857,7 +4856,7 @@ From %c"
 
   (leuven--section "10.8 (org)Agenda column view")
 
-  ;; 10.8 default column format, if no other format has been defined
+  ;; 10.8 Default column format, if no other format has been defined.
   (setq org-columns-default-format
         ;; "%65ITEM(Task) %DEADLINE(Due Date) %PRIORITY %6CLOCKSUM(Spent) %6Effort(Estim.){:}")
         ;; "%1BLOCKED %4TODO %CATEGORY %5Effort{:} %50ITEM %20TAGS %21ALLTAGS")
@@ -4896,7 +4895,7 @@ this with to-do items than with projects or headings."
       (org-agenda-switch-to)
       (org-capture 0))
 
-    ;; ;; new key assignment (overrides `org-agenda-next-item')
+    ;; ;; New key assignment (overrides `org-agenda-next-item').
     ;; (define-key org-agenda-mode-map "N" 'leuven-org-agenda-new)
   )
 
@@ -4906,18 +4905,18 @@ this with to-do items than with projects or headings."
 
   (with-eval-after-load "org-faces"
 
-    ;; add a face to #+begin_quote and #+begin_verse blocks
+    ;; Add a face to #+begin_quote and #+begin_verse blocks.
     (setq org-fontify-quote-and-verse-blocks t))
 
   (with-eval-after-load "org"
     (message "... Org Markup")
 
-    ;;??? change the face of a headline (as an additional information) if it is
-    ;; marked DONE (to face `org-headline-done')
+    ;;??? Change the face of a headline (as an additional information) if it is
+    ;; marked DONE (to face `org-headline-done').
     (setq org-fontify-done-headline t)
 
-    ;; 11.1 hide the emphasis marker characters
-    (setq org-hide-emphasis-markers t)  ; impact on table alignment!
+    ;; 11.1 Hide the emphasis marker characters.
+    (setq org-hide-emphasis-markers t)  ; Impact on table alignment!
 
     (defun leuven-org-insert-image-or-take-screenshot (name)
       "Insert a link to an already existing image, or else to a screenshot.
@@ -4947,7 +4946,7 @@ this with to-do items than with projects or headings."
       (insert (concat "[[" name "]]"))
       (org-display-inline-images))
 
-    ;; hide the brackets marking macro calls
+    ;; Hide the brackets marking macro calls.
     (setq org-hide-macro-markers t)
 
     (defun org-macro-insert ()
@@ -4961,7 +4960,7 @@ this with to-do items than with projects or headings."
         (insert "}}}")
         (when pos (goto-char pos)))))
 
-  ;; 11.7.1 define user entities to produce special characters
+  ;; 11.7.1 Define user entities to produce special characters.
   (with-eval-after-load "org-entities"
 
     (add-to-list 'org-entities-user
@@ -4980,28 +4979,28 @@ this with to-do items than with projects or headings."
                    "NOK"
                    "NOK" "✘")))
 
-  ;; 11.7.2 interpret "_" and "^" for display when braces are used
+  ;; 11.7.2 Interpret "_" and "^" for display when braces are used.
   (setq org-use-sub-superscripts '{})
 
-  ;; ;; 11.7.3 convert LaTeX fragments to images when exporting to HTML (using MathJax)
+  ;; ;; 11.7.3 Convert LaTeX fragments to images when exporting to HTML (using MathJax).
   ;; (setq org-export-with-latex t)
 
-  ;; highlight LaTeX and related syntax
+  ;; Highlight LaTeX and related syntax.
   (setq org-highlight-latex-and-related '(latex script entities))
 
-  ;; show entities as UTF8 characters
+  ;; Show entities as UTF8 characters.
   (setq org-pretty-entities t)          ; emsp, etc.
 
-  ;; ;; pretty entity display doesn't include formatting sub/superscripts
+  ;; ;; Pretty entity display doesn't include formatting sub/superscripts.
   ;; (setq org-pretty-entities-include-sub-superscripts nil)
 
 ;;* 12 (info "(org)Exporting")
 
-  ;; bind the exporter dispatcher to a key sequence
+  ;; Bind the exporter dispatcher to a key sequence.
   (with-eval-after-load "org"
     (message "... Org Exporting")
 
-    ;; libraries in this list will be loaded once the export framework is needed
+    ;; Libraries in this list will be loaded once the export framework is needed.
     (setq org-export-backends '(ascii html icalendar latex odt))
 
     ;; (define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch)
@@ -5025,12 +5024,12 @@ this with to-do items than with projects or headings."
              (base-name (file-name-base orgfile))
              (htmlfile (concat base-name ".html"))
              (pdffile (concat base-name ".pdf")))
-        (save-buffer)                     ; see other commands in
+        (save-buffer)                     ; See other commands in
                                           ; `before-save-hook':
                                           ; `org-update-all-dblocks'
-                                          ; `org-table-iterate-buffer-tables'
+                                          ; `org-table-iterate-buffer-tables'.
         (when (derived-mode-p 'org-mode)
-          ;; (org-babel-execute-buffer)   ; XXX why should we execute all code blocks?
+          ;; (org-babel-execute-buffer)   ; XXX Why should we execute all code blocks?
           (let ((before-save-hook nil))
             (save-buffer))
           (org-babel-tangle)
@@ -5052,40 +5051,40 @@ this with to-do items than with projects or headings."
 
   (leuven--section "12.2 (org)Export options")
 
-  ;; Org generic export engine
+  ;; Org generic export engine.
   (with-eval-after-load "ox"
 
-    ;; 12.3 don't insert a time stamp into the exported file
+    ;; 12.3 Don't insert a time stamp into the exported file.
     (setq org-export-time-stamp-file nil)
 
-    ;; 13.1.5 export all drawers (including properties)
+    ;; 13.1.5 Export all drawers (including properties).
     ;; (setq org-export-with-drawers t)
 
-    ;; default language of HTML export (see `org-export-language-setup' XXX)
+    ;; Default language of HTML export (see `org-export-language-setup' XXX).
     (setq org-export-default-language "en")
 
-    ;; include priority cookies in export
+    ;; Include priority cookies in export.
     (setq org-export-with-priority t)
 
-    ;; activate smart quotes during export (convert " to \og, \fg in French)
+    ;; Activate smart quotes during export (convert " to \og, \fg in French).
     (setq org-export-with-smart-quotes t) ; curly quotes in HTML
 
-    ;; interpret "_" and "^" for export when braces are used
+    ;; Interpret "_" and "^" for export when braces are used.
     (setq org-export-with-sub-superscripts '{})
 
-    ;; allow #+BIND to define local variable values for export
+    ;; Allow #+BIND to define local variable values for export.
     (setq org-export-allow-bind-keywords t)
 
-    ;; ;; exported stuff will not be pushed onto the kill ring
+    ;; ;; Exported stuff will not be pushed onto the kill ring.
     ;; (setq org-export-copy-to-kill-ring nil) ; new default since 2014-04-17
 
-    ;; ;; export and publishing commands will run in background
+    ;; ;; Export and publishing commands will run in background.
     ;; (setq org-export-in-background t)
 
-    ;; ;; use a non-intrusive export dispatcher
+    ;; ;; Use a non-intrusive export dispatcher.
     ;; (setq org-export-dispatch-use-expert-ui t)
 
-    ;; export snippet translations
+    ;; Export snippet translations.
     (add-to-list 'org-export-snippet-translation-alist
                  '("l" . "latex"))
     (add-to-list 'org-export-snippet-translation-alist
@@ -5093,44 +5092,44 @@ this with to-do items than with projects or headings."
 
     )                                   ; with-eval-after-load "ox" ends here
 
-  ;; execute buffer when exporting it (see some thread with Eric Schulte,
-  ;; end of December 2010)
+  ;; Execute buffer when exporting it (see some thread with Eric Schulte,
+  ;; end of December 2010).
   ;;;;;;;;;; (add-hook 'org-export-first-hook 'org-babel-execute-buffer)
 
 ;;** 12.5 (info "(org)HTML export")
 
-  ;; Org HTML export engine
+  ;; Org HTML export engine.
   (with-eval-after-load "ox-html"
 
     (setq org-html-checkbox-type 'unicode)
 
-    ;; output type to be used by htmlize when formatting code snippets
+    ;; Output type to be used by htmlize when formatting code snippets.
     (setq org-html-htmlize-output-type 'css)
 
     ;; ;; URL pointing to a CSS file defining text colors for htmlized Emacs
-    ;; ;; buffers
+    ;; ;; buffers.
     ;; (setq org-org-htmlized-css-url "style.css")
 
-    ;; XML declaration
+    ;; XML declaration.
     (setq org-html-xml-declaration
           '(("html" . "<!-- <xml version=\"1.0\" encoding=\"%s\"> -->")
             ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
             ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>")))
 
-    ;; coding system for HTML export
+    ;; Coding system for HTML export.
     (setq org-html-coding-system 'utf-8)
 
-    ;; format for the HTML postamble
+    ;; Format for the HTML postamble.
     (setq org-html-postamble
           "  <div id=\"footer\"><div id=\"copyright\">\n    Copyright &copy; %d %a\n  </div></div>")
 
-    ;; 13.1.5 don't include the JavaScript snippets in exported HTML files
+    ;; 13.1.5 Don't include the JavaScript snippets in exported HTML files.
     (setq org-html-head-include-scripts nil)
 
-    ;; 12.5.9 turn inclusion of the default CSS style off
+    ;; 12.5.9 Turn inclusion of the default CSS style off.
     (setq org-html-head-include-default-style nil)
 
-    ;; check that `tidy' is in PATH, and that configuration file exists
+    ;; Check that `tidy' is in PATH, and that configuration file exists.
     (when (and (executable-find "tidy")
                (file-exists-p "~/.tidyrc")) ; tidy-config
 
@@ -5150,7 +5149,7 @@ this with to-do items than with projects or headings."
       (add-to-list 'org-export-filter-final-output-functions
                    'leuven--export-html-final-filter))
 
-      ;; HTML checkbox output
+      ;; HTML checkbox output.
       (defun leuven--checkbox-filter (item backend info)
         (when (org-export-derived-backend-p backend 'html)
           (replace-regexp-in-string
@@ -5171,7 +5170,7 @@ this with to-do items than with projects or headings."
 
   (leuven--section "(emacs-goodies-el)htmlize")
 
-  ;; HTML-ize font-lock buffers
+  ;; HTML-ize font-lock buffers.
   (autoload 'htmlize-buffer "htmlize"
     "Convert BUFFER to HTML, preserving colors and decorations." t)
   (autoload 'htmlize-region "htmlize"
@@ -5181,10 +5180,10 @@ this with to-do items than with projects or headings."
 
   (with-eval-after-load "htmlize"
 
-    ;; output type of generated HTML
+    ;; Output type of generated HTML.
     (setq htmlize-output-type 'css)
 
-    ;; override output type `inline-css' used for htmlizing a region
+    ;; Override output type `inline-css' used for htmlizing a region.
     (defun htmlize-region-for-paste (beg end)
       "Htmlize the region and return just the HTML as a string.
     This forces the `css' style and only returns the HTML body, but without the
@@ -5199,40 +5198,40 @@ this with to-do items than with projects or headings."
                (plist-get htmlize-buffer-places 'content-end)))
           (kill-buffer htmlbuf))))
 
-    ;; charset declared by the resulting HTML documents
+    ;; Charset declared by the resulting HTML documents.
     (setq htmlize-html-charset "utf-8")
 
-    ;; non-ASCII characters (codes in the 128-255 range) are copied to
-    ;; HTML without modification -- if your HTML is in Unicode
+    ;; Non-ASCII characters (codes in the 128-255 range) are copied to
+    ;; HTML without modification -- if your HTML is in Unicode.
     (setq htmlize-convert-nonascii-to-entities nil)
 
-    ;; key binding
+    ;; Key binding.
     (global-set-key (kbd "M-P") 'htmlize-buffer)
 
     )                                   ; with-eval-after-load "htmlize" ends here
 
-  ;; quick print preview (to Web browser) with `htmlize-view-buffer'
+  ;; Quick print preview (to Web browser) with `htmlize-view-buffer'.
   (GNUEmacs
     (autoload 'htmlize-view-buffer "htmlize-view"
       "Convert buffer to html preserving faces and view in web browser." t)
 
-    ;; same key binding as Org export to HTML (open in browser)
+    ;; Same key binding as Org export to HTML (open in browser).
     (global-set-key (kbd "C-c C-e h o") 'htmlize-view-buffer)
 
-    ;; view current buffer as html in web browser
+    ;; View current buffer as html in web browser.
     (with-eval-after-load "htmlize-view"
 
-      ;; add "Quick Print" entry to file menu
+      ;; Add "Quick Print" entry to file menu.
       (htmlize-view-add-to-files-menu)))
 
 ;;** 12.6 (info "(org)LaTeX and PDF export")
 
   (leuven--section "12.6 (org)LaTeX and PDF export")
 
-  ;; LaTeX back-end
+  ;; LaTeX back-end.
   (with-eval-after-load "ox-latex"
 
-    ;; markup for TODO keywords and for tags, as a printf format
+    ;; Markup for TODO keywords and for tags, as a printf format.
     (defun org-latex-format-headline (todo todo-type priority text tags info)
       "Default function for formatting the headline's text."
       (concat (when todo
@@ -5249,20 +5248,20 @@ this with to-do items than with projects or headings."
                 ;; XXX source of "undefined control sequence"?
                   (mapconcat 'identity tags ":")))))
 
-    ;; function for formatting the headline's text
+    ;; Function for formatting the headline's text.
     (setq org-latex-format-headline-function
           'org-latex-format-headline)
 
-    ;; default width for images
+    ;; Default width for images.
     (setq org-latex-image-default-width ".75\\linewidth")
 
-    ;; format string for links with unknown path type
+    ;; Format string for links with unknown path type.
     (setq org-latex-link-with-unknown-path-format "\\colorbox{red}{%s}")
 
     (defun leuven--change-pdflatex-program (backend)
       "Automatically run XeLaTeX, if asked, when exporting to LaTeX."
 
-      ;; default (in Windows binary)
+      ;; Default (in Windows binary).
       (setq org-latex-pdf-process
             (if (executable-find "latexmk")
                 '("latexmk -CF -pdf %f && latexmk -c")
@@ -5280,20 +5279,20 @@ this with to-do items than with projects or headings."
                   "xelatex -interaction=nonstopmode -output-directory=%o %f"
                   "xelatex -interaction=nonstopmode -output-directory=%o %f")))))
 
-    ;; hook run before parsing an export buffer
+    ;; Hook run before parsing an export buffer.
     (add-hook 'org-export-before-parsing-hook 'leuven--change-pdflatex-program)
 
-    ;; export source code using `listings' (instead of `verbatim')
+    ;; Export source code using `listings' (instead of `verbatim').
     (setq org-latex-listings t)
 
-    ;; 12.6.2 default packages to be inserted in the header
-    ;; include the `listings' package for fontified source code
+    ;; 12.6.2 Default packages to be inserted in the header.
+    ;; Include the `listings' package for fontified source code.
     (add-to-list 'org-latex-packages-alist '("" "listings") t)
 
-    ;; include the `xcolor' package for colored source code
+    ;; Include the `xcolor' package for colored source code.
     (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
 
-    ;; filter for no-break spaces
+    ;; Filter for no-break spaces.
     (defun leuven--latex-filter-nbsp (text backend info)
       "Convert no-break spaces when exporting to LaTeX/Beamer."
       (when (memq backend '(latex beamer))
@@ -5302,51 +5301,51 @@ this with to-do items than with projects or headings."
     (add-to-list 'org-export-filter-plain-text-functions
                  'leuven--latex-filter-nbsp)
 
-    ;; include the `babel' package for language-specific hyphenation and
-    ;; typography
+    ;; Include the `babel' package for language-specific hyphenation and
+    ;; typography.
     (add-to-list 'org-latex-packages-alist '("french" "babel") t)
 
     (defun leuven--change-pdflatex-packages (backend)
       "Automatically select the LaTeX packages to include (depending on PDFLaTeX
     vs. XeLaTeX) when exporting When exporting to LaTeX."
 
-      ;; unconditionally remove `inputenc' from all the default packages
+      ;; Unconditionally remove `inputenc' from all the default packages.
       (setq org-latex-packages-alist
             (delete '("AUTO" "inputenc" t)
                     org-latex-packages-alist))
 
-      ;; unconditionally remove `fontenc' from all the default packages
+      ;; Unconditionally remove `fontenc' from all the default packages.
       (setq org-latex-packages-alist
             (delete '("T1" "fontenc" t)
                     org-latex-packages-alist))
 
-      ;; unconditionally remove `textcomp' from all the default packages
+      ;; Unconditionally remove `textcomp' from all the default packages.
       (setq org-latex-packages-alist
             (delete '("" "textcomp" t)
                     org-latex-packages-alist))
 
       (if (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
-          ;; packages to include when XeLaTeX is used
+          ;; Packages to include when XeLaTeX is used.
           (setq org-export-latex-packages-alist
                 '(("" "fontspec" t)
                   ("" "xunicode" t)
-                  ;; add here things like `\setmainfont{Georgia}'
+                  ;; Add here things like `\setmainfont{Georgia}'.
                   ))
 
-        ;; packages to include when PDFLaTeX is used
+        ;; Packages to include when PDFLaTeX is used.
         (setq org-export-latex-packages-alist
               '(("AUTO" "inputenc" t)
                 ("T1" "fontenc" t)
                 ("" "textcomp" t))))
 
-      ;; packages to always include
+      ;; Packages to always include.
       (add-to-list 'org-export-latex-packages-alist
                    '("frenchb" "babel") t))
 
-    ;; hook run before parsing an export buffer
+    ;; Hook run before parsing an export buffer.
     (add-hook 'org-export-before-parsing-hook 'leuven--change-pdflatex-packages)
 
-    ;; 12.6.5 default position for LaTeX figures
+    ;; 12.6.5 Default position for LaTeX figures.
     (setq org-latex-default-figure-position "!htbp")
 
     (defun org-export-ignore-headlines (data backend info)
@@ -5360,7 +5359,7 @@ this with to-do items than with projects or headings."
             (let ((level-top (org-element-property :level object))
                   level-diff)
               (mapc (lambda (el)
-                      ;; recursively promote all nested headlines
+                      ;; Recursively promote all nested headlines.
                       (org-element-map el 'headline
                         (lambda (el)
                           (when (equal 'headline (org-element-type el))
@@ -5370,7 +5369,7 @@ this with to-do items than with projects or headings."
                             (org-element-put-property el
                               :level (- (org-element-property :level el)
                                         level-diff)))))
-                      ;; insert back into parse tree
+                      ;; Insert back into parse tree.
                       (org-element-insert-before el object))
                     (org-element-contents object)))
             (org-element-extract-element object)))
@@ -5382,16 +5381,16 @@ this with to-do items than with projects or headings."
 
     )                                   ; with-eval-after-load "ox-latex" ends here
 
-  ;; 12.6.6 Beamer class export
+  ;; 12.6.6 Beamer class export.
   ;; (require 'ox-beamer)
   (with-eval-after-load "ox-beamer"
 
-    ;; default title of a frame containing an outline
+    ;; Default title of a frame containing an outline.
     (setq org-beamer-outline-frame-title "Plan")) ; [default: "Outline"]
 
   (with-eval-after-load "ox-odt"
 
-    ;; convert "odt" format to "doc" format
+    ;; Convert "odt" format to "doc" format.
     (setq org-odt-preferred-output-format "doc")
 
     (when leuven--cygwin-p
@@ -5404,14 +5403,14 @@ this with to-do items than with projects or headings."
 
   (with-eval-after-load "ox-publish"
 
-    ;; show message about files *not* published
+    ;; Show message about files *not* published.
     (setq org-publish-list-skipped-files nil)
 
-    ;; ;; 13.2 always publish all files
+    ;; ;; 13.2 Always publish all files.
     ;; ;; (do not use time stamp checking for skipping unmodified files)
     ;; (setq org-publish-use-timestamps-flag nil)
 
-    ;; 13.4 force publishing all files
+    ;; 13.4 Force publishing all files.
     (defun org-publish-all-force ()
       (interactive)
       (org-publish-all t)))
@@ -5420,12 +5419,12 @@ this with to-do items than with projects or headings."
 
   (with-eval-after-load "ob-core"
 
-    ;; make the images in the Emacs buffer automatically refresh after
-    ;; execution
+    ;; Make the images in the Emacs buffer automatically refresh after
+    ;; execution.
     (add-hook 'org-babel-after-execute-hook
               (lambda ()
                 (org-display-inline-images nil t)))
-                                        ; more efficient with refresh == t
+                                        ; More efficient with refresh == t.
 
     (defadvice org-babel-next-src-block
       (after leuven-org-babel-next-src-block activate)
@@ -5445,10 +5444,10 @@ this with to-do items than with projects or headings."
 
   ;; (with-eval-after-load "ob-shell"
   ;;
-  ;;   ;; command used to invoke a shell
+  ;;   ;; Command used to invoke a shell.
   ;;   (setq org-babel-sh-command "bash")  ; now uses `shell-file-name' throughout (2013-12-14)
   ;;
-  ;;   ;; use plain old syntax (instead of `$(...)') for Cygwin
+  ;;   ;; Use plain old syntax (instead of `$(...)') for Cygwin.
   ;;   (setq org-babel-sh-var-quote-fmt
   ;;         "`cat <<'BABEL_TABLE'\n%s\nBABEL_TABLE\n`"))
 
@@ -5458,49 +5457,49 @@ this with to-do items than with projects or headings."
 
   (with-eval-after-load "org-src"
 
-    ;; mapping languages to their major mode (for editing the source code block
-    ;; with `C-c '')
-    (add-to-list 'org-src-lang-modes    ; add new languages
+    ;; Mapping languages to their major mode (for editing the source code block
+    ;; with `C-c '').
+    (add-to-list 'org-src-lang-modes    ; Add new languages.
                  '("dot" . graphviz-dot)))
 
-  ;; display the source code edit buffer in the current window, keeping
-  ;; all other windows
+  ;; Display the source code edit buffer in the current window, keeping all
+  ;; other windows.
   (setq org-src-window-setup 'current-window)
 
-  ;; FIXME Bind this to the correct keys
+  ;; FIXME Bind this to the correct keys.
   (defun leuven-org-babel-expand-src-block ()
     (interactive)
     (let ((org-src-window-setup 'reorganize-frame))
       (org-babel-expand-src-block)))
 
-  ;; indent the content of a source code block
+  ;; Indent the content of a source code block.
   (setq org-edit-src-content-indentation 2)
 
-  ;; fontify code in code blocks (highlight syntax in the Org buffer)
-  (setq org-src-fontify-natively t)     ;! create overlay
+  ;; Fontify code in code blocks (highlight syntax in the Org buffer).
+  (setq org-src-fontify-natively t)     ;! Create overlay
                                         ;! `org-block-background' and remove
-                                        ;! text property `org-block'
+                                        ;! text property `org-block'.
 
-  ;; preserve spaces and `tab' characters in source code blocks
-  (setq org-src-preserve-indentation t) ; or add a `-i' flag to you source block
+  ;; Preserve spaces and `tab' characters in source code blocks.
+  (setq org-src-preserve-indentation t) ; Or add a `-i' flag to you source block.
 
-  ;; same effect for `tab' as in the language major mode buffer
+  ;; Same effect for `tab' as in the language major mode buffer.
   (setq org-src-tab-acts-natively t)
 
 
   ;; (with-eval-after-load "org"
   ;;   (message "... Org Editing source code")
   ;;
-  ;;   ;; allow indent region in the code edit buffer (according to language)
+  ;;   ;; Allow indent region in the code edit buffer (according to language).
   ;;   (defun leuven-org-indent-region (&optional arg)
   ;;     (interactive "P")
   ;;     (or (org-babel-do-key-sequence-in-edit-buffer (kbd "C-M-\\"))
   ;;         (indent-region arg)))
   ;;
-  ;;   ;; make `C-c C-v C-x C-M-\' more convenient
+  ;;   ;; Make `C-c C-v C-x C-M-\' more convenient.
   ;;   (define-key org-mode-map (kbd "C-M-\\") 'leuven-org-indent-region))
 
-  ;; prevent auto-filling in src blocks
+  ;; Prevent auto-filling in src blocks.
   (setq org-src-prevent-auto-filling t)
 
   (global-set-key (kbd "C-c C-v C-d") 'org-babel-demarcate-block)
@@ -5536,10 +5535,10 @@ this with to-do items than with projects or headings."
   (leuven--section "14.5 (org)Evaluating code blocks")
 
   ;; I don't want to execute code blocks with `C-c C-c' (evaluate code
-  ;; block only with `C-c C-v e')
+  ;; block only with `C-c C-v e').
   (setq org-babel-no-eval-on-ctrl-c-ctrl-c t)
 
-  ;; languages for which Org-babel will raise literate programming errors when
+  ;; Languages for which Org-babel will raise literate programming errors when
   ;; noweb references can not be resolved.
 
   (with-eval-after-load "ob-core"
@@ -5551,22 +5550,22 @@ this with to-do items than with projects or headings."
 
   (with-eval-after-load "org"
 
-    ;; load the NAMED code blocks defined in Org mode files into the
-    ;; library of Babel (global `org-babel-library-of-babel' variable)
+    ;; Load the NAMED code blocks defined in Org mode files into the library of
+    ;; Babel (global `org-babel-library-of-babel' variable).
     (let ((lob-file (concat (file-name-directory (locate-library "org"))
                             "../doc/library-of-babel.org")))
       (when (file-exists-p lob-file)
         (org-babel-lob-ingest lob-file))))
 
   (with-eval-after-load "ob-exp"
-    ;; template used to export the body of code blocks
+    ;; Template used to export the body of code blocks.
     (setq org-babel-exp-code-template
           ;; (concat "\n=%name=:\n"
                   org-babel-exp-code-template)
           ;; )
     )
 
-  ;; keep lower-case
+  ;; Keep lower-case.
   (setq org-babel-results-keyword "results")
 
 ;;** 14.7 (info "(org)Languages")
@@ -5579,17 +5578,17 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "org"
     (message "... Org Languages")
 
-    ;; configure Babel to support most languages
+    ;; Configure Babel to support most languages.
     (if (locate-library "ob-shell")     ; ob-sh renamed on Dec 13th, 2013
         (org-babel-do-load-languages    ; loads org, gnus-sum, etc...
          'org-babel-load-languages
-         '((R          . t)             ; requires R and ess-mode
+         '((R          . t)             ; Requires R and ess-mode.
            (awk        . t)
-           (ditaa      . t)             ; sudo aptitude install openjdk-6-jre
+           (ditaa      . t)             ; Sudo aptitude install openjdk-6-jre.
            (dot        . t)
            (emacs-lisp . t)
-           ;; (latex   . t)             ; shouldn't you use #+begin/end_latex blocks instead?
-           (ledger     . t)             ; requires ledger
+           ;; (latex   . t)             ; Shouldn't you use #+begin/end_latex blocks instead?
+           (ledger     . t)             ; Requires ledger.
            (org        . t)
            (shell      . t)
            (sql        . t)))
@@ -5607,13 +5606,13 @@ this with to-do items than with projects or headings."
          (sh         . t)
          (sql        . t))))
 
-    ;; accented characters on graphics
+    ;; Accented characters on graphics.
     (setq org-babel-R-command
           (concat org-babel-R-command " --encoding=UTF-8")))
 
 ;;* 15 (info "(org)Miscellaneous")
 
-  ;; from Dan Davison
+  ;; From Dan Davison.
   (defun leuven-switch-to-org-scratch ()
     "Switch to a temp Org buffer.  If the region is active, insert it."
     (interactive)
@@ -5644,7 +5643,7 @@ this with to-do items than with projects or headings."
                        lang (file-name-base))
               (sit-for 1.5)))))))
 
-  ;; guess dictionary
+  ;; Guess dictionary.
   (add-hook 'org-mode-hook 'leuven--org-switch-dictionary)
 
 ;;** 15.2 (info "(org)Easy Templates")
@@ -5654,7 +5653,7 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "org"
     (message "... Org Easy Templates")
 
-    ;; modify `org-structure-template-alist' to keep lower-case easy templates
+    ;; Modify `org-structure-template-alist' to keep lower-case easy templates.
     (mapc (lambda (asc)
             (let ((org-sce-dc (downcase (nth 1 asc))))
               (setf (nth 1 asc) org-sce-dc)))
@@ -5673,19 +5672,19 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "org"
     (message "... Org Speek keys")
 
-    ;; activate single letter commands at beginning of a headline
+    ;; Activate single letter commands at beginning of a headline.
     (setq org-use-speed-commands t)
 
     (add-to-list 'org-speed-commands-user '("d" org-todo "DONE"))
     (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE"))
 
-    ;; run current line (mapped to H-r)
+    ;; Run current line (mapped to H-r).
 
-    ;; run from beginning of code block to current line (mapped to H-a?)
+    ;; Run from beginning of code block to current line (mapped to H-a?).
 
-    ;; run from current line to end of code block (mapped to H-e?)
+    ;; Run from current line to end of code block (mapped to H-e?).
 
-    ;; run current code block
+    ;; Run current code block.
     (define-key org-mode-map (kbd "H-c") 'org-babel-execute-maybe)
     (define-key org-mode-map (kbd "H-e") 'org-babel-execute-maybe)
 
@@ -5699,10 +5698,10 @@ this with to-do items than with projects or headings."
 
   (with-eval-after-load "ob-core"
 
-    ;;!! don't be prompted on every code block evaluation
+    ;;!! Don't be prompted on every code block evaluation.
     (setq org-confirm-babel-evaluate nil))
 
-  ;; change the color of code blocks while they are being executed
+  ;; Change the color of code blocks while they are being executed.
   (defadvice org-babel-execute-src-block (around progress nil activate)
     "Create an overlay indicating when code block is running."
     (let ((ol (make-overlay (org-element-property :begin (org-element-at-point))
@@ -5716,7 +5715,7 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "org"
     (message "... Org Clean view")
 
-    ;; 15.8 don't skip even levels for the outline
+    ;; 15.8 Don't skip even levels for the outline.
     (setq org-odd-levels-only nil))
 
 ;;** 15.10 (info "(org)Interaction")
@@ -5725,17 +5724,17 @@ this with to-do items than with projects or headings."
 
   (with-eval-after-load "org"
 
-    ;; support shift-selection for making and enlarging regions when the cursor
-    ;; is not in a special context
+    ;; Support shift-selection for making and enlarging regions when the cursor
+    ;; is not in a special context.
     (setq org-support-shift-select t)
 
-    ;; maximum level for Imenu access to Org-mode headlines
+    ;; Maximum level for Imenu access to Org-mode headlines.
     (setq org-imenu-depth 3)
 
-    ;; extension of Imenu
+    ;; Extension of Imenu.
     (when (and (fboundp 'org-babel-execute-src-block) ; `org-babel' has been
-                                                      ; loaded
-               (fboundp 'try-to-add-imenu)) ; `imenu' has been loaded
+                                                      ; loaded.
+               (fboundp 'try-to-add-imenu)) ; `imenu' has been loaded.
 
       (setq org-src-blocks-imenu-generic-expression
             `(("Snippets" ,org-babel-src-name-w-name-regexp 2)))
@@ -5745,7 +5744,7 @@ this with to-do items than with projects or headings."
                   (setq imenu-generic-expression
                         org-src-blocks-imenu-generic-expression))))
 
-    ;; alternative to imenu
+    ;; Alternative to imenu.
     (defun dan/find-in-buffer ()
       (interactive)
       (let ((targets
@@ -5757,8 +5756,8 @@ this with to-do items than with projects or headings."
            (completing-read "Find: " (mapcar #'car targets)) targets)))
         (other-window 1))))
 
-  ;; keep my encrypted data (like account passwords) in my Org mode
-  ;; files with a special tag instead
+  ;; Keep my encrypted data (like account passwords) in my Org mode files with
+  ;; a special tag instead.
   (with-eval-after-load "org"
     (message "... Org Crypt")
 
@@ -5766,10 +5765,10 @@ this with to-do items than with projects or headings."
 
   (with-eval-after-load "org-crypt"
 
-    ;; encrypt all entries before saving
+    ;; Encrypt all entries before saving.
     (org-crypt-use-before-save-magic)
 
-    ;; which tag is used to mark headings to be encrypted
+    ;; Which tag is used to mark headings to be encrypted.
     (setq org-tags-exclude-from-inheritance '("crypt")))
 
   (defun leuven-scramble-contents ()
@@ -5797,31 +5796,31 @@ this with to-do items than with projects or headings."
           (goto-char (point-min)))
         (switch-to-buffer buffer))))
 
-  ;; don't pad tangled code with newlines
+  ;; Don't pad tangled code with newlines.
   (setq org-babel-tangle-pad-newline nil)
 
-  ;; how to combine blocks of the same name during tangling
+  ;; How to combine blocks of the same name during tangling.
   (setq org-babel-tangle-named-block-combination 'append)
 
-  ;; speed up tangling dramatically (a couple of orders of magnitude)
+  ;; Speed up tangling dramatically (a couple of orders of magnitude).
   (setq org-babel-use-quick-and-dirty-noweb-expansion t)
                                         ; :noweb-ref feature must NOT be used!
 
-  ;; minimum number of lines for output *block* (placed in a
+  ;; Minimum number of lines for output *block* (placed in a
   ;; #+begin_example...#+end_example) vs. output marked as literal by
-  ;; inserting a *colon* at the beginning of the lines
+  ;; inserting a *colon* at the beginning of the lines.
   (setq org-babel-min-lines-for-block-output 2)
 
   ;; ;; FIXME Make this the default behavior
-  ;; ;; grab the last line too, when selecting a subtree
+  ;; ;; Grab the last line too, when selecting a subtree.
   ;; (org-end-of-subtree nil t)
 
-  ;; backend aware export preprocess hook
+  ;; Backend aware export preprocess hook.
   (defun leuven--org-export-preprocess-hook ()
     "Backend-aware export preprocess hook."
     (save-excursion
       (when (eq org-export-current-backend 'latex)
-        ;; ignoreheading tag for bibliographies and appendices
+        ;; ignoreheading tag for bibliographies and appendices.
         (let* ((tag "ignoreheading"))
           ;; (goto-char (point-min))
           ;; (while (re-search-forward (concat ":" tag ":") nil t)
@@ -5844,7 +5843,7 @@ this with to-do items than with projects or headings."
     (interactive)
     (cond
      ((or (bolp) (not (looking-back "=")))
-      ;; insert just one =
+      ;; Insert just one =.
       (self-insert-command 1))
      ((save-excursion
         (backward-char)
@@ -5853,20 +5852,20 @@ this with to-do items than with projects or headings."
              (not (looking-back "="))
              (or (insert-and-inherit "=") t))))
      (t
-      ;; insert == around following symbol
+      ;; insert == around following symbol.
       (delete-char -1)
       (unless (looking-back "=") (insert-and-inherit "="))
       (save-excursion
         (skip-syntax-forward "w_")
         (unless (looking-at "=") (insert-and-inherit "="))))))
 
-  ;; must be in eval-after-load "org"?
+  ;; Must be in eval-after-load "org"?
   ;; (define-key org-mode-map (kbd "=") 'insert-one-equal-or-two)
 
   (with-eval-after-load "org"
     (message "... Org Mime")
 
-    ;; using Org mode to send buffer/subtree per mail
+    ;; Using Org mode to send buffer/subtree per mail.
     (try-require 'org-mime))
 
   (with-eval-after-load "org-mime"
@@ -5884,8 +5883,8 @@ this with to-do items than with projects or headings."
               (lambda ()
                 (local-set-key (kbd "C-c m") 'leuven-mail-subtree)))
 
-    ;; add a `mail_composed' property with the current time when
-    ;; `org-mime-subtree' is called
+    ;; Add a `mail_composed' property with the current time when
+    ;; `org-mime-subtree' is called.
     (add-hook 'org-mime-send-subtree-hook
               (lambda ()
                 (org-entry-put (point) "mail_composed"
@@ -5896,8 +5895,8 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "org"
     (message "... Org Adding hyperlink types")
 
-    ;; define a new link type (`latex') whose path argument can hold the name of
-    ;; any LaTeX command
+    ;; Define a new link type (`latex') whose path argument can hold the name of
+    ;; any LaTeX command.
     (org-add-link-type
      "latex" nil
      (lambda (path desc format)
@@ -5907,7 +5906,7 @@ this with to-do items than with projects or headings."
         ((eq format 'latex)
          (format "\\%s{%s}" path desc)))))
 
-    ;; add background color by using custom links like [[bgcolor:red][Warning!]]
+    ;; Add background color by using custom links like [[bgcolor:red][Warning!]].
     (org-add-link-type
       "bgcolor" nil
       (lambda (path desc format)
@@ -5938,9 +5937,9 @@ this with to-do items than with projects or headings."
                  (file-name-nondirectory (buffer-file-name)))
         (sit-for 1.5)
         (let ((flyspell-mode-before-save flyspell-mode))
-          (flyspell-mode -1)              ; temporarily disable Flyspell to
+          (flyspell-mode -1)              ; Temporarily disable Flyspell to
                                           ; avoid checking the following
-                                          ; modifications of the buffer
+                                          ; modifications of the buffer.
           (org-align-all-tags)
           (org-update-all-dblocks)
           (org-table-map-tables (lambda () (org-table-align)) t)
@@ -5951,8 +5950,7 @@ this with to-do items than with projects or headings."
             (leuven-org-remove-redundant-tags))
           (when flyspell-mode-before-save (flyspell-mode 1)))))
 
-    ;; make sure that all dynamic blocks and all tables are always
-    ;; up-to-date
+    ;; Make sure that all dynamic blocks and all tables are always up-to-date.
     (add-hook 'before-save-hook 'leuven-org-update-buffer)
     (message "Add leuven-org-update-buffer to before-save-hook  <<<<<<<<<<<<<<"))
 
@@ -5968,21 +5966,21 @@ this with to-do items than with projects or headings."
   ;;                 (sit-for 0.2)))))
 
   (GNUEmacs
-    ;; add weather forecast in your Org agenda
+    ;; Add weather forecast in your Org agenda.
     (autoload 'org-google-weather "org-google-weather"
       "Return Org entry with the weather for LOCATION in LANGUAGE." t)
 
     (with-eval-after-load "org-google-weather"
       ;; (try-require 'url)
 
-      ;; add the city
+      ;; Add the city.
       (setq org-google-weather-format "%C %i %c, %l°-%h°")))
 
 )                                       ; chapter 25.9-org-mode ends here
 
   (with-eval-after-load "tomatinho-autoloads"
 
-    ;; pomodoro
+    ;; Pomodoro.
     (global-set-key (kbd "<S-f4>") 'tomatinho))
 
 ;;** 25.10 (info "(emacs)TeX Mode")
@@ -5991,7 +5989,7 @@ this with to-do items than with projects or headings."
 
   (leuven--section "25.10 (emacs)TeX Mode")
 
-  ;; get colored PDFLaTeX output
+  ;; Get colored PDFLaTeX output.
   (define-derived-mode latex-output-mode fundamental-mode "LaTeX-Output"
     "Simple mode for colorizing LaTeX output."
     (set (make-local-variable 'font-lock-defaults)
@@ -6021,7 +6019,7 @@ this with to-do items than with projects or headings."
 
   (try-require 'tex-site)
 
-  ;; support for LaTeX documents
+  ;; Support for LaTeX documents.
   (GNUEmacs
     (with-eval-after-load "latex"
 
@@ -6035,19 +6033,19 @@ this with to-do items than with projects or headings."
 
       (leuven--section "2.6 (auctex)Completion")
 
-      ;; if this is non-nil when AUCTeX is loaded, the TeX escape
-      ;; character `\' will be bound to `TeX-electric-macro'
+      ;; If this is non-nil when AUCTeX is loaded, the TeX escape character `\'
+      ;; will be bound to `TeX-electric-macro'.
       (setq TeX-electric-escape t)
 
 ;;** 2.8 (info "(auctex)Indenting")
 
       (leuven--section "2.8 (auctex)Indenting")
 
-      ;; leave the `tikzpicture' code unfilled when doing `M-q'
+      ;; Leave the `tikzpicture' code unfilled when doing `M-q'.
       (add-to-list 'LaTeX-indent-environment-list '("tikzpicture"))
 
-      ;; auto-indentation (suggested by the AUCTeX manual -- instead of
-      ;; adding a local key binding to `<RET>' in the `LaTeX-mode-hook')
+      ;; Auto-indentation (suggested by the AUCTeX manual -- instead of adding
+      ;; a local key binding to `<RET>' in the `LaTeX-mode-hook').
       (setq TeX-newline-function 'newline-and-indent)
 
 ;;* 3 Controlling Screen (info "(auctex)Display")
@@ -6056,22 +6054,22 @@ this with to-do items than with projects or headings."
 
       (leuven--section "3.1 (auctex)Font Locking")
 
-      ;; (for Org mode) add the `comment' environment to the variable
-      ;; `LaTeX-verbatim-environments' so that, if the `#+TBLFM' line
-      ;; contains an odd number of dollar characters, this does not
-      ;; cause problems with font-lock in LaTeX-mode
+      ;; (for Org mode) Add the `comment' environment to the variable
+      ;; `LaTeX-verbatim-environments' so that, if the `#+TBLFM' line contains
+      ;; an odd number of dollar characters, this does not cause problems with
+      ;; font-lock in LaTeX-mode.
       (add-to-list 'LaTeX-verbatim-environments "comment")
 
 ;;** 4.1 Executing (info "(auctex)Commands")
 
       (leuven--section "4.1 Executing (auctex)Commands")
 
-      ;; add a command to execute on the LaTeX document
+      ;; Add a command to execute on the LaTeX document.
       (add-to-list 'TeX-command-list
                    '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
 
       (defun leuven--LaTeX-mode-hook ()
-        ;; default command to run in the LaTeX buffer
+        ;; Default command to run in the LaTeX buffer.
         (setq TeX-command-default
               (save-excursion
                 (save-restriction
@@ -6087,7 +6085,7 @@ this with to-do items than with projects or headings."
 
       (add-hook 'LaTeX-mode-hook 'leuven--LaTeX-mode-hook)
 
-      ;; don't ask user for permission to save files before starting TeX
+      ;; Don't ask user for permission to save files before starting TeX.
       (setq TeX-save-query nil)
 
       (defun TeX-default ()
@@ -6096,11 +6094,11 @@ this with to-do items than with projects or headings."
         (TeX-save-document "")          ; or just use `TeX-save-query'
         (execute-kbd-macro (kbd "C-c C-c RET")))
 
-      ;; rebind the "compile command" to default command from `C-c C-c'
-      ;; (in LaTeX mode only)
+      ;; Rebind the "compile command" to default command from `C-c C-c' (in
+      ;; LaTeX mode only).
       (define-key LaTeX-mode-map (kbd "<f9>") 'TeX-default)
 
-      ;; use PDF mode by default (instead of DVI)
+      ;; Use PDF mode by default (instead of DVI).
       (setq-default TeX-PDF-mode t)
 
 ;;** 4.2 (info "(auctex)Viewing") the formatted output
@@ -6111,7 +6109,7 @@ this with to-do items than with projects or headings."
         (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
         "Path to the SumatraPDF executable.")
 
-      ;; use a saner PDF viewer (evince, SumatraPDF)
+      ;; Use a saner PDF viewer (evince, SumatraPDF).
       (setcdr (assoc "^pdf$" TeX-output-view-style)
               (cond (leuven--win32-p
                      `("." (concat "\"" ,sumatrapdf-command "\" %o")))
@@ -6120,7 +6118,7 @@ this with to-do items than with projects or headings."
                     (t
                      '("." "evince %o"))))
 
-      ;; for AUCTeX 11.86+
+      ;; For AUCTeX 11.86+.
       (when (boundp 'TeX-view-program-list)
         (add-to-list 'TeX-view-program-list
                      `("SumatraPDF"
@@ -6134,16 +6132,16 @@ this with to-do items than with projects or headings."
 
 ;;** 5.2 (info "(auctex)Multifile") Documents
 
-      ;; ;; assume that the file is a master file itself
+      ;; ;; Assume that the file is a master file itself.
       ;; (setq-default TeX-master t)
 
 ;;** 5.3 Automatic (info "(auctex)Parsing Files")
 
-      ;; enable parse on load (if no style hook is found for the file)
+      ;; Enable parse on load (if no style hook is found for the file).
       (setq TeX-parse-self t)
 
-      ;; enable automatic save of parsed style information when saving
-      ;; the buffer
+      ;; Enable automatic save of parsed style information when saving the
+      ;; buffer.
       (setq TeX-auto-save t)
 
 ;;** 5.5 (info "(auctex)Automatic") Customization
@@ -6154,16 +6152,16 @@ this with to-do items than with projects or headings."
 
       (leuven--section "5.5.1 (auctex)Automatic Global Customization for the Site")
 
-      ;; directory containing automatically generated TeX information
+      ;; Directory containing automatically generated TeX information.
       (setq TeX-auto-global
             (concat user-emacs-directory "auctex-auto-generated-info/"))
-                                        ; must end with a slash
+                                        ; Must end with a slash.
 
 ;;*** 5.5.3 (info "(auctex)Automatic Local") Customization for a Directory
 
       (leuven--section "5.5.3 (auctex)Automatic Local Customization for a Directory")
 
-      ;; directory containing automatically generated TeX information
+      ;; Directory containing automatically generated TeX information.
       (setq TeX-auto-local (concat user-emacs-directory "auctex-auto-generated-info/"))
                                         ; must end with a slash
 
@@ -6173,7 +6171,7 @@ this with to-do items than with projects or headings."
 
       (with-eval-after-load "preview"
 
-        ;; path to `gs' command (for format conversions)
+        ;; Path to `gs' command (for format conversions).
         (setq preview-gs-command
           (cond (leuven--win32-p
                  (or (executable-find "gswin32c.exe")
@@ -6183,26 +6181,26 @@ this with to-do items than with projects or headings."
                  "/usr/bin/gs")))
         (leuven--file-exists-and-executable-p preview-gs-command)
 
-        ;; scale factor for included previews
+        ;; Scale factor for included previews.
         (setq preview-scale-function 1.2))
 
       (add-hook 'LaTeX-mode-hook 'reftex-mode) ; with AUCTeX LaTeX mode
 
-      ;; minor mode with distinct support for `\label', `\ref', `\cite'
-      ;; and `\index' in LaTeX
+      ;; Minor mode with distinct support for `\label', `\ref', `\cite' and
+      ;; `\index' in LaTeX.
       (with-eval-after-load "reftex"
 
-        ;; turn all plug-ins on
+        ;; Turn all plug-ins on.
         (setq reftex-plug-into-AUCTeX t)
 
-        ;; use a separate selection buffer for each label type -- so the
-        ;; menu generally comes up faster
+        ;; Use a separate selection buffer for each label type -- so the menu
+        ;; generally comes up faster.
         (setq reftex-use-multiple-selection-buffers t))
 
-      ;; BibTeX mode
+      ;; BibTeX mode.
       (with-eval-after-load "bibtex"
 
-        ;; current BibTeX dialect
+        ;; Current BibTeX dialect.
         (setq bibtex-dialect 'biblatex))
 
       ))                                ; with-eval-after-load "latex" ends here
@@ -6221,18 +6219,18 @@ this with to-do items than with projects or headings."
       (defun leuven--html-mode-hook ()
         "Customize html(-helper)-mode."
 
-        ;; set up a "tidy" menu in the menu bar
+        ;; Set up a "tidy" menu in the menu bar.
         (when (boundp 'html-mode-map)
           (tidy-build-menu html-mode-map))
         (when (boundp 'html-helper-mode-map)
           (tidy-build-menu html-helper-mode-map))
 
-        ;; bind the key sequence `C-c C-c' to `tidy-buffer'
+        ;; Bind the key sequence `C-c C-c' to `tidy-buffer'.
         (local-set-key (kbd "C-c C-c") 'tidy-buffer)
 
         (setq sgml-validate-command "tidy"))
 
-      ;; also run from `html-helper-mode'
+      ;; Also run from `html-helper-mode'.
       (add-hook 'html-mode-hook 'leuven--html-mode-hook)))
 
   (when (locate-library "html-helper-mode")
@@ -6240,13 +6238,13 @@ this with to-do items than with projects or headings."
     (autoload 'html-helper-mode "html-helper-mode"
       "Mode for editing HTML documents." t)
 
-    ;; invoke html-helper-mode automatically on .html files
+    ;; Invoke html-helper-mode automatically on .html files.
     (add-to-list 'auto-mode-alist '("\\.html?\\'" . html-helper-mode))
 
-    ;; invoke html-helper-mode automatically on .asp files
+    ;; Invoke html-helper-mode automatically on .asp files.
     (add-to-list 'auto-mode-alist '("\\.asp\\'" . html-helper-mode))
 
-    ;; invoke html-helper-mode automatically on .jsp files
+    ;; Invoke html-helper-mode automatically on .jsp files.
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode)))
 
   (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode))
@@ -6258,16 +6256,16 @@ this with to-do items than with projects or headings."
 
   (with-eval-after-load "nxml-mode"
 
-    ;; remove the binding of `C-c C-x' (`nxml-insert-xml-declaration'), used
-    ;; by Org timeclocking commands
+    ;; Remove the binding of `C-c C-x' (`nxml-insert-xml-declaration'), used by
+    ;; Org timeclocking commands.
     (define-key nxml-mode-map (kbd "C-c C-x") nil)
 
-    ;; view the buffer contents in a browser
+    ;; View the buffer contents in a browser.
     (define-key nxml-mode-map (kbd "C-c C-v") 'browse-url-of-buffer))
-                                        ; XXX normally bound to
+                                        ; XXX Normally bound to.
                                         ; `rng-validate-mode'
 
-  ;; highlight the current SGML tag context
+  ;; Highlight the current SGML tag context.
   (try-require 'hl-tags-mode)
   (with-eval-after-load "hl-tags-mode"
 
@@ -6297,14 +6295,14 @@ this with to-do items than with projects or headings."
 
 (leuven--chapter leuven-chapter-26-programs "26 Editing Programs"
 
-  ;; swap the current and previous line
+  ;; Swap the current and previous line.
   (defun leuven-move-line-up ()
     "Move the current line up."
     (interactive)
     (transpose-lines 1)
     (forward-line -2))
 
-  ;; swap the current and next line
+  ;; Swap the current and next line.
   (defun leuven-move-line-down ()
     "Move the current line down."
     (interactive)
@@ -6331,25 +6329,25 @@ this with to-do items than with projects or headings."
   (leuven--section "26.2 Top-Level Definitions, or (emacs)Defuns")
 
   (GNUEmacs
-    ;; making buffer indexes as menus
-    (try-require 'imenu)                ; awesome!
+    ;; Making buffer indexes as menus.
+    (try-require 'imenu)                ; Awesome!
     (with-eval-after-load "imenu"
 
-      ;; add Imenu to the menu bar in any mode that supports it
+      ;; Add Imenu to the menu bar in any mode that supports it.
       (defun try-to-add-imenu ()
         (condition-case nil
             (imenu-add-to-menubar "Imenu")
           (error nil)))
       (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
-      ;; bind Imenu from the mouse
+      ;; Bind Imenu from the mouse.
       (GNUEmacs (global-set-key [S-mouse-3] 'imenu))
       (XEmacs (global-set-key [(shift button3)] 'imenu))
 
-      ;; string to display in the mode line when current function is unknown
+      ;; String to display in the mode line when current function is unknown.
       (setq which-func-unknown "(Top Level)")
 
-      ;; show current function in mode line (based on Imenu)
+      ;; Show current function in mode line (based on Imenu).
       (which-function-mode 1)           ; ~ Stickyfunc mode (in header line)
 
       (defun my-which-func-current ()
@@ -6368,10 +6366,10 @@ mouse-2: toggle rest visibility\n\
 mouse-3: go to end") "]"))))
 
   (GNUEmacs
-    ;; helm imenu tag selection across all buffers with the same mode
+    ;; Helm imenu tag selection across all buffers with the same mode.
     (with-eval-after-load "imenu-anywhere-autoloads"
 
-      ;; `helm' source for `imenu-anywhere'
+      ;; `helm' source for `imenu-anywhere'.
       (global-set-key (kbd "C-.") 'helm-imenu-anywhere)))
                                         ; XXX Conflict with
                                         ; `flyspell-auto-correct-word'
@@ -6380,13 +6378,13 @@ mouse-3: go to end") "]"))))
 
     (leuven--section "26.3 (emacs)Program Indentation")
 
-    ;; turn on auto-fill mode in Lisp modes
+    ;; Turn on auto-fill mode in Lisp modes.
     (add-hook 'lisp-mode-hook 'auto-fill-mode)
     (add-hook 'emacs-lisp-mode-hook 'auto-fill-mode)
 
-    ;; auto-indentation: automatically jump to the "correct" column when
+    ;; Auto-indentation: automatically jump to the "correct" column when
     ;; the <RET> key is pressed while editing a program (act as if you
-    ;; pressed `C-j')
+    ;; pressed `C-j').
     (GNUEmacs24
       (add-hook 'prog-mode-hook
                 (lambda ()
@@ -6406,7 +6404,7 @@ mouse-3: go to end") "]"))))
 
     (with-eval-after-load "sh-script"
 
-      ;; use the SMIE code for navigation and indentation
+      ;; Use the SMIE code for navigation and indentation.
       (setq sh-use-smie t))
 
 ;;** 26.4 Commands for Editing with (info "(emacs)Parentheses")
@@ -9294,7 +9292,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (sit-for 3)
           (message "Configuration updated. Restart Emacs to complete the process.")))))
 
-(message "* --[ Loaded Emacs Leuven 20141009.1936]--")
+(message "* --[ Loaded Emacs Leuven 20141010.1212]--")
 
 (provide 'emacs-leuven)
 
