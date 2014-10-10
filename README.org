@@ -1,7 +1,6 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DATE:      2012-06-22
-#+Time-stamp: <2014-09-11 Thu 20:37>
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en
@@ -34,11 +33,13 @@ Using the Emacs Leuven library is very easy: you just need to...
 - Download and install [[https://github.com/fniessen/emacs-leuven][emacs-leuven]].
 
   #+BEGIN_SRC emacs-lisp
-  ;; make sure `emacs-leuven.el' is in your `load-path'
+  ;; Make sure `emacs-leuven.el' is in your `load-path'.
   (add-to-list 'load-path "/path/to/emacs-leuven")
 
-  ;; require it as normal
+  ;; Require it as normal.
   (require 'emacs-leuven)
+
+  ;; Place your settings here, which can override the settings of Emacs-Leuven.
   #+END_SRC
 
 - Restart Emacs.
@@ -46,6 +47,12 @@ Using the Emacs Leuven library is very easy: you just need to...
 ** Some better defaults
 
 - Unnecessary spaces at the end of the lines are indicated by red blocks.
+
+** Packages                                                           :noexport:
+
+#+begin_src emacs-lisp
+(setq leuven-elpa-packages (remove 'auto-complete leuven-elpa-packages))
+#+end_src
 
 ** Keyboard shortcuts
 
