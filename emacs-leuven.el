@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141010.1206
+;; Version: 20141010.2345
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141010.1206]--")
+(message "* --[ Loading Emacs Leuven 20141010.2345]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -6310,11 +6310,23 @@ this with to-do items than with projects or headings."
     (transpose-lines 1)
     (forward-line -1))
 
+  (defun leuven-scroll-up-one-line ()
+    "Scroll text of current window upward 1 line."
+    (interactive)
+    (scroll-up 1))
+
+  (defun leuven-scroll-down-one-line ()
+    "Scroll text of current window downward 1 line."
+    (interactive)
+    (scroll-down 1))
+
   (GNUEmacs24
     (add-hook 'prog-mode-hook
               (lambda ()
-                (local-set-key (kbd "<M-up>") 'leuven-move-line-up)
-                (local-set-key (kbd "<M-down>") 'leuven-move-line-down))))
+                (local-set-key (kbd "<C-up>") 'leuven-scroll-up-one-line)
+                (local-set-key (kbd "<C-down>") 'leuven-scroll-down-one-line)
+                (local-set-key (kbd "<C-S-up>") 'leuven-move-line-up)
+                (local-set-key (kbd "<C-S-down>") 'leuven-move-line-down))))
 
 ;;** 26.1 Major Modes for (info "(emacs)Program Modes")
 
@@ -9292,7 +9304,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (sit-for 3)
           (message "Configuration updated. Restart Emacs to complete the process.")))))
 
-(message "* --[ Loaded Emacs Leuven 20141010.1212]--")
+(message "* --[ Loaded Emacs Leuven 20141010.2346]--")
 
 (provide 'emacs-leuven)
 

@@ -9780,11 +9780,23 @@ Some key bindings:
     (transpose-lines 1)
     (forward-line -1))
 
+  (defun leuven-scroll-up-one-line ()
+    "Scroll text of current window upward 1 line."
+    (interactive)
+    (scroll-up 1))
+
+  (defun leuven-scroll-down-one-line ()
+    "Scroll text of current window downward 1 line."
+    (interactive)
+    (scroll-down 1))
+
   (GNUEmacs24
     (add-hook 'prog-mode-hook
               (lambda ()
-                (local-set-key (kbd "<M-up>") 'leuven-move-line-up)
-                (local-set-key (kbd "<M-down>") 'leuven-move-line-down))))
+                (local-set-key (kbd "<C-up>") 'leuven-scroll-up-one-line)
+                (local-set-key (kbd "<C-down>") 'leuven-scroll-down-one-line)
+                (local-set-key (kbd "<C-S-up>") 'leuven-move-line-up)
+                (local-set-key (kbd "<C-S-down>") 'leuven-move-line-down))))
 #+end_src
 
 *************** TODO Add "move view" up/down on C-up/down
