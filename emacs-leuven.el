@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141016.1224
+;; Version: 20141016.1234
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141016.1224]--")
+(message "* --[ Loading Emacs Leuven 20141016.1234]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -3100,7 +3100,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (add-hook 'text-mode-hook 'leuven-smart-punctuation)
   (add-hook 'message-mode-hook 'leuven-smart-punctuation)
 
-(with-eval-after-load "key-chord-autoloads"
+  (with-eval-after-load "key-chord-autoloads"
     (key-chord-mode 1))
 
   ;; map pairs of simultaneously pressed keys to commands
@@ -9400,7 +9400,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (shell-command-to-string "git pull --verbose --rebase")
           (message "Configuration updated. Restart Emacs to complete the process.")))))
 
-(message "* --[ Loaded Emacs Leuven 20141016.1226]--")
+(message "* --[ Loaded Emacs Leuven 20141016.1235]--")
 
 (provide 'emacs-leuven)
 

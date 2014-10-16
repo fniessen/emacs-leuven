@@ -4995,7 +4995,7 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 #+end_src
 
 #+begin_src emacs-lisp
-(with-eval-after-load "key-chord-autoloads"
+  (with-eval-after-load "key-chord-autoloads"
     (key-chord-mode 1))
 
   ;; map pairs of simultaneously pressed keys to commands
