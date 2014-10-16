@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141016.1152
+;; Version: 20141016.1224
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141016.1152]--")
+(message "* --[ Loading Emacs Leuven 20141016.1224]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -9212,7 +9212,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 (when (try-require 'guide-key)
 
   (setq guide-key/guide-key-sequence
-        '("C-c"
+        '("C-c"                         ; XXX Doesn't play nice with Org's C-c C-e.
           "C-h"
           "C-x 4"                       ; other window
           "C-x 5"                       ; other frame
@@ -9376,19 +9376,31 @@ a clean buffer we're an order of magnitude laxer about checking."
   (defun leuven-update ()
     "Update Leuven to its latest version."
     (interactive)
-    ;; (when (y-or-n-p "Do you want to update Leuven? ")
-      (message "Updating Leuven...")
-      (cd leuven--directory)
-      (let ((ret (shell-command-to-string "git pull --verbose --rebase")))
-        (if (string-match "Already up-to-date." ret)
-            (message "Configuration already up-to-date.")
-          (princ ret)
-          (sit-for 3)
-          (message "Configuration updated. Restart Emacs to complete the process.")))
-      ;; )
-    )
+    (message "Updating Leuven...")
+    (cd leuven--directory)
+    (let ((ret (shell-command-to-string "git pull --verbose --rebase")))
+      (if (string-match "Already up-to-date." ret)
+          (message "Configuration already up-to-date.")
+        (princ ret)
+        (sit-for 3)
+        (message "Configuration updated. Restart Emacs to complete the process."))))
 
-(message "* --[ Loaded Emacs Leuven 20141016.1153]--")
+  (defun leuven-update2 ()
+    "Update Leuven to its latest version."
+    (interactive)
+    (message "Fetching last changes in Leuven...")
+    (cd leuven--directory)
+    (let ((ret (shell-command-to-string "git fetch --verbose")))
+      (if (string-match "up to date" ret)
+          (message "Configuration already up-to-date.")
+        (setq ret (shell-command-to-string "git log HEAD..origin"))
+        (princ ret)
+        (sit-for 3)
+        (when (y-or-n-p "Do you want to update Leuven? ")
+          (shell-command-to-string "git pull --verbose --rebase")
+          (message "Configuration updated. Restart Emacs to complete the process.")))))
+
+(message "* --[ Loaded Emacs Leuven 20141016.1226]--")
 
 (provide 'emacs-leuven)
 

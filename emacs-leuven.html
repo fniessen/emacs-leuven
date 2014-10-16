@@ -1360,7 +1360,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141016.1156</span>
+"org-comment">Version: 20141016.1228</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1483,7 +1483,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141016.1156]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20141016.1228]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Turn on Common Lisp support.</span>
@@ -26575,7 +26575,11 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 (<span class="org-keyword">when</span> (try-require 'guide-key)
 
   (setq guide-key/guide-key-sequence
-        '(<span class="org-string">"C-c"</span>
+        '(<span class=
+"org-string">"C-c"</span>                         <span class=
+"org-comment-delimiter">; </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
+"org-comment"> Doesn't play nice with Org's C-c C-e.</span>
           <span class="org-string">"C-h"</span>
           <span class=
 "org-string">"C-x 4"</span>                       <span class=
@@ -27452,30 +27456,54 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 
         <p>git status –untracked-files=no –porcelain</p>
 
+        <p>See <a href=
+        "https://github.com/mordocai/.emacs.d/blob/master/init.el">https://github.com/mordocai/.emacs.d/blob/master/init.el</a>
+        for many Git functions implemented in Emacs Lisp.</p>
+
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-update</span> ()
     <span class="org-doc">"Update Leuven to its latest version."</span>
     (interactive)
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(when (y-or-n-p "Do you want to update Leuven? ")</span>
-      (message <span class="org-string">"Updating Leuven..."</span>)
-      (cd leuven--directory)
-      (<span class=
+    (message <span class="org-string">"Updating Leuven..."</span>)
+    (cd leuven--directory)
+    (<span class=
 "org-keyword">let</span> ((ret (shell-command-to-string <span class=
 "org-string">"git pull --verbose --rebase"</span>)))
-        (<span class="org-keyword">if</span> (string-match <span class=
+      (<span class="org-keyword">if</span> (string-match <span class=
 "org-string">"Already up-to-date."</span> ret)
-            (message <span class=
-"org-string">"Configuration already up-to-date."</span>)
-          (princ ret)
-          (sit-for 3)
           (message <span class=
-"org-string">"Configuration updated. Restart Emacs to complete the process."</span>)))
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">)</span>
-    )
+"org-string">"Configuration already up-to-date."</span>)
+        (princ ret)
+        (sit-for 3)
+        (message <span class=
+"org-string">"Configuration updated. Restart Emacs to complete the process."</span>))))
+
+  (<span class="org-keyword">defun</span> <span class=
+"org-function-name">leuven-update2</span> ()
+    <span class="org-doc">"Update Leuven to its latest version."</span>
+    (interactive)
+    (message <span class=
+"org-string">"Fetching last changes in Leuven..."</span>)
+    (cd leuven--directory)
+    (<span class=
+"org-keyword">let</span> ((ret (shell-command-to-string <span class=
+"org-string">"git fetch --verbose"</span>)))
+      (<span class="org-keyword">if</span> (string-match <span class=
+"org-string">"up to date"</span> ret)
+          (message <span class=
+"org-string">"Configuration already up-to-date."</span>)
+        (setq ret (shell-command-to-string <span class=
+"org-string">"git log HEAD..origin"</span>))
+        (princ ret)
+        (sit-for 3)
+        (<span class="org-keyword">when</span> (y-or-n-p <span class=
+"org-string">"Do you want to update Leuven? "</span>)
+          (shell-command-to-string <span class=
+"org-string">"git pull --verbose --rebase"</span>)
+          (message <span class=
+"org-string">"Configuration updated. Restart Emacs to complete the process."</span>)))))
 </pre>
         </div>
 
@@ -27485,7 +27513,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141016.1156]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20141016.1229]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
