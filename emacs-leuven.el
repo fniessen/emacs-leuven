@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141016.0009
+;; Version: 20141016.1054
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141016.0009]--")
+(message "* --[ Loading Emacs Leuven 20141016.1054]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -409,11 +409,10 @@ Last time is saved in global variable `leuven--before-section-time'."
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
           google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-          helm-descbinds helm-swoop highlight-symbol
-          htmlize key-chord litable idle-require imenu-anywhere info+
-          interaction-log ledger-mode leuven-theme multi-term multiple-cursors
-          pager powerline rainbow-mode spray tidy tomatinho unbound undo-tree
-          w3m yasnippet
+          helm-descbinds helm-swoop highlight-symbol htmlize key-chord litable
+          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          smartparens spray tidy tomatinho unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup."
@@ -1198,7 +1197,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
     ;; (with-eval-after-load "glasses"      (diminish 'glasses-mode))
     ;; (with-eval-after-load "redshank"     (diminish 'redshank-mode))
-    ;; (with-eval-after-load "smartparens"  (diminish 'smartparens-mode))
+    (with-eval-after-load "smartparens"  (diminish 'smartparens-mode))
     ;; (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
 
 (defface powerline-modified-face
@@ -3139,7 +3138,8 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; (key-chord-define-global "zz" 'zap-to-char)
 
     (with-eval-after-load "org"
-      (key-chord-define-global ";;" 'org-mark-ring-goto) ; Return to previous location before link.
+      ;; XXX Problem for comments in ELisp
+      ;; (key-chord-define-global ";;" 'org-mark-ring-goto) ; Return to previous location before link.
       (key-chord-define-global ";c" 'org-capture)
       (key-chord-define-global ";a" 'org-agenda)
       (key-chord-define-global ";w" 'org-refile)
@@ -4145,7 +4145,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; 8.4.2 Format string used when creating CLOCKSUM lines and when generating
     ;; a time duration (avoid showing days).
-    (setq org-time-clocksum-format
+    (setq org-time-clocksum-format      ;! works with Org 8 only
           '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
                                         ; some clocktable functions cannot
                                         ; digest day formats (e.g.,
@@ -6515,14 +6515,27 @@ mouse-3: go to end") "]"))))
 
   ;; (electric-pair-mode 1)
 
-  (add-hook 'prog-mode-hook
-            (lambda ()
+  ;; Automatic insertion, wrapping and paredit-like navigation with user defined
+  ;; pairs.
+  (with-eval-after-load "smartparens-autoloads"
 
-              ;; Attempts to wrap the selected region.
-              (setq autopair-autowrap t)
+    ;; Default configuration for smartparens package.
+    (require 'smartparens-config)
 
-              ;; Enable Autopair-Global mode.
-              (autopair-global-mode 1)))
+    ;; Toggle Smartparens mode in all buffers.
+    (smartparens-global-mode 1)
+
+    ;; Toggle Show-Smartparens mode in all buffers.
+    (show-smartparens-global-mode 1)
+
+    (sp-with-modes 'org-mode
+      (sp-local-tag "*" "*" "*" :actions '(wrap))
+      (sp-local-tag "=" "=" "=" :actions '(wrap))
+      (sp-local-tag "~" "~" "~" :actions '(wrap)))
+
+    ;; Add smartparens-strict-mode to all sp--lisp-modes hooks.
+
+    )
 
 ;;** 26.5 (info "(emacs)Comments")
 
@@ -9367,7 +9380,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (sit-for 3)
           (message "Configuration updated. Restart Emacs to complete the process.")))))
 
-(message "* --[ Loaded Emacs Leuven 20141016.0010]--")
+(message "* --[ Loaded Emacs Leuven 20141016.1055]--")
 
 (provide 'emacs-leuven)
 

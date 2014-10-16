@@ -1360,7 +1360,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141016.0013</span>
+"org-comment">Version: 20141016.1058</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1483,7 +1483,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141016.0013]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20141016.1058]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Turn on Common Lisp support.</span>
@@ -2279,11 +2279,10 @@
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
           google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-          helm-descbinds helm-swoop highlight-symbol
-          htmlize key-chord litable idle-require imenu-anywhere info+
-          interaction-log ledger-mode leuven-theme multi-term multiple-cursors
-          pager powerline rainbow-mode spray tidy tomatinho unbound undo-tree
-          w3m yasnippet
+          helm-descbinds helm-swoop highlight-symbol htmlize key-chord litable
+          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          smartparens spray tidy tomatinho unbound undo-tree w3m yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">jabber multi-term paredit redshank</span>
           )
@@ -4681,8 +4680,8 @@
 "org-comment">(with-eval-after-load "glasses"      (diminish 'glasses-mode))</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(with-eval-after-load "redshank"     (diminish 'redshank-mode))</span>
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(with-eval-after-load "smartparens"  (diminish 'smartparens-mode))</span>
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"smartparens"</span>  (diminish 'smartparens-mode))
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(with-eval-after-load "whitespace"   (diminish 'whitespace-mode))</span>
 </pre>
@@ -9866,10 +9865,11 @@ M-: (executable-find "diff") RET
 
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"org"</span>
-      (key-chord-define-global <span class=
-"org-string">";;"</span> 'org-mark-ring-goto) <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">Return to previous location before link.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
+"org-comment"> Problem for comments in ELisp</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";;" 'org-mark-ring-goto) ; Return to previous location before link.</span>
       (key-chord-define-global <span class=
 "org-string">";c"</span> 'org-capture)
       (key-chord-define-global <span class=
@@ -12473,7 +12473,9 @@ M-: (executable-find "diff") RET
 "org-comment">8.4.2 Format string used when creating CLOCKSUM lines and when generating</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">a time duration (avoid showing days).</span>
-    (setq org-time-clocksum-format
+    (setq org-time-clocksum-format      <span class=
+"org-comment-delimiter">;</span><span class=
+"org-comment">! works with Org 8 only</span>
           '(<span class="org-builtin">:hours</span> <span class=
 "org-string">"%d"</span> <span class=
 "org-builtin">:require-hours</span> t <span class=
@@ -18563,25 +18565,67 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
                 <p>Pair can be simple as parentheses or brackets, or can be
                 programming tokens such as <code>if</code> … <code>fi</code> or
                 <code>if</code> … <code>end</code> in many languages.</p>
+
+                <p>If you get into any serious lisp coding, check out
+                <code>paredit</code> – it forces you to always have balanced
+                brackets in the file, thus avoiding a whole class of silly but
+                hard-to-spot mistakes on lines ending with and avalanche of
+                ))))).</p>
+
+                <p>If you are less into bondage&amp;submission,
+                <code>smartparens.el</code> is another option, it <b>helps</b>
+                to have balanced brackets w/o breaking your will ;-)</p>
+
+                <p>It is more about ease-of-coding them B&amp;D.</p>
               </li>
             </ul>
 
-            <p>&gt;&gt;&gt; It looks like this - but I am always shocked by the
-            number of brackets &gt;&gt;&gt; in lisp. &gt;&gt; &gt;&gt; It’s a
-            bit of an adjustment. If you get into any serious lisp coding,
-            &gt;&gt; check out paredit – it forces you to always have balanced
-            brackets in &gt;&gt; the file, thus avoiding a whole class of silly
-            but hard-to-spot mistakes &gt;&gt; on lines ending with and
-            avalanche of ))))) &gt;&gt; &gt;&gt; <a href=
-            "http://www.emacswiki.org/emacs/ParEdit">http://www.emacswiki.org/emacs/ParEdit</a>
-            &gt; &gt; if you are less into bondage&amp;submission,
-            smartparens.el is another option, &gt; it <b>helps</b> to have
-            balanced brackets w/o breaking your will ;-)</p>
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Automatic insertion, wrapping and paredit-like navigation with user defined</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">pairs.</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"smartparens-autoloads"</span>
 
-            <p>It is more about ease-of-coding them B&amp;D.</p>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Default configuration for smartparens package.</span>
+    (<span class="org-keyword">require</span> '<span class=
+"org-constant">smartparens-config</span>)
 
-            <p><code>turn-on-smartparens-strict-mode</code> add years to ones
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Toggle Smartparens mode in all buffers.</span>
+    (smartparens-global-mode 1)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Toggle Show-Smartparens mode in all buffers.</span>
+    (show-smartparens-global-mode 1)
+
+    (<span class="org-keyword">sp-with-modes</span> 'org-mode
+      (sp-local-tag <span class="org-string">"*"</span> <span class=
+"org-string">"*"</span> <span class="org-string">"*"</span> <span class=
+"org-builtin">:actions</span> '(wrap))
+      (sp-local-tag <span class="org-string">"="</span> <span class=
+"org-string">"="</span> <span class="org-string">"="</span> <span class=
+"org-builtin">:actions</span> '(wrap))
+      (sp-local-tag <span class="org-string">"~"</span> <span class=
+"org-string">"~"</span> <span class="org-string">"~"</span> <span class=
+"org-builtin">:actions</span> '(wrap)))
+</pre>
+            </div>
+
+            <p><code>turn-on-smartparens-strict-mode</code> add years to one’s
             life to allow for more hacking. Seriously.</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Add smartparens-strict-mode to all sp--lisp-modes hooks.</span>
+
+    )
+</pre>
+            </div>
 
             <ul class="org-ul">
               <li>
@@ -18623,16 +18667,19 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  (add-hook 'prog-mode-hook
-            (<span class="org-keyword">lambda</span> ()
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"autopair-autoloads"</span>
 
-              <span class="org-comment-delimiter">;; </span><span class=
+    (add-hook 'prog-mode-hook
+              (<span class="org-keyword">lambda</span> ()
+
+                <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Attempts to wrap the selected region.</span>
-              (setq autopair-autowrap t)
+                (setq autopair-autowrap t)
 
-              <span class="org-comment-delimiter">;; </span><span class=
+                <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Enable Autopair-Global mode.</span>
-              (autopair-global-mode 1)))
+                (autopair-global-mode 1))))
 </pre>
             </div>
           </div>
@@ -27424,7 +27471,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141016.0013]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20141016.1058]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
