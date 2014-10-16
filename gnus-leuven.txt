@@ -8,7 +8,7 @@
 
 #+PROPERTY:  eval no
 #+PROPERTY:  tangle yes
-#+SETUPFILE: ~/src/org-style/bigblow.setup
+#+SETUPFILE: ./bigblow-pirilampo.setup
 
 * Overview
 
