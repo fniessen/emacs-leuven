@@ -288,8 +288,6 @@ afterward...
 ;;** 2.1 (info "(gnus)Group Buffer Format")
 
       ;; create some faces
-      (defface leuven-gnus-ticked '((t (:weight bold :foreground "#CF5D60")))
-        "Face for count of ticked articles.")
       (defface leuven-gnus-unseen '((t (:weight bold :foreground "blue")))
         "Face for marker of new mail, and count of unseen articles.")
       (defface leuven-gnus-unread '((t (:weight bold :foreground "black")))
@@ -303,7 +301,7 @@ afterward...
       (defface leuven-gnus-org-date '((t (:foreground "purple")))
         "Face for date in summary buffer.")
 
-      (setq gnus-face-1 'leuven-gnus-ticked)
+      (setq gnus-face-1 'gnus-summary-normal-ticked)
       (setq gnus-face-3 'leuven-gnus-unseen)
       (setq gnus-face-4 'leuven-gnus-unread)
       (setq gnus-face-5 'leuven-gnus-linum)
