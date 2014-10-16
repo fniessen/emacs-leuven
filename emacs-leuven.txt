@@ -1582,6 +1582,9 @@ Prior to running their own mode hooks,
 - all text-based major modes run ~text-mode-hook~, and
 - all programming language modes run ~prog-mode-hook~.
 
+XXX Try to get Org TODO overriding the TODO defined in
+leuven-highlight-keywords, so that only one expression can be used for *all* modes!
+
 #+begin_src emacs-lisp
   ;; Highlight FIXME notes.
   (defvar leuven-highlight-keywords
@@ -1645,6 +1648,9 @@ See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
 
 You can use *Hi Lock* (part of Emacs) to highlight a regexp (identical tokens)
 throughout a buffer.
+
+XXX The prefix C-x w only exists once hi-lock-mode is loaded!
+XXX What about M-s h?
 
 - ~M-x hi-lock-mode <RET>~ ::
      Enable or disable Hi Lock mode.
@@ -4064,7 +4070,7 @@ I guess your imagemagick support is ok.
 
   (leuven--section "19.4 (emacs)Kill Buffer")
 
-  ;; kill buffer without confirmation (if not modified)
+  ;; kill this buffer without confirmation (if not modified)
   (defun leuven-kill-this-buffer-without-query ()
     "Kill the current buffer without confirmation (if not modified)."
     (interactive)
@@ -4984,22 +4990,75 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 #+end_src
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "key-chord-autoloads"
+(with-eval-after-load "key-chord-autoloads"
     (key-chord-mode 1))
 
+  ;; map pairs of simultaneously pressed keys to commands
   (with-eval-after-load "key-chord"
+
+    (with-eval-after-load "hideshow"
+      (key-chord-define hs-minor-mode-map "'," 'hs-hide-block)
+      (key-chord-define hs-minor-mode-map "'." 'hs-show-block))
+
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
-    (key-chord-define-global "jj" 'ace-jump-word-mode)
-    (key-chord-define-global "jl" 'ace-jump-line-mode)
-    (key-chord-define-global "uu" 'undo-tree-visualize)
-    (key-chord-define-global "yy" 'browse-kill-ring)
-    (key-chord-define-global "xk" 'kill-buffer)
-    (key-chord-define-global "xx" 'helm-M-x)
-    (key-chord-define-global "zz" 'zap-to-char)
 
-    (key-chord-define-global ";c" 'org-capture)
-    (key-chord-define-global ";a" 'org-agenda)
+    (key-chord-define-global "hb" 'describe-bindings)
+    (key-chord-define-global "hf" 'describe-function)
+    (key-chord-define-global "hv" 'describe-variable)
+
+    (key-chord-define-global "hh" 'fill-paragraph)
+
+    ;; (key-chord-define-global "jj" 'er/expand-region)
+
+    (with-eval-after-load "ace-jump-mode"
+      (key-chord-define-global "jj" 'ace-jump-word-mode)
+      (key-chord-define-global "jk" 'ace-jump-mode-pop-mark)
+      (key-chord-define-global "jl" 'ace-jump-line-mode)
+      (key-chord-define-global "jw" 'ace-window))
+
+    (key-chord-define-global "kk" 'kill-whole-line)
+
+    (with-eval-after-load "undo-tree"
+      (key-chord-define-global "uu" 'undo-tree-visualize))
+
+    (with-eval-after-load "dired-x"
+      (key-chord-define-global "xj" 'dired-jump))
+
+    (key-chord-define-global "xk" 'kill-buffer)
+
+    (with-eval-after-load "helm-command"
+      (key-chord-define-global "xx" 'helm-M-x))
+
+    (key-chord-define-global "yy" 'browse-kill-ring)
+    ;; (key-chord-define-global "zz" 'zap-to-char)
+
+    (with-eval-after-load "org"
+      (key-chord-define-global ";;" 'org-mark-ring-goto) ; Return to previous location before link.
+      (key-chord-define-global ";c" 'org-capture)
+      (key-chord-define-global ";a" 'org-agenda)
+      (key-chord-define-global ";w" 'org-refile)
+
+      ;; (key-chord-define-global ";," 'org-mark-ring-goto)           ;; Return to previous location before link.
+      ;; (key-chord-define-global ";." 'org-time-stamp)               ;; Create new timestamp.
+      ;; (key-chord-define-global ";b" 'org-tree-to-indirect-buffer)  ;; Show complete tree in dedicated buffer.
+      ;; (key-chord-define-global ";d" 'org-todo)                     ;; Toggle todo for headline.
+      ;; (key-chord-define-global ";e" 'org-insert-link)              ;; Edit current link.
+      ;; (key-chord-define-global ";f" 'org-footnote-action)          ;; Create new footnote link.
+      ;; (key-chord-define-global ";g" 'er/open-org-calendar)         ;; Open calendar integration. :Functions.el:
+      ;; (key-chord-define-global ";h" 'org-toggle-heading)           ;; Toggle heading for current line/list item.
+      ;; (key-chord-define-global ";k" 'org-cut-subtree)              ;; Kill subtree.
+      ;; (key-chord-define-global ";l" 'org-store-link)               ;; Store link (useful for agenda ref).
+      ;; (key-chord-define-global ";n" 'er/org-narrow-and-reveal)     ;; Narrow region and reveal. :Functions.el:
+      ;; (key-chord-define-global ";o" 'org-open-at-point)            ;; Open link at point.
+      ;; (key-chord-define-global ";p" 'org-priority)                 ;; Toggle priority.
+      ;; (key-chord-define-global ";t" 'org-set-tags-command)         ;; Choose tags.
+      ;; (key-chord-define-global ";u" 'outline-up-heading)           ;; Go to parent headline.
+      ;; (key-chord-define-global ";v" 'org-paste-subtree)            ;; Paste subtree.
+      ;; (key-chord-define-global ";w" 'er/org-widen-and-outline)     ;; Widen and outline. :Functions.el:
+      ;; (key-chord-define-global ";y" 'org-copy-subtree)             ;; Copy subtree.
+      ;; (key-chord-define-global "<H" 'org-list-make-subtree)        ;; Toggle headings for all list items in subtree.
+      )
 
     ;; (key-chord-define-global "ac" 'align-current)
     ;; (key-chord-define-global "fc" 'flycheck-mode)
@@ -5011,23 +5070,13 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
     ;; (key-chord-define-global "vg" 'vc-git-grep)
 
     ;; (key-chord-define-global "''" "`'\C-b")
-    (key-chord-define-global "dq" "\"\"\C-b")
-    (key-chord-define-global "hh" 'fill-paragraph)
-    (when (featurep 'ace-window) (key-chord-define-global "jw" 'ace-window))
-    (key-chord-define-global ";d" 'dired-jump-other-window)
-    (with-eval-after-load "hideshow"
-      (key-chord-define hs-minor-mode-map "'," 'hs-hide-block)
-      (key-chord-define hs-minor-mode-map "'." 'hs-show-block))
-
-    (key-chord-define-global "jk" 'dabbrev-expand)
-    (key-chord-define-global "JJ" 'find-tag)
-    (key-chord-define-global "BB" 'ido-switch-buffer)
-    (key-chord-define-global "FF" 'ido-find-file)
-    (key-chord-define-global "##" 'server-edit)
-    (key-chord-define-global "VV" 'other-window)
-    (key-chord-define-global ",." "<>\C-b")
-    (key-chord-define-global "''" "`'\C-b")
-    (key-chord-define-global ",," 'indent-for-comment)
+    ;; (key-chord-define-global "dq" "\"\"\C-b")
+    ;; (key-chord-define-global ";d" 'dired-jump-other-window)
+    ;; (key-chord-define-global "jk" 'dabbrev-expand)
+    ;; (key-chord-define-global "JJ" 'find-tag)
+    ;; (key-chord-define-global ",." "<>\C-b")
+    ;; (key-chord-define-global "''" "`'\C-b")
+    ;; (key-chord-define-global ",," 'indent-for-comment)
     )
 #+end_src
 
@@ -5880,8 +5929,7 @@ has the equal signs escaped, unless you have:
   ;; Support for links to Gnus groups and messages from within Org mode.
   (with-eval-after-load "org-gnus"
 
-    ;; Create web links to Google groups or Gmane (instead of Gnus
-    ;; messages).
+    ;; Create web links to Google groups or Gmane (instead of Gnus messages).
     (setq org-gnus-prefer-web-links t))
 #+end_src
 
@@ -5912,6 +5960,24 @@ and resize it to a specific width.
     ;; 4.4 Try to get the width from an #+ATTR.* keyword and fall back on the
     ;; original width if none is found.
     (setq org-image-actual-width nil)
+#+end_src
+
+Search for backlinks:
+
+#+begin_src emacs-lisp
+    (defun leuven-org-what-links-here ()
+      "Show all links that point to the current node.  Also show the
+    node itself.
+
+    This makes id links quasi-bidirectional."
+      (interactive)
+      (let ((org-agenda-files (alpha-org-all-org-files
+                               :archive t
+                               :text-search-extra t))
+            ;; Turn off redundancy.
+            ;; FIXME Probably going to be redone.
+            org-agenda-text-search-extra-files)
+        (org-search-view nil (org-entry-get nil "ID" t))))
 #+end_src
 
 *** Link abbreviations
@@ -6935,9 +7001,9 @@ Have a look at [[http://vimeo.com/5662410][Store links in Emacs Org using org-pr
 
 *** Refile and copy
 
-Once a date has been scheduled, move the task to the appropriate category, by
-using the refile note command ~C-c C-w~.  This lets me select (with completion)
-the header under which the entry will be placed.
+Once a date has been scheduled, *move the task to the appropriate project*, by
+using the *refile* command ~C-c C-w~.  This lets me select (with completion) the
+header under which the entry will be placed.
 
 #+begin_src emacs-lisp
   (with-eval-after-load "org"
@@ -8809,18 +8875,18 @@ For security resons, evaluation is not turned on by default.
   (with-eval-after-load "ob-core"
 
     ;;!! Don't be prompted on every code block evaluation.
-    (setq org-confirm-babel-evaluate nil))
+    (setq org-confirm-babel-evaluate nil)
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; Change the color of code blocks while they are being executed.
-  (defadvice org-babel-execute-src-block (around progress nil activate)
-    "Create an overlay indicating when code block is running."
-    (let ((ol (make-overlay (org-element-property :begin (org-element-at-point))
-                            (org-element-property :end (org-element-at-point)))))
-      (overlay-put ol 'face '(background-color . "thistle1"))
-      ad-do-it
-      (delete-overlay ol)))
+    ;; Change the color of code blocks while they are being executed.
+    (defadvice org-babel-execute-src-block (around progress nil activate)
+      "Create an overlay indicating when code block is running."
+      (let ((ol (make-overlay (org-element-property :begin (org-element-at-point))
+                              (org-element-property :end (org-element-at-point)))))
+        (overlay-put ol 'face '(background-color . "thistle1"))
+        ad-do-it
+        (delete-overlay ol))))
 #+end_src
 
 *** A cleaner outline view
@@ -9795,8 +9861,12 @@ Some key bindings:
               (lambda ()
                 (local-set-key (kbd "<C-up>") 'leuven-scroll-up-one-line)
                 (local-set-key (kbd "<C-down>") 'leuven-scroll-down-one-line)
+                                        ; Sublime Text + SQL Management Studio
+
                 (local-set-key (kbd "<C-S-up>") 'leuven-move-line-up)
-                (local-set-key (kbd "<C-S-down>") 'leuven-move-line-down))))
+                (local-set-key (kbd "<C-S-down>") 'leuven-move-line-down)
+                                        ; Sublime Text
+                )))
 #+end_src
 
 *************** TODO Add "move view" up/down on C-up/down
@@ -10016,12 +10086,32 @@ Balanced editing: inserting two matching parentheses at once, etc.
 #+end_src
 
   Deleting one bracket doesn't delete the other.  If you want that, install
-  ~autopairs~ package.
+  ~autopair~ package.
 
 - *smartparens*
 
   Pair can be simple as parentheses or brackets, or can be programming tokens
   such as ~if~ ... ~fi~ or ~if~ ... ~end~ in many languages.
+
+
+>>> It looks like this - but I am always shocked by the number of brackets
+>>> in lisp.
+>>
+>> It’s a bit of an adjustment.  If you get into any serious lisp coding,
+>> check out paredit – it forces you to always have balanced brackets in
+>> the file, thus avoiding a whole class of silly but hard-to-spot mistakes
+>> on lines ending with and avalanche of )))))
+>>
+>> <http://www.emacswiki.org/emacs/ParEdit>
+>
+> if you are less into bondage&submission, smartparens.el is another option,
+> it *helps* to have balanced brackets w/o breaking your will ;-)
+
+It is more about ease-of-coding them B&D.
+
+=turn-on-smartparens-strict-mode= add years to ones life to allow for
+more hacking. Seriously.
+
 
 - *paredit* is (was?) the thing to use for Emacs Lisp!
 
@@ -12620,32 +12710,34 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; keep your appointment list clean: if you delete an appointment from your
-    ;; Org agenda file, delete the corresponding alert
-    (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
-      "Clear the existing `appt-time-msg-list'."
-      (setq appt-time-msg-list nil))
+    (with-eval-after-load "org-agenda"
 
-    ;; add today's appointments (found in `org-agenda-files') each time the
-    ;; agenda buffer is (re)built
-    (add-hook 'org-agenda-finalize-hook 'org-agenda-to-appt)
-                                        ;! don't use the `org-agenda-mode-hook'
-                                        ;! because the Org agenda files would be
-                                        ;! opened once by `org-agenda-to-appt',
-                                        ;! and then killed by
-                                        ;! `org-release-buffers' (because
-                                        ;! `org-agenda-to-appt' closes all the
-                                        ;! files it opened itself -- as they
-                                        ;! weren't already opened), to be
-                                        ;! finally re-opened!
+      ;; keep your appointment list clean: if you delete an appointment from your
+      ;; Org agenda file, delete the corresponding alert
+      (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
+        "Clear the existing `appt-time-msg-list'."
+        (setq appt-time-msg-list nil))
 
-    ;; add today's appointments (found in `org-agenda-files') each time such a
-    ;; file is saved
-    (add-hook 'after-save-hook
-              (lambda ()
-                (when (and (eq major-mode 'org-mode)
-                           (org-agenda-file-p))
-                  (org-agenda-to-appt))))
+      ;; add today's appointments (found in `org-agenda-files') each time the
+      ;; agenda buffer is (re)built
+      (add-hook 'org-agenda-finalize-hook 'org-agenda-to-appt)
+                                          ;! don't use the `org-agenda-mode-hook'
+                                          ;! because the Org agenda files would be
+                                          ;! opened once by `org-agenda-to-appt',
+                                          ;! and then killed by
+                                          ;! `org-release-buffers' (because
+                                          ;! `org-agenda-to-appt' closes all the
+                                          ;! files it opened itself -- as they
+                                          ;! weren't already opened), to be
+                                          ;! finally re-opened!
+
+      ;; add today's appointments (found in `org-agenda-files') each time such a
+      ;; file is saved
+      (add-hook 'after-save-hook
+                (lambda ()
+                  (when (and (eq major-mode 'org-mode)
+                             (org-agenda-file-p))
+                    (org-agenda-to-appt)))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -14604,6 +14696,7 @@ See as well Print keybindings (pkb).
           "C-x p"                       ; bmkp
           "C-x r"                       ; register + rectangle
           "C-x v"                       ; vc
+          "C-x w"                       ; hi-lock
           "M-g"                         ; goto + error
           "M-s"                         ; occur + highlight
           (org-mode "C-c C-x")

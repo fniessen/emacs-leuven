@@ -1360,7 +1360,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141010.2348</span>
+"org-comment">Version: 20141016.0013</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1483,7 +1483,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141010.2348]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20141016.0013]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Turn on Common Lisp support.</span>
@@ -4056,6 +4056,10 @@
             <code>prog-mode-hook</code>.</li>
           </ul>
 
+          <p>XXX Try to get Org TODO&nbsp;overriding the TODO defined in
+          leuven-highlight-keywords, so that only one expression can be used
+          for <b>all</b> modes!</p>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
@@ -4201,6 +4205,9 @@
 
           <p>You can use <b>Hi Lock</b> (part of Emacs) to highlight a regexp
           (identical tokens) throughout a buffer.</p>
+
+          <p>XXX The prefix C-x w only exists once hi-lock-mode is loaded! XXX
+          What about M-s h?</p>
 
           <dl class="org-dl">
             <dt><code>M-x hi-lock-mode &lt;RET&gt;</code></dt>
@@ -8269,7 +8276,7 @@ M-: (executable-find "diff") RET
   (leuven--section <span class="org-string">"19.4 (emacs)Kill Buffer"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">kill buffer without confirmation (if not modified)</span>
+"org-comment">kill this buffer without confirmation (if not modified)</span>
   (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-kill-this-buffer-without-query</span> ()
     <span class=
@@ -9784,12 +9791,22 @@ M-: (executable-find "diff") RET
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class=
+(<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"key-chord-autoloads"</span>
     (key-chord-mode 1))
 
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">map pairs of simultaneously pressed keys to commands</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"key-chord"</span>
+
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"hideshow"</span>
+      (key-chord-define hs-minor-mode-map <span class=
+"org-string">"',"</span> 'hs-hide-block)
+      (key-chord-define hs-minor-mode-map <span class=
+"org-string">"'."</span> 'hs-show-block))
+
     (key-chord-define-global <span class=
 "org-string">"&lt;&lt;"</span> (<span class=
 "org-keyword">lambda</span> () (interactive) (insert <span class=
@@ -9798,20 +9815,107 @@ M-: (executable-find "diff") RET
 "org-string">"&gt;&gt;"</span> (<span class=
 "org-keyword">lambda</span> () (interactive) (insert <span class=
 "org-string">"»"</span>)))
+
     (key-chord-define-global <span class=
+"org-string">"hb"</span> 'describe-bindings)
+    (key-chord-define-global <span class=
+"org-string">"hf"</span> 'describe-function)
+    (key-chord-define-global <span class=
+"org-string">"hv"</span> 'describe-variable)
+
+    (key-chord-define-global <span class=
+"org-string">"hh"</span> 'fill-paragraph)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "jj" 'er/expand-region)</span>
+
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"ace-jump-mode"</span>
+      (key-chord-define-global <span class=
 "org-string">"jj"</span> 'ace-jump-word-mode)
-    (key-chord-define-global <span class=
+      (key-chord-define-global <span class=
+"org-string">"jk"</span> 'ace-jump-mode-pop-mark)
+      (key-chord-define-global <span class=
 "org-string">"jl"</span> 'ace-jump-line-mode)
+      (key-chord-define-global <span class=
+"org-string">"jw"</span> 'ace-window))
+
     (key-chord-define-global <span class=
-"org-string">"uu"</span> 'undo-tree-visualize)
+"org-string">"kk"</span> 'kill-whole-line)
+
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"undo-tree"</span>
+      (key-chord-define-global <span class=
+"org-string">"uu"</span> 'undo-tree-visualize))
+
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"dired-x"</span>
+      (key-chord-define-global <span class=
+"org-string">"xj"</span> 'dired-jump))
+
+    (key-chord-define-global <span class="org-string">"xk"</span> 'kill-buffer)
+
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"helm-command"</span>
+      (key-chord-define-global <span class="org-string">"xx"</span> 'helm-M-x))
+
     (key-chord-define-global <span class=
 "org-string">"yy"</span> 'browse-kill-ring)
-    (key-chord-define-global <span class="org-string">"xk"</span> 'kill-buffer)
-    (key-chord-define-global <span class="org-string">"xx"</span> 'helm-M-x)
-    (key-chord-define-global <span class="org-string">"zz"</span> 'zap-to-char)
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "zz" 'zap-to-char)</span>
 
-    (key-chord-define-global <span class="org-string">";c"</span> 'org-capture)
-    (key-chord-define-global <span class="org-string">";a"</span> 'org-agenda)
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"org"</span>
+      (key-chord-define-global <span class=
+"org-string">";;"</span> 'org-mark-ring-goto) <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Return to previous location before link.</span>
+      (key-chord-define-global <span class=
+"org-string">";c"</span> 'org-capture)
+      (key-chord-define-global <span class=
+"org-string">";a"</span> 'org-agenda)
+      (key-chord-define-global <span class=
+"org-string">";w"</span> 'org-refile)
+
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";," 'org-mark-ring-goto)           ;; Return to previous location before link.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";." 'org-time-stamp)               ;; Create new timestamp.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";b" 'org-tree-to-indirect-buffer)  ;; Show complete tree in dedicated buffer.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";d" 'org-todo)                     ;; Toggle todo for headline.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";e" 'org-insert-link)              ;; Edit current link.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";f" 'org-footnote-action)          ;; Create new footnote link.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";g" 'er/open-org-calendar)         ;; Open calendar integration. :Functions.el:</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";h" 'org-toggle-heading)           ;; Toggle heading for current line/list item.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";k" 'org-cut-subtree)              ;; Kill subtree.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";l" 'org-store-link)               ;; Store link (useful for agenda ref).</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";n" 'er/org-narrow-and-reveal)     ;; Narrow region and reveal. :Functions.el:</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";o" 'org-open-at-point)            ;; Open link at point.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";p" 'org-priority)                 ;; Toggle priority.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";t" 'org-set-tags-command)         ;; Choose tags.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";u" 'outline-up-heading)           ;; Go to parent headline.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";v" 'org-paste-subtree)            ;; Paste subtree.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";w" 'er/org-widen-and-outline)     ;; Widen and outline. :Functions.el:</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";y" 'org-copy-subtree)             ;; Copy subtree.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "&lt;H" 'org-list-make-subtree)        ;; Toggle headings for all list items in subtree.</span>
+      )
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(key-chord-define-global "ac" 'align-current)</span>
@@ -9832,39 +9936,20 @@ M-: (executable-find "diff") RET
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(key-chord-define-global "''" "`'\C-b")</span>
-    (key-chord-define-global <span class="org-string">"dq"</span> <span class=
-"org-string">"\"\"\C-b"</span>)
-    (key-chord-define-global <span class=
-"org-string">"hh"</span> 'fill-paragraph)
-    (<span class="org-keyword">when</span> (<span class=
-"org-keyword">featurep</span> '<span class=
-"org-constant">ace-window</span>) (key-chord-define-global <span class=
-"org-string">"jw"</span> 'ace-window))
-    (key-chord-define-global <span class=
-"org-string">";d"</span> 'dired-jump-other-window)
-    (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"hideshow"</span>
-      (key-chord-define hs-minor-mode-map <span class=
-"org-string">"',"</span> 'hs-hide-block)
-      (key-chord-define hs-minor-mode-map <span class=
-"org-string">"'."</span> 'hs-show-block))
-
-    (key-chord-define-global <span class=
-"org-string">"jk"</span> 'dabbrev-expand)
-    (key-chord-define-global <span class="org-string">"JJ"</span> 'find-tag)
-    (key-chord-define-global <span class=
-"org-string">"BB"</span> 'ido-switch-buffer)
-    (key-chord-define-global <span class=
-"org-string">"FF"</span> 'ido-find-file)
-    (key-chord-define-global <span class="org-string">"##"</span> 'server-edit)
-    (key-chord-define-global <span class=
-"org-string">"VV"</span> 'other-window)
-    (key-chord-define-global <span class="org-string">",."</span> <span class=
-"org-string">"&lt;&gt;\C-b"</span>)
-    (key-chord-define-global <span class="org-string">"''"</span> <span class=
-"org-string">"`'\C-b"</span>)
-    (key-chord-define-global <span class=
-"org-string">",,"</span> 'indent-for-comment)
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "dq" "\"\"\C-b")</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ";d" 'dired-jump-other-window)</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "jk" 'dabbrev-expand)</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "JJ" 'find-tag)</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ",." "&lt;&gt;\C-b")</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "''" "`'\C-b")</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ",," 'indent-for-comment)</span>
     )
 </pre>
           </div>
@@ -11330,9 +11415,7 @@ M-: (executable-find "diff") RET
 "org-string">"org-gnus"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Create web links to Google groups or Gmane (instead of Gnus</span>
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">messages).</span>
+"org-comment">Create web links to Google groups or Gmane (instead of Gnus messages).</span>
     (setq org-gnus-prefer-web-links t))
 </pre>
             </div>
@@ -11383,6 +11466,34 @@ M-: (executable-find "diff") RET
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">original width if none is found.</span>
     (setq org-image-actual-width nil)
+</pre>
+            </div>
+
+            <p>Search for backlinks:</p>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
+    (<span class="org-keyword">defun</span> <span class=
+"org-function-name">leuven-org-what-links-here</span> ()
+      <span class=
+"org-doc">"Show all links that point to the current node.  Also show the</span>
+<span class="org-doc">    node itself.</span>
+
+<span class="org-doc">    This makes id links quasi-bidirectional."</span>
+      (interactive)
+      (<span class=
+"org-keyword">let</span> ((org-agenda-files (alpha-org-all-org-files
+                               <span class="org-builtin">:archive</span> t
+                               <span class=
+"org-builtin">:text-search-extra</span> t))
+            <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Turn off redundancy.</span>
+            <span class="org-comment-delimiter">;; </span><span class=
+"org-leuven-highlight"><span class=
+"org-comment">FIXME</span></span><span class="org-comment"> Probably going to be redone.</span>
+            org-agenda-text-search-extra-files)
+        (org-search-view nil (org-entry-get nil <span class=
+"org-string">"ID"</span> t))))
 </pre>
             </div>
           </div>
@@ -13147,10 +13258,10 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
           <h4 id="unnumbered-182">Refile and copy</h4>
 
           <div class="outline-text-4" id="text-unnumbered-182">
-            <p>Once a date has been scheduled, move the task to the appropriate
-            category, by using the refile note command <code>C-c C-w</code>.
-            This lets me select (with completion) the header under which the
-            entry will be placed.</p>
+            <p>Once a date has been scheduled, <b>move the task to the
+            appropriate project</b>, by using the <b>refile</b> command
+            <code>C-c C-w</code>. This lets me select (with completion) the
+            header under which the entry will be placed.</p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -16377,27 +16488,27 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 
     <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">!! Don't be prompted on every code block evaluation.</span>
-    (setq org-confirm-babel-evaluate nil))
+    (setq org-confirm-babel-evaluate nil)
 </pre>
             </div>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
+    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Change the color of code blocks while they are being executed.</span>
-  (<span class="org-keyword">defadvice</span> <span class=
+    (<span class="org-keyword">defadvice</span> <span class=
 "org-function-name">org-babel-execute-src-block</span> (around progress nil activate)
-    <span class=
+      <span class=
 "org-doc">"Create an overlay indicating when code block is running."</span>
-    (<span class=
+      (<span class=
 "org-keyword">let</span> ((ol (make-overlay (org-element-property <span class=
 "org-builtin">:begin</span> (org-element-at-point))
-                            (org-element-property <span class=
+                              (org-element-property <span class=
 "org-builtin">:end</span> (org-element-at-point)))))
-      (overlay-put ol 'face '(background-color . <span class=
+        (overlay-put ol 'face '(background-color . <span class=
 "org-string">"thistle1"</span>))
-      ad-do-it
-      (delete-overlay ol)))
+        ad-do-it
+        (delete-overlay ol))))
 </pre>
             </div>
           </div>
@@ -18060,10 +18171,17 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"&lt;C-up&gt;"</span>) 'leuven-scroll-up-one-line)
                 (local-set-key (kbd <span class=
 "org-string">"&lt;C-down&gt;"</span>) 'leuven-scroll-down-one-line)
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Sublime Text + SQL Management Studio</span>
+
                 (local-set-key (kbd <span class=
 "org-string">"&lt;C-S-up&gt;"</span>) 'leuven-move-line-up)
                 (local-set-key (kbd <span class=
-"org-string">"&lt;C-S-down&gt;"</span>) 'leuven-move-line-down))))
+"org-string">"&lt;C-S-down&gt;"</span>) 'leuven-move-line-down)
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">Sublime Text</span>
+                )))
 </pre>
         </div>
 
@@ -18436,7 +18554,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             </div>
 
             <p>Deleting one bracket doesn’t delete the other. If you want that,
-            install <code>autopairs</code> package.</p>
+            install <code>autopair</code> package.</p>
 
             <ul class="org-ul">
               <li>
@@ -18446,7 +18564,26 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
                 programming tokens such as <code>if</code> … <code>fi</code> or
                 <code>if</code> … <code>end</code> in many languages.</p>
               </li>
+            </ul>
 
+            <p>&gt;&gt;&gt; It looks like this - but I am always shocked by the
+            number of brackets &gt;&gt;&gt; in lisp. &gt;&gt; &gt;&gt; It’s a
+            bit of an adjustment. If you get into any serious lisp coding,
+            &gt;&gt; check out paredit – it forces you to always have balanced
+            brackets in &gt;&gt; the file, thus avoiding a whole class of silly
+            but hard-to-spot mistakes &gt;&gt; on lines ending with and
+            avalanche of ))))) &gt;&gt; &gt;&gt; <a href=
+            "http://www.emacswiki.org/emacs/ParEdit">http://www.emacswiki.org/emacs/ParEdit</a>
+            &gt; &gt; if you are less into bondage&amp;submission,
+            smartparens.el is another option, &gt; it <b>helps</b> to have
+            balanced brackets w/o breaking your will ;-)</p>
+
+            <p>It is more about ease-of-coding them B&amp;D.</p>
+
+            <p><code>turn-on-smartparens-strict-mode</code> add years to ones
+            life to allow for more hacking. Seriously.</p>
+
+            <ul class="org-ul">
               <li>
                 <p><b>paredit</b> is (was?) the thing to use for Emacs
                 Lisp!</p>
@@ -22879,74 +23016,77 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-    <span class="org-comment-delimiter">;; </span><span class=
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"org-agenda"</span>
+
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">keep your appointment list clean: if you delete an appointment from your</span>
-    <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Org agenda file, delete the corresponding alert</span>
-    (<span class="org-keyword">defadvice</span> <span class=
+      (<span class="org-keyword">defadvice</span> <span class=
 "org-function-name">org-agenda-to-appt</span> (before leuven-org-agenda-to-appt activate)
-      <span class="org-doc">"Clear the existing `</span><span class=
+        <span class="org-doc">"Clear the existing `</span><span class=
 "org-constant"><span class=
 "org-doc">appt-time-msg-list</span></span><span class="org-doc">'."</span>
-      (setq appt-time-msg-list nil))
+        (setq appt-time-msg-list nil))
 
-    <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">add today's appointments (found in `</span><span class=
 "org-constant"><span class=
 "org-comment">org-agenda-files</span></span><span class=
 "org-comment">') each time the</span>
-    <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">agenda buffer is (re)built</span>
-    (add-hook 'org-agenda-finalize-hook 'org-agenda-to-appt)
-                                        <span class=
+      (add-hook 'org-agenda-finalize-hook 'org-agenda-to-appt)
+                                          <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">! don't use the `</span><span class="org-constant"><span class=
 "org-comment">org-agenda-mode-hook</span></span><span class=
 "org-comment">'</span>
-                                        <span class=
+                                          <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">! because the Org agenda files would be</span>
-                                        <span class=
+                                          <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">! opened once by `</span><span class="org-constant"><span class=
 "org-comment">org-agenda-to-appt</span></span><span class=
 "org-comment">',</span>
-                                        <span class=
+                                          <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">! and then killed by</span>
-                                        <span class=
+                                          <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">! `</span><span class="org-constant"><span class=
 "org-comment">org-release-buffers</span></span><span class=
 "org-comment">' (because</span>
-                                        <span class=
+                                          <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">! `</span><span class="org-constant"><span class=
 "org-comment">org-agenda-to-appt</span></span><span class=
 "org-comment">' closes all the</span>
-                                        <span class=
+                                          <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">! files it opened itself -- as they</span>
-                                        <span class=
+                                          <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">! weren't already opened), to be</span>
-                                        <span class=
+                                          <span class=
 "org-comment-delimiter">;</span><span class=
 "org-comment">! finally re-opened!</span>
 
-    <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">add today's appointments (found in `</span><span class=
 "org-constant"><span class=
 "org-comment">org-agenda-files</span></span><span class=
 "org-comment">') each time such a</span>
-    <span class="org-comment-delimiter">;; </span><span class=
+      <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">file is saved</span>
-    (add-hook 'after-save-hook
-              (<span class="org-keyword">lambda</span> ()
-                (<span class=
+      (add-hook 'after-save-hook
+                (<span class="org-keyword">lambda</span> ()
+                  (<span class=
 "org-keyword">when</span> (and (eq major-mode 'org-mode)
-                           (org-agenda-file-p))
-                  (org-agenda-to-appt))))
+                             (org-agenda-file-p))
+                    (org-agenda-to-appt)))))
 </pre>
           </div>
 
@@ -26411,6 +26551,9 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 "org-string">"C-x v"</span>                       <span class=
 "org-comment-delimiter">; </span><span class="org-comment">vc</span>
           <span class=
+"org-string">"C-x w"</span>                       <span class=
+"org-comment-delimiter">; </span><span class="org-comment">hi-lock</span>
+          <span class=
 "org-string">"M-g"</span>                         <span class=
 "org-comment-delimiter">; </span><span class="org-comment">goto + error</span>
           <span class=
@@ -27281,7 +27424,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141010.2349]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20141016.0013]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

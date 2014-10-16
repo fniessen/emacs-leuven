@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141010.2345
+;; Version: 20141016.0009
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141010.2345]--")
+(message "* --[ Loading Emacs Leuven 20141016.0009]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -2477,7 +2477,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "19.4 (emacs)Kill Buffer")
 
-  ;; kill buffer without confirmation (if not modified)
+  ;; kill this buffer without confirmation (if not modified)
   (defun leuven-kill-this-buffer-without-query ()
     "Kill the current buffer without confirmation (if not modified)."
     (interactive)
@@ -3095,22 +3095,75 @@ Last time is saved in global variable `leuven--before-section-time'."
   (add-hook 'text-mode-hook 'leuven-smart-punctuation)
   (add-hook 'message-mode-hook 'leuven-smart-punctuation)
 
-  (with-eval-after-load "key-chord-autoloads"
+(with-eval-after-load "key-chord-autoloads"
     (key-chord-mode 1))
 
+  ;; map pairs of simultaneously pressed keys to commands
   (with-eval-after-load "key-chord"
+
+    (with-eval-after-load "hideshow"
+      (key-chord-define hs-minor-mode-map "'," 'hs-hide-block)
+      (key-chord-define hs-minor-mode-map "'." 'hs-show-block))
+
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
-    (key-chord-define-global "jj" 'ace-jump-word-mode)
-    (key-chord-define-global "jl" 'ace-jump-line-mode)
-    (key-chord-define-global "uu" 'undo-tree-visualize)
-    (key-chord-define-global "yy" 'browse-kill-ring)
-    (key-chord-define-global "xk" 'kill-buffer)
-    (key-chord-define-global "xx" 'helm-M-x)
-    (key-chord-define-global "zz" 'zap-to-char)
 
-    (key-chord-define-global ";c" 'org-capture)
-    (key-chord-define-global ";a" 'org-agenda)
+    (key-chord-define-global "hb" 'describe-bindings)
+    (key-chord-define-global "hf" 'describe-function)
+    (key-chord-define-global "hv" 'describe-variable)
+
+    (key-chord-define-global "hh" 'fill-paragraph)
+
+    ;; (key-chord-define-global "jj" 'er/expand-region)
+
+    (with-eval-after-load "ace-jump-mode"
+      (key-chord-define-global "jj" 'ace-jump-word-mode)
+      (key-chord-define-global "jk" 'ace-jump-mode-pop-mark)
+      (key-chord-define-global "jl" 'ace-jump-line-mode)
+      (key-chord-define-global "jw" 'ace-window))
+
+    (key-chord-define-global "kk" 'kill-whole-line)
+
+    (with-eval-after-load "undo-tree"
+      (key-chord-define-global "uu" 'undo-tree-visualize))
+
+    (with-eval-after-load "dired-x"
+      (key-chord-define-global "xj" 'dired-jump))
+
+    (key-chord-define-global "xk" 'kill-buffer)
+
+    (with-eval-after-load "helm-command"
+      (key-chord-define-global "xx" 'helm-M-x))
+
+    (key-chord-define-global "yy" 'browse-kill-ring)
+    ;; (key-chord-define-global "zz" 'zap-to-char)
+
+    (with-eval-after-load "org"
+      (key-chord-define-global ";;" 'org-mark-ring-goto) ; Return to previous location before link.
+      (key-chord-define-global ";c" 'org-capture)
+      (key-chord-define-global ";a" 'org-agenda)
+      (key-chord-define-global ";w" 'org-refile)
+
+      ;; (key-chord-define-global ";," 'org-mark-ring-goto)           ;; Return to previous location before link.
+      ;; (key-chord-define-global ";." 'org-time-stamp)               ;; Create new timestamp.
+      ;; (key-chord-define-global ";b" 'org-tree-to-indirect-buffer)  ;; Show complete tree in dedicated buffer.
+      ;; (key-chord-define-global ";d" 'org-todo)                     ;; Toggle todo for headline.
+      ;; (key-chord-define-global ";e" 'org-insert-link)              ;; Edit current link.
+      ;; (key-chord-define-global ";f" 'org-footnote-action)          ;; Create new footnote link.
+      ;; (key-chord-define-global ";g" 'er/open-org-calendar)         ;; Open calendar integration. :Functions.el:
+      ;; (key-chord-define-global ";h" 'org-toggle-heading)           ;; Toggle heading for current line/list item.
+      ;; (key-chord-define-global ";k" 'org-cut-subtree)              ;; Kill subtree.
+      ;; (key-chord-define-global ";l" 'org-store-link)               ;; Store link (useful for agenda ref).
+      ;; (key-chord-define-global ";n" 'er/org-narrow-and-reveal)     ;; Narrow region and reveal. :Functions.el:
+      ;; (key-chord-define-global ";o" 'org-open-at-point)            ;; Open link at point.
+      ;; (key-chord-define-global ";p" 'org-priority)                 ;; Toggle priority.
+      ;; (key-chord-define-global ";t" 'org-set-tags-command)         ;; Choose tags.
+      ;; (key-chord-define-global ";u" 'outline-up-heading)           ;; Go to parent headline.
+      ;; (key-chord-define-global ";v" 'org-paste-subtree)            ;; Paste subtree.
+      ;; (key-chord-define-global ";w" 'er/org-widen-and-outline)     ;; Widen and outline. :Functions.el:
+      ;; (key-chord-define-global ";y" 'org-copy-subtree)             ;; Copy subtree.
+      ;; (key-chord-define-global "<H" 'org-list-make-subtree)        ;; Toggle headings for all list items in subtree.
+      )
 
     ;; (key-chord-define-global "ac" 'align-current)
     ;; (key-chord-define-global "fc" 'flycheck-mode)
@@ -3122,23 +3175,13 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; (key-chord-define-global "vg" 'vc-git-grep)
 
     ;; (key-chord-define-global "''" "`'\C-b")
-    (key-chord-define-global "dq" "\"\"\C-b")
-    (key-chord-define-global "hh" 'fill-paragraph)
-    (when (featurep 'ace-window) (key-chord-define-global "jw" 'ace-window))
-    (key-chord-define-global ";d" 'dired-jump-other-window)
-    (with-eval-after-load "hideshow"
-      (key-chord-define hs-minor-mode-map "'," 'hs-hide-block)
-      (key-chord-define hs-minor-mode-map "'." 'hs-show-block))
-
-    (key-chord-define-global "jk" 'dabbrev-expand)
-    (key-chord-define-global "JJ" 'find-tag)
-    (key-chord-define-global "BB" 'ido-switch-buffer)
-    (key-chord-define-global "FF" 'ido-find-file)
-    (key-chord-define-global "##" 'server-edit)
-    (key-chord-define-global "VV" 'other-window)
-    (key-chord-define-global ",." "<>\C-b")
-    (key-chord-define-global "''" "`'\C-b")
-    (key-chord-define-global ",," 'indent-for-comment)
+    ;; (key-chord-define-global "dq" "\"\"\C-b")
+    ;; (key-chord-define-global ";d" 'dired-jump-other-window)
+    ;; (key-chord-define-global "jk" 'dabbrev-expand)
+    ;; (key-chord-define-global "JJ" 'find-tag)
+    ;; (key-chord-define-global ",." "<>\C-b")
+    ;; (key-chord-define-global "''" "`'\C-b")
+    ;; (key-chord-define-global ",," 'indent-for-comment)
     )
 
 ;;** 25.6 (info "(emacs)Case") Conversion Commands
@@ -3687,8 +3730,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; Support for links to Gnus groups and messages from within Org mode.
   (with-eval-after-load "org-gnus"
 
-    ;; Create web links to Google groups or Gmane (instead of Gnus
-    ;; messages).
+    ;; Create web links to Google groups or Gmane (instead of Gnus messages).
     (setq org-gnus-prefer-web-links t))
 
   ;; Global identifiers for Org-mode entries.
@@ -3707,6 +3749,20 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; 4.4 Try to get the width from an #+ATTR.* keyword and fall back on the
     ;; original width if none is found.
     (setq org-image-actual-width nil)
+
+    (defun leuven-org-what-links-here ()
+      "Show all links that point to the current node.  Also show the
+    node itself.
+
+    This makes id links quasi-bidirectional."
+      (interactive)
+      (let ((org-agenda-files (alpha-org-all-org-files
+                               :archive t
+                               :text-search-extra t))
+            ;; Turn off redundancy.
+            ;; FIXME Probably going to be redone.
+            org-agenda-text-search-extra-files)
+        (org-search-view nil (org-entry-get nil "ID" t))))
 
     ;; Shortcut links.
     (setq org-link-abbrev-alist
@@ -5699,16 +5755,16 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "ob-core"
 
     ;;!! Don't be prompted on every code block evaluation.
-    (setq org-confirm-babel-evaluate nil))
+    (setq org-confirm-babel-evaluate nil)
 
-  ;; Change the color of code blocks while they are being executed.
-  (defadvice org-babel-execute-src-block (around progress nil activate)
-    "Create an overlay indicating when code block is running."
-    (let ((ol (make-overlay (org-element-property :begin (org-element-at-point))
-                            (org-element-property :end (org-element-at-point)))))
-      (overlay-put ol 'face '(background-color . "thistle1"))
-      ad-do-it
-      (delete-overlay ol)))
+    ;; Change the color of code blocks while they are being executed.
+    (defadvice org-babel-execute-src-block (around progress nil activate)
+      "Create an overlay indicating when code block is running."
+      (let ((ol (make-overlay (org-element-property :begin (org-element-at-point))
+                              (org-element-property :end (org-element-at-point)))))
+        (overlay-put ol 'face '(background-color . "thistle1"))
+        ad-do-it
+        (delete-overlay ol))))
 
 ;;** 15.8 A (info "(org)Clean view")
 
@@ -6325,8 +6381,12 @@ this with to-do items than with projects or headings."
               (lambda ()
                 (local-set-key (kbd "<C-up>") 'leuven-scroll-up-one-line)
                 (local-set-key (kbd "<C-down>") 'leuven-scroll-down-one-line)
+                                        ; Sublime Text + SQL Management Studio
+
                 (local-set-key (kbd "<C-S-up>") 'leuven-move-line-up)
-                (local-set-key (kbd "<C-S-down>") 'leuven-move-line-down))))
+                (local-set-key (kbd "<C-S-down>") 'leuven-move-line-down)
+                                        ; Sublime Text
+                )))
 
 ;;** 26.1 Major Modes for (info "(emacs)Program Modes")
 
@@ -7800,32 +7860,34 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; enable appointment notification, several minutes beforehand
     (add-hook 'diary-hook 'appt-make-list)
 
-    ;; keep your appointment list clean: if you delete an appointment from your
-    ;; Org agenda file, delete the corresponding alert
-    (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
-      "Clear the existing `appt-time-msg-list'."
-      (setq appt-time-msg-list nil))
+    (with-eval-after-load "org-agenda"
 
-    ;; add today's appointments (found in `org-agenda-files') each time the
-    ;; agenda buffer is (re)built
-    (add-hook 'org-agenda-finalize-hook 'org-agenda-to-appt)
-                                        ;! don't use the `org-agenda-mode-hook'
-                                        ;! because the Org agenda files would be
-                                        ;! opened once by `org-agenda-to-appt',
-                                        ;! and then killed by
-                                        ;! `org-release-buffers' (because
-                                        ;! `org-agenda-to-appt' closes all the
-                                        ;! files it opened itself -- as they
-                                        ;! weren't already opened), to be
-                                        ;! finally re-opened!
+      ;; keep your appointment list clean: if you delete an appointment from your
+      ;; Org agenda file, delete the corresponding alert
+      (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
+        "Clear the existing `appt-time-msg-list'."
+        (setq appt-time-msg-list nil))
 
-    ;; add today's appointments (found in `org-agenda-files') each time such a
-    ;; file is saved
-    (add-hook 'after-save-hook
-              (lambda ()
-                (when (and (eq major-mode 'org-mode)
-                           (org-agenda-file-p))
-                  (org-agenda-to-appt))))
+      ;; add today's appointments (found in `org-agenda-files') each time the
+      ;; agenda buffer is (re)built
+      (add-hook 'org-agenda-finalize-hook 'org-agenda-to-appt)
+                                          ;! don't use the `org-agenda-mode-hook'
+                                          ;! because the Org agenda files would be
+                                          ;! opened once by `org-agenda-to-appt',
+                                          ;! and then killed by
+                                          ;! `org-release-buffers' (because
+                                          ;! `org-agenda-to-appt' closes all the
+                                          ;! files it opened itself -- as they
+                                          ;! weren't already opened), to be
+                                          ;! finally re-opened!
+
+      ;; add today's appointments (found in `org-agenda-files') each time such a
+      ;; file is saved
+      (add-hook 'after-save-hook
+                (lambda ()
+                  (when (and (eq major-mode 'org-mode)
+                             (org-agenda-file-p))
+                    (org-agenda-to-appt)))))
 
     )                                   ; with-eval-after-load "appt" ends here
 
@@ -9143,6 +9205,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           "C-x p"                       ; bmkp
           "C-x r"                       ; register + rectangle
           "C-x v"                       ; vc
+          "C-x w"                       ; hi-lock
           "M-g"                         ; goto + error
           "M-s"                         ; occur + highlight
           (org-mode "C-c C-x")
@@ -9304,7 +9367,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (sit-for 3)
           (message "Configuration updated. Restart Emacs to complete the process.")))))
 
-(message "* --[ Loaded Emacs Leuven 20141010.2346]--")
+(message "* --[ Loaded Emacs Leuven 20141016.0010]--")
 
 (provide 'emacs-leuven)
 
