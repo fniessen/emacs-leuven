@@ -1,7 +1,7 @@
 #+TITLE:     Minimal .emacs
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2014-08-07 Thu 11:13>
+#+Time-stamp: <2014-10-16 Thu 11:17>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
@@ -9,7 +9,7 @@
 
 #+PROPERTY:  eval no
 
-#+SETUPFILE: ~/src/org-style/setup/bigblow-local-abs.setup
+#+SETUPFILE: ./bigblow-pirilampo.setup
 
 * Example
   :PROPERTIES:
