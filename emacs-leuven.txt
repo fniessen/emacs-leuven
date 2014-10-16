@@ -15327,7 +15327,7 @@ functions implemented in Emacs Lisp.
         (sit-for 3)
         (message "Configuration updated. Restart Emacs to complete the process."))))
 
-  (defun leuven-whats-up ()
+  (defun leuven-show-last-commits ()
     "List last changes in Emacs Leuven."
     (interactive)
     (message "Fetching last changes in Leuven...")
@@ -15335,24 +15335,9 @@ functions implemented in Emacs Lisp.
     (let ((ret (shell-command-to-string "git fetch --verbose")))
       (if (string-match "up to date" ret)
           (message "Configuration already up-to-date.")
-        (setq ret (shell-command-to-string "git log HEAD..origin"))
-        (princ ret)
-        (sit-for 3))))
-
-  (defun leuven-update-show-commits ()
-    "Update Leuven to its latest version."
-    (interactive)
-    (message "Fetching last changes in Leuven...")
-    (cd leuven--directory)
-    (let ((ret (shell-command-to-string "git fetch --verbose")))
-      (if (string-match "up to date" ret)
-          (message "Configuration already up-to-date.")
-        (setq ret (shell-command-to-string "git log HEAD..origin"))
-        (princ ret)
-        (sit-for 3)
-        (when (y-or-n-p "Do you want to update Leuven? ")
-          (shell-command-to-string "git pull --verbose --rebase")
-          (message "Configuration updated. Restart Emacs to complete the process.")))))
+        (with-temp-buffer-window (get-buffer-create "*Leuven last commits*")
+          (setq ret (shell-command-to-string "git log HEAD..origin"))
+          (princ ret)))))
 #+end_src
 
 Please address particular issues or suggestions *specifically*, using `M-x
