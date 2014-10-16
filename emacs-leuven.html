@@ -1360,7 +1360,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141016.1238</span>
+"org-comment">Version: 20141016.1545</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1483,7 +1483,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141016.1238]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20141016.1545]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Turn on Common Lisp support.</span>
@@ -21527,7 +21527,12 @@ etags --langdef=shell --regex-shell=<span class=
             try-expand-dabbrev-visible  <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">visible (parts of all) buffers</span>
-            try-expand-dabbrev-all-buffers
+            try-expand-dabbrev-all-buffers <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">(almost) all buffers (see `</span><span class=
+"org-constant"><span class=
+"org-comment">hippie-expand-ignore-buffers</span></span><span class=
+"org-comment">')</span>
             try-expand-dabbrev-from-kill <span class=
 "org-comment-delimiter">; </span><span class="org-comment">kill ring</span>
             try-complete-file-name-partially <span class=
@@ -26019,12 +26024,63 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment">** Web search</span>
 
   (leuven--section <span class="org-string">"Web search"</span>)
+</pre>
+          </div>
 
+          <dl class="org-dl">
+            <dt><code>C-c g SPC</code></dt>
+
+            <dd><code>google-this-region</code></dd>
+
+            <dt><code>C-c g n</code></dt>
+
+            <dd><code>google-this-noconfirm</code></dd>
+
+            <dt><code>C-c g t</code></dt>
+
+            <dd><code>google-this</code></dd>
+          </dl>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"google-this-autoloads"</span>
-    (setq google-this-keybind (kbd <span class="org-string">"C-c g"</span>))
-    (google-this-mode 1))
 
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Keybinding under which `</span><span class=
+"org-constant"><span class=
+"org-comment">google-this-mode-submap</span></span><span class=
+"org-comment">' is assigned.</span>
+    (setq google-this-keybind (kbd <span class="org-string">"C-c g"</span>))
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Enable Google-This mode.</span>
+    (google-this-mode 1))
+</pre>
+          </div>
+
+          <p>When I want to Google most of a line, I call
+          <code>google-this-line</code> and edit the prompt. And when I to
+          Google the entire line, hitting <code>RET</code> one extra time
+          doesn’t quite bother me.</p>
+
+          <p>If you’d like to skip confirmation, you can define the following
+          function and bind it to a key:</p>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+    (<span class="org-keyword">defun</span> <span class=
+"org-function-name">goog-this-line-noconfirm</span> (prefix)
+      <span class=
+"org-doc">"Google the current line without confirmationl.</span>
+<span class="org-doc">    PREFIX determines quoting."</span>
+      (interactive <span class="org-string">"P"</span>)
+      (google-this-line prefix 'noconfirm))
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
   (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-google-search-active-region-or-word-at-point</span> ()
     <span class=
@@ -27470,7 +27526,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
     (cd leuven--directory)
     (<span class=
 "org-keyword">let</span> ((ret (shell-command-to-string <span class=
-"org-string">"git pull --verbose --rebase"</span>)))
+"org-string">"git pull --rebase"</span>)))
       (<span class="org-keyword">if</span> (string-match <span class=
 "org-string">"Already up-to-date."</span> ret)
           (message <span class=
@@ -27481,7 +27537,26 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 "org-string">"Configuration updated. Restart Emacs to complete the process."</span>))))
 
   (<span class="org-keyword">defun</span> <span class=
-"org-function-name">leuven-update2</span> ()
+"org-function-name">leuven-whats-up</span> ()
+    <span class="org-doc">"List last changes in Emacs Leuven."</span>
+    (interactive)
+    (message <span class=
+"org-string">"Fetching last changes in Leuven..."</span>)
+    (cd leuven--directory)
+    (<span class=
+"org-keyword">let</span> ((ret (shell-command-to-string <span class=
+"org-string">"git fetch --verbose"</span>)))
+      (<span class="org-keyword">if</span> (string-match <span class=
+"org-string">"up to date"</span> ret)
+          (message <span class=
+"org-string">"Configuration already up-to-date."</span>)
+        (setq ret (shell-command-to-string <span class=
+"org-string">"git log HEAD..origin"</span>))
+        (princ ret)
+        (sit-for 3))))
+
+  (<span class="org-keyword">defun</span> <span class=
+"org-function-name">leuven-update-show-commits</span> ()
     <span class="org-doc">"Update Leuven to its latest version."</span>
     (interactive)
     (message <span class=
@@ -27513,7 +27588,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141016.1238]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20141016.1545]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

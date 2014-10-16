@@ -11838,7 +11838,7 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
 
             try-expand-dabbrev          ; current buffer
             try-expand-dabbrev-visible  ; visible (parts of all) buffers
-            try-expand-dabbrev-all-buffers
+            try-expand-dabbrev-all-buffers ; (almost) all buffers (see `hippie-expand-ignore-buffers')
             try-expand-dabbrev-from-kill ; kill ring
             try-complete-file-name-partially ; file names
             try-complete-file-name
@@ -14389,11 +14389,41 @@ printing on Windows.
 ;;** Web search
 
   (leuven--section "Web search")
+#+end_src
 
+- ~C-c g SPC~ ::
+     ~google-this-region~
+- ~C-c g n~ ::
+     ~google-this-noconfirm~
+- ~C-c g t~ ::
+     ~google-this~
+
+#+begin_src emacs-lisp
   (with-eval-after-load "google-this-autoloads"
-    (setq google-this-keybind (kbd "C-c g"))
-    (google-this-mode 1))
 
+    ;; Keybinding under which `google-this-mode-submap' is assigned.
+    (setq google-this-keybind (kbd "C-c g"))
+
+    ;; Enable Google-This mode.
+    (google-this-mode 1))
+#+end_src
+
+When I want to Google most of a line, I call ~google-this-line~ and edit the
+prompt. And when I to Google the entire line, hitting ~RET~ one extra time doesn't
+quite bother me.
+
+If you'd like to skip confirmation, you can define the following function and
+bind it to a key:
+
+#+begin_src emacs-lisp :tangle no
+    (defun goog-this-line-noconfirm (prefix)
+      "Google the current line without confirmationl.
+    PREFIX determines quoting."
+      (interactive "P")
+      (google-this-line prefix 'noconfirm))
+#+end_src
+
+#+begin_src emacs-lisp
   (defun leuven-google-search-active-region-or-word-at-point ()
     "Create a Google search URL and send it to your web browser.
   If `transient-mark-mode' is non-nil and the mark is active, it defaults to the
@@ -15290,14 +15320,26 @@ functions implemented in Emacs Lisp.
     (interactive)
     (message "Updating Leuven...")
     (cd leuven--directory)
-    (let ((ret (shell-command-to-string "git pull --verbose --rebase")))
+    (let ((ret (shell-command-to-string "git pull --rebase")))
       (if (string-match "Already up-to-date." ret)
           (message "Configuration already up-to-date.")
         (princ ret)
         (sit-for 3)
         (message "Configuration updated. Restart Emacs to complete the process."))))
 
-  (defun leuven-update2 ()
+  (defun leuven-whats-up ()
+    "List last changes in Emacs Leuven."
+    (interactive)
+    (message "Fetching last changes in Leuven...")
+    (cd leuven--directory)
+    (let ((ret (shell-command-to-string "git fetch --verbose")))
+      (if (string-match "up to date" ret)
+          (message "Configuration already up-to-date.")
+        (setq ret (shell-command-to-string "git log HEAD..origin"))
+        (princ ret)
+        (sit-for 3))))
+
+  (defun leuven-update-show-commits ()
     "Update Leuven to its latest version."
     (interactive)
     (message "Fetching last changes in Leuven...")

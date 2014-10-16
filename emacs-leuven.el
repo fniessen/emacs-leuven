@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141016.1234
+;; Version: 20141016.1544
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141016.1234]--")
+(message "* --[ Loading Emacs Leuven 20141016.1544]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -7424,7 +7424,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
             try-expand-dabbrev          ; current buffer
             try-expand-dabbrev-visible  ; visible (parts of all) buffers
-            try-expand-dabbrev-all-buffers
+            try-expand-dabbrev-all-buffers ; (almost) all buffers (see `hippie-expand-ignore-buffers')
             try-expand-dabbrev-from-kill ; kill ring
             try-complete-file-name-partially ; file names
             try-complete-file-name
@@ -8967,7 +8967,11 @@ a clean buffer we're an order of magnitude laxer about checking."
   (leuven--section "Web search")
 
   (with-eval-after-load "google-this-autoloads"
+
+    ;; Keybinding under which `google-this-mode-submap' is assigned.
     (setq google-this-keybind (kbd "C-c g"))
+
+    ;; Enable Google-This mode.
     (google-this-mode 1))
 
   (defun leuven-google-search-active-region-or-word-at-point ()
@@ -9378,14 +9382,26 @@ a clean buffer we're an order of magnitude laxer about checking."
     (interactive)
     (message "Updating Leuven...")
     (cd leuven--directory)
-    (let ((ret (shell-command-to-string "git pull --verbose --rebase")))
+    (let ((ret (shell-command-to-string "git pull --rebase")))
       (if (string-match "Already up-to-date." ret)
           (message "Configuration already up-to-date.")
         (princ ret)
         (sit-for 3)
         (message "Configuration updated. Restart Emacs to complete the process."))))
 
-  (defun leuven-update2 ()
+  (defun leuven-whats-up ()
+    "List last changes in Emacs Leuven."
+    (interactive)
+    (message "Fetching last changes in Leuven...")
+    (cd leuven--directory)
+    (let ((ret (shell-command-to-string "git fetch --verbose")))
+      (if (string-match "up to date" ret)
+          (message "Configuration already up-to-date.")
+        (setq ret (shell-command-to-string "git log HEAD..origin"))
+        (princ ret)
+        (sit-for 3))))
+
+  (defun leuven-update-show-commits ()
     "Update Leuven to its latest version."
     (interactive)
     (message "Fetching last changes in Leuven...")
@@ -9400,7 +9416,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (shell-command-to-string "git pull --verbose --rebase")
           (message "Configuration updated. Restart Emacs to complete the process.")))))
 
-(message "* --[ Loaded Emacs Leuven 20141016.1235]--")
+(message "* --[ Loaded Emacs Leuven 20141016.1544]--")
 
 (provide 'emacs-leuven)
 
