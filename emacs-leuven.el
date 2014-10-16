@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141016.1626
+;; Version: 20141016.1930
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141016.1626]--")
+(message "* --[ Loading Emacs Leuven 20141016.1930]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -1408,12 +1408,14 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; ;; Maximum number of lines to keep in the *Emacs Log* buffer.
     ;; (setq ilog-log-max 10)
 
+    (defun leuven-display-interaction-log ()
+      "Display the Interaction-Log buffer."
+      (interactive)
+      (interaction-log-mode 1)
+      (display-buffer ilog-buffer-name)))
+
     ;; Hotkey for showing the log buffer.
-    (global-set-key (kbd "C-h C-l")
-      (lambda ()
-        (interactive)
-        (interaction-log-mode 1)
-        (display-buffer ilog-buffer-name))))
+    (global-set-key (kbd "C-h C-l") 'leuven-display-interaction-log))
 
 )                                       ; chapter 14 ends here
 
@@ -9401,7 +9403,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (setq ret (shell-command-to-string "git log HEAD..origin"))
           (princ ret)))))
 
-(message "* --[ Loaded Emacs Leuven 20141016.1626]--")
+(message "* --[ Loaded Emacs Leuven 20141016.1931]--")
 
 (provide 'emacs-leuven)
 
