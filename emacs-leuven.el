@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141016.1137
+;; Version: 20141016.1152
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141016.1137]--")
+(message "* --[ Loading Emacs Leuven 20141016.1152]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -1077,9 +1077,10 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; XXX Add key-chord ** to enable it on demand?
     )
 
-  (with-eval-after-load "color-identifiers-mode-autoloads"
-
-    (add-hook 'after-init-hook 'global-color-identifiers-mode))
+;; XXX Impact on Org's HTML export?
+  ;; (with-eval-after-load "color-identifiers-mode-autoloads"
+  ;;
+  ;;   (add-hook 'after-init-hook 'global-color-identifiers-mode))
 
   ;; Highlight uncommitted changes.
   (with-eval-after-load "diff-hl-autoloads"
@@ -9375,7 +9376,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (defun leuven-update ()
     "Update Leuven to its latest version."
     (interactive)
-    (when (y-or-n-p "Do you want to update Leuven? ")
+    ;; (when (y-or-n-p "Do you want to update Leuven? ")
       (message "Updating Leuven...")
       (cd leuven--directory)
       (let ((ret (shell-command-to-string "git pull --verbose --rebase")))
@@ -9383,9 +9384,11 @@ a clean buffer we're an order of magnitude laxer about checking."
             (message "Configuration already up-to-date.")
           (princ ret)
           (sit-for 3)
-          (message "Configuration updated. Restart Emacs to complete the process.")))))
+          (message "Configuration updated. Restart Emacs to complete the process.")))
+      ;; )
+    )
 
-(message "* --[ Loaded Emacs Leuven 20141016.1139]--")
+(message "* --[ Loaded Emacs Leuven 20141016.1153]--")
 
 (provide 'emacs-leuven)
 

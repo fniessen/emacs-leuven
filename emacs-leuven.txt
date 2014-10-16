@@ -1737,9 +1737,10 @@ XXX Check out ~light-symbol~.
 Color Identifiers Mode: *color* every *variable* in its own, consistent color.
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "color-identifiers-mode-autoloads"
-
-    (add-hook 'after-init-hook 'global-color-identifiers-mode))
+;; XXX Impact on Org's HTML export?
+  ;; (with-eval-after-load "color-identifiers-mode-autoloads"
+  ;;
+  ;;   (add-hook 'after-init-hook 'global-color-identifiers-mode))
 #+end_src
 
 ** Window Fringes
@@ -15284,7 +15285,7 @@ git status --untracked-files=no --porcelain
   (defun leuven-update ()
     "Update Leuven to its latest version."
     (interactive)
-    (when (y-or-n-p "Do you want to update Leuven? ")
+    ;; (when (y-or-n-p "Do you want to update Leuven? ")
       (message "Updating Leuven...")
       (cd leuven--directory)
       (let ((ret (shell-command-to-string "git pull --verbose --rebase")))
@@ -15292,7 +15293,9 @@ git status --untracked-files=no --porcelain
             (message "Configuration already up-to-date.")
           (princ ret)
           (sit-for 3)
-          (message "Configuration updated. Restart Emacs to complete the process.")))))
+          (message "Configuration updated. Restart Emacs to complete the process.")))
+      ;; )
+    )
 #+end_src
 
 Please address particular issues or suggestions *specifically*, using `M-x
