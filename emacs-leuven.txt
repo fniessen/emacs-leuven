@@ -15473,7 +15473,6 @@ tests.
 
 # This is for the sake of Emacs.
 # Local Variables:
-# coding-system-for-write: utf-8-unix
 # End:
 
 # emacs-leuven.txt ends here
