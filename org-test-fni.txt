@@ -10,7 +10,7 @@
 #+PROPERTY:  padline yes
 #+PROPERTY:  eval no
 
-#+SETUPFILE: ~/src/org-style/setup/bigblow-local-abs.setup
+#+SETUPFILE: ./bigblow-pirilampo.setup
 
 * Header
 
