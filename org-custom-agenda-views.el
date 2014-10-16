@@ -65,6 +65,7 @@
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'notdeadline))
                               (org-agenda-sorting-strategy '(priority-down))))
+                                        ; XXX Timed deadlines NOT shown!!!
                   ;; list of all TODO entries with deadline before today
                   (tags-todo "DEADLINE<\"<+0d>\""
                              ((org-agenda-overriding-header "OVERDUE")

@@ -12,28 +12,74 @@
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
   <link rel="stylesheet" type="text/css" href=
-  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/htmlize.css" />
+  "http://www.pirilampo.org/styles/bigblow/css/htmlize.css" />
   <link rel="stylesheet" type="text/css" href=
-  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/bigblow.css" />
+  "http://www.pirilampo.org/styles/bigblow/css/bigblow.css" />
   <link rel="stylesheet" type="text/css" href=
-  "file:///D:/Users/fni/src/org-style/styles/bigblow/css/hideshow.css" />
+  "http://www.pirilampo.org/styles/bigblow/css/hideshow.css" />
 <script type="text/javascript" src=
-"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery-1.9.1.min.js">
+"http://www.pirilampo.org/styles/bigblow/js/jquery-1.11.0.min.js">
 </script>
 <script type="text/javascript" src=
-"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery-ui-1.10.2.min.js">
+"http://www.pirilampo.org/styles/bigblow/js/jquery-ui-1.10.2.min.js">
 </script>
 <script type="text/javascript" src=
-"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery.localscroll-min.js">
+"http://www.pirilampo.org/styles/bigblow/js/jquery.localscroll-min.js">
 </script>
 <script type="text/javascript" src=
-"file:///D:/Users/fni/src/org-style/styles/bigblow/js/jquery.scrollTo-1.4.3.1-min.js">
+"http://www.pirilampo.org/styles/bigblow/js/jquery.scrollTo-1.4.3.1-min.js">
 </script>
 <script type="text/javascript" src=
-"file:///D:/Users/fni/src/org-style/styles/bigblow/js/bigblow.js">
+"http://www.pirilampo.org/styles/bigblow/js/jquery.zclip.min.js">
 </script>
 <script type="text/javascript" src=
-"file:///D:/Users/fni/src/org-style/styles/bigblow/js/hideshow.js">
+"http://www.pirilampo.org/styles/bigblow/js/bigblow.js">
+</script>
+<script type="text/javascript" src=
+"http://www.pirilampo.org/styles/bigblow/js/hideshow.js">
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js">
+</script>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
 </script>
 </head>
 
@@ -46,182 +92,184 @@
 
       <div id="text-table-of-contents">
         <ul>
-          <li><a href="#sec-1">Key bindings</a></li>
+          <li><a href="#unnumbered-7">Key bindings</a></li>
 
-          <li><a href="#sec-2">Description</a></li>
+          <li><a href="#unnumbered-8">Description</a></li>
 
-          <li><a href="#sec-3">Views</a></li>
+          <li><a href="#unnumbered-9">Views</a></li>
 
           <li>
-            <a href="#sec-4">COLLECT</a>
+            <a href="#unnumbered-10">COLLECT</a>
 
             <ul>
-              <li><a href="#sec-4-1">CollectBox</a></li>
+              <li><a href="#unnumbered-11">CollectBox</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#sec-5">FOCUS on my active tasks</a>
+            <a href="#unnumbered-12">FOCUS on my active tasks</a>
 
             <ul>
-              <li><a href="#sec-5-1">Today</a></li>
+              <li><a href="#unnumbered-13">Today</a></li>
 
-              <li><a href="#sec-5-2">Hotlist</a></li>
+              <li><a href="#unnumbered-15">Hotlist</a></li>
 
-              <li><a href="#sec-5-3"><span class="todo nilTODO">TODO</span> Hot
-              N Fast</a></li>
+              <li><a href="#unnumbered-16"><span class=
+              "todo nilTODO">TODO</span> Hot N Fast</a></li>
 
-              <li><a href="#sec-5-4">Scheduled</a></li>
+              <li><a href="#unnumbered-17">Scheduled</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#sec-6">REVIEW my work</a>
+            <a href="#unnumbered-18">REVIEW my work</a>
 
             <ul>
               <li>
-                <a href="#sec-6-1">All active tasks</a>
+                <a href="#unnumbered-19">All active tasks</a>
 
                 <ul>
                   <li>
-                    <a href="#sec-6-1-1">Sorted by due date</a>
+                    <a href="#unnumbered-20">Sorted by due date</a>
 
                     <ul>
-                      <li><a href="#sec-6-1-1-1">All tasks (tags view
+                      <li><a href="#unnumbered-21">All tasks (tags view
                       command)</a></li>
 
-                      <li><a href="#sec-6-1-1-2">All tasks (agenda view
+                      <li><a href="#unnumbered-22">All tasks (agenda view
                       command)</a></li>
                     </ul>
                   </li>
 
-                  <li><a href="#sec-6-1-2">Sorted by priority</a></li>
+                  <li><a href="#unnumbered-23">Sorted by priority</a></li>
                 </ul>
               </li>
 
-              <li><a href="#sec-6-2">Time tracking</a></li>
+              <li><a href="#unnumbered-24">Time tracking</a></li>
 
-              <li><a href="#sec-6-3">Timesheet</a></li>
+              <li><a href="#unnumbered-25">Timesheet</a></li>
 
-              <li><a href="#sec-6-4">Expense reporting</a></li>
+              <li><a href="#unnumbered-26">Expense reporting</a></li>
 
-              <li><a href="#sec-6-5">Calendar</a></li>
+              <li><a href="#unnumbered-27">Calendar</a></li>
 
-              <li><a href="#sec-6-6">Completed Tasks</a></li>
+              <li><a href="#unnumbered-28">Completed Tasks</a></li>
 
-              <li><a href="#sec-6-7">Cleanup</a></li>
+              <li><a href="#unnumbered-29">Cleanup</a></li>
 
-              <li><a href="#sec-6-8">Recent items</a></li>
+              <li><a href="#unnumbered-30">Recent items</a></li>
 
-              <li><a href="#sec-6-9">Daily task review</a></li>
+              <li><a href="#unnumbered-31">Daily task review</a></li>
 
-              <li><a href="#sec-6-10">Weekly task review</a></li>
+              <li><a href="#unnumbered-32">Weekly task review</a></li>
 
-              <li><a href="#sec-6-11">Next</a></li>
+              <li><a href="#unnumbered-33">Next</a></li>
 
-              <li><a href="#sec-6-12">Future</a></li>
+              <li><a href="#unnumbered-34">Future</a></li>
 
-              <li><a href="#sec-6-13">Ticklers</a></li>
+              <li><a href="#unnumbered-35">Ticklers</a></li>
 
-              <li><a href="#sec-6-14">Waiting for</a></li>
+              <li><a href="#unnumbered-36">Waiting for</a></li>
 
-              <li><a href="#sec-6-15">Projects</a></li>
+              <li><a href="#unnumbered-37">Projects</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#sec-7">MORE</a>
+            <a href="#unnumbered-38">MORE</a>
 
             <ul>
-              <li><a href="#sec-7-1">Assigned to me</a></li>
+              <li><a href="#unnumbered-39">Assigned to me</a></li>
 
-              <li><a href="#sec-7-2">Tasks by assignee</a></li>
+              <li><a href="#unnumbered-40">Tasks by assignee</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#sec-8">EMAIL notifications</a>
+            <a href="#unnumbered-41">EMAIL notifications</a>
 
             <ul>
-              <li><a href="#sec-8-1">Task assigned</a></li>
+              <li><a href="#unnumbered-42">Task assigned</a></li>
 
-              <li><a href="#sec-8-2">Email list</a></li>
+              <li><a href="#unnumbered-43">Email list</a></li>
 
-              <li><a href="#sec-8-3">Email the agenda buffer</a></li>
+              <li><a href="#unnumbered-44">Email the agenda buffer</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#sec-9">EXPORT</a>
+            <a href="#unnumbered-45">EXPORT</a>
 
             <ul>
-              <li><a href="#sec-9-1">Print list</a></li>
+              <li><a href="#unnumbered-46">Print list</a></li>
 
-              <li><a href="#sec-9-2">Export tasks lists as CSV files</a></li>
+              <li><a href="#unnumbered-47">Export tasks lists as CSV
+              files</a></li>
 
-              <li><a href="#sec-9-3">Upload on a Web site</a></li>
+              <li><a href="#unnumbered-48">Upload on a Web site</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#sec-10">VISUALIZE</a>
+            <a href="#unnumbered-49">VISUALIZE</a>
 
             <ul>
-              <li><a href="#sec-10-1">Productivity</a></li>
+              <li><a href="#unnumbered-50">Productivity</a></li>
 
-              <li><a href="#sec-10-2">Visual report</a></li>
+              <li><a href="#unnumbered-51">Visual report</a></li>
             </ul>
           </li>
 
-          <li><a href="#sec-11">ARCHIVE</a></li>
+          <li><a href="#unnumbered-52">ARCHIVE</a></li>
 
           <li>
-            <a href="#sec-12">REFERENCE</a>
+            <a href="#unnumbered-53">REFERENCE</a>
 
             <ul>
-              <li><a href="#sec-12-1">Search</a></li>
+              <li><a href="#unnumbered-54">Search</a></li>
 
-              <li><a href="#sec-12-2">Notes</a></li>
+              <li><a href="#unnumbered-55">Notes</a></li>
             </ul>
           </li>
 
-          <li><a href="#sec-13">Task markers (in the current buffer)</a></li>
+          <li><a href="#unnumbered-56">Task markers (in the current
+          buffer)</a></li>
 
-          <li><a href="#sec-14">Buggy commands</a></li>
+          <li><a href="#unnumbered-57">Buggy commands</a></li>
 
-          <li><a href="#sec-15">Unused code</a></li>
+          <li><a href="#unnumbered-58">Unused code</a></li>
 
-          <li><a href="#sec-16">Test cases</a></li>
+          <li><a href="#unnumbered-59">Test cases</a></li>
 
           <li>
-            <a href="#sec-17">Org mode</a>
+            <a href="#unnumbered-60">Org mode</a>
 
             <ul>
-              <li><a href="#sec-17-1">Lists</a></li>
+              <li><a href="#unnumbered-61">Lists</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#sec-18">Tips and tricks</a>
+            <a href="#unnumbered-62">Tips and tricks</a>
 
             <ul>
-              <li><a href="#sec-18-1">DEADLINE</a></li>
+              <li><a href="#unnumbered-63">DEADLINE</a></li>
 
-              <li><a href="#sec-18-2">Tasks with a time component</a></li>
+              <li><a href="#unnumbered-64">Tasks with a time component</a></li>
 
-              <li><a href="#sec-18-3">Cas d’erreurs</a></li>
+              <li><a href="#unnumbered-65">Cas d’erreurs</a></li>
             </ul>
           </li>
 
-          <li><a href="#sec-19">Footer</a></li>
+          <li><a href="#unnumbered-66">Footer</a></li>
         </ul>
       </div>
     </div>
 
-    <div id="outline-container-sec-1" class="outline-2">
-      <h2 id="sec-1">Key bindings</h2>
+    <div id="outline-container-unnumbered-7" class="outline-2">
+      <h2 id="unnumbered-7">Key bindings</h2>
 
-      <div class="outline-text-2" id="text-1">
+      <div class="outline-text-2" id="text-unnumbered-7">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;; </span><span class=
@@ -310,10 +358,10 @@
       </div>
     </div>
 
-    <div id="outline-container-sec-2" class="outline-2">
-      <h2 id="sec-2">Description</h2>
+    <div id="outline-container-unnumbered-8" class="outline-2">
+      <h2 id="unnumbered-8">Description</h2>
 
-      <div class="outline-text-2" id="text-2">
+      <div class="outline-text-2" id="text-unnumbered-8">
         <p>Vocabulary:</p>
 
         <ul class="org-ul">
@@ -380,10 +428,10 @@
       </div>
     </div>
 
-    <div id="outline-container-sec-3" class="outline-2">
-      <h2 id="sec-3">Views</h2>
+    <div id="outline-container-unnumbered-9" class="outline-2">
+      <h2 id="unnumbered-9">Views</h2>
 
-      <div class="outline-text-2" id="text-3">
+      <div class="outline-text-2" id="text-unnumbered-9">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
@@ -410,10 +458,10 @@
       </div>
     </div>
 
-    <div id="outline-container-sec-4" class="outline-2">
-      <h2 id="sec-4">COLLECT</h2>
+    <div id="outline-container-unnumbered-10" class="outline-2">
+      <h2 id="unnumbered-10">COLLECT</h2>
 
-      <div class="outline-text-2" id="text-4">
+      <div class="outline-text-2" id="text-unnumbered-10">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   (add-to-list 'org-agenda-custom-commands
@@ -423,10 +471,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-4-1" class="outline-3">
-        <h3 id="sec-4-1">CollectBox</h3>
+      <div id="outline-container-unnumbered-11" class="outline-3">
+        <h3 id="unnumbered-11">CollectBox</h3>
 
-        <div class="outline-text-3" id="text-4-1">
+        <div class="outline-text-3" id="text-unnumbered-11">
           <p>The CollectBox is the default place where you collect your
           thoughts.</p>
 
@@ -446,10 +494,10 @@
       </div>
     </div>
 
-    <div id="outline-container-sec-5" class="outline-2">
-      <h2 id="sec-5">FOCUS on my active tasks</h2>
+    <div id="outline-container-unnumbered-12" class="outline-2">
+      <h2 id="unnumbered-12">FOCUS on my active tasks</h2>
 
-      <div class="outline-text-2" id="text-5">
+      <div class="outline-text-2" id="text-unnumbered-12">
         <p>My work = tasks owned by me (“my tasks”) + tasks assigned to me.</p>
 
         <div class="org-src-container">
@@ -461,12 +509,12 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-5-1" class="outline-3">
-        <h3 id="sec-5-1">Today</h3>
+      <div id="outline-container-unnumbered-13" class="outline-3">
+        <h3 id="unnumbered-13">Today</h3>
 
-        <div class="outline-text-3" id="text-5-1">
+        <div class="outline-text-3" id="text-unnumbered-13">
           <p>An everyday objective should be to empty this list first, by any
-          mean. For example, start every morning by:</p>
+          mean. For example, start <i>every morning</i> by:</p>
 
           <ul class="org-ul">
             <li>scheduling tasks to another day if you already know it can’t be
@@ -532,6 +580,10 @@
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'notdeadline))
                               (org-agenda-sorting-strategy '(priority-down))))
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
+"org-comment"> Timed deadlines NOT shown!!!</span>
                   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">list of all </span><span class=
 "org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
@@ -626,10 +678,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-5-2" class="outline-3">
-        <h3 id="sec-5-2">Hotlist</h3>
+      <div id="outline-container-unnumbered-15" class="outline-3">
+        <h3 id="unnumbered-15">Hotlist</h3>
 
-        <div class="outline-text-3" id="text-5-2">
+        <div class="outline-text-3" id="text-unnumbered-15">
           <p>The <b>hotlist</b> is a convenient and smart way to see (in a
           single, clear overview) the <b>most urgent and important tasks</b>
           for you to be working on right now.</p>
@@ -729,10 +781,11 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-5-3" class="outline-3">
-        <h3 id="sec-5-3"><span class="todo TODO">TODO</span> Hot N Fast</h3>
+      <div id="outline-container-unnumbered-16" class="outline-3">
+        <h3 id="unnumbered-16"><span class="todo TODO">TODO</span> Hot N
+        Fast</h3>
 
-        <div class="outline-text-3" id="text-5-3">
+        <div class="outline-text-3" id="text-unnumbered-16">
           <p>The <b>Hot N Fast</b> list is everything on the Hotlist that takes
           less than 10 minutes. Tasks without a time estimate will NOT show up
           in this list.</p>
@@ -788,10 +841,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-5-4" class="outline-3">
-        <h3 id="sec-5-4">Scheduled</h3>
+      <div id="outline-container-unnumbered-17" class="outline-3">
+        <h3 id="unnumbered-17">Scheduled</h3>
 
-        <div class="outline-text-3" id="text-5-4">
+        <div class="outline-text-3" id="text-unnumbered-17">
           <div class="warning">
             <p>A deadline with no scheduling information has an implicit
             scheduled date equal to the deadline date (or, in some tools like
@@ -801,10 +854,10 @@
       </div>
     </div>
 
-    <div id="outline-container-sec-6" class="outline-2">
-      <h2 id="sec-6">REVIEW my work</h2>
+    <div id="outline-container-unnumbered-18" class="outline-2">
+      <h2 id="unnumbered-18">REVIEW my work</h2>
 
-      <div class="outline-text-2" id="text-6">
+      <div class="outline-text-2" id="text-unnumbered-18">
         <p>See <a href=
         "http://www.omnigroup.com/ftp/pub/software/macosx/extras/omnifocus/gtdandomnifocus.pdf">
         http://www.omnigroup.com/ftp/pub/software/macosx/extras/omnifocus/gtdandomnifocus.pdf</a>
@@ -823,10 +876,10 @@
         monthly. These review tasks get the <code>gtd</code> tag.</p>
       </div>
 
-      <div id="outline-container-sec-6-1" class="outline-3">
-        <h3 id="sec-6-1">All active tasks</h3>
+      <div id="outline-container-unnumbered-19" class="outline-3">
+        <h3 id="unnumbered-19">All active tasks</h3>
 
-        <div class="outline-text-3" id="text-6-1">
+        <div class="outline-text-3" id="text-unnumbered-19">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (add-to-list 'org-agenda-custom-commands
@@ -836,10 +889,10 @@
           </div>
         </div>
 
-        <div id="outline-container-sec-6-1-1" class="outline-4">
-          <h4 id="sec-6-1-1">Sorted by due date</h4>
+        <div id="outline-container-unnumbered-20" class="outline-4">
+          <h4 id="unnumbered-20">Sorted by due date</h4>
 
-          <div class="outline-text-4" id="text-6-1-1">
+          <div class="outline-text-4" id="text-unnumbered-20">
             <p>All <b>tasks</b>, grouped by <b>due date</b>:</p>
 
             <ul class="org-ul">
@@ -859,10 +912,10 @@
             </ul>
           </div>
 
-          <div id="outline-container-sec-6-1-1-1" class="outline-5">
-            <h5 id="sec-6-1-1-1">All tasks (tags view command)</h5>
+          <div id="outline-container-unnumbered-21" class="outline-5">
+            <h5 id="unnumbered-21">All tasks (tags view command)</h5>
 
-            <div class="outline-text-5" id="text-6-1-1-1">
+            <div class="outline-text-5" id="text-unnumbered-21">
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
   (add-to-list 'org-agenda-custom-commands
@@ -976,10 +1029,10 @@
             </div>
           </div>
 
-          <div id="outline-container-sec-6-1-1-2" class="outline-5">
-            <h5 id="sec-6-1-1-2">All tasks (agenda view command)</h5>
+          <div id="outline-container-unnumbered-22" class="outline-5">
+            <h5 id="unnumbered-22">All tasks (agenda view command)</h5>
 
-            <div class="outline-text-5" id="text-6-1-1-2">
+            <div class="outline-text-5" id="text-unnumbered-22">
               <table class="inlinetask" width="100%">
                 <tr>
                   <td valign="top"><b><span class=
@@ -1216,10 +1269,10 @@
           </div>
         </div>
 
-        <div id="outline-container-sec-6-1-2" class="outline-4">
-          <h4 id="sec-6-1-2">Sorted by priority</h4>
+        <div id="outline-container-unnumbered-23" class="outline-4">
+          <h4 id="unnumbered-23">Sorted by priority</h4>
 
-          <div class="outline-text-4" id="text-6-1-2">
+          <div class="outline-text-4" id="text-unnumbered-23">
             <p>All <b>tasks</b>, grouped by <b>priority</b>:</p>
 
             <ul class="org-ul">
@@ -1262,10 +1315,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-6-2" class="outline-3">
-        <h3 id="sec-6-2">Time tracking</h3>
+      <div id="outline-container-unnumbered-24" class="outline-3">
+        <h3 id="unnumbered-24">Time tracking</h3>
 
-        <div class="outline-text-3" id="text-6-2">
+        <div class="outline-text-3" id="text-unnumbered-24">
           <p>Generate a time tracking report: <a href=
           "https://confluence.atlassian.com/display/JIRA/Time+Tracking+Report">https://confluence.atlassian.com/display/JIRA/Time+Tracking+Report</a></p>
 
@@ -1286,10 +1339,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-6-3" class="outline-3">
-        <h3 id="sec-6-3">Timesheet</h3>
+      <div id="outline-container-unnumbered-25" class="outline-3">
+        <h3 id="unnumbered-25">Timesheet</h3>
 
-        <div class="outline-text-3" id="text-6-3">
+        <div class="outline-text-3" id="text-unnumbered-25">
           <div class="note">
             <p><code>org-timeline</code> has weaknesses and although not
             officially deprecated, should be best avoided. See Carsten’s
@@ -1340,17 +1393,35 @@
                   (org-agenda-time-grid nil))) t)
 </pre>
           </div>
+
+          <p>I believe what you are seeking is a highly customized agenda view,
+          which is possible, but will require an investment of a substantial
+          amount of time modifying the source code of org-agenda-list and the
+          functions it uses – e.g., org-agenda-get-…. Rather than using
+          something like the org-agenda-list family of functions, perhaps
+          consider using either a tag / property search (i.e., org-tags-view)
+          or a word search (i.e., org-search-view) using the built-in agenda
+          commands: orgmode.org/worg/org-tutorials/advanced-searching.html Both
+          of those searches do not insert dividers.</p>
+
+          <p>If you would like to modify the source code for org-agenda-list,
+          have a look at the section of code: (if (stringp
+          org-agenda-format-date) (format-time-string org-agenda-format-date
+          (org-time-from-absolute date)) (funcall org-agenda-format-date date))
+          “\n”). You may not need the text-properties that follow if you
+          eliminate the date . . . I would suggest creating an entirely new
+          function with a different name and leave org-agenda-list as-is.</p>
         </div>
       </div>
 
-      <div id="outline-container-sec-6-4" class="outline-3">
-        <h3 id="sec-6-4">Expense reporting</h3>
+      <div id="outline-container-unnumbered-26" class="outline-3">
+        <h3 id="unnumbered-26">Expense reporting</h3>
       </div>
 
-      <div id="outline-container-sec-6-5" class="outline-3">
-        <h3 id="sec-6-5">Calendar</h3>
+      <div id="outline-container-unnumbered-27" class="outline-3">
+        <h3 id="unnumbered-27">Calendar</h3>
 
-        <div class="outline-text-3" id="text-6-5">
+        <div class="outline-text-3" id="text-unnumbered-27">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (add-to-list 'org-agenda-custom-commands
@@ -1426,10 +1497,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-6-6" class="outline-3">
-        <h3 id="sec-6-6">Completed Tasks</h3>
+      <div id="outline-container-unnumbered-28" class="outline-3">
+        <h3 id="unnumbered-28">Completed Tasks</h3>
 
-        <div class="outline-text-3" id="text-6-6">
+        <div class="outline-text-3" id="text-unnumbered-28">
           <p>To monitor your progress, you can view what tasks have been
           <b>completed recently</b> (in this project) in the last day, week, or
           two weeks.</p>
@@ -1536,10 +1607,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-6-7" class="outline-3">
-        <h3 id="sec-6-7">Cleanup</h3>
+      <div id="outline-container-unnumbered-29" class="outline-3">
+        <h3 id="unnumbered-29">Cleanup</h3>
 
-        <div class="outline-text-3" id="text-6-7">
+        <div class="outline-text-3" id="text-unnumbered-29">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (add-to-list 'org-agenda-custom-commands
@@ -1572,10 +1643,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-6-8" class="outline-3">
-        <h3 id="sec-6-8">Recent items</h3>
+      <div id="outline-container-unnumbered-30" class="outline-3">
+        <h3 id="unnumbered-30">Recent items</h3>
 
-        <div class="outline-text-3" id="text-6-8">
+        <div class="outline-text-3" id="text-unnumbered-30">
           <table class="inlinetask" width="100%">
             <tr>
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
@@ -1624,10 +1695,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-6-9" class="outline-3">
-        <h3 id="sec-6-9">Daily task review</h3>
+      <div id="outline-container-unnumbered-31" class="outline-3">
+        <h3 id="unnumbered-31">Daily task review</h3>
 
-        <div class="outline-text-3" id="text-6-9">
+        <div class="outline-text-3" id="text-unnumbered-31">
           <p>Take a moment to plan your day:</p>
 
           <ul class="org-ul">
@@ -1659,10 +1730,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-6-10" class="outline-3">
-        <h3 id="sec-6-10">Weekly task review</h3>
+      <div id="outline-container-unnumbered-32" class="outline-3">
+        <h3 id="unnumbered-32">Weekly task review</h3>
 
-        <div class="outline-text-3" id="text-6-10">
+        <div class="outline-text-3" id="text-unnumbered-32">
           <ol class="org-ol">
             <li>Clear inbox for collecting</li>
 
@@ -1791,10 +1862,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-6-11" class="outline-3">
-        <h3 id="sec-6-11">Next</h3>
+      <div id="outline-container-unnumbered-33" class="outline-3">
+        <h3 id="unnumbered-33">Next</h3>
 
-        <div class="outline-text-3" id="text-6-11">
+        <div class="outline-text-3" id="text-unnumbered-33">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (add-to-list 'org-agenda-custom-commands
@@ -1825,10 +1896,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-6-12" class="outline-3">
-        <h3 id="sec-6-12">Future</h3>
+      <div id="outline-container-unnumbered-34" class="outline-3">
+        <h3 id="unnumbered-34">Future</h3>
 
-        <div class="outline-text-3" id="text-6-12">
+        <div class="outline-text-3" id="text-unnumbered-34">
           <p>FIXME C’est scheduled qu’il faut checker, plutôt que deadline
           ?</p>
 
@@ -1864,10 +1935,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-6-13" class="outline-3">
-        <h3 id="sec-6-13">Ticklers</h3>
+      <div id="outline-container-unnumbered-35" class="outline-3">
+        <h3 id="unnumbered-35">Ticklers</h3>
 
-        <div class="outline-text-3" id="text-6-13">
+        <div class="outline-text-3" id="text-unnumbered-35">
           <p>If you can’t get to work on something right now, but it’s not too
           far o! in the distance, you probably have a Tickler item on your
           hands. A tickler item, in Omni- Focus, is an item with a start date
@@ -1883,10 +1954,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-6-14" class="outline-3">
-        <h3 id="sec-6-14">Waiting for</h3>
+      <div id="outline-container-unnumbered-36" class="outline-3">
+        <h3 id="unnumbered-36">Waiting for</h3>
 
-        <div class="outline-text-3" id="text-6-14">
+        <div class="outline-text-3" id="text-unnumbered-36">
           <p>Only allow one assignee per task. See <a href=
           "https://asana.com/guide/learn/tasks/assigning">https://asana.com/guide/learn/tasks/assigning</a>
           for techniques when this can’t be done.</p>
@@ -1909,10 +1980,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-6-15" class="outline-3">
-        <h3 id="sec-6-15">Projects</h3>
+      <div id="outline-container-unnumbered-37" class="outline-3">
+        <h3 id="unnumbered-37">Projects</h3>
 
-        <div class="outline-text-3" id="text-6-15">
+        <div class="outline-text-3" id="text-unnumbered-37">
           <p>A <b>project</b> is any desired goal that requires <b>more than
           one action</b> to achieve.</p>
 
@@ -1976,10 +2047,10 @@
       </div>
     </div>
 
-    <div id="outline-container-sec-7" class="outline-2">
-      <h2 id="sec-7">MORE</h2>
+    <div id="outline-container-unnumbered-38" class="outline-2">
+      <h2 id="unnumbered-38">MORE</h2>
 
-      <div class="outline-text-2" id="text-7">
+      <div class="outline-text-2" id="text-unnumbered-38">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   (add-to-list 'org-agenda-custom-commands
@@ -1989,10 +2060,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-7-1" class="outline-3">
-        <h3 id="sec-7-1">Assigned to me</h3>
+      <div id="outline-container-unnumbered-39" class="outline-3">
+        <h3 id="unnumbered-39">Assigned to me</h3>
 
-        <div class="outline-text-3" id="text-7-1">
+        <div class="outline-text-3" id="text-unnumbered-39">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
@@ -2015,20 +2086,20 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-7-2" class="outline-3">
-        <h3 id="sec-7-2">Tasks by assignee</h3>
+      <div id="outline-container-unnumbered-40" class="outline-3">
+        <h3 id="unnumbered-40">Tasks by assignee</h3>
       </div>
     </div>
 
-    <div id="outline-container-sec-8" class="outline-2">
-      <h2 id="sec-8">EMAIL notifications</h2>
+    <div id="outline-container-unnumbered-41" class="outline-2">
+      <h2 id="unnumbered-41">EMAIL notifications</h2>
 
-      <div class="outline-text-2" id="text-8"></div>
+      <div class="outline-text-2" id="text-unnumbered-41"></div>
 
-      <div id="outline-container-sec-8-1" class="outline-3">
-        <h3 id="sec-8-1">Task assigned</h3>
+      <div id="outline-container-unnumbered-42" class="outline-3">
+        <h3 id="unnumbered-42">Task assigned</h3>
 
-        <div class="outline-text-3" id="text-8-1">
+        <div class="outline-text-3" id="text-unnumbered-42">
           <div class="org-src-container">
             <pre class="src src-text">
     Azendoo | Notification
@@ -2046,10 +2117,10 @@ This notification has been sent to you via Azendoo, do not reply.
         </div>
       </div>
 
-      <div id="outline-container-sec-8-2" class="outline-3">
-        <h3 id="sec-8-2">Email list</h3>
+      <div id="outline-container-unnumbered-43" class="outline-3">
+        <h3 id="unnumbered-43">Email list</h3>
 
-        <div class="outline-text-3" id="text-8-2">
+        <div class="outline-text-3" id="text-unnumbered-43">
           <p>You can receive an email with your daily planner every morning at
           8:00 AM to help you getting started in the morning.</p>
 
@@ -2070,10 +2141,10 @@ This notification has been sent to you via Azendoo, do not reply.
         </div>
       </div>
 
-      <div id="outline-container-sec-8-3" class="outline-3">
-        <h3 id="sec-8-3">Email the agenda buffer</h3>
+      <div id="outline-container-unnumbered-44" class="outline-3">
+        <h3 id="unnumbered-44">Email the agenda buffer</h3>
 
-        <div class="outline-text-3" id="text-8-3">
+        <div class="outline-text-3" id="text-unnumbered-44">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 (<span class="org-keyword">defun</span> <span class=
@@ -2094,17 +2165,17 @@ This notification has been sent to you via Azendoo, do not reply.
       </div>
     </div>
 
-    <div id="outline-container-sec-9" class="outline-2">
-      <h2 id="sec-9">EXPORT</h2>
+    <div id="outline-container-unnumbered-45" class="outline-2">
+      <h2 id="unnumbered-45">EXPORT</h2>
 
-      <div class="outline-text-2" id="text-9">
+      <div class="outline-text-2" id="text-unnumbered-45">
         <p>Exporting your personal or team task lists.</p>
       </div>
 
-      <div id="outline-container-sec-9-1" class="outline-3">
-        <h3 id="sec-9-1">Print list</h3>
+      <div id="outline-container-unnumbered-46" class="outline-3">
+        <h3 id="unnumbered-46">Print list</h3>
 
-        <div class="outline-text-3" id="text-9-1">
+        <div class="outline-text-3" id="text-unnumbered-46">
           <p>The <b>exported agenda views</b> are not <b>stored</b> when you
           use one of those commands interactively because this might use too
           much overhead. Instead, there is a special command to produce all
@@ -2181,14 +2252,14 @@ This notification has been sent to you via Azendoo, do not reply.
         </div>
       </div>
 
-      <div id="outline-container-sec-9-2" class="outline-3">
-        <h3 id="sec-9-2">Export tasks lists as CSV files</h3>
+      <div id="outline-container-unnumbered-47" class="outline-3">
+        <h3 id="unnumbered-47">Export tasks lists as CSV files</h3>
       </div>
 
-      <div id="outline-container-sec-9-3" class="outline-3">
-        <h3 id="sec-9-3">Upload on a Web site</h3>
+      <div id="outline-container-unnumbered-48" class="outline-3">
+        <h3 id="unnumbered-48">Upload on a Web site</h3>
 
-        <div class="outline-text-3" id="text-9-3">
+        <div class="outline-text-3" id="text-unnumbered-48">
           <p>I upload my agenda on a website, so I can access it from multiple
           devices. This works nicely with the following in a cron job:</p>
 
@@ -2202,10 +2273,10 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
       </div>
     </div>
 
-    <div id="outline-container-sec-10" class="outline-2">
-      <h2 id="sec-10">VISUALIZE</h2>
+    <div id="outline-container-unnumbered-49" class="outline-2">
+      <h2 id="unnumbered-49">VISUALIZE</h2>
 
-      <div class="outline-text-2" id="text-10">
+      <div class="outline-text-2" id="text-unnumbered-49">
         <p>Create custom reports with live data.</p>
 
         <p>See <a href=
@@ -2225,10 +2296,10 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
         </ul>
       </div>
 
-      <div id="outline-container-sec-10-1" class="outline-3">
-        <h3 id="sec-10-1">Productivity</h3>
+      <div id="outline-container-unnumbered-50" class="outline-3">
+        <h3 id="unnumbered-50">Productivity</h3>
 
-        <div class="outline-text-3" id="text-10-1">
+        <div class="outline-text-3" id="text-unnumbered-50">
           <p>The <b>Visualize productivity</b> view shows a graphical
           representation of your productivity in the last 2 weeks.</p>
 
@@ -2237,20 +2308,20 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
         </div>
       </div>
 
-      <div id="outline-container-sec-10-2" class="outline-3">
-        <h3 id="sec-10-2">Visual report</h3>
+      <div id="outline-container-unnumbered-51" class="outline-3">
+        <h3 id="unnumbered-51">Visual report</h3>
 
-        <div class="outline-text-3" id="text-10-2">
+        <div class="outline-text-3" id="text-unnumbered-51">
           <p>Stunning report on <a href=
           "https://weekdone.com/basecamp/">https://weekdone.com/basecamp/</a>.</p>
         </div>
       </div>
     </div>
 
-    <div id="outline-container-sec-11" class="outline-2">
-      <h2 id="sec-11">ARCHIVE</h2>
+    <div id="outline-container-unnumbered-52" class="outline-2">
+      <h2 id="unnumbered-52">ARCHIVE</h2>
 
-      <div class="outline-text-2" id="text-11">
+      <div class="outline-text-2" id="text-unnumbered-52">
         <p>Archiving a project (or action) consists in hiding its contents from
         view (NOT from search).</p>
 
@@ -2278,10 +2349,10 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
       </div>
     </div>
 
-    <div id="outline-container-sec-12" class="outline-2">
-      <h2 id="sec-12">REFERENCE</h2>
+    <div id="outline-container-unnumbered-53" class="outline-2">
+      <h2 id="unnumbered-53">REFERENCE</h2>
 
-      <div class="outline-text-2" id="text-12">
+      <div class="outline-text-2" id="text-unnumbered-53">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   (add-to-list 'org-agenda-custom-commands
@@ -2291,10 +2362,10 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
         </div>
       </div>
 
-      <div id="outline-container-sec-12-1" class="outline-3">
-        <h3 id="sec-12-1">Search</h3>
+      <div id="outline-container-unnumbered-54" class="outline-3">
+        <h3 id="unnumbered-54">Search</h3>
 
-        <div class="outline-text-3" id="text-12-1">
+        <div class="outline-text-3" id="text-unnumbered-54">
           <p>Search any word or regexp within your task name or in the note
           field:</p>
 
@@ -2339,10 +2410,10 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
         </div>
       </div>
 
-      <div id="outline-container-sec-12-2" class="outline-3">
-        <h3 id="sec-12-2">Notes</h3>
+      <div id="outline-container-unnumbered-55" class="outline-3">
+        <h3 id="unnumbered-55">Notes</h3>
 
-        <div class="outline-text-3" id="text-12-2">
+        <div class="outline-text-3" id="text-unnumbered-55">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (add-to-list 'org-agenda-custom-commands
@@ -2357,10 +2428,10 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
       </div>
     </div>
 
-    <div id="outline-container-sec-13" class="outline-2">
-      <h2 id="sec-13">Task markers (in the current buffer)</h2>
+    <div id="outline-container-unnumbered-56" class="outline-2">
+      <h2 id="unnumbered-56">Task markers (in the current buffer)</h2>
 
-      <div class="outline-text-2" id="text-13">
+      <div class="outline-text-2" id="text-unnumbered-56">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
@@ -2394,10 +2465,10 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
       </div>
     </div>
 
-    <div id="outline-container-sec-14" class="outline-2">
-      <h2 id="sec-14">Buggy commands</h2>
+    <div id="outline-container-unnumbered-57" class="outline-2">
+      <h2 id="unnumbered-57">Buggy commands</h2>
 
-      <div class="outline-text-2" id="text-14">
+      <div class="outline-text-2" id="text-unnumbered-57">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   (add-to-list 'org-agenda-custom-commands
@@ -2514,10 +2585,10 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
       </div>
     </div>
 
-    <div id="outline-container-sec-15" class="outline-2">
-      <h2 id="sec-15">Unused code</h2>
+    <div id="outline-container-unnumbered-58" class="outline-2">
+      <h2 id="unnumbered-58">Unused code</h2>
 
-      <div class="outline-text-2" id="text-15">
+      <div class="outline-text-2" id="text-unnumbered-58">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
   (<span class="org-string">"d"</span> <span class=
@@ -2613,10 +2684,10 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
       </div>
     </div>
 
-    <div id="outline-container-sec-16" class="outline-2">
-      <h2 id="sec-16">Test cases</h2>
+    <div id="outline-container-unnumbered-59" class="outline-2">
+      <h2 id="unnumbered-59">Test cases</h2>
 
-      <div class="outline-text-2" id="text-16">
+      <div class="outline-text-2" id="text-unnumbered-59">
         <ul class="org-ul">
           <li>Entries with no TODO keyword, but well with a DEADLINE.</li>
 
@@ -2640,15 +2711,15 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
       </div>
     </div>
 
-    <div id="outline-container-sec-17" class="outline-2">
-      <h2 id="sec-17">Org mode</h2>
+    <div id="outline-container-unnumbered-60" class="outline-2">
+      <h2 id="unnumbered-60">Org mode</h2>
 
-      <div class="outline-text-2" id="text-17"></div>
+      <div class="outline-text-2" id="text-unnumbered-60"></div>
 
-      <div id="outline-container-sec-17-1" class="outline-3">
-        <h3 id="sec-17-1">Lists</h3>
+      <div id="outline-container-unnumbered-61" class="outline-3">
+        <h3 id="unnumbered-61">Lists</h3>
 
-        <div class="outline-text-3" id="text-17-1">
+        <div class="outline-text-3" id="text-unnumbered-61">
           <ol class="org-ol">
             <li>Inbox</li>
 
@@ -2912,15 +2983,15 @@ emacs --batch -l ~/.emacs.d/init.el -eval <span class=
       </div>
     </div>
 
-    <div id="outline-container-sec-18" class="outline-2">
-      <h2 id="sec-18">Tips and tricks</h2>
+    <div id="outline-container-unnumbered-62" class="outline-2">
+      <h2 id="unnumbered-62">Tips and tricks</h2>
 
-      <div class="outline-text-2" id="text-18"></div>
+      <div class="outline-text-2" id="text-unnumbered-62"></div>
 
-      <div id="outline-container-sec-18-1" class="outline-3">
-        <h3 id="sec-18-1">DEADLINE</h3>
+      <div id="outline-container-unnumbered-63" class="outline-3">
+        <h3 id="unnumbered-63">DEADLINE</h3>
 
-        <div class="outline-text-3" id="text-18-1">
+        <div class="outline-text-3" id="text-unnumbered-63">
           <p>Writing <code>DEADLINE={}</code> is wrong. You must write:</p>
           <pre class="example">
 DEADLINE=""
@@ -2928,10 +2999,10 @@ DEADLINE=""
         </div>
       </div>
 
-      <div id="outline-container-sec-18-2" class="outline-3">
-        <h3 id="sec-18-2">Tasks with a time component</h3>
+      <div id="outline-container-unnumbered-64" class="outline-3">
+        <h3 id="unnumbered-64">Tasks with a time component</h3>
 
-        <div class="outline-text-3" id="text-18-2">
+        <div class="outline-text-3" id="text-unnumbered-64">
           <p>To be sure to get tasks with a time component in the lists,
           use</p>
 
@@ -2943,10 +3014,10 @@ DEADLINE=""
         </div>
       </div>
 
-      <div id="outline-container-sec-18-3" class="outline-3">
-        <h3 id="sec-18-3">Cas d’erreurs</h3>
+      <div id="outline-container-unnumbered-65" class="outline-3">
+        <h3 id="unnumbered-65">Cas d’erreurs</h3>
 
-        <div class="outline-text-3" id="text-18-3">
+        <div class="outline-text-3" id="text-unnumbered-65">
           <table border="2" cellspacing="0" cellpadding="6" rules="groups"
           frame="hsides">
             <colgroup>
@@ -2997,10 +3068,10 @@ DEADLINE=""
       </div>
     </div>
 
-    <div id="outline-container-sec-19" class="outline-2">
-      <h2 id="sec-19">Footer</h2>
+    <div id="outline-container-unnumbered-66" class="outline-2">
+      <h2 id="unnumbered-66">Footer</h2>
 
-      <div class="outline-text-2" id="text-19">
+      <div class="outline-text-2" id="text-unnumbered-66">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (<span class="org-keyword">provide</span> '<span class=

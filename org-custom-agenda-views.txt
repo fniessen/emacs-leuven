@@ -10,7 +10,7 @@
 #+PROPERTY:  padline yes
 #+PROPERTY:  eval no
 
-#+SETUPFILE: ~/src/org-style/setup/bigblow-local-abs.setup
+#+SETUPFILE: ./bigblow-pirilampo.setup
 
 * Private Notes                                                       :noexport:
 
@@ -173,7 +173,7 @@ My work = tasks owned by me ("my tasks") + tasks assigned to me.
 ** Today
 
 An everyday objective should be to empty this list first, by any mean.  For
-example, start every morning by:
+example, start /every morning/ by:
 
 - scheduling tasks to another day if you already know it can't be completed
   before that date,
@@ -216,6 +216,7 @@ because:
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'notdeadline))
                               (org-agenda-sorting-strategy '(priority-down))))
+                                        ; XXX Timed deadlines NOT shown!!!
                   ;; list of all TODO entries with deadline before today
                   (tags-todo "DEADLINE<\"<+0d>\""
                              ((org-agenda-overriding-header "OVERDUE")
@@ -774,6 +775,22 @@ http://www.freshbooks.com/track-your-time
                   (org-agenda-start-with-clockreport-mode t)
                   (org-agenda-time-grid nil))) t)
 #+end_src
+
+I believe what you are seeking is a highly customized agenda view, which is
+possible, but will require an investment of a substantial amount of time
+modifying the source code of org-agenda-list and the functions it uses -- e.g.,
+org-agenda-get-.... Rather than using something like the org-agenda-list family
+of functions, perhaps consider using either a tag / property search (i.e.,
+org-tags-view) or a word search (i.e., org-search-view) using the built-in
+agenda commands: orgmode.org/worg/org-tutorials/advanced-searching.html Both of
+those searches do not insert dividers.
+
+If you would like to modify the source code for org-agenda-list, have a look at
+the section of code: (if (stringp org-agenda-format-date) (format-time-string
+org-agenda-format-date (org-time-from-absolute date)) (funcall
+org-agenda-format-date date)) "\n"). You may not need the text-properties that
+follow if you eliminate the date . . . I would suggest creating an entirely new
+function with a different name and leave org-agenda-list as-is.
 
 ** Expense reporting
 
