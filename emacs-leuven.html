@@ -1360,7 +1360,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141016.1058</span>
+"org-comment">Version: 20141016.1141</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1483,7 +1483,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141016.1058]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20141016.1141]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Turn on Common Lisp support.</span>
@@ -2272,7 +2272,7 @@
 "org-comment">&lt;pkg&gt;-autoloads.el</span></span><span class=
 "org-comment">'</span>
 
-      (<span class="org-keyword">defcustom</span> <span class=
+      (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven-elpa-packages</span>
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
           boxquote calfw circe color-identifiers-mode company csv-mode
@@ -2287,26 +2287,33 @@
 "org-comment">jabber multi-term paredit redshank</span>
           )
         <span class=
-"org-doc">"A list of packages to ensure are installed at Emacs startup."</span>
+"org-doc">"A list of packages to ensure are installed at Emacs startup."</span>)
+
+      (<span class="org-keyword">defcustom</span> <span class=
+"org-variable-name">leuven-elpa-ignored-packages</span>
+        nil
+        <span class=
+"org-doc">"List of packages that should be ignored by Emacs Leuven."</span>
         <span class="org-builtin">:group</span> 'emacs-leuven
         <span class="org-builtin">:type</span> '(repeat (string)))
 
       (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven--missing-elpa-packages</span> ()
         <span class=
-"org-doc">"List packages to install which are neither built-in nor already installed."</span>
+"org-doc">"List packages to install which are neither built-in nor already installed nor ignored."</span>
         (<span class="org-keyword">let</span> (missing-elpa-packages)
           (<span class="org-keyword">dolist</span> (pkg leuven-elpa-packages)
             (<span class=
 "org-keyword">unless</span> (or (package-installed-p pkg)
-                        (locate-library (symbol-name pkg)))
+                        (locate-library (symbol-name pkg))
+                        (member pkg leuven-elpa-ignored-packages))
               (push pkg missing-elpa-packages)))
           missing-elpa-packages))
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Propose to install all the packages specified in `</span><span class="org-constant"><span class="org-comment">leuven-elpa-packages</span></span><span class="org-comment">'</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">which are missing.</span>
+"org-comment">which are missing and which shouldn't be ignored.</span>
       (<span class=
 "org-keyword">let</span> ((missing-elpa-packages (leuven--missing-elpa-packages)))
         (<span class="org-keyword">when</span> missing-elpa-packages
@@ -2342,7 +2349,7 @@
 "org-comment">'.</span>
               (message (concat <span class=
 "org-string">"Customize `</span><span class="org-constant"><span class=
-"org-string">leuven-elpa-packages</span></span><span class=
+"org-string">leuven-elpa-ignored-packages</span></span><span class=
 "org-string">' to ignore "</span>
                                <span class=
 "org-string">"the `</span><span class="org-constant"><span class=
@@ -27471,7 +27478,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141016.1058]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20141016.1142]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141016.1054
+;; Version: 20141016.1137
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141016.1054]--")
+(message "* --[ Loading Emacs Leuven 20141016.1137]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -403,7 +403,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       (package-initialize)              ; add ALL ELPA subdirs to `load-path'
                                         ; and load `<pkg>-autoloads.el'
 
-      (defcustom leuven-elpa-packages
+      (defconst leuven-elpa-packages
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
           boxquote calfw circe color-identifiers-mode company csv-mode
           dictionary diff-hl diminish dired+ dired-single ess expand-region
@@ -415,21 +415,26 @@ Last time is saved in global variable `leuven--before-section-time'."
           smartparens spray tidy tomatinho unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
-        "A list of packages to ensure are installed at Emacs startup."
+        "A list of packages to ensure are installed at Emacs startup.")
+
+      (defcustom leuven-elpa-ignored-packages
+        nil
+        "List of packages that should be ignored by Emacs Leuven."
         :group 'emacs-leuven
         :type '(repeat (string)))
 
       (defun leuven--missing-elpa-packages ()
-        "List packages to install which are neither built-in nor already installed."
+        "List packages to install which are neither built-in nor already installed nor ignored."
         (let (missing-elpa-packages)
           (dolist (pkg leuven-elpa-packages)
             (unless (or (package-installed-p pkg)
-                        (locate-library (symbol-name pkg)))
+                        (locate-library (symbol-name pkg))
+                        (member pkg leuven-elpa-ignored-packages))
               (push pkg missing-elpa-packages)))
           missing-elpa-packages))
 
       ;; Propose to install all the packages specified in `leuven-elpa-packages'
-      ;; which are missing.
+      ;; which are missing and which shouldn't be ignored.
       (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
         (when missing-elpa-packages
           ;; Download once the ELPA archive description.
@@ -443,7 +448,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                   (package-install pkg))
                                         ; Must be run after initializing
                                         ; `package-initialize'.
-              (message (concat "Customize `leuven-elpa-packages' to ignore "
+              (message (concat "Customize `leuven-elpa-ignored-packages' to ignore "
                                "the `%s' package at next startup...") pkg)
               (sit-for 1.5)))))
 
@@ -9380,7 +9385,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (sit-for 3)
           (message "Configuration updated. Restart Emacs to complete the process.")))))
 
-(message "* --[ Loaded Emacs Leuven 20141016.1055]--")
+(message "* --[ Loaded Emacs Leuven 20141016.1139]--")
 
 (provide 'emacs-leuven)
 

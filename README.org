@@ -48,10 +48,14 @@ Using the Emacs Leuven library is very easy: you just need to...
 
 - Unnecessary spaces at the end of the lines are indicated by red blocks.
 
-** Packages                                                           :noexport:
+** Packages
+
+To list packages which should be installed by Emacs Leuven, add something like
+this into your configuration file:
 
 #+begin_src emacs-lisp
-(setq leuven-elpa-packages (remove 'auto-complete leuven-elpa-packages))
+(setq leuven-elpa-ignored-packages
+      '(annoying-arrows-mode))
 #+end_src
 
 ** Keyboard shortcuts

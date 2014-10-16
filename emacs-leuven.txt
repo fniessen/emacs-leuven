@@ -13,7 +13,7 @@
 #+PROPERTY:  padline yes
 #+PROPERTY:  eval never
 
-#+SETUPFILE: ~/src/org-style/setup/bigblow-pirilampo.setup
+#+SETUPFILE: ./bigblow-pirilampo.setup
 
 * Description
 
@@ -550,7 +550,7 @@ outages).
       (package-initialize)              ; add ALL ELPA subdirs to `load-path'
                                         ; and load `<pkg>-autoloads.el'
 
-      (defcustom leuven-elpa-packages
+      (defconst leuven-elpa-packages
         '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
           boxquote calfw circe color-identifiers-mode company csv-mode
           dictionary diff-hl diminish dired+ dired-single ess expand-region
@@ -562,21 +562,26 @@ outages).
           smartparens spray tidy tomatinho unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
-        "A list of packages to ensure are installed at Emacs startup."
+        "A list of packages to ensure are installed at Emacs startup.")
+
+      (defcustom leuven-elpa-ignored-packages
+        nil
+        "List of packages that should be ignored by Emacs Leuven."
         :group 'emacs-leuven
         :type '(repeat (string)))
 
       (defun leuven--missing-elpa-packages ()
-        "List packages to install which are neither built-in nor already installed."
+        "List packages to install which are neither built-in nor already installed nor ignored."
         (let (missing-elpa-packages)
           (dolist (pkg leuven-elpa-packages)
             (unless (or (package-installed-p pkg)
-                        (locate-library (symbol-name pkg)))
+                        (locate-library (symbol-name pkg))
+                        (member pkg leuven-elpa-ignored-packages))
               (push pkg missing-elpa-packages)))
           missing-elpa-packages))
 
       ;; Propose to install all the packages specified in `leuven-elpa-packages'
-      ;; which are missing.
+      ;; which are missing and which shouldn't be ignored.
       (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
         (when missing-elpa-packages
           ;; Download once the ELPA archive description.
@@ -590,7 +595,7 @@ outages).
                   (package-install pkg))
                                         ; Must be run after initializing
                                         ; `package-initialize'.
-              (message (concat "Customize `leuven-elpa-packages' to ignore "
+              (message (concat "Customize `leuven-elpa-ignored-packages' to ignore "
                                "the `%s' package at next startup...") pkg)
               (sit-for 1.5)))))
 
