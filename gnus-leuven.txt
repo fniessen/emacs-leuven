@@ -1424,9 +1424,20 @@ below to set the variables.
 
 ;;*** 1.1 (info "(message)New Mail Message")
 
-      ;; keyboard macro to prepare a mail from the current buffer
-      (fset 'leuven-mail-this-buffer ;; XXX does not work
-            "\C-xh\M-w\M-xmail\C-m\C-c\C-t\C-y\C-c\C-f\C-t")
+      ;; prepare a mail from the current buffer
+      (defun leuven-mail-current-region-or-buffer ()
+        "Insert the current region or buffer into an email sending buffer."
+        (interactive)
+        (save-excursion
+          (if (use-region-p)
+              (kill-ring-save (region-beginning) (region-end))
+            (kill-ring-save (point-min) (point-max)))
+          (mail)
+          (end-of-buffer)
+          (yank)                        ; insert text
+          (beginning-of-buffer)
+          (next-line)
+          (end-of-line)))
 
 ;;*** 1.4 (info "(message)Wide Reply")
 

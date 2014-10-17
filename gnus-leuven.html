@@ -2676,13 +2676,23 @@
 "org-comment">*** 1.1 (info "(message)New Mail Message")</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">keyboard macro to prepare a mail from the current buffer</span>
-      (fset 'leuven-mail-this-buffer <span class=
-"org-comment-delimiter">;; </span><span class=
-"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
-"org-comment"> does not work</span>
-            <span class=
-"org-string">"\C-xh\M-w\M-xmail\C-m\C-c\C-t\C-y\C-c\C-f\C-t"</span>)
+"org-comment">prepare a mail from the current buffer</span>
+      (<span class="org-keyword">defun</span> <span class=
+"org-function-name">leuven-mail-current-region-or-buffer</span> ()
+        <span class=
+"org-doc">"Insert the current region or buffer into an email sending buffer."</span>
+        (interactive)
+        (<span class="org-keyword">save-excursion</span>
+          (<span class="org-keyword">if</span> (use-region-p)
+              (kill-ring-save (region-beginning) (region-end))
+            (kill-ring-save (point-min) (point-max)))
+          (mail)
+          (end-of-buffer)
+          (yank)                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">insert text</span>
+          (beginning-of-buffer)
+          (next-line)
+          (end-of-line)))
 
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">*** 1.4 (info "(message)Wide Reply")</span>
