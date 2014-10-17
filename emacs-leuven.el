@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141017.1152
+;; Version: 20141017.1622
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141017.1152]--")
+(message "* --[ Loading Emacs Leuven 20141017.1622]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -404,15 +404,16 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ; and load `<pkg>-autoloads.el'
 
       (defconst leuven-elpa-packages
-        '(ace-jump-mode annoying-arrows-mode auctex auto-complete bbdb bookmark+
-          boxquote calfw circe color-identifiers-mode company csv-mode
-          dictionary diff-hl diminish dired+ dired-single ess expand-region
-          fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
-          google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-          helm-descbinds helm-swoop highlight-symbol htmlize key-chord litable
-          idle-require imenu-anywhere info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          smartparens spray tidy tomatinho unbound undo-tree w3m yasnippet
+        '(ace-jump-mode ace-window annoying-arrows-mode auctex auto-complete
+          bbdb bookmark+ boxquote calfw circe color-identifiers-mode company
+          csv-mode dictionary diff-hl diminish dired+ dired-single ess
+          expand-region fancy-narrow fill-column-indicator flycheck fuzzy
+          git-commit-mode google-this google-translate goto-chg
+          graphviz-dot-mode guide-key helm helm-descbinds helm-swoop
+          highlight-symbol htmlize key-chord litable idle-require imenu-anywhere
+          info+ interaction-log ledger-mode leuven-theme multi-term
+          multiple-cursors pager powerline rainbow-mode smartparens spray tidy
+          tomatinho unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -1073,8 +1074,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; ;; toggle Auto-Highlight-Symbol mode in all programming mode buffers
     ;; (add-hook 'prog-mode-hook 'auto-highlight-symbol-mode)
-
-    ;; XXX Add key-chord ** to enable it on demand?
     )
 
 ;; XXX Impact on Org's HTML export?
@@ -3108,9 +3107,12 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; map pairs of simultaneously pressed keys to commands
   (with-eval-after-load "key-chord"
 
-    (with-eval-after-load "hideshow"
-      (key-chord-define hs-minor-mode-map "'," 'hs-hide-block)
-      (key-chord-define hs-minor-mode-map "'." 'hs-show-block))
+    (with-eval-after-load "hideshow"    ; Package.
+      (key-chord-define hs-minor-mode-map "'," 'hs-hide-block) ; Not autoloaded.
+      (key-chord-define hs-minor-mode-map "'." 'hs-show-block)) ; Not autoloaded.
+
+    (with-eval-after-load "auto-highlight-symbol" ; Package.
+      (key-chord-define-global "**" 'auto-highlight-symbol-mode)) ; Autoloaded?
 
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
@@ -3123,21 +3125,23 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; (key-chord-define-global "jj" 'er/expand-region)
 
-    (with-eval-after-load "ace-jump-mode"
-      (key-chord-define-global "jj" 'ace-jump-word-mode)
-      (key-chord-define-global "jk" 'ace-jump-mode-pop-mark)
-      (key-chord-define-global "jl" 'ace-jump-line-mode)
+    (with-eval-after-load "ace-window-autoloads" ; Autoloads file.
+      (key-chord-define-global "jj" 'ace-jump-word-mode) ; Autoloaded.
+      (key-chord-define-global "jk" 'ace-jump-mode-pop-mark) ; Autoloaded.
+      (key-chord-define-global "jl" 'ace-jump-line-mode)) ; Autoloaded.
+
+    (with-eval-after-load "ace-window"
       (key-chord-define-global "jw" 'ace-window))
 
     (key-chord-define-global "kk" 'kill-whole-line)
 
-    (with-eval-after-load "undo-tree"
-      (key-chord-define-global "uu" 'undo-tree-visualize))
+    (with-eval-after-load "undo-tree"   ; Package.
+      (key-chord-define-global "uu" 'undo-tree-visualize)) ; Not autoloaded.
 
     (with-eval-after-load "dired-x"
-      (key-chord-define-global "xj" 'dired-jump))
+      (key-chord-define-global "xj" 'dired-jump)) ; Autoloaded?
 
-    (key-chord-define-global "xk" 'kill-buffer) ; kill-this-buffer-if-not-modified
+    (key-chord-define-global "xk" 'kill-buffer) ; leuven-kill-this-buffer-without-query?
     (key-chord-define-global "xo" 'other-window)
     (key-chord-define-global "x1" 'delete-other-windows)
     (key-chord-define-global "x0" 'delete-window)
@@ -3152,17 +3156,19 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (key-chord-define-global "vc" 'vc-next-action)
 
-    (with-eval-after-load "helm-command"
-      (key-chord-define-global "xx" 'helm-M-x))
+    (with-eval-after-load "helm-autoloads" ; Autoloads file.
+      (key-chord-define-global "xx" 'helm-M-x)) ; Autoloaded.
 
     (key-chord-define-global "yy" 'browse-kill-ring)
 
-    (with-eval-after-load "org"
+    (with-eval-after-load "org-loaddefs" ; Autoloads file?
       ;; XXX Problem for comments in ELisp
       ;; (key-chord-define-global ";;" 'org-mark-ring-goto) ; Return to previous location before link.
-      (key-chord-define-global ";c" 'org-capture)
-      (key-chord-define-global ";a" 'org-agenda)
-      (key-chord-define-global ";w" 'org-refile)
+      (key-chord-define-global ";a" 'org-agenda) ; Autoloaded.
+      (key-chord-define-global ";c" 'org-capture)) ; Autoloaded.
+
+    (with-eval-after-load "org"         ; Package.
+      (key-chord-define-global ";w" 'org-refile) ; Not autoloaded.
 
       ;; (key-chord-define-global ";," 'org-mark-ring-goto)           ;; Return to previous location before link.
       ;; (key-chord-define-global ";." 'org-time-stamp)               ;; Create new timestamp.
@@ -6549,9 +6555,11 @@ mouse-3: go to end") "]"))))
     (show-smartparens-global-mode 1)
 
     (sp-with-modes 'org-mode
-      (sp-local-tag "*" "*" "*" :actions '(wrap))
-      (sp-local-tag "=" "=" "=" :actions '(wrap))
-      (sp-local-tag "~" "~" "~" :actions '(wrap)))
+      (sp-local-tag "*" "*" "*" :actions '(wrap)) ; Bold.
+      (sp-local-tag "/" "/" "/" :actions '(wrap)) ; Italic.
+      (sp-local-tag "_" "_" "_" :actions '(wrap)) ; Underline.
+      (sp-local-tag "=" "=" "=" :actions '(wrap)) ; Verbatim.
+      (sp-local-tag "~" "~" "~" :actions '(wrap)))) ; Code.
 
     ;; Add smartparens-strict-mode to all sp--lisp-modes hooks.
 
@@ -9408,7 +9416,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (setq ret (shell-command-to-string "git log HEAD..origin"))
           (princ ret)))))
 
-(message "* --[ Loaded Emacs Leuven 20141017.1153]--")
+(message "* --[ Loaded Emacs Leuven 20141017.1623]--")
 
 (provide 'emacs-leuven)
 
