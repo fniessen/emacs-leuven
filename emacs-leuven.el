@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141017.1632
+;; Version: 20141017.1638
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141017.1632]--")
+(message "* --[ Loading Emacs Leuven 20141017.1638]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -6561,9 +6561,11 @@ mouse-3: go to end") "]"))))
       (sp-local-tag "=" "=" "=" :actions '(wrap)) ; Verbatim.
       (sp-local-tag "~" "~" "~" :actions '(wrap))) ; Code.
 
-    ;; Add smartparens-strict-mode to all sp--lisp-modes hooks.
-
-    )
+    ;; Enable smartparens-strict-mode in all Lisp modes.
+    (mapc (lambda (mode)
+            (add-hook (intern (format "%s-hook" (symbol-name mode)))
+                      'smartparens-strict-mode))
+          sp--lisp-modes))
 
 ;;** 26.5 (info "(emacs)Comments")
 
@@ -9416,7 +9418,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (setq ret (shell-command-to-string "git log HEAD..origin"))
           (princ ret)))))
 
-(message "* --[ Loaded Emacs Leuven 20141017.1633]--")
+(message "* --[ Loaded Emacs Leuven 20141017.1639]--")
 
 (provide 'emacs-leuven)
 

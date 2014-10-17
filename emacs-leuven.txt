@@ -10156,9 +10156,11 @@ Balanced editing: inserting two matching parentheses at once, etc.
   hacking. Seriously.
 
 #+begin_src emacs-lisp
-    ;; Add smartparens-strict-mode to all sp--lisp-modes hooks.
-
-    )
+    ;; Enable smartparens-strict-mode in all Lisp modes.
+    (mapc (lambda (mode)
+            (add-hook (intern (format "%s-hook" (symbol-name mode)))
+                      'smartparens-strict-mode))
+          sp--lisp-modes))
 #+end_src
 
 - *paredit* is (was?) the thing to use for Emacs Lisp!
