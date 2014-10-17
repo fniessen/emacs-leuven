@@ -10149,7 +10149,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
       (sp-local-tag "/" "/" "/" :actions '(wrap)) ; Italic.
       (sp-local-tag "_" "_" "_" :actions '(wrap)) ; Underline.
       (sp-local-tag "=" "=" "=" :actions '(wrap)) ; Verbatim.
-      (sp-local-tag "~" "~" "~" :actions '(wrap)))) ; Code.
+      (sp-local-tag "~" "~" "~" :actions '(wrap))) ; Code.
 #+end_src
 
   =turn-on-smartparens-strict-mode= add years to one's life to allow for more
