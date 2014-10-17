@@ -1360,7 +1360,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141016.1932</span>
+"org-comment">Version: 20141017.1030</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1483,7 +1483,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141016.1932]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20141017.1030]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Turn on Common Lisp support.</span>
@@ -5102,7 +5102,7 @@
       <span class="org-doc">"Display the Interaction-Log buffer."</span>
       (interactive)
       (interaction-log-mode 1)
-      (display-buffer ilog-buffer-name)))
+      (display-buffer ilog-buffer-name))
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Hotkey for showing the log buffer.</span>
@@ -26392,12 +26392,8 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">speed up things by preventing garbage collections</span>
-  (setq gc-cons-threshold 3500000)      <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">make Gnus fast</span>
-                                        <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">from (info "(gnus)FAQ 9-2")</span>
+  (setq gc-cons-threshold (* 20 1024 1024)) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">20 MB</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">don't display messages at start and end of garbage collection (as it hides</span>
@@ -27568,7 +27564,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141016.1932]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20141017.1031]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

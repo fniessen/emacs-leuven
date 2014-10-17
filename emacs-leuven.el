@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141016.1930
+;; Version: 20141017.1028
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141016.1930]--")
+(message "* --[ Loading Emacs Leuven 20141017.1028]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -1412,7 +1412,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       "Display the Interaction-Log buffer."
       (interactive)
       (interaction-log-mode 1)
-      (display-buffer ilog-buffer-name)))
+      (display-buffer ilog-buffer-name))
 
     ;; Hotkey for showing the log buffer.
     (global-set-key (kbd "C-h C-l") 'leuven-display-interaction-log))
@@ -9111,8 +9111,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
 
   ;; speed up things by preventing garbage collections
-  (setq gc-cons-threshold 3500000)      ; make Gnus fast
-                                        ; from (info "(gnus)FAQ 9-2")
+  (setq gc-cons-threshold (* 20 1024 1024)) ; 20 MB
 
   ;; don't display messages at start and end of garbage collection (as it hides
   ;; too many interesting messages)
@@ -9403,7 +9402,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (setq ret (shell-command-to-string "git log HEAD..origin"))
           (princ ret)))))
 
-(message "* --[ Loaded Emacs Leuven 20141016.1931]--")
+(message "* --[ Loaded Emacs Leuven 20141017.1029]--")
 
 (provide 'emacs-leuven)
 

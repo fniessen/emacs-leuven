@@ -2181,7 +2181,7 @@ screencasts.
       "Display the Interaction-Log buffer."
       (interactive)
       (interaction-log-mode 1)
-      (display-buffer ilog-buffer-name)))
+      (display-buffer ilog-buffer-name))
 
     ;; Hotkey for showing the log buffer.
     (global-set-key (kbd "C-h C-l") 'leuven-display-interaction-log))
@@ -14610,8 +14610,7 @@ particular color...
   (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
 
   ;; speed up things by preventing garbage collections
-  (setq gc-cons-threshold 3500000)      ; make Gnus fast
-                                        ; from (info "(gnus)FAQ 9-2")
+  (setq gc-cons-threshold (* 20 1024 1024)) ; 20 MB
 
   ;; don't display messages at start and end of garbage collection (as it hides
   ;; too many interesting messages)
