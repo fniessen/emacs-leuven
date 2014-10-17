@@ -1360,7 +1360,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141017.1030</span>
+"org-comment">Version: 20141017.1153</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1483,7 +1483,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141017.1030]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20141017.1153]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Turn on Common Lisp support.</span>
@@ -9867,7 +9867,27 @@ M-: (executable-find "diff") RET
       (key-chord-define-global <span class=
 "org-string">"xj"</span> 'dired-jump))
 
-    (key-chord-define-global <span class="org-string">"xk"</span> 'kill-buffer)
+    (key-chord-define-global <span class=
+"org-string">"xk"</span> 'kill-buffer) <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">kill-this-buffer-if-not-modified</span>
+    (key-chord-define-global <span class=
+"org-string">"xo"</span> 'other-window)
+    (key-chord-define-global <span class=
+"org-string">"x1"</span> 'delete-other-windows)
+    (key-chord-define-global <span class=
+"org-string">"x0"</span> 'delete-window)
+
+    (key-chord-define-global <span class="org-string">"vg"</span> 'eval-region)
+    (key-chord-define-global <span class="org-string">"vb"</span> 'eval-buffer)
+
+    (key-chord-define-global <span class="org-string">"cv"</span> 'yank)
+    (key-chord-define-global <span class="org-string">"cy"</span> 'yank-pop)
+    (key-chord-define-global <span class="org-string">"xv"</span> 'kill-region)
+    (key-chord-define-global <span class="org-string">"zk"</span> 'zap-to-char)
+
+    (key-chord-define-global <span class=
+"org-string">"vc"</span> 'vc-next-action)
 
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"helm-command"</span>
@@ -9875,8 +9895,6 @@ M-: (executable-find "diff") RET
 
     (key-chord-define-global <span class=
 "org-string">"yy"</span> 'browse-kill-ring)
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global "zz" 'zap-to-char)</span>
 
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"org"</span>
@@ -16254,7 +16272,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     <span class=
 "org-doc">"Switch to a temp Org buffer.  If the region is active, insert it."</span>
     (interactive)
-    (<span class="org-keyword">let</span> ((contents (and (region-active-p)
+    (<span class="org-keyword">let</span> ((contents (and (use-region-p)
                          (buffer-substring (region-beginning)
                                            (region-end)))))
       (find-file <span class="org-string">"/tmp/org-scratch.org"</span>)
@@ -23583,19 +23601,13 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
           <h4 id="unnumbered-340">Options</h4>
 
           <div class="outline-text-4" id="text-unnumbered-340">
+            <p>You can add the author of a mail or posting to the BBDB by
+            hitting <code>:</code>.</p>
+
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">* (info "(bbdb)Options")</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">You can add the author of a mail or posting to the BBDB</span>
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">by hitting `:'</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">name of the file which contains your personal database</span>
-    (setq bbdb-file <span class="org-string">"~/.bbdb"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">no default area code to use when prompting for a new phone number</span>
@@ -27564,7 +27576,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141017.1031]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20141017.1154]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

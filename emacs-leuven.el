@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141017.1028
+;; Version: 20141017.1152
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141017.1028]--")
+(message "* --[ Loading Emacs Leuven 20141017.1152]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -3137,13 +3137,25 @@ Last time is saved in global variable `leuven--before-section-time'."
     (with-eval-after-load "dired-x"
       (key-chord-define-global "xj" 'dired-jump))
 
-    (key-chord-define-global "xk" 'kill-buffer)
+    (key-chord-define-global "xk" 'kill-buffer) ; kill-this-buffer-if-not-modified
+    (key-chord-define-global "xo" 'other-window)
+    (key-chord-define-global "x1" 'delete-other-windows)
+    (key-chord-define-global "x0" 'delete-window)
+
+    (key-chord-define-global "vg" 'eval-region)
+    (key-chord-define-global "vb" 'eval-buffer)
+
+    (key-chord-define-global "cv" 'yank)
+    (key-chord-define-global "cy" 'yank-pop)
+    (key-chord-define-global "xv" 'kill-region)
+    (key-chord-define-global "zk" 'zap-to-char)
+
+    (key-chord-define-global "vc" 'vc-next-action)
 
     (with-eval-after-load "helm-command"
       (key-chord-define-global "xx" 'helm-M-x))
 
     (key-chord-define-global "yy" 'browse-kill-ring)
-    ;; (key-chord-define-global "zz" 'zap-to-char)
 
     (with-eval-after-load "org"
       ;; XXX Problem for comments in ELisp
@@ -5680,7 +5692,7 @@ this with to-do items than with projects or headings."
   (defun leuven-switch-to-org-scratch ()
     "Switch to a temp Org buffer.  If the region is active, insert it."
     (interactive)
-    (let ((contents (and (region-active-p)
+    (let ((contents (and (use-region-p)
                          (buffer-substring (region-beginning)
                                            (region-end)))))
       (find-file "/tmp/org-scratch.org")
@@ -8119,12 +8131,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* (info "(bbdb)Options")
 
-    ;; You can add the author of a mail or posting to the BBDB
-    ;; by hitting `:'
-
-    ;; name of the file which contains your personal database
-    (setq bbdb-file "~/.bbdb")
-
     ;; no default area code to use when prompting for a new phone number
     (setq bbdb-default-area-code nil)
 
@@ -9402,7 +9408,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (setq ret (shell-command-to-string "git log HEAD..origin"))
           (princ ret)))))
 
-(message "* --[ Loaded Emacs Leuven 20141017.1029]--")
+(message "* --[ Loaded Emacs Leuven 20141017.1153]--")
 
 (provide 'emacs-leuven)
 
