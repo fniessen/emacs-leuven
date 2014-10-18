@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141017.1638
+;; Version: 20141018.1047
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141017.1638]--")
+(message "* --[ Loading Emacs Leuven 20141018.1047]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -725,7 +725,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     (global-set-key (kbd "C-@") 'er/expand-region)
     (global-set-key (kbd "C-;") 'er/expand-region) ; Used in `flyspell.el'.
-    (global-set-key (kbd "C-'") 'er/expand-region) ; Undefined.
+    (global-set-key (kbd "C-'") 'er/expand-region) ; Used in `org'.
     ;; (global-set-key (kbd "C-M-@") 'er/contract-region)
     )
 
@@ -791,8 +791,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   (GNUEmacs
 ;; old ([2012-09-07 Fri] remove "compile" after "activate")
 
-    ;; Add the ability to copy or cut the current line without marking it
-    ;; (no active region) -- idea stolen from SlickEdit.
+    ;; Add the ability to copy the current line without marking it (no
+    ;; selection).
     (defadvice kill-ring-save (before leuven-slick-copy activate)
       "When called with no active region, copy the current line instead."
       (interactive
@@ -801,6 +801,8 @@ Last time is saved in global variable `leuven--before-section-time'."
          (list (line-beginning-position)
                (line-beginning-position 2)))))
 
+    ;; Add the ability to cut the current line without marking it (no
+    ;; selection).
     (defadvice kill-region (before leuven-slick-cut activate)
       "When called with no active region, kill the current line instead."
       (interactive
@@ -3104,7 +3106,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (with-eval-after-load "key-chord-autoloads"
     (key-chord-mode 1))
 
-  ;; map pairs of simultaneously pressed keys to commands
+  ;; Map pairs of simultaneously pressed keys to commands.
   (with-eval-after-load "key-chord"
 
     (with-eval-after-load "hideshow"    ; Package.
@@ -3121,9 +3123,8 @@ Last time is saved in global variable `leuven--before-section-time'."
     (key-chord-define-global "hf" 'describe-function)
     (key-chord-define-global "hv" 'describe-variable)
 
-    (key-chord-define-global "hh" 'fill-paragraph)
-
-    ;; (key-chord-define-global "jj" 'er/expand-region)
+    (with-eval-after-load "expand-region-autoloads" ; Autoloads file.
+      (key-chord-define-global "hh" 'er/expand-region)) ; Autoloaded.
 
     (with-eval-after-load "ace-window-autoloads" ; Autoloads file.
       (key-chord-define-global "jj" 'ace-jump-word-mode) ; Autoloaded.
@@ -3141,53 +3142,55 @@ Last time is saved in global variable `leuven--before-section-time'."
     (with-eval-after-load "dired-x"
       (key-chord-define-global "xj" 'dired-jump)) ; Autoloaded?
 
-    (key-chord-define-global "xk" 'kill-buffer) ; leuven-kill-this-buffer-without-query?
-    (key-chord-define-global "xo" 'other-window)
-    (key-chord-define-global "x1" 'delete-other-windows)
-    (key-chord-define-global "x0" 'delete-window)
+    (key-chord-define-global "xv" 'kill-region) ; Cut.
+    (key-chord-define-global "xc" 'kill-ring-save) ; Copy.
+    (key-chord-define-global "cv" 'yank) ; Paste.
+    (key-chord-define-global "cy" 'yank-pop) ; Paste (with a different stretch).
 
-    (key-chord-define-global "vg" 'eval-region)
     (key-chord-define-global "vb" 'eval-buffer)
-
-    (key-chord-define-global "cv" 'yank)
-    (key-chord-define-global "cy" 'yank-pop)
-    (key-chord-define-global "xv" 'kill-region)
-    (key-chord-define-global "zk" 'zap-to-char)
+    (key-chord-define-global "vg" 'eval-region)
 
     (key-chord-define-global "vc" 'vc-next-action)
+
+    (key-chord-define-global "ww" 'save-buffer)
+
+    (key-chord-define-global "x0" 'delete-window)
+    (key-chord-define-global "x1" 'delete-other-windows)
+    (key-chord-define-global "xh" 'mark-whole-buffer)
+    (key-chord-define-global "xk" 'kill-buffer) ; leuven-kill-this-buffer-without-query?
+    (key-chord-define-global "xo" 'other-window)
 
     (with-eval-after-load "helm-autoloads" ; Autoloads file.
       (key-chord-define-global "xx" 'helm-M-x)) ; Autoloaded.
 
     (key-chord-define-global "yy" 'browse-kill-ring)
+    (key-chord-define-global "zk" 'zap-to-char)
 
     (with-eval-after-load "org-loaddefs" ; Autoloads file?
-      ;; XXX Problem for comments in ELisp
-      ;; (key-chord-define-global ";;" 'org-mark-ring-goto) ; Return to previous location before link.
-      (key-chord-define-global ";a" 'org-agenda) ; Autoloaded.
-      (key-chord-define-global ";c" 'org-capture)) ; Autoloaded.
+      (key-chord-define-global ",a" 'org-agenda) ; Autoloaded.
+      (key-chord-define-global ",c" 'org-capture)) ; Autoloaded.
 
     (with-eval-after-load "org"         ; Package.
-      (key-chord-define-global ";w" 'org-refile) ; Not autoloaded.
+      (key-chord-define-global ",u" 'outline-up-heading)
+      (key-chord-define-global ",w" 'org-refile) ; Not autoloaded.
 
-      ;; (key-chord-define-global ";," 'org-mark-ring-goto)           ;; Return to previous location before link.
-      ;; (key-chord-define-global ";." 'org-time-stamp)               ;; Create new timestamp.
-      ;; (key-chord-define-global ";b" 'org-tree-to-indirect-buffer)  ;; Show complete tree in dedicated buffer.
-      ;; (key-chord-define-global ";d" 'org-todo)                     ;; Toggle todo for headline.
-      ;; (key-chord-define-global ";e" 'org-insert-link)              ;; Edit current link.
-      ;; (key-chord-define-global ";f" 'org-footnote-action)          ;; Create new footnote link.
-      ;; (key-chord-define-global ";g" 'er/open-org-calendar)         ;; Open calendar integration. :Functions.el:
-      ;; (key-chord-define-global ";h" 'org-toggle-heading)           ;; Toggle heading for current line/list item.
-      ;; (key-chord-define-global ";k" 'org-cut-subtree)              ;; Kill subtree.
-      ;; (key-chord-define-global ";l" 'org-store-link)               ;; Store link (useful for agenda ref).
-      ;; (key-chord-define-global ";n" 'er/org-narrow-and-reveal)     ;; Narrow region and reveal. :Functions.el:
-      ;; (key-chord-define-global ";o" 'org-open-at-point)            ;; Open link at point.
-      ;; (key-chord-define-global ";p" 'org-priority)                 ;; Toggle priority.
-      ;; (key-chord-define-global ";t" 'org-set-tags-command)         ;; Choose tags.
-      ;; (key-chord-define-global ";u" 'outline-up-heading)           ;; Go to parent headline.
-      ;; (key-chord-define-global ";v" 'org-paste-subtree)            ;; Paste subtree.
-      ;; (key-chord-define-global ";w" 'er/org-widen-and-outline)     ;; Widen and outline. :Functions.el:
-      ;; (key-chord-define-global ";y" 'org-copy-subtree)             ;; Copy subtree.
+      ;; (key-chord-define-global ",," 'org-mark-ring-goto)           ;; Return to previous location before link.
+      ;; (key-chord-define-global ",." 'org-time-stamp)               ;; Create new timestamp.
+      ;; (key-chord-define-global ",b" 'org-tree-to-indirect-buffer)  ;; Show complete tree in dedicated buffer.
+      ;; (key-chord-define-global ",d" 'org-todo)                     ;; Toggle todo for headline.
+      ;; (key-chord-define-global ",e" 'org-insert-link)              ;; Edit current link.
+      ;; (key-chord-define-global ",f" 'org-footnote-action)          ;; Create new footnote link.
+      ;; (key-chord-define-global ",g" 'er/open-org-calendar)         ;; Open calendar integration. :Functions.el:
+      ;; (key-chord-define-global ",h" 'org-toggle-heading)           ;; Toggle heading for current line/list item.
+      ;; (key-chord-define-global ",k" 'org-cut-subtree)              ;; Kill subtree.
+      ;; (key-chord-define-global ",l" 'org-store-link)               ;; Store link (useful for agenda ref).
+      ;; (key-chord-define-global ",n" 'er/org-narrow-and-reveal)     ;; Narrow region and reveal. :Functions.el:
+      ;; (key-chord-define-global ",o" 'org-open-at-point)            ;; Open link at point.
+      ;; (key-chord-define-global ",p" 'org-priority)                 ;; Toggle priority.
+      ;; (key-chord-define-global ",t" 'org-set-tags-command)         ;; Choose tags.
+      ;; (key-chord-define-global ",v" 'org-paste-subtree)            ;; Paste subtree.
+      ;; (key-chord-define-global ",w" 'er/org-widen-and-outline)     ;; Widen and outline. :Functions.el:
+      ;; (key-chord-define-global ",y" 'org-copy-subtree)             ;; Copy subtree.
       ;; (key-chord-define-global "<H" 'org-list-make-subtree)        ;; Toggle headings for all list items in subtree.
       )
 
@@ -9418,7 +9421,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (setq ret (shell-command-to-string "git log HEAD..origin"))
           (princ ret)))))
 
-(message "* --[ Loaded Emacs Leuven 20141017.1639]--")
+(message "* --[ Loaded Emacs Leuven 20141018.1048]--")
 
 (provide 'emacs-leuven)
 

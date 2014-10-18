@@ -1360,7 +1360,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141017.1640</span>
+"org-comment">Version: 20141018.1049</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1483,7 +1483,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141017.1640]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20141018.1049]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Turn on Common Lisp support.</span>
@@ -3164,7 +3164,9 @@
 "org-comment">flyspell.el</span></span><span class="org-comment">'.</span>
     (global-set-key (kbd <span class=
 "org-string">"C-'"</span>) 'er/expand-region) <span class=
-"org-comment-delimiter">; </span><span class="org-comment">Undefined.</span>
+"org-comment-delimiter">; </span><span class=
+"org-comment">Used in `</span><span class="org-constant"><span class=
+"org-comment">org</span></span><span class="org-comment">'.</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(global-set-key (kbd "C-M-@") 'er/contract-region)</span>
     )
@@ -3287,7 +3289,8 @@
           <h4 id="unnumbered-32">Find All</h4>
 
           <div class="outline-text-4" id="text-unnumbered-32">
-            <p>Add all occurrences of the current word to the selection.</p>
+            <p><b>Add all occurrences of the current word to the
+            selection.</b></p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -3328,7 +3331,7 @@
 
           <div class="outline-text-4" id="text-unnumbered-33">
             <p>To go from multiple selections to a single selection, press
-            <code>C-g</code>.</p>
+            <code>C-g</code> or <code>RET</code>.</p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -3401,9 +3404,9 @@
 "org-comment">old ([2012-09-07 Fri] remove "compile" after "activate")</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Add the ability to copy or cut the current line without marking it</span>
+"org-comment">Add the ability to copy the current line without marking it (no</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(no active region) -- idea stolen from SlickEdit.</span>
+"org-comment">selection).</span>
     (<span class="org-keyword">defadvice</span> <span class=
 "org-function-name">kill-ring-save</span> (before leuven-slick-copy activate)
       <span class=
@@ -3415,6 +3418,10 @@
          (list (line-beginning-position)
                (line-beginning-position 2)))))
 
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Add the ability to cut the current line without marking it (no</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">selection).</span>
     (<span class="org-keyword">defadvice</span> <span class=
 "org-function-name">kill-region</span> (before leuven-slick-cut activate)
       <span class=
@@ -3549,9 +3556,10 @@
         <h3 id="unnumbered-39">Rectangles</h3>
 
         <div class="outline-text-3" id="text-unnumbered-39">
-          <p>To kill the text of the “region-rectangle”, use <code>C-x r
-          k</code> (<code>kill-rectangle</code>). Or just “delete” the
-          rectangle (without “killing” it) with <code>C-x r d</code>.</p>
+          <p>To kill the text of a rectangular area, use <code>C-x r k</code>
+          (<code>kill-rectangle</code>). Or just “delete” the
+          “region-rectangle” (without “killing” it) with <code>C-x r
+          d</code>.</p>
 
           <p>To copy a (series of) Org column(s) while avoiding the use of
           registers:</p>
@@ -9809,7 +9817,7 @@ M-: (executable-find "diff") RET
     (key-chord-mode 1))
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">map pairs of simultaneously pressed keys to commands</span>
+"org-comment">Map pairs of simultaneously pressed keys to commands.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"key-chord"</span>
 
@@ -9848,11 +9856,13 @@ M-: (executable-find "diff") RET
     (key-chord-define-global <span class=
 "org-string">"hv"</span> 'describe-variable)
 
-    (key-chord-define-global <span class=
-"org-string">"hh"</span> 'fill-paragraph)
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global "jj" 'er/expand-region)</span>
+    (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"expand-region-autoloads"</span> <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Autoloads file.</span>
+      (key-chord-define-global <span class=
+"org-string">"hh"</span> 'er/expand-region)) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">Autoloaded.</span>
 
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"ace-window-autoloads"</span> <span class=
@@ -9891,26 +9901,39 @@ M-: (executable-find "diff") RET
 "org-comment-delimiter">; </span><span class="org-comment">Autoloaded?</span>
 
     (key-chord-define-global <span class=
+"org-string">"xv"</span> 'kill-region) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">Cut.</span>
+    (key-chord-define-global <span class=
+"org-string">"xc"</span> 'kill-ring-save) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">Copy.</span>
+    (key-chord-define-global <span class=
+"org-string">"cv"</span> 'yank) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">Paste.</span>
+    (key-chord-define-global <span class=
+"org-string">"cy"</span> 'yank-pop) <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Paste (with a different stretch).</span>
+
+    (key-chord-define-global <span class="org-string">"vb"</span> 'eval-buffer)
+    (key-chord-define-global <span class="org-string">"vg"</span> 'eval-region)
+
+    (key-chord-define-global <span class=
+"org-string">"vc"</span> 'vc-next-action)
+
+    (key-chord-define-global <span class="org-string">"ww"</span> 'save-buffer)
+
+    (key-chord-define-global <span class=
+"org-string">"x0"</span> 'delete-window)
+    (key-chord-define-global <span class=
+"org-string">"x1"</span> 'delete-other-windows)
+    (key-chord-define-global <span class=
+"org-string">"xh"</span> 'mark-whole-buffer)
+    (key-chord-define-global <span class=
 "org-string">"xk"</span> 'kill-buffer) <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">leuven-kill-this-buffer-without-query?</span>
     (key-chord-define-global <span class=
 "org-string">"xo"</span> 'other-window)
-    (key-chord-define-global <span class=
-"org-string">"x1"</span> 'delete-other-windows)
-    (key-chord-define-global <span class=
-"org-string">"x0"</span> 'delete-window)
-
-    (key-chord-define-global <span class="org-string">"vg"</span> 'eval-region)
-    (key-chord-define-global <span class="org-string">"vb"</span> 'eval-buffer)
-
-    (key-chord-define-global <span class="org-string">"cv"</span> 'yank)
-    (key-chord-define-global <span class="org-string">"cy"</span> 'yank-pop)
-    (key-chord-define-global <span class="org-string">"xv"</span> 'kill-region)
-    (key-chord-define-global <span class="org-string">"zk"</span> 'zap-to-char)
-
-    (key-chord-define-global <span class=
-"org-string">"vc"</span> 'vc-next-action)
 
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"helm-autoloads"</span> <span class=
@@ -9922,67 +9945,63 @@ M-: (executable-find "diff") RET
 
     (key-chord-define-global <span class=
 "org-string">"yy"</span> 'browse-kill-ring)
+    (key-chord-define-global <span class="org-string">"zk"</span> 'zap-to-char)
 
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"org-loaddefs"</span> <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">Autoloads file?</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
-"org-comment"> Problem for comments in ELisp</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";;" 'org-mark-ring-goto) ; Return to previous location before link.</span>
       (key-chord-define-global <span class=
-"org-string">";a"</span> 'org-agenda) <span class=
+"org-string">",a"</span> 'org-agenda) <span class=
 "org-comment-delimiter">; </span><span class="org-comment">Autoloaded.</span>
       (key-chord-define-global <span class=
-"org-string">";c"</span> 'org-capture)) <span class=
+"org-string">",c"</span> 'org-capture)) <span class=
 "org-comment-delimiter">; </span><span class="org-comment">Autoloaded.</span>
 
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"org"</span>         <span class=
 "org-comment-delimiter">; </span><span class="org-comment">Package.</span>
       (key-chord-define-global <span class=
-"org-string">";w"</span> 'org-refile) <span class=
+"org-string">",u"</span> 'outline-up-heading)
+      (key-chord-define-global <span class=
+"org-string">",w"</span> 'org-refile) <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">Not autoloaded.</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";," 'org-mark-ring-goto)           ;; Return to previous location before link.</span>
+"org-comment">(key-chord-define-global ",," 'org-mark-ring-goto)           ;; Return to previous location before link.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";." 'org-time-stamp)               ;; Create new timestamp.</span>
+"org-comment">(key-chord-define-global ",." 'org-time-stamp)               ;; Create new timestamp.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";b" 'org-tree-to-indirect-buffer)  ;; Show complete tree in dedicated buffer.</span>
+"org-comment">(key-chord-define-global ",b" 'org-tree-to-indirect-buffer)  ;; Show complete tree in dedicated buffer.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";d" 'org-todo)                     ;; Toggle todo for headline.</span>
+"org-comment">(key-chord-define-global ",d" 'org-todo)                     ;; Toggle todo for headline.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";e" 'org-insert-link)              ;; Edit current link.</span>
+"org-comment">(key-chord-define-global ",e" 'org-insert-link)              ;; Edit current link.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";f" 'org-footnote-action)          ;; Create new footnote link.</span>
+"org-comment">(key-chord-define-global ",f" 'org-footnote-action)          ;; Create new footnote link.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";g" 'er/open-org-calendar)         ;; Open calendar integration. :Functions.el:</span>
+"org-comment">(key-chord-define-global ",g" 'er/open-org-calendar)         ;; Open calendar integration. :Functions.el:</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";h" 'org-toggle-heading)           ;; Toggle heading for current line/list item.</span>
+"org-comment">(key-chord-define-global ",h" 'org-toggle-heading)           ;; Toggle heading for current line/list item.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";k" 'org-cut-subtree)              ;; Kill subtree.</span>
+"org-comment">(key-chord-define-global ",k" 'org-cut-subtree)              ;; Kill subtree.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";l" 'org-store-link)               ;; Store link (useful for agenda ref).</span>
+"org-comment">(key-chord-define-global ",l" 'org-store-link)               ;; Store link (useful for agenda ref).</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";n" 'er/org-narrow-and-reveal)     ;; Narrow region and reveal. :Functions.el:</span>
+"org-comment">(key-chord-define-global ",n" 'er/org-narrow-and-reveal)     ;; Narrow region and reveal. :Functions.el:</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";o" 'org-open-at-point)            ;; Open link at point.</span>
+"org-comment">(key-chord-define-global ",o" 'org-open-at-point)            ;; Open link at point.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";p" 'org-priority)                 ;; Toggle priority.</span>
+"org-comment">(key-chord-define-global ",p" 'org-priority)                 ;; Toggle priority.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";t" 'org-set-tags-command)         ;; Choose tags.</span>
+"org-comment">(key-chord-define-global ",t" 'org-set-tags-command)         ;; Choose tags.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";u" 'outline-up-heading)           ;; Go to parent headline.</span>
+"org-comment">(key-chord-define-global ",v" 'org-paste-subtree)            ;; Paste subtree.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";v" 'org-paste-subtree)            ;; Paste subtree.</span>
+"org-comment">(key-chord-define-global ",w" 'er/org-widen-and-outline)     ;; Widen and outline. :Functions.el:</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";w" 'er/org-widen-and-outline)     ;; Widen and outline. :Functions.el:</span>
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global ";y" 'org-copy-subtree)             ;; Copy subtree.</span>
+"org-comment">(key-chord-define-global ",y" 'org-copy-subtree)             ;; Copy subtree.</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(key-chord-define-global "&lt;H" 'org-list-make-subtree)        ;; Toggle headings for all list items in subtree.</span>
       )
@@ -21647,8 +21666,8 @@ etags --langdef=shell --regex-shell=<span class=
           writing code)</h4>
 
           <div class="outline-text-4" id="text-unnumbered-308">
-            <p>Extensible inline text completion mechanism – really
-            brilliant!</p>
+            <p>Auto-Complete shows completions as you type, so you can fill in
+            long words by typing only a few characters – really brilliant!</p>
 
             <p>Auto-complete uses the variable <code>ac-modes</code> to decide
             whether to enable auto-completion in a particular mode; by default,
@@ -21693,11 +21712,11 @@ etags --langdef=shell --regex-shell=<span class=
               completion menu)</li>
             </ul>
 
-            <p>According to the settings, completion is done by
+            <p>According to the default settings, completion is done by
             <code>TAB</code> or <code>RET</code>:</p>
 
             <dl class="org-dl">
-              <dt><code>ac-expand</code> (<code>TAB</code>, by default)</dt>
+              <dt><code>ac-expand</code> (<code>TAB</code>)</dt>
 
               <dd>Select candidates in cycle.</dd>
 
@@ -27627,7 +27646,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141017.1640]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20141018.1049]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
