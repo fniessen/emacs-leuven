@@ -87,13 +87,6 @@
       ;; support for `.authinfo' file
       (when (try-require 'auth-source)
 
-        ;; for any host and any protocol, use just one .netrc-like file that
-        ;; holds authinfo passwords
-        (setq auth-sources
-              (if (file-exists-p "~/.authinfo.gpg")
-                  '("~/.authinfo.gpg")
-                '("~/.authinfo")))
-
         ;; log debug messages
         (setq auth-source-debug t))
 

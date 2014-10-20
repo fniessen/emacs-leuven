@@ -411,16 +411,6 @@
       (<span class="org-keyword">when</span> (try-require 'auth-source)
 
         <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">for any host and any protocol, use just one .netrc-like file that</span>
-        <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">holds authinfo passwords</span>
-        (setq auth-sources
-              (<span class="org-keyword">if</span> (file-exists-p <span class=
-"org-string">"~/.authinfo.gpg"</span>)
-                  '(<span class="org-string">"~/.authinfo.gpg"</span>)
-                '(<span class="org-string">"~/.authinfo"</span>)))
-
-        <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">log debug messages</span>
         (setq auth-source-debug t))
 </pre>
