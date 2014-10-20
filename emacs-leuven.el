@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141020.1531
+;; Version: 20141020.1557
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141020.1531]--")
+(message "* --[ Loading Emacs Leuven 20141020.1557]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -5325,7 +5325,7 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "ox-latex"
 
     ;; Markup for TODO keywords and for tags, as a printf format.
-    (defun org-latex-format-headline (todo todo-type priority text tags info)
+    (defun org-latex-format-headline (todo todo-type priority text tags &optional info)
       "Default function for formatting the headline's text."
       (concat (when todo
                 (format "{%s\\textbf{\\textsc{\\textsf{%s}}}} "
@@ -7670,13 +7670,13 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; open current file with w3m
     (when (executable-find "w3m")
-      (defun dired-find-w3m ()
+      (defun dired-open-with-w3m ()
         "In Dired, visit (with find-w3m) the file named on this line."
         (interactive)
         (w3m-find-file (file-name-sans-versions (dired-get-filename) t)))
 
-      ;; add a binding "W" -> `dired-find-w3m' to Dired
-      (define-key dired-mode-map "W" 'dired-find-w3m))
+      ;; add a binding "W" -> `dired-open-with-w3m' to Dired
+      (define-key dired-mode-map "W" 'dired-open-with-w3m))
 
 ;;** (info "(emacs)Operating on Files")
 
@@ -9426,7 +9426,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (setq ret (shell-command-to-string "git log HEAD..origin"))
           (princ ret)))))
 
-(message "* --[ Loaded Emacs Leuven 20141020.1532]--")
+(message "* --[ Loaded Emacs Leuven 20141020.1558]--")
 
 (provide 'emacs-leuven)
 

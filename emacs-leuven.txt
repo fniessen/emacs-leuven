@@ -8171,7 +8171,7 @@ capabilities.
   (with-eval-after-load "ox-latex"
 
     ;; Markup for TODO keywords and for tags, as a printf format.
-    (defun org-latex-format-headline (todo todo-type priority text tags info)
+    (defun org-latex-format-headline (todo todo-type priority text tags &optional info)
       "Default function for formatting the headline's text."
       (concat (when todo
                 (format "{%s\\textbf{\\textsc{\\textsf{%s}}}} "
@@ -12343,9 +12343,9 @@ Just ask a WWW browser to display the current file.
 
 It works for files as well as for directories.
 
-It opens the Windows explorer for:
+It opens the Windows Explorer for:
 
-- the *current directory* when invoked on ~.~.
+- the *current directory* when invoked on ~.~, and
 - the *parent directory* when invoked on ~..~.
 
 *************** TODO Mapcar on the browse-url function
@@ -12357,7 +12357,7 @@ We should probably have the same type of key binding for opening Explorer from
 Dired.
 *************** END
 
-**** Many files at once (for Windows)
+**** MANY FILES at once (for Windows)
 
 For those under Windows:
 
@@ -12378,9 +12378,6 @@ For those under Windows:
         (define-key dired-mode-map (kbd "E") 'w32-dired-open-files-externally)))
 #+end_src
 
-XXX It works for files as well as for directories.  It opens the Windows
-explorer for the *current directory* when invoked on ~.~ (correct) or ~..~ (bug!!).
-
 *** Open file with w3m
 
 See news "Opening html-File in Dired with w3m" for extra info.
@@ -12388,13 +12385,13 @@ See news "Opening html-File in Dired with w3m" for extra info.
 #+begin_src emacs-lisp
     ;; open current file with w3m
     (when (executable-find "w3m")
-      (defun dired-find-w3m ()
+      (defun dired-open-with-w3m ()
         "In Dired, visit (with find-w3m) the file named on this line."
         (interactive)
         (w3m-find-file (file-name-sans-versions (dired-get-filename) t)))
 
-      ;; add a binding "W" -> `dired-find-w3m' to Dired
-      (define-key dired-mode-map "W" 'dired-find-w3m))
+      ;; add a binding "W" -> `dired-open-with-w3m' to Dired
+      (define-key dired-mode-map "W" 'dired-open-with-w3m))
 #+end_src
 
 ** Operating on Files

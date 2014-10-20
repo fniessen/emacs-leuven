@@ -1000,7 +1000,7 @@
                       <li><a href="#unnumbered-317">Ask a WWW browser to
                       display file</a></li>
 
-                      <li><a href="#unnumbered-318">Many files at once (for
+                      <li><a href="#unnumbered-318">MANY FILES at once (for
                       Windows)</a></li>
                     </ul>
                   </li>
@@ -1363,7 +1363,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141020.1532</span>
+"org-comment">Version: 20141020.1558</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1486,7 +1486,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141020.1532]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20141020.1558]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Turn on Common Lisp support.</span>
@@ -15338,7 +15338,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">TODO</span></span><span class=
 "org-comment"> keywords and for tags, as a printf format.</span>
     (<span class="org-keyword">defun</span> <span class=
-"org-function-name">org-latex-format-headline</span> (todo todo-type priority text tags info)
+"org-function-name">org-latex-format-headline</span> (todo todo-type priority text tags <span class="org-type">&amp;optional</span> info)
       <span class=
 "org-doc">"Default function for formatting the headline's text."</span>
       (concat (<span class="org-keyword">when</span> todo
@@ -22427,11 +22427,11 @@ good|
 
               <p>It works for files as well as for directories.</p>
 
-              <p>It opens the Windows explorer for:</p>
+              <p>It opens the Windows Explorer for:</p>
 
               <ul class="org-ul">
                 <li>the <b>current directory</b> when invoked on
-                <code>.</code>.</li>
+                <code>.</code>, and</li>
 
                 <li>
                   <p>the <b>parent directory</b> when invoked on
@@ -22471,7 +22471,7 @@ good|
           </div>
 
           <div id="outline-container-unnumbered-318" class="outline-5">
-            <h5 id="unnumbered-318">Many files at once (for Windows)</h5>
+            <h5 id="unnumbered-318">MANY FILES at once (for Windows)</h5>
 
             <div class="outline-text-5" id="text-unnumbered-318">
               <p>For those under Windows:</p>
@@ -22502,11 +22502,6 @@ good|
 "org-string">"E"</span>) 'w32-dired-open-files-externally)))
 </pre>
               </div>
-
-              <p>XXX It works for files as well as for directories. It opens
-              the Windows explorer for the <b>current directory</b> when
-              invoked on <code>.</code> (correct) or <code>..</code>
-              (bug!!).</p>
             </div>
           </div>
         </div>
@@ -22525,7 +22520,7 @@ good|
     (<span class="org-keyword">when</span> (executable-find <span class=
 "org-string">"w3m"</span>)
       (<span class="org-keyword">defun</span> <span class=
-"org-function-name">dired-find-w3m</span> ()
+"org-function-name">dired-open-with-w3m</span> ()
         <span class=
 "org-doc">"In Dired, visit (with find-w3m) the file named on this line."</span>
         (interactive)
@@ -22534,10 +22529,10 @@ good|
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">add a binding "W" -&gt; `</span><span class=
 "org-constant"><span class=
-"org-comment">dired-find-w3m</span></span><span class=
+"org-comment">dired-open-with-w3m</span></span><span class=
 "org-comment">' to Dired</span>
       (define-key dired-mode-map <span class=
-"org-string">"W"</span> 'dired-find-w3m))
+"org-string">"W"</span> 'dired-open-with-w3m))
 </pre>
             </div>
           </div>
@@ -27680,7 +27675,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141020.1533]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20141020.1559]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
