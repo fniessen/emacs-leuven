@@ -7703,6 +7703,15 @@ XXX Does this work?
 
 *************** TODO Adding ":tangle yes" on the above code block results in partial tangling!
 
+**** Emphasize items in agenda
+
+#+begin_src emacs-lisp
+(add-hook 'org-agenda-finalize-hook
+          (lambda () (let ((inhibit-read-only t))
+               (goto-char (point-min))
+               (org-do-emphasis-faces (point-max)))))
+#+end_src
+
 **** Mark a task as DONE and create a follow-up task
 
 #+begin_src emacs-lisp
@@ -12193,9 +12202,9 @@ interface).
     ;; switches passed to `ls' for Dired
     (setq dired-listing-switches
           (cond (leuven--win32-p
-                 "-a -F -l -p")
+                 "-a -F -l")
                 (t
-                 "-a -F --group-directories-first -l -p --time-style=long-iso")))
+                 "-a -F --group-directories-first -l --time-style=long-iso")))
 #+end_src
 
 ** Deleting Files with Dired
@@ -14894,14 +14903,14 @@ Edit your =~/.Xresources= file to have a line with "Emacs.font".  Then do a
 or restart your X11 to validate the modification.  I let Emacs do this for me:
 
 #+begin_src emacs-lisp
-  (defun merge-x-resources ()
+  (defun leuven--merge-x-resources ()
     (let ((file (file-name-nondirectory (buffer-file-name))))
       (when (or (string= file ".Xdefaults")
                 (string= file ".Xresources"))
         (start-process "xrdb" nil "xrdb" "-merge" (buffer-file-name))
         (message (format "Merged %s into X resource database" file)))))
 
-  (add-hook 'after-save-hook 'merge-x-resources)
+  (add-hook 'after-save-hook 'leuven--merge-x-resources)
 #+end_src
 
 #+begin_src emacs-lisp

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141020.1459
+;; Version: 20141020.1531
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141020.1459]--")
+(message "* --[ Loading Emacs Leuven 20141020.1531]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -4961,6 +4961,11 @@ From %c"
               (remove-text-properties (point-min) (point-max)
                                       '(mouse-face t))))
 
+(add-hook 'org-agenda-finalize-hook
+          (lambda () (let ((inhibit-read-only t))
+               (goto-char (point-min))
+               (org-do-emphasis-faces (point-max)))))
+
   (with-eval-after-load "org-agenda"
 
     (defun leuven-org-agenda-mark-done-and-add-followup ()
@@ -7608,9 +7613,9 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; switches passed to `ls' for Dired
     (setq dired-listing-switches
           (cond (leuven--win32-p
-                 "-a -F -l -p")
+                 "-a -F -l")
                 (t
-                 "-a -F --group-directories-first -l -p --time-style=long-iso")))
+                 "-a -F --group-directories-first -l --time-style=long-iso")))
 
 ;;** (info "(emacs)Dired Deletion")
 
@@ -9283,14 +9288,14 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "Faces")
 
-  (defun merge-x-resources ()
+  (defun leuven--merge-x-resources ()
     (let ((file (file-name-nondirectory (buffer-file-name))))
       (when (or (string= file ".Xdefaults")
                 (string= file ".Xresources"))
         (start-process "xrdb" nil "xrdb" "-merge" (buffer-file-name))
         (message (format "Merged %s into X resource database" file)))))
 
-  (add-hook 'after-save-hook 'merge-x-resources)
+  (add-hook 'after-save-hook 'leuven--merge-x-resources)
 
   ;; allow any scalable font
   (setq scalable-fonts-allowed t)
@@ -9421,7 +9426,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (setq ret (shell-command-to-string "git log HEAD..origin"))
           (princ ret)))))
 
-(message "* --[ Loaded Emacs Leuven 20141020.1500]--")
+(message "* --[ Loaded Emacs Leuven 20141020.1532]--")
 
 (provide 'emacs-leuven)
 
