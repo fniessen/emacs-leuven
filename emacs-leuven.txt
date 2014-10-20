@@ -726,6 +726,7 @@ cancelable; hence, we put it out of a "chapter".
 
   ;; Undo some previous changes.
   (global-set-key (kbd "<f11>") 'undo)
+  (global-set-key (kbd "C-z") 'undo)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -734,6 +735,7 @@ cancelable; hence, we put it out of a "chapter".
     (defalias 'redo 'undo-tree-redo)
 
     (global-set-key (kbd "<S-f11>") 'redo)
+    (global-set-key (kbd "C-S-z") 'redo)
 
     ;; Enable Global-Undo-Tree mode.
     (global-undo-tree-mode 1)
@@ -986,10 +988,11 @@ Emacs).
     (when leuven--win32-p
       (setq Info-directory-list
             `(,(expand-file-name
-                (concat (file-name-directory (locate-library "org"))
-                        "../doc/"))
+                (concat (file-name-directory (locate-library "org")) "../doc/"))
               "c:/cygwin/usr/share/info/"
               ,@Info-directory-list)))
+
+  ;; XXX Replace by add-to-list to ensure we don't insert duplicates (if Cygwin was already there)
 #+end_src
 
 ~Info+~ fontifies entries for reference items (functions, macros, commands,
@@ -1434,17 +1437,22 @@ Visible bookmarks in buffer.
 
 Key bindings:
 
-- ~C-x p RET~ ::
+- ~C-x p RET~ (C-F2 in Sublime Text and TextMate) ::
      *Set* (or delete) a *bookmark* at point.
 
-- ~C-x p C-down~ ::
+- ~C-x p C-down~ (F2 in Sublime Text and TextMate) ::
      Cycle to the *next* highlighted *bookmark* in the current buffer.
 
-- ~C-x p C-up~ ::
+- ~C-x p C-up~ (S-F2 in Sublime Text and TextMate) ::
      Cycle to the *previous* highlighted *bookmark* in the current buffer.
 
 - ~C-x (4) j h~ ::
      Jump to a highlighted bookmark (in another window).
+
+In TeXStudio:
+
+- Set Bookmark 0..9: ~C-S-0..9~
+- Jump to Bookmark 0..9: ~C-0..9~
 
 #+begin_src emacs-lisp
     ;; Extensions to standard library `bookmark.el'.
@@ -2429,13 +2437,12 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
             ))
 
   ;; Check if `ispell-program-name' seems correct.
-  (defun ispell-check-program-name ()
+  (defun leuven--ispell-check-program-name ()
     "Ensure that `ispell-program-name' is defined and non-nil."
-    (interactive)
     (and (boundp 'ispell-program-name)
          ispell-program-name))
 
-  (when (ispell-check-program-name)
+  (when (leuven--ispell-check-program-name)
 
     (defun ispell-region-or-buffer ()
       "Interactively check the current region or buffer for spelling errors."
@@ -4363,7 +4370,7 @@ one.
 #+end_src
 
 #+begin_src emacs-lisp
-  (defun detach-window ()
+  (defun leuven-detach-window ()
     "Close current window and re-open it in new frame."
     (interactive)
     (let ((current-buffer (window-buffer)))
@@ -4388,13 +4395,13 @@ one.
   (leuven--section "21.7 (emacs)Frame Commands")
 
   (when leuven--x-window-p
-    (defun toggle-fullscreen ()
+    (defun leuven-toggle-fullscreen ()
       "Toggle between full screen and partial screen display in X servers."
       (interactive)
       (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                              '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
 
-    (global-set-key (kbd "C-c z") 'toggle-fullscreen))
+    (global-set-key (kbd "C-c z") 'leuven-toggle-fullscreen))
 
   (GNUEmacs
     (when leuven--win32-p
@@ -4416,7 +4423,7 @@ one.
   (modify-all-frames-parameters '((fullscreen . maximized)))
 #+end_src
 
-*************** TODO Try to use the name ~toggle-fullscreen~ for Windows as well
+*************** TODO Try to use the name ~leuven-toggle-fullscreen~ for Windows as well
 
 See ~(display-pixel-width)~:
 
@@ -5056,6 +5063,7 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
     (key-chord-define-global "xh" 'mark-whole-buffer)
     (key-chord-define-global "xk" 'kill-buffer) ; leuven-kill-this-buffer-without-query?
     (key-chord-define-global "xo" 'other-window)
+    (key-chord-define-global ";;" 'other-window)
 
     (with-eval-after-load "helm-autoloads" ; Autoloads file.
       (key-chord-define-global "xx" 'helm-M-x)) ; Autoloaded.
@@ -9509,7 +9517,7 @@ SumatraPDF as your PDF viewer.
 
       ;; Use a saner PDF viewer (evince, SumatraPDF).
       (setcdr (assoc "^pdf$" TeX-output-view-style)
-              (cond (leuven--win32-p
+              (cond ((or leuven--win32-p leuven--cygwin-p)
                      `("." (concat "\"" ,sumatrapdf-command "\" %o")))
                     ;; under Windows, we could open the PDF file with
                     ;; `start "" xxx.pdf' (in a command prompt)
@@ -9522,7 +9530,7 @@ SumatraPDF as your PDF viewer.
                      `("SumatraPDF"
                        (concat "\"" ,sumatrapdf-command "\" %o"))))
 
-      (when leuven--win32-p
+      (when (or leuven--win32-p leuven--cygwin-p)
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '("SumatraPDF")))
 #+end_src
@@ -9571,7 +9579,7 @@ Nor a default when point is on a command name...
 
       ;; Directory containing automatically generated TeX information.
       (setq TeX-auto-local (concat user-emacs-directory "auctex-auto-generated-info/"))
-                                        ; must end with a slash
+                                        ; Must end with a slash.
 #+end_src
 
 ** Preview-LaTeX
@@ -9591,7 +9599,7 @@ LaTeX file, ~preview-latex~ gives you a ~Preview~ menu.
           (cond (leuven--win32-p
                  (or (executable-find "gswin32c.exe")
                      "C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"))
-                                        ; default value
+                                        ; Default value.
                 (t
                  "/usr/bin/gs")))
         (leuven--file-exists-and-executable-p preview-gs-command)
@@ -10906,7 +10914,7 @@ Show the diff we are about to commit: ~C-c C-d~.
 
   (defun leuven--vc-log-mode-setup ()
     ;; check if `ispell-program-name' seems correct
-    (when (ispell-check-program-name)
+    (when (leuven--ispell-check-program-name)
       (setq ispell-local-dictionary "american")
       (flyspell-mode)))
 
@@ -12347,7 +12355,7 @@ For those under Windows:
 #+begin_src emacs-lisp
     ;; open files using Windows associations
     (GNUEmacs
-      (when leuven--win32-p
+      (when (or leuven--win32-p leuven--cygwin-p)
         (defun w32-dired-open-files-externally (&optional arg)
           "In Dired, open the marked files (or directories) with the default
         Windows tool."
@@ -14202,9 +14210,7 @@ printing on Windows.
                              (format "--header=%s" (buffer-name))))
 
     ;; name of a printer to which data is sent for printing
-    (setq printer-name
-          (cond (leuven--win32-p "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
-                (t t))))
+    (setq printer-name t))
 
   (defun leuven-ps-print-buffer-with-faces-query ()
     "Query user before printing the buffer."
@@ -14900,8 +14906,7 @@ or restart your X11 to validate the modification.  I let Emacs do this for me:
 
 #+begin_src emacs-lisp
   ;; allow any scalable font
-  (when leuven--win32-p
-    (setq scalable-fonts-allowed t))
+  (setq scalable-fonts-allowed t)
 #+end_src
 
 *** UTF-8
@@ -15136,7 +15141,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 ;;*** 4.2 Using fly spell mode
 
     ;; check if `ispell-program-name' seems correct
-    (when (ispell-check-program-name)
+    (when (leuven--ispell-check-program-name)
       (setq lui-flyspell-p t)
       (setq lui-flyspell-alist '(("." "american"))))
 

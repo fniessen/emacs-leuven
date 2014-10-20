@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141018.1047
+;; Version: 20141020.1459
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141018.1047]--")
+(message "* --[ Loading Emacs Leuven 20141020.1459]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -539,12 +539,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; Undo some previous changes.
   (global-set-key (kbd "<f11>") 'undo)
+  (global-set-key (kbd "C-z") 'undo)
 
   (with-eval-after-load "undo-tree-autoloads"
 
     (defalias 'redo 'undo-tree-redo)
 
     (global-set-key (kbd "<S-f11>") 'redo)
+    (global-set-key (kbd "C-S-z") 'redo)
 
     ;; Enable Global-Undo-Tree mode.
     (global-undo-tree-mode 1)
@@ -667,10 +669,11 @@ Last time is saved in global variable `leuven--before-section-time'."
     (when leuven--win32-p
       (setq Info-directory-list
             `(,(expand-file-name
-                (concat (file-name-directory (locate-library "org"))
-                        "../doc/"))
+                (concat (file-name-directory (locate-library "org")) "../doc/"))
               "c:/cygwin/usr/share/info/"
               ,@Info-directory-list)))
+
+  ;; XXX Replace by add-to-list to ensure we don't insert duplicates (if Cygwin was already there)
 
     (GNUEmacs
       (try-require 'info+)
@@ -1533,13 +1536,12 @@ Last time is saved in global variable `leuven--before-section-time'."
             ))
 
   ;; Check if `ispell-program-name' seems correct.
-  (defun ispell-check-program-name ()
+  (defun leuven--ispell-check-program-name ()
     "Ensure that `ispell-program-name' is defined and non-nil."
-    (interactive)
     (and (boundp 'ispell-program-name)
          ispell-program-name))
 
-  (when (ispell-check-program-name)
+  (when (leuven--ispell-check-program-name)
 
     (defun ispell-region-or-buffer ()
       "Interactively check the current region or buffer for spelling errors."
@@ -2695,7 +2697,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                 (format-time-string "%Y-%m-%d" emacs-build-time)
                 (emacs-pid)))
 
-  (defun detach-window ()
+  (defun leuven-detach-window ()
     "Close current window and re-open it in new frame."
     (interactive)
     (let ((current-buffer (window-buffer)))
@@ -2708,13 +2710,13 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "21.7 (emacs)Frame Commands")
 
   (when leuven--x-window-p
-    (defun toggle-fullscreen ()
+    (defun leuven-toggle-fullscreen ()
       "Toggle between full screen and partial screen display in X servers."
       (interactive)
       (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                              '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
 
-    (global-set-key (kbd "C-c z") 'toggle-fullscreen))
+    (global-set-key (kbd "C-c z") 'leuven-toggle-fullscreen))
 
   (GNUEmacs
     (when leuven--win32-p
@@ -3159,6 +3161,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (key-chord-define-global "xh" 'mark-whole-buffer)
     (key-chord-define-global "xk" 'kill-buffer) ; leuven-kill-this-buffer-without-query?
     (key-chord-define-global "xo" 'other-window)
+    (key-chord-define-global ";;" 'other-window)
 
     (with-eval-after-load "helm-autoloads" ; Autoloads file.
       (key-chord-define-global "xx" 'helm-M-x)) ; Autoloaded.
@@ -6196,7 +6199,7 @@ this with to-do items than with projects or headings."
 
       ;; Use a saner PDF viewer (evince, SumatraPDF).
       (setcdr (assoc "^pdf$" TeX-output-view-style)
-              (cond (leuven--win32-p
+              (cond ((or leuven--win32-p leuven--cygwin-p)
                      `("." (concat "\"" ,sumatrapdf-command "\" %o")))
                     ;; under Windows, we could open the PDF file with
                     ;; `start "" xxx.pdf' (in a command prompt)
@@ -6209,7 +6212,7 @@ this with to-do items than with projects or headings."
                      `("SumatraPDF"
                        (concat "\"" ,sumatrapdf-command "\" %o"))))
 
-      (when leuven--win32-p
+      (when (or leuven--win32-p leuven--cygwin-p)
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '("SumatraPDF")))
 
@@ -6248,7 +6251,7 @@ this with to-do items than with projects or headings."
 
       ;; Directory containing automatically generated TeX information.
       (setq TeX-auto-local (concat user-emacs-directory "auctex-auto-generated-info/"))
-                                        ; must end with a slash
+                                        ; Must end with a slash.
 
 ;;** (info "(preview-latex)Top")
 
@@ -6261,7 +6264,7 @@ this with to-do items than with projects or headings."
           (cond (leuven--win32-p
                  (or (executable-find "gswin32c.exe")
                      "C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"))
-                                        ; default value
+                                        ; Default value.
                 (t
                  "/usr/bin/gs")))
         (leuven--file-exists-and-executable-p preview-gs-command)
@@ -6977,7 +6980,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (defun leuven--vc-log-mode-setup ()
     ;; check if `ispell-program-name' seems correct
-    (when (ispell-check-program-name)
+    (when (leuven--ispell-check-program-name)
       (setq ispell-local-dictionary "american")
       (flyspell-mode)))
 
@@ -7647,7 +7650,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; open files using Windows associations
     (GNUEmacs
-      (when leuven--win32-p
+      (when (or leuven--win32-p leuven--cygwin-p)
         (defun w32-dired-open-files-externally (&optional arg)
           "In Dired, open the marked files (or directories) with the default
         Windows tool."
@@ -8801,9 +8804,7 @@ a clean buffer we're an order of magnitude laxer about checking."
                              (format "--header=%s" (buffer-name))))
 
     ;; name of a printer to which data is sent for printing
-    (setq printer-name
-          (cond (leuven--win32-p "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
-                (t t))))
+    (setq printer-name t))
 
   (defun leuven-ps-print-buffer-with-faces-query ()
     "Query user before printing the buffer."
@@ -9292,8 +9293,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (add-hook 'after-save-hook 'merge-x-resources)
 
   ;; allow any scalable font
-  (when leuven--win32-p
-    (setq scalable-fonts-allowed t))
+  (setq scalable-fonts-allowed t)
 
   (define-key global-map (kbd "C-+") 'text-scale-increase)
   (define-key global-map (kbd "C--") 'text-scale-decrease)
@@ -9421,7 +9421,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (setq ret (shell-command-to-string "git log HEAD..origin"))
           (princ ret)))))
 
-(message "* --[ Loaded Emacs Leuven 20141018.1048]--")
+(message "* --[ Loaded Emacs Leuven 20141020.1500]--")
 
 (provide 'emacs-leuven)
 

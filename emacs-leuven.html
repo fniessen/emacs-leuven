@@ -1360,7 +1360,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141018.1049</span>
+"org-comment">Version: 20141020.1501</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1483,7 +1483,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141018.1049]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20141020.1501]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Turn on Common Lisp support.</span>
@@ -2576,6 +2576,7 @@
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Undo some previous changes.</span>
   (global-set-key (kbd <span class="org-string">"&lt;f11&gt;"</span>) 'undo)
+  (global-set-key (kbd <span class="org-string">"C-z"</span>) 'undo)
 </pre>
           </div>
 
@@ -2589,6 +2590,7 @@
 
     (global-set-key (kbd <span class=
 "org-string">"&lt;S-f11&gt;"</span>) 'redo)
+    (global-set-key (kbd <span class="org-string">"C-S-z"</span>) 'redo)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Enable Global-Undo-Tree mode.</span>
@@ -2985,10 +2987,13 @@
       (setq Info-directory-list
             `(,(expand-file-name
                 (concat (file-name-directory (locate-library <span class=
-"org-string">"org"</span>))
-                        <span class="org-string">"../doc/"</span>))
+"org-string">"org"</span>)) <span class="org-string">"../doc/"</span>))
               <span class="org-string">"c:/cygwin/usr/share/info/"</span>
               ,@Info-directory-list)))
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
+"org-comment"> Replace by add-to-list to ensure we don't insert duplicates (if Cygwin was already there)</span>
 </pre>
           </div>
 
@@ -3790,16 +3795,18 @@
           <p>Key bindings:</p>
 
           <dl class="org-dl">
-            <dt><code>C-x p RET</code></dt>
+            <dt><code>C-x p RET</code> (C-F2 in Sublime Text and TextMate)</dt>
 
             <dd><b>Set</b> (or delete) a <b>bookmark</b> at point.</dd>
 
-            <dt><code>C-x p C-down</code></dt>
+            <dt><code>C-x p C-down</code> (F2 in Sublime Text and
+            TextMate)</dt>
 
             <dd>Cycle to the <b>next</b> highlighted <b>bookmark</b> in the
             current buffer.</dd>
 
-            <dt><code>C-x p C-up</code></dt>
+            <dt><code>C-x p C-up</code> (S-F2 in Sublime Text and
+            TextMate)</dt>
 
             <dd>Cycle to the <b>previous</b> highlighted <b>bookmark</b> in the
             current buffer.</dd>
@@ -3808,6 +3815,14 @@
 
             <dd>Jump to a highlighted bookmark (in another window).</dd>
           </dl>
+
+          <p>In TeXStudio:</p>
+
+          <ul class="org-ul">
+            <li>Set Bookmark 0..9: <code>C-S-0..9</code></li>
+
+            <li>Jump to Bookmark 0..9: <code>C-0..9</code></li>
+          </ul>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
@@ -5505,16 +5520,15 @@
 "org-comment">ispell-program-name</span></span><span class=
 "org-comment">' seems correct.</span>
   (<span class="org-keyword">defun</span> <span class=
-"org-function-name">ispell-check-program-name</span> ()
+"org-function-name">leuven--ispell-check-program-name</span> ()
     <span class="org-doc">"Ensure that `</span><span class=
 "org-constant"><span class=
 "org-doc">ispell-program-name</span></span><span class=
 "org-doc">' is defined and non-nil."</span>
-    (interactive)
     (and (boundp 'ispell-program-name)
          ispell-program-name))
 
-  (<span class="org-keyword">when</span> (ispell-check-program-name)
+  (<span class="org-keyword">when</span> (leuven--ispell-check-program-name)
 
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">ispell-region-or-buffer</span> ()
@@ -8739,7 +8753,7 @@ M-: (executable-find "diff") RET
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (<span class="org-keyword">defun</span> <span class=
-"org-function-name">detach-window</span> ()
+"org-function-name">leuven-detach-window</span> ()
     <span class=
 "org-doc">"Close current window and re-open it in new frame."</span>
     (interactive)
@@ -8778,7 +8792,7 @@ M-: (executable-find "diff") RET
 
   (<span class="org-keyword">when</span> leuven--x-window-p
     (<span class="org-keyword">defun</span> <span class=
-"org-function-name">toggle-fullscreen</span> ()
+"org-function-name">leuven-toggle-fullscreen</span> ()
       <span class=
 "org-doc">"Toggle between full screen and partial screen display in X servers."</span>
       (interactive)
@@ -8788,7 +8802,7 @@ M-: (executable-find "diff") RET
 "org-string">"_NET_WM_STATE_FULLSCREEN"</span> 0)))
 
     (global-set-key (kbd <span class=
-"org-string">"C-c z"</span>) 'toggle-fullscreen))
+"org-string">"C-c z"</span>) 'leuven-toggle-fullscreen))
 
   (GNUEmacs
     (<span class="org-keyword">when</span> leuven--win32-p
@@ -8822,7 +8836,8 @@ M-: (executable-find "diff") RET
               <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
 
               <td width="100%"><b>Try to use the name
-              <code>toggle-fullscreen</code> for Windows as well</b><br /></td>
+              <code>leuven-toggle-fullscreen</code> for Windows as
+              well</b><br /></td>
             </tr>
           </table>
 
@@ -9934,6 +9949,8 @@ M-: (executable-find "diff") RET
 "org-comment">leuven-kill-this-buffer-without-query?</span>
     (key-chord-define-global <span class=
 "org-string">"xo"</span> 'other-window)
+    (key-chord-define-global <span class=
+"org-string">";;"</span> 'other-window)
 
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"helm-autoloads"</span> <span class=
@@ -17613,7 +17630,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">Use a saner PDF viewer (evince, SumatraPDF).</span>
       (setcdr (assoc <span class=
 "org-string">"^pdf$"</span> TeX-output-view-style)
-              (<span class="org-keyword">cond</span> (leuven--win32-p
+              (<span class=
+"org-keyword">cond</span> ((or leuven--win32-p leuven--cygwin-p)
                      `(<span class="org-string">"."</span> (concat <span class=
 "org-string">"\""</span> ,sumatrapdf-command <span class=
 "org-string">"\" %o"</span>)))
@@ -17634,7 +17652,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"\""</span> ,sumatrapdf-command <span class=
 "org-string">"\" %o"</span>))))
 
-      (<span class="org-keyword">when</span> leuven--win32-p
+      (<span class=
+"org-keyword">when</span> (or leuven--win32-p leuven--cygwin-p)
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '(<span class="org-string">"SumatraPDF"</span>)))
 </pre>
@@ -17720,7 +17739,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-string">"auctex-auto-generated-info/"</span>))
                                         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">must end with a slash</span>
+"org-comment">Must end with a slash.</span>
 </pre>
           </div>
         </div>
@@ -17755,7 +17774,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
                      <span class=
 "org-string">"C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"</span>))
                                         <span class=
-"org-comment-delimiter">; </span><span class="org-comment">default value</span>
+"org-comment-delimiter">; </span><span class=
+"org-comment">Default value.</span>
                 (t
                  <span class="org-string">"/usr/bin/gs"</span>)))
         (leuven--file-exists-and-executable-p preview-gs-command)
@@ -19988,7 +20008,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">check if `</span><span class="org-constant"><span class=
 "org-comment">ispell-program-name</span></span><span class=
 "org-comment">' seems correct</span>
-    (<span class="org-keyword">when</span> (ispell-check-program-name)
+    (<span class="org-keyword">when</span> (leuven--ispell-check-program-name)
       (setq ispell-local-dictionary <span class="org-string">"american"</span>)
       (flyspell-mode)))
 
@@ -22442,7 +22462,8 @@ good|
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">open files using Windows associations</span>
     (GNUEmacs
-      (<span class="org-keyword">when</span> leuven--win32-p
+      (<span class=
+"org-keyword">when</span> (or leuven--win32-p leuven--cygwin-p)
         (<span class="org-keyword">defun</span> <span class=
 "org-function-name">w32-dired-open-files-externally</span> (<span class=
 "org-type">&amp;optional</span> arg)
@@ -25730,12 +25751,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">name of a printer to which data is sent for printing</span>
-    (setq printer-name
-          (<span class="org-keyword">cond</span> (leuven--win32-p <span class=
-"org-string">"//PRINT-SERVER/Brother HL-4150CDN"</span>) <span class=
-"org-comment-delimiter">; </span><span class=
-"org-leuven-highlight"><span class="org-comment">XXX</span></span>
-                (t t))))
+    (setq printer-name t))
 
   (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-ps-print-buffer-with-faces-query</span> ()
@@ -26949,8 +26965,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">allow any scalable font</span>
-  (<span class="org-keyword">when</span> leuven--win32-p
-    (setq scalable-fonts-allowed t))
+  (setq scalable-fonts-allowed t)
 </pre>
           </div>
         </div>
@@ -27284,7 +27299,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
 "org-comment">check if `</span><span class="org-constant"><span class=
 "org-comment">ispell-program-name</span></span><span class=
 "org-comment">' seems correct</span>
-    (<span class="org-keyword">when</span> (ispell-check-program-name)
+    (<span class="org-keyword">when</span> (leuven--ispell-check-program-name)
       (setq lui-flyspell-p t)
       (setq lui-flyspell-alist '((<span class=
 "org-string">"."</span> <span class="org-string">"american"</span>))))
@@ -27646,7 +27661,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141018.1049]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20141020.1501]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
