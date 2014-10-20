@@ -1363,7 +1363,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141020.1558</span>
+"org-comment">Version: 20141020.2334</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1486,7 +1486,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141020.1558]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20141020.2334]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Turn on Common Lisp support.</span>
@@ -2799,7 +2799,7 @@
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Avoid the description of all minor modes.</span>
   (<span class="org-keyword">defun</span> <span class=
-"org-function-name">describe-major-mode</span> ()
+"org-function-name">leuven-describe-major-mode</span> ()
     <span class="org-doc">"Describe only `</span><span class=
 "org-constant"><span class="org-doc">major-mode</span></span><span class=
 "org-doc">'."</span>
@@ -2927,7 +2927,7 @@
   (global-set-key (kbd <span class="org-string">"&lt;f1&gt;"</span>) 'info)
 
   (<span class="org-keyword">defun</span> <span class=
-"org-function-name">describe-elisp-symbol-at-point</span> ()
+"org-function-name">leuven-describe-elisp-symbol-at-point</span> ()
     <span class="org-doc">"Get help for the symbol at point."</span>
     (interactive)
     (<span class="org-keyword">let</span> ((sym (intern-soft (current-word))))
@@ -2940,7 +2940,7 @@
         (message <span class="org-string">"nothing"</span>))))
 
   (global-set-key (kbd <span class=
-"org-string">"&lt;f1&gt;"</span>) 'describe-elisp-symbol-at-point)
+"org-string">"&lt;f1&gt;"</span>) 'leuven-describe-elisp-symbol-at-point)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Display symbol definitions, as found in the relevant manual</span>
@@ -3899,18 +3899,6 @@
 
 (leuven--chapter leuven-chapter-14-display <span class=
 "org-string">"14 Controlling the Display"</span>
-</pre>
-        </div>
-
-        <div class="org-src-container">
-          <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">defun</span> <span class=
-"org-function-name">width-80</span> ()
-    (interactive)
-    (set-window-margins (selected-window) 0 0)
-    (<span class=
-"org-keyword">let</span> ((marginwidth (/ (- (window-width) 80) 2)))
-      (set-window-margins (selected-window) marginwidth marginwidth)))
 </pre>
         </div>
       </div>
@@ -5534,7 +5522,7 @@
   (<span class="org-keyword">when</span> (leuven--ispell-check-program-name)
 
     (<span class="org-keyword">defun</span> <span class=
-"org-function-name">ispell-region-or-buffer</span> ()
+"org-function-name">leuven-ispell-region-or-buffer</span> ()
       <span class=
 "org-doc">"Interactively check the current region or buffer for spelling errors."</span>
       (interactive)
@@ -5547,7 +5535,7 @@
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Key bindings (or `C-c i' prefix key binding?).</span>
     (global-set-key (kbd <span class=
-"org-string">"C-$"</span>) 'ispell-region-or-buffer)
+"org-string">"C-$"</span>) 'leuven-ispell-region-or-buffer)
     (global-set-key (kbd <span class=
 "org-string">"C-M-$"</span>) 'ispell-change-dictionary)
 
@@ -8808,25 +8796,26 @@ M-: (executable-find "diff") RET
 "org-string">"C-c z"</span>) 'leuven-toggle-fullscreen))
 
   (GNUEmacs
-    (<span class="org-keyword">when</span> leuven--win32-p
+    (<span class=
+"org-keyword">when</span> (or leuven--win32-p leuven--cygwin-p)
       (<span class="org-keyword">defun</span> <span class=
-"org-function-name">w32-maximize-frame</span> ()
+"org-function-name">leuven-w32-maximize-frame</span> ()
         <span class="org-doc">"Maximize the current frame."</span>
         (interactive)
         (w32-send-sys-command 61488)
         (global-set-key (kbd <span class=
-"org-string">"C-c z"</span>) 'w32-restore-frame))
+"org-string">"C-c z"</span>) 'leuven-w32-restore-frame))
 
       (global-set-key (kbd <span class=
-"org-string">"C-c z"</span>) 'w32-maximize-frame)
+"org-string">"C-c z"</span>) 'leuven-w32-maximize-frame)
 
       (<span class="org-keyword">defun</span> <span class=
-"org-function-name">w32-restore-frame</span> ()
+"org-function-name">leuven-w32-restore-frame</span> ()
         <span class="org-doc">"Restore a minimized frame."</span>
         (interactive)
         (w32-send-sys-command 61728)
         (global-set-key (kbd <span class=
-"org-string">"C-c z"</span>) 'w32-maximize-frame))))
+"org-string">"C-c z"</span>) 'leuven-w32-maximize-frame))))
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">maximize Emacs by default</span>
@@ -9191,7 +9180,7 @@ M-: (executable-find "diff") RET
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   (<span class="org-keyword">defun</span> <span class=
-"org-function-name">list-unicode-display</span> (<span class=
+"org-function-name">leuven-list-unicode-display</span> (<span class=
 "org-type">&amp;optional</span> regexp)
     <span class=
 "org-doc">"Display a list of unicode characters and their names in a buffer."</span>
@@ -12110,7 +12099,7 @@ M-: (executable-find "diff") RET
 "org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
 "org-comment"> entry to DONE when all children are done.</span>
   (<span class="org-keyword">defun</span> <span class=
-"org-function-name">org-summary-todo</span> (n-done n-not-done)
+"org-function-name">leuven--org-summary-todo</span> (n-done n-not-done)
     <span class=
 "org-doc">"Switch entry to DONE when all subentries are done, to </span><span class="org-leuven-highlight"><span class="org-doc">TODO</span></span><span class="org-doc"> otherwise."</span>
     (<span class=
@@ -12123,7 +12112,7 @@ M-: (executable-find "diff") RET
 "org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string">"</span>))))
 
-  (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+  (add-hook 'org-after-todo-statistics-hook 'leuven--org-summary-todo)
 </pre>
             </div>
           </div>
@@ -13243,7 +13232,7 @@ M-: (executable-find "diff") RET
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
     (<span class="org-keyword">defun</span> <span class=
-"org-function-name">make-capture-frame</span> ()
+"org-function-name">leuven-make-capture-frame</span> ()
       <span class="org-doc">"Create a new frame and run `</span><span class=
 "org-constant"><span class="org-doc">org-capture</span></span><span class=
 "org-doc">'."</span>
@@ -13294,7 +13283,7 @@ M-: (executable-find "diff") RET
 
               <div class="org-src-container">
                 <pre class="src src-sh">
-emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
+emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 </pre>
               </div>
             </div>
@@ -15225,7 +15214,8 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     (setq htmlize-output-type 'css)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Override output type `</span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
+"org-comment"> Override output type `</span><span class=
 "org-constant"><span class="org-comment">inline-css</span></span><span class=
 "org-comment">' used for htmlizing a region.</span>
     (<span class="org-keyword">defun</span> <span class=
@@ -15338,7 +15328,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
 "org-comment">TODO</span></span><span class=
 "org-comment"> keywords and for tags, as a printf format.</span>
     (<span class="org-keyword">defun</span> <span class=
-"org-function-name">org-latex-format-headline</span> (todo todo-type priority text tags <span class="org-type">&amp;optional</span> info)
+"org-function-name">leuven--org-latex-format-headline</span> (todo todo-type priority text tags <span class="org-type">&amp;optional</span> info)
       <span class=
 "org-doc">"Default function for formatting the headline's text."</span>
       (concat (<span class="org-keyword">when</span> todo
@@ -15368,7 +15358,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Function for formatting the headline's text.</span>
     (setq org-latex-format-headline-function
-          'org-latex-format-headline)
+          'leuven--org-latex-format-headline)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Default width for images.</span>
@@ -15649,7 +15639,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
     (<span class="org-keyword">defun</span> <span class=
-"org-function-name">org-export-ignore-headlines</span> (data backend info)
+"org-function-name">leuven--org-export-ignore-headlines</span> (data backend info)
       <span class=
 "org-doc">"Remove headlines tagged \"ignore\" retaining contents and promoting children.</span>
 <span class=
@@ -15690,7 +15680,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
       data)
 
     (add-hook 'org-export-filter-parse-tree-functions
-              'org-export-ignore-headlines)
+              'leuven--org-export-ignore-headlines)
 </pre>
             </div>
 
@@ -15855,7 +15845,7 @@ emacsclient -n -e <span class="org-string">'(make-capture-frame)'</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">13.4 Force publishing all files.</span>
     (<span class="org-keyword">defun</span> <span class=
-"org-function-name">org-publish-all-force</span> ()
+"org-function-name">leuven-org-publish-all-force</span> ()
       (interactive)
       (org-publish-all t)))
 </pre>
@@ -27637,7 +27627,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
     (cd leuven--directory)
     (<span class=
 "org-keyword">let</span> ((ret (shell-command-to-string <span class=
-"org-string">"git pull --rebase"</span>)))
+"org-string">"LANG=en_US git pull --rebase"</span>)))
       (<span class="org-keyword">if</span> (string-match <span class=
 "org-string">"Already up-to-date."</span> ret)
           (message <span class=
@@ -27656,7 +27646,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
     (cd leuven--directory)
     (<span class=
 "org-keyword">let</span> ((ret (shell-command-to-string <span class=
-"org-string">"git fetch --verbose"</span>)))
+"org-string">"LANG=en_US git fetch --verbose"</span>)))
       (<span class="org-keyword">if</span> (string-match <span class=
 "org-string">"up to date"</span> ret)
           (message <span class=
@@ -27664,7 +27654,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         (with-temp-buffer-window (get-buffer-create <span class=
 "org-string">"*Leuven last commits*"</span>)
           (setq ret (shell-command-to-string <span class=
-"org-string">"git log HEAD..origin"</span>))
+"org-string">"LANG=en_US git log HEAD..origin"</span>))
           (princ ret)))))
 </pre>
         </div>
@@ -27675,7 +27665,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141020.1559]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20141020.2335]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141020.1557
+;; Version: 20141020.2333
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141020.1557]--")
+(message "* --[ Loading Emacs Leuven 20141020.2333]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -604,7 +604,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "10.1 (emacs)Help Summary")
 
   ;; Avoid the description of all minor modes.
-  (defun describe-major-mode ()
+  (defun leuven-describe-major-mode ()
     "Describe only `major-mode'."
     (interactive)
     (describe-function major-mode))
@@ -644,7 +644,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; Enter Info documentation browser.
   (global-set-key (kbd "<f1>") 'info)
 
-  (defun describe-elisp-symbol-at-point ()
+  (defun leuven-describe-elisp-symbol-at-point ()
     "Get help for the symbol at point."
     (interactive)
     (let ((sym (intern-soft (current-word))))
@@ -656,7 +656,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                  (describe-variable sym)))
         (message "nothing"))))
 
-  (global-set-key (kbd "<f1>") 'describe-elisp-symbol-at-point)
+  (global-set-key (kbd "<f1>") 'leuven-describe-elisp-symbol-at-point)
 
   ;; Display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
@@ -926,12 +926,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 ;;* 14 Controlling the (info "(emacs)Display")
 
 (leuven--chapter leuven-chapter-14-display "14 Controlling the Display"
-
-  (defun width-80 ()
-    (interactive)
-    (set-window-margins (selected-window) 0 0)
-    (let ((marginwidth (/ (- (window-width) 80) 2)))
-      (set-window-margins (selected-window) marginwidth marginwidth)))
 
 ;;** 14.1 (info "(emacs)Scrolling")
 
@@ -1543,7 +1537,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (when (leuven--ispell-check-program-name)
 
-    (defun ispell-region-or-buffer ()
+    (defun leuven-ispell-region-or-buffer ()
       "Interactively check the current region or buffer for spelling errors."
       (interactive)
       (if mark-active
@@ -1553,7 +1547,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           (ispell-buffer)))
 
     ;; Key bindings (or `C-c i' prefix key binding?).
-    (global-set-key (kbd "C-$") 'ispell-region-or-buffer)
+    (global-set-key (kbd "C-$") 'leuven-ispell-region-or-buffer)
     (global-set-key (kbd "C-M-$") 'ispell-change-dictionary)
 
     ;; ;; Default dictionary to use (if `ispell-local-dictionary' is nil, that
@@ -2719,20 +2713,20 @@ Last time is saved in global variable `leuven--before-section-time'."
     (global-set-key (kbd "C-c z") 'leuven-toggle-fullscreen))
 
   (GNUEmacs
-    (when leuven--win32-p
-      (defun w32-maximize-frame ()
+    (when (or leuven--win32-p leuven--cygwin-p)
+      (defun leuven-w32-maximize-frame ()
         "Maximize the current frame."
         (interactive)
         (w32-send-sys-command 61488)
-        (global-set-key (kbd "C-c z") 'w32-restore-frame))
+        (global-set-key (kbd "C-c z") 'leuven-w32-restore-frame))
 
-      (global-set-key (kbd "C-c z") 'w32-maximize-frame)
+      (global-set-key (kbd "C-c z") 'leuven-w32-maximize-frame)
 
-      (defun w32-restore-frame ()
+      (defun leuven-w32-restore-frame ()
         "Restore a minimized frame."
         (interactive)
         (w32-send-sys-command 61728)
-        (global-set-key (kbd "C-c z") 'w32-maximize-frame))))
+        (global-set-key (kbd "C-c z") 'leuven-w32-maximize-frame))))
 
   ;; maximize Emacs by default
   (modify-all-frames-parameters '((fullscreen . maximized)))
@@ -2848,7 +2842,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                   (nth 1 (current-input-mode))
                   0)
 
-  (defun list-unicode-display (&optional regexp)
+  (defun leuven-list-unicode-display (&optional regexp)
     "Display a list of unicode characters and their names in a buffer."
     (interactive "sRegexp (default \".*\"): ")
     (let* ((regexp (or regexp ".*"))
@@ -3977,12 +3971,12 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "5.5 (org)Breaking down tasks")
 
   ;; Automatically change a TODO entry to DONE when all children are done.
-  (defun org-summary-todo (n-done n-not-done)
+  (defun leuven--org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
     (let (org-log-done org-log-states)  ; turn off logging
       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
 
-  (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+  (add-hook 'org-after-todo-statistics-hook 'leuven--org-summary-todo)
 
 ;;* 6 (info "(org)Tags")
 
@@ -4443,7 +4437,7 @@ From %c"
     ;; Default `org-capture-templates' key to use.
     (setq org-protocol-default-template-key "w")
 
-    (defun make-capture-frame ()
+    (defun leuven-make-capture-frame ()
       "Create a new frame and run `org-capture'."
       (interactive)
       (make-frame '((name . "capture")
@@ -5276,7 +5270,7 @@ this with to-do items than with projects or headings."
     ;; Output type of generated HTML.
     (setq htmlize-output-type 'css)
 
-    ;; Override output type `inline-css' used for htmlizing a region.
+    ;; XXX Override output type `inline-css' used for htmlizing a region.
     (defun htmlize-region-for-paste (beg end)
       "Htmlize the region and return just the HTML as a string.
     This forces the `css' style and only returns the HTML body, but without the
@@ -5325,7 +5319,7 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "ox-latex"
 
     ;; Markup for TODO keywords and for tags, as a printf format.
-    (defun org-latex-format-headline (todo todo-type priority text tags &optional info)
+    (defun leuven--org-latex-format-headline (todo todo-type priority text tags &optional info)
       "Default function for formatting the headline's text."
       (concat (when todo
                 (format "{%s\\textbf{\\textsc{\\textsf{%s}}}} "
@@ -5343,7 +5337,7 @@ this with to-do items than with projects or headings."
 
     ;; Function for formatting the headline's text.
     (setq org-latex-format-headline-function
-          'org-latex-format-headline)
+          'leuven--org-latex-format-headline)
 
     ;; Default width for images.
     (setq org-latex-image-default-width ".75\\linewidth")
@@ -5441,7 +5435,7 @@ this with to-do items than with projects or headings."
     ;; 12.6.5 Default position for LaTeX figures.
     (setq org-latex-default-figure-position "!htbp")
 
-    (defun org-export-ignore-headlines (data backend info)
+    (defun leuven--org-export-ignore-headlines (data backend info)
       "Remove headlines tagged \"ignore\" retaining contents and promoting children.
     Each headline tagged \"ignore\" will be removed retaining its
     contents and promoting any children headlines to the level of the
@@ -5470,7 +5464,7 @@ this with to-do items than with projects or headings."
       data)
 
     (add-hook 'org-export-filter-parse-tree-functions
-              'org-export-ignore-headlines)
+              'leuven--org-export-ignore-headlines)
 
     )                                   ; with-eval-after-load "ox-latex" ends here
 
@@ -5504,7 +5498,7 @@ this with to-do items than with projects or headings."
     ;; (setq org-publish-use-timestamps-flag nil)
 
     ;; 13.4 Force publishing all files.
-    (defun org-publish-all-force ()
+    (defun leuven-org-publish-all-force ()
       (interactive)
       (org-publish-all t)))
 
@@ -9407,7 +9401,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (interactive)
     (message "Updating Leuven...")
     (cd leuven--directory)
-    (let ((ret (shell-command-to-string "git pull --rebase")))
+    (let ((ret (shell-command-to-string "LANG=en_US git pull --rebase")))
       (if (string-match "Already up-to-date." ret)
           (message "Configuration already up-to-date.")
         (princ ret)
@@ -9419,14 +9413,14 @@ a clean buffer we're an order of magnitude laxer about checking."
     (interactive)
     (message "Fetching last changes in Leuven...")
     (cd leuven--directory)
-    (let ((ret (shell-command-to-string "git fetch --verbose")))
+    (let ((ret (shell-command-to-string "LANG=en_US git fetch --verbose")))
       (if (string-match "up to date" ret)
           (message "Configuration already up-to-date.")
         (with-temp-buffer-window (get-buffer-create "*Leuven last commits*")
-          (setq ret (shell-command-to-string "git log HEAD..origin"))
+          (setq ret (shell-command-to-string "LANG=en_US git log HEAD..origin"))
           (princ ret)))))
 
-(message "* --[ Loaded Emacs Leuven 20141020.1558]--")
+(message "* --[ Loaded Emacs Leuven 20141020.2334]--")
 
 (provide 'emacs-leuven)
 

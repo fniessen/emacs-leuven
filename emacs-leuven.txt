@@ -862,7 +862,7 @@ the relevant manual page without leaving Emacs.
   (leuven--section "10.1 (emacs)Help Summary")
 
   ;; Avoid the description of all minor modes.
-  (defun describe-major-mode ()
+  (defun leuven-describe-major-mode ()
     "Describe only `major-mode'."
     (interactive)
     (describe-function major-mode))
@@ -943,7 +943,7 @@ In a manual, these key bindings will make your life easier:
   ;; Enter Info documentation browser.
   (global-set-key (kbd "<f1>") 'info)
 
-  (defun describe-elisp-symbol-at-point ()
+  (defun leuven-describe-elisp-symbol-at-point ()
     "Get help for the symbol at point."
     (interactive)
     (let ((sym (intern-soft (current-word))))
@@ -955,7 +955,7 @@ In a manual, these key bindings will make your life easier:
                  (describe-variable sym)))
         (message "nothing"))))
 
-  (global-set-key (kbd "<f1>") 'describe-elisp-symbol-at-point)
+  (global-set-key (kbd "<f1>") 'leuven-describe-elisp-symbol-at-point)
 
   ;; Display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
@@ -1490,14 +1490,6 @@ In TeXStudio:
 ;;* 14 Controlling the (info "(emacs)Display")
 
 (leuven--chapter leuven-chapter-14-display "14 Controlling the Display"
-#+end_src
-
-#+begin_src emacs-lisp
-  (defun width-80 ()
-    (interactive)
-    (set-window-margins (selected-window) 0 0)
-    (let ((marginwidth (/ (- (window-width) 80) 2)))
-      (set-window-margins (selected-window) marginwidth marginwidth)))
 #+end_src
 
 ** Scrolling
@@ -2444,7 +2436,7 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
 
   (when (leuven--ispell-check-program-name)
 
-    (defun ispell-region-or-buffer ()
+    (defun leuven-ispell-region-or-buffer ()
       "Interactively check the current region or buffer for spelling errors."
       (interactive)
       (if mark-active
@@ -2454,7 +2446,7 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
           (ispell-buffer)))
 
     ;; Key bindings (or `C-c i' prefix key binding?).
-    (global-set-key (kbd "C-$") 'ispell-region-or-buffer)
+    (global-set-key (kbd "C-$") 'leuven-ispell-region-or-buffer)
     (global-set-key (kbd "C-M-$") 'ispell-change-dictionary)
 
     ;; ;; Default dictionary to use (if `ispell-local-dictionary' is nil, that
@@ -4404,20 +4396,20 @@ one.
     (global-set-key (kbd "C-c z") 'leuven-toggle-fullscreen))
 
   (GNUEmacs
-    (when leuven--win32-p
-      (defun w32-maximize-frame ()
+    (when (or leuven--win32-p leuven--cygwin-p)
+      (defun leuven-w32-maximize-frame ()
         "Maximize the current frame."
         (interactive)
         (w32-send-sys-command 61488)
-        (global-set-key (kbd "C-c z") 'w32-restore-frame))
+        (global-set-key (kbd "C-c z") 'leuven-w32-restore-frame))
 
-      (global-set-key (kbd "C-c z") 'w32-maximize-frame)
+      (global-set-key (kbd "C-c z") 'leuven-w32-maximize-frame)
 
-      (defun w32-restore-frame ()
+      (defun leuven-w32-restore-frame ()
         "Restore a minimized frame."
         (interactive)
         (w32-send-sys-command 61728)
-        (global-set-key (kbd "C-c z") 'w32-maximize-frame))))
+        (global-set-key (kbd "C-c z") 'leuven-w32-maximize-frame))))
 
   ;; maximize Emacs by default
   (modify-all-frames-parameters '((fullscreen . maximized)))
@@ -4623,7 +4615,7 @@ To see all the non-ASCII characters you can type with the ~C-x 8~ prefix, type
 #+end_src
 
 #+begin_src emacs-lisp
-  (defun list-unicode-display (&optional regexp)
+  (defun leuven-list-unicode-display (&optional regexp)
     "Display a list of unicode characters and their names in a buffer."
     (interactive "sRegexp (default \".*\"): ")
     (let* ((regexp (or regexp ".*"))
@@ -6281,12 +6273,12 @@ on the format of these entries."
   (leuven--section "5.5 (org)Breaking down tasks")
 
   ;; Automatically change a TODO entry to DONE when all children are done.
-  (defun org-summary-todo (n-done n-not-done)
+  (defun leuven--org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
     (let (org-log-done org-log-states)  ; turn off logging
       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
 
-  (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+  (add-hook 'org-after-todo-statistics-hook 'leuven--org-summary-todo)
 #+end_src
 
 ** Tags
@@ -6966,7 +6958,7 @@ From %c"
 **** Capture from command line
 
 #+begin_src emacs-lisp
-    (defun make-capture-frame ()
+    (defun leuven-make-capture-frame ()
       "Create a new frame and run `org-capture'."
       (interactive)
       (make-frame '((name . "capture")
@@ -6998,7 +6990,7 @@ From %c"
 #+end_src
 
 #+begin_src sh :tangle ~/bin/capture :shebang #!bin/sh
-emacsclient -n -e '(make-capture-frame)'
+emacsclient -n -e '(leuven-make-capture-frame)'
 #+end_src
 
 *** Attachments
@@ -8106,7 +8098,7 @@ version made available by Carsten Dominik in ~org-mode/contrib/lisp~ directory.
     ;; Output type of generated HTML.
     (setq htmlize-output-type 'css)
 
-    ;; Override output type `inline-css' used for htmlizing a region.
+    ;; XXX Override output type `inline-css' used for htmlizing a region.
     (defun htmlize-region-for-paste (beg end)
       "Htmlize the region and return just the HTML as a string.
     This forces the `css' style and only returns the HTML body, but without the
@@ -8171,7 +8163,7 @@ capabilities.
   (with-eval-after-load "ox-latex"
 
     ;; Markup for TODO keywords and for tags, as a printf format.
-    (defun org-latex-format-headline (todo todo-type priority text tags &optional info)
+    (defun leuven--org-latex-format-headline (todo todo-type priority text tags &optional info)
       "Default function for formatting the headline's text."
       (concat (when todo
                 (format "{%s\\textbf{\\textsc{\\textsf{%s}}}} "
@@ -8189,7 +8181,7 @@ capabilities.
 
     ;; Function for formatting the headline's text.
     (setq org-latex-format-headline-function
-          'org-latex-format-headline)
+          'leuven--org-latex-format-headline)
 
     ;; Default width for images.
     (setq org-latex-image-default-width ".75\\linewidth")
@@ -8350,7 +8342,7 @@ headline*, but *well its contents*, you can add a ~ignore~ tag to remove the
 headline:
 
 #+begin_src emacs-lisp
-    (defun org-export-ignore-headlines (data backend info)
+    (defun leuven--org-export-ignore-headlines (data backend info)
       "Remove headlines tagged \"ignore\" retaining contents and promoting children.
     Each headline tagged \"ignore\" will be removed retaining its
     contents and promoting any children headlines to the level of the
@@ -8379,7 +8371,7 @@ headline:
       data)
 
     (add-hook 'org-export-filter-parse-tree-functions
-              'org-export-ignore-headlines)
+              'leuven--org-export-ignore-headlines)
 #+end_src
 
 In addition, it promotes all headlines under the removed ~ignore~-tagged
@@ -8474,7 +8466,7 @@ See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-9-2][9.2 T
 
 #+begin_src emacs-lisp
     ;; 13.4 Force publishing all files.
-    (defun org-publish-all-force ()
+    (defun leuven-org-publish-all-force ()
       (interactive)
       (org-publish-all t)))
 #+end_src
@@ -15356,7 +15348,7 @@ functions implemented in Emacs Lisp.
     (interactive)
     (message "Updating Leuven...")
     (cd leuven--directory)
-    (let ((ret (shell-command-to-string "git pull --rebase")))
+    (let ((ret (shell-command-to-string "LANG=en_US git pull --rebase")))
       (if (string-match "Already up-to-date." ret)
           (message "Configuration already up-to-date.")
         (princ ret)
@@ -15368,11 +15360,11 @@ functions implemented in Emacs Lisp.
     (interactive)
     (message "Fetching last changes in Leuven...")
     (cd leuven--directory)
-    (let ((ret (shell-command-to-string "git fetch --verbose")))
+    (let ((ret (shell-command-to-string "LANG=en_US git fetch --verbose")))
       (if (string-match "up to date" ret)
           (message "Configuration already up-to-date.")
         (with-temp-buffer-window (get-buffer-create "*Leuven last commits*")
-          (setq ret (shell-command-to-string "git log HEAD..origin"))
+          (setq ret (shell-command-to-string "LANG=en_US git log HEAD..origin"))
           (princ ret)))))
 #+end_src
 
