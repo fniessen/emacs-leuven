@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141020.2333
+;; Version: 20141021.0911
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141020.2333]--")
+(message "* --[ Loading Emacs Leuven 20141021.0911]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -5350,21 +5350,37 @@ this with to-do items than with projects or headings."
 
       ;; Default (in Windows binary).
       (setq org-latex-pdf-process
-            (if (executable-find "latexmk")
-                '("latexmk -CF -pdf %f && latexmk -c")
-                                        ; must clean .fdb_latexmk, .fls, .ilg,
+            (cond
+             ((and leuven--win32-p (executable-find "latexmk"))
+              '("latexmk -CF -pdf %f && latexmk -c"))
+                                        ; Must clean .fdb_latexmk, .fls, .ilg,
                                         ; .ind, etc.
+             ((and leuven--cygwin-p (executable-find "latexmk"))
+              '("latexmk -CF -pdf $(cygpath -m %f) && latexmk -c"))
+             (leuven--win32-p
               '("pdflatex -interaction=nonstopmode -output-directory=%o %f"
                 "pdflatex -interaction=nonstopmode -output-directory=%o %f"
-                "pdflatex -interaction=nonstopmode -output-directory=%o %f")))
+                "pdflatex -interaction=nonstopmode -output-directory=%o %f"))
+             (leuven--cygwin-p
+              '("pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
+                "pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
+                "pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"))))
 
       (when (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
         (setq org-latex-pdf-process
-              (if (executable-find "latexmk")
-                  '("latexmk -CF -pdf -pdflatex=xelatex %f && latexmk -c")
+              (cond
+               ((and leuven--win32-p (executable-find "latexmk"))
+                '("latexmk -CF -pdf -pdflatex=xelatex %f && latexmk -c"))
+               ((and leuven--cygwin-p (executable-find "latexmk"))
+                '("latexmk -CF -pdf -pdflatex=xelatex $(cygpath -m %f) && latexmk -c"))
+               (leuven--win32-p
                 '("xelatex -interaction=nonstopmode -output-directory=%o %f"
                   "xelatex -interaction=nonstopmode -output-directory=%o %f"
-                  "xelatex -interaction=nonstopmode -output-directory=%o %f")))))
+                  "xelatex -interaction=nonstopmode -output-directory=%o %f"))
+               (leuven--cygwin-p
+                '("xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
+                  "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
+                  "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"))))))
 
     ;; Hook run before parsing an export buffer.
     (add-hook 'org-export-before-parsing-hook 'leuven--change-pdflatex-program)
@@ -9420,7 +9436,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (setq ret (shell-command-to-string "LANG=en_US git log HEAD..origin"))
           (princ ret)))))
 
-(message "* --[ Loaded Emacs Leuven 20141020.2334]--")
+(message "* --[ Loaded Emacs Leuven 20141021.0912]--")
 
 (provide 'emacs-leuven)
 

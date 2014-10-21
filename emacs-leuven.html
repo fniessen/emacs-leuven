@@ -1363,7 +1363,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141020.2334</span>
+"org-comment">Version: 20141021.0912</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1486,7 +1486,7 @@
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141020.2334]--"</span>)
+"org-string">"* --[ Loading Emacs Leuven 20141021.0912]--"</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Turn on Common Lisp support.</span>
@@ -15386,35 +15386,61 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Default (in Windows binary).</span>
       (setq org-latex-pdf-process
-            (<span class="org-keyword">if</span> (executable-find <span class=
-"org-string">"latexmk"</span>)
-                '(<span class=
-"org-string">"latexmk -CF -pdf %f &amp;&amp; latexmk -c"</span>)
+            (<span class="org-keyword">cond</span>
+             ((and leuven--win32-p (executable-find <span class=
+"org-string">"latexmk"</span>))
+              '(<span class=
+"org-string">"latexmk -CF -pdf %f &amp;&amp; latexmk -c"</span>))
                                         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">must clean .fdb_latexmk, .fls, .ilg,</span>
+"org-comment">Must clean .fdb_latexmk, .fls, .ilg,</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class="org-comment">.ind, etc.</span>
+             ((and leuven--cygwin-p (executable-find <span class=
+"org-string">"latexmk"</span>))
+              '(<span class=
+"org-string">"latexmk -CF -pdf $(cygpath -m %f) &amp;&amp; latexmk -c"</span>))
+             (leuven--win32-p
               '(<span class=
 "org-string">"pdflatex -interaction=nonstopmode -output-directory=%o %f"</span>
                 <span class=
 "org-string">"pdflatex -interaction=nonstopmode -output-directory=%o %f"</span>
                 <span class=
-"org-string">"pdflatex -interaction=nonstopmode -output-directory=%o %f"</span>)))
+"org-string">"pdflatex -interaction=nonstopmode -output-directory=%o %f"</span>))
+             (leuven--cygwin-p
+              '(<span class=
+"org-string">"pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>
+                <span class=
+"org-string">"pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>
+                <span class=
+"org-string">"pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>))))
 
       (<span class="org-keyword">when</span> (string-match <span class=
 "org-string">"^#\\+LATEX_CMD: xelatex"</span> (buffer-string))
         (setq org-latex-pdf-process
-              (<span class=
-"org-keyword">if</span> (executable-find <span class="org-string">"latexmk"</span>)
-                  '(<span class=
-"org-string">"latexmk -CF -pdf -pdflatex=xelatex %f &amp;&amp; latexmk -c"</span>)
+              (<span class="org-keyword">cond</span>
+               ((and leuven--win32-p (executable-find <span class=
+"org-string">"latexmk"</span>))
+                '(<span class=
+"org-string">"latexmk -CF -pdf -pdflatex=xelatex %f &amp;&amp; latexmk -c"</span>))
+               ((and leuven--cygwin-p (executable-find <span class=
+"org-string">"latexmk"</span>))
+                '(<span class=
+"org-string">"latexmk -CF -pdf -pdflatex=xelatex $(cygpath -m %f) &amp;&amp; latexmk -c"</span>))
+               (leuven--win32-p
                 '(<span class=
 "org-string">"xelatex -interaction=nonstopmode -output-directory=%o %f"</span>
                   <span class=
 "org-string">"xelatex -interaction=nonstopmode -output-directory=%o %f"</span>
                   <span class=
-"org-string">"xelatex -interaction=nonstopmode -output-directory=%o %f"</span>)))))
+"org-string">"xelatex -interaction=nonstopmode -output-directory=%o %f"</span>))
+               (leuven--cygwin-p
+                '(<span class=
+"org-string">"xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>
+                  <span class=
+"org-string">"xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>
+                  <span class=
+"org-string">"xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>))))))
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Hook run before parsing an export buffer.</span>
@@ -27665,7 +27691,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141020.2335]--"</span>)
+"org-string">"* --[ Loaded Emacs Leuven 20141021.0913]--"</span>)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)

@@ -8199,21 +8199,37 @@ of the files produced by LaTeX (~org-latex-logfiles-extensions~) are removed.
 
       ;; Default (in Windows binary).
       (setq org-latex-pdf-process
-            (if (executable-find "latexmk")
-                '("latexmk -CF -pdf %f && latexmk -c")
-                                        ; must clean .fdb_latexmk, .fls, .ilg,
+            (cond
+             ((and leuven--win32-p (executable-find "latexmk"))
+              '("latexmk -CF -pdf %f && latexmk -c"))
+                                        ; Must clean .fdb_latexmk, .fls, .ilg,
                                         ; .ind, etc.
+             ((and leuven--cygwin-p (executable-find "latexmk"))
+              '("latexmk -CF -pdf $(cygpath -m %f) && latexmk -c"))
+             (leuven--win32-p
               '("pdflatex -interaction=nonstopmode -output-directory=%o %f"
                 "pdflatex -interaction=nonstopmode -output-directory=%o %f"
-                "pdflatex -interaction=nonstopmode -output-directory=%o %f")))
+                "pdflatex -interaction=nonstopmode -output-directory=%o %f"))
+             (leuven--cygwin-p
+              '("pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
+                "pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
+                "pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"))))
 
       (when (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
         (setq org-latex-pdf-process
-              (if (executable-find "latexmk")
-                  '("latexmk -CF -pdf -pdflatex=xelatex %f && latexmk -c")
+              (cond
+               ((and leuven--win32-p (executable-find "latexmk"))
+                '("latexmk -CF -pdf -pdflatex=xelatex %f && latexmk -c"))
+               ((and leuven--cygwin-p (executable-find "latexmk"))
+                '("latexmk -CF -pdf -pdflatex=xelatex $(cygpath -m %f) && latexmk -c"))
+               (leuven--win32-p
                 '("xelatex -interaction=nonstopmode -output-directory=%o %f"
                   "xelatex -interaction=nonstopmode -output-directory=%o %f"
-                  "xelatex -interaction=nonstopmode -output-directory=%o %f")))))
+                  "xelatex -interaction=nonstopmode -output-directory=%o %f"))
+               (leuven--cygwin-p
+                '("xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
+                  "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
+                  "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"))))))
 
     ;; Hook run before parsing an export buffer.
     (add-hook 'org-export-before-parsing-hook 'leuven--change-pdflatex-program)
