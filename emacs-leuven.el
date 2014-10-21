@@ -1,10 +1,11 @@
+
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
 ;; Copyright (C) 1999-2014 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141021.1144
+;; Version: 20141021.1530
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +73,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141021.1144"
+(defconst leuven--emacs-version "20141021.1530"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5589,7 +5590,8 @@ this with to-do items than with projects or headings."
   ;; Preserve spaces and `tab' characters in source code blocks.
   (setq org-src-preserve-indentation t) ; Or add a `-i' flag to you source block.
 
-  ;; Same effect for `tab' as in the language major mode buffer.
+  ;; Same effect for `tab' as in the language major mode buffer (indenting
+  ;; properly when hitting the `tab' key).
   (setq org-src-tab-acts-natively t)
 
 
@@ -9418,18 +9420,20 @@ a clean buffer we're an order of magnitude laxer about checking."
   (defun leuven-update ()
     "Update Leuven to its latest version."
     (interactive)
+    (leuven-emacs-version)
     (message "Updating Leuven...")
     (cd leuven--directory)
     (let ((ret (shell-command-to-string "LC_ALL=en_US git pull --rebase")))
       (if (string-match "Already up-to-date." ret)
-          (message "ConFiGuRaTion already up-to-date.")
+          (message "Configuration already up-to-date.")
         (princ ret)
         (sit-for 3)
-        (message "ConFiGuRaTion updated. Restart Emacs to complete the process."))))
+        (message "Configuration updated. Restart Emacs to complete the process."))))
 
   (defun leuven-show-last-commits ()
     "List last changes in Leuven Emacs Config."
     (interactive)
+    (leuven-emacs-version)
     (message "Fetching last changes in Leuven...")
     (cd leuven--directory)
     (let ((ret (shell-command-to-string "LC_ALL=en_US git fetch --verbose")))
