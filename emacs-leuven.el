@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141021.0958
+;; Version: 20141021.1144
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -42,14 +42,14 @@
 ;;     (require 'emacs-leuven)
 ;;
 ;; To get more debug info about the packages getting loaded, add the following
-;; line before requiring Emacs Leuven.
+;; line before requiring Leuven Emacs Config.
 ;;
-;;     ;; show messages describing progress of loading Emacs Leuven
+;;     ;; show messages describing progress of loading Leuven Emacs Config
 ;;     (setq leuven-load-verbose t)
 ;;
 ;; To avoid be questioned about packages to add to your local Emacs
 ;; installation (though, I think you should install them), add the following
-;; line before requiring Emacs Leuven.
+;; line before requiring Leuven Emacs Config.
 ;;
 ;;     ;; do not (try to) install extra Emacs packages
 ;;     (setq leuven-elpa-packages nil)
@@ -72,7 +72,10 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141021.0958]--")
+(defconst leuven--emacs-version "20141021.1144"
+  "Leuven Emacs Config version (date of the last change).")
+
+(message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -86,7 +89,7 @@
       (+ (* (float (ash 1 16)) s0) (float s1) (* 0.0000001 s2)))))
 
 (defconst leuven--before-time (float-time)
-  "Value of `float-time' before loading the Emacs Leuven library.")
+  "Value of `float-time' before loading the Leuven Emacs Config library.")
 
 ;;; User Customizable Internal Variables
 
@@ -96,7 +99,7 @@
   :group 'text)
 
 (defcustom leuven-load-verbose nil
-  "If non-nil, means show messages describing progress of loading Emacs Leuven."
+  "If non-nil, means show messages describing progress of loading Leuven Emacs Config."
   :group 'emacs-leuven
   :type 'integer)
 
@@ -217,7 +220,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; Remember this directory.
   (defconst leuven--directory
     (file-name-directory (or load-file-name (buffer-file-name)))
-    "Directory path of Emacs Leuven installation.")
+    "Directory path of Leuven Emacs Config installation.")
 
   (leuven-add-to-load-path
    (concat leuven--directory "site-lisp"))
@@ -420,7 +423,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (defcustom leuven-elpa-ignored-packages
         nil
-        "List of packages that should be ignored by Emacs Leuven."
+        "List of packages that should be ignored by Leuven Emacs Config."
         :group 'emacs-leuven
         :type '(repeat (string)))
 
@@ -9417,26 +9420,30 @@ a clean buffer we're an order of magnitude laxer about checking."
     (interactive)
     (message "Updating Leuven...")
     (cd leuven--directory)
-    (let ((ret (shell-command-to-string "LANG=en_US git pull --rebase")))
+    (let ((ret (shell-command-to-string "LC_ALL=en_US git pull --rebase")))
       (if (string-match "Already up-to-date." ret)
-          (message "Configuration already up-to-date.")
+          (message "ConFiGuRaTion already up-to-date.")
         (princ ret)
         (sit-for 3)
-        (message "Configuration updated. Restart Emacs to complete the process."))))
+        (message "ConFiGuRaTion updated. Restart Emacs to complete the process."))))
 
   (defun leuven-show-last-commits ()
-    "List last changes in Emacs Leuven."
+    "List last changes in Leuven Emacs Config."
     (interactive)
     (message "Fetching last changes in Leuven...")
     (cd leuven--directory)
-    (let ((ret (shell-command-to-string "LANG=en_US git fetch --verbose")))
+    (let ((ret (shell-command-to-string "LC_ALL=en_US git fetch --verbose")))
       (if (string-match "up to date" ret)
           (message "Configuration already up-to-date.")
         (with-temp-buffer-window (get-buffer-create "*Leuven last commits*")
-          (setq ret (shell-command-to-string "LANG=en_US git log HEAD..origin"))
+          (setq ret (shell-command-to-string "LC_ALL=en_US git log HEAD..origin"))
           (princ ret)))))
 
-(message "* --[ Loaded Emacs Leuven 20141021.0959]--")
+  (defun leuven-emacs-version ()
+    (interactive)
+    (message "Leuven Emacs Config version %s" leuven--emacs-version))
+
+(message "* --[ Loaded Leuven Emacs Config %s]--" leuven--emacs-version)
 
 (provide 'emacs-leuven)
 

@@ -7,7 +7,7 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Emacs Leuven</title>
+  <title>Leuven Emacs Config</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
@@ -42,7 +42,7 @@
 
 <body>
   <div id="content">
-    <h1 class="title">Emacs Leuven</h1>
+    <h1 class="title">Leuven Emacs Config</h1>
 
     <div id="table-of-contents">
       <h2>Table of Contents</h2>
@@ -1363,7 +1363,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141021.0959</span>
+"org-comment">Version: 20141021.1144</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1427,10 +1427,10 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">To get more debug info about the packages getting loaded, add the following</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">line before requiring Emacs Leuven.</span>
+"org-comment">line before requiring Leuven Emacs Config.</span>
 <span class="org-comment-delimiter">;;</span>
 <span class="org-comment-delimiter">;;     </span><span class=
-"org-comment">;; show messages describing progress of loading Emacs Leuven</span>
+"org-comment">;; show messages describing progress of loading Leuven Emacs Config</span>
 <span class="org-comment-delimiter">;;     </span><span class=
 "org-comment">(setq leuven-load-verbose t)</span>
 <span class="org-comment-delimiter">;;</span>
@@ -1439,7 +1439,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">installation (though, I think you should install them), add the following</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">line before requiring Emacs Leuven.</span>
+"org-comment">line before requiring Leuven Emacs Config.</span>
 <span class="org-comment-delimiter">;;</span>
 <span class="org-comment-delimiter">;;     </span><span class=
 "org-comment">;; do not (try to) install extra Emacs packages</span>
@@ -1485,8 +1485,14 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
+(<span class="org-keyword">defconst</span> <span class=
+"org-variable-name">leuven--emacs-version</span> <span class=
+"org-string">"20141021.1144"</span>
+  <span class=
+"org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
+
 (message <span class=
-"org-string">"* --[ Loading Emacs Leuven 20141021.0959]--"</span>)
+"org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Turn on Common Lisp support.</span>
@@ -1518,7 +1524,7 @@
 "org-variable-name">leuven--before-time</span> (float-time)
   <span class="org-doc">"Value of `</span><span class=
 "org-constant"><span class="org-doc">float-time</span></span><span class=
-"org-doc">' before loading the Emacs Leuven library."</span>)
+"org-doc">' before loading the Leuven Emacs Config library."</span>)
 </pre>
         </div>
 
@@ -1536,7 +1542,7 @@
 (<span class="org-keyword">defcustom</span> <span class=
 "org-variable-name">leuven-load-verbose</span> nil
   <span class=
-"org-doc">"If non-nil, means show messages describing progress of loading Emacs Leuven."</span>
+"org-doc">"If non-nil, means show messages describing progress of loading Leuven Emacs Config."</span>
   <span class="org-builtin">:group</span> 'emacs-leuven
   <span class="org-builtin">:type</span> 'integer)
 </pre>
@@ -1820,7 +1826,7 @@
 "org-variable-name">leuven--directory</span>
     (file-name-directory (or load-file-name (buffer-file-name)))
     <span class=
-"org-doc">"Directory path of Emacs Leuven installation."</span>)
+"org-doc">"Directory path of Leuven Emacs Config installation."</span>)
 
   (leuven-add-to-load-path
    (concat leuven--directory <span class="org-string">"site-lisp"</span>))
@@ -2297,7 +2303,7 @@
 "org-variable-name">leuven-elpa-ignored-packages</span>
         nil
         <span class=
-"org-doc">"List of packages that should be ignored by Emacs Leuven."</span>
+"org-doc">"List of packages that should be ignored by Leuven Emacs Config."</span>
         <span class="org-builtin">:group</span> 'emacs-leuven
         <span class="org-builtin">:type</span> '(repeat (string)))
 
@@ -2742,14 +2748,14 @@
 
           <dd>Used with TAB completion to show documentation of functions.</dd>
 
-          <dt><code>elisp-index-search</code> (<code>C-h E</code> in Emacs
-          Leuven)</dt>
+          <dt><code>elisp-index-search</code> (<code>C-h E</code> in Leuven
+          Emacs Config)</dt>
 
           <dd>Look up documentation on broad Emacs Lisp topics (in the indices
           of the Emacs Lisp Reference Manual).</dd>
 
           <dt><code>info-lookup-symbol</code> (<code>C-h S</code>, or
-          <code>C-f1</code> in Emacs Leuven)</dt>
+          <code>C-f1</code> in Leuven Emacs Config)</dt>
 
           <dd><b>Bring the relevant section from the manual, which describes
           the topic in more detail.</b></dd>
@@ -27663,26 +27669,26 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
     (cd leuven--directory)
     (<span class=
 "org-keyword">let</span> ((ret (shell-command-to-string <span class=
-"org-string">"LANG=en_US git pull --rebase"</span>)))
+"org-string">"LC_ALL=en_US git pull --rebase"</span>)))
       (<span class="org-keyword">if</span> (string-match <span class=
 "org-string">"Already up-to-date."</span> ret)
           (message <span class=
-"org-string">"Configuration already up-to-date."</span>)
+"org-string">"ConFiGuRaTion already up-to-date."</span>)
         (princ ret)
         (sit-for 3)
         (message <span class=
-"org-string">"Configuration updated. Restart Emacs to complete the process."</span>))))
+"org-string">"ConFiGuRaTion updated. Restart Emacs to complete the process."</span>))))
 
   (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-show-last-commits</span> ()
-    <span class="org-doc">"List last changes in Emacs Leuven."</span>
+    <span class="org-doc">"List last changes in Leuven Emacs Config."</span>
     (interactive)
     (message <span class=
 "org-string">"Fetching last changes in Leuven..."</span>)
     (cd leuven--directory)
     (<span class=
 "org-keyword">let</span> ((ret (shell-command-to-string <span class=
-"org-string">"LANG=en_US git fetch --verbose"</span>)))
+"org-string">"LC_ALL=en_US git fetch --verbose"</span>)))
       (<span class="org-keyword">if</span> (string-match <span class=
 "org-string">"up to date"</span> ret)
           (message <span class=
@@ -27690,8 +27696,14 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         (with-temp-buffer-window (get-buffer-create <span class=
 "org-string">"*Leuven last commits*"</span>)
           (setq ret (shell-command-to-string <span class=
-"org-string">"LANG=en_US git log HEAD..origin"</span>))
+"org-string">"LC_ALL=en_US git log HEAD..origin"</span>))
           (princ ret)))))
+
+  (<span class="org-keyword">defun</span> <span class=
+"org-function-name">leuven-emacs-version</span> ()
+    (interactive)
+    (message <span class=
+"org-string">"Leuven Emacs Config version %s"</span> leuven--emacs-version))
 </pre>
         </div>
 
@@ -27701,7 +27713,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class=
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 (message <span class=
-"org-string">"* --[ Loaded Emacs Leuven 20141021.0959]--"</span>)
+"org-string">"* --[ Loaded Leuven Emacs Config %s]--"</span> leuven--emacs-version)
 
 (<span class="org-keyword">provide</span> '<span class=
 "org-constant">emacs-leuven</span>)
