@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141021.0911
+;; Version: 20141021.0958
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(message "* --[ Loading Emacs Leuven 20141021.0911]--")
+(message "* --[ Loading Emacs Leuven 20141021.0958]--")
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
@@ -2247,8 +2247,9 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; (setq helm-idle-delay 0.01)
 
       ;; time that the user has to be idle for, before ALL candidates are
-      ;; collected (>= `helm-idle-delay')
-      (setq helm-input-idle-delay 0.06) ; also effective for NON-DELAYED sources
+      ;; collected (>= `helm-idle-delay') -- also effective for NON-DELAYED
+      ;; sources
+      (setq helm-input-idle-delay 0.1)  ; 0.06 OK
 
       ;; ;; enable adaptive sorting in all sources
       ;; (helm-adaptive-mode 1)
@@ -3155,7 +3156,6 @@ Last time is saved in global variable `leuven--before-section-time'."
     (key-chord-define-global "xh" 'mark-whole-buffer)
     (key-chord-define-global "xk" 'kill-buffer) ; leuven-kill-this-buffer-without-query?
     (key-chord-define-global "xo" 'other-window)
-    (key-chord-define-global ";;" 'other-window)
 
     (with-eval-after-load "helm-autoloads" ; Autoloads file.
       (key-chord-define-global "xx" 'helm-M-x)) ; Autoloaded.
@@ -7849,8 +7849,8 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; fix foolish calendar-mode scrolling after loading `calendar.el'
   (add-hook 'calendar-load-hook
             (lambda ()
-              (define-key calendar-mode-map (kbd ">") 'scroll-calendar-left)
-              (define-key calendar-mode-map (kbd "<") 'scroll-calendar-right)))
+              (define-key calendar-mode-map (kbd ">") 'calendar-scroll-left)
+              (define-key calendar-mode-map (kbd "<") 'calendar-scroll-right)))
 
 ;;** 31.7 Times of (info "(emacs)Sunrise/Sunset")
 
@@ -9436,7 +9436,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (setq ret (shell-command-to-string "LANG=en_US git log HEAD..origin"))
           (princ ret)))))
 
-(message "* --[ Loaded Emacs Leuven 20141021.0912]--")
+(message "* --[ Loaded Emacs Leuven 20141021.0959]--")
 
 (provide 'emacs-leuven)
 
