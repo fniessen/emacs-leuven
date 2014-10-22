@@ -1328,7 +1328,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141022.0959</span>
+"org-comment">Version: 20141022.1123</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1452,7 +1452,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20141022.0959"</span>
+"org-string">"20141022.1123"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -2808,12 +2808,14 @@
 "org-comment">Check all variables and non-interactive functions as well.</span>
     (setq apropos-do-all t))
 
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Show variables whose name matches the pattern.</span>
   (GNUEmacs
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(defun apropos-variable (string)</span>
+"org-comment">apropos commands will search more extensively.</span>
+    (setq apropos-do-all t)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(defun apropos-user-option (string)</span>
     <span class="org-comment-delimiter">;;   </span><span class=
 "org-comment">"Like apropos, but lists only symbols that are names of user</span>
     <span class="org-comment-delimiter">;; </span><span class=
@@ -2833,8 +2835,10 @@
     <span class="org-comment-delimiter">;;         </span><span class=
 "org-comment">(and message (message message)))))</span>
 
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Show all variables whose name matches the pattern.</span>
     (define-key help-map (kbd <span class=
-"org-string">"A"</span>) 'apropos-variable))
+"org-string">"A"</span>) 'apropos-user-option))
 </pre>
           </div>
         </div>
@@ -3577,7 +3581,8 @@
           of a region-rectangle with a given string.</p>
 
           <div class="note">
-            <p>On the Emacs trunk, you can do:</p>
+            <p>Since Emacs 24.4, you can use <code>rectangle-mark-mode</code>
+            (<code>C-x SPC</code>) and do:</p>
 
             <ul class="org-ul">
               <li><code>C-x SPC</code> &lt;…move around…&gt; <code>DEL</code>
@@ -3623,9 +3628,8 @@
           fallback behavior.</p>
 
           <p>CUA mode also provides enhanced rectangle support with visible
-          rectangle highlighting. Check out <a href=
-          "http://www.vimeo.com/1168225?pg=embed&amp;sec=1168225">Emacs Column
-          Editing on Vimeo</a>.</p>
+          rectangle highlighting. Though, since Emacs 24.4,
+          <code>rectangle-mark-mode</code> is the new way.</p>
 
           <ul class="org-ul">
             <li><code>&lt;C-RET&gt;</code> runs the command
@@ -4207,6 +4211,11 @@
 
             <dd>Enable or disable Hi Lock mode.</dd>
 
+            <dt><code>M-s h .</code></dt>
+
+            <dd><b>Highlight</b> each instance of the <b>symbol at
+            point</b>.</dd>
+
             <dt><code>C-x w h REGEXP &lt;RET&gt; &lt;RET&gt;</code></dt>
 
             <dd>Highlight text that matches REGEXP.</dd>
@@ -4222,11 +4231,17 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
+<span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(GNUEmacs</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
+<span class="org-comment-delimiter">;;</span>
+<span class="org-comment-delimiter">;;     </span><span class=
+"org-comment">;; Do not prompt for the face to use. Instead, cycle through them.</span>
+<span class="org-comment-delimiter">;;     </span><span class=
+"org-comment">(setq hi-lock-auto-select-face t)</span>
+<span class="org-comment-delimiter">;;</span>
+<span class="org-comment-delimiter">;;     </span><span class=
 "org-comment">;; enable Hi Lock mode for all buffers</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
+<span class="org-comment-delimiter">;;     </span><span class=
 "org-comment">(global-hi-lock-mode 1))</span>
 </pre>
           </div>
@@ -4696,169 +4711,169 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-(<span class="org-keyword">defface</span> <span class=
+  (<span class="org-keyword">defface</span> <span class=
 "org-variable-name">powerline-modified-face</span>
-  '((((class color))
-     (<span class="org-builtin">:background</span> <span class=
+    '((((class color))
+       (<span class="org-builtin">:background</span> <span class=
 "org-string">"#FFA335"</span> <span class=
 "org-builtin">:foreground</span> <span class=
 "org-string">"black"</span> <span class="org-builtin">:weight</span> bold))
-    (t (<span class="org-builtin">:weight</span> bold)))
-  <span class="org-doc">"Face to fontify modified files."</span>
-  <span class="org-builtin">:group</span> 'powerline)
+      (t (<span class="org-builtin">:weight</span> bold)))
+    <span class="org-doc">"Face to fontify modified files."</span>
+    <span class="org-builtin">:group</span> 'powerline)
 
-(<span class="org-keyword">defface</span> <span class=
+  (<span class="org-keyword">defface</span> <span class=
 "org-variable-name">powerline-normal-face</span>
-  '((((class color))
-     (<span class="org-builtin">:background</span> <span class=
+    '((((class color))
+       (<span class="org-builtin">:background</span> <span class=
 "org-string">"#4F9D03"</span> <span class=
 "org-builtin">:foreground</span> <span class=
 "org-string">"black"</span> <span class="org-builtin">:weight</span> bold))
-    (t (<span class="org-builtin">:weight</span> bold)))
-  <span class="org-doc">"Face to fontify unchanged files."</span>
-  <span class="org-builtin">:group</span> 'powerline)
+      (t (<span class="org-builtin">:weight</span> bold)))
+    <span class="org-doc">"Face to fontify unchanged files."</span>
+    <span class="org-builtin">:group</span> 'powerline)
 
-(<span class="org-keyword">defface</span> <span class=
+  (<span class="org-keyword">defface</span> <span class=
 "org-variable-name">powerline-default-dictionary-active-face</span>
-  '((((class color))
-     (<span class="org-builtin">:background</span> <span class=
+    '((((class color))
+       (<span class="org-builtin">:background</span> <span class=
 "org-string">"#8A2BE2"</span> <span class=
 "org-builtin">:foreground</span> <span class=
 "org-string">"black"</span> <span class="org-builtin">:weight</span> bold))
-    (t (<span class="org-builtin">:weight</span> bold)))
-  <span class=
+      (t (<span class="org-builtin">:weight</span> bold)))
+    <span class=
 "org-doc">"Face to fontify default dictionary in the active buffer."</span>
-  <span class="org-builtin">:group</span> 'powerline)
+    <span class="org-builtin">:group</span> 'powerline)
 
-(<span class="org-keyword">defface</span> <span class=
+  (<span class="org-keyword">defface</span> <span class=
 "org-variable-name">powerline-default-dictionary-inactive-face</span>
-  '((((class color))
-     (<span class="org-builtin">:background</span> <span class=
+    '((((class color))
+       (<span class="org-builtin">:background</span> <span class=
 "org-string">"thistle"</span> <span class=
 "org-builtin">:foreground</span> <span class=
 "org-string">"black"</span> <span class="org-builtin">:weight</span> bold))
-    (t (<span class="org-builtin">:weight</span> bold)))
-  <span class=
+      (t (<span class="org-builtin">:weight</span> bold)))
+    <span class=
 "org-doc">"Face to fontify default dictionary in inactive buffers."</span>
-  <span class="org-builtin">:group</span> 'powerline)
+    <span class="org-builtin">:group</span> 'powerline)
 
-(<span class="org-keyword">defface</span> <span class=
+  (<span class="org-keyword">defface</span> <span class=
 "org-variable-name">powerline-other-dictionary-active-face</span>
-  '((((class color))
-     (<span class="org-builtin">:background</span> <span class=
+    '((((class color))
+       (<span class="org-builtin">:background</span> <span class=
 "org-string">"yellow"</span> <span class=
 "org-builtin">:foreground</span> <span class=
 "org-string">"black"</span> <span class="org-builtin">:weight</span> bold))
-    (t (<span class="org-builtin">:weight</span> bold)))
-  <span class=
+      (t (<span class="org-builtin">:weight</span> bold)))
+    <span class=
 "org-doc">"Face to fontify another dictionary in the active buffer."</span>
-  <span class="org-builtin">:group</span> 'powerline)
+    <span class="org-builtin">:group</span> 'powerline)
 
-(<span class="org-keyword">defface</span> <span class=
+  (<span class="org-keyword">defface</span> <span class=
 "org-variable-name">powerline-other-dictionary-inactive-face</span>
-  '((((class color))
-     (<span class="org-builtin">:background</span> <span class=
+    '((((class color))
+       (<span class="org-builtin">:background</span> <span class=
 "org-string">"LightYellow1"</span> <span class=
 "org-builtin">:foreground</span> <span class=
 "org-string">"black"</span> <span class="org-builtin">:weight</span> bold))
-    (t (<span class="org-builtin">:weight</span> bold)))
-  <span class=
+      (t (<span class="org-builtin">:weight</span> bold)))
+    <span class=
 "org-doc">"Face to fontify another dictionary in inactive buffers."</span>
-  <span class="org-builtin">:group</span> 'powerline)
+    <span class="org-builtin">:group</span> 'powerline)
 </pre>
           </div>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-(<span class="org-keyword">defun</span> <span class=
+  (<span class="org-keyword">defun</span> <span class=
 "org-function-name">powerline-leuven-theme</span> ()
-  <span class="org-doc">"Setup the leuven mode-line."</span>
-  (interactive)
-  (setq-default mode-line-format
-                '(<span class="org-string">"%e"</span>
-                  (<span class="org-builtin">:eval</span>
-                   (<span class=
+    <span class="org-doc">"Setup the leuven mode-line."</span>
+    (interactive)
+    (setq-default mode-line-format
+                  '(<span class="org-string">"%e"</span>
+                    (<span class="org-builtin">:eval</span>
+                     (<span class=
 "org-keyword">let*</span> ((active (powerline-selected-window-active))
-                          (mode-line (<span class=
+                            (mode-line (<span class=
 "org-keyword">if</span> active 'mode-line 'mode-line-inactive))
-                          (face1 (<span class=
+                            (face1 (<span class=
 "org-keyword">if</span> active 'powerline-active1 'powerline-inactive1))
-                          (face2 (<span class=
+                            (face2 (<span class=
 "org-keyword">if</span> active 'powerline-active2 'powerline-inactive2))
-                          (default-dictionary-face (<span class=
+                            (default-dictionary-face (<span class=
 "org-keyword">if</span> active 'powerline-default-dictionary-active-face 'powerline-default-dictionary-inactive-face))
-                          (other-dictionary-face (<span class=
+                            (other-dictionary-face (<span class=
 "org-keyword">if</span> active 'powerline-other-dictionary-active-face 'powerline-other-dictionary-inactive-face))
-                          (separator-left (intern (format <span class=
+                            (separator-left (intern (format <span class=
 "org-string">"powerline-%s-%s"</span>
-                                                          powerline-default-separator
-                                                          (car powerline-default-separator-dir))))
-                          (separator-right (intern (format <span class=
+                                                            powerline-default-separator
+                                                            (car powerline-default-separator-dir))))
+                            (separator-right (intern (format <span class=
 "org-string">"powerline-%s-%s"</span>
-                                                           powerline-default-separator
-                                                           (cdr powerline-default-separator-dir))))
-                          (lhs (list
-                                     <span class=
+                                                             powerline-default-separator
+                                                             (cdr powerline-default-separator-dir))))
+                            (lhs (list
+                                       <span class=
 "org-comment-delimiter">;; </span><span class="org-comment">vc mode</span>
-                                     (<span class=
+                                       (<span class=
 "org-keyword">when</span> (and (fboundp 'vc-switches)
-                                                (buffer-file-name (current-buffer))
-                                                vc-mode)
-                                       (<span class=
+                                                  (buffer-file-name (current-buffer))
+                                                  vc-mode)
+                                         (<span class=
 "org-keyword">if</span> (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
-                                           (powerline-vc 'powerline-normal-face 'r)
-                                         (powerline-vc 'powerline-modified-face 'r)))
+                                             (powerline-vc 'powerline-normal-face 'r)
+                                           (powerline-vc 'powerline-modified-face 'r)))
 
-                                     (<span class=
+                                       (<span class=
 "org-keyword">when</span> (and (not (fboundp 'vc-switches))
-                                                (buffer-file-name (current-buffer))
-                                                vc-mode)
-                                       (powerline-vc face1 'r))
+                                                  (buffer-file-name (current-buffer))
+                                                  vc-mode)
+                                         (powerline-vc face1 'r))
 
-                                     (<span class=
-"org-keyword">when</span> (and (buffer-file-name (current-buffer))
-                                                vc-mode)
                                        (<span class=
+"org-keyword">when</span> (and (buffer-file-name (current-buffer))
+                                                  vc-mode)
+                                         (<span class=
 "org-keyword">if</span> (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
-                                           (funcall separator-left 'powerline-normal-face mode-line)
-                                         (funcall separator-left 'powerline-modified-face mode-line)))
+                                             (funcall separator-left 'powerline-normal-face mode-line)
+                                           (funcall separator-left 'powerline-modified-face mode-line)))
 
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;; </span><span class=
 "org-comment">"modified" indicator</span>
-                                     (<span class=
+                                       (<span class=
 "org-keyword">if</span> (not (buffer-modified-p))
-                                         (powerline-raw <span class=
+                                           (powerline-raw <span class=
 "org-string">"%*"</span> nil 'l)
-                                       (powerline-raw <span class=
+                                         (powerline-raw <span class=
 "org-string">"%*"</span> 'mode-line-emphasis 'l))
 
-                                     (powerline-raw mode-line-mule-info nil 'l)
+                                       (powerline-raw mode-line-mule-info nil 'l)
 
-                                     (powerline-buffer-id nil 'l)
+                                       (powerline-buffer-id nil 'l)
 
-                                     (<span class=
+                                       (<span class=
 "org-keyword">when</span> (and (boundp 'which-func-mode) which-func-mode)
-                                       (powerline-raw which-func-format nil 'l))
+                                         (powerline-raw which-func-format nil 'l))
 
-                                     (powerline-raw <span class=
+                                       (powerline-raw <span class=
 "org-string">" "</span>)
-                                     (funcall separator-left mode-line face1)
-                                     (<span class=
+                                       (funcall separator-left mode-line face1)
+                                       (<span class=
 "org-keyword">when</span> (boundp 'erc-modified-channels-object)
-                                       (powerline-raw erc-modified-channels-object face1 'l))
-                                     (powerline-major-mode face1 'l)
-                                     (powerline-process face1)
-                                     (powerline-raw <span class=
+                                         (powerline-raw erc-modified-channels-object face1 'l))
+                                       (powerline-major-mode face1 'l)
+                                       (powerline-process face1)
+                                       (powerline-raw <span class=
 "org-string">" "</span> face1)
-                                     (funcall separator-left face1 face2)
-                                     (powerline-minor-modes face2 'l)
-                                     (powerline-narrow face2 'l)
-                                     (powerline-raw <span class=
+                                       (funcall separator-left face1 face2)
+                                       (powerline-minor-modes face2 'l)
+                                       (powerline-narrow face2 'l)
+                                       (powerline-raw <span class=
 "org-string">" "</span> face2)
-                                     (funcall separator-left face2 mode-line)))
-                          (rhs (list (powerline-raw global-mode-string mode-line 'r)
-                                     (funcall separator-right mode-line face1)
+                                       (funcall separator-left face2 mode-line)))
+                            (rhs (list (powerline-raw global-mode-string mode-line 'r)
+                                       (funcall separator-right mode-line face1)
 </pre>
           </div>
 
@@ -4870,79 +4885,81 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-                                     (powerline-raw <span class=
+                                       (powerline-raw <span class=
 "org-string">"%l"</span> face1 'l)
-                                     (powerline-raw <span class=
+                                       (powerline-raw <span class=
 "org-string">", "</span> face1 'l)
-                                     (powerline-raw <span class=
+                                       (powerline-raw <span class=
 "org-string">"%c"</span> face1 'r)
-                                     (funcall separator-right face1 mode-line)
-                                     (powerline-raw <span class=
+                                       (funcall separator-right face1 mode-line)
+                                       (powerline-raw <span class=
 "org-string">" "</span>)
-                                     (powerline-raw <span class=
+                                       (powerline-raw <span class=
 "org-string">"%4p"</span> nil 'r)
-                                     (funcall separator-right mode-line face2)
-                                     (powerline-buffer-size face2 'l)
-                                     (powerline-raw <span class=
+                                       (funcall separator-right mode-line face2)
+                                       (powerline-buffer-size face2 'l)
+                                       (powerline-raw <span class=
 "org-string">" "</span> face2)
 
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;; </span><span class=
 "org-comment">(let ((dict (and (featurep 'ispell)</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;                  </span><span class=
 "org-comment">(or ispell-local-dictionary</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;                      </span><span class=
 "org-comment">ispell-dictionary</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;                      </span><span class=
 "org-comment">"--" ; default dictionary</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;                      </span><span class=
 "org-comment">))))</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;   </span><span class=
 "org-comment">(cond ((or (equal dict "francais") (equal dict "--"))</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;          </span><span class=
 "org-comment">(powerline-raw</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;           </span><span class=
 "org-comment">(concat (substring dict 0 2) " ")</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;           </span><span class=
 "org-comment">default-dictionary-face 'l))</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;         </span><span class=
 "org-comment">(buffer-read-only</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;          </span><span class=
 "org-comment">(powerline-raw "%%%% "</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;           </span><span class=
 "org-comment">default-dictionary-face 'l))</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;         </span><span class="org-comment">(t</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;          </span><span class=
 "org-comment">(powerline-raw</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;           </span><span class=
 "org-comment">(concat (substring dict 0 2) " ")</span>
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;;           </span><span class=
 "org-comment">other-dictionary-face 'l))))</span>
 
-                                     <span class=
+                                       <span class=
 "org-comment-delimiter">;; </span><span class=
 "org-comment">(powerline-hud face2 face1)</span>
-                                     )))
-                     (concat (powerline-render lhs)
-                             (powerline-fill mode-line (powerline-width rhs))
-                             (powerline-render rhs)))))))
+                                       )))
+                       (concat (powerline-render lhs)
+                               (powerline-fill mode-line (powerline-width rhs))
+                               (powerline-render rhs)))))))
 
-(add-hook 'after-init-hook 'powerline-leuven-theme)
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"powerline-autoloads"</span>
+    (add-hook 'after-init-hook 'powerline-leuven-theme))
 </pre>
           </div>
         </div>
@@ -4992,6 +5009,10 @@
 "org-comment">Cursor of the selected window blinks.</span>
   (XEmacs
     (blink-cursor-mode))
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Cursor blinks forever.</span>
+  (setq blink-cursor-blinks 0)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Toggle line highlighting in all buffers (Global Hl-Line mode).</span>
@@ -8022,12 +8043,23 @@ M-: (executable-find "diff") RET
               </tr>
             </table>
 
+            <p>New commands since Emacs 24.4:</p>
+
+            <ul class="org-ul">
+              <li><code>n</code> (<code>image-next-file</code>) and</li>
+
+              <li><code>p</code> (<code>image-previous-file</code>)</li>
+            </ul>
+
+            <p>visit the next image file and the previous image file in the
+            same directory, respectively.</p>
+
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   (leuven--section <span class="org-string">"Image mode"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">show image files as images (not as semi-random bits)</span>
+"org-comment">Show image files as images (not as semi-random bits).</span>
   (GNUEmacs
     (add-hook 'find-file-hook 'auto-image-file-mode))
 </pre>
@@ -8335,12 +8367,6 @@ M-: (executable-find "diff") RET
 
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"uniquify"</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">style used for uniquifying buffer names with parts of directory</span>
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">name</span>
-    (setq uniquify-buffer-name-style 'forward)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">distinguish directories by adding extra separator</span>
@@ -8733,12 +8759,12 @@ M-: (executable-find "diff") RET
 
         <div class="outline-text-3" id="text-23-3">
           <dl class="org-dl">
-            <dt><code>toggle-frame-fullscreen</code></dt>
+            <dt><code>toggle-frame-fullscreen</code> (f11 by default)</dt>
 
             <dd>Toggle fullscreen mode of the selected frame. <b>Ignore window
             manager screen decorations.</b></dd>
 
-            <dt><code>toggle-frame-maximized</code></dt>
+            <dt><code>toggle-frame-maximized</code> (M-f10 by default)</dt>
 
             <dd>Toggle maximization state of the selected frame. Respect window
             manager screen decorations.</dd>
@@ -18751,12 +18777,16 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Enable smartparens-strict-mode in all Lisp modes.</span>
-    (mapc (<span class="org-keyword">lambda</span> (mode)
-            (add-hook (intern (format <span class=
-"org-string">"%s-hook"</span> (symbol-name mode)))
-                      'smartparens-strict-mode))
-          sp--lisp-modes))
+"org-comment">;; Enable smartparens-strict-mode in all Lisp modes.</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(mapc (lambda (mode)</span>
+    <span class="org-comment-delimiter">;;         </span><span class=
+"org-comment">(add-hook (intern (format "%s-hook" (symbol-name mode)))</span>
+    <span class=
+"org-comment-delimiter">;;                   </span><span class="org-comment">'smartparens-strict-mode))</span>
+    <span class="org-comment-delimiter">;;       </span><span class=
+"org-comment">sp--lisp-modes)</span>
+    )
 </pre>
             </div>
 
@@ -19702,25 +19732,25 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 "org-string">"27.9 (emacs)Lisp Eval Expressions"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable the use of the command `</span><span class=
+"org-comment">Enable the use of the command `</span><span class=
 "org-constant"><span class=
 "org-comment">eval-expression</span></span><span class=
-"org-comment">' without confirmation</span>
+"org-comment">' without confirmation.</span>
   (put 'eval-expression 'disabled nil)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">maximum depth of lists to print in the result of the evaluation</span>
+"org-comment">Maximum depth of lists to print in the result of the evaluation commands</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">commands before abbreviating them</span>
+"org-comment">before abbreviating them.</span>
   (setq eval-expression-print-level nil) <span class=
-"org-comment-delimiter">; </span><span class="org-comment">no limit</span>
+"org-comment-delimiter">; </span><span class="org-comment">No limit.</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">maximum length of lists to print in the result of the evaluation</span>
+"org-comment">Maximum length of lists to print in the result of the evaluation commands</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">commands before abbreviating them</span>
+"org-comment">before abbreviating them.</span>
   (setq eval-expression-print-length nil) <span class=
-"org-comment-delimiter">; </span><span class="org-comment">no limit</span>
+"org-comment-delimiter">; </span><span class="org-comment">No limit.</span>
 </pre>
           </div>
 
@@ -25972,26 +26002,6 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (setq-default save-place t)         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">default value for all buffers</span>
-
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">name of the file that records `</span><span class=
-"org-constant"><span class=
-"org-comment">save-place-alist</span></span><span class=
-"org-comment">' value</span>
-    (setq save-place-file
-          (convert-standard-filename (concat user-emacs-directory <span class=
-"org-string">".places"</span>))))
-                                        <span class=
-"org-comment-delimiter">;</span><span class=
-"org-comment">! a .txt extension would load `</span><span class=
-"org-constant"><span class="org-comment">org</span></span><span class=
-"org-comment">' at</span>
-                                        <span class=
-"org-comment-delimiter">;</span><span class=
-"org-comment">! the time Emacs is killed (if not</span>
-                                        <span class=
-"org-comment-delimiter">;</span><span class=
-"org-comment">! already loaded)!</span>
 
 )                                       <span class=
 "org-comment-delimiter">; </span><span class=

@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141022.0959
+;; Version: 20141022.1122
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -73,7 +73,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141022.0959"
+(defconst leuven--emacs-version "20141022.1122"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -625,10 +625,12 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; Check all variables and non-interactive functions as well.
     (setq apropos-do-all t))
 
-  ;; Show variables whose name matches the pattern.
   (GNUEmacs
 
-    ;; (defun apropos-variable (string)
+    ;; apropos commands will search more extensively.
+    (setq apropos-do-all t)
+
+    ;; (defun apropos-user-option (string)
     ;;   "Like apropos, but lists only symbols that are names of user
     ;; modifiable variables.  Argument REGEXP is a regular expression.
     ;;    Returns a list of symbols, and documentation found"
@@ -639,7 +641,8 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;;     (if (apropos string  'user-variable-p)
     ;;         (and message (message message)))))
 
-    (define-key help-map (kbd "A") 'apropos-variable))
+    ;; Show all variables whose name matches the pattern.
+    (define-key help-map (kbd "A") 'apropos-user-option))
 
 ;;** 10.8 (info "(emacs)Misc Help")
 
@@ -1041,9 +1044,13 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "14.13 (emacs)Highlight Interactively by Matching")
 
-  ;; (GNUEmacs
-  ;;   ;; enable Hi Lock mode for all buffers
-  ;;   (global-hi-lock-mode 1))
+;; (GNUEmacs
+;;
+;;     ;; Do not prompt for the face to use. Instead, cycle through them.
+;;     (setq hi-lock-auto-select-face t)
+;;
+;;     ;; enable Hi Lock mode for all buffers
+;;     (global-hi-lock-mode 1))
 
   (with-eval-after-load "highlight-symbol-autoloads"
 
@@ -1208,147 +1215,148 @@ Last time is saved in global variable `leuven--before-section-time'."
     (with-eval-after-load "smartparens"  (diminish 'smartparens-mode))
     ;; (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
 
-(defface powerline-modified-face
-  '((((class color))
-     (:background "#FFA335" :foreground "black" :weight bold))
-    (t (:weight bold)))
-  "Face to fontify modified files."
-  :group 'powerline)
+  (defface powerline-modified-face
+    '((((class color))
+       (:background "#FFA335" :foreground "black" :weight bold))
+      (t (:weight bold)))
+    "Face to fontify modified files."
+    :group 'powerline)
 
-(defface powerline-normal-face
-  '((((class color))
-     (:background "#4F9D03" :foreground "black" :weight bold))
-    (t (:weight bold)))
-  "Face to fontify unchanged files."
-  :group 'powerline)
+  (defface powerline-normal-face
+    '((((class color))
+       (:background "#4F9D03" :foreground "black" :weight bold))
+      (t (:weight bold)))
+    "Face to fontify unchanged files."
+    :group 'powerline)
 
-(defface powerline-default-dictionary-active-face
-  '((((class color))
-     (:background "#8A2BE2" :foreground "black" :weight bold))
-    (t (:weight bold)))
-  "Face to fontify default dictionary in the active buffer."
-  :group 'powerline)
+  (defface powerline-default-dictionary-active-face
+    '((((class color))
+       (:background "#8A2BE2" :foreground "black" :weight bold))
+      (t (:weight bold)))
+    "Face to fontify default dictionary in the active buffer."
+    :group 'powerline)
 
-(defface powerline-default-dictionary-inactive-face
-  '((((class color))
-     (:background "thistle" :foreground "black" :weight bold))
-    (t (:weight bold)))
-  "Face to fontify default dictionary in inactive buffers."
-  :group 'powerline)
+  (defface powerline-default-dictionary-inactive-face
+    '((((class color))
+       (:background "thistle" :foreground "black" :weight bold))
+      (t (:weight bold)))
+    "Face to fontify default dictionary in inactive buffers."
+    :group 'powerline)
 
-(defface powerline-other-dictionary-active-face
-  '((((class color))
-     (:background "yellow" :foreground "black" :weight bold))
-    (t (:weight bold)))
-  "Face to fontify another dictionary in the active buffer."
-  :group 'powerline)
+  (defface powerline-other-dictionary-active-face
+    '((((class color))
+       (:background "yellow" :foreground "black" :weight bold))
+      (t (:weight bold)))
+    "Face to fontify another dictionary in the active buffer."
+    :group 'powerline)
 
-(defface powerline-other-dictionary-inactive-face
-  '((((class color))
-     (:background "LightYellow1" :foreground "black" :weight bold))
-    (t (:weight bold)))
-  "Face to fontify another dictionary in inactive buffers."
-  :group 'powerline)
+  (defface powerline-other-dictionary-inactive-face
+    '((((class color))
+       (:background "LightYellow1" :foreground "black" :weight bold))
+      (t (:weight bold)))
+    "Face to fontify another dictionary in inactive buffers."
+    :group 'powerline)
 
-(defun powerline-leuven-theme ()
-  "Setup the leuven mode-line."
-  (interactive)
-  (setq-default mode-line-format
-                '("%e"
-                  (:eval
-                   (let* ((active (powerline-selected-window-active))
-                          (mode-line (if active 'mode-line 'mode-line-inactive))
-                          (face1 (if active 'powerline-active1 'powerline-inactive1))
-                          (face2 (if active 'powerline-active2 'powerline-inactive2))
-                          (default-dictionary-face (if active 'powerline-default-dictionary-active-face 'powerline-default-dictionary-inactive-face))
-                          (other-dictionary-face (if active 'powerline-other-dictionary-active-face 'powerline-other-dictionary-inactive-face))
-                          (separator-left (intern (format "powerline-%s-%s"
-                                                          powerline-default-separator
-                                                          (car powerline-default-separator-dir))))
-                          (separator-right (intern (format "powerline-%s-%s"
-                                                           powerline-default-separator
-                                                           (cdr powerline-default-separator-dir))))
-                          (lhs (list
-                                     ;; vc mode
-                                     (when (and (fboundp 'vc-switches)
-                                                (buffer-file-name (current-buffer))
-                                                vc-mode)
-                                       (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
-                                           (powerline-vc 'powerline-normal-face 'r)
-                                         (powerline-vc 'powerline-modified-face 'r)))
+  (defun powerline-leuven-theme ()
+    "Setup the leuven mode-line."
+    (interactive)
+    (setq-default mode-line-format
+                  '("%e"
+                    (:eval
+                     (let* ((active (powerline-selected-window-active))
+                            (mode-line (if active 'mode-line 'mode-line-inactive))
+                            (face1 (if active 'powerline-active1 'powerline-inactive1))
+                            (face2 (if active 'powerline-active2 'powerline-inactive2))
+                            (default-dictionary-face (if active 'powerline-default-dictionary-active-face 'powerline-default-dictionary-inactive-face))
+                            (other-dictionary-face (if active 'powerline-other-dictionary-active-face 'powerline-other-dictionary-inactive-face))
+                            (separator-left (intern (format "powerline-%s-%s"
+                                                            powerline-default-separator
+                                                            (car powerline-default-separator-dir))))
+                            (separator-right (intern (format "powerline-%s-%s"
+                                                             powerline-default-separator
+                                                             (cdr powerline-default-separator-dir))))
+                            (lhs (list
+                                       ;; vc mode
+                                       (when (and (fboundp 'vc-switches)
+                                                  (buffer-file-name (current-buffer))
+                                                  vc-mode)
+                                         (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
+                                             (powerline-vc 'powerline-normal-face 'r)
+                                           (powerline-vc 'powerline-modified-face 'r)))
 
-                                     (when (and (not (fboundp 'vc-switches))
-                                                (buffer-file-name (current-buffer))
-                                                vc-mode)
-                                       (powerline-vc face1 'r))
+                                       (when (and (not (fboundp 'vc-switches))
+                                                  (buffer-file-name (current-buffer))
+                                                  vc-mode)
+                                         (powerline-vc face1 'r))
 
-                                     (when (and (buffer-file-name (current-buffer))
-                                                vc-mode)
-                                       (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
-                                           (funcall separator-left 'powerline-normal-face mode-line)
-                                         (funcall separator-left 'powerline-modified-face mode-line)))
+                                       (when (and (buffer-file-name (current-buffer))
+                                                  vc-mode)
+                                         (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
+                                             (funcall separator-left 'powerline-normal-face mode-line)
+                                           (funcall separator-left 'powerline-modified-face mode-line)))
 
-                                     ;; "modified" indicator
-                                     (if (not (buffer-modified-p))
-                                         (powerline-raw "%*" nil 'l)
-                                       (powerline-raw "%*" 'mode-line-emphasis 'l))
+                                       ;; "modified" indicator
+                                       (if (not (buffer-modified-p))
+                                           (powerline-raw "%*" nil 'l)
+                                         (powerline-raw "%*" 'mode-line-emphasis 'l))
 
-                                     (powerline-raw mode-line-mule-info nil 'l)
+                                       (powerline-raw mode-line-mule-info nil 'l)
 
-                                     (powerline-buffer-id nil 'l)
+                                       (powerline-buffer-id nil 'l)
 
-                                     (when (and (boundp 'which-func-mode) which-func-mode)
-                                       (powerline-raw which-func-format nil 'l))
+                                       (when (and (boundp 'which-func-mode) which-func-mode)
+                                         (powerline-raw which-func-format nil 'l))
 
-                                     (powerline-raw " ")
-                                     (funcall separator-left mode-line face1)
-                                     (when (boundp 'erc-modified-channels-object)
-                                       (powerline-raw erc-modified-channels-object face1 'l))
-                                     (powerline-major-mode face1 'l)
-                                     (powerline-process face1)
-                                     (powerline-raw " " face1)
-                                     (funcall separator-left face1 face2)
-                                     (powerline-minor-modes face2 'l)
-                                     (powerline-narrow face2 'l)
-                                     (powerline-raw " " face2)
-                                     (funcall separator-left face2 mode-line)))
-                          (rhs (list (powerline-raw global-mode-string mode-line 'r)
-                                     (funcall separator-right mode-line face1)
+                                       (powerline-raw " ")
+                                       (funcall separator-left mode-line face1)
+                                       (when (boundp 'erc-modified-channels-object)
+                                         (powerline-raw erc-modified-channels-object face1 'l))
+                                       (powerline-major-mode face1 'l)
+                                       (powerline-process face1)
+                                       (powerline-raw " " face1)
+                                       (funcall separator-left face1 face2)
+                                       (powerline-minor-modes face2 'l)
+                                       (powerline-narrow face2 'l)
+                                       (powerline-raw " " face2)
+                                       (funcall separator-left face2 mode-line)))
+                            (rhs (list (powerline-raw global-mode-string mode-line 'r)
+                                       (funcall separator-right mode-line face1)
 
-                                     (powerline-raw "%l" face1 'l)
-                                     (powerline-raw ", " face1 'l)
-                                     (powerline-raw "%c" face1 'r)
-                                     (funcall separator-right face1 mode-line)
-                                     (powerline-raw " ")
-                                     (powerline-raw "%4p" nil 'r)
-                                     (funcall separator-right mode-line face2)
-                                     (powerline-buffer-size face2 'l)
-                                     (powerline-raw " " face2)
+                                       (powerline-raw "%l" face1 'l)
+                                       (powerline-raw ", " face1 'l)
+                                       (powerline-raw "%c" face1 'r)
+                                       (funcall separator-right face1 mode-line)
+                                       (powerline-raw " ")
+                                       (powerline-raw "%4p" nil 'r)
+                                       (funcall separator-right mode-line face2)
+                                       (powerline-buffer-size face2 'l)
+                                       (powerline-raw " " face2)
 
-                                     ;; (let ((dict (and (featurep 'ispell)
-                                     ;;                  (or ispell-local-dictionary
-                                     ;;                      ispell-dictionary
-                                     ;;                      "--" ; default dictionary
-                                     ;;                      ))))
-                                     ;;   (cond ((or (equal dict "francais") (equal dict "--"))
-                                     ;;          (powerline-raw
-                                     ;;           (concat (substring dict 0 2) " ")
-                                     ;;           default-dictionary-face 'l))
-                                     ;;         (buffer-read-only
-                                     ;;          (powerline-raw "%%%% "
-                                     ;;           default-dictionary-face 'l))
-                                     ;;         (t
-                                     ;;          (powerline-raw
-                                     ;;           (concat (substring dict 0 2) " ")
-                                     ;;           other-dictionary-face 'l))))
+                                       ;; (let ((dict (and (featurep 'ispell)
+                                       ;;                  (or ispell-local-dictionary
+                                       ;;                      ispell-dictionary
+                                       ;;                      "--" ; default dictionary
+                                       ;;                      ))))
+                                       ;;   (cond ((or (equal dict "francais") (equal dict "--"))
+                                       ;;          (powerline-raw
+                                       ;;           (concat (substring dict 0 2) " ")
+                                       ;;           default-dictionary-face 'l))
+                                       ;;         (buffer-read-only
+                                       ;;          (powerline-raw "%%%% "
+                                       ;;           default-dictionary-face 'l))
+                                       ;;         (t
+                                       ;;          (powerline-raw
+                                       ;;           (concat (substring dict 0 2) " ")
+                                       ;;           other-dictionary-face 'l))))
 
-                                     ;; (powerline-hud face2 face1)
-                                     )))
-                     (concat (powerline-render lhs)
-                             (powerline-fill mode-line (powerline-width rhs))
-                             (powerline-render rhs)))))))
+                                       ;; (powerline-hud face2 face1)
+                                       )))
+                       (concat (powerline-render lhs)
+                               (powerline-fill mode-line (powerline-width rhs))
+                               (powerline-render rhs)))))))
 
-(add-hook 'after-init-hook 'powerline-leuven-theme)
+  (with-eval-after-load "powerline-autoloads"
+    (add-hook 'after-init-hook 'powerline-leuven-theme))
 
 ;;** 14.20 The (info "(emacs)Cursor Display")
 
@@ -1376,6 +1384,9 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; Cursor of the selected window blinks.
   (XEmacs
     (blink-cursor-mode))
+
+  ;; Cursor blinks forever.
+  (setq blink-cursor-blinks 0)
 
   ;; Toggle line highlighting in all buffers (Global Hl-Line mode).
   (global-hl-line-mode 1)               ; XXX Perhaps only in prog-modes?
@@ -2351,7 +2362,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "Image mode")
 
-  ;; show image files as images (not as semi-random bits)
+  ;; Show image files as images (not as semi-random bits).
   (GNUEmacs
     (add-hook 'find-file-hook 'auto-image-file-mode))
 
@@ -2512,10 +2523,6 @@ Last time is saved in global variable `leuven--before-section-time'."
   (try-require 'uniquify)
 
   (with-eval-after-load "uniquify"
-
-    ;; style used for uniquifying buffer names with parts of directory
-    ;; name
-    (setq uniquify-buffer-name-style 'forward)
 
     ;; distinguish directories by adding extra separator
     (setq uniquify-trailing-separator-p t))
@@ -6587,11 +6594,12 @@ mouse-3: go to end") "]"))))
       (sp-local-tag "=" "=" "=" :actions '(wrap)) ; Verbatim.
       (sp-local-tag "~" "~" "~" :actions '(wrap))) ; Code.
 
-    ;; Enable smartparens-strict-mode in all Lisp modes.
-    (mapc (lambda (mode)
-            (add-hook (intern (format "%s-hook" (symbol-name mode)))
-                      'smartparens-strict-mode))
-          sp--lisp-modes))
+    ;; ;; Enable smartparens-strict-mode in all Lisp modes.
+    ;; (mapc (lambda (mode)
+    ;;         (add-hook (intern (format "%s-hook" (symbol-name mode)))
+    ;;                   'smartparens-strict-mode))
+    ;;       sp--lisp-modes)
+    )
 
 ;;** 26.5 (info "(emacs)Comments")
 
@@ -6911,16 +6919,16 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "27.9 (emacs)Lisp Eval Expressions")
 
-  ;; enable the use of the command `eval-expression' without confirmation
+  ;; Enable the use of the command `eval-expression' without confirmation.
   (put 'eval-expression 'disabled nil)
 
-  ;; maximum depth of lists to print in the result of the evaluation
-  ;; commands before abbreviating them
-  (setq eval-expression-print-level nil) ; no limit
+  ;; Maximum depth of lists to print in the result of the evaluation commands
+  ;; before abbreviating them.
+  (setq eval-expression-print-level nil) ; No limit.
 
-  ;; maximum length of lists to print in the result of the evaluation
-  ;; commands before abbreviating them
-  (setq eval-expression-print-length nil) ; no limit
+  ;; Maximum length of lists to print in the result of the evaluation commands
+  ;; before abbreviating them.
+  (setq eval-expression-print-length nil) ; No limit.
 
   (defun eval-and-replace ()
     "Replace the preceding sexp with its value."
@@ -8948,13 +8956,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; automatically save place in each file
     (setq-default save-place t)         ; default value for all buffers
-
-    ;; name of the file that records `save-place-alist' value
-    (setq save-place-file
-          (convert-standard-filename (concat user-emacs-directory ".places"))))
-                                        ;! a .txt extension would load `org' at
-                                        ;! the time Emacs is killed (if not
-                                        ;! already loaded)!
 
 )                                       ; chapter 42 ends here
 
