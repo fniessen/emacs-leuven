@@ -215,13 +215,15 @@
               <li><a href="#sec-17-1">Incremental Search (aka “Live
               Search”)</a></li>
 
-              <li><a href="#sec-17-2">Regexp Search</a></li>
+              <li><a href="#sec-17-2">Symbol Search</a></li>
 
-              <li><a href="#sec-17-3">Search Case</a></li>
+              <li><a href="#sec-17-3">Regexp Search</a></li>
 
-              <li><a href="#sec-17-4">Replacement Commands</a></li>
+              <li><a href="#sec-17-4">Search Case</a></li>
 
-              <li><a href="#sec-17-5">Other Search-and-Loop Commands</a></li>
+              <li><a href="#sec-17-5">Replacement Commands</a></li>
+
+              <li><a href="#sec-17-6">Other Search-and-Loop Commands</a></li>
             </ul>
           </li>
 
@@ -1328,7 +1330,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141022.1133</span>
+"org-comment">Version: 20141022.1209</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1452,7 +1454,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20141022.1133"</span>
+"org-string">"20141022.1209"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -5257,9 +5259,23 @@
       </div>
 
       <div id="outline-container-sec-17-2" class="outline-3">
-        <h3 id="sec-17-2">Regexp Search</h3>
+        <h3 id="sec-17-2">Symbol Search</h3>
 
         <div class="outline-text-3" id="text-17-2">
+          <dl class="org-dl">
+            <dt><code>M-s .</code>
+            (<code>isearch-forward-symbol-at-point</code>)</dt>
+
+            <dd>Start a symbol (identifier) incremental search forward with the
+            symbol found near point added to the search string initially.</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div id="outline-container-sec-17-3" class="outline-3">
+        <h3 id="sec-17-3">Regexp Search</h3>
+
+        <div class="outline-text-3" id="text-17-3">
           <p>Emacs uses basic regular expressions, which means that the
           extended regexp operators have to be escaped. This means you have to
           use <code>\(</code>, <code>\|</code>, and <code>\)</code> instead of
@@ -5280,7 +5296,7 @@
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** 15.5 (info "(emacs)Regexp Search")</span>
 
-  (leuven--section <span class="org-string">"15.4 (emacs)Regexp Search"</span>)
+  (leuven--section <span class="org-string">"15.5 (emacs)Regexp Search"</span>)
 </pre>
           </div>
 
@@ -5307,16 +5323,16 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-17-3" class="outline-3">
-        <h3 id="sec-17-3">Search Case</h3>
+      <div id="outline-container-sec-17-4" class="outline-3">
+        <h3 id="sec-17-4">Search Case</h3>
 
-        <div class="outline-text-3" id="text-17-3">
+        <div class="outline-text-3" id="text-17-4">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** 15.9 (info "(emacs)Search Case")</span>
 
-  (leuven--section <span class="org-string">"15.8 (emacs)Search Case"</span>)
+  (leuven--section <span class="org-string">"15.9 (emacs)Search Case"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Searches should ignore case by default (in all buffers that do not</span>
@@ -5328,10 +5344,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-17-4" class="outline-3">
-        <h3 id="sec-17-4">Replacement Commands</h3>
+      <div id="outline-container-sec-17-5" class="outline-3">
+        <h3 id="sec-17-5">Replacement Commands</h3>
 
-        <div class="outline-text-3" id="text-17-4">
+        <div class="outline-text-3" id="text-17-5">
           <p>Pass the string or the regexp directly to
           <code>query-replace</code>, so you can’t mangle it on the way, by
           pressing <code>M-%</code> while at the <code>I-search:</code>
@@ -5339,10 +5355,10 @@
         </div>
       </div>
 
-      <div id="outline-container-sec-17-5" class="outline-3">
-        <h3 id="sec-17-5">Other Search-and-Loop Commands</h3>
+      <div id="outline-container-sec-17-6" class="outline-3">
+        <h3 id="sec-17-6">Other Search-and-Loop Commands</h3>
 
-        <div class="outline-text-3" id="text-17-5">
+        <div class="outline-text-3" id="text-17-6">
           <p><code>M-x flush-lines</code> (or
           <code>delete-matching-lines</code>) deletes each line that contains a
           match for REGEXP.</p>
@@ -5353,7 +5369,7 @@
 "org-comment">** 15.11 (info "(emacs)Other Repeating Search") Commands</span>
 
   (leuven--section <span class=
-"org-string">"15.10 (emacs)Other Repeating Search Commands"</span>)
+"org-string">"15.11 (emacs)Other Repeating Search Commands"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; Invoke `</span><span class="org-constant"><span class=
@@ -6277,7 +6293,14 @@
 "org-comment">Enable Global Auto-Revert mode.</span>
   (global-auto-revert-mode 1)           <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">Can generate a lot of network traffic.</span>
+"org-comment">Can generate a lot of network traffic</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">if `</span><span class="org-constant"><span class=
+"org-comment">auto-revert-remote-files</span></span><span class=
+"org-comment">' is set</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">to non-nil.</span>
 </pre>
           </div>
 
@@ -9210,8 +9233,9 @@ M-: (executable-find "diff") RET
         <h3 id="sec-24-3">Recognizing Coding Systems</h3>
 
         <div class="outline-text-3" id="text-24-3">
-          <p>In GNU Emacs, when you specify the coding explicitly in the file,
-          that overrides <code>file-coding-system-alist</code>.</p>
+          <p>In GNU Emacs, when you specify the coding explicitly in the file
+          via an explicit <code>coding:</code> cookie, that overrides
+          <code>file-coding-system-alist</code>.</p>
 
           <p>XXX Declare PDF files as binary</p>
 
@@ -9904,25 +9928,8 @@ M-: (executable-find "diff") RET
 "org-string">"xj"</span> 'dired-jump)) <span class=
 "org-comment-delimiter">; </span><span class="org-comment">Autoloaded?</span>
 
-    (key-chord-define-global <span class=
-"org-string">"xv"</span> 'kill-region) <span class=
-"org-comment-delimiter">; </span><span class="org-comment">Cut.</span>
-    (key-chord-define-global <span class=
-"org-string">"xc"</span> 'kill-ring-save) <span class=
-"org-comment-delimiter">; </span><span class="org-comment">Copy.</span>
-    (key-chord-define-global <span class=
-"org-string">"cv"</span> 'yank) <span class=
-"org-comment-delimiter">; </span><span class="org-comment">Paste.</span>
-    (key-chord-define-global <span class=
-"org-string">"cy"</span> 'yank-pop) <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">Paste (with a different stretch).</span>
-
     (key-chord-define-global <span class="org-string">"vb"</span> 'eval-buffer)
     (key-chord-define-global <span class="org-string">"vg"</span> 'eval-region)
-
-    (key-chord-define-global <span class=
-"org-string">"vc"</span> 'vc-next-action)
 
     (key-chord-define-global <span class="org-string">"ww"</span> 'save-buffer)
 
@@ -24352,31 +24359,13 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (add-to-list 'sh-alias-alist '(sh . bash)))
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
-"org-comment"> Test the following (added on 2011-08-03)</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(when leuven--win32-p</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">;; Workaround for Cygwin shell, when set 'CYGWIN=noglob'.  By default</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">;; shell-quote-argument' quoted by double '\' chars, this cause failure.</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(defun shell-quote-argument (argument)</span>
-  <span class="org-comment-delimiter">;;     </span><span class=
-"org-comment">(concat "'" argument "'"))</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">;; Workaround for Cygwin when 'shell-file-name' is 'bash'.</span>
-  <span class="org-comment-delimiter">;;   </span><span class=
-"org-comment">(setq null-device "/dev/null"))</span>
-  <span class="org-comment-delimiter">;;</span>
-  <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">;; Use shell from Cygwin/MinGW.</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(setq shell-file-name "bash")</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(setenv "SHELL" "/bin/bash")</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq explicit-bash-args '("-i"))</span>
+"org-comment">(setq explicit-bash-args '("-i")) ; --noediting since Emacs 24.4</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(setq explicit-sh-args '("-i"))</span>
 </pre>
@@ -24451,6 +24440,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">quote process arguments to ensure correct parsing on Windows</span>
   (setq w32-quote-process-args t)
+
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">;; Workaround for Cygwin when 'shell-file-name' is 'bash'.</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq null-device "/dev/null"))</span>
 </pre>
           </div>
 

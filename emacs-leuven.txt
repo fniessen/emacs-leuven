@@ -2289,6 +2289,12 @@ the user see truly invisible matches before replacing them.
       (add-hook 'isearch-mode-hook 'turn-on-fuzzy-isearch)))
 #+end_src
 
+** Symbol Search
+
+- ~M-s .~ (~isearch-forward-symbol-at-point~) ::
+     Start a symbol (identifier) incremental search forward with the symbol
+     found near point added to the search string initially.
+
 ** Regexp Search
 
 Emacs uses basic regular expressions, which means that the extended regexp
@@ -2304,7 +2310,7 @@ Optimize regexps with =regexp-opt.el=.
 #+begin_src emacs-lisp
 ;;** 15.5 (info "(emacs)Regexp Search")
 
-  (leuven--section "15.4 (emacs)Regexp Search")
+  (leuven--section "15.5 (emacs)Regexp Search")
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -2349,7 +2355,7 @@ ELISP> (save-excursion (set-buffer "BUFFER")
 #+begin_src emacs-lisp
 ;;** 15.9 (info "(emacs)Search Case")
 
-  (leuven--section "15.8 (emacs)Search Case")
+  (leuven--section "15.9 (emacs)Search Case")
 
   ;; Searches should ignore case by default (in all buffers that do not
   ;; override this).
@@ -2369,7 +2375,7 @@ a match for REGEXP.
 #+begin_src emacs-lisp
 ;;** 15.11 (info "(emacs)Other Repeating Search") Commands
 
-  (leuven--section "15.10 (emacs)Other Repeating Search Commands")
+  (leuven--section "15.11 (emacs)Other Repeating Search Commands")
 
   ;; ;; Invoke `occur' easily from within `isearch'.
   ;; (define-key isearch-mode-map (kbd "C-o")
@@ -2901,7 +2907,9 @@ Turn on auto-revert mode globally.
 
 #+begin_src emacs-lisp
   ;; Enable Global Auto-Revert mode.
-  (global-auto-revert-mode 1)           ; Can generate a lot of network traffic.
+  (global-auto-revert-mode 1)           ; Can generate a lot of network traffic
+                                        ; if `auto-revert-remote-files' is set
+                                        ; to non-nil.
 #+end_src
 
 Auto-revert will automatically reload files that have changed outside of Emacs.
@@ -4657,8 +4665,8 @@ To see all the non-ASCII characters you can type with the ~C-x 8~ prefix, type
 
 ** Recognizing Coding Systems
 
-In GNU Emacs, when you specify the coding explicitly in the file, that
-overrides ~file-coding-system-alist~.
+In GNU Emacs, when you specify the coding explicitly in the file via an explicit
+~coding:~ cookie, that overrides ~file-coding-system-alist~.
 
 XXX Declare PDF files as binary
 
@@ -5060,15 +5068,8 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
     (with-eval-after-load "dired-x"
       (key-chord-define-global "xj" 'dired-jump)) ; Autoloaded?
 
-    (key-chord-define-global "xv" 'kill-region) ; Cut.
-    (key-chord-define-global "xc" 'kill-ring-save) ; Copy.
-    (key-chord-define-global "cv" 'yank) ; Paste.
-    (key-chord-define-global "cy" 'yank-pop) ; Paste (with a different stretch).
-
     (key-chord-define-global "vb" 'eval-buffer)
     (key-chord-define-global "vg" 'eval-region)
-
-    (key-chord-define-global "vc" 'vc-next-action)
 
     (key-chord-define-global "ww" 'save-buffer)
 
@@ -13459,19 +13460,10 @@ See customizations at http://snarfed.org/why_i_run_shells_inside_emacs.
 
     (add-to-list 'sh-alias-alist '(sh . bash)))
 
-  ;; XXX Test the following (added on 2011-08-03)
-  ;; (when leuven--win32-p
-  ;;   ;; Workaround for Cygwin shell, when set 'CYGWIN=noglob'.  By default
-  ;;   ;; shell-quote-argument' quoted by double '\' chars, this cause failure.
-  ;;   (defun shell-quote-argument (argument)
-  ;;     (concat "'" argument "'"))
-  ;;   ;; Workaround for Cygwin when 'shell-file-name' is 'bash'.
-  ;;   (setq null-device "/dev/null"))
-  ;;
   ;; ;; Use shell from Cygwin/MinGW.
   ;; (setq shell-file-name "bash")
   ;; (setenv "SHELL" "/bin/bash")
-  ;; (setq explicit-bash-args '("-i"))
+  ;; (setq explicit-bash-args '("-i")) ; --noediting since Emacs 24.4
   ;; (setq explicit-sh-args '("-i"))
 #+end_src
 
@@ -13512,6 +13504,9 @@ and *replaces* it with the output from the shell command.
 
   ;; quote process arguments to ensure correct parsing on Windows
   (setq w32-quote-process-args t)
+
+  ;; ;; Workaround for Cygwin when 'shell-file-name' is 'bash'.
+  ;; (setq null-device "/dev/null"))
 #+end_src
 
 The above assignments may *NOT* be done *in an eval-after-load* as those variables

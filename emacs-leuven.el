@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141022.1133
+;; Version: 20141022.1208
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -73,7 +73,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141022.1133"
+(defconst leuven--emacs-version "20141022.1208"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1471,7 +1471,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 ;;** 15.5 (info "(emacs)Regexp Search")
 
-  (leuven--section "15.4 (emacs)Regexp Search")
+  (leuven--section "15.5 (emacs)Regexp Search")
 
   (defun leuven-buffer-matched-strings ()
     (interactive)
@@ -1487,7 +1487,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 ;;** 15.9 (info "(emacs)Search Case")
 
-  (leuven--section "15.8 (emacs)Search Case")
+  (leuven--section "15.9 (emacs)Search Case")
 
   ;; Searches should ignore case by default (in all buffers that do not
   ;; override this).
@@ -1495,7 +1495,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 ;;** 15.11 (info "(emacs)Other Repeating Search") Commands
 
-  (leuven--section "15.10 (emacs)Other Repeating Search Commands")
+  (leuven--section "15.11 (emacs)Other Repeating Search Commands")
 
   ;; ;; Invoke `occur' easily from within `isearch'.
   ;; (define-key isearch-mode-map (kbd "C-o")
@@ -1823,7 +1823,9 @@ Last time is saved in global variable `leuven--before-section-time'."
   (global-set-key (kbd "<C-f12>") 'leuven-revert-buffer-without-query)
 
   ;; Enable Global Auto-Revert mode.
-  (global-auto-revert-mode 1)           ; Can generate a lot of network traffic.
+  (global-auto-revert-mode 1)           ; Can generate a lot of network traffic
+                                        ; if `auto-revert-remote-files' is set
+                                        ; to non-nil.
 
   ;; ;; Global Auto-Revert mode operates on all buffers (Dired, among others)
   ;; (setq global-auto-revert-non-file-buffers t)
@@ -3150,15 +3152,8 @@ Last time is saved in global variable `leuven--before-section-time'."
     (with-eval-after-load "dired-x"
       (key-chord-define-global "xj" 'dired-jump)) ; Autoloaded?
 
-    (key-chord-define-global "xv" 'kill-region) ; Cut.
-    (key-chord-define-global "xc" 'kill-ring-save) ; Copy.
-    (key-chord-define-global "cv" 'yank) ; Paste.
-    (key-chord-define-global "cy" 'yank-pop) ; Paste (with a different stretch).
-
     (key-chord-define-global "vb" 'eval-buffer)
     (key-chord-define-global "vg" 'eval-region)
-
-    (key-chord-define-global "vc" 'vc-next-action)
 
     (key-chord-define-global "ww" 'save-buffer)
 
@@ -8451,19 +8446,10 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (add-to-list 'sh-alias-alist '(sh . bash)))
 
-  ;; XXX Test the following (added on 2011-08-03)
-  ;; (when leuven--win32-p
-  ;;   ;; Workaround for Cygwin shell, when set 'CYGWIN=noglob'.  By default
-  ;;   ;; shell-quote-argument' quoted by double '\' chars, this cause failure.
-  ;;   (defun shell-quote-argument (argument)
-  ;;     (concat "'" argument "'"))
-  ;;   ;; Workaround for Cygwin when 'shell-file-name' is 'bash'.
-  ;;   (setq null-device "/dev/null"))
-  ;;
   ;; ;; Use shell from Cygwin/MinGW.
   ;; (setq shell-file-name "bash")
   ;; (setenv "SHELL" "/bin/bash")
-  ;; (setq explicit-bash-args '("-i"))
+  ;; (setq explicit-bash-args '("-i")) ; --noediting since Emacs 24.4
   ;; (setq explicit-sh-args '("-i"))
 
 ;;** 36.1 Single Shell
@@ -8493,6 +8479,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; quote process arguments to ensure correct parsing on Windows
   (setq w32-quote-process-args t)
+
+  ;; ;; Workaround for Cygwin when 'shell-file-name' is 'bash'.
+  ;; (setq null-device "/dev/null"))
 
 ;;** 36.2 Interactive Shell
 
