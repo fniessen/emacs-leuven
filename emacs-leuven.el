@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141021.1530
+;; Version: 20141022.0959
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -73,7 +73,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141021.1530"
+(defconst leuven--emacs-version "20141022.0959"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2174,7 +2174,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (global-set-key (kbd "<f3>") 'helm-for-files)
 
-      (global-set-key (kbd "C-x C-f") 'helm-find-files)
+      ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
       ;; buffer list
       (global-set-key (kbd "C-x b") 'helm-mini) ; = `helm-buffers-list' + recents

@@ -3694,7 +3694,7 @@ XXX Look at helm-dictionary.
 
       (global-set-key (kbd "<f3>") 'helm-for-files)
 
-      (global-set-key (kbd "C-x C-f") 'helm-find-files)
+      ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
       ;; buffer list
       (global-set-key (kbd "C-x b") 'helm-mini) ; = `helm-buffers-list' + recents
