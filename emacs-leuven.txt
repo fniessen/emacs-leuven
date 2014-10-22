@@ -14387,7 +14387,7 @@ printing on Windows.
   (with-eval-after-load "saveplace"
 
     ;; automatically save place in each file
-    (setq-default save-place t)         ; default value for all buffers
+    (setq-default save-place t))        ; default value for all buffers
 
 )                                       ; chapter 42 ends here
 #+end_src
