@@ -554,16 +554,15 @@ outages).
                                         ; and load `<pkg>-autoloads.el'
 
       (defconst leuven-elpa-packages
-        '(ace-jump-mode ace-window annoying-arrows-mode auctex auto-complete
-          bbdb bookmark+ boxquote calfw circe color-identifiers-mode company
-          csv-mode dictionary diff-hl diminish dired+ dired-single ess
-          expand-region fancy-narrow fill-column-indicator flycheck fuzzy
-          git-commit-mode google-this google-translate goto-chg
-          graphviz-dot-mode guide-key helm helm-descbinds helm-swoop
-          highlight-symbol htmlize key-chord litable idle-require imenu-anywhere
-          info+ interaction-log ledger-mode leuven-theme multi-term
-          multiple-cursors pager powerline rainbow-mode smartparens spray tidy
-          tomatinho unbound undo-tree w3m yasnippet
+        '(ace-jump-mode ace-window auctex auto-complete bbdb bookmark+ boxquote
+          calfw circe color-identifiers-mode company csv-mode dictionary diff-hl
+          diminish dired+ dired-single ess expand-region fancy-narrow
+          fill-column-indicator flycheck fuzzy git-commit-mode google-this
+          google-translate goto-chg graphviz-dot-mode guide-key helm
+          helm-descbinds helm-swoop highlight-symbol htmlize key-chord litable
+          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          smartparens spray tidy tomatinho unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -1522,13 +1521,6 @@ In TeXStudio:
     (global-set-key (kbd "<next>") 'pager-page-down))
 #+end_src
 
-#+begin_src emacs-lisp
-  ;; Annoying arrows mode.
-  (try-require 'annoying-arrows-mode)
-  (with-eval-after-load "annoying-arrows-mode"
-    (global-annoying-arrows-mode))
-#+end_src
-
 ** Automatic Scrolling
 
 "Smooth" (civilized) scrolling.
@@ -1547,6 +1539,10 @@ In TeXStudio:
   ;; Scrolling down looks much better.
   (setq auto-window-vscroll nil)
 #+end_src
+
+** Horizontal Scrolling
+
+How to automatically add/remove scrollbars as needed by text width?
 
 ** Narrowing
 
@@ -1662,32 +1658,30 @@ See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
 You can use *Hi Lock* (part of Emacs) to highlight a regexp (identical tokens)
 throughout a buffer.
 
-XXX The prefix C-x w only exists once hi-lock-mode is loaded!
-XXX What about M-s h?
-
 - ~M-x hi-lock-mode <RET>~ ::
      Enable or disable Hi Lock mode.
 
 - ~M-s h .~ ::
       *Highlight* each instance of the *symbol at point*.
 
-- ~C-x w h REGEXP <RET> <RET>~ ::
-     Highlight text that matches REGEXP.
+- ~M-s h r REGEXP <RET>~ ::
+     Highlight text that *matches REGEXP*.
 
-- ~C-x w l REGEXP <RET> <RET>~ ::
-     Highlight entire lines containing a match for REGEXP.
+- ~M-s h l REGEXP <RET>~ ::
+     Highlight *entire lines* containing a match for REGEXP.
 
-- ~C-x w r REGEXP <RET>~ ::
-     Unhighlight REGEXP.
+- ~M-s h u REGEXP <RET>~ ::
+     *Unhighlight* REGEXP.
 
 #+begin_src emacs-lisp
-;; (GNUEmacs
-;;
-;;     ;; Do not prompt for the face to use. Instead, cycle through them.
-;;     (setq hi-lock-auto-select-face t)
-;;
-;;     ;; enable Hi Lock mode for all buffers
-;;     (global-hi-lock-mode 1))
+  (GNUEmacs
+
+    ;; Do not prompt for the face to use. Instead, cycle through them.
+    (setq hi-lock-auto-select-face t)
+
+    ;; ;; enable Hi Lock mode for all buffers
+    ;; (global-hi-lock-mode 1)
+    )
 #+end_src
 
 It is complementary to the features of the library *Highlight-symbol* (from
@@ -10291,7 +10285,9 @@ Function argument hint.
     (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
     (add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
     (add-hook 'ielm-mode-hook 'eldoc-mode)
-    (add-hook 'eval-expression-minibuffer-setup-hook 'eldoc-mode))
+    (add-hook 'eval-expression-minibuffer-setup-hook 'eldoc-mode)
+    ;; (global-eldoc-mode) ;; in Emacs 25
+    )
 
   ;; highlight the arguments in `font-lock-variable-name-face'
   (defun leuven--frob-eldoc-argument-list (string)
@@ -13463,7 +13459,7 @@ See customizations at http://snarfed.org/why_i_run_shells_inside_emacs.
   ;; ;; Use shell from Cygwin/MinGW.
   ;; (setq shell-file-name "bash")
   ;; (setenv "SHELL" "/bin/bash")
-  ;; (setq explicit-bash-args '("-i")) ; --noediting since Emacs 24.4
+  ;; (setq explicit-bash-args '("-i")) ; --noediting added in Emacs 24.4
   ;; (setq explicit-sh-args '("-i"))
 #+end_src
 

@@ -1,11 +1,10 @@
-
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
 ;; Copyright (C) 1999-2014 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141022.1208
+;; Version: 20141023.1441
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -73,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141022.1208"
+(defconst leuven--emacs-version "20141023.1441"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -408,16 +407,15 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ; and load `<pkg>-autoloads.el'
 
       (defconst leuven-elpa-packages
-        '(ace-jump-mode ace-window annoying-arrows-mode auctex auto-complete
-          bbdb bookmark+ boxquote calfw circe color-identifiers-mode company
-          csv-mode dictionary diff-hl diminish dired+ dired-single ess
-          expand-region fancy-narrow fill-column-indicator flycheck fuzzy
-          git-commit-mode google-this google-translate goto-chg
-          graphviz-dot-mode guide-key helm helm-descbinds helm-swoop
-          highlight-symbol htmlize key-chord litable idle-require imenu-anywhere
-          info+ interaction-log ledger-mode leuven-theme multi-term
-          multiple-cursors pager powerline rainbow-mode smartparens spray tidy
-          tomatinho unbound undo-tree w3m yasnippet
+        '(ace-jump-mode ace-window auctex auto-complete bbdb bookmark+ boxquote
+          calfw circe color-identifiers-mode company csv-mode dictionary diff-hl
+          diminish dired+ dired-single ess expand-region fancy-narrow
+          fill-column-indicator flycheck fuzzy git-commit-mode google-this
+          google-translate goto-chg graphviz-dot-mode guide-key helm
+          helm-descbinds helm-swoop highlight-symbol htmlize key-chord litable
+          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          smartparens spray tidy tomatinho unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -954,11 +952,6 @@ Last time is saved in global variable `leuven--before-section-time'."
     (global-set-key (kbd "<prior>") 'pager-page-up)
     (global-set-key (kbd "<next>") 'pager-page-down))
 
-  ;; Annoying arrows mode.
-  (try-require 'annoying-arrows-mode)
-  (with-eval-after-load "annoying-arrows-mode"
-    (global-annoying-arrows-mode))
-
 ;;** 14.3 (info "(emacs)Auto Scrolling")
 
   (leuven--section "14.3 (emacs)Auto Scrolling")
@@ -1044,13 +1037,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "14.13 (emacs)Highlight Interactively by Matching")
 
-;; (GNUEmacs
-;;
-;;     ;; Do not prompt for the face to use. Instead, cycle through them.
-;;     (setq hi-lock-auto-select-face t)
-;;
-;;     ;; enable Hi Lock mode for all buffers
-;;     (global-hi-lock-mode 1))
+  (GNUEmacs
+
+    ;; Do not prompt for the face to use. Instead, cycle through them.
+    (setq hi-lock-auto-select-face t)
+
+    ;; ;; enable Hi Lock mode for all buffers
+    ;; (global-hi-lock-mode 1)
+    )
 
   (with-eval-after-load "highlight-symbol-autoloads"
 
@@ -6627,7 +6621,9 @@ mouse-3: go to end") "]"))))
     (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
     (add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
     (add-hook 'ielm-mode-hook 'eldoc-mode)
-    (add-hook 'eval-expression-minibuffer-setup-hook 'eldoc-mode))
+    (add-hook 'eval-expression-minibuffer-setup-hook 'eldoc-mode)
+    ;; (global-eldoc-mode) ;; in Emacs 25
+    )
 
   ;; highlight the arguments in `font-lock-variable-name-face'
   (defun leuven--frob-eldoc-argument-list (string)
@@ -8449,7 +8445,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; ;; Use shell from Cygwin/MinGW.
   ;; (setq shell-file-name "bash")
   ;; (setenv "SHELL" "/bin/bash")
-  ;; (setq explicit-bash-args '("-i")) ; --noediting since Emacs 24.4
+  ;; (setq explicit-bash-args '("-i")) ; --noediting added in Emacs 24.4
   ;; (setq explicit-sh-args '("-i"))
 
 ;;** 36.1 Single Shell
