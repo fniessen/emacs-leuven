@@ -1367,7 +1367,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141023.1442</span>
+"org-comment">Version: 20141023.1522</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1491,7 +1491,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20141023.1442"</span>
+"org-string">"20141023.1522"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -2369,21 +2369,7 @@
 "org-string">%s</span></span><span class=
 "org-string">' package at next startup..."</span>) <span class=
 "org-warning">pkg)</span>
-              (sit-for 1.5)))))
-
-      <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Don't truncate package names in Emacs package list.</span>
-      (add-hook 'package-menu-mode-hook
-                (<span class="org-keyword">lambda</span> ()
-                  (setq tabulated-list-format
-                        [(<span class=
-"org-string">"Package"</span> 28 package-menu--name-predicate)
-                         (<span class="org-string">"Version"</span> 14 nil)
-                         (<span class=
-"org-string">"Status"</span>  10 package-menu--status-predicate)
-                         (<span class=
-"org-string">"Description"</span> 0 nil)])
-                  (tabulated-list-init-header)))))
+              (sit-for 1.5)))))))
 </pre>
           </div>
 

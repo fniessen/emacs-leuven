@@ -600,17 +600,7 @@ outages).
                                         ; `package-initialize'.
               (message (concat "Customize `leuven-elpa-ignored-packages' to ignore "
                                "the `%s' package at next startup...") pkg)
-              (sit-for 1.5)))))
-
-      ;; Don't truncate package names in Emacs package list.
-      (add-hook 'package-menu-mode-hook
-                (lambda ()
-                  (setq tabulated-list-format
-                        [("Package" 28 package-menu--name-predicate)
-                         ("Version" 14 nil)
-                         ("Status"  10 package-menu--status-predicate)
-                         ("Description" 0 nil)])
-                  (tabulated-list-init-header)))))
+              (sit-for 1.5)))))))
 #+end_src
 
 #+begin_src emacs-lisp

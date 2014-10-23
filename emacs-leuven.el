@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141023.1441
+;; Version: 20141023.1521
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141023.1441"
+(defconst leuven--emacs-version "20141023.1521"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -453,17 +453,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ; `package-initialize'.
               (message (concat "Customize `leuven-elpa-ignored-packages' to ignore "
                                "the `%s' package at next startup...") pkg)
-              (sit-for 1.5)))))
-
-      ;; Don't truncate package names in Emacs package list.
-      (add-hook 'package-menu-mode-hook
-                (lambda ()
-                  (setq tabulated-list-format
-                        [("Package" 28 package-menu--name-predicate)
-                         ("Version" 14 nil)
-                         ("Status"  10 package-menu--status-predicate)
-                         ("Description" 0 nil)])
-                  (tabulated-list-init-header)))))
+              (sit-for 1.5)))))))
 
 )                                       ; chapter 47 ends here
 
