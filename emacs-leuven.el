@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141023.1521
+;; Version: 20141104.2248
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141023.1521"
+(defconst leuven--emacs-version "20141104.2248"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3139,16 +3139,11 @@ Last time is saved in global variable `leuven--before-section-time'."
     (key-chord-define-global "vb" 'eval-buffer)
     (key-chord-define-global "vg" 'eval-region)
 
-    (key-chord-define-global "ww" 'save-buffer)
-
     (key-chord-define-global "x0" 'delete-window)
     (key-chord-define-global "x1" 'delete-other-windows)
     (key-chord-define-global "xh" 'mark-whole-buffer)
     (key-chord-define-global "xk" 'kill-buffer) ; leuven-kill-this-buffer-without-query?
     (key-chord-define-global "xo" 'other-window)
-
-    (with-eval-after-load "helm-autoloads" ; Autoloads file.
-      (key-chord-define-global "xx" 'helm-M-x)) ; Autoloaded.
 
     (key-chord-define-global "yy" 'browse-kill-ring)
     (key-chord-define-global "zk" 'zap-to-char)
@@ -5865,7 +5860,7 @@ this with to-do items than with projects or headings."
     ;; Which tag is used to mark headings to be encrypted.
     (setq org-tags-exclude-from-inheritance '("crypt")))
 
-  (defun leuven-scramble-contents ()
+  (defun leuven-org-scramble-contents ()
     (interactive)
     (let ((tree (org-element-parse-buffer)))
       (org-element-map tree '(code comment comment-block example-block fixed-width
