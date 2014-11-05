@@ -5046,9 +5046,6 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 
     (key-chord-define-global "kk" 'kill-whole-line)
 
-    (with-eval-after-load "undo-tree"   ; Package.
-      (key-chord-define-global "uu" 'undo-tree-visualize)) ; Not autoloaded.
-
     (with-eval-after-load "dired-x"
       (key-chord-define-global "xj" 'dired-jump)) ; Autoloaded?
 

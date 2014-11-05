@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141104.2248
+;; Version: 20141105.1127
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141104.2248"
+(defconst leuven--emacs-version "20141105.1127"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3129,9 +3129,6 @@ Last time is saved in global variable `leuven--before-section-time'."
       (key-chord-define-global "jw" 'ace-window))
 
     (key-chord-define-global "kk" 'kill-whole-line)
-
-    (with-eval-after-load "undo-tree"   ; Package.
-      (key-chord-define-global "uu" 'undo-tree-visualize)) ; Not autoloaded.
 
     (with-eval-after-load "dired-x"
       (key-chord-define-global "xj" 'dired-jump)) ; Autoloaded?
