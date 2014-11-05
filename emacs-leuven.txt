@@ -555,10 +555,10 @@ outages).
 
       (defconst leuven-elpa-packages
         '(ace-jump-mode ace-window auctex auto-complete bbdb bookmark+ boxquote
-          calfw circe color-identifiers-mode company csv-mode dictionary diff-hl
-          diminish dired+ dired-single ess expand-region fancy-narrow
-          fill-column-indicator flycheck fuzzy git-commit-mode google-this
-          google-translate goto-chg graphviz-dot-mode guide-key helm
+          calfw circe color-identifiers-mode company csv-mode cygwin-mount
+          dictionary diff-hl diminish dired+ dired-single ess expand-region
+          fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
+          google-this google-translate goto-chg graphviz-dot-mode guide-key helm
           helm-descbinds helm-swoop highlight-symbol htmlize key-chord litable
           idle-require imenu-anywhere info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors pager powerline rainbow-mode

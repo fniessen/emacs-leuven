@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141105.1127
+;; Version: 20141105.1724
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141105.1127"
+(defconst leuven--emacs-version "20141105.1724"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -408,10 +408,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (defconst leuven-elpa-packages
         '(ace-jump-mode ace-window auctex auto-complete bbdb bookmark+ boxquote
-          calfw circe color-identifiers-mode company csv-mode dictionary diff-hl
-          diminish dired+ dired-single ess expand-region fancy-narrow
-          fill-column-indicator flycheck fuzzy git-commit-mode google-this
-          google-translate goto-chg graphviz-dot-mode guide-key helm
+          calfw circe color-identifiers-mode company csv-mode cygwin-mount
+          dictionary diff-hl diminish dired+ dired-single ess expand-region
+          fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
+          google-this google-translate goto-chg graphviz-dot-mode guide-key helm
           helm-descbinds helm-swoop highlight-symbol htmlize key-chord litable
           idle-require imenu-anywhere info+ interaction-log ledger-mode
           leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
