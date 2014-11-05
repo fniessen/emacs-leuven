@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141105.1724
+;; Version: 20141105.1732
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141105.1724"
+(defconst leuven--emacs-version "20141105.1732"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -412,10 +412,11 @@ Last time is saved in global variable `leuven--before-section-time'."
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
           google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-          helm-descbinds helm-swoop highlight-symbol htmlize key-chord litable
-          idle-require imenu-anywhere info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          smartparens spray tidy tomatinho unbound undo-tree w3m yasnippet
+          helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
+          key-chord litable idle-require imenu-anywhere info+ interaction-log
+          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
+          rainbow-mode smartparens spray tidy tomatinho unbound undo-tree w3m
+          yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
