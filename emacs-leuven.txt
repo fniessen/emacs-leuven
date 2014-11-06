@@ -10325,38 +10325,38 @@ many programming modes.
 #+begin_src emacs-lisp :tangle no
   ;; if hideshowvis is not installed, do not attempt to configure it, as this
   ;; will prevent packages (including hideshowvis itself) from compiling
-  (when (and (display-graphic-p)
-             (try-require 'hideshowvis))
+  (when display-graphic-p
+    (with-eval-after-load "hideshowvis-autoloads"
 
-    ;; enable hideshowvis for programming modes
-    (add-hook 'prog-mode-hook
-              (lambda ()
-                (require 'fold-dwim)    ; more syntax definitions
-                (hideshowvis-enable)))
+      ;; enable hideshowvis for programming modes
+      (add-hook 'prog-mode-hook
+                (lambda ()
+                  (require 'fold-dwim)    ; more syntax definitions
+                  (hideshowvis-enable)))
 
-    ;; (defface hs-fringe-face
-    ;;   '((t (:box (:line-width 2 :color "#808080" :style released-button)
-    ;;         :foreground "#999999")))
-    ;;   "Face used to highlight the fringe on folded regions"
-    ;;   :group 'hideshow)
+      ;; (defface hs-fringe-face
+      ;;   '((t (:box (:line-width 2 :color "#808080" :style released-button)
+      ;;         :foreground "#999999")))
+      ;;   "Face used to highlight the fringe on folded regions"
+      ;;   :group 'hideshow)
 
-    (defun hs-display-code-line-counts (ov)
-      (when (eq 'code (overlay-get ov 'hs))
-        (let* ((marker-string "*fringe-dummy*")
-               (marker-length (length marker-string))
-               (display-string "..."))
-          (overlay-put ov 'help-echo "Hidden text. C-c,= to show")
-          (put-text-property 0 marker-length
-                             'display (list 'left-fringe
-                                            'hs-marker
-                                            'hs-fringe-face)
-                             marker-string)
-          (overlay-put ov 'before-string marker-string)
-          (put-text-property 0 (length display-string)
-                             'face 'hs-face display-string)
-          (overlay-put ov 'display display-string))))
+      (defun hs-display-code-line-counts (ov)
+        (when (eq 'code (overlay-get ov 'hs))
+          (let* ((marker-string "*fringe-dummy*")
+                 (marker-length (length marker-string))
+                 (display-string "..."))
+            (overlay-put ov 'help-echo "Hidden text. C-c,= to show")
+            (put-text-property 0 marker-length
+                               'display (list 'left-fringe
+                                              'hs-marker
+                                              'hs-fringe-face)
+                               marker-string)
+            (overlay-put ov 'before-string marker-string)
+            (put-text-property 0 (length display-string)
+                               'face 'hs-face display-string)
+            (overlay-put ov 'display display-string))))
 
-    (setq hs-set-up-overlay 'hs-display-code-line-counts))
+      (setq hs-set-up-overlay 'hs-display-code-line-counts)))
 #+end_src
 
 ** Completion for Symbol Names
