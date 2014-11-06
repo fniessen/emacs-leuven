@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141105.1732
+;; Version: 20141106.0945
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141105.1732"
+(defconst leuven--emacs-version "20141106.0945"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -415,8 +415,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
           key-chord litable idle-require imenu-anywhere info+ interaction-log
           ledger-mode leuven-theme multi-term multiple-cursors pager powerline
-          rainbow-mode smartparens spray tidy tomatinho unbound undo-tree w3m
-          yasnippet
+          rainbow-mode smartparens spray tidy unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -6065,11 +6064,6 @@ this with to-do items than with projects or headings."
 
 )                                       ; chapter 25.9-org-mode ends here
 
-  (with-eval-after-load "tomatinho-autoloads"
-
-    ;; Pomodoro.
-    (global-set-key (kbd "<S-f4>") 'tomatinho))
-
 ;;** 25.10 (info "(emacs)TeX Mode")
 
 (leuven--chapter leuven-chapter-25.10-tex-mode "25.10 TeX Mode"
@@ -8647,8 +8641,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; ;; let Emacs recognize Cygwin paths (e.g. /usr/local/lib)
     ;; (when (and leuven--win32-p
     ;;            (executable-find "mount")) ; Cygwin bin directory found
-    ;;   (try-require 'cygwin-mount)
-    ;;   (with-eval-after-load "cygwin-mount"
+    ;;   (with-eval-after-load "cygwin-mount-autoloads"
     ;;     (cygwin-mount-activate)))
 
     ;; let Emacs recognize Windows paths (e.g. C:/Program Files/)

@@ -562,8 +562,7 @@ outages).
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
           key-chord litable idle-require imenu-anywhere info+ interaction-log
           ledger-mode leuven-theme multi-term multiple-cursors pager powerline
-          rainbow-mode smartparens spray tidy tomatinho unbound undo-tree w3m
-          yasnippet
+          rainbow-mode smartparens spray tidy unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -9328,13 +9327,6 @@ Link emails from Org files.
 )                                       ; chapter 25.9-org-mode ends here
 #+end_src
 
-#+begin_src emacs-lisp
-  (with-eval-after-load "tomatinho-autoloads"
-
-    ;; Pomodoro.
-    (global-set-key (kbd "<S-f4>") 'tomatinho))
-#+end_src
-
 * TeX
 
 #+begin_src emacs-lisp
@@ -13895,8 +13887,7 @@ with Gnus...*
     ;; ;; let Emacs recognize Cygwin paths (e.g. /usr/local/lib)
     ;; (when (and leuven--win32-p
     ;;            (executable-find "mount")) ; Cygwin bin directory found
-    ;;   (try-require 'cygwin-mount)
-    ;;   (with-eval-after-load "cygwin-mount"
+    ;;   (with-eval-after-load "cygwin-mount-autoloads"
     ;;     (cygwin-mount-activate)))
 #+end_src
 
