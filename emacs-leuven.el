@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141106.1143
+;; Version: 20141106.1349
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141106.1143"
+(defconst leuven--emacs-version "20141106.1349"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -4723,8 +4723,6 @@ From %c"
           (todo category-up priority-down effort-down)
           (tags category-up priority-down effort-down)
           (search category-up)))
-
-  ;; (setq org-sort-agenda-notime-is-late nil)
 
   ;; Show agenda in the current window, keeping all other windows.
   (setq org-agenda-window-setup 'current-window)

@@ -7367,12 +7367,25 @@ for today's date:
 question, so that other sorting parameters will not be outranked by ~time-up~ for
 the rest of the entries.
 
-*************** TODO refile.org should come first
-Current workaround: added ~#+CATEGORY: @refile~ at the end of that file (the ~@~
-symbol is alphabetically before the letters)
-*************** END
+#+begin_note
+The file =refile.org= should come first.  My current workaround is to add
+~:CATEGORY: @refile~ in its subtrees, as the ~@~ symbol is alphabetically before the
+letters.
+#+end_note
 
 Agenda view: put related tasks together, then by priority.
+
+#+begin_note
+Not sure about that anymore: the agenda view is to work on tasks, hence prior
+tasks (then grouped by project) should arrive ahead; on the opposite, when doing
+a review, it's good to have all tasks grouped by project.
+#+end_note
+
+*************** TODO Sort agenda by prior, then categ, then date
+Inverting ~category-up~ and ~priority-down~ in the agenda does unexpected
+sorting: first by priority (OK), but then by scheduled time (while it should be
+grouped by category)!
+*************** END
 
 #+begin_src emacs-lisp
   ;; 10.4.3 Sorting structure for the agenda items of a single day.
@@ -7381,8 +7394,6 @@ Agenda view: put related tasks together, then by priority.
           (todo category-up priority-down effort-down)
           (tags category-up priority-down effort-down)
           (search category-up)))
-
-  ;; (setq org-sort-agenda-notime-is-late nil)
 
   ;; Show agenda in the current window, keeping all other windows.
   (setq org-agenda-window-setup 'current-window)
