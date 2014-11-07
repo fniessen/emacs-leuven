@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141106.1349
+;; Version: 20141107.1637
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141106.1349"
+(defconst leuven--emacs-version "20141107.1637"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -411,11 +411,12 @@ Last time is saved in global variable `leuven--before-section-time'."
           calfw circe color-identifiers-mode company csv-mode cygwin-mount
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
-          google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-          helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
-          key-chord litable idle-require imenu-anywhere info+ interaction-log
-          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
-          rainbow-mode smartparens spray tidy unbound undo-tree w3m yasnippet
+          google-this google-translate goto-chg graphviz-dot-mode
+          graphviz-dot-mode guide-key helm helm-descbinds helm-swoop hideshowvis
+          highlight-symbol htmlize key-chord litable idle-require imenu-anywhere
+          info+ interaction-log ledger-mode leuven-theme multi-term
+          multiple-cursors pager powerline rainbow-mode smartparens spray tidy
+          unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -662,6 +663,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;; List of directories to search for Info documentation files (in the order
     ;; they are listed).
     (when leuven--win32-p
+      ;; (info-initialize)
       (setq Info-directory-list
             `(,(expand-file-name
                 (concat (file-name-directory (locate-library "org")) "../doc/"))
@@ -2310,6 +2312,12 @@ Last time is saved in global variable `leuven--before-section-time'."
     ;;
     ;;   ;; don't save history information to file
     ;;   (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history))
+
+    ;; kill-ring, mark-ring, and register browsers for Helm.
+    (with-eval-after-load "helm-ring"
+
+      ;; Max number of lines displayed per candidate in kill-ring browser.
+      (setq helm-kill-ring-max-lines-number 20))
 
     ;; efficiently hopping squeezed lines powered by Helm interface
     ;; (= Helm occur + Follow mode!)
@@ -6444,10 +6452,6 @@ this with to-do items than with projects or headings."
 
   (leuven--section "26.1 Major Modes for (emacs)Program Modes")
 
-  (autoload 'graphviz-dot-mode "graphviz-dot-mode"
-    "Major mode for the dot language." t)
-  (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
-
 ;;** 26.2 Top-Level Definitions, or (info "(emacs)Defuns")
 
   (leuven--section "26.2 Top-Level Definitions, or (emacs)Defuns")
@@ -7050,9 +7054,9 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; vc status without asking for a directory
   (global-set-key (kbd "<C-f9>") 'leuven-vc-jump)
 
-  ;; hide up-to-date and unregistered files
   (add-hook  'vc-dir-mode-hook
              (lambda ()
+               ;; hide up-to-date and unregistered files
                (define-key vc-dir-mode-map
                  (kbd "x") 'leuven-vc-dir-hide-up-to-date-and-unregistered)
                (define-key vc-dir-mode-map

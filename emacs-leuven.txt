@@ -104,6 +104,8 @@ this set of customizations to "short-cut" that initial process.
 
 * Code
 
+Some things are "activated" by default in =lisp/loaddefs.el=.
+
 #+begin_src emacs-lisp :noweb yes
 ;;; Code:
 
@@ -558,11 +560,12 @@ outages).
           calfw circe color-identifiers-mode company csv-mode cygwin-mount
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
-          google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-          helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
-          key-chord litable idle-require imenu-anywhere info+ interaction-log
-          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
-          rainbow-mode smartparens spray tidy unbound undo-tree w3m yasnippet
+          google-this google-translate goto-chg graphviz-dot-mode
+          graphviz-dot-mode guide-key helm helm-descbinds helm-swoop hideshowvis
+          highlight-symbol htmlize key-chord litable idle-require imenu-anywhere
+          info+ interaction-log ledger-mode leuven-theme multi-term
+          multiple-cursors pager powerline rainbow-mode smartparens spray tidy
+          unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -981,6 +984,7 @@ Emacs).
     ;; List of directories to search for Info documentation files (in the order
     ;; they are listed).
     (when leuven--win32-p
+      ;; (info-initialize)
       (setq Info-directory-list
             `(,(expand-file-name
                 (concat (file-name-directory (locate-library "org")) "../doc/"))
@@ -3871,6 +3875,16 @@ projects.
     ;;
     ;;   ;; don't save history information to file
     ;;   (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history))
+#+end_src
+
+**** Helm show kill ring
+
+#+begin_src emacs-lisp
+    ;; kill-ring, mark-ring, and register browsers for Helm.
+    (with-eval-after-load "helm-ring"
+
+      ;; Max number of lines displayed per candidate in kill-ring browser.
+      (setq helm-kill-ring-max-lines-number 20))
 #+end_src
 
 **** Helm swoop
@@ -9985,12 +9999,6 @@ Also =who-calls.el=
   (leuven--section "26.1 Major Modes for (emacs)Program Modes")
 #+end_src
 
-#+begin_src emacs-lisp
-  (autoload 'graphviz-dot-mode "graphviz-dot-mode"
-    "Major mode for the dot language." t)
-  (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
-#+end_src
-
 ** Top-Level Definitions, or Defuns
 
 Imenu is a great tool allowing you to *go to a function definition* (by name), but
@@ -10119,6 +10127,8 @@ things.
   (XEmacs
     (paren-set-mode 'paren))
 #+end_src
+
+XXX Is the following still necessary?  Paren are highlighted by smartparens?
 
 #+begin_src emacs-lisp
   ;; Highlight (nearest) surrounding parentheses (abd brackets).
@@ -11028,9 +11038,9 @@ Show the diff we are about to commit: ~C-c C-d~.
   ;; vc status without asking for a directory
   (global-set-key (kbd "<C-f9>") 'leuven-vc-jump)
 
-  ;; hide up-to-date and unregistered files
   (add-hook  'vc-dir-mode-hook
              (lambda ()
+               ;; hide up-to-date and unregistered files
                (define-key vc-dir-mode-map
                  (kbd "x") 'leuven-vc-dir-hide-up-to-date-and-unregistered)
                (define-key vc-dir-mode-map
@@ -12163,6 +12173,8 @@ available completions and filter as well.
     (define-key company-active-map (kbd "C-g") 'company-abort)
     (define-key company-active-map (kbd "<left>") 'company-abort)
 #+end_src
+
+If you press ~<right>~ when the menu is displayed, it will cancel completion.
 
 *First* run the *indent* function, then try *completion* only if it didn't change
 anything.
