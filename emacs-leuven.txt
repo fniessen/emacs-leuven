@@ -4822,6 +4822,8 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
 
 ** Tabs vs. Spaces
 
+Don't tabify.  Instead, _reindent_ everything, e.g. with C-M-\.
+
 #+begin_src emacs-lisp
 ;;** 24.3 TABs vs. (info "(emacs)Just Spaces")
 
@@ -10220,11 +10222,14 @@ Balanced editing: inserting two matching parentheses at once, etc.
     (show-smartparens-global-mode 1)
 
     (sp-with-modes 'org-mode
+      ;; (sp-local-pair "'" nil :actions nil)
       (sp-local-tag "*" "*" "*" :actions '(wrap)) ; Bold.
       (sp-local-tag "/" "/" "/" :actions '(wrap)) ; Italic.
       (sp-local-tag "_" "_" "_" :actions '(wrap)) ; Underline.
       (sp-local-tag "=" "=" "=" :actions '(wrap)) ; Verbatim.
       (sp-local-tag "~" "~" "~" :actions '(wrap))) ; Code.
+
+    ;; (push 'latex-mode sp-ignore-modes-list)
 #+end_src
 
   =turn-on-smartparens-strict-mode= add years to one's life to allow for more
@@ -11543,6 +11548,9 @@ The commands to display *symbol references* are:
         (local-set-key (kbd "C-c C-r") 'semantic-symref))
 
       (add-hook 'c-mode-common-hook 'leuven--c-mode-semantic))
+                                        ; Note that this will apply to all
+                                        ; cc-modes, e.g. c-mode, c++-mode,
+                                        ; php-mode, csharp-mode, awk-mode.
 
     ;; hooks, specific for Semantic
     (defun leuven--semantic-imenu ()
@@ -11625,6 +11633,9 @@ really like this.
        )
 
      (add-hook 'c-mode-common-hook 'leuven--c-mode-eassist))
+                                        ; Note that this will apply to all
+                                        ; cc-modes, e.g. c-mode, c++-mode,
+                                        ; php-mode, csharp-mode, awk-mode.
 #+end_src
 
 #+begin_src emacs-lisp
@@ -12172,6 +12183,15 @@ available completions and filter as well.
     ;; abort
     (define-key company-active-map (kbd "C-g") 'company-abort)
     (define-key company-active-map (kbd "<left>") 'company-abort)
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; Add support for keypad events (`<kp-numbers>' without the modifier).
+    (eval-after-load 'company
+      '(dotimes (i 10)
+         (define-key company-active-map
+           (read-kbd-macro (format "<kp-%d>" i))
+           'company-complete-number)))
 #+end_src
 
 If you press ~<right>~ when the menu is displayed, it will cancel completion.

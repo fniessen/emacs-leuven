@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141107.1637
+;; Version: 20141110.1151
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141107.1637"
+(defconst leuven--emacs-version "20141110.1151"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -6585,11 +6585,14 @@ mouse-3: go to end") "]"))))
     (show-smartparens-global-mode 1)
 
     (sp-with-modes 'org-mode
+      ;; (sp-local-pair "'" nil :actions nil)
       (sp-local-tag "*" "*" "*" :actions '(wrap)) ; Bold.
       (sp-local-tag "/" "/" "/" :actions '(wrap)) ; Italic.
       (sp-local-tag "_" "_" "_" :actions '(wrap)) ; Underline.
       (sp-local-tag "=" "=" "=" :actions '(wrap)) ; Verbatim.
       (sp-local-tag "~" "~" "~" :actions '(wrap))) ; Code.
+
+    ;; (push 'latex-mode sp-ignore-modes-list)
 
     ;; ;; Enable smartparens-strict-mode in all Lisp modes.
     ;; (mapc (lambda (mode)
@@ -7335,6 +7338,9 @@ a clean buffer we're an order of magnitude laxer about checking."
         (local-set-key (kbd "C-c C-r") 'semantic-symref))
 
       (add-hook 'c-mode-common-hook 'leuven--c-mode-semantic))
+                                        ; Note that this will apply to all
+                                        ; cc-modes, e.g. c-mode, c++-mode,
+                                        ; php-mode, csharp-mode, awk-mode.
 
     ;; hooks, specific for Semantic
     (defun leuven--semantic-imenu ()
@@ -7608,6 +7614,13 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; abort
     (define-key company-active-map (kbd "C-g") 'company-abort)
     (define-key company-active-map (kbd "<left>") 'company-abort)
+
+    ;; Add support for keypad events (`<kp-numbers>' without the modifier).
+    (eval-after-load 'company
+      '(dotimes (i 10)
+         (define-key company-active-map
+           (read-kbd-macro (format "<kp-%d>" i))
+           'company-complete-number)))
 
     )
 
