@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141112.1040
+;; Version: 20141112.1225
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141112.1040"
+(defconst leuven--emacs-version "20141112.1225"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3668,8 +3668,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "2.5 (org)Structure editing")
 
-  ;; Don't adapt indentation to outline node level.
-  (setq org-adapt-indentation nil)
+  ;; ;; Don't adapt indentation to outline node level.
+  ;; (setq org-adapt-indentation nil)
 
   ;; ;; FIXME Choose the right value!
   ;; (setq org-M-RET-may-split-line nil)
@@ -4324,7 +4324,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                  `("mt" "Create a TODO Action + edit" entry
                    (file+headline ,(concat org-directory "/refile.org") "Email") ; #+FILETAGS: :mail:
                    "* TODO %^{Creating action}%? (from %:fromname)
-   %:date-timestamp-inactive
+  %:date-timestamp-inactive
 
 #+begin_verse
 %i
@@ -4337,8 +4337,8 @@ From %a"
                  `("mr" "Create a TODO Action Remind 3" entry
                    (file+headline ,(concat org-directory "/refile.org") "Email") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
-   SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \"\")
-   %:date-timestamp-inactive
+  SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \"\")
+  %:date-timestamp-inactive
 
 #+begin_verse
 %i
