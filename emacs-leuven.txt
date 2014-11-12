@@ -5852,6 +5852,9 @@ See also [[*Sparse%20trees][Sparse trees]] for behavior when revealing a locatio
 
   (leuven--section "2.5 (org)Structure editing")
 
+  ;; Don't adapt indentation to outline node level.
+  (setq org-adapt-indentation nil)
+
   ;; ;; FIXME Choose the right value!
   ;; (setq org-M-RET-may-split-line nil)
 #+end_src
@@ -12288,7 +12291,7 @@ interface).
 
     ;; switches passed to `ls' for Dired
     (setq dired-listing-switches
-          (cond (leuven--win32-p
+          (cond ((or leuven--win32-p leuven--cygwin-p)
                  "-a -F -l")
                 (t
                  "-a -F --group-directories-first -l --time-style=long-iso")))

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141110.1151
+;; Version: 20141112.0913
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141110.1151"
+(defconst leuven--emacs-version "20141112.0913"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3667,6 +3667,9 @@ Last time is saved in global variable `leuven--before-section-time'."
 ;;** (info "(org)Structure editing")
 
   (leuven--section "2.5 (org)Structure editing")
+
+  ;; Don't adapt indentation to outline node level.
+  (setq org-adapt-indentation nil)
 
   ;; ;; FIXME Choose the right value!
   ;; (setq org-M-RET-may-split-line nil)
@@ -7647,7 +7650,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; switches passed to `ls' for Dired
     (setq dired-listing-switches
-          (cond (leuven--win32-p
+          (cond ((or leuven--win32-p leuven--cygwin-p)
                  "-a -F -l")
                 (t
                  "-a -F --group-directories-first -l --time-style=long-iso")))
