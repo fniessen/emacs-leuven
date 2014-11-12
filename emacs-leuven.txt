@@ -5885,6 +5885,9 @@ See also [[*Sparse%20trees][Sparse trees]] for behavior when revealing a locatio
 
 *** Plain lists
 
+An empty line does not end all plain list levels: if you need to separate
+consecutive lists with blank lines, always use two of them.
+
 #+begin_src emacs-lisp
 ;;** (info "(org)Plain lists")
 
@@ -5895,9 +5898,6 @@ See also [[*Sparse%20trees][Sparse trees]] for behavior when revealing a locatio
 
   ;; Don't make tab cycle visibility on plain list items.
   (setq org-cycle-include-plain-lists nil) ;; 'integrate?
-
-  ;; An empty line does not end all plain list levels.
-  (setq org-list-empty-line-terminates-plain-lists nil)
 #+end_src
 
 *** Footnotes
@@ -8557,17 +8557,6 @@ up-to-date.
       (recenter))
 #+end_src
 
-#+begin_src emacs-lisp
-  ;; (with-eval-after-load "ob-shell"
-  ;;
-  ;;   ;; Command used to invoke a shell.
-  ;;   (setq org-babel-sh-command "bash")  ; now uses `shell-file-name' throughout (2013-12-14)
-  ;;
-  ;;   ;; Use plain old syntax (instead of `$(...)') for Cygwin.
-  ;;   (setq org-babel-sh-var-quote-fmt
-  ;;         "`cat <<'BABEL_TABLE'\n%s\nBABEL_TABLE\n`"))
-#+end_src
-
 *** Editing source code
 
 #+begin_src emacs-lisp
@@ -8781,7 +8770,7 @@ languages which can be evaluated in Org mode buffers.
 ~screen~ offers support for interactive terminals.  Mostly shell scripts.  Heavily
 inspired by ~eev~.
 
-Eric Schulte believes screen has more of a focus on sustained interaction with
+Eric Schulte believes ~screen~ has more of a focus on sustained interaction with
 an interactive terminal.
 
 *** Prettier (or at least fancier) code block delimiters

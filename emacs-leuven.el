@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141112.0913
+;; Version: 20141112.1040
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141112.0913"
+(defconst leuven--emacs-version "20141112.1040"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3701,9 +3701,6 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; Don't make tab cycle visibility on plain list items.
   (setq org-cycle-include-plain-lists nil) ;; 'integrate?
 
-  ;; An empty line does not end all plain list levels.
-  (setq org-list-empty-line-terminates-plain-lists nil)
-
 ;;** (info "(org)Footnotes")
 
   (leuven--section "2.10 (org)Footnotes")
@@ -5535,15 +5532,6 @@ this with to-do items than with projects or headings."
       (after leuven-org-agenda-switch-to activate)
       "Recenter after jumping to the file which contains the item at point."
       (recenter))
-
-  ;; (with-eval-after-load "ob-shell"
-  ;;
-  ;;   ;; Command used to invoke a shell.
-  ;;   (setq org-babel-sh-command "bash")  ; now uses `shell-file-name' throughout (2013-12-14)
-  ;;
-  ;;   ;; Use plain old syntax (instead of `$(...)') for Cygwin.
-  ;;   (setq org-babel-sh-var-quote-fmt
-  ;;         "`cat <<'BABEL_TABLE'\n%s\nBABEL_TABLE\n`"))
 
 ;;** 14.2 (info "(org)Editing source code")
 
