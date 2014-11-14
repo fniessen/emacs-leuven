@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141114.1102
+;; Version: 20141114.1427
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141114.1102"
+(defconst leuven--emacs-version "20141114.1427"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3115,9 +3115,6 @@ Last time is saved in global variable `leuven--before-section-time'."
       (key-chord-define hs-minor-mode-map "'," 'hs-hide-block) ; Not autoloaded.
       (key-chord-define hs-minor-mode-map "'." 'hs-show-block)) ; Not autoloaded.
 
-    (with-eval-after-load "auto-highlight-symbol" ; Package.
-      (key-chord-define-global "**" 'auto-highlight-symbol-mode)) ; Autoloaded?
-
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
 
@@ -5735,7 +5732,7 @@ this with to-do items than with projects or headings."
                              (min (1+ (match-end 0)) end)))
                     (unless (bolp) (insert "\n"))))))))))))
 
-  (add-hook 'org-mode-hook 'org-repair-property-drawers)
+  ;; (add-hook 'org-mode-hook 'org-repair-property-drawers)
 
   (defun leuven--org-switch-dictionary ()
     "Set language if Flyspell is enabled and `#+LANGUAGE:' is on top 8 lines."

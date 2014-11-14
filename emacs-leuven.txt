@@ -5039,9 +5039,6 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
       (key-chord-define hs-minor-mode-map "'," 'hs-hide-block) ; Not autoloaded.
       (key-chord-define hs-minor-mode-map "'." 'hs-show-block)) ; Not autoloaded.
 
-    (with-eval-after-load "auto-highlight-symbol" ; Package.
-      (key-chord-define-global "**" 'auto-highlight-symbol-mode)) ; Autoloaded?
-
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
 
@@ -8841,7 +8838,7 @@ an interactive terminal.
                              (min (1+ (match-end 0)) end)))
                     (unless (bolp) (insert "\n"))))))))))))
 
-  (add-hook 'org-mode-hook 'org-repair-property-drawers)
+  ;; (add-hook 'org-mode-hook 'org-repair-property-drawers)
 #+end_src
 
 *** Ispell
