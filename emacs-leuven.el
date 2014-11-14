@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141112.1225
+;; Version: 20141114.0906
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141112.1225"
+(defconst leuven--emacs-version "20141114.0906"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -8508,7 +8508,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; (with-eval-after-load "comint"
 
     ;; comint prompt is read only
-    (setq comint-prompt-read-only t)
+    (setq comint-prompt-read-only t)    ; Text is read-only (in ESS)?
 
     ;; no duplicates in command history
     (setq-default comint-input-ignoredups t)

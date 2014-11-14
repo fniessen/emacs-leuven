@@ -13614,7 +13614,7 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
   ;; (with-eval-after-load "comint"
 
     ;; comint prompt is read only
-    (setq comint-prompt-read-only t)
+    (setq comint-prompt-read-only t)    ; Text is read-only (in ESS)?
 
     ;; no duplicates in command history
     (setq-default comint-input-ignoredups t)
@@ -14076,6 +14076,9 @@ help of Auto-Complete.
     ;; suffix appended by `ac-source-R-args' to candidates
     (setq ess-ac-R-argument-suffix "=")
 #+end_src
+
+XXX Switch to ~company-ess~, which does auto-start completion of function
+arguments with 0 characters.
 
 *** 10 Developing with ESS
 
