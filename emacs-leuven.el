@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141114.1427
+;; Version: 20141117.2231
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141114.1427"
+(defconst leuven--emacs-version "20141117.2231"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1188,7 +1188,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (with-eval-after-load "google-this"  (diminish 'google-this-mode))
     (with-eval-after-load "guide-key"    (diminish 'guide-key-mode))
     (with-eval-after-load "hilit-chg"    (diminish 'highlight-changes-mode))
-    (with-eval-after-load "isearch"      (diminish 'isearch-mode (string 32 ?\u279c)))
+    ;; (with-eval-after-load "isearch"      (diminish 'isearch-mode (string 32 ?\u279c)))
     (with-eval-after-load "paredit"      (diminish 'paredit-mode " Pe"))
     (with-eval-after-load "rainbow-mode" (diminish 'rainbow-mode))
     (with-eval-after-load "simple"       (diminish 'auto-fill-function))
@@ -3155,27 +3155,27 @@ Last time is saved in global variable `leuven--before-section-time'."
       (key-chord-define-global ",c" 'org-capture)) ; Autoloaded.
 
     (with-eval-after-load "org"         ; Package.
-      (key-chord-define-global ",u" 'outline-up-heading)
-      (key-chord-define-global ",w" 'org-refile) ; Not autoloaded.
+      (key-chord-define org-mode-map ",u" 'outline-up-heading)
+      (key-chord-define org-mode-map ",w" 'org-refile) ; Not autoloaded.
 
-      ;; (key-chord-define-global ",," 'org-mark-ring-goto)           ;; Return to previous location before link.
-      ;; (key-chord-define-global ",." 'org-time-stamp)               ;; Create new timestamp.
-      ;; (key-chord-define-global ",b" 'org-tree-to-indirect-buffer)  ;; Show complete tree in dedicated buffer.
-      ;; (key-chord-define-global ",d" 'org-todo)                     ;; Toggle todo for headline.
-      ;; (key-chord-define-global ",e" 'org-insert-link)              ;; Edit current link.
-      ;; (key-chord-define-global ",f" 'org-footnote-action)          ;; Create new footnote link.
-      ;; (key-chord-define-global ",g" 'er/open-org-calendar)         ;; Open calendar integration. :Functions.el:
-      ;; (key-chord-define-global ",h" 'org-toggle-heading)           ;; Toggle heading for current line/list item.
-      ;; (key-chord-define-global ",k" 'org-cut-subtree)              ;; Kill subtree.
-      ;; (key-chord-define-global ",l" 'org-store-link)               ;; Store link (useful for agenda ref).
-      ;; (key-chord-define-global ",n" 'er/org-narrow-and-reveal)     ;; Narrow region and reveal. :Functions.el:
-      ;; (key-chord-define-global ",o" 'org-open-at-point)            ;; Open link at point.
-      ;; (key-chord-define-global ",p" 'org-priority)                 ;; Toggle priority.
-      ;; (key-chord-define-global ",t" 'org-set-tags-command)         ;; Choose tags.
-      ;; (key-chord-define-global ",v" 'org-paste-subtree)            ;; Paste subtree.
-      ;; (key-chord-define-global ",w" 'er/org-widen-and-outline)     ;; Widen and outline. :Functions.el:
-      ;; (key-chord-define-global ",y" 'org-copy-subtree)             ;; Copy subtree.
-      ;; (key-chord-define-global "<H" 'org-list-make-subtree)        ;; Toggle headings for all list items in subtree.
+      ;; (key-chord-define org-mode-map ",," 'org-mark-ring-goto)           ;; Return to previous location before link.
+      ;; (key-chord-define org-mode-map ",." 'org-time-stamp)               ;; Create new timestamp.
+      ;; (key-chord-define org-mode-map ",b" 'org-tree-to-indirect-buffer)  ;; Show complete tree in dedicated buffer.
+      ;; (key-chord-define org-mode-map ",d" 'org-todo)                     ;; Toggle todo for headline.
+      ;; (key-chord-define org-mode-map ",e" 'org-insert-link)              ;; Edit current link.
+      ;; (key-chord-define org-mode-map ",f" 'org-footnote-action)          ;; Create new footnote link.
+      ;; (key-chord-define org-mode-map ",g" 'er/open-org-calendar)         ;; Open calendar integration. :Functions.el:
+      ;; (key-chord-define org-mode-map ",h" 'org-toggle-heading)           ;; Toggle heading for current line/list item.
+      ;; (key-chord-define org-mode-map ",k" 'org-cut-subtree)              ;; Kill subtree.
+      ;; (key-chord-define org-mode-map ",l" 'org-store-link)               ;; Store link (useful for agenda ref).
+      ;; (key-chord-define org-mode-map ",n" 'er/org-narrow-and-reveal)     ;; Narrow region and reveal. :Functions.el:
+      ;; (key-chord-define org-mode-map ",o" 'org-open-at-point)            ;; Open link at point.
+      ;; (key-chord-define org-mode-map ",p" 'org-priority)                 ;; Toggle priority.
+      ;; (key-chord-define org-mode-map ",t" 'org-set-tags-command)         ;; Choose tags.
+      ;; (key-chord-define org-mode-map ",v" 'org-paste-subtree)            ;; Paste subtree.
+      ;; (key-chord-define org-mode-map ",w" 'er/org-widen-and-outline)     ;; Widen and outline. :Functions.el:
+      ;; (key-chord-define org-mode-map ",y" 'org-copy-subtree)             ;; Copy subtree.
+      ;; (key-chord-define org-mode-map "<H" 'org-list-make-subtree)        ;; Toggle headings for all list items in subtree.
       )
 
     ;; (key-chord-define-global "ac" 'align-current)
@@ -4321,7 +4321,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                  `("mt" "Create a TODO Action + edit" entry
                    (file+headline ,(concat org-directory "/refile.org") "Email") ; #+FILETAGS: :mail:
                    "* TODO %^{Creating action}%? (from %:fromname)
-  %:date-timestamp-inactive
+   %:date-timestamp-inactive
 
 #+begin_verse
 %i
@@ -4334,8 +4334,8 @@ From %a"
                  `("mr" "Create a TODO Action Remind 3" entry
                    (file+headline ,(concat org-directory "/refile.org") "Email") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
-  SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \"\")
-  %:date-timestamp-inactive
+   SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \"\")
+   %:date-timestamp-inactive
 
 #+begin_verse
 %i
