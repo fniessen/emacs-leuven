@@ -5003,8 +5003,10 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
   (defun leuven-smart-punctuation-quotation-mark ()
     "Replace two following double quotes by French quotes."
     (interactive)
-    (let ((dict (or ispell-local-dictionary
-                    ispell-dictionary)))
+    (let ((dict (or (when (boundp 'ispell-local-dictionary)
+                      ispell-local-dictionary)
+                    (when (boundp 'ispell-dictionary)
+                      ispell-dictionary))))
       (if (and (string= dict "francais")
                (eq (char-before) ?\")
                (or (not (equal mode-name "Org"))

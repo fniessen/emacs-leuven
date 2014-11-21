@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141121.2050
+;; Version: 20141121.2229
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141121.2050"
+(defconst leuven--emacs-version "20141121.2229"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3083,8 +3083,10 @@ Last time is saved in global variable `leuven--before-section-time'."
   (defun leuven-smart-punctuation-quotation-mark ()
     "Replace two following double quotes by French quotes."
     (interactive)
-    (let ((dict (or ispell-local-dictionary
-                    ispell-dictionary)))
+    (let ((dict (or (when (boundp 'ispell-local-dictionary)
+                      ispell-local-dictionary)
+                    (when (boundp 'ispell-dictionary)
+                      ispell-dictionary))))
       (if (and (string= dict "francais")
                (eq (char-before) ?\")
                (or (not (equal mode-name "Org"))
