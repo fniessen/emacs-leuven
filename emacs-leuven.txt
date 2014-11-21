@@ -5847,8 +5847,8 @@ See also [[*Sparse%20trees][Sparse trees]] for behavior when revealing a locatio
 
   (leuven--section "2.5 (org)Structure editing")
 
-  ;; ;; Don't adapt indentation to outline node level.
-  ;; (setq org-adapt-indentation nil)
+  ;; Don't adapt indentation to outline node level.
+  (setq org-adapt-indentation nil)
 
   ;; ;; FIXME Choose the right value!
   ;; (setq org-M-RET-may-split-line nil)
@@ -10211,6 +10211,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
     ;; Toggle Show-Smartparens mode in all buffers.
     (show-smartparens-global-mode 1)
 
+    ;; Add local pairs in Org mode.
     (sp-with-modes 'org-mode
       ;; (sp-local-pair "'" nil :actions nil)
       (sp-local-tag "*" "*" "*" :actions '(wrap)) ; Bold.
@@ -10219,7 +10220,10 @@ Balanced editing: inserting two matching parentheses at once, etc.
       (sp-local-tag "=" "=" "=" :actions '(wrap)) ; Verbatim.
       (sp-local-tag "~" "~" "~" :actions '(wrap))) ; Code.
 
-    ;; (push 'latex-mode sp-ignore-modes-list)
+    ;; Remove local pairs.
+    (sp-local-pair text-mode "\"" nil :actions :rem)
+
+    (push 'latex-mode sp-ignore-modes-list)
 #+end_src
 
   =turn-on-smartparens-strict-mode= add years to one's life to allow for more
@@ -10914,6 +10918,9 @@ Version control systems that interact with Emacs in a generic way.
 - ~C-x v v~ ::
      Take appropriate "next" action (add, commit).
 
+- ~C-x v r~ (or ~M-!~?) ::
+     Switch Git branches.
+
 #+begin_src emacs-lisp
 ;;** 28.1 (info "(emacs)Version Control")
 
@@ -10969,7 +10976,14 @@ full-blown Lisp evaluation there is not implemented...
 
 *** Features of the Log Entry Buffer
 
-Show the diff we are about to commit: ~C-c C-d~.
+- ~C-c C-d~ ::
+     Show the diff we are about to commit.
+
+- ~D~ (~vc-git-previous-revision~) ::
+     Get the previous revision.
+
+Using Emacs VC, you only have to write the ChangeLog, then use ~C-c C-a~ to insert
+it into the commit buffer. So there is no need to "write the same thing twice".
 
 #+begin_src emacs-lisp
 ;;*** 28.1.4 (info "(emacs)Log Buffer")

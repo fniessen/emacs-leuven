@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141117.2231
+;; Version: 20141121.1753
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141117.2231"
+(defconst leuven--emacs-version "20141121.1753"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3665,8 +3665,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "2.5 (org)Structure editing")
 
-  ;; ;; Don't adapt indentation to outline node level.
-  ;; (setq org-adapt-indentation nil)
+  ;; Don't adapt indentation to outline node level.
+  (setq org-adapt-indentation nil)
 
   ;; ;; FIXME Choose the right value!
   ;; (setq org-M-RET-may-split-line nil)
@@ -6575,6 +6575,7 @@ mouse-3: go to end") "]"))))
     ;; Toggle Show-Smartparens mode in all buffers.
     (show-smartparens-global-mode 1)
 
+    ;; Add local pairs in Org mode.
     (sp-with-modes 'org-mode
       ;; (sp-local-pair "'" nil :actions nil)
       (sp-local-tag "*" "*" "*" :actions '(wrap)) ; Bold.
@@ -6583,7 +6584,10 @@ mouse-3: go to end") "]"))))
       (sp-local-tag "=" "=" "=" :actions '(wrap)) ; Verbatim.
       (sp-local-tag "~" "~" "~" :actions '(wrap))) ; Code.
 
-    ;; (push 'latex-mode sp-ignore-modes-list)
+    ;; Remove local pairs.
+    (sp-local-pair text-mode "\"" nil :actions :rem)
+
+    (push 'latex-mode sp-ignore-modes-list)
 
     ;; ;; Enable smartparens-strict-mode in all Lisp modes.
     ;; (mapc (lambda (mode)
