@@ -10220,8 +10220,10 @@ Balanced editing: inserting two matching parentheses at once, etc.
       (sp-local-tag "=" "=" "=" :actions '(wrap)) ; Verbatim.
       (sp-local-tag "~" "~" "~" :actions '(wrap))) ; Code.
 
-    ;; Remove local pairs.
-    (sp-local-pair text-mode "\"" nil :actions :rem)
+    ;; Remove local pairs in Text mode.
+    (sp-with-modes 'text-mode
+      (sp-local-pair "'" nil :actions nil)
+      (sp-local-pair "\"" nil :actions nil))
 
     (push 'latex-mode sp-ignore-modes-list)
 #+end_src
