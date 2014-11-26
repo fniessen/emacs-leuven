@@ -5074,6 +5074,10 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
     (key-chord-define-global "yy" 'browse-kill-ring)
     (key-chord-define-global "zk" 'zap-to-char)
 
+    (with-eval-after-load "diff-hl"      ; Package.
+      (key-chord-define diff-hl-mode-map ",," 'diff-hl-previous-hunk)
+      (key-chord-define diff-hl-mode-map ".." 'diff-hl-next-hunk))
+
     (with-eval-after-load "org-loaddefs" ; Autoloads file?
       (key-chord-define-global ",a" 'org-agenda) ; Autoloaded.
       (key-chord-define-global ",c" 'org-capture)) ; Autoloaded.
@@ -10925,6 +10929,9 @@ Version control systems that interact with Emacs in a generic way.
 - ~C-x v r~ (or ~M-!~?) ::
      Switch Git branches.
 
+- ~C-x v L~ ::
+     List the change log for the current VC controlled tree in a window.
+
 #+begin_src emacs-lisp
 ;;** 28.1 (info "(emacs)Version Control")
 
@@ -11319,8 +11326,8 @@ After this, you can select the tag file to use with the command
 
 *** Finding a Tag (go to function definition)
 
-You can *go to* the first *definition* of a tag (matching your regexp) -- *according
-to TAGS file* -- by using ~M-x find-tag~ (bound to ~M-.~).  The default tag is the
+You can *go to* the first *definition* of a tag (matching your regexp) -- *according*
+*to TAGS file* -- by using ~M-x find-tag~ (bound to ~M-.~).  The default tag is the
 identifier under the cursor.
 
 To continue searching for *next definition*, use ~C-u M-.~.
