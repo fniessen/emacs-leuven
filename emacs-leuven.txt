@@ -5074,9 +5074,11 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
     (key-chord-define-global "yy" 'browse-kill-ring)
     (key-chord-define-global "zk" 'zap-to-char)
 
-    (with-eval-after-load "diff-hl"      ; Package.
-      (key-chord-define diff-hl-mode-map ",," 'diff-hl-previous-hunk)
-      (key-chord-define diff-hl-mode-map ".." 'diff-hl-next-hunk))
+    (with-eval-after-load "diff-hl"     ; Package.
+      (key-chord-define diff-hl-mode-map "v," 'diff-hl-previous-hunk)
+      (key-chord-define diff-hl-mode-map "v." 'diff-hl-next-hunk)
+      (key-chord-define diff-hl-mode-map "v;" 'diff-hl-next-hunk))
+                                        ; For Azerty keyboards
 
     (with-eval-after-load "org-loaddefs" ; Autoloads file?
       (key-chord-define-global ",a" 'org-agenda) ; Autoloaded.

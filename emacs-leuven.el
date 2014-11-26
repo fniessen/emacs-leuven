@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141126.1029
+;; Version: 20141126.1038
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141126.1029"
+(defconst leuven--emacs-version "20141126.1038"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3152,9 +3152,11 @@ Last time is saved in global variable `leuven--before-section-time'."
     (key-chord-define-global "yy" 'browse-kill-ring)
     (key-chord-define-global "zk" 'zap-to-char)
 
-    (with-eval-after-load "diff-hl"      ; Package.
-      (key-chord-define diff-hl-mode-map ",," 'diff-hl-previous-hunk)
-      (key-chord-define diff-hl-mode-map ".." 'diff-hl-next-hunk))
+    (with-eval-after-load "diff-hl"     ; Package.
+      (key-chord-define diff-hl-mode-map "v," 'diff-hl-previous-hunk)
+      (key-chord-define diff-hl-mode-map "v." 'diff-hl-next-hunk)
+      (key-chord-define diff-hl-mode-map "v;" 'diff-hl-next-hunk))
+                                        ; For Azerty keyboards
 
     (with-eval-after-load "org-loaddefs" ; Autoloads file?
       (key-chord-define-global ",a" 'org-agenda) ; Autoloaded.
