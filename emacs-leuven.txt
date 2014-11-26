@@ -1087,12 +1087,7 @@ XXX Look at ~goto-last-change~ (from Kevin Rodgers) and ~goto-last-point~.
 #+begin_src emacs-lisp
   ;; Increase selected region by semantic units.
   (with-eval-after-load "expand-region-autoloads"
-
-    (global-set-key (kbd "C-@") 'er/expand-region)
-    (global-set-key (kbd "C-;") 'er/expand-region) ; Used in `flyspell.el'.
-    (global-set-key (kbd "C-'") 'er/expand-region) ; Used in `org'.
-    ;; (global-set-key (kbd "C-M-@") 'er/contract-region)
-    )
+    (global-set-key (kbd "C-@") 'er/expand-region)) ; XXX Not seen as `C-@'!?
 #+end_src
 
 ** Operating on the Region
@@ -5073,6 +5068,8 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 
     (key-chord-define-global "yy" 'browse-kill-ring)
     (key-chord-define-global "zk" 'zap-to-char)
+
+    (key-chord-define-global ";s" 'set-mark-command)
 
     (with-eval-after-load "diff-hl"     ; Package.
       (key-chord-define diff-hl-mode-map "v," 'diff-hl-previous-hunk)
