@@ -37,6 +37,10 @@ Overall count: 6 projects.
 
 * Tasks                                                               :noexport:
 
+** TODO Check interesting stuff from LiquidPlanner
+
+http://www.liquidplanner.com/support/videos/daily-task-management/
+
 ** TODO Convert <+0d> into <today>
 
 Check first that all the correct tasks are shown, the ones with a time part and
