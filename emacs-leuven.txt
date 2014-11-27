@@ -4356,7 +4356,13 @@ one.
       ;; auto-detect the screen dimensions and compute the height of Emacs
       (add-to-list 'default-frame-alist
                    (cons 'height
-                         (/ (- (x-display-pixel-height) 106)
+                         (/ (-
+                             ;; Height of Display 1.
+                             (nth 4
+                                  (assq 'geometry
+                                        (car (display-monitor-attributes-list))))
+                             106)       ; Allow for Emacs' title bar and taskbar
+                                        ; (from the OS).
                             (frame-char-height)))))
 
     (XEmacs
@@ -4432,21 +4438,11 @@ one.
         (w32-send-sys-command 61728)
         (global-set-key (kbd "C-c z") 'leuven-w32-maximize-frame))))
 
-  ;; maximize Emacs by default
+  ;; maximize Emacs frame by default
   (modify-all-frames-parameters '((fullscreen . maximized)))
 #+end_src
 
 *************** TODO Try to use the name ~leuven-toggle-fullscreen~ for Windows as well
-
-See ~(display-pixel-width)~:
-
-#+begin_src emacs-lisp :tangle no
-  ;; set the new height, allowing for title bars
-  (setq lframe-width (- (/ (x-display-pixel-width) (frame-char-width)) 8))
-
-  ;; set the new height, allowing for title bars
-  (setq lframe-height (- (/ (x-display-pixel-height) (frame-char-height)) 5))
-#+end_src
 
 ** Speedbar Frames
 
@@ -8814,7 +8810,6 @@ an interactive terminal.
   (defun org-repair-property-drawers ()
     "Fix properties drawers in current buffer.
   Ignore non Org buffers."
-    (interactive)
     (when (eq major-mode 'org-mode)
       (org-with-wide-buffer
        (goto-char (point-min))
@@ -8832,16 +8827,16 @@ an interactive terminal.
                   (when (and (< (point) end)
                              (not (org-looking-at-p org-property-drawer-re))
                              (save-excursion
-                               (re-search-forward org-property-drawer-re end t)
-                               (eq (org-element-type
-                                    (save-match-data (org-element-at-point)))
-                                   'drawer)))
+                               (and (re-search-forward org-property-drawer-re end t)
+                                    (eq (org-element-type
+                                         (save-match-data (org-element-at-point)))
+                                        'drawer))))
                     (insert (delete-and-extract-region
                              (match-beginning 0)
                              (min (1+ (match-end 0)) end)))
                     (unless (bolp) (insert "\n"))))))))))))
 
-  ;; (add-hook 'org-mode-hook 'org-repair-property-drawers)
+  (add-hook 'org-mode-hook 'org-repair-property-drawers)
 #+end_src
 
 *** Ispell

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141126.1115
+;; Version: 20141127.1525
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141126.1115"
+(defconst leuven--emacs-version "20141127.1525"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2669,7 +2669,13 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; auto-detect the screen dimensions and compute the height of Emacs
       (add-to-list 'default-frame-alist
                    (cons 'height
-                         (/ (- (x-display-pixel-height) 106)
+                         (/ (-
+                             ;; Height of Display 1.
+                             (nth 4
+                                  (assq 'geometry
+                                        (car (display-monitor-attributes-list))))
+                             106)       ; Allow for Emacs' title bar and taskbar
+                                        ; (from the OS).
                             (frame-char-height)))))
 
     (XEmacs
@@ -2729,7 +2735,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         (w32-send-sys-command 61728)
         (global-set-key (kbd "C-c z") 'leuven-w32-maximize-frame))))
 
-  ;; maximize Emacs by default
+  ;; maximize Emacs frame by default
   (modify-all-frames-parameters '((fullscreen . maximized)))
 
 ;;** 21.9 (info "(emacs)Speedbar")
@@ -5710,7 +5716,6 @@ this with to-do items than with projects or headings."
   (defun org-repair-property-drawers ()
     "Fix properties drawers in current buffer.
   Ignore non Org buffers."
-    (interactive)
     (when (eq major-mode 'org-mode)
       (org-with-wide-buffer
        (goto-char (point-min))
@@ -5728,16 +5733,16 @@ this with to-do items than with projects or headings."
                   (when (and (< (point) end)
                              (not (org-looking-at-p org-property-drawer-re))
                              (save-excursion
-                               (re-search-forward org-property-drawer-re end t)
-                               (eq (org-element-type
-                                    (save-match-data (org-element-at-point)))
-                                   'drawer)))
+                               (and (re-search-forward org-property-drawer-re end t)
+                                    (eq (org-element-type
+                                         (save-match-data (org-element-at-point)))
+                                        'drawer))))
                     (insert (delete-and-extract-region
                              (match-beginning 0)
                              (min (1+ (match-end 0)) end)))
                     (unless (bolp) (insert "\n"))))))))))))
 
-  ;; (add-hook 'org-mode-hook 'org-repair-property-drawers)
+  (add-hook 'org-mode-hook 'org-repair-property-drawers)
 
   (defun leuven--org-switch-dictionary ()
     "Set language if Flyspell is enabled and `#+LANGUAGE:' is on top 8 lines."
