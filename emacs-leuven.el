@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141202.2215
+;; Version: 20141202.2348
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141202.2215"
+(defconst leuven--emacs-version "20141202.2348"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -9461,18 +9461,21 @@ a clean buffer we're an order of magnitude laxer about checking."
         (sit-for 3)
         (message "Configuration updated. Restart Emacs to complete the process."))))
 
-  (defun leuven-show-last-commits ()
-    "List last changes in Leuven Emacs Config."
+  (defun leuven-show-latest-commits ()
+    "List latest changes in Leuven Emacs Config."
     (interactive)
     (leuven-emacs-version)
     (message "Fetching last changes in Leuven...")
     (cd leuven--directory)
-    (let ((ret (shell-command-to-string "LC_ALL=C git fetch --verbose")))
-      (if (string-match "up to date" ret)
+    (let ((ret (shell-command-to-string "LC_ALL=C git fetch --verbose"))
+          (bufname "*Leuven latest commits*"))
+      (if (string-match "\\(up to date\\|up-to-date\\)" ret)
           (message "Configuration already up-to-date.")
-       (with-output-to-temp-buffer "*Leuven last commits*"
-         (shell-command "LC_ALL=C git log HEAD..origin" "*Leuven last commits*")
-         (pop-to-buffer "*Leuven last commits*")))))
+       (with-output-to-temp-buffer bufname
+         (shell-command
+          "LC_ALL=C git log --pretty=format:'%h %ad %s' --date=short HEAD..origin"
+          bufname)
+         (pop-to-buffer bufname)))))
 
   (defun leuven-emacs-version ()
     (interactive)
