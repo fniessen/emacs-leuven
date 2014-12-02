@@ -4743,7 +4743,8 @@ Instead of superseding the binding in ~auto-mode-alist~, you can replace it
     "Major mode for fontifiying ssh config files." t)
 
   ;; ledger
-  (add-to-list 'auto-mode-alist '("\\.ldg\\'" . ledger-mode))
+  (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
+  (add-to-list 'auto-mode-alist '("\\.ledger\\'" . ledger-mode))
 
   ;; major mode for editing comma-separated value files
   (with-eval-after-load "csv-mode-autoloads"

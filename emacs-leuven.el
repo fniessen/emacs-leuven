@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141202.1224
+;; Version: 20141202.1229
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141202.1224"
+(defconst leuven--emacs-version "20141202.1229"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2914,7 +2914,8 @@ Last time is saved in global variable `leuven--before-section-time'."
     "Major mode for fontifiying ssh config files." t)
 
   ;; ledger
-  (add-to-list 'auto-mode-alist '("\\.ldg\\'" . ledger-mode))
+  (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
+  (add-to-list 'auto-mode-alist '("\\.ledger\\'" . ledger-mode))
 
   ;; major mode for editing comma-separated value files
   (with-eval-after-load "csv-mode-autoloads"
