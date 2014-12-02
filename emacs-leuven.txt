@@ -15466,7 +15466,7 @@ functions implemented in Emacs Lisp.
     (message "Updating Leuven...")
     (cd leuven--directory)
     (let ((ret (shell-command-to-string "LC_ALL=C git pull --rebase")))
-      (if (string-match "Already up-to-date." ret)
+      (if (string-match "up to date\\|up-to-date" ret)
           (message "Configuration already up-to-date.")
         (princ ret)
         (sit-for 3)
