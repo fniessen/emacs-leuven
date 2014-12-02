@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141201.2207
+;; Version: 20141202.1129
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141201.2207"
+(defconst leuven--emacs-version "20141202.1129"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5680,6 +5680,7 @@ this with to-do items than with projects or headings."
            (emacs-lisp . t)
            ;; (latex   . t)             ; Shouldn't you use #+begin/end_latex blocks instead?
            (ledger     . t)             ; Requires ledger.
+           (makefile   . t)
            (org        . t)
            (shell      . t)
            (sql        . t)))
@@ -5693,6 +5694,7 @@ this with to-do items than with projects or headings."
          (emacs-lisp . t)
          ;; (latex   . t)
          (ledger     . t)
+         (makefile   . t)
          (org        . t)
          (sh         . t)
          (sql        . t))))
@@ -5743,6 +5745,21 @@ this with to-do items than with projects or headings."
                     (unless (bolp) (insert "\n"))))))))))))
 
   (add-hook 'org-mode-hook 'org-repair-property-drawers)
+
+  (defun org-src-block-check ()
+    (interactive)
+    (org-element-map (org-element-parse-buffer 'element) 'src-block
+      (lambda (src-block)
+        (let ((language (org-element-property :language src-block)))
+          (cond ((null language)
+                 (error "Missing language at position %d"
+                        (org-element-property :post-affiliated src-block)))
+                ((not (assoc-string language org-babel-load-languages))
+                 (error "Unknown language at position %d"
+                        (org-element-property :post-affiliated src-block)))))))
+    (message "Source blocks checked in %s." (buffer-name (buffer-base-buffer))))
+
+  (add-hook 'org-mode-hook 'org-src-block-check)
 
   (defun leuven--org-switch-dictionary ()
     "Set language if Flyspell is enabled and `#+LANGUAGE:' is on top 8 lines."

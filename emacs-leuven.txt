@@ -3160,7 +3160,7 @@ file.  It is a *symbolic link to ~gzip~*; you can verify this by ~ls -l
 Since *GNU Emacs does not understand Cygwin's symbolic links*, it cannot execute
 ~gunzip~.  The solution is to replace ~gunzip~ with ~gzip -d~.
 
-#+begin_src sh :tangle ~/bin/gunzip :padline no
+#+begin_src shell :tangle ~/bin/gunzip :padline no
 #!/bin/sh
 # gunzip -- gunzip solution on Windows
 
@@ -7002,7 +7002,7 @@ From %c"
     )                                   ; with-eval-after-load "org-capture" ends here
 #+end_src
 
-#+begin_src sh :tangle ~/bin/capture :shebang #!bin/sh
+#+begin_src shell :tangle ~/bin/capture :shebang #!bin/sh
 emacsclient -n -e '(leuven-make-capture-frame)'
 #+end_src
 
@@ -8741,6 +8741,7 @@ languages which can be evaluated in Org mode buffers.
            (emacs-lisp . t)
            ;; (latex   . t)             ; Shouldn't you use #+begin/end_latex blocks instead?
            (ledger     . t)             ; Requires ledger.
+           (makefile   . t)
            (org        . t)
            (shell      . t)
            (sql        . t)))
@@ -8754,6 +8755,7 @@ languages which can be evaluated in Org mode buffers.
          (emacs-lisp . t)
          ;; (latex   . t)
          (ledger     . t)
+         (makefile   . t)
          (org        . t)
          (sh         . t)
          (sql        . t))))
@@ -8837,6 +8839,23 @@ an interactive terminal.
                     (unless (bolp) (insert "\n"))))))))))))
 
   (add-hook 'org-mode-hook 'org-repair-property-drawers)
+#+end_src
+
+#+begin_src emacs-lisp
+  (defun org-src-block-check ()
+    (interactive)
+    (org-element-map (org-element-parse-buffer 'element) 'src-block
+      (lambda (src-block)
+        (let ((language (org-element-property :language src-block)))
+          (cond ((null language)
+                 (error "Missing language at position %d"
+                        (org-element-property :post-affiliated src-block)))
+                ((not (assoc-string language org-babel-load-languages))
+                 (error "Unknown language at position %d"
+                        (org-element-property :post-affiliated src-block)))))))
+    (message "Source blocks checked in %s." (buffer-name (buffer-base-buffer))))
+
+  (add-hook 'org-mode-hook 'org-src-block-check)
 #+end_src
 
 *** Ispell
@@ -11222,7 +11241,7 @@ Comparison of tools:
 
      For example, I can now look for tags in my shell code to by running:
 
-     #+begin_src sh :tangle no
+     #+begin_src shell :tangle no
      etags --langdef=shell --regex-shell='/function [_[:alnum:]]+/[_[:alnum:]]+/' --language-force=shell
      #+end_src
 
@@ -15586,15 +15605,15 @@ After much optimization...
   user    0m0.028s
   sys     0m0.020s
 
-#+begin_src sh
+#+begin_src shell
 time emacs -f kill-emacs 2>&1
 #+end_src
 
-#+begin_src sh
+#+begin_src shell
 time emacs -q -f kill-emacs 2>&1
 #+end_src
 
-#+begin_src sh
+#+begin_src shell
 time emacs -Q -f kill-emacs 2>&1
 #+end_src
 
