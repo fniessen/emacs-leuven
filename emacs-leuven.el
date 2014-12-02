@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141202.1129
+;; Version: 20141202.1150
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141202.1129"
+(defconst leuven--emacs-version "20141202.1150"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -9453,7 +9453,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (leuven-emacs-version)
     (message "Updating Leuven...")
     (cd leuven--directory)
-    (let ((ret (shell-command-to-string "LANG=en_US git pull --rebase")))
+    (let ((ret (shell-command-to-string "LC_ALL=en_US git pull --rebase")))
       (if (string-match "Already up-to-date." ret)
           (message "Configuration already up-to-date.")
         (princ ret)
@@ -9466,11 +9466,11 @@ a clean buffer we're an order of magnitude laxer about checking."
     (leuven-emacs-version)
     (message "Fetching last changes in Leuven...")
     (cd leuven--directory)
-    (let ((ret (shell-command-to-string "LANG=en_US git fetch --verbose")))
+    (let ((ret (shell-command-to-string "LC_ALL=en_US git fetch --verbose")))
       (if (string-match "up to date" ret)
           (message "Configuration already up-to-date.")
         (with-temp-buffer-window (get-buffer-create "*Leuven last commits*")
-          (setq ret (shell-command-to-string "LANG=en_US git log HEAD..origin"))
+          (setq ret (shell-command-to-string "LC_ALL=en_US git log HEAD..origin"))
           (princ ret)))))
 
   (defun leuven-emacs-version ()
