@@ -15460,7 +15460,7 @@ functions implemented in Emacs Lisp.
 
 #+begin_src emacs-lisp
   (defun leuven-update ()
-    "Update Leuven to its latest version."
+    "Update Leuven Emacs Config to its latest version."
     (interactive)
     (leuven-emacs-version)
     (message "Updating Leuven...")
