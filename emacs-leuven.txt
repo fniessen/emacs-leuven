@@ -15482,6 +15482,7 @@ functions implemented in Emacs Lisp.
       (if (string-match "up to date" ret)
           (message "Configuration already up-to-date.")
         (with-temp-buffer-window (get-buffer-create "*Leuven last commits*")
+
           (setq ret (shell-command-to-string "LC_ALL=C git log HEAD..origin"))
           (princ ret)))))
 

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141202.1412
+;; Version: 20141202.1453
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141202.1412"
+(defconst leuven--emacs-version "20141202.1453"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -9471,6 +9471,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (if (string-match "up to date" ret)
           (message "Configuration already up-to-date.")
         (with-temp-buffer-window (get-buffer-create "*Leuven last commits*")
+
           (setq ret (shell-command-to-string "LC_ALL=C git log HEAD..origin"))
           (princ ret)))))
 
