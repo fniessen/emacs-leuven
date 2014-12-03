@@ -10220,7 +10220,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
 #+begin_src emacs-lisp
   ;; Automatic insertion, wrapping and paredit-like navigation with user defined
   ;; pairs.
-  (with-eval-after-load "smartparens-autoloads"
+  (with-eval-after-load "smartparens-autoloads-XXX"
 
     ;; Default configuration for smartparens package.
     (require 'smartparens-config)
@@ -10241,9 +10241,8 @@ Balanced editing: inserting two matching parentheses at once, etc.
       (sp-local-tag "~" "~" "~" :actions '(wrap))) ; Code.
 
     ;; Remove local pairs in Text mode.
-    (sp-with-modes 'text-mode
-      (sp-local-pair "'" nil :actions nil)
-      (sp-local-pair "\"" nil :actions nil))
+    (sp-local-pair 'text-mode "'" nil :actions nil)
+    (sp-local-pair 'text-mode "\"" nil :actions nil)
 
     (push 'latex-mode sp-ignore-modes-list)
 #+end_src

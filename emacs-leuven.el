@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141202.2348
+;; Version: 20141203.2139
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141202.2348"
+(defconst leuven--emacs-version "20141203.2139"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -6592,7 +6592,7 @@ mouse-3: go to end") "]"))))
 
   ;; Automatic insertion, wrapping and paredit-like navigation with user defined
   ;; pairs.
-  (with-eval-after-load "smartparens-autoloads"
+  (with-eval-after-load "smartparens-autoloads-XXX"
 
     ;; Default configuration for smartparens package.
     (require 'smartparens-config)
@@ -6613,9 +6613,8 @@ mouse-3: go to end") "]"))))
       (sp-local-tag "~" "~" "~" :actions '(wrap))) ; Code.
 
     ;; Remove local pairs in Text mode.
-    (sp-with-modes 'text-mode
-      (sp-local-pair "'" nil :actions nil)
-      (sp-local-pair "\"" nil :actions nil))
+    (sp-local-pair 'text-mode "'" nil :actions nil)
+    (sp-local-pair 'text-mode "\"" nil :actions nil)
 
     (push 'latex-mode sp-ignore-modes-list)
 
