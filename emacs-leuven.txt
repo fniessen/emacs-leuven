@@ -15493,8 +15493,8 @@ functions implemented in Emacs Lisp.
     (message "Leuven Emacs Config version %s" leuven--emacs-version))
 #+end_src
 
-Please address particular issues or suggestions *specifically*, using `M-x
-leuven-send-bug-report'.
+Please address particular issues or suggestions *specifically*, using ~M-x
+leuven-send-bug-report~.
 
 #+begin_src emacs-lisp
 (message "* --[ Loaded Leuven Emacs Config %s]--" leuven--emacs-version)
