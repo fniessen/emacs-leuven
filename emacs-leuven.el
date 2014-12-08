@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141205.1116
+;; Version: 20141208.1345
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141205.1116"
+(defconst leuven--emacs-version "20141208.1345"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5753,11 +5753,14 @@ this with to-do items than with projects or headings."
       (lambda (src-block)
         (let ((language (org-element-property :language src-block)))
           (cond ((null language)
-                 (error "Missing language at position %d"
-                        (org-element-property :post-affiliated src-block)))
+                 (error "Missing language at position %d in %s"
+                        (org-element-property :post-affiliated src-block)
+                        (buffer-name)))
                 ((not (assoc-string language org-babel-load-languages))
-                 (error "Unknown language at position %d"
-                        (org-element-property :post-affiliated src-block)))))))
+                 (error "Unknown language `%s' at position %d in `%s'"
+                        language
+                        (org-element-property :post-affiliated src-block)
+                        (buffer-name)))))))
     (message "Source blocks checked in %s." (buffer-name (buffer-base-buffer))))
 
   (add-hook 'org-mode-hook 'org-src-block-check)
@@ -7645,6 +7648,19 @@ a clean buffer we're an order of magnitude laxer about checking."
          (define-key company-active-map
            (read-kbd-macro (format "<kp-%d>" i))
            'company-complete-number)))
+
+    ;; Do nothing if the indicated candidate contains digits (actually, it will
+    ;; try to insert the digit you type).
+    (advice-add
+     'company-complete-number :around
+     (lambda (fun n)
+       (let ((cand (nth (+ (1- n) company-tooltip-offset)
+                        company-candidates)))
+         (if (string-match-p "[0-9]" cand)
+             (let ((last-command-event (+ ?0 n)))
+               (self-insert-command 1))
+           (funcall fun n))))
+     '((name . "Don't complete numbers")))
 
     )
 

@@ -8849,11 +8849,14 @@ an interactive terminal.
       (lambda (src-block)
         (let ((language (org-element-property :language src-block)))
           (cond ((null language)
-                 (error "Missing language at position %d"
-                        (org-element-property :post-affiliated src-block)))
+                 (error "Missing language at position %d in %s"
+                        (org-element-property :post-affiliated src-block)
+                        (buffer-name)))
                 ((not (assoc-string language org-babel-load-languages))
-                 (error "Unknown language at position %d"
-                        (org-element-property :post-affiliated src-block)))))))
+                 (error "Unknown language `%s' at position %d in `%s'"
+                        language
+                        (org-element-property :post-affiliated src-block)
+                        (buffer-name)))))))
     (message "Source blocks checked in %s." (buffer-name (buffer-base-buffer))))
 
   (add-hook 'org-mode-hook 'org-src-block-check)
@@ -12220,6 +12223,19 @@ available completions and filter as well.
          (define-key company-active-map
            (read-kbd-macro (format "<kp-%d>" i))
            'company-complete-number)))
+
+    ;; Do nothing if the indicated candidate contains digits (actually, it will
+    ;; try to insert the digit you type).
+    (advice-add
+     'company-complete-number :around
+     (lambda (fun n)
+       (let ((cand (nth (+ (1- n) company-tooltip-offset)
+                        company-candidates)))
+         (if (string-match-p "[0-9]" cand)
+             (let ((last-command-event (+ ?0 n)))
+               (self-insert-command 1))
+           (funcall fun n))))
+     '((name . "Don't complete numbers")))
 #+end_src
 
 If you press ~<right>~ when the menu is displayed, it will cancel completion.
