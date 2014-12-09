@@ -14004,10 +14004,12 @@ Since GNU Emacs 23, there's now support for serial port access.  The new command
 
 Let Emacs, for example, find the program =/usr/bin/w3m=.
 
-*But it causes problems (Emacs crashes or unable to connect) when reading mail
-with Gnus...*
+*But ~cygwin-mount-activate~ causes problems (Emacs crashes or unable to connect)
+when reading mail with Gnus...*
 
-#+begin_src emacs-lisp
+Those problems disappear as soon as we do ~cygwin-mount-deactivate~...
+
+#+begin_src emacs-lisp :tangle no
   ;; Let Emacs recognize Cygwin paths (e.g. /usr/local/lib).
   (when (and leuven--win32-p
              (executable-find "mount")) ; Cygwin bin directory found
