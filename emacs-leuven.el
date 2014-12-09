@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141208.1345
+;; Version: 20141209.1048
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141208.1345"
+(defconst leuven--emacs-version "20141209.1048"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5636,19 +5636,6 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "ob-core"
     (add-to-list 'org-babel-noweb-error-langs "emacs-lisp"))
 
-;;** 14.6 (info "(org)Library of Babel")
-
-  (leuven--section "14.6 (org)Library of Babel")
-
-  (with-eval-after-load "org"
-
-    ;; Load the NAMED code blocks defined in Org mode files into the library of
-    ;; Babel (global `org-babel-library-of-babel' variable).
-    (let ((lob-file (concat (file-name-directory (locate-library "org"))
-                            "../doc/library-of-babel.org")))
-      (when (file-exists-p lob-file)
-        (org-babel-lob-ingest lob-file))))
-
   (with-eval-after-load "ob-exp"
     ;; Template used to export the body of code blocks.
     (setq org-babel-exp-code-template
@@ -5702,7 +5689,38 @@ this with to-do items than with projects or headings."
 
     ;; Accented characters on graphics.
     (setq org-babel-R-command
-          (concat org-babel-R-command " --encoding=UTF-8")))
+          (concat org-babel-R-command " --encoding=UTF-8"))
+
+    (defun org-src-block-check ()
+      (interactive)
+      (org-element-map (org-element-parse-buffer 'element) 'src-block
+        (lambda (src-block)
+          (let ((language (org-element-property :language src-block)))
+            (cond ((null language)
+                   (error "Missing language at position %d in %s"
+                          (org-element-property :post-affiliated src-block)
+                          (buffer-name)))
+                  ((not (assoc-string language org-babel-load-languages))
+                   (error "Unknown language `%s' at position %d in `%s'"
+                          language
+                          (org-element-property :post-affiliated src-block)
+                          (buffer-name)))))))
+      (message "Source blocks checked in %s." (buffer-name (buffer-base-buffer))))
+
+    (add-hook 'org-mode-hook 'org-src-block-check))
+
+;;** 14.6 (info "(org)Library of Babel")
+
+  (leuven--section "14.6 (org)Library of Babel")
+
+  (with-eval-after-load "org"
+
+    ;; Load the NAMED code blocks defined in Org mode files into the library of
+    ;; Babel (global `org-babel-library-of-babel' variable).
+    (let ((lob-file (concat (file-name-directory (locate-library "org"))
+                            "../doc/library-of-babel.org")))
+      (when (file-exists-p lob-file)
+        (org-babel-lob-ingest lob-file))))
 
 ;;* 15 (info "(org)Miscellaneous")
 
@@ -5746,24 +5764,6 @@ this with to-do items than with projects or headings."
                     (unless (bolp) (insert "\n"))))))))))))
 
   (add-hook 'org-mode-hook 'org-repair-property-drawers)
-
-  (defun org-src-block-check ()
-    (interactive)
-    (org-element-map (org-element-parse-buffer 'element) 'src-block
-      (lambda (src-block)
-        (let ((language (org-element-property :language src-block)))
-          (cond ((null language)
-                 (error "Missing language at position %d in %s"
-                        (org-element-property :post-affiliated src-block)
-                        (buffer-name)))
-                ((not (assoc-string language org-babel-load-languages))
-                 (error "Unknown language `%s' at position %d in `%s'"
-                        language
-                        (org-element-property :post-affiliated src-block)
-                        (buffer-name)))))))
-    (message "Source blocks checked in %s." (buffer-name (buffer-base-buffer))))
-
-  (add-hook 'org-mode-hook 'org-src-block-check)
 
   (defun leuven--org-switch-dictionary ()
     "Set language if Flyspell is enabled and `#+LANGUAGE:' is on top 8 lines."
@@ -8721,12 +8721,6 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; - ssh -t -t user@host
   ;; - Cygwin'ized Emacs
   ;; - MSYS (MinGW)
-
-    ;; ;; let Emacs recognize Cygwin paths (e.g. /usr/local/lib)
-    ;; (when (and leuven--win32-p
-    ;;            (executable-find "mount")) ; Cygwin bin directory found
-    ;;   (with-eval-after-load "cygwin-mount-autoloads"
-    ;;     (cygwin-mount-activate)))
 
     ;; let Emacs recognize Windows paths (e.g. C:/Program Files/)
     (when leuven--cygwin-p

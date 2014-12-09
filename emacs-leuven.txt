@@ -8685,23 +8685,6 @@ Write error messages to the Messages buffer for invalid ~org-sbe~ calls.
        (signal (car err) (cdr err)))))
 #+end_src
 
-*** Library of Babel
-
-#+begin_src emacs-lisp
-;;** 14.6 (info "(org)Library of Babel")
-
-  (leuven--section "14.6 (org)Library of Babel")
-
-  (with-eval-after-load "org"
-
-    ;; Load the NAMED code blocks defined in Org mode files into the library of
-    ;; Babel (global `org-babel-library-of-babel' variable).
-    (let ((lob-file (concat (file-name-directory (locate-library "org"))
-                            "../doc/library-of-babel.org")))
-      (when (file-exists-p lob-file)
-        (org-babel-lob-ingest lob-file))))
-#+end_src
-
 *** Languages
 
 #+begin_src emacs-lisp
@@ -8763,7 +8746,25 @@ languages which can be evaluated in Org mode buffers.
 
     ;; Accented characters on graphics.
     (setq org-babel-R-command
-          (concat org-babel-R-command " --encoding=UTF-8")))
+          (concat org-babel-R-command " --encoding=UTF-8"))
+
+    (defun org-src-block-check ()
+      (interactive)
+      (org-element-map (org-element-parse-buffer 'element) 'src-block
+        (lambda (src-block)
+          (let ((language (org-element-property :language src-block)))
+            (cond ((null language)
+                   (error "Missing language at position %d in %s"
+                          (org-element-property :post-affiliated src-block)
+                          (buffer-name)))
+                  ((not (assoc-string language org-babel-load-languages))
+                   (error "Unknown language `%s' at position %d in `%s'"
+                          language
+                          (org-element-property :post-affiliated src-block)
+                          (buffer-name)))))))
+      (message "Source blocks checked in %s." (buffer-name (buffer-base-buffer))))
+
+    (add-hook 'org-mode-hook 'org-src-block-check))
 #+end_src
 
 ~screen~ offers support for interactive terminals.  Mostly shell scripts.  Heavily
@@ -8786,6 +8787,27 @@ an interactive terminal.
                      nil))))))
 
     (add-hook 'org-mode-hook 'prettier-org-code-blocks)
+#+end_src
+
+*** Library of Babel
+
+As the LOB contains code blocks of different languages, and as we now *check that
+languages are known*, this section 14.6 has been moved *after* the section 14.7
+where we *load languages* such as R, etc.
+
+#+begin_src emacs-lisp
+;;** 14.6 (info "(org)Library of Babel")
+
+  (leuven--section "14.6 (org)Library of Babel")
+
+  (with-eval-after-load "org"
+
+    ;; Load the NAMED code blocks defined in Org mode files into the library of
+    ;; Babel (global `org-babel-library-of-babel' variable).
+    (let ((lob-file (concat (file-name-directory (locate-library "org"))
+                            "../doc/library-of-babel.org")))
+      (when (file-exists-p lob-file)
+        (org-babel-lob-ingest lob-file))))
 #+end_src
 
 ** Miscellaneous
@@ -8840,26 +8862,6 @@ an interactive terminal.
                     (unless (bolp) (insert "\n"))))))))))))
 
   (add-hook 'org-mode-hook 'org-repair-property-drawers)
-#+end_src
-
-#+begin_src emacs-lisp
-  (defun org-src-block-check ()
-    (interactive)
-    (org-element-map (org-element-parse-buffer 'element) 'src-block
-      (lambda (src-block)
-        (let ((language (org-element-property :language src-block)))
-          (cond ((null language)
-                 (error "Missing language at position %d in %s"
-                        (org-element-property :post-affiliated src-block)
-                        (buffer-name)))
-                ((not (assoc-string language org-babel-load-languages))
-                 (error "Unknown language `%s' at position %d in `%s'"
-                        language
-                        (org-element-property :post-affiliated src-block)
-                        (buffer-name)))))))
-    (message "Source blocks checked in %s." (buffer-name (buffer-base-buffer))))
-
-  (add-hook 'org-mode-hook 'org-src-block-check)
 #+end_src
 
 *** Ispell
@@ -14004,12 +14006,12 @@ Let Emacs, for example, find the program =/usr/bin/w3m=.
 *But it causes problems (Emacs crashes or unable to connect) when reading mail
 with Gnus...*
 
-#+begin_src emacs-lisp
-    ;; ;; let Emacs recognize Cygwin paths (e.g. /usr/local/lib)
-    ;; (when (and leuven--win32-p
-    ;;            (executable-find "mount")) ; Cygwin bin directory found
-    ;;   (with-eval-after-load "cygwin-mount-autoloads"
-    ;;     (cygwin-mount-activate)))
+#+begin_src emacs-lisp :tangle no
+    ;; let Emacs recognize Cygwin paths (e.g. /usr/local/lib)
+    (when (and leuven--win32-p
+               (executable-find "mount")) ; Cygwin bin directory found
+      (with-eval-after-load "cygwin-mount-autoloads"
+        (cygwin-mount-activate)))
 #+end_src
 
 See =w32-settings.el= for more!
