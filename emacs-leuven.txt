@@ -8748,6 +8748,7 @@ languages which can be evaluated in Org mode buffers.
     (setq org-babel-R-command
           (concat org-babel-R-command " --encoding=UTF-8"))
 
+    ;; Check for the support of source code block languages.
     (defun org-src-block-check ()
       (interactive)
       (org-element-map (org-element-parse-buffer 'element) 'src-block
@@ -14006,12 +14007,17 @@ Let Emacs, for example, find the program =/usr/bin/w3m=.
 *But it causes problems (Emacs crashes or unable to connect) when reading mail
 with Gnus...*
 
-#+begin_src emacs-lisp :tangle no
-    ;; let Emacs recognize Cygwin paths (e.g. /usr/local/lib)
-    (when (and leuven--win32-p
-               (executable-find "mount")) ; Cygwin bin directory found
-      (with-eval-after-load "cygwin-mount-autoloads"
-        (cygwin-mount-activate)))
+#+begin_src emacs-lisp
+  ;; Let Emacs recognize Cygwin paths (e.g. /usr/local/lib).
+  (when (and leuven--win32-p
+             (executable-find "mount")) ; Cygwin bin directory found
+
+    (with-eval-after-load "cygwin-mount-autoloads"
+
+      (autoload 'cygwin-mount-activate "cygwin-mount"
+        "Activate cygwin-mount- and cygwin-style-handling." t)
+
+      (cygwin-mount-activate)))         ; This is sometimes VERY SLOW!
 #+end_src
 
 See =w32-settings.el= for more!
@@ -14019,11 +14025,15 @@ See =w32-settings.el= for more!
 ** Helper for Cygwin Emacs
 
 #+begin_src emacs-lisp
-    ;; let Emacs recognize Windows paths (e.g. C:/Program Files/)
-    (when leuven--cygwin-p
-      (try-require 'windows-path)
-      (with-eval-after-load "windows-path"
-        (windows-path-activate)))
+  ;; Let Emacs recognize Windows paths (e.g. C:/Program Files/).
+  (when leuven--cygwin-p
+
+    (try-require 'windows-path)
+
+    (with-eval-after-load "windows-path"
+
+      ;; Activate windows-path-style-handling.
+      (windows-path-activate)))
 #+end_src
 
 ** Emacs Speaks Statistics (ESS)

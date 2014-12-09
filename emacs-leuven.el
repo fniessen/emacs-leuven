@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141209.1048
+;; Version: 20141209.1109
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141209.1048"
+(defconst leuven--emacs-version "20141209.1109"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5691,6 +5691,7 @@ this with to-do items than with projects or headings."
     (setq org-babel-R-command
           (concat org-babel-R-command " --encoding=UTF-8"))
 
+    ;; Check for the support of source code block languages.
     (defun org-src-block-check ()
       (interactive)
       (org-element-map (org-element-parse-buffer 'element) 'src-block
@@ -8722,11 +8723,26 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; - Cygwin'ized Emacs
   ;; - MSYS (MinGW)
 
-    ;; let Emacs recognize Windows paths (e.g. C:/Program Files/)
-    (when leuven--cygwin-p
-      (try-require 'windows-path)
-      (with-eval-after-load "windows-path"
-        (windows-path-activate)))
+  ;; Let Emacs recognize Cygwin paths (e.g. /usr/local/lib).
+  (when (and leuven--win32-p
+             (executable-find "mount")) ; Cygwin bin directory found
+
+    (with-eval-after-load "cygwin-mount-autoloads"
+
+      (autoload 'cygwin-mount-activate "cygwin-mount"
+        "Activate cygwin-mount- and cygwin-style-handling." t)
+
+      (cygwin-mount-activate)))         ; This is sometimes VERY SLOW!
+
+  ;; Let Emacs recognize Windows paths (e.g. C:/Program Files/).
+  (when leuven--cygwin-p
+
+    (try-require 'windows-path)
+
+    (with-eval-after-load "windows-path"
+
+      ;; Activate windows-path-style-handling.
+      (windows-path-activate)))
 
   (leuven--section "Utilities -- ESS")
 
