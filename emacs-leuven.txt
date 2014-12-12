@@ -14009,7 +14009,7 @@ when reading mail with Gnus...*
 
 Those problems disappear as soon as we do ~cygwin-mount-deactivate~...
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   ;; Let Emacs recognize Cygwin paths (e.g. /usr/local/lib).
   (when (and leuven--win32-p
              (executable-find "mount")) ; Cygwin bin directory found
@@ -14019,7 +14019,8 @@ Those problems disappear as soon as we do ~cygwin-mount-deactivate~...
       (autoload 'cygwin-mount-activate "cygwin-mount"
         "Activate cygwin-mount- and cygwin-style-handling." t)
 
-      (cygwin-mount-activate)))         ; This is sometimes VERY SLOW!
+      ;; (cygwin-mount-activate)           ; This is sometimes VERY SLOW!
+      ))
 #+end_src
 
 See =w32-settings.el= for more!
