@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141212.1056
+;; Version: 20141222.1201
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141212.1056"
+(defconst leuven--emacs-version "20141222.1201"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5670,6 +5670,7 @@ this with to-do items than with projects or headings."
            (ledger     . t)             ; Requires ledger.
            (makefile   . t)
            (org        . t)
+           (python     . t)
            (shell      . t)
            (sql        . t)))
       ;; XXX (in the future) message saying "Upgrade to Org 8.3"
@@ -5684,6 +5685,7 @@ this with to-do items than with projects or headings."
          (ledger     . t)
          (makefile   . t)
          (org        . t)
+         (python     . t)
          (sh         . t)
          (sql        . t))))
 
