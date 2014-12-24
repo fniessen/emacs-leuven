@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141222.1201
+;; Version: 20141224.1006
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141222.1201"
+(defconst leuven--emacs-version "20141224.1006"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1245,17 +1245,33 @@ Last time is saved in global variable `leuven--before-section-time'."
                   '("%e"
                     (:eval
                      (let* ((active (powerline-selected-window-active))
-                            (mode-line (if active 'mode-line 'mode-line-inactive))
-                            (face1 (if active 'powerline-active1 'powerline-inactive1))
-                            (face2 (if active 'powerline-active2 'powerline-inactive2))
-                            (default-dictionary-face (if active 'powerline-default-dictionary-active-face 'powerline-default-dictionary-inactive-face))
-                            (other-dictionary-face (if active 'powerline-other-dictionary-active-face 'powerline-other-dictionary-inactive-face))
-                            (separator-left (intern (format "powerline-%s-%s"
-                                                            powerline-default-separator
-                                                            (car powerline-default-separator-dir))))
-                            (separator-right (intern (format "powerline-%s-%s"
-                                                             powerline-default-separator
-                                                             (cdr powerline-default-separator-dir))))
+                            (mode-line (if active
+                                           'mode-line
+                                         'mode-line-inactive))
+                            (face1 (if active
+                                       'powerline-active1
+                                     'powerline-inactive1))
+                            (face2 (if active
+                                       'powerline-active2
+                                     'powerline-inactive2))
+                            (default-dictionary-face
+                              (if active
+                                  'powerline-default-dictionary-active-face
+                                'powerline-default-dictionary-inactive-face))
+                            (other-dictionary-face
+                             (if active
+                                 'powerline-other-dictionary-active-face
+                               'powerline-other-dictionary-inactive-face))
+                            (separator-left
+                             (intern
+                              (format "powerline-%s-%s"
+                                      powerline-default-separator
+                                      (car powerline-default-separator-dir))))
+                            (separator-right
+                             (intern
+                              (format "powerline-%s-%s"
+                                      powerline-default-separator
+                                      (cdr powerline-default-separator-dir))))
                             (lhs (list
                                        ;; vc mode
                                        (when (and (fboundp 'vc-switches)
@@ -1313,22 +1329,16 @@ Last time is saved in global variable `leuven--before-section-time'."
                                        (powerline-buffer-size face2 'l)
                                        (powerline-raw " " face2)
 
-                                       ;; (let ((dict (and (featurep 'ispell)
-                                       ;;                  (or ispell-local-dictionary
-                                       ;;                      ispell-dictionary
-                                       ;;                      "--" ; default dictionary
-                                       ;;                      ))))
-                                       ;;   (cond ((or (equal dict "francais") (equal dict "--"))
-                                       ;;          (powerline-raw
-                                       ;;           (concat (substring dict 0 2) " ")
-                                       ;;           default-dictionary-face 'l))
-                                       ;;         (buffer-read-only
-                                       ;;          (powerline-raw "%%%% "
-                                       ;;           default-dictionary-face 'l))
-                                       ;;         (t
-                                       ;;          (powerline-raw
-                                       ;;           (concat (substring dict 0 2) " ")
-                                       ;;           other-dictionary-face 'l))))
+                                       (let ((dict (and (featurep 'ispell)
+                                                        (or
+                                                         ispell-local-dictionary
+                                                         ispell-dictionary))))
+                                         (cond (buffer-read-only
+                                                (powerline-raw "%%%% " default-dictionary-face 'l))
+                                               ((null dict)
+                                                (powerline-raw "-- " default-dictionary-face 'l))
+                                               (t
+                                                (powerline-raw (concat (substring dict 0 2) " ") other-dictionary-face 'l))))
 
                                        ;; (powerline-hud face2 face1)
                                        )))
@@ -2742,7 +2752,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "21.9 (emacs)Speedbar Frames")
 
-  (unless (featurep 'helm-config)       ; helm is better than speedbar!
+  (unless (featurep 'helm-config)       ; Helm is better than speedbar!
 
     ;; jump to speedbar frame
     (global-set-key (kbd "<f4>") 'speedbar-get-focus))
