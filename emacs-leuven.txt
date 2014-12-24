@@ -10215,7 +10215,19 @@ Balanced editing: inserting two matching parentheses at once, etc.
     sensible things
 
 #+begin_src emacs-lisp
-  ;; (electric-pair-mode 1)
+  (electric-pair-mode 1)
+
+  ;; Pairs that should be used regardless of major mode.
+  (push '(?\* . ?\*) electric-pair-pairs)
+
+  (defvar org-electric-pairs '((?/ . ?/) (?= . ?=))
+    "Electric pairs for Org mode.")
+
+  (defun org-add-electric-pairs ()
+    (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
+    (setq-local electric-pair-text-pairs electric-pair-pairs)) ; In comments.
+
+  (add-hook 'org-mode-hook 'org-add-electric-pairs)
 #+end_src
 
   Deleting one bracket doesn't delete the other.  If you want that, install
@@ -10235,7 +10247,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
   It is more about ease-of-coding them B&D.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Automatic insertion, wrapping and paredit-like navigation with user defined
   ;; pairs.
   (with-eval-after-load "smartparens-autoloads-XXX"
@@ -10268,7 +10280,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
   =turn-on-smartparens-strict-mode= add years to one's life to allow for more
   hacking. Seriously.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     ;; ;; Enable smartparens-strict-mode in all Lisp modes.
     ;; (mapc (lambda (mode)
     ;;         (add-hook (intern (format "%s-hook" (symbol-name mode)))

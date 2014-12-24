@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141224.1353
+;; Version: 20141224.1530
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141224.1353"
+(defconst leuven--emacs-version "20141224.1530"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -6604,42 +6604,19 @@ mouse-3: go to end") "]"))))
 
   (global-set-key (kbd "C-)") 'leuven-match-paren)
 
-  ;; (electric-pair-mode 1)
+  (electric-pair-mode 1)
 
-  ;; Automatic insertion, wrapping and paredit-like navigation with user defined
-  ;; pairs.
-  (with-eval-after-load "smartparens-autoloads-XXX"
+  ;; Pairs that should be used regardless of major mode.
+  (push '(?\* . ?\*) electric-pair-pairs)
 
-    ;; Default configuration for smartparens package.
-    (require 'smartparens-config)
+  (defvar org-electric-pairs '((?/ . ?/) (?= . ?=))
+    "Electric pairs for Org mode.")
 
-    ;; Toggle Smartparens mode in all buffers.
-    (smartparens-global-mode 1)
+  (defun org-add-electric-pairs ()
+    (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
+    (setq-local electric-pair-text-pairs electric-pair-pairs)) ; In comments.
 
-    ;; Toggle Show-Smartparens mode in all buffers.
-    (show-smartparens-global-mode 1)
-
-    ;; Add local pairs in Org mode.
-    (sp-with-modes 'org-mode
-      ;; (sp-local-pair "'" nil :actions nil)
-      (sp-local-tag "*" "*" "*" :actions '(wrap)) ; Bold.
-      (sp-local-tag "/" "/" "/" :actions '(wrap)) ; Italic.
-      (sp-local-tag "_" "_" "_" :actions '(wrap)) ; Underline.
-      (sp-local-tag "=" "=" "=" :actions '(wrap)) ; Verbatim.
-      (sp-local-tag "~" "~" "~" :actions '(wrap))) ; Code.
-
-    ;; Remove local pairs in Text mode.
-    (sp-local-pair 'text-mode "'" nil :actions nil)
-    (sp-local-pair 'text-mode "\"" nil :actions nil)
-
-    (push 'latex-mode sp-ignore-modes-list)
-
-    ;; ;; Enable smartparens-strict-mode in all Lisp modes.
-    ;; (mapc (lambda (mode)
-    ;;         (add-hook (intern (format "%s-hook" (symbol-name mode)))
-    ;;                   'smartparens-strict-mode))
-    ;;       sp--lisp-modes)
-    )
+  (add-hook 'org-mode-hook 'org-add-electric-pairs)
 
 ;;** 26.5 (info "(emacs)Comments")
 
