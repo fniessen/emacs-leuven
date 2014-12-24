@@ -8737,7 +8737,7 @@ languages which can be evaluated in Org mode buffers.
            (ledger     . t)             ; Requires ledger.
            (makefile   . t)
            (org        . t)
-           (python     . t)
+           ;; (python  . t)
            (shell      . t)
            (sql        . t)))
       ;; XXX (in the future) message saying "Upgrade to Org 8.3"
@@ -8752,7 +8752,7 @@ languages which can be evaluated in Org mode buffers.
          (ledger     . t)
          (makefile   . t)
          (org        . t)
-         (python     . t)
+         ;; (python  . t)
          (sh         . t)
          (sql        . t))))
 
