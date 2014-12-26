@@ -9522,6 +9522,13 @@ file, AUCTeX gives you a ~Command~ menu.
 #+end_src
 
 #+begin_src emacs-lisp
+;;** 2.1 (info "(auctex)Quotes")
+
+      (leuven--section "2.1 (auctex)Quotes")
+
+      ;; Insert right brace with suitable macro after typing left brace.
+      (setq LaTeX-electric-left-right-brace t)
+
 ;;** 2.6 (info "(auctex)Completion")
 
       (leuven--section "2.6 (auctex)Completion")

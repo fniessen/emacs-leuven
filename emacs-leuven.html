@@ -1372,7 +1372,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20141226.1207</span>
+"org-comment">Version: 20141226.1209</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1499,7 +1499,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20141226.1207"</span>
+"org-string">"20141226.1209"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -17585,6 +17585,15 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
+<span class="org-comment-delimiter">;;</span><span class=
+"org-comment">** 2.1 (info "(auctex)Quotes")</span>
+
+      (leuven--section <span class="org-string">"2.1 (auctex)Quotes"</span>)
+
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Insert right brace with suitable macro after typing left brace.</span>
+      (setq LaTeX-electric-left-right-brace t)
+
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** 2.6 (info "(auctex)Completion")</span>
 

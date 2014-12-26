@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141226.1206
+;; Version: 20141226.1208
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141226.1206"
+(defconst leuven--emacs-version "20141226.1208"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -6182,6 +6182,13 @@ this with to-do items than with projects or headings."
       ;;           (lambda ()
       ;;             (make-local-variable 'ispell-parser)
       ;;             (setq ispell-parser 'tex)))
+
+;;** 2.1 (info "(auctex)Quotes")
+
+      (leuven--section "2.1 (auctex)Quotes")
+
+      ;; Insert right brace with suitable macro after typing left brace.
+      (setq LaTeX-electric-left-right-brace t)
 
 ;;** 2.6 (info "(auctex)Completion")
 
