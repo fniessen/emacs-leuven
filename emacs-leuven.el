@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141226.0943
+;; Version: 20141226.1206
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141226.0943"
+(defconst leuven--emacs-version "20141226.1206"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3556,17 +3556,17 @@ Last time is saved in global variable `leuven--before-section-time'."
     (setq org-inlinetask-default-state "TODO")
 
     ;; Template for inline tasks in HTML exporter.
-    (defun leuven--org-html-format-inlinetask (todo todo-type priority title
-                                               tags contents)
+    (defun leuven--org-html-format-inlinetask
+        (todo todo-type priority text tags contents &optional info)
       "Format an inline task element for HTML export."
       (let ((todo-kw
              (if todo
                  (format "<span class=\"%s %s\">%s</span> " todo-type todo todo)
                ""))
-            (full-title-w/o-todo-kw
+            (full-headline-w/o-todo-kw
              (concat
               (when priority (format "[#%c] " priority))
-              title
+              text
               (when tags
                 (concat "&nbsp;&nbsp;&nbsp;"
                         "<span class=\"tag\">"
@@ -3579,7 +3579,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         (concat "<table class=\"inlinetask\" width=\"100%\">"
                   "<tr>"
                     "<td valign=\"top\"><b>" todo-kw "</b></td>"
-                    "<td width=\"100%\"><b>" full-title-w/o-todo-kw "</b><br />"
+                    "<td width=\"100%\"><b>" full-headline-w/o-todo-kw "</b><br />"
                       (or contents "") "</td>"
                   "</tr>"
                 "</table>")))
@@ -3589,8 +3589,8 @@ Last time is saved in global variable `leuven--before-section-time'."
           'leuven--org-html-format-inlinetask)
 
     ;; Template for inline tasks in LaTeX exporter.
-    (defun leuven--org-latex-format-inlinetask (todo todo-type priority title
-                                                tags contents)
+    (defun leuven--org-latex-format-inlinetask
+        (todo todo-type priority text tags contents &optional info)
       "Format an inline task element for LaTeX export."
       (let* ((tags-string (format ":%s:" (mapconcat 'identity tags ":")))
              (opt-color
@@ -3603,14 +3603,14 @@ Last time is saved in global variable `leuven--before-section-time'."
                          "color=red!40")
                         (t ""))
                 ""))
-             (full-title
+             (full-headline
               (concat
                (when todo
                  (format "{\\color{red}\\textbf{\\textsf{\\textsc{%s}}}} "
                          todo))
                (when priority
                  (format "\\textsf{\\framebox{\\#%c}} " priority))
-               title
+               text
                (when tags
                  (format "\\hfill{}:%s:"
                          (mapconcat 'identity tags ":")))))
@@ -3627,7 +3627,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                         "  %s"
                         "}")
                 opt-color
-                full-title
+                full-headline
                 opt-rule
                 opt-contents)))
 
@@ -5328,7 +5328,8 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "ox-latex"
 
     ;; Markup for TODO keywords and for tags, as a printf format.
-    (defun leuven--org-latex-format-headline (todo todo-type priority text tags &optional info)
+    (defun leuven--org-latex-format-headline
+        (todo todo-type priority text tags &optional info)
       "Default function for formatting the headline's text."
       (concat (when todo
                 (format "{%s\\textbf{\\textsc{\\textsf{%s}}}} "

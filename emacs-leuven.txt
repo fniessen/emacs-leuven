@@ -5698,17 +5698,17 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
     (setq org-inlinetask-default-state "TODO")
 
     ;; Template for inline tasks in HTML exporter.
-    (defun leuven--org-html-format-inlinetask (todo todo-type priority title
-                                               tags contents)
+    (defun leuven--org-html-format-inlinetask
+        (todo todo-type priority text tags contents &optional info)
       "Format an inline task element for HTML export."
       (let ((todo-kw
              (if todo
                  (format "<span class=\"%s %s\">%s</span> " todo-type todo todo)
                ""))
-            (full-title-w/o-todo-kw
+            (full-headline-w/o-todo-kw
              (concat
               (when priority (format "[#%c] " priority))
-              title
+              text
               (when tags
                 (concat "&nbsp;&nbsp;&nbsp;"
                         "<span class=\"tag\">"
@@ -5721,7 +5721,7 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
         (concat "<table class=\"inlinetask\" width=\"100%\">"
                   "<tr>"
                     "<td valign=\"top\"><b>" todo-kw "</b></td>"
-                    "<td width=\"100%\"><b>" full-title-w/o-todo-kw "</b><br />"
+                    "<td width=\"100%\"><b>" full-headline-w/o-todo-kw "</b><br />"
                       (or contents "") "</td>"
                   "</tr>"
                 "</table>")))
@@ -5731,8 +5731,8 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
           'leuven--org-html-format-inlinetask)
 
     ;; Template for inline tasks in LaTeX exporter.
-    (defun leuven--org-latex-format-inlinetask (todo todo-type priority title
-                                                tags contents)
+    (defun leuven--org-latex-format-inlinetask
+        (todo todo-type priority text tags contents &optional info)
       "Format an inline task element for LaTeX export."
       (let* ((tags-string (format ":%s:" (mapconcat 'identity tags ":")))
              (opt-color
@@ -5745,14 +5745,14 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
                          "color=red!40")
                         (t ""))
                 ""))
-             (full-title
+             (full-headline
               (concat
                (when todo
                  (format "{\\color{red}\\textbf{\\textsf{\\textsc{%s}}}} "
                          todo))
                (when priority
                  (format "\\textsf{\\framebox{\\#%c}} " priority))
-               title
+               text
                (when tags
                  (format "\\hfill{}:%s:"
                          (mapconcat 'identity tags ":")))))
@@ -5769,7 +5769,7 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
                         "  %s"
                         "}")
                 opt-color
-                full-title
+                full-headline
                 opt-rule
                 opt-contents)))
 
@@ -8200,7 +8200,8 @@ capabilities.
   (with-eval-after-load "ox-latex"
 
     ;; Markup for TODO keywords and for tags, as a printf format.
-    (defun leuven--org-latex-format-headline (todo todo-type priority text tags &optional info)
+    (defun leuven--org-latex-format-headline
+        (todo todo-type priority text tags &optional info)
       "Default function for formatting the headline's text."
       (concat (when todo
                 (format "{%s\\textbf{\\textsc{\\textsf{%s}}}} "
