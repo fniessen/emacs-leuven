@@ -1182,6 +1182,8 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
             org-end-of-line
             org-kill-line
             org-self-insert-command
+            org-shiftleft
+            org-shiftright
             org-yank
             orgtbl-self-insert-command
             yas-expand)))

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141226.1208
+;; Version: 20141229.1100
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141226.1208"
+(defconst leuven--emacs-version "20141229.1100"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -769,6 +769,8 @@ Last time is saved in global variable `leuven--before-section-time'."
             org-end-of-line
             org-kill-line
             org-self-insert-command
+            org-shiftleft
+            org-shiftright
             org-yank
             orgtbl-self-insert-command
             yas-expand)))
