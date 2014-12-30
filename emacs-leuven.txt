@@ -1753,7 +1753,7 @@ This feature gives you a really nice at-a-glance view of where you've made
 changes.
 
 #+begin_src emacs-lisp
-  ;; Highlight uncommitted changes.
+  ;; Indicate uncommitted changes in the fringe.
   (with-eval-after-load "diff-hl-autoloads"
 
     (global-diff-hl-mode))
