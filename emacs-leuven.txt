@@ -33,7 +33,7 @@ this set of customizations to "short-cut" that initial process.
 #+begin_src emacs-lisp :noweb yes
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2014 Fabrice Niessen
+;; Copyright (C) 1999-2015 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
@@ -1753,7 +1753,7 @@ This feature gives you a really nice at-a-glance view of where you've made
 changes.
 
 #+begin_src emacs-lisp
-  ;; Indicate uncommitted changes in the fringe.
+  ;; Indicate  changes in the fringe.
   (with-eval-after-load "diff-hl-autoloads"
 
     (global-diff-hl-mode))

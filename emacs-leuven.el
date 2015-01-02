@@ -1,10 +1,10 @@
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2014 Fabrice Niessen
+;; Copyright (C) 1999-2015 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20141230.1050
+;; Version: 20150102.1021
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20141230.1050"
+(defconst leuven--emacs-version "20150102.1021"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1074,7 +1074,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;;
   ;;   (add-hook 'after-init-hook 'global-color-identifiers-mode))
 
-  ;; Indicate uncommitted changes in the fringe.
+  ;; Indicate  changes in the fringe.
   (with-eval-after-load "diff-hl-autoloads"
 
     (global-diff-hl-mode))

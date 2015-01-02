@@ -1,6 +1,6 @@
 ;;; gnus-leuven.el --- my Gnus config file
 
-;; Copyright (C) 2004-2014 Fabrice Niessen
+;; Copyright (C) 2004-2015 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; Keywords: gnus, dotfile, config
