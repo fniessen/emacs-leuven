@@ -1,6 +1,5 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+DATE:      2012-06-22
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en
@@ -261,7 +260,7 @@ beer and as in speech.
 
 ** License
 
-Copyright (C) 1999-2014 Free Software Foundation, Inc.
+Copyright (C) 1999-2015 Free Software Foundation, Inc.
 
 Author: Fabrice Niessen \\
 Keywords: emacs configuration file
