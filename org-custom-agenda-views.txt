@@ -912,6 +912,29 @@ The above is more appropriate than:
 because *repeatable* tasks are switched back to a non-TODO state and (at least,
 by default) don't get a ~CLOSED:~ time-stamp.
 
+*** Note from Sascha Ziemann
+
+http://jcardente.blogspot.de/2010/06/org-mode-hack-tasks-done-last-month.html
+
+inspired me to do this:
+
+#+begin_src emacs-lisp :tangle no
+(defun org-done-view (&optional offset)
+  "Shows all TODOs, which are done."
+  (interactive "nOffset: ")
+  (let ((offset (or offset 0)))
+    (let ((t0 (calendar-current-date offset))
+      (t1 (calendar-current-date (+ offset 1))))
+      (org-tags-view nil
+             (format "CLOSED>=\"[%s-%s-%s]\"+CLOSED<=\"[%s-%s-%s]\""
+                 (calendar-extract-year t0)
+                 (calendar-extract-month t0)
+                 (calendar-extract-day t0)
+                 (calendar-extract-year t1)
+                 (calendar-extract-month t1)
+                 (calendar-extract-day t1))))))
+#+end_src
+
 ** Cleanup
 
 #+begin_src emacs-lisp
