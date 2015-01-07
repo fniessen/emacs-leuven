@@ -1372,7 +1372,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150107.1208</span>
+"org-comment">Version: 20150107.1232</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1499,7 +1499,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150107.1208"</span>
+"org-string">"20150107.1232"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -9707,12 +9707,9 @@ M-: (executable-find "diff") RET
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Graphically indicate the fill column.</span>
-  (try-require 'fill-column-indicator-<span class=
-"org-leuven-highlight">XXX</span>)
+  (try-require 'fill-column-indicator)
   (<span class="org-keyword">with-eval-after-load</span> <span class=
-"org-string">"fill-column-indicator-</span><span class=
-"org-leuven-highlight"><span class="org-string">XXX</span></span><span class=
-"org-string">"</span>
+"org-string">"fill-column-indicator"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Color used to draw the fill-column rule.</span>

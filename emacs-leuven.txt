@@ -4927,8 +4927,8 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 
 #+begin_src emacs-lisp
   ;; Graphically indicate the fill column.
-  (try-require 'fill-column-indicator-XXX)
-  (with-eval-after-load "fill-column-indicator-XXX"
+  (try-require 'fill-column-indicator)
+  (with-eval-after-load "fill-column-indicator"
 
     ;; Color used to draw the fill-column rule.
     (setq fci-rule-color "#FFE0E0")
