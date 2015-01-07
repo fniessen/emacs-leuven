@@ -1372,7 +1372,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150107.1232</span>
+"org-comment">Version: 20150107.1734</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1499,7 +1499,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150107.1232"</span>
+"org-string">"20150107.1734"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -2342,18 +2342,19 @@
 "org-keyword">let</span> ((missing-elpa-packages (leuven--missing-elpa-packages)))
         (<span class="org-keyword">when</span> missing-elpa-packages
           <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; Download once the ELPA archive description.</span>
-          <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(package-refresh-contents)    ; Ensure that the list of packages is</span>
-          <span class=
-"org-comment-delimiter">;;                               </span><span class=
-"org-comment">; up-to-date.  Otherwise, new packages</span>
-          <span class=
-"org-comment-delimiter">;;                               </span><span class=
-"org-comment">; (not present in the cache of the ELPA</span>
-          <span class=
-"org-comment-delimiter">;;                               </span><span class=
-"org-comment">; contents) won't install.</span>
+"org-comment">Download once the ELPA archive description.</span>
+          (package-refresh-contents)    <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Ensure that the list of packages is</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">up-to-date.  Otherwise, new packages</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">(not present in the cache of the ELPA</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">contents) won't install.</span>
           (<span class="org-keyword">dolist</span> (pkg missing-elpa-packages)
             (<span class=
 "org-keyword">if</span> (yes-or-no-p (format <span class=
