@@ -5009,16 +5009,22 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
                       ispell-local-dictionary)
                     (when (boundp 'ispell-dictionary)
                       ispell-dictionary))))
-      (if (and (string= dict "francais")
-               (eq (char-before) ?\")
-               (or (not (equal mode-name "Org"))
-                   (not (member (org-element-type (org-element-at-point))
-                                '(src-block keyword table dynamic-block)))))
-          (progn
-            (backward-delete-char 1)
-            (insert "«  »")
-            (backward-char 2))
-        (insert "\""))))
+      (cond
+       ((and (string= dict "francais")
+             (eq (char-before) ?\")
+             (or (not (equal mode-name "Org"))
+                 (not (member (org-element-type (org-element-at-point))
+                              '(src-block keyword table dynamic-block)))))
+        (backward-delete-char 1)
+        (insert "«  »")
+        (backward-char 2))
+       ((and (eq (char-before) ?\")
+             (eq major-mode 'latex-mode))
+        (backward-delete-char 1)
+        (insert "\\endquote{}")
+        (backward-char 1))
+       (t
+        (insert "\"")))))
 
   (defun leuven-smart-punctuation ()
     "Replace second apostrophe or quotation mark."

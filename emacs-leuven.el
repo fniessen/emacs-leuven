@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150107.1734
+;; Version: 20150107.2240
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150107.1734"
+(defconst leuven--emacs-version "20150107.2240"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3099,16 +3099,22 @@ These packages are neither built-in nor already installed nor ignored."
                       ispell-local-dictionary)
                     (when (boundp 'ispell-dictionary)
                       ispell-dictionary))))
-      (if (and (string= dict "francais")
-               (eq (char-before) ?\")
-               (or (not (equal mode-name "Org"))
-                   (not (member (org-element-type (org-element-at-point))
-                                '(src-block keyword table dynamic-block)))))
-          (progn
-            (backward-delete-char 1)
-            (insert "«  »")
-            (backward-char 2))
-        (insert "\""))))
+      (cond
+       ((and (string= dict "francais")
+             (eq (char-before) ?\")
+             (or (not (equal mode-name "Org"))
+                 (not (member (org-element-type (org-element-at-point))
+                              '(src-block keyword table dynamic-block)))))
+        (backward-delete-char 1)
+        (insert "«  »")
+        (backward-char 2))
+       ((and (eq (char-before) ?\")
+             (eq major-mode 'latex-mode))
+        (backward-delete-char 1)
+        (insert "\\endquote{}")
+        (backward-char 1))
+       (t
+        (insert "\"")))))
 
   (defun leuven-smart-punctuation ()
     "Replace second apostrophe or quotation mark."

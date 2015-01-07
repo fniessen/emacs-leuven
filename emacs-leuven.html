@@ -1372,7 +1372,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150107.1734</span>
+"org-comment">Version: 20150107.2241</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1499,7 +1499,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150107.1734"</span>
+"org-string">"20150107.2241"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -9826,18 +9826,22 @@ M-: (executable-find "diff") RET
                     (<span class=
 "org-keyword">when</span> (boundp 'ispell-dictionary)
                       ispell-dictionary))))
-      (<span class="org-keyword">if</span> (and (string= dict <span class=
-"org-string">"francais"</span>)
-               (eq (char-before) ?\")
-               (or (not (equal mode-name <span class=
-"org-string">"Org"</span>))
-                   (not (member (org-element-type (org-element-at-point))
-                                '(src-block keyword table dynamic-block)))))
-          (<span class="org-keyword">progn</span>
-            (backward-delete-char 1)
-            (insert <span class="org-string">"«  »"</span>)
-            (backward-char 2))
-        (insert <span class="org-string">"\""</span>))))
+      (<span class="org-keyword">cond</span>
+       ((and (string= dict <span class="org-string">"francais"</span>)
+             (eq (char-before) ?\")
+             (or (not (equal mode-name <span class="org-string">"Org"</span>))
+                 (not (member (org-element-type (org-element-at-point))
+                              '(src-block keyword table dynamic-block)))))
+        (backward-delete-char 1)
+        (insert <span class="org-string">"«  »"</span>)
+        (backward-char 2))
+       ((and (eq (char-before) ?\")
+             (eq major-mode 'latex-mode))
+        (backward-delete-char 1)
+        (insert <span class="org-string">"\\endquote{}"</span>)
+        (backward-char 1))
+       (t
+        (insert <span class="org-string">"\""</span>)))))
 
   (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-smart-punctuation</span> ()
