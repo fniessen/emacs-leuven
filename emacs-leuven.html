@@ -1372,7 +1372,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150102.1021</span>
+"org-comment">Version: 20150107.1208</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1499,7 +1499,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150102.1021"</span>
+"org-string">"20150107.1208"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -2322,7 +2322,9 @@
       (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven--missing-elpa-packages</span> ()
         <span class=
-"org-doc">"List packages to install which are neither built-in nor already installed nor ignored."</span>
+"org-doc">"List packages to install for a full blown Leuven installation.</span>
+<span class=
+"org-doc">These packages are neither built-in nor already installed nor ignored."</span>
         (<span class="org-keyword">let</span> (missing-elpa-packages)
           (<span class="org-keyword">dolist</span> (pkg leuven-elpa-packages)
             (<span class=
@@ -2340,19 +2342,18 @@
 "org-keyword">let</span> ((missing-elpa-packages (leuven--missing-elpa-packages)))
         (<span class="org-keyword">when</span> missing-elpa-packages
           <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Download once the ELPA archive description.</span>
-          (package-refresh-contents)    <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">Ensure that the list of packages is</span>
-                                        <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">up-to-date.  Otherwise, new packages</span>
-                                        <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">(not present in the cache of the ELPA</span>
-                                        <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">contents) won't install.</span>
+"org-comment">;; Download once the ELPA archive description.</span>
+          <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(package-refresh-contents)    ; Ensure that the list of packages is</span>
+          <span class=
+"org-comment-delimiter">;;                               </span><span class=
+"org-comment">; up-to-date.  Otherwise, new packages</span>
+          <span class=
+"org-comment-delimiter">;;                               </span><span class=
+"org-comment">; (not present in the cache of the ELPA</span>
+          <span class=
+"org-comment-delimiter">;;                               </span><span class=
+"org-comment">; contents) won't install.</span>
           (<span class="org-keyword">dolist</span> (pkg missing-elpa-packages)
             (<span class=
 "org-keyword">if</span> (yes-or-no-p (format <span class=
@@ -2372,11 +2373,11 @@
               (message (concat <span class=
 "org-string">"Customize `</span><span class="org-constant"><span class=
 "org-string">leuven-elpa-ignored-packages</span></span><span class=
-"org-string">' to ignore "</span>
+"org-string">' "</span>
                                <span class=
-"org-string">"the `</span><span class="org-constant"><span class=
+"org-string">"to ignore the `</span><span class="org-constant"><span class=
 "org-string">%s</span></span><span class=
-"org-string">' package at next startup..."</span>) pkg)
+"org-string">' package..."</span>) pkg)
               (sit-for 1.5)))))))
 </pre>
           </div>
@@ -3991,8 +3992,8 @@
         <h3 id="unnumbered-48">Horizontal Scrolling</h3>
 
         <div class="outline-text-3" id="text-unnumbered-48">
-          <p>How to automatically add/remove scrollbars as needed by text
-          width?</p>
+          <p>How to automatically add/remove horizontal scrollbars as needed by
+          text width?</p>
         </div>
       </div>
 
@@ -5031,13 +5032,6 @@
 
   (leuven--section <span class=
 "org-string">"14.21 (emacs)Line Truncation"</span>)
-
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; Switch wrap mode from "wrap long lines to next screen line" (continued</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; line) to "non-wrap", or vice-versa.</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(global-set-key (kbd "C-c t") 'toggle-truncate-lines)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Respect the value of `</span><span class=
@@ -8687,7 +8681,7 @@ M-: (executable-find "diff") RET
 "org-string">"21.1 (emacs)Mouse Commands"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">scroll one line at a time</span>
+"org-comment">Scroll one line at a time.</span>
   (setq mouse-wheel-scroll-amount
         '(1
           ((shift) . 1)))
@@ -8733,14 +8727,14 @@ M-: (executable-find "diff") RET
   (<span class="org-keyword">when</span> (display-graphic-p)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">put Emacs exactly where you want it, every time it starts up</span>
+"org-comment">Put Emacs exactly where you want it, every time it starts up.</span>
     (setq initial-frame-alist
           '((top . 0)
             (left . 0)))
 
     (GNUEmacs
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">auto-detect the screen dimensions and compute the height of Emacs</span>
+"org-comment">Auto-detect the screen dimensions and compute the height of Emacs.</span>
       (add-to-list 'default-frame-alist
                    (cons 'height
                          (/ (-
@@ -8768,7 +8762,7 @@ M-: (executable-find "diff") RET
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">title bar display of visible frames</span>
+"org-comment">Title bar display of visible frames.</span>
   (setq frame-title-format
         (format <span class="org-string">"%s Emacs %s%s of %s - PID: %d"</span>
                 (capitalize (symbol-name system-type))
@@ -8865,7 +8859,7 @@ M-: (executable-find "diff") RET
 "org-string">"C-c z"</span>) 'leuven-w32-maximize-frame))))
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">maximize Emacs frame by default</span>
+"org-comment">Maximize Emacs frame by default.</span>
   (modify-all-frames-parameters '((fullscreen . maximized)))
 </pre>
           </div>
@@ -8901,23 +8895,21 @@ M-: (executable-find "diff") RET
 "org-comment">Helm is better than speedbar!</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">jump to speedbar frame</span>
+"org-comment">Jump to speedbar frame.</span>
     (global-set-key (kbd <span class=
 "org-string">"&lt;f4&gt;"</span>) 'speedbar-get-focus))
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">everything browser (into individual source files), or Dired on</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">steroids</span>
+"org-comment">Everything browser (into individual source files), or Dired on steroids.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"speedbar"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">number of spaces used for indentation</span>
+"org-comment">Number of spaces used for indentation.</span>
     (setq speedbar-indentation-width 2)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">add new extensions for speedbar tagging (allow to expand/collapse</span>
+"org-comment">Add new extensions for speedbar tagging (allow to expand/collapse</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">sections, etc.) -- do this BEFORE firing up speedbar?</span>
     (speedbar-add-supported-extension
@@ -8931,14 +8923,14 @@ M-: (executable-find "diff") RET
 "org-string">"README"</span>))
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">bind the arrow keys in the speedbar tree</span>
+"org-comment">Bind the arrow keys in the speedbar tree.</span>
     (define-key speedbar-mode-map (kbd <span class=
 "org-string">"&lt;right&gt;"</span>) 'speedbar-expand-line)
     (define-key speedbar-mode-map (kbd <span class=
 "org-string">"&lt;left&gt;"</span>) 'speedbar-contract-line)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">parameters to use when creating the speedbar frame in Emacs</span>
+"org-comment">Parameters to use when creating the speedbar frame in Emacs.</span>
     (setq speedbar-frame-parameters '((width . 30)
                                       (height . 45)
                                       (foreground-color . <span class=
@@ -8947,7 +8939,7 @@ M-: (executable-find "diff") RET
 "org-string">"white"</span>)))
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">speedbar in the current frame (vs in a new frame)</span>
+"org-comment">Speedbar in the current frame (vs in a new frame).</span>
     (<span class=
 "org-keyword">when</span> (and (not (locate-library <span class=
 "org-string">"helm-config"</span>))
@@ -8981,11 +8973,11 @@ M-: (executable-find "diff") RET
 "org-constant">powerline</span>))
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">turn scroll bar off</span>
+"org-comment">Turn scroll bar off.</span>
       (scroll-bar-mode -1)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">position of the vertical scroll bar</span>
+"org-comment">Position of the vertical scroll bar.</span>
     (setq-default vertical-scroll-bar 'right))
 </pre>
           </div>
@@ -9004,7 +8996,7 @@ M-: (executable-find "diff") RET
   (leuven--section <span class="org-string">"21.15 (emacs)Tool Bars"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">turn tool bar off</span>
+"org-comment">Turn tool bar off.</span>
   (<span class="org-keyword">when</span> (display-graphic-p)
     (GNUEmacs
       (tool-bar-mode -1))
@@ -9028,11 +9020,11 @@ M-: (executable-find "diff") RET
 "org-string">"21.16 (emacs)Using Dialog Boxes"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't use dialog boxes to ask questions</span>
+"org-comment">Don't use dialog boxes to ask questions.</span>
   (setq use-dialog-box nil)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't use a file dialog to ask for files</span>
+"org-comment">Don't use a file dialog to ask for files.</span>
   (setq use-file-dialog nil)
 </pre>
           </div>
@@ -9051,7 +9043,7 @@ M-: (executable-find "diff") RET
   (leuven--section <span class="org-string">"21.17 (emacs)Tooltips"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">disable Tooltip mode (use the echo area for help and GUD tooltips)</span>
+"org-comment">Disable Tooltip mode (use the echo area for help and GUD tooltips).</span>
   (<span class="org-keyword">unless</span> leuven--console-p (tooltip-mode -1))
 </pre>
           </div>
@@ -9139,29 +9131,30 @@ M-: (executable-find "diff") RET
 "org-string">"22.3 (emacs)Language Environments"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">specify your character-set locale</span>
+"org-comment">Specify your character-set locale.</span>
   (setenv <span class="org-string">"LANG"</span> <span class=
 "org-string">"en_US.utf8"</span>)          <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">for svn not to report warnings</span>
+"org-comment">For svn not to report warnings.</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">system locale to use for formatting time values</span>
+"org-comment">System locale to use for formatting time values.</span>
   (setq system-time-locale <span class=
 "org-string">"C"</span>)         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">make sure that the weekdays in the</span>
+"org-comment">Make sure that the weekdays in the</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">time stamps of your Org mode files</span>
+"org-comment">time stamps of your Org mode files and</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">and in the agenda appear in English</span>
+"org-comment">in the agenda appear in English.</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(setq system-time-locale (getenv "LANG"))</span>
-  <span class=
-"org-comment-delimiter">;;                                       </span><span class="org-comment">; for weekdays in your locale settings</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">For weekdays in your locale settings.</span>
 </pre>
           </div>
 
@@ -9203,7 +9196,7 @@ M-: (executable-find "diff") RET
   (leuven--section <span class="org-string">"22.4 (emacs)Input Methods"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">get 8-bit characters in terminal mode (Cygwin Emacs)</span>
+"org-comment">Get 8-bit characters in terminal mode (Cygwin Emacs).</span>
   (set-input-mode (car (current-input-mode))
                   (nth 1 (current-input-mode))
                   0)
@@ -9224,7 +9217,7 @@ M-: (executable-find "diff") RET
            (cmp (<span class=
 "org-keyword">lambda</span> (x y) (&lt; (cdr x) (cdr y))))
            <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">alist like ("name" . code-point)</span>
+"org-comment">alist like ("name" . code-point).</span>
            (char-alist (sort (cl-remove-if-not (<span class=
 "org-keyword">lambda</span> (x) (string-match regexp (car x)))
                                                (ucs-names))
@@ -9261,15 +9254,16 @@ M-: (executable-find "diff") RET
 "org-string">"22.7 (emacs)Recognize Coding Systems"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">default coding system (for new files),</span>
+"org-comment">Default coding system (for new files), also moved to the front of the</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">also moved to the front of the priority list for automatic detection</span>
+"org-comment">priority list for automatic detection.</span>
   (GNUEmacs
    (prefer-coding-system 'utf-8-unix))  <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">Unix flavor for code blocks executed</span>
                                         <span class=
-"org-comment-delimiter">; </span><span class="org-comment">via Org-babel</span>
+"org-comment-delimiter">; </span><span class=
+"org-comment">via Org-babel.</span>
 </pre>
           </div>
         </div>
@@ -9289,9 +9283,9 @@ M-: (executable-find "diff") RET
 
   (GNUEmacs
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">to copy and paste to and from Emacs through the clipboard (with</span>
+"org-comment">To copy and paste to and from Emacs through the clipboard (with coding</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">coding system conversion)</span>
+"org-comment">system conversion).</span>
     (<span class="org-keyword">cond</span> (leuven--win32-p
            (set-selection-coding-system 'compound-text-with-extensions))
           (t
@@ -9314,9 +9308,9 @@ M-: (executable-find "diff") RET
 "org-string">"22.20 (emacs)Bidirectional Editing"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">faster scrolling (if you never expect to have to display bidirectional</span>
+"org-comment">Faster scrolling (if you never expect to have to display bidirectional</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">scripts, such as Arabic and Hebrew)</span>
+"org-comment">scripts, such as Arabic and Hebrew).</span>
   (setq-default bidi-paragraph-direction 'left-to-right)
 </pre>
           </div>
@@ -13263,11 +13257,9 @@ M-: (executable-find "diff") RET
                     (height . 10)))
       (select-frame-by-name <span class="org-string">"capture"</span>)
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; setup buffer to wrap</span>
+"org-comment">;; Setup buffer to wrap.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq truncate-lines nil</span>
-      <span class="org-comment-delimiter">;;       </span><span class=
-"org-comment">word-wrap t)</span>
+"org-comment">(setq truncate-lines nil)</span>
       (org-capture))
 
     <span class="org-comment-delimiter">;; </span><span class=
@@ -18802,9 +18794,14 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
   (electric-pair-mode 1)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Pairs that should be used regardless of major mode.</span>
-  (push '(?\* . ?\*) electric-pair-pairs)
+"org-comment">;; Pairs that should be used regardless of major mode.</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(push '(?\* . ?\*) electric-pair-pairs)</span>
+</pre>
+            </div>
 
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
   (<span class="org-keyword">defvar</span> <span class=
 "org-variable-name">org-electric-pairs</span> '((?/ . ?/) (?= . ?=))
     <span class="org-doc">"Electric pairs for Org mode."</span>)

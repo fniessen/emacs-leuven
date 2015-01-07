@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150102.1021
+;; Version: 20150107.1207
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150102.1021"
+(defconst leuven--emacs-version "20150107.1207"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -428,7 +428,8 @@ Last time is saved in global variable `leuven--before-section-time'."
         :type '(repeat (string)))
 
       (defun leuven--missing-elpa-packages ()
-        "List packages to install which are neither built-in nor already installed nor ignored."
+        "List packages to install for a full blown Leuven installation.
+These packages are neither built-in nor already installed nor ignored."
         (let (missing-elpa-packages)
           (dolist (pkg leuven-elpa-packages)
             (unless (or (package-installed-p pkg)
@@ -441,19 +442,19 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; which are missing and which shouldn't be ignored.
       (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
         (when missing-elpa-packages
-          ;; Download once the ELPA archive description.
-          (package-refresh-contents)    ; Ensure that the list of packages is
-                                        ; up-to-date.  Otherwise, new packages
-                                        ; (not present in the cache of the ELPA
-                                        ; contents) won't install.
+          ;; ;; Download once the ELPA archive description.
+          ;; (package-refresh-contents)    ; Ensure that the list of packages is
+          ;;                               ; up-to-date.  Otherwise, new packages
+          ;;                               ; (not present in the cache of the ELPA
+          ;;                               ; contents) won't install.
           (dolist (pkg missing-elpa-packages)
             (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
                 (ignore-errors
                   (package-install pkg))
                                         ; Must be run after initializing
                                         ; `package-initialize'.
-              (message (concat "Customize `leuven-elpa-ignored-packages' to ignore "
-                               "the `%s' package at next startup...") pkg)
+              (message (concat "Customize `leuven-elpa-ignored-packages' "
+                               "to ignore the `%s' package...") pkg)
               (sit-for 1.5)))))))
 
 )                                       ; chapter 47 ends here
@@ -1389,10 +1390,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 ;;** 14.21 (info "(emacs)Line Truncation")
 
   (leuven--section "14.21 (emacs)Line Truncation")
-
-  ;; ;; Switch wrap mode from "wrap long lines to next screen line" (continued
-  ;; ;; line) to "non-wrap", or vice-versa.
-  ;; (global-set-key (kbd "C-c t") 'toggle-truncate-lines)
 
   ;; Respect the value of `truncate-lines' in all windows less than the full
   ;; width of the frame.
@@ -2663,7 +2660,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "21.1 (emacs)Mouse Commands")
 
-  ;; scroll one line at a time
+  ;; Scroll one line at a time.
   (setq mouse-wheel-scroll-amount
         '(1
           ((shift) . 1)))
@@ -2674,13 +2671,13 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (when (display-graphic-p)
 
-    ;; put Emacs exactly where you want it, every time it starts up
+    ;; Put Emacs exactly where you want it, every time it starts up.
     (setq initial-frame-alist
           '((top . 0)
             (left . 0)))
 
     (GNUEmacs
-      ;; auto-detect the screen dimensions and compute the height of Emacs
+      ;; Auto-detect the screen dimensions and compute the height of Emacs.
       (add-to-list 'default-frame-alist
                    (cons 'height
                          (/ (-
@@ -2697,7 +2694,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       (set-frame-width (buffer-dedicated-frame) 80)
       (set-frame-height (buffer-dedicated-frame) 42)))
 
-  ;; title bar display of visible frames
+  ;; Title bar display of visible frames.
   (setq frame-title-format
         (format "%s Emacs %s%s of %s - PID: %d"
                 (capitalize (symbol-name system-type))
@@ -2749,7 +2746,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         (w32-send-sys-command 61728)
         (global-set-key (kbd "C-c z") 'leuven-w32-maximize-frame))))
 
-  ;; maximize Emacs frame by default
+  ;; Maximize Emacs frame by default.
   (modify-all-frames-parameters '((fullscreen . maximized)))
 
 ;;** 21.9 (info "(emacs)Speedbar")
@@ -2758,33 +2755,32 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (unless (featurep 'helm-config)       ; Helm is better than speedbar!
 
-    ;; jump to speedbar frame
+    ;; Jump to speedbar frame.
     (global-set-key (kbd "<f4>") 'speedbar-get-focus))
 
-  ;; everything browser (into individual source files), or Dired on
-  ;; steroids
+  ;; Everything browser (into individual source files), or Dired on steroids.
   (with-eval-after-load "speedbar"
 
-    ;; number of spaces used for indentation
+    ;; Number of spaces used for indentation.
     (setq speedbar-indentation-width 2)
 
-    ;; add new extensions for speedbar tagging (allow to expand/collapse
+    ;; Add new extensions for speedbar tagging (allow to expand/collapse
     ;; sections, etc.) -- do this BEFORE firing up speedbar?
     (speedbar-add-supported-extension
      '(".bib" ".css" ".jpg" ".js" ".nw" ".org" ".php" ".png" ".R" ".tex" ".txt"
        ".w" "README"))
 
-    ;; bind the arrow keys in the speedbar tree
+    ;; Bind the arrow keys in the speedbar tree.
     (define-key speedbar-mode-map (kbd "<right>") 'speedbar-expand-line)
     (define-key speedbar-mode-map (kbd "<left>") 'speedbar-contract-line)
 
-    ;; parameters to use when creating the speedbar frame in Emacs
+    ;; Parameters to use when creating the speedbar frame in Emacs.
     (setq speedbar-frame-parameters '((width . 30)
                                       (height . 45)
                                       (foreground-color . "blue")
                                       (background-color . "white")))
 
-    ;; speedbar in the current frame (vs in a new frame)
+    ;; Speedbar in the current frame (vs in a new frame).
     (when (and (not (locate-library "helm-config"))
                                         ; helm is better than speedbar!
                (locate-library "sr-speedbar"))
@@ -2799,17 +2795,17 @@ Last time is saved in global variable `leuven--before-section-time'."
   (if (and (display-graphic-p)
            (featurep 'powerline))
 
-      ;; turn scroll bar off
+      ;; Turn scroll bar off.
       (scroll-bar-mode -1)
 
-    ;; position of the vertical scroll bar
+    ;; Position of the vertical scroll bar.
     (setq-default vertical-scroll-bar 'right))
 
 ;;** 21.15 (info "(emacs)Tool Bars")
 
   (leuven--section "21.15 (emacs)Tool Bars")
 
-  ;; turn tool bar off
+  ;; Turn tool bar off.
   (when (display-graphic-p)
     (GNUEmacs
       (tool-bar-mode -1))
@@ -2820,17 +2816,17 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "21.16 (emacs)Using Dialog Boxes")
 
-  ;; don't use dialog boxes to ask questions
+  ;; Don't use dialog boxes to ask questions.
   (setq use-dialog-box nil)
 
-  ;; don't use a file dialog to ask for files
+  ;; Don't use a file dialog to ask for files.
   (setq use-file-dialog nil)
 
 ;;** 21.17 (info "(emacs)Tooltips")
 
   (leuven--section "21.17 (emacs)Tooltips")
 
-  ;; disable Tooltip mode (use the echo area for help and GUD tooltips)
+  ;; Disable Tooltip mode (use the echo area for help and GUD tooltips).
   (unless leuven--console-p (tooltip-mode -1))
 
 )                                       ; chapter 21 ends here
@@ -2843,22 +2839,22 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "22.3 (emacs)Language Environments")
 
-  ;; specify your character-set locale
-  (setenv "LANG" "en_US.utf8")          ; for svn not to report warnings
+  ;; Specify your character-set locale.
+  (setenv "LANG" "en_US.utf8")          ; For svn not to report warnings.
 
-  ;; system locale to use for formatting time values
-  (setq system-time-locale "C")         ; make sure that the weekdays in the
-                                        ; time stamps of your Org mode files
-                                        ; and in the agenda appear in English
+  ;; System locale to use for formatting time values.
+  (setq system-time-locale "C")         ; Make sure that the weekdays in the
+                                        ; time stamps of your Org mode files and
+                                        ; in the agenda appear in English.
 
   ;; (setq system-time-locale (getenv "LANG"))
-  ;;                                       ; for weekdays in your locale settings
+                                        ; For weekdays in your locale settings.
 
 ;;** 22.4 (info "(emacs)Input Methods")
 
   (leuven--section "22.4 (emacs)Input Methods")
 
-  ;; get 8-bit characters in terminal mode (Cygwin Emacs)
+  ;; Get 8-bit characters in terminal mode (Cygwin Emacs).
   (set-input-mode (car (current-input-mode))
                   (nth 1 (current-input-mode))
                   0)
@@ -2869,7 +2865,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (let* ((regexp (or regexp ".*"))
            (case-fold-search t)
            (cmp (lambda (x y) (< (cdr x) (cdr y))))
-           ;; alist like ("name" . code-point)
+           ;; alist like ("name" . code-point).
            (char-alist (sort (cl-remove-if-not (lambda (x) (string-match regexp (car x)))
                                                (ucs-names))
                              cmp)))
@@ -2884,19 +2880,19 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "22.7 (emacs)Recognize Coding Systems")
 
-  ;; default coding system (for new files),
-  ;; also moved to the front of the priority list for automatic detection
+  ;; Default coding system (for new files), also moved to the front of the
+  ;; priority list for automatic detection.
   (GNUEmacs
    (prefer-coding-system 'utf-8-unix))  ; Unix flavor for code blocks executed
-                                        ; via Org-babel
+                                        ; via Org-babel.
 
 ;;** 22.8 (info "(emacs)Specify Coding") System of a File
 
   (leuven--section "22.8 (emacs)Specify Coding System of a File")
 
   (GNUEmacs
-    ;; to copy and paste to and from Emacs through the clipboard (with
-    ;; coding system conversion)
+    ;; To copy and paste to and from Emacs through the clipboard (with coding
+    ;; system conversion).
     (cond (leuven--win32-p
            (set-selection-coding-system 'compound-text-with-extensions))
           (t
@@ -4457,9 +4453,8 @@ From %c"
                     (width . 80)
                     (height . 10)))
       (select-frame-by-name "capture")
-      ;; ;; setup buffer to wrap
-      ;; (setq truncate-lines nil
-      ;;       word-wrap t)
+      ;; ;; Setup buffer to wrap.
+      ;; (setq truncate-lines nil)
       (org-capture))
 
     ;; Make the frame contain a single window (by default, `org-capture' splits
@@ -6618,17 +6613,8 @@ mouse-3: go to end") "]"))))
 
   (electric-pair-mode 1)
 
-  ;; Pairs that should be used regardless of major mode.
-  (push '(?\* . ?\*) electric-pair-pairs)
-
-  (defvar org-electric-pairs '((?/ . ?/) (?= . ?=))
-    "Electric pairs for Org mode.")
-
-  (defun org-add-electric-pairs ()
-    (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
-    (setq-local electric-pair-text-pairs electric-pair-pairs)) ; In comments.
-
-  (add-hook 'org-mode-hook 'org-add-electric-pairs)
+  ;; ;; Pairs that should be used regardless of major mode.
+  ;; (push '(?\* . ?\*) electric-pair-pairs)
 
 ;;** 26.5 (info "(emacs)Comments")
 
