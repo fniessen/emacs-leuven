@@ -1,7 +1,6 @@
 #+TITLE:     Minimal .emacs
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
-#+Time-stamp: <2014-10-16 Thu 11:17>
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
