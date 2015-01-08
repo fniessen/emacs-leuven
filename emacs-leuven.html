@@ -1372,7 +1372,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150107.2241</span>
+"org-comment">Version: 20150108.2039</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1499,7 +1499,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150107.2241"</span>
+"org-string">"20150108.2039"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -9838,7 +9838,7 @@ M-: (executable-find "diff") RET
        ((and (eq (char-before) ?\")
              (eq major-mode 'latex-mode))
         (backward-delete-char 1)
-        (insert <span class="org-string">"\\endquote{}"</span>)
+        (insert <span class="org-string">"\\enquote{}"</span>)
         (backward-char 1))
        (t
         (insert <span class="org-string">"\""</span>)))))

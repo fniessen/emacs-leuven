@@ -5021,7 +5021,7 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
        ((and (eq (char-before) ?\")
              (eq major-mode 'latex-mode))
         (backward-delete-char 1)
-        (insert "\\endquote{}")
+        (insert "\\enquote{}")
         (backward-char 1))
        (t
         (insert "\"")))))
