@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150114.1435
+;; Version: 20150114.1444
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150114.1435"
+(defconst leuven--emacs-version "20150114.1444"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5190,6 +5190,8 @@ this with to-do items than with projects or headings."
     ;; (setq org-export-dispatch-use-expert-ui t)
 
     ;; Export snippet translations.
+    (add-to-list 'org-export-snippet-translation-alist
+                 '("h" . "html"))
     (add-to-list 'org-export-snippet-translation-alist
                  '("l" . "latex"))
     (add-to-list 'org-export-snippet-translation-alist

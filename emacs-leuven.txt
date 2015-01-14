@@ -8034,6 +8034,8 @@ launched from Dired?
 
     ;; Export snippet translations.
     (add-to-list 'org-export-snippet-translation-alist
+                 '("h" . "html"))
+    (add-to-list 'org-export-snippet-translation-alist
                  '("l" . "latex"))
     (add-to-list 'org-export-snippet-translation-alist
                  '("b" . "beamer"))
