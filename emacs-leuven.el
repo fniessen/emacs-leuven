@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150114.1444
+;; Version: 20150114.1924
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150114.1444"
+(defconst leuven--emacs-version "20150114.1924"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5125,29 +5125,35 @@ this with to-do items than with projects or headings."
              (htmlfile (concat base-name ".html"))
              (texfile (concat base-name ".tex"))
              (pdffile (concat base-name ".pdf")))
-        (save-buffer)                     ; See other commands in
-                                          ; `before-save-hook':
-                                          ; `org-update-all-dblocks'
-                                          ; `org-table-iterate-buffer-tables'.
+        (save-buffer)                   ; See other commands in
+                                        ; `before-save-hook':
+                                        ; `org-update-all-dblocks'
+                                        ; `org-table-iterate-buffer-tables'.
         (when (derived-mode-p 'org-mode)
+          (org-mode-restart)            ; Update information from one of the
+                                        ; special #+KEYWORD lines
+                                        ; (like `C-c C-c')
           ;; (org-babel-execute-buffer)   ; XXX Why should we execute all code blocks?
+;; It'd make sense to eval all code blocks which have :cache yes or :exports
+;; results or both... And, before that, to delete all code block results!?
           (let ((before-save-hook nil))
             (save-buffer))
           (org-babel-tangle)
-          (if (and (file-exists-p htmlfile)
-                   (file-newer-than-file-p orgfile htmlfile))
-              (org-html-export-to-html)
-            (message "HTML is up to date with Org file"))
-          (if (or (and (file-exists-p pdffile)
-                       (file-newer-than-file-p orgfile pdffile))
-                  (and (file-exists-p texfile)
-                       (not (file-exists-p pdffile)))
+          (when (file-exists-p htmlfile)
+            (if (file-newer-than-file-p orgfile htmlfile)
+                (org-html-export-to-html)
+              (message "HTML is up to date with Org file")))
+          (when (or (file-exists-p texfile) (file-exists-p pdffile))
+            (if (or (and (file-exists-p pdffile)
+                         (file-newer-than-file-p orgfile pdffile))
+                    (and (file-exists-p texfile)
+                         (not (file-exists-p pdffile)))
                                         ; Previous PDF export failed.
-                  )
-              (if (string-match "^#\\+BEAMER_THEME: " (buffer-string))
-                  (org-beamer-export-to-pdf)
-                (org-latex-export-to-pdf))
-            (message "PDF is up to date with Org file"))
+                    )
+                (if (string-match "^#\\+BEAMER_THEME: " (buffer-string))
+                    (org-beamer-export-to-pdf)
+                  (org-latex-export-to-pdf))
+              (message "PDF is up to date with Org file")))
           (beep))))
 
     (define-key org-mode-map (kbd "<f9>") 'org-save-buffer-and-do-related))
