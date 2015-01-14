@@ -1372,7 +1372,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150108.2039</span>
+"org-comment">Version: 20150114.1421</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1499,7 +1499,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150108.2039"</span>
+"org-string">"20150114.1421"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -9406,6 +9406,8 @@ M-: (executable-find "diff") RET
   (add-to-list 'auto-mode-alist '(<span class=
 "org-string">"\\.dat\\'"</span> . ledger-mode))
   (add-to-list 'auto-mode-alist '(<span class=
+"org-string">"\\.journal\\'"</span> . ledger-mode))
+  (add-to-list 'auto-mode-alist '(<span class=
 "org-string">"\\.ledger\\'"</span> . ledger-mode))
 
   <span class="org-comment-delimiter">;; </span><span class=
@@ -9725,13 +9727,20 @@ M-: (executable-find "diff") RET
     (setq fci-dash-pattern 0.5)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Enable fci-mode as a global minor mode.</span>
-    (<span class="org-keyword">define-globalized-minor-mode</span> <span class=
-"org-function-name">global-fci-mode</span> fci-mode
-      (<span class="org-keyword">lambda</span> ()
-        (fci-mode 1)))
-    (global-fci-mode 1)
+"org-comment">Enable fci-mode in programming, message and Org modes.</span>
+    (add-hook 'prog-mode-hook 'fci-mode)
+    (add-hook 'message-mode-hook 'fci-mode)
+    (add-hook 'org-mode-hook 'fci-mode)
+</pre>
+          </div>
 
+          <div class="note">
+            <p>Enabling <code>fci-mode</code> as a global minor mode slows down
+            the tangling of this file by a factor 2…</p>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Avoid fci-mode and auto-complete popups.</span>
     (<span class="org-keyword">defvar</span> <span class=
@@ -9826,6 +9835,7 @@ M-: (executable-find "diff") RET
                     (<span class=
 "org-keyword">when</span> (boundp 'ispell-dictionary)
                       ispell-dictionary))))
+(message <span class="org-string">"&gt;&gt;&gt; %s"</span> major-mode)
       (<span class="org-keyword">cond</span>
        ((and (string= dict <span class="org-string">"francais"</span>)
              (eq (char-before) ?\")
@@ -14911,6 +14921,8 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
              (base-name (file-name-base orgfile))
              (htmlfile (concat base-name <span class=
 "org-string">".html"</span>))
+             (texfile (concat base-name <span class=
+"org-string">".tex"</span>))
              (pdffile (concat base-name <span class=
 "org-string">".pdf"</span>)))
         (save-buffer)                     <span class=
@@ -14938,21 +14950,21 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
           (<span class="org-keyword">let</span> ((before-save-hook nil))
             (save-buffer))
           (org-babel-tangle)
-          (<span class="org-keyword">when</span> (file-exists-p htmlfile)
-            (<span class=
-"org-keyword">if</span> (file-newer-than-file-p orgfile htmlfile)
-                (org-html-export-to-html)
-              (message <span class=
-"org-string">"HTML is up to date with Org file"</span>)))
-          (<span class="org-keyword">when</span> (file-exists-p pdffile)
-            (<span class=
-"org-keyword">if</span> (file-newer-than-file-p orgfile pdffile)
-                (<span class="org-keyword">if</span> (string-match <span class=
+          (<span class="org-keyword">if</span> (and (file-exists-p htmlfile)
+                   (file-newer-than-file-p orgfile htmlfile))
+              (org-html-export-to-html)
+            (message <span class=
+"org-string">"HTML is up to date with Org file"</span>))
+          (<span class="org-keyword">if</span> (or (and (file-exists-p texfile)
+                       (file-newer-than-file-p orgfile texfile))
+                  (and (file-exists-p pdffile)
+                       (file-newer-than-file-p orgfile pdffile)))
+              (<span class="org-keyword">if</span> (string-match <span class=
 "org-string">"^#\\+BEAMER_THEME: "</span> (buffer-string))
-                    (org-beamer-export-to-pdf)
-                  (org-latex-export-to-pdf))
-              (message <span class=
-"org-string">"PDF is up to date with Org file"</span>)))
+                  (org-beamer-export-to-pdf)
+                (org-latex-export-to-pdf))
+            (message <span class=
+"org-string">"PDF is up to date with Org file"</span>))
           (beep))))
 
     (define-key org-mode-map (kbd <span class=
@@ -16089,9 +16101,6 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Prevent auto-filling in src blocks.</span>
   (setq org-src-prevent-auto-filling t)
-
-  (global-set-key (kbd <span class=
-"org-string">"C-c C-v C-d"</span>) 'org-babel-demarcate-block)
 </pre>
             </div>
 
@@ -16700,9 +16709,20 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Run current code block.</span>
     (define-key org-mode-map (kbd <span class=
-"org-string">"H-c"</span>) 'org-babel-execute-maybe)
-    (define-key org-mode-map (kbd <span class=
 "org-string">"H-e"</span>) 'org-babel-execute-maybe)
+
+    (<span class="org-keyword">defun</span> <span class=
+"org-function-name">org-babel-force-execute-src-block</span> ()
+      <span class=
+"org-doc">"Force execution of the current source code block."</span>
+      (interactive)
+      (org-babel-execute-src-block nil nil '((<span class=
+"org-builtin">:eval</span> . <span class="org-string">"yes"</span>))))
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Run current code block (force execution).</span>
+    (define-key org-mode-map (kbd <span class=
+"org-string">"H-f"</span>) 'org-babel-force-execute-src-block)
 </pre>
               </div>
 

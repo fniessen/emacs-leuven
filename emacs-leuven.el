@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150108.2116
+;; Version: 20150114.1420
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150108.2116"
+(defconst leuven--emacs-version "20150114.1420"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2925,6 +2925,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; ledger
   (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
+  (add-to-list 'auto-mode-alist '("\\.journal\\'" . ledger-mode))
   (add-to-list 'auto-mode-alist '("\\.ledger\\'" . ledger-mode))
 
   ;; major mode for editing comma-separated value files
@@ -3035,11 +3036,10 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Ratio of dash length to line height.
     (setq fci-dash-pattern 0.5)
 
-    ;; Enable fci-mode as a global minor mode.
-    (define-globalized-minor-mode global-fci-mode fci-mode
-      (lambda ()
-        (fci-mode 1)))
-    (global-fci-mode 1)
+    ;; Enable fci-mode in programming, message and Org modes.
+    (add-hook 'prog-mode-hook 'fci-mode)
+    (add-hook 'message-mode-hook 'fci-mode)
+    (add-hook 'org-mode-hook 'fci-mode)
 
     ;; Avoid fci-mode and auto-complete popups.
     (defvar sanityinc/fci-mode-suppressed nil)
@@ -5123,6 +5123,7 @@ this with to-do items than with projects or headings."
       (let* ((orgfile (buffer-file-name))
              (base-name (file-name-base orgfile))
              (htmlfile (concat base-name ".html"))
+             (texfile (concat base-name ".tex"))
              (pdffile (concat base-name ".pdf")))
         (save-buffer)                     ; See other commands in
                                           ; `before-save-hook':
@@ -5133,16 +5134,18 @@ this with to-do items than with projects or headings."
           (let ((before-save-hook nil))
             (save-buffer))
           (org-babel-tangle)
-          (when (file-exists-p htmlfile)
-            (if (file-newer-than-file-p orgfile htmlfile)
-                (org-html-export-to-html)
-              (message "HTML is up to date with Org file")))
-          (when (file-exists-p pdffile)
-            (if (file-newer-than-file-p orgfile pdffile)
-                (if (string-match "^#\\+BEAMER_THEME: " (buffer-string))
-                    (org-beamer-export-to-pdf)
-                  (org-latex-export-to-pdf))
-              (message "PDF is up to date with Org file")))
+          (if (and (file-exists-p htmlfile)
+                   (file-newer-than-file-p orgfile htmlfile))
+              (org-html-export-to-html)
+            (message "HTML is up to date with Org file"))
+          (if (or (and (file-exists-p texfile)
+                       (file-newer-than-file-p orgfile texfile))
+                  (and (file-exists-p pdffile)
+                       (file-newer-than-file-p orgfile pdffile)))
+              (if (string-match "^#\\+BEAMER_THEME: " (buffer-string))
+                  (org-beamer-export-to-pdf)
+                (org-latex-export-to-pdf))
+            (message "PDF is up to date with Org file"))
           (beep))))
 
     (define-key org-mode-map (kbd "<f9>") 'org-save-buffer-and-do-related))
@@ -5611,8 +5614,6 @@ this with to-do items than with projects or headings."
   ;; Prevent auto-filling in src blocks.
   (setq org-src-prevent-auto-filling t)
 
-  (global-set-key (kbd "C-c C-v C-d") 'org-babel-demarcate-block)
-
   (defvar only-code-overlays nil
     "Overlays hiding non-code blocks.")
   (make-variable-buffer-local 'only-code-overlays)
@@ -5848,8 +5849,15 @@ this with to-do items than with projects or headings."
     ;; Run from current line to end of code block (mapped to H-e?).
 
     ;; Run current code block.
-    (define-key org-mode-map (kbd "H-c") 'org-babel-execute-maybe)
     (define-key org-mode-map (kbd "H-e") 'org-babel-execute-maybe)
+
+    (defun org-babel-force-execute-src-block ()
+      "Force execution of the current source code block."
+      (interactive)
+      (org-babel-execute-src-block nil nil '((:eval . "yes"))))
+
+    ;; Run current code block (force execution).
+    (define-key org-mode-map (kbd "H-f") 'org-babel-force-execute-src-block)
 
     (define-key org-mode-map (kbd "H-t") 'org-babel-tangle)
 
