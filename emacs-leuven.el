@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150114.1420
+;; Version: 20150114.1435
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150114.1420"
+(defconst leuven--emacs-version "20150114.1435"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5138,10 +5138,12 @@ this with to-do items than with projects or headings."
                    (file-newer-than-file-p orgfile htmlfile))
               (org-html-export-to-html)
             (message "HTML is up to date with Org file"))
-          (if (or (and (file-exists-p texfile)
-                       (file-newer-than-file-p orgfile texfile))
-                  (and (file-exists-p pdffile)
-                       (file-newer-than-file-p orgfile pdffile)))
+          (if (or (and (file-exists-p pdffile)
+                       (file-newer-than-file-p orgfile pdffile))
+                  (and (file-exists-p texfile)
+                       (not (file-exists-p pdffile)))
+                                        ; Previous PDF export failed.
+                  )
               (if (string-match "^#\\+BEAMER_THEME: " (buffer-string))
                   (org-beamer-export-to-pdf)
                 (org-latex-export-to-pdf))

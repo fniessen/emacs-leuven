@@ -1372,7 +1372,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150114.1421</span>
+"org-comment">Version: 20150114.1436</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1499,7 +1499,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150114.1421"</span>
+"org-string">"20150114.1436"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -14955,10 +14955,14 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
               (org-html-export-to-html)
             (message <span class=
 "org-string">"HTML is up to date with Org file"</span>))
-          (<span class="org-keyword">if</span> (or (and (file-exists-p texfile)
-                       (file-newer-than-file-p orgfile texfile))
-                  (and (file-exists-p pdffile)
-                       (file-newer-than-file-p orgfile pdffile)))
+          (<span class="org-keyword">if</span> (or (and (file-exists-p pdffile)
+                       (file-newer-than-file-p orgfile pdffile))
+                  (and (file-exists-p texfile)
+                       (not (file-exists-p pdffile)))
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Previous PDF export failed.</span>
+                  )
               (<span class="org-keyword">if</span> (string-match <span class=
 "org-string">"^#\\+BEAMER_THEME: "</span> (buffer-string))
                   (org-beamer-export-to-pdf)
