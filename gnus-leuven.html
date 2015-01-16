@@ -7,10 +7,11 @@
   <meta name="generator" content=
   "HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org" />
 
-  <title>Gnus Leuven</title>
+  <title>Gnus Leuven Config</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="generator" content="Org-mode" />
   <meta name="author" content="Fabrice Niessen" />
+  <meta name="keywords" content="emacs, gnus, dotfile, config" />
   <link rel="stylesheet" type="text/css" href=
   "http://www.pirilampo.org/styles/bigblow/css/htmlize.css" />
   <link rel="stylesheet" type="text/css" href=
@@ -42,7 +43,7 @@
 
 <body>
   <div id="content">
-    <h1 class="title">Gnus Leuven</h1>
+    <h1 class="title">Gnus Leuven Config</h1>
 
     <div id="table-of-contents">
       <h2>Table of Contents</h2>
@@ -51,182 +52,186 @@
         <ul>
           <li><a href="#unnumbered-1">Overview</a></li>
 
+          <li><a href="#unnumbered-2">Header</a></li>
+
           <li>
-            <a href="#unnumbered-2">Starting Up Gnus</a>
+            <a href="#unnumbered-3">Starting Up Gnus</a>
 
             <ul>
-              <li><a href="#unnumbered-3">Finding the News</a></li>
+              <li><a href="#unnumbered-4">Finding the News</a></li>
 
-              <li><a href="#unnumbered-4">New Groups</a></li>
+              <li><a href="#unnumbered-5">New Groups</a></li>
 
-              <li><a href="#unnumbered-5">Startup Files</a></li>
+              <li><a href="#unnumbered-6">Startup Files</a></li>
 
-              <li><a href="#unnumbered-6">Auto Save</a></li>
+              <li><a href="#unnumbered-7">Auto Save</a></li>
 
-              <li><a href="#unnumbered-7">Active File</a></li>
+              <li><a href="#unnumbered-8">Active File</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#unnumbered-8">Group Buffer</a>
+            <a href="#unnumbered-9">Group Buffer</a>
 
             <ul>
-              <li><a href="#unnumbered-9">Group Buffer Format</a></li>
+              <li><a href="#unnumbered-10">Group Buffer Format</a></li>
 
-              <li><a href="#unnumbered-10">Selecting a Group</a></li>
+              <li><a href="#unnumbered-11">Selecting a Group</a></li>
 
-              <li><a href="#unnumbered-11">Listing Groups</a></li>
+              <li><a href="#unnumbered-12">Listing Groups</a></li>
 
-              <li><a href="#unnumbered-12">Exiting Gnus</a></li>
+              <li><a href="#unnumbered-13">Exiting Gnus</a></li>
 
-              <li><a href="#unnumbered-13">Group Topics</a></li>
+              <li><a href="#unnumbered-14">Group Topics</a></li>
 
-              <li><a href="#unnumbered-14">Misc Group Stuff</a></li>
+              <li><a href="#unnumbered-15">Misc Group Stuff</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#unnumbered-15">Summary buffer</a>
+            <a href="#unnumbered-16">Summary buffer</a>
 
             <ul>
-              <li><a href="#unnumbered-16">Summary Buffer Format</a></li>
+              <li><a href="#unnumbered-17">Summary Buffer Format</a></li>
 
-              <li><a href="#unnumbered-17">Paging the Article</a></li>
+              <li><a href="#unnumbered-18">Paging the Article</a></li>
 
-              <li><a href="#unnumbered-18">Reply, Followup and Post</a></li>
+              <li><a href="#unnumbered-19">Reply, Followup and Post</a></li>
 
-              <li><a href="#unnumbered-19">Threading</a></li>
+              <li><a href="#unnumbered-20">Threading</a></li>
 
-              <li><a href="#unnumbered-20">Sorting the Summary Buffer</a></li>
+              <li><a href="#unnumbered-21">Sorting the Summary Buffer</a></li>
 
-              <li><a href="#unnumbered-21">Article Caching</a></li>
+              <li><a href="#unnumbered-22">Article Caching</a></li>
 
-              <li><a href="#unnumbered-22">Article Treatment</a></li>
+              <li><a href="#unnumbered-23">Article Treatment</a></li>
 
-              <li><a href="#unnumbered-23">MIME Commands</a></li>
+              <li><a href="#unnumbered-24">MIME Commands</a></li>
 
-              <li><a href="#unnumbered-24">Charsets</a></li>
+              <li><a href="#unnumbered-25">Charsets</a></li>
 
               <li>
-                <a href="#unnumbered-25">Various Summary Stuff</a>
+                <a href="#unnumbered-26">Various Summary Stuff</a>
 
                 <ul>
-                  <li><a href="#unnumbered-26">Gnus Stripes</a></li>
+                  <li><a href="#unnumbered-27">Gnus Stripes</a></li>
                 </ul>
               </li>
             </ul>
           </li>
 
           <li>
-            <a href="#unnumbered-27">Article Buffer</a>
+            <a href="#unnumbered-28">Article Buffer</a>
 
             <ul>
-              <li><a href="#unnumbered-28">Hiding headers</a></li>
+              <li><a href="#unnumbered-29">Hiding headers</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#unnumbered-29">Emacs MIME</a>
+            <a href="#unnumbered-30">Emacs MIME</a>
 
             <ul>
-              <li><a href="#unnumbered-30">Decoding and Viewing</a></li>
+              <li><a href="#unnumbered-31">Decoding and Viewing</a></li>
 
-              <li><a href="#unnumbered-31">Non-MIME</a></li>
+              <li><a href="#unnumbered-32">Non-MIME</a></li>
 
-              <li><a href="#unnumbered-32">Display Customization</a></li>
+              <li><a href="#unnumbered-33">Display Customization</a></li>
 
-              <li><a href="#unnumbered-33">Composing</a></li>
+              <li><a href="#unnumbered-34">Composing</a></li>
 
-              <li><a href="#unnumbered-34">Basic Functions</a></li>
+              <li><a href="#unnumbered-35">Basic Functions</a></li>
             </ul>
           </li>
 
-          <li><a href="#unnumbered-35">Back to Article Buffer</a></li>
+          <li><a href="#unnumbered-36">Back to Article Buffer</a></li>
 
           <li>
-            <a href="#unnumbered-36">Composing Messages</a>
+            <a href="#unnumbered-37">Composing Messages</a>
 
             <ul>
-              <li><a href="#unnumbered-37">Mail</a></li>
+              <li><a href="#unnumbered-38">Mail</a></li>
 
-              <li><a href="#unnumbered-38">Posting Server</a></li>
+              <li><a href="#unnumbered-39">Posting Server</a></li>
 
-              <li><a href="#unnumbered-39">Archived Messages</a></li>
+              <li><a href="#unnumbered-40">Archived Messages</a></li>
 
               <li>
-                <a href="#unnumbered-40">Posting Styles</a>
+                <a href="#unnumbered-41">Posting Styles</a>
 
                 <ul>
-                  <li><a href="#unnumbered-41">Multiple servers</a></li>
+                  <li><a href="#unnumbered-42">Multiple servers</a></li>
 
-                  <li><a href="#unnumbered-42">Headers</a></li>
+                  <li><a href="#unnumbered-43">Headers</a></li>
                 </ul>
               </li>
             </ul>
           </li>
 
           <li>
-            <a href="#unnumbered-43">Message</a>
+            <a href="#unnumbered-44">Message</a>
 
             <ul>
-              <li><a href="#unnumbered-44">Interface</a></li>
+              <li><a href="#unnumbered-45">Interface</a></li>
 
-              <li><a href="#unnumbered-45">Commands</a></li>
+              <li><a href="#unnumbered-46">Commands</a></li>
 
-              <li><a href="#unnumbered-46">Variables</a></li>
+              <li><a href="#unnumbered-47">Variables</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#unnumbered-47">Select Methods</a>
+            <a href="#unnumbered-48">Select Methods</a>
 
             <ul>
-              <li><a href="#unnumbered-48">Getting Mail</a></li>
+              <li><a href="#unnumbered-49">Getting Mail</a></li>
 
-              <li><a href="#unnumbered-49">Browsing the Web</a></li>
+              <li><a href="#unnumbered-50">Browsing the Web</a></li>
 
-              <li><a href="#unnumbered-50">IMAP</a></li>
+              <li><a href="#unnumbered-51">IMAP</a></li>
 
-              <li><a href="#unnumbered-51">Gnus Unplugged</a></li>
+              <li><a href="#unnumbered-52">Gnus Unplugged</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#unnumbered-52">Scoring</a>
+            <a href="#unnumbered-53">Scoring</a>
 
             <ul>
-              <li><a href="#unnumbered-53">From Sacha Chua</a></li>
+              <li><a href="#unnumbered-54">From Sacha Chua</a></li>
             </ul>
           </li>
 
-          <li><a href="#unnumbered-54">Searching</a></li>
+          <li><a href="#unnumbered-55">Searching</a></li>
 
           <li>
-            <a href="#unnumbered-55">Various</a>
+            <a href="#unnumbered-56">Various</a>
 
             <ul>
-              <li><a href="#unnumbered-56">Interactive</a></li>
+              <li><a href="#unnumbered-57">Interactive</a></li>
 
-              <li><a href="#unnumbered-57">Formatting Variables</a></li>
+              <li><a href="#unnumbered-58">Formatting Variables</a></li>
 
-              <li><a href="#unnumbered-58">Window Layout</a></li>
+              <li><a href="#unnumbered-59">Window Layout</a></li>
 
-              <li><a href="#unnumbered-59">Interaction with other
+              <li><a href="#unnumbered-60">Interaction with other
               modes</a></li>
 
-              <li><a href="#unnumbered-60">Various Various</a></li>
+              <li><a href="#unnumbered-61">Various Various</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#unnumbered-61">Appendices</a>
+            <a href="#unnumbered-62">Appendices</a>
 
             <ul>
-              <li><a href="#unnumbered-62">History</a></li>
+              <li><a href="#unnumbered-63">History</a></li>
 
-              <li><a href="#unnumbered-63">Frequently Asked Questions</a></li>
+              <li><a href="#unnumbered-64">Frequently Asked Questions</a></li>
 
-              <li><a href="#unnumbered-64">File Local Variables</a></li>
+              <li><a href="#unnumbered-65">Feature</a></li>
+
+              <li><a href="#unnumbered-66">File Local Variables</a></li>
             </ul>
           </li>
         </ul>
@@ -239,6 +244,18 @@
       <div class="outline-text-2" id="text-unnumbered-1">
         <p>See <a href=
         "http://www.gnu.org/software/emacs/manual/gnus.html">http://www.gnu.org/software/emacs/manual/gnus.html</a></p>
+      </div>
+    </div>
+
+    <div id="outline-container-unnumbered-2" class="outline-2">
+      <h2 id="unnumbered-2">Header</h2>
+
+      <div class="outline-text-2" id="text-unnumbered-2">
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp" id="current-time">
+(format-time-string <span class="org-string">"%Y%m%d.%H%M"</span>)
+</pre>
+        </div>
 
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
@@ -251,7 +268,11 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Keywords: gnus, dotfile, config</span>
+"org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Version: 20150116.1350</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Keywords: emacs, gnus, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
 <span class="org-comment-delimiter">;;    </span><span class=
@@ -387,10 +408,10 @@
       </div>
     </div>
 
-    <div id="outline-container-unnumbered-2" class="outline-2">
-      <h2 id="unnumbered-2">Starting Up Gnus</h2>
+    <div id="outline-container-unnumbered-3" class="outline-2">
+      <h2 id="unnumbered-3">Starting Up Gnus</h2>
 
-      <div class="outline-text-2" id="text-unnumbered-2">
+      <div class="outline-text-2" id="text-unnumbered-3">
         <p>If you’re running a recent Emacs, look into the EPA library to
         encrypt your <code>.authinfo</code> file.</p>
 
@@ -441,10 +462,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-3" class="outline-3">
-        <h3 id="unnumbered-3">Finding the News</h3>
+      <div id="outline-container-unnumbered-4" class="outline-3">
+        <h3 id="unnumbered-4">Finding the News</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-3">
+        <div class="outline-text-3" id="text-unnumbered-4">
           <p>Download and <b>install</b> of <a href=
           "http://www.gnu.org/software/gnutls/">GnuTLS library</a> may be
           required.</p>
@@ -523,10 +544,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-4" class="outline-3">
-        <h3 id="unnumbered-4">New Groups</h3>
+      <div id="outline-container-unnumbered-5" class="outline-3">
+        <h3 id="unnumbered-5">New Groups</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-4">
+        <div class="outline-text-3" id="text-unnumbered-5">
           <p>Finding new newsgroups is done:</p>
 
           <ul class="org-ul">
@@ -578,10 +599,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-5" class="outline-3">
-        <h3 id="unnumbered-5">Startup Files</h3>
+      <div id="outline-container-unnumbered-6" class="outline-3">
+        <h3 id="unnumbered-6">Startup Files</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-5">
+        <div class="outline-text-3" id="text-unnumbered-6">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -615,10 +636,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-6" class="outline-3">
-        <h3 id="unnumbered-6">Auto Save</h3>
+      <div id="outline-container-unnumbered-7" class="outline-3">
+        <h3 id="unnumbered-7">Auto Save</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-6">
+        <div class="outline-text-3" id="text-unnumbered-7">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -636,10 +657,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-7" class="outline-3">
-        <h3 id="unnumbered-7">Active File</h3>
+      <div id="outline-container-unnumbered-8" class="outline-3">
+        <h3 id="unnumbered-8">Active File</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-7">
+        <div class="outline-text-3" id="text-unnumbered-8">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -659,10 +680,10 @@
       </div>
     </div>
 
-    <div id="outline-container-unnumbered-8" class="outline-2">
-      <h2 id="unnumbered-8">Group Buffer</h2>
+    <div id="outline-container-unnumbered-9" class="outline-2">
+      <h2 id="unnumbered-9">Group Buffer</h2>
 
-      <div class="outline-text-2" id="text-unnumbered-8">
+      <div class="outline-text-2" id="text-unnumbered-9">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -674,10 +695,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-9" class="outline-3">
-        <h3 id="unnumbered-9">Group Buffer Format</h3>
+      <div id="outline-container-unnumbered-10" class="outline-3">
+        <h3 id="unnumbered-10">Group Buffer Format</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-9">
+        <div class="outline-text-3" id="text-unnumbered-10">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -785,10 +806,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-10" class="outline-3">
-        <h3 id="unnumbered-10">Selecting a Group</h3>
+      <div id="outline-container-unnumbered-11" class="outline-3">
+        <h3 id="unnumbered-11">Selecting a Group</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-10">
+        <div class="outline-text-3" id="text-unnumbered-11">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -802,10 +823,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-11" class="outline-3">
-        <h3 id="unnumbered-11">Listing Groups</h3>
+      <div id="outline-container-unnumbered-12" class="outline-3">
+        <h3 id="unnumbered-12">Listing Groups</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-11">
+        <div class="outline-text-3" id="text-unnumbered-12">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -822,10 +843,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-12" class="outline-3">
-        <h3 id="unnumbered-12">Exiting Gnus</h3>
+      <div id="outline-container-unnumbered-13" class="outline-3">
+        <h3 id="unnumbered-13">Exiting Gnus</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-12">
+        <div class="outline-text-3" id="text-unnumbered-13">
           <p>Cleanup all Gnus buffers on exit.</p>
 
           <div class="org-src-container">
@@ -854,10 +875,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-13" class="outline-3">
-        <h3 id="unnumbered-13">Group Topics</h3>
+      <div id="outline-container-unnumbered-14" class="outline-3">
+        <h3 id="unnumbered-14">Group Topics</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-13">
+        <div class="outline-text-3" id="text-unnumbered-14">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -878,10 +899,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-14" class="outline-3">
-        <h3 id="unnumbered-14">Misc Group Stuff</h3>
+      <div id="outline-container-unnumbered-15" class="outline-3">
+        <h3 id="unnumbered-15">Misc Group Stuff</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-14">
+        <div class="outline-text-3" id="text-unnumbered-15">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -935,10 +956,10 @@
       </div>
     </div>
 
-    <div id="outline-container-unnumbered-15" class="outline-2">
-      <h2 id="unnumbered-15">Summary buffer</h2>
+    <div id="outline-container-unnumbered-16" class="outline-2">
+      <h2 id="unnumbered-16">Summary buffer</h2>
 
-      <div class="outline-text-2" id="text-unnumbered-15">
+      <div class="outline-text-2" id="text-unnumbered-16">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -950,10 +971,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-16" class="outline-3">
-        <h3 id="unnumbered-16">Summary Buffer Format</h3>
+      <div id="outline-container-unnumbered-17" class="outline-3">
+        <h3 id="unnumbered-17">Summary Buffer Format</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-16">
+        <div class="outline-text-3" id="text-unnumbered-17">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -1167,10 +1188,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-17" class="outline-3">
-        <h3 id="unnumbered-17">Paging the Article</h3>
+      <div id="outline-container-unnumbered-18" class="outline-3">
+        <h3 id="unnumbered-18">Paging the Article</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-17">
+        <div class="outline-text-3" id="text-unnumbered-18">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -1190,10 +1211,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-18" class="outline-3">
-        <h3 id="unnumbered-18">Reply, Followup and Post</h3>
+      <div id="outline-container-unnumbered-19" class="outline-3">
+        <h3 id="unnumbered-19">Reply, Followup and Post</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-18">
+        <div class="outline-text-3" id="text-unnumbered-19">
           <p>Messages posted via Usenet do not show up in the Emacs bug
           tracker. Avoid to forget about this programmatically!</p>
 
@@ -1230,10 +1251,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-19" class="outline-3">
-        <h3 id="unnumbered-19">Threading</h3>
+      <div id="outline-container-unnumbered-20" class="outline-3">
+        <h3 id="unnumbered-20">Threading</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-19">
+        <div class="outline-text-3" id="text-unnumbered-20">
           <p>Threading is the representation of discussions “as they happen”.
           Use <code>T T</code> to toggle threading.</p>
 
@@ -1280,10 +1301,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-20" class="outline-3">
-        <h3 id="unnumbered-20">Sorting the Summary Buffer</h3>
+      <div id="outline-container-unnumbered-21" class="outline-3">
+        <h3 id="unnumbered-21">Sorting the Summary Buffer</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-20">
+        <div class="outline-text-3" id="text-unnumbered-21">
           <p><b>Primary</b> sort key should be the <b>last</b> function in the
           list.</p>
 
@@ -1330,10 +1351,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-21" class="outline-3">
-        <h3 id="unnumbered-21">Article Caching</h3>
+      <div id="outline-container-unnumbered-22" class="outline-3">
+        <h3 id="unnumbered-22">Article Caching</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-21">
+        <div class="outline-text-3" id="text-unnumbered-22">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -1384,10 +1405,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-22" class="outline-3">
-        <h3 id="unnumbered-22">Article Treatment</h3>
+      <div id="outline-container-unnumbered-23" class="outline-3">
+        <h3 id="unnumbered-23">Article Treatment</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-22">
+        <div class="outline-text-3" id="text-unnumbered-23">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -1488,10 +1509,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-23" class="outline-3">
-        <h3 id="unnumbered-23">MIME Commands</h3>
+      <div id="outline-container-unnumbered-24" class="outline-3">
+        <h3 id="unnumbered-24">MIME Commands</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-23">
+        <div class="outline-text-3" id="text-unnumbered-24">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -1512,10 +1533,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-24" class="outline-3">
-        <h3 id="unnumbered-24">Charsets</h3>
+      <div id="outline-container-unnumbered-25" class="outline-3">
+        <h3 id="unnumbered-25">Charsets</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-24">
+        <div class="outline-text-3" id="text-unnumbered-25">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -1547,10 +1568,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-25" class="outline-3">
-        <h3 id="unnumbered-25">Various Summary Stuff</h3>
+      <div id="outline-container-unnumbered-26" class="outline-3">
+        <h3 id="unnumbered-26">Various Summary Stuff</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-25">
+        <div class="outline-text-3" id="text-unnumbered-26">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -1598,11 +1619,11 @@
           </div>
         </div>
 
-        <div id="outline-container-unnumbered-26" class="outline-4">
-          <h4 id="unnumbered-26"><a href=
+        <div id="outline-container-unnumbered-27" class="outline-4">
+          <h4 id="unnumbered-27"><a href=
           "http://www.emacswiki.org/emacs/GnusStripes">Gnus Stripes</a></h4>
 
-          <div class="outline-text-4" id="text-unnumbered-26">
+          <div class="outline-text-4" id="text-unnumbered-27">
             <p>The following does work, but hides the read background for read
             postings, as the stripe background is superimposed on my “read”
             background.</p>
@@ -1706,10 +1727,10 @@
       </div>
     </div>
 
-    <div id="outline-container-unnumbered-27" class="outline-2">
-      <h2 id="unnumbered-27">Article Buffer</h2>
+    <div id="outline-container-unnumbered-28" class="outline-2">
+      <h2 id="unnumbered-28">Article Buffer</h2>
 
-      <div class="outline-text-2" id="text-unnumbered-27">
+      <div class="outline-text-2" id="text-unnumbered-28">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -1721,10 +1742,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-28" class="outline-3">
-        <h3 id="unnumbered-28">Hiding headers</h3>
+      <div id="outline-container-unnumbered-29" class="outline-3">
+        <h3 id="unnumbered-29">Hiding headers</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-28">
+        <div class="outline-text-3" id="text-unnumbered-29">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -1881,10 +1902,10 @@
       </div>
     </div>
 
-    <div id="outline-container-unnumbered-29" class="outline-2">
-      <h2 id="unnumbered-29">Emacs MIME</h2>
+    <div id="outline-container-unnumbered-30" class="outline-2">
+      <h2 id="unnumbered-30">Emacs MIME</h2>
 
-      <div class="outline-text-2" id="text-unnumbered-29">
+      <div class="outline-text-2" id="text-unnumbered-30">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -1893,10 +1914,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-30" class="outline-3">
-        <h3 id="unnumbered-30">Decoding and Viewing</h3>
+      <div id="outline-container-unnumbered-31" class="outline-3">
+        <h3 id="unnumbered-31">Decoding and Viewing</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-30">
+        <div class="outline-text-3" id="text-unnumbered-31">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -1906,10 +1927,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-31" class="outline-3">
-        <h3 id="unnumbered-31">Non-MIME</h3>
+      <div id="outline-container-unnumbered-32" class="outline-3">
+        <h3 id="unnumbered-32">Non-MIME</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-31">
+        <div class="outline-text-3" id="text-unnumbered-32">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -1931,10 +1952,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-32" class="outline-3">
-        <h3 id="unnumbered-32">Display Customization</h3>
+      <div id="outline-container-unnumbered-33" class="outline-3">
+        <h3 id="unnumbered-33">Display Customization</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-32">
+        <div class="outline-text-3" id="text-unnumbered-33">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -2104,10 +2125,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-33" class="outline-3">
-        <h3 id="unnumbered-33">Composing</h3>
+      <div id="outline-container-unnumbered-34" class="outline-3">
+        <h3 id="unnumbered-34">Composing</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-33">
+        <div class="outline-text-3" id="text-unnumbered-34">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -2132,10 +2153,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-34" class="outline-3">
-        <h3 id="unnumbered-34">Basic Functions</h3>
+      <div id="outline-container-unnumbered-35" class="outline-3">
+        <h3 id="unnumbered-35">Basic Functions</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-34">
+        <div class="outline-text-3" id="text-unnumbered-35">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -2179,10 +2200,10 @@
       </div>
     </div>
 
-    <div id="outline-container-unnumbered-35" class="outline-2">
-      <h2 id="unnumbered-35">Back to Article Buffer</h2>
+    <div id="outline-container-unnumbered-36" class="outline-2">
+      <h2 id="unnumbered-36">Back to Article Buffer</h2>
 
-      <div class="outline-text-2" id="text-unnumbered-35">
+      <div class="outline-text-2" id="text-unnumbered-36">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -2248,10 +2269,10 @@
       </div>
     </div>
 
-    <div id="outline-container-unnumbered-36" class="outline-2">
-      <h2 id="unnumbered-36">Composing Messages</h2>
+    <div id="outline-container-unnumbered-37" class="outline-2">
+      <h2 id="unnumbered-37">Composing Messages</h2>
 
-      <div class="outline-text-2" id="text-unnumbered-36">
+      <div class="outline-text-2" id="text-unnumbered-37">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -2263,10 +2284,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-37" class="outline-3">
-        <h3 id="unnumbered-37">Mail</h3>
+      <div id="outline-container-unnumbered-38" class="outline-3">
+        <h3 id="unnumbered-38">Mail</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-37">
+        <div class="outline-text-3" id="text-unnumbered-38">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -2280,10 +2301,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-38" class="outline-3">
-        <h3 id="unnumbered-38">Posting Server</h3>
+      <div id="outline-container-unnumbered-39" class="outline-3">
+        <h3 id="unnumbered-39">Posting Server</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-38">
+        <div class="outline-text-3" id="text-unnumbered-39">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -2326,10 +2347,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-39" class="outline-3">
-        <h3 id="unnumbered-39">Archived Messages</h3>
+      <div id="outline-container-unnumbered-40" class="outline-3">
+        <h3 id="unnumbered-40">Archived Messages</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-39">
+        <div class="outline-text-3" id="text-unnumbered-40">
           <p>The <code>Gcc:</code> header is about in which group to save the
           messages you’ve written.</p>
 
@@ -2411,10 +2432,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-40" class="outline-3">
-        <h3 id="unnumbered-40">Posting Styles</h3>
+      <div id="outline-container-unnumbered-41" class="outline-3">
+        <h3 id="unnumbered-41">Posting Styles</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-40">
+        <div class="outline-text-3" id="text-unnumbered-41">
           <p>Concept of “roles” in mutt.</p>
 
           <div class="org-src-container">
@@ -2569,10 +2590,10 @@
           </div>
         </div>
 
-        <div id="outline-container-unnumbered-41" class="outline-4">
-          <h4 id="unnumbered-41">Multiple servers</h4>
+        <div id="outline-container-unnumbered-42" class="outline-4">
+          <h4 id="unnumbered-42">Multiple servers</h4>
 
-          <div class="outline-text-4" id="text-unnumbered-41">
+          <div class="outline-text-4" id="text-unnumbered-42">
             <p>Let Gnus decide which SMTP server should be used for sending
             email by looking at XXX.</p>
 
@@ -2583,10 +2604,10 @@
           </div>
         </div>
 
-        <div id="outline-container-unnumbered-42" class="outline-4">
-          <h4 id="unnumbered-42">Headers</h4>
+        <div id="outline-container-unnumbered-43" class="outline-4">
+          <h4 id="unnumbered-43">Headers</h4>
 
-          <div class="outline-text-4" id="text-unnumbered-42">
+          <div class="outline-text-4" id="text-unnumbered-43">
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
       <span class="org-comment-delimiter">;; </span><span class=
@@ -2612,10 +2633,10 @@
       </div>
     </div>
 
-    <div id="outline-container-unnumbered-43" class="outline-2">
-      <h2 id="unnumbered-43">Message</h2>
+    <div id="outline-container-unnumbered-44" class="outline-2">
+      <h2 id="unnumbered-44">Message</h2>
 
-      <div class="outline-text-2" id="text-unnumbered-43">
+      <div class="outline-text-2" id="text-unnumbered-44">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -2632,10 +2653,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-44" class="outline-3">
-        <h3 id="unnumbered-44">Interface</h3>
+      <div id="outline-container-unnumbered-45" class="outline-3">
+        <h3 id="unnumbered-45">Interface</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-44">
+        <div class="outline-text-3" id="text-unnumbered-45">
           <p>&gt; Is there a way to configure multiple addresses?</p>
 
           <p>Yes. There are a couple of variables for that. I use a code piece
@@ -2923,10 +2944,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-45" class="outline-3">
-        <h3 id="unnumbered-45">Commands</h3>
+      <div id="outline-container-unnumbered-46" class="outline-3">
+        <h3 id="unnumbered-46">Commands</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-45">
+        <div class="outline-text-3" id="text-unnumbered-46">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -2972,10 +2993,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-46" class="outline-3">
-        <h3 id="unnumbered-46">Variables</h3>
+      <div id="outline-container-unnumbered-47" class="outline-3">
+        <h3 id="unnumbered-47">Variables</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-46">
+        <div class="outline-text-3" id="text-unnumbered-47">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3157,10 +3178,10 @@
       </div>
     </div>
 
-    <div id="outline-container-unnumbered-47" class="outline-2">
-      <h2 id="unnumbered-47">Select Methods</h2>
+    <div id="outline-container-unnumbered-48" class="outline-2">
+      <h2 id="unnumbered-48">Select Methods</h2>
 
-      <div class="outline-text-2" id="text-unnumbered-47">
+      <div class="outline-text-2" id="text-unnumbered-48">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3172,10 +3193,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-48" class="outline-3">
-        <h3 id="unnumbered-48">Getting Mail</h3>
+      <div id="outline-container-unnumbered-49" class="outline-3">
+        <h3 id="unnumbered-49">Getting Mail</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-48">
+        <div class="outline-text-3" id="text-unnumbered-49">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3467,10 +3488,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-49" class="outline-3">
-        <h3 id="unnumbered-49">Browsing the Web</h3>
+      <div id="outline-container-unnumbered-50" class="outline-3">
+        <h3 id="unnumbered-50">Browsing the Web</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-49">
+        <div class="outline-text-3" id="text-unnumbered-50">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3547,10 +3568,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-50" class="outline-3">
-        <h3 id="unnumbered-50">IMAP</h3>
+      <div id="outline-container-unnumbered-51" class="outline-3">
+        <h3 id="unnumbered-51">IMAP</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-50">
+        <div class="outline-text-3" id="text-unnumbered-51">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3564,10 +3585,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-51" class="outline-3">
-        <h3 id="unnumbered-51">Gnus Unplugged</h3>
+      <div id="outline-container-unnumbered-52" class="outline-3">
+        <h3 id="unnumbered-52">Gnus Unplugged</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-51">
+        <div class="outline-text-3" id="text-unnumbered-52">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3589,10 +3610,10 @@
       </div>
     </div>
 
-    <div id="outline-container-unnumbered-52" class="outline-2">
-      <h2 id="unnumbered-52">Scoring</h2>
+    <div id="outline-container-unnumbered-53" class="outline-2">
+      <h2 id="unnumbered-53">Scoring</h2>
 
-      <div class="outline-text-2" id="text-unnumbered-52">
+      <div class="outline-text-2" id="text-unnumbered-53">
         <p>You can <i>increase</i> or <i>lower</i> the score, respectively, in
         the global file (instead of the score file local for the group) by
         pressing <code>M-i a I</code> or <code>M-i a L</code>.</p>
@@ -3626,10 +3647,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-53" class="outline-3">
-        <h3 id="unnumbered-53">From Sacha Chua</h3>
+      <div id="outline-container-unnumbered-54" class="outline-3">
+        <h3 id="unnumbered-54">From Sacha Chua</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-53">
+        <div class="outline-text-3" id="text-unnumbered-54">
           <p>Adaptive scoring means that if you kill a thread you’re not
           particularly interested in, it lowers the score on that one, so any
           replies are shown with a negative score. You can also configure it to
@@ -3662,10 +3683,10 @@
       </div>
     </div>
 
-    <div id="outline-container-unnumbered-54" class="outline-2">
-      <h2 id="unnumbered-54">Searching</h2>
+    <div id="outline-container-unnumbered-55" class="outline-2">
+      <h2 id="unnumbered-55">Searching</h2>
 
-      <div class="outline-text-2" id="text-unnumbered-54">
+      <div class="outline-text-2" id="text-unnumbered-55">
         <p>Basically, there’s only one user-frontend function:
         <code>gnus-group-make-nnir-group</code> bound to <code>G G</code> in
         <code>*Group*</code>.</p>
@@ -3675,10 +3696,10 @@
       </div>
     </div>
 
-    <div id="outline-container-unnumbered-55" class="outline-2">
-      <h2 id="unnumbered-55">Various</h2>
+    <div id="outline-container-unnumbered-56" class="outline-2">
+      <h2 id="unnumbered-56">Various</h2>
 
-      <div class="outline-text-2" id="text-unnumbered-55">
+      <div class="outline-text-2" id="text-unnumbered-56">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3690,10 +3711,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-56" class="outline-3">
-        <h3 id="unnumbered-56">Interactive</h3>
+      <div id="outline-container-unnumbered-57" class="outline-3">
+        <h3 id="unnumbered-57">Interactive</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-56">
+        <div class="outline-text-3" id="text-unnumbered-57">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3707,10 +3728,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-57" class="outline-3">
-        <h3 id="unnumbered-57">Formatting Variables</h3>
+      <div id="outline-container-unnumbered-58" class="outline-3">
+        <h3 id="unnumbered-58">Formatting Variables</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-57">
+        <div class="outline-text-3" id="text-unnumbered-58">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3724,10 +3745,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-58" class="outline-3">
-        <h3 id="unnumbered-58">Window Layout</h3>
+      <div id="outline-container-unnumbered-59" class="outline-3">
+        <h3 id="unnumbered-59">Window Layout</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-58">
+        <div class="outline-text-3" id="text-unnumbered-59">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3759,10 +3780,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-59" class="outline-3">
-        <h3 id="unnumbered-59">Interaction with other modes</h3>
+      <div id="outline-container-unnumbered-60" class="outline-3">
+        <h3 id="unnumbered-60">Interaction with other modes</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-59">
+        <div class="outline-text-3" id="text-unnumbered-60">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3799,10 +3820,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-60" class="outline-3">
-        <h3 id="unnumbered-60">Various Various</h3>
+      <div id="outline-container-unnumbered-61" class="outline-3">
+        <h3 id="unnumbered-61">Various Various</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-60">
+        <div class="outline-text-3" id="text-unnumbered-61">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3825,10 +3846,10 @@
       </div>
     </div>
 
-    <div id="outline-container-unnumbered-61" class="outline-2">
-      <h2 id="unnumbered-61">Appendices</h2>
+    <div id="outline-container-unnumbered-62" class="outline-2">
+      <h2 id="unnumbered-62">Appendices</h2>
 
-      <div class="outline-text-2" id="text-unnumbered-61">
+      <div class="outline-text-2" id="text-unnumbered-62">
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3840,10 +3861,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-62" class="outline-3">
-        <h3 id="unnumbered-62">History</h3>
+      <div id="outline-container-unnumbered-63" class="outline-3">
+        <h3 id="unnumbered-63">History</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-62">
+        <div class="outline-text-3" id="text-unnumbered-63">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3857,10 +3878,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-63" class="outline-3">
-        <h3 id="unnumbered-63">Frequently Asked Questions</h3>
+      <div id="outline-container-unnumbered-64" class="outline-3">
+        <h3 id="unnumbered-64">Frequently Asked Questions</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-63">
+        <div class="outline-text-3" id="text-unnumbered-64">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -3889,7 +3910,13 @@
 (message <span class="org-string">"\n"</span>)
 </pre>
           </div>
+        </div>
+      </div>
 
+      <div id="outline-container-unnumbered-65" class="outline-3">
+        <h3 id="unnumbered-65">Feature</h3>
+
+        <div class="outline-text-3" id="text-unnumbered-65">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 (<span class="org-keyword">provide</span> '<span class=
@@ -3899,10 +3926,10 @@
         </div>
       </div>
 
-      <div id="outline-container-unnumbered-64" class="outline-3">
-        <h3 id="unnumbered-64">File Local Variables</h3>
+      <div id="outline-container-unnumbered-66" class="outline-3">
+        <h3 id="unnumbered-66">File Local Variables</h3>
 
-        <div class="outline-text-3" id="text-unnumbered-64">
+        <div class="outline-text-3" id="text-unnumbered-66">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;; </span><span class=
@@ -3912,7 +3939,11 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">coding: utf-8-unix</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))</span>
+"org-comment">eval: (when (require 'rainbow-mode nil t) (rainbow-mode))</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">flycheck-emacs-lisp-initialize-packages: t</span>
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">flycheck-mode: nil</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">ispell-local-dictionary: "american"</span>
 <span class="org-comment-delimiter">;; </span><span class=

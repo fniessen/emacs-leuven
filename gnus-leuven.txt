@@ -1,26 +1,37 @@
-#+TITLE:     Gnus Leuven
+#+TITLE:     Gnus Leuven Config
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DESCRIPTION:
-#+KEYWORDS:
+#+KEYWORDS:  emacs, gnus, dotfile, config
 #+LANGUAGE:  en
-#+OPTIONS:   H:3 num:nil
+#+OPTIONS:   H:4 num:nil
 
-#+PROPERTY:  eval no
+#+PROPERTY:  eval never
+#+PROPERTY:  padline yes
 #+PROPERTY:  tangle yes
+
 #+SETUPFILE: ./bigblow-pirilampo.setup
 
 * Overview
 
 See http://www.gnu.org/software/emacs/manual/gnus.html
 
-#+begin_src emacs-lisp
+* Header
+
+#+name: current-time
+#+begin_src emacs-lisp :eval yes :results silent :tangle no
+(format-time-string "%Y%m%d.%H%M")
+#+end_src
+
+#+begin_src emacs-lisp :noweb yes
 ;;; gnus-leuven.el --- my Gnus config file
 
 ;; Copyright (C) 2004-2015 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
-;; Keywords: gnus, dotfile, config
+;; URL: https://github.com/fniessen/emacs-leuven-theme
+;; Version: <<current-time()>>
+;; Keywords: emacs, gnus, dotfile, config
 
 ;;
 ;;    __ _ _ __  _   _ ___
@@ -70,8 +81,6 @@ See http://www.gnu.org/software/emacs/manual/gnus.html
 ;; This file is only provided as an example. Customize it to your own taste!
 #+end_src
 
-#+results:
-
 #+begin_src emacs-lisp
 (message "* Load Gnus Leuven")
 
@@ -100,8 +109,6 @@ See http://www.gnu.org/software/emacs/manual/gnus.html
 ;; list of packages that `try-require' can't find
 (setq leuven--missing-packages nil)
 #+end_src
-
-#+results:
 
 * Starting Up Gnus
 
@@ -2035,6 +2042,8 @@ It comes with Gnus.  You don't even need to configure anything for searching
 (message "\n")
 #+end_src
 
+** Feature
+
 #+begin_src emacs-lisp
 (provide 'gnus-leuven)
 #+end_src
@@ -2045,9 +2054,13 @@ It comes with Gnus.  You don't even need to configure anything for searching
 ;; This is for the sake of Emacs.
 ;; Local Variables:
 ;; coding: utf-8-unix
-;; eval: (when (locate-library "rainbow-mode") (require 'rainbow-mode) (rainbow-mode))
+;; eval: (when (require 'rainbow-mode nil t) (rainbow-mode))
+;; flycheck-emacs-lisp-initialize-packages: t
+;; flycheck-mode: nil
 ;; ispell-local-dictionary: "american"
 ;; End:
 
 ;;; gnus-leuven.el ends here
 #+end_src
+
+# gnus-leuven.txt ends here
