@@ -3,17 +3,127 @@
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DESCRIPTION:
-#+KEYWORDS:
+#+KEYWORDS:  emacs, dotfile, config
 #+LANGUAGE:  en
 #+OPTIONS:   H:4 num:nil
 
 #+SEQ_TODO:  TODO FIXME | DONE
 
-#+PROPERTY:  tangle emacs-leuven.el
-#+PROPERTY:  padline yes
 #+PROPERTY:  eval never
+#+PROPERTY:  padline yes
+#+PROPERTY:  tangle yes
 
 #+SETUPFILE: ./bigblow-pirilampo.setup
+
+* Tasks                                                               :noexport:
+
+** TODO Standardize comments
+
+The main documentation we follow for coding style is the GNU Coding Standard
+(https://www.gnu.org/prep/standards/html_node/Comments.html) which says, among
+other things: "Also, please write complete sentences and capitalize the first
+word."
+
+Stefan prefers to capitalize and punctuate ";; pattern found" as well, treating
+*all* comments the same way.
+
+Note that a lot of code in Emacs does not follow the convention, because we're
+not strict enough about enforcing it.
+
+** TODO Improve documentation of navigation and search
+
+Excellent example:
+http://www.jetbrains.com/resharper/features/navigation_search.html
+
+Other:
+https://support.rstudio.com/hc/en-us/articles/200710523
+
+** TODO Automate reporting of style errors
+   :PROPERTIES:
+   :tangle:   no
+   :END:
+
+Report all errors with:
+
+#+begin_src emacs-lisp
+(checkdoc-current-buffer t)
+#+end_src
+
+- Format the documentation string so that it fits in an Emacs window on an
+  80-column screen. It is a good idea for most lines to be no wider than 60
+  characters. The first line should not be wider than 67 characters or it will
+  look bad in the output of apropos.
+
+  You can fill the text if that looks good. However, rather than blindly filling
+  the entire documentation string, you can often make it much more readable by
+  choosing certain line breaks with care. Use blank lines between topics if the
+  documentation string is long.
+
+- Do not indent subsequent lines of a documentation string so that the text is
+  lined up in the source code with the text of the first line. This looks nice
+  in the source code, but looks bizarre when users view the documentation.
+
+  Remember that the indentation before the starting double-quote is not part of
+  the string!
+
+** TODO Optimize startup time
+   :PROPERTIES:
+   :tangle:   no
+   :END:
+
+*** Context
+
+Identify what parts of your =.emacs= take so long.  You can do this e.g. by
+starting Emacs with ~emacs -q~, set up your ~load-path~, and then evaluate
+
+#+begin_src emacs-lisp
+(benchmark-run
+  (require 'some-package))
+#+end_src
+
+The first number appearing in the echo area will be the time needed to run that
+command.
+
+Use autoloads, which delay the loading of the complete package until one of the
+interactive functions is used.
+
+If you want to set options which need to be evaluated after a package is loaded,
+you can use ~eval-after-load~.
+
+With ~(eval-after-load "pkg-autoloads" ...)~, you make sure that you only run code
+when the package is installed/available through ~package.el~.
+
+*** Timings from my system
+
+After much optimization...
+
+  $ time emacs -f kill-emacs
+  real    0m0.157s
+  user    0m0.140s
+  sys     0m0.012s
+  $ time emacs -q -f kill-emacs
+  real    0m0.137s
+  user    0m0.116s
+  sys     0m0.016s
+  $ time emacs -Q -f kill-emacs
+  real    0m0.051s
+  user    0m0.028s
+  sys     0m0.020s
+
+#+begin_src shell
+time emacs -f kill-emacs 2>&1
+#+end_src
+
+#+begin_src shell
+time emacs -q -f kill-emacs 2>&1
+#+end_src
+
+#+begin_src shell
+time emacs -Q -f kill-emacs 2>&1
+#+end_src
+
+Note that your first test is going to be dramatically slower than subsequent
+tests.
 
 * Description
 
@@ -7972,9 +8082,15 @@ launched from Dired?
           (org-mode-restart)            ; Update information from one of the
                                         ; special #+KEYWORD lines
                                         ; (like `C-c C-c')
+
           ;; (org-babel-execute-buffer)   ; XXX Why should we execute all code blocks?
+
 ;; It'd make sense to eval all code blocks which have :cache yes or :exports
 ;; results or both... And, before that, to delete all code block results!?
+;; Well, almost all code blocks: not the ones of "cached" blocks (they may have
+;; taken a long time to be computed, or may not be computable another time), nor
+;; the ones with a caption on the results block...
+
           (let ((before-save-hook nil))
             (save-buffer))
           (org-babel-tangle)
@@ -7997,6 +8113,9 @@ launched from Dired?
 
     (define-key org-mode-map (kbd "<f9>") 'org-save-buffer-and-do-related))
 #+end_src
+
+XXX We should check that SETUPFILES (like for Bigblow) or INCLUDE files do
+exist, before exporting.
 
 *** Export options
 
@@ -8758,7 +8877,7 @@ languages which can be evaluated in Org mode buffers.
            (ditaa      . t)             ; Sudo aptitude install openjdk-6-jre.
            (dot        . t)
            (emacs-lisp . t)
-           ;; (latex   . t)             ; Shouldn't you use #+begin/end_latex blocks instead?
+           (latex   . t)                ; Shouldn't you use #+begin/end_latex blocks instead?
            (ledger     . t)             ; Requires ledger.
            (makefile   . t)
            (org        . t)
@@ -8773,7 +8892,7 @@ languages which can be evaluated in Org mode buffers.
          (ditaa      . t)
          (dot        . t)
          (emacs-lisp . t)
-         ;; (latex   . t)
+         (latex   . t)
          (ledger     . t)
          (makefile   . t)
          (org        . t)
@@ -10569,6 +10688,26 @@ See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard a
 
     ;; no space between an identifier and an opening parenthesis
     (setq glasses-separate-parentheses-p nil))
+#+end_src
+
+** Other Features Useful for Editing Programs
+
+#+begin_src emacs-lisp
+;;** 26.11 (info "(emacs)Misc for Programs")
+
+  (leuven--section "26.11 (emacs)Misc for Programs")
+
+  ;; Enable Prettify-Symbols mode in all buffers that support it.
+  (global-prettify-symbols-mode 1)
+
+  ;; (add-hook 'prog-mode-hook
+  ;;           (lambda ()
+  ;;             (setq-local prettify-symbols-alist
+  ;;                         '(("lambda" . ?λ)
+  ;;                           ("math.sqrt" . ?√)
+  ;;                           ("math.pi" . ?π)
+  ;;                           ("sum" . ?Σ)))
+  ;;             (prettify-symbols-mode 1)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -15593,134 +15732,27 @@ leuven-send-bug-report~.
 
 #+begin_src emacs-lisp
 (message "* --[ Loaded Leuven Emacs Config %s]--" leuven--emacs-version)
+#+end_src
 
+** Feature
+
+#+begin_src emacs-lisp
 (provide 'emacs-leuven)
+#+end_src
 
+** File Local Variables
 
+#+begin_src emacs-lisp
 ;; This is for the sake of Emacs.
 ;; Local Variables:
-;; coding: utf-8
-;; ispell-local-dictionary: "american"
+;; coding: utf-8-unix
 ;; eval: (when (require 'rainbow-mode nil t) (rainbow-mode))
-;; flycheck-mode: nil
 ;; flycheck-emacs-lisp-initialize-packages: t
+;; flycheck-mode: nil
+;; ispell-local-dictionary: "american"
 ;; End:
 
 ;;; emacs-leuven.el ends here
 #+end_src
-
-* Tasks                                                               :noexport:
-
-** TODO Standardize comments
-
-The main documentation we follow for coding style is the GNU Coding Standard
-(https://www.gnu.org/prep/standards/html_node/Comments.html) which says, among
-other things: "Also, please write complete sentences and capitalize the first
-word."
-
-Stefan prefers to capitalize and punctuate ";; pattern found" as well, treating
-*all* comments the same way.
-
-Note that a lot of code in Emacs does not follow the convention, because we're
-not strict enough about enforcing it.
-
-** TODO Improve documentation of navigation and search
-
-Excellent example:
-http://www.jetbrains.com/resharper/features/navigation_search.html
-
-Other:
-https://support.rstudio.com/hc/en-us/articles/200710523
-
-** TODO Automate reporting of style errors
-   :PROPERTIES:
-   :tangle:   no
-   :END:
-
-Report all errors with:
-
-#+begin_src emacs-lisp
-(checkdoc-current-buffer t)
-#+end_src
-
-- Format the documentation string so that it fits in an Emacs window on an
-  80-column screen. It is a good idea for most lines to be no wider than 60
-  characters. The first line should not be wider than 67 characters or it will
-  look bad in the output of apropos.
-
-  You can fill the text if that looks good. However, rather than blindly filling
-  the entire documentation string, you can often make it much more readable by
-  choosing certain line breaks with care. Use blank lines between topics if the
-  documentation string is long.
-
-- Do not indent subsequent lines of a documentation string so that the text is
-  lined up in the source code with the text of the first line. This looks nice
-  in the source code, but looks bizarre when users view the documentation.
-
-  Remember that the indentation before the starting double-quote is not part of
-  the string!
-
-* Startup time
-  :PROPERTIES:
-  :tangle:   no
-  :END:
-
-** Context
-
-Identify what parts of your =.emacs= take so long.  You can do this e.g. by
-starting Emacs with ~emacs -q~, set up your ~load-path~, and then evaluate
-
-#+begin_src emacs-lisp
-(benchmark-run
-  (require 'some-package))
-#+end_src
-
-The first number appearing in the echo area will be the time needed to run that
-command.
-
-Use autoloads, which delay the loading of the complete package until one of the
-interactive functions is used.
-
-If you want to set options which need to be evaluated after a package is loaded,
-you can use ~eval-after-load~.
-
-With ~(eval-after-load "pkg-autoloads" ...)~, you make sure that you only run code
-when the package is installed/available through ~package.el~.
-
-** Timings from my system
-
-After much optimization...
-
-  $ time emacs -f kill-emacs
-  real    0m0.157s
-  user    0m0.140s
-  sys     0m0.012s
-  $ time emacs -q -f kill-emacs
-  real    0m0.137s
-  user    0m0.116s
-  sys     0m0.016s
-  $ time emacs -Q -f kill-emacs
-  real    0m0.051s
-  user    0m0.028s
-  sys     0m0.020s
-
-#+begin_src shell
-time emacs -f kill-emacs 2>&1
-#+end_src
-
-#+begin_src shell
-time emacs -q -f kill-emacs 2>&1
-#+end_src
-
-#+begin_src shell
-time emacs -Q -f kill-emacs 2>&1
-#+end_src
-
-Note that your first test is going to be dramatically slower than subsequent
-tests.
-
-# This is for the sake of Emacs.
-# Local Variables:
-# End:
 
 # emacs-leuven.txt ends here

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150114.1924
+;; Version: 20150116.1339
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150114.1924"
+(defconst leuven--emacs-version "20150116.1339"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5133,9 +5133,15 @@ this with to-do items than with projects or headings."
           (org-mode-restart)            ; Update information from one of the
                                         ; special #+KEYWORD lines
                                         ; (like `C-c C-c')
+
           ;; (org-babel-execute-buffer)   ; XXX Why should we execute all code blocks?
+
 ;; It'd make sense to eval all code blocks which have :cache yes or :exports
 ;; results or both... And, before that, to delete all code block results!?
+;; Well, almost all code blocks: not the ones of "cached" blocks (they may have
+;; taken a long time to be computed, or may not be computable another time), nor
+;; the ones with a caption on the results block...
+
           (let ((before-save-hook nil))
             (save-buffer))
           (org-babel-tangle)
@@ -5694,7 +5700,7 @@ this with to-do items than with projects or headings."
            (ditaa      . t)             ; Sudo aptitude install openjdk-6-jre.
            (dot        . t)
            (emacs-lisp . t)
-           ;; (latex   . t)             ; Shouldn't you use #+begin/end_latex blocks instead?
+           (latex   . t)                ; Shouldn't you use #+begin/end_latex blocks instead?
            (ledger     . t)             ; Requires ledger.
            (makefile   . t)
            (org        . t)
@@ -5709,7 +5715,7 @@ this with to-do items than with projects or headings."
          (ditaa      . t)
          (dot        . t)
          (emacs-lisp . t)
-         ;; (latex   . t)
+         (latex   . t)
          (ledger     . t)
          (makefile   . t)
          (org        . t)
@@ -6755,6 +6761,22 @@ mouse-3: go to end") "]"))))
 
     ;; no space between an identifier and an opening parenthesis
     (setq glasses-separate-parentheses-p nil))
+
+;;** 26.11 (info "(emacs)Misc for Programs")
+
+  (leuven--section "26.11 (emacs)Misc for Programs")
+
+  ;; Enable Prettify-Symbols mode in all buffers that support it.
+  (global-prettify-symbols-mode 1)
+
+  ;; (add-hook 'prog-mode-hook
+  ;;           (lambda ()
+  ;;             (setq-local prettify-symbols-alist
+  ;;                         '(("lambda" . ?λ)
+  ;;                           ("math.sqrt" . ?√)
+  ;;                           ("math.pi" . ?π)
+  ;;                           ("sum" . ?Σ)))
+  ;;             (prettify-symbols-mode 1)))
 
 )                                       ; chapter 26 ends here
 
@@ -9523,14 +9545,13 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 (provide 'emacs-leuven)
 
-
 ;; This is for the sake of Emacs.
 ;; Local Variables:
-;; coding: utf-8
-;; ispell-local-dictionary: "american"
+;; coding: utf-8-unix
 ;; eval: (when (require 'rainbow-mode nil t) (rainbow-mode))
-;; flycheck-mode: nil
 ;; flycheck-emacs-lisp-initialize-packages: t
+;; flycheck-mode: nil
+;; ispell-local-dictionary: "american"
 ;; End:
 
 ;;; emacs-leuven.el ends here
