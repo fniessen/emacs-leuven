@@ -1375,7 +1375,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150116.1340</span>
+"org-comment">Version: 20150119.1654</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1502,7 +1502,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150116.1340"</span>
+"org-string">"20150119.1654"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -2306,8 +2306,8 @@
           graphviz-dot-mode guide-key helm helm-descbinds helm-swoop hideshowvis
           highlight-symbol htmlize key-chord litable idle-require imenu-anywhere
           info+ interaction-log ledger-mode leuven-theme multi-term
-          multiple-cursors pager powerline rainbow-mode smartparens spray tidy
-          unbound undo-tree w3m yasnippet
+          multiple-cursors pager powerline rainbow-mode spray tidy unbound
+          undo-tree w3m yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">jabber multi-term paredit redshank</span>
           )
@@ -3843,6 +3843,14 @@
     (try-require 'bookmark+)
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"bookmark+"</span>
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Default highlight style for autonamed bookmarks.</span>
+(setq bmkp-light-style-autonamed 'rfringe)
+
+<span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Default highlight style for non-autonamed bookmarks.</span>
+(setq bmkp-light-style-non-autonamed 'rfringe)
 
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Automatically highlight bookmarks when set.</span>

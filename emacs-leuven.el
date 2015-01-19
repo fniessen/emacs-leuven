@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150116.1339
+;; Version: 20150119.1653
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150116.1339"
+(defconst leuven--emacs-version "20150119.1653"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -415,8 +415,8 @@ Last time is saved in global variable `leuven--before-section-time'."
           graphviz-dot-mode guide-key helm helm-descbinds helm-swoop hideshowvis
           highlight-symbol htmlize key-chord litable idle-require imenu-anywhere
           info+ interaction-log ledger-mode leuven-theme multi-term
-          multiple-cursors pager powerline rainbow-mode smartparens spray tidy
-          unbound undo-tree w3m yasnippet
+          multiple-cursors pager powerline rainbow-mode spray tidy unbound
+          undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -899,6 +899,12 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Extensions to standard library `bookmark.el'.
     (try-require 'bookmark+)
     (with-eval-after-load "bookmark+"
+
+;; Default highlight style for autonamed bookmarks.
+(setq bmkp-light-style-autonamed 'rfringe)
+
+;; Default highlight style for non-autonamed bookmarks.
+(setq bmkp-light-style-non-autonamed 'rfringe)
 
       ;; Automatically highlight bookmarks when set.
       (setq bmkp-auto-light-when-set 'any-bookmark)

@@ -674,8 +674,8 @@ outages).
           graphviz-dot-mode guide-key helm helm-descbinds helm-swoop hideshowvis
           highlight-symbol htmlize key-chord litable idle-require imenu-anywhere
           info+ interaction-log ledger-mode leuven-theme multi-term
-          multiple-cursors pager powerline rainbow-mode smartparens spray tidy
-          unbound undo-tree w3m yasnippet
+          multiple-cursors pager powerline rainbow-mode spray tidy unbound
+          undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -1565,6 +1565,12 @@ In TeXStudio:
     ;; Extensions to standard library `bookmark.el'.
     (try-require 'bookmark+)
     (with-eval-after-load "bookmark+"
+
+;; Default highlight style for autonamed bookmarks.
+(setq bmkp-light-style-autonamed 'rfringe)
+
+;; Default highlight style for non-autonamed bookmarks.
+(setq bmkp-light-style-non-autonamed 'rfringe)
 
       ;; Automatically highlight bookmarks when set.
       (setq bmkp-auto-light-when-set 'any-bookmark)
