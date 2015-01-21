@@ -3840,7 +3840,7 @@ XXX Look at helm-dictionary.
       For programming mode buffers, show functions, variables, etc."
         (interactive)
         (if (derived-mode-p 'org-mode)
-            (helm-org-headlines)
+            (helm-org-in-buffer-headings)
           (helm-imenu)))
 
       (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
@@ -6932,7 +6932,7 @@ Find a location for refiling on capture.
       "Find my CollectBox file and some headline in the current buffer."
       (find-file org-default-notes-file)
       (goto-char (point-min))
-      (helm-org-headlines)
+      (helm-org-in-buffer-headings)
       (org-forward-heading-same-level 1))
 #+end_src
 

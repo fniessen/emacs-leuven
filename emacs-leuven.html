@@ -1375,7 +1375,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150119.1654</span>
+"org-comment">Version: 20150121.1154</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1502,7 +1502,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150119.1654"</span>
+"org-string">"20150121.1154"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -7660,7 +7660,7 @@ M-: (executable-find "diff") RET
 "org-doc">      For programming mode buffers, show functions, variables, etc."</span>
         (interactive)
         (<span class="org-keyword">if</span> (derived-mode-p 'org-mode)
-            (helm-org-headlines)
+            (helm-org-in-buffer-headings)
           (helm-imenu)))
 
       (global-set-key (kbd <span class=
@@ -12981,7 +12981,7 @@ M-: (executable-find "diff") RET
 "org-doc">"Find my CollectBox file and some headline in the current buffer."</span>
       (find-file org-default-notes-file)
       (goto-char (point-min))
-      (helm-org-headlines)
+      (helm-org-in-buffer-headings)
       (org-forward-heading-same-level 1))
 </pre>
               </div>

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150119.1653
+;; Version: 20150121.1153
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150119.1653"
+(defconst leuven--emacs-version "20150121.1153"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2201,7 +2201,7 @@ These packages are neither built-in nor already installed nor ignored."
       For programming mode buffers, show functions, variables, etc."
         (interactive)
         (if (derived-mode-p 'org-mode)
-            (helm-org-headlines)
+            (helm-org-in-buffer-headings)
           (helm-imenu)))
 
       (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
@@ -4346,7 +4346,7 @@ These packages are neither built-in nor already installed nor ignored."
       "Find my CollectBox file and some headline in the current buffer."
       (find-file org-default-notes-file)
       (goto-char (point-min))
-      (helm-org-headlines)
+      (helm-org-in-buffer-headings)
       (org-forward-heading-same-level 1))
 
     (add-to-list 'org-capture-templates
