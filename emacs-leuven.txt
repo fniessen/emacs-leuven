@@ -8690,10 +8690,13 @@ up-to-date.
 #+begin_src emacs-lisp
     ;; Make the images in the Emacs buffer automatically refresh after
     ;; execution.
-    (add-hook 'org-babel-after-execute-hook
-              (lambda ()
-                (org-display-inline-images nil t)))
-                                        ; More efficient with refresh == t.
+
+    ;; (add-hook 'org-babel-after-execute-hook
+    ;;           (lambda ()
+    ;;             (org-display-inline-images nil t))) ; DOESN'T WORK!
+    ;;                                     ; More efficient with refresh == t.
+
+    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -9821,6 +9824,11 @@ Nor a default when point is on a command name...
       ;; Enable automatic save of parsed style information when saving the
       ;; buffer.
       (setq TeX-auto-save t)
+
+;;** 5.4 (info "(auctex)Internationalization")
+
+      ;; ;; Insert a literal hyphen XXX
+      ;; (setq LaTeX-babel-insert-hyphen nil)
 
 ;;** 5.5 (info "(auctex)Automatic") Customization
 
@@ -11160,6 +11168,10 @@ Version control systems that interact with Emacs in a generic way.
 
 - ~C-x v L~ ::
      List the change log for the current VC controlled tree in a window.
+
+We already have at least two pairs of commands (C-x v l vs.  C-x v L /and/ C-x
+v = vs. C-x v D), of which one operates on the current file /and/ the other on the
+repository as a whole.
 
 #+begin_src emacs-lisp
 ;;** 28.1 (info "(emacs)Version Control")

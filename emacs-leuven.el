@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150121.1153
+;; Version: 20150122.1437
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150121.1153"
+(defconst leuven--emacs-version "20150122.1437"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5563,10 +5563,13 @@ this with to-do items than with projects or headings."
 
     ;; Make the images in the Emacs buffer automatically refresh after
     ;; execution.
-    (add-hook 'org-babel-after-execute-hook
-              (lambda ()
-                (org-display-inline-images nil t)))
-                                        ; More efficient with refresh == t.
+
+    ;; (add-hook 'org-babel-after-execute-hook
+    ;;           (lambda ()
+    ;;             (org-display-inline-images nil t))) ; DOESN'T WORK!
+    ;;                                     ; More efficient with refresh == t.
+
+    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
     (defadvice org-babel-next-src-block
       (after leuven-org-babel-next-src-block activate)
@@ -6338,6 +6341,11 @@ this with to-do items than with projects or headings."
       ;; Enable automatic save of parsed style information when saving the
       ;; buffer.
       (setq TeX-auto-save t)
+
+;;** 5.4 (info "(auctex)Internationalization")
+
+      ;; ;; Insert a literal hyphen XXX
+      ;; (setq LaTeX-babel-insert-hyphen nil)
 
 ;;** 5.5 (info "(auctex)Automatic") Customization
 

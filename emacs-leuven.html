@@ -1375,7 +1375,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150121.1154</span>
+"org-comment">Version: 20150122.1438</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1502,7 +1502,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150121.1154"</span>
+"org-string">"20150122.1438"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -15993,12 +15993,17 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 "org-comment">Make the images in the Emacs buffer automatically refresh after</span>
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">execution.</span>
-    (add-hook 'org-babel-after-execute-hook
-              (<span class="org-keyword">lambda</span> ()
-                (org-display-inline-images nil t)))
-                                        <span class=
-"org-comment-delimiter">; </span><span class=
-"org-comment">More efficient with refresh == t.</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(add-hook 'org-babel-after-execute-hook</span>
+    <span class="org-comment-delimiter">;;           </span><span class=
+"org-comment">(lambda ()</span>
+    <span class="org-comment-delimiter">;;             </span><span class=
+"org-comment">(org-display-inline-images nil t))) ; DOESN'T WORK!</span>
+    <span class=
+"org-comment-delimiter">;;                                     </span><span class="org-comment">; More efficient with refresh == t.</span>
+
+    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 </pre>
           </div>
 
@@ -17912,6 +17917,15 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">buffer.</span>
       (setq TeX-auto-save t)
+
+<span class="org-comment-delimiter">;;</span><span class=
+"org-comment">** 5.4 (info "(auctex)Internationalization")</span>
+
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">;; Insert a literal hyphen </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq LaTeX-babel-insert-hyphen nil)</span>
 
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** 5.5 (info "(auctex)Automatic") Customization</span>
@@ -20183,6 +20197,10 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
             <dd>List the change log for the current VC controlled tree in a
             window.</dd>
           </dl>
+
+          <p>We already have at least two pairs of commands (C-x v l vs. C-x v
+          L <i>and</i> C-x v = vs. C-x v D), of which one operates on the
+          current file <i>and</i> the other on the repository as a whole.</p>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
