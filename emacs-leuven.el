@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150123.1658
+;; Version: 20150123.1704
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150123.1658"
+(defconst leuven--emacs-version "20150123.1704"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1122,7 +1122,8 @@ These packages are neither built-in nor already installed nor ignored."
                                         ; separator (for when using emacsclient
                                         ; to compose emails and doing C-x #).
                           (eq major-mode 'diff-mode))
-                                        ; ... where the diff can't be changed!
+                                        ; ... where the patch file can't be
+                                        ; changed!
                 (delete-trailing-whitespace))))
 
   ;; Visually indicate empty lines after the buffer end in the fringe.
