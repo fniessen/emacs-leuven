@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150123.1704
+;; Version: 20150123.2022
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150123.1704"
+(defconst leuven--emacs-version "20150123.2022"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1808,7 +1808,12 @@ These packages are neither built-in nor already installed nor ignored."
 
   (GNUEmacs
     ;; Update the copyright notice to indicate the current year.
-    (add-hook 'before-save-hook 'copyright-update))
+    (add-hook 'before-save-hook
+              (lambda ()                ; Except for ...
+                (unless (eq major-mode 'diff-mode)
+                                        ; ... where the patch file can't be
+                                        ; changed!
+                  (copyright-update)))))
 
 ;;** 18.4 (info "(emacs)Reverting") a Buffer
 

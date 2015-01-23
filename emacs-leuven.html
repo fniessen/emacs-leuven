@@ -1375,7 +1375,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150123.1704</span>
+"org-comment">Version: 20150123.2023</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1502,7 +1502,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150123.1704"</span>
+"org-string">"20150123.2023"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -6261,7 +6261,19 @@
   (GNUEmacs
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Update the copyright notice to indicate the current year.</span>
-    (add-hook 'before-save-hook 'copyright-update))
+    (add-hook 'before-save-hook
+              (<span class=
+"org-keyword">lambda</span> ()                <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Except for ...</span>
+                (<span class=
+"org-keyword">unless</span> (eq major-mode 'diff-mode)
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">... where the patch file can't be</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">changed!</span>
+                  (copyright-update)))))
 </pre>
           </div>
         </div>
