@@ -1375,7 +1375,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150122.1438</span>
+"org-comment">Version: 20150123.0941</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1502,7 +1502,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150122.1438"</span>
+"org-string">"20150123.0941"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -7810,6 +7810,13 @@ M-: (executable-find "diff") RET
             <h5 id="unnumbered-98">Helm find files</h5>
 
             <div class="outline-text-5" id="text-unnumbered-98">
+              <dl class="org-dl">
+                <dt><code>C-l</code></dt>
+
+                <dd>Delete the last segment of a file name (in the
+                minibuffer).</dd>
+              </dl>
+
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
     (<span class="org-keyword">with-eval-after-load</span> <span class=
@@ -16833,7 +16840,7 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
                               (org-element-property <span class=
 "org-builtin">:end</span> (org-element-at-point)))))
         (overlay-put ol 'face '(background-color . <span class=
-"org-string">"#FFC5FF"</span>))
+"org-string">"#FFD9FF"</span>))
         ad-do-it
         (delete-overlay ol))))
 </pre>

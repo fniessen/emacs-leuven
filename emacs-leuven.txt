@@ -3923,6 +3923,9 @@ make your life much easier with million Emacs keys.
 
 **** Helm find files
 
+- ~C-l~ ::
+     Delete the last segment of a file name (in the minibuffer).
+
 #+begin_src emacs-lisp
     (with-eval-after-load "helm-files"
 
@@ -9188,7 +9191,7 @@ For security resons, evaluation is not turned on by default.
       "Create an overlay indicating when code block is running."
       (let ((ol (make-overlay (org-element-property :begin (org-element-at-point))
                               (org-element-property :end (org-element-at-point)))))
-        (overlay-put ol 'face '(background-color . "#FFC5FF"))
+        (overlay-put ol 'face '(background-color . "#FFD9FF"))
         ad-do-it
         (delete-overlay ol))))
 #+end_src

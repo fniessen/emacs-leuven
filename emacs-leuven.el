@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150122.1437
+;; Version: 20150123.0940
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150122.1437"
+(defconst leuven--emacs-version "20150123.0940"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5902,7 +5902,7 @@ this with to-do items than with projects or headings."
       "Create an overlay indicating when code block is running."
       (let ((ol (make-overlay (org-element-property :begin (org-element-at-point))
                               (org-element-property :end (org-element-at-point)))))
-        (overlay-put ol 'face '(background-color . "#FFC5FF"))
+        (overlay-put ol 'face '(background-color . "#FFD9FF"))
         ad-do-it
         (delete-overlay ol))))
 
