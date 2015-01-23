@@ -1375,7 +1375,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150123.0941</span>
+"org-comment">Version: 20150123.1658</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1502,7 +1502,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150123.0941"</span>
+"org-string">"20150123.1658"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -4503,13 +4503,25 @@
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Nuke all trailing whitespaces in the buffer.</span>
   (add-hook 'before-save-hook
-            (<span class="org-keyword">lambda</span> ()
-              <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Except for Message mode where "-- " is the signature separator</span>
-              <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(for when using emacsclient to compose emails and doing C-x #).</span>
+            (<span class=
+"org-keyword">lambda</span> ()                  <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Except for ...</span>
               (<span class=
-"org-keyword">unless</span> (eq major-mode 'message-mode)
+"org-keyword">unless</span> (or (eq major-mode 'message-mode)
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">... where "-- " is the signature</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">separator (for when using emacsclient</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">to compose emails and doing C-x #).</span>
+                          (eq major-mode 'diff-mode))
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">... where the diff can't be changed!</span>
                 (delete-trailing-whitespace))))
 </pre>
           </div>
