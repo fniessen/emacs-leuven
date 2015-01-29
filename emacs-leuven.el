@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150123.2022
+;; Version: 20150129.1653
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150123.2022"
+(defconst leuven--emacs-version "20150129.1653"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -6667,8 +6667,20 @@ mouse-3: go to end") "]"))))
 
   (electric-pair-mode 1)
 
-  ;; ;; Pairs that should be used regardless of major mode.
-  ;; (push '(?\* . ?\*) electric-pair-pairs)
+  (defvar org-electric-pairs
+    '((?\* . ?\*)
+      (?/ . ?/)
+      (?_ . ?_)
+      (?= . ?=)
+      (?~ . ?~))
+    "Electric pairs for Org mode.")     ; See `org-emphasis-alist'.
+
+  (defun org-add-electric-pairs ()
+    (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
+    ;; (setq-local electric-pair-text-pairs electric-pair-pairs) ; In comments.
+  )
+
+  (add-hook 'org-mode-hook 'org-add-electric-pairs)
 
 ;;** 26.5 (info "(emacs)Comments")
 

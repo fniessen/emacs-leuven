@@ -10400,18 +10400,21 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
 #+begin_src emacs-lisp
   (electric-pair-mode 1)
-
-  ;; ;; Pairs that should be used regardless of major mode.
-  ;; (push '(?\* . ?\*) electric-pair-pairs)
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
-  (defvar org-electric-pairs '((?/ . ?/) (?= . ?=))
-    "Electric pairs for Org mode.")
+#+begin_src emacs-lisp
+  (defvar org-electric-pairs
+    '((?\* . ?\*)
+      (?/ . ?/)
+      (?_ . ?_)
+      (?= . ?=)
+      (?~ . ?~))
+    "Electric pairs for Org mode.")     ; See `org-emphasis-alist'.
 
   (defun org-add-electric-pairs ()
     (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
-    (setq-local electric-pair-text-pairs electric-pair-pairs)) ; In comments.
+    ;; (setq-local electric-pair-text-pairs electric-pair-pairs) ; In comments.
+  )
 
   (add-hook 'org-mode-hook 'org-add-electric-pairs)
 #+end_src
