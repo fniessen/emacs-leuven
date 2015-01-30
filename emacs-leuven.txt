@@ -7000,31 +7000,31 @@ Additional parameters can be included via the commands you use:
                  `("m" "Email processing...") t)
 
     (add-to-list 'org-capture-templates
-                 `("mt" "Create a TODO Action + edit" entry
+                 `("mT" "Create a TODO Action + edit" entry
                    (file+headline ,(concat org-directory "/refile.org") "Email") ; #+FILETAGS: :mail:
                    "* TODO %^{Creating action}%? (from %:fromname)
    %:date-timestamp-inactive
 
-#+begin_verse
+,#+begin_verse
 %i
-#+end_verse
+,#+end_verse
 
 From %a"
                    :empty-lines 1) t)
 
     (add-to-list 'org-capture-templates
-                 `("mr" "Create a TODO Action Remind 3" entry
+                 `("mt" "Create a TODO Action" entry
                    (file+headline ,(concat org-directory "/refile.org") "Email") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
-   SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \"\")
    %:date-timestamp-inactive
 
-#+begin_verse
+,#+begin_verse
 %i
-#+end_verse
+,#+end_verse
 
 From %a"
-                   :empty-lines 1 :immediate-finish t) t)
+                   :empty-lines 1
+                   :immediate-finish t) t)
 #+end_src
 
 The property ~:immediate-finish~, when set, immediately files the item without
@@ -7038,13 +7038,16 @@ With the clock options, ~org-capture~ automatically clocks in.  When pressing
                  `("p" "Phone call" entry
                    (file+headline ,(concat org-directory "/refile.org") "Phone calls")
                    "* %?"
-                   :empty-lines 1 :clock-in t :clock-resume t) t)
+                   :clock-in t
+                   :clock-resume t
+                   :empty-lines 1) t)
 
     (add-to-list 'org-capture-templates
                  `("i" "interruption" entry
                    (file ,(concat org-directory "/refile.org"))
                    "A TEMPLATE HERE"
-                   :clock-in t :clock-resume t) t)
+                   :clock-in t
+                   :clock-resume t) t)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -7097,8 +7100,10 @@ From %a"
     ;;           (file ,(concat org-directory "/refile.org"))
     ;;           "* TODO Review %c
     ;; %U"
-    ;;           :immediate-finish t :clock-in t :clock-resume t)
-
+    ;;           :clock-in t
+    ;;           :clock-resume t
+    ;;           :immediate-finish t)
+    ;;
     ;; ("web-clippings" ?w
     ;;  "* %^{Title} %^g \n  :PROPERTIES:\n  :date: %^t\n  :link: %^{link}\n  :END:\n\n %x %?"
     ;;  "~/org/data.org" "Web Clippings")
@@ -7115,7 +7120,8 @@ From %a"
 %i
 
 From %c"
-                   :empty-lines 1 :immediate-finish t) t)
+                   :empty-lines 1
+                   :immediate-finish t) t)
 
     ;; Default `org-capture-templates' key to use.
     (setq org-protocol-default-template-key "w")
@@ -10402,10 +10408,9 @@ Balanced editing: inserting two matching parentheses at once, etc.
     sensible things
 
 #+begin_src emacs-lisp
+  ;; Enable automatic parens pairing (Electric Pair mode).
   (electric-pair-mode 1)
-#+end_src
 
-#+begin_src emacs-lisp
   (defvar org-electric-pairs
     '((?\* . ?\*)
       (?/ . ?/)

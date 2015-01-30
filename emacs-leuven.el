@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150130.1030
+;; Version: 20150130.1048
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150130.1030"
+(defconst leuven--emacs-version "20150130.1048"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -4362,7 +4362,7 @@ These packages are neither built-in nor already installed nor ignored."
                  `("m" "Email processing...") t)
 
     (add-to-list 'org-capture-templates
-                 `("mt" "Create a TODO Action + edit" entry
+                 `("mT" "Create a TODO Action + edit" entry
                    (file+headline ,(concat org-directory "/refile.org") "Email") ; #+FILETAGS: :mail:
                    "* TODO %^{Creating action}%? (from %:fromname)
    %:date-timestamp-inactive
@@ -4375,10 +4375,9 @@ From %a"
                    :empty-lines 1) t)
 
     (add-to-list 'org-capture-templates
-                 `("mr" "Create a TODO Action Remind 3" entry
+                 `("mt" "Create a TODO Action" entry
                    (file+headline ,(concat org-directory "/refile.org") "Email") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
-   SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+3d\") nil nil nil nil \"\")
    %:date-timestamp-inactive
 
 #+begin_verse
@@ -4386,19 +4385,23 @@ From %a"
 #+end_verse
 
 From %a"
-                   :empty-lines 1 :immediate-finish t) t)
+                   :empty-lines 1
+                   :immediate-finish t) t)
 
     (add-to-list 'org-capture-templates
                  `("p" "Phone call" entry
                    (file+headline ,(concat org-directory "/refile.org") "Phone calls")
                    "* %?"
-                   :empty-lines 1 :clock-in t :clock-resume t) t)
+                   :clock-in t
+                   :clock-resume t
+                   :empty-lines 1) t)
 
     (add-to-list 'org-capture-templates
                  `("i" "interruption" entry
                    (file ,(concat org-directory "/refile.org"))
                    "A TEMPLATE HERE"
-                   :clock-in t :clock-resume t) t)
+                   :clock-in t
+                   :clock-resume t) t)
 
     ;; Thought.
     (add-to-list 'org-capture-templates
@@ -4447,8 +4450,10 @@ From %a"
     ;;           (file ,(concat org-directory "/refile.org"))
     ;;           "* TODO Review %c
     ;; %U"
-    ;;           :immediate-finish t :clock-in t :clock-resume t)
-
+    ;;           :clock-in t
+    ;;           :clock-resume t
+    ;;           :immediate-finish t)
+    ;;
     ;; ("web-clippings" ?w
     ;;  "* %^{Title} %^g \n  :PROPERTIES:\n  :date: %^t\n  :link: %^{link}\n  :END:\n\n %x %?"
     ;;  "~/org/data.org" "Web Clippings")
@@ -4463,7 +4468,8 @@ From %a"
 %i
 
 From %c"
-                   :empty-lines 1 :immediate-finish t) t)
+                   :empty-lines 1
+                   :immediate-finish t) t)
 
     ;; Default `org-capture-templates' key to use.
     (setq org-protocol-default-template-key "w")
@@ -6668,6 +6674,7 @@ mouse-3: go to end") "]"))))
 
   (global-set-key (kbd "C-)") 'leuven-match-paren)
 
+  ;; Enable automatic parens pairing (Electric Pair mode).
   (electric-pair-mode 1)
 
   (defvar org-electric-pairs
