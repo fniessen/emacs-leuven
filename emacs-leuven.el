@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150129.1653
+;; Version: 20150130.1030
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150129.1653"
+(defconst leuven--emacs-version "20150130.1030"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5745,20 +5745,23 @@ this with to-do items than with projects or headings."
     (setq org-babel-R-command
           (concat org-babel-R-command " --encoding=UTF-8"))
 
-    ;; Check for the support of source code block languages.
+    ;; Check for the support of (inline) source block languages.
     (defun org-src-block-check ()
       (interactive)
-      (org-element-map (org-element-parse-buffer 'element) 'src-block
-        (lambda (src-block)
-          (let ((language (org-element-property :language src-block)))
+      (org-element-map (org-element-parse-buffer)
+        '(src-block inline-src-block)
+        (lambda (sb)
+          (let ((language (org-element-property :language sb)))
             (cond ((null language)
-                   (error "Missing language at position %d in %s"
-                          (org-element-property :post-affiliated src-block)
+                   (error "Missing language at line %d in %s"
+                          (org-current-line
+                           (org-element-property :post-affiliated sb))
                           (buffer-name)))
                   ((not (assoc-string language org-babel-load-languages))
-                   (error "Unknown language `%s' at position %d in `%s'"
+                   (error "Unknown language `%s' at line %d in `%s'"
                           language
-                          (org-element-property :post-affiliated src-block)
+                          (org-current-line
+                           (org-element-property :post-affiliated sb))
                           (buffer-name)))))))
       (message "Source blocks checked in %s." (buffer-name (buffer-base-buffer))))
 
