@@ -5641,7 +5641,7 @@ These variables need to be set before Org mode is loaded.
 
   ;; Face to be used by `font-lock' for highlighting in Org mode Emacs
   ;; buffers, and tags to be used to convert emphasis fontifiers for HTML
-  ;; export.
+  ;; export. XXX Format changed! XXX
   (setq org-emphasis-alist              ; Remove the strike-through emphasis.
         '(("*" bold "<b>" "</b>")
           ("/" italic "<i>" "</i>")
@@ -10927,8 +10927,8 @@ if you made a mistake.
   ;; modern on-the-fly syntax checking
   (with-eval-after-load "flycheck-autoloads"
 
-    ;; enable Flycheck mode in all buffers
-    (add-hook 'after-init-hook 'global-flycheck-mode))
+    ;; enable Flycheck mode in all programming modes
+    (add-hook 'prog-mode-hook 'flycheck-mode))
 
   (with-eval-after-load "flycheck"
 

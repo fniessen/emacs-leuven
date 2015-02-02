@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150130.1048
+;; Version: 20150202.1530
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150130.1048"
+(defconst leuven--emacs-version "20150202.1530"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3459,7 +3459,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Face to be used by `font-lock' for highlighting in Org mode Emacs
   ;; buffers, and tags to be used to convert emphasis fontifiers for HTML
-  ;; export.
+  ;; export. XXX Format changed! XXX
   (setq org-emphasis-alist              ; Remove the strike-through emphasis.
         '(("*" bold "<b>" "</b>")
           ("/" italic "<i>" "</i>")
@@ -6947,8 +6947,8 @@ mouse-3: go to end") "]"))))
   ;; modern on-the-fly syntax checking
   (with-eval-after-load "flycheck-autoloads"
 
-    ;; enable Flycheck mode in all buffers
-    (add-hook 'after-init-hook 'global-flycheck-mode))
+    ;; enable Flycheck mode in all programming modes
+    (add-hook 'prog-mode-hook 'flycheck-mode))
 
   (with-eval-after-load "flycheck"
 

@@ -1374,7 +1374,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150130.1048</span>
+"org-comment">Version: 20150202.1531</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1501,7 +1501,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150130.1048"</span>
+"org-string">"20150202.1531"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -10769,7 +10769,10 @@ M-: (executable-find "diff") RET
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">buffers, and tags to be used to convert emphasis fontifiers for HTML</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">export.</span>
+"org-comment">export. </span><span class="org-leuven-highlight"><span class=
+"org-comment">XXX</span></span><span class=
+"org-comment"> Format changed! </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span>
   (setq org-emphasis-alist              <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">Remove the strike-through emphasis.</span>
@@ -19807,8 +19810,8 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 "org-string">"flycheck-autoloads"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable Flycheck mode in all buffers</span>
-    (add-hook 'after-init-hook 'global-flycheck-mode))
+"org-comment">enable Flycheck mode in all programming modes</span>
+    (add-hook 'prog-mode-hook 'flycheck-mode))
 
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"flycheck"</span>
