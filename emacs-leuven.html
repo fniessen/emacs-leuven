@@ -1374,7 +1374,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150203.1058</span>
+"org-comment">Version: 20150203.1727</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1501,7 +1501,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150203.1058"</span>
+"org-string">"20150203.1727"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -5582,12 +5582,15 @@
     (add-hook 'org-mode-hook
               (<span class="org-keyword">lambda</span> ()
                 (<span class=
-"org-keyword">if</span> (or (eq (aref (buffer-name) 0) ?\s) <span class=
+"org-keyword">if</span> (or (eq (aref (buffer-name) 0) ?\s)
+                                        <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">buffer starting with " *"</span>
+"org-comment">Buffer starting with " *".</span>
                         (and (boundp 'org-babel-exp-reference-buffer)
-                             org-babel-exp-reference-buffer)) <span class=
-"org-comment-delimiter">; </span><span class="org-comment">export buffer</span>
+                             org-babel-exp-reference-buffer))
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Export buffer.</span>
                     (message <span class=
 "org-string">"DON'T TURN ON Flyspell mode in `</span><span class=
 "org-constant"><span class="org-string">%s</span></span><span class=
@@ -15001,9 +15004,18 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 "org-comment">(like `C-c C-c')</span>
 
           <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(org-babel-execute-buffer)   ; </span><span class=
-"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
-"org-comment"> Why should we execute all code blocks?</span>
+"org-comment">;; Update the results in the Org buffer</span>
+          <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(org-babel-execute-buffer)    ; In this case, better than</span>
+          <span class=
+"org-comment-delimiter">;;                               </span><span class=
+"org-comment">; (add-hook 'org-export-first-hook</span>
+          <span class=
+"org-comment-delimiter">;;                               </span><span class=
+"org-comment">;           'org-babel-execute-buffer):</span>
+          <span class=
+"org-comment-delimiter">;;                               </span><span class=
+"org-comment">; excuted only once for both exports.</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">It'd make sense to eval all code blocks which have :cache yes or :exports</span>
@@ -15183,17 +15195,6 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
     )                                   <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">with-eval-after-load "ox" ends here</span>
-</pre>
-            </div>
-
-            <div class="org-src-container">
-              <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Execute buffer when exporting it (see some thread with Eric Schulte,</span>
-  <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">end of December 2010).</span>
-  <span class="org-comment-delimiter">;;;;;;;;;; </span><span class=
-"org-comment">(add-hook 'org-export-first-hook 'org-babel-execute-buffer)</span>
 </pre>
             </div>
           </div>
@@ -16996,11 +16997,14 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Extension of Imenu.</span>
-    (<span class=
-"org-keyword">when</span> (and (fboundp 'org-babel-execute-src-block) <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">org-babel</span></span><span class="org-comment">' has been</span>
-                                                      <span class=
-"org-comment-delimiter">; </span><span class="org-comment">loaded.</span>
-               (fboundp 'try-to-add-imenu)) <span class=
+    (<span class="org-keyword">when</span> (and (<span class=
+"org-keyword">featurep</span> '<span class=
+"org-constant">ob-core</span>)      <span class=
+"org-comment-delimiter">; </span><span class="org-comment">`</span><span class=
+"org-constant"><span class="org-comment">org-babel</span></span><span class=
+"org-comment">' has been loaded.</span>
+               (<span class="org-keyword">featurep</span> '<span class=
+"org-constant">imenu</span>))       <span class=
 "org-comment-delimiter">; </span><span class="org-comment">`</span><span class=
 "org-constant"><span class="org-comment">imenu</span></span><span class=
 "org-comment">' has been loaded.</span>
@@ -18981,10 +18985,15 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 
   (<span class="org-keyword">defvar</span> <span class=
 "org-variable-name">org-electric-pairs</span>
-    '((?\* . ?\*)
-      (?/ . ?/)
-      (?_ . ?_)
-      (?= . ?=)
+    '(
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(?\* . ?\*)</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(?/ . ?/)</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(?_ . ?_)</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(?= . ?=)                      ; Too much used in code blocks.</span>
       (?~ . ?~))
     <span class=
 "org-doc">"Electric pairs for Org mode."</span>)     <span class=
@@ -21705,11 +21714,11 @@ etags --langdef=shell --regex-shell=<span class=
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">add root directories that store the snippets</span>
+"org-comment">Add root directories that store the snippets.</span>
       (<span class=
 "org-keyword">let</span> ((leuven-snippets            <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">additional YASnippets</span>
+"org-comment">Additional YASnippets.</span>
              (concat leuven--directory <span class=
 "org-string">"snippets"</span>))
             (org-snippets
@@ -21724,17 +21733,17 @@ etags --langdef=shell --regex-shell=<span class=
           (add-to-list 'yas-snippet-dirs leuven-snippets)))
                                         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">the first element (inserted last) is</span>
+"org-comment">The first element (inserted last) is</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">always the user-created snippets</span>
                                         <span class=
-"org-comment-delimiter">; </span><span class="org-comment">directory</span>
+"org-comment-delimiter">; </span><span class="org-comment">directory.</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">use Snippet mode for files with a `</span><span class=
+"org-comment">Use Snippet mode for files with a `</span><span class=
 "org-constant"><span class="org-comment">yasnippet</span></span><span class=
-"org-comment">' extension</span>
+"org-comment">' extension.</span>
       (add-to-list 'auto-mode-alist '(<span class=
 "org-string">"\\.yasnippet\\'"</span> . snippet-mode))
 </pre>
@@ -21749,15 +21758,16 @@ etags --langdef=shell --regex-shell=<span class=
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">insert snippet at point</span>
+"org-comment">Insert snippet at point.</span>
       (global-set-key (kbd <span class=
 "org-string">"C-c y i"</span>) 'yas-insert-snippet) <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">also on `C-c &amp; C-s'</span>
+"org-comment">Also on `C-c &amp; C-s'.</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">bind `</span><span class="org-constant"><span class=
-"org-comment">yas-expand</span></span><span class="org-comment">' to SPC</span>
+"org-comment">Bind `</span><span class="org-constant"><span class=
+"org-comment">yas-expand</span></span><span class=
+"org-comment">' to SPC.</span>
       (define-key yas-minor-mode-map (kbd <span class=
 "org-string">"&lt;tab&gt;"</span>) nil)
       (define-key yas-minor-mode-map (kbd <span class=
@@ -21766,19 +21776,20 @@ etags --langdef=shell --regex-shell=<span class=
 "org-string">"SPC"</span>) 'yas-expand)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't expand when you are typing in a string or comment</span>
+"org-comment">Don't expand when you are typing in a string or comment.</span>
       (add-hook 'prog-mode-hook
                 '(<span class="org-keyword">lambda</span> ()
                    (setq yas-buffer-local-condition
                          '(<span class=
-"org-keyword">if</span> (nth 8 (syntax-ppss)) <span class=
+"org-keyword">if</span> (nth 8 (syntax-ppss))
+                                        <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">non-nil if in a string or comment</span>
+"org-comment">Non-nil if in a string or comment.</span>
                               '(require-snippet-condition . force-in-comment)
                             t))))
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">UI for selecting snippet when there are multiple candidates</span>
+"org-comment">UI for selecting snippet when there are multiple candidates.</span>
       (setq yas-prompt-functions '(yas-dropdown-prompt))
 </pre>
             </div>
@@ -21889,7 +21900,7 @@ etags --langdef=shell --regex-shell=<span class=
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">automatically reload snippets after saving</span>
+"org-comment">Automatically reload snippets after saving.</span>
       (<span class="org-keyword">defun</span> <span class=
 "org-function-name">recompile-and-reload-all-snippets</span> ()
         (interactive)

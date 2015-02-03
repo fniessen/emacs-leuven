@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150203.1057
+;; Version: 20150203.1727
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150203.1057"
+(defconst leuven--emacs-version "20150203.1727"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1574,9 +1574,11 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Enable on-the-fly spell checking.
     (add-hook 'org-mode-hook
               (lambda ()
-                (if (or (eq (aref (buffer-name) 0) ?\s) ; buffer starting with " *"
+                (if (or (eq (aref (buffer-name) 0) ?\s)
+                                        ; Buffer starting with " *".
                         (and (boundp 'org-babel-exp-reference-buffer)
-                             org-babel-exp-reference-buffer)) ; export buffer
+                             org-babel-exp-reference-buffer))
+                                        ; Export buffer.
                     (message "DON'T TURN ON Flyspell mode in `%s'" (buffer-name))
                   (message "Turn on Flyspell mode in `%s'" (buffer-name))
                   (flyspell-mode))))
@@ -5155,7 +5157,11 @@ this with to-do items than with projects or headings."
                                         ; special #+KEYWORD lines
                                         ; (like `C-c C-c')
 
-          ;; (org-babel-execute-buffer)   ; XXX Why should we execute all code blocks?
+          ;; ;; Update the results in the Org buffer
+          ;; (org-babel-execute-buffer)    ; In this case, better than
+          ;;                               ; (add-hook 'org-export-first-hook
+          ;;                               ;           'org-babel-execute-buffer):
+          ;;                               ; excuted only once for both exports.
 
 ;; It'd make sense to eval all code blocks which have :cache yes or :exports
 ;; results or both... And, before that, to delete all code block results!?
@@ -5231,10 +5237,6 @@ this with to-do items than with projects or headings."
                  '("b" . "beamer"))
 
     )                                   ; with-eval-after-load "ox" ends here
-
-  ;; Execute buffer when exporting it (see some thread with Eric Schulte,
-  ;; end of December 2010).
-  ;;;;;;;;;; (add-hook 'org-export-first-hook 'org-babel-execute-buffer)
 
 ;;** 12.5 (info "(org)HTML export")
 
@@ -5950,9 +5952,8 @@ this with to-do items than with projects or headings."
     (setq org-imenu-depth 3)
 
     ;; Extension of Imenu.
-    (when (and (fboundp 'org-babel-execute-src-block) ; `org-babel' has been
-                                                      ; loaded.
-               (fboundp 'try-to-add-imenu)) ; `imenu' has been loaded.
+    (when (and (featurep 'ob-core)      ; `org-babel' has been loaded.
+               (featurep 'imenu))       ; `imenu' has been loaded.
 
       (setq org-src-blocks-imenu-generic-expression
             `(("Snippets" ,org-babel-src-name-w-name-regexp 2)))
@@ -6682,10 +6683,11 @@ mouse-3: go to end") "]"))))
   (electric-pair-mode 1)
 
   (defvar org-electric-pairs
-    '((?\* . ?\*)
-      (?/ . ?/)
-      (?_ . ?_)
-      (?= . ?=)
+    '(
+      ;; (?\* . ?\*)
+      ;; (?/ . ?/)
+      ;; (?_ . ?_)
+      ;; (?= . ?=)                      ; Too much used in code blocks.
       (?~ . ?~))
     "Electric pairs for Org mode.")     ; See `org-emphasis-alist'.
 
@@ -7487,8 +7489,8 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;; ;; load the snippet tables
       ;; (yas-reload-all)               ; in double? (see Messages buffer)
 
-      ;; add root directories that store the snippets
-      (let ((leuven-snippets            ; additional YASnippets
+      ;; Add root directories that store the snippets.
+      (let ((leuven-snippets            ; Additional YASnippets.
              (concat leuven--directory "snippets"))
             (org-snippets
              (concat leuven--local-repos-directory "yasnippet-org-mode")))
@@ -7498,30 +7500,31 @@ a clean buffer we're an order of magnitude laxer about checking."
 
         (when (file-directory-p leuven-snippets)
           (add-to-list 'yas-snippet-dirs leuven-snippets)))
-                                        ; the first element (inserted last) is
+                                        ; The first element (inserted last) is
                                         ; always the user-created snippets
-                                        ; directory
+                                        ; directory.
 
-      ;; use Snippet mode for files with a `yasnippet' extension
+      ;; Use Snippet mode for files with a `yasnippet' extension.
       (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
 
-      ;; insert snippet at point
-      (global-set-key (kbd "C-c y i") 'yas-insert-snippet) ; also on `C-c & C-s'
+      ;; Insert snippet at point.
+      (global-set-key (kbd "C-c y i") 'yas-insert-snippet) ; Also on `C-c & C-s'.
 
-      ;; bind `yas-expand' to SPC
+      ;; Bind `yas-expand' to SPC.
       (define-key yas-minor-mode-map (kbd "<tab>") nil)
       (define-key yas-minor-mode-map (kbd "TAB") nil)
       (define-key yas-minor-mode-map (kbd "SPC") 'yas-expand)
 
-      ;; don't expand when you are typing in a string or comment
+      ;; Don't expand when you are typing in a string or comment.
       (add-hook 'prog-mode-hook
                 '(lambda ()
                    (setq yas-buffer-local-condition
-                         '(if (nth 8 (syntax-ppss)) ; non-nil if in a string or comment
+                         '(if (nth 8 (syntax-ppss))
+                                        ; Non-nil if in a string or comment.
                               '(require-snippet-condition . force-in-comment)
                             t))))
 
-      ;; UI for selecting snippet when there are multiple candidates
+      ;; UI for selecting snippet when there are multiple candidates.
       (setq yas-prompt-functions '(yas-dropdown-prompt))
 
       (global-set-key (kbd "C-c y l") 'yas-describe-tables)
@@ -7554,7 +7557,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
       (global-set-key [mouse-3] 'lawlist-popup-context-menu)
 
-      ;; automatically reload snippets after saving
+      ;; Automatically reload snippets after saving.
       (defun recompile-and-reload-all-snippets ()
         (interactive)
         (when (eq major-mode 'snippet-mode)
