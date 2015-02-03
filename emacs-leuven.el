@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150203.1727
+;; Version: 20150203.1814
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150203.1727"
+(defconst leuven--emacs-version "20150203.1814"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1826,6 +1826,11 @@ These packages are neither built-in nor already installed nor ignored."
     "Unconditionally revert current buffer."
     (interactive)
     (revert-buffer t t)                 ; ignore-auto(-save), noconfirm
+    (dolist (o (overlays-in (window-start) (window-end)))
+      (when (equal (overlay-get o 'face) 'org-block-executing)
+        (delete-overlay o)))            ; Useful when our advice of function
+                                        ; `org-babel-execute-src-block' fails to
+                                        ; remove the background color.
     (message "Buffer is up to date with file on disk"))
 
   ;; key binding
@@ -5921,14 +5926,18 @@ this with to-do items than with projects or headings."
     ;;!! Don't be prompted on every code block evaluation.
     (setq org-confirm-babel-evaluate nil)
 
+    (defface org-block-executing
+      '((t (:background "#FFD9FF")))
+      "Face used for the source block background when executed.")
+
     ;; Change the color of code blocks while they are being executed.
     (defadvice org-babel-execute-src-block (around progress nil activate)
       "Create an overlay indicating when code block is running."
-      (let ((ol (make-overlay (org-element-property :begin (org-element-at-point))
-                              (org-element-property :end (org-element-at-point)))))
-        (overlay-put ol 'face '(background-color . "#FFD9FF"))
+      (let ((o (make-overlay (org-element-property :begin (org-element-at-point))
+                             (1- (org-element-property :end (org-element-at-point))))))
+        (overlay-put o 'face 'org-block-executing)
         ad-do-it
-        (delete-overlay ol))))
+        (delete-overlay o))))
 
 ;;** 15.8 A (info "(org)Clean view")
 

@@ -1374,7 +1374,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150203.1727</span>
+"org-comment">Version: 20150203.1814</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1501,7 +1501,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150203.1727"</span>
+"org-string">"20150203.1814"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -6302,6 +6302,21 @@
     (revert-buffer t t)                 <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">ignore-auto(-save), noconfirm</span>
+    (<span class=
+"org-keyword">dolist</span> (o (overlays-in (window-start) (window-end)))
+      (<span class=
+"org-keyword">when</span> (equal (overlay-get o 'face) 'org-block-executing)
+        (delete-overlay o)))            <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Useful when our advice of function</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">`</span><span class=
+"org-constant"><span class=
+"org-comment">org-babel-execute-src-block</span></span><span class=
+"org-comment">' fails to</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">remove the background color.</span>
     (message <span class=
 "org-string">"Buffer is up to date with file on disk"</span>))
 
@@ -16923,6 +16938,13 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
+    (<span class="org-keyword">defface</span> <span class=
+"org-variable-name">org-block-executing</span>
+      '((t (<span class="org-builtin">:background</span> <span class=
+"org-string">"#FFD9FF"</span>)))
+      <span class=
+"org-doc">"Face used for the source block background when executed."</span>)
+
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Change the color of code blocks while they are being executed.</span>
     (<span class="org-keyword">defadvice</span> <span class=
@@ -16930,14 +16952,13 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
       <span class=
 "org-doc">"Create an overlay indicating when code block is running."</span>
       (<span class=
-"org-keyword">let</span> ((ol (make-overlay (org-element-property <span class=
+"org-keyword">let</span> ((o (make-overlay (org-element-property <span class=
 "org-builtin">:begin</span> (org-element-at-point))
-                              (org-element-property <span class=
-"org-builtin">:end</span> (org-element-at-point)))))
-        (overlay-put ol 'face '(background-color . <span class=
-"org-string">"#FFD9FF"</span>))
+                             (1- (org-element-property <span class=
+"org-builtin">:end</span> (org-element-at-point))))))
+        (overlay-put o 'face 'org-block-executing)
         ad-do-it
-        (delete-overlay ol))))
+        (delete-overlay o))))
 </pre>
             </div>
           </div>

@@ -3016,6 +3016,11 @@ Update time stamps (and copyright notice) automatically.
     "Unconditionally revert current buffer."
     (interactive)
     (revert-buffer t t)                 ; ignore-auto(-save), noconfirm
+    (dolist (o (overlays-in (window-start) (window-end)))
+      (when (equal (overlay-get o 'face) 'org-block-executing)
+        (delete-overlay o)))            ; Useful when our advice of function
+                                        ; `org-babel-execute-src-block' fails to
+                                        ; remove the background color.
     (message "Buffer is up to date with file on disk"))
 
   ;; key binding
@@ -9225,14 +9230,18 @@ For security resons, evaluation is not turned on by default.
 #+end_src
 
 #+begin_src emacs-lisp
+    (defface org-block-executing
+      '((t (:background "#FFD9FF")))
+      "Face used for the source block background when executed.")
+
     ;; Change the color of code blocks while they are being executed.
     (defadvice org-babel-execute-src-block (around progress nil activate)
       "Create an overlay indicating when code block is running."
-      (let ((ol (make-overlay (org-element-property :begin (org-element-at-point))
-                              (org-element-property :end (org-element-at-point)))))
-        (overlay-put ol 'face '(background-color . "#FFD9FF"))
+      (let ((o (make-overlay (org-element-property :begin (org-element-at-point))
+                             (1- (org-element-property :end (org-element-at-point))))))
+        (overlay-put o 'face 'org-block-executing)
         ad-do-it
-        (delete-overlay ol))))
+        (delete-overlay o))))
 #+end_src
 
 *** A cleaner outline view
