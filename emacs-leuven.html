@@ -1374,7 +1374,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150202.1531</span>
+"org-comment">Version: 20150203.1058</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1501,7 +1501,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150202.1531"</span>
+"org-string">"20150203.1058"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -15049,8 +15049,57 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 </pre>
           </div>
 
-          <p>XXX We should check that SETUPFILES (like for Bigblow) or INCLUDE
-          files do exist, before exporting.</p>
+          <table class="inlinetask" width="100%">
+            <tr>
+              <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
+
+              <td width="100%">
+                <b>Execute all code blocks in buffer</b><br />
+
+                <p>Ce qui serait mieux :</p>
+
+                <ul class="org-ul">
+                  <li>executer tout dans le buffer (sauf les never,
+                  évidemment)</li>
+
+                  <li>exporter en let-bind’ant eval à never… SAUF POUR DES
+                  BLOCKS DONT ON NE VOULAIT PAS LE RÉSULTAT (TROP LONG, PAR
+                  EXEMPLE) DANS LE BUFFER MAIS QUE L’ON VEUT À L’EXPORT !!</li>
+                </ul>
+
+                <p>Ansi, on aurait les valeurs à jour dans le buffer Org, et
+                les deux exports (HTML et PDF) seraient identiques entre eux,
+                et avec le buffer Org.</p>
+              </td>
+            </tr>
+          </table>
+
+          <table class="inlinetask" width="100%">
+            <tr>
+              <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
+
+              <td width="100%">
+                <b>Check that SETUPFILES (like for Bigblow) or INCLUDE files
+                exist</b><br />
+
+                <p>Before exporting…</p>
+              </td>
+            </tr>
+          </table>
+
+          <table class="inlinetask" width="100%">
+            <tr>
+              <td valign="top"><b><span class="todo TODO">TODO</span></b></td>
+
+              <td width="100%">
+                <b>Map through inline code blocks to remove inline
+                results</b><br />
+
+                <p><code>(org-babel-map-inline-src-blocks nil
+                (org-babel-remove-inline-result))</code></p>
+              </td>
+            </tr>
+          </table>
         </div>
 
         <div id="outline-container-unnumbered-206" class="outline-4">
@@ -16422,7 +16471,21 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
       (message <span class=
 "org-string">"Source blocks checked in %s."</span> (buffer-name (buffer-base-buffer))))
 
-    (add-hook 'org-mode-hook 'org-src-block-check))
+    (add-hook 'org-mode-hook 'org-src-block-check t))
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Place this at the end to ensure that</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">errors do not stop applying other</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">functions in the `</span><span class="org-constant"><span class=
+"org-comment">org-mode-hook</span></span><span class=
+"org-comment">' (such</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">as switching the dictionary).</span>
 </pre>
             </div>
 

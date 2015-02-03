@@ -8138,8 +8138,25 @@ launched from Dired?
     (define-key org-mode-map (kbd "<f9>") 'org-save-buffer-and-do-related))
 #+end_src
 
-XXX We should check that SETUPFILES (like for Bigblow) or INCLUDE files do
-exist, before exporting.
+*************** TODO Execute all code blocks in buffer
+Ce qui serait mieux :
+
+- executer tout dans le buffer (sauf les never, évidemment)
+- exporter en let-bind'ant eval à never... SAUF POUR DES BLOCKS DONT ON NE
+  VOULAIT PAS LE RÉSULTAT (TROP LONG, PAR EXEMPLE) DANS LE BUFFER MAIS QUE L'ON
+  VEUT À L'EXPORT !!
+
+Ansi, on aurait les valeurs à jour dans le buffer Org, et les deux exports
+(HTML et PDF) seraient identiques entre eux, et avec le buffer Org.
+*************** END
+
+*************** TODO Check that SETUPFILES (like for Bigblow) or INCLUDE files exist
+Before exporting...
+*************** END
+
+*************** TODO Map through inline code blocks to remove inline results
+~(org-babel-map-inline-src-blocks nil (org-babel-remove-inline-result))~
+*************** END
 
 *** Export options
 
@@ -8951,7 +8968,11 @@ languages which can be evaluated in Org mode buffers.
                           (buffer-name)))))))
       (message "Source blocks checked in %s." (buffer-name (buffer-base-buffer))))
 
-    (add-hook 'org-mode-hook 'org-src-block-check))
+    (add-hook 'org-mode-hook 'org-src-block-check t))
+                                        ; Place this at the end to ensure that
+                                        ; errors do not stop applying other
+                                        ; functions in the `org-mode-hook' (such
+                                        ; as switching the dictionary).
 #+end_src
 
 ~screen~ offers support for interactive terminals.  Mostly shell scripts.  Heavily
