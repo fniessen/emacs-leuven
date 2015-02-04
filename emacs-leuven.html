@@ -1374,7 +1374,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150204.1053</span>
+"org-comment">Version: 20150204.1514</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1501,7 +1501,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150204.1053"</span>
+"org-string">"20150204.1514"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -1539,6 +1539,20 @@
   <span class="org-doc">"Value of `</span><span class=
 "org-constant"><span class="org-doc">float-time</span></span><span class=
 "org-doc">' before loading the Leuven Emacs Config library."</span>)
+</pre>
+        </div>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+(<span class="org-keyword">defmacro</span> <span class=
+"org-function-name">measure-time</span> (message <span class=
+"org-type">&amp;rest</span> body)
+  <span class="org-doc">"Measure the time it takes to evaluate BODY."</span>
+  `(<span class="org-keyword">let</span> ((time (current-time)))
+     ,@body
+     (message <span class=
+"org-string">"%s (in %.02f s) ___________________________"</span>
+              ,message (float-time (time-since time)))))
 </pre>
         </div>
 
@@ -17458,20 +17472,6 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
         <div class="outline-text-3" id="text-unnumbered-234">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">defmacro</span> <span class=
-"org-function-name">measure-time</span> (message <span class=
-"org-type">&amp;rest</span> body)
-    <span class="org-doc">"Measure the time it takes to evaluate BODY."</span>
-    `(<span class="org-keyword">let</span> ((time (current-time)))
-       ,@body
-       (message <span class=
-"org-string">"%s in %.02f s ___________________________"</span>
-                ,message (float-time (time-since time)))))
-</pre>
-          </div>
-
-          <div class="org-src-container">
-            <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** A.6 (info "(org)Dynamic blocks")</span>
 
@@ -17512,7 +17512,8 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 "org-comment">TEMP (Because of bug with pretty</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class="org-comment">entity emsp)</span>
-          (measure-time <span class="org-string">"Iterated all tables"</span>
+          (measure-time <span class=
+"org-string">"Re-applied formulas to all tables"</span>
                         (org-table-iterate-buffer-tables))
           (<span class=
 "org-keyword">when</span> (file-exists-p (buffer-file-name (current-buffer)))

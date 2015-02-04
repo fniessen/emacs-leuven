@@ -242,6 +242,15 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
 #+end_src
 
 #+begin_src emacs-lisp
+(defmacro measure-time (message &rest body)
+  "Measure the time it takes to evaluate BODY."
+  `(let ((time (current-time)))
+     ,@body
+     (message "%s (in %.02f s) ___________________________"
+              ,message (float-time (time-since time)))))
+#+end_src
+
+#+begin_src emacs-lisp
 ;;; User Customizable Internal Variables
 
 (defgroup leuven nil
@@ -9551,15 +9560,6 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 ** A.6 Dynamic blocks
 
 #+begin_src emacs-lisp
-  (defmacro measure-time (message &rest body)
-    "Measure the time it takes to evaluate BODY."
-    `(let ((time (current-time)))
-       ,@body
-       (message "%s in %.02f s ___________________________"
-                ,message (float-time (time-since time)))))
-#+end_src
-
-#+begin_src emacs-lisp
 ;;** A.6 (info "(org)Dynamic blocks")
 
   (with-eval-after-load "org"
@@ -9582,7 +9582,7 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
                         (org-table-map-tables (lambda () (org-table-align)) t))
                                         ; TEMP (Because of bug with pretty
                                         ; entity emsp)
-          (measure-time "Iterated all tables"
+          (measure-time "Re-applied formulas to all tables"
                         (org-table-iterate-buffer-tables))
           (when (file-exists-p (buffer-file-name (current-buffer)))
             (leuven-org-remove-redundant-tags))

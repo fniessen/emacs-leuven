@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150204.1052
+;; Version: 20150204.1514
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150204.1052"
+(defconst leuven--emacs-version "20150204.1514"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -90,6 +90,13 @@
 
 (defconst leuven--before-time (float-time)
   "Value of `float-time' before loading the Leuven Emacs Config library.")
+
+(defmacro measure-time (message &rest body)
+  "Measure the time it takes to evaluate BODY."
+  `(let ((time (current-time)))
+     ,@body
+     (message "%s (in %.02f s) ___________________________"
+              ,message (float-time (time-since time)))))
 
 ;;; User Customizable Internal Variables
 
@@ -6159,13 +6166,6 @@ this with to-do items than with projects or headings."
      (org-table-map-tables
         (lambda () (orgtbl-send-table 'maybe))))
 
-  (defmacro measure-time (message &rest body)
-    "Measure the time it takes to evaluate BODY."
-    `(let ((time (current-time)))
-       ,@body
-       (message "%s in %.02f s ___________________________"
-                ,message (float-time (time-since time)))))
-
 ;;** A.6 (info "(org)Dynamic blocks")
 
   (with-eval-after-load "org"
@@ -6188,7 +6188,7 @@ this with to-do items than with projects or headings."
                         (org-table-map-tables (lambda () (org-table-align)) t))
                                         ; TEMP (Because of bug with pretty
                                         ; entity emsp)
-          (measure-time "Iterated all tables"
+          (measure-time "Re-applied formulas to all tables"
                         (org-table-iterate-buffer-tables))
           (when (file-exists-p (buffer-file-name (current-buffer)))
             (leuven-org-remove-redundant-tags))
