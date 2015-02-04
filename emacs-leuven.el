@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150204.1514
+;; Version: 20150204.1541
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150204.1514"
+(defconst leuven--emacs-version "20150204.1541"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1833,8 +1833,10 @@ These packages are neither built-in nor already installed nor ignored."
     "Unconditionally revert current buffer."
     (interactive)
     (revert-buffer t t)                 ; ignore-auto(-save), noconfirm
+    ;; Remove less important overlays
     (dolist (o (overlays-in (window-start) (window-end)))
-      (when (equal (overlay-get o 'face) 'org-block-executing)
+      (when (or (equal (overlay-get o 'face) 'recover-this-file)
+                (equal (overlay-get o 'face) 'org-block-executing))
         (delete-overlay o)))            ; Useful when our advice of function
                                         ; `org-babel-execute-src-block' fails to
                                         ; remove the background color.

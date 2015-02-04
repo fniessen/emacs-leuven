@@ -3025,8 +3025,10 @@ Update time stamps (and copyright notice) automatically.
     "Unconditionally revert current buffer."
     (interactive)
     (revert-buffer t t)                 ; ignore-auto(-save), noconfirm
+    ;; Remove less important overlays
     (dolist (o (overlays-in (window-start) (window-end)))
-      (when (equal (overlay-get o 'face) 'org-block-executing)
+      (when (or (equal (overlay-get o 'face) 'recover-this-file)
+                (equal (overlay-get o 'face) 'org-block-executing))
         (delete-overlay o)))            ; Useful when our advice of function
                                         ; `org-babel-execute-src-block' fails to
                                         ; remove the background color.

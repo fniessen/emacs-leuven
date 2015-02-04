@@ -1374,7 +1374,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150204.1514</span>
+"org-comment">Version: 20150204.1541</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1501,7 +1501,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150204.1514"</span>
+"org-string">"20150204.1541"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -6316,10 +6316,13 @@
     (revert-buffer t t)                 <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">ignore-auto(-save), noconfirm</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Remove less important overlays</span>
     (<span class=
 "org-keyword">dolist</span> (o (overlays-in (window-start) (window-end)))
       (<span class=
-"org-keyword">when</span> (equal (overlay-get o 'face) 'org-block-executing)
+"org-keyword">when</span> (or (equal (overlay-get o 'face) 'recover-this-file)
+                (equal (overlay-get o 'face) 'org-block-executing))
         (delete-overlay o)))            <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">Useful when our advice of function</span>
