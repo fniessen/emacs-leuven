@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150203.1814
+;; Version: 20150204.1004
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150203.1814"
+(defconst leuven--emacs-version "20150204.1004"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5767,16 +5767,17 @@ this with to-do items than with projects or headings."
           (let ((language (org-element-property :language sb)))
             (cond ((null language)
                    (error "Missing language at line %d in %s"
-                          (org-current-line
+                          (line-number-at-pos
                            (org-element-property :post-affiliated sb))
                           (buffer-name)))
                   ((not (assoc-string language org-babel-load-languages))
                    (error "Unknown language `%s' at line %d in `%s'"
                           language
-                          (org-current-line
+                          (line-number-at-pos
                            (org-element-property :post-affiliated sb))
                           (buffer-name)))))))
-      (message "Source blocks checked in %s." (buffer-name (buffer-base-buffer))))
+      (message "Source blocks checked in %s."
+               (buffer-name (buffer-base-buffer))))
 
     (add-hook 'org-mode-hook 'org-src-block-check t))
                                         ; Place this at the end to ensure that

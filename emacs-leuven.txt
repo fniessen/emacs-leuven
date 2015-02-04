@@ -8962,16 +8962,17 @@ languages which can be evaluated in Org mode buffers.
           (let ((language (org-element-property :language sb)))
             (cond ((null language)
                    (error "Missing language at line %d in %s"
-                          (org-current-line
+                          (line-number-at-pos
                            (org-element-property :post-affiliated sb))
                           (buffer-name)))
                   ((not (assoc-string language org-babel-load-languages))
                    (error "Unknown language `%s' at line %d in `%s'"
                           language
-                          (org-current-line
+                          (line-number-at-pos
                            (org-element-property :post-affiliated sb))
                           (buffer-name)))))))
-      (message "Source blocks checked in %s." (buffer-name (buffer-base-buffer))))
+      (message "Source blocks checked in %s."
+               (buffer-name (buffer-base-buffer))))
 
     (add-hook 'org-mode-hook 'org-src-block-check t))
                                         ; Place this at the end to ensure that
