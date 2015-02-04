@@ -1374,7 +1374,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150204.1004</span>
+"org-comment">Version: 20150204.1053</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1501,7 +1501,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150204.1004"</span>
+"org-string">"20150204.1053"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -15008,7 +15008,9 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 "org-comment">org-table-iterate-buffer-tables</span></span><span class=
 "org-comment">'.</span>
         (<span class="org-keyword">when</span> (derived-mode-p 'org-mode)
-          (org-mode-restart)            <span class=
+          (measure-time <span class=
+"org-string">"Restarted Org mode"</span> (org-mode-restart))
+                                        <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">Update information from one of the</span>
                                         <span class=
@@ -15042,34 +15044,40 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 "org-comment">taken a long time to be computed, or may not be computable another time), nor</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">the ones with a caption on the results block...</span>
-
-          (<span class="org-keyword">let</span> ((before-save-hook nil))
-            (save-buffer))
-          (org-babel-tangle)
-          (<span class="org-keyword">when</span> (file-exists-p htmlfile)
-            (<span class=
+          (measure-time
+           <span class="org-string">"Buffer saved"</span>
+           (<span class="org-keyword">let</span> ((before-save-hook nil))
+             (save-buffer)))
+          (measure-time <span class=
+"org-string">"Buffer tangled"</span> (org-babel-tangle))
+          (measure-time
+           <span class="org-string">"Buffer exported to HTML"</span>
+           (<span class="org-keyword">when</span> (file-exists-p htmlfile)
+             (<span class=
 "org-keyword">if</span> (file-newer-than-file-p orgfile htmlfile)
-                (org-html-export-to-html)
-              (message <span class=
-"org-string">"HTML is up to date with Org file"</span>)))
-          (<span class=
+                 (org-html-export-to-html)
+               (message <span class=
+"org-string">"HTML is up to date with Org file"</span>))))
+          (measure-time
+           <span class="org-string">"Buffer exported to PDF LaTeX"</span>
+           (<span class=
 "org-keyword">when</span> (or (file-exists-p texfile) (file-exists-p pdffile))
-            (<span class=
+             (<span class=
 "org-keyword">if</span> (or (and (file-exists-p pdffile)
-                         (file-newer-than-file-p orgfile pdffile))
-                    (and (file-exists-p texfile)
-                         (not (file-exists-p pdffile)))
+                          (file-newer-than-file-p orgfile pdffile))
+                     (and (file-exists-p texfile)
+                          (not (file-exists-p pdffile)))
                                         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">Previous PDF export failed.</span>
-                    )
-                (<span class="org-keyword">if</span> (string-match <span class=
-"org-string">"^#\\+BEAMER_THEME: "</span> (buffer-string))
-                    (org-beamer-export-to-pdf)
-                  (org-latex-export-to-pdf))
-              (message <span class=
-"org-string">"PDF is up to date with Org file"</span>)))
-          (beep))))
+                     )
+                 (<span class=
+"org-keyword">if</span> (string-match <span class="org-string">"^#\\+BEAMER_THEME: "</span> (buffer-string))
+                     (org-beamer-export-to-pdf)
+                   (org-latex-export-to-pdf))
+               (message <span class=
+"org-string">"PDF is up to date with Org file"</span>))))
+           (beep))))
 
     (define-key org-mode-map (kbd <span class=
 "org-string">"&lt;f9&gt;"</span>) 'org-save-buffer-and-do-related))
@@ -17450,6 +17458,20 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
         <div class="outline-text-3" id="text-unnumbered-234">
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">defmacro</span> <span class=
+"org-function-name">measure-time</span> (message <span class=
+"org-type">&amp;rest</span> body)
+    <span class="org-doc">"Measure the time it takes to evaluate BODY."</span>
+    `(<span class="org-keyword">let</span> ((time (current-time)))
+       ,@body
+       (message <span class=
+"org-string">"%s in %.02f s ___________________________"</span>
+                ,message (float-time (time-since time)))))
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
 "org-comment">** A.6 (info "(org)Dynamic blocks")</span>
 
@@ -17478,16 +17500,20 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
                                           <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">modifications of the buffer.</span>
-          (org-align-all-tags)
-          (org-update-all-dblocks)
-          (org-table-map-tables (<span class=
-"org-keyword">lambda</span> () (org-table-align)) t)
+          (measure-time <span class=
+"org-string">"Realigned all tags"</span> (org-align-all-tags))
+          (measure-time <span class=
+"org-string">"Updated all dynamic blocks"</span> (org-update-all-dblocks))
+          (measure-time <span class="org-string">"Aligned all tables"</span>
+                        (org-table-map-tables (<span class=
+"org-keyword">lambda</span> () (org-table-align)) t))
                                         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">TEMP(Because of bug with pretty entity</span>
+"org-comment">TEMP (Because of bug with pretty</span>
                                         <span class=
-"org-comment-delimiter">; </span><span class="org-comment">emsp)</span>
-          (org-table-iterate-buffer-tables)
+"org-comment-delimiter">; </span><span class="org-comment">entity emsp)</span>
+          (measure-time <span class="org-string">"Iterated all tables"</span>
+                        (org-table-iterate-buffer-tables))
           (<span class=
 "org-keyword">when</span> (file-exists-p (buffer-file-name (current-buffer)))
             (leuven-org-remove-redundant-tags))

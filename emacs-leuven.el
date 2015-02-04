@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150204.1004
+;; Version: 20150204.1052
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150204.1004"
+(defconst leuven--emacs-version "20150204.1052"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5158,7 +5158,8 @@ this with to-do items than with projects or headings."
                                         ; `org-update-all-dblocks'
                                         ; `org-table-iterate-buffer-tables'.
         (when (derived-mode-p 'org-mode)
-          (org-mode-restart)            ; Update information from one of the
+          (measure-time "Restarted Org mode" (org-mode-restart))
+                                        ; Update information from one of the
                                         ; special #+KEYWORD lines
                                         ; (like `C-c C-c')
 
@@ -5173,26 +5174,31 @@ this with to-do items than with projects or headings."
 ;; Well, almost all code blocks: not the ones of "cached" blocks (they may have
 ;; taken a long time to be computed, or may not be computable another time), nor
 ;; the ones with a caption on the results block...
-
-          (let ((before-save-hook nil))
-            (save-buffer))
-          (org-babel-tangle)
-          (when (file-exists-p htmlfile)
-            (if (file-newer-than-file-p orgfile htmlfile)
-                (org-html-export-to-html)
-              (message "HTML is up to date with Org file")))
-          (when (or (file-exists-p texfile) (file-exists-p pdffile))
-            (if (or (and (file-exists-p pdffile)
-                         (file-newer-than-file-p orgfile pdffile))
-                    (and (file-exists-p texfile)
-                         (not (file-exists-p pdffile)))
+          (measure-time
+           "Buffer saved"
+           (let ((before-save-hook nil))
+             (save-buffer)))
+          (measure-time "Buffer tangled" (org-babel-tangle))
+          (measure-time
+           "Buffer exported to HTML"
+           (when (file-exists-p htmlfile)
+             (if (file-newer-than-file-p orgfile htmlfile)
+                 (org-html-export-to-html)
+               (message "HTML is up to date with Org file"))))
+          (measure-time
+           "Buffer exported to PDF LaTeX"
+           (when (or (file-exists-p texfile) (file-exists-p pdffile))
+             (if (or (and (file-exists-p pdffile)
+                          (file-newer-than-file-p orgfile pdffile))
+                     (and (file-exists-p texfile)
+                          (not (file-exists-p pdffile)))
                                         ; Previous PDF export failed.
-                    )
-                (if (string-match "^#\\+BEAMER_THEME: " (buffer-string))
-                    (org-beamer-export-to-pdf)
-                  (org-latex-export-to-pdf))
-              (message "PDF is up to date with Org file")))
-          (beep))))
+                     )
+                 (if (string-match "^#\\+BEAMER_THEME: " (buffer-string))
+                     (org-beamer-export-to-pdf)
+                   (org-latex-export-to-pdf))
+               (message "PDF is up to date with Org file"))))
+           (beep))))
 
     (define-key org-mode-map (kbd "<f9>") 'org-save-buffer-and-do-related))
 
@@ -6153,6 +6159,13 @@ this with to-do items than with projects or headings."
      (org-table-map-tables
         (lambda () (orgtbl-send-table 'maybe))))
 
+  (defmacro measure-time (message &rest body)
+    "Measure the time it takes to evaluate BODY."
+    `(let ((time (current-time)))
+       ,@body
+       (message "%s in %.02f s ___________________________"
+                ,message (float-time (time-since time)))))
+
 ;;** A.6 (info "(org)Dynamic blocks")
 
   (with-eval-after-load "org"
@@ -6169,12 +6182,14 @@ this with to-do items than with projects or headings."
           (flyspell-mode -1)              ; Temporarily disable Flyspell to
                                           ; avoid checking the following
                                           ; modifications of the buffer.
-          (org-align-all-tags)
-          (org-update-all-dblocks)
-          (org-table-map-tables (lambda () (org-table-align)) t)
-                                        ; TEMP(Because of bug with pretty entity
-                                        ; emsp)
-          (org-table-iterate-buffer-tables)
+          (measure-time "Realigned all tags" (org-align-all-tags))
+          (measure-time "Updated all dynamic blocks" (org-update-all-dblocks))
+          (measure-time "Aligned all tables"
+                        (org-table-map-tables (lambda () (org-table-align)) t))
+                                        ; TEMP (Because of bug with pretty
+                                        ; entity emsp)
+          (measure-time "Iterated all tables"
+                        (org-table-iterate-buffer-tables))
           (when (file-exists-p (buffer-file-name (current-buffer)))
             (leuven-org-remove-redundant-tags))
           (when flyspell-mode-before-save (flyspell-mode 1)))))
