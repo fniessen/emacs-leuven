@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150204.1541
+;; Version: 20150205.1026
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150204.1541"
+(defconst leuven--emacs-version "20150205.1026"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -270,6 +270,25 @@ Last time is saved in global variable `leuven--before-section-time'."
       (declare (indent defun))
       `(eval-after-load ,mode
          '(progn ,@body))))
+
+  (defun switch-or-start (function buffer)
+    "If the BUFFER is current, bury it.  If there is a buffer with that name,
+  switch to it; otherwise, invoke the FUNCTION."
+    (if (equal (buffer-name (current-buffer)) buffer)
+        (bury-buffer)
+      (if (get-buffer buffer)
+          (switch-to-buffer buffer)
+        (funcall function))))
+
+  (defun switch-or-find-file (file)
+    "If the FILE is current, bury it.  If there is a buffer with that name,
+  switch to it; otherwise, open it."
+    (when (file-exists-p file)
+      (if (and (buffer-file-name)
+               (string= (expand-file-name file)
+                        (expand-file-name (buffer-file-name))))
+          (bury-buffer)
+        (find-file file))))
 
 )                                       ; chapter 0-loading-libraries ends here
 
@@ -2402,29 +2421,6 @@ These packages are neither built-in nor already installed nor ignored."
 ;;* 19 Using Multiple (info "(emacs)Buffers")
 
 (leuven--chapter leuven-chapter-19-buffers "19 Using Multiple Buffers"
-
-;;** 19.1 Creating and (info "(emacs)Select Buffer")
-
-  (leuven--section "19.1 (emacs)Select Buffer")
-
-  (defun switch-or-start (function buffer)
-    "If the BUFFER is current, bury it.  If there is a buffer with that name,
-  switch to it; otherwise, invoke the FUNCTION."
-    (if (equal (buffer-name (current-buffer)) buffer)
-        (bury-buffer)
-      (if (get-buffer buffer)
-          (switch-to-buffer buffer)
-        (funcall function))))
-
-  (defun switch-or-find-file (file)
-    "If the FILE is current, bury it.  If there is a buffer with that name,
-  switch to it; otherwise, open it."
-    (when (file-exists-p file)
-      (if (and (buffer-file-name)
-               (string= (expand-file-name file)
-                        (expand-file-name (buffer-file-name))))
-          (bury-buffer)
-        (find-file file))))
 
 ;;** 19.2 (info "(emacs)List Buffers")
 
@@ -9423,36 +9419,36 @@ a clean buffer we're an order of magnitude laxer about checking."
      (delete-window)
      (setq truncate-lines t)))
 
-;; guide the following key bindings automatically and dynamically
-(when (try-require 'guide-key)
+  ;; guide the following key bindings automatically and dynamically
+  (when (try-require 'guide-key)
 
-  (setq guide-key/guide-key-sequence
-        '("C-c"                         ; XXX Doesn't play nice with Org's C-c C-e.
-          "C-h"
-          "C-x 4"                       ; other window
-          "C-x 5"                       ; other frame
-          "C-x 8"                       ; unicode
-          "C-x RET"                     ; coding system
-          "C-x a"                       ; abbrev
-          "C-x c"                       ; helm
-          "C-x n"                       ; narrow
-          "C-x p"                       ; bmkp
-          "C-x r"                       ; register + rectangle
-          "C-x v"                       ; vc
-          "C-x w"                       ; hi-lock
-          "M-g"                         ; goto + error
-          "M-s"                         ; occur + highlight
-          (org-mode "C-c C-x")
-          (outline-minor-mode "C-c @")))
+    (setq guide-key/guide-key-sequence
+          '("C-c"                       ; XXX Doesn't play nice with Org's C-c C-e.
+            "C-h"
+            "C-x 4"                     ; other window
+            "C-x 5"                     ; other frame
+            "C-x 8"                     ; unicode
+            "C-x RET"                   ; coding system
+            "C-x a"                     ; abbrev
+            "C-x c"                     ; helm
+            "C-x n"                     ; narrow
+            "C-x p"                     ; bmkp
+            "C-x r"                     ; register + rectangle
+            "C-x v"                     ; vc
+            "C-x w"                     ; hi-lock
+            "M-g"                       ; goto + error
+            "M-s"                       ; occur + highlight
+            (org-mode "C-c C-x")
+            (outline-minor-mode "C-c @")))
 
-  ;; (setq guide-key/idle-delay 0.3)
+    ;; (setq guide-key/idle-delay 0.3)
 
-  (setq guide-key/recursive-key-sequence-flag t)
+    (setq guide-key/recursive-key-sequence-flag t)
 
-  (setq guide-key/popup-window-position 'bottom)
+    (setq guide-key/popup-window-position 'bottom)
 
-  ;; enable guide-key-mode
-  (guide-key-mode 1))
+    ;; enable guide-key-mode
+    (guide-key-mode 1))
 
 ;;** 48.5 The (info "(emacs)Syntax") Table
 
