@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150116.1350
+;; Version: 20150205.0946
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;
@@ -78,8 +78,27 @@
 
 ;;* Loading
 
+(require 'gnus)
+
 ;; list of packages that `try-require' can't find
 (setq leuven--missing-packages nil)
+
+  ;; Require a feature/library if available; if not, fail silently.
+  (unless (fboundp 'try-require)
+    (defun try-require (feature)
+      "Attempt to load a FEATURE (or library).
+    Return true if the library given as argument is successfully loaded.  If
+    not, just print a message."
+      (condition-case err
+          (progn
+            (if (stringp feature)
+                (load-library feature)
+              (require feature))
+            t)                          ; Necessary for correct behavior in
+                                        ; conditional expressions.
+        (file-error
+         (message "Requiring `%s'... missing" feature)
+         nil))))
 
 ;;* 1 (info "(gnus)Starting Up") Gnus
 
@@ -380,18 +399,17 @@
           (setq gnus-sum-thread-tree-leaf-with-other "+---")
           (setq gnus-sum-thread-tree-single-leaf "+---"))) ; "`---"
 
-      (eval-after-load "message"
-        '(progn
-           ;; regexp matching alternative email addresses
-           (setq message-alternative-emails
-                 (concat
-                  (regexp-quote "johndoe@example.com") "\\|"
-                  (regexp-quote "janedoe@example.com")))
+      (with-eval-after-load "message"
+        ;; regexp matching alternative email addresses
+        (setq message-alternative-emails
+              (concat
+               (regexp-quote "johndoe@example.com") "\\|"
+               (regexp-quote "janedoe@example.com")))
 
-           ;; `From' headers that may be suppressed in favor of `To' headers
-           (setq gnus-ignored-from-addresses
-                 (concat
-                  (regexp-quote user-mail-address) "\\|" message-alternative-emails))))
+        ;; `From' headers that may be suppressed in favor of `To' headers
+        (setq gnus-ignored-from-addresses
+              (concat
+               (regexp-quote user-mail-address) "\\|" message-alternative-emails)))
 
       ;; extra headers to parse (to check when matching recipients)
       (when (boundp 'nnmail-extra-headers)
@@ -686,22 +704,21 @@
 
 ;;** 4.1 Hiding headers
 
-      (eval-after-load "gnus-art"
-        '(progn
-           ;; TODO Could be limited to news headers only
-           (setq gnus-visible-headers
-                 (concat
-                 "^User-Agent:\\|^X-Spam-Level:\\|^X-Report-Spam:\\|"
-                 gnus-visible-headers))
+      (with-eval-after-load "gnus-art"
+         ;; TODO Could be limited to news headers only
+         (setq gnus-visible-headers
+               (concat
+               "^User-Agent:\\|^X-Spam-Level:\\|^X-Report-Spam:\\|"
+               gnus-visible-headers))
 
-           ;; when Gnus, highlight user agent
-           (add-to-list
-            'gnus-header-face-alist
-            (list (concat
-                   "^"
-                   (regexp-opt '("User-Agent" "X-Mailer" "Newsreader" "X-Newsreader") t)
-                   ":.*Gnus.*")
-                  nil 'gnus-server-opened))))
+         ;; when Gnus, highlight user agent
+         (add-to-list
+          'gnus-header-face-alist
+          (list (concat
+                 "^"
+                 (regexp-opt '("User-Agent" "X-Mailer" "Newsreader" "X-Newsreader") t)
+                 ":.*Gnus.*")
+                nil 'gnus-server-opened)))
 
       ;; ,----[ (info "(gnus)Choosing Commands") ]
       ;; | `G j'
@@ -759,57 +776,52 @@
 
 ;;*** 1.5 (info "(emacs-mime)Display Customization")
 
-      ;; You can view "text/html" parts of the current article with a WWW
-      ;; browser by pressing `K H' (`gnus-article-browse-html-article')
+      (with-eval-after-load "mm-decode"
+        ;; ;; MIME type that will be displayed externally automatically
+        ;; (add-to-list 'mm-automatic-external-display "text/html")
 
-      ;; ;; MIME type that will be displayed externally automatically
-      ;; (add-to-list 'mm-automatic-external-display "text/html")
-
-      ;; do not treat inline images as real attachments (display them, instead)
-      (add-to-list 'mm-attachment-override-types "image/.*")
+        ;; do not treat inline images as real attachments (display them, instead)
+        (add-to-list 'mm-attachment-override-types "image/.*")
                                         ; "text/x-vcard"...
 
-      ;; don't render HTML automatically *when plain text alternative is
-      ;; available*
-      (eval-after-load "mm-decode"
-        '(progn
-           (add-to-list 'mm-discouraged-alternatives "text/html")
-           (add-to-list 'mm-discouraged-alternatives "text/richtext")
-           (add-to-list 'mm-discouraged-alternatives "text/enriched")
-           (add-to-list 'mm-discouraged-alternatives "multipart/related")))
+        ;; don't render HTML automatically *when plain text alternative is
+        ;; available*
+        (add-to-list 'mm-discouraged-alternatives "text/html")
+        (add-to-list 'mm-discouraged-alternatives "text/richtext")
+        (add-to-list 'mm-discouraged-alternatives "text/enriched")
+        (add-to-list 'mm-discouraged-alternatives "multipart/related")
 
-      ;; all images fit in the buffer
-      (setq mm-inline-large-images t)
+        ;; all images fit in the buffer
+        (setq mm-inline-large-images t)
 
-      ;; ;; always show HTML mails as attachments (even if they can be
-      ;; ;; displayed) use `browse-url-browser-function' (firefox) to render
-      ;; ;; HTML mails
-      ;; (push "text/html" mm-inline-override-types)
+        ;; ;; always show HTML mails as attachments (even if they can be
+        ;; ;; displayed) use `browse-url-browser-function' (firefox) to render
+        ;; ;; HTML mails
+        ;; (push "text/html" mm-inline-override-types)
 
 
-      ;; use `w3m' browser (if installed) to render HTML-only mails
-      (setq mm-text-html-renderer
-            (cond ((executable-find "w3m") 'w3m) ; or `gnus-w3m'?
-                  (t 'html2text)))      ; Emacs built-in
+        ;; use `w3m' browser (if installed) to render HTML-only mails
+        (setq mm-text-html-renderer
+              (cond ((executable-find "w3m") 'w3m) ; or `gnus-w3m'?
+                    (t 'html2text)))      ; Emacs built-in
 
-      ;; recent Gnusae have a built-in HTML renderer which even (somewhat)
-      ;; handles CSS
-      (setq mm-text-html-renderer 'shr) ; eww-backend?
+        ;; recent Gnusae have a built-in HTML renderer which even (somewhat)
+        ;; handles CSS
+        (setq mm-text-html-renderer 'shr) ; eww-backend?
+        )
 
+      (with-eval-after-load "w3m"
+         ;; (setq browse-url-browser-function 'w3m-browse-url)
+         (setq mm-inline-text-html-renderer
+               'mm-inline-text-html-render-with-w3m)
+         (setq gnus-article-wash-function
+               'gnus-article-wash-html-with-w3m)
 
-      (eval-after-load "w3m"
-        '(progn
-           ;; (setq browse-url-browser-function 'w3m-browse-url)
-           (setq mm-inline-text-html-renderer
-                 'mm-inline-text-html-render-with-w3m)
-           (setq gnus-article-wash-function
-                 'gnus-article-wash-html-with-w3m)
-
-           ;; Whenever you try to browse URLs found in articles, Gnus
-           ;; (`emacs-w3m', in fact) complains that "This link is considered
-           ;; unsafe...". To turn it off, frob the variables
-           ;; `w3m-safe-url-regexp' and `mm-w3m-safe-url-regexp'.
-           ))
+         ;; Whenever you try to browse URLs found in articles, Gnus
+         ;; (`emacs-w3m', in fact) complains that "This link is considered
+         ;; unsafe...". To turn it off, frob the variables
+         ;; `w3m-safe-url-regexp' and `mm-w3m-safe-url-regexp'.
+         )
 
       ;; allow retrieving images in HTML contents with the <img> tags
       (setq mm-inline-text-html-with-images t)
@@ -863,12 +875,11 @@
 ;;*** 4.12 (info "(emacs-mime)mailcap")
 
       ;; choose the right MIME type when sending an attachment
-      (eval-after-load "mailcap"
-        '(progn
-           (add-to-list 'mailcap-mime-extensions
-                        '(".doc" . "application/msword"))
-           (add-to-list 'mailcap-mime-extensions
-                        '(".ppt" . "application/vnd.ms-powerpoint"))))
+      (with-eval-after-load "mailcap"
+         (add-to-list 'mailcap-mime-extensions
+                      '(".doc" . "application/msword"))
+         (add-to-list 'mailcap-mime-extensions
+                      '(".ppt" . "application/vnd.ms-powerpoint")))
                                         ; MIME content-types keyed by file
                                         ; extensions
 
@@ -983,8 +994,7 @@
       (autoload 'gnus-alias-determine-identity "gnus-alias" nil t)
       (add-hook 'message-setup-hook 'gnus-alias-determine-identity)
 
-      (eval-after-load "gnus-alias"
-        '(progn
+      (with-eval-after-load "gnus-alias"
 
         ;; ;; add gnus-alias call to message mode hook
         ;; (gnus-alias-init)
@@ -1065,7 +1075,7 @@
         ;;       (setq mail-envelope-from from)))
 
         (add-hook 'message-setup-hook 'leuven-set-msg-envelope-from)
-        ))
+        )
 
       ;; add certain headers before sending messages
       (defun leuven-message-add-content ()
@@ -1106,7 +1116,7 @@
 ;;*** 1.4 (info "(message)Wide Reply")
 
       ;; addresses to prune (disable `Cc:' to myself) when doing wide replies
-      (eval-after-load "message"
+      (with-eval-after-load "message"
         (when (boundp 'gnus-ignored-from-addresses)
           (setq message-dont-reply-to-names gnus-ignored-from-addresses)))
 
@@ -1195,8 +1205,8 @@
 
       ;; tell Gnus not to generate a sender header on outgoing posts
       ;; (default behavior since Gnus 5.10.0)
-      (eval-after-load "message"
-        '(add-to-list 'message-syntax-checks '(sender . disabled)))
+      (with-eval-after-load "message"
+        (add-to-list 'message-syntax-checks '(sender . disabled)))
 
 ;;*** 3.6 (info "(message)Insertion Variables")
 
@@ -1421,7 +1431,7 @@
       ;; delete the article when pressing `Delete'
 
 ;; FIXME Does not work... This is the opposite of SPC (page down)!
-(eval-after-load "gnus-sum" ;; be sure to override default
+(with-eval-after-load "gnus-sum" ;; be sure to override default
       (gnus-define-keys gnus-summary-mode-map
         [delete] gnus-summary-delete-article))
 
