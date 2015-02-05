@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150205.1026
+;; Version: 20150205.1139
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150205.1026"
+(defconst leuven--emacs-version "20150205.1139"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -441,8 +441,8 @@ Last time is saved in global variable `leuven--before-section-time'."
           graphviz-dot-mode guide-key helm helm-descbinds helm-swoop hideshowvis
           highlight-symbol htmlize key-chord litable idle-require imenu-anywhere
           info+ interaction-log ledger-mode leuven-theme multi-term
-          multiple-cursors pager powerline rainbow-mode spray tidy unbound
-          undo-tree w3m yasnippet
+          multiple-cursors pager powerline rainbow-mode tidy unbound undo-tree
+          w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -3190,7 +3190,7 @@ These packages are neither built-in nor already installed nor ignored."
     (key-chord-define-global "vg" 'eval-region)
 
     (key-chord-define-global "x0" 'delete-window)
-    (key-chord-define-global "x1" 'delete-other-windows)
+    ;; (key-chord-define-global "x1" 'delete-other-windows) ; CRASH Gnus 2015-02-05
     (key-chord-define-global "xh" 'mark-whole-buffer)
     (key-chord-define-global "xk" 'kill-buffer) ; leuven-kill-this-buffer-without-query?
     (key-chord-define-global "xo" 'other-window)
@@ -3213,7 +3213,6 @@ These packages are neither built-in nor already installed nor ignored."
     (with-eval-after-load "org"         ; Package.
       (key-chord-define org-mode-map ",u" 'outline-up-heading)
       (key-chord-define org-mode-map ",w" 'org-refile) ; Not autoloaded.
-
       ;; (key-chord-define org-mode-map ",," 'org-mark-ring-goto)           ;; Return to previous location before link.
       ;; (key-chord-define org-mode-map ",." 'org-time-stamp)               ;; Create new timestamp.
       ;; (key-chord-define org-mode-map ",b" 'org-tree-to-indirect-buffer)  ;; Show complete tree in dedicated buffer.
@@ -3425,9 +3424,6 @@ These packages are neither built-in nor already installed nor ignored."
       "Translate the region according to the phonetic alphabet." t))
 
 )                                       ; chapter 25 ends here
-
-  (with-eval-after-load "spray-autoloads"
-    (global-set-key (kbd "C-c s") 'spray-mode))
 
 ;;* 25.9 Org Mode
 

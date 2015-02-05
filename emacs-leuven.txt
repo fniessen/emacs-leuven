@@ -706,8 +706,8 @@ outages).
           graphviz-dot-mode guide-key helm helm-descbinds helm-swoop hideshowvis
           highlight-symbol htmlize key-chord litable idle-require imenu-anywhere
           info+ interaction-log ledger-mode leuven-theme multi-term
-          multiple-cursors pager powerline rainbow-mode spray tidy unbound
-          undo-tree w3m yasnippet
+          multiple-cursors pager powerline rainbow-mode tidy unbound undo-tree
+          w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -5224,7 +5224,7 @@ a factor 2...
     (key-chord-define-global "vg" 'eval-region)
 
     (key-chord-define-global "x0" 'delete-window)
-    (key-chord-define-global "x1" 'delete-other-windows)
+    ;; (key-chord-define-global "x1" 'delete-other-windows) ; CRASH Gnus 2015-02-05
     (key-chord-define-global "xh" 'mark-whole-buffer)
     (key-chord-define-global "xk" 'kill-buffer) ; leuven-kill-this-buffer-without-query?
     (key-chord-define-global "xo" 'other-window)
@@ -5247,7 +5247,6 @@ a factor 2...
     (with-eval-after-load "org"         ; Package.
       (key-chord-define org-mode-map ",u" 'outline-up-heading)
       (key-chord-define org-mode-map ",w" 'org-refile) ; Not autoloaded.
-
       ;; (key-chord-define org-mode-map ",," 'org-mark-ring-goto)           ;; Return to previous location before link.
       ;; (key-chord-define org-mode-map ",." 'org-time-stamp)               ;; Create new timestamp.
       ;; (key-chord-define org-mode-map ",b" 'org-tree-to-indirect-buffer)  ;; Show complete tree in dedicated buffer.
@@ -5583,13 +5582,6 @@ Region Marked>~.
 
 #+begin_src emacs-lisp
 )                                       ; chapter 25 ends here
-#+end_src
-
-** Reading mode
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "spray-autoloads"
-    (global-set-key (kbd "C-c s") 'spray-mode))
 #+end_src
 
 * Org Mode (Getting Things Done)
