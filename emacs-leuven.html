@@ -1376,7 +1376,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150205.1140</span>
+"org-comment">Version: 20150209.1133</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1503,7 +1503,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150205.1140"</span>
+"org-string">"20150209.1133"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -10019,10 +10019,16 @@ M-: (executable-find "diff") RET
     (key-chord-define-global <span class="org-string">"vb"</span> 'eval-buffer)
     (key-chord-define-global <span class="org-string">"vg"</span> 'eval-region)
 
-    (key-chord-define-global <span class=
-"org-string">"x0"</span> 'delete-window)
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(key-chord-define-global "x1" 'delete-other-windows) ; CRASH Gnus 2015-02-05</span>
+"org-comment">(key-chord-define-global "x0" 'delete-window)</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">2015-02-09 Crash Gnus `C-u 3'</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "x1" 'delete-other-windows)</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">2015-02-05 Crash Gnus `C-u 1'</span>
     (key-chord-define-global <span class=
 "org-string">"xh"</span> 'mark-whole-buffer)
     (key-chord-define-global <span class=
@@ -15378,8 +15384,9 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
             </div>
 
             <p>Emacs 23+ users: in order to avoid “Invalid face” errors, you
-            need to use the version made available by Carsten Dominik in
-            <code>org-mode/contrib/lisp</code> directory.</p>
+            need to use the version of <code>htmlize</code> made available by
+            Carsten Dominik in <code>org-mode/contrib/lisp</code>
+            directory.</p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">

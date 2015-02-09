@@ -5223,8 +5223,10 @@ a factor 2...
     (key-chord-define-global "vb" 'eval-buffer)
     (key-chord-define-global "vg" 'eval-region)
 
-    (key-chord-define-global "x0" 'delete-window)
-    ;; (key-chord-define-global "x1" 'delete-other-windows) ; CRASH Gnus 2015-02-05
+    ;; (key-chord-define-global "x0" 'delete-window)
+                                        ; 2015-02-09 Crash Gnus `C-u 3'
+    ;; (key-chord-define-global "x1" 'delete-other-windows)
+                                        ; 2015-02-05 Crash Gnus `C-u 1'
     (key-chord-define-global "xh" 'mark-whole-buffer)
     (key-chord-define-global "xk" 'kill-buffer) ; leuven-kill-this-buffer-without-query?
     (key-chord-define-global "xo" 'other-window)
@@ -8309,7 +8311,8 @@ org-export-htmlize-generate-css~ to extract class definitions.
 #+end_src
 
 Emacs 23+ users: in order to avoid "Invalid face" errors, you need to use the
-version made available by Carsten Dominik in ~org-mode/contrib/lisp~ directory.
+version of =htmlize= made available by Carsten Dominik in =org-mode/contrib/lisp=
+directory.
 
 #+begin_src emacs-lisp
 ;;** (info "(emacs-goodies-el)htmlize")

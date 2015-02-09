@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150205.1139
+;; Version: 20150209.1132
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150205.1139"
+(defconst leuven--emacs-version "20150209.1132"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3189,8 +3189,10 @@ These packages are neither built-in nor already installed nor ignored."
     (key-chord-define-global "vb" 'eval-buffer)
     (key-chord-define-global "vg" 'eval-region)
 
-    (key-chord-define-global "x0" 'delete-window)
-    ;; (key-chord-define-global "x1" 'delete-other-windows) ; CRASH Gnus 2015-02-05
+    ;; (key-chord-define-global "x0" 'delete-window)
+                                        ; 2015-02-09 Crash Gnus `C-u 3'
+    ;; (key-chord-define-global "x1" 'delete-other-windows)
+                                        ; 2015-02-05 Crash Gnus `C-u 1'
     (key-chord-define-global "xh" 'mark-whole-buffer)
     (key-chord-define-global "xk" 'kill-buffer) ; leuven-kill-this-buffer-without-query?
     (key-chord-define-global "xo" 'other-window)
