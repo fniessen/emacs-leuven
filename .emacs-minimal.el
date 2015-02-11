@@ -44,7 +44,7 @@
 ;; Org-mode (reverse order, so that the Org lisp directory will be found
 ;; before the Org contrib lisp directory)
 ;; (add-to-list 'load-path "~/Public/Repositories/org-mode/testing")
-;; (add-to-list 'load-path "~/Public/Repositories/org-mode/contrib/lisp")
+;; (add-to-list 'load-path "~/Public/Repositories/org-mode/contrib/lisp") ; htmlize
 (add-to-list 'load-path "~/Public/Repositories/org-mode/lisp")
                                         ; modify the paths to suit your environment!
 
