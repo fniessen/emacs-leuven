@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150211.1136
+;; Version: 20150211.1402
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150211.1136"
+(defconst leuven--emacs-version "20150211.1402"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -9132,33 +9132,36 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 (leuven--chapter leuven-chapter-45-hyperlinking "45 Hyperlinking and Navigation Features"
 
-  ;; use proxy
+  ;; Use proxy.
   (setq url-proxy-services              ;! Emacs expects just hostname and port
                                         ;! in `url-proxy-services', NOT prefixed
                                         ;! with "http://"
         `(("http"     . ,(getenv "http_proxy"))
           ("ftp"      . ,(getenv "http_proxy"))
           ("no_proxy" . "^.*example.com")))
-          ;; disable proxy for some hosts
+          ;; Disable proxy for some hosts.
 
-;;** pass a URL to a WWW browser
+;;** Pass a URL to a WWW browser.
 
   (leuven--section "pass a URL to a WWW browser")
 
-  ;; default browser started when you click on some URL in the buffer
+  ;; Default browser started when you click on some URL in the buffer.
   (setq browse-url-browser-function
-        (cond ((or leuven--win32-p leuven--cygwin-p)
+        (cond ((or leuven--win32-p
+                   leuven--cygwin-p)
                'browse-url-default-windows-browser)
               (leuven--mac-p
                'browse-url-default-macosx-browser)
               ((not (display-graphic-p)) ; console
-               'w3m-browse-url)
-              (t
+               'eww-browse-url)         ; 'w3m-browse-url
+              (t                        ; Linux
                'browse-url-generic)))
 
-  ;; name of the browser program used by `browse-url-generic'
-  (setq browse-url-generic-program (executable-find "firefox"))
-                                        ; could be `google-chrome'
+  ;; Name of the browser program used by `browse-url-generic'.
+  (setq browse-url-generic-program (executable-find "gnome-open"))
+                                        ; Defer the decision to Gnome. We could
+                                        ; use "firefox" or "google-chrome" as
+                                        ; well.
 
   (leuven--section "FFAP")
 
