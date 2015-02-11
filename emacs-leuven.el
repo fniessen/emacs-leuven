@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150209.1132
+;; Version: 20150211.1134
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150209.1132"
+(defconst leuven--emacs-version "20150211.1134"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1143,11 +1143,11 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Nuke all trailing whitespaces in the buffer.
   (add-hook 'before-save-hook
             (lambda ()                  ; Except for ...
-              (unless (or (eq major-mode 'message-mode)
+              (unless (or (derived-mode-p 'message-mode)
                                         ; ... where "-- " is the signature
                                         ; separator (for when using emacsclient
                                         ; to compose emails and doing C-x #).
-                          (eq major-mode 'diff-mode))
+                          (derived-mode-p 'diff-mode))
                                         ; ... where the patch file can't be
                                         ; changed!
                 (delete-trailing-whitespace))))
@@ -1838,7 +1838,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Update the copyright notice to indicate the current year.
     (add-hook 'before-save-hook
               (lambda ()                ; Except for ...
-                (unless (eq major-mode 'diff-mode)
+                (unless (derived-mode-p 'diff-mode)
                                         ; ... where the patch file can't be
                                         ; changed!
                   (copyright-update)))))
@@ -1963,7 +1963,7 @@ These packages are neither built-in nor already installed nor ignored."
           (error nil))
         (run-at-time 0.0 nil
                      (lambda ()
-                       (if (eq major-mode 'diff-mode)
+                       (if (derived-mode-p 'diff-mode)
                            ;; Put back the cursor only if still in a Diff buffer
                            ;; after the delay.
                            (goto-char (point-min)))))))
@@ -3137,7 +3137,7 @@ These packages are neither built-in nor already installed nor ignored."
         (insert "«  »")
         (backward-char 2))
        ((and (eq (char-before) ?\")
-             (eq major-mode 'latex-mode))
+             (derived-mode-p 'latex-mode))
         (backward-delete-char 1)
         (insert "\\enquote{}")
         (backward-char 1))
@@ -4074,7 +4074,7 @@ These packages are neither built-in nor already installed nor ignored."
   A tag is considered redundant if it is local to a headline and inherited by
   a parent headline."
     (interactive)
-    (when (eq major-mode 'org-mode)
+    (when (derived-mode-p 'org-mode)
       (save-excursion
         (org-map-entries
          (lambda ()
@@ -5822,7 +5822,7 @@ this with to-do items than with projects or headings."
   (defun org-repair-property-drawers ()
     "Fix properties drawers in current buffer.
   Ignore non Org buffers."
-    (when (eq major-mode 'org-mode)
+    (when (derived-mode-p 'org-mode)
       (org-with-wide-buffer
        (goto-char (point-min))
        (let ((case-fold-search t)
@@ -6170,7 +6170,7 @@ this with to-do items than with projects or headings."
     (defun leuven-org-update-buffer ()
       "Update all dynamic blocks and all tables in the buffer."
       (interactive)
-      (when (eq major-mode 'org-mode)
+      (when (derived-mode-p 'org-mode)
         (message "(Info) Update Org buffer %s"
                  (file-name-nondirectory (buffer-file-name)))
         (sit-for 1.5)
@@ -7581,7 +7581,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;; Automatically reload snippets after saving.
       (defun recompile-and-reload-all-snippets ()
         (interactive)
-        (when (eq major-mode 'snippet-mode)
+        (when (derived-mode-p 'snippet-mode)
           (yas-recompile-all)
           (yas-reload-all)
           (message "Reloaded all snippets")))
@@ -8122,7 +8122,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;; file is saved
       (add-hook 'after-save-hook
                 (lambda ()
-                  (when (and (eq major-mode 'org-mode)
+                  (when (and (derived-mode-p 'org-mode)
                              (org-agenda-file-p))
                     (org-agenda-to-appt)))))
 

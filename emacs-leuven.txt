@@ -1962,11 +1962,11 @@ Remove trailing whitespace (right trim lines) *in all lines*:
   ;; Nuke all trailing whitespaces in the buffer.
   (add-hook 'before-save-hook
             (lambda ()                  ; Except for ...
-              (unless (or (eq major-mode 'message-mode)
+              (unless (or (derived-mode-p 'message-mode)
                                         ; ... where "-- " is the signature
                                         ; separator (for when using emacsclient
                                         ; to compose emails and doing C-x #).
-                          (eq major-mode 'diff-mode))
+                          (derived-mode-p 'diff-mode))
                                         ; ... where the patch file can't be
                                         ; changed!
                 (delete-trailing-whitespace))))
@@ -3030,7 +3030,7 @@ Update time stamps (and copyright notice) automatically.
     ;; Update the copyright notice to indicate the current year.
     (add-hook 'before-save-hook
               (lambda ()                ; Except for ...
-                (unless (eq major-mode 'diff-mode)
+                (unless (derived-mode-p 'diff-mode)
                                         ; ... where the patch file can't be
                                         ; changed!
                   (copyright-update)))))
@@ -3206,7 +3206,7 @@ In Diff mode, I can *select a hunk and apply it (in reverse)*.  Nice following
           (error nil))
         (run-at-time 0.0 nil
                      (lambda ()
-                       (if (eq major-mode 'diff-mode)
+                       (if (derived-mode-p 'diff-mode)
                            ;; Put back the cursor only if still in a Diff buffer
                            ;; after the delay.
                            (goto-char (point-min)))))))
@@ -5169,7 +5169,7 @@ a factor 2...
         (insert "«  »")
         (backward-char 2))
        ((and (eq (char-before) ?\")
-             (eq major-mode 'latex-mode))
+             (derived-mode-p 'latex-mode))
         (backward-delete-char 1)
         (insert "\\enquote{}")
         (backward-char 1))
@@ -6532,7 +6532,7 @@ that all tags starting with ~@~ or ~#~ will be excluded from inheritance with:
   A tag is considered redundant if it is local to a headline and inherited by
   a parent headline."
     (interactive)
-    (when (eq major-mode 'org-mode)
+    (when (derived-mode-p 'org-mode)
       (save-excursion
         (org-map-entries
          (lambda ()
@@ -9057,7 +9057,7 @@ where we *load languages* such as R, etc.
   (defun org-repair-property-drawers ()
     "Fix properties drawers in current buffer.
   Ignore non Org buffers."
-    (when (eq major-mode 'org-mode)
+    (when (derived-mode-p 'org-mode)
       (org-with-wide-buffer
        (goto-char (point-min))
        (let ((case-fold-search t)
@@ -9561,7 +9561,7 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
     (defun leuven-org-update-buffer ()
       "Update all dynamic blocks and all tables in the buffer."
       (interactive)
-      (when (eq major-mode 'org-mode)
+      (when (derived-mode-p 'org-mode)
         (message "(Info) Update Org buffer %s"
                  (file-name-nondirectory (buffer-file-name)))
         (sit-for 1.5)
@@ -12157,7 +12157,7 @@ Automatically reload snippets after saving.
       ;; Automatically reload snippets after saving.
       (defun recompile-and-reload-all-snippets ()
         (interactive)
-        (when (eq major-mode 'snippet-mode)
+        (when (derived-mode-p 'snippet-mode)
           (yas-recompile-all)
           (yas-reload-all)
           (message "Reloaded all snippets")))
@@ -13226,7 +13226,7 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
       ;; file is saved
       (add-hook 'after-save-hook
                 (lambda ()
-                  (when (and (eq major-mode 'org-mode)
+                  (when (and (derived-mode-p 'org-mode)
                              (org-agenda-file-p))
                     (org-agenda-to-appt)))))
 #+end_src

@@ -1376,7 +1376,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150209.1133</span>
+"org-comment">Version: 20150211.1134</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1503,7 +1503,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150209.1133"</span>
+"org-string">"20150211.1134"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -4557,7 +4557,7 @@
 "org-comment-delimiter">; </span><span class=
 "org-comment">Except for ...</span>
               (<span class=
-"org-keyword">unless</span> (or (eq major-mode 'message-mode)
+"org-keyword">unless</span> (or (derived-mode-p 'message-mode)
                                         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">... where "-- " is the signature</span>
@@ -4567,7 +4567,7 @@
                                         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">to compose emails and doing C-x #).</span>
-                          (eq major-mode 'diff-mode))
+                          (derived-mode-p 'diff-mode))
                                         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">... where the patch file can't be</span>
@@ -6319,7 +6319,7 @@
 "org-comment-delimiter">; </span><span class=
 "org-comment">Except for ...</span>
                 (<span class=
-"org-keyword">unless</span> (eq major-mode 'diff-mode)
+"org-keyword">unless</span> (derived-mode-p 'diff-mode)
                                         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">... where the patch file can't be</span>
@@ -6617,7 +6617,7 @@
         (run-at-time 0.0 nil
                      (<span class="org-keyword">lambda</span> ()
                        (<span class=
-"org-keyword">if</span> (eq major-mode 'diff-mode)
+"org-keyword">if</span> (derived-mode-p 'diff-mode)
                            <span class=
 "org-comment-delimiter">;; </span><span class=
 "org-comment">Put back the cursor only if still in a Diff buffer</span>
@@ -9921,7 +9921,7 @@ M-: (executable-find "diff") RET
         (insert <span class="org-string">"«  »"</span>)
         (backward-char 2))
        ((and (eq (char-before) ?\")
-             (eq major-mode 'latex-mode))
+             (derived-mode-p 'latex-mode))
         (backward-delete-char 1)
         (insert <span class="org-string">"\\enquote{}"</span>)
         (backward-char 1))
@@ -12347,7 +12347,7 @@ M-: (executable-find "diff") RET
 "org-doc">  A tag is considered redundant if it is local to a headline and inherited by</span>
 <span class="org-doc">  a parent headline."</span>
     (interactive)
-    (<span class="org-keyword">when</span> (eq major-mode 'org-mode)
+    (<span class="org-keyword">when</span> (derived-mode-p 'org-mode)
       (<span class="org-keyword">save-excursion</span>
         (org-map-entries
          (<span class="org-keyword">lambda</span> ()
@@ -16651,7 +16651,7 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 "org-function-name">org-repair-property-drawers</span> ()
     <span class="org-doc">"Fix properties drawers in current buffer.</span>
 <span class="org-doc">  Ignore non Org buffers."</span>
-    (<span class="org-keyword">when</span> (eq major-mode 'org-mode)
+    (<span class="org-keyword">when</span> (derived-mode-p 'org-mode)
       (org-with-wide-buffer
        (goto-char (point-min))
        (<span class="org-keyword">let</span> ((case-fold-search t)
@@ -17477,7 +17477,7 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
       <span class=
 "org-doc">"Update all dynamic blocks and all tables in the buffer."</span>
       (interactive)
-      (<span class="org-keyword">when</span> (eq major-mode 'org-mode)
+      (<span class="org-keyword">when</span> (derived-mode-p 'org-mode)
         (message <span class="org-string">"(Info) Update Org buffer %s"</span>
                  (file-name-nondirectory (buffer-file-name)))
         (sit-for 1.5)
@@ -21944,7 +21944,7 @@ etags --langdef=shell --regex-shell=<span class=
       (<span class="org-keyword">defun</span> <span class=
 "org-function-name">recompile-and-reload-all-snippets</span> ()
         (interactive)
-        (<span class="org-keyword">when</span> (eq major-mode 'snippet-mode)
+        (<span class="org-keyword">when</span> (derived-mode-p 'snippet-mode)
           (yas-recompile-all)
           (yas-reload-all)
           (message <span class="org-string">"Reloaded all snippets"</span>)))
@@ -23801,7 +23801,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       (add-hook 'after-save-hook
                 (<span class="org-keyword">lambda</span> ()
                   (<span class=
-"org-keyword">when</span> (and (eq major-mode 'org-mode)
+"org-keyword">when</span> (and (derived-mode-p 'org-mode)
                              (org-agenda-file-p))
                     (org-agenda-to-appt)))))
 </pre>
