@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150211.1134
+;; Version: 20150211.1136
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150211.1134"
+(defconst leuven--emacs-version "20150211.1136"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5779,7 +5779,13 @@ this with to-do items than with projects or headings."
                           (line-number-at-pos
                            (org-element-property :post-affiliated sb))
                           (buffer-name)))
-                  ((not (assoc-string language org-babel-load-languages))
+                  ((and (not (assoc-string language org-babel-load-languages))
+                        (not (assoc-string language org-src-lang-modes))
+                        (locate-library (concat language "-mode")))
+                                        ; XXX This should be stricter: must be
+                                        ; in org-babel-load-languages for
+                                        ; evaluated code blocks. Must be in both
+                                        ; other cases for edited code blocks.
                    (error "Unknown language `%s' at line %d in `%s'"
                           language
                           (line-number-at-pos

@@ -8973,7 +8973,13 @@ languages which can be evaluated in Org mode buffers.
                           (line-number-at-pos
                            (org-element-property :post-affiliated sb))
                           (buffer-name)))
-                  ((not (assoc-string language org-babel-load-languages))
+                  ((and (not (assoc-string language org-babel-load-languages))
+                        (not (assoc-string language org-src-lang-modes))
+                        (locate-library (concat language "-mode")))
+                                        ; XXX This should be stricter: must be
+                                        ; in org-babel-load-languages for
+                                        ; evaluated code blocks. Must be in both
+                                        ; other cases for edited code blocks.
                    (error "Unknown language `%s' at line %d in `%s'"
                           language
                           (line-number-at-pos

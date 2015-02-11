@@ -1376,7 +1376,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150211.1134</span>
+"org-comment">Version: 20150211.1137</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1503,7 +1503,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150211.1134"</span>
+"org-string">"20150211.1137"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -16487,7 +16487,23 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
                            (org-element-property <span class=
 "org-builtin">:post-affiliated</span> sb))
                           (buffer-name)))
-                  ((not (assoc-string language org-babel-load-languages))
+                  ((and (not (assoc-string language org-babel-load-languages))
+                        (not (assoc-string language org-src-lang-modes))
+                        (locate-library (concat language <span class=
+"org-string">"-mode"</span>)))
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
+"org-comment"> This should be stricter: must be</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">in org-babel-load-languages for</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">evaluated code blocks. Must be in both</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">other cases for edited code blocks.</span>
                    (<span class="org-warning">error</span> <span class=
 "org-string">"Unknown language `</span><span class="org-constant"><span class=
 "org-string">%s</span></span><span class=
