@@ -1382,7 +1382,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150211.1402</span>
+"org-comment">Version: 20150211.1407</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1509,7 +1509,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150211.1402"</span>
+"org-string">"20150211.1407"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -26674,6 +26674,10 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
                'browse-url-generic)))
 
   <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">TEMP For testing purpose</span>
+  (setq browse-url-browser-function 'eww-browse-url)
+
+  <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Name of the browser program used by `</span><span class=
 "org-constant"><span class=
 "org-comment">browse-url-generic</span></span><span class=
@@ -26682,7 +26686,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-string">"gnome-open"</span>))
                                         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">Defer the decision to Gnome. We could</span>
+"org-comment">Defer the decision to Gnome.  We could</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">use "firefox" or "google-chrome" as</span>

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150211.1402
+;; Version: 20150211.1407
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150211.1402"
+(defconst leuven--emacs-version "20150211.1407"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -9157,9 +9157,12 @@ a clean buffer we're an order of magnitude laxer about checking."
               (t                        ; Linux
                'browse-url-generic)))
 
+  ;; TEMP For testing purpose
+  (setq browse-url-browser-function 'eww-browse-url)
+
   ;; Name of the browser program used by `browse-url-generic'.
   (setq browse-url-generic-program (executable-find "gnome-open"))
-                                        ; Defer the decision to Gnome. We could
+                                        ; Defer the decision to Gnome.  We could
                                         ; use "firefox" or "google-chrome" as
                                         ; well.
 

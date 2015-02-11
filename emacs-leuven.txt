@@ -14864,9 +14864,12 @@ printing on Windows.
               (t                        ; Linux
                'browse-url-generic)))
 
+  ;; TEMP For testing purpose
+  (setq browse-url-browser-function 'eww-browse-url)
+
   ;; Name of the browser program used by `browse-url-generic'.
   (setq browse-url-generic-program (executable-find "gnome-open"))
-                                        ; Defer the decision to Gnome. We could
+                                        ; Defer the decision to Gnome.  We could
                                         ; use "firefox" or "google-chrome" as
                                         ; well.
 #+end_src
