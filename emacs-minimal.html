@@ -163,21 +163,21 @@
 "org-comment">* --[ Constant part ]-------------------------------------------------------</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">activate debugging</span>
+"org-comment">Activate debugging.</span>
 (setq debug-on-error t)
 (setq debug-on-quit t)
 
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">no limit when printing values</span>
+"org-comment">No limit when printing values.</span>
 (setq eval-expression-print-length nil)
 (setq eval-expression-print-level nil)
 
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">allow input of accented characters (for terminals that use 8-bit charsets)</span>
+"org-comment">Allow input of accented characters (for terminals that use 8-bit charsets).</span>
 (set-input-mode nil nil 1)
 
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable visualization of matching parens</span>
+"org-comment">Enable visualization of matching parens.</span>
 (<span class="org-keyword">require</span> '<span class=
 "org-constant">paren</span>)
 (show-paren-mode 1)
@@ -185,7 +185,7 @@
 (setq show-paren-ring-bell-on-mismatch t)
 
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">title bar display of visible frames</span>
+"org-comment">Title bar display of visible frames.</span>
 (setq frame-title-format
       (format <span class=
 "org-string">"Minimal Emacs %s%s of %s - PID: %d"</span>
@@ -206,7 +206,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Org-mode (reverse order, so that the Org lisp directory will be found</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">before the Org contrib lisp directory)</span>
+"org-comment">before the Org contrib lisp directory).</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(add-to-list 'load-path "~/Public/Repositories/org-mode/testing")</span>
 <span class="org-comment-delimiter">;; </span><span class=
@@ -215,10 +215,12 @@
 "org-string">"~/Public/Repositories/org-mode/lisp"</span>)
                                         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">modify the paths to suit your environment!</span>
+"org-comment">Modify the paths to suit your</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">environment!</span>
 
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">getting started</span>
+"org-comment">Getting started.</span>
 (add-to-list 'auto-mode-alist '(<span class=
 "org-string">"\\.</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">org</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">org_archive</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">txt</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">\\'"</span> . org-mode))
 (<span class="org-keyword">if</span> (locate-library <span class=
@@ -228,7 +230,7 @@
   (<span class="org-keyword">require</span> '<span class=
 "org-constant">org-install</span>))               <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">obsolete since Emacs 24.3</span>
+"org-comment">Obsolete since Emacs 24.3.</span>
 
 (global-set-key (kbd <span class="org-string">"C-c l"</span>) 'org-store-link)
 (global-set-key (kbd <span class="org-string">"C-c a"</span>) 'org-agenda)
@@ -257,7 +259,7 @@
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Place your test code here</span>
+"org-comment">Place your test code here.</span>
 </pre>
             </div>
           </div>
@@ -331,7 +333,7 @@
 (<span class=
 "org-keyword">let</span> ((org-confirm-babel-evaluate nil)) <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">preference over the explicit setq</span>
+"org-comment">Preference over the explicit setq.</span>
   (find-file <span class="org-string">"file-to-export.org"</span>)
   (org-export-as-html 3))
 </pre>
@@ -346,7 +348,7 @@
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">change the pathname appropriately!</span>
+"org-comment">Change the pathname appropriately!</span>
 (add-to-list 'load-path (expand-file-name <span class=
 "org-string">"~/Public/Repositories/org-mode/testing"</span>))
 (load-library <span class="org-string">"org-test"</span>)
@@ -391,7 +393,7 @@
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">change the pathname appropriately!</span>
+"org-comment">Change the pathname appropriately!</span>
 (add-to-list 'load-path (expand-file-name <span class=
 "org-string">"~/Public/Repositories/org-mode/testing/lisp"</span>))
 (load-library <span class="org-string">"test-org"</span>)
@@ -433,7 +435,7 @@
 "org-constant">diary-lib</span>)
 
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">profile some times... CAUTION: require the packages first (to get results)!</span>
+"org-comment">Profile some times... CAUTION: require the packages first (to get results)!</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(elp-instrument-list '(org-agenda-next-line next-line line-move))</span>
 (<span class="org-keyword">when</span> (<span class=
@@ -454,7 +456,7 @@
   (global-set-key (kbd <span class="org-string">"C-c e"</span>) 'elp-results))
 
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">improve readability of profile results, give milliseconds</span>
+"org-comment">Improve readability of profile results, give milliseconds.</span>
 (<span class="org-keyword">defun</span> <span class=
 "org-function-name">elp-pack-number</span> (number width)
   (format (concat <span class=
