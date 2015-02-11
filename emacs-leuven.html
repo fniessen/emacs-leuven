@@ -1382,7 +1382,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150211.1407</span>
+"org-comment">Version: 20150211.1643</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1509,7 +1509,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150211.1407"</span>
+"org-string">"20150211.1643"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -11310,7 +11310,15 @@ M-: (executable-find "diff") RET
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Do not switch to OVERVIEW at startup.</span>
-  (setq org-startup-folded nil)
+  (setq org-startup-folded nil)         <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Emacs hangs when editing a 5-line Org</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">file (with Company auto-starting after</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">2 characters and 0 s delay)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Inhibit startup when preparing agenda buffers -- agenda optimization.</span>

@@ -5938,7 +5938,9 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
   (leuven--section "2.3 (org)Visibility cycling")
 
   ;; Do not switch to OVERVIEW at startup.
-  (setq org-startup-folded nil)
+  (setq org-startup-folded nil)         ; Emacs hangs when editing a 5-line Org
+                                        ; file (with Company auto-starting after
+                                        ; 2 characters and 0 s delay)
 
   ;; Inhibit startup when preparing agenda buffers -- agenda optimization.
   (setq org-agenda-inhibit-startup t)

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150211.1407
+;; Version: 20150211.1643
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150211.1407"
+(defconst leuven--emacs-version "20150211.1643"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3672,7 +3672,9 @@ These packages are neither built-in nor already installed nor ignored."
   (leuven--section "2.3 (org)Visibility cycling")
 
   ;; Do not switch to OVERVIEW at startup.
-  (setq org-startup-folded nil)
+  (setq org-startup-folded nil)         ; Emacs hangs when editing a 5-line Org
+                                        ; file (with Company auto-starting after
+                                        ; 2 characters and 0 s delay)
 
   ;; Inhibit startup when preparing agenda buffers -- agenda optimization.
   (setq org-agenda-inhibit-startup t)
