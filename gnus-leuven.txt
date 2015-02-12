@@ -1643,6 +1643,17 @@ for inserting a citation line in the correct language.
   (message "6 Select Methods...")
 #+end_src
 
+** Getting News
+
+#+begin_src emacs-lisp
+;;** 6.2 (info "(gnus)Getting News")
+
+;;*** 6.2.1 (info "(gnus)NNTP")
+
+  ;; number of seconds to wait before an nntp connection times out
+  (setq nntp-connection-timeout 5)      ; 30
+#+end_src
+
 ** Getting Mail
 
 #+begin_src emacs-lisp :tangle no

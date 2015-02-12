@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150212.1035
+;; Version: 20150212.1051
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -843,6 +843,13 @@
 ;;* 6 (info "(gnus)Select Methods")
 
   (message "6 Select Methods...")
+
+;;** 6.2 (info "(gnus)Getting News")
+
+;;*** 6.2.1 (info "(gnus)NNTP")
+
+  ;; number of seconds to wait before an nntp connection times out
+  (setq nntp-connection-timeout 5)      ; 30
 
   ;; the first match in `nnmail-split-rule' found will be used
   (setq nnmail-crosspost nil)
