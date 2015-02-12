@@ -1382,7 +1382,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150211.1643</span>
+"org-comment">Version: 20150212.1018</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1509,7 +1509,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150211.1643"</span>
+"org-string">"20150212.1018"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -2354,15 +2354,15 @@
       (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven-elpa-packages</span>
         '(ace-jump-mode ace-window auctex auto-complete bbdb bookmark+ boxquote
-          calfw circe color-identifiers-mode company csv-mode cygwin-mount
-          dictionary diff-hl diminish dired+ dired-single ess expand-region
-          fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
-          google-this google-translate goto-chg graphviz-dot-mode
-          graphviz-dot-mode guide-key helm helm-descbinds helm-swoop hideshowvis
-          highlight-symbol htmlize key-chord litable idle-require imenu-anywhere
-          info+ interaction-log ledger-mode leuven-theme multi-term
-          multiple-cursors pager powerline rainbow-mode tidy unbound undo-tree
-          w3m yasnippet
+          calfw circe color-identifiers-mode company company-quickhelp csv-mode
+          cygwin-mount dictionary diff-hl diminish dired+ dired-single ess
+          expand-region fancy-narrow fill-column-indicator flycheck fuzzy
+          git-commit-mode google-this google-translate goto-chg
+          graphviz-dot-mode graphviz-dot-mode guide-key helm helm-descbinds
+          helm-swoop hideshowvis highlight-symbol htmlize key-chord litable
+          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          tidy unbound undo-tree w3m yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">jabber multi-term paredit redshank</span>
           )
@@ -8026,8 +8026,8 @@ M-: (executable-find "diff") RET
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"helm-locate"</span>
 
-      (<span class=
-"org-keyword">when</span> (and (or leuven--win32-p leuven--cygwin-p)
+      (<span class="org-keyword">when</span> (and (or leuven--win32-p
+                     leuven--cygwin-p)
                  (executable-find <span class=
 "org-string">"es"</span>))<span class=
 "org-comment-delimiter">; </span><span class=
@@ -8919,8 +8919,8 @@ M-: (executable-find "diff") RET
 "org-string">"C-c z"</span>) 'leuven-toggle-fullscreen))
 
   (GNUEmacs
-    (<span class=
-"org-keyword">when</span> (or leuven--win32-p leuven--cygwin-p)
+    (<span class="org-keyword">when</span> (or leuven--win32-p
+              leuven--cygwin-p)
       (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-w32-maximize-frame</span> ()
         <span class="org-doc">"Maximize the current frame."</span>
@@ -16528,8 +16528,11 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
                            (org-element-property <span class=
 "org-builtin">:post-affiliated</span> sb))
                           (buffer-name)))))))
-      (message <span class="org-string">"Source blocks checked in %s."</span>
-               (buffer-name (buffer-base-buffer))))
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(message "Source blocks checked in %s."</span>
+      <span class="org-comment-delimiter">;;          </span><span class=
+"org-comment">(buffer-name (buffer-base-buffer)))</span>
+      )
 
     (add-hook 'org-mode-hook 'org-src-block-check t))
                                         <span class=
@@ -18018,8 +18021,8 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 "org-comment">Use a saner PDF viewer (evince, SumatraPDF).</span>
       (setcdr (assoc <span class=
 "org-string">"^pdf$"</span> TeX-output-view-style)
-              (<span class=
-"org-keyword">cond</span> ((or leuven--win32-p leuven--cygwin-p)
+              (<span class="org-keyword">cond</span> ((or leuven--win32-p
+                         leuven--cygwin-p)
                      `(<span class="org-string">"."</span> (concat <span class=
 "org-string">"\""</span> ,sumatrapdf-command <span class=
 "org-string">"\" %o"</span>)))
@@ -18040,8 +18043,8 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 "org-string">"\""</span> ,sumatrapdf-command <span class=
 "org-string">"\" %o"</span>))))
 
-      (<span class=
-"org-keyword">when</span> (or leuven--win32-p leuven--cygwin-p)
+      (<span class="org-keyword">when</span> (or leuven--win32-p
+                leuven--cygwin-p)
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '(<span class="org-string">"SumatraPDF"</span>)))
 </pre>
@@ -22327,7 +22330,7 @@ etags --langdef=shell --regex-shell=<span class=
   (GNUEmacs
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Auto Completion</span>
+"org-comment">Auto Completion.</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"auto-complete-autoloads-</span><span class=
 "org-leuven-highlight"><span class="org-string">XXX</span></span><span class=
@@ -22338,32 +22341,32 @@ etags --langdef=shell --regex-shell=<span class=
 "org-string">"auto-complete-config"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">6.1 set a list of sources to use (by default + for some major modes)</span>
+"org-comment">6.1 Set a list of sources to use (by default + for some major modes)</span>
       (ac-config-default))              <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">... and enable Auto-Complete mode in all</span>
                                         <span class=
-"org-comment-delimiter">; </span><span class="org-comment">buffers</span>
+"org-comment-delimiter">; </span><span class="org-comment">buffers.</span>
 
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"auto-complete"</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">required by ESS</span>
+"org-comment">Required by ESS.</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; 5.4 completion will be started automatically by inserting 2 characters</span>
+"org-comment">;; 5.4 Completion will be started automatically by inserting 2 characters.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(setq ac-auto-start 2)            ; also applies on arguments after opening</span>
+"org-comment">(setq ac-auto-start 2)            ; Also applies on arguments after opening</span>
       <span class=
-"org-comment-delimiter">;;                                   </span><span class="org-comment">; parenthesis in ESS</span>
+"org-comment-delimiter">;;                                   </span><span class="org-comment">; parenthesis in ESS.</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">7.5 use `</span><span class="org-constant"><span class=
+"org-comment">7.5 Use `</span><span class="org-constant"><span class=
 "org-comment">C-n/C-p</span></span><span class=
 "org-comment">' to select candidates (only when completion menu is</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">displayed)</span>
+"org-comment">displayed).</span>
       (setq ac-use-menu-map t)
       (define-key ac-menu-map (kbd <span class=
 "org-string">"C-n"</span>) 'ac-next)
@@ -22371,16 +22374,16 @@ etags --langdef=shell --regex-shell=<span class=
 "org-string">"C-p"</span>) 'ac-previous)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">unbind some keys (inconvenient in Comint buffers)</span>
+"org-comment">Unbind some keys (inconvenient in Comint buffers).</span>
       (define-key ac-completing-map (kbd <span class=
 "org-string">"M-n"</span>) nil)
       (define-key ac-completing-map (kbd <span class=
 "org-string">"M-p"</span>) nil)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">add other modes into `</span><span class=
+"org-comment">Add other modes into `</span><span class=
 "org-constant"><span class="org-comment">ac-modes</span></span><span class=
-"org-comment">'</span>
+"org-comment">'.</span>
       (setq ac-modes
             (append ac-modes
                     '(change-log-mode
@@ -22388,36 +22391,36 @@ etags --langdef=shell --regex-shell=<span class=
                       org-mode
                       prog-mode       <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">programming modes</span>
+"org-comment">Programming modes.</span>
                       snippet-mode
                       sql-mode
                       text-mode)))
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">8.1 delay to completions will be available</span>
+"org-comment">8.1 Delay to completions will be available.</span>
       (setq ac-delay 0)               <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">faster than default 0.1</span>
+"org-comment">Faster than default 0.1.</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">8.2 completion menu will be automatically shown</span>
+"org-comment">8.2 Completion menu will be automatically shown.</span>
       (setq ac-auto-show-menu 0.2)    <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">[default: 0.8]</span>
+"org-comment">[Default: 0.8].</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">8.13 delay to show quick help</span>
+"org-comment">8.13 Delay to show quick help.</span>
       (setq ac-quick-help-delay 0.5)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">8.15 max height of quick help</span>
+"org-comment">8.15 Max height of quick help.</span>
       (setq ac-quick-help-height 10)  <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">same as `</span><span class="org-constant"><span class=
-"org-comment">ac-menu-height</span></span><span class="org-comment">'</span>
+"org-comment">Same as `</span><span class="org-constant"><span class=
+"org-comment">ac-menu-height</span></span><span class="org-comment">'.</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">8.16 limit on number of candidates</span>
+"org-comment">8.16 Limit on number of candidates.</span>
       (setq ac-candidate-limit 100)
 
       <span class="org-comment-delimiter">;; </span><span class=
@@ -22426,24 +22429,24 @@ etags --langdef=shell --regex-shell=<span class=
 "org-comment">(setq ac-candidate-menu-min 0)</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">completion by TAB</span>
+"org-comment">Completion by TAB.</span>
       (define-key ac-completing-map (kbd <span class=
 "org-string">"&lt;tab&gt;"</span>) 'ac-complete)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">completion by RET</span>
+"org-comment">Completion by RET.</span>
       (define-key ac-completing-map (kbd <span class=
 "org-string">"&lt;return&gt;"</span>) 'ac-complete)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">abort</span>
+"org-comment">Abort.</span>
       (define-key ac-completing-map (kbd <span class=
 "org-string">"C-g"</span>) 'ac-stop)
       (define-key ac-completing-map (kbd <span class=
 "org-string">"&lt;left&gt;"</span>) 'ac-stop)
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">11.1 avoid Flyspell processes when auto completion is being started</span>
+"org-comment">11.1 Avoid Flyspell processes when auto completion is being started.</span>
       (ac-flyspell-workaround)))
 </pre>
             </div>
@@ -22452,9 +22455,9 @@ etags --langdef=shell --regex-shell=<span class=
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
-<span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable the drop down auto complete inside comment lines</span>
-(setq ac-disable-faces nil)
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Enable the drop down auto complete inside comment lines.</span>
+      (setq ac-disable-faces nil)
 </pre>
             </div>
           </div>
@@ -22495,66 +22498,66 @@ etags --langdef=shell --regex-shell=<span class=
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">modular text completion framework</span>
+"org-comment">Modular text completion framework.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"company-autoloads"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable Company mode in all buffers ...</span>
+"org-comment">Enable Company mode in all buffers ....</span>
     (add-hook 'after-init-hook 'global-company-mode))
 
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"company"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">... except in some modes</span>
+"org-comment">... Except in some modes.</span>
     (setq company-global-modes
           '(not ess-mode                <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">in (i)ESS buffers, Auto-Complete is</span>
+"org-comment">In (i)ESS buffers, Auto-Complete is</span>
                 inferior-ess-mode       <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">enabled by default</span>
+"org-comment">enabled by default.</span>
                 magit-status-mode
                 help-mode))
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">minimum prefix length for idle completion</span>
+"org-comment">Minimum prefix length for idle completion.</span>
     (setq company-minimum-prefix-length 2)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">start completion immediately</span>
+"org-comment">Start completion immediately.</span>
     (setq company-idle-delay 0)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">show quick-access numbers for the first ten candidates</span>
+"org-comment">Show quick-access numbers for the first ten candidates.</span>
     (setq company-show-numbers t)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">use `</span><span class="org-constant"><span class=
+"org-comment">Use `</span><span class="org-constant"><span class=
 "org-comment">C-n/C-p</span></span><span class=
 "org-comment">' to select candidates (only when completion menu is</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">displayed)</span>
+"org-comment">displayed).</span>
     (define-key company-active-map (kbd <span class=
 "org-string">"C-n"</span>) 'company-select-next)
     (define-key company-active-map (kbd <span class=
 "org-string">"C-p"</span>) 'company-select-previous)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">unbind some keys (inconvenient in Comint buffers)</span>
+"org-comment">Unbind some keys (inconvenient in Comint buffers).</span>
     (define-key company-active-map (kbd <span class=
 "org-string">"M-n"</span>) nil)
     (define-key company-active-map (kbd <span class=
 "org-string">"M-p"</span>) nil)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">completion by TAB</span>
+"org-comment">Completion by TAB.</span>
     (define-key company-active-map (kbd <span class=
 "org-string">"&lt;tab&gt;"</span>) 'company-complete-selection)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">abort</span>
+"org-comment">Abort.</span>
     (define-key company-active-map (kbd <span class=
 "org-string">"C-g"</span>) 'company-abort)
     (define-key company-active-map (kbd <span class=
@@ -22608,7 +22611,9 @@ etags --langdef=shell --regex-shell=<span class=
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">see tab-always-indent</span>
+"org-comment">See `</span><span class="org-constant"><span class=
+"org-comment">tab-always-indent</span></span><span class=
+"org-comment">'.</span>
 
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-indent-or-complete</span> ()
@@ -22664,17 +22669,17 @@ good|
 "org-string">"company-dabbrev"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't ignore case when collecting completion candidates</span>
+"org-comment">Don't ignore case when collecting completion candidates.</span>
     (setq company-dabbrev-ignore-case nil)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">don't downcase the returned candidates</span>
+"org-comment">Don't downcase the returned candidates.</span>
     (setq company-dabbrev-downcase nil))
 </pre>
             </div>
 
-            <p>XXX What about company-search-candidates vs
-            company-filter-candidates?</p>
+            <p>XXX What about <code>company-search-candidates</code> vs
+            <code>company-filter-candidates</code>?</p>
 
             <div class="org-src-container">
               <pre class="src src-emacs-lisp">
@@ -22695,6 +22700,19 @@ good|
 
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"company-quickhelp-autoloads"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Enable `</span><span class="org-constant"><span class=
+"org-comment">company-quickhelp-mode</span></span><span class=
+"org-comment">'.</span>
+    (company-quickhelp-mode 1)
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Delay to show quick help.</span>
+    (setq company-quickhelp-delay 0.5))
+
 )                                       <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">chapter 29 ends here</span>
@@ -22753,8 +22771,8 @@ good|
 "org-constant"><span class="org-comment">ls</span></span><span class=
 "org-comment">' for Dired</span>
     (setq dired-listing-switches
-          (<span class=
-"org-keyword">cond</span> ((or leuven--win32-p leuven--cygwin-p)
+          (<span class="org-keyword">cond</span> ((or leuven--win32-p
+                     leuven--cygwin-p)
                  <span class="org-string">"-a -F -l"</span>)
                 (t
                  <span class=
@@ -23048,8 +23066,8 @@ good|
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">open files using Windows associations</span>
     (GNUEmacs
-      (<span class=
-"org-keyword">when</span> (or leuven--win32-p leuven--cygwin-p)
+      (<span class="org-keyword">when</span> (or leuven--win32-p
+                leuven--cygwin-p)
         (<span class="org-keyword">defun</span> <span class=
 "org-function-name">w32-dired-open-files-externally</span> (<span class=
 "org-type">&amp;optional</span> arg)
@@ -26360,24 +26378,24 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-string">"38 Printing Hard Copies"</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">print Emacs buffer on line printer</span>
+"org-comment">Print Emacs buffer on line printer</span>
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">for {lpr,print}-{buffer,region}</span>
+"org-comment">for {lpr,print}-{buffer,region}.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"lpr"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">name of program for printing a file</span>
+"org-comment">Name of program for printing a file.</span>
     (setq lpr-command (executable-find <span class=
 "org-string">"enscript"</span>))
                                     <span class=
 "org-comment-delimiter">; </span><span class=
 "org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
 "org-comment"> Install `</span><span class="org-constant"><span class=
-"org-comment">enscript</span></span><span class="org-comment">'</span>
+"org-comment">enscript</span></span><span class="org-comment">'.</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">list of strings to pass as extra options for the printer program</span>
+"org-comment">List of strings to pass as extra options for the printer program.</span>
     (setq lpr-switches (list <span class="org-string">"--font=Courier8"</span>
                              <span class=
 "org-string">"--header-font=Courier10"</span>
@@ -26385,7 +26403,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-string">"--header=%s"</span> (buffer-name))))
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">name of a printer to which data is sent for printing</span>
+"org-comment">Name of a printer to which data is sent for printing.</span>
     (setq printer-name t))
 
   (<span class="org-keyword">defun</span> <span class=
@@ -26397,11 +26415,11 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
       (ps-print-buffer-with-faces)))
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">generate and print a PostScript image of the buffer</span>
+"org-comment">Generate and print a PostScript image of the buffer.</span>
   (GNUEmacs
     (<span class="org-keyword">when</span> leuven--win32-p
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">override `Print Screen' globally used as a hotkey by Windows</span>
+"org-comment">Override `Print Screen' globally used as a hotkey by Windows.</span>
       (w32-register-hot-key (kbd <span class=
 "org-string">"&lt;snapshot&gt;"</span>))
       (global-set-key
@@ -26415,7 +26433,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (setq toolbar-print-function 'ps-print-buffer-with-faces))
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">print text from the buffer as PostScript</span>
+"org-comment">Print text from the buffer as PostScript.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"ps-print"</span>
 
@@ -26433,24 +26451,33 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 
         (<span class="org-keyword">progn</span>
           <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">name of a local printer for printing PostScript files</span>
-          <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">adjusted to run Ghostscript</span>
-          (setq ps-printer-name t)
+"org-comment">Name of a local printer for printing PostScript files.</span>
+          (setq ps-printer-name t)      <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Adjusted to run Ghostscript.</span>
+
 
           <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">name of program for printing a PostScript file</span>
-          <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">tell Emacs where Ghostscript print utility is located</span>
+"org-comment">Name of program for printing a PostScript file.</span>
           (setq ps-lpr-command gsprint-program)
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Tell Emacs where Ghostscript print</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">utility is located.</span>
 
           <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">list of extra switches to pass to `</span><span class=
+"org-comment">List of extra switches to pass to `</span><span class=
 "org-constant"><span class=
-"org-comment">ps-lpr-command</span></span><span class="org-comment">'</span>
-          <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">tell Ghostscript to query which printer to use</span>
+"org-comment">ps-lpr-command</span></span><span class="org-comment">'.</span>
           (setq ps-lpr-switches '(<span class="org-string">"-query"</span>)))
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Tell Ghostscript to query which</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">printer to use.</span>
                                         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">'("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2")</span>
@@ -26466,19 +26493,19 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment">(setq ps-error-handler-message 'system)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">size of paper to format for</span>
+"org-comment">Size of paper to format for.</span>
     (setq ps-paper-type 'a4)
     (setq ps-warn-paper-type nil)
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">print in portrait mode</span>
+"org-comment">Print in portrait mode.</span>
     (setq ps-landscape-mode nil)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(setq ps-print-control-characters nil)</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">number of columns</span>
+"org-comment">Number of columns.</span>
     (setq ps-number-of-columns 1)
 
     (setq ps-left-margin 40)
@@ -26490,9 +26517,9 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-comment">Page layout: Header [file-name     2001-06-18 Mon]</span>
     (setq ps-print-header-frame nil)    <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">no box around the header</span>
+"org-comment">No box around the header.</span>
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">see http://www.emacswiki.org/emacs/PsPrintPackage-23</span>
+"org-comment">See http://www.emacswiki.org/emacs/PsPrintPackage-23.</span>
     (setq ps-header-frame-alist '((fore-color . <span class=
 "org-string">"#CCCCCC"</span>)))
     (setq ps-header-lines 1)
@@ -26514,7 +26541,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (setq ps-print-footer t)
     (setq ps-print-footer-frame nil)    <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">no box around the footer</span>
+"org-comment">No box around the footer.</span>
     (setq ps-footer-frame-alist '((fore-color . <span class=
 "org-string">"#666666"</span>)))
     (setq ps-footer-lines 1)
@@ -26523,21 +26550,32 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (setq ps-left-footer nil)
     (setq ps-right-footer (list <span class=
 "org-string">"/pagenumberstring load"</span>)) <span class=
-"org-comment-delimiter">; </span><span class="org-comment">Page n of m</span>
+"org-comment-delimiter">; </span><span class="org-comment">Page n of m.</span>
 
     (setq ps-font-family 'Courier)      <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">see `</span><span class="org-constant"><span class=
+"org-comment">See `</span><span class="org-constant"><span class=
 "org-comment">ps-font-info-database</span></span><span class=
-"org-comment">'</span>
+"org-comment">'.</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Legitimate values include Courier,</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">Helvetica, NewCenturySchlbk, Palatino</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class="org-comment">and Times.</span>
+
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">legitimate values include Courier, Helvetica, NewCenturySchlbk,</span>
-    <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Palatino and Times</span>
+"org-comment">Font size, in points, for ordinary text, when generating PostScript.</span>
     (setq ps-font-size 9.1)
 
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Specify if face background should be used.</span>
     (setq ps-use-face-background t)
 
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Specify line spacing, in points, for ordinary text.</span>
     (setq ps-line-spacing 3))
 
 )                                       <span class=
@@ -26561,7 +26599,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-string">"39 Sorting Text"</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">key binding</span>
+"org-comment">Key binding.</span>
   (global-set-key (kbd <span class="org-string">"C-c ^"</span>) 'sort-lines)
 
 )                                       <span class=
@@ -26673,17 +26711,18 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
               (leuven--mac-p
                'browse-url-default-macosx-browser)
               ((not (display-graphic-p)) <span class=
-"org-comment-delimiter">; </span><span class="org-comment">console</span>
+"org-comment-delimiter">; </span><span class="org-comment">Console.</span>
                'eww-browse-url)         <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">'w3m-browse-url</span>
               (t                        <span class=
-"org-comment-delimiter">; </span><span class="org-comment">Linux</span>
+"org-comment-delimiter">; </span><span class="org-comment">Linux.</span>
                'browse-url-generic)))
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">TEMP For testing purpose</span>
-  (setq browse-url-browser-function 'eww-browse-url)
+"org-comment">;; TEMP For testing purpose</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq browse-url-browser-function 'eww-browse-url)</span>
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Name of the browser program used by `</span><span class=

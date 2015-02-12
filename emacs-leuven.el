@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150211.1643
+;; Version: 20150212.1017
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150211.1643"
+(defconst leuven--emacs-version "20150212.1017"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -434,15 +434,15 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (defconst leuven-elpa-packages
         '(ace-jump-mode ace-window auctex auto-complete bbdb bookmark+ boxquote
-          calfw circe color-identifiers-mode company csv-mode cygwin-mount
-          dictionary diff-hl diminish dired+ dired-single ess expand-region
-          fancy-narrow fill-column-indicator flycheck fuzzy git-commit-mode
-          google-this google-translate goto-chg graphviz-dot-mode
-          graphviz-dot-mode guide-key helm helm-descbinds helm-swoop hideshowvis
-          highlight-symbol htmlize key-chord litable idle-require imenu-anywhere
-          info+ interaction-log ledger-mode leuven-theme multi-term
-          multiple-cursors pager powerline rainbow-mode tidy unbound undo-tree
-          w3m yasnippet
+          calfw circe color-identifiers-mode company company-quickhelp csv-mode
+          cygwin-mount dictionary diff-hl diminish dired+ dired-single ess
+          expand-region fancy-narrow fill-column-indicator flycheck fuzzy
+          git-commit-mode google-this google-translate goto-chg
+          graphviz-dot-mode graphviz-dot-mode guide-key helm helm-descbinds
+          helm-swoop hideshowvis highlight-symbol htmlize key-chord litable
+          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
+          tidy unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -2349,7 +2349,8 @@ These packages are neither built-in nor already installed nor ignored."
 
     (with-eval-after-load "helm-locate"
 
-      (when (and (or leuven--win32-p leuven--cygwin-p)
+      (when (and (or leuven--win32-p
+                     leuven--cygwin-p)
                  (executable-find "es")); we could check for it in
                                         ; (concat (getenv "USERPROFILE") "/Downloads")
 
@@ -2758,7 +2759,8 @@ These packages are neither built-in nor already installed nor ignored."
     (global-set-key (kbd "C-c z") 'leuven-toggle-fullscreen))
 
   (GNUEmacs
-    (when (or leuven--win32-p leuven--cygwin-p)
+    (when (or leuven--win32-p
+              leuven--cygwin-p)
       (defun leuven-w32-maximize-frame ()
         "Maximize the current frame."
         (interactive)
@@ -5793,8 +5795,9 @@ this with to-do items than with projects or headings."
                           (line-number-at-pos
                            (org-element-property :post-affiliated sb))
                           (buffer-name)))))))
-      (message "Source blocks checked in %s."
-               (buffer-name (buffer-base-buffer))))
+      ;; (message "Source blocks checked in %s."
+      ;;          (buffer-name (buffer-base-buffer)))
+      )
 
     (add-hook 'org-mode-hook 'org-src-block-check t))
                                         ; Place this at the end to ensure that
@@ -6361,7 +6364,8 @@ this with to-do items than with projects or headings."
 
       ;; Use a saner PDF viewer (evince, SumatraPDF).
       (setcdr (assoc "^pdf$" TeX-output-view-style)
-              (cond ((or leuven--win32-p leuven--cygwin-p)
+              (cond ((or leuven--win32-p
+                         leuven--cygwin-p)
                      `("." (concat "\"" ,sumatrapdf-command "\" %o")))
                     ;; under Windows, we could open the PDF file with
                     ;; `start "" xxx.pdf' (in a command prompt)
@@ -6374,7 +6378,8 @@ this with to-do items than with projects or headings."
                      `("SumatraPDF"
                        (concat "\"" ,sumatrapdf-command "\" %o"))))
 
-      (when (or leuven--win32-p leuven--cygwin-p)
+      (when (or leuven--win32-p
+                leuven--cygwin-p)
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '("SumatraPDF")))
 
@@ -7649,112 +7654,112 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (GNUEmacs
 
-    ;; Auto Completion
+    ;; Auto Completion.
     (with-eval-after-load "auto-complete-autoloads-XXX"
       (idle-require 'auto-complete-config))
 
     (with-eval-after-load "auto-complete-config"
 
-      ;; 6.1 set a list of sources to use (by default + for some major modes)
+      ;; 6.1 Set a list of sources to use (by default + for some major modes)
       (ac-config-default))              ; ... and enable Auto-Complete mode in all
-                                        ; buffers
+                                        ; buffers.
 
     (with-eval-after-load "auto-complete"
-                                        ; required by ESS
+                                        ; Required by ESS.
 
-      ;; ;; 5.4 completion will be started automatically by inserting 2 characters
-      ;; (setq ac-auto-start 2)            ; also applies on arguments after opening
-      ;;                                   ; parenthesis in ESS
+      ;; ;; 5.4 Completion will be started automatically by inserting 2 characters.
+      ;; (setq ac-auto-start 2)            ; Also applies on arguments after opening
+      ;;                                   ; parenthesis in ESS.
 
-      ;; 7.5 use `C-n/C-p' to select candidates (only when completion menu is
-      ;; displayed)
+      ;; 7.5 Use `C-n/C-p' to select candidates (only when completion menu is
+      ;; displayed).
       (setq ac-use-menu-map t)
       (define-key ac-menu-map (kbd "C-n") 'ac-next)
       (define-key ac-menu-map (kbd "C-p") 'ac-previous)
 
-      ;; unbind some keys (inconvenient in Comint buffers)
+      ;; Unbind some keys (inconvenient in Comint buffers).
       (define-key ac-completing-map (kbd "M-n") nil)
       (define-key ac-completing-map (kbd "M-p") nil)
 
-      ;; add other modes into `ac-modes'
+      ;; Add other modes into `ac-modes'.
       (setq ac-modes
             (append ac-modes
                     '(change-log-mode
                       latex-mode
                       org-mode
-                      prog-mode       ; programming modes
+                      prog-mode       ; Programming modes.
                       snippet-mode
                       sql-mode
                       text-mode)))
 
-      ;; 8.1 delay to completions will be available
-      (setq ac-delay 0)               ; faster than default 0.1
+      ;; 8.1 Delay to completions will be available.
+      (setq ac-delay 0)               ; Faster than default 0.1.
 
-      ;; 8.2 completion menu will be automatically shown
-      (setq ac-auto-show-menu 0.2)    ; [default: 0.8]
+      ;; 8.2 Completion menu will be automatically shown.
+      (setq ac-auto-show-menu 0.2)    ; [Default: 0.8].
 
-      ;; 8.13 delay to show quick help
+      ;; 8.13 Delay to show quick help.
       (setq ac-quick-help-delay 0.5)
 
-      ;; 8.15 max height of quick help
-      (setq ac-quick-help-height 10)  ; same as `ac-menu-height'
+      ;; 8.15 Max height of quick help.
+      (setq ac-quick-help-height 10)  ; Same as `ac-menu-height'.
 
-      ;; 8.16 limit on number of candidates
+      ;; 8.16 Limit on number of candidates.
       (setq ac-candidate-limit 100)
 
       ;; (setq ac-disable-inline t)
       ;; (setq ac-candidate-menu-min 0)
 
-      ;; completion by TAB
+      ;; Completion by TAB.
       (define-key ac-completing-map (kbd "<tab>") 'ac-complete)
 
-      ;; completion by RET
+      ;; Completion by RET.
       (define-key ac-completing-map (kbd "<return>") 'ac-complete)
 
-      ;; abort
+      ;; Abort.
       (define-key ac-completing-map (kbd "C-g") 'ac-stop)
       (define-key ac-completing-map (kbd "<left>") 'ac-stop)
 
-      ;; 11.1 avoid Flyspell processes when auto completion is being started
+      ;; 11.1 Avoid Flyspell processes when auto completion is being started.
       (ac-flyspell-workaround)))
 
-  ;; modular text completion framework
+  ;; Modular text completion framework.
   (with-eval-after-load "company-autoloads"
 
-    ;; enable Company mode in all buffers ...
+    ;; Enable Company mode in all buffers ....
     (add-hook 'after-init-hook 'global-company-mode))
 
   (with-eval-after-load "company"
 
-    ;; ... except in some modes
+    ;; ... Except in some modes.
     (setq company-global-modes
-          '(not ess-mode                ; in (i)ESS buffers, Auto-Complete is
-                inferior-ess-mode       ; enabled by default
+          '(not ess-mode                ; In (i)ESS buffers, Auto-Complete is
+                inferior-ess-mode       ; enabled by default.
                 magit-status-mode
                 help-mode))
 
-    ;; minimum prefix length for idle completion
+    ;; Minimum prefix length for idle completion.
     (setq company-minimum-prefix-length 2)
 
-    ;; start completion immediately
+    ;; Start completion immediately.
     (setq company-idle-delay 0)
 
-    ;; show quick-access numbers for the first ten candidates
+    ;; Show quick-access numbers for the first ten candidates.
     (setq company-show-numbers t)
 
-    ;; use `C-n/C-p' to select candidates (only when completion menu is
-    ;; displayed)
+    ;; Use `C-n/C-p' to select candidates (only when completion menu is
+    ;; displayed).
     (define-key company-active-map (kbd "C-n") 'company-select-next)
     (define-key company-active-map (kbd "C-p") 'company-select-previous)
 
-    ;; unbind some keys (inconvenient in Comint buffers)
+    ;; Unbind some keys (inconvenient in Comint buffers).
     (define-key company-active-map (kbd "M-n") nil)
     (define-key company-active-map (kbd "M-p") nil)
 
-    ;; completion by TAB
+    ;; Completion by TAB.
     (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
 
-    ;; abort
+    ;; Abort.
     (define-key company-active-map (kbd "C-g") 'company-abort)
     (define-key company-active-map (kbd "<left>") 'company-abort)
 
@@ -7782,11 +7787,19 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (with-eval-after-load "company-dabbrev"
 
-    ;; don't ignore case when collecting completion candidates
+    ;; Don't ignore case when collecting completion candidates.
     (setq company-dabbrev-ignore-case nil)
 
-    ;; don't downcase the returned candidates
+    ;; Don't downcase the returned candidates.
     (setq company-dabbrev-downcase nil))
+
+  (with-eval-after-load "company-quickhelp-autoloads"
+
+    ;; Enable `company-quickhelp-mode'.
+    (company-quickhelp-mode 1)
+
+    ;; Delay to show quick help.
+    (setq company-quickhelp-delay 0.5))
 
 )                                       ; chapter 29 ends here
 
@@ -7803,7 +7816,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; switches passed to `ls' for Dired
     (setq dired-listing-switches
-          (cond ((or leuven--win32-p leuven--cygwin-p)
+          (cond ((or leuven--win32-p
+                     leuven--cygwin-p)
                  "-a -F -l")
                 (t
                  "-a -F --group-directories-first -l --time-style=long-iso")))
@@ -7846,7 +7860,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; open files using Windows associations
     (GNUEmacs
-      (when (or leuven--win32-p leuven--cygwin-p)
+      (when (or leuven--win32-p
+                leuven--cygwin-p)
         (defun w32-dired-open-files-externally (&optional arg)
           "In Dired, open the marked files (or directories) with the default
         Windows tool."
@@ -8989,20 +9004,20 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 (leuven--chapter leuven-chapter-38-printing "38 Printing Hard Copies"
 
-  ;; print Emacs buffer on line printer
-  ;; for {lpr,print}-{buffer,region}
+  ;; Print Emacs buffer on line printer
+  ;; for {lpr,print}-{buffer,region}.
   (with-eval-after-load "lpr"
 
-    ;; name of program for printing a file
+    ;; Name of program for printing a file.
     (setq lpr-command (executable-find "enscript"))
-                                    ; TODO Install `enscript'
+                                    ; TODO Install `enscript'.
 
-    ;; list of strings to pass as extra options for the printer program
+    ;; List of strings to pass as extra options for the printer program.
     (setq lpr-switches (list "--font=Courier8"
                              "--header-font=Courier10"
                              (format "--header=%s" (buffer-name))))
 
-    ;; name of a printer to which data is sent for printing
+    ;; Name of a printer to which data is sent for printing.
     (setq printer-name t))
 
   (defun leuven-ps-print-buffer-with-faces-query ()
@@ -9011,10 +9026,10 @@ a clean buffer we're an order of magnitude laxer about checking."
     (when (y-or-n-p "Are you sure you want to print this buffer? ")
       (ps-print-buffer-with-faces)))
 
-  ;; generate and print a PostScript image of the buffer
+  ;; Generate and print a PostScript image of the buffer.
   (GNUEmacs
     (when leuven--win32-p
-      ;; override `Print Screen' globally used as a hotkey by Windows
+      ;; Override `Print Screen' globally used as a hotkey by Windows.
       (w32-register-hot-key (kbd "<snapshot>"))
       (global-set-key
         (kbd "<snapshot>") 'leuven-ps-print-buffer-with-faces-query)))
@@ -9024,7 +9039,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (XEmacs
     (setq toolbar-print-function 'ps-print-buffer-with-faces))
 
-  ;; print text from the buffer as PostScript
+  ;; Print text from the buffer as PostScript.
   (with-eval-after-load "ps-print"
 
     (defvar gsprint-program
@@ -9037,17 +9052,19 @@ a clean buffer we're an order of magnitude laxer about checking."
              (executable-find gsprint-program))
 
         (progn
-          ;; name of a local printer for printing PostScript files
-          ;; adjusted to run Ghostscript
-          (setq ps-printer-name t)
+          ;; Name of a local printer for printing PostScript files.
+          (setq ps-printer-name t)      ; Adjusted to run Ghostscript.
 
-          ;; name of program for printing a PostScript file
-          ;; tell Emacs where Ghostscript print utility is located
+
+          ;; Name of program for printing a PostScript file.
           (setq ps-lpr-command gsprint-program)
+                                        ; Tell Emacs where Ghostscript print
+                                        ; utility is located.
 
-          ;; list of extra switches to pass to `ps-lpr-command'
-          ;; tell Ghostscript to query which printer to use
+          ;; List of extra switches to pass to `ps-lpr-command'.
           (setq ps-lpr-switches '("-query")))
+                                        ; Tell Ghostscript to query which
+                                        ; printer to use.
                                         ; '("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2")
 
       (setq ps-printer-name "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
@@ -9056,16 +9073,16 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; (setq ps-error-handler-message 'system)
 
-    ;; size of paper to format for
+    ;; Size of paper to format for.
     (setq ps-paper-type 'a4)
     (setq ps-warn-paper-type nil)
 
-    ;; print in portrait mode
+    ;; Print in portrait mode.
     (setq ps-landscape-mode nil)
 
     ;; (setq ps-print-control-characters nil)
 
-    ;; number of columns
+    ;; Number of columns.
     (setq ps-number-of-columns 1)
 
     (setq ps-left-margin 40)
@@ -9074,8 +9091,8 @@ a clean buffer we're an order of magnitude laxer about checking."
     (setq ps-top-margin 32)
 
     ;; Page layout: Header [file-name     2001-06-18 Mon]
-    (setq ps-print-header-frame nil)    ; no box around the header
-    ;; see http://www.emacswiki.org/emacs/PsPrintPackage-23
+    (setq ps-print-header-frame nil)    ; No box around the header.
+    ;; See http://www.emacswiki.org/emacs/PsPrintPackage-23.
     (setq ps-header-frame-alist '((fore-color . "#CCCCCC")))
     (setq ps-header-lines 1)
     (setq ps-header-font-family 'Helvetica)
@@ -9090,21 +9107,26 @@ a clean buffer we're an order of magnitude laxer about checking."
     (setq ps-footer-offset 14)
     (setq ps-footer-line-pad .50)
     (setq ps-print-footer t)
-    (setq ps-print-footer-frame nil)    ; no box around the footer
+    (setq ps-print-footer-frame nil)    ; No box around the footer.
     (setq ps-footer-frame-alist '((fore-color . "#666666")))
     (setq ps-footer-lines 1)
     (setq ps-footer-font-family 'Helvetica)
     (setq ps-footer-font-size 8)
     (setq ps-left-footer nil)
-    (setq ps-right-footer (list "/pagenumberstring load")) ; Page n of m
+    (setq ps-right-footer (list "/pagenumberstring load")) ; Page n of m.
 
-    (setq ps-font-family 'Courier)      ; see `ps-font-info-database'
-    ;; legitimate values include Courier, Helvetica, NewCenturySchlbk,
-    ;; Palatino and Times
+    (setq ps-font-family 'Courier)      ; See `ps-font-info-database'.
+                                        ; Legitimate values include Courier,
+                                        ; Helvetica, NewCenturySchlbk, Palatino
+                                        ; and Times.
+
+    ;; Font size, in points, for ordinary text, when generating PostScript.
     (setq ps-font-size 9.1)
 
+    ;; Specify if face background should be used.
     (setq ps-use-face-background t)
 
+    ;; Specify line spacing, in points, for ordinary text.
     (setq ps-line-spacing 3))
 
 )                                       ; chapter 38 ends here
@@ -9113,7 +9135,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 (leuven--chapter leuven-chapter-39-sorting "39 Sorting Text"
 
-  ;; key binding
+  ;; Key binding.
   (global-set-key (kbd "C-c ^") 'sort-lines)
 
 )                                       ; chapter 39 ends here
@@ -9154,13 +9176,13 @@ a clean buffer we're an order of magnitude laxer about checking."
                'browse-url-default-windows-browser)
               (leuven--mac-p
                'browse-url-default-macosx-browser)
-              ((not (display-graphic-p)) ; console
+              ((not (display-graphic-p)) ; Console.
                'eww-browse-url)         ; 'w3m-browse-url
-              (t                        ; Linux
+              (t                        ; Linux.
                'browse-url-generic)))
 
-  ;; TEMP For testing purpose
-  (setq browse-url-browser-function 'eww-browse-url)
+  ;; ;; TEMP For testing purpose
+  ;; (setq browse-url-browser-function 'eww-browse-url)
 
   ;; Name of the browser program used by `browse-url-generic'.
   (setq browse-url-generic-program (executable-find "gnome-open"))
