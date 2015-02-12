@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150212.1017
+;; Version: 20150212.1157
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150212.1017"
+(defconst leuven--emacs-version "20150212.1157"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1314,20 +1314,20 @@ These packages are neither built-in nor already installed nor ignored."
                (lhs (list
                      ;; vc mode
                      (when (and (fboundp 'vc-switches)
-                                (buffer-file-name (current-buffer))
+                                buffer-file-name
                                 vc-mode)
-                       (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
+                       (if (eq (vc-state buffer-file-name) 'up-to-date)
                            (powerline-vc 'powerline-normal-face 'r)
                          (powerline-vc 'powerline-modified-face 'r)))
 
                      (when (and (not (fboundp 'vc-switches))
-                                (buffer-file-name (current-buffer))
+                                buffer-file-name
                                 vc-mode)
                        (powerline-vc face1 'r))
 
-                     (when (and (buffer-file-name (current-buffer))
+                     (when (and buffer-file-name
                                 vc-mode)
-                       (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
+                       (if (eq (vc-state buffer-file-name) 'up-to-date)
                            (funcall separator-left 'powerline-normal-face mode-line)
                          (funcall separator-left 'powerline-modified-face mode-line)))
 
@@ -7139,7 +7139,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;;       ;; http://www.emacswiki.org/emacs/VcIcon
   ;;       (defun vc-icon ()
   ;;         "Display a colored icon indicating the vc status of the current file."
-  ;;         (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
+  ;;         (let ((icon (if (eq (vc-state buffer-file-name) 'up-to-date)
   ;;                         (concat leuven--directory "Pictures/NormalIcon.png")
   ;;                       (concat leuven--directory "Pictures/ModifiedIcon.png")))
   ;;               (bg-colour (face-attribute 'mode-line :background)))

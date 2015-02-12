@@ -2183,20 +2183,20 @@ See https://github.com/bling/vim-airline for the original author.
                (lhs (list
                      ;; vc mode
                      (when (and (fboundp 'vc-switches)
-                                (buffer-file-name (current-buffer))
+                                buffer-file-name
                                 vc-mode)
-                       (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
+                       (if (eq (vc-state buffer-file-name) 'up-to-date)
                            (powerline-vc 'powerline-normal-face 'r)
                          (powerline-vc 'powerline-modified-face 'r)))
 
                      (when (and (not (fboundp 'vc-switches))
-                                (buffer-file-name (current-buffer))
+                                buffer-file-name
                                 vc-mode)
                        (powerline-vc face1 'r))
 
-                     (when (and (buffer-file-name (current-buffer))
+                     (when (and buffer-file-name
                                 vc-mode)
-                       (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
+                       (if (eq (vc-state buffer-file-name) 'up-to-date)
                            (funcall separator-left 'powerline-normal-face mode-line)
                          (funcall separator-left 'powerline-modified-face mode-line)))
 
@@ -11274,7 +11274,7 @@ tooltip over the VC indicator also says more explicitly.
   ;;       ;; http://www.emacswiki.org/emacs/VcIcon
   ;;       (defun vc-icon ()
   ;;         "Display a colored icon indicating the vc status of the current file."
-  ;;         (let ((icon (if (vc-workfile-unchanged-p (buffer-file-name (current-buffer)))
+  ;;         (let ((icon (if (eq (vc-state buffer-file-name) 'up-to-date)
   ;;                         (concat leuven--directory "Pictures/NormalIcon.png")
   ;;                       (concat leuven--directory "Pictures/ModifiedIcon.png")))
   ;;               (bg-colour (face-attribute 'mode-line :background)))
