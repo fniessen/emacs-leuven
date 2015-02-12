@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150212.1157
+;; Version: 20150212.1555
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150212.1157"
+(defconst leuven--emacs-version "20150212.1555"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -8141,13 +8141,14 @@ a clean buffer we're an order of magnitude laxer about checking."
                                           ;! weren't already opened), to be
                                           ;! finally re-opened!
 
-      ;; add today's appointments (found in `org-agenda-files') each time such a
-      ;; file is saved
-      (add-hook 'after-save-hook
-                (lambda ()
-                  (when (and (derived-mode-p 'org-mode)
-                             (org-agenda-file-p))
-                    (org-agenda-to-appt)))))
+      ;; ;; add today's appointments (found in `org-agenda-files') each time such a
+      ;; ;; file is saved
+      ;; (add-hook 'after-save-hook          ; VERY TIME CONSUMING (~ 30 s) at each save...
+      ;;           (lambda ()
+      ;;             (when (and (derived-mode-p 'org-mode) ; ... of an Org
+      ;;                        (org-agenda-file-p)) ; agenda file...
+      ;;               (org-agenda-to-appt))))
+      )
 
     )                                   ; with-eval-after-load "appt" ends here
 

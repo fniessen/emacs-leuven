@@ -13249,13 +13249,14 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
                                           ;! weren't already opened), to be
                                           ;! finally re-opened!
 
-      ;; add today's appointments (found in `org-agenda-files') each time such a
-      ;; file is saved
-      (add-hook 'after-save-hook
-                (lambda ()
-                  (when (and (derived-mode-p 'org-mode)
-                             (org-agenda-file-p))
-                    (org-agenda-to-appt)))))
+      ;; ;; add today's appointments (found in `org-agenda-files') each time such a
+      ;; ;; file is saved
+      ;; (add-hook 'after-save-hook          ; VERY TIME CONSUMING (~ 30 s) at each save...
+      ;;           (lambda ()
+      ;;             (when (and (derived-mode-p 'org-mode) ; ... of an Org
+      ;;                        (org-agenda-file-p)) ; agenda file...
+      ;;               (org-agenda-to-appt))))
+      )
 #+end_src
 
 #+begin_src emacs-lisp
