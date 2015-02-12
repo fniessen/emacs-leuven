@@ -1382,7 +1382,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150212.1557</span>
+"org-comment">Version: 20150212.1645</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1509,7 +1509,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150212.1557"</span>
+"org-string">"20150212.1645"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -2436,7 +2436,7 @@
                                <span class=
 "org-string">"to ignore the `</span><span class="org-constant"><span class=
 "org-string">%s</span></span><span class=
-"org-string">' package..."</span>) <span class="org-warning">pkg)</span>
+"org-string">' package..."</span>) pkg)
               (sit-for 1.5)))))))
 </pre>
           </div>
@@ -9474,7 +9474,7 @@ M-: (executable-find "diff") RET
 "org-string">".ssh/config\\'"</span>  . ssh-config-mode)
                   (<span class=
 "org-string">"sshd?_config\\'"</span> . ssh-config-mode)
-                  ) <span class="org-warning">auto-mode-alist))</span>
+                  ) auto-mode-alist))
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">major mode for fontifiying ssh config files</span>
@@ -12997,8 +12997,7 @@ M-: (executable-find "diff") RET
                    <span class="org-string">"* NEW %^{Task}%?</span>
 
 <span class="org-string">%i"</span>
-                   <span class=
-"org-builtin">:empty-lines</span> 1) <span class="org-warning">t)</span>
+                   <span class="org-builtin">:empty-lines</span> 1) t)
 
     (add-to-list 'org-capture-templates
                  `(<span class="org-string">"T"</span> <span class=
@@ -13011,8 +13010,7 @@ M-: (executable-find "diff") RET
 "org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string"> %?</span>
 <span class="org-string">  %U %a %n"</span>
-                   <span class="org-builtin">:prepend</span> t) <span class=
-"org-warning">t)</span>
+                   <span class="org-builtin">:prepend</span> t) t)
 
     (add-to-list 'org-capture-templates
                  `(<span class="org-string">"a"</span> <span class=
@@ -13023,8 +13021,7 @@ M-: (executable-find "diff") RET
 <span class="org-string">%^T</span>
 
 <span class="org-string">%i"</span>
-                   <span class=
-"org-builtin">:empty-lines</span> 1) <span class="org-warning">t)</span>
+                   <span class="org-builtin">:empty-lines</span> 1) t)
                    <span class="org-comment-delimiter">;; </span><span class=
 "org-leuven-highlight"><span class="org-comment">TODO</span></span><span class=
 "org-comment"> Prompt only for date, not time...</span>
@@ -13048,8 +13045,7 @@ M-: (executable-find "diff") RET
                    <span class="org-string">"** </span><span class=
 "org-leuven-highlight"><span class="org-string">TODO</span></span><span class=
 "org-string"> Put this in some other file\n\n"</span>
-                   <span class="org-builtin">:prepend</span> t) <span class=
-"org-warning">t)</span>
+                   <span class="org-builtin">:prepend</span> t) t)
 
     (<span class="org-keyword">defun</span> <span class=
 "org-function-name">leuven-find-location</span> ()
@@ -13162,8 +13158,7 @@ M-: (executable-find "diff") RET
 <span class="org-string">#+end_verse</span>
 
 <span class="org-string">From %a"</span>
-                   <span class=
-"org-builtin">:empty-lines</span> 1) <span class="org-warning">t)</span>
+                   <span class="org-builtin">:empty-lines</span> 1) t)
 
     (add-to-list 'org-capture-templates
                  `(<span class="org-string">"mt"</span> <span class=
@@ -13185,8 +13180,7 @@ M-: (executable-find "diff") RET
 
 <span class="org-string">From %a"</span>
                    <span class="org-builtin">:empty-lines</span> 1
-                   <span class=
-"org-builtin">:immediate-finish</span> t) <span class="org-warning">t)</span>
+                   <span class="org-builtin">:immediate-finish</span> t) t)
 </pre>
               </div>
 
@@ -13209,8 +13203,7 @@ M-: (executable-find "diff") RET
                    <span class="org-string">"* %?"</span>
                    <span class="org-builtin">:clock-in</span> t
                    <span class="org-builtin">:clock-resume</span> t
-                   <span class=
-"org-builtin">:empty-lines</span> 1) <span class="org-warning">t)</span>
+                   <span class="org-builtin">:empty-lines</span> 1) t)
 
     (add-to-list 'org-capture-templates
                  `(<span class="org-string">"i"</span> <span class=
@@ -13219,8 +13212,7 @@ M-: (executable-find "diff") RET
 "org-string">"/refile.org"</span>))
                    <span class="org-string">"A TEMPLATE HERE"</span>
                    <span class="org-builtin">:clock-in</span> t
-                   <span class=
-"org-builtin">:clock-resume</span> t) <span class="org-warning">t)</span>
+                   <span class="org-builtin">:clock-resume</span> t) t)
 </pre>
               </div>
 
@@ -13236,8 +13228,7 @@ M-: (executable-find "diff") RET
                    <span class="org-string">"* %^{Thought}%?</span>
 
 <span class="org-string">%i"</span>
-                   <span class=
-"org-builtin">:empty-lines</span> 1) <span class="org-warning">t)</span>
+                   <span class="org-builtin">:empty-lines</span> 1) t)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Shopping list (stuff to buy).</span>
@@ -13246,7 +13237,7 @@ M-: (executable-find "diff") RET
 "org-string">"Buy"</span> checkitem
                    (file+headline ,(concat org-directory <span class=
 "org-string">"/refile.org"</span>) <span class=
-"org-string">"Shopping"</span>)) <span class="org-warning">t)</span>
+"org-string">"Shopping"</span>)) t)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Add a note to the currently clocked task.</span>
@@ -13274,8 +13265,7 @@ M-: (executable-find "diff") RET
 <span class="org-string">From %a"</span>
                    <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">"* %^{Title}\n  :PROPERTIES:\n  :on: %T\n  :END:\n  %?\n  %x"</span>
-                   <span class=
-"org-builtin">:empty-lines</span> 1) <span class="org-warning">t)</span>
+                   <span class="org-builtin">:empty-lines</span> 1) t)
 
     (add-to-list 'org-capture-templates
                  `(<span class="org-string">"S"</span> <span class=
@@ -13333,8 +13323,7 @@ M-: (executable-find "diff") RET
 
 <span class="org-string">From %c"</span>
                    <span class="org-builtin">:empty-lines</span> 1
-                   <span class=
-"org-builtin">:immediate-finish</span> t) <span class="org-warning">t)</span>
+                   <span class="org-builtin">:immediate-finish</span> t) t)
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Default `</span><span class="org-constant"><span class=
@@ -13468,8 +13457,7 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 "org-string">"http://orgmode.org/worg/"</span>
                    <span class=
 "org-builtin">:working-directory</span> <span class=
-"org-string">"~/Public/Repositories/worg/"</span>) <span class=
-"org-warning">t))</span>
+"org-string">"~/Public/Repositories/worg/"</span>) t))
 </pre>
             </div>
           </div>
@@ -15763,8 +15751,7 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 "org-string">"\\ifdefined\\DeclareUnicodeCharacter{"</span>
                        <span class=
 "org-string">"\\DeclareUnicodeCharacter{00A0}{~}"</span>
-                       <span class="org-string">"}\\fi"</span>) <span class=
-"org-warning">t)</span>
+                       <span class="org-string">"}\\fi"</span>) t)
 </pre>
                 </div>
               </li>
@@ -26655,10 +26642,17 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 "org-string">"saveplace"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">automatically save place in each file</span>
+"org-comment">Automatically save place in each file.</span>
     (setq-default save-place t))        <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">default value for all buffers</span>
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Name of the file that records `</span><span class=
+"org-constant"><span class=
+"org-comment">save-place-alist</span></span><span class=
+"org-comment">' value.</span>
+    (setq save-place-file <span class="org-string">"~/.emacs.d/.places"</span>)
 
 )                                       <span class=
 "org-comment-delimiter">; </span><span class=

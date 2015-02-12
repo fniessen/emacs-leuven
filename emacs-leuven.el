@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150212.1555
+;; Version: 20150212.1644
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150212.1555"
+(defconst leuven--emacs-version "20150212.1644"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -9148,8 +9148,11 @@ a clean buffer we're an order of magnitude laxer about checking."
   (try-require 'saveplace)
   (with-eval-after-load "saveplace"
 
-    ;; automatically save place in each file
+    ;; Automatically save place in each file.
     (setq-default save-place t))        ; default value for all buffers
+
+    ;; Name of the file that records `save-place-alist' value.
+    (setq save-place-file "~/.emacs.d/.places")
 
 )                                       ; chapter 42 ends here
 
