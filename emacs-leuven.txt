@@ -9251,7 +9251,7 @@ For security resons, evaluation is not turned on by default.
 
 #+begin_src emacs-lisp
     (defface org-block-executing
-      '((t (:background "#FFD9FF")))
+      '((t (:background "#FFE0FF")))
       "Face used for the source block background when executed.")
 
     ;; Change the color of code blocks while they are being executed.
@@ -9259,6 +9259,7 @@ For security resons, evaluation is not turned on by default.
       "Create an overlay indicating when code block is running."
       (let ((o (make-overlay (org-element-property :begin (org-element-at-point))
                              (1- (org-element-property :end (org-element-at-point))))))
+        (recenter)
         (overlay-put o 'face 'org-block-executing)
         ad-do-it
         (delete-overlay o))))

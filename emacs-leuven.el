@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150212.1644
+;; Version: 20150213.1124
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150212.1644"
+(defconst leuven--emacs-version "20150213.1124"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5948,7 +5948,7 @@ this with to-do items than with projects or headings."
     (setq org-confirm-babel-evaluate nil)
 
     (defface org-block-executing
-      '((t (:background "#FFD9FF")))
+      '((t (:background "#FFE0FF")))
       "Face used for the source block background when executed.")
 
     ;; Change the color of code blocks while they are being executed.
@@ -5956,6 +5956,7 @@ this with to-do items than with projects or headings."
       "Create an overlay indicating when code block is running."
       (let ((o (make-overlay (org-element-property :begin (org-element-at-point))
                              (1- (org-element-property :end (org-element-at-point))))))
+        (recenter)
         (overlay-put o 'face 'org-block-executing)
         ad-do-it
         (delete-overlay o))))
