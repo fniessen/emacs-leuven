@@ -701,13 +701,13 @@ outages).
         '(ace-jump-mode ace-window auctex auto-complete bbdb bookmark+ boxquote
           calfw circe color-identifiers-mode company company-quickhelp csv-mode
           cygwin-mount dictionary diff-hl diminish dired+ dired-single ess
-          expand-region fancy-narrow fill-column-indicator flycheck fuzzy
-          git-commit-mode google-this google-translate goto-chg
-          graphviz-dot-mode graphviz-dot-mode guide-key helm helm-descbinds
-          helm-swoop hideshowvis highlight-symbol htmlize key-chord litable
-          idle-require imenu-anywhere info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          tidy unbound undo-tree w3m yasnippet
+          expand-region fancy-narrow fill-column-indicator flycheck
+          flycheck-ledger fuzzy git-commit-mode google-this google-translate
+          goto-chg graphviz-dot-mode graphviz-dot-mode guide-key helm
+          helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
+          key-chord litable idle-require imenu-anywhere info+ interaction-log
+          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
+          rainbow-mode tidy unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -4895,12 +4895,24 @@ Instead of superseding the binding in ~auto-mode-alist~, you can replace it
   ;; major mode for fontifiying ssh config files
   (autoload 'ssh-config-mode "ssh-config-mode"
     "Major mode for fontifiying ssh config files." t)
+#+end_src
 
+#+begin_src emacs-lisp
   ;; ledger
   (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
   (add-to-list 'auto-mode-alist '("\\.journal\\'" . ledger-mode))
   (add-to-list 'auto-mode-alist '("\\.ledger\\'" . ledger-mode))
 
+  ;; Don't override the highlighting of each posted item in a xact if it is
+  ;; cleared/pending. XXX
+  (with-eval-after-load "ledger"
+    (setq ledger-fontify-xact-state-overrides nil))
+
+  (with-eval-after-load "flycheck"
+    (try-require 'flycheck-ledger))
+#+end_src
+
+#+begin_src emacs-lisp
   ;; major mode for editing comma-separated value files
   (with-eval-after-load "csv-mode-autoloads"
 
@@ -11031,8 +11043,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "gdb-mi"
 
     ;; enable Gdb-Many-Windows mode
-    (setq gdb-many-windows t))
-    ;; the only important parameter for GDB
+    (setq gdb-many-windows t))          ; the only important parameter for GDB
 #+end_src
 
 ** Debugging Lisp programs
@@ -11050,8 +11061,8 @@ With that source-level debugger for Emacs Lisp, you can:
   ;; source-level debugger for Emacs Lisp
   (with-eval-after-load "edebug"
 
-    ;; display a trace of function entry and exit
-    (setq edebug-trace t)
+    ;; ;; display a trace of function entry and exit
+    ;; (setq edebug-trace t)
 #+end_src
 
 While ~edebug~'ging, use ~T~ to view a trace buffer (~*edebug-trace*~).  Emacs will
@@ -11098,8 +11109,8 @@ than fixing a bug in a scripting language like Perl.
 
   (leuven--section "27.8 (emacs)Lisp Libraries")
 
-  ;; force load of `.el' files when they are newer than the `.elc' files
-  (setq load-prefer-newer t)            ; from Emacs 24.4
+  ;; Force load of `.el' files when they are newer than the `.elc' files.
+  (setq load-prefer-newer t)            ; From Emacs 24.4.
 #+end_src
 
 ** Evaluating Emacs Lisp Expressions
@@ -11750,15 +11761,15 @@ It provides:
      A *project management* system which can *generate Makefiles* to compile your
      code for you.
 
-     Look as well at Projectile!
+     (Look as well at Projectile!)
 
 - SRecode ::
      A template / *code generation* system which can convert tags from semantic
      back into code.
 
 - COGRE (COnnected GRaph Editor) ::
-     A *UML diagram editor* which can generate code from a class diagram that
-     you draw in Emacs.
+     A *UML diagram editor* which can generate code from a class diagram that you
+     draw in Emacs.
 
 See [[http://cedet.sourceforge.net/languagesupport.shtml][supported languages]].
 
@@ -12033,14 +12044,14 @@ XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-con
 **** Use YASnippet as a global minor mode
 
 #+begin_src emacs-lisp
-      ;; enable YASnippet in all buffers
+      ;; Enable YASnippet in all buffers.
       (yas-global-mode 1)
 #+end_src
 
 **** Use ~yas-minor-mode~ on a per-buffer basis
 
 #+begin_src emacs-lisp :tangle no
-      ;; enable YASnippet in programming modes only
+      ;; Enable YASnippet in programming modes only.
       (add-hook 'prog-mode-hook
                 '(lambda ()
                    (yas-minor-mode)))
@@ -12053,8 +12064,8 @@ XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-con
 #+begin_src emacs-lisp
     (with-eval-after-load "yasnippet"
 
-      ;; ;; load the snippet tables
-      ;; (yas-reload-all)               ; in double? (see Messages buffer)
+      ;; ;; Load the snippet tables.
+      ;; (yas-reload-all)               ; XXX in double? (see Messages buffer)
 #+end_src
 
 *** Organizing snippets

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150213.1732
+;; Version: 20150213.1758
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150213.1732"
+(defconst leuven--emacs-version "20150213.1758"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -436,13 +436,13 @@ Last time is saved in global variable `leuven--before-section-time'."
         '(ace-jump-mode ace-window auctex auto-complete bbdb bookmark+ boxquote
           calfw circe color-identifiers-mode company company-quickhelp csv-mode
           cygwin-mount dictionary diff-hl diminish dired+ dired-single ess
-          expand-region fancy-narrow fill-column-indicator flycheck fuzzy
-          git-commit-mode google-this google-translate goto-chg
-          graphviz-dot-mode graphviz-dot-mode guide-key helm helm-descbinds
-          helm-swoop hideshowvis highlight-symbol htmlize key-chord litable
-          idle-require imenu-anywhere info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          tidy unbound undo-tree w3m yasnippet
+          expand-region fancy-narrow fill-column-indicator flycheck
+          flycheck-ledger fuzzy git-commit-mode google-this google-translate
+          goto-chg graphviz-dot-mode graphviz-dot-mode guide-key helm
+          helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
+          key-chord litable idle-require imenu-anywhere info+ interaction-log
+          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
+          rainbow-mode tidy unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -2956,6 +2956,14 @@ These packages are neither built-in nor already installed nor ignored."
   (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
   (add-to-list 'auto-mode-alist '("\\.journal\\'" . ledger-mode))
   (add-to-list 'auto-mode-alist '("\\.ledger\\'" . ledger-mode))
+
+  ;; Don't override the highlighting of each posted item in a xact if it is
+  ;; cleared/pending. XXX
+  (with-eval-after-load "ledger"
+    (setq ledger-fontify-xact-state-overrides nil))
+
+  (with-eval-after-load "flycheck"
+    (try-require 'flycheck-ledger))
 
   ;; major mode for editing comma-separated value files
   (with-eval-after-load "csv-mode-autoloads"
@@ -7033,16 +7041,15 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "gdb-mi"
 
     ;; enable Gdb-Many-Windows mode
-    (setq gdb-many-windows t))
-    ;; the only important parameter for GDB
+    (setq gdb-many-windows t))          ; the only important parameter for GDB
 
 ;;** Debugging Lisp programs
 
   ;; source-level debugger for Emacs Lisp
   (with-eval-after-load "edebug"
 
-    ;; display a trace of function entry and exit
-    (setq edebug-trace t)
+    ;; ;; display a trace of function entry and exit
+    ;; (setq edebug-trace t)
 
     (defadvice edebug-overlay-arrow (around leuven-highlight-line activate)
       "Highlight line currently being Edebug'ged."
@@ -7062,8 +7069,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "27.8 (emacs)Lisp Libraries")
 
-  ;; force load of `.el' files when they are newer than the `.elc' files
-  (setq load-prefer-newer t)            ; from Emacs 24.4
+  ;; Force load of `.el' files when they are newer than the `.elc' files.
+  (setq load-prefer-newer t)            ; From Emacs 24.4.
 
 ;;** 27.9 (info "(emacs)Lisp Eval") Expressions
 
@@ -7514,15 +7521,15 @@ a clean buffer we're an order of magnitude laxer about checking."
   (GNUEmacs
     (with-eval-after-load "yasnippet-autoloads"
 
-      ;; enable YASnippet in all buffers
+      ;; Enable YASnippet in all buffers.
       (yas-global-mode 1)
 
     )
 
     (with-eval-after-load "yasnippet"
 
-      ;; ;; load the snippet tables
-      ;; (yas-reload-all)               ; in double? (see Messages buffer)
+      ;; ;; Load the snippet tables.
+      ;; (yas-reload-all)               ; XXX in double? (see Messages buffer)
 
       ;; Add root directories that store the snippets.
       (let ((leuven-snippets            ; Additional YASnippets.

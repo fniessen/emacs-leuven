@@ -1382,7 +1382,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150213.1732</span>
+"org-comment">Version: 20150213.1759</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1509,7 +1509,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150213.1732"</span>
+"org-string">"20150213.1759"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -2356,13 +2356,13 @@
         '(ace-jump-mode ace-window auctex auto-complete bbdb bookmark+ boxquote
           calfw circe color-identifiers-mode company company-quickhelp csv-mode
           cygwin-mount dictionary diff-hl diminish dired+ dired-single ess
-          expand-region fancy-narrow fill-column-indicator flycheck fuzzy
-          git-commit-mode google-this google-translate goto-chg
-          graphviz-dot-mode graphviz-dot-mode guide-key helm helm-descbinds
-          helm-swoop hideshowvis highlight-symbol htmlize key-chord litable
-          idle-require imenu-anywhere info+ interaction-log ledger-mode
-          leuven-theme multi-term multiple-cursors pager powerline rainbow-mode
-          tidy unbound undo-tree w3m yasnippet
+          expand-region fancy-narrow fill-column-indicator flycheck
+          flycheck-ledger fuzzy git-commit-mode google-this google-translate
+          goto-chg graphviz-dot-mode graphviz-dot-mode guide-key helm
+          helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
+          key-chord litable idle-require imenu-anywhere info+ interaction-log
+          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
+          rainbow-mode tidy unbound undo-tree w3m yasnippet
           <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">jabber multi-term paredit redshank</span>
           )
@@ -9481,7 +9481,11 @@ M-: (executable-find "diff") RET
   (autoload 'ssh-config-mode <span class="org-string">"ssh-config-mode"</span>
     <span class=
 "org-doc">"Major mode for fontifiying ssh config files."</span> t)
+</pre>
+            </div>
 
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">ledger</span>
   (add-to-list 'auto-mode-alist '(<span class=
@@ -9491,6 +9495,23 @@ M-: (executable-find "diff") RET
   (add-to-list 'auto-mode-alist '(<span class=
 "org-string">"\\.ledger\\'"</span> . ledger-mode))
 
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Don't override the highlighting of each posted item in a xact if it is</span>
+  <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">cleared/pending. </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"ledger"</span>
+    (setq ledger-fontify-xact-state-overrides nil))
+
+  (<span class="org-keyword">with-eval-after-load</span> <span class=
+"org-string">"flycheck"</span>
+    (try-require 'flycheck-ledger))
+</pre>
+            </div>
+
+            <div class="org-src-container">
+              <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">major mode for editing comma-separated value files</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
@@ -20037,8 +20058,8 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">enable Gdb-Many-Windows mode</span>
-    (setq gdb-many-windows t))
-    <span class="org-comment-delimiter">;; </span><span class=
+    (setq gdb-many-windows t))          <span class=
+"org-comment-delimiter">; </span><span class=
 "org-comment">the only important parameter for GDB</span>
 </pre>
           </div>
@@ -20073,8 +20094,9 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 "org-string">"edebug"</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">display a trace of function entry and exit</span>
-    (setq edebug-trace t)
+"org-comment">;; display a trace of function entry and exit</span>
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(setq edebug-trace t)</span>
 </pre>
           </div>
 
@@ -20141,14 +20163,14 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 "org-string">"27.8 (emacs)Lisp Libraries"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">force load of `</span><span class="org-constant"><span class=
+"org-comment">Force load of `</span><span class="org-constant"><span class=
 "org-comment">.el</span></span><span class=
 "org-comment">' files when they are newer than the `</span><span class=
 "org-constant"><span class="org-comment">.elc</span></span><span class=
-"org-comment">' files</span>
+"org-comment">' files.</span>
   (setq load-prefer-newer t)            <span class=
 "org-comment-delimiter">; </span><span class=
-"org-comment">from Emacs 24.4</span>
+"org-comment">From Emacs 24.4.</span>
 </pre>
           </div>
         </div>
@@ -21246,7 +21268,7 @@ etags --langdef=shell --regex-shell=<span class=
                 <p>A <b>project management</b> system which can <b>generate
                 Makefiles</b> to compile your code for you.</p>
 
-                <p>Look as well at Projectile!</p>
+                <p>(Look as well at Projectile!)</p>
               </dd>
 
               <dt>SRecode</dt>
@@ -21732,7 +21754,7 @@ etags --langdef=shell --regex-shell=<span class=
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable YASnippet in all buffers</span>
+"org-comment">Enable YASnippet in all buffers.</span>
       (yas-global-mode 1)
 </pre>
               </div>
@@ -21747,7 +21769,7 @@ etags --langdef=shell --regex-shell=<span class=
               <div class="org-src-container">
                 <pre class="src src-emacs-lisp">
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">enable YASnippet in programming modes only</span>
+"org-comment">Enable YASnippet in programming modes only.</span>
       (add-hook 'prog-mode-hook
                 '(<span class="org-keyword">lambda</span> ()
                    (yas-minor-mode)))
@@ -21766,9 +21788,11 @@ etags --langdef=shell --regex-shell=<span class=
 "org-string">"yasnippet"</span>
 
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">;; load the snippet tables</span>
+"org-comment">;; Load the snippet tables.</span>
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(yas-reload-all)               ; in double? (see Messages buffer)</span>
+"org-comment">(yas-reload-all)               ; </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
+"org-comment"> in double? (see Messages buffer)</span>
 </pre>
               </div>
             </div>
