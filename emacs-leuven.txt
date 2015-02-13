@@ -8977,6 +8977,9 @@ languages which can be evaluated in Org mode buffers.
     (setq org-babel-R-command
           (concat org-babel-R-command " --encoding=UTF-8"))
 
+    ;; R commands are displayed in the process buffer.
+    (setq org-babel-R-eval-visibly t)   ; XXX Under test
+
     ;; Check for the support of (inline) source block languages.
     (defun org-src-block-check ()
       (interactive)

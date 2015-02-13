@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150213.1758
+;; Version: 20150213.1804
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150213.1758"
+(defconst leuven--emacs-version "20150213.1804"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5778,6 +5778,9 @@ this with to-do items than with projects or headings."
     ;; Accented characters on graphics.
     (setq org-babel-R-command
           (concat org-babel-R-command " --encoding=UTF-8"))
+
+    ;; R commands are displayed in the process buffer.
+    (setq org-babel-R-eval-visibly t)   ; XXX Under test
 
     ;; Check for the support of (inline) source block languages.
     (defun org-src-block-check ()

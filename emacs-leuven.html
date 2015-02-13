@@ -1382,7 +1382,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150213.1759</span>
+"org-comment">Version: 20150213.1805</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1509,7 +1509,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150213.1759"</span>
+"org-string">"20150213.1805"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -16503,6 +16503,13 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
     (setq org-babel-R-command
           (concat org-babel-R-command <span class=
 "org-string">" --encoding=UTF-8"</span>))
+
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">R commands are displayed in the process buffer.</span>
+    (setq org-babel-R-eval-visibly t)   <span class=
+"org-comment-delimiter">; </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span><span class=
+"org-comment"> Under test</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Check for the support of (inline) source block languages.</span>
