@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150213.1124
+;; Version: 20150213.1732
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150213.1124"
+(defconst leuven--emacs-version "20150213.1732"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -95,7 +95,7 @@
   "Measure the time it takes to evaluate BODY."
   `(let ((time (current-time)))
      ,@body
-     (message "%s (in %.02f s) ___________________________"
+     (message "__%s (in %.02f s)___________________________"
               ,message (float-time (time-since time)))))
 
 ;;; User Customizable Internal Variables
@@ -5958,7 +5958,7 @@ this with to-do items than with projects or headings."
                              (1- (org-element-property :end (org-element-at-point))))))
         (recenter)
         (overlay-put o 'face 'org-block-executing)
-        ad-do-it
+        (measure-time "Executed code block" ad-do-it)
         (delete-overlay o))))
 
 ;;** 15.8 A (info "(org)Clean view")
@@ -7662,8 +7662,8 @@ a clean buffer we're an order of magnitude laxer about checking."
     (with-eval-after-load "auto-complete-config"
 
       ;; 6.1 Set a list of sources to use (by default + for some major modes)
-      (ac-config-default))              ; ... and enable Auto-Complete mode in all
-                                        ; buffers.
+      (ac-config-default))              ; ... and enable Auto-Complete mode in
+                                        ; all buffers.
 
     (with-eval-after-load "auto-complete"
                                         ; Required by ESS.
@@ -7799,8 +7799,11 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Enable `company-quickhelp-mode'.
     (company-quickhelp-mode 1)
 
-    ;; Delay to show quick help.
-    (setq company-quickhelp-delay 0.5))
+    ;; ;; Delay to show quick help.
+    ;; (setq company-quickhelp-delay 0.5)
+
+    ;; Maximum number of lines to show in the popup.
+    (setq company-quickhelp-max-lines 10))
 
 )                                       ; chapter 29 ends here
 

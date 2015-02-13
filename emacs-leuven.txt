@@ -246,7 +246,7 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
   "Measure the time it takes to evaluate BODY."
   `(let ((time (current-time)))
      ,@body
-     (message "%s (in %.02f s) ___________________________"
+     (message "__%s (in %.02f s)___________________________"
               ,message (float-time (time-since time)))))
 #+end_src
 
@@ -9261,7 +9261,7 @@ For security resons, evaluation is not turned on by default.
                              (1- (org-element-property :end (org-element-at-point))))))
         (recenter)
         (overlay-put o 'face 'org-block-executing)
-        ad-do-it
+        (measure-time "Executed code block" ad-do-it)
         (delete-overlay o))))
 #+end_src
 
@@ -12385,8 +12385,8 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
     (with-eval-after-load "auto-complete-config"
 
       ;; 6.1 Set a list of sources to use (by default + for some major modes)
-      (ac-config-default))              ; ... and enable Auto-Complete mode in all
-                                        ; buffers.
+      (ac-config-default))              ; ... and enable Auto-Complete mode in
+                                        ; all buffers.
 
     (with-eval-after-load "auto-complete"
                                         ; Required by ESS.
@@ -12605,16 +12605,17 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
 
 **** Company-quickhelp
 
-https://github.com/expez/company-quickhelp/commit/95ab0f0811407ce53156fab2ff01afc9e32cb3f9
-
 #+begin_src emacs-lisp
   (with-eval-after-load "company-quickhelp-autoloads"
 
     ;; Enable `company-quickhelp-mode'.
     (company-quickhelp-mode 1)
 
-    ;; Delay to show quick help.
-    (setq company-quickhelp-delay 0.5))
+    ;; ;; Delay to show quick help.
+    ;; (setq company-quickhelp-delay 0.5)
+
+    ;; Maximum number of lines to show in the popup.
+    (setq company-quickhelp-max-lines 10))
 
 )                                       ; chapter 29 ends here
 #+end_src
