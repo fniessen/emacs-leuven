@@ -98,7 +98,7 @@ See http://www.gnu.org/software/emacs/manual/gnus.html
 
 * Loading Libraries of Lisp Code for Emacs
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Require a feature/library if available; if not, fail silently.
   (unless (fboundp 'try-require)
     (defun try-require (feature)
@@ -169,46 +169,39 @@ Go to [[http://schwarzvogel.de/ssl_tls_testing.shtml][Testing SSL and TLS servic
 Setting the following right is the only thing really required! The rest is
 customization.
 
+#+begin_note
+The account label allows for multiple accounts on the same server (see =.authinfo=
+for logins).
+#+end_note
+
 #+begin_src emacs-lisp
 ;;** 1.1 (info "(gnus)Finding the News")
 
-  ;; using Gnus for news (see `gnus-secondary-select-methods' as well)
-  (setq gnus-select-method
-        '(nntp "eternal-september.org"
-               (nntp-address "news.eternal-september.org")
-               (nnir-search-engine nntp))
-
-        ;; ;; empty, read-only back-end (all real servers are secondary or
-        ;; ;; foreign)
-        ;; '(nnnil)
-        )
-
-  ;; required when posting to an authenticated news server
-  (add-hook 'nntp-server-opened-hook 'nntp-send-authinfo)
-
   ;; configure incoming mail
-  (setq gnus-secondary-select-methods
-        '((nnimap "mail"
-                  ;; account label allows for multiple accounts on the
-                  ;; same server (see `.authinfo' for logins)
-
-                  (nnimap-address "mail")
-                  ;; (nnimap-server-port 993)
-                  ;; (nnimap-stream ssl)
-
-                  (nnimap-split-methods 'nnimap-split-fancy) ; quoted???? XXX
-                                        ; XXX when (try-require 'bbdb-gnus)...
-
-                  )
-
-          (nntp "gmane"
-                (nntp-address "news.gmane.org")
-                (nntp-port-number 119))))
+  (setq gnus-select-method
+        '(nnimap "mail"
+                 (nnimap-address "mail")
+                 (nnimap-server-port 993)
+                 (nnimap-stream ssl)
+                 ;; (nnimap-split-methods default) ; << ABSOLUTELY NEEDED
+                 (nnimap-split-methods nnimap-split-fancy) ; <<< NOT QUOTED!!!
+                 ;;                        ; XXX when (try-require 'bbdb-gnus)...
+                 ))
 
   ;; ;; allow "hostname NOT matched" in the server certificate
   ;; (setq starttls-extra-arguments '("--insecure"))
   ;;                                   ;! not used in an Emacs 24 with built-in
   ;;                                   ;! gnutls support
+
+  ;; using Gnus for news
+  (setq gnus-secondary-select-methods
+        '((nntp "gmane"
+                (nntp-address "news.gmane.org"))
+          (nntp "eternal-september"
+                (nntp-address "news.eternal-september.org"))))
+
+  ;; required when posting to an authenticated news server
+  (add-hook 'nntp-server-opened-hook 'nntp-send-authinfo)
 #+end_src
 
 ** New Groups
@@ -409,7 +402,9 @@ Cleanup all Gnus buffers on exit.
 
   ;; keep track of when I last read a group
   (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
+#+end_src
 
+#+begin_src emacs-lisp
   ;; turn off the column number in the group buffer, and remove the binding
   ;; of `C-c C-x', used by Org clocking commands
   (add-hook 'gnus-group-mode-hook
@@ -604,6 +599,33 @@ forget about this programmatically!
 #+end_src
 
 Source: Michael Heerdegen.
+
+** Marking Articles
+
+https://github.com/cofi/dotfiles/blob/master/gnus.el
+
+#+begin_src emacs-lisp
+(setq gnus-ticked-mark ?⚑
+      gnus-dormant-mark ?⚐
+      gnus-unread-mark ?✉)
+#+end_src
+
+#+begin_src emacs-lisp
+(setq gnus-del-mark ?✗
+      gnus-read-mark ?✓
+      gnus-killed-mark ?☠
+      gnus-canceled-mark ?↗)
+#+end_src
+
+#+begin_src emacs-lisp
+(setq gnus-replied-mark ?↺
+      gnus-forwarded-mark ?↪
+      gnus-cached-mark ?☍
+      gnus-unseen-mark ?★
+      gnus-recent-mark ?✩
+      gnus-process-mark ?⚙
+      gnus-expirable-mark ?♻)
+#+end_src
 
 ** Threading
 

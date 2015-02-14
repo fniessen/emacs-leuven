@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150212.1051
+;; Version: 20150214.0110
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -20,23 +20,6 @@
 ;; list of packages that `try-require' can't find
 (setq leuven--missing-packages nil)
 
-  ;; Require a feature/library if available; if not, fail silently.
-  (unless (fboundp 'try-require)
-    (defun try-require (feature)
-      "Attempt to load a FEATURE (or library).
-    Return true if the library given as argument is successfully loaded.  If
-    not, just print a message."
-      (condition-case err
-          (progn
-            (if (stringp feature)
-                (load-library feature)
-              (require feature))
-            t)                          ; Necessary for correct behavior in
-                                        ; conditional expressions.
-        (file-error
-         (message "Requiring `%s'... missing" feature)
-         nil))))
-
 ;;* 1 (info "(gnus)Starting Up") Gnus
 
   (message "1 Starting Gnus...")
@@ -49,43 +32,31 @@
 
 ;;** 1.1 (info "(gnus)Finding the News")
 
-  ;; using Gnus for news (see `gnus-secondary-select-methods' as well)
-  (setq gnus-select-method
-        '(nntp "eternal-september.org"
-               (nntp-address "news.eternal-september.org")
-               (nnir-search-engine nntp))
-
-        ;; ;; empty, read-only back-end (all real servers are secondary or
-        ;; ;; foreign)
-        ;; '(nnnil)
-        )
-
-  ;; required when posting to an authenticated news server
-  (add-hook 'nntp-server-opened-hook 'nntp-send-authinfo)
-
   ;; configure incoming mail
-  (setq gnus-secondary-select-methods
-        '((nnimap "mail"
-                  ;; account label allows for multiple accounts on the
-                  ;; same server (see `.authinfo' for logins)
-
-                  (nnimap-address "mail")
-                  ;; (nnimap-server-port 993)
-                  ;; (nnimap-stream ssl)
-
-                  (nnimap-split-methods 'nnimap-split-fancy) ; quoted???? XXX
-                                        ; XXX when (try-require 'bbdb-gnus)...
-
-                  )
-
-          (nntp "gmane"
-                (nntp-address "news.gmane.org")
-                (nntp-port-number 119))))
+  (setq gnus-select-method
+        '(nnimap "mail"
+                 (nnimap-address "mail")
+                 (nnimap-server-port 993)
+                 (nnimap-stream ssl)
+                 ;; (nnimap-split-methods default) ; << ABSOLUTELY NEEDED
+                 (nnimap-split-methods nnimap-split-fancy) ; <<< NOT QUOTED!!!
+                 ;;                        ; XXX when (try-require 'bbdb-gnus)...
+                 ))
 
   ;; ;; allow "hostname NOT matched" in the server certificate
   ;; (setq starttls-extra-arguments '("--insecure"))
   ;;                                   ;! not used in an Emacs 24 with built-in
   ;;                                   ;! gnutls support
+
+  ;; using Gnus for news
+  (setq gnus-secondary-select-methods
+        '((nntp "gmane"
+                (nntp-address "news.gmane.org"))
+          (nntp "eternal-september"
+                (nntp-address "news.eternal-september.org"))))
+
+  ;; required when posting to an authenticated news server
+  (add-hook 'nntp-server-opened-hook 'nntp-send-authinfo)
 
 ;;** 1.4 (info "(gnus)New Groups")
 
@@ -211,6 +182,17 @@
             (lambda ()
               (define-key gnus-topic-mode-map
                 (kbd "C-c C-x") nil)))
+
+  ;; turn off the column number in the group buffer, and remove the binding
+  ;; of `C-c C-x', used by Org clocking commands
+  (add-hook 'gnus-group-mode-hook
+            (lambda ()
+              (progn
+                (set (make-local-variable 'column-number-mode) nil)
+                (define-key gnus-group-mode-map
+                  (kbd "C-c C-x") nil))))
+
+  (message "2 Group Buffer... Done")
 
 ;;* 3 (info "(gnus)The Summary Buffer")
 
@@ -343,6 +325,23 @@
   (with-eval-after-load "gnus-sum"
     (define-key gnus-summary-mode-map
       (kbd "F") 'leuven-gnus-summary-followup-with-original))
+
+(setq gnus-ticked-mark ?⚑
+      gnus-dormant-mark ?⚐
+      gnus-unread-mark ?✉)
+
+(setq gnus-del-mark ?✗
+      gnus-read-mark ?✓
+      gnus-killed-mark ?☠
+      gnus-canceled-mark ?↗)
+
+(setq gnus-replied-mark ?↺
+      gnus-forwarded-mark ?↪
+      gnus-cached-mark ?☍
+      gnus-unseen-mark ?★
+      gnus-recent-mark ?✩
+      gnus-process-mark ?⚙
+      gnus-expirable-mark ?♻)
 
 ;;** 3.9 (info "(gnus)Threading")
 
