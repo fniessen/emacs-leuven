@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150214.0110
+;; Version: 20150214.0149
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -326,22 +326,25 @@
     (define-key gnus-summary-mode-map
       (kbd "F") 'leuven-gnus-summary-followup-with-original))
 
-(setq gnus-ticked-mark ?⚑
-      gnus-dormant-mark ?⚐
-      gnus-unread-mark ?✉)
+(setq gnus-ticked-mark ?⚑)
+(setq gnus-dormant-mark ?⚐)
+(setq gnus-unread-mark ?✉)
 
-(setq gnus-del-mark ?✗
-      gnus-read-mark ?✓
-      gnus-killed-mark ?☠
-      gnus-canceled-mark ?↗)
+(setq gnus-del-mark ?✗)
+(setq gnus-read-mark ?✓)
+(setq gnus-killed-mark ?☠)
+(setq gnus-canceled-mark ?↗)
 
-(setq gnus-replied-mark ?↺
-      gnus-forwarded-mark ?↪
-      gnus-cached-mark ?☍
-      gnus-unseen-mark ?★
-      gnus-recent-mark ?✩
-      gnus-process-mark ?⚙
-      gnus-expirable-mark ?♻)
+(setq gnus-score-over-mark ?↑)          ; ↑ ☀
+(setq gnus-score-below-mark ?↓)         ; ↓ ☂
+
+(setq gnus-replied-mark ?↺)
+(setq gnus-forwarded-mark ?↪)
+(setq gnus-cached-mark ?☍)
+(setq gnus-unseen-mark ?✩)
+(setq gnus-recent-mark ?★)
+(setq gnus-process-mark ?⚙)
+(setq gnus-expirable-mark ?♻)
 
 ;;** 3.9 (info "(gnus)Threading")
 
