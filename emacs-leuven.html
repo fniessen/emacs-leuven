@@ -1382,7 +1382,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150213.1805</span>
+"org-comment">Version: 20150216.1409</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1509,7 +1509,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150213.1805"</span>
+"org-string">"20150216.1409"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -10033,9 +10033,6 @@ M-: (executable-find "diff") RET
 "org-string">"ace-window"</span>
       (key-chord-define-global <span class=
 "org-string">"jw"</span> 'ace-window))
-
-    (key-chord-define-global <span class=
-"org-string">"kk"</span> 'kill-whole-line)
 
     (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"dired-x"</span>
@@ -19138,6 +19135,9 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
                 to have balanced brackets w/o breaking your will ;-)</p>
 
                 <p>It is more about ease-of-coding them B&amp;D.</p>
+
+                <p><b>Bug 18785: Emacs hangs with Org mode when point is in
+                LOGBOOK.</b></p>
               </li>
             </ul>
 

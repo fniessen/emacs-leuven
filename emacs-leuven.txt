@@ -5229,8 +5229,6 @@ a factor 2...
     (with-eval-after-load "ace-window"
       (key-chord-define-global "jw" 'ace-window))
 
-    (key-chord-define-global "kk" 'kill-whole-line)
-
     (with-eval-after-load "dired-x"
       (key-chord-define-global "xj" 'dired-jump)) ; Autoloaded?
 
@@ -10513,6 +10511,8 @@ Balanced editing: inserting two matching parentheses at once, etc.
   *helps* to have balanced brackets w/o breaking your will ;-)
 
   It is more about ease-of-coding them B&D.
+
+  *Bug 18785: Emacs hangs with Org mode when point is in LOGBOOK.*
 
 #+begin_src emacs-lisp :tangle no
   ;; Automatic insertion, wrapping and paredit-like navigation with user defined
