@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150216.1336
+;; Version: 20150216.1502
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -202,10 +202,11 @@
 
   ;; date format depending on age of article
   (setq gnus-user-date-format-alist ;; `user-date'
-        '(((gnus-seconds-today) . "               %H:%M")
-          ;; (604800 . "           %a %H:%M")
-          ((gnus-seconds-month) . "        %d %a %H:%M")
-          ((gnus-seconds-year) . "     %m-%d %a %H:%M")
+        '(((gnus-seconds-today) . "Today, %H:%M")
+          ((+ 86400 (gnus-seconds-today)) . "Yesterday, %H:%M")
+          (604800 . "%A, %H:%M")
+          ((gnus-seconds-month) . "%d %a %H:%M")
+          ((gnus-seconds-year) . "%m-%d %a %H:%M")
           (t . "%Y-%m-%d %a %H:%M")))
 
   ;; create some faces
@@ -234,7 +235,7 @@
          "%5{%U%}"                      ; "read" status
          "%9{%R%}"                      ; "reply" status
          "%6{%z%} "                     ; score
-         "%8{%20&user-date; %} "        ; date
+         "%8{%~(pad-left 20)&user-date; %} " ; date
          "%7{ %4k %}"                   ; size
          "%*" "%-15,15f "               ; cursor before name of the poster
          ;; (if (boundp 'rs-gnus-summary-line-content-type-alist)

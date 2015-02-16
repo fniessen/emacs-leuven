@@ -275,7 +275,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150216.1336</span>
+"org-comment">Version: 20150216.1502</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, gnus, dotfile, config</span>
 </pre>
@@ -432,6 +432,15 @@
       <h2 id="unnumbered-4">Starting Up Gnus</h2>
 
       <div class="outline-text-2" id="text-unnumbered-4">
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+(setq gnus-directory <span class=
+"org-string">"~/.gnus.d/"</span>)      <span class=
+"org-comment-delimiter">; </span><span class=
+"org-leuven-highlight"><span class="org-comment">XXX</span></span>
+</pre>
+        </div>
+
         <p>If you’re running a recent Emacs, look into the EPA library to
         encrypt your <code>.authinfo</code> file.</p>
 
@@ -990,13 +999,14 @@
 "org-comment">`</span><span class="org-constant"><span class=
 "org-comment">user-date</span></span><span class="org-comment">'</span>
         '(((gnus-seconds-today) . <span class=
-"org-string">"               %H:%M"</span>)
-          <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">(604800 . "           %a %H:%M")</span>
+"org-string">"Today, %H:%M"</span>)
+          ((+ 86400 (gnus-seconds-today)) . <span class=
+"org-string">"Yesterday, %H:%M"</span>)
+          (604800 . <span class="org-string">"%A, %H:%M"</span>)
           ((gnus-seconds-month) . <span class=
-"org-string">"        %d %a %H:%M"</span>)
+"org-string">"%d %a %H:%M"</span>)
           ((gnus-seconds-year) . <span class=
-"org-string">"     %m-%d %a %H:%M"</span>)
+"org-string">"%m-%d %a %H:%M"</span>)
           (t . <span class="org-string">"%Y-%m-%d %a %H:%M"</span>)))
 
   <span class="org-comment-delimiter">;; </span><span class=
@@ -1048,7 +1058,7 @@
 "org-string">"%6{%z%} "</span>                     <span class=
 "org-comment-delimiter">; </span><span class="org-comment">score</span>
          <span class=
-"org-string">"%8{%20&amp;user-date; %} "</span>        <span class=
+"org-string">"%8{%~(pad-left 20)&amp;user-date; %} "</span> <span class=
 "org-comment-delimiter">; </span><span class="org-comment">date</span>
          <span class=
 "org-string">"%7{ %4k %}"</span>                   <span class=
@@ -1952,6 +1962,14 @@
 
   (message <span class="org-string">"Emacs MIME..."</span>)
 </pre>
+          </div>
+
+          <div class="note">
+            <p>Use <code>K i</code> from the summary buffer (or <code>i</code>
+            on the MIME button in the article buffer) to insert the contents of
+            the MIME object into the buffer
+            (<code>gnus-mime-inline-part</code>) as <code>text/plain</code>, in
+            order to read them directly in Gnus.</p>
           </div>
         </div>
       </div>

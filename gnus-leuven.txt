@@ -119,6 +119,10 @@ See http://www.gnu.org/software/emacs/manual/gnus.html
 
 * Starting Up Gnus
 
+#+begin_src emacs-lisp :tangle no
+(setq gnus-directory "~/.gnus.d/")      ; XXX
+#+end_src
+
 If you're running a recent Emacs, look into the EPA library to encrypt your
 ~.authinfo~ file.
 
@@ -457,10 +461,11 @@ Cleanup all Gnus buffers on exit.
 #+begin_src emacs-lisp
   ;; date format depending on age of article
   (setq gnus-user-date-format-alist ;; `user-date'
-        '(((gnus-seconds-today) . "               %H:%M")
-          ;; (604800 . "           %a %H:%M")
-          ((gnus-seconds-month) . "        %d %a %H:%M")
-          ((gnus-seconds-year) . "     %m-%d %a %H:%M")
+        '(((gnus-seconds-today) . "Today, %H:%M")
+          ((+ 86400 (gnus-seconds-today)) . "Yesterday, %H:%M")
+          (604800 . "%A, %H:%M")
+          ((gnus-seconds-month) . "%d %a %H:%M")
+          ((gnus-seconds-year) . "%m-%d %a %H:%M")
           (t . "%Y-%m-%d %a %H:%M")))
 
   ;; create some faces
@@ -489,7 +494,7 @@ Cleanup all Gnus buffers on exit.
          "%5{%U%}"                      ; "read" status
          "%9{%R%}"                      ; "reply" status
          "%6{%z%} "                     ; score
-         "%8{%20&user-date; %} "        ; date
+         "%8{%~(pad-left 20)&user-date; %} " ; date
          "%7{ %4k %}"                   ; size
          "%*" "%-15,15f "               ; cursor before name of the poster
          ;; (if (boundp 'rs-gnus-summary-line-content-type-alist)
@@ -998,6 +1003,12 @@ stripe background is superimposed on my "read" background.
 
   (message "Emacs MIME...")
 #+end_src
+
+#+begin_note
+Use =K i= from the summary buffer (or =i= on the MIME button in the article buffer)
+to insert the contents of the MIME object into the buffer
+(=gnus-mime-inline-part=) as =text/plain=, in order to read them directly in Gnus.
+#+end_note
 
 * Emacs MIME
 
