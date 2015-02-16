@@ -275,7 +275,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150214.0110</span>
+"org-comment">Version: 20150216.1336</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, gnus, dotfile, config</span>
 </pre>
@@ -501,6 +501,11 @@
             server (see <code>.authinfo</code> for logins).</p>
           </div>
 
+          <div class="note">
+            <p>The groups in the gnus-select-method don’t get a prefix like
+            “nnimap”. Nice!</p>
+          </div>
+
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class=
@@ -510,7 +515,8 @@
 "org-comment">configure incoming mail</span>
   (setq gnus-select-method
         '(nnimap <span class="org-string">"mail"</span>
-                 (nnimap-address <span class="org-string">"mail"</span>)
+                 (nnimap-address <span class=
+"org-string">"mail.missioncriticalit.com"</span>)
                  (nnimap-server-port 993)
                  (nnimap-stream ssl)
                  <span class="org-comment-delimiter">;; </span><span class=
@@ -997,14 +1003,12 @@
 "org-comment">create some faces</span>
   (<span class="org-keyword">defface</span> <span class=
 "org-variable-name">leuven-gnus-linum</span> '((t (<span class=
-"org-builtin">:foreground</span> <span class="org-string">"#AFB7BA"</span>)))
+"org-builtin">:foreground</span> <span class="org-string">"#026EC5"</span>)))
     <span class="org-doc">"Face for markers in summary buffer."</span>)
   (<span class="org-keyword">defface</span> <span class=
 "org-variable-name">leuven-gnus-score</span> '((t (<span class=
 "org-builtin">:weight</span> bold <span class=
-"org-builtin">:foreground</span> <span class=
-"org-string">"#2B7E2A"</span> <span class=
-"org-builtin">:background</span> <span class="org-string">"#CCFFCC"</span>)))
+"org-builtin">:foreground</span> <span class="org-string">"#2B7E2A"</span>)))
     <span class="org-doc">"Face for scoring marker in summary buffer."</span>)
   (<span class="org-keyword">defface</span> <span class=
 "org-variable-name">leuven-gnus-diredp-file-suffix</span> '((t (<span class=
@@ -1014,11 +1018,16 @@
 "org-variable-name">leuven-gnus-org-date</span> '((t (<span class=
 "org-builtin">:foreground</span> <span class="org-string">"purple"</span>)))
     <span class="org-doc">"Face for date in summary buffer."</span>)
+  (<span class="org-keyword">defface</span> <span class=
+"org-variable-name">leuven-gnus-reply-mark</span> '((t (<span class=
+"org-builtin">:foreground</span> <span class="org-string">"#41D823"</span>)))
+    <span class="org-doc">"Face for date in summary buffer."</span>)
 
   (setq gnus-face-5 'leuven-gnus-linum)
   (setq gnus-face-6 'leuven-gnus-score)
   (setq gnus-face-7 'leuven-gnus-diredp-file-suffix)
   (setq gnus-face-8 'leuven-gnus-org-date)
+  (setq gnus-face-9 'leuven-gnus-reply-mark)
 
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">format specification of the lines in the summary buffer</span>
@@ -1030,10 +1039,11 @@
         (concat
          <span class=
 "org-string">"%5{%U%}"</span>                      <span class=
-"org-comment-delimiter">; </span><span class="org-comment">status</span>
+"org-comment-delimiter">; </span><span class="org-comment">"read" status</span>
          <span class=
-"org-string">"%8{%R%}"</span>                      <span class=
-"org-comment-delimiter">; </span><span class="org-comment">reply status</span>
+"org-string">"%9{%R%}"</span>                      <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">"reply" status</span>
          <span class=
 "org-string">"%6{%z%} "</span>                     <span class=
 "org-comment-delimiter">; </span><span class="org-comment">score</span>
@@ -1052,7 +1062,9 @@
          <span class="org-comment-delimiter">;;     </span><span class=
 "org-comment">"%u&amp;attachment; ")</span>
          <span class="org-string">"%u&amp;r; "</span>
-         <span class="org-string">"%5{ %}"</span>
+         <span class=
+"org-string">"%5{ %}"</span>                       <span class=
+"org-comment-delimiter">; </span><span class="org-comment">???</span>
          <span class="org-string">"%B"</span>
          <span class="org-string">"%I%s"</span>
          <span class="org-string">"\n"</span>))
@@ -1258,30 +1270,39 @@
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-(setq gnus-ticked-mark ?⚑
-      gnus-dormant-mark ?⚐
-      gnus-unread-mark ?✉)
+(setq gnus-ticked-mark ?⚑)
+(setq gnus-dormant-mark ?⚐)
+(setq gnus-unread-mark ?✉)
 </pre>
           </div>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-(setq gnus-del-mark ?✗
-      gnus-read-mark ?✓
-      gnus-killed-mark ?☠
-      gnus-canceled-mark ?↗)
+(setq gnus-del-mark ?✗)
+(setq gnus-read-mark ?✓)
+(setq gnus-killed-mark ?☠)
+(setq gnus-canceled-mark ?↗)
 </pre>
           </div>
 
           <div class="org-src-container">
             <pre class="src src-emacs-lisp">
-(setq gnus-replied-mark ?↺
-      gnus-forwarded-mark ?↪
-      gnus-cached-mark ?☍
-      gnus-unseen-mark ?★
-      gnus-recent-mark ?✩
-      gnus-process-mark ?⚙
-      gnus-expirable-mark ?♻)
+(setq gnus-score-over-mark ?↑)          <span class=
+"org-comment-delimiter">; </span><span class="org-comment">↑ ☀</span>
+(setq gnus-score-below-mark ?↓)         <span class=
+"org-comment-delimiter">; </span><span class="org-comment">↓ ☂</span>
+</pre>
+          </div>
+
+          <div class="org-src-container">
+            <pre class="src src-emacs-lisp">
+(setq gnus-replied-mark ?↺)
+(setq gnus-forwarded-mark ?↪)
+(setq gnus-cached-mark ?☍)
+(setq gnus-unseen-mark ?✩)
+(setq gnus-recent-mark ?★)
+(setq gnus-process-mark ?⚙)
+(setq gnus-expirable-mark ?♻)
 </pre>
           </div>
         </div>
@@ -2398,7 +2419,7 @@
   <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">group in which to save the messages you've written</span>
   (setq gnus-message-archive-group <span class=
-"org-string">"nnimap+mail:INBOX.Sent"</span>)
+"org-string">"INBOX.Sent"</span>)
 </pre>
           </div>
 
@@ -2428,10 +2449,10 @@
     (<span class="org-keyword">let*</span> (<span class=
 "org-comment-delimiter">;; </span><span class=
 "org-comment">if this "group" is chosen the default "Gcc" remains</span>
-           (default <span class="org-string">"nnimap+mail:INBOX"</span>)
+           (default <span class="org-string">"INBOX"</span>)
            <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">if this "group" is chosen the default "Gcc" is deleted</span>
-           (delete <span class="org-string">"nnimap+mail:INBOX.Trash"</span>)
+           (delete <span class="org-string">"INBOX.Trash"</span>)
            <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">else the choosen group is inserted as "Gcc:"</span>
            (groups (append gnus-newsrc-alist (list (list default 'dummy)

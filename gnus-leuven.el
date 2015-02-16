@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150214.0149
+;; Version: 20150216.1336
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -35,7 +35,7 @@
   ;; configure incoming mail
   (setq gnus-select-method
         '(nnimap "mail"
-                 (nnimap-address "mail")
+                 (nnimap-address "mail.missioncriticalit.com")
                  (nnimap-server-port 993)
                  (nnimap-stream ssl)
                  ;; (nnimap-split-methods default) ; << ABSOLUTELY NEEDED
@@ -209,27 +209,30 @@
           (t . "%Y-%m-%d %a %H:%M")))
 
   ;; create some faces
-  (defface leuven-gnus-linum '((t (:foreground "#AFB7BA")))
+  (defface leuven-gnus-linum '((t (:foreground "#026EC5")))
     "Face for markers in summary buffer.")
-  (defface leuven-gnus-score '((t (:weight bold :foreground "#2B7E2A" :background "#CCFFCC")))
+  (defface leuven-gnus-score '((t (:weight bold :foreground "#2B7E2A")))
     "Face for scoring marker in summary buffer.")
   (defface leuven-gnus-diredp-file-suffix '((t (:foreground "#2EAE2C")))
     "Face for size of article in summary buffer.")
   (defface leuven-gnus-org-date '((t (:foreground "purple")))
+    "Face for date in summary buffer.")
+  (defface leuven-gnus-reply-mark '((t (:foreground "#41D823")))
     "Face for date in summary buffer.")
 
   (setq gnus-face-5 'leuven-gnus-linum)
   (setq gnus-face-6 'leuven-gnus-score)
   (setq gnus-face-7 'leuven-gnus-diredp-file-suffix)
   (setq gnus-face-8 'leuven-gnus-org-date)
+  (setq gnus-face-9 'leuven-gnus-reply-mark)
 
   ;; format specification of the lines in the summary buffer
   (setq gnus-summary-line-format
         ;; for the record, the default string is
         ;; `%U%R%z%I%(%[%4L: %-20,20n%]%) %s\n'
         (concat
-         "%5{%U%}"                      ; status
-         "%8{%R%}"                      ; reply status
+         "%5{%U%}"                      ; "read" status
+         "%9{%R%}"                      ; "reply" status
          "%6{%z%} "                     ; score
          "%8{%20&user-date; %} "        ; date
          "%7{ %4k %}"                   ; size
@@ -237,7 +240,7 @@
          ;; (if (boundp 'rs-gnus-summary-line-content-type-alist)
          ;;     "%u&attachment; ")
          "%u&r; "
-         "%5{ %}"
+         "%5{ %}"                       ; ???
          "%B"
          "%I%s"
          "\n"))
@@ -512,7 +515,7 @@
   (setq smtpmail-debug-verb t)
 
   ;; group in which to save the messages you've written
-  (setq gnus-message-archive-group "nnimap+mail:INBOX.Sent")
+  (setq gnus-message-archive-group "INBOX.Sent")
 
 ;;** 5.5 (info "(gnus)Archived Messages")
 
@@ -523,9 +526,9 @@
   (defun leuven-choose-gcc()
     (interactive)
     (let* (;; if this "group" is chosen the default "Gcc" remains
-           (default "nnimap+mail:INBOX")
+           (default "INBOX")
            ;; if this "group" is chosen the default "Gcc" is deleted
-           (delete "nnimap+mail:INBOX.Trash")
+           (delete "INBOX.Trash")
            ;; else the choosen group is inserted as "Gcc:"
            (groups (append gnus-newsrc-alist (list (list default 'dummy)
                                                    (list delete  'dummy))))
