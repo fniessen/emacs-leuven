@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150216.1408
+;; Version: 20150217.1104
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150216.1408"
+(defconst leuven--emacs-version "20150217.1104"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3195,7 +3195,8 @@ These packages are neither built-in nor already installed nor ignored."
       (key-chord-define-global "xj" 'dired-jump)) ; Autoloaded?
 
     (key-chord-define-global "vb" 'eval-buffer)
-    (key-chord-define-global "vg" 'eval-region)
+    ;; (key-chord-define-global "vg" 'eval-region)
+                                        ; 2015-02-17 Crash Gnus `C-u g'
 
     ;; (key-chord-define-global "x0" 'delete-window)
                                         ; 2015-02-09 Crash Gnus `C-u 3'

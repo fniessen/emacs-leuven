@@ -5233,7 +5233,8 @@ a factor 2...
       (key-chord-define-global "xj" 'dired-jump)) ; Autoloaded?
 
     (key-chord-define-global "vb" 'eval-buffer)
-    (key-chord-define-global "vg" 'eval-region)
+    ;; (key-chord-define-global "vg" 'eval-region)
+                                        ; 2015-02-17 Crash Gnus `C-u g'
 
     ;; (key-chord-define-global "x0" 'delete-window)
                                         ; 2015-02-09 Crash Gnus `C-u 3'

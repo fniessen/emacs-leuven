@@ -1382,7 +1382,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150216.1409</span>
+"org-comment">Version: 20150217.1105</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1509,7 +1509,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150216.1409"</span>
+"org-string">"20150217.1105"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -10041,7 +10041,11 @@ M-: (executable-find "diff") RET
 "org-comment-delimiter">; </span><span class="org-comment">Autoloaded?</span>
 
     (key-chord-define-global <span class="org-string">"vb"</span> 'eval-buffer)
-    (key-chord-define-global <span class="org-string">"vg"</span> 'eval-region)
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global "vg" 'eval-region)</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">2015-02-17 Crash Gnus `C-u g'</span>
 
     <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">(key-chord-define-global "x0" 'delete-window)</span>
