@@ -132,28 +132,88 @@
 "org-comment">Functions for writing tests</span>
 
 (<span class="org-keyword">defun</span> <span class=
-"org-function-name">compare-org-html-export-files</span> (orgfile)
+"org-function-name">compare-org-html-export-files</span> (org-file)
   <span class=
-"org-doc">"Compare current export of ORGFILE with HTML file already present on disk."</span>
-  (<span class="org-keyword">let*</span> ((base-name
-          (concat (file-name-directory orgfile) (file-name-base orgfile)))
-         (htmlfile (concat base-name <span class="org-string">".html"</span>))
-         htmlcontents)
+"org-doc">"Compare current export of ORG-FILE with HTML file already present on disk."</span>
+  (<span class="org-keyword">require</span> '<span class=
+"org-constant">ox-html</span>)
+  (<span class=
+"org-keyword">let*</span> ((html-file (concat (file-name-directory org-file)
+                            (file-name-base org-file) <span class=
+"org-string">".html"</span>))
+         html-contents)
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">should have a .html file</span>
+    (should
+     (file-exists-p html-file))
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">should have the same .html exported file</span>
     (should
      (equal
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">new export</span>
       (<span class="org-keyword">with-temp-buffer</span>
-        (insert-file-contents orgfile)
-        (setq htmlcontents (org-export-as 'html))
+        (insert-file-contents org-file)
+        (setq html-contents (org-export-as 'html))
         (delete-region (point-min) (point-max))
-        (insert htmlcontents)
+        (insert html-contents)
         (buffer-string))
       <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">old export</span>
       (<span class="org-keyword">with-temp-buffer</span>
-        (insert-file-contents htmlfile)
+        (insert-file-contents html-file)
         (buffer-string))))))
+</pre>
+        </div>
+
+        <p>For inspiration:</p>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp">
+(ert-deftest test-ob-exp/org-babel-exp-src-blocks/w-no-headers ()
+  <span class=
+"org-string">"Testing export without any headlines in the Org mode file."</span>
+  (<span class="org-keyword">require</span> '<span class=
+"org-constant">ox-html</span>)
+  (<span class=
+"org-keyword">let</span> ((html-file (concat (file-name-sans-extension org-test-no-heading-file)
+                           <span class="org-string">".html"</span>)))
+    (<span class=
+"org-keyword">when</span> (file-exists-p html-file) (delete-file html-file))
+    (org-test-in-example-file org-test-no-heading-file
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Export the file to HTML.</span>
+      (org-export-to-file 'html html-file))
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">should create a .html file</span>
+    (should (file-exists-p html-file))
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">should not create a file with "::" appended to it's name</span>
+    (should-not (file-exists-p (concat org-test-no-heading-file <span class=
+"org-string">"::"</span>)))
+    (<span class=
+"org-keyword">when</span> (file-exists-p html-file) (delete-file html-file))))
+
+(ert-deftest test-ob-exp/org-babel-exp-src-blocks/w-no-file ()
+  <span class=
+"org-string">"Testing export from buffers which are not visiting any file."</span>
+  (<span class="org-keyword">require</span> '<span class=
+"org-constant">ox-html</span>)
+  (<span class=
+"org-keyword">let</span> ((name (generate-new-buffer-name <span class=
+"org-string">"*Org HTML Export*"</span>)))
+    (org-test-in-example-file nil
+      (org-export-to-buffer 'html name nil nil nil t))
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Should create a HTML buffer.</span>
+    (should (buffer-live-p (get-buffer name)))
+    <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">Should contain the content of the buffer.</span>
+    (<span class="org-keyword">with-current-buffer</span> (get-buffer name)
+      (should (string-match (regexp-quote org-test-file-ob-anchor)
+                            (buffer-string))))
+    (<span class=
+"org-keyword">when</span> (get-buffer name) (kill-buffer name))))
 </pre>
         </div>
       </div>
@@ -186,7 +246,7 @@
 
 (ert-deftest test-org-export/export-html-backend-test-file ()
   <span class=
-"org-string">"Compare current export of ORGFILE with HTML file already present on disk."</span>
+"org-string">"Compare current export of ORG-FILE with HTML file already present on disk."</span>
   (compare-org-html-export-files <span class=
 "org-string">"~/src/emacs-leuven/org-test-sample.org"</span>))
 
@@ -199,7 +259,7 @@
           <pre class="src src-emacs-lisp">
 (ert-deftest test-org-export/export-html-backend-example-file ()
   <span class=
-"org-string">"Compare current export of ORGFILE with HTML file already present on disk."</span>
+"org-string">"Compare current export of ORG-FILE with HTML file already present on disk."</span>
   (compare-org-html-export-files <span class=
 "org-string">"~/src/org-style/example.txt"</span>))
 
@@ -212,7 +272,7 @@
           <pre class="src src-emacs-lisp">
 (ert-deftest test-org-export/export-html-backend-ERT-refcard-file ()
   <span class=
-"org-string">"Compare current export of ORGFILE with HTML file already present on disk."</span>
+"org-string">"Compare current export of ORG-FILE with HTML file already present on disk."</span>
   (compare-org-html-export-files <span class=
 "org-string">"~/src/reference-cards/ERT-refcard.txt"</span>))
 
