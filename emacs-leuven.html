@@ -1382,7 +1382,7 @@
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
 <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">Version: 20150217.1105</span>
+"org-comment">Version: 20150218.1548</span>
 <span class="org-comment-delimiter">;; </span><span class=
 "org-comment">Keywords: emacs, dotfile, config</span>
 
@@ -1509,7 +1509,7 @@
 
 (<span class="org-keyword">defconst</span> <span class=
 "org-variable-name">leuven--emacs-version</span> <span class=
-"org-string">"20150217.1105"</span>
+"org-string">"20150218.1548"</span>
   <span class=
 "org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
@@ -9502,7 +9502,11 @@ M-: (executable-find "diff") RET
 "org-leuven-highlight"><span class="org-comment">XXX</span></span>
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"ledger"</span>
-    (setq ledger-fontify-xact-state-overrides nil))
+    (setq ledger-fontify-xact-state-overrides nil)
+
+    (setq ledger-reconcile-default-commodity <span class=
+"org-string">"EUR"</span>)) <span class=
+"org-comment-delimiter">; </span><span class="org-comment">"€"</span>
 
   (<span class="org-keyword">with-eval-after-load</span> <span class=
 "org-string">"flycheck"</span>
@@ -10090,9 +10094,11 @@ M-: (executable-find "diff") RET
 "org-string">"org-loaddefs"</span> <span class=
 "org-comment-delimiter">; </span><span class=
 "org-comment">Autoloads file?</span>
-      (key-chord-define-global <span class=
-"org-string">",a"</span> 'org-agenda) <span class=
-"org-comment-delimiter">; </span><span class="org-comment">Autoloaded.</span>
+      <span class="org-comment-delimiter">;; </span><span class=
+"org-comment">(key-chord-define-global ",a" 'org-agenda) ; Autoloaded.</span>
+                                        <span class=
+"org-comment-delimiter">; </span><span class=
+"org-comment">2015-02-18 Crash Gnus `C-u a'</span>
       (key-chord-define-global <span class=
 "org-string">",c"</span> 'org-capture)) <span class=
 "org-comment-delimiter">; </span><span class="org-comment">Autoloaded.</span>
@@ -22506,6 +22512,18 @@ etags --langdef=shell --regex-shell=<span class=
           <div class="outline-text-4" id="text-unnumbered-312">
             <p>The best alternative to Auto-Complete seems to be Company
             mode.</p>
+
+            <p>Besides that the maintainer of company-mode is incredibly
+            competent and friendly,</p>
+
+            <ul class="org-ul">
+              <li>company-mode is super easy to extend (whereas you often have
+              to write 3-4 times as much code to get the equivalent
+              functionality out of AC backend);</li>
+
+              <li>company “just works”, most of the time. It’s incredibly
+              simple to use.</li>
+            </ul>
 
             <p>See <a href=
             "https://github.com/company-mode/company-mode/issues/68">https://github.com/company-mode/company-mode/issues/68</a>

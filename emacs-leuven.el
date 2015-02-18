@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150217.1104
+;; Version: 20150218.1548
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150217.1104"
+(defconst leuven--emacs-version "20150218.1548"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2960,7 +2960,9 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Don't override the highlighting of each posted item in a xact if it is
   ;; cleared/pending. XXX
   (with-eval-after-load "ledger"
-    (setq ledger-fontify-xact-state-overrides nil))
+    (setq ledger-fontify-xact-state-overrides nil)
+
+    (setq ledger-reconcile-default-commodity "EUR")) ; "€"
 
   (with-eval-after-load "flycheck"
     (try-require 'flycheck-ledger))
@@ -3218,7 +3220,8 @@ These packages are neither built-in nor already installed nor ignored."
                                         ; For Azerty keyboards
 
     (with-eval-after-load "org-loaddefs" ; Autoloads file?
-      (key-chord-define-global ",a" 'org-agenda) ; Autoloaded.
+      ;; (key-chord-define-global ",a" 'org-agenda) ; Autoloaded.
+                                        ; 2015-02-18 Crash Gnus `C-u a'
       (key-chord-define-global ",c" 'org-capture)) ; Autoloaded.
 
     (with-eval-after-load "org"         ; Package.

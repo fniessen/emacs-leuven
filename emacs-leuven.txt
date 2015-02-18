@@ -4906,7 +4906,9 @@ Instead of superseding the binding in ~auto-mode-alist~, you can replace it
   ;; Don't override the highlighting of each posted item in a xact if it is
   ;; cleared/pending. XXX
   (with-eval-after-load "ledger"
-    (setq ledger-fontify-xact-state-overrides nil))
+    (setq ledger-fontify-xact-state-overrides nil)
+
+    (setq ledger-reconcile-default-commodity "EUR")) ; "€"
 
   (with-eval-after-load "flycheck"
     (try-require 'flycheck-ledger))
@@ -5256,7 +5258,8 @@ a factor 2...
                                         ; For Azerty keyboards
 
     (with-eval-after-load "org-loaddefs" ; Autoloads file?
-      (key-chord-define-global ",a" 'org-agenda) ; Autoloaded.
+      ;; (key-chord-define-global ",a" 'org-agenda) ; Autoloaded.
+                                        ; 2015-02-18 Crash Gnus `C-u a'
       (key-chord-define-global ",c" 'org-capture)) ; Autoloaded.
 
     (with-eval-after-load "org"         ; Package.
@@ -12473,6 +12476,14 @@ XXX Test the following.
 *** Company mode ("Complete anything")
 
 The best alternative to Auto-Complete seems to be Company mode.
+
+Besides that the maintainer of company-mode is incredibly competent and
+friendly,
+
+- company-mode is super easy to extend (whereas you often have to write 3-4
+  times as much code to get the equivalent functionality out of AC backend);
+
+- company "just works", most of the time.  It's incredibly simple to use.
 
 See https://github.com/company-mode/company-mode/issues/68 for a *feature
 comparison* between both.
