@@ -50,7 +50,7 @@
 * Helper functions
 
 #+begin_src emacs-lisp
-;;; Functions for writing tests
+;;; Functions for writing tests.
 
 (defun compare-org-html-export-files (org-file)
   "Compare current export of ORG-FILE with HTML file already present on disk."
@@ -58,20 +58,20 @@
   (let* ((html-file (concat (file-name-directory org-file)
                             (file-name-base org-file) ".html"))
          html-contents)
-    ;; should have a .html file
+    ;; Should have a .html file.
     (should
      (file-exists-p html-file))
-    ;; should have the same .html exported file
+    ;; Should have the same .html exported file.
     (should
      (equal
-      ;; new export
+      ;; New export.
       (with-temp-buffer
         (insert-file-contents org-file)
         (setq html-contents (org-export-as 'html))
         (delete-region (point-min) (point-max))
         (insert html-contents)
         (buffer-string))
-      ;; old export
+      ;; Old export.
       (with-temp-buffer
         (insert-file-contents html-file)
         (buffer-string))))))
@@ -89,9 +89,9 @@ For inspiration:
     (org-test-in-example-file org-test-no-heading-file
       ;; Export the file to HTML.
       (org-export-to-file 'html html-file))
-    ;; should create a .html file
+    ;; Should create a .html file.
     (should (file-exists-p html-file))
-    ;; should not create a file with "::" appended to it's name
+    ;; Should not create a file with "::" appended to it's name.
     (should-not (file-exists-p (concat org-test-no-heading-file "::")))
     (when (file-exists-p html-file) (delete-file html-file))))
 
@@ -122,7 +122,7 @@ Files to test:
 - Emacs-Leuven
 
 #+begin_src emacs-lisp
-;;; Internal Tests
+;;; Internal tests.
 
 (ert-deftest test-org-export/export-html-backend-test-file ()
   "Compare current export of ORG-FILE with HTML file already present on disk."

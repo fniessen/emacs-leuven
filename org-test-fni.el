@@ -29,7 +29,7 @@
 (require 'ert)
 (require 'ox)
 
-;;; Functions for writing tests
+;;; Functions for writing tests.
 
 (defun compare-org-html-export-files (org-file)
   "Compare current export of ORG-FILE with HTML file already present on disk."
@@ -37,25 +37,25 @@
   (let* ((html-file (concat (file-name-directory org-file)
                             (file-name-base org-file) ".html"))
          html-contents)
-    ;; should have a .html file
+    ;; Should have a .html file.
     (should
      (file-exists-p html-file))
-    ;; should have the same .html exported file
+    ;; Should have the same .html exported file.
     (should
      (equal
-      ;; new export
+      ;; New export.
       (with-temp-buffer
         (insert-file-contents org-file)
         (setq html-contents (org-export-as 'html))
         (delete-region (point-min) (point-max))
         (insert html-contents)
         (buffer-string))
-      ;; old export
+      ;; Old export.
       (with-temp-buffer
         (insert-file-contents html-file)
         (buffer-string))))))
 
-;;; Internal Tests
+;;; Internal tests.
 
 (ert-deftest test-org-export/export-html-backend-test-file ()
   "Compare current export of ORG-FILE with HTML file already present on disk."

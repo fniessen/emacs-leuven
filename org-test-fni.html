@@ -129,7 +129,7 @@
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;; </span><span class=
-"org-comment">Functions for writing tests</span>
+"org-comment">Functions for writing tests.</span>
 
 (<span class="org-keyword">defun</span> <span class=
 "org-function-name">compare-org-html-export-files</span> (org-file)
@@ -143,15 +143,15 @@
 "org-string">".html"</span>))
          html-contents)
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">should have a .html file</span>
+"org-comment">Should have a .html file.</span>
     (should
      (file-exists-p html-file))
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">should have the same .html exported file</span>
+"org-comment">Should have the same .html exported file.</span>
     (should
      (equal
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">new export</span>
+"org-comment">New export.</span>
       (<span class="org-keyword">with-temp-buffer</span>
         (insert-file-contents org-file)
         (setq html-contents (org-export-as 'html))
@@ -159,7 +159,7 @@
         (insert html-contents)
         (buffer-string))
       <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">old export</span>
+"org-comment">Old export.</span>
       (<span class="org-keyword">with-temp-buffer</span>
         (insert-file-contents html-file)
         (buffer-string))))))
@@ -185,10 +185,10 @@
 "org-comment">Export the file to HTML.</span>
       (org-export-to-file 'html html-file))
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">should create a .html file</span>
+"org-comment">Should create a .html file.</span>
     (should (file-exists-p html-file))
     <span class="org-comment-delimiter">;; </span><span class=
-"org-comment">should not create a file with "::" appended to it's name</span>
+"org-comment">Should not create a file with "::" appended to it's name.</span>
     (should-not (file-exists-p (concat org-test-no-heading-file <span class=
 "org-string">"::"</span>)))
     (<span class=
@@ -242,7 +242,7 @@
         <div class="org-src-container">
           <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;; </span><span class=
-"org-comment">Internal Tests</span>
+"org-comment">Internal tests.</span>
 
 (ert-deftest test-org-export/export-html-backend-test-file ()
   <span class=
