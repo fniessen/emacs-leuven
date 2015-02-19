@@ -154,7 +154,10 @@
 "org-comment">New export.</span>
       (<span class="org-keyword">with-temp-buffer</span>
         (insert-file-contents org-file)
-        (setq html-contents (org-export-as 'html))
+        (setq html-contents
+              (<span class=
+"org-keyword">let</span> ((org-export-allow-bind-keywords t))
+                (org-export-as 'html)))
         (delete-region (point-min) (point-max))
         (insert html-contents)
         (buffer-string))
