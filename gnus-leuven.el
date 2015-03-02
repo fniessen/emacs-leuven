@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150216.1502
+;; Version: 20150224.0927
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -130,27 +130,25 @@
       ""))
 
   ;; create some faces
-  (defface leuven-gnus-unseen '((t (:weight bold :foreground "blue")))
-    "Face for marker of new mail, and count of unseen articles.")
-  (defface leuven-gnus-unread '((t (:weight bold :foreground "black")))
+  (defface leuven-gnus-unseen '((t (:weight normal :foreground "#FC7202")))
     "Face for count of unread articles.")
-  (defface leuven-gnus-diredp-file-suffix-7 '((t (:foreground "#2EAE2C")))
-    "Face for size of article in summary buffer.")
+  ;; (defface leuven-gnus-total '((t (:foreground "#2EAE2C")))
+  ;;   "Face for size of article in summary buffer.")
 
   (setq gnus-face-1 'gnus-summary-normal-ticked)
+  (setq gnus-face-2 'gnus-summary-normal-unread)
   (setq gnus-face-3 'leuven-gnus-unseen)
-  (setq gnus-face-4 'leuven-gnus-unread)
-  (setq gnus-face-2 'leuven-gnus-diredp-file-suffix-7)
+  ;; (setq gnus-face-4 'leuven-gnus-total)
 
   ;; format of the group buffer
   (setq gnus-group-line-format (concat "%1{%M%}"
-                                       "%3{%m%}"
+                                       "%2{%m%}"
                                        "  "
                                        "%(%-42,42g%) "
-                                       "%4{%10uy%} "
+                                       "%2{%10uy%} "
                                        "%3{%10uU%} "
                                        "%1{%10uT%} "
-                                       "%2{%6t Total%}"
+                                       ;; "%4{%6t Total%}"
                                        "\n"))
 
 ;;** 2.3 (info "(gnus)Selecting a Group")
@@ -210,38 +208,29 @@
           (t . "%Y-%m-%d %a %H:%M")))
 
   ;; create some faces
-  (defface leuven-gnus-linum '((t (:foreground "#026EC5")))
-    "Face for markers in summary buffer.")
-  (defface leuven-gnus-score '((t (:weight bold :foreground "#2B7E2A")))
-    "Face for scoring marker in summary buffer.")
-  (defface leuven-gnus-diredp-file-suffix '((t (:foreground "#2EAE2C")))
+  (defface leuven-gnus-date '((t (:foreground "#FF80BF")))
+    "Face for date in summary buffer.")
+ (defface leuven-gnus-size '((t (:foreground "#8FBF60")))
     "Face for size of article in summary buffer.")
-  (defface leuven-gnus-org-date '((t (:foreground "purple")))
-    "Face for date in summary buffer.")
-  (defface leuven-gnus-reply-mark '((t (:foreground "#41D823")))
-    "Face for date in summary buffer.")
 
-  (setq gnus-face-5 'leuven-gnus-linum)
-  (setq gnus-face-6 'leuven-gnus-score)
-  (setq gnus-face-7 'leuven-gnus-diredp-file-suffix)
-  (setq gnus-face-8 'leuven-gnus-org-date)
-  (setq gnus-face-9 'leuven-gnus-reply-mark)
+  (setq gnus-face-7 'gnus-summary-high-unread)
+  (setq gnus-face-8 'leuven-gnus-date)
+  (setq gnus-face-9 'leuven-gnus-size)
 
   ;; format specification of the lines in the summary buffer
   (setq gnus-summary-line-format
         ;; for the record, the default string is
         ;; `%U%R%z%I%(%[%4L: %-20,20n%]%) %s\n'
         (concat
-         "%5{%U%}"                      ; "read" status
-         "%9{%R%}"                      ; "reply" status
-         "%6{%z%} "                     ; score
+         "%U"                           ; "read" status
+         "%3{%R%}"                      ; "reply" status
+         "%7{%z%} "                     ; score
          "%8{%~(pad-left 20)&user-date; %} " ; date
-         "%7{ %4k %}"                   ; size
+         "%9{ %4k %}"                   ; size
          "%*" "%-15,15f "               ; cursor before name of the poster
          ;; (if (boundp 'rs-gnus-summary-line-content-type-alist)
          ;;     "%u&attachment; ")
-         "%u&r; "
-         "%5{ %}"                       ; ???
+         "%u&r;  "
          "%B"
          "%I%s"
          "\n"))
@@ -330,25 +319,26 @@
     (define-key gnus-summary-mode-map
       (kbd "F") 'leuven-gnus-summary-followup-with-original))
 
-(setq gnus-ticked-mark ?⚑)
-(setq gnus-dormant-mark ?⚐)
-(setq gnus-unread-mark ?✉)
+  (setq gnus-ticked-mark ?⚑)
+  (setq gnus-dormant-mark ?⚐)
+  (setq gnus-unread-mark ?✉)
 
-(setq gnus-del-mark ?✗)
-(setq gnus-read-mark ?✓)
-(setq gnus-killed-mark ?☠)
-(setq gnus-canceled-mark ?↗)
+  (setq gnus-del-mark ?✗)
+  (setq gnus-read-mark ?✓)
+  (setq gnus-ancient-mark ? )
+  (setq gnus-killed-mark ?☠)
+  (setq gnus-canceled-mark ?↗)
 
-(setq gnus-score-over-mark ?↑)          ; ↑ ☀
-(setq gnus-score-below-mark ?↓)         ; ↓ ☂
+  (setq gnus-score-over-mark ?↑)
+  (setq gnus-score-below-mark ?↓)
 
-(setq gnus-replied-mark ?↺)
-(setq gnus-forwarded-mark ?↪)
-(setq gnus-cached-mark ?☍)
-(setq gnus-unseen-mark ?✩)
-(setq gnus-recent-mark ?★)
-(setq gnus-process-mark ?⚙)
-(setq gnus-expirable-mark ?♻)
+  (setq gnus-replied-mark ?↺)
+  (setq gnus-forwarded-mark ?↪)
+  (setq gnus-cached-mark ?☍)
+  (setq gnus-unseen-mark ?✩)
+  (setq gnus-recent-mark ?★)
+  (setq gnus-process-mark ?⚙)
+  (setq gnus-expirable-mark ?♻)
 
 ;;** 3.9 (info "(gnus)Threading")
 
