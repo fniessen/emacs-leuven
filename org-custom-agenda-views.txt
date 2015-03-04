@@ -132,6 +132,25 @@ Ordered by:
 Get your errand list for this week by filtering the agenda (for the current
 week) on the ~errands~ tag.
 
+* Getting started (with Things)
+
+** Gather it all in one place
+
+Each and every thing that you want to accomplish needs to end up in one place,
+and that place is the *CollectBox*.
+
+It's fine if you haven't yet come up with a plan for exactly how or when you'll
+do these new to-dos. What's crucial is immediately getting them off your mind
+and into the Inbox to revisit later. When this becomes a reflex, it's also a lot
+easier to stay focused on whatever you're doing.
+
+Include the fun or interesting things that you'd love to do, too. If you only
+add your obligations, looking over your to-dos will become a chore.
+
+Taking a second look at all of the new to-dos in your Inbox daily is an easy yet
+powerful habit that'll make you feel great. As you do this, decide when you'll
+start each of them.
+
 ** Decide when to get started
 
 There's too much for you to get done in one day, but that's no reason to
@@ -152,6 +171,77 @@ of them on a specific day.
 *Someday* is the place for to-dos that you might like to get to, but you're not
 sure when. Regularly review what you've added here to decide if it's time to
 act.
+
+** Do bigger things with projects
+
+Every so often, you'll find that something you've added to your Inbox will
+actually take more than a single step to complete. When that happens, make it
+a *Project* instead.
+
+Like to-dos, there are almost always too many potential projects for you to work
+on at any given time. If you're not totally committed to working on a project in
+the near future, move it to Someday. If you want to review a project to see if
+it's relevant again on a later date, move it to Scheduled. If you do these
+things, you'll always have a tidy, relevant list of the projects you're devoted
+to right now.
+
+Finally, if you need to get an overview of all the next actions across your
+current projects, you can find them listed together in Next.
+
+** Define yourself with areas
+
+Projects and to-dos that support an ongoing ambition belong together in an *Area
+of Responsibility*.
+
+There's an area for every hat you wear. Stay in touch with the people you care
+about by creating a *Family & Friends* area. Remember to keep an eye on your
+savings for the future with a *Money* area. Encourage yourself to care for your
+body and mind by maintaining a *Health* area. Tame a busy class schedule with
+a *School* area. Work toward new professional heights with a *Career* area. When you
+only want to see related projects and to-dos, your areas are a great place to
+narrow your focus.
+
+** Establish your daily routine
+
+A visit with your to-dos early in the day, every day, is the best way to set
+your priorities and stay on top of what matters most to you. So grab a coffee
+and spend a few minutes in *Today* -- this won't take long.
+
+First, Things shows you what's new for the day. Decide what you want to do today
+and postpone the rest for later. Visualize what you'll get done and in what
+order, then arrange your to-dos accordingly.
+
+Second, if your Today list needs a bit more substance, add some to-dos. Look
+over Next to get a quick overview of all of your projects and add some to-dos
+from there. Or, browse your areas and projects to pick some to-dos from those.
+
+When you take a bit of time to organize your Today list, it'll no longer seem
+like each day is merely something that happens to you. Interruptions won't be so
+disruptive. You'll be in control. It's a good feeling.
+
+** A few tips before you go
+
+The *faster* you can get new to-dos into your Inbox, the faster you can get back
+to work. In Org mode, you can create a new to-do while you're working by
+pressing ~C-c c t~.
+
+Great *titles* for your to-dos make a big difference. Imagine you're in a hurry
+and you create a to-do that's simply titled /Valentine's Day/. Valentine's Day
+isn't really something you can /do/. You can, however, /Buy a Valentine's Day card/
+or /Make a dinner reservation for Valentine's Day/. Be crystal-clear about the
+real action you're going to take, so that when you see the to-do again later you
+won't have to think twice about what you meant.
+
+If you need to shorten a long list and see only the to-dos that are relevant
+right this moment, use *tags*. Your tags should have an unambiguous purpose and
+you should use them frequently to filter lists and see similar to-dos. For
+example, /Errand/ is one of our favorites: you can use it to filter your Next list
+and see everything you need to do when you're around town.
+
+Use *due dates* sparingly, and only when a to-do has a fixed deadline. If you do
+that, it'll always be obvious at a glance what /really/ requires your attention
+each day. If you simply want a to-do to appear in your Today list later, move it
+to the Scheduled list and set a date that way.
 
 * Views
 
