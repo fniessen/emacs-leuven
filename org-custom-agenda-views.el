@@ -6,15 +6,15 @@
 
   (require 'org-agenda)
 
-  ;; display the calendar and tasks for today
+  ;; Display the calendar and tasks for today.
   (global-set-key
     (kbd "<f7>") (kbd "C-c a f ."))
 
-  ;; display the hotlist
+  ;; Display the hotlist.
   (global-set-key
     (kbd "<S-f7>") (kbd "C-c a f h"))
 
-  ;; display calendar for 7 days
+  ;; Display calendar for 7 days.
   (global-set-key
     (kbd "<C-f7>") (kbd "C-c a r c 7"))
 
@@ -28,13 +28,13 @@
             "\\) ")
     "Matches any completion time stamp.")
 
-  ;; custom commands for the agenda -- start with a clean slate
+  ;; Custom commands for the agenda -- start with a clean slate.
   (setq org-agenda-custom-commands nil)
 
   (add-to-list 'org-agenda-custom-commands
                '("c" . "COLLECT...") t)
 
-  ;; CollectBox
+  ;; Collectbox.
   (add-to-list 'org-agenda-custom-commands
                `("cb" "CollectBox"
                  ((alltodo ""))
@@ -46,7 +46,7 @@
   (add-to-list 'org-agenda-custom-commands
                `("f." "Today"
                  (
-                  ;; events
+                  ;; Events.
                   (agenda ""
                           ((org-agenda-entry-types '(:timestamp :sexp))
                            (org-agenda-overriding-header
@@ -55,18 +55,18 @@
                                     ;; #("__________________" 0 12 (face (:foreground "gray")))
                                     ))
                            (org-agenda-span 'day)))
-                  ;; unscheduled new tasks (waiting to be prioritized and scheduled)
+                  ;; Unscheduled new tasks (waiting to be prioritized and scheduled).
                   (tags-todo "LEVEL=2"
                         ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")
                          (org-agenda-files (list ,(concat org-directory "/refile.org")))))
-                  ;; list of all TODO entries with deadline today
+                  ;; List of all TODO entries with deadline today.
                   (tags-todo "DEADLINE=\"<+0d>\""
                              ((org-agenda-overriding-header "DUE TODAY")
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'notdeadline))
                               (org-agenda-sorting-strategy '(priority-down))))
                                         ; XXX Timed deadlines NOT shown!!!
-                  ;; list of all TODO entries with deadline before today
+                  ;; List of all TODO entries with deadline before today.
                   (tags-todo "DEADLINE<\"<+0d>\""
                              ((org-agenda-overriding-header "OVERDUE")
                               (org-agenda-skip-function
@@ -92,8 +92,8 @@
                            (org-agenda-span 'day)
                            (org-agenda-start-on-weekday nil)
                            (org-agenda-time-grid nil)))
-                  ;; list of all TODO entries completed today
-                  (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
+                  ;; List of all TODO entries completed today.
+                  (todo "TODO|DONE|CANX" ; Includes repeated tasks (back in TODO).
                              ((org-agenda-overriding-header "COMPLETED TODAY")
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if
@@ -141,7 +141,7 @@
                   ;;            ((org-agenda-overriding-header "...FLAGGED...")))
                   )
                  ((org-agenda-todo-ignore-scheduled 'future)
-                  (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK
+                  (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK.
 
   (add-to-list 'org-agenda-custom-commands
                '("r" . "REVIEW...") t)
@@ -212,7 +212,7 @@
                `("ra2" "All active tasks, by due date"
                  ((agenda ""
                           ((org-agenda-overriding-header "Today")
-                           ;; FIXME We don't see "timed" DEADLINE
+                           ;; FIXME We don't see "timed" DEADLINE.
                            (org-agenda-skip-function
                             (lambda ()
                               (let* ((dl (org-entry-get nil "DEADLINE")))
@@ -281,9 +281,9 @@
               (and sd
                    (not (equal sd ""))
                    (org-time< sd (+ (org-time-today) (* n2 86400))))
-              (and (or (not dl)       ; no deadline
+              (and (or (not dl)       ; No deadline.
                        (equal dl ""))
-                   (or (not sd)       ; nor scheduled
+                   (or (not sd)       ; Nor scheduled.
                        (equal sd ""))))
           (progn (outline-next-heading) (point)))))
 
@@ -332,7 +332,7 @@
                   (org-agenda-prefix-format " %i %?-12t% s")
                   (org-agenda-span 'day)
                   (org-agenda-use-time-grid nil)
-                  (org-agenda-sorting-strategy '(deadline-up)) ; FIXME sort does not work in "Past due", well in "Next 12 days"
+                  (org-agenda-sorting-strategy '(deadline-up)) ; FIXME sort does not work in "Past due", well in "Next 12 days".
                   (org-agenda-write-buffer-name "List Review"))
                  "~/org___agenda-all-todo-entries.html") t)
 
@@ -343,7 +343,7 @@
                   (tags-todo "PRIORITY={B}"
                              ((org-agenda-overriding-header "MEDIUM")))
                   (tags-todo "PRIORITY=\"\""
-                             ((org-agenda-overriding-header "NONE"))) ; = medium
+                             ((org-agenda-overriding-header "NONE"))) ; = Medium.
                   (tags-todo "PRIORITY={C}"
                              ((org-agenda-overriding-header "LOW")))
                   (todo "DONE|CANX"
@@ -353,7 +353,7 @@
   (add-to-list 'org-agenda-custom-commands
                '("rt" . "Timesheet...") t)
 
-  ;; show what happened today
+  ;; Show what happened today.
   (add-to-list 'org-agenda-custom-commands
                '("rtd" "Daily Timesheet"
                  ((agenda ""))
@@ -364,7 +364,7 @@
                   (org-agenda-start-with-clockreport-mode t)
                   (org-agenda-time-grid nil))) t)
 
-  ;; show what happened this week
+  ;; Show what happened this week.
   (add-to-list 'org-agenda-custom-commands
                '("rtw" "Weekly Timesheet"
                  ((agenda ""))
@@ -391,7 +391,7 @@
                   ;; (org-agenda-date-weekend ... new face ...)
                   (org-agenda-time-grid nil))) t)
 
-  ;; calendar view for org-agenda
+  ;; Calendar view for org-agenda.
   (when (locate-library "calfw-org")
 
     (autoload 'cfw:open-org-calendar "calfw-org"
@@ -415,7 +415,7 @@
 
   (add-to-list 'org-agenda-custom-commands
                `("rC" "Completed view"
-                 (;; list of all TODO entries completed yesterday
+                 (;; List of all TODO entries completed yesterday.
                   (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
                              ((org-agenda-overriding-header
                                (concat "YESTERDAY   "
@@ -427,7 +427,7 @@
                                  'notregexp
                                  (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 1))))
                               (org-agenda-sorting-strategy '(priority-down))))
-                  ;; list of all TODO entries completed 2 days ago
+                  ;; List of all TODO entries completed 2 days ago.
                   (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
                              ((org-agenda-overriding-header
                                (concat "2 DAYS AGO  "
@@ -437,8 +437,8 @@
                                  'notregexp
                                  (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 2))))
                               (org-agenda-sorting-strategy '(priority-down))))
-                  ;; list of all TODO entries completed 3 days ago
-                  (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
+                  ;; List of all TODO entries completed 3 days ago.
+                  (todo "TODO|DONE|CANX" ; Includes repeated tasks (back in TODO).
                              ((org-agenda-overriding-header
                                (concat "3 DAYS AGO  "
                                        (format-time-string "%a %d" (current-time-ndays-ago 3))))
@@ -466,7 +466,7 @@
 
   (add-to-list 'org-agenda-custom-commands
                '("rr" "Recent items (past 7 days)"
-                 ;; faster than tags
+                 ;; Faster than tags.
                  ((agenda ""))
                  ((org-agenda-start-day "-7d")
                   (org-agenda-span 7)
@@ -506,7 +506,7 @@
                   (todo "PROJ"
                         ((org-agenda-overriding-header "PROJECT LIST")))
 
-                  ;; FIXME we should show which tasks (don't) have CLOCK lines: archived vs. deleted
+                  ;; FIXME we should show which tasks (don't) have CLOCK lines: archived vs. deleted.
                   (todo "DONE|PROJDONE"
                         ((org-agenda-overriding-header
                           "Candidates to be archived")))
@@ -518,19 +518,19 @@
                         ((org-agenda-overriding-header "IN PROGRESS")
                          (org-agenda-todo-ignore-scheduled nil)))
 
-                  (todo "TODO"        ; don't include items from CollectBox! XXX
+                  (todo "TODO"        ; Don't include items from CollectBox! XXX
                         ((org-agenda-overriding-header "ACTION LIST")))
 
-                  ;; ignore scheduled and deadline entries, as they're
-                  ;; visible in the above agenda (for the past + for next
-                  ;; month) or scheduled/deadline'd for much later...
+                  ;; Ignore scheduled and deadline entries, as they're visible
+                  ;; in the above agenda (for the past + for next month) or
+                  ;; scheduled/deadline'd for much later...
                   (todo "WAIT"
                         ((org-agenda-format-date "")
                          (org-agenda-overriding-header "WAITING FOR")
-                         (org-agenda-todo-ignore-deadlines 'all) ; future?
+                         (org-agenda-todo-ignore-deadlines 'all) ; Future?
                          (org-agenda-todo-ignore-scheduled t)))
 
-                  ;; same reasoning as for WAIT
+                  ;; Same reasoning as for WAIT.
                   (todo "SDAY"
                         ((org-agenda-format-date "")
                          (org-agenda-overriding-header "SOMEDAY")
@@ -554,7 +554,7 @@
                '("rW" "Waiting for"
                  ((tags-todo "TODO={WAIT}"))
                  ((org-agenda-overriding-header "Waiting for")
-                  (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME does not work
+                  (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME does not work.
 
   (add-to-list 'org-agenda-custom-commands
                '("rP" "Projects"
@@ -565,7 +565,7 @@
   (add-to-list 'org-agenda-custom-commands
                '("+" . "MORE...") t)
 
-  ;; checking tasks that are assigned to me
+  ;; Checking tasks that are assigned to me.
   (add-to-list 'org-agenda-custom-commands
                `("+a" "Assigned to me"
                  ((tags ,(concat "Assignee={" user-login-name "\\|"
@@ -575,7 +575,7 @@
   (add-to-list 'org-agenda-custom-commands
                '("E" . "Exported agenda files...") t)
 
-  ;; exporting agenda views
+  ;; Exporting agenda views.
   (add-to-list 'org-agenda-custom-commands
                '("Ea"
                  ((agenda ""))
@@ -627,8 +627,8 @@
                  ((tags "refile|capture"))
                  ((org-agenda-overriding-header "Refile stuff"))) t)
 
-  ;; create a sparse tree (current buffer only) with all entries containing
-  ;; the word `TODO', `FIXME' or `XXX'
+  ;; Create a sparse tree (current buffer only) with all entries containing the
+  ;; word `TODO', `FIXME' or `XXX'.
   (add-to-list 'org-agenda-custom-commands
                '("1" "Task markers (in current buffer)"
                  ((occur-tree "\\<TODO\\|FIXME\\|XXX\\>"))) t)
