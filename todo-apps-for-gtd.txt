@@ -338,6 +338,37 @@ Add some color to Asana » ( http://connect.asana.com/1L9Q-1EBU8-8X1XHI-KBJNH-0/
 
 From [[gnus:nnimap%2Bmc:INBOX#SOV-DM-DROID2520eb75c335e45f0828d56735fefbe43@sov-dm-droid2][Email from Asana: Search Views, New Right Pane, ]]
 
+*** For Android
+
+https://play.google.com/store/apps/details?id=com.asana.app
+
+Key features:
+
+- GET ORGANIZED WITH TASKS
+  Create tasks quickly for yourself or a teammate. Add to-dos, reminders, and
+  requests.
+
+- COMMUNICATE ABOUT WORK
+  Comment directly on tasks and get updates on the progress of your team's tasks
+  and projects.
+
+- MANAGE THE DETAILS OF TEAMWORK
+  Track due dates, assignees, and notes on your tasks.
+
+- PLAN YOUR DAY
+  View and organize your task list. Re-order tasks as priorities and statuses
+  change.
+
+- COMPLETE WORK ON-THE-GO
+  Swipe to complete tasks, which notifies your team that your work is finished.
+
+- SYNCS WITH WEB APP
+  Whether working in the Asana web app or on your phone or tablet, you and your
+  team will see updates and stay in sync.
+
+- FREE
+  Add tasks, projects, and comments for free (up to 15 people).
+
 ** [[https://www.azendoo.com/][Azendoo]]
 
 Azendoo provides easy ways to organize your work, *without "work about work"*.
@@ -1285,3 +1316,40 @@ Note that:
 - Logged / Total [E] = % Complete
 
 http://www.liquidplanner.com/support/videos/daily-task-management/
+
+** FengOffice
+
+Structure of an Org file -- from online demo...
+
+Clients & Projects:
+
+1. Active Clients
+2. Leads & Prospects
+3. Inactive Clients
+
+Workspaces:
+
+1. General Organization
+   1. Welcome to the Agency
+   2. Company Policies
+   3. Interesting Articles
+   4. Team
+2. Products & Services
+3. Customer Success
+   1. Support
+   2. FAQs
+   3. Metrics
+4. Sales & Marketing
+   1. Welcome to Sales & Marketing
+5. Systems D+I
+   1. Website Development
+   2. Infrastructure
+6. Administration
+   1. Incomes
+   2. Payments
+   3. Taxes
+   4. Human Resources
+      1. CVs
+      2. Vacations
+      3. Headhunting
+7. Board of Directors
