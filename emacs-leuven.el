@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150218.1548
+;; Version: 20150320.1050
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150218.1548"
+(defconst leuven--emacs-version "20150320.1050"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2014,8 +2014,7 @@ These packages are neither built-in nor already installed nor ignored."
           (lambda (&optional arg)
             (if (> (frame-width) 160)
                 (split-window-horizontally arg)
-              (split-window-vertically
-               arg)))))
+              (split-window-vertically arg)))))
 
 ;;** 18.11 (info "(emacs)Misc File Ops")
 
@@ -2406,7 +2405,8 @@ These packages are neither built-in nor already installed nor ignored."
       (setq helm-swoop-speed-or-color t)
 
       ;; split direction
-      (setq helm-swoop-split-direction 'split-window-horizontally)
+      ;; (setq helm-swoop-split-direction 'split-window-horizontally)
+      (setq helm-swoop-split-direction 'split-window-sensibly)
 
       ;; don't save each buffer you edit when editing is complete
       (setq helm-multi-swoop-edit-save nil)))
@@ -3479,15 +3479,15 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; These variables need to be set before org.el is loaded...
 
-  ;; Face to be used by `font-lock' for highlighting in Org mode Emacs
-  ;; buffers, and tags to be used to convert emphasis fontifiers for HTML
-  ;; export. XXX Format changed! XXX
-  (setq org-emphasis-alist              ; Remove the strike-through emphasis.
-        '(("*" bold "<b>" "</b>")
-          ("/" italic "<i>" "</i>")
-          ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
-          ("=" org-verbatim "<code>" "</code>" verbatim)
-          ("~" org-code "<code>" "</code>" verbatim)))
+  ;; ;; Face to be used by `font-lock' for highlighting in Org mode Emacs
+  ;; ;; buffers, and tags to be used to convert emphasis fontifiers for HTML
+  ;; ;; export. XXX Format changed! XXX
+  ;; (setq org-emphasis-alist              ; Remove the strike-through emphasis.
+  ;;       '(("*" bold "<b>" "</b>")
+  ;;         ("/" italic "<i>" "</i>")
+  ;;         ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
+  ;;         ("=" org-verbatim "<code>" "</code>" verbatim)
+  ;;         ("~" org-code "<code>" "</code>" verbatim)))
 
   ;; (setq org-emphasis-alist
   ;;       '(("&" (:weight ultra-bold :foreground "#000000" :background "#FBFF00"))
@@ -3597,85 +3597,85 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Initial state (TODO keyword) of inline tasks.
     (setq org-inlinetask-default-state "TODO")
 
-    ;; Template for inline tasks in HTML exporter.
-    (defun leuven--org-html-format-inlinetask
-        (todo todo-type priority text tags contents &optional info)
-      "Format an inline task element for HTML export."
-      (let ((todo-kw
-             (if todo
-                 (format "<span class=\"%s %s\">%s</span> " todo-type todo todo)
-               ""))
-            (full-headline-w/o-todo-kw
-             (concat
-              (when priority (format "[#%c] " priority))
-              text
-              (when tags
-                (concat "&nbsp;&nbsp;&nbsp;"
-                        "<span class=\"tag\">"
-                        (mapconcat (lambda (tag)
-                                     (concat "<span class= \"" tag "\">" tag
-                                             "</span>"))
-                                   tags
-                                   "&nbsp;")
-                        "</span>")))))
-        (concat "<table class=\"inlinetask\" width=\"100%\">"
-                  "<tr>"
-                    "<td valign=\"top\"><b>" todo-kw "</b></td>"
-                    "<td width=\"100%\"><b>" full-headline-w/o-todo-kw "</b><br />"
-                      (or contents "") "</td>"
-                  "</tr>"
-                "</table>")))
-
-    ;; Function called to format an inlinetask in HTML code.
-    (setq org-html-format-inlinetask-function
-          'leuven--org-html-format-inlinetask)
-
-    ;; Template for inline tasks in LaTeX exporter.
-    (defun leuven--org-latex-format-inlinetask
-        (todo todo-type priority text tags contents &optional info)
-      "Format an inline task element for LaTeX export."
-      (let* ((tags-string (format ":%s:" (mapconcat 'identity tags ":")))
-             (opt-color
-              (if tags
-                  (cond ((string-match ":info:" tags-string)
-                         "color=yellow!40")
-                        ((string-match ":warning:" tags-string)
-                         "color=orange!40")
-                        ((string-match ":error:" tags-string)
-                         "color=red!40")
-                        (t ""))
-                ""))
-             (full-headline
-              (concat
-               (when todo
-                 (format "{\\color{red}\\textbf{\\textsf{\\textsc{%s}}}} "
-                         todo))
-               (when priority
-                 (format "\\textsf{\\framebox{\\#%c}} " priority))
-               text
-               (when tags
-                 (format "\\hfill{}:%s:"
-                         (mapconcat 'identity tags ":")))))
-             (opt-rule
-              (if contents
-                  "\\\\ \\rule[.3em]{\\textwidth}{0.2pt}\n"
-                ""))
-             (opt-contents
-              (or contents "")))
-        ;; This requires the `todonotes' package.
-        (format (concat "\\todo[inline,caption={},%s]{\n"
-                        "  %s\n"
-                        "  %s"
-                        "  %s"
-                        "}")
-                opt-color
-                full-headline
-                opt-rule
-                opt-contents)))
-
-    ;; Function called to format an inlinetask in LaTeX code.
-    (setq org-latex-format-inlinetask-function
-          'leuven--org-latex-format-inlinetask)
+    ;; ;; Template for inline tasks in HTML exporter.
+    ;; (defun leuven--org-html-format-inlinetask
+    ;;     (todo todo-type priority text tags contents &optional info)
+    ;;   "Format an inline task element for HTML export."
+    ;;   (let ((todo-kw
+    ;;          (if todo
+    ;;              (format "<span class=\"%s %s\">%s</span> " todo-type todo todo)
+    ;;            ""))
+    ;;         (full-headline-w/o-todo-kw
+    ;;          (concat
+    ;;           (when priority (format "[#%c] " priority))
+    ;;           text
+    ;;           (when tags
+    ;;             (concat "&nbsp;&nbsp;&nbsp;"
+    ;;                     "<span class=\"tag\">"
+    ;;                     (mapconcat (lambda (tag)
+    ;;                                  (concat "<span class= \"" tag "\">" tag
+    ;;                                          "</span>"))
+    ;;                                tags
+    ;;                                "&nbsp;")
+    ;;                     "</span>")))))
+    ;;     (concat "<table class=\"inlinetask\" width=\"100%\">"
+    ;;               "<tr>"
+    ;;                 "<td valign=\"top\"><b>" todo-kw "</b></td>"
+    ;;                 "<td width=\"100%\"><b>" full-headline-w/o-todo-kw "</b><br />"
+    ;;                   (or contents "") "</td>"
+    ;;               "</tr>"
+    ;;             "</table>")))
+    ;;
+    ;; ;; Function called to format an inlinetask in HTML code.
+    ;; (setq org-html-format-inlinetask-function
+    ;;       'leuven--org-html-format-inlinetask)
+    ;;
+    ;; ;; Template for inline tasks in LaTeX exporter.
+    ;; (defun leuven--org-latex-format-inlinetask
+    ;;     (todo todo-type priority text tags contents &optional info)
+    ;;   "Format an inline task element for LaTeX export."
+    ;;   (let* ((tags-string (format ":%s:" (mapconcat 'identity tags ":")))
+    ;;          (opt-color
+    ;;           (if tags
+    ;;               (cond ((string-match ":info:" tags-string)
+    ;;                      "color=yellow!40")
+    ;;                     ((string-match ":warning:" tags-string)
+    ;;                      "color=orange!40")
+    ;;                     ((string-match ":error:" tags-string)
+    ;;                      "color=red!40")
+    ;;                     (t ""))
+    ;;             ""))
+    ;;          (full-headline
+    ;;           (concat
+    ;;            (when todo
+    ;;              (format "{\\color{red}\\textbf{\\textsf{\\textsc{%s}}}} "
+    ;;                      todo))
+    ;;            (when priority
+    ;;              (format "\\textsf{\\framebox{\\#%c}} " priority))
+    ;;            text
+    ;;            (when tags
+    ;;              (format "\\hfill{}:%s:"
+    ;;                      (mapconcat 'identity tags ":")))))
+    ;;          (opt-rule
+    ;;           (if contents
+    ;;               "\\\\ \\rule[.3em]{\\textwidth}{0.2pt}\n"
+    ;;             ""))
+    ;;          (opt-contents
+    ;;           (or contents "")))
+    ;;     ;; This requires the `todonotes' package.
+    ;;     (format (concat "\\todo[inline,caption={},%s]{\n"
+    ;;                     "  %s\n"
+    ;;                     "  %s"
+    ;;                     "  %s"
+    ;;                     "}")
+    ;;             opt-color
+    ;;             full-headline
+    ;;             opt-rule
+    ;;             opt-contents)))
+    ;;
+    ;; ;; Function called to format an inlinetask in LaTeX code.
+    ;; (setq org-latex-format-inlinetask-function
+    ;;       'leuven--org-latex-format-inlinetask)
 
     )                                   ; with-eval-after-load "org-inlinetask" ends here
 
@@ -3827,9 +3827,9 @@ These packages are neither built-in nor already installed nor ignored."
     ;; 4.4 Show inline images when loading a new Org file.
     (setq org-startup-with-inline-images t) ; Invokes org-display-inline-images.
 
-    ;; 4.4 Try to get the width from an #+ATTR.* keyword and fall back on the
-    ;; original width if none is found.
-    (setq org-image-actual-width nil)
+    ;; 4.4 Try to get the width from an #+ATTR.* keyword and fall back on 320px
+    ;; width if none is found.
+    (setq org-image-actual-width '(320))
 
     (defun leuven-org-what-links-here ()
       "Show all links that point to the current node.  Also show the
@@ -5266,6 +5266,9 @@ this with to-do items than with projects or headings."
 
     )                                   ; with-eval-after-load "ox" ends here
 
+  (defmacro by-backend (&rest body)
+    `(case (if (boundp 'backend) (org-export-backend-name backend) nil) ,@body))
+
 ;;** 12.5 (info "(org)HTML export")
 
   ;; Org HTML export engine.
@@ -5280,18 +5283,18 @@ this with to-do items than with projects or headings."
     ;; ;; buffers.
     ;; (setq org-org-htmlized-css-url "style.css")
 
-    ;; XML declaration.
-    (setq org-html-xml-declaration
-          '(("html" . "<!-- <xml version=\"1.0\" encoding=\"%s\"> -->")
-            ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
-            ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>")))
+    ;; ;; XML declaration.
+    ;; (setq org-html-xml-declaration
+    ;;       '(("html" . "<!-- <xml version=\"1.0\" encoding=\"%s\"> -->")
+    ;;         ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
+    ;;         ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>")))
 
     ;; Coding system for HTML export.
     (setq org-html-coding-system 'utf-8)
 
-    ;; Format for the HTML postamble.
-    (setq org-html-postamble
-          "  <div id=\"footer\"><div id=\"copyright\">\n    Copyright &copy; %d %a\n  </div></div>")
+    ;; ;; Format for the HTML postamble.
+    ;; (setq org-html-postamble
+    ;;       "  <div id=\"footer\"><div id=\"copyright\">\n    &copy; %d %a\n  </div></div>")
 
     ;; 13.1.5 Don't include the JavaScript snippets in exported HTML files.
     (setq org-html-head-include-scripts nil)
@@ -5746,36 +5749,22 @@ this with to-do items than with projects or headings."
     (message "... Org Languages")
 
     ;; Configure Babel to support most languages.
-    (if (locate-library "ob-shell")     ; ob-sh renamed on Dec 13th, 2013
-        (org-babel-do-load-languages    ; loads org, gnus-sum, etc...
-         'org-babel-load-languages
-         '((R          . t)             ; Requires R and ess-mode.
-           (awk        . t)
-           (ditaa      . t)             ; Sudo aptitude install openjdk-6-jre.
-           (dot        . t)
-           (emacs-lisp . t)
-           (latex   . t)                ; Shouldn't you use #+begin/end_latex blocks instead?
-           (ledger     . t)             ; Requires ledger.
-           (makefile   . t)
-           (org        . t)
-           ;; (python  . t)
-           (shell      . t)
-           (sql        . t)))
-      ;; XXX (in the future) message saying "Upgrade to Org 8.3"
-      (org-babel-do-load-languages
-       'org-babel-load-languages
-       '((R          . t)
-         (awk        . t)
-         (ditaa      . t)
-         (dot        . t)
-         (emacs-lisp . t)
-         (latex   . t)
-         (ledger     . t)
-         (makefile   . t)
-         (org        . t)
-         ;; (python  . t)
-         (sh         . t)
-         (sql        . t))))
+    (add-to-list 'org-babel-load-languages '(R . t)) ; Requires R and ess-mode.
+    (add-to-list 'org-babel-load-languages '(awk . t))
+    (add-to-list 'org-babel-load-languages '(ditaa . t)) ; Sudo aptitude install openjdk-6-jre.
+    (add-to-list 'org-babel-load-languages '(dot . t))
+    (add-to-list 'org-babel-load-languages '(java . t))
+    (add-to-list 'org-babel-load-languages '(latex . t)) ; Shouldn't you use #+begin/end_latex blocks instead?
+    (add-to-list 'org-babel-load-languages '(ledger . t)) ; Requires ledger.
+    (add-to-list 'org-babel-load-languages '(makefile . t))
+    (add-to-list 'org-babel-load-languages '(org . t))
+    (if (locate-library "ob-shell")     ; ob-sh renamed on 2013-12-13
+        (add-to-list 'org-babel-load-languages '(shell . t))
+      (add-to-list 'org-babel-load-languages '(sh . t)))
+    (add-to-list 'org-babel-load-languages '(sql . t))
+
+    (org-babel-do-load-languages        ; Loads org, gnus-sum, etc...
+     'org-babel-load-languages org-babel-load-languages)
 
     ;; Accented characters on graphics.
     (setq org-babel-R-command
@@ -5798,7 +5787,8 @@ this with to-do items than with projects or headings."
                           (buffer-name)))
                   ((and (not (assoc-string language org-babel-load-languages))
                         (not (assoc-string language org-src-lang-modes))
-                        (locate-library (concat language "-mode")))
+                        ;; (locate-library (concat language "-mode")) ; would allow `sh-mode'
+                        )
                                         ; XXX This should be stricter: must be
                                         ; in org-babel-load-languages for
                                         ; evaluated code blocks. Must be in both
@@ -5842,6 +5832,17 @@ this with to-do items than with projects or headings."
                                            (region-end)))))
       (find-file "/tmp/org-scratch.org")
       (if contents (insert contents))))
+
+  (defun org-check-property-drawers ()
+    (interactive)
+    (org-element-map (org-element-parse-buffer 'element) 'headline
+      (lambda (h)
+        (and (org-element-map h 'drawer
+               (lambda (d) (equal (org-element-property :name d) "PROPERTIES"))
+               nil t 'headline)
+             (let ((begin (org-element-property :begin h)))
+               (message "Entry with erroneous properties drawer at %d" begin)
+               begin)))))
 
   (defun org-repair-property-drawers ()
     "Fix properties drawers in current buffer.
@@ -5912,10 +5913,19 @@ this with to-do items than with projects or headings."
           org-structure-template-alist)
 
     (add-to-list 'org-structure-template-alist
-                 '("E" "\\begin\{equation\}\n?\n\\end\{equation\}" ""))
+                 '("n" "#+begin_note\n?\n#+end_note"))
 
     (add-to-list 'org-structure-template-alist
-                 '("C" "#+begin_comment\n?\n#+end_comment")))
+                 '("w" "#+begin_warning\n?\n#+end_warning"))
+
+    (add-to-list 'org-structure-template-alist
+                 '("t" "#+begin_tip\n?\n#+end_tip"))
+
+    (add-to-list 'org-structure-template-alist
+                 '("C" "#+begin_comment\n?\n#+end_comment"))
+
+    (add-to-list 'org-structure-template-alist
+                 '("E" "\\begin\{equation\}\n?\n\\end\{equation\}" "")))
 
 ;;** 15.3 (info "(org)Speed keys")
 
@@ -6037,12 +6047,13 @@ this with to-do items than with projects or headings."
   (defun leuven-org-scramble-contents ()
     (interactive)
     (let ((tree (org-element-parse-buffer)))
-      (org-element-map tree '(code comment comment-block example-block fixed-width
-                                   keyword link node-property plain-text verbatim)
+      (org-element-map tree
+          '(code comment comment-block example-block fixed-width keyword link
+            node-property plain-text verbatim)
         (lambda (obj)
-          (case (org-element-type obj)
+          (cl-case (org-element-type obj)
             ((code comment comment-block example-block fixed-width keyword
-                   node-property verbatim)
+              node-property verbatim)
              (let ((value (org-element-property :value obj)))
                (org-element-put-property
                 obj :value (replace-regexp-in-string "[[:alnum:]]" "x" value))))
@@ -8445,14 +8456,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 (leuven--chapter leuven-chapter-35-document-view "35 Document Viewing"
 
   ;; view PDF/PostScript/DVI files in Emacs
-
-;;** 35.1 (info "(emacs)Navigation")
-
-  (leuven--section "35.1 (emacs)Navigation")
-
-  ;; `doc-view' integrates with the usual bookmark facility.  So simply use
-  ;; `C-x r m' (`bookmark-set') to jump back to the last page you've read in
-  ;; a PDF document.
 
   ;; antiword will be run on every `.doc' file you open
   ;; TODO sudo aptitude install antiword (or via Cygwin setup)
