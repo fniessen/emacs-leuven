@@ -576,8 +576,10 @@ minutes. Tasks without a time estimate will NOT show up in this list.
 A deadline with no scheduling information has an implicit ~SCHEDULED~ date equal
 to:
 
-- the ~DEADLINE~ date, or
-- today (such as in Azendoo)!
+- the ~DEADLINE~ date (too late?), or
+- today, in tools such as in Azendoo (too soon?)!
+
+Or it should simply appear in the Next list?
 #+end_warning
 
 * REVIEW my work
