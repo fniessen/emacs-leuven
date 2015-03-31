@@ -16,10 +16,23 @@
 #+SETUPFILE: ./bigblow-pirilampo.setup
 
 * Tasks                                                               :noexport:
+  :PROPERTIES:
+  :tangle:   no
+  :END:
 
-** Use #'<name> when referring to a function
+** TODO Use #'<name> when referring to a function
 
+#+begin_src emacs-lisp
 (add-hook 'kill-buffer-hook #'track-closed-buffer)
+#+end_src
+
+** TODO Improve writing of time-substract
+
+#+begin_src emacs-lisp
+(let ((time (current-time)))
+  (org-id-find "zangwill.nick_2014:aesthetic.judgment")
+  (format "%ss" (time-to-seconds (time-subtract (current-time) time))))
+#+end_src
 
 ** TODO Standardize comments
 
@@ -4518,7 +4531,7 @@ one.
                              ;; Height of Display 1.
                              (nth 4
                                   (assq 'geometry
-                                        (car (display-monitor-attributes-list))))
+                                        (car (display-monitor-attributes-list)))) ; XXX Emacs 24.4 needed!
                              106)       ; Allow for Emacs' title bar and taskbar
                                         ; (from the OS).
                             (frame-char-height)))))
@@ -6196,7 +6209,7 @@ Search for backlinks:
       "Show all links that point to the current node.  Also show the
     node itself.
 
-    This makes id links quasi-bidirectional."
+    This makes ID links quasi-bidirectional."
       (interactive)
       (let ((org-agenda-files (alpha-org-all-org-files
                                :archive t
@@ -9622,16 +9635,15 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
         (message "(Info) Update Org buffer %s"
                  (file-name-nondirectory (buffer-file-name)))
         (sit-for 1.5)
-        (let ((flyspell-mode-before-save flyspell-mode))
-          (flyspell-mode -1)              ; Temporarily disable Flyspell to
-                                          ; avoid checking the following
-                                          ; modifications of the buffer.
+        (let ((cache-long-scans nil)    ; Make `forward-line' much faster and
+                                        ; thus `org-goto-line', `org-table-sum',
+                                        ; etc.
+              (flyspell-mode-before-save flyspell-mode))
+          (flyspell-mode -1)            ; Temporarily disable Flyspell to avoid
+                                        ; checking the following modifications
+                                        ; of the buffer.
           (measure-time "Realigned all tags" (org-align-all-tags))
           (measure-time "Updated all dynamic blocks" (org-update-all-dblocks))
-          (measure-time "Aligned all tables"
-                        (org-table-map-tables (lambda () (org-table-align)) t))
-                                        ; TEMP (Because of bug with pretty
-                                        ; entity emsp)
           (measure-time "Re-applied formulas to all tables"
                         (org-table-iterate-buffer-tables))
           (when (file-exists-p (buffer-file-name (current-buffer)))
@@ -10837,7 +10849,7 @@ See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard a
   (leuven--section "26.11 (emacs)Misc for Programs")
 
   ;; Enable Prettify-Symbols mode in all buffers that support it.
-  (global-prettify-symbols-mode 1)
+  (global-prettify-symbols-mode 1)      ; XXX Emacs 24.4 needed!
 
   ;; (add-hook 'prog-mode-hook
   ;;           (lambda ()

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150320.1050
+;; Version: 20150331.1513
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150320.1050"
+(defconst leuven--emacs-version "20150331.1513"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2712,7 +2712,7 @@ These packages are neither built-in nor already installed nor ignored."
                              ;; Height of Display 1.
                              (nth 4
                                   (assq 'geometry
-                                        (car (display-monitor-attributes-list))))
+                                        (car (display-monitor-attributes-list)))) ; XXX Emacs 24.4 needed!
                              106)       ; Allow for Emacs' title bar and taskbar
                                         ; (from the OS).
                             (frame-char-height)))))
@@ -3835,7 +3835,7 @@ These packages are neither built-in nor already installed nor ignored."
       "Show all links that point to the current node.  Also show the
     node itself.
 
-    This makes id links quasi-bidirectional."
+    This makes ID links quasi-bidirectional."
       (interactive)
       (let ((org-agenda-files (alpha-org-all-org-files
                                :archive t
@@ -6210,16 +6210,15 @@ this with to-do items than with projects or headings."
         (message "(Info) Update Org buffer %s"
                  (file-name-nondirectory (buffer-file-name)))
         (sit-for 1.5)
-        (let ((flyspell-mode-before-save flyspell-mode))
-          (flyspell-mode -1)              ; Temporarily disable Flyspell to
-                                          ; avoid checking the following
-                                          ; modifications of the buffer.
+        (let ((cache-long-scans nil)    ; Make `forward-line' much faster and
+                                        ; thus `org-goto-line', `org-table-sum',
+                                        ; etc.
+              (flyspell-mode-before-save flyspell-mode))
+          (flyspell-mode -1)            ; Temporarily disable Flyspell to avoid
+                                        ; checking the following modifications
+                                        ; of the buffer.
           (measure-time "Realigned all tags" (org-align-all-tags))
           (measure-time "Updated all dynamic blocks" (org-update-all-dblocks))
-          (measure-time "Aligned all tables"
-                        (org-table-map-tables (lambda () (org-table-align)) t))
-                                        ; TEMP (Because of bug with pretty
-                                        ; entity emsp)
           (measure-time "Re-applied formulas to all tables"
                         (org-table-iterate-buffer-tables))
           (when (file-exists-p (buffer-file-name (current-buffer)))
@@ -6877,7 +6876,7 @@ mouse-3: go to end") "]"))))
   (leuven--section "26.11 (emacs)Misc for Programs")
 
   ;; Enable Prettify-Symbols mode in all buffers that support it.
-  (global-prettify-symbols-mode 1)
+  (global-prettify-symbols-mode 1)      ; XXX Emacs 24.4 needed!
 
   ;; (add-hook 'prog-mode-hook
   ;;           (lambda ()
