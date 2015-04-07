@@ -54,7 +54,7 @@ for installation), add something like this into your configuration file:
 
 #+begin_src emacs-lisp
 (setq leuven-elpa-ignored-packages
-      '(annoying-arrows-mode circe ess))
+      '(useless-package other-annoying-package))
 #+end_src
 
 ** Keyboard shortcuts
