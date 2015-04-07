@@ -49,12 +49,12 @@ Using the Emacs Leuven library is very easy: you just need to...
 
 ** Packages
 
-To list packages which should be installed by Emacs Leuven, add something like
-this into your configuration file:
+To list packages which should NOT be installed by Emacs Leuven (neither proposed
+for installation), add something like this into your configuration file:
 
 #+begin_src emacs-lisp
 (setq leuven-elpa-ignored-packages
-      '(annoying-arrows-mode))
+      '(annoying-arrows-mode circe ess))
 #+end_src
 
 ** Keyboard shortcuts
