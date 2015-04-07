@@ -188,7 +188,7 @@ The groups in the gnus-select-method don't get a prefix like "nnimap". Nice!
   ;; configure incoming mail
   (setq gnus-select-method
         '(nnimap "mail"
-                 (nnimap-address "mail.missioncriticalit.com")
+                 (nnimap-address "mail")
                  (nnimap-server-port 993)
                  (nnimap-stream ssl)
                  ;; (nnimap-split-methods default) ; << ABSOLUTELY NEEDED
@@ -604,6 +604,8 @@ Source: Michael Heerdegen.
 ** Marking Articles
 
 https://github.com/cofi/dotfiles/blob/master/gnus.el
+
+*************** TODO Check that every mark is displayable in the current font
 
 #+begin_src emacs-lisp
   (setq gnus-ticked-mark ?⚑)

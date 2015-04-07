@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150224.0927
+;; Version: 20150407.1217
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -35,7 +35,7 @@
   ;; configure incoming mail
   (setq gnus-select-method
         '(nnimap "mail"
-                 (nnimap-address "mail.missioncriticalit.com")
+                 (nnimap-address "mail")
                  (nnimap-server-port 993)
                  (nnimap-stream ssl)
                  ;; (nnimap-split-methods default) ; << ABSOLUTELY NEEDED
