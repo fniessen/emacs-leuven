@@ -693,6 +693,13 @@ are generated programmatically from upstream Git-based sources.
 Note -- The Marmalade repository is not recommended by Flycheck (due to frequent
 outages).
 
+To list packages which should /not/ be installed by Emacs Leuven, add something
+like this into your configuration file:
+
+#+begin_example
+(setq leuven-elpa-ignored-packages '(ess))
+#+end_example
+
 #+begin_src emacs-lisp
 ;;** 47.2 Package Installation
 
@@ -761,8 +768,8 @@ These packages are neither built-in nor already installed nor ignored."
                   (package-install pkg))
                                         ; Must be run after initializing
                                         ; `package-initialize'.
-              (message (concat "Customize `leuven-elpa-ignored-packages' "
-                               "to ignore the `%s' package...") pkg)
+              (message (concat "Customize Emacs Leuven to ignore "
+                               "the `%s' package next times...") pkg)
               (sit-for 1.5)))))))
 #+end_src
 
@@ -2986,6 +2993,15 @@ a remote location.
 ;;** 18.3 (info "(emacs)Saving") Files
 
   (leuven--section "18.3 (emacs)Saving Files")
+
+  (defadvice save-file (around leuven-save-file activate)
+    "Save the file named FILENAME and report time spent."
+    (let ((filename (ad-get-arg 0))
+          (save-file-time-start (float-time)))
+      (message "(Info) Saving file %s..." filename)
+      ad-do-it
+      (message "(Info) Saved file %s in %.2f s" filename
+               (- (float-time) save-file-time-start))))
 
   ;; Make your changes permanent.
   (global-set-key (kbd "<f2>") 'save-buffer)
@@ -6035,7 +6051,7 @@ vs ~C-u C-c C-j~
     (define-key org-mode-map (kbd "C-c C-r") 'leuven-org-reveal))
 #+end_src
 
-See also [[*Sparse%20trees][Sparse trees]] for behavior when revealing a location.
+See also [[id:a9fe61b7-cdbd-478e-a4af-da9e122fb2d9][Sparse trees]] for behavior when revealing a location.
 
 *** Structure editing
 
@@ -9033,6 +9049,13 @@ languages which can be evaluated in Org mode buffers.
                                         ; as switching the dictionary).
 #+end_src
 
+*************** TODO Why isn't diff-mode.el found?
+[[file:~/org/personal/Org-for-dummies.org]]
+*************** END
+
+*************** TODO Check src blocks in  *temp* buffers?
+*************** END
+
 ~screen~ offers support for interactive terminals.  Mostly shell scripts.  Heavily
 inspired by ~eev~.
 
@@ -11303,11 +11326,16 @@ Version control systems that interact with Emacs in a generic way.
      Switch Git branches.
 
 - ~C-x v L~ ::
-     List the change log for the current VC controlled tree in a window.
+     Open the *log buffer* (List the change log for the current VC controlled tree
+     in a window).
 
-We already have at least two pairs of commands (C-x v l vs.  C-x v L /and/ C-x
-v = vs. C-x v D), of which one operates on the current file /and/ the other on the
-repository as a whole.
+     When in it:
+     - ~C-m~ to read the commit message,
+     - ~d~ to see the corresponding diff.
+
+We have at least two pairs of commands (C-x v l vs.  C-x v L /and/ C-x v = vs. C-x
+v D), of which one operates on the current file /and/ the other on the repository
+as a whole.
 
 #+begin_src emacs-lisp
 ;;** 28.1 (info "(emacs)Version Control")
@@ -14999,8 +15027,14 @@ printing on Windows.
 - ~C-c g t~ ::
      ~google-this~
 
+~url-parse~ and ~url-cookies~ are quite heavy to load, hence:
+
 #+begin_src emacs-lisp
+  ;; A set of functions and bindings to Google under point.
   (with-eval-after-load "google-this-autoloads"
+    (idle-require 'google-this))
+
+  (with-eval-after-load "google-this"
 
     ;; Keybinding under which `google-this-mode-submap' is assigned.
     (setq google-this-keybind (kbd "C-c g"))
