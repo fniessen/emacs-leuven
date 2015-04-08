@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150408.1606
+;; Version: 20150408.1653
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150408.1606"
+(defconst leuven--emacs-version "20150408.1653"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1109,7 +1109,9 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Indicate  changes in the fringe.
   (with-eval-after-load "diff-hl-autoloads"
+    (idle-require 'diff-hl))
 
+  (with-eval-after-load "diff-hl"
     (global-diff-hl-mode))
 
   (with-eval-after-load "diff-hl"
@@ -1790,14 +1792,14 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "18.3 (emacs)Saving Files")
 
-  (defadvice save-file (around leuven-save-file activate)
+  (defadvice save-buffer (around leuven-save-buffer activate)
     "Save the file named FILENAME and report time spent."
     (let ((filename (ad-get-arg 0))
-          (save-file-time-start (float-time)))
+          (save-buffer-time-start (float-time)))
       (message "(Info) Saving file %s..." filename)
       ad-do-it
       (message "(Info) Saved file %s in %.2f s" filename
-               (- (float-time) save-file-time-start))))
+               (- (float-time) save-buffer-time-start))))
 
   ;; Make your changes permanent.
   (global-set-key (kbd "<f2>") 'save-buffer)
