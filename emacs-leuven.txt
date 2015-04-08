@@ -5767,7 +5767,7 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 #+begin_src emacs-lisp
   ;; Set the RESET_CHECK_BOXES and LIST_EXPORT_BASENAME properties in items as
   ;; needed.
-  (add-to-list 'org-modules 'org-checklist)
+  (add-to-list 'org-modules 'org-checklist) ; From org-contrib.
 #+end_src
 
 #+begin_src emacs-lisp

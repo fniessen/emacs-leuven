@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150408.1717
+;; Version: 20150408.1735
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150408.1717"
+(defconst leuven--emacs-version "20150408.1735"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3521,7 +3521,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Set the RESET_CHECK_BOXES and LIST_EXPORT_BASENAME properties in items as
   ;; needed.
-  (add-to-list 'org-modules 'org-checklist)
+  (add-to-list 'org-modules 'org-checklist) ; From org-contrib.
 
   ;; Globally unique ID for Org mode entries (see `org-store-link')
   ;; (takes care of automatically creating unique targets for internal
