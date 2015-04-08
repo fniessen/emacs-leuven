@@ -9156,7 +9156,8 @@ Find all entries where :PROPERTIES: is not the first item listed.
               (save-excursion
                 (let ((end (save-excursion (outline-next-heading) (point))))
                   (forward-line)
-                  (when (org-looking-at-p org-planning-line-re) (forward-line))
+                  (when (org-looking-at-p org-planning-line-re) ; Org-8.3.
+                    (forward-line))
                   (when (and (< (point) end)
                              (not (org-looking-at-p org-property-drawer-re))
                              (save-excursion

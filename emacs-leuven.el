@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150408.1735
+;; Version: 20150408.1743
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150408.1735"
+(defconst leuven--emacs-version "20150408.1743"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5873,7 +5873,8 @@ this with to-do items than with projects or headings."
               (save-excursion
                 (let ((end (save-excursion (outline-next-heading) (point))))
                   (forward-line)
-                  (when (org-looking-at-p org-planning-line-re) (forward-line))
+                  (when (org-looking-at-p org-planning-line-re) ; Org-8.3.
+                    (forward-line))
                   (when (and (< (point) end)
                              (not (org-looking-at-p org-property-drawer-re))
                              (save-excursion
