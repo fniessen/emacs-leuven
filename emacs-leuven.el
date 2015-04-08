@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150408.1709
+;; Version: 20150408.1717
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150408.1709"
+(defconst leuven--emacs-version "20150408.1717"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -9495,8 +9495,11 @@ a clean buffer we're an order of magnitude laxer about checking."
      (delete-window)
      (setq truncate-lines t)))
 
-  ;; guide the following key bindings automatically and dynamically
-  (when (try-require 'guide-key)
+  ;; Guide the following key bindings automatically and dynamically.
+  (with-eval-after-load "guide-key-autoloads"
+    (idle-require 'guide-key))
+
+  (with-eval-after-load "guide-key"
 
     (setq guide-key/guide-key-sequence
           '("C-c"                       ; XXX Doesn't play nice with Org's C-c C-e.

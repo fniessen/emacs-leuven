@@ -15377,8 +15377,11 @@ See as well Print keybindings (pkb).
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; guide the following key bindings automatically and dynamically
-  (when (try-require 'guide-key)
+  ;; Guide the following key bindings automatically and dynamically.
+  (with-eval-after-load "guide-key-autoloads"
+    (idle-require 'guide-key))
+
+  (with-eval-after-load "guide-key"
 
     (setq guide-key/guide-key-sequence
           '("C-c"                       ; XXX Doesn't play nice with Org's C-c C-e.
