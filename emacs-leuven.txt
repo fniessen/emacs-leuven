@@ -12116,6 +12116,9 @@ XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-con
   ;; Yet Another Snippet extension for Emacs
   (GNUEmacs
     (with-eval-after-load "yasnippet-autoloads"
+      (idle-require 'yasnippet))
+
+    (with-eval-after-load "yasnippet"
 #+end_src
 
 **** Use YASnippet as a global minor mode

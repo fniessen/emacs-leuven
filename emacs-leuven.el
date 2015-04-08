@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150408.1653
+;; Version: 20150408.1706
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150408.1653"
+(defconst leuven--emacs-version "20150408.1706"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -7546,6 +7546,9 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; Yet Another Snippet extension for Emacs
   (GNUEmacs
     (with-eval-after-load "yasnippet-autoloads"
+      (idle-require 'yasnippet))
+
+    (with-eval-after-load "yasnippet"
 
       ;; Enable YASnippet in all buffers.
       (yas-global-mode 1)
