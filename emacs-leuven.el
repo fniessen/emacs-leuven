@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150408.1706
+;; Version: 20150408.1709
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150408.1706"
+(defconst leuven--emacs-version "20150408.1709"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -700,7 +700,9 @@ These packages are neither built-in nor already installed nor ignored."
   ;; XXX Replace by add-to-list to ensure we don't insert duplicates (if Cygwin was already there)
 
     (GNUEmacs
-      (try-require 'info+)
+      (with-eval-after-load "info+-autoloads"
+        (idle-require 'info+))
+
       (with-eval-after-load "info+"
 
         ;; Show breadcrumbs in the header line.

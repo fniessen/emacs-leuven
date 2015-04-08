@@ -1170,7 +1170,9 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
 
 #+begin_src emacs-lisp
     (GNUEmacs
-      (try-require 'info+)
+      (with-eval-after-load "info+-autoloads"
+        (idle-require 'info+))
+
       (with-eval-after-load "info+"
 
         ;; Show breadcrumbs in the header line.
