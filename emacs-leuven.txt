@@ -3000,7 +3000,7 @@ a remote location.
 
   (defadvice save-buffer (around leuven-save-buffer activate)
     "Save the file named FILENAME and report time spent."
-    (let ((filename (ad-get-arg 0))
+    (let ((filename (buffer-file-name))
           (save-buffer-time-start (float-time)))
       (message "(Info) Saving file %s..." filename)
       ad-do-it
@@ -3312,7 +3312,10 @@ In Ediff, press:
           (lambda (&optional arg)
             (if (> (frame-width) 160)
                 (split-window-horizontally arg)
-              (split-window-vertically arg)))))
+              (split-window-vertically arg))))
+
+    ;; (setq ediff-merge-split-window-function 'split-window-vertically)
+    )
 #+end_src
 
 For *comparing two directories*, you can use ~ediff-directories~ or [[http://meldmerge.org/][Meld]].

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150408.1743
+;; Version: 20150409.1056
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150408.1743"
+(defconst leuven--emacs-version "20150409.1056"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1796,7 +1796,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   (defadvice save-buffer (around leuven-save-buffer activate)
     "Save the file named FILENAME and report time spent."
-    (let ((filename (ad-get-arg 0))
+    (let ((filename (buffer-file-name))
           (save-buffer-time-start (float-time)))
       (message "(Info) Saving file %s..." filename)
       ad-do-it
@@ -2027,7 +2027,10 @@ These packages are neither built-in nor already installed nor ignored."
           (lambda (&optional arg)
             (if (> (frame-width) 160)
                 (split-window-horizontally arg)
-              (split-window-vertically arg)))))
+              (split-window-vertically arg))))
+
+    ;; (setq ediff-merge-split-window-function 'split-window-vertically)
+    )
 
 ;;** 18.11 (info "(emacs)Misc File Ops")
 
