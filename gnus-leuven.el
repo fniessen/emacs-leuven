@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150407.1217
+;; Version: 20150409.2005
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -32,30 +32,32 @@
 
 ;;** 1.1 (info "(gnus)Finding the News")
 
-  ;; configure incoming mail
-  (setq gnus-select-method
-        '(nnimap "mail"
-                 (nnimap-address "mail")
-                 (nnimap-server-port 993)
-                 (nnimap-stream ssl)
-                 ;; (nnimap-split-methods default) ; << ABSOLUTELY NEEDED
-                 (nnimap-split-methods nnimap-split-fancy) ; <<< NOT QUOTED!!!
-                 ;;                        ; XXX when (try-require 'bbdb-gnus)...
-                 ))
+  (when (equal (system-name) "MUNDANEUM") ; private config
 
-  ;; ;; allow "hostname NOT matched" in the server certificate
+    ;; Configure incoming mail.
+    (setq gnus-select-method
+          '(nnimap "mail"
+                   (nnimap-address "mail")
+                   (nnimap-server-port 993)
+                   (nnimap-stream ssl)
+                   ;; (nnimap-split-methods default) ; << ABSOLUTELY NEEDED
+                   (nnimap-split-methods nnimap-split-fancy) ; <<< NOT QUOTED!!!
+                   ;;                        ; XXX when (try-require 'bbdb-gnus)...
+                   )))
+
+  ;; ;; Allow "hostname NOT matched" in the server certificate.
   ;; (setq starttls-extra-arguments '("--insecure"))
-  ;;                                   ;! not used in an Emacs 24 with built-in
-  ;;                                   ;! gnutls support
+  ;;                                   ;! Not used in an Emacs 24 with built-in
+  ;;                                   ;! gnutls support.
 
-  ;; using Gnus for news
+  ;; Using Gnus for news.
   (setq gnus-secondary-select-methods
         '((nntp "gmane"
                 (nntp-address "news.gmane.org"))
           (nntp "eternal-september"
                 (nntp-address "news.eternal-september.org"))))
 
-  ;; required when posting to an authenticated news server
+  ;; Required when posting to an authenticated news server.
   (add-hook 'nntp-server-opened-hook 'nntp-send-authinfo)
 
 ;;** 1.4 (info "(gnus)New Groups")
