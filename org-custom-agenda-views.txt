@@ -596,6 +596,12 @@ There is one task in each Folder that repeats as often as I need to review that
 Folder. Some Folders I only need to review weekly or monthly. These review
 tasks get the ~gtd~ tag.
 
+See
+http://stackoverflow.com/questions/22394394/orgmode-a-report-of-tasks-that-are-done-within-the-week
+and
+http://stackoverflow.com/questions/29390976/generate-report-of-completed-work-using-org-mode
+for custom agenda views...
+
 ** All active tasks
 
 #+begin_src emacs-lisp
