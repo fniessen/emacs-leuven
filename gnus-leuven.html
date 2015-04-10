@@ -166,7 +166,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150409.2005</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150410.0919</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, gnus, dotfile, config</span>
 </pre></div>
 <div class="org-src-container">
@@ -300,18 +300,20 @@
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 1.1 (info "(gnus)Finding the News")</span>
 
-  (<span class="org-keyword">when</span> (equal (system-name) <span class="org-string">"MUNDANEUM"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">private config</span>
+  (<span class="org-keyword">if</span> (equal (system-name) <span class="org-string">"MUNDANEUM"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">private config</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Configure incoming mail.</span>
-    (setq gnus-select-method
-          '(nnimap <span class="org-string">"mail"</span>
-                   (nnimap-address <span class="org-string">"mail"</span>)
-                   (nnimap-server-port 993)
-                   (nnimap-stream ssl)
-                   <span class="org-comment-delimiter">;; </span><span class="org-comment">(nnimap-split-methods default) ; &lt;&lt; ABSOLUTELY NEEDED</span>
-                   (nnimap-split-methods nnimap-split-fancy) <span class="org-comment-delimiter">; </span><span class="org-comment">&lt;&lt;&lt; NOT QUOTED!!!</span>
-                   <span class="org-comment-delimiter">;;                        </span><span class="org-comment">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> when (try-require 'bbdb-gnus)...</span>
-                   )))
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Configure incoming mail.</span>
+      (setq gnus-select-method
+            '(nnimap <span class="org-string">"mail"</span>
+                     (nnimap-address <span class="org-string">"mail"</span>)
+                     (nnimap-server-port 993)
+                     (nnimap-stream ssl)
+                     <span class="org-comment-delimiter">;; </span><span class="org-comment">(nnimap-split-methods default) ; &lt;&lt; ABSOLUTELY NEEDED</span>
+                     (nnimap-split-methods nnimap-split-fancy) <span class="org-comment-delimiter">; </span><span class="org-comment">&lt;&lt;&lt; NOT QUOTED!!!</span>
+                     <span class="org-comment-delimiter">;;                        </span><span class="org-comment">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> when (try-require 'bbdb-gnus)...</span>
+                     ))
+
+    (setq gnus-select-method '(nnnil <span class="org-string">""</span>)))
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Allow "hostname NOT matched" in the server certificate.</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq starttls-extra-arguments '("--insecure"))</span>

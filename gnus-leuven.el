@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150409.2005
+;; Version: 20150410.0919
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -32,18 +32,20 @@
 
 ;;** 1.1 (info "(gnus)Finding the News")
 
-  (when (equal (system-name) "MUNDANEUM") ; private config
+  (if (equal (system-name) "MUNDANEUM") ; private config
 
-    ;; Configure incoming mail.
-    (setq gnus-select-method
-          '(nnimap "mail"
-                   (nnimap-address "mail")
-                   (nnimap-server-port 993)
-                   (nnimap-stream ssl)
-                   ;; (nnimap-split-methods default) ; << ABSOLUTELY NEEDED
-                   (nnimap-split-methods nnimap-split-fancy) ; <<< NOT QUOTED!!!
-                   ;;                        ; XXX when (try-require 'bbdb-gnus)...
-                   )))
+      ;; Configure incoming mail.
+      (setq gnus-select-method
+            '(nnimap "mail"
+                     (nnimap-address "mail")
+                     (nnimap-server-port 993)
+                     (nnimap-stream ssl)
+                     ;; (nnimap-split-methods default) ; << ABSOLUTELY NEEDED
+                     (nnimap-split-methods nnimap-split-fancy) ; <<< NOT QUOTED!!!
+                     ;;                        ; XXX when (try-require 'bbdb-gnus)...
+                     ))
+
+    (setq gnus-select-method '(nnnil "")))
 
   ;; ;; Allow "hostname NOT matched" in the server certificate.
   ;; (setq starttls-extra-arguments '("--insecure"))

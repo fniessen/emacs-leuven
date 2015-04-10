@@ -185,18 +185,20 @@ The groups in the gnus-select-method don't get a prefix like "nnimap". Nice!
 #+begin_src emacs-lisp
 ;;** 1.1 (info "(gnus)Finding the News")
 
-  (when (equal (system-name) "MUNDANEUM") ; private config
+  (if (equal (system-name) "MUNDANEUM") ; private config
 
-    ;; Configure incoming mail.
-    (setq gnus-select-method
-          '(nnimap "mail"
-                   (nnimap-address "mail")
-                   (nnimap-server-port 993)
-                   (nnimap-stream ssl)
-                   ;; (nnimap-split-methods default) ; << ABSOLUTELY NEEDED
-                   (nnimap-split-methods nnimap-split-fancy) ; <<< NOT QUOTED!!!
-                   ;;                        ; XXX when (try-require 'bbdb-gnus)...
-                   )))
+      ;; Configure incoming mail.
+      (setq gnus-select-method
+            '(nnimap "mail"
+                     (nnimap-address "mail")
+                     (nnimap-server-port 993)
+                     (nnimap-stream ssl)
+                     ;; (nnimap-split-methods default) ; << ABSOLUTELY NEEDED
+                     (nnimap-split-methods nnimap-split-fancy) ; <<< NOT QUOTED!!!
+                     ;;                        ; XXX when (try-require 'bbdb-gnus)...
+                     ))
+
+    (setq gnus-select-method '(nnnil "")))
 
   ;; ;; Allow "hostname NOT matched" in the server certificate.
   ;; (setq starttls-extra-arguments '("--insecure"))
