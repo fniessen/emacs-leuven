@@ -5,7 +5,7 @@
 #+DESCRIPTION:
 #+KEYWORDS:  emacs, dotfile, config
 #+LANGUAGE:  en
-#+OPTIONS:   H:4 num:nil
+#+OPTIONS:   H:4 num:nil toc:2
 
 #+SEQ_TODO:  TODO FIXME | DONE
 
@@ -13,7 +13,8 @@
 #+PROPERTY:  padline yes
 #+PROPERTY:  tangle yes
 
-#+SETUPFILE: ./bigblow-pirilampo.setup
+# #+SETUPFILE: ./bigblow-pirilampo.setup
+#+SETUPFILE: ~/src/org-html-themes/setup/theme-readtheorg-local-abs.setup
 
 * Tasks                                                               :noexport:
   :PROPERTIES:
@@ -655,6 +656,9 @@ See function ~--find-program~ at http://www.visualco.de/src/elisp/.emacs.el.html
 #+end_src
 
 * Emacs Lisp Packages
+  :PROPERTIES:
+  :ID:       8c71fa50-b62e-49ae-bcbb-2ed1ee7a5d65
+  :END:
 
 Another *first thing* in your init script should be ~(package-initialize)~ so that
 customization of Org variables (for example) doesn't auto-load the old version
@@ -690,8 +694,10 @@ HTTP frontends for the Emacs repositories:
 In Marmalade, the developers themselves do the packaging.  In MELPA, packages
 are generated programmatically from upstream Git-based sources.
 
-Note -- The Marmalade repository is not recommended by Flycheck (due to frequent
+#+begin_note
+The Marmalade repository is not recommended by Flycheck (due to frequent
 outages).
+#+end_note
 
 To list packages which should /not/ be installed by Emacs Leuven, add something
 like this into your configuration file:
@@ -858,7 +864,7 @@ cancelable; hence, we put it out of a "chapter".
 
 ** Moving Point Location
 
-- M-r ::
+- ~M-r~ ::
      ~move-to-window-line~.
 
 - ~M-g g~ ::
@@ -2567,7 +2573,7 @@ a match for REGEXP.
   ;; "Multi-occur" easily inside Isearch.
   (define-key isearch-mode-map (kbd "M-o") 'helm-multi-swoop-all)
 
-  ;; grep all same extension files from inside isearch
+  ;; Grep all same extension files from inside Isearch.
   (define-key isearch-mode-map (kbd "C-M-o")
     (lambda ()
       (interactive)
@@ -2594,10 +2600,12 @@ a match for REGEXP.
 
 ** Checking and Correcting Spelling
 
-*************** Install [[http://ftp.gnu.org/gnu/aspell/w32/Aspell-0-50-3-3-Setup.exe][GNU Aspell 0.50.3]] on Windows (more dictionaries than Cygwin Aspell)
+#+begin_note
+On Windows:
+- Install [[http://ftp.gnu.org/gnu/aspell/w32/Aspell-0-50-3-3-Setup.exe][GNU Aspell 0.50.3]] (more dictionaries than Cygwin Aspell)
 - Install [[http://ftp.gnu.org/gnu/aspell/w32/Aspell-en-0.50-2-3.exe][Aspell English dictionary-0.50-2]]
 - Add ~C:\Program Files (x86)\Aspell\bin~ to the System ~PATH~
-*************** END
+#+end_note
 
 GNU *Aspell* is better than *Ispell*:
 
@@ -2752,9 +2760,11 @@ Add language indicator.
       )
 #+end_src
 
-Note -- Each time you cycle to another window (~C-x o~), the *Ispell process* gets
-*killed* and a *new Ispell process* is *started*, if the language in the next window
-is different from the language in the current window...
+#+begin_note
+Each time you cycle to another window (~C-x o~), the *Ispell process* gets *killed*
+and a *new Ispell process* is *started*, if the language in the next window is
+different from the language in the current window...
+#+end_note
 
 ~flyspell-auto-correct-word~ is bound to ~C-.~.  Press it one time to correct the
 word under the cursor.  If several spellings are possible, they appear in the
@@ -3328,8 +3338,10 @@ hit ~RET~ on such a pair.
 
 As bonus, it even works for remote directories.
 
-*CAUTION --* ~ediff-directories~ does not list files in one directory with no
-corresponding files in the other directory.
+#+begin_warning
+~ediff-directories~ does not list files in one directory with no corresponding
+files in the other directory.
+#+end_warning
 
 ** Miscellaneous File Operations
 
@@ -3476,9 +3488,11 @@ Examples:
 Also ~M-x find-dired~, ~rgrep~, ~lgrep~, ~compile -~ properly work with TRAMP (run on
 remote server and show result in your Emacs).
 
-Note -- `sshfs' can give me the same functionality as TRAMP: it is like a
-personal NFS (another mounted file system) over SSH.  If you can SSH to a
-server, you can probably do `sshfs'.
+#+begin_note
+~sshfs~ can give me the same functionality as TRAMP: it is like a personal NFS
+(another mounted file system) over SSH.  If you can SSH to a server, you can
+probably do ~sshfs~.
+#+end_note
 
 > I'm in shell mode, logged in on another machine over ssh, and I want to do
 > some 'crontab -e' editing on that machine.  But that will bring up a new
@@ -6565,8 +6579,8 @@ that all tags starting with ~@~ or ~#~ will be excluded from inheritance with:
            (:slant italic
             :foreground "#699761"))     ; :background "#C1D996"
           ("FLAGGED"
-           (:slant italic
-            :foreground "#C15F4E"))     ; :background "#EDC6C8"
+           (:weight bold :slant italic
+            :foreground "white" :background "#DB2D27")) ; :background "#EDC6C8"
           ("now"
            (:slant italic
             :foreground "#000000"))     ; :background "#FFEA80"
@@ -14584,8 +14598,10 @@ Smart underscore:
 
 **** Integration with auto-complete package
 
-Note -- R docs are not in Info format.  Though, they are available via the quick
-help of Auto-Complete.
+#+begin_note
+R docs are not in Info format.  Though, they are available via the quick help of
+Auto-Complete.
+#+end_note
 
 #+begin_src emacs-lisp
     ;; suffix appended by `ac-source-R-args' to candidates
@@ -15043,12 +15059,13 @@ printing on Windows.
 #+begin_src emacs-lisp
   ;; A set of functions and bindings to Google under point.
   (with-eval-after-load "google-this-autoloads"
-    (idle-require 'google-this))
-
-  (with-eval-after-load "google-this"
 
     ;; Keybinding under which `google-this-mode-submap' is assigned.
     (setq google-this-keybind (kbd "C-c g"))
+
+    (idle-require 'google-this))
+
+  (with-eval-after-load "google-this"
 
     ;; Enable Google-This mode.
     (google-this-mode 1))
@@ -15193,8 +15210,8 @@ Emacs 24 custom themes allow loading multiple themes simultaneously.  If you
 don't want the previous theme to stay in effect, you will need to unload it
 first.
 
-Install Leuven Theme via the [[*Emacs%20Lisp%20Packages][Emacs Lisp Packages]] (or use the one bundled in GNU
-Emacs 24.4)
+Install Leuven Theme via the [[id:8c71fa50-b62e-49ae-bcbb-2ed1ee7a5d65][Emacs Lisp Packages]] (or use the one bundled in GNU
+Emacs 24.4).
 
 #+begin_src emacs-lisp
 ;;* 48 (info "(emacs)Customization")

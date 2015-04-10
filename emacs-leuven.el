@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150409.1056
+;; Version: 20150410.1550
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150409.1056"
+(defconst leuven--emacs-version "20150410.1550"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1547,7 +1547,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;; "Multi-occur" easily inside Isearch.
   (define-key isearch-mode-map (kbd "M-o") 'helm-multi-swoop-all)
 
-  ;; grep all same extension files from inside isearch
+  ;; Grep all same extension files from inside Isearch.
   (define-key isearch-mode-map (kbd "C-M-o")
     (lambda ()
       (interactive)
@@ -4085,8 +4085,8 @@ These packages are neither built-in nor already installed nor ignored."
            (:slant italic
             :foreground "#699761"))     ; :background "#C1D996"
           ("FLAGGED"
-           (:slant italic
-            :foreground "#C15F4E"))     ; :background "#EDC6C8"
+           (:weight bold :slant italic
+            :foreground "white" :background "#DB2D27")) ; :background "#EDC6C8"
           ("now"
            (:slant italic
             :foreground "#000000"))     ; :background "#FFEA80"
@@ -9252,12 +9252,13 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; A set of functions and bindings to Google under point.
   (with-eval-after-load "google-this-autoloads"
-    (idle-require 'google-this))
-
-  (with-eval-after-load "google-this"
 
     ;; Keybinding under which `google-this-mode-submap' is assigned.
     (setq google-this-keybind (kbd "C-c g"))
+
+    (idle-require 'google-this))
+
+  (with-eval-after-load "google-this"
 
     ;; Enable Google-This mode.
     (google-this-mode 1))
