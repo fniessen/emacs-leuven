@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150410.1550
+;; Version: 20150420.2323
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150410.1550"
+(defconst leuven--emacs-version "20150420.2323"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -441,8 +441,8 @@ Last time is saved in global variable `leuven--before-section-time'."
           goto-chg graphviz-dot-mode graphviz-dot-mode guide-key helm
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
           key-chord litable idle-require imenu-anywhere info+ interaction-log
-          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
-          rainbow-mode tidy unbound undo-tree w3m yasnippet
+          ledger-mode leuven-theme multi-term multiple-cursors pager pdf-tools
+          powerline rainbow-mode tidy unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -1147,14 +1147,15 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Nuke all trailing whitespaces in the buffer.
   (add-hook 'before-save-hook
             (lambda ()                  ; Except for ...
-              (unless (or (derived-mode-p 'message-mode)
+              (let ((buffer-undo-list buffer-undo-list)) ; For goto-chg.
+                (unless (or (derived-mode-p 'message-mode)
                                         ; ... where "-- " is the signature
                                         ; separator (for when using emacsclient
                                         ; to compose emails and doing C-x #).
-                          (derived-mode-p 'diff-mode))
+                            (derived-mode-p 'diff-mode))
                                         ; ... where the patch file can't be
                                         ; changed!
-                (delete-trailing-whitespace))))
+                  (delete-trailing-whitespace)))))
 
   ;; Visually indicate empty lines after the buffer end in the fringe.
   (setq-default indicate-empty-lines t)
@@ -5196,6 +5197,9 @@ this with to-do items than with projects or headings."
                                         ; special #+KEYWORD lines
                                         ; (like `C-c C-c')
 
+          (when (locate-library "org-lint")
+            (measure-time "Linted Org mode" (org-lint)))
+
           ;; ;; Update the results in the Org buffer
           ;; (org-babel-execute-buffer)    ; In this case, better than
           ;;                               ; (add-hook 'org-export-first-hook
@@ -6226,11 +6230,12 @@ this with to-do items than with projects or headings."
       (when (derived-mode-p 'org-mode)
         (message "(Info) Update Org buffer %s"
                  (file-name-nondirectory (buffer-file-name)))
-        (sit-for 1.5)
+        ;; (sit-for 1.5)
         (let ((cache-long-scans nil)    ; Make `forward-line' much faster and
                                         ; thus `org-goto-line', `org-table-sum',
                                         ; etc.
-              (flyspell-mode-before-save flyspell-mode))
+              (flyspell-mode-before-save flyspell-mode)
+              (buffer-undo-list buffer-undo-list)) ; For goto-chg.
           (flyspell-mode -1)            ; Temporarily disable Flyspell to avoid
                                         ; checking the following modifications
                                         ; of the buffer.
@@ -8475,6 +8480,10 @@ a clean buffer we're an order of magnitude laxer about checking."
 (leuven--chapter leuven-chapter-35-document-view "35 Document Viewing"
 
   ;; view PDF/PostScript/DVI files in Emacs
+
+  (when leuven--linux-p
+    (with-eval-after-load "pdf-tools-autoloads"
+      (pdf-tools-install)))
 
   ;; antiword will be run on every `.doc' file you open
   ;; TODO sudo aptitude install antiword (or via Cygwin setup)

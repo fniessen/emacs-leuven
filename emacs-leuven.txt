@@ -736,8 +736,8 @@ like this into your configuration file:
           goto-chg graphviz-dot-mode graphviz-dot-mode guide-key helm
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
           key-chord litable idle-require imenu-anywhere info+ interaction-log
-          ledger-mode leuven-theme multi-term multiple-cursors pager powerline
-          rainbow-mode tidy unbound undo-tree w3m yasnippet
+          ledger-mode leuven-theme multi-term multiple-cursors pager pdf-tools
+          powerline rainbow-mode tidy unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -785,6 +785,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ~Idle-require~ must be loaded *after* ~package-initialize~, and should not be
 cancelable; hence, we put it out of a "chapter".
+
 
 #+begin_src emacs-lisp
   ;; Load elisp libraries while Emacs is idle.
@@ -963,6 +964,7 @@ echo area.
   ;; Ignore case when reading a buffer name.
   (setq read-buffer-completion-ignore-case t)
 #+end_src
+
 
 #+begin_src emacs-lisp
   ;; Provide the same facility of `ls --color' inside Emacs.
@@ -1237,7 +1239,9 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
 Instead of setting the mark in order to operate on a region, you can also use it
 to:
 
-- *"remember" a position* in the buffer (by typing ~C-SPC C-SPC~), and
+- *"remember" a position* in the buffer (by typing ~C-SPC C-SPC~ to set the mark
+  where point is), and
+
 - later *jump* back *to the mark* in the buffer (by typing ~C-u C-SPC~).
 
 *Go to* the *place* where you *last changed* something:
@@ -1248,7 +1252,7 @@ to:
     (global-set-key (kbd "<C-S-backspace>") 'goto-last-change))
 #+end_src
 
-XXX Look at ~goto-last-change~ (from Kevin Rodgers) and ~goto-last-point~.
+It moves point through ~buffer-undo-list~ positions.
 
 ** Commands to Mark Textual Objects
 
@@ -1996,14 +2000,15 @@ Remove trailing whitespace (right trim lines) *in all lines*:
   ;; Nuke all trailing whitespaces in the buffer.
   (add-hook 'before-save-hook
             (lambda ()                  ; Except for ...
-              (unless (or (derived-mode-p 'message-mode)
+              (let ((buffer-undo-list buffer-undo-list)) ; For goto-chg.
+                (unless (or (derived-mode-p 'message-mode)
                                         ; ... where "-- " is the signature
                                         ; separator (for when using emacsclient
                                         ; to compose emails and doing C-x #).
-                          (derived-mode-p 'diff-mode))
+                            (derived-mode-p 'diff-mode))
                                         ; ... where the patch file can't be
                                         ; changed!
-                (delete-trailing-whitespace))))
+                  (delete-trailing-whitespace)))))
 #+end_src
 
 Remove trailing whitespace *in edited lines* with ~ws-butler~?  Does not work!?
@@ -6221,7 +6226,7 @@ has the equal signs escaped, unless you have:
           'create-if-interactive-and-no-custom-id))
 #+end_src
 
-PDF viewer? See ~org-file-apps~.  Just change to your favorite viewer.  And make
+PDF viewer?  See ~org-file-apps~.  Just change to your favorite viewer.  And make
 sure that you're calling ~org-return~ to open (it's bound to ~C-m~).
 
 If I inline an image in an Org file, I can toggle its display with ~C-c C-x C-v~
@@ -8188,6 +8193,9 @@ launched from Dired?
                                         ; special #+KEYWORD lines
                                         ; (like `C-c C-c')
 
+          (when (locate-library "org-lint")
+            (measure-time "Linted Org mode" (org-lint)))
+
           ;; ;; Update the results in the Org buffer
           ;; (org-babel-execute-buffer)    ; In this case, better than
           ;;                               ; (add-hook 'org-export-first-hook
@@ -9679,11 +9687,12 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
       (when (derived-mode-p 'org-mode)
         (message "(Info) Update Org buffer %s"
                  (file-name-nondirectory (buffer-file-name)))
-        (sit-for 1.5)
+        ;; (sit-for 1.5)
         (let ((cache-long-scans nil)    ; Make `forward-line' much faster and
                                         ; thus `org-goto-line', `org-table-sum',
                                         ; etc.
-              (flyspell-mode-before-save flyspell-mode))
+              (flyspell-mode-before-save flyspell-mode)
+              (buffer-undo-list buffer-undo-list)) ; For goto-chg.
           (flyspell-mode -1)            ; Temporarily disable Flyspell to avoid
                                         ; checking the following modifications
                                         ; of the buffer.
@@ -13760,6 +13769,14 @@ syntex stuff/AUCTeX integration works!)
 
 PDF Tools (~pdf-view-mode~) is no external program but a major mode for viewing
 PDFs in Emacs similar (but much more advanced) than ~doc-view-mode~.
+
+It's the best PDF viewer on GNU/Linux (including the ones not running in Emacs).
+
+#+begin_src emacs-lisp
+  (when leuven--linux-p
+    (with-eval-after-load "pdf-tools-autoloads"
+      (pdf-tools-install)))
+#+end_src
 
 ** Navigation
 
