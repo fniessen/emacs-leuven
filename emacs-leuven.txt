@@ -728,10 +728,10 @@ like this into your configuration file:
                                         ; and load `<pkg>-autoloads.el'
 
       (defconst leuven-elpa-packages
-        '(ace-jump-mode ace-window auctex auto-complete bbdb bookmark+ boxquote
-          calfw circe color-identifiers-mode company company-quickhelp csv-mode
-          cygwin-mount dictionary diff-hl diminish dired+ dired-single ess
-          expand-region fancy-narrow fill-column-indicator flycheck
+        '(ace-jump-mode ace-window anzu auctex auto-complete bbdb bookmark+
+          boxquote calfw circe color-identifiers-mode company company-quickhelp
+          csv-mode cygwin-mount dictionary diff-hl diminish dired+ dired-single
+          ess expand-region fancy-narrow fill-column-indicator flycheck
           flycheck-ledger fuzzy git-commit-mode google-this google-translate
           goto-chg graphviz-dot-mode graphviz-dot-mode guide-key helm
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
@@ -2445,10 +2445,10 @@ Since Emacs 24.3:
 #+end_src
 
 #+begin_note
-When search-invisible is t, perform-replace can replace matches in any invisible
+When ~search-invisible~ is ~t~, ~perform-replace~ can replace matches in any invisible
 text, but does not display it when prompting the user for confirmation.
 
-When search-invisible is 'open, perform-replace can replace matches only in
+When ~search-invisible~ is ~'open~, ~perform-replace~ can replace matches only in
 hidden text (invisible through an overlay), and displays it when prompting the
 user.
 
@@ -2456,7 +2456,7 @@ We lack a way to reveal truly invisible text when performing a search and
 replace.  The URL of a bracket link in Org is an example of such truly invisible
 text.
 
-Juri's solution to add 'open-all could also be used in perform-replace to let
+Juri's solution to add ~'open-all~ could also be used in ~perform-replace~ to let
 the user see truly invisible matches before replacing them.
 #+end_note
 
@@ -2470,6 +2470,22 @@ the user see truly invisible matches before replacing them.
                                         ; `fuzzy-autoloads'!
 
       (add-hook 'isearch-mode-hook 'turn-on-fuzzy-isearch)))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Show number of matches in mode-line while searching.
+  (with-eval-after-load "anzu-autoloads"
+
+    ;; Enable Global-Anzu mode.
+    (global-anzu-mode 1)
+
+    ;; Lighter of anzu-mode.
+    (setq anzu-mode-lighter "")
+
+    ;; (setq anzu-deactivate-region t)
+    ;; (setq anzu-search-threshold 1000)
+    ;; (setq anzu-replace-to-string-separator " => ")
+    )
 #+end_src
 
 ** Symbol Search
@@ -2617,9 +2633,6 @@ GNU *Aspell* is better than *Ispell*:
 - It does recognize words with apostrophes (l'avion)... but it is slower.
 
 - It can handle UTF-8 documents far better than Ispell can.
-
-See [[https://github.com/rolandwalker/flyspell-lazy][Flyspell-lazy]] if you are experiencing performance issues with Emacs'
-built-in ~flyspell-mode~.
 
 When spellchecking a buffer, the ~A~ command accepts an incorrect word, and adds
 it to the *file word list* (~ispell-add-per-file-word-list~).
@@ -2792,6 +2805,10 @@ of possible corrections for misspelled word before point.
 
      ;; Don't consider that a word repeated twice is an error.
      (setq flyspell-mark-duplications-flag nil)
+
+     ;; Lower (for performance reasons) the maximum distance for finding
+     ;; duplicates of unrecognized words.
+     (setq flyspell-duplicate-distance 12000) ; [default: 400000]
 
      ;; Fix the "enabling flyspell mode gave an error" bug.
      (setq flyspell-issue-welcome-flag nil)
@@ -13309,7 +13326,7 @@ But [[id:737b836b-ac1f-4120-94ca-c9e0282268f0][Org]] outperforms it!
 Send notifications using ~notifications-notify~ (which was added in Emacs 24).
 It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
 
-*************** TODO For Windows users: use `todochicku.el' and the snarl notifier
+*************** TODO For Windows users: use `todochicku.el' (cross-platform?) and the snarl notifier
 
 *************** TODO Diff between shell-command and call-process?  Blocking call?
 
@@ -13773,7 +13790,9 @@ PDFs in Emacs similar (but much more advanced) than ~doc-view-mode~.
 It's the best PDF viewer on GNU/Linux (including the ones not running in Emacs).
 
 #+begin_src emacs-lisp
-  (when leuven--linux-p
+  (when (and leuven--linux-p
+             ;; (executable-find "epdfinfo")
+             )
     (with-eval-after-load "pdf-tools-autoloads"
       (pdf-tools-install)))
 #+end_src

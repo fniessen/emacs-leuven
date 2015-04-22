@@ -431,7 +431,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150420.2324</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150422.1656</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -507,7 +507,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150420.2324"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150422.1656"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -982,10 +982,10 @@ nil</div>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">and load `</span><span class="org-constant"><span class="org-comment">&lt;pkg&gt;-autoloads.el</span></span><span class="org-comment">'</span>
 
       (<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven-elpa-packages</span>
-        '(ace-jump-mode ace-window auctex auto-complete bbdb bookmark+ boxquote
-          calfw circe color-identifiers-mode company company-quickhelp csv-mode
-          cygwin-mount dictionary diff-hl diminish dired+ dired-single ess
-          expand-region fancy-narrow fill-column-indicator flycheck
+        '(ace-jump-mode ace-window anzu auctex auto-complete bbdb bookmark+
+          boxquote calfw circe color-identifiers-mode company company-quickhelp
+          csv-mode cygwin-mount dictionary diff-hl diminish dired+ dired-single
+          ess expand-region fancy-narrow fill-column-indicator flycheck
           flycheck-ledger fuzzy git-commit-mode google-this google-translate
           goto-chg graphviz-dot-mode graphviz-dot-mode guide-key helm
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
@@ -2650,10 +2650,10 @@ nil</div>
   (setq isearch-allow-scroll t)
 </pre></div>
 <div class="note">
-<p>When search-invisible is t, perform-replace can replace matches in any invisible text, but does not display it when prompting the user for confirmation.</p>
-<p>When search-invisible is 'open, perform-replace can replace matches only in hidden text (invisible through an overlay), and displays it when prompting the user.</p>
+<p>When <code>search-invisible</code> is <code>t</code>, <code>perform-replace</code> can replace matches in any invisible text, but does not display it when prompting the user for confirmation.</p>
+<p>When <code>search-invisible</code> is <code>'open</code>, <code>perform-replace</code> can replace matches only in hidden text (invisible through an overlay), and displays it when prompting the user.</p>
 <p>We lack a way to reveal truly invisible text when performing a search and replace. The URL of a bracket link in Org is an example of such truly invisible text.</p>
-<p>Juri's solution to add 'open-all could also be used in perform-replace to let the user see truly invisible matches before replacing them.</p>
+<p>Juri's solution to add <code>'open-all</code> could also be used in <code>perform-replace</code> to let the user see truly invisible matches before replacing them.</p>
 </div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -2666,6 +2666,22 @@ nil</div>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">fuzzy-autoloads</span></span><span class="org-comment">'!</span>
 
       (add-hook 'isearch-mode-hook 'turn-on-fuzzy-isearch)))
+</pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Show number of matches in mode-line while searching.</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"anzu-autoloads"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Global-Anzu mode.</span>
+    (global-anzu-mode 1)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Lighter of anzu-mode.</span>
+    (setq anzu-mode-lighter <span class="org-string">""</span>)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq anzu-deactivate-region t)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq anzu-search-threshold 1000)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq anzu-replace-to-string-separator " =&gt; ")</span>
+    )
 </pre></div>
 </div>
 </div>
@@ -2796,7 +2812,6 @@ nil</div>
 <li>It does recognize words with apostrophes (l'avion)… but it is slower.</li>
 <li>It can handle UTF-8 documents far better than Ispell can.</li>
 </ul>
-<p>See <a href="https://github.com/rolandwalker/flyspell-lazy">Flyspell-lazy</a> if you are experiencing performance issues with Emacs' built-in <code>flyspell-mode</code>.</p>
 <p>When spellchecking a buffer, the <code>A</code> command accepts an incorrect word, and adds it to the <b>file word list</b> (<code>ispell-add-per-file-word-list</code>).</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -2948,6 +2963,10 @@ nil</div>
 
      <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't consider that a word repeated twice is an error.</span>
      (setq flyspell-mark-duplications-flag nil)
+
+     <span class="org-comment-delimiter">;; </span><span class="org-comment">Lower (for performance reasons) the maximum distance for finding</span>
+     <span class="org-comment-delimiter">;; </span><span class="org-comment">duplicates of unrecognized words.</span>
+     (setq flyspell-duplicate-distance 12000) <span class="org-comment-delimiter">; </span><span class="org-comment">[default: 400000]</span>
 
      <span class="org-comment-delimiter">;; </span><span class="org-comment">Fix the "enabling flyspell mode gave an error" bug.</span>
      (setq flyspell-issue-welcome-flag nil)
@@ -13111,7 +13130,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
     (setq appt-display-interval 15)     <span class="org-comment-delimiter">; </span><span class="org-comment">[default: 3]</span>
 </pre></div>
 <p>Send notifications using <code>notifications-notify</code> (which was added in Emacs 24). It uses <code>notify-send</code> (if the <code>libnotify-bin</code> Ubuntu package is installed).</p>
-<div class="inlinetask"><b><span class="todo TODO">TODO</span> For Windows users: use `todochicku.el' and the snarl notifier</b><br />
+<div class="inlinetask"><b><span class="todo TODO">TODO</span> For Windows users: use `todochicku.el' (cross-platform?) and the snarl notifier</b><br />
 nil</div>
 <div class="inlinetask"><b><span class="todo TODO">TODO</span> Diff between shell-command and call-process? Blocking call?</b><br />
 nil</div>
@@ -13582,7 +13601,9 @@ syntex stuff/AUCTeX integration works!)<br /></p>
 <p>It's the best PDF viewer on GNU/Linux (including the ones not running in Emacs).</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">when</span> leuven--linux-p
+  (<span class="org-keyword">when</span> (and leuven--linux-p
+             <span class="org-comment-delimiter">;; </span><span class="org-comment">(executable-find "epdfinfo")</span>
+             )
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"pdf-tools-autoloads"</span>
       (pdf-tools-install)))
 </pre></div>
