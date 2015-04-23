@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150422.1655
+;; Version: 20150423.1543
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150422.1655"
+(defconst leuven--emacs-version "20150423.1543"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -441,8 +441,8 @@ Last time is saved in global variable `leuven--before-section-time'."
           goto-chg graphviz-dot-mode graphviz-dot-mode guide-key helm
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
           key-chord litable idle-require imenu-anywhere info+ interaction-log
-          ledger-mode leuven-theme multi-term multiple-cursors pager pdf-tools
-          powerline rainbow-mode tidy unbound undo-tree w3m yasnippet
+          ledger-mode leuven-theme magit multi-term multiple-cursors pager
+          pdf-tools powerline rainbow-mode tidy unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -5215,8 +5215,8 @@ this with to-do items than with projects or headings."
                                         ; special #+KEYWORD lines
                                         ; (like `C-c C-c')
 
-          (when (locate-library "org-lint")
-            (measure-time "Linted Org mode" (org-lint)))
+          ;; (when (locate-library "org-lint")
+          ;;   (measure-time "Linted Org mode" (org-lint)))
 
           ;; ;; Update the results in the Org buffer
           ;; (org-babel-execute-buffer)    ; In this case, better than
@@ -7240,6 +7240,10 @@ a clean buffer we're an order of magnitude laxer about checking."
     (add-hook 'git-commit-mode-hook
               (lambda ()
                 (toggle-save-place 0))))
+
+  (with-eval-after-load "magit-autoloads"
+    (message "...")
+    )
 
 ;;*** 28.1.6 (info "(emacs)Old Revisions")
 

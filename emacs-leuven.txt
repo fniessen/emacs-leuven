@@ -736,8 +736,8 @@ like this into your configuration file:
           goto-chg graphviz-dot-mode graphviz-dot-mode guide-key helm
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
           key-chord litable idle-require imenu-anywhere info+ interaction-log
-          ledger-mode leuven-theme multi-term multiple-cursors pager pdf-tools
-          powerline rainbow-mode tidy unbound undo-tree w3m yasnippet
+          ledger-mode leuven-theme magit multi-term multiple-cursors pager
+          pdf-tools powerline rainbow-mode tidy unbound undo-tree w3m yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -6151,7 +6151,7 @@ consecutive lists with blank lines, always use two of them.
   (setq org-cycle-include-plain-lists nil) ;; 'integrate?
 #+end_src
 
-*** Footnotes
+*** Footnotes 
 
 #+begin_src emacs-lisp
 ;;** (info "(org)Footnotes")
@@ -8210,8 +8210,8 @@ launched from Dired?
                                         ; special #+KEYWORD lines
                                         ; (like `C-c C-c')
 
-          (when (locate-library "org-lint")
-            (measure-time "Linted Org mode" (org-lint)))
+          ;; (when (locate-library "org-lint")
+          ;;   (measure-time "Linted Org mode" (org-lint)))
 
           ;; ;; Update the results in the Org buffer
           ;; (org-babel-execute-buffer)    ; In this case, better than
@@ -11476,6 +11476,12 @@ it into the commit buffer. So there is no need to "write the same thing twice".
     (add-hook 'git-commit-mode-hook
               (lambda ()
                 (toggle-save-place 0))))
+#+end_src
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "magit-autoloads"
+    (message "...")
+    )
 #+end_src
 
 *** Examining And Comparing Old Revisions
