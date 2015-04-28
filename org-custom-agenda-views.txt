@@ -10,11 +10,7 @@
 #+PROPERTY:  padline yes
 #+PROPERTY:  eval no
 
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="d:/Users/fni/src/org-html-themes/styles/readtheorg/rtd.css"/>
-#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery-1.11.0.min.js"></script>
-#+HTML_HEAD: <script type="text/javascript" src="d:/Users/fni/src/org-html-themes/styles/readtheorg/rtd.js"></script>
-
-# #+SETUPFILE: ./bigblow-pirilampo.setup
+#+SETUPFILE: ~/src/org-html-themes/setup/theme-readtheorg.setup
 
 * Private Notes                                                       :noexport:
 
@@ -572,7 +568,7 @@ minutes. Tasks without a time estimate will NOT show up in this list.
 
 ** Scheduled
 
-#+begin_warning
+#+begin_note
 A deadline with no scheduling information has an implicit ~SCHEDULED~ date equal
 to:
 
@@ -580,7 +576,7 @@ to:
 - today, in tools such as in Azendoo (too soon?)!
 
 Or it should simply appear in the Next list?
-#+end_warning
+#+end_note
 
 * REVIEW my work
 
@@ -1221,6 +1217,12 @@ you can use either
 
 Though, we should make a performance comparison to see whether one is quicker
 than the other.
+#+end_note
+
+#+begin_note
+If you want to show TODO items neither *scheduled* nor *deadline*'d, you can use:
+
+: -SCHEDULED={.+}-DEADLINE={.+}+TODO="TODO"
 #+end_note
 
 ** Future
