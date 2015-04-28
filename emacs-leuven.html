@@ -432,7 +432,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150428.1137</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150428.2258</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -508,7 +508,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150428.1137"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150428.2258"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -564,52 +564,52 @@
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Allow quick include/exclude of setup parts -- DO NOT EDIT the DEFVAR!</span>
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-0-environment</span> t) <span class="org-comment-delimiter">; </span><span class="org-comment">required</span>
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-0-loading-libraries</span> t) <span class="org-comment-delimiter">; </span><span class="org-comment">required</span>
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-0-debugging</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-47-packages</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-1-screen</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-6-exiting</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-7-basic</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-8-minibuffer</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-10-help</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-11-mark</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-12-killing</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-13-registers</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-14-display</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-15-search</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-16-fixit</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-17-keyboard-macros</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-18-files</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-19-buffers</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-20-windows</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-21-frames</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-22-international</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-23-major-and-minor-modes</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-24-indentation</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-25-text</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-25.9-org-mode</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-25.10-tex-mode</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-26-programs</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-27-building</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-28-maintaining</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-29-abbrevs</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-30-dired</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-31-calendar-diary</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-32-sending-mail</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-34-gnus</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-35-document-view</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-36-shell</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-37-emacs-server</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-38-printing</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-39-sorting</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-42-saving-emacs-sessions</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-45-hyperlinking</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-46-amusements</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-48-customization</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-AppG-ms-dos</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-XX-emacs-display</span> t)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-chapter-99-debugging</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-0-environment</span> t) <span class="org-comment-delimiter">; </span><span class="org-comment">required</span>
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-0-loading-libraries</span> t) <span class="org-comment-delimiter">; </span><span class="org-comment">required</span>
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-0-debugging</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-47-packages</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-1-screen</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-6-exiting</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-7-basic</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-8-minibuffer</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-10-help</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-11-mark</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-12-killing</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-13-registers</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-14-display</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-15-search</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-16-fixit</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-17-keyboard-macros</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-18-files</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-19-buffers</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-20-windows</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-21-frames</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-22-international</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-23-major-and-minor-modes</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-24-indentation</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-25-text</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-25.9-org-mode</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-25.10-tex-mode</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-26-programs</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-27-building</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-28-maintaining</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-29-abbrevs</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-30-dired</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-31-calendar-diary</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-32-sending-mail</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-34-gnus</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-35-document-view</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-36-shell</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-37-emacs-server</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-38-printing</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-39-sorting</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-42-saving-emacs-sessions</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-45-hyperlinking</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-46-amusements</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-48-customization</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-AppG-ms-dos</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-XX-emacs-display</span> t)
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven-load-chapter-99-debugging</span> t)
 </pre></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -663,7 +663,7 @@
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* Loading Libraries of Lisp Code for Emacs</span>
 
-(leuven--chapter leuven-chapter-0-loading-libraries <span class="org-string">"0 Loading Libraries"</span>
+(leuven--chapter leuven-load-chapter-0-loading-libraries <span class="org-string">"0 Loading Libraries"</span>
 </pre></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -784,7 +784,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* Environment</span>
 
-(leuven--chapter leuven-chapter-0-environment <span class="org-string">"0 Environment"</span>
+(leuven--chapter leuven-load-chapter-0-environment <span class="org-string">"0 Environment"</span>
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** Type of OS</span>
 
@@ -898,7 +898,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* Debugging</span>
 
-(leuven--chapter leuven-chapter-0-debugging <span class="org-string">"0 Debugging"</span>
+(leuven--chapter leuven-load-chapter-0-debugging <span class="org-string">"0 Debugging"</span>
 </pre></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -930,7 +930,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 47 Emacs Lisp (info "(emacs)Packages")</span>
 
-(leuven--chapter leuven-chapter-47-packages <span class="org-string">"47 Emacs Lisp Packages"</span>
+(leuven--chapter leuven-load-chapter-47-packages <span class="org-string">"47 Emacs Lisp Packages"</span>
 </pre></div>
 <p>To upgrade packages after running <code>package-list-packages</code>, type:</p>
 <ul class="org-ul">
@@ -1071,7 +1071,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 1 The Organization of the (info "(emacs)Screen")</span>
 
-(leuven--chapter leuven-chapter-1-screen <span class="org-string">"1 The Organization of the Screen"</span>
+(leuven--chapter leuven-load-chapter-1-screen <span class="org-string">"1 The Organization of the Screen"</span>
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 1.2 The (info "(emacs)Echo Area")</span>
 
@@ -1089,7 +1089,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 6 (info "(emacs)Exiting") Emacs</span>
 
-(leuven--chapter leuven-chapter-6-exiting <span class="org-string">"6 Exiting Emacs"</span>
+(leuven--chapter leuven-load-chapter-6-exiting <span class="org-string">"6 Exiting Emacs"</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Unbind "minimize".</span>
   (global-unset-key (kbd <span class="org-string">"C-z"</span>))
@@ -1106,7 +1106,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 7 (info "(emacs)Basic") Editing Commands</span>
 
-(leuven--chapter leuven-chapter-7-basic <span class="org-string">"7 Basic Editing Commands"</span>
+(leuven--chapter leuven-load-chapter-7-basic <span class="org-string">"7 Basic Editing Commands"</span>
 </pre></div>
 <div id="outline-container-orgheadline14" class="outline-3">
 <h3 id="orgheadline14">Inserting Text</h3>
@@ -1190,7 +1190,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 8 The (info "(emacs)Minibuffer")</span>
 
-(leuven--chapter leuven-chapter-8-minibuffer <span class="org-string">"8 The Minibuffer"</span>
+(leuven--chapter leuven-load-chapter-8-minibuffer <span class="org-string">"8 The Minibuffer"</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">How long to display an echo-area message when the minibuffer is active.</span>
   (setq minibuffer-message-timeout 0.5)
@@ -1273,7 +1273,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 10 (info "(emacs)Help")</span>
 
-(leuven--chapter leuven-chapter-10-help <span class="org-string">"10 Help"</span>
+(leuven--chapter leuven-load-chapter-10-help <span class="org-string">"10 Help"</span>
 </pre></div>
 </div>
 <div id="outline-container-orgheadline22" class="outline-3">
@@ -1464,7 +1464,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 11 The (info "(emacs)Mark") and the Region</span>
 
-(leuven--chapter leuven-chapter-11-mark <span class="org-string">"11 The Mark and the Region"</span>
+(leuven--chapter leuven-load-chapter-11-mark <span class="org-string">"11 The Mark and the Region"</span>
 </pre></div>
 <div id="outline-container-orgheadline26" class="outline-3">
 <h3 id="orgheadline26">Setting the Mark</h3>
@@ -1622,7 +1622,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 12 (info "(emacs)Killing") and Moving Text</span>
 
-(leuven--chapter leuven-chapter-12-killing <span class="org-string">"12 Killing and Moving Text"</span>
+(leuven--chapter leuven-load-chapter-12-killing <span class="org-string">"12 Killing and Moving Text"</span>
 </pre></div>
 <div id="outline-container-orgheadline36" class="outline-3">
 <h3 id="orgheadline36">Deletion and Killing</h3>
@@ -1786,7 +1786,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 13 (info "(emacs)Registers")</span>
 
-(leuven--chapter leuven-chapter-13-registers <span class="org-string">"13 Registers"</span>
+(leuven--chapter leuven-load-chapter-13-registers <span class="org-string">"13 Registers"</span>
 </pre></div>
 <div id="outline-container-orgheadline44" class="outline-3">
 <h3 id="orgheadline44">Saving Positions in Registers</h3>
@@ -1905,7 +1905,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 14 Controlling the (info "(emacs)Display")</span>
 
-(leuven--chapter leuven-chapter-14-display <span class="org-string">"14 Controlling the Display"</span>
+(leuven--chapter leuven-load-chapter-14-display <span class="org-string">"14 Controlling the Display"</span>
 </pre></div>
 <div id="outline-container-orgheadline48" class="outline-3">
 <h3 id="orgheadline48">Scrolling</h3>
@@ -2611,7 +2611,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 15 (info "(emacs)Search")ing and Replacement</span>
 
-(leuven--chapter leuven-chapter-15-search <span class="org-string">"15 Searching and Replacement"</span>
+(leuven--chapter leuven-load-chapter-15-search <span class="org-string">"15 Searching and Replacement"</span>
 </pre></div>
 <div id="outline-container-orgheadline63" class="outline-3">
 <h3 id="orgheadline63">Incremental Search (aka "Live Search")</h3>
@@ -2795,7 +2795,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 16 Commands for (info "(emacs)Fixit") Typos</span>
 
-(leuven--chapter leuven-chapter-16-fixit <span class="org-string">"16 Commands for Fixing Typos"</span>
+(leuven--chapter leuven-load-chapter-16-fixit <span class="org-string">"16 Commands for Fixing Typos"</span>
 </pre></div>
 <div id="outline-container-orgheadline70" class="outline-3">
 <h3 id="orgheadline70">Checking and Correcting Spelling</h3>
@@ -3070,7 +3070,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 17 (info "(emacs)Keyboard Macros")</span>
 
-(leuven--chapter leuven-chapter-17-keyboard-macros <span class="org-string">"17 Keyboard Macros"</span>
+(leuven--chapter leuven-load-chapter-17-keyboard-macros <span class="org-string">"17 Keyboard Macros"</span>
 </pre></div>
 <div id="outline-container-orgheadline72" class="outline-3">
 <h3 id="orgheadline72">Basic Use</h3>
@@ -3144,7 +3144,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 18 (info "(emacs)Files") Handling</span>
 
-(leuven--chapter leuven-chapter-18-files <span class="org-string">"18 Files Handling"</span>
+(leuven--chapter leuven-load-chapter-18-files <span class="org-string">"18 Files Handling"</span>
 </pre></div>
 <div id="outline-container-orgheadline75" class="outline-3">
 <h3 id="orgheadline75">Visiting Files</h3>
@@ -4256,7 +4256,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 19 Using Multiple (info "(emacs)Buffers")</span>
 
-(leuven--chapter leuven-chapter-19-buffers <span class="org-string">"19 Using Multiple Buffers"</span>
+(leuven--chapter leuven-load-chapter-19-buffers <span class="org-string">"19 Using Multiple Buffers"</span>
 </pre></div>
 <div id="outline-container-orgheadline99" class="outline-3">
 <h3 id="orgheadline99">Listing Existing Buffers</h3>
@@ -4430,7 +4430,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 20 Multiple (info "(emacs)Windows")</span>
 
-(leuven--chapter leuven-chapter-20-windows <span class="org-string">"20 Multiple Windows"</span>
+(leuven--chapter leuven-load-chapter-20-windows <span class="org-string">"20 Multiple Windows"</span>
 </pre></div>
 <div id="outline-container-orgheadline104" class="outline-3">
 <h3 id="orgheadline104">Concepts of Emacs Windows</h3>
@@ -4591,7 +4591,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 21 (info "(emacs)Frames") and Graphical Displays</span>
 
-(leuven--chapter leuven-chapter-21-frames <span class="org-string">"21 Frames and Graphical Displays"</span>
+(leuven--chapter leuven-load-chapter-21-frames <span class="org-string">"21 Frames and Graphical Displays"</span>
 </pre></div>
 <div id="outline-container-orgheadline110" class="outline-3">
 <h3 id="orgheadline110">Mouse Commands for Editing</h3>
@@ -4846,7 +4846,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 22 (info "(emacs)International") Character Set Support</span>
 
-(leuven--chapter leuven-chapter-22-international <span class="org-string">"22 International Character Set Support"</span>
+(leuven--chapter leuven-load-chapter-22-international <span class="org-string">"22 International Character Set Support"</span>
 </pre></div>
 <p>For any user who needs symbols that are not in the 7-bit ASCII set, our recommendation is to move to Unicode UTF-8. That is the only encoding that is the same across all platforms and operating systems that support it.</p>
 <p>To open (or save) a file in UTF-8, you can press <code>C-x &lt;RET&gt; c utf-8 &lt;RET&gt;</code> (<code>universal-coding-system-argument</code>) before the <code>C-x C-f</code> (or <code>C-x C-s</code>).</p>
@@ -4997,7 +4997,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 23 (info "(emacs)Modes")</span>
 
-(leuven--chapter leuven-chapter-23-major-and-minor-modes <span class="org-string">"23 Major and Minor Modes"</span>
+(leuven--chapter leuven-load-chapter-23-major-and-minor-modes <span class="org-string">"23 Major and Minor Modes"</span>
 </pre></div>
 <div id="outline-container-orgheadline125" class="outline-3">
 <h3 id="orgheadline125">How Major Modes are Chosen</h3>
@@ -5097,7 +5097,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 24 (info "(emacs)Indentation")</span>
 
-(leuven--chapter leuven-chapter-24-indentation <span class="org-string">"24 Indentation"</span>
+(leuven--chapter leuven-load-chapter-24-indentation <span class="org-string">"24 Indentation"</span>
 </pre></div>
 <div id="outline-container-orgheadline130" class="outline-3">
 <h3 id="orgheadline130">Indentation Commands</h3>
@@ -5152,7 +5152,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 25 Commands for (info "(emacs)Text") Human Languages</span>
 
-(leuven--chapter leuven-chapter-25-text <span class="org-string">"25 Commands for Human Languages"</span>
+(leuven--chapter leuven-load-chapter-25-text <span class="org-string">"25 Commands for Human Languages"</span>
 </pre></div>
 <div id="outline-container-orgheadline133" class="outline-3">
 <h3 id="orgheadline133">Words</h3>
@@ -5740,7 +5740,7 @@ nil</div>
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">(info "(org)Top") outline-based notes management and organizer</span>
 
-(leuven--chapter leuven-chapter-25.9-org-mode <span class="org-string">"25.9 Getting Things Done (with Org mode)"</span>
+(leuven--chapter leuven-load-chapter-25.9-org-mode <span class="org-string">"25.9 Getting Things Done (with Org mode)"</span>
 </pre></div>
 <p>After all the configuration has been done, you can easily manage your daily work and tasks with Org mode.</p>
 <div class="org-src-container">
@@ -9805,7 +9805,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 25.10 (info "(emacs)TeX Mode")</span>
 
-(leuven--chapter leuven-chapter-25.10-tex-mode <span class="org-string">"25.10 TeX Mode"</span>
+(leuven--chapter leuven-load-chapter-25.10-tex-mode <span class="org-string">"25.10 TeX Mode"</span>
 </pre></div>
 <div id="outline-container-orgheadline240" class="outline-3">
 <h3 id="orgheadline240">Native TeX Mode</h3>
@@ -10140,7 +10140,7 @@ nil</div>
 <h2 id="orgheadline245">SGML and HTML Modes</h2>
 <div class="outline-text-2 org-src-container" id="text-orgheadline245">
 <pre class="src src-emacs-lisp">
-(leuven--chapter leuven-chapter-25-text <span class="org-string">"25 Commands for Human Languages"</span>
+(leuven--chapter leuven-load-chapter-25-text <span class="org-string">"25 Commands for Human Languages"</span>
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 25.11 (info "(emacs)HTML Mode")</span>
 
@@ -10335,7 +10335,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 26 Editing (info "(emacs)Programs")</span>
 
-(leuven--chapter leuven-chapter-26-programs <span class="org-string">"26 Editing Programs"</span>
+(leuven--chapter leuven-load-chapter-26-programs <span class="org-string">"26 Editing Programs"</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Swap the current and previous line.</span>
   (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-move-line-up</span> ()
@@ -10922,7 +10922,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 27 (info "(emacs)Building") Compiling and Testing Programs</span>
 
-(leuven--chapter leuven-chapter-27-building <span class="org-string">"27 Compiling and Testing Programs"</span>
+(leuven--chapter leuven-load-chapter-27-building <span class="org-string">"27 Compiling and Testing Programs"</span>
 </pre></div>
 <div id="outline-container-orgheadline268" class="outline-3">
 <h3 id="orgheadline268">Running Compilations under Emacs</h3>
@@ -11318,7 +11318,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 28 (info "(emacs)Maintaining") Programs</span>
 
-(leuven--chapter leuven-chapter-28-maintaining <span class="org-string">"28 Maintaining Programs"</span>
+(leuven--chapter leuven-load-chapter-28-maintaining <span class="org-string">"28 Maintaining Programs"</span>
 </pre></div>
 <div id="outline-container-orgheadline281" class="outline-3">
 <h3 id="orgheadline281">Version Control</h3>
@@ -11611,6 +11611,7 @@ nil</div>
 <h3 id="orgheadline290">Tags Tables (navigating code)</h3>
 <div class="outline-text-3" id="text-orgheadline290">
 <p>Using tags tables is the most generic approach to setup <b>code navigation</b>. A "tag" signifies a language object for which an index entry is available.</p>
+<p>Always run <code>make TAGS</code> right after you build some project.</p>
 <p>Once you've built a <code>TAGS</code> file (<code>ctags</code> / <code>etags</code>), you can find all commands that match a regexp.</p>
 <p>Support for tags has been in Emacs for a long time: any installation of Emacs should comes with the <code>etags</code> program, which supports many different languages.</p>
 <p>Comparison of tools:</p>
@@ -12034,7 +12035,7 @@ etags --langdef=shell --regex-shell=<span class="org-string">'/function [_[:alnu
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 29 (info "(emacs)Abbrevs")</span>
 
-(leuven--chapter leuven-chapter-29-abbrevs <span class="org-string">"29 Abbrevs"</span>
+(leuven--chapter leuven-load-chapter-29-abbrevs <span class="org-string">"29 Abbrevs"</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">See (info "(autotype)") as well</span>
 </pre></div>
@@ -12635,7 +12636,7 @@ good|
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 30 (info "(emacs)Dired"), the Directory Editor</span>
 
-(leuven--chapter leuven-chapter-30-dired <span class="org-string">"30 Dired, the Directory Editor"</span>
+(leuven--chapter leuven-load-chapter-30-dired <span class="org-string">"30 Dired, the Directory Editor"</span>
 </pre></div>
 <p>Type <code>0 w</code> (<code>dired-copy-filename-as-kill</code>) in Dired to put the <b>full path</b> to some local file into the kill ring.</p>
 <div class="note">
@@ -13092,7 +13093,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 31 The (info "(emacs)Calendar/Diary")</span>
 
-(leuven--chapter leuven-chapter-31-calendar-diary <span class="org-string">"31 The Calendar and the Diary"</span>
+(leuven--chapter leuven-load-chapter-31-calendar-diary <span class="org-string">"31 The Calendar and the Diary"</span>
 </pre></div>
 <div id="outline-container-orgheadline333" class="outline-3">
 <h3 id="orgheadline333">Calendar Motion</h3>
@@ -13375,7 +13376,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 32 (info "(emacs)Sending Mail")</span>
 
-(leuven--chapter leuven-chapter-32-sending-mail <span class="org-string">"32 Sending Mail"</span>
+(leuven--chapter leuven-load-chapter-32-sending-mail <span class="org-string">"32 Sending Mail"</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">full name of this user</span>
   (setq user-full-name <span class="org-string">"John Doe"</span>)
@@ -13401,7 +13402,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 34 (info "(emacs)Gnus")</span>
 
-(leuven--chapter leuven-chapter-34-gnus <span class="org-string">"34 Gnus"</span>
+(leuven--chapter leuven-load-chapter-34-gnus <span class="org-string">"34 Gnus"</span>
 
   (global-set-key (kbd <span class="org-string">"C-c n"</span>)
     (<span class="org-keyword">lambda</span> ()
@@ -13627,7 +13628,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 35 (info "(emacs)Document View")</span>
 
-(leuven--chapter leuven-chapter-35-document-view <span class="org-string">"35 Document Viewing"</span>
+(leuven--chapter leuven-load-chapter-35-document-view <span class="org-string">"35 Document Viewing"</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">view PDF/PostScript/DVI files in Emacs</span>
 </pre></div>
@@ -13913,7 +13914,7 @@ syntex stuff/AUCTeX integration works!)<br /></p>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 36 Running (info "(emacs)Shell") Commands from Emacs</span>
 
-(leuven--chapter leuven-chapter-36-shell <span class="org-string">"36 Running Shell Commands from Emacs"</span>
+(leuven--chapter leuven-load-chapter-36-shell <span class="org-string">"36 Running Shell Commands from Emacs"</span>
 </pre></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -14645,7 +14646,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 37 (info "(emacs)Emacs Server")</span>
 
-(leuven--chapter leuven-chapter-37-emacs-server <span class="org-string">"37 Using Emacs as a Server"</span>
+(leuven--chapter leuven-load-chapter-37-emacs-server <span class="org-string">"37 Using Emacs as a Server"</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">use Emacs as a server (with the `</span><span class="org-constant"><span class="org-comment">emacsclient</span></span><span class="org-comment">' program)</span>
   (GNUEmacs
@@ -14692,7 +14693,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 38 (info "(emacs)Printing")</span>
 
-(leuven--chapter leuven-chapter-38-printing <span class="org-string">"38 Printing Hard Copies"</span>
+(leuven--chapter leuven-load-chapter-38-printing <span class="org-string">"38 Printing Hard Copies"</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Print Emacs buffer on line printer</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">for {lpr,print}-{buffer,region}.</span>
@@ -14829,7 +14830,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 39 (info "(emacs)Sorting") Text</span>
 
-(leuven--chapter leuven-chapter-39-sorting <span class="org-string">"39 Sorting Text"</span>
+(leuven--chapter leuven-load-chapter-39-sorting <span class="org-string">"39 Sorting Text"</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Key binding.</span>
   (global-set-key (kbd <span class="org-string">"C-c ^"</span>) 'sort-lines)
@@ -14846,7 +14847,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 42 (info "(emacs)Saving Emacs Sessions")</span>
 
-(leuven--chapter leuven-chapter-42-saving-emacs-sessions <span class="org-string">"42 Saving Emacs Sessions"</span>
+(leuven--chapter leuven-load-chapter-42-saving-emacs-sessions <span class="org-string">"42 Saving Emacs Sessions"</span>
 
   (try-require 'saveplace)
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"saveplace"</span>
@@ -14867,7 +14868,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 45 (info "(emacs)Hyperlinking")</span>
 
-(leuven--chapter leuven-chapter-45-hyperlinking <span class="org-string">"45 Hyperlinking and Navigation Features"</span>
+(leuven--chapter leuven-load-chapter-45-hyperlinking <span class="org-string">"45 Hyperlinking and Navigation Features"</span>
 </pre></div>
 <div id="outline-container-orgheadline397" class="outline-3">
 <h3 id="orgheadline397">Following URLs</h3>
@@ -15086,7 +15087,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 46 Other (info "(emacs)Amusements")</span>
 
-(leuven--chapter leuven-chapter-46-amusements <span class="org-string">"46 Other Amusements"</span>
+(leuven--chapter leuven-load-chapter-46-amusements <span class="org-string">"46 Other Amusements"</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">define a default menu bar</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"menu-bar"</span>
@@ -15106,7 +15107,7 @@ nil</div>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 48 (info "(emacs)Customization")</span>
 
-(leuven--chapter leuven-chapter-48-customization <span class="org-string">"48 Customization"</span>
+(leuven--chapter leuven-load-chapter-48-customization <span class="org-string">"48 Customization"</span>
 
   (GNUEmacs24
     (<span class="org-keyword">ignore-errors</span>
@@ -15363,7 +15364,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class="org-keyw
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* Emacs Display</span>
 
-(leuven--chapter leuven-chapter-XX-emacs-display <span class="org-string">"XX Emacs Display"</span>
+(leuven--chapter leuven-load-chapter-XX-emacs-display <span class="org-string">"XX Emacs Display"</span>
 </pre></div>
 <div id="outline-container-orgheadline411" class="outline-3">
 <h3 id="orgheadline411">Faces</h3>
@@ -15679,7 +15680,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class="org-keyw
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* App G Emacs and (info "(emacs)Microsoft Windows/MS-DOS")</span>
 
-(leuven--chapter leuven-chapter-AppG-ms-dos <span class="org-string">"Appendix G Emacs and MS-DOS"</span>
+(leuven--chapter leuven-load-chapter-AppG-ms-dos <span class="org-string">"Appendix G Emacs and MS-DOS"</span>
 </pre></div>
 <p>Use the Caps Lock key as Ctrl:</p>
 <div class="org-src-container">
@@ -15761,7 +15762,7 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class="org-keyw
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* Reporting Bugs</span>
 
-(leuven--chapter leuven-chapter-99-debugging <span class="org-string">"99 Debugging"</span>
+(leuven--chapter leuven-load-chapter-99-debugging <span class="org-string">"99 Debugging"</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">get the backtrace when uncaught errors occur</span>
   (setq debug-on-error nil)             <span class="org-comment-delimiter">; </span><span class="org-comment">was set to `t' at beginning of file</span>

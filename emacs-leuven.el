@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150428.1137
+;; Version: 20150428.2257
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150428.1137"
+(defconst leuven--emacs-version "20150428.2257"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -120,52 +120,52 @@
                           (ad-get-arg 0)))))
 
 ;; Allow quick include/exclude of setup parts -- DO NOT EDIT the DEFVAR!
-(defvar leuven-chapter-0-environment t) ; required
-(defvar leuven-chapter-0-loading-libraries t) ; required
-(defvar leuven-chapter-0-debugging t)
-(defvar leuven-chapter-47-packages t)
-(defvar leuven-chapter-1-screen t)
-(defvar leuven-chapter-6-exiting t)
-(defvar leuven-chapter-7-basic t)
-(defvar leuven-chapter-8-minibuffer t)
-(defvar leuven-chapter-10-help t)
-(defvar leuven-chapter-11-mark t)
-(defvar leuven-chapter-12-killing t)
-(defvar leuven-chapter-13-registers t)
-(defvar leuven-chapter-14-display t)
-(defvar leuven-chapter-15-search t)
-(defvar leuven-chapter-16-fixit t)
-(defvar leuven-chapter-17-keyboard-macros t)
-(defvar leuven-chapter-18-files t)
-(defvar leuven-chapter-19-buffers t)
-(defvar leuven-chapter-20-windows t)
-(defvar leuven-chapter-21-frames t)
-(defvar leuven-chapter-22-international t)
-(defvar leuven-chapter-23-major-and-minor-modes t)
-(defvar leuven-chapter-24-indentation t)
-(defvar leuven-chapter-25-text t)
-(defvar leuven-chapter-25.9-org-mode t)
-(defvar leuven-chapter-25.10-tex-mode t)
-(defvar leuven-chapter-26-programs t)
-(defvar leuven-chapter-27-building t)
-(defvar leuven-chapter-28-maintaining t)
-(defvar leuven-chapter-29-abbrevs t)
-(defvar leuven-chapter-30-dired t)
-(defvar leuven-chapter-31-calendar-diary t)
-(defvar leuven-chapter-32-sending-mail t)
-(defvar leuven-chapter-34-gnus t)
-(defvar leuven-chapter-35-document-view t)
-(defvar leuven-chapter-36-shell t)
-(defvar leuven-chapter-37-emacs-server t)
-(defvar leuven-chapter-38-printing t)
-(defvar leuven-chapter-39-sorting t)
-(defvar leuven-chapter-42-saving-emacs-sessions t)
-(defvar leuven-chapter-45-hyperlinking t)
-(defvar leuven-chapter-46-amusements t)
-(defvar leuven-chapter-48-customization t)
-(defvar leuven-chapter-AppG-ms-dos t)
-(defvar leuven-chapter-XX-emacs-display t)
-(defvar leuven-chapter-99-debugging t)
+(defvar leuven-load-chapter-0-environment t) ; required
+(defvar leuven-load-chapter-0-loading-libraries t) ; required
+(defvar leuven-load-chapter-0-debugging t)
+(defvar leuven-load-chapter-47-packages t)
+(defvar leuven-load-chapter-1-screen t)
+(defvar leuven-load-chapter-6-exiting t)
+(defvar leuven-load-chapter-7-basic t)
+(defvar leuven-load-chapter-8-minibuffer t)
+(defvar leuven-load-chapter-10-help t)
+(defvar leuven-load-chapter-11-mark t)
+(defvar leuven-load-chapter-12-killing t)
+(defvar leuven-load-chapter-13-registers t)
+(defvar leuven-load-chapter-14-display t)
+(defvar leuven-load-chapter-15-search t)
+(defvar leuven-load-chapter-16-fixit t)
+(defvar leuven-load-chapter-17-keyboard-macros t)
+(defvar leuven-load-chapter-18-files t)
+(defvar leuven-load-chapter-19-buffers t)
+(defvar leuven-load-chapter-20-windows t)
+(defvar leuven-load-chapter-21-frames t)
+(defvar leuven-load-chapter-22-international t)
+(defvar leuven-load-chapter-23-major-and-minor-modes t)
+(defvar leuven-load-chapter-24-indentation t)
+(defvar leuven-load-chapter-25-text t)
+(defvar leuven-load-chapter-25.9-org-mode t)
+(defvar leuven-load-chapter-25.10-tex-mode t)
+(defvar leuven-load-chapter-26-programs t)
+(defvar leuven-load-chapter-27-building t)
+(defvar leuven-load-chapter-28-maintaining t)
+(defvar leuven-load-chapter-29-abbrevs t)
+(defvar leuven-load-chapter-30-dired t)
+(defvar leuven-load-chapter-31-calendar-diary t)
+(defvar leuven-load-chapter-32-sending-mail t)
+(defvar leuven-load-chapter-34-gnus t)
+(defvar leuven-load-chapter-35-document-view t)
+(defvar leuven-load-chapter-36-shell t)
+(defvar leuven-load-chapter-37-emacs-server t)
+(defvar leuven-load-chapter-38-printing t)
+(defvar leuven-load-chapter-39-sorting t)
+(defvar leuven-load-chapter-42-saving-emacs-sessions t)
+(defvar leuven-load-chapter-45-hyperlinking t)
+(defvar leuven-load-chapter-46-amusements t)
+(defvar leuven-load-chapter-48-customization t)
+(defvar leuven-load-chapter-AppG-ms-dos t)
+(defvar leuven-load-chapter-XX-emacs-display t)
+(defvar leuven-load-chapter-99-debugging t)
 
 (defvar leuven--load-times-list nil
   "List of chapters and time to load them.")
@@ -206,7 +206,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 ;;* Loading Libraries of Lisp Code for Emacs
 
-(leuven--chapter leuven-chapter-0-loading-libraries "0 Loading Libraries"
+(leuven--chapter leuven-load-chapter-0-loading-libraries "0 Loading Libraries"
 
   ;; Load-path enhancement.
   (defun leuven-add-to-load-path (this-directory)
@@ -294,7 +294,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 ;;* Environment
 
-(leuven--chapter leuven-chapter-0-environment "0 Environment"
+(leuven--chapter leuven-load-chapter-0-environment "0 Environment"
 
 ;;** Type of OS
 
@@ -395,7 +395,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 ;;* Debugging
 
-(leuven--chapter leuven-chapter-0-debugging "0 Debugging"
+(leuven--chapter leuven-load-chapter-0-debugging "0 Debugging"
 
   ;; Get the backtrace when uncaught errors occur.
   (setq debug-on-error t)               ; Will be unset at the end.
@@ -410,7 +410,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 ;;* 47 Emacs Lisp (info "(emacs)Packages")
 
-(leuven--chapter leuven-chapter-47-packages "47 Emacs Lisp Packages"
+(leuven--chapter leuven-load-chapter-47-packages "47 Emacs Lisp Packages"
 
 ;;** 47.2 Package Installation
 
@@ -509,7 +509,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 1 The Organization of the (info "(emacs)Screen")
 
-(leuven--chapter leuven-chapter-1-screen "1 The Organization of the Screen"
+(leuven--chapter leuven-load-chapter-1-screen "1 The Organization of the Screen"
 
 ;;** 1.2 The (info "(emacs)Echo Area")
 
@@ -522,7 +522,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 6 (info "(emacs)Exiting") Emacs
 
-(leuven--chapter leuven-chapter-6-exiting "6 Exiting Emacs"
+(leuven--chapter leuven-load-chapter-6-exiting "6 Exiting Emacs"
 
   ;; Unbind "minimize".
   (global-unset-key (kbd "C-z"))
@@ -534,7 +534,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 7 (info "(emacs)Basic") Editing Commands
 
-(leuven--chapter leuven-chapter-7-basic "7 Basic Editing Commands"
+(leuven--chapter leuven-load-chapter-7-basic "7 Basic Editing Commands"
 
 ;;** 7.1 (info "(emacs)Inserting Text")
 
@@ -581,7 +581,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 8 The (info "(emacs)Minibuffer")
 
-(leuven--chapter leuven-chapter-8-minibuffer "8 The Minibuffer"
+(leuven--chapter leuven-load-chapter-8-minibuffer "8 The Minibuffer"
 
   ;; How long to display an echo-area message when the minibuffer is active.
   (setq minibuffer-message-timeout 0.5)
@@ -617,7 +617,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 10 (info "(emacs)Help")
 
-(leuven--chapter leuven-chapter-10-help "10 Help"
+(leuven--chapter leuven-load-chapter-10-help "10 Help"
 
 ;;** 10.1 (info "(emacs)Help Summary")
 
@@ -743,7 +743,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 11 The (info "(emacs)Mark") and the Region
 
-(leuven--chapter leuven-chapter-11-mark "11 The Mark and the Region"
+(leuven--chapter leuven-load-chapter-11-mark "11 The Mark and the Region"
 
   ;; Goto last change.
   (with-eval-after-load "goto-chg-autoloads"
@@ -808,7 +808,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 12 (info "(emacs)Killing") and Moving Text
 
-(leuven--chapter leuven-chapter-12-killing "12 Killing and Moving Text"
+(leuven--chapter leuven-load-chapter-12-killing "12 Killing and Moving Text"
 
 ;;** 12.1 (info "(emacs)Deletion and Killing")
 
@@ -891,7 +891,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 13 (info "(emacs)Registers")
 
-(leuven--chapter leuven-chapter-13-registers "13 Registers"
+(leuven--chapter leuven-load-chapter-13-registers "13 Registers"
 
 ;;** 13.1 (info "(emacs)Position Registers")
 
@@ -954,7 +954,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 14 Controlling the (info "(emacs)Display")
 
-(leuven--chapter leuven-chapter-14-display "14 Controlling the Display"
+(leuven--chapter leuven-load-chapter-14-display "14 Controlling the Display"
 
 ;;** 14.1 (info "(emacs)Scrolling")
 
@@ -1467,7 +1467,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 15 (info "(emacs)Search")ing and Replacement
 
-(leuven--chapter leuven-chapter-15-search "15 Searching and Replacement"
+(leuven--chapter leuven-load-chapter-15-search "15 Searching and Replacement"
 
 ;;** 15.1 (info "(emacs)Incremental Search")
 
@@ -1578,7 +1578,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 16 Commands for (info "(emacs)Fixit") Typos
 
-(leuven--chapter leuven-chapter-16-fixit "16 Commands for Fixing Typos"
+(leuven--chapter leuven-load-chapter-16-fixit "16 Commands for Fixing Typos"
 
 ;;** 16.4 Checking and Correcting (info "(emacs)Spelling")
 
@@ -1756,7 +1756,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 17 (info "(emacs)Keyboard Macros")
 
-(leuven--chapter leuven-chapter-17-keyboard-macros "17 Keyboard Macros"
+(leuven--chapter leuven-load-chapter-17-keyboard-macros "17 Keyboard Macros"
 
 ;;** 17.1 (info "(emacs)Basic Keyboard Macro") Use
 
@@ -1791,7 +1791,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 18 (info "(emacs)Files") Handling
 
-(leuven--chapter leuven-chapter-18-files "18 Files Handling"
+(leuven--chapter leuven-load-chapter-18-files "18 Files Handling"
 
 ;;** 18.2 (info "(emacs)Visiting") Files
 
@@ -2465,7 +2465,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 19 Using Multiple (info "(emacs)Buffers")
 
-(leuven--chapter leuven-chapter-19-buffers "19 Using Multiple Buffers"
+(leuven--chapter leuven-load-chapter-19-buffers "19 Using Multiple Buffers"
 
 ;;** 19.2 (info "(emacs)List Buffers")
 
@@ -2603,7 +2603,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 20 Multiple (info "(emacs)Windows")
 
-(leuven--chapter leuven-chapter-20-windows "20 Multiple Windows"
+(leuven--chapter leuven-load-chapter-20-windows "20 Multiple Windows"
 
 ;;** 20.1 (info "(emacs)Basic Window")
 
@@ -2726,7 +2726,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 21 (info "(emacs)Frames") and Graphical Displays
 
-(leuven--chapter leuven-chapter-21-frames "21 Frames and Graphical Displays"
+(leuven--chapter leuven-load-chapter-21-frames "21 Frames and Graphical Displays"
 
 ;;** 21.1 (info "(emacs)Mouse Commands")
 
@@ -2906,7 +2906,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 22 (info "(emacs)International") Character Set Support
 
-(leuven--chapter leuven-chapter-22-international "22 International Character Set Support"
+(leuven--chapter leuven-load-chapter-22-international "22 International Character Set Support"
 
 ;;** 22.3 (info "(emacs)Language Environments")
 
@@ -2975,7 +2975,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 23 (info "(emacs)Modes")
 
-(leuven--chapter leuven-chapter-23-major-and-minor-modes "23 Major and Minor Modes"
+(leuven--chapter leuven-load-chapter-23-major-and-minor-modes "23 Major and Minor Modes"
 
 ;;** 23.3 (info "(emacs)Choosing Modes")
 
@@ -3031,7 +3031,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 24 (info "(emacs)Indentation")
 
-(leuven--chapter leuven-chapter-24-indentation "24 Indentation"
+(leuven--chapter leuven-load-chapter-24-indentation "24 Indentation"
 
 ;;** 24.1 (info "(emacs)Indentation Commands") and Techniques
 
@@ -3056,7 +3056,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;* 25 Commands for (info "(emacs)Text") Human Languages
 
-(leuven--chapter leuven-chapter-25-text "25 Commands for Human Languages"
+(leuven--chapter leuven-load-chapter-25-text "25 Commands for Human Languages"
 
 ;;** 25.1 (info "(emacs)Words")
 
@@ -3487,7 +3487,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;; (info "(org)Top") outline-based notes management and organizer
 
-(leuven--chapter leuven-chapter-25.9-org-mode "25.9 Getting Things Done (with Org mode)"
+(leuven--chapter leuven-load-chapter-25.9-org-mode "25.9 Getting Things Done (with Org mode)"
 
 ;;* 1 (info "(org)Introduction")
 
@@ -6308,7 +6308,7 @@ this with to-do items than with projects or headings."
 
 ;;** 25.10 (info "(emacs)TeX Mode")
 
-(leuven--chapter leuven-chapter-25.10-tex-mode "25.10 TeX Mode"
+(leuven--chapter leuven-load-chapter-25.10-tex-mode "25.10 TeX Mode"
 
   (leuven--section "25.10 (emacs)TeX Mode")
 
@@ -6544,7 +6544,7 @@ this with to-do items than with projects or headings."
 
 )                                       ; chapter 25.10-tex-mode ends here
 
-(leuven--chapter leuven-chapter-25-text "25 Commands for Human Languages"
+(leuven--chapter leuven-load-chapter-25-text "25 Commands for Human Languages"
 
 ;;** 25.11 (info "(emacs)HTML Mode")
 
@@ -6630,7 +6630,7 @@ this with to-do items than with projects or headings."
 
 ;;* 26 Editing (info "(emacs)Programs")
 
-(leuven--chapter leuven-chapter-26-programs "26 Editing Programs"
+(leuven--chapter leuven-load-chapter-26-programs "26 Editing Programs"
 
   ;; Swap the current and previous line.
   (defun leuven-move-line-up ()
@@ -6944,7 +6944,7 @@ mouse-3: go to end") "]"))))
 
 ;;* 27 (info "(emacs)Building") Compiling and Testing Programs
 
-(leuven--chapter leuven-chapter-27-building "27 Compiling and Testing Programs"
+(leuven--chapter leuven-load-chapter-27-building "27 Compiling and Testing Programs"
 
 ;;** 27.1 Running (info "(emacs)Compilation")s under Emacs
 
@@ -7198,7 +7198,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 28 (info "(emacs)Maintaining") Programs
 
-(leuven--chapter leuven-chapter-28-maintaining "28 Maintaining Programs"
+(leuven--chapter leuven-load-chapter-28-maintaining "28 Maintaining Programs"
 
 ;;** 28.1 (info "(emacs)Version Control")
 
@@ -7581,7 +7581,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 29 (info "(emacs)Abbrevs")
 
-(leuven--chapter leuven-chapter-29-abbrevs "29 Abbrevs"
+(leuven--chapter leuven-load-chapter-29-abbrevs "29 Abbrevs"
 
   ;; See (info "(autotype)") as well
 
@@ -7891,7 +7891,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 30 (info "(emacs)Dired"), the Directory Editor
 
-(leuven--chapter leuven-chapter-30-dired "30 Dired, the Directory Editor"
+(leuven--chapter leuven-load-chapter-30-dired "30 Dired, the Directory Editor"
 
 ;;** (info "(emacs)Dired Enter")
 
@@ -8100,7 +8100,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 31 The (info "(emacs)Calendar/Diary")
 
-(leuven--chapter leuven-chapter-31-calendar-diary "31 The Calendar and the Diary"
+(leuven--chapter leuven-load-chapter-31-calendar-diary "31 The Calendar and the Diary"
 
 ;;** 31.1 (info "(emacs)Calendar Motion")
 
@@ -8312,7 +8312,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 32 (info "(emacs)Sending Mail")
 
-(leuven--chapter leuven-chapter-32-sending-mail "32 Sending Mail"
+(leuven--chapter leuven-load-chapter-32-sending-mail "32 Sending Mail"
 
   ;; full name of this user
   (setq user-full-name "John Doe")
@@ -8332,7 +8332,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 34 (info "(emacs)Gnus")
 
-(leuven--chapter leuven-chapter-34-gnus "34 Gnus"
+(leuven--chapter leuven-load-chapter-34-gnus "34 Gnus"
 
   (global-set-key (kbd "C-c n")
     (lambda ()
@@ -8512,7 +8512,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 35 (info "(emacs)Document View")
 
-(leuven--chapter leuven-chapter-35-document-view "35 Document Viewing"
+(leuven--chapter leuven-load-chapter-35-document-view "35 Document Viewing"
 
   ;; view PDF/PostScript/DVI files in Emacs
 
@@ -8712,7 +8712,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 36 Running (info "(emacs)Shell") Commands from Emacs
 
-(leuven--chapter leuven-chapter-36-shell "36 Running Shell Commands from Emacs"
+(leuven--chapter leuven-load-chapter-36-shell "36 Running Shell Commands from Emacs"
 
   ;; transform shell names to what they really are
   (with-eval-after-load "sh-script"
@@ -9061,7 +9061,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 37 (info "(emacs)Emacs Server")
 
-(leuven--chapter leuven-chapter-37-emacs-server "37 Using Emacs as a Server"
+(leuven--chapter leuven-load-chapter-37-emacs-server "37 Using Emacs as a Server"
 
   ;; use Emacs as a server (with the `emacsclient' program)
   (GNUEmacs
@@ -9087,7 +9087,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 38 (info "(emacs)Printing")
 
-(leuven--chapter leuven-chapter-38-printing "38 Printing Hard Copies"
+(leuven--chapter leuven-load-chapter-38-printing "38 Printing Hard Copies"
 
   ;; Print Emacs buffer on line printer
   ;; for {lpr,print}-{buffer,region}.
@@ -9218,7 +9218,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 39 (info "(emacs)Sorting") Text
 
-(leuven--chapter leuven-chapter-39-sorting "39 Sorting Text"
+(leuven--chapter leuven-load-chapter-39-sorting "39 Sorting Text"
 
   ;; Key binding.
   (global-set-key (kbd "C-c ^") 'sort-lines)
@@ -9227,7 +9227,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 42 (info "(emacs)Saving Emacs Sessions")
 
-(leuven--chapter leuven-chapter-42-saving-emacs-sessions "42 Saving Emacs Sessions"
+(leuven--chapter leuven-load-chapter-42-saving-emacs-sessions "42 Saving Emacs Sessions"
 
   (try-require 'saveplace)
   (with-eval-after-load "saveplace"
@@ -9242,7 +9242,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 45 (info "(emacs)Hyperlinking")
 
-(leuven--chapter leuven-chapter-45-hyperlinking "45 Hyperlinking and Navigation Features"
+(leuven--chapter leuven-load-chapter-45-hyperlinking "45 Hyperlinking and Navigation Features"
 
   ;; Use proxy.
   (setq url-proxy-services              ;! Emacs expects just hostname and port
@@ -9392,7 +9392,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 46 Other (info "(emacs)Amusements")
 
-(leuven--chapter leuven-chapter-46-amusements "46 Other Amusements"
+(leuven--chapter leuven-load-chapter-46-amusements "46 Other Amusements"
 
   ;; define a default menu bar
   (with-eval-after-load "menu-bar"
@@ -9404,7 +9404,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* 48 (info "(emacs)Customization")
 
-(leuven--chapter leuven-chapter-48-customization "48 Customization"
+(leuven--chapter leuven-load-chapter-48-customization "48 Customization"
 
   (GNUEmacs24
     (ignore-errors
@@ -9594,7 +9594,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* Emacs Display
 
-(leuven--chapter leuven-chapter-XX-emacs-display "XX Emacs Display"
+(leuven--chapter leuven-load-chapter-XX-emacs-display "XX Emacs Display"
 
 ;;** (info "(elisp)Faces")
 
@@ -9619,7 +9619,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* App G Emacs and (info "(emacs)Microsoft Windows/MS-DOS")
 
-(leuven--chapter leuven-chapter-AppG-ms-dos "Appendix G Emacs and MS-DOS"
+(leuven--chapter leuven-load-chapter-AppG-ms-dos "Appendix G Emacs and MS-DOS"
 
   ;; ;; read the Caps Lock key as <capslock>
   ;; (setq w32-enable-caps-lock nil)
@@ -9683,7 +9683,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* Reporting Bugs
 
-(leuven--chapter leuven-chapter-99-debugging "99 Debugging"
+(leuven--chapter leuven-load-chapter-99-debugging "99 Debugging"
 
   ;; get the backtrace when uncaught errors occur
   (setq debug-on-error nil)             ; was set to `t' at beginning of file

@@ -295,52 +295,52 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
 
 #+begin_src emacs-lisp
 ;; Allow quick include/exclude of setup parts -- DO NOT EDIT the DEFVAR!
-(defvar leuven-chapter-0-environment t) ; required
-(defvar leuven-chapter-0-loading-libraries t) ; required
-(defvar leuven-chapter-0-debugging t)
-(defvar leuven-chapter-47-packages t)
-(defvar leuven-chapter-1-screen t)
-(defvar leuven-chapter-6-exiting t)
-(defvar leuven-chapter-7-basic t)
-(defvar leuven-chapter-8-minibuffer t)
-(defvar leuven-chapter-10-help t)
-(defvar leuven-chapter-11-mark t)
-(defvar leuven-chapter-12-killing t)
-(defvar leuven-chapter-13-registers t)
-(defvar leuven-chapter-14-display t)
-(defvar leuven-chapter-15-search t)
-(defvar leuven-chapter-16-fixit t)
-(defvar leuven-chapter-17-keyboard-macros t)
-(defvar leuven-chapter-18-files t)
-(defvar leuven-chapter-19-buffers t)
-(defvar leuven-chapter-20-windows t)
-(defvar leuven-chapter-21-frames t)
-(defvar leuven-chapter-22-international t)
-(defvar leuven-chapter-23-major-and-minor-modes t)
-(defvar leuven-chapter-24-indentation t)
-(defvar leuven-chapter-25-text t)
-(defvar leuven-chapter-25.9-org-mode t)
-(defvar leuven-chapter-25.10-tex-mode t)
-(defvar leuven-chapter-26-programs t)
-(defvar leuven-chapter-27-building t)
-(defvar leuven-chapter-28-maintaining t)
-(defvar leuven-chapter-29-abbrevs t)
-(defvar leuven-chapter-30-dired t)
-(defvar leuven-chapter-31-calendar-diary t)
-(defvar leuven-chapter-32-sending-mail t)
-(defvar leuven-chapter-34-gnus t)
-(defvar leuven-chapter-35-document-view t)
-(defvar leuven-chapter-36-shell t)
-(defvar leuven-chapter-37-emacs-server t)
-(defvar leuven-chapter-38-printing t)
-(defvar leuven-chapter-39-sorting t)
-(defvar leuven-chapter-42-saving-emacs-sessions t)
-(defvar leuven-chapter-45-hyperlinking t)
-(defvar leuven-chapter-46-amusements t)
-(defvar leuven-chapter-48-customization t)
-(defvar leuven-chapter-AppG-ms-dos t)
-(defvar leuven-chapter-XX-emacs-display t)
-(defvar leuven-chapter-99-debugging t)
+(defvar leuven-load-chapter-0-environment t) ; required
+(defvar leuven-load-chapter-0-loading-libraries t) ; required
+(defvar leuven-load-chapter-0-debugging t)
+(defvar leuven-load-chapter-47-packages t)
+(defvar leuven-load-chapter-1-screen t)
+(defvar leuven-load-chapter-6-exiting t)
+(defvar leuven-load-chapter-7-basic t)
+(defvar leuven-load-chapter-8-minibuffer t)
+(defvar leuven-load-chapter-10-help t)
+(defvar leuven-load-chapter-11-mark t)
+(defvar leuven-load-chapter-12-killing t)
+(defvar leuven-load-chapter-13-registers t)
+(defvar leuven-load-chapter-14-display t)
+(defvar leuven-load-chapter-15-search t)
+(defvar leuven-load-chapter-16-fixit t)
+(defvar leuven-load-chapter-17-keyboard-macros t)
+(defvar leuven-load-chapter-18-files t)
+(defvar leuven-load-chapter-19-buffers t)
+(defvar leuven-load-chapter-20-windows t)
+(defvar leuven-load-chapter-21-frames t)
+(defvar leuven-load-chapter-22-international t)
+(defvar leuven-load-chapter-23-major-and-minor-modes t)
+(defvar leuven-load-chapter-24-indentation t)
+(defvar leuven-load-chapter-25-text t)
+(defvar leuven-load-chapter-25.9-org-mode t)
+(defvar leuven-load-chapter-25.10-tex-mode t)
+(defvar leuven-load-chapter-26-programs t)
+(defvar leuven-load-chapter-27-building t)
+(defvar leuven-load-chapter-28-maintaining t)
+(defvar leuven-load-chapter-29-abbrevs t)
+(defvar leuven-load-chapter-30-dired t)
+(defvar leuven-load-chapter-31-calendar-diary t)
+(defvar leuven-load-chapter-32-sending-mail t)
+(defvar leuven-load-chapter-34-gnus t)
+(defvar leuven-load-chapter-35-document-view t)
+(defvar leuven-load-chapter-36-shell t)
+(defvar leuven-load-chapter-37-emacs-server t)
+(defvar leuven-load-chapter-38-printing t)
+(defvar leuven-load-chapter-39-sorting t)
+(defvar leuven-load-chapter-42-saving-emacs-sessions t)
+(defvar leuven-load-chapter-45-hyperlinking t)
+(defvar leuven-load-chapter-46-amusements t)
+(defvar leuven-load-chapter-48-customization t)
+(defvar leuven-load-chapter-AppG-ms-dos t)
+(defvar leuven-load-chapter-XX-emacs-display t)
+(defvar leuven-load-chapter-99-debugging t)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -403,7 +403,7 @@ need to load a single file that define autoloaded functions.
 #+begin_src emacs-lisp
 ;;* Loading Libraries of Lisp Code for Emacs
 
-(leuven--chapter leuven-chapter-0-loading-libraries "0 Loading Libraries"
+(leuven--chapter leuven-load-chapter-0-loading-libraries "0 Loading Libraries"
 #+end_src
 
 #+begin_src emacs-lisp
@@ -524,7 +524,7 @@ distro) without impacting on stuff you have added by hand.
 #+begin_src emacs-lisp
 ;;* Environment
 
-(leuven--chapter leuven-chapter-0-environment "0 Environment"
+(leuven--chapter leuven-load-chapter-0-environment "0 Environment"
 
 ;;** Type of OS
 
@@ -637,7 +637,7 @@ See function ~--find-program~ at http://www.visualco.de/src/elisp/.emacs.el.html
 #+begin_src emacs-lisp
 ;;* Debugging
 
-(leuven--chapter leuven-chapter-0-debugging "0 Debugging"
+(leuven--chapter leuven-load-chapter-0-debugging "0 Debugging"
 #+end_src
 
 #+begin_src emacs-lisp
@@ -671,7 +671,7 @@ If you require something from Org mode, it must be after ~package-initialize~.
 #+begin_src emacs-lisp
 ;;* 47 Emacs Lisp (info "(emacs)Packages")
 
-(leuven--chapter leuven-chapter-47-packages "47 Emacs Lisp Packages"
+(leuven--chapter leuven-load-chapter-47-packages "47 Emacs Lisp Packages"
 #+end_src
 
 To upgrade packages after running ~package-list-packages~, type:
@@ -816,7 +816,7 @@ cancelable; hence, we put it out of a "chapter".
 #+begin_src emacs-lisp
 ;;* 1 The Organization of the (info "(emacs)Screen")
 
-(leuven--chapter leuven-chapter-1-screen "1 The Organization of the Screen"
+(leuven--chapter leuven-load-chapter-1-screen "1 The Organization of the Screen"
 
 ;;** 1.2 The (info "(emacs)Echo Area")
 
@@ -833,7 +833,7 @@ cancelable; hence, we put it out of a "chapter".
 #+begin_src emacs-lisp
 ;;* 6 (info "(emacs)Exiting") Emacs
 
-(leuven--chapter leuven-chapter-6-exiting "6 Exiting Emacs"
+(leuven--chapter leuven-load-chapter-6-exiting "6 Exiting Emacs"
 
   ;; Unbind "minimize".
   (global-unset-key (kbd "C-z"))
@@ -849,7 +849,7 @@ cancelable; hence, we put it out of a "chapter".
 #+begin_src emacs-lisp
 ;;* 7 (info "(emacs)Basic") Editing Commands
 
-(leuven--chapter leuven-chapter-7-basic "7 Basic Editing Commands"
+(leuven--chapter leuven-load-chapter-7-basic "7 Basic Editing Commands"
 #+end_src
 
 ** Inserting Text
@@ -925,7 +925,7 @@ cancelable; hence, we put it out of a "chapter".
 #+begin_src emacs-lisp
 ;;* 8 The (info "(emacs)Minibuffer")
 
-(leuven--chapter leuven-chapter-8-minibuffer "8 The Minibuffer"
+(leuven--chapter leuven-load-chapter-8-minibuffer "8 The Minibuffer"
 
   ;; How long to display an echo-area message when the minibuffer is active.
   (setq minibuffer-message-timeout 0.5)
@@ -1021,7 +1021,7 @@ the relevant manual page without leaving Emacs.
 #+begin_src emacs-lisp
 ;;* 10 (info "(emacs)Help")
 
-(leuven--chapter leuven-chapter-10-help "10 Help"
+(leuven--chapter leuven-load-chapter-10-help "10 Help"
 #+end_src
 
 ** Help Summary
@@ -1231,7 +1231,7 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
 #+begin_src emacs-lisp
 ;;* 11 The (info "(emacs)Mark") and the Region
 
-(leuven--chapter leuven-chapter-11-mark "11 The Mark and the Region"
+(leuven--chapter leuven-load-chapter-11-mark "11 The Mark and the Region"
 #+end_src
 
 ** Setting the Mark
@@ -1377,7 +1377,7 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
 #+begin_src emacs-lisp
 ;;* 12 (info "(emacs)Killing") and Moving Text
 
-(leuven--chapter leuven-chapter-12-killing "12 Killing and Moving Text"
+(leuven--chapter leuven-load-chapter-12-killing "12 Killing and Moving Text"
 #+end_src
 
 ** Deletion and Killing
@@ -1541,7 +1541,7 @@ highlighting.  Though, since Emacs 24.4, ~rectangle-mark-mode~ is the new way.
 #+begin_src emacs-lisp
 ;;* 13 (info "(emacs)Registers")
 
-(leuven--chapter leuven-chapter-13-registers "13 Registers"
+(leuven--chapter leuven-load-chapter-13-registers "13 Registers"
 #+end_src
 
 ** Saving Positions in Registers
@@ -1670,7 +1670,7 @@ In TeXStudio:
 #+begin_src emacs-lisp
 ;;* 14 Controlling the (info "(emacs)Display")
 
-(leuven--chapter leuven-chapter-14-display "14 Controlling the Display"
+(leuven--chapter leuven-load-chapter-14-display "14 Controlling the Display"
 #+end_src
 
 ** Scrolling
@@ -2399,7 +2399,7 @@ screencasts.
 #+begin_src emacs-lisp
 ;;* 15 (info "(emacs)Search")ing and Replacement
 
-(leuven--chapter leuven-chapter-15-search "15 Searching and Replacement"
+(leuven--chapter leuven-load-chapter-15-search "15 Searching and Replacement"
 #+end_src
 
 ** Incremental Search (aka "Live Search")
@@ -2616,7 +2616,7 @@ a match for REGEXP.
 #+begin_src emacs-lisp
 ;;* 16 Commands for (info "(emacs)Fixit") Typos
 
-(leuven--chapter leuven-chapter-16-fixit "16 Commands for Fixing Typos"
+(leuven--chapter leuven-load-chapter-16-fixit "16 Commands for Fixing Typos"
 #+end_src
 
 ** Checking and Correcting Spelling
@@ -2919,7 +2919,7 @@ What is working for you?
 #+begin_src emacs-lisp
 ;;* 17 (info "(emacs)Keyboard Macros")
 
-(leuven--chapter leuven-chapter-17-keyboard-macros "17 Keyboard Macros"
+(leuven--chapter leuven-load-chapter-17-keyboard-macros "17 Keyboard Macros"
 #+end_src
 
 ** Basic Use
@@ -2997,7 +2997,7 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
 #+begin_src emacs-lisp
 ;;* 18 (info "(emacs)Files") Handling
 
-(leuven--chapter leuven-chapter-18-files "18 Files Handling"
+(leuven--chapter leuven-load-chapter-18-files "18 Files Handling"
 #+end_src
 
 ** Visiting Files
@@ -4232,7 +4232,7 @@ respectively.
 #+begin_src emacs-lisp
 ;;* 19 Using Multiple (info "(emacs)Buffers")
 
-(leuven--chapter leuven-chapter-19-buffers "19 Using Multiple Buffers"
+(leuven--chapter leuven-load-chapter-19-buffers "19 Using Multiple Buffers"
 #+end_src
 
 ** Listing Existing Buffers
@@ -4396,7 +4396,7 @@ respectively.
 #+begin_src emacs-lisp
 ;;* 20 Multiple (info "(emacs)Windows")
 
-(leuven--chapter leuven-chapter-20-windows "20 Multiple Windows"
+(leuven--chapter leuven-load-chapter-20-windows "20 Multiple Windows"
 #+end_src
 
 ** Concepts of Emacs Windows
@@ -4553,7 +4553,7 @@ Use ~M-x scroll-all-mode~ to scroll all visible windows together in parallel.
 #+begin_src emacs-lisp
 ;;* 21 (info "(emacs)Frames") and Graphical Displays
 
-(leuven--chapter leuven-chapter-21-frames "21 Frames and Graphical Displays"
+(leuven--chapter leuven-load-chapter-21-frames "21 Frames and Graphical Displays"
 #+end_src
 
 ** Mouse Commands for Editing
@@ -4798,7 +4798,7 @@ one.
 #+begin_src emacs-lisp
 ;;* 22 (info "(emacs)International") Character Set Support
 
-(leuven--chapter leuven-chapter-22-international "22 International Character Set Support"
+(leuven--chapter leuven-load-chapter-22-international "22 International Character Set Support"
 #+end_src
 
 For any user who needs symbols that are not in the 7-bit ASCII set, our
@@ -4950,7 +4950,7 @@ XXX Declare PDF files as binary
 #+begin_src emacs-lisp
 ;;* 23 (info "(emacs)Modes")
 
-(leuven--chapter leuven-chapter-23-major-and-minor-modes "23 Major and Minor Modes"
+(leuven--chapter leuven-load-chapter-23-major-and-minor-modes "23 Major and Minor Modes"
 #+end_src
 
 ** How Major Modes are Chosen
@@ -5041,7 +5041,7 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
 #+begin_src emacs-lisp
 ;;* 24 (info "(emacs)Indentation")
 
-(leuven--chapter leuven-chapter-24-indentation "24 Indentation"
+(leuven--chapter leuven-load-chapter-24-indentation "24 Indentation"
 #+end_src
 
 ** Indentation Commands
@@ -5091,7 +5091,7 @@ Don't tabify.  Instead, _reindent_ everything, e.g. with C-M-\.
 #+begin_src emacs-lisp
 ;;* 25 Commands for (info "(emacs)Text") Human Languages
 
-(leuven--chapter leuven-chapter-25-text "25 Commands for Human Languages"
+(leuven--chapter leuven-load-chapter-25-text "25 Commands for Human Languages"
 #+end_src
 
 ** Words
@@ -5708,7 +5708,7 @@ Region Marked>~.
 
 ;; (info "(org)Top") outline-based notes management and organizer
 
-(leuven--chapter leuven-chapter-25.9-org-mode "25.9 Getting Things Done (with Org mode)"
+(leuven--chapter leuven-load-chapter-25.9-org-mode "25.9 Getting Things Done (with Org mode)"
 #+end_src
 
 After all the configuration has been done, you can easily manage your daily
@@ -9824,7 +9824,7 @@ Link emails from Org files.
 #+begin_src emacs-lisp
 ;;** 25.10 (info "(emacs)TeX Mode")
 
-(leuven--chapter leuven-chapter-25.10-tex-mode "25.10 TeX Mode"
+(leuven--chapter leuven-load-chapter-25.10-tex-mode "25.10 TeX Mode"
 #+end_src
 
 ** Native TeX Mode
@@ -10182,7 +10182,7 @@ current selection.  More general index entries are created with ~C-c <~.
 * SGML and HTML Modes
 
 #+begin_src emacs-lisp
-(leuven--chapter leuven-chapter-25-text "25 Commands for Human Languages"
+(leuven--chapter leuven-load-chapter-25-text "25 Commands for Human Languages"
 
 ;;** 25.11 (info "(emacs)HTML Mode")
 
@@ -10383,7 +10383,7 @@ Some key bindings:
 #+begin_src emacs-lisp
 ;;* 26 Editing (info "(emacs)Programs")
 
-(leuven--chapter leuven-chapter-26-programs "26 Editing Programs"
+(leuven--chapter leuven-load-chapter-26-programs "26 Editing Programs"
 
   ;; Swap the current and previous line.
   (defun leuven-move-line-up ()
@@ -10983,7 +10983,7 @@ See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard a
 #+begin_src emacs-lisp
 ;;* 27 (info "(emacs)Building") Compiling and Testing Programs
 
-(leuven--chapter leuven-chapter-27-building "27 Compiling and Testing Programs"
+(leuven--chapter leuven-load-chapter-27-building "27 Compiling and Testing Programs"
 #+end_src
 
 ** Running Compilations under Emacs
@@ -11399,7 +11399,7 @@ contents!
 #+begin_src emacs-lisp
 ;;* 28 (info "(emacs)Maintaining") Programs
 
-(leuven--chapter leuven-chapter-28-maintaining "28 Maintaining Programs"
+(leuven--chapter leuven-load-chapter-28-maintaining "28 Maintaining Programs"
 #+end_src
 
 ** Version Control
@@ -11696,6 +11696,8 @@ it into the commit buffer. So there is no need to "write the same thing twice".
 
 Using tags tables is the most generic approach to setup *code navigation*.  A
 "tag" signifies a language object for which an index entry is available.
+
+Always run ~make TAGS~ right after you build some project.
 
 Once you've built a ~TAGS~ file (~ctags~ / ~etags~), you can find all commands that
 match a regexp.
@@ -12177,7 +12179,7 @@ into a specified *expansion*.
 #+begin_src emacs-lisp
 ;;* 29 (info "(emacs)Abbrevs")
 
-(leuven--chapter leuven-chapter-29-abbrevs "29 Abbrevs"
+(leuven--chapter leuven-load-chapter-29-abbrevs "29 Abbrevs"
 
   ;; See (info "(autotype)") as well
 #+end_src
@@ -12818,7 +12820,7 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
 #+begin_src emacs-lisp
 ;;* 30 (info "(emacs)Dired"), the Directory Editor
 
-(leuven--chapter leuven-chapter-30-dired "30 Dired, the Directory Editor"
+(leuven--chapter leuven-load-chapter-30-dired "30 Dired, the Directory Editor"
 #+end_src
 
 Type ~0 w~ (~dired-copy-filename-as-kill~) in Dired to put the *full path* to some
@@ -13278,7 +13280,7 @@ example.
 #+begin_src emacs-lisp
 ;;* 31 The (info "(emacs)Calendar/Diary")
 
-(leuven--chapter leuven-chapter-31-calendar-diary "31 The Calendar and the Diary"
+(leuven--chapter leuven-load-chapter-31-calendar-diary "31 The Calendar and the Diary"
 #+end_src
 
 ** Calendar Motion
@@ -13555,7 +13557,7 @@ Minimal configuration for sending a bug report, for example.
 #+begin_src emacs-lisp
 ;;* 32 (info "(emacs)Sending Mail")
 
-(leuven--chapter leuven-chapter-32-sending-mail "32 Sending Mail"
+(leuven--chapter leuven-load-chapter-32-sending-mail "32 Sending Mail"
 
   ;; full name of this user
   (setq user-full-name "John Doe")
@@ -13579,7 +13581,7 @@ Minimal configuration for sending a bug report, for example.
 #+begin_src emacs-lisp
 ;;* 34 (info "(emacs)Gnus")
 
-(leuven--chapter leuven-chapter-34-gnus "34 Gnus"
+(leuven--chapter leuven-load-chapter-34-gnus "34 Gnus"
 
   (global-set-key (kbd "C-c n")
     (lambda ()
@@ -13800,7 +13802,7 @@ if ~doc-view-pdftotext-program~ is on your ~PATH~.
 #+begin_src emacs-lisp
 ;;* 35 (info "(emacs)Document View")
 
-(leuven--chapter leuven-chapter-35-document-view "35 Document Viewing"
+(leuven--chapter leuven-load-chapter-35-document-view "35 Document Viewing"
 
   ;; view PDF/PostScript/DVI files in Emacs
 #+end_src
@@ -14092,7 +14094,7 @@ See customizations at http://snarfed.org/why_i_run_shells_inside_emacs.
 #+begin_src emacs-lisp
 ;;* 36 Running (info "(emacs)Shell") Commands from Emacs
 
-(leuven--chapter leuven-chapter-36-shell "36 Running Shell Commands from Emacs"
+(leuven--chapter leuven-load-chapter-36-shell "36 Running Shell Commands from Emacs"
 #+end_src
 
 #+begin_src emacs-lisp
@@ -14835,7 +14837,7 @@ creates an X Window and doesn't wait for ~(server-edit)~.
 #+begin_src emacs-lisp
 ;;* 37 (info "(emacs)Emacs Server")
 
-(leuven--chapter leuven-chapter-37-emacs-server "37 Using Emacs as a Server"
+(leuven--chapter leuven-load-chapter-37-emacs-server "37 Using Emacs as a Server"
 
   ;; use Emacs as a server (with the `emacsclient' program)
   (GNUEmacs
@@ -14893,7 +14895,7 @@ printing on Windows.
 #+begin_src emacs-lisp
 ;;* 38 (info "(emacs)Printing")
 
-(leuven--chapter leuven-chapter-38-printing "38 Printing Hard Copies"
+(leuven--chapter leuven-load-chapter-38-printing "38 Printing Hard Copies"
 
   ;; Print Emacs buffer on line printer
   ;; for {lpr,print}-{buffer,region}.
@@ -15028,7 +15030,7 @@ printing on Windows.
 #+begin_src emacs-lisp
 ;;* 39 (info "(emacs)Sorting") Text
 
-(leuven--chapter leuven-chapter-39-sorting "39 Sorting Text"
+(leuven--chapter leuven-load-chapter-39-sorting "39 Sorting Text"
 
   ;; Key binding.
   (global-set-key (kbd "C-c ^") 'sort-lines)
@@ -15043,7 +15045,7 @@ printing on Windows.
 #+begin_src emacs-lisp
 ;;* 42 (info "(emacs)Saving Emacs Sessions")
 
-(leuven--chapter leuven-chapter-42-saving-emacs-sessions "42 Saving Emacs Sessions"
+(leuven--chapter leuven-load-chapter-42-saving-emacs-sessions "42 Saving Emacs Sessions"
 
   (try-require 'saveplace)
   (with-eval-after-load "saveplace"
@@ -15062,7 +15064,7 @@ printing on Windows.
 #+begin_src emacs-lisp
 ;;* 45 (info "(emacs)Hyperlinking")
 
-(leuven--chapter leuven-chapter-45-hyperlinking "45 Hyperlinking and Navigation Features"
+(leuven--chapter leuven-load-chapter-45-hyperlinking "45 Hyperlinking and Navigation Features"
 #+end_src
 
 ** Following URLs
@@ -15277,7 +15279,7 @@ fniessen
 #+begin_src emacs-lisp
 ;;* 46 Other (info "(emacs)Amusements")
 
-(leuven--chapter leuven-chapter-46-amusements "46 Other Amusements"
+(leuven--chapter leuven-load-chapter-46-amusements "46 Other Amusements"
 
   ;; define a default menu bar
   (with-eval-after-load "menu-bar"
@@ -15300,7 +15302,7 @@ Emacs 24.4).
 #+begin_src emacs-lisp
 ;;* 48 (info "(emacs)Customization")
 
-(leuven--chapter leuven-chapter-48-customization "48 Customization"
+(leuven--chapter leuven-load-chapter-48-customization "48 Customization"
 
   (GNUEmacs24
     (ignore-errors
@@ -15552,7 +15554,7 @@ considered part of the word (depending on the current major mode).
 #+begin_src emacs-lisp
 ;;* Emacs Display
 
-(leuven--chapter leuven-chapter-XX-emacs-display "XX Emacs Display"
+(leuven--chapter leuven-load-chapter-XX-emacs-display "XX Emacs Display"
 #+end_src
 
 ** Faces
@@ -15920,7 +15922,7 @@ Eventually have a look as well at ~input-decode-map~.
 #+begin_src emacs-lisp
 ;;* App G Emacs and (info "(emacs)Microsoft Windows/MS-DOS")
 
-(leuven--chapter leuven-chapter-AppG-ms-dos "Appendix G Emacs and MS-DOS"
+(leuven--chapter leuven-load-chapter-AppG-ms-dos "Appendix G Emacs and MS-DOS"
 #+end_src
 
 Use the Caps Lock key as Ctrl:
@@ -16001,7 +16003,7 @@ calls to message), set the variable ~debug-on-message~.
 
 ;;* Reporting Bugs
 
-(leuven--chapter leuven-chapter-99-debugging "99 Debugging"
+(leuven--chapter leuven-load-chapter-99-debugging "99 Debugging"
 
   ;; get the backtrace when uncaught errors occur
   (setq debug-on-error nil)             ; was set to `t' at beginning of file
