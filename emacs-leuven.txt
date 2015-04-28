@@ -3248,7 +3248,12 @@ the ~diff3~ program).  Smerge does not automatically select regions but provides
 convenient key bindings to navigate between conflicts and to choose the A or B
 variant.
 
-** Diff Mode
+** Diff mode
+
+You can review the diff of all file changes, either:
+
+- unified (Diff mode) or
+- split (Ediff mode).
 
 In Diff mode, I can *select a hunk and apply it (in reverse)*.  Nice following
 ~C-x v =~ to show what's changed, and decide to reverse a change.
@@ -3347,12 +3352,21 @@ In Ediff, press:
               (split-window-vertically arg))))
 
     ;; (setq ediff-merge-split-window-function 'split-window-vertically)
+
+    (defun turn-on-visible-mode ()
+      "Make all invisible text temporarily visible."
+      (visible-mode 1)
+      (setq truncate-lines nil))
+
+    ;; Force the buffers to unhide (folded) text (in Org files).
+    (add-hook 'ediff-prepare-buffer-hook 'turn-on-visible-mode)
+
     )
 #+end_src
 
 For *comparing two directories*, you can use ~ediff-directories~ or [[http://meldmerge.org/][Meld]].
 
-~ediff-directories~ combined with the key sequence "= h x" shows you only the
+~ediff-directories~ combined with the key sequence == h x= ~= h x~ shows you only the
 files which differ.
 
 It is not recursive, but it gives you also subdirectory pairs to compare.  Just
@@ -6016,9 +6030,26 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
     ;; ;; Function called to format an inlinetask in LaTeX code.
     ;; (setq org-latex-format-inlinetask-function
     ;;       'leuven--org-latex-format-inlinetask)
-
     )                                   ; with-eval-after-load "org-inlinetask" ends here
 #+end_src
+
+#+begin_src emacs-lisp :tangle no
+  (setq org-inlinetask-export-templates
+        '((latex "%s\\footnote{%s\\\\ %s}\\marginpar{\\fbox{\\thefootnote}}"
+                 '((unless
+                       (eq todo "")
+                     (format "\\fbox{\\textsc{%s%s}}" todo priority))
+                   heading content))))
+#+end_src
+
+*************** TODO Use todonotes
+Why use footnotes when you can use ~todonotes~
+(https://www.ctan.org/pkg/todonotes)?
+
+It can even make a ~list-of-todo-notes~.  See also
+http://tex.stackexchange.com/questions/9796/how-to-add-todo-notes for more
+options.
+*************** END
 
 *************** TODO Have a solution for base article, report, book (w/o todonotes)
 
@@ -6132,6 +6163,13 @@ See also [[id:a9fe61b7-cdbd-478e-a4af-da9e122fb2d9][Sparse trees]] for behavior 
   ;; Show the entry below a headline when revealing a location.
   (setq org-show-entry-below t)
   (setq org-show-entry-below '((org-goto . t)))
+#+end_src
+
+If you're using development version, see ~org-show-context-detail~ instead:
+
+#+begin_src emacs-lisp
+  (add-to-list 'org-show-context-detail '(tags-tree . minimal))
+  (add-to-list 'org-show-context-detail '(occur-tree . minimal))
 #+end_src
 
 *** Plain lists
@@ -15262,6 +15300,7 @@ Emacs 24.4).
 
   (GNUEmacs24
     (ignore-errors
+      ;; Load custom theme "Leuven" and enable it.
       (load-theme 'leuven t)))
 #+end_src
 

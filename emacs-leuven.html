@@ -143,7 +143,7 @@
 <li><a href="#orgheadline78">Auto Reverting Non-File Buffers</a></li>
 <li><a href="#orgheadline79">Auto-Saving: Protection Against Disasters</a></li>
 <li><a href="#orgheadline80">Comparing Files</a></li>
-<li><a href="#orgheadline81">Diff Mode</a></li>
+<li><a href="#orgheadline81">Diff mode</a></li>
 <li><a href="#orgheadline82">Miscellaneous File Operations</a></li>
 <li><a href="#orgheadline83">Accessing Compressed Files</a></li>
 <li><a href="#orgheadline84">Auto Encryption</a></li>
@@ -432,7 +432,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150423.1543</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150428.1130</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -508,7 +508,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150423.1543"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150428.1130"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -3392,8 +3392,13 @@ nil</div>
 </div>
 </div>
 <div id="outline-container-orgheadline81" class="outline-3">
-<h3 id="orgheadline81">Diff Mode</h3>
+<h3 id="orgheadline81">Diff mode</h3>
 <div class="outline-text-3" id="text-orgheadline81">
+<p>You can review the diff of all file changes, either:</p>
+<ul class="org-ul">
+<li>unified (Diff mode) or</li>
+<li>split (Ediff mode).</li>
+</ul>
 <p>In Diff mode, I can <b>select a hunk and apply it (in reverse)</b>. Nice following <code>C-x v =</code> to show what's changed, and decide to reverse a change.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -3485,10 +3490,19 @@ M-: (executable-find "diff") RET
               (split-window-vertically arg))))
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq ediff-merge-split-window-function 'split-window-vertically)</span>
+
+    (<span class="org-keyword">defun</span> <span class="org-function-name">turn-on-visible-mode</span> ()
+      <span class="org-doc">"Make all invisible text temporarily visible."</span>
+      (visible-mode 1)
+      (setq truncate-lines nil))
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Force the buffers to unhide (folded) text (in Org files).</span>
+    (add-hook 'ediff-prepare-buffer-hook 'turn-on-visible-mode)
+
     )
 </pre></div>
 <p>For <b>comparing two directories</b>, you can use <code>ediff-directories</code> or <a href="http://meldmerge.org/">Meld</a>.</p>
-<p><code>ediff-directories</code> combined with the key sequence "= h x" shows you only the files which differ.</p>
+<p><code>ediff-directories</code> combined with the key sequence <code>= h x</code> <code>= h x</code> shows you only the files which differ.</p>
 <p>It is not recursive, but it gives you also subdirectory pairs to compare. Just hit <code>RET</code> on such a pair.</p>
 <p>As bonus, it even works for remote directories.</p>
 <div class="warning">
@@ -6035,9 +6049,21 @@ nil</div>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Function called to format an inlinetask in LaTeX code.</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq org-latex-format-inlinetask-function</span>
     <span class="org-comment-delimiter">;;       </span><span class="org-comment">'leuven--org-latex-format-inlinetask)</span>
-
     )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "org-inlinetask" ends here</span>
 </pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+  (setq org-inlinetask-export-templates
+        '((latex <span class="org-string">"%s\\footnote{%s\\\\ %s}\\marginpar{\\fbox{\\thefootnote}}"</span>
+                 '((<span class="org-keyword">unless</span>
+                       (eq todo <span class="org-string">""</span>)
+                     (format <span class="org-string">"\\fbox{\\textsc{%s%s}}"</span> todo priority))
+                   heading content))))
+</pre></div>
+<div class="inlinetask"><b><span class="todo TODO">TODO</span> Use todonotes</b><br />
+<p>Why use footnotes when you can use <code>todonotes</code> (<a href="https://www.ctan.org/pkg/todonotes">https://www.ctan.org/pkg/todonotes</a>)?</p>
+<p>It can even make a <code>list-of-todo-notes</code>. See also <a href="http://tex.stackexchange.com/questions/9796/how-to-add-todo-notes">http://tex.stackexchange.com/questions/9796/how-to-add-todo-notes</a> for more options.</p>
+</div>
 <div class="inlinetask"><b><span class="todo TODO">TODO</span> Have a solution for base article, report, book (w/o todonotes)</b><br />
 nil</div>
 </div>
@@ -6133,7 +6159,8 @@ nil</div>
 </div>
 <div id="outline-container-orgheadline152" class="outline-4">
 <h4 id="orgheadline152"><a id="ID-a9fe61b7-cdbd-478e-a4af-da9e122fb2d9" name="ID-a9fe61b7-cdbd-478e-a4af-da9e122fb2d9"></a>Sparse trees</h4>
-<div class="outline-text-4 org-src-container" id="text-orgheadline152">
+<div class="outline-text-4" id="text-orgheadline152">
+<div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** (info "(org)Sparse trees")</span>
 
@@ -6152,6 +6179,13 @@ nil</div>
   (setq org-show-entry-below t)
   (setq org-show-entry-below '((org-goto . t)))
 </pre></div>
+<p>If you're using development version, see <code>org-show-context-detail</code> instead:</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+  (add-to-list 'org-show-context-detail '(tags-tree . minimal))
+  (add-to-list 'org-show-context-detail '(occur-tree . minimal))
+</pre></div>
+</div>
 </div>
 <div id="outline-container-orgheadline155" class="outline-4">
 <h4 id="orgheadline155">Plain lists</h4>
@@ -8731,10 +8765,10 @@ nil</div>
 
 <span class="org-org-level-1">* Appendix                                                             </span><span class="org-org-tag"><span class="org-org-level-1">:ignore:</span></span>
 <span class="org-org-meta-line">#+LaTeX: \begin{appendices}</span>
-<span class="org-org-level-2">** Reproduction</span>
-<span class="org-org-level-2">** Data Sets</span>
-<span class="org-org-level-2">** Tooling</span>
-<span class="org-org-level-2">** Definitions</span>
+<span class="org-org-hide">*</span><span class="org-org-level-2">* Reproduction</span>
+<span class="org-org-hide">*</span><span class="org-org-level-2">* Data Sets</span>
+<span class="org-org-hide">*</span><span class="org-org-level-2">* Tooling</span>
+<span class="org-org-hide">*</span><span class="org-org-level-2">* Definitions</span>
 <span class="org-org-meta-line">#+LaTeX: \end{appendices}</span>
 </pre></div>
 <div class="org-src-container">
@@ -15072,6 +15106,7 @@ nil</div>
 
   (GNUEmacs24
     (<span class="org-keyword">ignore-errors</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Load custom theme "Leuven" and enable it.</span>
       (load-theme 'leuven t)))
 </pre></div>
 </div>

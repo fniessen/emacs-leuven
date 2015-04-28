@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150423.1543
+;; Version: 20150428.1129
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150423.1543"
+(defconst leuven--emacs-version "20150428.1129"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2049,6 +2049,15 @@ These packages are neither built-in nor already installed nor ignored."
               (split-window-vertically arg))))
 
     ;; (setq ediff-merge-split-window-function 'split-window-vertically)
+
+    (defun turn-on-visible-mode ()
+      "Make all invisible text temporarily visible."
+      (visible-mode 1)
+      (setq truncate-lines nil))
+
+    ;; Force the buffers to unhide (folded) text (in Org files).
+    (add-hook 'ediff-prepare-buffer-hook 'turn-on-visible-mode)
+
     )
 
 ;;** 18.11 (info "(emacs)Misc File Ops")
@@ -3711,7 +3720,6 @@ These packages are neither built-in nor already installed nor ignored."
     ;; ;; Function called to format an inlinetask in LaTeX code.
     ;; (setq org-latex-format-inlinetask-function
     ;;       'leuven--org-latex-format-inlinetask)
-
     )                                   ; with-eval-after-load "org-inlinetask" ends here
 
 ;;** (info "(org)Visibility cycling")
@@ -3790,6 +3798,9 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Show the entry below a headline when revealing a location.
   (setq org-show-entry-below t)
   (setq org-show-entry-below '((org-goto . t)))
+
+  (add-to-list 'org-show-context-detail '(tags-tree . minimal))
+  (add-to-list 'org-show-context-detail '(occur-tree . minimal))
 
 ;;** (info "(org)Plain lists")
 
@@ -9395,6 +9406,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (GNUEmacs24
     (ignore-errors
+      ;; Load custom theme "Leuven" and enable it.
       (load-theme 'leuven t)))
 
   ;; color sort order for `list-colors-display'
