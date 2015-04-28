@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150428.1129
+;; Version: 20150428.1137
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150428.1129"
+(defconst leuven--emacs-version "20150428.1137"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3786,21 +3786,23 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "2.6 (org)Sparse trees")
 
-  ;; Show full hierarchy when revealing a location.
-  (setq org-show-hierarchy-above t)
+  (with-eval-after-load "org"
 
-  ;; Don't show following heading when revealing a location.
-  (setq org-show-following-heading nil)
+    ;; Show full hierarchy when revealing a location.
+    (setq org-show-hierarchy-above t)     ; OBSOLETE
 
-  ;; Don't show all sibling headings when revealing a location.
-  (setq org-show-siblings nil)
+    ;; Don't show following heading when revealing a location.
+    (setq org-show-following-heading nil) ; OBSOLETE
 
-  ;; Show the entry below a headline when revealing a location.
-  (setq org-show-entry-below t)
-  (setq org-show-entry-below '((org-goto . t)))
+    ;; Don't show all sibling headings when revealing a location.
+    (setq org-show-siblings nil)          ; OBSOLETE
 
-  (add-to-list 'org-show-context-detail '(tags-tree . minimal))
-  (add-to-list 'org-show-context-detail '(occur-tree . minimal))
+    ;; Show the entry below a headline when revealing a location.
+    (setq org-show-entry-below t)         ; OBSOLETE
+    (setq org-show-entry-below '((org-goto . t)))
+
+    (add-to-list 'org-show-context-detail '(tags-tree . minimal))
+    (add-to-list 'org-show-context-detail '(occur-tree . minimal)))
 
 ;;** (info "(org)Plain lists")
 
