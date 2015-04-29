@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150428.2257
+;; Version: 20150429.1558
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150428.2257"
+(defconst leuven--emacs-version "20150429.1558"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -552,6 +552,17 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Print the current buffer line number.
   (global-set-key (kbd "M-G") 'what-line)
+
+  (defun goto-line-with-feedback ()
+    "Show line numbers temporarily, while prompting for the line number input"
+    (interactive)
+    (unwind-protect
+        (progn
+          (linum-mode 1)
+          (goto-line (read-number "Goto line: ")))
+      (linum-mode -1)))
+
+  (global-set-key [remap goto-line] 'goto-line-with-feedback)
 
 ;;** 7.4 (info "(emacs)Basic Undo")ing Changes
 
@@ -1896,7 +1907,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;; key binding
   (global-set-key (kbd "<C-f12>") 'leuven-revert-buffer-without-query)
 
-  ;; Enable Global Auto-Revert mode.
+  ;; Enable Global Auto-Revert mode (auto refresh buffers).
   (global-auto-revert-mode 1)           ; Can generate a lot of network traffic
                                         ; if `auto-revert-remote-files' is set
                                         ; to non-nil.
@@ -1904,8 +1915,8 @@ These packages are neither built-in nor already installed nor ignored."
   ;; ;; Global Auto-Revert mode operates on all buffers (Dired, among others)
   ;; (setq global-auto-revert-non-file-buffers t)
 
-  ;; ;; Do not generate any messages.
-  ;; (setq auto-revert-verbose nil) ; avoid "Reverting buffer `some-dir/'."
+  ;; ;; Do not generate any messages (be quiet about refreshing Dired).
+  ;; (setq auto-revert-verbose nil)     ; Avoid "Reverting buffer `some-dir/'.".
 
 ;;** 18.6 (info "(emacs)Auto Save"): Protection Against Disasters
 
@@ -6647,6 +6658,13 @@ this with to-do items than with projects or headings."
     (transpose-lines 1)
     (forward-line -1))
 
+  (GNUEmacs24
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (local-set-key (kbd "<C-S-up>") 'leuven-move-line-up)
+                (local-set-key (kbd "<C-S-down>") 'leuven-move-line-down))))
+                                        ; Sublime Text
+
   (defun leuven-scroll-up-one-line ()
     "Scroll text of current window upward 1 line."
     (interactive)
@@ -6661,13 +6679,8 @@ this with to-do items than with projects or headings."
     (add-hook 'prog-mode-hook
               (lambda ()
                 (local-set-key (kbd "<C-up>") 'leuven-scroll-up-one-line)
-                (local-set-key (kbd "<C-down>") 'leuven-scroll-down-one-line)
+                (local-set-key (kbd "<C-down>") 'leuven-scroll-down-one-line))))
                                         ; Sublime Text + SQL Management Studio
-
-                (local-set-key (kbd "<C-S-up>") 'leuven-move-line-up)
-                (local-set-key (kbd "<C-S-down>") 'leuven-move-line-down)
-                                        ; Sublime Text
-                )))
 
 ;;** 26.1 Major Modes for (info "(emacs)Program Modes")
 
@@ -7908,6 +7921,26 @@ a clean buffer we're an order of magnitude laxer about checking."
                 (t
                  "-a -F --group-directories-first -l --time-style=long-iso")))
 
+;;** (info "(emacs)Dired Navigation")
+
+    (leuven--section "30.2 (emacs)Dired Navigation")
+
+    (defun dired-back-to-top ()
+      (interactive)
+      (beginning-of-buffer)
+      (dired-next-line 4))
+
+    (define-key dired-mode-map
+      (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
+
+    (defun dired-jump-to-bottom ()
+      (interactive)
+      (end-of-buffer)
+      (dired-next-line -1))
+
+    (define-key dired-mode-map
+      (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
+
 ;;** (info "(emacs)Dired Deletion")
 
     (leuven--section "30.3 (emacs)Dired Deletion")
@@ -7984,7 +8017,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (leuven--section "30.15 (emacs)Dired Updating")
 
-    ;; automatically revert Dired buffer on revisiting
+    ;; Automatically revert Dired buffer on revisiting.
     (setq dired-auto-revert-buffer t)
 
     ;; Dired sort
