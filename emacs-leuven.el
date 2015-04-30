@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150429.1558
+;; Version: 20150430.2301
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150429.1558"
+(defconst leuven--emacs-version "20150430.2301"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3812,8 +3812,9 @@ These packages are neither built-in nor already installed nor ignored."
     (setq org-show-entry-below t)         ; OBSOLETE
     (setq org-show-entry-below '((org-goto . t)))
 
-    (add-to-list 'org-show-context-detail '(tags-tree . minimal))
-    (add-to-list 'org-show-context-detail '(occur-tree . minimal)))
+    (when (boundp 'org-show-context-detail)
+      (add-to-list 'org-show-context-detail '(tags-tree . minimal))
+      (add-to-list 'org-show-context-detail '(occur-tree . minimal))))
 
 ;;** (info "(org)Plain lists")
 

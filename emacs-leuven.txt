@@ -6198,8 +6198,9 @@ See also [[id:a9fe61b7-cdbd-478e-a4af-da9e122fb2d9][Sparse trees]] for behavior 
 If you're using development version, see ~org-show-context-detail~ instead:
 
 #+begin_src emacs-lisp
-    (add-to-list 'org-show-context-detail '(tags-tree . minimal))
-    (add-to-list 'org-show-context-detail '(occur-tree . minimal)))
+    (when (boundp 'org-show-context-detail)
+      (add-to-list 'org-show-context-detail '(tags-tree . minimal))
+      (add-to-list 'org-show-context-detail '(occur-tree . minimal))))
 #+end_src
 
 *** Plain lists
