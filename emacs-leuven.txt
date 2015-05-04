@@ -3377,6 +3377,13 @@ In Ediff, press:
     ;; Force the buffers to unhide (folded) text (in Org files).
     (add-hook 'ediff-prepare-buffer-hook 'turn-on-visible-mode)
 
+    (defun turn-off-visible-mode ()
+      "Disable Visible mode."
+      (visible-mode 0)
+      (setq truncate-lines t))
+
+    (add-hook 'ediff-quit-hook 'turn-off-visible-mode)
+
     )
 #+end_src
 

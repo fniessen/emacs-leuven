@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150430.2301
+;; Version: 20150504.1026
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150430.2301"
+(defconst leuven--emacs-version "20150504.1026"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2068,6 +2068,13 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; Force the buffers to unhide (folded) text (in Org files).
     (add-hook 'ediff-prepare-buffer-hook 'turn-on-visible-mode)
+
+    (defun turn-off-visible-mode ()
+      "Disable Visible mode."
+      (visible-mode 0)
+      (setq truncate-lines t))
+
+    (add-hook 'ediff-quit-hook 'turn-off-visible-mode)
 
     )
 

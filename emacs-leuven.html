@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150430.2301</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150504.1027</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150430.2301"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150504.1027"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -3513,6 +3513,13 @@ M-: (executable-find "diff") RET
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Force the buffers to unhide (folded) text (in Org files).</span>
     (add-hook 'ediff-prepare-buffer-hook 'turn-on-visible-mode)
+
+    (<span class="org-keyword">defun</span> <span class="org-function-name">turn-off-visible-mode</span> ()
+      <span class="org-doc">"Disable Visible mode."</span>
+      (visible-mode 0)
+      (setq truncate-lines t))
+
+    (add-hook 'ediff-quit-hook 'turn-off-visible-mode)
 
     )
 </pre></div>
