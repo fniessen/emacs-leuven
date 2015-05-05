@@ -1,10 +1,11 @@
+
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
 ;; Copyright (C) 1999-2015 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150504.1026
+;; Version: 20150505.2101
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +73,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150504.1026"
+(defconst leuven--emacs-version "20150505.2101"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5944,7 +5945,8 @@ this with to-do items than with projects or headings."
                              (min (1+ (match-end 0)) end)))
                     (unless (bolp) (insert "\n"))))))))))))
 
-  (add-hook 'org-mode-hook 'org-repair-property-drawers)
+  (when (boundp 'org-planning-line-re)
+    (add-hook 'org-mode-hook 'org-repair-property-drawers))
 
   (defun leuven--org-switch-dictionary ()
     "Set language if Flyspell is enabled and `#+LANGUAGE:' is on top 8 lines."

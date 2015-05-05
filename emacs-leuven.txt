@@ -9288,7 +9288,8 @@ Find all entries where :PROPERTIES: is not the first item listed.
                              (min (1+ (match-end 0)) end)))
                     (unless (bolp) (insert "\n"))))))))))))
 
-  (add-hook 'org-mode-hook 'org-repair-property-drawers)
+  (when (boundp 'org-planning-line-re)
+    (add-hook 'org-mode-hook 'org-repair-property-drawers))
 #+end_src
 
 *** Ispell
