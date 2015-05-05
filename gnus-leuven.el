@@ -1,10 +1,11 @@
+
 ;;; gnus-leuven.el --- my Gnus config file
 
 ;; Copyright (C) 2004-2015 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150410.0919
+;; Version: 20150505.2250
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -323,26 +324,55 @@
     (define-key gnus-summary-mode-map
       (kbd "F") 'leuven-gnus-summary-followup-with-original))
 
-  (setq gnus-ticked-mark ?⚑)
-  (setq gnus-dormant-mark ?⚐)
-  (setq gnus-unread-mark ?✉)
+  (when (char-displayable-p ?\u2691)
+    (setq gnus-ticked-mark ?⚑))
 
-  (setq gnus-del-mark ?✗)
-  (setq gnus-read-mark ?✓)
-  (setq gnus-ancient-mark ? )
-  (setq gnus-killed-mark ?☠)
-  (setq gnus-canceled-mark ?↗)
+  (when (char-displayable-p ?\u2690)
+    (setq gnus-dormant-mark ?⚐))
 
-  (setq gnus-score-over-mark ?↑)
-  (setq gnus-score-below-mark ?↓)
+  (when (char-displayable-p ?\u2709)
+    (setq gnus-unread-mark ?✉))
 
-  (setq gnus-replied-mark ?↺)
-  (setq gnus-forwarded-mark ?↪)
-  (setq gnus-cached-mark ?☍)
-  (setq gnus-unseen-mark ?✩)
-  (setq gnus-recent-mark ?★)
-  (setq gnus-process-mark ?⚙)
-  (setq gnus-expirable-mark ?♻)
+  (when (char-displayable-p ?\u2717)
+    (setq gnus-del-mark ?✗))
+
+  (when (char-displayable-p ?\u2713)
+    (setq gnus-read-mark ?✓))
+
+  (setq gnus-ancient-mark ? ))
+
+  (when (char-displayable-p ?\u2620)
+    (setq gnus-killed-mark ?☠))
+
+  (when (char-displayable-p ?\u2197)
+    (setq gnus-canceled-mark ?↗))
+
+  (when (char-displayable-p ?\u2191)
+    (setq gnus-score-over-mark ?↑))
+
+  (when (char-displayable-p ?\u2193)
+    (setq gnus-score-below-mark ?↓))
+
+  (when (char-displayable-p ?\u21BA)
+    (setq gnus-replied-mark ?↺))
+
+  (when (char-displayable-p ?\u21AA)
+    (setq gnus-forwarded-mark ?↪))
+
+  (when (char-displayable-p ?\u260D)
+    (setq gnus-cached-mark ?☍))
+
+  (when (char-displayable-p ?\u2729)
+    (setq gnus-unseen-mark ?✩))
+
+  (when (char-displayable-p ?\u2605)
+    (setq gnus-recent-mark ?★))
+
+  (when (char-displayable-p ?\u2699)
+    (setq gnus-process-mark ?⚙))
+
+  (when (char-displayable-p ?\u267B)
+    (setq gnus-expirable-mark ?♻))
 
 ;;** 3.9 (info "(gnus)Threading")
 
