@@ -629,7 +629,7 @@ https://github.com/cofi/dotfiles/blob/master/gnus.el
   (when (char-displayable-p ?\u2713)
     (setq gnus-read-mark ?✓))
 
-  (setq gnus-ancient-mark ? ))
+  (setq gnus-ancient-mark ? )
 
   (when (char-displayable-p ?\u2620)
     (setq gnus-killed-mark ?☠))

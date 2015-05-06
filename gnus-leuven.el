@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150505.2250
+;; Version: 20150506.1038
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -339,7 +339,7 @@
   (when (char-displayable-p ?\u2713)
     (setq gnus-read-mark ?✓))
 
-  (setq gnus-ancient-mark ? ))
+  (setq gnus-ancient-mark ? )
 
   (when (char-displayable-p ?\u2620)
     (setq gnus-killed-mark ?☠))
