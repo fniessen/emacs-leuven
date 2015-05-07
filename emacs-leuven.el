@@ -1,11 +1,10 @@
-
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
 ;; Copyright (C) 1999-2015 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150505.2101
+;; Version: 20150507.1157
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -73,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150505.2101"
+(defconst leuven--emacs-version "20150507.1157"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2065,7 +2064,9 @@ These packages are neither built-in nor already installed nor ignored."
     (defun turn-on-visible-mode ()
       "Make all invisible text temporarily visible."
       (visible-mode 1)
-      (setq truncate-lines nil))
+      (setq truncate-lines nil)
+      (when (derived-mode-p 'org-mode)
+        (org-remove-inline-images)))
 
     ;; Force the buffers to unhide (folded) text (in Org files).
     (add-hook 'ediff-prepare-buffer-hook 'turn-on-visible-mode)
@@ -2073,7 +2074,9 @@ These packages are neither built-in nor already installed nor ignored."
     (defun turn-off-visible-mode ()
       "Disable Visible mode."
       (visible-mode 0)
-      (setq truncate-lines t))
+      (setq truncate-lines t)
+      (when (derived-mode-p 'org-mode)
+        (org-display-inline-images)))
 
     (add-hook 'ediff-quit-hook 'turn-off-visible-mode)
 
@@ -6069,39 +6072,6 @@ this with to-do items than with projects or headings."
 
   (leuven--section "15.10 (org)Interaction")
 
-  (with-eval-after-load "org"
-
-    ;; Support shift-selection for making and enlarging regions when the cursor
-    ;; is not in a special context.
-    (setq org-support-shift-select t)
-
-    ;; Maximum level for Imenu access to Org-mode headlines.
-    (setq org-imenu-depth 3)
-
-    ;; Extension of Imenu.
-    (when (and (featurep 'ob-core)      ; `org-babel' has been loaded.
-               (featurep 'imenu))       ; `imenu' has been loaded.
-
-      (setq org-src-blocks-imenu-generic-expression
-            `(("Snippets" ,org-babel-src-name-w-name-regexp 2)))
-
-      (add-hook 'org-mode-hook
-                (lambda ()
-                  (setq imenu-generic-expression
-                        org-src-blocks-imenu-generic-expression))))
-
-    ;; Alternative to imenu.
-    (defun dan/find-in-buffer ()
-      (interactive)
-      (let ((targets
-             `(("<named src blocks>" . ,org-babel-src-name-regexp)
-               ("<src block results>" . ,org-babel-result-regexp))))
-        (occur
-         (cdr
-          (assoc
-           (completing-read "Find: " (mapcar #'car targets)) targets)))
-        (other-window 1))))
-
   ;; Keep my encrypted data (like account passwords) in my Org mode files with
   ;; a special tag instead.
   (with-eval-after-load "org"
@@ -6273,35 +6243,31 @@ this with to-do items than with projects or headings."
 
 ;;** A.6 (info "(org)Dynamic blocks")
 
-  (with-eval-after-load "org"
-    (message "... Org Update dynamic blocks and tables")
+  (defun leuven-org-update-buffer ()
+    "Update all dynamic blocks and all tables in the buffer."
+    (interactive)
+    (when (derived-mode-p 'org-mode)
+      (message "(Info) Update Org buffer %s"
+               (file-name-nondirectory (buffer-file-name)))
+      ;; (sit-for 1.5)
+      (let ((cache-long-scans nil)    ; Make `forward-line' much faster and
+                                      ; thus `org-goto-line', `org-table-sum',
+                                      ; etc.
+            (flyspell-mode-before-save flyspell-mode)
+            (buffer-undo-list buffer-undo-list)) ; For goto-chg.
+        (flyspell-mode -1)            ; Temporarily disable Flyspell to avoid
+                                      ; checking the following modifications
+                                      ; of the buffer.
+        (measure-time "Realigned all tags" (org-align-all-tags))
+        (measure-time "Updated all dynamic blocks" (org-update-all-dblocks))
+        (measure-time "Re-applied formulas to all tables"
+                      (org-table-iterate-buffer-tables))
+        (when (file-exists-p (buffer-file-name (current-buffer)))
+          (leuven-org-remove-redundant-tags))
+        (when flyspell-mode-before-save (flyspell-mode 1)))))
 
-    (defun leuven-org-update-buffer ()
-      "Update all dynamic blocks and all tables in the buffer."
-      (interactive)
-      (when (derived-mode-p 'org-mode)
-        (message "(Info) Update Org buffer %s"
-                 (file-name-nondirectory (buffer-file-name)))
-        ;; (sit-for 1.5)
-        (let ((cache-long-scans nil)    ; Make `forward-line' much faster and
-                                        ; thus `org-goto-line', `org-table-sum',
-                                        ; etc.
-              (flyspell-mode-before-save flyspell-mode)
-              (buffer-undo-list buffer-undo-list)) ; For goto-chg.
-          (flyspell-mode -1)            ; Temporarily disable Flyspell to avoid
-                                        ; checking the following modifications
-                                        ; of the buffer.
-          (measure-time "Realigned all tags" (org-align-all-tags))
-          (measure-time "Updated all dynamic blocks" (org-update-all-dblocks))
-          (measure-time "Re-applied formulas to all tables"
-                        (org-table-iterate-buffer-tables))
-          (when (file-exists-p (buffer-file-name (current-buffer)))
-            (leuven-org-remove-redundant-tags))
-          (when flyspell-mode-before-save (flyspell-mode 1)))))
-
-    ;; Make sure that all dynamic blocks and all tables are always up-to-date.
-    (add-hook 'before-save-hook 'leuven-org-update-buffer)
-    (message "Add leuven-org-update-buffer to before-save-hook  <<<<<<<<<<<<<<"))
+  ;; Make sure that all dynamic blocks and all tables are always up-to-date.
+  (add-hook 'before-save-hook 'leuven-org-update-buffer)
 
   ;; (with-eval-after-load "org"
   ;;   (message "... Org Effectiveness")

@@ -3372,7 +3372,9 @@ In Ediff, press:
     (defun turn-on-visible-mode ()
       "Make all invisible text temporarily visible."
       (visible-mode 1)
-      (setq truncate-lines nil))
+      (setq truncate-lines nil)
+      (when (derived-mode-p 'org-mode)
+        (org-remove-inline-images)))
 
     ;; Force the buffers to unhide (folded) text (in Org files).
     (add-hook 'ediff-prepare-buffer-hook 'turn-on-visible-mode)
@@ -3380,7 +3382,9 @@ In Ediff, press:
     (defun turn-off-visible-mode ()
       "Disable Visible mode."
       (visible-mode 0)
-      (setq truncate-lines t))
+      (setq truncate-lines t)
+      (when (derived-mode-p 'org-mode)
+        (org-display-inline-images)))
 
     (add-hook 'ediff-quit-hook 'turn-off-visible-mode)
 
@@ -9492,7 +9496,16 @@ For security resons, evaluation is not turned on by default.
   (leuven--section "15.10 (org)Interaction")
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_note
+On [2015-05-01 Fri], in commit ~49a656a~, Nicolas Goaziou has removed
+~org-babel-src-name-w-name-regexp~, and replaced it by the function call
+~(org-babel-named-src-block-regexp-for-name)~.
+
+Until modification of the following code, it has been disabled, as it breaks
+Org...
+#+end_note
+
+#+begin_src emacs-lisp :tangle no
   (with-eval-after-load "org"
 
     ;; Support shift-selection for making and enlarging regions when the cursor
@@ -9513,9 +9526,7 @@ For security resons, evaluation is not turned on by default.
                 (lambda ()
                   (setq imenu-generic-expression
                         org-src-blocks-imenu-generic-expression))))
-#+end_src
 
-#+begin_src emacs-lisp
     ;; Alternative to imenu.
     (defun dan/find-in-buffer ()
       (interactive)
@@ -9769,38 +9780,40 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 
 ** A.6 Dynamic blocks
 
+#+begin_note
+For some (yet) unknown reason, ~leuven-org-update-buffer~ gets added to a local
+copy of the global variable ~before-save-hook~.  We now decided to add it to the
+hook outside of Org (not anymore in an ~with-eval-after-load~ form).
+#+end_note
+
 #+begin_src emacs-lisp
 ;;** A.6 (info "(org)Dynamic blocks")
 
-  (with-eval-after-load "org"
-    (message "... Org Update dynamic blocks and tables")
+  (defun leuven-org-update-buffer ()
+    "Update all dynamic blocks and all tables in the buffer."
+    (interactive)
+    (when (derived-mode-p 'org-mode)
+      (message "(Info) Update Org buffer %s"
+               (file-name-nondirectory (buffer-file-name)))
+      ;; (sit-for 1.5)
+      (let ((cache-long-scans nil)    ; Make `forward-line' much faster and
+                                      ; thus `org-goto-line', `org-table-sum',
+                                      ; etc.
+            (flyspell-mode-before-save flyspell-mode)
+            (buffer-undo-list buffer-undo-list)) ; For goto-chg.
+        (flyspell-mode -1)            ; Temporarily disable Flyspell to avoid
+                                      ; checking the following modifications
+                                      ; of the buffer.
+        (measure-time "Realigned all tags" (org-align-all-tags))
+        (measure-time "Updated all dynamic blocks" (org-update-all-dblocks))
+        (measure-time "Re-applied formulas to all tables"
+                      (org-table-iterate-buffer-tables))
+        (when (file-exists-p (buffer-file-name (current-buffer)))
+          (leuven-org-remove-redundant-tags))
+        (when flyspell-mode-before-save (flyspell-mode 1)))))
 
-    (defun leuven-org-update-buffer ()
-      "Update all dynamic blocks and all tables in the buffer."
-      (interactive)
-      (when (derived-mode-p 'org-mode)
-        (message "(Info) Update Org buffer %s"
-                 (file-name-nondirectory (buffer-file-name)))
-        ;; (sit-for 1.5)
-        (let ((cache-long-scans nil)    ; Make `forward-line' much faster and
-                                        ; thus `org-goto-line', `org-table-sum',
-                                        ; etc.
-              (flyspell-mode-before-save flyspell-mode)
-              (buffer-undo-list buffer-undo-list)) ; For goto-chg.
-          (flyspell-mode -1)            ; Temporarily disable Flyspell to avoid
-                                        ; checking the following modifications
-                                        ; of the buffer.
-          (measure-time "Realigned all tags" (org-align-all-tags))
-          (measure-time "Updated all dynamic blocks" (org-update-all-dblocks))
-          (measure-time "Re-applied formulas to all tables"
-                        (org-table-iterate-buffer-tables))
-          (when (file-exists-p (buffer-file-name (current-buffer)))
-            (leuven-org-remove-redundant-tags))
-          (when flyspell-mode-before-save (flyspell-mode 1)))))
-
-    ;; Make sure that all dynamic blocks and all tables are always up-to-date.
-    (add-hook 'before-save-hook 'leuven-org-update-buffer)
-    (message "Add leuven-org-update-buffer to before-save-hook  <<<<<<<<<<<<<<"))
+  ;; Make sure that all dynamic blocks and all tables are always up-to-date.
+  (add-hook 'before-save-hook 'leuven-org-update-buffer)
 #+end_src
 
 ** Org-contrib
