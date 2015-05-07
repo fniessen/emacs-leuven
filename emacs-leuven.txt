@@ -7152,22 +7152,22 @@ The following rules will apply to interpret an email to a task:
 
 Additional parameters can be included via the commands you use:
 
-- Create a TODO Action ::
+- Create a ~TODO~ Action ::
      Create a new action.
 
-- Create a TODO Action Remind 3 ::
+- Create a ~TODO~ Action Remind 3 ::
      Create a new action.  Set reminder in 3 days.
 
-- Create a TODO Action Due Date 7 ::
+- Create a ~TODO~ Action Due Date 7 ::
      Create a new action.  Set due date in 7 days.
 
-- Create a TODO Action of an existing Project ::
+- Create a ~TODO~ Action of an existing Project ::
      Attach it to something that we're already working on.
 
-- Create a WAIT Item ::
+- Create a ~WAIT~ Item ::
      Create a new "Waiting For" item, eventually with an "Assignee" property.
 
-- Create a SDAY Item ::
+- Create a ~SDAY~ Item ::
      Create a new "Someday" item.
 
 - Create a Reference Item ::
