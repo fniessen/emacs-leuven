@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150507.1440
+;; Version: 20150507.1512
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150507.1440"
+(defconst leuven--emacs-version "20150507.1512"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3902,18 +3902,14 @@ These packages are neither built-in nor already installed nor ignored."
     ;; width if none is found.
     (setq org-image-actual-width '(320))
 
-    (defun leuven-org-what-links-here ()
-      "Show all links that point to the current node.  Also show the
+    (defun leuven-org-search-backlinks ()
+      "Show all entries that point to the current node.  Also show the current
     node itself.
 
     This makes ID links quasi-bidirectional."
       (interactive)
-      (let ((org-agenda-files (alpha-org-all-org-files
-                               :archive t
-                               :text-search-extra t))
-            ;; Turn off redundancy.
-            ;; FIXME Probably going to be redone.
-            org-agenda-text-search-extra-files)
+      (let ((org-agenda-files
+             (add-to-list 'org-agenda-files (buffer-file-name))))
         (org-search-view nil (org-entry-get nil "ID" t))))
 
     ;; Shortcut links.

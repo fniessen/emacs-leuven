@@ -6344,18 +6344,14 @@ and resize it to a specific width.
 Search for backlinks:
 
 #+begin_src emacs-lisp
-    (defun leuven-org-what-links-here ()
-      "Show all links that point to the current node.  Also show the
+    (defun leuven-org-search-backlinks ()
+      "Show all entries that point to the current node.  Also show the current
     node itself.
 
     This makes ID links quasi-bidirectional."
       (interactive)
-      (let ((org-agenda-files (alpha-org-all-org-files
-                               :archive t
-                               :text-search-extra t))
-            ;; Turn off redundancy.
-            ;; FIXME Probably going to be redone.
-            org-agenda-text-search-extra-files)
+      (let ((org-agenda-files
+             (add-to-list 'org-agenda-files (buffer-file-name))))
         (org-search-view nil (org-entry-get nil "ID" t))))
 #+end_src
 
@@ -6806,16 +6802,16 @@ special meaning are written with all capitals.
 
 Schedule it with ~C-c C-s~:
 
-- RET ::
+- ~RET~ ::
      Today.
 
-- +1d RET ::
+- ~+1d RET~ ::
      Tomorrow.
 
-- +1w RET ::
+- ~+1w RET~ ::
      Next week.
 
-- +4w RET ::
+- ~+4w RET~ ::
      Next "month".
 
 Remove scheduling date with ~C-u C-c C-s~.
@@ -9486,9 +9482,6 @@ For security resons, evaluation is not turned on by default.
 #+end_src
 
 *** Interaction with other packages
-    :PROPERTIES:
-    :ID:       366386cb-9c4f-4d61-b676-e742e6277587
-    :END:
 
 #+begin_src emacs-lisp
 ;;** 15.10 (info "(org)Interaction")
