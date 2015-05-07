@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150507.1158</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150507.1441</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150507.1158"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150507.1441"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -9484,7 +9484,7 @@ nil</div>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Extension of Imenu.</span>
     (<span class="org-keyword">when</span> (and (<span class="org-keyword">featurep</span> '<span class="org-constant">ob-core</span>)      <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">org-babel</span></span><span class="org-comment">' has been loaded.</span>
-               (<span class="org-keyword">featurep</span> '<span class="org-constant">imenu</span>))       <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">imenu</span></span><span class="org-comment">' has been loaded.</span>
+               (<span class="org-keyword">featurep</span> '<span class="org-constant">imenu</span>))       <span class="org-comment-delimiter">; </span><span class="org-comment">Imenu has been loaded.</span>
 
       (setq org-src-blocks-imenu-generic-expression
             `((<span class="org-string">"Snippets"</span> ,org-babel-src-name-w-name-regexp 2)))
@@ -9494,7 +9494,7 @@ nil</div>
                   (setq imenu-generic-expression
                         org-src-blocks-imenu-generic-expression))))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Alternative to imenu.</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Alternative to Imenu.</span>
     (<span class="org-keyword">defun</span> <span class="org-function-name">dan/find-in-buffer</span> ()
       (interactive)
       (<span class="org-keyword">let</span> ((targets
@@ -10444,7 +10444,7 @@ nil</div>
 </div>
 </div>
 <div id="outline-container-orgheadline256" class="outline-3">
-<h3 id="orgheadline256">Top-Level Definitions, or Defuns</h3>
+<h3 id="orgheadline256"><a id="ID-ea687cd8-fff0-461f-999e-c9fbc84b5901" name="ID-ea687cd8-fff0-461f-999e-c9fbc84b5901"></a>Top-Level Definitions, or Defuns</h3>
 <div class="outline-text-3" id="text-orgheadline256">
 <p>Imenu is a great tool allowing you to <b>go to a function definition</b> (by name), but only if the definition is <b>in the buffer you are currently editing</b> (it won't jump and open another file).</p>
 <p>XXX Autoloaded?</p>
@@ -10494,11 +10494,14 @@ nil</div>
 <span class="org-string">mouse-2: toggle rest visibility\n\</span>
 <span class="org-string">mouse-3: go to end"</span>) <span class="org-string">"]"</span>))))
 </pre></div>
-<p><code>helm-imenu-anywhere</code> command pops an Helm interface with all the imenu tags <b>across all buffers with the same mode as the current one</b>. In a sense, it is similar to etag selection, but works only for the open buffers. This is often more convenient as you don't have to explicitly build the etags table.</p>
+<p><code>helm-imenu-anywhere</code> command pops an Helm interface with all the <b>Imenu tags</b> <b>across all buffers with the same mode as the current one</b>.</p>
+<div class="note">
+<p>In a sense, it is similar to <code>etag</code> selection, but works only for the <i>open</i> buffers - you don't get thousands of symbols from <code>etags</code> to deal with. And this is often more convenient as you don't have to explicitly build the <code>etags</code> table.</p>
+</div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
   (GNUEmacs
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Helm imenu tag selection across all buffers with the same mode.</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Helm Imenu tag selection across all buffers with the same mode.</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"imenu-anywhere-autoloads"</span>
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">helm</span></span><span class="org-comment">' source for `</span><span class="org-constant"><span class="org-comment">imenu-anywhere</span></span><span class="org-comment">'.</span>
@@ -11658,6 +11661,15 @@ nil</div>
 <h3 id="orgheadline290">Tags Tables (navigating code)</h3>
 <div class="outline-text-3" id="text-orgheadline290">
 <p>Using tags tables is the most generic approach to setup <b>code navigation</b>. A "tag" signifies a language object for which an index entry is available.</p>
+<div class="note">
+<p>There are many situations when you cannot or might not want to use <code>tags</code>. You would like to use <a href="#orgheadline256">Imenu</a> because:</p>
+<ul class="org-ul">
+<li>Imenu is meaningful in non-programing modes and for non-visiting buffers.</li>
+<li>Virtually all modes already define Imenu, so it works out of the box everywhere, even if you read a language in which you will never write.</li>
+<li>And finally, Imenu operates on what you work on - open files - you don't get thousands of symbols from <code>etags</code> to deal with.</li>
+</ul>
+<p>Using <code>imenu-anywhere</code> offers a much better, more uniform and more consistent experience than anything else.</p>
+</div>
 <p>Always run <code>make TAGS</code> right after you build some project.</p>
 <p>Once you've built a <code>TAGS</code> file (<code>ctags</code> / <code>etags</code>), you can find all commands that match a regexp.</p>
 <p>Support for tags has been in Emacs for a long time: any installation of Emacs should comes with the <code>etags</code> program, which supports many different languages.</p>

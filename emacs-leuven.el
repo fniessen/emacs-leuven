@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150507.1157
+;; Version: 20150507.1440
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150507.1157"
+(defconst leuven--emacs-version "20150507.1440"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -6704,7 +6704,7 @@ mouse-2: toggle rest visibility\n\
 mouse-3: go to end") "]"))))
 
   (GNUEmacs
-    ;; Helm imenu tag selection across all buffers with the same mode.
+    ;; Helm Imenu tag selection across all buffers with the same mode.
     (with-eval-after-load "imenu-anywhere-autoloads"
 
       ;; `helm' source for `imenu-anywhere'.

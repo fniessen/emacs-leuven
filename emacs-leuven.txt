@@ -9517,7 +9517,7 @@ Org...
 
     ;; Extension of Imenu.
     (when (and (featurep 'ob-core)      ; `org-babel' has been loaded.
-               (featurep 'imenu))       ; `imenu' has been loaded.
+               (featurep 'imenu))       ; Imenu has been loaded.
 
       (setq org-src-blocks-imenu-generic-expression
             `(("Snippets" ,org-babel-src-name-w-name-regexp 2)))
@@ -9527,7 +9527,7 @@ Org...
                   (setq imenu-generic-expression
                         org-src-blocks-imenu-generic-expression))))
 
-    ;; Alternative to imenu.
+    ;; Alternative to Imenu.
     (defun dan/find-in-buffer ()
       (interactive)
       (let ((targets
@@ -10503,6 +10503,9 @@ Also =who-calls.el=
 #+end_src
 
 ** Top-Level Definitions, or Defuns
+   :PROPERTIES:
+   :ID:       ea687cd8-fff0-461f-999e-c9fbc84b5901
+   :END:
 
 Imenu is a great tool allowing you to *go to a function definition* (by name), but
 only if the definition is *in the buffer you are currently editing* (it won't jump
@@ -10557,14 +10560,18 @@ mouse-2: toggle rest visibility\n\
 mouse-3: go to end") "]"))))
 #+end_src
 
-~helm-imenu-anywhere~ command pops an Helm interface with all the imenu tags
-*across all buffers with the same mode as the current one*.  In a sense, it is
-similar to etag selection, but works only for the open buffers.  This is often
-more convenient as you don't have to explicitly build the etags table.
+~helm-imenu-anywhere~ command pops an Helm interface with all the *Imenu tags*
+*across all buffers with the same mode as the current one*.
+
+#+begin_note
+In a sense, it is similar to ~etag~ selection, but works only for the /open/
+buffers -- you don't get thousands of symbols from ~etags~ to deal with.  And this
+is often more convenient as you don't have to explicitly build the ~etags~ table.
+#+end_note
 
 #+begin_src emacs-lisp
   (GNUEmacs
-    ;; Helm imenu tag selection across all buffers with the same mode.
+    ;; Helm Imenu tag selection across all buffers with the same mode.
     (with-eval-after-load "imenu-anywhere-autoloads"
 
       ;; `helm' source for `imenu-anywhere'.
@@ -11754,6 +11761,22 @@ See http://whattheemacsd.com/setup-magit.el-01.html.
 
 Using tags tables is the most generic approach to setup *code navigation*.  A
 "tag" signifies a language object for which an index entry is available.
+
+#+begin_note
+There are many situations when you cannot or might not want to use ~tags~.  You
+would like to use [[id:ea687cd8-fff0-461f-999e-c9fbc84b5901][Imenu]] because:
+
+- Imenu is meaningful in non-programing modes and for non-visiting buffers.
+
+- Virtually all modes already define Imenu, so it works out of the box
+  everywhere, even if you read a language in which you will never write.
+
+- And finally, Imenu operates on what you work on -- open files -- you don't get
+  thousands of symbols from ~etags~ to deal with.
+
+Using ~imenu-anywhere~ offers a much better, more uniform and more consistent
+experience than anything else.
+#+end_note
 
 Always run ~make TAGS~ right after you build some project.
 
