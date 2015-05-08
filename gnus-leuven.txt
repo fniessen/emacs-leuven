@@ -16,6 +16,9 @@
 
 See http://www.gnu.org/software/emacs/manual/gnus.html
 
+This covers the basics of Gnus:
+http://koldfront.dk/text/gnus-email-basic-usage.html
+
 * Header
 
 #+name: current-time
