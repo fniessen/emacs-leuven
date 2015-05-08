@@ -1715,6 +1715,19 @@ for inserting a citation line in the correct language.
 
 ** Getting News
 
+Newsgroups in which I'm interested:
+
+- ~nntp+gmane:gmane.emacs.orgmode~
+- ~nntp+gmane:gwene.org.org-mode.git~
+- ~nntp+gmane:gwene.com.stackoverflow.feeds.tag.org-mode~
+- ~nntp+gmane:gwene.com.stackexchange.emacs.feeds.tag.tagnames.org-mode~
+- ~nntp+eternal-september:gnu.emacs.help~
+- ~nntp+eternal-september:gnu.emacs.bug~
+- ~nntp+eternal-september:gnu.emacs.gnus~
+- ~nntp+gmane:gmane.os.cygwin~
+- ~nntp+gmane:gmane.emacs.ess.general~
+- ~nntp+gmane:gmane.comp.finance.ledger.general~
+
 #+begin_src emacs-lisp
 ;;** 6.2 (info "(gnus)Getting News")
 
