@@ -737,7 +737,8 @@ like this into your configuration file:
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
           key-chord litable idle-require imenu-anywhere info+ interaction-log
           ledger-mode leuven-theme magit multi-term multiple-cursors pager
-          pdf-tools powerline rainbow-mode tidy unbound undo-tree w3m yasnippet
+          pdf-tools powerline rainbow-mode tidy unbound undo-tree w3m ws-butler
+          yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -1343,6 +1344,10 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
 *** Find All
 
 *Add all occurrences of the current word to the selection.*
+
+#+begin_src emacs-lisp
+    (global-set-key (kbd "C-;") 'mc/mark-all-symbols-like-this) ; Like Iedit
+#+end_src
 
 #+begin_src emacs-lisp
     ;; Mark all parts of the buffer that matches the current region.
@@ -2012,7 +2017,7 @@ Make trailing whitespace at the end of a line visible.
 
 Remove trailing whitespace (right trim lines) *in all lines*:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Nuke all trailing whitespaces in the buffer.
   (add-hook 'before-save-hook
             (lambda ()                  ; Except for ...
@@ -2027,7 +2032,16 @@ Remove trailing whitespace (right trim lines) *in all lines*:
                   (delete-trailing-whitespace)))))
 #+end_src
 
-Remove trailing whitespace *in edited lines* with ~ws-butler~?  Does not work!?
+Remove trailing whitespace *in edited lines* with ~ws-butler~:
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "ws-butler-autoloads"
+    (add-hook 'c-mode-common-hook 'ws-butler-mode)
+    (add-hook 'text-mode 'ws-butler-mode)
+    (add-hook 'fundamental-mode 'ws-butler-mode))
+#+end_src
+
+XXX Does work!?
 
 #+begin_src emacs-lisp
   ;; Visually indicate empty lines after the buffer end in the fringe.
@@ -2495,6 +2509,9 @@ the user see truly invisible matches before replacing them.
     ;; Enable Global-Anzu mode.
     (global-anzu-mode 1)
 
+    (global-set-key (kbd "M-%") 'anzu-query-replace)
+    (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
+
     ;; Lighter of anzu-mode.
     (setq anzu-mode-lighter "")
 
@@ -2804,6 +2821,14 @@ different from the language in the current window...
 word under the cursor.  If several spellings are possible, they appear in the
 minibuffer.  Just keep hitting ~C-.~ to replace the word with the successive
 suggestions.
+
+#+begin_src emacs-lisp
+    (with-eval-after-load "flyspell"
+
+      ;; Remove the binding of `flyspell-auto-correct-previous-word', to be used
+      ;; by Multiple Cursors.
+      (define-key flyspell-mode-map (kbd "C-;") nil))
+#+end_src
 
 ~flyspell-goto-next-error~ is bound to "C-,".  Press it to go to the next
 previously detected error.
@@ -5106,6 +5131,9 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
   (global-set-key (kbd "C-x \\") 'align-regexp)
 #+end_src
 
+*************** TODO Look at the `dtrt-indent' and `aggressive-indent' packages
+*************** END
+
 ** Tabs vs. Spaces
 
 Don't tabify.  Instead, _reindent_ everything, e.g. with C-M-\.
@@ -5907,9 +5935,18 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
               (local-set-key (kbd "C-M-w") 'org-table-copy-region)
               (local-set-key (kbd "C-M-y") 'org-table-paste-rectangle)
 
-              ;; Remove the binding of `C-c SPC' (in Org tables), used by Ace Jump.
-              (local-set-key (kbd "C-c SPC") nil)))
+              ;; Remove some bindings.
+              (local-unset-key (kbd "C-c SPC")) ; Used by Ace Jump.
+              (local-unset-key (kbd "C-c C-<")) ; Used by Multiple Cursors.
+              (local-unset-key (kbd "C-c *")) ; Used by Multiple Cursors.
+
+              ))
 #+end_src
+
+#+begin_note
+See ~(define-key flyspell-mode-map (kbd "C-;") nil))~ for an alternative manner of
+unsetting local keys?
+#+end_note
 
 *** Activation
 
@@ -12857,6 +12894,10 @@ good|
 
 #+begin_src emacs-lisp
   (with-eval-after-load "company-dabbrev"
+
+    ;; Only search in the current buffer
+    (setq company-dabbrev-other-buffers nil) ; Prevent Company completing
+                                             ; numbers coming from other files
 
     ;; Don't ignore case when collecting completion candidates.
     (setq company-dabbrev-ignore-case nil)

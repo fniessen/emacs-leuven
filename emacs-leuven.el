@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150507.1512
+;; Version: 20150508.1748
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150507.1512"
+(defconst leuven--emacs-version "20150508.1748"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -442,7 +442,8 @@ Last time is saved in global variable `leuven--before-section-time'."
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
           key-chord litable idle-require imenu-anywhere info+ interaction-log
           ledger-mode leuven-theme magit multi-term multiple-cursors pager
-          pdf-tools powerline rainbow-mode tidy unbound undo-tree w3m yasnippet
+          pdf-tools powerline rainbow-mode tidy unbound undo-tree w3m ws-butler
+          yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -784,6 +785,8 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Add a cursor and region at the next part of the buffer backwards that
     ;; matches the current region.
     (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+
+    (global-set-key (kbd "C-;") 'mc/mark-all-symbols-like-this) ; Like Iedit
 
     ;; Mark all parts of the buffer that matches the current region.
     (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
@@ -1155,18 +1158,10 @@ These packages are neither built-in nor already installed nor ignored."
   ;; ;; Highlight trailing whitespaces in all modes.
   ;; (setq-default show-trailing-whitespace t)
 
-  ;; Nuke all trailing whitespaces in the buffer.
-  (add-hook 'before-save-hook
-            (lambda ()                  ; Except for ...
-              (let ((buffer-undo-list buffer-undo-list)) ; For goto-chg.
-                (unless (or (derived-mode-p 'message-mode)
-                                        ; ... where "-- " is the signature
-                                        ; separator (for when using emacsclient
-                                        ; to compose emails and doing C-x #).
-                            (derived-mode-p 'diff-mode))
-                                        ; ... where the patch file can't be
-                                        ; changed!
-                  (delete-trailing-whitespace)))))
+  (with-eval-after-load "ws-butler-autoloads"
+    (add-hook 'c-mode-common-hook 'ws-butler-mode)
+    (add-hook 'text-mode 'ws-butler-mode)
+    (add-hook 'fundamental-mode 'ws-butler-mode))
 
   ;; Visually indicate empty lines after the buffer end in the fringe.
   (setq-default indicate-empty-lines t)
@@ -1519,6 +1514,9 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Enable Global-Anzu mode.
     (global-anzu-mode 1)
 
+    (global-set-key (kbd "M-%") 'anzu-query-replace)
+    (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
+
     ;; Lighter of anzu-mode.
     (setq anzu-mode-lighter "")
 
@@ -1676,6 +1674,12 @@ These packages are neither built-in nor already installed nor ignored."
       ;;                (default-value 'mode-line-format)))
 
       )
+
+    (with-eval-after-load "flyspell"
+
+      ;; Remove the binding of `flyspell-auto-correct-previous-word', to be used
+      ;; by Multiple Cursors.
+      (define-key flyspell-mode-map (kbd "C-;") nil))
 
     ;; Don't use `M-TAB' to auto-correct the current word (only use `C-.').
     (setq flyspell-use-meta-tab nil)
@@ -3602,8 +3606,12 @@ These packages are neither built-in nor already installed nor ignored."
               (local-set-key (kbd "C-M-w") 'org-table-copy-region)
               (local-set-key (kbd "C-M-y") 'org-table-paste-rectangle)
 
-              ;; Remove the binding of `C-c SPC' (in Org tables), used by Ace Jump.
-              (local-set-key (kbd "C-c SPC") nil)))
+              ;; Remove some bindings.
+              (local-unset-key (kbd "C-c SPC")) ; Used by Ace Jump.
+              (local-unset-key (kbd "C-c C-<")) ; Used by Multiple Cursors.
+              (local-unset-key (kbd "C-c *")) ; Used by Multiple Cursors.
+
+              ))
 
   (with-eval-after-load "org"
     (message "... Org Introduction")
@@ -7854,6 +7862,10 @@ a clean buffer we're an order of magnitude laxer about checking."
     )
 
   (with-eval-after-load "company-dabbrev"
+
+    ;; Only search in the current buffer
+    (setq company-dabbrev-other-buffers nil) ; Prevent Company completing
+                                             ; numbers coming from other files
 
     ;; Don't ignore case when collecting completion candidates.
     (setq company-dabbrev-ignore-case nil)

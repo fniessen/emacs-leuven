@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150507.1526</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150508.1749</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150507.1526"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150508.1749"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -993,7 +993,8 @@ nil</div>
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
           key-chord litable idle-require imenu-anywhere info+ interaction-log
           ledger-mode leuven-theme magit multi-term multiple-cursors pager
-          pdf-tools powerline rainbow-mode tidy unbound undo-tree w3m yasnippet
+          pdf-tools powerline rainbow-mode tidy unbound undo-tree w3m ws-butler
+          yasnippet
           <span class="org-comment-delimiter">;; </span><span class="org-comment">jabber multi-term paredit redshank</span>
           )
         <span class="org-doc">"A list of packages to ensure are installed at Emacs startup."</span>)
@@ -1581,6 +1582,10 @@ nil</div>
 <h4 id="orgheadline33">Find All</h4>
 <div class="outline-text-4" id="text-orgheadline33">
 <p class="c2">Add all occurrences of the current word to the selection.</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+    (global-set-key (kbd <span class="org-string">"C-;"</span>) 'mc/mark-all-symbols-like-this) <span class="org-comment-delimiter">; </span><span class="org-comment">Like Iedit</span>
+</pre></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Mark all parts of the buffer that matches the current region.</span>
@@ -2249,7 +2254,15 @@ nil</div>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">changed!</span>
                   (delete-trailing-whitespace)))))
 </pre></div>
-<p>Remove trailing whitespace <b>in edited lines</b> with <code>ws-butler</code>? Does not work!?</p>
+<p>Remove trailing whitespace <b>in edited lines</b> with <code>ws-butler</code>:</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ws-butler-autoloads"</span>
+    (add-hook 'c-mode-common-hook 'ws-butler-mode)
+    (add-hook 'text-mode 'ws-butler-mode)
+    (add-hook 'fundamental-mode 'ws-butler-mode))
+</pre></div>
+<p>XXX Does work!?</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Visually indicate empty lines after the buffer end in the fringe.</span>
@@ -2691,6 +2704,9 @@ nil</div>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Global-Anzu mode.</span>
     (global-anzu-mode 1)
 
+    (global-set-key (kbd <span class="org-string">"M-%"</span>) 'anzu-query-replace)
+    (global-set-key (kbd <span class="org-string">"C-M-%"</span>) 'anzu-query-replace-regexp)
+
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Lighter of anzu-mode.</span>
     (setq anzu-mode-lighter <span class="org-string">""</span>)
 
@@ -2966,6 +2982,14 @@ nil</div>
 <p>Each time you cycle to another window (<code>C-x o</code>), the <b>Ispell process</b> gets <b>killed</b> and a <b>new Ispell process</b> is <b>started</b>, if the language in the next window is different from the language in the current window…</p>
 </div>
 <p><code>flyspell-auto-correct-word</code> is bound to <code>C-.</code>. Press it one time to correct the word under the cursor. If several spellings are possible, they appear in the minibuffer. Just keep hitting <code>C-.</code> to replace the word with the successive suggestions.</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"flyspell"</span>
+
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Remove the binding of `</span><span class="org-constant"><span class="org-comment">flyspell-auto-correct-previous-word</span></span><span class="org-comment">', to be used</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">by Multiple Cursors.</span>
+      (define-key flyspell-mode-map (kbd <span class="org-string">"C-;"</span>) nil))
+</pre></div>
 <p><code>flyspell-goto-next-error</code> is bound to "C-,". Press it to go to the next previously detected error.</p>
 <p><code>flyspell-correct-word-before-point</code> is bound to <code>C-c $</code>. Press it to <b>pop up a menu</b> of possible corrections for misspelled word before point.</p>
 <div class="org-src-container">
@@ -5158,6 +5182,8 @@ nil</div>
 <pre class="src src-emacs-lisp">
   (global-set-key (kbd <span class="org-string">"C-x \\"</span>) 'align-regexp)
 </pre></div>
+<div class="inlinetask"><b><span class="todo TODO">TODO</span> Look at the `dtrt-indent' and `aggressive-indent' packages</b><br />
+nil</div>
 </div>
 </div>
 <div id="outline-container-orgheadline131" class="outline-3">
@@ -5924,9 +5950,16 @@ nil</div>
               (local-set-key (kbd <span class="org-string">"C-M-w"</span>) 'org-table-copy-region)
               (local-set-key (kbd <span class="org-string">"C-M-y"</span>) 'org-table-paste-rectangle)
 
-              <span class="org-comment-delimiter">;; </span><span class="org-comment">Remove the binding of `C-c SPC' (in Org tables), used by Ace Jump.</span>
-              (local-set-key (kbd <span class="org-string">"C-c SPC"</span>) nil)))
+              <span class="org-comment-delimiter">;; </span><span class="org-comment">Remove some bindings.</span>
+              (local-unset-key (kbd <span class="org-string">"C-c SPC"</span>)) <span class="org-comment-delimiter">; </span><span class="org-comment">Used by Ace Jump.</span>
+              (local-unset-key (kbd <span class="org-string">"C-c C-&lt;"</span>)) <span class="org-comment-delimiter">; </span><span class="org-comment">Used by Multiple Cursors.</span>
+              (local-unset-key (kbd <span class="org-string">"C-c *"</span>)) <span class="org-comment-delimiter">; </span><span class="org-comment">Used by Multiple Cursors.</span>
+
+              ))
 </pre></div>
+<div class="note">
+<p>See <code>(define-key flyspell-mode-map (kbd "C-;") nil))</code> for an alternative manner of unsetting local keys?</p>
+</div>
 </div>
 <div id="outline-container-orgheadline148" class="outline-4">
 <h4 id="orgheadline148">Activation</h4>
@@ -12649,6 +12682,10 @@ good|
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"company-dabbrev"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Only search in the current buffer</span>
+    (setq company-dabbrev-other-buffers nil) <span class="org-comment-delimiter">; </span><span class="org-comment">Prevent Company completing</span>
+                                             <span class="org-comment-delimiter">; </span><span class="org-comment">numbers coming from other files</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't ignore case when collecting completion candidates.</span>
     (setq company-dabbrev-ignore-case nil)
