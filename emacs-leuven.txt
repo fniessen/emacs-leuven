@@ -724,21 +724,21 @@ like this into your configuration file:
                     package-archives))
 
       ;; Load the latest version of all installed packages, and activate them.
-      (package-initialize)              ; add ALL ELPA subdirs to `load-path'
-                                        ; and load `<pkg>-autoloads.el'
+      (package-initialize)              ; Add ALL ELPA subdirs to `load-path'
+                                        ; and load `<pkg>-autoloads.el'.
 
       (defconst leuven-elpa-packages
-        '(ace-jump-mode ace-window anzu auctex auto-complete bbdb bookmark+
-          boxquote calfw circe color-identifiers-mode company company-quickhelp
-          csv-mode cygwin-mount dictionary diff-hl diminish dired+ dired-single
-          ess expand-region fancy-narrow fill-column-indicator flycheck
-          flycheck-ledger fuzzy git-commit-mode google-this google-translate
-          goto-chg graphviz-dot-mode graphviz-dot-mode guide-key helm
-          helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
-          key-chord litable idle-require imenu-anywhere info+ interaction-log
-          ledger-mode leuven-theme magit multi-term multiple-cursors pager
-          pdf-tools powerline rainbow-mode tidy unbound undo-tree w3m ws-butler
-          yasnippet
+        '(ace-jump-mode ace-link ace-window anzu auctex auto-complete bbdb
+          bookmark+ boxquote calfw circe color-identifiers-mode company
+          company-quickhelp csv-mode cygwin-mount dictionary diff-hl diminish
+          dired+ dired-single ess expand-region fancy-narrow
+          fill-column-indicator flycheck flycheck-ledger fuzzy git-commit-mode
+          git-timemachine google-this google-translate goto-chg
+          graphviz-dot-mode graphviz-dot-mode guide-key helm helm-descbinds
+          helm-swoop hideshowvis highlight-symbol htmlize key-chord litable
+          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          leuven-theme magit multi-term multiple-cursors pager pdf-tools
+          powerline rainbow-mode tidy unbound undo-tree w3m ws-butler yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -786,7 +786,6 @@ These packages are neither built-in nor already installed nor ignored."
 
 ~Idle-require~ must be loaded *after* ~package-initialize~, and should not be
 cancelable; hence, we put it out of a "chapter".
-
 
 #+begin_src emacs-lisp
   ;; Load elisp libraries while Emacs is idle.
@@ -1261,6 +1260,11 @@ to:
 
 - later *jump* back *to the mark* in the buffer (by typing ~C-u C-SPC~).
 
+*************** TODO Look at `back-button'
+Visual navigation through mark rings.
+*************** END
+
+
 *Go to* the *place* where you *last changed* something:
 
 #+begin_src emacs-lisp
@@ -1283,6 +1287,7 @@ It moves point through ~buffer-undo-list~ positions.
 #+begin_src emacs-lisp
   ;; Increase selected region by semantic units.
   (with-eval-after-load "expand-region-autoloads"
+
     (global-set-key (kbd "C-@") 'er/expand-region)) ; XXX Not seen as `C-@'!?
 #+end_src
 
@@ -1680,6 +1685,23 @@ In TeXStudio:
   ;; Quickly jump to a position in the current view.
   (with-eval-after-load "ace-jump-mode-autoloads"
     (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
+
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Quickly follow links using `ace-jump-mode'.
+  (with-eval-after-load "ace-link-autoloads"
+
+    ;; Setup the defualt shortcuts.
+    (ace-link-setup-default ;; "f"
+     ))
+
+  ;; Jump to things tree-style.
+  (with-eval-after-load "avy-jump"
+
+    ;; Default keys for jumping.
+    (setq avy-keys '(?a ?b ?c ?d ?e ?f ?g ?h ?i ?j ?k ?l ?m
+                     ?n ?o ?p ?q ?r ?s ?t ?u ?v ?w ?x ?y ?z)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1707,12 +1729,13 @@ In TeXStudio:
   ;; Better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
   ;; place the point at the same place).
   (with-eval-after-load "pager-autoloads"
+
     (autoload 'pager-page-up "pager"
       "Like scroll-down, but moves a fixed amount of lines." t)
-    (autoload 'pager-page-down "pager"
-      "Like scroll-up, but moves a fixed amount of lines." t)
                                         ; These autoloads aren't defined in
                                         ; `pager-autoloads'!
+    (autoload 'pager-page-down "pager"
+      "Like scroll-up, but moves a fixed amount of lines." t)
 
     (global-set-key (kbd "<prior>") 'pager-page-up)
     (global-set-key (kbd "<next>") 'pager-page-down))
@@ -5121,7 +5144,7 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
   (leuven--section "24.1 (emacs)Indentation Commands and Techniques")
 
   (defun leuven-indent-buffer ()
-    "Indent each nonblank line in the buffer."
+    "Indent each non-blank line in the buffer."
     (interactive)
     (save-excursion
       (indent-region (point-min) (point-max) nil)))
@@ -5132,6 +5155,10 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
 #+end_src
 
 *************** TODO Look at the `dtrt-indent' and `aggressive-indent' packages
+Aggressive-indent-mode seems very, very nice.
+*************** END
+
+*************** TODO Look at the `indent-guide'
 *************** END
 
 ** Tabs vs. Spaces
@@ -11508,18 +11535,6 @@ Version control systems that interact with Emacs in a generic way.
 - ~C-x v r~ (or ~M-!~?) ::
      Switch Git branches.
 
-- ~C-x v L~ ::
-     Open the *log buffer* (List the change log for the current VC controlled tree
-     in a window).
-
-     When in it:
-     - ~C-m~ to read the commit message,
-     - ~d~ to see the corresponding diff.
-
-We have at least two pairs of commands (C-x v l vs.  C-x v L /and/ C-x v = vs. C-x
-v D), of which one operates on the current file /and/ the other on the repository
-as a whole.
-
 #+begin_src emacs-lisp
 ;;** 28.1 (info "(emacs)Version Control")
 
@@ -11630,6 +11645,61 @@ See http://whattheemacsd.com/setup-magit.el-01.html.
 
   ;; switches for diff under VC
   (setq vc-diff-switches diff-switches)
+#+end_src
+
+*** VC Change Log
+
+#+begin_src emacs-lisp
+;;*** 28.1.7 (info "(emacs)VC Change Log")
+
+  (leuven--section "28.1.7 VC Change Log")
+#+end_src
+
+- ~C-x v L~ ::
+     Open the *log buffer* for the current *repository* (List the change log for the
+     current VC controlled tree in a window).
+
+     When in it:
+     - ~C-m~ to read the commit message,
+     - ~d~ to see the corresponding diff.
+
+We have at least two pairs of commands (C-x v l vs.  C-x v L /and/ C-x v = vs. C-x
+v D), of which one operates on the current *file* /and/ the other on the *repository*
+as a whole.
+
+- ~C-x v l~ to view the file's history.
+- ~n~ and ~p~ to move between commits.
+- ~f~ to visit the file as of the commit at point.
+
+~git-timemachine~ makes the process of *navigating between different versions* of
+a file almost completely seamless.
+
+You call ~M-x git-timemachine RET~ from a buffer visiting a tracked file, then you
+can use the following keys to navigate historic versions of the file:
+
+- ~p~ ::
+     Visit previous historic version.
+
+- ~n~ ::
+     Visit next historic version.
+
+- ~w~ ::
+     Copy the abbreviated hash of the current historic version.
+
+- ~W~ ::
+     Copy the full hash of the current historic version.
+
+- ~q~ ::
+     Exit the time machine.
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "git-timemachine-autoloads"
+
+    ;; Number of chars from the full SHA1 hash to use for abbreviation.
+    (setq git-timemachine-abbreviation-length 7)
+
+    (global-set-key (kbd "C-x v t") 'git-timemachine)
+    )
 #+end_src
 
 *** VC Directory Mode
@@ -15499,9 +15569,16 @@ particular color...
 
   ;; limit on number of Lisp variable bindings & unwind-protects
   (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
+#+end_src
 
+By default Emacs will initiate GC every 0.76 MB allocated (~gc-cons-threshold~ ==
+800,000).
+
+If you have a modern machine, I encourage you to add the following:
+
+#+begin_src emacs-lisp
   ;; speed up things by preventing garbage collections
-  (setq gc-cons-threshold (* 20 1024 1024)) ; 20 MB
+  (setq gc-cons-threshold (* 20 1024 1024)) ; 20 MB.
 
   ;; don't display messages at start and end of garbage collection (as it hides
   ;; too many interesting messages)

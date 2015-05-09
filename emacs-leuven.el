@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150508.1748
+;; Version: 20150509.2320
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150508.1748"
+(defconst leuven--emacs-version "20150509.2320"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -429,21 +429,21 @@ Last time is saved in global variable `leuven--before-section-time'."
                     package-archives))
 
       ;; Load the latest version of all installed packages, and activate them.
-      (package-initialize)              ; add ALL ELPA subdirs to `load-path'
-                                        ; and load `<pkg>-autoloads.el'
+      (package-initialize)              ; Add ALL ELPA subdirs to `load-path'
+                                        ; and load `<pkg>-autoloads.el'.
 
       (defconst leuven-elpa-packages
-        '(ace-jump-mode ace-window anzu auctex auto-complete bbdb bookmark+
-          boxquote calfw circe color-identifiers-mode company company-quickhelp
-          csv-mode cygwin-mount dictionary diff-hl diminish dired+ dired-single
-          ess expand-region fancy-narrow fill-column-indicator flycheck
-          flycheck-ledger fuzzy git-commit-mode google-this google-translate
-          goto-chg graphviz-dot-mode graphviz-dot-mode guide-key helm
-          helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
-          key-chord litable idle-require imenu-anywhere info+ interaction-log
-          ledger-mode leuven-theme magit multi-term multiple-cursors pager
-          pdf-tools powerline rainbow-mode tidy unbound undo-tree w3m ws-butler
-          yasnippet
+        '(ace-jump-mode ace-link ace-window anzu auctex auto-complete bbdb
+          bookmark+ boxquote calfw circe color-identifiers-mode company
+          company-quickhelp csv-mode cygwin-mount dictionary diff-hl diminish
+          dired+ dired-single ess expand-region fancy-narrow
+          fill-column-indicator flycheck flycheck-ledger fuzzy git-commit-mode
+          git-timemachine google-this google-translate goto-chg
+          graphviz-dot-mode graphviz-dot-mode guide-key helm helm-descbinds
+          helm-swoop hideshowvis highlight-symbol htmlize key-chord litable
+          idle-require imenu-anywhere info+ interaction-log ledger-mode
+          leuven-theme magit multi-term multiple-cursors pager pdf-tools
+          powerline rainbow-mode tidy unbound undo-tree w3m ws-butler yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -763,6 +763,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Increase selected region by semantic units.
   (with-eval-after-load "expand-region-autoloads"
+
     (global-set-key (kbd "C-@") 'er/expand-region)) ; XXX Not seen as `C-@'!?
 
   ;; Inserting text while the mark is active causes the text in the region to be
@@ -964,6 +965,20 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "ace-jump-mode-autoloads"
     (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
 
+  ;; Quickly follow links using `ace-jump-mode'.
+  (with-eval-after-load "ace-link-autoloads"
+
+    ;; Setup the defualt shortcuts.
+    (ace-link-setup-default ;; "f"
+     ))
+
+  ;; Jump to things tree-style.
+  (with-eval-after-load "avy-jump"
+
+    ;; Default keys for jumping.
+    (setq avy-keys '(?a ?b ?c ?d ?e ?f ?g ?h ?i ?j ?k ?l ?m
+                     ?n ?o ?p ?q ?r ?s ?t ?u ?v ?w ?x ?y ?z)))
+
 )                                       ; chapter 13 ends here
 
 ;;* 14 Controlling the (info "(emacs)Display")
@@ -980,12 +995,13 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
   ;; place the point at the same place).
   (with-eval-after-load "pager-autoloads"
+
     (autoload 'pager-page-up "pager"
       "Like scroll-down, but moves a fixed amount of lines." t)
-    (autoload 'pager-page-down "pager"
-      "Like scroll-up, but moves a fixed amount of lines." t)
                                         ; These autoloads aren't defined in
                                         ; `pager-autoloads'!
+    (autoload 'pager-page-down "pager"
+      "Like scroll-up, but moves a fixed amount of lines." t)
 
     (global-set-key (kbd "<prior>") 'pager-page-up)
     (global-set-key (kbd "<next>") 'pager-page-down))
@@ -3064,7 +3080,7 @@ These packages are neither built-in nor already installed nor ignored."
   (leuven--section "24.1 (emacs)Indentation Commands and Techniques")
 
   (defun leuven-indent-buffer ()
-    "Indent each nonblank line in the buffer."
+    "Indent each non-blank line in the buffer."
     (interactive)
     (save-excursion
       (indent-region (point-min) (point-max) nil)))
@@ -7258,6 +7274,18 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; switches for diff under VC
   (setq vc-diff-switches diff-switches)
 
+;;*** 28.1.7 (info "(emacs)VC Change Log")
+
+  (leuven--section "28.1.7 VC Change Log")
+
+  (with-eval-after-load "git-timemachine-autoloads"
+
+    ;; Number of chars from the full SHA1 hash to use for abbreviation.
+    (setq git-timemachine-abbreviation-length 7)
+
+    (global-set-key (kbd "C-x v t") 'git-timemachine)
+    )
+
 ;;*** 28.1.9 (info "(emacs)VC Directory Mode")
 
   (leuven--section "28.1.9 VC Directory Mode")
@@ -9462,7 +9490,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
 
   ;; speed up things by preventing garbage collections
-  (setq gc-cons-threshold (* 20 1024 1024)) ; 20 MB
+  (setq gc-cons-threshold (* 20 1024 1024)) ; 20 MB.
 
   ;; don't display messages at start and end of garbage collection (as it hides
   ;; too many interesting messages)
