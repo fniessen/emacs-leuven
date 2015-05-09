@@ -917,11 +917,6 @@ Show line numbers temporarily -- just when you're going to a line number with
 #+begin_src emacs-lisp
   (with-eval-after-load "undo-tree-autoloads"
 
-    (defalias 'redo 'undo-tree-redo)
-
-    (global-set-key (kbd "<S-f11>") 'redo)
-    (global-set-key (kbd "C-S-z") 'redo)
-
     ;; Enable Global-Undo-Tree mode.
     (global-undo-tree-mode 1)
 
@@ -929,7 +924,14 @@ Show line numbers temporarily -- just when you're going to a line number with
     (setq undo-tree-visualizer-relative-timestamps t)
 
     ;; Display time-stamps by default in undo-tree visualizer.
-    (setq undo-tree-visualizer-timestamps t))
+    (setq undo-tree-visualizer-timestamps t) ; Toggle time-stamps display using `t'.
+
+    ;; Display diff by default in undo-tree visualizer.
+    (setq undo-tree-visualizer-diff t) ; Toggle the diff display using `d'.
+
+    (defalias 'redo 'undo-tree-redo)
+    (global-set-key (kbd "<S-f11>") 'redo)
+    (global-set-key (kbd "C-S-z") 'redo))
 #+end_src
 
 #+begin_src emacs-lisp

@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150509.2321</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150509.2333</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150509.2321"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150509.2333"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1179,11 +1179,6 @@ nil</div>
 <pre class="src src-emacs-lisp">
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"undo-tree-autoloads"</span>
 
-    (<span class="org-keyword">defalias</span> '<span class="org-function-name">redo</span> 'undo-tree-redo)
-
-    (global-set-key (kbd <span class="org-string">"&lt;S-f11&gt;"</span>) 'redo)
-    (global-set-key (kbd <span class="org-string">"C-S-z"</span>) 'redo)
-
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Global-Undo-Tree mode.</span>
     (global-undo-tree-mode 1)
 
@@ -1191,7 +1186,14 @@ nil</div>
     (setq undo-tree-visualizer-relative-timestamps t)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Display time-stamps by default in undo-tree visualizer.</span>
-    (setq undo-tree-visualizer-timestamps t))
+    (setq undo-tree-visualizer-timestamps t) <span class="org-comment-delimiter">; </span><span class="org-comment">Toggle time-stamps display using `t'.</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Display diff by default in undo-tree visualizer.</span>
+    (setq undo-tree-visualizer-diff t) <span class="org-comment-delimiter">; </span><span class="org-comment">Toggle the diff display using `d'.</span>
+
+    (<span class="org-keyword">defalias</span> '<span class="org-function-name">redo</span> 'undo-tree-redo)
+    (global-set-key (kbd <span class="org-string">"&lt;S-f11&gt;"</span>) 'redo)
+    (global-set-key (kbd <span class="org-string">"C-S-z"</span>) 'redo))
 </pre></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">

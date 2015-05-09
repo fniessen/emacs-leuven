@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150509.2320
+;; Version: 20150509.2332
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150509.2320"
+(defconst leuven--emacs-version "20150509.2332"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -575,11 +575,6 @@ These packages are neither built-in nor already installed nor ignored."
 
   (with-eval-after-load "undo-tree-autoloads"
 
-    (defalias 'redo 'undo-tree-redo)
-
-    (global-set-key (kbd "<S-f11>") 'redo)
-    (global-set-key (kbd "C-S-z") 'redo)
-
     ;; Enable Global-Undo-Tree mode.
     (global-undo-tree-mode 1)
 
@@ -587,7 +582,14 @@ These packages are neither built-in nor already installed nor ignored."
     (setq undo-tree-visualizer-relative-timestamps t)
 
     ;; Display time-stamps by default in undo-tree visualizer.
-    (setq undo-tree-visualizer-timestamps t))
+    (setq undo-tree-visualizer-timestamps t) ; Toggle time-stamps display using `t'.
+
+    ;; Display diff by default in undo-tree visualizer.
+    (setq undo-tree-visualizer-diff t) ; Toggle the diff display using `d'.
+
+    (defalias 'redo 'undo-tree-redo)
+    (global-set-key (kbd "<S-f11>") 'redo)
+    (global-set-key (kbd "C-S-z") 'redo))
 
 )                                       ; chapter 7 ends here
 
