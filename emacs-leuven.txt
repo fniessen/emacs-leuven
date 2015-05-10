@@ -2063,6 +2063,7 @@ Remove trailing whitespace *in edited lines* with ~ws-butler~:
   (with-eval-after-load "ws-butler-autoloads"
     (add-hook 'c-mode-common-hook 'ws-butler-mode)
     (add-hook 'text-mode 'ws-butler-mode)
+    (add-hook 'org-mode-hook 'ws-butler-mode)
     (add-hook 'fundamental-mode 'ws-butler-mode))
 #+end_src
 
@@ -12411,20 +12412,12 @@ XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-con
 
 #+begin_src emacs-lisp :tangle no
       ;; Enable YASnippet in programming modes only.
-      (add-hook 'prog-mode-hook
-                '(lambda ()
-                   (yas-minor-mode)))
+      (add-hook 'prog-mode-hook 'yas-minor-mode)
 #+end_src
 
 #+begin_src emacs-lisp
-    )
-#+end_src
-
-#+begin_src emacs-lisp
-    (with-eval-after-load "yasnippet"
-
-      ;; ;; Load the snippet tables.
-      ;; (yas-reload-all)               ; XXX in double? (see Messages buffer)
+      ;; Load the snippet tables.
+      (yas-reload-all)
 #+end_src
 
 *** Organizing snippets

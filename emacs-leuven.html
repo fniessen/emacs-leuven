@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150509.2333</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150510.2303</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150509.2333"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150510.2303"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2285,6 +2285,7 @@ nil</div>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ws-butler-autoloads"</span>
     (add-hook 'c-mode-common-hook 'ws-butler-mode)
     (add-hook 'text-mode 'ws-butler-mode)
+    (add-hook 'org-mode-hook 'ws-butler-mode)
     (add-hook 'fundamental-mode 'ws-butler-mode))
 </pre></div>
 <p>XXX Does work!?</p>
@@ -12237,20 +12238,12 @@ etags --langdef=shell --regex-shell=<span class="org-string">'/function [_[:alnu
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable YASnippet in programming modes only.</span>
-      (add-hook 'prog-mode-hook
-                '(<span class="org-keyword">lambda</span> ()
-                   (yas-minor-mode)))
+      (add-hook 'prog-mode-hook 'yas-minor-mode)
 </pre></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
-    )
-</pre></div>
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">
-    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"yasnippet"</span>
-
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Load the snippet tables.</span>
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">(yas-reload-all)               ; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> in double? (see Messages buffer)</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Load the snippet tables.</span>
+      (yas-reload-all)
 </pre></div>
 </div>
 </div>

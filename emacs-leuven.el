@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150509.2332
+;; Version: 20150510.2302
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150509.2332"
+(defconst leuven--emacs-version "20150510.2302"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1179,6 +1179,7 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "ws-butler-autoloads"
     (add-hook 'c-mode-common-hook 'ws-butler-mode)
     (add-hook 'text-mode 'ws-butler-mode)
+    (add-hook 'org-mode-hook 'ws-butler-mode)
     (add-hook 'fundamental-mode 'ws-butler-mode))
 
   ;; Visually indicate empty lines after the buffer end in the fringe.
@@ -7622,12 +7623,8 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;; Enable YASnippet in all buffers.
       (yas-global-mode 1)
 
-    )
-
-    (with-eval-after-load "yasnippet"
-
-      ;; ;; Load the snippet tables.
-      ;; (yas-reload-all)               ; XXX in double? (see Messages buffer)
+      ;; Load the snippet tables.
+      (yas-reload-all)
 
       ;; Add root directories that store the snippets.
       (let ((leuven-snippets            ; Additional YASnippets.
