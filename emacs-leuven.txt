@@ -727,12 +727,12 @@ like this into your configuration file:
                                         ; and load `<pkg>-autoloads.el'.
 
       (defconst leuven-elpa-packages
-        '(ace-jump-mode ace-link ace-window anzu auctex auto-complete bbdb
-          bookmark+ boxquote calfw circe color-identifiers-mode company
-          company-quickhelp csv-mode cygwin-mount dictionary diff-hl diminish
-          dired+ dired-single ess expand-region fancy-narrow
-          fill-column-indicator flycheck flycheck-ledger fuzzy git-commit-mode
-          git-timemachine google-this google-translate goto-chg
+        '(ace-jump-mode ace-link ace-window aggressive-indent anzu auctex
+          auto-complete bbdb bookmark+ boxquote calfw circe
+          color-identifiers-mode company company-quickhelp csv-mode cygwin-mount
+          dictionary diff-hl diminish dired+ dired-single ess expand-region
+          fancy-narrow fill-column-indicator flycheck flycheck-ledger fuzzy
+          git-commit-mode git-timemachine google-this google-translate goto-chg
           graphviz-dot-mode graphviz-dot-mode guide-key helm helm-descbinds
           helm-swoop hideshowvis highlight-symbol htmlize key-chord litable
           idle-require imenu-anywhere info+ interaction-log ledger-mode
@@ -2059,14 +2059,13 @@ Remove trailing whitespace (right trim lines) *in all lines*:
 Remove trailing whitespace *in edited lines* with ~ws-butler~:
 
 #+begin_src emacs-lisp
+  ;; Unobtrusively remove trailing whitespace.
   (with-eval-after-load "ws-butler-autoloads"
-    (add-hook 'c-mode-common-hook 'ws-butler-mode)
-    (add-hook 'text-mode 'ws-butler-mode)
-    (add-hook 'org-mode-hook 'ws-butler-mode)
-    (add-hook 'fundamental-mode 'ws-butler-mode))
-#+end_src
 
-XXX Does work!?
+    (add-hook 'text-mode-hook 'ws-butler-mode)
+    ;; (add-hook 'org-mode-hook 'ws-butler-mode)
+    (add-hook 'prog-mode-hook 'ws-butler-mode))
+#+end_src
 
 #+begin_src emacs-lisp
   ;; Visually indicate empty lines after the buffer end in the fringe.
@@ -4028,11 +4027,11 @@ XXX Look at helm-dictionary.
 
     (leuven--section "Helm")
 
-    ;; open Helm (QuickSilver-like candidate-selection framework)
+    ;; Open Helm (QuickSilver-like candidate-selection framework).
     (when (try-require 'helm-config)    ; [helm-command-prefix-key: "C-x c"]
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
-      ;; better version of `occur'
+      ;; Better version of `occur'.
       (global-set-key (kbd "C-o") 'helm-occur)
 
       (global-set-key (kbd "M-x") 'helm-M-x)
@@ -4041,12 +4040,13 @@ XXX Look at helm-dictionary.
 
       ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
-      ;; buffer list
-      (global-set-key (kbd "C-x b") 'helm-mini) ; = `helm-buffers-list' + recents
+      ;; Buffer list.
+      (global-set-key (kbd "C-x b") 'helm-mini)
+                                        ; = `helm-buffers-list' + recents.
 
       (global-set-key (kbd "C-x r l") 'helm-bookmarks)
 
-      ;; install from https://github.com/thierryvolpiatto/emacs-bmk-ext
+      ;; Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.
       (global-set-key (kbd "C-x r b") 'helm-bookmark-ext)
 
       (defun leuven-helm-org-prog-menu ()
@@ -4142,13 +4142,13 @@ make your life much easier with million Emacs keys.
 #+begin_src emacs-lisp
     (with-eval-after-load "helm-files"
 
-      ;; don't show only basename of candidates in `helm-find-files'
+      ;; Don't show only basename of candidates in `helm-find-files'.
       (setq helm-ff-transformer-show-only-basename nil)
 
-      ;; search for library in `require' and `declare-function' sexp
+      ;; Search for library in `require' and `declare-function' sexp.
       (setq helm-ff-search-library-in-sexp t)
 
-      ;; ;; use `recentf-list' instead of `file-name-history' in `helm-find-files'
+      ;; ;; Use `recentf-list' instead of `file-name-history' in `helm-find-files'.
       ;; (setq helm-ff-file-name-history-use-recentf t)
       )
 #+end_src
@@ -4174,7 +4174,7 @@ make your life much easier with million Emacs keys.
 #+begin_src emacs-lisp
     (with-eval-after-load "helm-command"
 
-      ;; save command even when it fails
+      ;; Save command even when it fails.
       (setq helm-M-x-always-save-history t))
 #+end_src
 
@@ -4200,10 +4200,10 @@ projects.
 #+begin_src emacs-lisp
     (with-eval-after-load "helm-buffers"
 
-      ;; don't truncate buffer names
+      ;; Don't truncate buffer names.
       (setq helm-buffer-max-length nil)
 
-      ;; never show details in buffer list
+      ;; Never show details in buffer list.
       (setq helm-buffer-details-flag nil))
 #+end_src
 
@@ -5151,6 +5151,13 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-x \\") 'align-regexp)
+#+end_src
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "aggressive-indent"
+
+    ;; Enable aggressive indent mode everywhere.
+    (aggressive-indent-global-mode))
 #+end_src
 
 *************** TODO Look at the `dtrt-indent' and `aggressive-indent' packages
@@ -11264,6 +11271,31 @@ See ~leuven-helm-grep-org-files~.
 Flycheck (aka "Flymake done right") can perform static code analysis *on-the-fly*,
 and *highlight warnings and errors* in the code immediately as you are editing it,
 if you made a mistake.
+
+To *list all errors in the current buffer*, you can popup an error list with
+~C-c ! l~ (~M-x flycheck-list-errors~).
+
+In the error list window the following keybindings are available:
+
+- ~n~ ::
+     Move to the next error.
+
+- ~p~ ::
+     Move to the previous error.
+
+- ~q~ ::
+     Hide the error list window.
+
+- ~RET~ ::
+     Jump to the location of the error at point.
+
+- ~g~ ::
+     Refresh the error list, by triggering a new syntax check in the associated
+     buffer.
+
+- ~S~ ::
+     Sort the error list by the column at point. Press repeatedly to inverse the
+     sorting order.
 
 #+begin_src emacs-lisp
 ;;** 27.5 (info "(emacs)Flymake")

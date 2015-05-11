@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150511.1508</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150511.2259</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150511.1508"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150511.2259"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -984,12 +984,12 @@ nil</div>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">and load `</span><span class="org-constant"><span class="org-comment">&lt;pkg&gt;-autoloads.el</span></span><span class="org-comment">'.</span>
 
       (<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven-elpa-packages</span>
-        '(ace-jump-mode ace-link ace-window anzu auctex auto-complete bbdb
-          bookmark+ boxquote calfw circe color-identifiers-mode company
-          company-quickhelp csv-mode cygwin-mount dictionary diff-hl diminish
-          dired+ dired-single ess expand-region fancy-narrow
-          fill-column-indicator flycheck flycheck-ledger fuzzy git-commit-mode
-          git-timemachine google-this google-translate goto-chg
+        '(ace-jump-mode ace-link ace-window aggressive-indent anzu auctex
+          auto-complete bbdb bookmark+ boxquote calfw circe
+          color-identifiers-mode company company-quickhelp csv-mode cygwin-mount
+          dictionary diff-hl diminish dired+ dired-single ess expand-region
+          fancy-narrow fill-column-indicator flycheck flycheck-ledger fuzzy
+          git-commit-mode git-timemachine google-this google-translate goto-chg
           graphviz-dot-mode graphviz-dot-mode guide-key helm helm-descbinds
           helm-swoop hideshowvis highlight-symbol htmlize key-chord litable
           idle-require imenu-anywhere info+ interaction-log ledger-mode
@@ -2282,13 +2282,13 @@ nil</div>
 <p>Remove trailing whitespace <b>in edited lines</b> with <code>ws-butler</code>:</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Unobtrusively remove trailing whitespace.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ws-butler-autoloads"</span>
-    (add-hook 'c-mode-common-hook 'ws-butler-mode)
-    (add-hook 'text-mode 'ws-butler-mode)
-    (add-hook 'org-mode-hook 'ws-butler-mode)
-    (add-hook 'fundamental-mode 'ws-butler-mode))
+
+    (add-hook 'text-mode-hook 'ws-butler-mode)
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(add-hook 'org-mode-hook 'ws-butler-mode)</span>
+    (add-hook 'prog-mode-hook 'ws-butler-mode))
 </pre></div>
-<p>XXX Does work!?</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Visually indicate empty lines after the buffer end in the fringe.</span>
@@ -4043,11 +4043,11 @@ M-: (executable-find "diff") RET
 
     (leuven--section <span class="org-string">"Helm"</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">open Helm (QuickSilver-like candidate-selection framework)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Open Helm (QuickSilver-like candidate-selection framework).</span>
     (<span class="org-keyword">when</span> (try-require 'helm-config)    <span class="org-comment-delimiter">; </span><span class="org-comment">[helm-command-prefix-key: "C-x c"]</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">Explicitly loads `</span><span class="org-constant"><span class="org-comment">helm-autoloads</span></span><span class="org-comment">'!</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">CAUTION for recursive loads...</span>
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">better version of `</span><span class="org-constant"><span class="org-comment">occur</span></span><span class="org-comment">'</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Better version of `</span><span class="org-constant"><span class="org-comment">occur</span></span><span class="org-comment">'.</span>
       (global-set-key (kbd <span class="org-string">"C-o"</span>) 'helm-occur)
 
       (global-set-key (kbd <span class="org-string">"M-x"</span>) 'helm-M-x)
@@ -4056,12 +4056,13 @@ M-: (executable-find "diff") RET
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-x C-f") 'helm-find-files)</span>
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">buffer list</span>
-      (global-set-key (kbd <span class="org-string">"C-x b"</span>) 'helm-mini) <span class="org-comment-delimiter">; </span><span class="org-comment">= `</span><span class="org-constant"><span class="org-comment">helm-buffers-list</span></span><span class="org-comment">' + recents</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Buffer list.</span>
+      (global-set-key (kbd <span class="org-string">"C-x b"</span>) 'helm-mini)
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">= `</span><span class="org-constant"><span class="org-comment">helm-buffers-list</span></span><span class="org-comment">' + recents.</span>
 
       (global-set-key (kbd <span class="org-string">"C-x r l"</span>) 'helm-bookmarks)
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">install from https://github.com/thierryvolpiatto/emacs-bmk-ext</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.</span>
       (global-set-key (kbd <span class="org-string">"C-x r b"</span>) 'helm-bookmark-ext)
 
       (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-helm-org-prog-menu</span> ()
@@ -4158,13 +4159,13 @@ M-: (executable-find "diff") RET
 <pre class="src src-emacs-lisp">
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-files"</span>
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">don't show only basename of candidates in `</span><span class="org-constant"><span class="org-comment">helm-find-files</span></span><span class="org-comment">'</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't show only basename of candidates in `</span><span class="org-constant"><span class="org-comment">helm-find-files</span></span><span class="org-comment">'.</span>
       (setq helm-ff-transformer-show-only-basename nil)
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">search for library in `</span><span class="org-constant"><span class="org-comment">require</span></span><span class="org-comment">' and `</span><span class="org-constant"><span class="org-comment">declare-function</span></span><span class="org-comment">' sexp</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Search for library in `</span><span class="org-constant"><span class="org-comment">require</span></span><span class="org-comment">' and `</span><span class="org-constant"><span class="org-comment">declare-function</span></span><span class="org-comment">' sexp.</span>
       (setq helm-ff-search-library-in-sexp t)
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">;; use `</span><span class="org-constant"><span class="org-comment">recentf-list</span></span><span class="org-comment">' instead of `</span><span class="org-constant"><span class="org-comment">file-name-history</span></span><span class="org-comment">' in `</span><span class="org-constant"><span class="org-comment">helm-find-files</span></span><span class="org-comment">'</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Use `</span><span class="org-constant"><span class="org-comment">recentf-list</span></span><span class="org-comment">' instead of `</span><span class="org-constant"><span class="org-comment">file-name-history</span></span><span class="org-comment">' in `</span><span class="org-constant"><span class="org-comment">helm-find-files</span></span><span class="org-comment">'.</span>
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq helm-ff-file-name-history-use-recentf t)</span>
       )
 </pre></div>
@@ -4193,7 +4194,7 @@ M-: (executable-find "diff") RET
 <pre class="src src-emacs-lisp">
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-command"</span>
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">save command even when it fails</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Save command even when it fails.</span>
       (setq helm-M-x-always-save-history t))
 </pre></div>
 </div>
@@ -4222,10 +4223,10 @@ M-: (executable-find "diff") RET
 <pre class="src src-emacs-lisp">
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-buffers"</span>
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">don't truncate buffer names</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't truncate buffer names.</span>
       (setq helm-buffer-max-length nil)
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">never show details in buffer list</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Never show details in buffer list.</span>
       (setq helm-buffer-details-flag nil))
 </pre></div>
 <div class="org-src-container">
@@ -5204,6 +5205,13 @@ nil</div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
   (global-set-key (kbd <span class="org-string">"C-x \\"</span>) 'align-regexp)
+</pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"aggressive-indent"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable aggressive indent mode everywhere.</span>
+    (aggressive-indent-global-mode))
 </pre></div>
 <div class="inlinetask"><b><span class="todo TODO">TODO</span> Look at the `dtrt-indent' and `aggressive-indent' packages</b><br />
 <p>Aggressive-indent-mode seems very, very nice.</p>
@@ -11179,6 +11187,22 @@ nil</div>
 <h3 id="orgheadline271">Finding Syntax Errors On The Fly</h3>
 <div class="outline-text-3" id="text-orgheadline271">
 <p>Flycheck (aka "Flymake done right") can perform static code analysis <b>on-the-fly</b>, and <b>highlight warnings and errors</b> in the code immediately as you are editing it, if you made a mistake.</p>
+<p>To <b>list all errors in the current buffer</b>, you can popup an error list with <code>C-c ! l</code> (<code>M-x flycheck-list-errors</code>).</p>
+<p>In the error list window the following keybindings are available:</p>
+<dl class="org-dl">
+<dt><code>n</code></dt>
+<dd>Move to the next error.</dd>
+<dt><code>p</code></dt>
+<dd>Move to the previous error.</dd>
+<dt><code>q</code></dt>
+<dd>Hide the error list window.</dd>
+<dt><code>RET</code></dt>
+<dd>Jump to the location of the error at point.</dd>
+<dt><code>g</code></dt>
+<dd>Refresh the error list, by triggering a new syntax check in the associated buffer.</dd>
+<dt><code>S</code></dt>
+<dd>Sort the error list by the column at point. Press repeatedly to inverse the sorting order.</dd>
+</dl>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 27.5 (info "(emacs)Flymake")</span>

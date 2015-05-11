@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150511.1507
+;; Version: 20150511.2259
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150511.1507"
+(defconst leuven--emacs-version "20150511.2259"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -433,12 +433,12 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ; and load `<pkg>-autoloads.el'.
 
       (defconst leuven-elpa-packages
-        '(ace-jump-mode ace-link ace-window anzu auctex auto-complete bbdb
-          bookmark+ boxquote calfw circe color-identifiers-mode company
-          company-quickhelp csv-mode cygwin-mount dictionary diff-hl diminish
-          dired+ dired-single ess expand-region fancy-narrow
-          fill-column-indicator flycheck flycheck-ledger fuzzy git-commit-mode
-          git-timemachine google-this google-translate goto-chg
+        '(ace-jump-mode ace-link ace-window aggressive-indent anzu auctex
+          auto-complete bbdb bookmark+ boxquote calfw circe
+          color-identifiers-mode company company-quickhelp csv-mode cygwin-mount
+          dictionary diff-hl diminish dired+ dired-single ess expand-region
+          fancy-narrow fill-column-indicator flycheck flycheck-ledger fuzzy
+          git-commit-mode git-timemachine google-this google-translate goto-chg
           graphviz-dot-mode graphviz-dot-mode guide-key helm helm-descbinds
           helm-swoop hideshowvis highlight-symbol htmlize key-chord litable
           idle-require imenu-anywhere info+ interaction-log ledger-mode
@@ -1176,11 +1176,12 @@ These packages are neither built-in nor already installed nor ignored."
   ;; ;; Highlight trailing whitespaces in all modes.
   ;; (setq-default show-trailing-whitespace t)
 
+  ;; Unobtrusively remove trailing whitespace.
   (with-eval-after-load "ws-butler-autoloads"
-    (add-hook 'c-mode-common-hook 'ws-butler-mode)
-    (add-hook 'text-mode 'ws-butler-mode)
-    (add-hook 'org-mode-hook 'ws-butler-mode)
-    (add-hook 'fundamental-mode 'ws-butler-mode))
+
+    (add-hook 'text-mode-hook 'ws-butler-mode)
+    ;; (add-hook 'org-mode-hook 'ws-butler-mode)
+    (add-hook 'prog-mode-hook 'ws-butler-mode))
 
   ;; Visually indicate empty lines after the buffer end in the fringe.
   (setq-default indicate-empty-lines t)
@@ -2305,11 +2306,11 @@ These packages are neither built-in nor already installed nor ignored."
 
     (leuven--section "Helm")
 
-    ;; open Helm (QuickSilver-like candidate-selection framework)
+    ;; Open Helm (QuickSilver-like candidate-selection framework).
     (when (try-require 'helm-config)    ; [helm-command-prefix-key: "C-x c"]
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
-      ;; better version of `occur'
+      ;; Better version of `occur'.
       (global-set-key (kbd "C-o") 'helm-occur)
 
       (global-set-key (kbd "M-x") 'helm-M-x)
@@ -2318,12 +2319,13 @@ These packages are neither built-in nor already installed nor ignored."
 
       ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
-      ;; buffer list
-      (global-set-key (kbd "C-x b") 'helm-mini) ; = `helm-buffers-list' + recents
+      ;; Buffer list.
+      (global-set-key (kbd "C-x b") 'helm-mini)
+                                        ; = `helm-buffers-list' + recents.
 
       (global-set-key (kbd "C-x r l") 'helm-bookmarks)
 
-      ;; install from https://github.com/thierryvolpiatto/emacs-bmk-ext
+      ;; Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.
       (global-set-key (kbd "C-x r b") 'helm-bookmark-ext)
 
       (defun leuven-helm-org-prog-menu ()
@@ -2405,13 +2407,13 @@ These packages are neither built-in nor already installed nor ignored."
 
     (with-eval-after-load "helm-files"
 
-      ;; don't show only basename of candidates in `helm-find-files'
+      ;; Don't show only basename of candidates in `helm-find-files'.
       (setq helm-ff-transformer-show-only-basename nil)
 
-      ;; search for library in `require' and `declare-function' sexp
+      ;; Search for library in `require' and `declare-function' sexp.
       (setq helm-ff-search-library-in-sexp t)
 
-      ;; ;; use `recentf-list' instead of `file-name-history' in `helm-find-files'
+      ;; ;; Use `recentf-list' instead of `file-name-history' in `helm-find-files'.
       ;; (setq helm-ff-file-name-history-use-recentf t)
       )
 
@@ -2429,7 +2431,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     (with-eval-after-load "helm-command"
 
-      ;; save command even when it fails
+      ;; Save command even when it fails.
       (setq helm-M-x-always-save-history t))
 
     (with-eval-after-load "helm-locate"
@@ -2444,10 +2446,10 @@ These packages are neither built-in nor already installed nor ignored."
 
     (with-eval-after-load "helm-buffers"
 
-      ;; don't truncate buffer names
+      ;; Don't truncate buffer names.
       (setq helm-buffer-max-length nil)
 
-      ;; never show details in buffer list
+      ;; Never show details in buffer list.
       (setq helm-buffer-details-flag nil))
 
     ;; (with-eval-after-load "helm-adaptive"
@@ -3086,6 +3088,11 @@ These packages are neither built-in nor already installed nor ignored."
       (indent-region (point-min) (point-max) nil)))
 
   (global-set-key (kbd "C-x \\") 'align-regexp)
+
+  (with-eval-after-load "aggressive-indent"
+
+    ;; Enable aggressive indent mode everywhere.
+    (aggressive-indent-global-mode))
 
 ;;** 24.3 TABs vs. (info "(emacs)Just Spaces")
 
