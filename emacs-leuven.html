@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150510.2303</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150511.1058</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150510.2303"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150511.1058"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -4043,10 +4043,11 @@ M-: (executable-find "diff") RET
 
     (leuven--section <span class="org-string">"Helm"</span>)
 
-    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-autoloads"</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">open Helm (QuickSilver-like candidate-selection framework)</span>
+    (try-require 'helm-config)          <span class="org-comment-delimiter">; </span><span class="org-comment">[helm-command-prefix-key: "C-x c"]</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Explicitly loads `</span><span class="org-constant"><span class="org-comment">helm-autoloads</span></span><span class="org-comment">'!</span>
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">open Helm (QuickSilver-like candidate-selection framework)</span>
-      (<span class="org-keyword">require</span> '<span class="org-constant">helm-config</span>)            <span class="org-comment-delimiter">; </span><span class="org-comment">[helm-command-prefix-key: "C-x c"]</span>
+    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-autoloads"</span>
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">better version of `</span><span class="org-constant"><span class="org-comment">occur</span></span><span class="org-comment">'</span>
       (global-set-key (kbd <span class="org-string">"C-o"</span>) 'helm-occur)
@@ -11527,7 +11528,8 @@ nil</div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"magit-autoloads"</span>
-    (message <span class="org-string">"..."</span>)
+
+    (setq magit-auto-revert-mode nil)   <span class="org-comment-delimiter">; </span><span class="org-comment">Avoid any data loss.</span>
     )
 </pre></div>
 <p>See <a href="http://whattheemacsd.com/setup-magit.el-01.html">http://whattheemacsd.com/setup-magit.el-01.html</a>.</p>
@@ -12204,7 +12206,7 @@ etags --langdef=shell --regex-shell=<span class="org-string">'/function [_[:alnu
 <div class="outline-text-3" id="text-orgheadline301">
 <p>Inspired by <a href="http://macromates.com/">TextMate</a>.</p>
 <p>For complex templates, I use <code>YASnippet</code>. For example, new file templates (where it's Lisp evaluation is handy), class and function templates with docblocks, etc. I use it to reduce the repetitious parts of programming, and let me focus on getting things done.</p>
-<p><code>YASnippet</code> does support mirror fields and transformations. It also does support multiple snippet with same name. It will also expand snippets containing non-word-constituent characters, which <code>abbrev</code> can't. So I can't have <code>@p</code> expand to <code>@param</code> with <code>abbrev</code>, but I can with <code>YASnippet</code>.</p>
+<p><code>YASnippet</code> does support mirror fields and transformations. It also does support multiple snippets with same name. It will also expand snippets containing non-word-constituent characters, which <code>abbrev</code> can't. So I can't have <code>@p</code> expand to <code>@param</code> with <code>abbrev</code>, but I can with <code>YASnippet</code>.</p>
 <p>XXX Look at <a href="https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-configuration.el">https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-configuration.el</a></p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -12242,6 +12244,8 @@ etags --langdef=shell --regex-shell=<span class="org-string">'/function [_[:alnu
 </pre></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq yas-verbosity 1)</span>
+
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Load the snippet tables.</span>
       (yas-reload-all)
 </pre></div>

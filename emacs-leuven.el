@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150510.2302
+;; Version: 20150511.1057
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150510.2302"
+(defconst leuven--emacs-version "20150511.1057"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2305,10 +2305,11 @@ These packages are neither built-in nor already installed nor ignored."
 
     (leuven--section "Helm")
 
-    (with-eval-after-load "helm-autoloads"
+    ;; open Helm (QuickSilver-like candidate-selection framework)
+    (try-require 'helm-config)          ; [helm-command-prefix-key: "C-x c"]
+                                        ; Explicitly loads `helm-autoloads'!
 
-      ;; open Helm (QuickSilver-like candidate-selection framework)
-      (require 'helm-config)            ; [helm-command-prefix-key: "C-x c"]
+    (with-eval-after-load "helm-autoloads"
 
       ;; better version of `occur'
       (global-set-key (kbd "C-o") 'helm-occur)
@@ -7267,7 +7268,8 @@ a clean buffer we're an order of magnitude laxer about checking."
                 (toggle-save-place 0))))
 
   (with-eval-after-load "magit-autoloads"
-    (message "...")
+
+    (setq magit-auto-revert-mode nil)   ; Avoid any data loss.
     )
 
 ;;*** 28.1.6 (info "(emacs)Old Revisions")
@@ -7622,6 +7624,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
       ;; Enable YASnippet in all buffers.
       (yas-global-mode 1)
+
+      ;; (setq yas-verbosity 1)
 
       ;; Load the snippet tables.
       (yas-reload-all)

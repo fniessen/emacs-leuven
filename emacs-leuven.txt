@@ -6,8 +6,7 @@
 #+KEYWORDS:  emacs, dotfile, config
 #+LANGUAGE:  en
 #+OPTIONS:   H:4 num:nil toc:2
-
-#+SEQ_TODO:  TODO FIXME | DONE
+#+EXCLUDE_TAGS: noexport
 
 #+PROPERTY:  eval never
 #+PROPERTY:  padline yes
@@ -4029,10 +4028,11 @@ XXX Look at helm-dictionary.
 
     (leuven--section "Helm")
 
-    (with-eval-after-load "helm-autoloads"
+    ;; open Helm (QuickSilver-like candidate-selection framework)
+    (try-require 'helm-config)          ; [helm-command-prefix-key: "C-x c"]
+                                        ; Explicitly loads `helm-autoloads'!
 
-      ;; open Helm (QuickSilver-like candidate-selection framework)
-      (require 'helm-config)            ; [helm-command-prefix-key: "C-x c"]
+    (with-eval-after-load "helm-autoloads"
 
       ;; better version of `occur'
       (global-set-key (kbd "C-o") 'helm-occur)
@@ -11633,7 +11633,8 @@ it into the commit buffer. So there is no need to "write the same thing twice".
 
 #+begin_src emacs-lisp
   (with-eval-after-load "magit-autoloads"
-    (message "...")
+
+    (setq magit-auto-revert-mode nil)   ; Avoid any data loss.
     )
 #+end_src
 
@@ -12378,7 +12379,7 @@ etc. I use it to reduce the repetitious parts of programming, and let me focus
 on getting things done.
 
 ~YASnippet~ does support mirror fields and transformations.  It also does support
-multiple snippet with same name.  It will also expand snippets containing
+multiple snippets with same name.  It will also expand snippets containing
 non-word-constituent characters, which ~abbrev~ can't.  So I can't have ~@p~ expand
 to ~@param~ with ~abbrev~, but I can with ~YASnippet~.
 
@@ -12416,6 +12417,8 @@ XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-con
 #+end_src
 
 #+begin_src emacs-lisp
+      ;; (setq yas-verbosity 1)
+
       ;; Load the snippet tables.
       (yas-reload-all)
 #+end_src
