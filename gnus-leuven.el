@@ -1,4 +1,3 @@
-
 ;;; gnus-leuven.el --- my Gnus config file
 
 ;; Copyright (C) 2004-2015 Fabrice Niessen
