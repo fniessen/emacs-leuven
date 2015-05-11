@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150511.1058</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150511.1222</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150511.1058"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150511.1222"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -4126,9 +4126,7 @@ M-: (executable-find "diff") RET
       <span class="org-comment-delimiter">;; </span><span class="org-comment">candidates separator of `</span><span class="org-constant"><span class="org-comment">multiline</span></span><span class="org-comment">' source (such as</span>
       <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">helm-show-kill-ring</span></span><span class="org-comment">')</span>
       (setq helm-candidate-separator
-            (propertize
-             <span class="org-string">"--8&lt;-----------------------separator------------------------&gt;8---"</span>
-             'face (list <span class="org-builtin">:weight</span> 'bold <span class="org-builtin">:foreground</span> <span class="org-string">"red"</span>)))
+            <span class="org-string">"--8&lt;-----------------------separator------------------------&gt;8---"</span>)
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">suppress displaying sources which are out of screen at first</span>
       (setq helm-quick-update t)

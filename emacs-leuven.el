@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150511.1057
+;; Version: 20150511.1222
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150511.1057"
+(defconst leuven--emacs-version "20150511.1222"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2383,9 +2383,7 @@ These packages are neither built-in nor already installed nor ignored."
       ;; candidates separator of `multiline' source (such as
       ;; `helm-show-kill-ring')
       (setq helm-candidate-separator
-            (propertize
-             "--8<-----------------------separator------------------------>8---"
-             'face (list :weight 'bold :foreground "red")))
+            "--8<-----------------------separator------------------------>8---")
 
       ;; suppress displaying sources which are out of screen at first
       (setq helm-quick-update t)
