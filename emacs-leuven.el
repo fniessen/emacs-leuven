@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150511.1222
+;; Version: 20150511.1507
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150511.1222"
+(defconst leuven--emacs-version "20150511.1507"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2306,11 +2306,9 @@ These packages are neither built-in nor already installed nor ignored."
     (leuven--section "Helm")
 
     ;; open Helm (QuickSilver-like candidate-selection framework)
-    (try-require 'helm-config)          ; [helm-command-prefix-key: "C-x c"]
+    (when (try-require 'helm-config)    ; [helm-command-prefix-key: "C-x c"]
                                         ; Explicitly loads `helm-autoloads'!
-
-    (with-eval-after-load "helm-autoloads"
-
+                                        ; CAUTION for recursive loads...
       ;; better version of `occur'
       (global-set-key (kbd "C-o") 'helm-occur)
 
@@ -2342,15 +2340,15 @@ These packages are neither built-in nor already installed nor ignored."
 
       (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 
-;; (global-set-key (kbd "M-5") 'helm-etags-select)
-;; (global-set-key (kbd "C-h ,") 'helm-apropos)
-;; (global-set-key (kbd "C-h .") 'helm-info-emacs)
-;; (global-set-key (kbd "C-h r") 'helm-info-emacs)
-;; (global-set-key (kbd "C-h d") 'helm-info-at-point)
-;; (global-set-key (kbd "C-h 4") 'helm-info-elisp)
-;; (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
-;; (global-set-key (kbd "C-h C--") 'helm-google)
-;; (global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)
+      ;; (global-set-key (kbd "M-5") 'helm-etags-select)
+      ;; (global-set-key (kbd "C-h ,") 'helm-apropos)
+      ;; (global-set-key (kbd "C-h .") 'helm-info-emacs)
+      ;; (global-set-key (kbd "C-h r") 'helm-info-emacs)
+      ;; (global-set-key (kbd "C-h d") 'helm-info-at-point)
+      ;; (global-set-key (kbd "C-h 4") 'helm-info-elisp)
+      ;; (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+      ;; (global-set-key (kbd "C-h C--") 'helm-google)
+      ;; (global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)
 
       (global-set-key (kbd "C-h b") 'helm-descbinds)
     )

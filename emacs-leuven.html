@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150511.1222</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150511.1508</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150511.1222"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150511.1508"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -4044,11 +4044,9 @@ M-: (executable-find "diff") RET
     (leuven--section <span class="org-string">"Helm"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">open Helm (QuickSilver-like candidate-selection framework)</span>
-    (try-require 'helm-config)          <span class="org-comment-delimiter">; </span><span class="org-comment">[helm-command-prefix-key: "C-x c"]</span>
+    (<span class="org-keyword">when</span> (try-require 'helm-config)    <span class="org-comment-delimiter">; </span><span class="org-comment">[helm-command-prefix-key: "C-x c"]</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">Explicitly loads `</span><span class="org-constant"><span class="org-comment">helm-autoloads</span></span><span class="org-comment">'!</span>
-
-    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-autoloads"</span>
-
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">CAUTION for recursive loads...</span>
       <span class="org-comment-delimiter">;; </span><span class="org-comment">better version of `</span><span class="org-constant"><span class="org-comment">occur</span></span><span class="org-comment">'</span>
       (global-set-key (kbd <span class="org-string">"C-o"</span>) 'helm-occur)
 
@@ -4080,15 +4078,15 @@ M-: (executable-find "diff") RET
 
       (global-set-key (kbd <span class="org-string">"M-y"</span>) 'helm-show-kill-ring)
 
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "M-5") 'helm-etags-select)</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h ,") 'helm-apropos)</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h .") 'helm-info-emacs)</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h r") 'helm-info-emacs)</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h d") 'helm-info-at-point)</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h 4") 'helm-info-elisp)</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h C--") 'helm-google)</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "M-5") 'helm-etags-select)</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h ,") 'helm-apropos)</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h .") 'helm-info-emacs)</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h r") 'helm-info-emacs)</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h d") 'helm-info-at-point)</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h 4") 'helm-info-elisp)</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h C--") 'helm-google)</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)</span>
 </pre></div>
 <p>Use the separate Helm Descbinds to get a quick <b>key bindings</b> overview. It will make your life much easier with million Emacs keys.</p>
 <div class="org-src-container">
