@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150512.0935
+;; Version: 20150512.1029
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150512.0935"
+(defconst leuven--emacs-version "20150512.1029"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1255,7 +1255,6 @@ These packages are neither built-in nor already installed nor ignored."
     (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC"))
     (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " fS"))
     (with-eval-after-load "google-this"  (diminish 'google-this-mode))
-    (with-eval-after-load "guide-key"    (diminish 'guide-key-mode))
     (with-eval-after-load "hilit-chg"    (diminish 'highlight-changes-mode))
     ;; (with-eval-after-load "isearch"      (diminish 'isearch-mode (string 32 ?\u279c)))
     (with-eval-after-load "paredit"      (diminish 'paredit-mode " Pe"))
@@ -7654,9 +7653,6 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;; Use Snippet mode for files with a `yasnippet' extension.
       (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
 
-      ;; Insert snippet at point.
-      (global-set-key (kbd "C-c y i") 'yas-insert-snippet) ; Also on `C-c & C-s'.
-
       ;; Bind `yas-expand' to SPC.
       (define-key yas-minor-mode-map (kbd "<tab>") nil)
       (define-key yas-minor-mode-map (kbd "TAB") nil)
@@ -7674,11 +7670,9 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;; UI for selecting snippet when there are multiple candidates.
       (setq yas-prompt-functions '(yas-dropdown-prompt))
 
-      (global-set-key (kbd "C-c y l") 'yas-describe-tables)
+      (global-set-key (kbd "C-c & C-r") 'yas-reload-all)
 
-      (global-set-key (kbd "C-c y n") 'yas-new-snippet)
-      (global-set-key (kbd "C-c y r") 'yas-reload-all)
-      (global-set-key (kbd "C-c y v") 'yas-visit-snippet-file)
+      (global-set-key (kbd "C-c & C-l") 'yas-describe-tables)
 
       (defvar lawlist-context-menu-map
         (let ((map (make-sparse-keymap "Context Menu")))
@@ -9608,22 +9602,23 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "guide-key"
 
     (setq guide-key/guide-key-sequence
-          '("C-c"                       ; XXX Doesn't play nice with Org's C-c C-e.
+          '("C-c"
             "C-h"
-            "C-x 4"                     ; other window
-            "C-x 5"                     ; other frame
-            "C-x 8"                     ; unicode
-            "C-x RET"                   ; coding system
-            "C-x a"                     ; abbrev
-            "C-x c"                     ; helm
-            "C-x n"                     ; narrow
-            "C-x p"                     ; bmkp
-            "C-x r"                     ; register + rectangle
-            "C-x v"                     ; vc
-            "C-x w"                     ; hi-lock
-            "M-g"                       ; goto + error
-            "M-s"                       ; occur + highlight
-            (org-mode "C-c C-x")
+            "C-x 4"                     ; Other window. OK.
+            "C-x 5"                     ; Other frame.
+            "C-x 8"                     ; Unicode. OK.
+            "C-x RET"                   ; Coding system.
+            "C-x a"                     ; Abbrev.
+            "C-x c"                     ; Helm.
+            "C-x n"                     ; Narrow.
+            "C-x p"                     ; Bmkp.
+            "C-x r"                     ; Register + rectangle. OK.
+            "C-x v"                     ; VC. OK.
+            "C-x w"                     ; Hi-lock.
+            "M-g"                       ; Goto + error.
+            "M-s"                       ; Occur + highlight.
+            (org-mode "C-c C-x"
+                      "C-c C-v")
             (outline-minor-mode "C-c @")))
 
     ;; (setq guide-key/idle-delay 0.3)
@@ -9632,8 +9627,11 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (setq guide-key/popup-window-position 'bottom)
 
-    ;; enable guide-key-mode
-    (guide-key-mode 1))
+    ;; Enable guide-key-mode.
+    (guide-key-mode 1)
+
+    (with-eval-after-load "guide-key"
+      (diminish 'guide-key-mode)))
 
 ;;** 48.5 The (info "(emacs)Syntax") Table
 

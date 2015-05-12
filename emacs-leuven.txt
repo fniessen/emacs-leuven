@@ -2190,7 +2190,6 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
     (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC"))
     (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " fS"))
     (with-eval-after-load "google-this"  (diminish 'google-this-mode))
-    (with-eval-after-load "guide-key"    (diminish 'guide-key-mode))
     (with-eval-after-load "hilit-chg"    (diminish 'highlight-changes-mode))
     ;; (with-eval-after-load "isearch"      (diminish 'isearch-mode (string 32 ?\u279c)))
     (with-eval-after-load "paredit"      (diminish 'paredit-mode " Pe"))
@@ -12496,10 +12495,10 @@ Load additional snippets.
 
 *** Expanding snippets
 
-#+begin_src emacs-lisp
-      ;; Insert snippet at point.
-      (global-set-key (kbd "C-c y i") 'yas-insert-snippet) ; Also on `C-c & C-s'.
+- ~C-c & C-s~ ::
+     Insert snippet at point.
 
+#+begin_src emacs-lisp
       ;; Bind `yas-expand' to SPC.
       (define-key yas-minor-mode-map (kbd "<tab>") nil)
       (define-key yas-minor-mode-map (kbd "TAB") nil)
@@ -12518,18 +12517,25 @@ Load additional snippets.
       (setq yas-prompt-functions '(yas-dropdown-prompt))
 #+end_src
 
-Display all available snippets with ~M-x yas-describe-tables~.
+*** Writing snippets
+
+- ~C-c & C-n~ ::
+     ~yas-new-snippet~.
+
+- ~C-c & C-v~ ::
+     ~yas-visit-snippet-file~.
+
+*** YASnippet menu
 
 #+begin_src emacs-lisp
-      (global-set-key (kbd "C-c y l") 'yas-describe-tables)
+      (global-set-key (kbd "C-c & C-r") 'yas-reload-all)
 #+end_src
 
-Other key bindings:
+Display all available snippets with ~M-x yas-describe-tables~ (or ~C-c & C-l~ in
+Emacs Leuven):
 
 #+begin_src emacs-lisp
-      (global-set-key (kbd "C-c y n") 'yas-new-snippet)
-      (global-set-key (kbd "C-c y r") 'yas-reload-all)
-      (global-set-key (kbd "C-c y v") 'yas-visit-snippet-file)
+      (global-set-key (kbd "C-c & C-l") 'yas-describe-tables)
 #+end_src
 
 See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippet.
@@ -15753,22 +15759,23 @@ See as well Print keybindings (pkb).
   (with-eval-after-load "guide-key"
 
     (setq guide-key/guide-key-sequence
-          '("C-c"                       ; XXX Doesn't play nice with Org's C-c C-e.
+          '("C-c"
             "C-h"
-            "C-x 4"                     ; other window
-            "C-x 5"                     ; other frame
-            "C-x 8"                     ; unicode
-            "C-x RET"                   ; coding system
-            "C-x a"                     ; abbrev
-            "C-x c"                     ; helm
-            "C-x n"                     ; narrow
-            "C-x p"                     ; bmkp
-            "C-x r"                     ; register + rectangle
-            "C-x v"                     ; vc
-            "C-x w"                     ; hi-lock
-            "M-g"                       ; goto + error
-            "M-s"                       ; occur + highlight
-            (org-mode "C-c C-x")
+            "C-x 4"                     ; Other window. OK.
+            "C-x 5"                     ; Other frame.
+            "C-x 8"                     ; Unicode. OK.
+            "C-x RET"                   ; Coding system.
+            "C-x a"                     ; Abbrev.
+            "C-x c"                     ; Helm.
+            "C-x n"                     ; Narrow.
+            "C-x p"                     ; Bmkp.
+            "C-x r"                     ; Register + rectangle. OK.
+            "C-x v"                     ; VC. OK.
+            "C-x w"                     ; Hi-lock.
+            "M-g"                       ; Goto + error.
+            "M-s"                       ; Occur + highlight.
+            (org-mode "C-c C-x"
+                      "C-c C-v")
             (outline-minor-mode "C-c @")))
 
     ;; (setq guide-key/idle-delay 0.3)
@@ -15777,8 +15784,11 @@ See as well Print keybindings (pkb).
 
     (setq guide-key/popup-window-position 'bottom)
 
-    ;; enable guide-key-mode
-    (guide-key-mode 1))
+    ;; Enable guide-key-mode.
+    (guide-key-mode 1)
+
+    (with-eval-after-load "guide-key"
+      (diminish 'guide-key-mode)))
 #+end_src
 
 ** Syntax Table
