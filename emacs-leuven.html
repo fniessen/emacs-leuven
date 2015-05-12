@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150512.1918</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150512.2119</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150512.1918"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150512.2119"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1531,7 +1531,8 @@ nil</div>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Increase selected region by semantic units.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"expand-region-autoloads"</span>
 
-    (global-set-key (kbd <span class="org-string">"C-@"</span>) 'er/expand-region)) <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> Not seen as `</span><span class="org-constant"><span class="org-comment">C-@</span></span><span class="org-comment">'!?</span>
+    (global-set-key (kbd <span class="org-string">"C-+"</span>) 'er/expand-region)
+    (global-set-key (kbd <span class="org-string">"C--"</span>) 'er/contract-region))
 </pre></div>
 </div>
 </div>
@@ -1574,9 +1575,6 @@ nil</div>
 <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Add a cursor to each (continuous) line in the current region.</span>
     (global-set-key (kbd <span class="org-string">"C-S-c C-S-c"</span>) 'mc/edit-lines)
-
-    (global-set-key (kbd <span class="org-string">"C-S-c C-e"</span>) 'mc/edit-ends-of-lines)
-    (global-set-key (kbd <span class="org-string">"C-S-c C-a"</span>) 'mc/edit-beginnings-of-lines)
 </pre></div>
 </div>
 </div>
@@ -1589,10 +1587,17 @@ nil</div>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Add a cursor and region at the next part of the buffer forwards that</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">matches the current region.</span>
     (global-set-key (kbd <span class="org-string">"C-&gt;"</span>) 'mc/mark-next-like-this)
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-c &gt;") 'mc/mark-next-like-this)</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Add a cursor and region at the next part of the buffer backwards that</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">matches the current region.</span>
     (global-set-key (kbd <span class="org-string">"C-&lt;"</span>) 'mc/mark-previous-like-this)
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-c &lt;") 'mc/mark-previous-like-this)</span>
+
+    (global-set-key (kbd <span class="org-string">"C-M-&gt;"</span>) 'mc/skip-to-next-like-this)
+    (global-set-key (kbd <span class="org-string">"C-M-&lt;"</span>) 'mc/skip-to-previous-like-this)
+
+    (global-set-key (kbd <span class="org-string">"C-S-&lt;mouse-1&gt;"</span>) 'mc/add-cursor-on-click)
 </pre></div>
 </div>
 </div>
@@ -1602,10 +1607,8 @@ nil</div>
 <p class="c2">Add all occurrences of the current word to the selection.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
-    (global-set-key (kbd <span class="org-string">"C-;"</span>) 'mc/mark-all-symbols-like-this) <span class="org-comment-delimiter">; </span><span class="org-comment">Like Iedit</span>
-</pre></div>
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">
+    (global-set-key (kbd <span class="org-string">"C-;"</span>) 'mc/mark-all-like-this-dwim) <span class="org-comment-delimiter">; </span><span class="org-comment">Like Iedit.</span>
+
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Mark all parts of the buffer that matches the current region.</span>
     (global-set-key (kbd <span class="org-string">"C-c C-&lt;"</span>) 'mc/mark-all-like-this)
     (global-set-key (kbd <span class="org-string">"C-c *"</span>) 'mc/mark-all-like-this)
@@ -1613,13 +1616,11 @@ nil</div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
     (global-set-key (kbd <span class="org-string">"C-&lt;return&gt;"</span>) 'mc/mark-more-like-this-extended)
+</pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
     (global-set-key (kbd <span class="org-string">"C-S-SPC"</span>) 'set-rectangular-region-anchor)
     (global-set-key (kbd <span class="org-string">"C-M-="</span>) 'mc/insert-numbers)
-    (global-set-key (kbd <span class="org-string">"C-S-&lt;mouse-1&gt;"</span>) 'mc/add-cursor-on-click)
-
-    (global-set-key (kbd <span class="org-string">"C-c &gt;"</span>) 'mc/mark-next-like-this)
-    (global-set-key (kbd <span class="org-string">"C-c &lt;"</span>) 'mc/mark-previous-like-this)
-    (global-set-key (kbd <span class="org-string">"s-SPC"</span>) 'set-rectangular-region-anchor)
   )
 </pre></div>
 </div>

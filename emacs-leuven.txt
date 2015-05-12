@@ -1299,7 +1299,8 @@ It moves point through ~buffer-undo-list~ positions.
   ;; Increase selected region by semantic units.
   (with-eval-after-load "expand-region-autoloads"
 
-    (global-set-key (kbd "C-@") 'er/expand-region)) ; XXX Not seen as `C-@'!?
+    (global-set-key (kbd "C-+") 'er/expand-region)
+    (global-set-key (kbd "C--") 'er/contract-region))
 #+end_src
 
 ** Operating on the Region
@@ -1337,9 +1338,6 @@ the region into lines* which are then *edited simultaneously*.
 #+begin_src emacs-lisp
     ;; Add a cursor to each (continuous) line in the current region.
     (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-
-    (global-set-key (kbd "C-S-c C-e") 'mc/edit-ends-of-lines)
-    (global-set-key (kbd "C-S-c C-a") 'mc/edit-beginnings-of-lines)
 #+end_src
 
 *** Quick add next/previous
@@ -1351,10 +1349,17 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
     ;; Add a cursor and region at the next part of the buffer forwards that
     ;; matches the current region.
     (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+    ;; (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
 
     ;; Add a cursor and region at the next part of the buffer backwards that
     ;; matches the current region.
     (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+    ;; (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
+
+    (global-set-key (kbd "C-M->") 'mc/skip-to-next-like-this)
+    (global-set-key (kbd "C-M-<") 'mc/skip-to-previous-like-this)
+
+    (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
 #+end_src
 
 *** Find All
@@ -1362,10 +1367,8 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
 *Add all occurrences of the current word to the selection.*
 
 #+begin_src emacs-lisp
-    (global-set-key (kbd "C-;") 'mc/mark-all-symbols-like-this) ; Like Iedit
-#+end_src
+    (global-set-key (kbd "C-;") 'mc/mark-all-like-this-dwim) ; Like Iedit.
 
-#+begin_src emacs-lisp
     ;; Mark all parts of the buffer that matches the current region.
     (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
     (global-set-key (kbd "C-c *") 'mc/mark-all-like-this)
@@ -1373,13 +1376,11 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
 
 #+begin_src emacs-lisp
     (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended)
+#+end_src
+
+#+begin_src emacs-lisp
     (global-set-key (kbd "C-S-SPC") 'set-rectangular-region-anchor)
     (global-set-key (kbd "C-M-=") 'mc/insert-numbers)
-    (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
-
-    (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
-    (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
-    (global-set-key (kbd "s-SPC") 'set-rectangular-region-anchor)
   )
 #+end_src
 

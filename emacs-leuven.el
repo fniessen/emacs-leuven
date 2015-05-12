@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150512.1917
+;; Version: 20150512.2118
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150512.1917"
+(defconst leuven--emacs-version "20150512.2118"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -771,7 +771,8 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Increase selected region by semantic units.
   (with-eval-after-load "expand-region-autoloads"
 
-    (global-set-key (kbd "C-@") 'er/expand-region)) ; XXX Not seen as `C-@'!?
+    (global-set-key (kbd "C-+") 'er/expand-region)
+    (global-set-key (kbd "C--") 'er/contract-region))
 
   ;; Inserting text while the mark is active causes the text in the region to be
   ;; deleted first.
@@ -783,31 +784,31 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Add a cursor to each (continuous) line in the current region.
     (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 
-    (global-set-key (kbd "C-S-c C-e") 'mc/edit-ends-of-lines)
-    (global-set-key (kbd "C-S-c C-a") 'mc/edit-beginnings-of-lines)
-
     ;; Add a cursor and region at the next part of the buffer forwards that
     ;; matches the current region.
     (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+    ;; (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
 
     ;; Add a cursor and region at the next part of the buffer backwards that
     ;; matches the current region.
     (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+    ;; (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
 
-    (global-set-key (kbd "C-;") 'mc/mark-all-symbols-like-this) ; Like Iedit
+    (global-set-key (kbd "C-M->") 'mc/skip-to-next-like-this)
+    (global-set-key (kbd "C-M-<") 'mc/skip-to-previous-like-this)
+
+    (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+
+    (global-set-key (kbd "C-;") 'mc/mark-all-like-this-dwim) ; Like Iedit.
 
     ;; Mark all parts of the buffer that matches the current region.
     (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
     (global-set-key (kbd "C-c *") 'mc/mark-all-like-this)
 
     (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended)
+
     (global-set-key (kbd "C-S-SPC") 'set-rectangular-region-anchor)
     (global-set-key (kbd "C-M-=") 'mc/insert-numbers)
-    (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
-
-    (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
-    (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
-    (global-set-key (kbd "s-SPC") 'set-rectangular-region-anchor)
   )
 
   ;; Multiple cursors for Emacs.
