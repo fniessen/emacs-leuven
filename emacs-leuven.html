@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150511.2259</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150511.2315</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150511.2259"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150511.2315"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1177,7 +1177,16 @@ nil</div>
 </pre></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"volatile-highlights-autoloads"</span>
+    (volatile-highlights-mode 1))
+</pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Treat undo history as a tree.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"undo-tree-autoloads"</span>
+
+    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diminish-autoloads"</span>
+      (diminish 'undo-tree-mode))
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Global-Undo-Tree mode.</span>
     (global-undo-tree-mode 1)
@@ -2214,6 +2223,13 @@ nil</div>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diff-hl"</span>
     (global-diff-hl-mode))
 </pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+ (<span class="org-keyword">defadvice</span> <span class="org-function-name">git-commit-commit</span> (after git-commit-commit-after activate)
+         (<span class="org-keyword">dolist</span> (buffer (buffer-list))
+           (<span class="org-keyword">with-current-buffer</span> buffer
+             (<span class="org-keyword">when</span> diff-hl-mode (diff-hl-update)))))
+</pre></div>
 <p>Jump between changes:</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -2391,7 +2407,6 @@ nil</div>
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"paredit"</span>      (diminish 'paredit-mode <span class="org-string">" Pe"</span>))
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"rainbow-mode"</span> (diminish 'rainbow-mode))
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"simple"</span>       (diminish 'auto-fill-function))
-    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"undo-tree"</span>    (diminish 'undo-tree-mode))
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"whitespace"</span>   (diminish 'whitespace-mode))
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"yasnippet"</span>    (diminish 'yas-minor-mode)))
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(diminish-on-load hs-minor-mode-hook hs-minor-mode)</span>
@@ -4050,14 +4065,14 @@ M-: (executable-find "diff") RET
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Better version of `</span><span class="org-constant"><span class="org-comment">occur</span></span><span class="org-comment">'.</span>
       (global-set-key (kbd <span class="org-string">"C-o"</span>) 'helm-occur)
 
-      (global-set-key (kbd <span class="org-string">"M-x"</span>) 'helm-M-x)
+      (global-set-key (kbd <span class="org-string">"M-x"</span>) 'helm-M-x) <span class="org-comment-delimiter">; </span><span class="org-comment">OK.</span>
 
       (global-set-key (kbd <span class="org-string">"&lt;f3&gt;"</span>) 'helm-for-files)
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-x C-f") 'helm-find-files)</span>
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Buffer list.</span>
-      (global-set-key (kbd <span class="org-string">"C-x b"</span>) 'helm-mini)
+      (global-set-key (kbd <span class="org-string">"C-x b"</span>) 'helm-mini) <span class="org-comment-delimiter">; </span><span class="org-comment">OK.</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">= `</span><span class="org-constant"><span class="org-comment">helm-buffers-list</span></span><span class="org-comment">' + recents.</span>
 
       (global-set-key (kbd <span class="org-string">"C-x r l"</span>) 'helm-bookmarks)
@@ -4077,7 +4092,7 @@ M-: (executable-find "diff") RET
       (global-set-key (kbd <span class="org-string">"&lt;f4&gt;"</span>) 'leuven-helm-org-prog-menu) <span class="org-comment-delimiter">; </span><span class="org-comment">awesome</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">and `C-c =' (like in RefTeX)?</span>
 
-      (global-set-key (kbd <span class="org-string">"M-y"</span>) 'helm-show-kill-ring)
+      (global-set-key (kbd <span class="org-string">"M-y"</span>) 'helm-show-kill-ring) <span class="org-comment-delimiter">; </span><span class="org-comment">OK.</span>
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "M-5") 'helm-etags-select)</span>
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h ,") 'helm-apropos)</span>

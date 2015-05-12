@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150511.2259
+;; Version: 20150511.2315
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150511.2259"
+(defconst leuven--emacs-version "20150511.2315"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -573,7 +573,14 @@ These packages are neither built-in nor already installed nor ignored."
   (global-set-key (kbd "<f11>") 'undo)
   (global-set-key (kbd "C-z") 'undo)
 
+  (with-eval-after-load "volatile-highlights-autoloads"
+    (volatile-highlights-mode 1))
+
+  ;; Treat undo history as a tree.
   (with-eval-after-load "undo-tree-autoloads"
+
+    (with-eval-after-load "diminish-autoloads"
+      (diminish 'undo-tree-mode))
 
     ;; Enable Global-Undo-Tree mode.
     (global-undo-tree-mode 1)
@@ -1257,7 +1264,6 @@ These packages are neither built-in nor already installed nor ignored."
     (with-eval-after-load "paredit"      (diminish 'paredit-mode " Pe"))
     (with-eval-after-load "rainbow-mode" (diminish 'rainbow-mode))
     (with-eval-after-load "simple"       (diminish 'auto-fill-function))
-    (with-eval-after-load "undo-tree"    (diminish 'undo-tree-mode))
     (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
     (with-eval-after-load "yasnippet"    (diminish 'yas-minor-mode)))
     ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
@@ -2313,14 +2319,14 @@ These packages are neither built-in nor already installed nor ignored."
       ;; Better version of `occur'.
       (global-set-key (kbd "C-o") 'helm-occur)
 
-      (global-set-key (kbd "M-x") 'helm-M-x)
+      (global-set-key (kbd "M-x") 'helm-M-x) ; OK.
 
       (global-set-key (kbd "<f3>") 'helm-for-files)
 
       ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
       ;; Buffer list.
-      (global-set-key (kbd "C-x b") 'helm-mini)
+      (global-set-key (kbd "C-x b") 'helm-mini) ; OK.
                                         ; = `helm-buffers-list' + recents.
 
       (global-set-key (kbd "C-x r l") 'helm-bookmarks)
@@ -2340,7 +2346,7 @@ These packages are neither built-in nor already installed nor ignored."
       (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
                                         ; and `C-c =' (like in RefTeX)?
 
-      (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+      (global-set-key (kbd "M-y") 'helm-show-kill-ring) ; OK.
 
       ;; (global-set-key (kbd "M-5") 'helm-etags-select)
       ;; (global-set-key (kbd "C-h ,") 'helm-apropos)
