@@ -2023,11 +2023,11 @@ Jump between changes:
 #+begin_src emacs-lisp
   (with-eval-after-load "diff-hl"
 
-    ;; ;; Jump to next hunk (also on `C-x v ]').
-    ;; (define-key diff-hl-mode-map (kbd "C-x v n") 'diff-hl-next-hunk)
-    ;;
-    ;; ;; Jump to previous hunk (also on `C-x v [').
-    ;; (define-key diff-hl-mode-map (kbd "C-x v p") 'diff-hl-previous-hunk)
+    ;; Jump to next hunk (also on `C-x v ]').
+    (define-key diff-hl-mode-map (kbd "C-x v >") 'diff-hl-next-hunk)
+
+    ;; Jump to previous hunk (also on `C-x v [').
+    (define-key diff-hl-mode-map (kbd "C-x v <") 'diff-hl-previous-hunk)
 #+end_src
 
 Act on changes:

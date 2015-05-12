@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150512.1446</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150512.1454</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150512.1446"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150512.1454"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2241,11 +2241,11 @@ nil</div>
 <pre class="src src-emacs-lisp">
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diff-hl"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Jump to next hunk (also on `C-x v ]').</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(define-key diff-hl-mode-map (kbd "C-x v n") 'diff-hl-next-hunk)</span>
-    <span class="org-comment-delimiter">;;</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Jump to previous hunk (also on `C-x v [').</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(define-key diff-hl-mode-map (kbd "C-x v p") 'diff-hl-previous-hunk)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Jump to next hunk (also on `C-x v ]').</span>
+    (define-key diff-hl-mode-map (kbd <span class="org-string">"C-x v &gt;"</span>) 'diff-hl-next-hunk)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Jump to previous hunk (also on `C-x v [').</span>
+    (define-key diff-hl-mode-map (kbd <span class="org-string">"C-x v &lt;"</span>) 'diff-hl-previous-hunk)
 </pre></div>
 <p>Act on changes:</p>
 <div class="org-src-container">
