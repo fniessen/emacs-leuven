@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150512.1454
+;; Version: 20150512.1620
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150512.1454"
+(defconst leuven--emacs-version "20150512.1620"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -441,8 +441,8 @@ Last time is saved in global variable `leuven--before-section-time'."
           git-commit-mode git-messenger git-timemachine google-this
           google-translate goto-chg graphviz-dot-mode graphviz-dot-mode
           guide-key helm helm-descbinds helm-swoop hideshowvis highlight-symbol
-          htmlize key-chord litable idle-require imenu-anywhere info+
-          interaction-log ledger-mode leuven-theme magit multi-term
+          htmlize indent-guide key-chord litable idle-require imenu-anywhere
+          info+ interaction-log ledger-mode leuven-theme magit multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
           undo-tree w3m ws-butler yasnippet
           ;; jabber multi-term paredit redshank
@@ -3094,10 +3094,24 @@ These packages are neither built-in nor already installed nor ignored."
 
   (global-set-key (kbd "C-x \\") 'align-regexp)
 
-  (with-eval-after-load "aggressive-indent"
+  ;; Minor mode to aggressively keep your code always indented.
+  (with-eval-after-load "aggressive-indent-autoloads"
 
     ;; Enable aggressive indent mode everywhere.
     (aggressive-indent-global-mode))
+
+  ;; Show vertical lines to guide indentation.
+  (with-eval-after-load "indent-guide-autoloads"
+
+    ;; Enable indent-guide-mode automatically.
+    (indent-guide-global-mode)
+
+    ;; Character used as vertical line.
+    (setq indent-guide-char "│")
+    (setq indent-guide-char "┆")
+    (setq indent-guide-char "╎")
+    ;; (setq indent-guide-char ":")
+)
 
 ;;** 24.3 TABs vs. (info "(emacs)Just Spaces")
 
@@ -7302,7 +7316,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (global-set-key (kbd "C-x v t") 'git-timemachine))
 
   ;; Pop up last commit information of current line.
-  (with-eval-after-load "git-messenger"
+  (with-eval-after-load "git-messenger-autoloads"
 
     (global-set-key (kbd "C-x v p") 'git-messenger:popup-message) ; `C-h g'.
 

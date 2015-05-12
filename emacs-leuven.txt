@@ -735,8 +735,8 @@ like this into your configuration file:
           git-commit-mode git-messenger git-timemachine google-this
           google-translate goto-chg graphviz-dot-mode graphviz-dot-mode
           guide-key helm helm-descbinds helm-swoop hideshowvis highlight-symbol
-          htmlize key-chord litable idle-require imenu-anywhere info+
-          interaction-log ledger-mode leuven-theme magit multi-term
+          htmlize indent-guide key-chord litable idle-require imenu-anywhere
+          info+ interaction-log ledger-mode leuven-theme magit multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
           undo-tree w3m ws-butler yasnippet
           ;; jabber multi-term paredit redshank
@@ -5183,10 +5183,26 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
 #+end_src
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "aggressive-indent"
+  ;; Minor mode to aggressively keep your code always indented.
+  (with-eval-after-load "aggressive-indent-autoloads"
 
     ;; Enable aggressive indent mode everywhere.
     (aggressive-indent-global-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Show vertical lines to guide indentation.
+  (with-eval-after-load "indent-guide-autoloads"
+
+    ;; Enable indent-guide-mode automatically.
+    (indent-guide-global-mode)
+
+    ;; Character used as vertical line.
+    (setq indent-guide-char "│")
+    (setq indent-guide-char "┆")
+    (setq indent-guide-char "╎")
+    ;; (setq indent-guide-char ":")
+)
 #+end_src
 
 *************** TODO Look at the `dtrt-indent' and `aggressive-indent' packages
@@ -11768,7 +11784,7 @@ can use the following keys to navigate historic versions of the file:
 
 #+begin_src emacs-lisp
   ;; Pop up last commit information of current line.
-  (with-eval-after-load "git-messenger"
+  (with-eval-after-load "git-messenger-autoloads"
 
     (global-set-key (kbd "C-x v p") 'git-messenger:popup-message) ; `C-h g'.
 

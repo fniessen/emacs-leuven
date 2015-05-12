@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150512.1454</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150512.1621</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150512.1454"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150512.1621"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -992,8 +992,8 @@ nil</div>
           git-commit-mode git-messenger git-timemachine google-this
           google-translate goto-chg graphviz-dot-mode graphviz-dot-mode
           guide-key helm helm-descbinds helm-swoop hideshowvis highlight-symbol
-          htmlize key-chord litable idle-require imenu-anywhere info+
-          interaction-log ledger-mode leuven-theme magit multi-term
+          htmlize indent-guide key-chord litable idle-require imenu-anywhere
+          info+ interaction-log ledger-mode leuven-theme magit multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
           undo-tree w3m ws-butler yasnippet
           <span class="org-comment-delimiter">;; </span><span class="org-comment">jabber multi-term paredit redshank</span>
@@ -5234,10 +5234,26 @@ nil</div>
 </pre></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
-  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"aggressive-indent"</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Minor mode to aggressively keep your code always indented.</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"aggressive-indent-autoloads"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable aggressive indent mode everywhere.</span>
     (aggressive-indent-global-mode))
+</pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Show vertical lines to guide indentation.</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"indent-guide-autoloads"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable indent-guide-mode automatically.</span>
+    (indent-guide-global-mode)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Character used as vertical line.</span>
+    (setq indent-guide-char <span class="org-string">"│"</span>)
+    (setq indent-guide-char <span class="org-string">"┆"</span>)
+    (setq indent-guide-char <span class="org-string">"╎"</span>)
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq indent-guide-char ":")</span>
+)
 </pre></div>
 <div class="inlinetask"><b><span class="todo TODO">TODO</span> Look at the `dtrt-indent' and `aggressive-indent' packages</b><br />
 <p>Aggressive-indent-mode seems very, very nice.</p>
@@ -11649,7 +11665,7 @@ nil</div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Pop up last commit information of current line.</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"git-messenger"</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"git-messenger-autoloads"</span>
 
     (global-set-key (kbd <span class="org-string">"C-x v p"</span>) 'git-messenger:popup-message) <span class="org-comment-delimiter">; </span><span class="org-comment">`C-h g'.</span>
 
