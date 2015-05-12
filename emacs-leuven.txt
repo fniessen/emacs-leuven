@@ -732,12 +732,13 @@ like this into your configuration file:
           color-identifiers-mode company company-quickhelp csv-mode cygwin-mount
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck flycheck-ledger fuzzy
-          git-commit-mode git-timemachine google-this google-translate goto-chg
-          graphviz-dot-mode graphviz-dot-mode guide-key helm helm-descbinds
-          helm-swoop hideshowvis highlight-symbol htmlize key-chord litable
-          idle-require imenu-anywhere info+ interaction-log ledger-mode
-          leuven-theme magit multi-term multiple-cursors pager pdf-tools
-          powerline rainbow-mode tidy unbound undo-tree w3m ws-butler yasnippet
+          git-commit-mode git-messenger git-timemachine google-this
+          google-translate goto-chg graphviz-dot-mode graphviz-dot-mode
+          guide-key helm helm-descbinds helm-swoop hideshowvis highlight-symbol
+          htmlize key-chord litable idle-require imenu-anywhere info+
+          interaction-log ledger-mode leuven-theme magit multi-term
+          multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
+          undo-tree w3m ws-butler yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -2022,11 +2023,11 @@ Jump between changes:
 #+begin_src emacs-lisp
   (with-eval-after-load "diff-hl"
 
-    ;; Jump to next hunk (also on `C-x v ]').
-    (define-key diff-hl-mode-map (kbd "C-x v n") 'diff-hl-next-hunk)
-
-    ;; Jump to previous hunk (also on `C-x v [').
-    (define-key diff-hl-mode-map (kbd "C-x v p") 'diff-hl-previous-hunk)
+    ;; ;; Jump to next hunk (also on `C-x v ]').
+    ;; (define-key diff-hl-mode-map (kbd "C-x v n") 'diff-hl-next-hunk)
+    ;;
+    ;; ;; Jump to previous hunk (also on `C-x v [').
+    ;; (define-key diff-hl-mode-map (kbd "C-x v p") 'diff-hl-previous-hunk)
 #+end_src
 
 Act on changes:
@@ -11756,13 +11757,23 @@ can use the following keys to navigate historic versions of the file:
      Exit the time machine.
 
 #+begin_src emacs-lisp
+  ;; Walk through Git revisions of a file.
   (with-eval-after-load "git-timemachine-autoloads"
 
     ;; Number of chars from the full SHA1 hash to use for abbreviation.
     (setq git-timemachine-abbreviation-length 7)
 
-    (global-set-key (kbd "C-x v t") 'git-timemachine)
-    )
+    (global-set-key (kbd "C-x v t") 'git-timemachine))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Pop up last commit information of current line.
+  (with-eval-after-load "git-messenger"
+
+    (global-set-key (kbd "C-x v p") 'git-messenger:popup-message) ; `C-h g'.
+
+    ;; Pop up commit ID and author name too.
+    (setq git-messenger:show-detail t))
 #+end_src
 
 *** VC Directory Mode
@@ -12666,7 +12677,14 @@ Find it at http://capitaomorte.github.io/yasnippet/snippet-reference.html#yas-ke
                                         ; '("w" "w_" "w_." "w_.()"
                                         ;   yas-try-key-from-whitespace)]
 
-      ))
+      )
+#+end_src
+
+*** Reference
+
+#+begin_src emacs-lisp
+      ;; Log level for `yas--message'.
+      (setq yas-verbosity 2))           ; Warning.
 #+end_src
 
 ** Dynamic Abbrev Expansion

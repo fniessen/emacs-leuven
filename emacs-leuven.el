@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150512.1244
+;; Version: 20150512.1445
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150512.1244"
+(defconst leuven--emacs-version "20150512.1445"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -438,12 +438,13 @@ Last time is saved in global variable `leuven--before-section-time'."
           color-identifiers-mode company company-quickhelp csv-mode cygwin-mount
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck flycheck-ledger fuzzy
-          git-commit-mode git-timemachine google-this google-translate goto-chg
-          graphviz-dot-mode graphviz-dot-mode guide-key helm helm-descbinds
-          helm-swoop hideshowvis highlight-symbol htmlize key-chord litable
-          idle-require imenu-anywhere info+ interaction-log ledger-mode
-          leuven-theme magit multi-term multiple-cursors pager pdf-tools
-          powerline rainbow-mode tidy unbound undo-tree w3m ws-butler yasnippet
+          git-commit-mode git-messenger git-timemachine google-this
+          google-translate goto-chg graphviz-dot-mode graphviz-dot-mode
+          guide-key helm helm-descbinds helm-swoop hideshowvis highlight-symbol
+          htmlize key-chord litable idle-require imenu-anywhere info+
+          interaction-log ledger-mode leuven-theme magit multi-term
+          multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
+          undo-tree w3m ws-butler yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -1154,11 +1155,11 @@ These packages are neither built-in nor already installed nor ignored."
 
   (with-eval-after-load "diff-hl"
 
-    ;; Jump to next hunk (also on `C-x v ]').
-    (define-key diff-hl-mode-map (kbd "C-x v n") 'diff-hl-next-hunk)
-
-    ;; Jump to previous hunk (also on `C-x v [').
-    (define-key diff-hl-mode-map (kbd "C-x v p") 'diff-hl-previous-hunk)
+    ;; ;; Jump to next hunk (also on `C-x v ]').
+    ;; (define-key diff-hl-mode-map (kbd "C-x v n") 'diff-hl-next-hunk)
+    ;;
+    ;; ;; Jump to previous hunk (also on `C-x v [').
+    ;; (define-key diff-hl-mode-map (kbd "C-x v p") 'diff-hl-previous-hunk)
 
     ;; Popup current diff.
     (define-key diff-hl-mode-map (kbd "C-x v =") 'diff-hl-diff-goto-hunk)
@@ -7292,13 +7293,21 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "28.1.7 VC Change Log")
 
+  ;; Walk through Git revisions of a file.
   (with-eval-after-load "git-timemachine-autoloads"
 
     ;; Number of chars from the full SHA1 hash to use for abbreviation.
     (setq git-timemachine-abbreviation-length 7)
 
-    (global-set-key (kbd "C-x v t") 'git-timemachine)
-    )
+    (global-set-key (kbd "C-x v t") 'git-timemachine))
+
+  ;; Pop up last commit information of current line.
+  (with-eval-after-load "git-messenger"
+
+    (global-set-key (kbd "C-x v p") 'git-messenger:popup-message) ; `C-h g'.
+
+    ;; Pop up commit ID and author name too.
+    (setq git-messenger:show-detail t))
 
 ;;*** 28.1.9 (info "(emacs)VC Directory Mode")
 
@@ -7723,7 +7732,10 @@ a clean buffer we're an order of magnitude laxer about checking."
                                         ; '("w" "w_" "w_." "w_.()"
                                         ;   yas-try-key-from-whitespace)]
 
-      ))
+      )
+
+      ;; Log level for `yas--message'.
+      (setq yas-verbosity 2))           ; Warning.
 
 ;;** 29.7 (info "(emacs)Dabbrev Customization")
 
