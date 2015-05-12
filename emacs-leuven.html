@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150511.2315</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150512.0936</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150511.2315"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150512.0936"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1185,11 +1185,11 @@ nil</div>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Treat undo history as a tree.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"undo-tree-autoloads"</span>
 
-    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diminish-autoloads"</span>
-      (diminish 'undo-tree-mode))
-
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Global-Undo-Tree mode.</span>
     (global-undo-tree-mode 1)
+
+    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diminish-autoloads"</span>
+      (diminish 'undo-tree-mode))
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Display times relative to current time in visualizer.</span>
     (setq undo-tree-visualizer-relative-timestamps t)

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150511.2315
+;; Version: 20150512.0935
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150511.2315"
+(defconst leuven--emacs-version "20150512.0935"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -573,17 +573,14 @@ These packages are neither built-in nor already installed nor ignored."
   (global-set-key (kbd "<f11>") 'undo)
   (global-set-key (kbd "C-z") 'undo)
 
-  (with-eval-after-load "volatile-highlights-autoloads"
-    (volatile-highlights-mode 1))
-
   ;; Treat undo history as a tree.
   (with-eval-after-load "undo-tree-autoloads"
 
-    (with-eval-after-load "diminish-autoloads"
-      (diminish 'undo-tree-mode))
-
     ;; Enable Global-Undo-Tree mode.
     (global-undo-tree-mode 1)
+
+    (with-eval-after-load "diminish-autoloads"
+      (diminish 'undo-tree-mode))
 
     ;; Display times relative to current time in visualizer.
     (setq undo-tree-visualizer-relative-timestamps t)

@@ -913,7 +913,7 @@ Show line numbers temporarily -- just when you're going to a line number with
   (global-set-key (kbd "C-z") 'undo)
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (with-eval-after-load "volatile-highlights-autoloads"
     (volatile-highlights-mode 1))
 #+end_src
@@ -922,11 +922,11 @@ Show line numbers temporarily -- just when you're going to a line number with
   ;; Treat undo history as a tree.
   (with-eval-after-load "undo-tree-autoloads"
 
-    (with-eval-after-load "diminish-autoloads"
-      (diminish 'undo-tree-mode))
-
     ;; Enable Global-Undo-Tree mode.
     (global-undo-tree-mode 1)
+
+    (with-eval-after-load "diminish-autoloads"
+      (diminish 'undo-tree-mode))
 
     ;; Display times relative to current time in visualizer.
     (setq undo-tree-visualizer-relative-timestamps t)
