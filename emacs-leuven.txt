@@ -2079,7 +2079,6 @@ Remove trailing whitespace *in edited lines* with ~ws-butler~:
   (with-eval-after-load "ws-butler-autoloads"
 
     (add-hook 'text-mode-hook 'ws-butler-mode)
-    ;; (add-hook 'org-mode-hook 'ws-butler-mode)
     (add-hook 'prog-mode-hook 'ws-butler-mode))
 #+end_src
 
@@ -5986,6 +5985,8 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
               (local-unset-key (kbd "C-c SPC")) ; Used by Ace Jump.
               (local-unset-key (kbd "C-c C-<")) ; Used by Multiple Cursors.
               (local-unset-key (kbd "C-c *")) ; Used by Multiple Cursors.
+              ;; (local-unset-key (kbd "C-c %")) ; XXX
+              ;; (local-unset-key (kbd "C-c &")) ; XXX
 
               ))
 #+end_src
@@ -10255,7 +10256,8 @@ AUCTeX is fantastic, and RefTeX just makes things better.
 To fill in ~\ref{}~ and ~\cite{}~ commands, you can use ~C-c &~
 (~reftex-view-crossref~).
 
-XXX Conflict with YASnippet.
+*************** TODO Conflict with YASnippet prefix key and ~org-mark-ring~-push
+*************** END
 
 A Table of Contents of the entire (multifile) document with browsing
 capabilities is available with ~C-c =~.  Hitting ~l~ there will show all the labels
@@ -12519,16 +12521,38 @@ Load additional snippets.
 
 *** Writing snippets
 
-- ~C-c & C-n~ ::
-     ~yas-new-snippet~.
+See http://cupfullofcode.com/snippet-expansion-with-yasnippet/.
+
+- ~C-c & C-n~ (~yas-new-snippet~) ::
+     Creates a new snippet, pre-filled out with the basic structure.
 
 - ~C-c & C-v~ ::
-     ~yas-visit-snippet-file~.
+    ~yas-visit-snippet-file~.
 
 *** YASnippet menu
 
+After editing your snippets:
+
+- ~M-x yas-recompile-all~ to compile all snippets,
+
+- ~M-x yas-reload-all~ to reload them all.
+
 #+begin_src emacs-lisp
       (global-set-key (kbd "C-c & C-r") 'yas-reload-all)
+#+end_src
+
+Automatically reload snippets after saving.
+
+#+begin_src emacs-lisp
+      ;; Automatically reload snippets after saving.
+      (defun recompile-and-reload-all-snippets ()
+        (interactive)
+        (when (derived-mode-p 'snippet-mode)
+          (yas-recompile-all)
+          (yas-reload-all)
+          (message "Reloaded all snippets")))
+
+      (add-hook 'after-save-hook 'recompile-and-reload-all-snippets)
 #+end_src
 
 Display all available snippets with ~M-x yas-describe-tables~ (or ~C-c & C-l~ in
@@ -12564,34 +12588,6 @@ See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippe
           (popup-menu lawlist-context-menu-map event prefix))
 
       (global-set-key [mouse-3] 'lawlist-popup-context-menu)
-#+end_src
-
-*** Writing snippets
-
-See http://cupfullofcode.com/snippet-expansion-with-yasnippet/.
-
-- ~C-c & C-n~ (~yas-new-snippet~) ::
-     Creates a new snippet, pre-filled out with the basic structure.
-
-- ~C-c & C-v~ ::
-    ~yas-visit-snippet-file~
-
-After editing your snippets:
-- ~M-x yas-recompile-all~ to compile all snippets,
-- ~M-x yas-reload-all~ to reload them all.
-
-Automatically reload snippets after saving.
-
-#+begin_src emacs-lisp
-      ;; Automatically reload snippets after saving.
-      (defun recompile-and-reload-all-snippets ()
-        (interactive)
-        (when (derived-mode-p 'snippet-mode)
-          (yas-recompile-all)
-          (yas-reload-all)
-          (message "Reloaded all snippets")))
-
-      (add-hook 'after-save-hook 'recompile-and-reload-all-snippets)
 #+end_src
 
 *** Frequently Asked Questions

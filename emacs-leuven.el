@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150512.1029
+;; Version: 20150512.1043
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150512.1029"
+(defconst leuven--emacs-version "20150512.1043"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1184,7 +1184,6 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "ws-butler-autoloads"
 
     (add-hook 'text-mode-hook 'ws-butler-mode)
-    ;; (add-hook 'org-mode-hook 'ws-butler-mode)
     (add-hook 'prog-mode-hook 'ws-butler-mode))
 
   ;; Visually indicate empty lines after the buffer end in the fringe.
@@ -3635,6 +3634,8 @@ These packages are neither built-in nor already installed nor ignored."
               (local-unset-key (kbd "C-c SPC")) ; Used by Ace Jump.
               (local-unset-key (kbd "C-c C-<")) ; Used by Multiple Cursors.
               (local-unset-key (kbd "C-c *")) ; Used by Multiple Cursors.
+              ;; (local-unset-key (kbd "C-c %")) ; XXX
+              ;; (local-unset-key (kbd "C-c &")) ; XXX
 
               ))
 
@@ -7672,6 +7673,16 @@ a clean buffer we're an order of magnitude laxer about checking."
 
       (global-set-key (kbd "C-c & C-r") 'yas-reload-all)
 
+      ;; Automatically reload snippets after saving.
+      (defun recompile-and-reload-all-snippets ()
+        (interactive)
+        (when (derived-mode-p 'snippet-mode)
+          (yas-recompile-all)
+          (yas-reload-all)
+          (message "Reloaded all snippets")))
+
+      (add-hook 'after-save-hook 'recompile-and-reload-all-snippets)
+
       (global-set-key (kbd "C-c & C-l") 'yas-describe-tables)
 
       (defvar lawlist-context-menu-map
@@ -7697,16 +7708,6 @@ a clean buffer we're an order of magnitude laxer about checking."
           (popup-menu lawlist-context-menu-map event prefix))
 
       (global-set-key [mouse-3] 'lawlist-popup-context-menu)
-
-      ;; Automatically reload snippets after saving.
-      (defun recompile-and-reload-all-snippets ()
-        (interactive)
-        (when (derived-mode-p 'snippet-mode)
-          (yas-recompile-all)
-          (yas-reload-all)
-          (message "Reloaded all snippets")))
-
-      (add-hook 'after-save-hook 'recompile-and-reload-all-snippets)
 
       (add-hook 'snippet-mode-hook
                 (lambda ()
