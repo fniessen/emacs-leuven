@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150512.1044</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150512.1245</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150512.1044"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150512.1245"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2223,13 +2223,18 @@ nil</div>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diff-hl"</span>
     (global-diff-hl-mode))
 </pre></div>
+<p>If you're using some package other than <code>vc</code> to commit changes, it might not run <code>vc-checkin-hook</code> after commits. In that case, you'll need to either add <code>diff-hl-update</code> to the hook it does run, or advise some function that's called in the buffer after its state has changed.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
- (<span class="org-keyword">defadvice</span> <span class="org-function-name">git-commit-commit</span> (after git-commit-commit-after activate)
-         (<span class="org-keyword">dolist</span> (buffer (buffer-list))
-           (<span class="org-keyword">with-current-buffer</span> buffer
-             (<span class="org-keyword">when</span> diff-hl-mode (diff-hl-update)))))
+  (<span class="org-keyword">defadvice</span> <span class="org-function-name">magit-refresh</span> (after diff-hl-refresh-after-magit-refresh activate)
+    (<span class="org-keyword">dolist</span> (buffer (buffer-list))
+      (<span class="org-keyword">with-current-buffer</span> buffer
+        (<span class="org-keyword">when</span> diff-hl-mode
+          (diff-hl-update)))))
 </pre></div>
+<div class="note">
+<p>Of course, <code>diff-hl</code> is not updated when we commit changes with <code>sendpatch</code>…</p>
+</div>
 <p>Jump between changes:</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -4253,7 +4258,8 @@ M-: (executable-find "diff") RET
 </div>
 <div id="outline-container-orgheadline95" class="outline-5">
 <h5 id="orgheadline95">Helm show kill ring</h5>
-<div class="outline-text-5 org-src-container" id="text-orgheadline95">
+<div class="outline-text-5" id="text-orgheadline95">
+<div class="org-src-container">
 <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class="org-comment">kill-ring, mark-ring, and register browsers for Helm.</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-ring"</span>
@@ -4261,6 +4267,12 @@ M-: (executable-find "diff") RET
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Max number of lines displayed per candidate in kill-ring browser.</span>
       (setq helm-kill-ring-max-lines-number 20))
 </pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(with-eval-after-load "helm-utils"</span>
+    <span class="org-comment-delimiter">;;   </span><span class="org-comment">(setq helm-yank-symbol-first t)</span>
+</pre></div>
+</div>
 </div>
 <div id="outline-container-orgheadline96" class="outline-5">
 <h5 id="orgheadline96">Helm swoop</h5>

@@ -2000,12 +2000,22 @@ changes.
     (global-diff-hl-mode))
 #+end_src
 
+If you're using some package other than ~vc~ to commit changes, it might not run
+~vc-checkin-hook~ after commits.  In that case, you'll need to either add
+~diff-hl-update~ to the hook it does run, or advise some function that's called in
+the buffer after its state has changed.
+
 #+begin_src emacs-lisp :tangle no
- (defadvice git-commit-commit (after git-commit-commit-after activate)
-         (dolist (buffer (buffer-list))
-           (with-current-buffer buffer
-             (when diff-hl-mode (diff-hl-update)))))
+  (defadvice magit-refresh (after diff-hl-refresh-after-magit-refresh activate)
+    (dolist (buffer (buffer-list))
+      (with-current-buffer buffer
+        (when diff-hl-mode
+          (diff-hl-update)))))
 #+end_src
+
+#+begin_note
+Of course, ~diff-hl~ is not updated when we commit changes with ~sendpatch~...
+#+end_note
 
 Jump between changes:
 
@@ -4235,6 +4245,11 @@ projects.
 
       ;; Max number of lines displayed per candidate in kill-ring browser.
       (setq helm-kill-ring-max-lines-number 20))
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; (with-eval-after-load "helm-utils"
+    ;;   (setq helm-yank-symbol-first t)
 #+end_src
 
 **** Helm swoop

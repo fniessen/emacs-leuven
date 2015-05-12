@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150512.1043
+;; Version: 20150512.1244
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150512.1043"
+(defconst leuven--emacs-version "20150512.1244"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2463,6 +2463,9 @@ These packages are neither built-in nor already installed nor ignored."
 
       ;; Max number of lines displayed per candidate in kill-ring browser.
       (setq helm-kill-ring-max-lines-number 20))
+
+    ;; (with-eval-after-load "helm-utils"
+    ;;   (setq helm-yank-symbol-first t)
 
     ;; efficiently hopping squeezed lines powered by Helm interface
     ;; (= Helm occur + Follow mode!)
