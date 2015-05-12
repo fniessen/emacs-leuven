@@ -4853,7 +4853,8 @@ one.
   (leuven--section "21.12 (emacs)Scroll Bars")
 
   (if (and (display-graphic-p)
-           (featurep 'powerline))
+           ;; (featurep 'powerline)
+           )
 
       ;; Turn scroll bar off.
       (scroll-bar-mode -1)
@@ -5182,7 +5183,7 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
   (global-set-key (kbd "C-x \\") 'align-regexp)
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Minor mode to aggressively keep your code always indented.
   (with-eval-after-load "aggressive-indent-autoloads"
 
@@ -5190,19 +5191,26 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
     (aggressive-indent-global-mode))
 #+end_src
 
+#+begin_warning
+If we enable ~aggressive-indent-mode~, then the tangled Emacs Lisp code (from this
+file) is beginning at column 0.
+#+end_warning
+
 #+begin_src emacs-lisp
   ;; Show vertical lines to guide indentation.
   (with-eval-after-load "indent-guide-autoloads"
 
     ;; Enable indent-guide-mode automatically.
-    (indent-guide-global-mode)
+    (add-hook 'prog-mode-hook #'indent-guide-mode))
+
+  (with-eval-after-load "indent-guide"
 
     ;; Character used as vertical line.
     (setq indent-guide-char "│")
     (setq indent-guide-char "┆")
     (setq indent-guide-char "╎")
     ;; (setq indent-guide-char ":")
-)
+    )
 #+end_src
 
 *************** TODO Look at the `dtrt-indent' and `aggressive-indent' packages

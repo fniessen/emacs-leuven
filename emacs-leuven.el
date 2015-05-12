@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150512.1620
+;; Version: 20150512.1917
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150512.1620"
+(defconst leuven--emacs-version "20150512.1917"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2915,7 +2915,8 @@ These packages are neither built-in nor already installed nor ignored."
   (leuven--section "21.12 (emacs)Scroll Bars")
 
   (if (and (display-graphic-p)
-           (featurep 'powerline))
+           ;; (featurep 'powerline)
+           )
 
       ;; Turn scroll bar off.
       (scroll-bar-mode -1)
@@ -3094,24 +3095,20 @@ These packages are neither built-in nor already installed nor ignored."
 
   (global-set-key (kbd "C-x \\") 'align-regexp)
 
-  ;; Minor mode to aggressively keep your code always indented.
-  (with-eval-after-load "aggressive-indent-autoloads"
-
-    ;; Enable aggressive indent mode everywhere.
-    (aggressive-indent-global-mode))
-
   ;; Show vertical lines to guide indentation.
   (with-eval-after-load "indent-guide-autoloads"
 
     ;; Enable indent-guide-mode automatically.
-    (indent-guide-global-mode)
+    (add-hook 'prog-mode-hook #'indent-guide-mode))
+
+  (with-eval-after-load "indent-guide"
 
     ;; Character used as vertical line.
     (setq indent-guide-char "│")
     (setq indent-guide-char "┆")
     (setq indent-guide-char "╎")
     ;; (setq indent-guide-char ":")
-)
+    )
 
 ;;** 24.3 TABs vs. (info "(emacs)Just Spaces")
 
