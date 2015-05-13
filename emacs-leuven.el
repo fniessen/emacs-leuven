@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150512.2118
+;; Version: 20150513.1831
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150512.2118"
+(defconst leuven--emacs-version "20150513.1831"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -885,6 +885,23 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;; XXX perf 2.00 s requiring bytecomp and warnings...
 
+  (defun duplicate-current-line ()
+    "Duplicate the line containing point."
+    (interactive)
+    (save-excursion
+      (let (line-text)
+        (goto-char (line-beginning-position))
+        (let ((beg (point)))
+          (goto-char (line-end-position))
+          (setq line-text (buffer-substring beg (point))))
+        (if (eobp)
+            (insert ?\n)
+          (forward-line))
+        (open-line 1)
+        (insert line-text))))
+
+  (global-set-key (kbd "C-c d") 'duplicate-current-line)
+
 ;;** 12.2 (info "(emacs)Yanking")
 
   (leuven--section "12.2 (emacs)Yanking")
@@ -1346,7 +1363,7 @@ These packages are neither built-in nor already installed nor ignored."
                          powerline-default-separator
                          (cdr powerline-default-separator-dir))))
                (lhs (list
-                     ;; vc mode
+                     ;; VC mode.
                      (when (and (fboundp 'vc-switches)
                                 buffer-file-name
                                 vc-mode)
@@ -1365,7 +1382,7 @@ These packages are neither built-in nor already installed nor ignored."
                            (funcall separator-left 'powerline-normal-face mode-line)
                          (funcall separator-left 'powerline-modified-face mode-line)))
 
-                     ;; "modified" indicator
+                     ;; "Modified" indicator.
                      (if (not (buffer-modified-p))
                          (powerline-raw "%*" nil 'l)
                        (powerline-raw "%*" 'mode-line-emphasis 'l))
@@ -1589,7 +1606,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;; When doing Isearch, hand the word over to `helm-swoop'.
   (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
 
-  (global-unset-key (kbd "M-o"))
+  (global-unset-key (kbd "M-o")) ; XXX???
 
   ;; "Multi-occur" easily inside Isearch.
   (define-key isearch-mode-map (kbd "M-o") 'helm-multi-swoop-all)
@@ -1757,9 +1774,9 @@ These packages are neither built-in nor already installed nor ignored."
   (try-require "dictionary-autoloads")
   (with-eval-after-load "dictionary-autoloads"
 
-    (global-set-key (kbd "C-c d s") 'dictionary-search)
-    (global-set-key (kbd "C-c d l") 'dictionary-lookup-definition)
-    (global-set-key (kbd "C-c d m") 'dictionary-match-words))
+    (global-set-key (kbd "C-c C-d s") 'dictionary-search)
+    (global-set-key (kbd "C-c C-d l") 'dictionary-lookup-definition)
+    (global-set-key (kbd "C-c C-d m") 'dictionary-match-words))
 
   (with-eval-after-load "dictionary"
 
@@ -2309,14 +2326,18 @@ These packages are neither built-in nor already installed nor ignored."
 
     (leuven--section "Helm")
 
+    ;; Change `helm-command-prefix-key'
+    (global-set-key (kbd "C-c h") 'helm-command-prefix)
+
     ;; Open Helm (QuickSilver-like candidate-selection framework).
-    (when (try-require 'helm-config)    ; [helm-command-prefix-key: "C-x c"]
+    (when (try-require 'helm-config)    ; [default `helm-command-prefix-key']
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
+
+      (global-unset-key (kbd "C-x c"))
+
       ;; Better version of `occur'.
       (global-set-key (kbd "C-o") 'helm-occur)
-
-      (global-set-key (kbd "M-x") 'helm-M-x) ; OK.
 
       (global-set-key (kbd "<f3>") 'helm-for-files)
 
@@ -2325,8 +2346,10 @@ These packages are neither built-in nor already installed nor ignored."
       ;; Buffer list.
       (global-set-key (kbd "C-x b") 'helm-mini) ; OK.
                                         ; = `helm-buffers-list' + recents.
+      (global-set-key (kbd "C-x C-b") 'helm-buffers-list) ; OK.
 
       (global-set-key (kbd "C-x r l") 'helm-bookmarks)
+      (global-set-key (kbd "C-x r l") 'helm-filtered-bookmarks) ; XXX?
 
       ;; Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.
       (global-set-key (kbd "C-x r b") 'helm-bookmark-ext)
@@ -2346,17 +2369,26 @@ These packages are neither built-in nor already installed nor ignored."
       (global-set-key (kbd "M-y") 'helm-show-kill-ring) ; OK.
 
       ;; (global-set-key (kbd "M-5") 'helm-etags-select)
-      ;; (global-set-key (kbd "C-h ,") 'helm-apropos)
-      ;; (global-set-key (kbd "C-h .") 'helm-info-emacs)
-      ;; (global-set-key (kbd "C-h r") 'helm-info-emacs)
+      (global-set-key (kbd "C-h a") 'helm-apropos)
+      (global-set-key (kbd "C-h i") 'helm-info-emacs)
       ;; (global-set-key (kbd "C-h d") 'helm-info-at-point)
       ;; (global-set-key (kbd "C-h 4") 'helm-info-elisp)
       ;; (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
-      ;; (global-set-key (kbd "C-h C--") 'helm-google)
+
       ;; (global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)
 
       (global-set-key (kbd "C-h b") 'helm-descbinds)
     )
+
+    (global-set-key (kbd "C-c h g") 'helm-google)
+    (global-set-key (kbd "C-c h s") 'helm-google-suggest)
+
+    ;; ;; Emacs Helm Interface for quick Google searches
+    ;; (with-eval-after-load "helm-google"
+    ;;
+    ;;   ;; (when (executable-find "curl")
+    ;;   ;;   (setq helm-google-suggest-use-curl-p t))
+    ;;   )
 
     (with-eval-after-load "helm"
 
@@ -2365,8 +2397,8 @@ These packages are neither built-in nor already installed nor ignored."
       ;; for multi-line items in e.g. minibuffer history, match entire items,
       ;; not individual lines within items.
 
-;; (try-require 'helm-ls-git)
-;; (try-require 'helm-dictionary)
+      ;; (try-require 'helm-ls-git)
+      ;; (try-require 'helm-dictionary)
 
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
@@ -2432,6 +2464,8 @@ These packages are neither built-in nor already installed nor ignored."
                                           :skip-subdirs t)))
           (helm-do-grep-1 files))))
 
+    (global-set-key (kbd "M-x") 'helm-M-x)
+
     (with-eval-after-load "helm-command"
 
       ;; Save command even when it fails.
@@ -2475,9 +2509,13 @@ These packages are neither built-in nor already installed nor ignored."
 
       ;; better version of `occur'
       (global-set-key (kbd "C-o") 'helm-swoop)
+      (global-set-key (kbd "M-s o") 'helm-swoop)
       ;; (global-set-key (kbd "M-i") 'helm-swoop)
       ;; (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+
+      (global-set-key (kbd "M-s /") 'helm-multi-swoop)
       ;; (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+
       ;; (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
 
       ;; when doing Isearch, hand the word over to `helm-swoop'
@@ -3640,7 +3678,7 @@ These packages are neither built-in nor already installed nor ignored."
               ;; (local-set-key (kbd "C-c C-S-s") 'org-show-subtree)
               ;; (local-set-key (kbd "C-c s") 'org-show-subtree)
 
-              (local-set-key (kbd "C-c h") 'hide-other)
+              ;; (local-set-key (kbd "C-c h") 'hide-other) ; I should use it!!
 
               ;; Table.
               (local-set-key (kbd "C-M-w") 'org-table-copy-region)
@@ -7755,25 +7793,27 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; (with-eval-after-load "dabbrev"
   ;;
-  ;;   ;; preserve case when expanding the abbreviation
+  ;;   ;; Preserve case when expanding the abbreviation.
   ;;   (setq dabbrev-case-replace nil))
 
-  ;; expand text trying various ways to find its expansion
-  (global-set-key (kbd "M-/") 'hippie-expand)
+  ;; Expand text trying various ways to find its expansion.
+  (global-set-key (kbd "M-/") 'hippie-expand) ; Built-in.
 
   (with-eval-after-load "hippie-exp"
 
-    ;; list of expansion functions tried (in order) by `hippie-expand'
-    ;; (completion strategy)
+    ;; List of expansion functions tried (in order) by `hippie-expand'
+    ;; (completion strategy).
     (setq hippie-expand-try-functions-list
-          '(try-expand-all-abbrevs      ; abbreviations
+          '(try-expand-all-abbrevs      ; Abbreviations.
 
-            try-expand-dabbrev          ; current buffer
-            try-expand-dabbrev-visible  ; visible (parts of all) buffers
-            try-expand-dabbrev-all-buffers ; (almost) all buffers (see `hippie-expand-ignore-buffers')
-            try-expand-dabbrev-from-kill ; kill ring
-            try-complete-file-name-partially ; file names
+            try-expand-dabbrev          ; Current buffer.
+            try-expand-dabbrev-visible  ; Visible (parts of all) buffers.
+            ;; try-expand-dabbrev-all-buffers ; (Almost) all buffers (see `hippie-expand-ignore-buffers').
+            try-expand-dabbrev-from-kill ; Kill ring.
+
+            try-complete-file-name-partially ; File names.
             try-complete-file-name
+
             try-complete-lisp-symbol-partially
             try-complete-lisp-symbol
 
@@ -7783,9 +7823,9 @@ a clean buffer we're an order of magnitude laxer about checking."
     (with-eval-after-load "yasnippet"
 
       (add-to-list 'hippie-expand-try-functions-list
-                    'yas-hippie-try-expand)))
-                                        ; makes more sense when placed at the
-                                        ; top of the list
+                   'yas-hippie-try-expand)))
+                                        ; Makes more sense when placed at the
+                                        ; top of the list.
 
   (GNUEmacs
 

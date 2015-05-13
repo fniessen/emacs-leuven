@@ -1477,6 +1477,25 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
 ;; XXX perf 2.00 s requiring bytecomp and warnings...
 #+end_src
 
+#+begin_src emacs-lisp
+  (defun duplicate-current-line ()
+    "Duplicate the line containing point."
+    (interactive)
+    (save-excursion
+      (let (line-text)
+        (goto-char (line-beginning-position))
+        (let ((beg (point)))
+          (goto-char (line-end-position))
+          (setq line-text (buffer-substring beg (point))))
+        (if (eobp)
+            (insert ?\n)
+          (forward-line))
+        (open-line 1)
+        (insert line-text))))
+
+  (global-set-key (kbd "C-c d") 'duplicate-current-line)
+#+end_src
+
 ** Yanking
 
 #+begin_src emacs-lisp
@@ -2215,8 +2234,6 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
     ;; (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
 #+end_src
 
-See Emacs Powerline.
-
 See https://powerline.readthedocs.org/en/latest/overview.html#vim-statusline for screenshots.
 
 See https://github.com/bling/vim-airline for the original author.
@@ -2299,7 +2316,7 @@ See https://github.com/bling/vim-airline for the original author.
                          powerline-default-separator
                          (cdr powerline-default-separator-dir))))
                (lhs (list
-                     ;; vc mode
+                     ;; VC mode.
                      (when (and (fboundp 'vc-switches)
                                 buffer-file-name
                                 vc-mode)
@@ -2318,7 +2335,7 @@ See https://github.com/bling/vim-airline for the original author.
                            (funcall separator-left 'powerline-normal-face mode-line)
                          (funcall separator-left 'powerline-modified-face mode-line)))
 
-                     ;; "modified" indicator
+                     ;; "Modified" indicator.
                      (if (not (buffer-modified-p))
                          (powerline-raw "%*" nil 'l)
                        (powerline-raw "%*" 'mode-line-emphasis 'l))
@@ -2671,7 +2688,7 @@ a match for REGEXP.
   ;; When doing Isearch, hand the word over to `helm-swoop'.
   (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
 
-  (global-unset-key (kbd "M-o"))
+  (global-unset-key (kbd "M-o")) ; XXX???
 
   ;; "Multi-occur" easily inside Isearch.
   (define-key isearch-mode-map (kbd "M-o") 'helm-multi-swoop-all)
@@ -2964,9 +2981,9 @@ What is working for you?
   (try-require "dictionary-autoloads")
   (with-eval-after-load "dictionary-autoloads"
 
-    (global-set-key (kbd "C-c d s") 'dictionary-search)
-    (global-set-key (kbd "C-c d l") 'dictionary-lookup-definition)
-    (global-set-key (kbd "C-c d m") 'dictionary-match-words))
+    (global-set-key (kbd "C-c C-d s") 'dictionary-search)
+    (global-set-key (kbd "C-c C-d l") 'dictionary-lookup-definition)
+    (global-set-key (kbd "C-c C-d m") 'dictionary-match-words))
 
   (with-eval-after-load "dictionary"
 
@@ -3823,10 +3840,14 @@ root using the ~sudo~ tramp method.
     (recentf-mode 1))
 #+end_src
 
-*** Helm (Anything successor)
+*** Helm (successor of Anything)
     :PROPERTIES:
     :ID:       59418189-b87e-45a2-b128-5cbdc8a16430
     :END:
+
+Helm is a incremental completion and selection narrowing framework for emacs. It
+will help steer you in the right direction when you're looking for stuff in
+Emacs (like buffers, files, etc).
 
 XXX Sort this section following
 https://github.com/emacs-helm/helm/wiki#generalhelmcommands and following.
@@ -3836,7 +3857,7 @@ Nice guide: http://tuhdo.github.io/helm-intro.html.
 For Helm documentation, see the [[https://github.com/emacs-helm/helm/wiki][Emacs-helm wiki]] and the [[https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el][Helm configuration file
 of Thierry Volpiatto]]!
 
-The prefix for Helm commands is ~C-x c~.
+The /default/ prefix for Helm commands is ~C-x c~.
 
 Since I use Helm, I never bother to remember the structure of my working
 directory. And that's the point: I don't have to remember such trivial details
@@ -3983,9 +4004,6 @@ http://tuhdo.github.io/static/helm-projectile/helm-projectile-etags.gif.
 
 
 
-With ~helm-M-x~, to pass prefix arguments to the command you want to run, you
-have to type ~C-u~ *after* typing ~M-x~.
-
 In Helm, generally, look at the mode line; you will see ~C-c ?:Help~, it is your
 friend: hit it for more info.
 
@@ -4026,9 +4044,6 @@ You can also use the ~@~ prefix to *search buffer contents*.
 To mark all candidates in a Helm buffer, use ~M-a~ (~helm-mark-all~) or ~M-m~
 (~helm-toggle-all-marks~).
 
-Locate for *Windows* users: you have to install [[http://www.voidtools.com/download.php][Everything]] with its command line
-interface ~es.exe~.
-
 Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 
 - ~volatile~ means your candidates are recomputed each time you enter a character
@@ -4052,15 +4067,24 @@ XXX Look at helm-dictionary.
 
     (leuven--section "Helm")
 
+    ;; Change `helm-command-prefix-key'
+    (global-set-key (kbd "C-c h") 'helm-command-prefix)
+
     ;; Open Helm (QuickSilver-like candidate-selection framework).
-    (when (try-require 'helm-config)    ; [helm-command-prefix-key: "C-x c"]
+    (when (try-require 'helm-config)    ; [default `helm-command-prefix-key']
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
+
+      (global-unset-key (kbd "C-x c"))
+
       ;; Better version of `occur'.
       (global-set-key (kbd "C-o") 'helm-occur)
+#+end_src
 
-      (global-set-key (kbd "M-x") 'helm-M-x) ; OK.
+See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-or-instant-search-for-emacs][Sublime Text 2's "Goto Anything" (or instant search) for Emacs?]]
++ https://github.com/xiaohanyu/oh-my-emacs/blob/master/core/ome-completion.org
 
+#+begin_src emacs-lisp
       (global-set-key (kbd "<f3>") 'helm-for-files)
 
       ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
@@ -4068,8 +4092,10 @@ XXX Look at helm-dictionary.
       ;; Buffer list.
       (global-set-key (kbd "C-x b") 'helm-mini) ; OK.
                                         ; = `helm-buffers-list' + recents.
+      (global-set-key (kbd "C-x C-b") 'helm-buffers-list) ; OK.
 
       (global-set-key (kbd "C-x r l") 'helm-bookmarks)
+      (global-set-key (kbd "C-x r l") 'helm-filtered-bookmarks) ; XXX?
 
       ;; Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.
       (global-set-key (kbd "C-x r b") 'helm-bookmark-ext)
@@ -4089,13 +4115,12 @@ XXX Look at helm-dictionary.
       (global-set-key (kbd "M-y") 'helm-show-kill-ring) ; OK.
 
       ;; (global-set-key (kbd "M-5") 'helm-etags-select)
-      ;; (global-set-key (kbd "C-h ,") 'helm-apropos)
-      ;; (global-set-key (kbd "C-h .") 'helm-info-emacs)
-      ;; (global-set-key (kbd "C-h r") 'helm-info-emacs)
+      (global-set-key (kbd "C-h a") 'helm-apropos)
+      (global-set-key (kbd "C-h i") 'helm-info-emacs)
       ;; (global-set-key (kbd "C-h d") 'helm-info-at-point)
       ;; (global-set-key (kbd "C-h 4") 'helm-info-elisp)
       ;; (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
-      ;; (global-set-key (kbd "C-h C--") 'helm-google)
+
       ;; (global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)
 #+end_src
 
@@ -4107,6 +4132,26 @@ make your life much easier with million Emacs keys.
     )
 #+end_src
 
+Try out ~helm-google-suggest~, because it's very efficient when you get
+completions from google (so you can type only a few characters to get relevant
+completions) and then you can send this completion to various services
+(e.g. wiki lookup), so you don't have to start a separate wikipedia lookup,
+youtube lookup, etc. command, because you can use the same command for any of
+them. It's very convenient and you can easily add actions for other sites you
+usually search for info on.
+
+#+begin_src emacs-lisp
+    (global-set-key (kbd "C-c h g") 'helm-google)
+    (global-set-key (kbd "C-c h s") 'helm-google-suggest)
+
+    ;; ;; Emacs Helm Interface for quick Google searches
+    ;; (with-eval-after-load "helm-google"
+    ;;
+    ;;   ;; (when (executable-find "curl")
+    ;;   ;;   (setq helm-google-suggest-use-curl-p t))
+    ;;   )
+#+end_src
+
 #+begin_src emacs-lisp
     (with-eval-after-load "helm"
 
@@ -4115,8 +4160,8 @@ make your life much easier with million Emacs keys.
       ;; for multi-line items in e.g. minibuffer history, match entire items,
       ;; not individual lines within items.
 
-;; (try-require 'helm-ls-git)
-;; (try-require 'helm-dictionary)
+      ;; (try-require 'helm-ls-git)
+      ;; (try-require 'helm-dictionary)
 
       ;; use the *current window* (no popup) to show the candidates
       (setq helm-full-frame nil)
@@ -4197,6 +4242,16 @@ make your life much easier with million Emacs keys.
 **** Helm M-x
 
 #+begin_src emacs-lisp
+    (global-set-key (kbd "M-x") 'helm-M-x)
+#+end_src
+
+#+begin_note
+With ~helm-M-x~, to pass prefix arguments to the command you want to run, you have
+to type ~C-u~ *after* typing ~M-x~ and selecting the command -- that is, *before*
+pressing ~RET~.
+#+end_note
+
+#+begin_src emacs-lisp
     (with-eval-after-load "helm-command"
 
       ;; Save command even when it fails.
@@ -4205,8 +4260,12 @@ make your life much easier with million Emacs keys.
 
 **** Helm locate
 
-Use Helm and Everything to *quickly navigate between files*, even in the largest
-projects.
+Use Helm to *quickly navigate between files*, even in the largest projects.
+
+#+begin_note
+Locate for *Windows* users: you have to install [[http://www.voidtools.com/download.php][Everything]] with its command line
+interface ~es.exe~.
+#+end_note
 
 #+begin_src emacs-lisp
     (with-eval-after-load "helm-locate"
@@ -4256,8 +4315,6 @@ projects.
 
 **** Helm swoop
 
-https://github.com/ShingoFukuyama/helm-swoop
-
 # Occur Edit mode applies edits made in ~*Occur*~ buffers to the original buffers.
 # It is bound to ~e~ in Occur mode.
 
@@ -4268,9 +4325,13 @@ https://github.com/ShingoFukuyama/helm-swoop
 
       ;; better version of `occur'
       (global-set-key (kbd "C-o") 'helm-swoop)
+      (global-set-key (kbd "M-s o") 'helm-swoop)
       ;; (global-set-key (kbd "M-i") 'helm-swoop)
       ;; (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+
+      (global-set-key (kbd "M-s /") 'helm-multi-swoop)
       ;; (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+
       ;; (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
 
       ;; when doing Isearch, hand the word over to `helm-swoop'
@@ -6016,7 +6077,7 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
               ;; (local-set-key (kbd "C-c C-S-s") 'org-show-subtree)
               ;; (local-set-key (kbd "C-c s") 'org-show-subtree)
 
-              (local-set-key (kbd "C-c h") 'hide-other)
+              ;; (local-set-key (kbd "C-c h") 'hide-other) ; I should use it!!
 
               ;; Table.
               (local-set-key (kbd "C-M-w") 'org-table-copy-region)
@@ -12738,45 +12799,58 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
 
   ;; (with-eval-after-load "dabbrev"
   ;;
-  ;;   ;; preserve case when expanding the abbreviation
+  ;;   ;; Preserve case when expanding the abbreviation.
   ;;   (setq dabbrev-case-replace nil))
 #+end_src
 
 *** Hippie-expand
 
-#+begin_src emacs-lisp
-  ;; expand text trying various ways to find its expansion
-  (global-set-key (kbd "M-/") 'hippie-expand)
+Typically, we bind ~hippie-expand~ to ~M-/~, with ~dabbrev-expand~ (the standard
+binding of ~M-/~) providing one of the expansion possibilities.
 
+#+begin_src emacs-lisp
+  ;; Expand text trying various ways to find its expansion.
+  (global-set-key (kbd "M-/") 'hippie-expand) ; Built-in.
+#+end_src
+
+#+begin_note
+Would we want to bind ~hippie-expand~ on TAB, we should have to write a ~smart-tab~
+command which would look if the major mode is Org and then act differently...
+#+end_note
+
+#+begin_src emacs-lisp
   (with-eval-after-load "hippie-exp"
 
-    ;; list of expansion functions tried (in order) by `hippie-expand'
-    ;; (completion strategy)
+    ;; List of expansion functions tried (in order) by `hippie-expand'
+    ;; (completion strategy).
     (setq hippie-expand-try-functions-list
-          '(try-expand-all-abbrevs      ; abbreviations
+          '(try-expand-all-abbrevs      ; Abbreviations.
 
-            try-expand-dabbrev          ; current buffer
-            try-expand-dabbrev-visible  ; visible (parts of all) buffers
-            try-expand-dabbrev-all-buffers ; (almost) all buffers (see `hippie-expand-ignore-buffers')
-            try-expand-dabbrev-from-kill ; kill ring
-            try-complete-file-name-partially ; file names
+            try-expand-dabbrev          ; Current buffer.
+            try-expand-dabbrev-visible  ; Visible (parts of all) buffers.
+            ;; try-expand-dabbrev-all-buffers ; (Almost) all buffers (see `hippie-expand-ignore-buffers').
+            try-expand-dabbrev-from-kill ; Kill ring.
+
+            try-complete-file-name-partially ; File names.
             try-complete-file-name
+
             try-complete-lisp-symbol-partially
             try-complete-lisp-symbol
 
             try-expand-whole-kill))
 #+end_src
 
-Configure Hippie-expand to use YASnippet.
+Configure Hippie-expand to also expand YASnippets (on the key used by
+~hippie-expand~, then).
 
 #+begin_src emacs-lisp
     ;; integrate YASnippet with `hippie-expand'
     (with-eval-after-load "yasnippet"
 
       (add-to-list 'hippie-expand-try-functions-list
-                    'yas-hippie-try-expand)))
-                                        ; makes more sense when placed at the
-                                        ; top of the list
+                   'yas-hippie-try-expand)))
+                                        ; Makes more sense when placed at the
+                                        ; top of the list.
 #+end_src
 
 *** Auto-Complete ("IntelliSensy" completion when writing code)

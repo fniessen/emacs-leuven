@@ -16,6 +16,8 @@
 </script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js" type="text/javascript">
 </script>
+<script type="text/javascript" src="d:/Users/fni/src/org-html-themes/styles/lib/js/jquery.stickytableheaders.js">
+</script>
 <script type="text/javascript" src="d:/Users/fni/src/org-html-themes/styles/readtheorg/js/readtheorg.js">
 </script>
 <style type="text/css">
@@ -433,7 +435,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150512.2119</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150513.1832</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +511,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150512.2119"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150513.1832"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1724,6 +1726,25 @@ nil</div>
 
 <span class="org-comment-delimiter">;; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> perf 2.00 s requiring bytecomp and warnings...</span>
 </pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+  (<span class="org-keyword">defun</span> <span class="org-function-name">duplicate-current-line</span> ()
+    <span class="org-doc">"Duplicate the line containing point."</span>
+    (interactive)
+    (<span class="org-keyword">save-excursion</span>
+      (<span class="org-keyword">let</span> (line-text)
+        (goto-char (line-beginning-position))
+        (<span class="org-keyword">let</span> ((beg (point)))
+          (goto-char (line-end-position))
+          (setq line-text (buffer-substring beg (point))))
+        (<span class="org-keyword">if</span> (eobp)
+            (insert ?\n)
+          (forward-line))
+        (open-line 1)
+        (insert line-text))))
+
+  (global-set-key (kbd <span class="org-string">"C-c d"</span>) 'duplicate-current-line)
+</pre></div>
 </div>
 </div>
 <div id="outline-container-orgheadline37" class="outline-3">
@@ -2420,7 +2441,6 @@ nil</div>
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"smartparens"</span>  (diminish 'smartparens-mode))
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(with-eval-after-load "whitespace"   (diminish 'whitespace-mode))</span>
 </pre></div>
-<p>See Emacs Powerline.</p>
 <p>See <a href="https://powerline.readthedocs.org/en/latest/overview.html#vim-statusline">https://powerline.readthedocs.org/en/latest/overview.html#vim-statusline</a> for screenshots.</p>
 <p>See <a href="https://github.com/bling/vim-airline">https://github.com/bling/vim-airline</a> for the original author.</p>
 <div class="org-src-container">
@@ -2502,7 +2522,7 @@ nil</div>
                          powerline-default-separator
                          (cdr powerline-default-separator-dir))))
                (lhs (list
-                     <span class="org-comment-delimiter">;; </span><span class="org-comment">vc mode</span>
+                     <span class="org-comment-delimiter">;; </span><span class="org-comment">VC mode.</span>
                      (<span class="org-keyword">when</span> (and (fboundp 'vc-switches)
                                 buffer-file-name
                                 vc-mode)
@@ -2521,7 +2541,7 @@ nil</div>
                            (funcall separator-left 'powerline-normal-face mode-line)
                          (funcall separator-left 'powerline-modified-face mode-line)))
 
-                     <span class="org-comment-delimiter">;; </span><span class="org-comment">"modified" indicator</span>
+                     <span class="org-comment-delimiter">;; </span><span class="org-comment">"Modified" indicator.</span>
                      (<span class="org-keyword">if</span> (not (buffer-modified-p))
                          (powerline-raw <span class="org-string">"%*"</span> nil 'l)
                        (powerline-raw <span class="org-string">"%*"</span> 'mode-line-emphasis 'l))
@@ -2842,7 +2862,7 @@ nil</div>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">When doing Isearch, hand the word over to `</span><span class="org-constant"><span class="org-comment">helm-swoop</span></span><span class="org-comment">'.</span>
   (define-key isearch-mode-map (kbd <span class="org-string">"C-o"</span>) 'helm-swoop-from-isearch)
 
-  (global-unset-key (kbd <span class="org-string">"M-o"</span>))
+  (global-unset-key (kbd <span class="org-string">"M-o"</span>)) <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment">???</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">"Multi-occur" easily inside Isearch.</span>
   (define-key isearch-mode-map (kbd <span class="org-string">"M-o"</span>) 'helm-multi-swoop-all)
@@ -3107,9 +3127,9 @@ nil</div>
   (try-require <span class="org-string">"dictionary-autoloads"</span>)
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"dictionary-autoloads"</span>
 
-    (global-set-key (kbd <span class="org-string">"C-c d s"</span>) 'dictionary-search)
-    (global-set-key (kbd <span class="org-string">"C-c d l"</span>) 'dictionary-lookup-definition)
-    (global-set-key (kbd <span class="org-string">"C-c d m"</span>) 'dictionary-match-words))
+    (global-set-key (kbd <span class="org-string">"C-c C-d s"</span>) 'dictionary-search)
+    (global-set-key (kbd <span class="org-string">"C-c C-d l"</span>) 'dictionary-lookup-definition)
+    (global-set-key (kbd <span class="org-string">"C-c C-d m"</span>) 'dictionary-match-words))
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"dictionary"</span>
 
@@ -3910,12 +3930,13 @@ M-: (executable-find "diff") RET
     (recentf-mode 1))
 </pre></div>
 <div id="outline-container-orgheadline38" class="outline-4">
-<h4 id="orgheadline38"><a id="ID-59418189-b87e-45a2-b128-5cbdc8a16430" name="ID-59418189-b87e-45a2-b128-5cbdc8a16430"></a>Helm (Anything successor)</h4>
+<h4 id="orgheadline38"><a id="ID-59418189-b87e-45a2-b128-5cbdc8a16430" name="ID-59418189-b87e-45a2-b128-5cbdc8a16430"></a>Helm (successor of Anything)</h4>
 <div class="outline-text-4" id="text-orgheadline38">
+<p>Helm is a incremental completion and selection narrowing framework for emacs. It will help steer you in the right direction when you're looking for stuff in Emacs (like buffers, files, etc).</p>
 <p>XXX Sort this section following <a href="https://github.com/emacs-helm/helm/wiki#generalhelmcommands">https://github.com/emacs-helm/helm/wiki#generalhelmcommands</a> and following.</p>
 <p>Nice guide: <a href="http://tuhdo.github.io/helm-intro.html">http://tuhdo.github.io/helm-intro.html</a>.</p>
 <p>For Helm documentation, see the <a href="https://github.com/emacs-helm/helm/wiki">Emacs-helm wiki</a> and the <a href="https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el">Helm configuration file of Thierry Volpiatto</a>!</p>
-<p>The prefix for Helm commands is <code>C-x c</code>.</p>
+<p>The <i>default</i> prefix for Helm commands is <code>C-x c</code>.</p>
 <p>Since I use Helm, I never bother to remember the structure of my working directory. And that's the point: I don't have to remember such trivial details and I can focus my mind on other more important things.</p>
 <p>Here is another example that make sure of Helm interface nicely: helm-semantic-or-imenu. Demo: <img src="http://tuhdo.github.io/static/part3/helm-semantic-or-imenu.gif" alt="helm-semantic-or-imenu.gif" /></p>
 <p>You can think of it as an outline tree in regular IDE, but Helm makes it interactive, and fast. I can ask question like "is there something that is function and has int in it that the function name contains memory?".</p>
@@ -4016,7 +4037,6 @@ M-: (executable-find "diff") RET
 <ul class="org-ul">
 <li>You can invoke `helm-do-grep` on any project directory when using a `helm-projectile` command.</li>
 </ul>
-<p>With <code>helm-M-x</code>, to pass prefix arguments to the command you want to run, you have to type <code>C-u</code> <b>after</b> typing <code>M-x</code>.</p>
 <p>In Helm, generally, look at the mode line; you will see <code>C-c ?:Help</code>, it is your friend: hit it for more info.</p>
 <ul class="org-ul">
 <li>Narrow the list by typing some patterns (use the <b>space as separator</b> for multiple patterns),</li>
@@ -4048,7 +4068,6 @@ M-: (executable-find "diff") RET
 <p>As a starting point for all <b>searches in buffers and files</b>, use <code>helm-buffers-list</code> and <code>helm-find-files</code>: you can launch <code>helm-multi-occur</code> and <code>helm-do-grep</code> from there.</p>
 <p>You can also use the <code>@</code> prefix to <b>search buffer contents</b>.</p>
 <p>To mark all candidates in a Helm buffer, use <code>M-a</code> (<code>helm-mark-all</code>) or <code>M-m</code> (<code>helm-toggle-all-marks</code>).</p>
-<p>Locate for <b>Windows</b> users: you have to install <a href="http://www.voidtools.com/download.php">Everything</a> with its command line interface <code>es.exe</code>.</p>
 <p>Switch to <code>*Helm Log*</code> buffer with <code>M-x helm-open-last-log</code>.</p>
 <ul class="org-ul">
 <li><code>volatile</code> means your candidates are recomputed each time you enter a character in pattern (cached candidates are not reused). Async sources are by essence volatile.</li>
@@ -4063,15 +4082,25 @@ M-: (executable-find "diff") RET
 
     (leuven--section <span class="org-string">"Helm"</span>)
 
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Change `</span><span class="org-constant"><span class="org-comment">helm-command-prefix-key</span></span><span class="org-comment">'</span>
+    (global-set-key (kbd <span class="org-string">"C-c h"</span>) 'helm-command-prefix)
+
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Open Helm (QuickSilver-like candidate-selection framework).</span>
-    (<span class="org-keyword">when</span> (try-require 'helm-config)    <span class="org-comment-delimiter">; </span><span class="org-comment">[helm-command-prefix-key: "C-x c"]</span>
+    (<span class="org-keyword">when</span> (try-require 'helm-config)    <span class="org-comment-delimiter">; </span><span class="org-comment">[default `</span><span class="org-constant"><span class="org-comment">helm-command-prefix-key</span></span><span class="org-comment">']</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">Explicitly loads `</span><span class="org-constant"><span class="org-comment">helm-autoloads</span></span><span class="org-comment">'!</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">CAUTION for recursive loads...</span>
+
+      (global-unset-key (kbd <span class="org-string">"C-x c"</span>))
+
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Better version of `</span><span class="org-constant"><span class="org-comment">occur</span></span><span class="org-comment">'.</span>
       (global-set-key (kbd <span class="org-string">"C-o"</span>) 'helm-occur)
-
-      (global-set-key (kbd <span class="org-string">"M-x"</span>) 'helm-M-x) <span class="org-comment-delimiter">; </span><span class="org-comment">OK.</span>
-
+</pre></div>
+<p>See <a href="http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-or-instant-search-for-emacs">Sublime Text 2's "Goto Anything" (or instant search) for Emacs?</a></p>
+<ul class="org-ul">
+<li><a href="https://github.com/xiaohanyu/oh-my-emacs/blob/master/core/ome-completion.org">https://github.com/xiaohanyu/oh-my-emacs/blob/master/core/ome-completion.org</a></li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
       (global-set-key (kbd <span class="org-string">"&lt;f3&gt;"</span>) 'helm-for-files)
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-x C-f") 'helm-find-files)</span>
@@ -4079,8 +4108,10 @@ M-: (executable-find "diff") RET
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Buffer list.</span>
       (global-set-key (kbd <span class="org-string">"C-x b"</span>) 'helm-mini) <span class="org-comment-delimiter">; </span><span class="org-comment">OK.</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">= `</span><span class="org-constant"><span class="org-comment">helm-buffers-list</span></span><span class="org-comment">' + recents.</span>
+      (global-set-key (kbd <span class="org-string">"C-x C-b"</span>) 'helm-buffers-list) <span class="org-comment-delimiter">; </span><span class="org-comment">OK.</span>
 
       (global-set-key (kbd <span class="org-string">"C-x r l"</span>) 'helm-bookmarks)
+      (global-set-key (kbd <span class="org-string">"C-x r l"</span>) 'helm-filtered-bookmarks) <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment">?</span>
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.</span>
       (global-set-key (kbd <span class="org-string">"C-x r b"</span>) 'helm-bookmark-ext)
@@ -4100,13 +4131,12 @@ M-: (executable-find "diff") RET
       (global-set-key (kbd <span class="org-string">"M-y"</span>) 'helm-show-kill-ring) <span class="org-comment-delimiter">; </span><span class="org-comment">OK.</span>
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "M-5") 'helm-etags-select)</span>
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h ,") 'helm-apropos)</span>
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h .") 'helm-info-emacs)</span>
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h r") 'helm-info-emacs)</span>
+      (global-set-key (kbd <span class="org-string">"C-h a"</span>) 'helm-apropos)
+      (global-set-key (kbd <span class="org-string">"C-h i"</span>) 'helm-info-emacs)
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h d") 'helm-info-at-point)</span>
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h 4") 'helm-info-elisp)</span>
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)</span>
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-h C--") 'helm-google)</span>
+
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)</span>
 </pre></div>
 <p>Use the separate Helm Descbinds to get a quick <b>key bindings</b> overview. It will make your life much easier with million Emacs keys.</p>
@@ -4114,6 +4144,19 @@ M-: (executable-find "diff") RET
 <pre class="src src-emacs-lisp">
       (global-set-key (kbd <span class="org-string">"C-h b"</span>) 'helm-descbinds)
     )
+</pre></div>
+<p>Try out <code>helm-google-suggest</code>, because it's very efficient when you get completions from google (so you can type only a few characters to get relevant completions) and then you can send this completion to various services (e.g. wiki lookup), so you don't have to start a separate wikipedia lookup, youtube lookup, etc. command, because you can use the same command for any of them. It's very convenient and you can easily add actions for other sites you usually search for info on.</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+    (global-set-key (kbd <span class="org-string">"C-c h g"</span>) 'helm-google)
+    (global-set-key (kbd <span class="org-string">"C-c h s"</span>) 'helm-google-suggest)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Emacs Helm Interface for quick Google searches</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(with-eval-after-load "helm-google"</span>
+    <span class="org-comment-delimiter">;;</span>
+    <span class="org-comment-delimiter">;;   </span><span class="org-comment">;; (when (executable-find "curl")</span>
+    <span class="org-comment-delimiter">;;   </span><span class="org-comment">;;   (setq helm-google-suggest-use-curl-p t))</span>
+    <span class="org-comment-delimiter">;;   </span><span class="org-comment">)</span>
 </pre></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -4124,8 +4167,8 @@ M-: (executable-find "diff") RET
       <span class="org-comment-delimiter">;; </span><span class="org-comment">for multi-line items in e.g. minibuffer history, match entire items,</span>
       <span class="org-comment-delimiter">;; </span><span class="org-comment">not individual lines within items.</span>
 
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(try-require 'helm-ls-git)</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(try-require 'helm-dictionary)</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(try-require 'helm-ls-git)</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(try-require 'helm-dictionary)</span>
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">use the *current window* (no popup) to show the candidates</span>
       (setq helm-full-frame nil)
@@ -4210,7 +4253,15 @@ M-: (executable-find "diff") RET
 </div>
 <div id="outline-container-orgheadline92" class="outline-5">
 <h5 id="orgheadline92">Helm M-x</h5>
-<div class="outline-text-5 org-src-container" id="text-orgheadline92">
+<div class="outline-text-5" id="text-orgheadline92">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+    (global-set-key (kbd <span class="org-string">"M-x"</span>) 'helm-M-x)
+</pre></div>
+<div class="note">
+<p>With <code>helm-M-x</code>, to pass prefix arguments to the command you want to run, you have to type <code>C-u</code> <b>after</b> typing <code>M-x</code> and selecting the command - that is, <b>before</b> pressing <code>RET</code>.</p>
+</div>
+<div class="org-src-container">
 <pre class="src src-emacs-lisp">
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-command"</span>
 
@@ -4218,10 +4269,14 @@ M-: (executable-find "diff") RET
       (setq helm-M-x-always-save-history t))
 </pre></div>
 </div>
+</div>
 <div id="outline-container-orgheadline93" class="outline-5">
 <h5 id="orgheadline93">Helm locate</h5>
 <div class="outline-text-5" id="text-orgheadline93">
-<p>Use Helm and Everything to <b>quickly navigate between files</b>, even in the largest projects.</p>
+<p>Use Helm to <b>quickly navigate between files</b>, even in the largest projects.</p>
+<div class="note">
+<p>Locate for <b>Windows</b> users: you have to install <a href="http://www.voidtools.com/download.php">Everything</a> with its command line interface <code>es.exe</code>.</p>
+</div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-locate"</span>
@@ -4278,9 +4333,7 @@ M-: (executable-find "diff") RET
 </div>
 <div id="outline-container-orgheadline96" class="outline-5">
 <h5 id="orgheadline96">Helm swoop</h5>
-<div class="outline-text-5" id="text-orgheadline96">
-<p><a href="https://github.com/ShingoFukuyama/helm-swoop">https://github.com/ShingoFukuyama/helm-swoop</a></p>
-<div class="org-src-container">
+<div class="outline-text-5 org-src-container" id="text-orgheadline96">
 <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class="org-comment">efficiently hopping squeezed lines powered by Helm interface</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(= Helm occur + Follow mode!)</span>
@@ -4288,9 +4341,13 @@ M-: (executable-find "diff") RET
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">better version of `</span><span class="org-constant"><span class="org-comment">occur</span></span><span class="org-comment">'</span>
       (global-set-key (kbd <span class="org-string">"C-o"</span>) 'helm-swoop)
+      (global-set-key (kbd <span class="org-string">"M-s o"</span>) 'helm-swoop)
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "M-i") 'helm-swoop)</span>
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)</span>
+
+      (global-set-key (kbd <span class="org-string">"M-s /"</span>) 'helm-multi-swoop)
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-c M-i") 'helm-multi-swoop)</span>
+
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)</span>
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">when doing Isearch, hand the word over to `</span><span class="org-constant"><span class="org-comment">helm-swoop</span></span><span class="org-comment">'</span>
@@ -4318,7 +4375,6 @@ M-: (executable-find "diff") RET
       <span class="org-comment-delimiter">;; </span><span class="org-comment">don't save each buffer you edit when editing is complete</span>
       (setq helm-multi-swoop-edit-save nil)))
 </pre></div>
-</div>
 </div>
 </div>
 <div id="outline-container-orgheadline97" class="outline-4">
@@ -6027,7 +6083,7 @@ nil</div>
               <span class="org-comment-delimiter">;; </span><span class="org-comment">(local-set-key (kbd "C-c C-S-s") 'org-show-subtree)</span>
               <span class="org-comment-delimiter">;; </span><span class="org-comment">(local-set-key (kbd "C-c s") 'org-show-subtree)</span>
 
-              (local-set-key (kbd <span class="org-string">"C-c h"</span>) 'hide-other)
+              <span class="org-comment-delimiter">;; </span><span class="org-comment">(local-set-key (kbd "C-c h") 'hide-other) ; I should use it!!</span>
 
               <span class="org-comment-delimiter">;; </span><span class="org-comment">Table.</span>
               (local-set-key (kbd <span class="org-string">"C-M-w"</span>) 'org-table-copy-region)
@@ -12542,46 +12598,54 @@ etags --langdef=shell --regex-shell=<span class="org-string">'/function [_[:alnu
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(with-eval-after-load "dabbrev"</span>
   <span class="org-comment-delimiter">;;</span>
-  <span class="org-comment-delimiter">;;   </span><span class="org-comment">;; preserve case when expanding the abbreviation</span>
+  <span class="org-comment-delimiter">;;   </span><span class="org-comment">;; Preserve case when expanding the abbreviation.</span>
   <span class="org-comment-delimiter">;;   </span><span class="org-comment">(setq dabbrev-case-replace nil))</span>
 </pre></div>
 </div>
 <div id="outline-container-orgheadline314" class="outline-4">
 <h4 id="orgheadline314">Hippie-expand</h4>
 <div class="outline-text-4" id="text-orgheadline314">
+<p>Typically, we bind <code>hippie-expand</code> to <code>M-/</code>, with <code>dabbrev-expand</code> (the standard binding of <code>M-/</code>) providing one of the expansion possibilities.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">expand text trying various ways to find its expansion</span>
-  (global-set-key (kbd <span class="org-string">"M-/"</span>) 'hippie-expand)
-
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Expand text trying various ways to find its expansion.</span>
+  (global-set-key (kbd <span class="org-string">"M-/"</span>) 'hippie-expand) <span class="org-comment-delimiter">; </span><span class="org-comment">Built-in.</span>
+</pre></div>
+<div class="note">
+<p>Would we want to bind <code>hippie-expand</code> on TAB, we should have to write a <code>smart-tab</code> command which would look if the major mode is Org and then act differently…</p>
+</div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"hippie-exp"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">list of expansion functions tried (in order) by `</span><span class="org-constant"><span class="org-comment">hippie-expand</span></span><span class="org-comment">'</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(completion strategy)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">List of expansion functions tried (in order) by `</span><span class="org-constant"><span class="org-comment">hippie-expand</span></span><span class="org-comment">'</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(completion strategy).</span>
     (setq hippie-expand-try-functions-list
-          '(try-expand-all-abbrevs      <span class="org-comment-delimiter">; </span><span class="org-comment">abbreviations</span>
+          '(try-expand-all-abbrevs      <span class="org-comment-delimiter">; </span><span class="org-comment">Abbreviations.</span>
 
-            try-expand-dabbrev          <span class="org-comment-delimiter">; </span><span class="org-comment">current buffer</span>
-            try-expand-dabbrev-visible  <span class="org-comment-delimiter">; </span><span class="org-comment">visible (parts of all) buffers</span>
-            try-expand-dabbrev-all-buffers <span class="org-comment-delimiter">; </span><span class="org-comment">(almost) all buffers (see `</span><span class="org-constant"><span class="org-comment">hippie-expand-ignore-buffers</span></span><span class="org-comment">')</span>
-            try-expand-dabbrev-from-kill <span class="org-comment-delimiter">; </span><span class="org-comment">kill ring</span>
-            try-complete-file-name-partially <span class="org-comment-delimiter">; </span><span class="org-comment">file names</span>
+            try-expand-dabbrev          <span class="org-comment-delimiter">; </span><span class="org-comment">Current buffer.</span>
+            try-expand-dabbrev-visible  <span class="org-comment-delimiter">; </span><span class="org-comment">Visible (parts of all) buffers.</span>
+            <span class="org-comment-delimiter">;; </span><span class="org-comment">try-expand-dabbrev-all-buffers ; (Almost) all buffers (see `</span><span class="org-constant"><span class="org-comment">hippie-expand-ignore-buffers</span></span><span class="org-comment">').</span>
+            try-expand-dabbrev-from-kill <span class="org-comment-delimiter">; </span><span class="org-comment">Kill ring.</span>
+
+            try-complete-file-name-partially <span class="org-comment-delimiter">; </span><span class="org-comment">File names.</span>
             try-complete-file-name
+
             try-complete-lisp-symbol-partially
             try-complete-lisp-symbol
 
             try-expand-whole-kill))
 </pre></div>
-<p>Configure Hippie-expand to use YASnippet.</p>
+<p>Configure Hippie-expand to also expand YASnippets (on the key used by <code>hippie-expand</code>, then).</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class="org-comment">integrate YASnippet with `</span><span class="org-constant"><span class="org-comment">hippie-expand</span></span><span class="org-comment">'</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"yasnippet"</span>
 
       (add-to-list 'hippie-expand-try-functions-list
-                    'yas-hippie-try-expand)))
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">makes more sense when placed at the</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">top of the list</span>
+                   'yas-hippie-try-expand)))
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Makes more sense when placed at the</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">top of the list.</span>
 </pre></div>
 </div>
 </div>
