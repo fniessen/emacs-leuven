@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150514.1039
+;; Version: 20150514.1601
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150514.1039"
+(defconst leuven--emacs-version "20150514.1601"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2513,6 +2513,7 @@ These packages are neither built-in nor already installed nor ignored."
       ;; (global-set-key (kbd "M-i") 'helm-swoop)
       ;; (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
 
+      (global-set-key (kbd "M-s O") 'helm-multi-swoop)
       (global-set-key (kbd "M-s /") 'helm-multi-swoop)
       ;; (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
 
@@ -7190,6 +7191,8 @@ a clean buffer we're an order of magnitude laxer about checking."
     (add-hook 'flycheck-after-syntax-check-hook
               'leuven--adjust-flycheck-automatic-syntax-eagerness))
 
+  (global-set-key (kbd "C-x C-S-e") 'elint-current-buffer)
+
   (with-eval-after-load "elint"
     (add-to-list 'elint-standard-variables 'current-prefix-arg)
     (add-to-list 'elint-standard-variables 'command-line-args-left)
@@ -7967,6 +7970,11 @@ a clean buffer we're an order of magnitude laxer about checking."
                (self-insert-command 1))
            (funcall fun n))))
      '((name . "Don't complete numbers")))
+
+    (defadvice company-pseudo-tooltip-unless-just-one-frontend
+               (around only-show-tooltip-when-invoked activate)
+      (when (company-explicit-action-p)
+        ad-do-it))
 
     )
 

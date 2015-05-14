@@ -1303,6 +1303,9 @@ It moves point through ~buffer-undo-list~ positions.
     (global-set-key (kbd "C--") 'er/contract-region))
 #+end_src
 
+*************** TODO Those key bindings are overridden by ~text-scale-increase~
+*************** END
+
 ** Operating on the Region
 
 #+begin_src emacs-lisp
@@ -4351,6 +4354,7 @@ changing the buffer's contents!
       ;; (global-set-key (kbd "M-i") 'helm-swoop)
       ;; (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
 
+      (global-set-key (kbd "M-s O") 'helm-multi-swoop)
       (global-set-key (kbd "M-s /") 'helm-multi-swoop)
       ;; (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
 
@@ -10652,6 +10656,12 @@ Some key bindings:
       (sort-declarations))))
 #+end_src
 
+** Skewer: live web development with Emacs
+
+This lets you send HTML, CSS, and Javascript fragments to Google Chrome. You may
+need to start Chrome with ~chrome --allow-running-insecure-content~, if you're
+using the user script with HTTPS sites.
+
 #+begin_src emacs-lisp
 )                                       ; chapter 25 ends here
 #+end_src
@@ -11512,6 +11522,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 #+end_src
 
 #+begin_src emacs-lisp
+  (global-set-key (kbd "C-x C-S-e") 'elint-current-buffer)
+
   (with-eval-after-load "elint"
     (add-to-list 'elint-standard-variables 'current-prefix-arg)
     (add-to-list 'elint-standard-variables 'command-line-args-left)
@@ -13144,6 +13156,20 @@ XXX The following does not work in Org files (TAB does not expand nodes anymore)
     ;;
     ;; (add-hook 'prog-mode-hook 'leuven--tab-fix)
 #+end_src
+
+Only trigger the tooltip on manual invocation, but still have the preview (of
+the first candidate) show up immediately:
+
+#+begin_src emacs-lisp
+    (defadvice company-pseudo-tooltip-unless-just-one-frontend
+               (around only-show-tooltip-when-invoked activate)
+      (when (company-explicit-action-p)
+        ad-do-it))
+#+end_src
+
+From https://github.com/company-mode/company-mode/issues/87.
+
+See also https://github.com/company-mode/company-mode/issues/123.
 
 #+begin_src emacs-lisp
     )
