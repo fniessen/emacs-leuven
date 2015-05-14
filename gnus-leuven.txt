@@ -143,7 +143,7 @@ See http://www.emacswiki.org/emacs/GnusEncryptedAuthInfo.
     (setq auth-source-debug t))
 #+end_src
 
-#+begin_note
+#+begin_verse
 Richard Stallman <rms@gnu.org> writes:
 
 > http://www.theguardian.com/technology/2014/sep/29/londoners-wi-fi-security-herod-clause
@@ -165,7 +165,7 @@ no passwords unencrypted.
 The only exceptions are HTTP and IRC, unless the latter has been fixed
 lately.  And there are hopefully nobody who does a login that matters
 over HTTP.
-#+end_note
+#+end_verse
 
 ** Finding the News
 
@@ -183,6 +183,12 @@ for logins).
 
 #+begin_note
 The groups in the gnus-select-method don't get a prefix like "nnimap". Nice!
+#+end_note
+
+#+begin_note
+The following configuration, given as example (which works if your mail server
+is accessible via the name ~mail~), is wrapped in a test with my host name, so
+that it does not interfere with your own configuration...
 #+end_note
 
 #+begin_src emacs-lisp

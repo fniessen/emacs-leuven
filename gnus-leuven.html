@@ -167,7 +167,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150508.1037</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150514.1027</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, gnus, dotfile, config</span>
 </pre></div>
 <div class="org-src-container">
@@ -277,13 +277,27 @@
     <span class="org-comment-delimiter">;; </span><span class="org-comment">log debug messages</span>
     (setq auth-source-debug t))
 </pre></div>
-<div class="note">
-<p>Richard Stallman &lt;rms@gnu.org&gt; writes:</p>
-<p>&gt; <a href="http://www.theguardian.com/technology/2014/sep/29/londoners-wi-fi-security-herod-clause">http://www.theguardian.com/technology/2014/sep/29/londoners-wi-fi-security-herod-clause</a> &gt; &gt; says that POP3 passwords are sometimes transmitted in plain text. &gt; &gt; Is plaintext transmission of passwords inherent in POP3 &gt; or is it optional?</p>
-<p>Modern pop3 servers support STARTTLS, and Emacs will upgrade to a TLS connection whenever the server supports it. (If you have an Emacs compiled with gnutls support, but I would guess that almost all Emacs instances has that.)</p>
-<p>Virtually all the Emacs network transports that I know of will upgrade to TLS opportunistically, if the servers allow it, so Emacs should send no passwords unencrypted.</p>
-<p>The only exceptions are HTTP and IRC, unless the latter has been fixed lately. And there are hopefully nobody who does a login that matters over HTTP.</p>
-</div>
+<p class="verse">Richard Stallman &lt;rms@gnu.org&gt; writes:<br />
+<br />
+&gt; <a href="http://www.theguardian.com/technology/2014/sep/29/londoners-wi-fi-security-herod-clause">http://www.theguardian.com/technology/2014/sep/29/londoners-wi-fi-security-herod-clause</a><br />
+&gt;<br />
+&gt; says that POP3 passwords are sometimes transmitted in plain text.<br />
+&gt;<br />
+&gt; Is plaintext transmission of passwords inherent in POP3<br />
+&gt; or is it optional?<br />
+<br />
+Modern pop3 servers support STARTTLS, and Emacs will upgrade to a TLS<br />
+connection whenever the server supports it. (If you have an Emacs<br />
+compiled with gnutls support, but I would guess that almost all Emacs<br />
+instances has that.)<br />
+<br />
+Virtually all the Emacs network transports that I know of will upgrade<br />
+to TLS opportunistically, if the servers allow it, so Emacs should send<br />
+no passwords unencrypted.<br />
+<br />
+The only exceptions are HTTP and IRC, unless the latter has been fixed<br />
+lately. And there are hopefully nobody who does a login that matters<br />
+over HTTP.<br /></p>
 </div>
 <div id="outline-container-orgheadline5" class="outline-3">
 <h3 id="orgheadline5">Finding the News</h3>
@@ -296,6 +310,9 @@
 </div>
 <div class="note">
 <p>The groups in the gnus-select-method don't get a prefix like "nnimap". Nice!</p>
+</div>
+<div class="note">
+<p>The following configuration, given as example (which works if your mail server is accessible via the name <code>mail</code>), is wrapped in a test with my host name, so that it does not interfere with your own configuration…</p>
 </div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
