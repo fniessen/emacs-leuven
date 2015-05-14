@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150514.0831
+;; Version: 20150514.1022
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150514.0831"
+(defconst leuven--emacs-version "20150514.1022"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -7175,6 +7175,13 @@ a clean buffer we're an order of magnitude laxer about checking."
     (add-hook 'flycheck-after-syntax-check-hook
               'leuven--adjust-flycheck-automatic-syntax-eagerness))
 
+  (with-eval-after-load "elint"
+    (add-to-list 'elint-standard-variables 'current-prefix-arg)
+    (add-to-list 'elint-standard-variables 'command-line-args-left)
+    (add-to-list 'elint-standard-variables 'buffer-file-coding-system)
+    (add-to-list 'elint-standard-variables 'emacs-major-version)
+    (add-to-list 'elint-standard-variables 'window-system))
+
 ;;** 27.6 Running (info "(emacs)Debuggers") Under Emacs
 
   (leuven--section "27.6 Running (emacs)Debuggers Under Emacs")
@@ -7242,7 +7249,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (add-hook 'lisp-interaction-mode-hook 'litable-mode))
 
-;;** 27.10 Lisp Interaction Buffers
+;;** 27.10 (info "(emacs)Lisp Interaction") Buffers
 
   (leuven--section "27.10 (emacs)Lisp Interaction Buffers")
 
@@ -7254,18 +7261,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; major mode command symbol to use for the initial `*scratch*' buffer
   (setq initial-major-mode 'fundamental-mode)
-
-  (defun elint-current-buffer ()
-    (interactive)
-    (elint-initialize)
-    (elint-current-buffer))
-
-  (with-eval-after-load "elint"
-    (add-to-list 'elint-standard-variables 'current-prefix-arg)
-    (add-to-list 'elint-standard-variables 'command-line-args-left)
-    (add-to-list 'elint-standard-variables 'buffer-file-coding-system)
-    (add-to-list 'elint-standard-variables 'emacs-major-version)
-    (add-to-list 'elint-standard-variables 'window-system))
 
 )                                       ; chapter 27 ends here
 

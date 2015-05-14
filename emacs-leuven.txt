@@ -4313,6 +4313,28 @@ interface ~es.exe~.
     ;;   (setq helm-yank-symbol-first t)
 #+end_src
 
+**** Lisp completion
+
+#+begin_warning
+This (from Thierry Volpiatto) seems good, except that it changes the behavior of
+TAB when done in a word.  Instead of indenting, it completes the word at point,
+changing the buffer's contents!
+#+end_warning
+
+#+begin_src emacs-lisp :tangle no
+  ;; Lisp complete or indent
+  (define-key lisp-interaction-mode-map
+    [remap indent-for-tab-command] 'helm-lisp-completion-at-point-or-indent)
+  (define-key emacs-lisp-mode-map
+    [remap indent-for-tab-command] 'helm-lisp-completion-at-point-or-indent)
+
+  ;; Lisp complete
+  (define-key lisp-interaction-mode-map
+    [remap completion-at-point] 'helm-lisp-completion-at-point)
+  (define-key emacs-lisp-mode-map
+    [remap completion-at-point] 'helm-lisp-completion-at-point)
+#+end_src
+
 **** Helm swoop
 
 # Occur Edit mode applies edits made in ~*Occur*~ buffers to the original buffers.
@@ -11474,6 +11496,15 @@ a clean buffer we're an order of magnitude laxer about checking."
               'leuven--adjust-flycheck-automatic-syntax-eagerness))
 #+end_src
 
+#+begin_src emacs-lisp
+  (with-eval-after-load "elint"
+    (add-to-list 'elint-standard-variables 'current-prefix-arg)
+    (add-to-list 'elint-standard-variables 'command-line-args-left)
+    (add-to-list 'elint-standard-variables 'buffer-file-coding-system)
+    (add-to-list 'elint-standard-variables 'emacs-major-version)
+    (add-to-list 'elint-standard-variables 'window-system))
+#+end_src
+
 ** Running Debuggers Under Emacs
 
 #+begin_src emacs-lisp
@@ -11607,10 +11638,10 @@ See demo of it: http://www.youtube.com/watch?v=TMoPuv-xXMM.
     (add-hook 'lisp-interaction-mode-hook 'litable-mode))
 #+end_src
 
-** Lisp Interaction Buffers
+** Lisp Interaction Buffers (~*scratch*~)
 
 #+begin_src emacs-lisp
-;;** 27.10 Lisp Interaction Buffers
+;;** 27.10 (info "(emacs)Lisp Interaction") Buffers
 
   (leuven--section "27.10 (emacs)Lisp Interaction Buffers")
 
@@ -11634,42 +11665,6 @@ Otherwise, ~*scratch*~ will already have been created, in the default major
 mode.
 
 To evaluate a non-interactive command, simply use ~IELM~.
-
-** Other
-
-#+begin_src emacs-lisp
-  (defun elint-current-buffer ()
-    (interactive)
-    (elint-initialize)
-    (elint-current-buffer))
-
-  (with-eval-after-load "elint"
-    (add-to-list 'elint-standard-variables 'current-prefix-arg)
-    (add-to-list 'elint-standard-variables 'command-line-args-left)
-    (add-to-list 'elint-standard-variables 'buffer-file-coding-system)
-    (add-to-list 'elint-standard-variables 'emacs-major-version)
-    (add-to-list 'elint-standard-variables 'window-system))
-#+end_src
-
-** TODO From Thierry Volpiatto
-
-Seems good, except that it changes the behavior of TAB when done in a word.
-Instead of indenting, it completes the word at point, changing the buffer's
-contents!
-
-#+begin_src emacs-lisp :tangle no
-  ;; Lisp complete or indent
-  (define-key lisp-interaction-mode-map
-    [remap indent-for-tab-command] 'helm-lisp-completion-at-point-or-indent)
-  (define-key emacs-lisp-mode-map
-    [remap indent-for-tab-command] 'helm-lisp-completion-at-point-or-indent)
-
-  ;; Lisp complete
-  (define-key lisp-interaction-mode-map
-    [remap completion-at-point] 'helm-lisp-completion-at-point)
-  (define-key emacs-lisp-mode-map
-    [remap completion-at-point] 'helm-lisp-completion-at-point)
-#+end_src
 
 #+begin_src emacs-lisp
 )                                       ; chapter 27 ends here
