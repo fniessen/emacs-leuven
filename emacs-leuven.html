@@ -435,7 +435,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150513.1832</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150514.0831</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -511,7 +511,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150513.1832"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150514.0831"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -7776,7 +7776,13 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 10.4 (info "(org)Presentation and sorting")</span>
 
     (leuven--section <span class="org-string">"10.4 (org)Presentation and sorting"</span>)
-
+</pre></div>
+<p>You can modify <code>org-agenda-prefix-format</code> to show extra information in the lists.</p>
+<div class="note">
+<p>If none of the built-in format specifiers are sufficient, you can use <code>%(my-function-here)</code> as a specifier and <code>my-function-here</code> will be called on each headline (to return any kind of string you want).</p>
+</div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class="org-comment">10.4 Format specifications for the prefix of items in the agenda views.</span>
     (setq org-agenda-prefix-format
           '((agenda   . <span class="org-string">" %-11s%i %?-12t"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">Agenda.</span>
@@ -7785,6 +7791,35 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
             (tags     . <span class="org-string">" %i %-12:c"</span>)   <span class="org-comment-delimiter">; </span><span class="org-comment">Tags, tags-todo, stuck.</span>
             (search   . <span class="org-string">" %i %-12:c"</span>))) <span class="org-comment-delimiter">; </span><span class="org-comment">Search.</span>
 
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Type "(" in agenda and todo buffers to show category name and task</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">length for each task.</span>
+    (<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven--org-agenda-show-tasks-details</span> nil)
+    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-org-agenda-toggle-tasks-details</span> ()
+      <span class="org-doc">"Hide/show tasks details (category and time estimate) in agenda views."</span>
+      (interactive)
+      (<span class="org-keyword">if</span> leuven--org-agenda-show-tasks-details
+          (<span class="org-keyword">progn</span>
+            (setq leuven--org-agenda-show-tasks-details nil)
+            (setq org-agenda-prefix-format
+                  '((agenda    . <span class="org-string">" %-11s%i %?-12t"</span>)
+                    (timeline  . <span class="org-string">" % s"</span>)
+                    (todo      . <span class="org-string">" "</span>)
+                    (search    . <span class="org-string">" "</span>)
+                    (tags      . <span class="org-string">" "</span>))))
+        (setq leuven--org-agenda-show-tasks-details t)
+        (setq org-agenda-prefix-format
+              '((agenda   . <span class="org-string">" %-11s%i %-12:c%?-12t%7e "</span>)
+                (timeline . <span class="org-string">" % s"</span>)
+                (todo     . <span class="org-string">" %i %-12:c"</span>)
+                (search   . <span class="org-string">" %i %-12:c"</span>)
+                (tags     . <span class="org-string">" %i %-12:c"</span>))))
+      (org-agenda-redo))
+
+    (define-key org-agenda-mode-map
+      (kbd <span class="org-string">"("</span>) 'leuven-org-agenda-toggle-tasks-details)
+</pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Text preceding scheduled items in the agenda view.</span>
     (setq org-agenda-scheduled-leaders
           '(<span class="org-string">"Scheduled  "</span>
@@ -7841,34 +7876,7 @@ emacsclient -n -e <span class="org-string">'(leuven-make-capture-frame)'</span>
       <span class="org-doc">"Justify the tags to the right border of the agenda window."</span>
       (<span class="org-keyword">let</span> ((org-agenda-tags-column (- 2 (window-width))))
         (org-agenda-align-tags)))
-    (add-hook 'org-agenda-finalize-hook 'leuven--org-agenda-right-justify-tags)
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Type "(" in agenda and todo buffers to show category name and task</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">length for each task.</span>
-    (<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven--org-agenda-show-tasks-details</span> nil)
-    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-org-agenda-toggle-tasks-details</span> ()
-      <span class="org-doc">"Hide/show tasks details (category and time estimate) in agenda views."</span>
-      (interactive)
-      (<span class="org-keyword">if</span> leuven--org-agenda-show-tasks-details
-          (<span class="org-keyword">progn</span>
-            (setq leuven--org-agenda-show-tasks-details nil)
-            (setq org-agenda-prefix-format
-                  '((agenda    . <span class="org-string">" %-11s%i %?-12t"</span>)
-                    (timeline  . <span class="org-string">" % s"</span>)
-                    (todo      . <span class="org-string">" "</span>)
-                    (search    . <span class="org-string">" "</span>)
-                    (tags      . <span class="org-string">" "</span>))))
-        (setq leuven--org-agenda-show-tasks-details t)
-        (setq org-agenda-prefix-format
-              '((agenda   . <span class="org-string">" %-11s%i %-12:c%?-12t%7e "</span>)
-                (timeline . <span class="org-string">" % s"</span>)
-                (todo     . <span class="org-string">" %i %-12:c"</span>)
-                (search   . <span class="org-string">" %i %-12:c"</span>)
-                (tags     . <span class="org-string">" %i %-12:c"</span>))))
-      (org-agenda-redo))
-
-    (define-key org-agenda-mode-map
-      (kbd <span class="org-string">"("</span>) 'leuven-org-agenda-toggle-tasks-details))
+    (add-hook 'org-agenda-finalize-hook 'leuven--org-agenda-right-justify-tags))
 </pre></div>
 <p>Show the time grid in the daily agenda but not in the weekly agenda, except for today's date:</p>
 <div class="org-src-container">

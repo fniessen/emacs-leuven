@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150513.1831
+;; Version: 20150514.0831
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150513.1831"
+(defconst leuven--emacs-version "20150514.0831"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -4859,6 +4859,33 @@ From %c"
             (tags     . " %i %-12:c")   ; Tags, tags-todo, stuck.
             (search   . " %i %-12:c"))) ; Search.
 
+    ;; Type "(" in agenda and todo buffers to show category name and task
+    ;; length for each task.
+    (defvar leuven--org-agenda-show-tasks-details nil)
+    (defun leuven-org-agenda-toggle-tasks-details ()
+      "Hide/show tasks details (category and time estimate) in agenda views."
+      (interactive)
+      (if leuven--org-agenda-show-tasks-details
+          (progn
+            (setq leuven--org-agenda-show-tasks-details nil)
+            (setq org-agenda-prefix-format
+                  '((agenda    . " %-11s%i %?-12t")
+                    (timeline  . " % s")
+                    (todo      . " ")
+                    (search    . " ")
+                    (tags      . " "))))
+        (setq leuven--org-agenda-show-tasks-details t)
+        (setq org-agenda-prefix-format
+              '((agenda   . " %-11s%i %-12:c%?-12t%7e ")
+                (timeline . " % s")
+                (todo     . " %i %-12:c")
+                (search   . " %i %-12:c")
+                (tags     . " %i %-12:c"))))
+      (org-agenda-redo))
+
+    (define-key org-agenda-mode-map
+      (kbd "(") 'leuven-org-agenda-toggle-tasks-details)
+
     ;; Text preceding scheduled items in the agenda view.
     (setq org-agenda-scheduled-leaders
           '("Scheduled  "
@@ -4913,34 +4940,7 @@ From %c"
       "Justify the tags to the right border of the agenda window."
       (let ((org-agenda-tags-column (- 2 (window-width))))
         (org-agenda-align-tags)))
-    (add-hook 'org-agenda-finalize-hook 'leuven--org-agenda-right-justify-tags)
-
-    ;; Type "(" in agenda and todo buffers to show category name and task
-    ;; length for each task.
-    (defvar leuven--org-agenda-show-tasks-details nil)
-    (defun leuven-org-agenda-toggle-tasks-details ()
-      "Hide/show tasks details (category and time estimate) in agenda views."
-      (interactive)
-      (if leuven--org-agenda-show-tasks-details
-          (progn
-            (setq leuven--org-agenda-show-tasks-details nil)
-            (setq org-agenda-prefix-format
-                  '((agenda    . " %-11s%i %?-12t")
-                    (timeline  . " % s")
-                    (todo      . " ")
-                    (search    . " ")
-                    (tags      . " "))))
-        (setq leuven--org-agenda-show-tasks-details t)
-        (setq org-agenda-prefix-format
-              '((agenda   . " %-11s%i %-12:c%?-12t%7e ")
-                (timeline . " % s")
-                (todo     . " %i %-12:c")
-                (search   . " %i %-12:c")
-                (tags     . " %i %-12:c"))))
-      (org-agenda-redo))
-
-    (define-key org-agenda-mode-map
-      (kbd "(") 'leuven-org-agenda-toggle-tasks-details))
+    (add-hook 'org-agenda-finalize-hook 'leuven--org-agenda-right-justify-tags))
 
   ;; 10.4.2 Settings for time grid for agenda display.
   (setq org-agenda-time-grid '((daily remove-match)

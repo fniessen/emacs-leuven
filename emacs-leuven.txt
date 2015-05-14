@@ -7793,7 +7793,17 @@ http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
 ;;** 10.4 (info "(org)Presentation and sorting")
 
     (leuven--section "10.4 (org)Presentation and sorting")
+#+end_src
 
+You can modify ~org-agenda-prefix-format~ to show extra information in the lists.
+
+#+begin_note
+If none of the built-in format specifiers are sufficient, you can use
+~%(my-function-here)~ as a specifier and ~my-function-here~ will be called on each
+headline (to return any kind of string you want).
+#+end_note
+
+#+begin_src emacs-lisp
     ;; 10.4 Format specifications for the prefix of items in the agenda views.
     (setq org-agenda-prefix-format
           '((agenda   . " %-11s%i %?-12t") ; Agenda.
@@ -7802,6 +7812,35 @@ http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
             (tags     . " %i %-12:c")   ; Tags, tags-todo, stuck.
             (search   . " %i %-12:c"))) ; Search.
 
+    ;; Type "(" in agenda and todo buffers to show category name and task
+    ;; length for each task.
+    (defvar leuven--org-agenda-show-tasks-details nil)
+    (defun leuven-org-agenda-toggle-tasks-details ()
+      "Hide/show tasks details (category and time estimate) in agenda views."
+      (interactive)
+      (if leuven--org-agenda-show-tasks-details
+          (progn
+            (setq leuven--org-agenda-show-tasks-details nil)
+            (setq org-agenda-prefix-format
+                  '((agenda    . " %-11s%i %?-12t")
+                    (timeline  . " % s")
+                    (todo      . " ")
+                    (search    . " ")
+                    (tags      . " "))))
+        (setq leuven--org-agenda-show-tasks-details t)
+        (setq org-agenda-prefix-format
+              '((agenda   . " %-11s%i %-12:c%?-12t%7e ")
+                (timeline . " % s")
+                (todo     . " %i %-12:c")
+                (search   . " %i %-12:c")
+                (tags     . " %i %-12:c"))))
+      (org-agenda-redo))
+
+    (define-key org-agenda-mode-map
+      (kbd "(") 'leuven-org-agenda-toggle-tasks-details)
+#+end_src
+
+#+begin_src emacs-lisp
     ;; Text preceding scheduled items in the agenda view.
     (setq org-agenda-scheduled-leaders
           '("Scheduled  "
@@ -7858,34 +7897,7 @@ http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
       "Justify the tags to the right border of the agenda window."
       (let ((org-agenda-tags-column (- 2 (window-width))))
         (org-agenda-align-tags)))
-    (add-hook 'org-agenda-finalize-hook 'leuven--org-agenda-right-justify-tags)
-
-    ;; Type "(" in agenda and todo buffers to show category name and task
-    ;; length for each task.
-    (defvar leuven--org-agenda-show-tasks-details nil)
-    (defun leuven-org-agenda-toggle-tasks-details ()
-      "Hide/show tasks details (category and time estimate) in agenda views."
-      (interactive)
-      (if leuven--org-agenda-show-tasks-details
-          (progn
-            (setq leuven--org-agenda-show-tasks-details nil)
-            (setq org-agenda-prefix-format
-                  '((agenda    . " %-11s%i %?-12t")
-                    (timeline  . " % s")
-                    (todo      . " ")
-                    (search    . " ")
-                    (tags      . " "))))
-        (setq leuven--org-agenda-show-tasks-details t)
-        (setq org-agenda-prefix-format
-              '((agenda   . " %-11s%i %-12:c%?-12t%7e ")
-                (timeline . " % s")
-                (todo     . " %i %-12:c")
-                (search   . " %i %-12:c")
-                (tags     . " %i %-12:c"))))
-      (org-agenda-redo))
-
-    (define-key org-agenda-mode-map
-      (kbd "(") 'leuven-org-agenda-toggle-tasks-details))
+    (add-hook 'org-agenda-finalize-hook 'leuven--org-agenda-right-justify-tags))
 #+end_src
 
 Show the time grid in the daily agenda but not in the weekly agenda, except
