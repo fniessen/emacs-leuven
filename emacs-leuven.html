@@ -433,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150514.1023</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150514.1040</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -509,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150514.1023"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150514.1040"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -4330,7 +4330,7 @@ M-: (executable-find "diff") RET
 </div>
 </div>
 <div id="outline-container-orgheadline96" class="outline-5">
-<h5 id="orgheadline96">Lisp</h5>
+<h5 id="orgheadline96">Lisp completion</h5>
 <div class="outline-text-5" id="text-orgheadline96">
 <div class="warning">
 <p>This (from Thierry Volpiatto) seems good, except that it changes the behavior of TAB when done in a word. Instead of indenting, it completes the word at point, changing the buffer's contents!</p>
@@ -5206,7 +5206,7 @@ nil</div>
 <p>Instead of superseding the binding in <code>auto-mode-alist</code>, you can replace it (brute force) with <code>(setcdr (rassq 'old-mode auto-mode-alist) 'new-mode)</code>.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">list of filename patterns</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">List of filename patterns.</span>
   (setq auto-mode-alist
         (append '((<span class="org-string">"\\.log\\'"</span>       . text-mode)
                   <span class="org-comment-delimiter">;; </span><span class="org-comment">("\\.[tT]e[xX]\\'" . latex-mode)</span>
@@ -5217,25 +5217,40 @@ nil</div>
                   (<span class="org-string">"sshd?_config\\'"</span> . ssh-config-mode)
                   ) auto-mode-alist))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">major mode for fontifiying ssh config files</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Major mode for fontifiying ssh config files.</span>
   (autoload 'ssh-config-mode <span class="org-string">"ssh-config-mode"</span>
     <span class="org-doc">"Major mode for fontifiying ssh config files."</span> t)
 </pre></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">ledger</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Helper code for use with the "ledger" command-line tool.</span>
   (add-to-list 'auto-mode-alist '(<span class="org-string">"\\.dat\\'"</span> . ledger-mode))
   (add-to-list 'auto-mode-alist '(<span class="org-string">"\\.journal\\'"</span> . ledger-mode))
   (add-to-list 'auto-mode-alist '(<span class="org-string">"\\.ledger\\'"</span> . ledger-mode))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't override the highlighting of each posted item in a xact if it is</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">cleared/pending. </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ledger"</span>
-    (setq ledger-fontify-xact-state-overrides nil)
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ledger-commodities"</span>
 
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Default commodity for use in target calculations in ledger reconcile.</span>
     (setq ledger-reconcile-default-commodity <span class="org-string">"EUR"</span>)) <span class="org-comment-delimiter">; </span><span class="org-comment">"€"</span>
 
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Provide custom fontification for ledger-mode.</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ledger-fontify"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">If t, the highlight entire xact with state.</span>
+    (setq ledger-fontify-xact-state-overrides nil))
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Don't override the highlighting of</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">each posted item in a xact if it is</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">cleared/pending. </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span>
+
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ledger-init"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq ledger-default-date-format "%Y-%m-%d")</span>
+    (setq ledger-default-date-format <span class="org-string">"%Y/%m/%d"</span>)
+    )
+
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"flycheck"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Flycheck integration for ledger files.</span>
     (try-require 'flycheck-ledger))
 </pre></div>
 <div class="org-src-container">
@@ -11565,7 +11580,7 @@ nil</div>
 <dd>Open Dired buffer in VC-mode.</dd>
 <dt><code>C-x v v</code></dt>
 <dd>Take appropriate "next" action (add, commit).</dd>
-<dt><code>C-x v r</code> (or <code>M-!</code>?)</dt>
+<dt><code>C-x v r</code> (or <code>M-!</code> ?)</dt>
 <dd>Switch Git branches.</dd>
 </dl>
 <div class="org-src-container">

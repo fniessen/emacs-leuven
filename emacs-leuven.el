@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150514.1022
+;; Version: 20150514.1039
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150514.1022"
+(defconst leuven--emacs-version "20150514.1039"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3070,7 +3070,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "23.3 (emacs)Choosing File Modes")
 
-  ;; list of filename patterns
+  ;; List of filename patterns.
   (setq auto-mode-alist
         (append '(("\\.log\\'"       . text-mode)
                   ;; ("\\.[tT]e[xX]\\'" . latex-mode)
@@ -3081,23 +3081,38 @@ These packages are neither built-in nor already installed nor ignored."
                   ("sshd?_config\\'" . ssh-config-mode)
                   ) auto-mode-alist))
 
-  ;; major mode for fontifiying ssh config files
+  ;; Major mode for fontifiying ssh config files.
   (autoload 'ssh-config-mode "ssh-config-mode"
     "Major mode for fontifiying ssh config files." t)
 
-  ;; ledger
+  ;; Helper code for use with the "ledger" command-line tool.
   (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
   (add-to-list 'auto-mode-alist '("\\.journal\\'" . ledger-mode))
   (add-to-list 'auto-mode-alist '("\\.ledger\\'" . ledger-mode))
 
-  ;; Don't override the highlighting of each posted item in a xact if it is
-  ;; cleared/pending. XXX
-  (with-eval-after-load "ledger"
-    (setq ledger-fontify-xact-state-overrides nil)
+  (with-eval-after-load "ledger-commodities"
 
+    ;; Default commodity for use in target calculations in ledger reconcile.
     (setq ledger-reconcile-default-commodity "EUR")) ; "€"
 
+  ;; Provide custom fontification for ledger-mode.
+  (with-eval-after-load "ledger-fontify"
+
+    ;; If t, the highlight entire xact with state.
+    (setq ledger-fontify-xact-state-overrides nil))
+                                        ; Don't override the highlighting of
+                                        ; each posted item in a xact if it is
+                                        ; cleared/pending. XXX
+
+  (with-eval-after-load "ledger-init"
+
+    ;; (setq ledger-default-date-format "%Y-%m-%d")
+    (setq ledger-default-date-format "%Y/%m/%d")
+    )
+
   (with-eval-after-load "flycheck"
+
+    ;; Flycheck integration for ledger files.
     (try-require 'flycheck-ledger))
 
   ;; major mode for editing comma-separated value files
