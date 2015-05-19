@@ -165,7 +165,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150519.1033</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150519.1059</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, gnus, dotfile, config</span>
 </pre></div>
 <div class="org-src-container">
@@ -1264,29 +1264,6 @@ over HTTP.<br /></p>
 </pre></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Remove HTML tags from a buffer</span>
-  (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-wash-ugly-html</span> ()
-    <span class="org-doc">"Remove ugly HTML tags."</span>
-    (interactive)
-    (toggle-read-only -1)
-    (<span class="org-keyword">save-excursion</span>
-      (goto-char (point-min))
-      (<span class="org-keyword">while</span> (re-search-forward <span class="org-string">"&lt;[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string">#][</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string">&lt;@&gt;]*&gt;"</span> nil t)
-        (replace-match <span class="org-string">""</span> nil nil))
-      (goto-char (point-min))
-      (<span class="org-keyword">while</span> (re-search-forward <span class="org-string">"&amp;gt;"</span> nil t)
-        (replace-match <span class="org-string">"&gt;"</span> nil nil))
-      (goto-char (point-min))
-      (<span class="org-keyword">while</span> (re-search-forward <span class="org-string">"&amp;lt;"</span> nil t)
-        (replace-match <span class="org-string">"&lt;"</span> nil nil))
-
-      <span class="org-comment-delimiter">;; </span><span class="org-leuven-highlight"><span class="org-comment">FIXME</span></span><span class="org-comment"> Do not simply remove accents like it does now</span>
-      (goto-char (point-min))
-      (<span class="org-keyword">while</span> (re-search-forward <span class="org-string">"&amp;[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string">;]*;"</span> nil t)
-        (replace-match <span class="org-string">""</span> nil nil))))
-</pre></div>
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">*** 1.6 (info "(emacs-mime)Files and Directories")</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">default directory for saving attachments</span>
@@ -1731,48 +1708,47 @@ below to set the variables.<br /></p>
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">*** 3.1 (info "(message)Message Headers")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">specify how `</span><span class="org-constant"><span class="org-comment">From</span></span><span class="org-comment">' headers should look</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Specify how `</span><span class="org-constant"><span class="org-comment">From</span></span><span class="org-comment">' headers should look.</span>
   (setq message-from-style 'angles)
-
+</pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">*** 3.3 (info "(message)Mail Variables")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">sending mail -- for Gnus (for `</span><span class="org-constant"><span class="org-comment">message</span></span><span class="org-comment">')</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Sending mail -- for Gnus (for `</span><span class="org-constant"><span class="org-comment">message</span></span><span class="org-comment">').</span>
   (setq message-send-mail-function 'message-smtpmail-send-it)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">limit on the size of messages sent (10 MB)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Limit on the size of messages sent (10 MB).</span>
   (setq message-send-mail-partially-limit (* 10 1000 1024))
-
+</pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">*** 3.4 (info "(message)News Headers")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">masquerade domain part of Message-ID</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Masquerade domain part of Message-ID.</span>
   (setq message-user-fqdn <span class="org-string">"example.com"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">(system-name)</span>
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">tell Gnus not to generate a sender header on outgoing posts</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">(default behavior since Gnus 5.10.0)</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"message"</span>
-    (add-to-list 'message-syntax-checks '(sender . disabled)))
 </pre></div>
-<p>XXX See <a href="http://www.emacswiki.org/emacs/AutoDictionaryMode">http://www.emacswiki.org/emacs/AutoDictionaryMode</a> for inserting a citation line in the correct language.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">*** 3.6 (info "(message)Insertion Variables")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">function for citing an original message</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">(stripping off the signature from the original message)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Strip off the signature when citing the original message.</span>
   (setq message-cite-function 'message-cite-original-without-signature)
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq message-cite-function 'trivial-cite</span>
-  <span class="org-comment-delimiter">;;       </span><span class="org-comment">tc-normal-citemarks "&gt;|:"</span>
-  <span class="org-comment-delimiter">;;       </span><span class="org-comment">tc-fill-long-lines nil</span>
-  <span class="org-comment-delimiter">;;       </span><span class="org-comment">tc-make-attribution 'tc-fancy-attribution)</span>
-
+</pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
   (<span class="org-keyword">defun</span> <span class="org-function-name">message-insert-citation-line</span> ()
     <span class="org-doc">"A replacement of the original `</span><span class="org-constant"><span class="org-doc">message-insert-citation-line</span></span><span class="org-doc">'."</span>
     (<span class="org-keyword">let</span> ((from (replace-regexp-in-string
                  <span class="org-string">"[()]</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string"> ?[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string"> ]*?@[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string"> ]* ?"</span> <span class="org-string">""</span>
                  (mail-header-from message-reply-headers))))
       (insert from <span class="org-string">" wrote:\n"</span>)))
-
+</pre></div>
+<div class="inlinetask"><b><span class="todo TODO">TODO</span> Insert a citation line in the correct language</b><br />
+<p>See <a href="http://www.emacswiki.org/emacs/AutoDictionaryMode">http://www.emacswiki.org/emacs/AutoDictionaryMode</a>.</p>
+</div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">*** 3.7 (info "(message)Various Message Variables")</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">;; directory from which all other mail file variables are derived</span>

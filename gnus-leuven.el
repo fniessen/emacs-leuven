@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150519.1033
+;; Version: 20150519.1059
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -766,44 +766,26 @@
 
 ;;*** 3.1 (info "(message)Message Headers")
 
-  ;; specify how `From' headers should look
+  ;; Specify how `From' headers should look.
   (setq message-from-style 'angles)
 
 ;;*** 3.3 (info "(message)Mail Variables")
 
-  ;; sending mail -- for Gnus (for `message')
+  ;; Sending mail -- for Gnus (for `message').
   (setq message-send-mail-function 'message-smtpmail-send-it)
 
-  ;; limit on the size of messages sent (10 MB)
+  ;; Limit on the size of messages sent (10 MB).
   (setq message-send-mail-partially-limit (* 10 1000 1024))
 
 ;;*** 3.4 (info "(message)News Headers")
 
-  ;; masquerade domain part of Message-ID
+  ;; Masquerade domain part of Message-ID.
   (setq message-user-fqdn "example.com") ; (system-name)
-
-  ;; tell Gnus not to generate a sender header on outgoing posts
-  ;; (default behavior since Gnus 5.10.0)
-  (with-eval-after-load "message"
-    (add-to-list 'message-syntax-checks '(sender . disabled)))
 
 ;;*** 3.6 (info "(message)Insertion Variables")
 
-  ;; function for citing an original message
-  ;; (stripping off the signature from the original message)
+  ;; Strip off the signature when citing the original message.
   (setq message-cite-function 'message-cite-original-without-signature)
-
-  ;; (setq message-cite-function 'trivial-cite
-  ;;       tc-normal-citemarks ">|:"
-  ;;       tc-fill-long-lines nil
-  ;;       tc-make-attribution 'tc-fancy-attribution)
-
-  (defun message-insert-citation-line ()
-    "A replacement of the original `message-insert-citation-line'."
-    (let ((from (replace-regexp-in-string
-                 "[()]\\| ?[^ ]*?@[^ ]* ?" ""
-                 (mail-header-from message-reply-headers))))
-      (insert from " wrote:\n")))
 
 ;;*** 3.7 (info "(message)Various Message Variables")
 
