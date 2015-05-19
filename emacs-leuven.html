@@ -372,41 +372,40 @@
 <li><a href="#orgheadline401">Following URLs</a></li>
 <li><a href="#orgheadline402">Finding Files and URLs at Point</a></li>
 <li><a href="#orgheadline403">Google search</a></li>
-<li><a href="#orgheadline404">Google Maps</a></li>
-<li><a href="#orgheadline405">Babel translator</a></li>
+<li><a href="#orgheadline404">Babel translator</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline406">Other Amusements</a></li>
-<li><a href="#orgheadline407">Customization</a>
+<li><a href="#orgheadline405">Other Amusements</a></li>
+<li><a href="#orgheadline406">Customization</a>
 <ul>
-<li><a href="#orgheadline408">Color</a></li>
-<li><a href="#orgheadline409">Color theme</a></li>
-<li><a href="#orgheadline410">Not sorted</a></li>
-<li><a href="#orgheadline411">Variables</a></li>
-<li><a href="#orgheadline412">Key Bindings</a></li>
-<li><a href="#orgheadline413">Syntax Table</a></li>
+<li><a href="#orgheadline407">Color</a></li>
+<li><a href="#orgheadline408">Color theme</a></li>
+<li><a href="#orgheadline409">Not sorted</a></li>
+<li><a href="#orgheadline410">Variables</a></li>
+<li><a href="#orgheadline411">Key Bindings</a></li>
+<li><a href="#orgheadline412">Syntax Table</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline414">Emacs Display</a>
+<li><a href="#orgheadline413">Emacs Display</a>
 <ul>
-<li><a href="#orgheadline415">Faces</a></li>
+<li><a href="#orgheadline414">Faces</a></li>
 <li><a href="#orgheadline282">Images</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline419">Calc</a>
+<li><a href="#orgheadline418">Calc</a>
 <ul>
-<li><a href="#orgheadline422">Introduction</a></li>
-<li><a href="#orgheadline423">Embedded Mode</a></li>
+<li><a href="#orgheadline421">Introduction</a></li>
+<li><a href="#orgheadline422">Embedded Mode</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline424">IRC client for Emacs</a></li>
-<li><a href="#orgheadline425">Emacs and Microsoft Windows/MS-DOS</a></li>
-<li><a href="#orgheadline426">Profiler</a></li>
-<li><a href="#orgheadline427">Reporting Bugs</a></li>
-<li><a href="#orgheadline428">Leuven</a>
+<li><a href="#orgheadline423">IRC client for Emacs</a></li>
+<li><a href="#orgheadline424">Emacs and Microsoft Windows/MS-DOS</a></li>
+<li><a href="#orgheadline425">Profiler</a></li>
+<li><a href="#orgheadline426">Reporting Bugs</a></li>
+<li><a href="#orgheadline427">Leuven</a>
 <ul>
-<li><a href="#orgheadline429">Feature</a></li>
-<li><a href="#orgheadline430">File Local Variables</a></li>
+<li><a href="#orgheadline428">Feature</a></li>
+<li><a href="#orgheadline429">File Local Variables</a></li>
 </ul>
 </li>
 </ul>
@@ -434,7 +433,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150514.1602</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150519.1103</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -510,7 +509,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150514.1602"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150519.1103"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2622,7 +2621,7 @@ nil</div>
       <span class="org-doc">"Change cursor color according to some minor modes."</span>
       (<span class="org-keyword">let</span> ((color (<span class="org-keyword">cond</span> (buffer-read-only <span class="org-string">"purple1"</span>)
                          (overwrite-mode   <span class="org-string">"red"</span>)
-                         (t                <span class="org-string">"black"</span>)))
+                         (t                <span class="org-string">"#21BDFF"</span>))) <span class="org-comment-delimiter">; </span><span class="org-comment">Black.</span>
             (type (<span class="org-keyword">if</span> (null overwrite-mode)
                       'bar
                     'box)))
@@ -15349,7 +15348,7 @@ nil</div>
 <p>If you'd like to skip confirmation, you can define the following function and bind it to a key:</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
-    (<span class="org-keyword">defun</span> <span class="org-function-name">goog-this-line-noconfirm</span> (prefix)
+    (<span class="org-keyword">defun</span> <span class="org-function-name">google-this-line-noconfirm</span> (prefix)
       <span class="org-doc">"Google the current line without confirmationl.</span>
 <span class="org-doc">    PREFIX determines quoting."</span>
       (interactive <span class="org-string">"P"</span>)
@@ -15391,17 +15390,8 @@ nil</div>
 </div>
 </div>
 <div id="outline-container-orgheadline404" class="outline-3">
-<h3 id="orgheadline404">Google Maps</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline404">
-<pre class="src src-emacs-lisp">
-  (GNUEmacs
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Google maps</span>
-    (try-require 'google-maps))
-</pre></div>
-</div>
-<div id="outline-container-orgheadline405" class="outline-3">
-<h3 id="orgheadline405">Babel translator</h3>
-<div class="outline-text-3" id="text-orgheadline405">
+<h3 id="orgheadline404">Babel translator</h3>
+<div class="outline-text-3" id="text-orgheadline404">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** Babel</span>
@@ -15461,9 +15451,9 @@ nil</div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgheadline406" class="outline-2">
-<h2 id="orgheadline406">Other Amusements</h2>
-<div class="outline-text-2 org-src-container" id="text-orgheadline406">
+<div id="outline-container-orgheadline405" class="outline-2">
+<h2 id="orgheadline405">Other Amusements</h2>
+<div class="outline-text-2 org-src-container" id="text-orgheadline405">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 46 Other (info "(emacs)Amusements")</span>
 
@@ -15478,9 +15468,9 @@ nil</div>
 )                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 46 ends here</span>
 </pre></div>
 </div>
-<div id="outline-container-orgheadline407" class="outline-2">
-<h2 id="orgheadline407">Customization</h2>
-<div class="outline-text-2" id="text-orgheadline407">
+<div id="outline-container-orgheadline406" class="outline-2">
+<h2 id="orgheadline406">Customization</h2>
+<div class="outline-text-2" id="text-orgheadline406">
 <p>Emacs 24 custom themes allow loading multiple themes simultaneously. If you don't want the previous theme to stay in effect, you will need to unload it first.</p>
 <p>Install Leuven Theme via the <a href="#orgheadline8">Emacs Lisp Packages</a> (or use the one bundled in GNU Emacs 24.4).</p>
 <div class="org-src-container">
@@ -15495,9 +15485,9 @@ nil</div>
       (load-theme 'leuven t)))
 </pre></div>
 </div>
-<div id="outline-container-orgheadline408" class="outline-3">
-<h3 id="orgheadline408">Color</h3>
-<div class="outline-text-3" id="text-orgheadline408">
+<div id="outline-container-orgheadline407" class="outline-3">
+<h3 id="orgheadline407">Color</h3>
+<div class="outline-text-3" id="text-orgheadline407">
 <p>You can govern the sort order of colors now such as HSV or RGB distance from a particular color…</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -15506,9 +15496,9 @@ nil</div>
 </pre></div>
 </div>
 </div>
-<div id="outline-container-orgheadline409" class="outline-3">
-<h3 id="orgheadline409">Color theme</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline409">
+<div id="outline-container-orgheadline408" class="outline-3">
+<h3 id="orgheadline408">Color theme</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline408">
 <pre class="src src-emacs-lisp">
   (XEmacs
     <span class="org-comment-delimiter">;; </span><span class="org-comment">the real color theme functions</span>
@@ -15534,9 +15524,9 @@ nil</div>
     (setq options-save-faces t))
 </pre></div>
 </div>
-<div id="outline-container-orgheadline410" class="outline-3">
-<h3 id="orgheadline410">Not sorted</h3>
-<div class="outline-text-3" id="text-orgheadline410">
+<div id="outline-container-orgheadline409" class="outline-3">
+<h3 id="orgheadline409">Not sorted</h3>
+<div class="outline-text-3" id="text-orgheadline409">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class="org-comment">;; limit serving to catch infinite recursions for you before they</span>
@@ -15559,9 +15549,9 @@ nil</div>
 </pre></div>
 </div>
 </div>
-<div id="outline-container-orgheadline411" class="outline-3">
-<h3 id="orgheadline411">Variables</h3>
-<div class="outline-text-3" id="text-orgheadline411">
+<div id="outline-container-orgheadline410" class="outline-3">
+<h3 id="orgheadline410">Variables</h3>
+<div class="outline-text-3" id="text-orgheadline410">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 48.3 (info "(emacs)Variables")</span>
@@ -15595,9 +15585,9 @@ nil</div>
 <p>Have a look at (info "(emacs)Directory Variables").</p>
 </div>
 </div>
-<div id="outline-container-orgheadline412" class="outline-3">
-<h3 id="orgheadline412">Key Bindings</h3>
-<div class="outline-text-3" id="text-orgheadline412">
+<div id="outline-container-orgheadline411" class="outline-3">
+<h3 id="orgheadline411">Key Bindings</h3>
+<div class="outline-text-3" id="text-orgheadline411">
 <p>The keys <code>C-c LETTER</code> are <a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html">reserved for user functions</a>.</p>
 <p>You can get a list of all the disabled functions by typing:</p>
 <div class="org-src-container">
@@ -15719,9 +15709,9 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class="org-keyw
 </pre></div>
 </div>
 </div>
-<div id="outline-container-orgheadline413" class="outline-3">
-<h3 id="orgheadline413">Syntax Table</h3>
-<div class="outline-text-3" id="text-orgheadline413">
+<div id="outline-container-orgheadline412" class="outline-3">
+<h3 id="orgheadline412">Syntax Table</h3>
+<div class="outline-text-3" id="text-orgheadline412">
 <p>The syntax table contains information that tells Emacs how to operate on text, words, sentences etc. It will make Emacs know enough about all the symbols in a buffer. Syntax table is used for example for:</p>
 <ul class="org-ul">
 <li>commands like <code>forward-word</code> (<code>M-f</code>) or <code>backward-kill-word</code> (<code>M-DEL</code>),</li>
@@ -15748,17 +15738,17 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class="org-keyw
 </div>
 </div>
 </div>
-<div id="outline-container-orgheadline414" class="outline-2">
-<h2 id="orgheadline414">Emacs Display</h2>
-<div class="outline-text-2 org-src-container" id="text-orgheadline414">
+<div id="outline-container-orgheadline413" class="outline-2">
+<h2 id="orgheadline413">Emacs Display</h2>
+<div class="outline-text-2 org-src-container" id="text-orgheadline413">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* Emacs Display</span>
 
 (leuven--chapter leuven-load-chapter-XX-emacs-display <span class="org-string">"XX Emacs Display"</span>
 </pre></div>
-<div id="outline-container-orgheadline415" class="outline-3">
-<h3 id="orgheadline415">Faces</h3>
-<div class="outline-text-3" id="text-orgheadline415">
+<div id="outline-container-orgheadline414" class="outline-3">
+<h3 id="orgheadline414">Faces</h3>
+<div class="outline-text-3" id="text-orgheadline414">
 <p>You can get text properties of any char by typing <code>C-u C-x =</code>.</p>
 <p>Under Windows, you can get the current <b>font</b> by typing <code>(w32-select-font)</code> followed by <code>C-x C-e</code>.</p>
 <p>You can find the current <b>font string</b> by typing <code>M-x ielm &lt;RET&gt; (frame-parameters) &lt;RET&gt;</code> - see the line <code>font</code>.</p>
@@ -15808,9 +15798,9 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class="org-keyw
   (setq scalable-fonts-allowed t)
 </pre></div>
 </div>
-<div id="outline-container-orgheadline416" class="outline-4">
-<h4 id="orgheadline416">UTF-8</h4>
-<div class="outline-text-4" id="text-orgheadline416">
+<div id="outline-container-orgheadline415" class="outline-4">
+<h4 id="orgheadline415">UTF-8</h4>
+<div class="outline-text-4" id="text-orgheadline415">
 <p>Fonts that have a good UTF-8 coverage are:</p>
 <ul class="org-ul">
 <li>DejaVu Sans Mono</li>
@@ -15820,15 +15810,15 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class="org-keyw
 <p>None of them has all four variants, some have regular (medium) and bold or light and regular, one regular and oblique.</p>
 </div>
 </div>
-<div id="outline-container-orgheadline417" class="outline-4">
-<h4 id="orgheadline417">Anti-aliasing</h4>
-<div class="outline-text-4" id="text-orgheadline417">
+<div id="outline-container-orgheadline416" class="outline-4">
+<h4 id="orgheadline416">Anti-aliasing</h4>
+<div class="outline-text-4" id="text-orgheadline416">
 <p>To see if anti-aliasing is active, use <code>xmag</code> (under Linux) or any of the other magnifier applications. The fonts should have gray edges.</p>
 </div>
 </div>
-<div id="outline-container-orgheadline418" class="outline-4">
-<h4 id="orgheadline418">Adjust the height of the default face</h4>
-<div class="outline-text-4" id="text-orgheadline418">
+<div id="outline-container-orgheadline417" class="outline-4">
+<h4 id="orgheadline417">Adjust the height of the default face</h4>
+<div class="outline-text-4" id="text-orgheadline417">
 <p>There are a few commands to adjust the font sizes:</p>
 <dl class="org-dl">
 <dt><code>C-x C-+</code></dt>
@@ -15893,30 +15883,30 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class="org-keyw
 </div>
 </div>
 </div>
-<div id="outline-container-orgheadline419" class="outline-2">
-<h2 id="orgheadline419">Calc</h2>
-<div class="outline-text-2" id="text-orgheadline419">
+<div id="outline-container-orgheadline418" class="outline-2">
+<h2 id="orgheadline418">Calc</h2>
+<div class="outline-text-2" id="text-orgheadline418">
 <p><code>C-x *</code> invokes the GNU Emacs Calculator.</p>
 </div>
-<div id="outline-container-orgheadline422" class="outline-3">
-<h3 id="orgheadline422">Introduction</h3>
-<div class="outline-text-3" id="text-orgheadline422"></div>
-<div id="outline-container-orgheadline420" class="outline-4">
-<h4 id="orgheadline420">Basic Commands</h4>
-<div class="outline-text-4" id="text-orgheadline420">
+<div id="outline-container-orgheadline421" class="outline-3">
+<h3 id="orgheadline421">Introduction</h3>
+<div class="outline-text-3" id="text-orgheadline421"></div>
+<div id="outline-container-orgheadline419" class="outline-4">
+<h4 id="orgheadline419">Basic Commands</h4>
+<div class="outline-text-4" id="text-orgheadline419">
 <p>Start the Calc: <code>C-x * c</code>.</p>
 </div>
 </div>
-<div id="outline-container-orgheadline421" class="outline-4">
-<h4 id="orgheadline421">"Quick Calculator" Mode</h4>
-<div class="outline-text-4" id="text-orgheadline421">
+<div id="outline-container-orgheadline420" class="outline-4">
+<h4 id="orgheadline420">"Quick Calculator" Mode</h4>
+<div class="outline-text-4" id="text-orgheadline420">
 <p>Run the Calculator in the minibuffer: <code>C-x * q</code> (<code>M-x quick-calc</code>).</p>
 </div>
 </div>
 </div>
-<div id="outline-container-orgheadline423" class="outline-3">
-<h3 id="orgheadline423">Embedded Mode</h3>
-<div class="outline-text-3" id="text-orgheadline423">
+<div id="outline-container-orgheadline422" class="outline-3">
+<h3 id="orgheadline422">Embedded Mode</h3>
+<div class="outline-text-3" id="text-orgheadline422">
 <p>Try the Embedded mode of Calc: <code>C-x * e</code> (no need to mark the region).</p>
 <p>Similar commands: in place of <code>e</code>,</p>
 <dl class="org-dl">
@@ -15929,9 +15919,9 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class="org-keyw
 </div>
 </div>
 </div>
-<div id="outline-container-orgheadline424" class="outline-2">
-<h2 id="orgheadline424">IRC client for Emacs</h2>
-<div class="outline-text-2" id="text-orgheadline424">
+<div id="outline-container-orgheadline423" class="outline-2">
+<h2 id="orgheadline423">IRC client for Emacs</h2>
+<div class="outline-text-2" id="text-orgheadline423">
 <p>See <a href="http://en.wikipedia.org/wiki/List_of_IRC_commands">List of Internet Relay Chat commands</a>:</p>
 <ul class="org-ul">
 <li><code>/whois</code></li>
@@ -16062,9 +16052,9 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class="org-keyw
 </pre></div>
 </div>
 </div>
-<div id="outline-container-orgheadline425" class="outline-2">
-<h2 id="orgheadline425">Emacs and Microsoft Windows/MS-DOS</h2>
-<div class="outline-text-2" id="text-orgheadline425">
+<div id="outline-container-orgheadline424" class="outline-2">
+<h2 id="orgheadline424">Emacs and Microsoft Windows/MS-DOS</h2>
+<div class="outline-text-2" id="text-orgheadline424">
 <p>Eventually have a look as well at <code>input-decode-map</code>.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -16126,9 +16116,9 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class="org-keyw
 </pre></div>
 </div>
 </div>
-<div id="outline-container-orgheadline426" class="outline-2">
-<h2 id="orgheadline426">Profiler</h2>
-<div class="outline-text-2 org-src-container" id="text-orgheadline426">
+<div id="outline-container-orgheadline425" class="outline-2">
+<h2 id="orgheadline425">Profiler</h2>
+<div class="outline-text-2 org-src-container" id="text-orgheadline425">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* Profiler</span>
 
@@ -16142,9 +16132,9 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class="org-keyw
                    (5 right))))))
 </pre></div>
 </div>
-<div id="outline-container-orgheadline427" class="outline-2">
-<h2 id="orgheadline427">Reporting Bugs</h2>
-<div class="outline-text-2" id="text-orgheadline427">
+<div id="outline-container-orgheadline426" class="outline-2">
+<h2 id="orgheadline426">Reporting Bugs</h2>
+<div class="outline-text-2" id="text-orgheadline426">
 <p>To get a backtrace when a specific regexp is displayed in the echo area (through calls to message), set the variable <code>debug-on-message</code>.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -16207,9 +16197,9 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class="org-keyw
 </pre></div>
 </div>
 </div>
-<div id="outline-container-orgheadline428" class="outline-2">
-<h2 id="orgheadline428">Leuven</h2>
-<div class="outline-text-2" id="text-orgheadline428">
+<div id="outline-container-orgheadline427" class="outline-2">
+<h2 id="orgheadline427">Leuven</h2>
+<div class="outline-text-2" id="text-orgheadline427">
 <p>If you are like me, you want to know if there are:</p>
 <ul class="org-ul">
 <li>changes to existing files</li>
@@ -16261,16 +16251,16 @@ M-: (<span class="org-keyword">let</span> (lst) (mapatoms (<span class="org-keyw
 (message <span class="org-string">"* --[ Loaded Leuven Emacs Config %s]--"</span> leuven--emacs-version)
 </pre></div>
 </div>
-<div id="outline-container-orgheadline429" class="outline-3">
-<h3 id="orgheadline429">Feature</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline429">
+<div id="outline-container-orgheadline428" class="outline-3">
+<h3 id="orgheadline428">Feature</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline428">
 <pre class="src src-emacs-lisp">
 (<span class="org-keyword">provide</span> '<span class="org-constant">emacs-leuven</span>)
 </pre></div>
 </div>
-<div id="outline-container-orgheadline430" class="outline-3">
-<h3 id="orgheadline430">File Local Variables</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline430">
+<div id="outline-container-orgheadline429" class="outline-3">
+<h3 id="orgheadline429">File Local Variables</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline429">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This is for the sake of Emacs.</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Local Variables:</span>

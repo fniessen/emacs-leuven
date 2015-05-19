@@ -2418,7 +2418,7 @@ See http://www.elliotglaysher.org/emacs/
       "Change cursor color according to some minor modes."
       (let ((color (cond (buffer-read-only "purple1")
                          (overwrite-mode   "red")
-                         (t                "black")))
+                         (t                "#21BDFF"))) ; Black.
             (type (if (null overwrite-mode)
                       'bar
                     'box)))
@@ -15601,7 +15601,7 @@ If you'd like to skip confirmation, you can define the following function and
 bind it to a key:
 
 #+begin_src emacs-lisp :tangle no
-    (defun goog-this-line-noconfirm (prefix)
+    (defun google-this-line-noconfirm (prefix)
       "Google the current line without confirmationl.
     PREFIX determines quoting."
       (interactive "P")
@@ -15639,14 +15639,6 @@ bind it to a key:
 
   (global-set-key (kbd "C-c g G") 'leuven-google-search-active-region-or-word-at-point)
   (global-set-key (kbd "C-c g D") 'leuven-duckduckgo-search-active-region-or-word-at-point)
-#+end_src
-
-** Google Maps
-
-#+begin_src emacs-lisp :tangle no
-  (GNUEmacs
-    ;; Google maps
-    (try-require 'google-maps))
 #+end_src
 
 ** Babel translator

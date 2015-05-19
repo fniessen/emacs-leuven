@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150514.1601
+;; Version: 20150519.1103
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150514.1601"
+(defconst leuven--emacs-version "20150519.1103"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1452,7 +1452,7 @@ These packages are neither built-in nor already installed nor ignored."
       "Change cursor color according to some minor modes."
       (let ((color (cond (buffer-read-only "purple1")
                          (overwrite-mode   "red")
-                         (t                "black")))
+                         (t                "#21BDFF"))) ; Black.
             (type (if (null overwrite-mode)
                       'bar
                     'box)))
