@@ -84,61 +84,60 @@
 <li><a href="#orgheadline35">Decoding and Viewing</a></li>
 <li><a href="#orgheadline36">Non-MIME</a></li>
 <li><a href="#orgheadline37">Display Customization</a></li>
-<li><a href="#orgheadline38">Composing</a></li>
-<li><a href="#orgheadline39">Basic Functions</a></li>
+<li><a href="#orgheadline38">Basic Functions</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline40">Back to Article Buffer</a></li>
-<li><a href="#orgheadline41">Composing Messages</a>
+<li><a href="#orgheadline39">Back to Article Buffer</a></li>
+<li><a href="#orgheadline40">Composing Messages</a>
 <ul>
-<li><a href="#orgheadline42">Mail</a></li>
-<li><a href="#orgheadline43">Posting Server</a></li>
-<li><a href="#orgheadline44">Archived Messages</a></li>
-<li><a href="#orgheadline45">Posting Styles</a>
+<li><a href="#orgheadline41">Mail</a></li>
+<li><a href="#orgheadline42">Posting Server</a></li>
+<li><a href="#orgheadline43">Archived Messages</a></li>
+<li><a href="#orgheadline44">Posting Styles</a>
 <ul>
-<li><a href="#orgheadline46">Multiple servers</a></li>
-<li><a href="#orgheadline47">Headers</a></li>
+<li><a href="#orgheadline45">Multiple servers</a></li>
+<li><a href="#orgheadline46">Headers</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgheadline48">Message</a>
+<li><a href="#orgheadline47">Message</a>
 <ul>
-<li><a href="#orgheadline49">Interface</a></li>
-<li><a href="#orgheadline50">Commands</a></li>
-<li><a href="#orgheadline51">Variables</a></li>
+<li><a href="#orgheadline48">Interface</a></li>
+<li><a href="#orgheadline49">Commands</a></li>
+<li><a href="#orgheadline50">Variables</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline52">Select Methods</a>
+<li><a href="#orgheadline51">Select Methods</a>
 <ul>
-<li><a href="#orgheadline53">Getting News</a></li>
-<li><a href="#orgheadline54">Getting Mail</a></li>
-<li><a href="#orgheadline55">Browsing the Web</a></li>
-<li><a href="#orgheadline56">IMAP</a></li>
-<li><a href="#orgheadline57">Gnus Unplugged</a></li>
+<li><a href="#orgheadline52">Getting News</a></li>
+<li><a href="#orgheadline53">Getting Mail</a></li>
+<li><a href="#orgheadline54">Browsing the Web</a></li>
+<li><a href="#orgheadline55">IMAP</a></li>
+<li><a href="#orgheadline56">Gnus Unplugged</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline58">Scoring</a>
+<li><a href="#orgheadline57">Scoring</a>
 <ul>
-<li><a href="#orgheadline59">From Sacha Chua</a></li>
+<li><a href="#orgheadline58">From Sacha Chua</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline60">Searching</a></li>
-<li><a href="#orgheadline61">Various</a>
+<li><a href="#orgheadline59">Searching</a></li>
+<li><a href="#orgheadline60">Various</a>
 <ul>
-<li><a href="#orgheadline62">Interactive</a></li>
-<li><a href="#orgheadline63">Formatting Variables</a></li>
-<li><a href="#orgheadline64">Window Layout</a></li>
-<li><a href="#orgheadline65">Interaction with other modes</a></li>
-<li><a href="#orgheadline66">Various Various</a></li>
+<li><a href="#orgheadline61">Interactive</a></li>
+<li><a href="#orgheadline62">Formatting Variables</a></li>
+<li><a href="#orgheadline63">Window Layout</a></li>
+<li><a href="#orgheadline64">Interaction with other modes</a></li>
+<li><a href="#orgheadline65">Various Various</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline67">Appendices</a>
+<li><a href="#orgheadline66">Appendices</a>
 <ul>
-<li><a href="#orgheadline68">History</a></li>
-<li><a href="#orgheadline69">Frequently Asked Questions</a></li>
-<li><a href="#orgheadline70">Feature</a></li>
-<li><a href="#orgheadline71">File Local Variables</a></li>
+<li><a href="#orgheadline67">History</a></li>
+<li><a href="#orgheadline68">Frequently Asked Questions</a></li>
+<li><a href="#orgheadline69">Feature</a></li>
+<li><a href="#orgheadline70">File Local Variables</a></li>
 </ul>
 </li>
 </ul>
@@ -166,7 +165,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150519.1001</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150519.1033</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, gnus, dotfile, config</span>
 </pre></div>
 <div class="org-src-container">
@@ -362,19 +361,16 @@ over HTTP.<br /></p>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 1.4 (info "(gnus)New Groups")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Gnus will not check for new newsgroups at startup</span>
-  (setq gnus-check-new-newsgroups nil)
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">save you some time at startup and when you do the `g' command</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Gnus will not check for new newsgroups at startup.</span>
+  (setq gnus-check-new-newsgroups nil)  <span class="org-comment-delimiter">; </span><span class="org-comment">Save you some time at startup and when</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">you do the `g' command.</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">don't save the list of killed groups</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">WARNING As Gnus has no record of which groups are new and which are</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">old, the automatic new newsgroups subscription methods becomes</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">meaningless</span>
-  (setq gnus-save-killed-list nil)
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">make all new groups that come from mail back-ends subscribed</span>
-  (setq gnus-auto-subscribed-groups
-        <span class="org-string">"^nnml</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">^nnimap"</span>)
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't save the list of killed groups.</span>
+  (setq gnus-save-killed-list nil)      <span class="org-comment-delimiter">; </span><span class="org-comment">WARNING -- As Gnus has no record of</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">which groups are new and which are</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">old, the automatic new newsgroups</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">subscription methods becomes</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">meaningless.</span>
 </pre></div>
 </div>
 </div>
@@ -385,16 +381,18 @@ over HTTP.<br /></p>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 1.6 (info "(gnus)Startup Files")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">don't save a `</span><span class="org-constant"><span class="org-comment">.newsrc</span></span><span class="org-comment">' file (for using other newsreaders) on exit</span>
-  (setq gnus-save-newsrc-file nil)  <span class="org-comment-delimiter">; </span><span class="org-comment">speed-up</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't save a `</span><span class="org-constant"><span class="org-comment">.newsrc</span></span><span class="org-comment">' file (for using other newsreaders) on exit.</span>
+  (setq gnus-save-newsrc-file nil)      <span class="org-comment-delimiter">; </span><span class="org-comment">Speed-up.</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">ignore the `</span><span class="org-constant"><span class="org-comment">.newsrc</span></span><span class="org-comment">' file</span>
-  (setq gnus-read-newsrc-file nil)  <span class="org-comment-delimiter">; </span><span class="org-comment">speed-up</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Ignore the `</span><span class="org-constant"><span class="org-comment">.newsrc</span></span><span class="org-comment">' file.</span>
+  (setq gnus-read-newsrc-file nil)      <span class="org-comment-delimiter">; </span><span class="org-comment">Speed-up.</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">my `</span><span class="org-constant"><span class="org-comment">.newsrc</span></span><span class="org-comment">' file (and the derived .el/.eld files)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">My `</span><span class="org-constant"><span class="org-comment">.newsrc</span></span><span class="org-comment">' file (and the derived .el/.eld files).</span>
   (setq gnus-startup-file (concat gnus-directory <span class="org-string">".newsrc"</span>))
 </pre></div>
-<p>To stop the repetitive (and growing) "nntp read" messages, ensure you subscribe to at least one group for every NNTP server. You can even unsubscribe directly afterward…</p>
+<div class="tip">
+<p>To stop the repetitive (and growing) <code>nntp read</code> messages, ensure you subscribe to at least one group for every NNTP server. You can even unsubscribe directly afterward…</p>
+</div>
 </div>
 </div>
 <div id="outline-container-orgheadline8" class="outline-3">
@@ -403,10 +401,10 @@ over HTTP.<br /></p>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 1.7 (info "(gnus)Auto Save")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">enable showing of [Gmail]/* groups</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable showing of [Gmail]/* groups.</span>
   (setq gnus-ignored-newsgroups <span class="org-string">""</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">unconditionally read the dribble file</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Unconditionally read the dribble file.</span>
   (setq gnus-always-read-dribble-file t)
 </pre></div>
 </div>
@@ -830,24 +828,25 @@ over HTTP.<br /></p>
 <div id="outline-container-orgheadline24" class="outline-3">
 <h3 id="orgheadline24">Threading</h3>
 <div class="outline-text-3" id="text-orgheadline24">
-<p>Threading is the representation of discussions "as they happen". Use <code>T T</code> to toggle threading.</p>
+<p>Threading is the representation of discussions "as they happen".</p>
+<p>Use <code>T T</code> to toggle threading.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 3.9 (info "(gnus)Threading")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">gather threads by comparing the Subject header of the articles</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Gather threads by comparing the Subject header of the articles.</span>
   (setq gnus-summary-thread-gathering-function
         'gnus-gather-threads-by-subject)
         <span class="org-comment-delimiter">;; </span><span class="org-comment">'gnus-gather-threads-by-references)</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">don't grab old headers to build threads</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't grab old headers to build threads.</span>
   (setq gnus-fetch-old-headers nil)     <span class="org-comment-delimiter">; </span><span class="org-comment">nil to speed up (otherwise, it can</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">seriously impact performance)</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">seriously impact performance).</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">fill in all the gaps to tie loose threads together</span>
-  (setq gnus-build-sparse-threads nil)  <span class="org-comment-delimiter">; </span><span class="org-comment">was 'some</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Fill in all the gaps to tie loose threads together.</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq gnus-build-sparse-threads 'some)</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; sort the articles within a thread after it has been gathered together</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Sort the articles within a thread after it has been gathered together.</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq gnus-sort-gathered-threads-function 'gnus-thread-sort-by-date)</span>
 </pre></div>
 <p>Show/hide threads with <code>&gt;</code> / <code>&lt;</code>.</p>
@@ -855,6 +854,7 @@ over HTTP.<br /></p>
 <pre class="src src-emacs-lisp">
   (define-key gnus-summary-mode-map
     (kbd <span class="org-string">"&gt;"</span>) 'gnus-summary-show-thread)
+
   (define-key gnus-summary-mode-map
     (kbd <span class="org-string">"&lt;"</span>) 'gnus-summary-hide-thread)
 </pre></div>
@@ -864,15 +864,19 @@ over HTTP.<br /></p>
 <h3 id="orgheadline25">Sorting the Summary Buffer</h3>
 <div class="outline-text-3" id="text-orgheadline25">
 <p><b>Primary</b> sort key should be the <b>last</b> function in the list.</p>
+<div class="tip">
 <p>You should always include <code>gnus-thread-sort-by-number</code> in the list, probably as first (least important) element.</p>
-<p>WARNING - Sorting by date is often much slower than sorting by number, and the sorting order is very similar.</p>
+</div>
+<div class="warning">
+<p>Sorting by date is often much slower than sorting by number, and the sorting order is very similar.</p>
+</div>
 <p>The threads with the highest article scores in total are on top in my summary buffers. For threads with equal scores, I sort by the most recent article in a thread (older before younger, thus the not). If that still doesn't distinguish 2 threads, it's sorted by article number (that should always be included as last element to guarantee a total ordering).</p>
 <p>By the way: in mail groups (except for mailing list groups) I disable scoring, so there the sorting by recency of youngest message in thread is the decision maker. I like that in older-before-younger order, because then I read older replies to an article before younger replies.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 3.10 (info "(gnus)Sorting the Summary Buffer")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">sort threads in descending article order</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Sort threads in descending article order.</span>
   (setq gnus-thread-sort-functions
         '(gnus-thread-sort-by-number
           (not gnus-thread-sort-by-most-recent-date)
@@ -890,35 +894,27 @@ over HTTP.<br /></p>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 3.12 (info "(gnus)Article Caching")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">use the cache</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Use the cache.</span>
   (setq gnus-use-cache t)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; local cache</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Local cache.</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq gnus-cache-directory (concat gnus-directory "cache/"))</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">entering of articles from the cache</span>
-  (setq gnus-cache-enter-articles '(ticked dormant unread read))
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">simple setup for your convenience, if</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">you are using `</span><span class="org-constant"><span class="org-comment">nnimap</span></span><span class="org-comment">' from home, over</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">a dialup connection</span>
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">removing of articles from the cache</span>
-  (setq gnus-cache-remove-articles nil)
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">cache your nnimap groups</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Cache your nnimap groups.</span>
   (setq gnus-cacheable-groups <span class="org-string">"^nnimap"</span>)
 </pre></div>
 </div>
 <div id="outline-container-orgheadline27" class="outline-3">
 <h3 id="orgheadline27">Article Treatment</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline27">
+<div class="outline-text-3" id="text-orgheadline27">
+<div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 3.18 (info "(gnus)Article Treatment")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">change a `\205' figure to "..."</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Change a `\205' figure to "...".</span>
   (add-hook 'gnus-part-display-hook 'article-treat-dumbquotes)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">full shampoo of messages you read</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Full shampoo of messages you read.</span>
   (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-gnus-wash-this-article</span> ()
     <span class="org-doc">"Wash an article."</span>
     (interactive)
@@ -930,16 +926,17 @@ over HTTP.<br /></p>
   (define-key gnus-summary-mode-map
     (kbd <span class="org-string">"C-c w"</span>) 'leuven-gnus-wash-this-article)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">what is to be considered a signature</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">What is to be considered a signature.</span>
   (setq gnus-signature-separator
-        '(<span class="org-string">"^-- $"</span>                       <span class="org-comment-delimiter">; </span><span class="org-comment">the standard</span>
-          <span class="org-string">"^-- *$"</span>                      <span class="org-comment-delimiter">; </span><span class="org-comment">a common mangling</span>
-          <span class="org-string">"^________*$"</span>))               <span class="org-comment-delimiter">; </span><span class="org-comment">a long line of underscores is also</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">popular</span>
+        '(<span class="org-string">"^-- $"</span>                       <span class="org-comment-delimiter">; </span><span class="org-comment">The standard.</span>
+          <span class="org-string">"^________*$"</span>))               <span class="org-comment-delimiter">; </span><span class="org-comment">A long line of underscores is also</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">popular.</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">limit (in lines, in floating point) to what is considered a signature</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Limit (in lines, in floating point) to what is considered a signature.</span>
   (setq gnus-signature-limit 20.0)
-
+</pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
   (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-prefix-line</span> ()
     <span class="org-doc">"Prefix the current line with `&gt;'."</span>
     (interactive)
@@ -957,8 +954,10 @@ over HTTP.<br /></p>
            (looking-at <span class="org-string">" *$"</span>)))))
 
   (global-set-key (kbd <span class="org-string">"&lt;S-f5&gt;"</span>) 'leuven-prefix-line)
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">banners to remove</span>
+</pre></div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Banners to remove.</span>
   (setq gnus-article-address-banner-alist
         '((<span class="org-string">"@yahoo\\.com"</span> .
            <span class="org-string">"^__________________+\nDo you Yahoo!\\?\n.*\n.*\n"</span>)
@@ -982,14 +981,15 @@ over HTTP.<br /></p>
           gnus-article-fill-cited-article))
 </pre></div>
 </div>
+</div>
 <div id="outline-container-orgheadline28" class="outline-3">
 <h3 id="orgheadline28">MIME Commands</h3>
 <div class="outline-text-3 org-src-container" id="text-orgheadline28">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 3.19 (info "(gnus)MIME Commands")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">rewrite file names of MIME parts (delete control characters, delete</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">shell gotchas, handle evil white spaces)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Rewrite file names of MIME parts (delete control characters, delete shell</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">gotchas, handle evil white spaces).</span>
   (setq mm-file-name-rewrite-functions
         '(mm-file-name-delete-control
           mm-file-name-delete-gotchas
@@ -1007,21 +1007,6 @@ over HTTP.<br /></p>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">permitted unencoded charsets for posting</span>
   (setq gnus-group-posting-charset-alist
         '((message-this-is-news nil (iso-8859-15))))
-
-  (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-show-article-as-charset</span> ()
-    (interactive)
-    (message <span class="org-string">"Display in: latin-[1], latin-[9]/15, [u]tf-8, [c]p1252"</span>)
-    (<span class="org-keyword">let</span> ((answer (read-char)))
-      (<span class="org-keyword">cond</span>
-       ((eq answer ?1)
-        (gnus-summary-show-article-from-menu-as-charset-iso-8859-1))
-       ((eq answer ?9)
-        (gnus-summary-show-article-from-menu-as-charset-iso-8859-9))
-       ((eq answer ?c)
-        (gnus-summary-show-article-from-menu-as-charset-cp1252))
-       ((eq answer ?u)
-        (gnus-summary-show-article-from-menu-as-charset-utf-8))))
-    (gnus-summary-rethread-current))
 </pre></div>
 </div>
 <div id="outline-container-orgheadline30" class="outline-3">
@@ -1209,20 +1194,20 @@ over HTTP.<br /></p>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">*** 1.2 (info "(emacs-mime)Non-MIME")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">regexp of Emacs sources groups</span>
-  (setq mm-uu-emacs-sources-regexp <span class="org-string">"emacs"</span>)
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Regexp of Emacs sources groups.</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq mm-uu-emacs-sources-regexp "emacs")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">regexp matching diff groups</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Regexp matching diff groups.</span>
   (setq mm-uu-diff-groups-regexp <span class="org-string">".*"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">regexp matching TeX groups</span>
-  (setq mm-uu-tex-groups-regexp <span class="org-string">".*"</span>)
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Regexp matching TeX groups.</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq mm-uu-tex-groups-regexp ".*")</span>
 </pre></div>
 </div>
 <div id="outline-container-orgheadline37" class="outline-3">
 <h3 id="orgheadline37">Display Customization</h3>
 <div class="outline-text-3" id="text-orgheadline37">
-<p>You can view "text/html" parts of the current article with a WWW browser by pressing <code>K H</code> (<code>gnus-article-browse-html-article</code>).</p>
+<p>You can view <code>text/html</code> parts of the current article with a Web browser by pressing <code>K H</code> (<code>gnus-article-browse-html-article</code>).</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">*** 1.5 (info "(emacs-mime)Display Customization")</span>
@@ -1321,72 +1306,43 @@ over HTTP.<br /></p>
 </div>
 </div>
 <div id="outline-container-orgheadline38" class="outline-3">
-<h3 id="orgheadline38">Composing</h3>
+<h3 id="orgheadline38">Basic Functions</h3>
 <div class="outline-text-3 org-src-container" id="text-orgheadline38">
-<pre class="src src-emacs-lisp">
-<span class="org-comment-delimiter">;;</span><span class="org-comment">** 2 (info "(emacs-mime)Composing")</span>
-
-<span class="org-comment-delimiter">;;</span><span class="org-comment">*** 2.4 (info "(emacs-mime)Encoding Customization")</span>
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">preferred coding systems for encoding outgoing messages</span>
-  (setq mm-coding-system-priorities
-        '(utf-8
-          iso-latin-9
-          iso-latin-1))                 <span class="org-comment-delimiter">; </span><span class="org-comment">ensure that utf-8 is chosen over</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">iso-latin-9 and latin-1, if possible</span>
-</pre></div>
-</div>
-<div id="outline-container-orgheadline39" class="outline-3">
-<h3 id="orgheadline39">Basic Functions</h3>
-<div class="outline-text-3" id="text-orgheadline39">
-<div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 4 (info "(emacs-mime)Basic Functions")</span>
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">*** 4.12 (info "(emacs-mime)mailcap")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">choose the right MIME type when sending an attachment</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Choose the right MIME type when sending an attachment.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"mailcap"</span>
      (add-to-list 'mailcap-mime-extensions
                   '(<span class="org-string">".doc"</span> . <span class="org-string">"application/msword"</span>))
      (add-to-list 'mailcap-mime-extensions
                   '(<span class="org-string">".ppt"</span> . <span class="org-string">"application/vnd.ms-powerpoint"</span>)))
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">MIME content-types keyed by file</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">extensions</span>
-</pre></div>
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">&gt; which settings do you have to see PDF attachments as text,</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">&gt; automagically? Does it work as well for DOC, XLS and PPT?</span>
-  <span class="org-comment-delimiter">;;</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">not here, but I think it's customizable. You need to have the</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">programs installed, of course. The variable to look at is</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">mailcap-mime-data. It is not customizable, but see</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">http://www.gnus.org/manual/emacs-mime_30.html</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">MIME content-types keyed by file ext.</span>
 </pre></div>
 </div>
 </div>
-</div>
-<div id="outline-container-orgheadline40" class="outline-2">
-<h2 id="orgheadline40">Back to Article Buffer</h2>
-<div class="outline-text-2" id="text-orgheadline40">
+<div id="outline-container-orgheadline39" class="outline-2">
+<h2 id="orgheadline39">Back to Article Buffer</h2>
+<div class="outline-text-2" id="text-orgheadline39">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 4.4 (info "(gnus)Customizing Articles")</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(require 'gnus-art)</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">add buttons</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Add buttons.</span>
   (setq gnus-treat-buttonize t)
   (setq gnus-treat-buttonize-head 'head)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">do not display smileys as pictures</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Do not display smileys as pictures.</span>
   (setq gnus-treat-display-smileys nil)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">sound</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Sound.</span>
   (setq gnus-treat-play-sounds t)
 </pre></div>
-<p>Toggle colouring from HTML emails:</p>
+<p>Toggle coloring from HTML emails:</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class="org-comment">from Tassilo Horn, 2014-07-17</span>
@@ -1413,17 +1369,17 @@ over HTTP.<br /></p>
 </pre></div>
 </div>
 </div>
-<div id="outline-container-orgheadline41" class="outline-2">
-<h2 id="orgheadline41">Composing Messages</h2>
-<div class="outline-text-2 org-src-container" id="text-orgheadline41">
+<div id="outline-container-orgheadline40" class="outline-2">
+<h2 id="orgheadline40">Composing Messages</h2>
+<div class="outline-text-2 org-src-container" id="text-orgheadline40">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 5 (info "(gnus)Composing Messages")</span>
 
   (message <span class="org-string">"5 Composing Messages..."</span>)
 </pre></div>
-<div id="outline-container-orgheadline42" class="outline-3">
-<h3 id="orgheadline42">Mail</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline42">
+<div id="outline-container-orgheadline41" class="outline-3">
+<h3 id="orgheadline41">Mail</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline41">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 5.1 (info "(gnus)Mail")</span>
 
@@ -1431,9 +1387,9 @@ over HTTP.<br /></p>
   (setq gnus-confirm-mail-reply-to-news t)
 </pre></div>
 </div>
-<div id="outline-container-orgheadline43" class="outline-3">
-<h3 id="orgheadline43">Posting Server</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline43">
+<div id="outline-container-orgheadline42" class="outline-3">
+<h3 id="orgheadline42">Posting Server</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline42">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 5.2 (info "(gnus)Posting Server")</span>
 
@@ -1457,22 +1413,22 @@ over HTTP.<br /></p>
   (setq smtpmail-debug-verb t)
 </pre></div>
 </div>
-<div id="outline-container-orgheadline44" class="outline-3">
-<h3 id="orgheadline44">Archived Messages</h3>
-<div class="outline-text-3" id="text-orgheadline44">
+<div id="outline-container-orgheadline43" class="outline-3">
+<h3 id="orgheadline43">Archived Messages</h3>
+<div class="outline-text-3" id="text-orgheadline43">
 <p>The <code>Gcc:</code> header is about in which group to save the messages you've written.</p>
 <p><code>gnus-message-archive-group</code> specifies which (if any) <code>Gcc:</code> header is inserted when a message buffer is <b>created</b>.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">group in which to save the messages you've written</span>
+<span class="org-comment-delimiter">;;</span><span class="org-comment">** 5.5 (info "(gnus)Archived Messages")</span>
+
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Group in which to save the messages you've written.</span>
   (setq gnus-message-archive-group <span class="org-string">"INBOX.Sent"</span>)
 </pre></div>
 <p>The <code>Gcc:</code> header at the time of <b>sending</b> the message specifies where it is archived.</p>
 <p>If you want to be asked for each <b>message to be sent</b>, you can change the <code>Gcc:</code> header in the <code>message-send-hook</code>.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
-<span class="org-comment-delimiter">;;</span><span class="org-comment">** 5.5 (info "(gnus)Archived Messages")</span>
-
   <span class="org-comment-delimiter">;; </span><span class="org-comment">the Gcc Header specifies a local mail box that receives a copy of the</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">sent article</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">"Gcc:"-chooser, from Christoph Conrad</span>
@@ -1507,9 +1463,9 @@ over HTTP.<br /></p>
 </pre></div>
 </div>
 </div>
-<div id="outline-container-orgheadline45" class="outline-3">
-<h3 id="orgheadline45">Posting Styles</h3>
-<div class="outline-text-3" id="text-orgheadline45">
+<div id="outline-container-orgheadline44" class="outline-3">
+<h3 id="orgheadline44">Posting Styles</h3>
+<div class="outline-text-3" id="text-orgheadline44">
 <p>Concept of "roles" in mutt.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -1604,16 +1560,18 @@ over HTTP.<br /></p>
     )
 </pre></div>
 </div>
-<div id="outline-container-orgheadline46" class="outline-4">
-<h4 id="orgheadline46">Multiple servers</h4>
-<div class="outline-text-4" id="text-orgheadline46">
-<p>Let Gnus decide which SMTP server should be used for sending email by looking at XXX.</p>
+<div id="outline-container-orgheadline45" class="outline-4">
+<h4 id="orgheadline45">Multiple servers</h4>
+<div class="outline-text-4" id="text-orgheadline45">
+<p>Let Gnus decide which SMTP server should be used for sending email…</p>
+<div class="note">
 <p>See <a href="http://www.emacswiki.org/emacs/MultipleSMTPAccounts">http://www.emacswiki.org/emacs/MultipleSMTPAccounts</a> for looking at the <code>From:</code> header line of the current post.</p>
 </div>
 </div>
-<div id="outline-container-orgheadline47" class="outline-4">
-<h4 id="orgheadline47">Headers</h4>
-<div class="outline-text-4" id="text-orgheadline47">
+</div>
+<div id="outline-container-orgheadline46" class="outline-4">
+<h4 id="orgheadline46">Headers</h4>
+<div class="outline-text-4" id="text-orgheadline46">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
   <span class="org-comment-delimiter">;; </span><span class="org-comment">add certain headers before sending messages</span>
@@ -1631,9 +1589,9 @@ over HTTP.<br /></p>
 </div>
 </div>
 </div>
-<div id="outline-container-orgheadline48" class="outline-2">
-<h2 id="orgheadline48">Message</h2>
-<div class="outline-text-2 org-src-container" id="text-orgheadline48">
+<div id="outline-container-orgheadline47" class="outline-2">
+<h2 id="orgheadline47">Message</h2>
+<div class="outline-text-2 org-src-container" id="text-orgheadline47">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* (info "(message)Top")</span>
 
@@ -1642,11 +1600,13 @@ over HTTP.<br /></p>
 
   (message <span class="org-string">"Message..."</span>)
 </pre></div>
-<div id="outline-container-orgheadline49" class="outline-3">
-<h3 id="orgheadline49">Interface</h3>
-<div class="outline-text-3" id="text-orgheadline49">
-<p>&gt; Is there a way to configure multiple addresses?</p>
-<p>Yes. There are a couple of variables for that. I use a code piece like the one below to set the variables.</p>
+<div id="outline-container-orgheadline48" class="outline-3">
+<h3 id="orgheadline48">Interface</h3>
+<div class="outline-text-3" id="text-orgheadline48">
+<p class="verse">&gt; Is there a way to configure multiple addresses?<br />
+<br />
+Yes. There are a couple of variables for that. I use a code piece like the one<br />
+below to set the variables.<br /></p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
   (<span class="org-keyword">let</span> ((addr '(<span class="org-string">"primary.address@somewhere.invalid"</span>
@@ -1735,9 +1695,9 @@ over HTTP.<br /></p>
 </pre></div>
 </div>
 </div>
-<div id="outline-container-orgheadline50" class="outline-3">
-<h3 id="orgheadline50">Commands</h3>
-<div class="outline-text-3" id="text-orgheadline50">
+<div id="outline-container-orgheadline49" class="outline-3">
+<h3 id="orgheadline49">Commands</h3>
+<div class="outline-text-3" id="text-orgheadline49">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 2 (info "(message)Commands")</span>
@@ -1762,9 +1722,9 @@ over HTTP.<br /></p>
 </pre></div>
 </div>
 </div>
-<div id="outline-container-orgheadline51" class="outline-3">
-<h3 id="orgheadline51">Variables</h3>
-<div class="outline-text-3" id="text-orgheadline51">
+<div id="outline-container-orgheadline50" class="outline-3">
+<h3 id="orgheadline50">Variables</h3>
+<div class="outline-text-3" id="text-orgheadline50">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 3 (info "(message)Variables")</span>
@@ -1875,17 +1835,17 @@ over HTTP.<br /></p>
 </div>
 </div>
 </div>
-<div id="outline-container-orgheadline52" class="outline-2">
-<h2 id="orgheadline52">Select Methods</h2>
-<div class="outline-text-2 org-src-container" id="text-orgheadline52">
+<div id="outline-container-orgheadline51" class="outline-2">
+<h2 id="orgheadline51">Select Methods</h2>
+<div class="outline-text-2 org-src-container" id="text-orgheadline51">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 6 (info "(gnus)Select Methods")</span>
 
   (message <span class="org-string">"6 Select Methods..."</span>)
 </pre></div>
-<div id="outline-container-orgheadline53" class="outline-3">
-<h3 id="orgheadline53">Getting News</h3>
-<div class="outline-text-3" id="text-orgheadline53">
+<div id="outline-container-orgheadline52" class="outline-3">
+<h3 id="orgheadline52">Getting News</h3>
+<div class="outline-text-3" id="text-orgheadline52">
 <p>Newsgroups in which I'm interested:</p>
 <ul class="org-ul">
 <li><code>nntp+gmane:gmane.emacs.orgmode</code></li>
@@ -1910,9 +1870,9 @@ over HTTP.<br /></p>
 </pre></div>
 </div>
 </div>
-<div id="outline-container-orgheadline54" class="outline-3">
-<h3 id="orgheadline54">Getting Mail</h3>
-<div class="outline-text-3" id="text-orgheadline54">
+<div id="outline-container-orgheadline53" class="outline-3">
+<h3 id="orgheadline53">Getting Mail</h3>
+<div class="outline-text-3" id="text-orgheadline53">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 6.3 (info "(gnus)Getting Mail")</span>
@@ -2087,9 +2047,9 @@ over HTTP.<br /></p>
 </pre></div>
 </div>
 </div>
-<div id="outline-container-orgheadline55" class="outline-3">
-<h3 id="orgheadline55">Browsing the Web</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline55">
+<div id="outline-container-orgheadline54" class="outline-3">
+<h3 id="orgheadline54">Browsing the Web</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline54">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 6.4 (info "(gnus)Browsing the Web")</span>
 
@@ -2130,9 +2090,9 @@ over HTTP.<br /></p>
             )))
 </pre></div>
 </div>
-<div id="outline-container-orgheadline56" class="outline-3">
-<h3 id="orgheadline56">IMAP</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline56">
+<div id="outline-container-orgheadline55" class="outline-3">
+<h3 id="orgheadline55">IMAP</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline55">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 6.5 (info "(gnus)IMAP")</span>
 
@@ -2140,9 +2100,9 @@ over HTTP.<br /></p>
   (setq nnimap-record-commands t)
 </pre></div>
 </div>
-<div id="outline-container-orgheadline57" class="outline-3">
-<h3 id="orgheadline57">Gnus Unplugged</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline57">
+<div id="outline-container-orgheadline56" class="outline-3">
+<h3 id="orgheadline56">Gnus Unplugged</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline56">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 6.8 (info "(gnus)Gnus Unplugged")</span>
 
@@ -2154,9 +2114,9 @@ over HTTP.<br /></p>
 </pre></div>
 </div>
 </div>
-<div id="outline-container-orgheadline58" class="outline-2">
-<h2 id="orgheadline58">Scoring</h2>
-<div class="outline-text-2" id="text-orgheadline58">
+<div id="outline-container-orgheadline57" class="outline-2">
+<h2 id="orgheadline57">Scoring</h2>
+<div class="outline-text-2" id="text-orgheadline57">
 <p>You can <i>increase</i> or <i>lower</i> the score, respectively, in the global file (instead of the score file local for the group) by pressing <code>M-i a I</code> or <code>M-i a L</code>.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -2175,9 +2135,9 @@ over HTTP.<br /></p>
   (message <span class="org-string">"7 Scoring... Done"</span>)
 </pre></div>
 </div>
-<div id="outline-container-orgheadline59" class="outline-3">
-<h3 id="orgheadline59">From Sacha Chua</h3>
-<div class="outline-text-3" id="text-orgheadline59">
+<div id="outline-container-orgheadline58" class="outline-3">
+<h3 id="orgheadline58">From Sacha Chua</h3>
+<div class="outline-text-3" id="text-orgheadline58">
 <p>Adaptive scoring means that if you kill a thread you're not particularly interested in, it lowers the score on that one, so any replies are shown with a negative score. You can also configure it to hide messages with scores below a certain threshold, so you don't even see replies.</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -2198,24 +2158,24 @@ over HTTP.<br /></p>
 </div>
 </div>
 </div>
-<div id="outline-container-orgheadline60" class="outline-2">
-<h2 id="orgheadline60">Searching</h2>
-<div class="outline-text-2" id="text-orgheadline60">
+<div id="outline-container-orgheadline59" class="outline-2">
+<h2 id="orgheadline59">Searching</h2>
+<div class="outline-text-2" id="text-orgheadline59">
 <p>Basically, there's only one user-frontend function: <code>gnus-group-make-nnir-group</code> bound to <code>G G</code> in <code>*Group*</code>.</p>
 <p>It comes with Gnus. You don't even need to configure anything for searching <b>IMAP</b> and <b>Gmane</b> groups.</p>
 </div>
 </div>
-<div id="outline-container-orgheadline61" class="outline-2">
-<h2 id="orgheadline61">Various</h2>
-<div class="outline-text-2 org-src-container" id="text-orgheadline61">
+<div id="outline-container-orgheadline60" class="outline-2">
+<h2 id="orgheadline60">Various</h2>
+<div class="outline-text-2 org-src-container" id="text-orgheadline60">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 9 (info "(gnus)Various")</span>
 
   (message <span class="org-string">"9 Various..."</span>)
 </pre></div>
-<div id="outline-container-orgheadline62" class="outline-3">
-<h3 id="orgheadline62">Interactive</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline62">
+<div id="outline-container-orgheadline61" class="outline-3">
+<h3 id="orgheadline61">Interactive</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline61">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 9.2 (info "(gnus)Interactive")</span>
 
@@ -2223,9 +2183,9 @@ over HTTP.<br /></p>
   (setq gnus-novice-user nil)
 </pre></div>
 </div>
-<div id="outline-container-orgheadline63" class="outline-3">
-<h3 id="orgheadline63">Formatting Variables</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline63">
+<div id="outline-container-orgheadline62" class="outline-3">
+<h3 id="orgheadline62">Formatting Variables</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline62">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 9.4 (info "(gnus)Formatting Variables")</span>
 
@@ -2233,9 +2193,9 @@ over HTTP.<br /></p>
   (setq gnus-use-correct-string-widths nil)
 </pre></div>
 </div>
-<div id="outline-container-orgheadline64" class="outline-3">
-<h3 id="orgheadline64">Window Layout</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline64">
+<div id="outline-container-orgheadline63" class="outline-3">
+<h3 id="orgheadline63">Window Layout</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline63">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 9.5 (info "(gnus)Window Layout")</span>
 
@@ -2254,9 +2214,9 @@ over HTTP.<br /></p>
                  (article 1.0)))))
 </pre></div>
 </div>
-<div id="outline-container-orgheadline65" class="outline-3">
-<h3 id="orgheadline65">Interaction with other modes</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline65">
+<div id="outline-container-orgheadline64" class="outline-3">
+<h3 id="orgheadline64">Interaction with other modes</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline64">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 9.20 Interaction with (info "(gnus)Other modes")</span>
 
@@ -2276,9 +2236,9 @@ over HTTP.<br /></p>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">dired-find-alternate-file</span></span><span class="org-comment">'</span>
 </pre></div>
 </div>
-<div id="outline-container-orgheadline66" class="outline-3">
-<h3 id="orgheadline66">Various Various</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline66">
+<div id="outline-container-orgheadline65" class="outline-3">
+<h3 id="orgheadline65">Various Various</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline65">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 9.21 (info "(gnus)Various Various")</span>
 
@@ -2292,17 +2252,17 @@ over HTTP.<br /></p>
 </pre></div>
 </div>
 </div>
-<div id="outline-container-orgheadline67" class="outline-2">
-<h2 id="orgheadline67">Appendices</h2>
-<div class="outline-text-2 org-src-container" id="text-orgheadline67">
+<div id="outline-container-orgheadline66" class="outline-2">
+<h2 id="orgheadline66">Appendices</h2>
+<div class="outline-text-2 org-src-container" id="text-orgheadline66">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 11 (info "(gnus)Appendices")</span>
 
   (message <span class="org-string">"11 Appendices..."</span>)
 </pre></div>
-<div id="outline-container-orgheadline68" class="outline-3">
-<h3 id="orgheadline68">History</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline68">
+<div id="outline-container-orgheadline67" class="outline-3">
+<h3 id="orgheadline67">History</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline67">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 11.2 (info "(gnus)History")</span>
 
@@ -2310,9 +2270,9 @@ over HTTP.<br /></p>
   (setq canlock-password-for-verify <span class="org-string">"secret"</span>)
 </pre></div>
 </div>
-<div id="outline-container-orgheadline69" class="outline-3">
-<h3 id="orgheadline69">Frequently Asked Questions</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline69">
+<div id="outline-container-orgheadline68" class="outline-3">
+<h3 id="orgheadline68">Frequently Asked Questions</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline68">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 11.9 (info "(gnus)Frequently Asked Questions")</span>
 
@@ -2330,16 +2290,16 @@ over HTTP.<br /></p>
   (message <span class="org-string">"\n"</span>)
 </pre></div>
 </div>
-<div id="outline-container-orgheadline70" class="outline-3">
-<h3 id="orgheadline70">Feature</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline70">
+<div id="outline-container-orgheadline69" class="outline-3">
+<h3 id="orgheadline69">Feature</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline69">
 <pre class="src src-emacs-lisp">
 (<span class="org-keyword">provide</span> '<span class="org-constant">gnus-leuven</span>)
 </pre></div>
 </div>
-<div id="outline-container-orgheadline71" class="outline-3">
-<h3 id="orgheadline71">File Local Variables</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline71">
+<div id="outline-container-orgheadline70" class="outline-3">
+<h3 id="orgheadline70">File Local Variables</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline70">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This is for the sake of Emacs.</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Local Variables:</span>

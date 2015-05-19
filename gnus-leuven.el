@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150519.0957
+;; Version: 20150519.1033
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -64,37 +64,34 @@
 
 ;;** 1.4 (info "(gnus)New Groups")
 
-  ;; Gnus will not check for new newsgroups at startup
-  (setq gnus-check-new-newsgroups nil)
-  ;; save you some time at startup and when you do the `g' command
+  ;; Gnus will not check for new newsgroups at startup.
+  (setq gnus-check-new-newsgroups nil)  ; Save you some time at startup and when
+                                        ; you do the `g' command.
 
-  ;; don't save the list of killed groups
-  ;; WARNING As Gnus has no record of which groups are new and which are
-  ;; old, the automatic new newsgroups subscription methods becomes
-  ;; meaningless
-  (setq gnus-save-killed-list nil)
-
-  ;; make all new groups that come from mail back-ends subscribed
-  (setq gnus-auto-subscribed-groups
-        "^nnml\\|^nnimap")
+  ;; Don't save the list of killed groups.
+  (setq gnus-save-killed-list nil)      ; WARNING -- As Gnus has no record of
+                                        ; which groups are new and which are
+                                        ; old, the automatic new newsgroups
+                                        ; subscription methods becomes
+                                        ; meaningless.
 
 ;;** 1.6 (info "(gnus)Startup Files")
 
-  ;; don't save a `.newsrc' file (for using other newsreaders) on exit
-  (setq gnus-save-newsrc-file nil)  ; speed-up
+  ;; Don't save a `.newsrc' file (for using other newsreaders) on exit.
+  (setq gnus-save-newsrc-file nil)      ; Speed-up.
 
-  ;; ignore the `.newsrc' file
-  (setq gnus-read-newsrc-file nil)  ; speed-up
+  ;; Ignore the `.newsrc' file.
+  (setq gnus-read-newsrc-file nil)      ; Speed-up.
 
-  ;; my `.newsrc' file (and the derived .el/.eld files)
+  ;; My `.newsrc' file (and the derived .el/.eld files).
   (setq gnus-startup-file (concat gnus-directory ".newsrc"))
 
 ;;** 1.7 (info "(gnus)Auto Save")
 
-  ;; enable showing of [Gmail]/* groups
+  ;; Enable showing of [Gmail]/* groups.
   (setq gnus-ignored-newsgroups "")
 
-  ;; unconditionally read the dribble file
+  ;; Unconditionally read the dribble file.
   (setq gnus-always-read-dribble-file t)
 
 ;;** 1.8 (info "(gnus)The Active File")
@@ -384,20 +381,31 @@
 
 ;;** 3.9 (info "(gnus)Threading")
 
-  ;; gather threads by comparing the Subject header of the articles
+  ;; Gather threads by comparing the Subject header of the articles.
   (setq gnus-summary-thread-gathering-function
         'gnus-gather-threads-by-subject)
         ;; 'gnus-gather-threads-by-references)
 
-  ;; don't grab old headers to build threads
+  ;; Don't grab old headers to build threads.
   (setq gnus-fetch-old-headers nil)     ; nil to speed up (otherwise, it can
-                                        ; seriously impact performance)
+                                        ; seriously impact performance).
 
-  ;; fill in all the gaps to tie loose threads together
-  (setq gnus-build-sparse-threads nil)  ; was 'some
+  ;; ;; Fill in all the gaps to tie loose threads together.
+  ;; (setq gnus-build-sparse-threads 'some)
 
-  ;; ;; sort the articles within a thread after it has been gathered together
+  ;; ;; Sort the articles within a thread after it has been gathered together.
   ;; (setq gnus-sort-gathered-threads-function 'gnus-thread-sort-by-date)
+
+;;** 3.19 (info "(gnus)MIME Commands")
+
+  ;; Rewrite file names of MIME parts (delete control characters, delete shell
+  ;; gotchas, handle evil white spaces).
+  (setq mm-file-name-rewrite-functions
+        '(mm-file-name-delete-control
+          mm-file-name-delete-gotchas
+          mm-file-name-trim-whitespace
+          mm-file-name-collapse-whitespace
+          mm-file-name-replace-whitespace))
 
   (message "3 Summary Buffer... Done")
 
@@ -411,14 +419,14 @@
 
 ;;*** 1.2 (info "(emacs-mime)Non-MIME")
 
-  ;; regexp of Emacs sources groups
-  (setq mm-uu-emacs-sources-regexp "emacs")
+  ;; ;; Regexp of Emacs sources groups.
+  ;; (setq mm-uu-emacs-sources-regexp "emacs")
 
-  ;; regexp matching diff groups
+  ;; Regexp matching diff groups.
   (setq mm-uu-diff-groups-regexp ".*")
 
-  ;; regexp matching TeX groups
-  (setq mm-uu-tex-groups-regexp ".*")
+  ;; ;; Regexp matching TeX groups.
+  ;; (setq mm-uu-tex-groups-regexp ".*")
 
 ;;*** 1.5 (info "(emacs-mime)Display Customization")
 
@@ -492,14 +500,13 @@
 
 ;;*** 4.12 (info "(emacs-mime)mailcap")
 
-  ;; choose the right MIME type when sending an attachment
+  ;; Choose the right MIME type when sending an attachment.
   (with-eval-after-load "mailcap"
      (add-to-list 'mailcap-mime-extensions
                   '(".doc" . "application/msword"))
      (add-to-list 'mailcap-mime-extensions
                   '(".ppt" . "application/vnd.ms-powerpoint")))
-                                        ; MIME content-types keyed by file
-                                        ; extensions
+                                        ; MIME content-types keyed by file ext.
 
   ;; from Tassilo Horn, 2014-07-17
   (setq shr-color-visible-distance-min 10)
@@ -526,31 +533,10 @@
   ;; Gnus requests confirmation when replying to news (unlike mail)
   (setq gnus-confirm-mail-reply-to-news t)
 
-;;** 5.2 (info "(gnus)Posting Server")
-
-  ;; control the hostname sent in the first EHLO or HELO command sent to the
-  ;; server (client sends `EHLO CLARK.smtpmail-local-domain')
-  (setq smtpmail-local-domain
-        "i-did-not-set--mail-host-address--so-tickle-me")
-        ;;              ^^^^^^^^^^^^^^^^^
-
-  ;; make the SMTP library add `@' and the specified domain name to
-  ;; recipients specified in the message when they are sent using the RCPT
-  ;; TO command (or when we simply enter an email address without its
-  ;; domain extension)
-  (setq smtpmail-sendto-domain "local")
-
-  ;; print info in buffer *trace of SMTP session to <somewhere>*
-  (setq smtpmail-debug-info t)          ; only to debug problems
-
-  ;; send the SMTP VERB command (enabling verbose information from the SMTP
-  ;; server)
-  (setq smtpmail-debug-verb t)
-
-  ;; group in which to save the messages you've written
-  (setq gnus-message-archive-group "INBOX.Sent")
-
 ;;** 5.5 (info "(gnus)Archived Messages")
+
+  ;; Group in which to save the messages you've written.
+  (setq gnus-message-archive-group "INBOX.Sent")
 
   ;; the Gcc Header specifies a local mail box that receives a copy of the
   ;; sent article

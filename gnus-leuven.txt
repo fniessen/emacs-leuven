@@ -238,19 +238,16 @@ buffer.
 #+begin_src emacs-lisp
 ;;** 1.4 (info "(gnus)New Groups")
 
-  ;; Gnus will not check for new newsgroups at startup
-  (setq gnus-check-new-newsgroups nil)
-  ;; save you some time at startup and when you do the `g' command
+  ;; Gnus will not check for new newsgroups at startup.
+  (setq gnus-check-new-newsgroups nil)  ; Save you some time at startup and when
+                                        ; you do the `g' command.
 
-  ;; don't save the list of killed groups
-  ;; WARNING As Gnus has no record of which groups are new and which are
-  ;; old, the automatic new newsgroups subscription methods becomes
-  ;; meaningless
-  (setq gnus-save-killed-list nil)
-
-  ;; make all new groups that come from mail back-ends subscribed
-  (setq gnus-auto-subscribed-groups
-        "^nnml\\|^nnimap")
+  ;; Don't save the list of killed groups.
+  (setq gnus-save-killed-list nil)      ; WARNING -- As Gnus has no record of
+                                        ; which groups are new and which are
+                                        ; old, the automatic new newsgroups
+                                        ; subscription methods becomes
+                                        ; meaningless.
 #+end_src
 
 ** Startup Files
@@ -258,29 +255,31 @@ buffer.
 #+begin_src emacs-lisp
 ;;** 1.6 (info "(gnus)Startup Files")
 
-  ;; don't save a `.newsrc' file (for using other newsreaders) on exit
-  (setq gnus-save-newsrc-file nil)  ; speed-up
+  ;; Don't save a `.newsrc' file (for using other newsreaders) on exit.
+  (setq gnus-save-newsrc-file nil)      ; Speed-up.
 
-  ;; ignore the `.newsrc' file
-  (setq gnus-read-newsrc-file nil)  ; speed-up
+  ;; Ignore the `.newsrc' file.
+  (setq gnus-read-newsrc-file nil)      ; Speed-up.
 
-  ;; my `.newsrc' file (and the derived .el/.eld files)
+  ;; My `.newsrc' file (and the derived .el/.eld files).
   (setq gnus-startup-file (concat gnus-directory ".newsrc"))
 #+end_src
 
-To stop the repetitive (and growing) "nntp read" messages, ensure you subscribe
-to at least one group for every NNTP server. You can even unsubscribe directly
+#+begin_tip
+To stop the repetitive (and growing) ~nntp read~ messages, ensure you subscribe to
+at least one group for every NNTP server. You can even unsubscribe directly
 afterward...
+#+end_tip
 
 ** Auto Save
 
 #+begin_src emacs-lisp
 ;;** 1.7 (info "(gnus)Auto Save")
 
-  ;; enable showing of [Gmail]/* groups
+  ;; Enable showing of [Gmail]/* groups.
   (setq gnus-ignored-newsgroups "")
 
-  ;; unconditionally read the dribble file
+  ;; Unconditionally read the dribble file.
   (setq gnus-always-read-dribble-file t)
 #+end_src
 
@@ -681,25 +680,26 @@ https://github.com/cofi/dotfiles/blob/master/gnus.el
 
 ** Threading
 
-Threading is the representation of discussions "as they happen". Use ~T T~ to
-toggle threading.
+Threading is the representation of discussions "as they happen".
+
+Use ~T T~ to toggle threading.
 
 #+begin_src emacs-lisp
 ;;** 3.9 (info "(gnus)Threading")
 
-  ;; gather threads by comparing the Subject header of the articles
+  ;; Gather threads by comparing the Subject header of the articles.
   (setq gnus-summary-thread-gathering-function
         'gnus-gather-threads-by-subject)
         ;; 'gnus-gather-threads-by-references)
 
-  ;; don't grab old headers to build threads
+  ;; Don't grab old headers to build threads.
   (setq gnus-fetch-old-headers nil)     ; nil to speed up (otherwise, it can
-                                        ; seriously impact performance)
+                                        ; seriously impact performance).
 
-  ;; fill in all the gaps to tie loose threads together
-  (setq gnus-build-sparse-threads nil)  ; was 'some
+  ;; ;; Fill in all the gaps to tie loose threads together.
+  ;; (setq gnus-build-sparse-threads 'some)
 
-  ;; ;; sort the articles within a thread after it has been gathered together
+  ;; ;; Sort the articles within a thread after it has been gathered together.
   ;; (setq gnus-sort-gathered-threads-function 'gnus-thread-sort-by-date)
 #+end_src
 
@@ -708,6 +708,7 @@ Show/hide threads with ~>~ / ~<~.
 #+begin_src emacs-lisp :tangle no
   (define-key gnus-summary-mode-map
     (kbd ">") 'gnus-summary-show-thread)
+
   (define-key gnus-summary-mode-map
     (kbd "<") 'gnus-summary-hide-thread)
 #+end_src
@@ -716,11 +717,15 @@ Show/hide threads with ~>~ / ~<~.
 
 *Primary* sort key should be the *last* function in the list.
 
+#+begin_tip
 You should always include ~gnus-thread-sort-by-number~ in the list, probably as
 first (least important) element.
+#+end_tip
 
-WARNING -- Sorting by date is often much slower than sorting by number, and the
-sorting order is very similar.
+#+begin_warning
+Sorting by date is often much slower than sorting by number, and the sorting
+order is very similar.
+#+end_warning
 
 The threads with the highest article scores in total are on top in my summary
 buffers. For threads with equal scores, I sort by the most recent article in
@@ -736,7 +741,7 @@ replies to an article before younger replies.
 #+begin_src emacs-lisp :tangle no
 ;;** 3.10 (info "(gnus)Sorting the Summary Buffer")
 
-  ;; sort threads in descending article order
+  ;; Sort threads in descending article order.
   (setq gnus-thread-sort-functions
         '(gnus-thread-sort-by-number
           (not gnus-thread-sort-by-most-recent-date)
@@ -752,22 +757,13 @@ replies to an article before younger replies.
 #+begin_src emacs-lisp :tangle no
 ;;** 3.12 (info "(gnus)Article Caching")
 
-  ;; use the cache
+  ;; Use the cache.
   (setq gnus-use-cache t)
 
-  ;; ;; local cache
+  ;; ;; Local cache.
   ;; (setq gnus-cache-directory (concat gnus-directory "cache/"))
 
-  ;; entering of articles from the cache
-  (setq gnus-cache-enter-articles '(ticked dormant unread read))
-                                        ; simple setup for your convenience, if
-                                        ; you are using `nnimap' from home, over
-                                        ; a dialup connection
-
-  ;; removing of articles from the cache
-  (setq gnus-cache-remove-articles nil)
-
-  ;; cache your nnimap groups
+  ;; Cache your nnimap groups.
   (setq gnus-cacheable-groups "^nnimap")
 #+end_src
 
@@ -776,10 +772,10 @@ replies to an article before younger replies.
 #+begin_src emacs-lisp :tangle no
 ;;** 3.18 (info "(gnus)Article Treatment")
 
-  ;; change a `\205' figure to "..."
+  ;; Change a `\205' figure to "...".
   (add-hook 'gnus-part-display-hook 'article-treat-dumbquotes)
 
-  ;; full shampoo of messages you read
+  ;; Full shampoo of messages you read.
   (defun leuven-gnus-wash-this-article ()
     "Wash an article."
     (interactive)
@@ -791,16 +787,17 @@ replies to an article before younger replies.
   (define-key gnus-summary-mode-map
     (kbd "C-c w") 'leuven-gnus-wash-this-article)
 
-  ;; what is to be considered a signature
+  ;; What is to be considered a signature.
   (setq gnus-signature-separator
-        '("^-- $"                       ; the standard
-          "^-- *$"                      ; a common mangling
-          "^________*$"))               ; a long line of underscores is also
-                                        ; popular
+        '("^-- $"                       ; The standard.
+          "^________*$"))               ; A long line of underscores is also
+                                        ; popular.
 
-  ;; limit (in lines, in floating point) to what is considered a signature
+  ;; Limit (in lines, in floating point) to what is considered a signature.
   (setq gnus-signature-limit 20.0)
+#+end_src
 
+#+begin_src emacs-lisp :tangle no
   (defun leuven-prefix-line ()
     "Prefix the current line with `>'."
     (interactive)
@@ -818,8 +815,10 @@ replies to an article before younger replies.
            (looking-at " *$")))))
 
   (global-set-key (kbd "<S-f5>") 'leuven-prefix-line)
+#+end_src
 
-  ;; banners to remove
+#+begin_src emacs-lisp :tangle no
+  ;; Banners to remove.
   (setq gnus-article-address-banner-alist
         '(("@yahoo\\.com" .
            "^__________________+\nDo you Yahoo!\\?\n.*\n.*\n")
@@ -845,11 +844,11 @@ replies to an article before younger replies.
 
 ** MIME Commands
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 ;;** 3.19 (info "(gnus)MIME Commands")
 
-  ;; rewrite file names of MIME parts (delete control characters, delete
-  ;; shell gotchas, handle evil white spaces)
+  ;; Rewrite file names of MIME parts (delete control characters, delete shell
+  ;; gotchas, handle evil white spaces).
   (setq mm-file-name-rewrite-functions
         '(mm-file-name-delete-control
           mm-file-name-delete-gotchas
@@ -866,21 +865,6 @@ replies to an article before younger replies.
   ;; permitted unencoded charsets for posting
   (setq gnus-group-posting-charset-alist
         '((message-this-is-news nil (iso-8859-15))))
-
-  (defun leuven-show-article-as-charset ()
-    (interactive)
-    (message "Display in: latin-[1], latin-[9]/15, [u]tf-8, [c]p1252")
-    (let ((answer (read-char)))
-      (cond
-       ((eq answer ?1)
-        (gnus-summary-show-article-from-menu-as-charset-iso-8859-1))
-       ((eq answer ?9)
-        (gnus-summary-show-article-from-menu-as-charset-iso-8859-9))
-       ((eq answer ?c)
-        (gnus-summary-show-article-from-menu-as-charset-cp1252))
-       ((eq answer ?u)
-        (gnus-summary-show-article-from-menu-as-charset-utf-8))))
-    (gnus-summary-rethread-current))
 #+end_src
 
 ** Various Summary Stuff
@@ -1062,19 +1046,19 @@ to insert the contents of the MIME object into the buffer
 #+begin_src emacs-lisp
 ;;*** 1.2 (info "(emacs-mime)Non-MIME")
 
-  ;; regexp of Emacs sources groups
-  (setq mm-uu-emacs-sources-regexp "emacs")
+  ;; ;; Regexp of Emacs sources groups.
+  ;; (setq mm-uu-emacs-sources-regexp "emacs")
 
-  ;; regexp matching diff groups
+  ;; Regexp matching diff groups.
   (setq mm-uu-diff-groups-regexp ".*")
 
-  ;; regexp matching TeX groups
-  (setq mm-uu-tex-groups-regexp ".*")
+  ;; ;; Regexp matching TeX groups.
+  ;; (setq mm-uu-tex-groups-regexp ".*")
 #+end_src
 
 ** Display Customization
 
-You can view "text/html" parts of the current article with a WWW browser by
+You can view ~text/html~ parts of the current article with a Web browser by
 pressing ~K H~ (~gnus-article-browse-html-article~).
 
 #+begin_src emacs-lisp
@@ -1172,21 +1156,6 @@ pressing ~K H~ (~gnus-article-browse-html-article~).
   (setq mm-tmp-directory temporary-file-directory)
 #+end_src
 
-** Composing
-
-#+begin_src emacs-lisp :tangle no
-;;** 2 (info "(emacs-mime)Composing")
-
-;;*** 2.4 (info "(emacs-mime)Encoding Customization")
-
-  ;; preferred coding systems for encoding outgoing messages
-  (setq mm-coding-system-priorities
-        '(utf-8
-          iso-latin-9
-          iso-latin-1))                 ; ensure that utf-8 is chosen over
-                                        ; iso-latin-9 and latin-1, if possible
-#+end_src
-
 ** Basic Functions
 
 #+begin_src emacs-lisp
@@ -1194,24 +1163,13 @@ pressing ~K H~ (~gnus-article-browse-html-article~).
 
 ;;*** 4.12 (info "(emacs-mime)mailcap")
 
-  ;; choose the right MIME type when sending an attachment
+  ;; Choose the right MIME type when sending an attachment.
   (with-eval-after-load "mailcap"
      (add-to-list 'mailcap-mime-extensions
                   '(".doc" . "application/msword"))
      (add-to-list 'mailcap-mime-extensions
                   '(".ppt" . "application/vnd.ms-powerpoint")))
-                                        ; MIME content-types keyed by file
-                                        ; extensions
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-  ;; > which settings do you have to see PDF attachments as text,
-  ;; > automagically? Does it work as well for DOC, XLS and PPT?
-  ;;
-  ;; not here, but I think it's customizable. You need to have the
-  ;; programs installed, of course. The variable to look at is
-  ;; mailcap-mime-data. It is not customizable, but see
-  ;; http://www.gnus.org/manual/emacs-mime_30.html
+                                        ; MIME content-types keyed by file ext.
 #+end_src
 
 * Back to Article Buffer
@@ -1221,18 +1179,18 @@ pressing ~K H~ (~gnus-article-browse-html-article~).
 
   ;; (require 'gnus-art)
 
-  ;; add buttons
+  ;; Add buttons.
   (setq gnus-treat-buttonize t)
   (setq gnus-treat-buttonize-head 'head)
 
-  ;; do not display smileys as pictures
+  ;; Do not display smileys as pictures.
   (setq gnus-treat-display-smileys nil)
 
-  ;; sound
+  ;; Sound.
   (setq gnus-treat-play-sounds t)
 #+end_src
 
-Toggle colouring from HTML emails:
+Toggle coloring from HTML emails:
 
 #+begin_src emacs-lisp
   ;; from Tassilo Horn, 2014-07-17
@@ -1277,7 +1235,7 @@ Toggle colouring from HTML emails:
 
 ** Posting Server
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;;** 5.2 (info "(gnus)Posting Server")
 
   ;; control the hostname sent in the first EHLO or HELO command sent to the
@@ -1308,7 +1266,9 @@ The ~Gcc:~ header is about in which group to save the messages you've written.
 a message buffer is *created*.
 
 #+begin_src emacs-lisp
-  ;; group in which to save the messages you've written
+;;** 5.5 (info "(gnus)Archived Messages")
+
+  ;; Group in which to save the messages you've written.
   (setq gnus-message-archive-group "INBOX.Sent")
 #+end_src
 
@@ -1319,8 +1279,6 @@ If you want to be asked for each *message to be sent*, you can change the ~Gcc:~
 header in the ~message-send-hook~.
 
 #+begin_src emacs-lisp
-;;** 5.5 (info "(gnus)Archived Messages")
-
   ;; the Gcc Header specifies a local mail box that receives a copy of the
   ;; sent article
   ;; "Gcc:"-chooser, from Christoph Conrad
@@ -1454,11 +1412,12 @@ Concept of "roles" in mutt.
 
 *** Multiple servers
 
-Let Gnus decide which SMTP server should be used for sending email by looking at
-XXX.
+Let Gnus decide which SMTP server should be used for sending email...
 
+#+begin_note
 See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the ~From:~
 header line of the current post.
+#+end_note
 
 *** Headers
 
@@ -1488,10 +1447,12 @@ header line of the current post.
 
 ** Interface
 
+#+begin_verse
 > Is there a way to configure multiple addresses?
 
 Yes. There are a couple of variables for that. I use a code piece like the one
 below to set the variables.
+#+end_verse
 
 #+begin_src emacs-lisp :tangle no
   (let ((addr '("primary.address@somewhere.invalid"
