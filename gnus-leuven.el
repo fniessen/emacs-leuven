@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150519.1115
+;; Version: 20150519.1233
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -17,22 +17,22 @@
 
 (require 'gnus)
 
-;; list of packages that `try-require' can't find
+;; List of packages that `try-require' can't find.
 (setq leuven--missing-packages nil)
 
 ;;* 1 (info "(gnus)Starting Up") Gnus
 
   (message "1 Starting Gnus...")
 
-  ;; support for `.authinfo' file
+  ;; Support for `.authinfo' file.
   (when (try-require 'auth-source)
 
-    ;; log debug messages
+    ;; Log debug messages.
     (setq auth-source-debug t))
 
 ;;** 1.1 (info "(gnus)Finding the News")
 
-  (if (equal (system-name) "MUNDANEUM") ; private config
+  (if (equal (system-name) "MUNDANEUM") ; Private config.
 
       ;; Configure incoming mail.
       (setq gnus-select-method
@@ -47,20 +47,12 @@
 
     (setq gnus-select-method '(nnnil "")))
 
-  ;; ;; Allow "hostname NOT matched" in the server certificate.
-  ;; (setq starttls-extra-arguments '("--insecure"))
-  ;;                                   ;! Not used in an Emacs 24 with built-in
-  ;;                                   ;! gnutls support.
-
   ;; Using Gnus for news.
   (setq gnus-secondary-select-methods
         '((nntp "gmane"
                 (nntp-address "news.gmane.org"))
           (nntp "eternal-september"
                 (nntp-address "news.eternal-september.org"))))
-
-  ;; Required when posting to an authenticated news server.
-  (add-hook 'nntp-server-opened-hook 'nntp-send-authinfo)
 
 ;;** 1.4 (info "(gnus)New Groups")
 
@@ -802,9 +794,6 @@
   (defun leuven--message-mode-hook ()
     "Enable Org minor modes and auto-fill."
 
-    ;; ;; prompt for and insert a mail alias
-    ;; (local-set-key (kbd "M-a") 'mail-abbrev-insert-alias)
-
     ;; tab completion for alias in `.mailrc'
     (local-set-key (kbd "<M-tab>") 'mail-abbrev-complete-alias)
 
@@ -818,10 +807,6 @@
     ;; turn on (the enhanced version of) orgstruct-mode
     (turn-on-orgstruct++)
 
-    ;; ;; make `orgstruct-hijacker-command-22' rebind `M-q' to a message
-    ;; ;; specific function to fill a paragraph
-    ;; (setq fill-paragraph-function 'org-fill-paragraph)
-
     (when (try-require 'org-footnote)
       ;; default style used for footnoting is local to the Message being
       ;; written
@@ -829,11 +814,7 @@
 
       ;; no tag marking the beginning of footnote section
       (set (make-local-variable
-      'org-footnote-tag-for-non-org-mode-files) nil))
-
-    ;; (when (try-require 'auto-complete)
-    ;;   (auto-complete-mode))
-    )
+            'org-footnote-tag-for-non-org-mode-files) nil)))
 
   (when (featurep 'org)
     (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append))
@@ -849,63 +830,45 @@
 
   (message "6 Select Methods...")
 
-;;** 6.2 (info "(gnus)Getting News")
+;;** 6.4 (info "(gnus)Getting Mail")
 
-;;*** 6.2.1 (info "(gnus)NNTP")
+;;*** 6.4.3 (info "(gnus)Splitting Mail") (in IMAP)
 
-  ;; number of seconds to wait before an nntp connection times out
-  (setq nntp-connection-timeout 5)      ; 30
-
-  ;; the first match in `nnmail-split-rule' found will be used
+  ;; The first match in `nnmail-split-rule' found will be used.
   (setq nnmail-crosspost nil)
 
-  ;; name(s) of IMAP mailboxes to split mail from
-  (setq nnimap-inbox '("INBOX"))        ; Gnus v5.13
-  ;; (setq nnimap-split-inbox '("INBOX")) ; Ma Gnus
+  ;; Name(s) of IMAP mailboxes to split mail from.
+  (setq nnimap-inbox '("INBOX"))
 
-  ;; BBDB (Big Brother DataBase) is loaded from my `.emacs' file
+  ;; BBDB (Big Brother DataBase) is loaded from my `.emacs' file.
   (when (try-require 'bbdb-gnus)
 
-    ;; split function to use (sorting mails into groups using BBDB)
+    ;; Split function to use (sorting mails into groups using BBDB).
     (setq nnimap-split-methods 'nnimap-split-fancy)
 
-    ;; for records which don't have `gnus-private' set, the rules in
-    ;; split-fancy are invoked
-    (setq bbdb/gnus-split-default-group nil)
-
-    ;; specify how to split mail
+    ;; Specify how to split mail.
     (setq nnimap-split-fancy            ; XXX vs `nnmail-split-fancy'?
           `(|                           ; split to the *first* match
 
-              ;; mailing lists (in To: or Cc:)
+              ;; Mailing lists (in To: or Cc:).
               (to "foo@bar\\.com" "list.foo")
 
-              ;; invoke BBDB            ; XXX with BBDB v2 and v3?
+              ;; Invoke BBDB.           ; XXX with BBDB v2 and v3?
               (: (lambda ()
                    (car (bbdb/gnus-split-method))))
 
-              ;; catch spam
+              ;; Catch spam.
               ("X-Spam-Status" "[Yy]es"
                "INBOX.Spam")
 
-              ;; unmatched mail goes to the catch-all group (default mailbox)
-              "INBOX")))
+              ;; Unmatched mail goes to the catch-all group (default mailbox).
+              "INBOX"))                 ; Undecided.
 
-;;*** 6.3.11 (info "(gnus)Duplicates")
+    ;; For records which don't have `gnus-private' set, the rules in
+    ;; `split-fancy' are invoked.
+    (setq bbdb/gnus-split-default-group nil))
 
-  ;; cache of old Message-IDs for every message Gnus sees
-  (setq nnmail-message-id-cache-file
-        (concat gnus-directory ".nnmail-cache"))
-
-  ;; to use `nnmail-split-fancy-with-parent'
-  ;; record the Message-ID of every message it sees
-  (setq nnmail-treat-duplicates 'warn)  ; or `delete'
-
-  ;; ensure that the Message-ID are still in the cache
-  (setq nnmail-message-id-cache-length 5000)
-
-  ;; record the Message-ID of moved articles
-  (setq nnmail-cache-accepted-message-ids t)
+;;*** 6.4.11 (info "(gnus)Duplicates")
 
 ;;* 9 (info "(gnus)Various")
 
@@ -937,7 +900,7 @@
                  (summary 0.40 point)
                  (article 1.0)))))
 
-;;** 9.20 Interaction with (info "(gnus)Other modes")
+;;** 9.19 Interaction with (info "(gnus)Other modes")
 
   ;; attach all marked files from Dired to a new Gnus message
   (autoload 'gnus-dired-mode "gnus-dired"
@@ -954,7 +917,7 @@
       (kbd "a") 'gnus-dired-attach))    ; XXX conflict with
                                         ; `dired-find-alternate-file'
 
-;;** 9.21 (info "(gnus)Various Various")
+;;** 9.20 (info "(gnus)Various Various")
 
   ;; Display more messages from Gnus.
   (setq gnus-verbose 10)                ; 9 = minimum for helpful debugging.
@@ -964,7 +927,7 @@
 
   (message "9 Various... Done")
 
-  ;; warn that some packages were missing
+  ;; Warn that some packages were missing.
   (dolist (pkg leuven--missing-packages)
     (message "(warning) Package `%s' not found" pkg))
 

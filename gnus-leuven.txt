@@ -96,7 +96,7 @@ http://koldfront.dk/text/gnus-email-basic-usage.html
 
 (require 'gnus)
 
-;; list of packages that `try-require' can't find
+;; List of packages that `try-require' can't find.
 (setq leuven--missing-packages nil)
 #+end_src
 
@@ -137,10 +137,10 @@ See http://www.emacswiki.org/emacs/GnusEncryptedAuthInfo.
 
   (message "1 Starting Gnus...")
 
-  ;; support for `.authinfo' file
+  ;; Support for `.authinfo' file.
   (when (try-require 'auth-source)
 
-    ;; log debug messages
+    ;; Log debug messages.
     (setq auth-source-debug t))
 #+end_src
 
@@ -195,7 +195,7 @@ that it does not interfere with your own configuration...
 #+begin_src emacs-lisp
 ;;** 1.1 (info "(gnus)Finding the News")
 
-  (if (equal (system-name) "MUNDANEUM") ; private config
+  (if (equal (system-name) "MUNDANEUM") ; Private config.
 
       ;; Configure incoming mail.
       (setq gnus-select-method
@@ -209,21 +209,22 @@ that it does not interfere with your own configuration...
                      ))
 
     (setq gnus-select-method '(nnnil "")))
+#+end_src
 
+#+begin_src emacs-lisp :tangle no
   ;; ;; Allow "hostname NOT matched" in the server certificate.
   ;; (setq starttls-extra-arguments '("--insecure"))
   ;;                                   ;! Not used in an Emacs 24 with built-in
   ;;                                   ;! gnutls support.
+#+end_src
 
+#+begin_src emacs-lisp
   ;; Using Gnus for news.
   (setq gnus-secondary-select-methods
         '((nntp "gmane"
                 (nntp-address "news.gmane.org"))
           (nntp "eternal-september"
                 (nntp-address "news.eternal-september.org"))))
-
-  ;; Required when posting to an authenticated news server.
-  (add-hook 'nntp-server-opened-hook 'nntp-send-authinfo)
 #+end_src
 
 ** New Groups
@@ -1606,9 +1607,6 @@ See http://www.emacswiki.org/emacs/AutoDictionaryMode.
   (defun leuven--message-mode-hook ()
     "Enable Org minor modes and auto-fill."
 
-    ;; ;; prompt for and insert a mail alias
-    ;; (local-set-key (kbd "M-a") 'mail-abbrev-insert-alias)
-
     ;; tab completion for alias in `.mailrc'
     (local-set-key (kbd "<M-tab>") 'mail-abbrev-complete-alias)
 
@@ -1622,10 +1620,6 @@ See http://www.emacswiki.org/emacs/AutoDictionaryMode.
     ;; turn on (the enhanced version of) orgstruct-mode
     (turn-on-orgstruct++)
 
-    ;; ;; make `orgstruct-hijacker-command-22' rebind `M-q' to a message
-    ;; ;; specific function to fill a paragraph
-    ;; (setq fill-paragraph-function 'org-fill-paragraph)
-
     (when (try-require 'org-footnote)
       ;; default style used for footnoting is local to the Message being
       ;; written
@@ -1633,11 +1627,7 @@ See http://www.emacswiki.org/emacs/AutoDictionaryMode.
 
       ;; no tag marking the beginning of footnote section
       (set (make-local-variable
-      'org-footnote-tag-for-non-org-mode-files) nil))
-
-    ;; (when (try-require 'auto-complete)
-    ;;   (auto-complete-mode))
-    )
+            'org-footnote-tag-for-non-org-mode-files) nil)))
 
   (when (featurep 'org)
     (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append))
@@ -1673,79 +1663,73 @@ Newsgroups in which I'm interested:
 - ~nntp+gmane:gmane.emacs.ess.general~
 - ~nntp+gmane:gmane.comp.finance.ledger.general~
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;;** 6.2 (info "(gnus)Getting News")
 
 ;;*** 6.2.1 (info "(gnus)NNTP")
+
+  ;; Required when posting to an authenticated news server.
+  (add-hook 'nntp-server-opened-hook 'nntp-send-authinfo)
 
   ;; number of seconds to wait before an nntp connection times out
   (setq nntp-connection-timeout 5)      ; 30
 #+end_src
 
-** Getting Mail
+** Using IMAP
 
 #+begin_src emacs-lisp :tangle no
-;;** 6.3 (info "(gnus)Getting Mail")
+;;** 6.3 (info "(gnus)Using IMAP")
 
-;;*** 6.3.3 (info "(gnus)Splitting Mail") (in IMAP)
-
-  ;; the registry should be installed
-  (setq gnus-registry-install t)        ; for `G G' searches
+  ;; Log commands (imap session trace) to the `*imap log*' buffer.
+  (setq nnimap-record-commands t)
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
-  ;; article registry for Gnus
-  (when (try-require 'gnus-registry-XXX)
+** Getting Mail
 
-    ;; use long group names (so that Gnus knows where the article is)
-    (setq gnus-registry-use-long-group-names t)
-
-    ;; unlimited number of entries in the registry
-    (setq gnus-registry-max-entries nil)
-
-    ;; enable the various registry functions
-    (gnus-registry-initialize))
+#+begin_src emacs-lisp
+;;** 6.4 (info "(gnus)Getting Mail")
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; the first match in `nnmail-split-rule' found will be used
+;;*** 6.4.3 (info "(gnus)Splitting Mail") (in IMAP)
+
+  ;; The first match in `nnmail-split-rule' found will be used.
   (setq nnmail-crosspost nil)
 
-  ;; name(s) of IMAP mailboxes to split mail from
-  (setq nnimap-inbox '("INBOX"))        ; Gnus v5.13
-  ;; (setq nnimap-split-inbox '("INBOX")) ; Ma Gnus
+  ;; Name(s) of IMAP mailboxes to split mail from.
+  (setq nnimap-inbox '("INBOX"))
 
-  ;; BBDB (Big Brother DataBase) is loaded from my `.emacs' file
+  ;; BBDB (Big Brother DataBase) is loaded from my `.emacs' file.
   (when (try-require 'bbdb-gnus)
 
-    ;; split function to use (sorting mails into groups using BBDB)
+    ;; Split function to use (sorting mails into groups using BBDB).
     (setq nnimap-split-methods 'nnimap-split-fancy)
 
-    ;; for records which don't have `gnus-private' set, the rules in
-    ;; split-fancy are invoked
-    (setq bbdb/gnus-split-default-group nil)
-
-    ;; specify how to split mail
+    ;; Specify how to split mail.
     (setq nnimap-split-fancy            ; XXX vs `nnmail-split-fancy'?
           `(|                           ; split to the *first* match
 
-              ;; mailing lists (in To: or Cc:)
+              ;; Mailing lists (in To: or Cc:).
               (to "foo@bar\\.com" "list.foo")
 
-              ;; invoke BBDB            ; XXX with BBDB v2 and v3?
+              ;; Invoke BBDB.           ; XXX with BBDB v2 and v3?
               (: (lambda ()
                    (car (bbdb/gnus-split-method))))
 
-              ;; catch spam
+              ;; Catch spam.
               ("X-Spam-Status" "[Yy]es"
                "INBOX.Spam")
 
-              ;; unmatched mail goes to the catch-all group (default mailbox)
-              "INBOX")))
+              ;; Unmatched mail goes to the catch-all group (default mailbox).
+              "INBOX"))                 ; Undecided.
+
+    ;; For records which don't have `gnus-private' set, the rules in
+    ;; `split-fancy' are invoked.
+    (setq bbdb/gnus-split-default-group nil))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-;;*** 6.3.9 (info "(gnus)Expiring Mail")
+;;*** 6.4.9 (info "(gnus)Expiring Mail")
 
   ;; How can I purge a message from an IMAP server using Gnus?
   ;; IMAP calls it "Expunge" of deleted messages, Gnus calls it expiry of
@@ -1839,27 +1823,24 @@ Newsgroups in which I'm interested:
 #+end_src
 
 #+begin_src emacs-lisp
-;;*** 6.3.11 (info "(gnus)Duplicates")
+;;*** 6.4.11 (info "(gnus)Duplicates")
+#+end_src
 
-  ;; cache of old Message-IDs for every message Gnus sees
+nnmail keeps a cache of  Message-IDs to discover mail duplicates.
+
+#+begin_src emacs-lisp :tangle no
+  ;; Cache of Message-IDs (for every message Gnus sees).
   (setq nnmail-message-id-cache-file
         (concat gnus-directory ".nnmail-cache"))
 
-  ;; to use `nnmail-split-fancy-with-parent'
-  ;; record the Message-ID of every message it sees
-  (setq nnmail-treat-duplicates 'warn)  ; or `delete'
-
-  ;; ensure that the Message-ID are still in the cache
-  (setq nnmail-message-id-cache-length 5000)
-
-  ;; record the Message-ID of moved articles
+  ;; Update the Message-ID cache when moving articles.
   (setq nnmail-cache-accepted-message-ids t)
 #+end_src
 
 ** Browsing the Web
 
 #+begin_src emacs-lisp :tangle no
-;;** 6.4 (info "(gnus)Browsing the Web")
+;;** 6.5 (info "(gnus)Browsing the Web")
 
   ;; use `wget' instead of `url.el' (for nnweb-type google), cause it
   ;; seems to be more reliable (about how the HTML is fetched)
@@ -1898,19 +1879,10 @@ Newsgroups in which I'm interested:
             )))
 #+end_src
 
-** IMAP
-
-#+begin_src emacs-lisp :tangle no
-;;** 6.5 (info "(gnus)IMAP")
-
-  ;; log commands (imap session trace) to the `*imap log*' buffer
-  (setq nnimap-record-commands t)
-#+end_src
-
 ** Gnus Unplugged
 
 #+begin_src emacs-lisp :tangle no
-;;** 6.8 (info "(gnus)Gnus Unplugged")
+;;** 6.9 (info "(gnus)Gnus Unplugged")
 
   ;; disable the Gnus agent (used for "offline" reading)
   (setq gnus-agent nil)                 ; prevent being unable to delete some
@@ -2021,10 +1993,25 @@ It comes with Gnus.  You don't even need to configure anything for searching
                  (article 1.0)))))
 #+end_src
 
+** The Gnus Registry
+
+#+begin_src emacs-lisp :tangle no
+;;** 9.18 (info "(gnus)The Gnus Registry")
+
+  ;; The registry should be installed.
+  (setq gnus-registry-install t)        ; For `G G' searches???
+
+  ;; Article registry for Gnus.
+  (when (try-require 'gnus-registry-XXX)
+
+    ;; Enable the various registry functions.
+    (gnus-registry-initialize))
+#+end_src
+
 ** Interaction with other modes
 
 #+begin_src emacs-lisp
-;;** 9.20 Interaction with (info "(gnus)Other modes")
+;;** 9.19 Interaction with (info "(gnus)Other modes")
 
   ;; attach all marked files from Dired to a new Gnus message
   (autoload 'gnus-dired-mode "gnus-dired"
@@ -2045,7 +2032,7 @@ It comes with Gnus.  You don't even need to configure anything for searching
 ** Various Various
 
 #+begin_src emacs-lisp
-;;** 9.21 (info "(gnus)Various Various")
+;;** 9.20 (info "(gnus)Various Various")
 
   ;; Display more messages from Gnus.
   (setq gnus-verbose 10)                ; 9 = minimum for helpful debugging.
@@ -2059,20 +2046,20 @@ It comes with Gnus.  You don't even need to configure anything for searching
 ** Missing packages
 
 #+begin_src emacs-lisp
-  ;; warn that some packages were missing
+  ;; Warn that some packages were missing.
   (dolist (pkg leuven--missing-packages)
     (message "(warning) Package `%s' not found" pkg))
 
   (message "\n")
 #+end_src
 
+* File Local Variables
+
 ** Feature
 
 #+begin_src emacs-lisp
 (provide 'gnus-leuven)
 #+end_src
-
-** File Local Variables
 
 #+begin_src emacs-lisp
 ;; This is for the sake of Emacs.
