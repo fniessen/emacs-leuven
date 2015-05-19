@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150506.1038
+;; Version: 20150519.0957
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -157,12 +157,12 @@
 
 ;;** 2.3 (info "(gnus)Selecting a Group")
 
-  ;; no groups are considered big (> 200 articles)
+  ;; Groups of 200+ articles are NOT considered big.
   (setq gnus-large-newsgroup nil)
 
 ;;** 2.15 (info "(gnus)Exiting Gnus")
 
-  ;; quit Gnus properly, if it is running ...
+  ;; Quit Gnus properly, if it is running ...
   (defun exit-gnus ()
     "Save and exit Gnus."
     (if (and (fboundp 'gnus-group-exit)
@@ -171,28 +171,37 @@
           (let (gnus-interactive-exit)
             (gnus-group-exit)))))
 
-  ;; ... before exiting Emacs (not leaving auto-save files around)
+  ;; ... before exiting Emacs (not leaving auto-save files around).
   (add-hook 'kill-emacs-hook 'exit-gnus)
 
 ;;** 2.16 (info "(gnus)Group Topics")
 
-  ;; permanently enable the topic mode
+  ;; Permanently enable the topic mode.
   (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 
-  ;; remove the binding of `C-c C-x', used by Org clocking commands
+  ;; Remove the binding of `C-c C-x', used by Org clocking commands.
   (add-hook 'gnus-topic-mode-hook
             (lambda ()
               (define-key gnus-topic-mode-map
                 (kbd "C-c C-x") nil)))
 
-  ;; turn off the column number in the group buffer, and remove the binding
-  ;; of `C-c C-x', used by Org clocking commands
+;;** 2.17 (info "(gnus)Misc Group Stuff")
+
+  ;; Turn off the column number in the group buffer, and remove the binding
+  ;; of `C-c C-x', used by Org clocking commands.
   (add-hook 'gnus-group-mode-hook
             (lambda ()
               (progn
                 (set (make-local-variable 'column-number-mode) nil)
                 (define-key gnus-group-mode-map
                   (kbd "C-c C-x") nil))))
+
+  ;; jump to the first group with unread articles, after getting new news
+  (add-hook 'gnus-after-getting-new-news-hook
+            'gnus-group-first-unread-group)
+
+  ;; keep track of when I last read a group
+  (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
 
   (message "2 Group Buffer... Done")
 
@@ -314,9 +323,9 @@
     "Force sending messages to `gnu.emacs.bug' per email."
     (interactive)
     (if (string-match (rx "gnu.emacs.bug") gnus-newsgroup-name)
-                                        ; answer per email
+                                        ; Answer per email.
         (call-interactively 'gnus-summary-wide-reply-with-original)
-                                        ; post via news
+                                        ; Post via news.
       (call-interactively 'gnus-summary-followup-with-original)))
 
   (with-eval-after-load "gnus-sum"
@@ -346,11 +355,8 @@
   (when (char-displayable-p ?\u2197)
     (setq gnus-canceled-mark ?↗))
 
-  (when (char-displayable-p ?\u2191)
-    (setq gnus-score-over-mark ?↑))
-
-  (when (char-displayable-p ?\u2193)
-    (setq gnus-score-below-mark ?↓))
+  (when (char-displayable-p ?\u267B)
+    (setq gnus-expirable-mark ?♻))
 
   (when (char-displayable-p ?\u21BA)
     (setq gnus-replied-mark ?↺))
@@ -364,14 +370,17 @@
   (when (char-displayable-p ?\u2729)
     (setq gnus-unseen-mark ?✩))
 
-  (when (char-displayable-p ?\u2605)
-    (setq gnus-recent-mark ?★))
-
   (when (char-displayable-p ?\u2699)
     (setq gnus-process-mark ?⚙))
 
-  (when (char-displayable-p ?\u267B)
-    (setq gnus-expirable-mark ?♻))
+  (when (char-displayable-p ?\u2605)
+    (setq gnus-recent-mark ?★))
+
+  (when (char-displayable-p ?\u2191)
+    (setq gnus-score-over-mark ?↑))
+
+  (when (char-displayable-p ?\u2193)
+    (setq gnus-score-below-mark ?↓))
 
 ;;** 3.9 (info "(gnus)Threading")
 

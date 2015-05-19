@@ -358,7 +358,7 @@ afterward...
 #+begin_src emacs-lisp
 ;;** 2.3 (info "(gnus)Selecting a Group")
 
-  ;; no groups are considered big (> 200 articles)
+  ;; Groups of 200+ articles are NOT considered big.
   (setq gnus-large-newsgroup nil)
 #+end_src
 
@@ -369,7 +369,7 @@ Cleanup all Gnus buffers on exit.
 #+begin_src emacs-lisp
 ;;** 2.15 (info "(gnus)Exiting Gnus")
 
-  ;; quit Gnus properly, if it is running ...
+  ;; Quit Gnus properly, if it is running ...
   (defun exit-gnus ()
     "Save and exit Gnus."
     (if (and (fboundp 'gnus-group-exit)
@@ -378,7 +378,7 @@ Cleanup all Gnus buffers on exit.
           (let (gnus-interactive-exit)
             (gnus-group-exit)))))
 
-  ;; ... before exiting Emacs (not leaving auto-save files around)
+  ;; ... before exiting Emacs (not leaving auto-save files around).
   (add-hook 'kill-emacs-hook 'exit-gnus)
 #+end_src
 
@@ -387,10 +387,10 @@ Cleanup all Gnus buffers on exit.
 #+begin_src emacs-lisp
 ;;** 2.16 (info "(gnus)Group Topics")
 
-  ;; permanently enable the topic mode
+  ;; Permanently enable the topic mode.
   (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 
-  ;; remove the binding of `C-c C-x', used by Org clocking commands
+  ;; Remove the binding of `C-c C-x', used by Org clocking commands.
   (add-hook 'gnus-topic-mode-hook
             (lambda ()
               (define-key gnus-topic-mode-map
@@ -399,9 +399,31 @@ Cleanup all Gnus buffers on exit.
 
 ** Misc Group Stuff
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 ;;** 2.17 (info "(gnus)Misc Group Stuff")
+#+end_src
 
+#+begin_src emacs-lisp
+  ;; Turn off the column number in the group buffer, and remove the binding
+  ;; of `C-c C-x', used by Org clocking commands.
+  (add-hook 'gnus-group-mode-hook
+            (lambda ()
+              (progn
+                (set (make-local-variable 'column-number-mode) nil)
+                (define-key gnus-group-mode-map
+                  (kbd "C-c C-x") nil))))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; jump to the first group with unread articles, after getting new news
+  (add-hook 'gnus-after-getting-new-news-hook
+            'gnus-group-first-unread-group)
+
+  ;; keep track of when I last read a group
+  (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
   (defface highlight-line-gnus
     '((t (:background "#DAEAFC")))
     "Face for highlighting the current line with `highlight-line-gnus'."
@@ -414,25 +436,9 @@ Cleanup all Gnus buffers on exit.
 
   ;; highlight current line in group buffer
   (add-hook 'gnus-group-mode-hook 'leuven--hl-line-highlight)
-
-  ;; jump to the first group with unread articles, after getting new news
-  (add-hook 'gnus-after-getting-new-news-hook
-            'gnus-group-first-unread-group)
-
-  ;; keep track of when I last read a group
-  (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; turn off the column number in the group buffer, and remove the binding
-  ;; of `C-c C-x', used by Org clocking commands
-  (add-hook 'gnus-group-mode-hook
-            (lambda ()
-              (progn
-                (set (make-local-variable 'column-number-mode) nil)
-                (define-key gnus-group-mode-map
-                  (kbd "C-c C-x") nil))))
-
   (message "2 Group Buffer... Done")
 #+end_src
 
@@ -451,20 +457,19 @@ Cleanup all Gnus buffers on exit.
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-  ;; auxiliary summary mode commands for Gnus
-  ;; http://theotp1.physik.uni-ulm.de/~ste/comp/emacs/gnus/rs-gnus-summary.el
+  ;; Auxiliary summary mode commands for Gnus.
   (when (try-require 'rs-gnus-summary-XXX)
 
-    ;; summary line indicators
+    ;; Summary line indicators.
     (setq rs-gnus-summary-line-content-type-alist
           '((".*" " ")
             ("^multipart/mixed" "@")))
 
-    ;; display `@' for message with attachment in summary line
+    ;; Display `@' for message with attachment in summary line.
     (defalias 'gnus-user-format-function-attachment
       'rs-gnus-summary-line-content-type)
 
-    ;; alias for the score function:
+    ;; Alias for the score function.
     (defalias 'gnus-user-format-function-score
       'rs-gnus-summary-line-score))
 #+end_src
@@ -577,19 +582,6 @@ Cleanup all Gnus buffers on exit.
   (setq gnus-summary-mode-line-format "%V: %%b")
 #+end_src
 
-** Paging the Article
-
-#+begin_src emacs-lisp :tangle no
-;;** 3.4 (info "(gnus)Paging the Article")
-
-  ;; added some key bindings to the gnus summary mode
-  (define-key gnus-summary-mode-map
-    (kbd "<M-up>") '(lambda () (scroll-other-window -1)))
-
-  (define-key gnus-summary-mode-map
-    (kbd "<M-down>") '(lambda () (scroll-other-window 1)))
-#+end_src
-
 ** Reply, Followup and Post
 
 Messages posted via Usenet do not show up in the Emacs bug tracker. Avoid to
@@ -602,9 +594,9 @@ forget about this programmatically!
     "Force sending messages to `gnu.emacs.bug' per email."
     (interactive)
     (if (string-match (rx "gnu.emacs.bug") gnus-newsgroup-name)
-                                        ; answer per email
+                                        ; Answer per email.
         (call-interactively 'gnus-summary-wide-reply-with-original)
-                                        ; post via news
+                                        ; Post via news.
       (call-interactively 'gnus-summary-followup-with-original)))
 
   (with-eval-after-load "gnus-sum"
@@ -618,7 +610,7 @@ Source: Michael Heerdegen.
 
 https://github.com/cofi/dotfiles/blob/master/gnus.el
 
-*************** TODO Check that every mark is displayable in the current font
+*** Unread Articles
 
 #+begin_src emacs-lisp
   (when (char-displayable-p ?\u2691)
@@ -630,6 +622,8 @@ https://github.com/cofi/dotfiles/blob/master/gnus.el
   (when (char-displayable-p ?\u2709)
     (setq gnus-unread-mark ?✉))
 #+end_src
+
+*** Read Articles
 
 #+begin_src emacs-lisp
   (when (char-displayable-p ?\u2717)
@@ -645,15 +639,12 @@ https://github.com/cofi/dotfiles/blob/master/gnus.el
 
   (when (char-displayable-p ?\u2197)
     (setq gnus-canceled-mark ?↗))
+
+  (when (char-displayable-p ?\u267B)
+    (setq gnus-expirable-mark ?♻))
 #+end_src
 
-#+begin_src emacs-lisp
-  (when (char-displayable-p ?\u2191)
-    (setq gnus-score-over-mark ?↑))
-
-  (when (char-displayable-p ?\u2193)
-    (setq gnus-score-below-mark ?↓))
-#+end_src
+*** Other marks
 
 #+begin_src emacs-lisp
   (when (char-displayable-p ?\u21BA)
@@ -668,14 +659,23 @@ https://github.com/cofi/dotfiles/blob/master/gnus.el
   (when (char-displayable-p ?\u2729)
     (setq gnus-unseen-mark ?✩))
 
-  (when (char-displayable-p ?\u2605)
-    (setq gnus-recent-mark ?★))
-
   (when (char-displayable-p ?\u2699)
     (setq gnus-process-mark ?⚙))
+#+end_src
 
-  (when (char-displayable-p ?\u267B)
-    (setq gnus-expirable-mark ?♻))
+#+begin_src emacs-lisp
+  (when (char-displayable-p ?\u2605)
+    (setq gnus-recent-mark ?★))
+#+end_src
+
+*** Score Variables
+
+#+begin_src emacs-lisp
+  (when (char-displayable-p ?\u2191)
+    (setq gnus-score-over-mark ?↑))
+
+  (when (char-displayable-p ?\u2193)
+    (setq gnus-score-below-mark ?↓))
 #+end_src
 
 ** Threading
