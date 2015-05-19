@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150519.1233
+;; Version: 20150519.1453
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -41,7 +41,7 @@
                      (nnimap-server-port 993)
                      (nnimap-stream ssl)
                      ;; (nnimap-split-methods default) ; << ABSOLUTELY NEEDED
-                     (nnimap-split-methods nnimap-split-fancy) ; <<< NOT QUOTED!!!
+                     ;; (nnimap-split-methods nnimap-split-fancy) ; <<< NOT QUOTED!!!
                      ;;                        ; XXX when (try-require 'bbdb-gnus)...
                      ))
 
@@ -108,7 +108,7 @@
   (defun gnus-user-format-function-U (headers)
     "Return string for count of unseen articles."
     (if (> (gnus-number-of-unseen-articles-in-group gnus-tmp-group) 0)
-        ;; found in gnus-group.el
+        ;; Found in gnus-group.el.
         (concat (int-to-string
                  (gnus-number-of-unseen-articles-in-group
                   gnus-tmp-group)) " Unseen")
@@ -122,7 +122,7 @@
                 " Ticked")
       ""))
 
-  ;; create some faces
+  ;; Create some faces.
   (defface leuven-gnus-unseen '((t (:weight normal :foreground "#FC7202")))
     "Face for count of unread articles.")
   ;; (defface leuven-gnus-total '((t (:foreground "#2EAE2C")))
@@ -133,7 +133,7 @@
   (setq gnus-face-3 'leuven-gnus-unseen)
   ;; (setq gnus-face-4 'leuven-gnus-total)
 
-  ;; format of the group buffer
+  ;; Format of the group buffer.
   (setq gnus-group-line-format (concat "%1{%M%}"
                                        "%2{%m%}"
                                        "  "
@@ -185,11 +185,11 @@
                 (define-key gnus-group-mode-map
                   (kbd "C-c C-x") nil))))
 
-  ;; jump to the first group with unread articles, after getting new news
+  ;; Jump to the first group with unread articles, after getting new news.
   (add-hook 'gnus-after-getting-new-news-hook
             'gnus-group-first-unread-group)
 
-  ;; keep track of when I last read a group
+  ;; Keep track of when I last read a group.
   (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
 
   (message "2 Group Buffer... Done")
@@ -200,7 +200,7 @@
 
 ;;** 3.1 (info "(gnus)Summary Buffer Format")
 
-  ;; date format depending on age of article
+  ;; Date format depending on age of article.
   (setq gnus-user-date-format-alist ;; `user-date'
         '(((gnus-seconds-today) . "Today, %H:%M")
           ((+ 86400 (gnus-seconds-today)) . "Yesterday, %H:%M")
@@ -209,7 +209,7 @@
           ((gnus-seconds-year) . "%m-%d %a %H:%M")
           (t . "%Y-%m-%d %a %H:%M")))
 
-  ;; create some faces
+  ;; Create some faces.
   (defface leuven-gnus-date '((t (:foreground "#FF80BF")))
     "Face for date in summary buffer.")
  (defface leuven-gnus-size '((t (:foreground "#8FBF60")))
@@ -219,10 +219,10 @@
   (setq gnus-face-8 'leuven-gnus-date)
   (setq gnus-face-9 'leuven-gnus-size)
 
-  ;; format specification of the lines in the summary buffer
+  ;; Format specification of the lines in the summary buffer.
   (setq gnus-summary-line-format
-        ;; for the record, the default string is
-        ;; `%U%R%z%I%(%[%4L: %-20,20n%]%) %s\n'
+        ;; For the record, the default string is
+        ;; `%U%R%z%I%(%[%4L: %-20,20n%]%) %s\n'.
         (concat
          "%U"                           ; "read" status
          "%3{%R%}"                      ; "reply" status
@@ -237,12 +237,12 @@
          "%I%s"
          "\n"))
 
-  ;; string indicating that the current article has the same subject as the
-  ;; previous
+  ;; String indicating that the current article has the same subject as the
+  ;; previous.
   (setq gnus-summary-same-subject "")
 
-  ;; strings indicating that the current article has the same subject as the
-  ;; previous
+  ;; Strings indicating that the current article has the same subject as the
+  ;; previous.
   (if (char-displayable-p ?\u2514)      ; box drawings
       (progn                            ; tree layout using Unicode characters
         (setq gnus-sum-thread-tree-root "")
@@ -262,18 +262,18 @@
       (setq gnus-sum-thread-tree-single-leaf "+---"))) ; "`---"
 
   (with-eval-after-load "message"
-    ;; regexp matching alternative email addresses
+    ;; Regexp matching alternative email addresses.
     (setq message-alternative-emails
           (concat
            (regexp-quote "johndoe@example.com") "\\|"
            (regexp-quote "janedoe@example.com")))
 
-    ;; `From' headers that may be suppressed in favor of `To' headers
+    ;; `From' headers that may be suppressed in favor of `To' headers.
     (setq gnus-ignored-from-addresses
           (concat
            (regexp-quote user-mail-address) "\\|" message-alternative-emails)))
 
-  ;; extra headers to parse (to check when matching recipients)
+  ;; Extra headers to parse (to check when matching recipients).
   (when (boundp 'nnmail-extra-headers)
     (add-to-list 'nnmail-extra-headers 'Cc))
 
@@ -296,14 +296,14 @@
        ((and (string-match gnus-ignored-from-addresses (concat to ", " cc))
              (fboundp 'bbdb-split))
         (if (< (length (bbdb-split (concat to ", " cc) ",")) 5)
-            ;; number of recipients to consider as large
+            ;; Number of recipients to consider as large.
             "C"
           "*"))
        (t " "))))
 
   (defalias 'gnus-user-format-function-r 'leuven-gnus-count-recipients)
 
-  ;; format specification for the summary mode line
+  ;; Format specification for the summary mode line.
   (setq gnus-summary-mode-line-format "%V: %%b")
 
 ;;** 3.5 (info "(gnus)Reply Followup and Post")
@@ -426,33 +426,32 @@
     ;; ;; MIME type that will be displayed externally automatically
     ;; (add-to-list 'mm-automatic-external-display "text/html")
 
-    ;; do not treat inline images as real attachments (display them, instead)
+    ;; Do not treat inline images as real attachments (display them, instead).
     (add-to-list 'mm-attachment-override-types "image/.*")
                                         ; "text/x-vcard"...
 
-    ;; don't render HTML automatically *when plain text alternative is
-    ;; available*
-    (add-to-list 'mm-discouraged-alternatives "text/html")
+    ;; Don't render HTML automatically *when plain text alternative is
+    ;; available*.
+    (Add-to-list 'mm-discouraged-alternatives "text/html").
     (add-to-list 'mm-discouraged-alternatives "text/richtext")
     (add-to-list 'mm-discouraged-alternatives "text/enriched")
     (add-to-list 'mm-discouraged-alternatives "multipart/related")
 
-    ;; all images fit in the buffer
+    ;; All images fit in the buffer.
     (setq mm-inline-large-images t)
 
-    ;; ;; always show HTML mails as attachments (even if they can be
+    ;; ;; Always show HTML mails as attachments (even if they can be
     ;; ;; displayed) use `browse-url-browser-function' (firefox) to render
-    ;; ;; HTML mails
+    ;; ;; HTML mails.
     ;; (push "text/html" mm-inline-override-types)
 
-
-    ;; use `w3m' browser (if installed) to render HTML-only mails
+    ;; Use `w3m' browser (if installed) to render HTML-only mails.
     (setq mm-text-html-renderer
           (cond ((executable-find "w3m") 'w3m) ; or `gnus-w3m'?
                 (t 'html2text)))        ; Emacs built-in
 
-    ;; recent Gnusae have a built-in HTML renderer which even (somewhat)
-    ;; handles CSS
+    ;; Recent Gnusae have a built-in HTML renderer which even (somewhat)
+    ;; handles CSS.
     (setq mm-text-html-renderer 'shr) ; eww-backend?
     )
 
@@ -474,7 +473,7 @@
 
 ;;*** 1.6 (info "(emacs-mime)Files and Directories")
 
-  ;; default directory for saving attachments
+  ;; Default directory for saving attachments.
   (setq mm-default-directory
         (cond ((or leuven--win32-p
                    leuven--cygwin-p)
@@ -485,7 +484,7 @@
   (when (fboundp 'leuven-make-directory-yes-or-no)
     (leuven-make-directory-yes-or-no mm-default-directory))
 
-  ;; directory for storing temporary files (opened attachments as well)
+  ;; Directory for storing temporary files (opened attachments as well).
   (setq mm-tmp-directory temporary-file-directory)
 
 ;;** 4 (info "(emacs-mime)Basic Functions")
@@ -500,17 +499,17 @@
                   '(".ppt" . "application/vnd.ms-powerpoint")))
                                         ; MIME content-types keyed by file ext.
 
-  ;; from Tassilo Horn, 2014-07-17
+  ;; From Tassilo Horn, 2014-07-17.
   (setq shr-color-visible-distance-min 10)
   (setq shr-color-visible-luminance-min 60)
   (setq gnus-treat-fill-article 0)
 
 ;;** 4.6 (info "(gnus)Misc Article")
 
-  ;; format specification for the article mode line
+  ;; Format specification for the article mode line.
   (setq gnus-article-mode-line-format "%S%m")
 
-  ;; make `C-c C-f' active from within messages
+  ;; Make `C-c C-f' active from within messages.
   (define-key gnus-article-mode-map
     (kbd "C-c C-f") 'gnus-summary-mail-forward)
 
@@ -522,7 +521,7 @@
 
 ;;** 5.1 (info "(gnus)Mail")
 
-  ;; Gnus requests confirmation when replying to news (unlike mail)
+  ;; Gnus requests confirmation when replying to news (unlike mail).
   (setq gnus-confirm-mail-reply-to-news t)
 
 ;;** 5.5 (info "(gnus)Archived Messages")
@@ -530,9 +529,9 @@
   ;; Group in which to save the messages you've written.
   (setq gnus-message-archive-group "INBOX.Sent")
 
-  ;; the Gcc Header specifies a local mail box that receives a copy of the
-  ;; sent article
-  ;; "Gcc:"-chooser, from Christoph Conrad
+  ;; The Gcc Header specifies a local mail box that receives a copy of the sent
+  ;; article.
+  ;; "Gcc:"-chooser, from Christoph Conrad.
   (defvar header-gcc-history nil)
   (defun leuven-choose-gcc()
     (interactive)
@@ -556,22 +555,22 @@
 
   (add-hook 'message-send-hook 'leuven-choose-gcc)
 
-  ;; automatically mark Gcc articles (i.e., sent by myself) as read
+  ;; Automatically mark Gcc articles (i.e., sent by myself) as read.
   (setq gnus-gcc-mark-as-read t)
 
 ;;** 5.6 (info "(gnus)Posting Styles")
 
-  ;; an alternative to `gnus-posting-styles', if you want to change accounts
-  ;; on the fly while composing messages
+  ;; An alternative to `gnus-posting-styles', if you want to change accounts
+  ;; on the fly while composing messages.
   (autoload 'gnus-alias-determine-identity "gnus-alias" nil t)
   (add-hook 'message-setup-hook 'gnus-alias-determine-identity)
 
   (with-eval-after-load "gnus-alias"
 
-    ;; ;; add gnus-alias call to message mode hook
+    ;; ;; Add gnus-alias call to message mode hook.
     ;; (gnus-alias-init)
 
-    ;; added one key binding
+    ;; Added one key binding.
     (define-key message-mode-map
       (kbd "C-c p") 'gnus-alias-select-identity)
 
@@ -593,7 +592,7 @@
              "\nBest regards,\n  Jane\n"
              "Jane Doe")))
 
-    ;; automatically choose an identity given the message context
+    ;; Automatically choose an identity given the message context.
     (setq gnus-alias-identity-rules
           '(("Newsgroups-Rule"
              ("newsgroups" ".*" current)
@@ -607,30 +606,30 @@
              ("any" "janedoe@example.com" both)
              "Jane-Doe-ID")))
 
-    ;; identity to use when gnus-alias finds an unknown identity
+    ;; Identity to use when gnus-alias finds an unknown identity.
     (setq gnus-alias-unknown-identity-rule 'error)
 
-    ;; ;; default identity (when it isn't able to determine which identity to
-    ;; ;; use)
+    ;; ;; Default identity (when it isn't able to determine which identity to
+    ;; ;; use).
     ;; (setq gnus-alias-default-identity "John-Doe-ID")
 
-    ;; old identity is completely removed before the new one is added
+    ;; Old identity is completely removed before the new one is added.
     (setq gnus-alias-overlay-identities nil)
 
-    ;; allow your `Return-Path' to be set properly
+    ;; Allow your `Return-Path' to be set properly.
     (setq gnus-alias-override-user-mail-address t)
 
-    ;; after an Identity is used, where should point be moved to?
+    ;; After an Identity is used, where should point be moved to?
     (setq gnus-alias-point-position 'start-of-sig)
 
-    ;; `From' header becomes a button that you can click on
+    ;; `From' header becomes a button that you can click on.
     (setq gnus-alias-use-buttonized-from t)
 
-    ;; level of verbosity -- message output only (see `*gnus-alias debug*'
-    ;; buffer, when maximum verbosity)
+    ;; Level of verbosity -- message output only (see `*gnus-alias debug*'
+    ;; buffer, when maximum verbosity).
     (setq gnus-alias-verbosity 1)
 
-    ;; set message envelope to content of `From'
+    ;; Set message envelope to content of `From'.
     ;; XXX see `mail-specify-envelope-from'
     (defun leuven-set-msg-envelope-from()
       "Set `mail-envelope-from' to the value in the \"From\" field."
@@ -639,7 +638,7 @@
              (last (string-match ">" from)))
         (setq mail-envelope-from (substring from first last))))
 
-    ;; ;; alternative for FPZ??
+    ;; ;; Alternative for FPZ??
     ;; (defun leuven-set-msg-envelope-from ()
     ;;   (let ((from (cadr
     ;;                (mail-extract-address-components
@@ -649,9 +648,9 @@
     (add-hook 'message-setup-hook 'leuven-set-msg-envelope-from)
     )
 
-  ;; add certain headers before sending messages
+  ;; Add certain headers before sending messages.
   (defun leuven-message-add-content ()
-    ;; for Gmane address obfuscation
+    ;; For Gmane address obfuscation.
     (message-add-header "X-Archive: encrypt"))
 
   (add-hook 'message-send-hook 'leuven-message-add-content)
@@ -660,16 +659,13 @@
 
 ;;* (info "(message)Top")
 
-  ;; Message mode has become the default mail editing mode in Emacs 23.2+
-  ;; (used by Gnus and RMail, at least)
-
   (message "Message...")
 
 ;;** 1 (info "(message)Interface")
 
 ;;*** 1.1 (info "(message)New Mail Message")
 
-  ;; prepare a mail from the current buffer
+  ;; Prepare a mail from the current buffer.
   (defun leuven-mail-current-region-or-buffer ()
     "Insert the current region or buffer into an email sending buffer."
     (interactive)
@@ -686,23 +682,23 @@
 
 ;;*** 1.4 (info "(message)Wide Reply")
 
-  ;; addresses to prune (disable `Cc:' to myself) when doing wide replies
+  ;; Addresses to prune (disable `Cc:' to myself) when doing wide replies.
   (with-eval-after-load "message"
     (when (boundp 'gnus-ignored-from-addresses)
       (setq message-dont-reply-to-names gnus-ignored-from-addresses)))
 
 ;;*** 1.8 (info "(message)Forwarding")
 
-  ;; ;; delimiter inserted before forwarded messages
+  ;; ;; Delimiter inserted before forwarded messages.
   ;; (setq message-forward-start-separator "-----Original Message-----\n")
   ;;
-  ;; ;; delimiter inserted after forwarded messages
+  ;; ;; Delimiter inserted after forwarded messages.
   ;; (setq message-forward-end-separator "\n")
 
-  ;; when forwarding mail, chop off these headers
+  ;; When forwarding mail, chop off these headers.
   (setq message-forward-ignored-headers
         (concat "^\\("
-                ;; FIXME Rewrite the following in a shorter way
+                ;; FIXME Rewrite the following in a shorter way.
                 ;; (mapconcat 'regexp-quote
                 ;;            '("Content-Class" "Content-language" "DKIM-Signature"
                 ;;              "Delivered-To" "Disposition-Notification-To")
@@ -741,7 +737,7 @@
 
 ;;*** 2.4 (info "(message)Insertion")
 
-  ;; name of file containing the signature
+  ;; Name of file containing the signature.
   (setq message-signature-file "~/Mail/signatures/johndoe")
                                         ; this file must exist (otherwise, you
                                         ; get misplaced headers when switching
@@ -781,38 +777,38 @@
 
 ;;*** 3.7 (info "(message)Various Message Variables")
 
-  ;; ;; directory from which all other mail file variables are derived
+  ;; ;; Directory from which all other mail file variables are derived.
   ;; (setq message-directory "~/Mail/")
 
-  ;; remove the binding of `C-c C-v', used by Org-Babel commands
+  ;; Remove the binding of `C-c C-v', used by Org-Babel commands.
   (add-hook 'message-mode-hook
             (lambda ()
               (define-key message-mode-map
                 (kbd "C-c C-v") nil)))
 
-  ;; operates on messages you compose
+  ;; Operate on messages you compose.
   (defun leuven--message-mode-hook ()
     "Enable Org minor modes and auto-fill."
 
-    ;; tab completion for alias in `.mailrc'
+    ;; Tab completion for alias in `.mailrc'.
     (local-set-key (kbd "<M-tab>") 'mail-abbrev-complete-alias)
 
-    ;; enable automatic word-wrap when composing messages
+    ;; Enable automatic word-wrap when composing messages.
     (setq-default fill-column 80)
     (auto-fill-mode)
 
-    ;; turn on the Org mode table editor (in emails)
+    ;; Turn on the Org mode table editor (in emails).
     (turn-on-orgtbl)
 
-    ;; turn on (the enhanced version of) orgstruct-mode
+    ;; Turn on (the enhanced version of) orgstruct-mode.
     (turn-on-orgstruct++)
 
     (when (try-require 'org-footnote)
-      ;; default style used for footnoting is local to the Message being
-      ;; written
+      ;; Default style used for footnoting is local to the Message being
+      ;; written.
       (set (make-local-variable 'org-footnote-auto-label) 'plain)
 
-      ;; no tag marking the beginning of footnote section
+      ;; No tag marking the beginning of footnote section.
       (set (make-local-variable
             'org-footnote-tag-for-non-org-mode-files) nil)))
 
@@ -821,7 +817,7 @@
 
 ;;*** 3.9 (info "(message)Message Buffers")
 
-  ;; kill message buffer after sending a message
+  ;; Kill message buffer after sending a message.
   (setq message-kill-buffer-on-exit t)
 
   (message "Message... Done")
@@ -830,6 +826,11 @@
 
   (message "6 Select Methods...")
 
+;;** 6.3 (info "(gnus)Using IMAP")
+
+  ;; Name(s) of IMAP mailboxes to split mail from.
+  (setq nnimap-inbox "INBOX")           ; Necessary for splitting under 24.5.
+
 ;;** 6.4 (info "(gnus)Getting Mail")
 
 ;;*** 6.4.3 (info "(gnus)Splitting Mail") (in IMAP)
@@ -837,8 +838,7 @@
   ;; The first match in `nnmail-split-rule' found will be used.
   (setq nnmail-crosspost nil)
 
-  ;; Name(s) of IMAP mailboxes to split mail from.
-  (setq nnimap-inbox '("INBOX"))
+;;*** 6.4.6 (info "(gnus)Fancy Mail Splitting")
 
   ;; BBDB (Big Brother DataBase) is loaded from my `.emacs' file.
   (when (try-require 'bbdb-gnus)
@@ -848,7 +848,7 @@
 
     ;; Specify how to split mail.
     (setq nnimap-split-fancy            ; XXX vs `nnmail-split-fancy'?
-          `(|                           ; split to the *first* match
+          '(|                           ; Split to the *first* match.
 
               ;; Mailing lists (in To: or Cc:).
               (to "foo@bar\\.com" "list.foo")
@@ -892,7 +892,7 @@
        '(article
          (horizontal 1.0
                      (summary 0.50 point)
-                     ;; `point' positions the cursor properly
+                     ;; `point' positions the cursor properly.
                      (article 1.0))))
     (gnus-add-configuration
      '(article
@@ -902,7 +902,7 @@
 
 ;;** 9.19 Interaction with (info "(gnus)Other modes")
 
-  ;; attach all marked files from Dired to a new Gnus message
+  ;; Attach all marked files from Dired to a new Gnus message.
   (autoload 'gnus-dired-mode "gnus-dired"
     "Attach dired's marked files to a gnus message composition." t)
 
