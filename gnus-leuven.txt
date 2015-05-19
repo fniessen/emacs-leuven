@@ -1989,7 +1989,7 @@ It comes with Gnus.  You don't even need to configure anything for searching
 #+begin_src emacs-lisp
 ;;** 9.2 (info "(gnus)Interactive")
 
-  ;; don't display verbose messages and don't require confirmations
+  ;; Don't display verbose messages and don't require confirmations.
   (setq gnus-novice-user nil)
 #+end_src
 
@@ -1998,7 +1998,7 @@ It comes with Gnus.  You don't even need to configure anything for searching
 #+begin_src emacs-lisp
 ;;** 9.4 (info "(gnus)Formatting Variables")
 
-  ;; assume that fixed width fonts have characters of the same width
+  ;; Assume that fixed width fonts have characters of the same width.
   (setq gnus-use-correct-string-widths nil)
 #+end_src
 
@@ -2007,7 +2007,7 @@ It comes with Gnus.  You don't even need to configure anything for searching
 #+begin_src emacs-lisp
 ;;** 9.5 (info "(gnus)Window Layout")
 
-  ;; add a window configuration to `gnus-buffer-configuration'
+  ;; Add a window configuration to `gnus-buffer-configuration'.
   (if (> (frame-width) 160)
       (gnus-add-configuration
        '(article
@@ -2048,44 +2048,18 @@ It comes with Gnus.  You don't even need to configure anything for searching
 #+begin_src emacs-lisp
 ;;** 9.21 (info "(gnus)Various Various")
 
-  ;; display more messages from Gnus
-  (setq gnus-verbose 10)                ; 9 = minimum for helpful debugging
+  ;; Display more messages from Gnus.
+  (setq gnus-verbose 10)                ; 9 = minimum for helpful debugging.
 
-  ;; display more messages from the Gnus back-ends
+  ;; Display more messages from the Gnus back-ends.
   (setq gnus-verbose-backends 10)
 
   (message "9 Various... Done")
 #+end_src
 
-* Appendices
+** Missing packages
 
 #+begin_src emacs-lisp
-;;* 11 (info "(gnus)Appendices")
-
-  (message "11 Appendices...")
-#+end_src
-
-** History
-
-#+begin_src emacs-lisp
-;;** 11.2 (info "(gnus)History")
-
-  (setq canlock-password "secret")
-  (setq canlock-password-for-verify "secret")
-#+end_src
-
-** Frequently Asked Questions
-
-#+begin_src emacs-lisp
-;;** 11.9 (info "(gnus)Frequently Asked Questions")
-
-  ;; byte-compile the user-defined format specs (things like
-  ;; `gnus-summary-line-format')
-  (when (fboundp 'gnus-compile)
-    (gnus-compile)) ;;  at the bottom
-
-  (message "11 Appendices... Done")
-
   ;; warn that some packages were missing
   (dolist (pkg leuven--missing-packages)
     (message "(warning) Package `%s' not found" pkg))

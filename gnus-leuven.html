@@ -130,14 +130,9 @@
 <li><a href="#orgheadline63">Window Layout</a></li>
 <li><a href="#orgheadline64">Interaction with other modes</a></li>
 <li><a href="#orgheadline65">Various Various</a></li>
-</ul>
-</li>
-<li><a href="#orgheadline66">Appendices</a>
-<ul>
-<li><a href="#orgheadline67">History</a></li>
-<li><a href="#orgheadline68">Frequently Asked Questions</a></li>
-<li><a href="#orgheadline69">Feature</a></li>
-<li><a href="#orgheadline70">File Local Variables</a></li>
+<li><a href="#orgheadline66">Missing packages</a></li>
+<li><a href="#orgheadline67">Feature</a></li>
+<li><a href="#orgheadline68">File Local Variables</a></li>
 </ul>
 </li>
 </ul>
@@ -165,7 +160,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150519.1059</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150519.1111</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, gnus, dotfile, config</span>
 </pre></div>
 <div class="org-src-container">
@@ -2155,7 +2150,7 @@ below to set the variables.<br /></p>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 9.2 (info "(gnus)Interactive")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">don't display verbose messages and don't require confirmations</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't display verbose messages and don't require confirmations.</span>
   (setq gnus-novice-user nil)
 </pre></div>
 </div>
@@ -2165,7 +2160,7 @@ below to set the variables.<br /></p>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 9.4 (info "(gnus)Formatting Variables")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">assume that fixed width fonts have characters of the same width</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Assume that fixed width fonts have characters of the same width.</span>
   (setq gnus-use-correct-string-widths nil)
 </pre></div>
 </div>
@@ -2175,7 +2170,7 @@ below to set the variables.<br /></p>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 9.5 (info "(gnus)Window Layout")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">add a window configuration to `</span><span class="org-constant"><span class="org-comment">gnus-buffer-configuration</span></span><span class="org-comment">'</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Add a window configuration to `</span><span class="org-constant"><span class="org-comment">gnus-buffer-configuration</span></span><span class="org-comment">'.</span>
   (<span class="org-keyword">if</span> (&gt; (frame-width) 160)
       (gnus-add-configuration
        '(article
@@ -2218,47 +2213,19 @@ below to set the variables.<br /></p>
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 9.21 (info "(gnus)Various Various")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">display more messages from Gnus</span>
-  (setq gnus-verbose 10)                <span class="org-comment-delimiter">; </span><span class="org-comment">9 = minimum for helpful debugging</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Display more messages from Gnus.</span>
+  (setq gnus-verbose 10)                <span class="org-comment-delimiter">; </span><span class="org-comment">9 = minimum for helpful debugging.</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">display more messages from the Gnus back-ends</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Display more messages from the Gnus back-ends.</span>
   (setq gnus-verbose-backends 10)
 
   (message <span class="org-string">"9 Various... Done"</span>)
 </pre></div>
 </div>
-</div>
-<div id="outline-container-orgheadline66" class="outline-2">
-<h2 id="orgheadline66">Appendices</h2>
-<div class="outline-text-2 org-src-container" id="text-orgheadline66">
+<div id="outline-container-orgheadline66" class="outline-3">
+<h3 id="orgheadline66">Missing packages</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline66">
 <pre class="src src-emacs-lisp">
-<span class="org-comment-delimiter">;;</span><span class="org-comment">* 11 (info "(gnus)Appendices")</span>
-
-  (message <span class="org-string">"11 Appendices..."</span>)
-</pre></div>
-<div id="outline-container-orgheadline67" class="outline-3">
-<h3 id="orgheadline67">History</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline67">
-<pre class="src src-emacs-lisp">
-<span class="org-comment-delimiter">;;</span><span class="org-comment">** 11.2 (info "(gnus)History")</span>
-
-  (setq canlock-password <span class="org-string">"secret"</span>)
-  (setq canlock-password-for-verify <span class="org-string">"secret"</span>)
-</pre></div>
-</div>
-<div id="outline-container-orgheadline68" class="outline-3">
-<h3 id="orgheadline68">Frequently Asked Questions</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline68">
-<pre class="src src-emacs-lisp">
-<span class="org-comment-delimiter">;;</span><span class="org-comment">** 11.9 (info "(gnus)Frequently Asked Questions")</span>
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">byte-compile the user-defined format specs (things like</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">gnus-summary-line-format</span></span><span class="org-comment">')</span>
-  (<span class="org-keyword">when</span> (fboundp 'gnus-compile)
-    (gnus-compile)) <span class="org-comment-delimiter">;;  </span><span class="org-comment">at the bottom</span>
-
-  (message <span class="org-string">"11 Appendices... Done"</span>)
-
   <span class="org-comment-delimiter">;; </span><span class="org-comment">warn that some packages were missing</span>
   (<span class="org-keyword">dolist</span> (pkg leuven--missing-packages)
     (message <span class="org-string">"(warning) Package `</span><span class="org-constant"><span class="org-string">%s</span></span><span class="org-string">' not found"</span> pkg))
@@ -2266,16 +2233,16 @@ below to set the variables.<br /></p>
   (message <span class="org-string">"\n"</span>)
 </pre></div>
 </div>
-<div id="outline-container-orgheadline69" class="outline-3">
-<h3 id="orgheadline69">Feature</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline69">
+<div id="outline-container-orgheadline67" class="outline-3">
+<h3 id="orgheadline67">Feature</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline67">
 <pre class="src src-emacs-lisp">
 (<span class="org-keyword">provide</span> '<span class="org-constant">gnus-leuven</span>)
 </pre></div>
 </div>
-<div id="outline-container-orgheadline70" class="outline-3">
-<h3 id="orgheadline70">File Local Variables</h3>
-<div class="outline-text-3 org-src-container" id="text-orgheadline70">
+<div id="outline-container-orgheadline68" class="outline-3">
+<h3 id="orgheadline68">File Local Variables</h3>
+<div class="outline-text-3 org-src-container" id="text-orgheadline68">
 <pre class="src src-emacs-lisp">
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This is for the sake of Emacs.</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Local Variables:</span>
