@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150519.1110
+;; Version: 20150519.1115
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -835,9 +835,8 @@
     ;;   (auto-complete-mode))
     )
 
-  (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append)
-
-  (add-hook 'message-send-hook 'org-footnote-normalize)
+  (when (featurep 'org)
+    (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append))
 
 ;;*** 3.9 (info "(message)Message Buffers")
 

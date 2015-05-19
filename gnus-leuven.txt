@@ -1639,9 +1639,8 @@ See http://www.emacswiki.org/emacs/AutoDictionaryMode.
     ;;   (auto-complete-mode))
     )
 
-  (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append)
-
-  (add-hook 'message-send-hook 'org-footnote-normalize)
+  (when (featurep 'org)
+    (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append))
 
 ;;*** 3.9 (info "(message)Message Buffers")
 

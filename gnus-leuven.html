@@ -160,7 +160,7 @@
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150519.1111</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150519.1115</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, gnus, dotfile, config</span>
 </pre></div>
 <div class="org-src-container">
@@ -1792,9 +1792,8 @@ below to set the variables.<br /></p>
     <span class="org-comment-delimiter">;;   </span><span class="org-comment">(auto-complete-mode))</span>
     )
 
-  (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append)
-
-  (add-hook 'message-send-hook 'org-footnote-normalize)
+  (<span class="org-keyword">when</span> (<span class="org-keyword">featurep</span> '<span class="org-constant">org</span>)
+    (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append))
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">*** 3.9 (info "(message)Message Buffers")</span>
 
