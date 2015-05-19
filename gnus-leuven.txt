@@ -10,7 +10,8 @@
 #+PROPERTY:  padline yes
 #+PROPERTY:  tangle yes
 
-#+SETUPFILE: ./bigblow-pirilampo.setup
+# #+SETUPFILE: ./bigblow-pirilampo.setup
+#+SETUPFILE: ~/src/org-html-themes/setup/theme-readtheorg-local-abs.setup
 
 * Overview
 
@@ -127,7 +128,7 @@ http://koldfront.dk/text/gnus-email-basic-usage.html
 #+end_src
 
 If you're running a recent Emacs, look into the EPA library to encrypt your
-~.authinfo~ file.
+=.authinfo= file.
 
 See http://www.emacswiki.org/emacs/GnusEncryptedAuthInfo.
 
@@ -228,10 +229,10 @@ that it does not interfere with your own configuration...
 ** New Groups
 
 Finding new newsgroups is done:
-- at startup (if =gnus-check-new-newsgroups= is non-nil) or
-- by using the function =gnus-find-new-newsgroup=.
+- at startup (if ~gnus-check-new-newsgroups~ is non-nil) or
+- by using the function ~gnus-find-new-newsgroup~.
 
-You can always subscribe to the new groups just by pressing =U= in the group
+You can always subscribe to the new groups just by pressing ~U~ in the group
 buffer.
 
 #+begin_src emacs-lisp
@@ -680,7 +681,7 @@ https://github.com/cofi/dotfiles/blob/master/gnus.el
 
 ** Threading
 
-Threading is the representation of discussions "as they happen". Use =T T= to
+Threading is the representation of discussions "as they happen". Use ~T T~ to
 toggle threading.
 
 #+begin_src emacs-lisp
@@ -702,7 +703,7 @@ toggle threading.
   ;; (setq gnus-sort-gathered-threads-function 'gnus-thread-sort-by-date)
 #+end_src
 
-Show/hide threads with =>= / =<=.
+Show/hide threads with ~>~ / ~<~.
 
 #+begin_src emacs-lisp :tangle no
   (define-key gnus-summary-mode-map
@@ -715,7 +716,7 @@ Show/hide threads with =>= / =<=.
 
 *Primary* sort key should be the *last* function in the list.
 
-You should always include =gnus-thread-sort-by-number= in the list, probably as
+You should always include ~gnus-thread-sort-by-number~ in the list, probably as
 first (least important) element.
 
 WARNING -- Sorting by date is often much slower than sorting by number, and the
@@ -1039,9 +1040,9 @@ stripe background is superimposed on my "read" background.
 #+end_src
 
 #+begin_note
-Use =K i= from the summary buffer (or =i= on the MIME button in the article buffer)
+Use ~K i~ from the summary buffer (or ~i~ on the MIME button in the article buffer)
 to insert the contents of the MIME object into the buffer
-(=gnus-mime-inline-part=) as =text/plain=, in order to read them directly in Gnus.
+(~gnus-mime-inline-part~) as ~text/plain~, in order to read them directly in Gnus.
 #+end_note
 
 * Emacs MIME
@@ -1301,9 +1302,9 @@ Toggle colouring from HTML emails:
 
 ** Archived Messages
 
-The =Gcc:= header is about in which group to save the messages you've written.
+The ~Gcc:~ header is about in which group to save the messages you've written.
 
-=gnus-message-archive-group= specifies which (if any) =Gcc:= header is inserted when
+~gnus-message-archive-group~ specifies which (if any) ~Gcc:~ header is inserted when
 a message buffer is *created*.
 
 #+begin_src emacs-lisp
@@ -1311,11 +1312,11 @@ a message buffer is *created*.
   (setq gnus-message-archive-group "INBOX.Sent")
 #+end_src
 
-The =Gcc:= header at the time of *sending* the message specifies where it is
+The ~Gcc:~ header at the time of *sending* the message specifies where it is
 archived.
 
-If you want to be asked for each *message to be sent*, you can change the =Gcc:=
-header in the =message-send-hook=.
+If you want to be asked for each *message to be sent*, you can change the ~Gcc:~
+header in the ~message-send-hook~.
 
 #+begin_src emacs-lisp
 ;;** 5.5 (info "(gnus)Archived Messages")
@@ -1456,7 +1457,7 @@ Concept of "roles" in mutt.
 Let Gnus decide which SMTP server should be used for sending email by looking at
 XXX.
 
-See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the =From:=
+See http://www.emacswiki.org/emacs/MultipleSMTPAccounts for looking at the ~From:~
 header line of the current post.
 
 *** Headers
@@ -1986,7 +1987,7 @@ Newsgroups in which I'm interested:
 * Scoring
 
 You can /increase/ or /lower/ the score, respectively, in the global file (instead
-of the score file local for the group) by pressing =M-i a I= or =M-i a L=.
+of the score file local for the group) by pressing ~M-i a I~ or ~M-i a L~.
 
 #+begin_src emacs-lisp :tangle no
 ;;* 7 (info "(gnus)Scoring")
@@ -2033,8 +2034,8 @@ and it slows loading groups down a bit.
 
 * Searching
 
-Basically, there's only one user-frontend function: =gnus-group-make-nnir-group=
-bound to =G G= in =*Group*=.
+Basically, there's only one user-frontend function: ~gnus-group-make-nnir-group~
+bound to ~G G~ in ~*Group*~.
 
 It comes with Gnus.  You don't even need to configure anything for searching
 *IMAP* and *Gmane* groups.
