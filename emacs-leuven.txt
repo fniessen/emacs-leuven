@@ -2598,14 +2598,17 @@ the user see truly invisible matches before replacing them.
     ;; Lighter of anzu-mode.
     (setq anzu-mode-lighter "")
 
-    ;; Limit of search number.
-    (setq anzu-search-threshold 1000)
-
     ;; Deactive region if you use anzu a replace command with region.
     (setq anzu-deactivate-region t)
 
     ;; Separator of `to' string.
     (setq anzu-replace-to-string-separator " => ")
+
+    ;; Function which returns mode-line string.
+    (defun leuven-anzu-update-func (here total)
+      (propertize (format " %d/%d " here total)
+                  'face 'anzu-mode-line))
+    (setq anzu-mode-line-update-function 'leuven-anzu-update-func)
 
     ;; Enable Global-Anzu mode.
     (global-anzu-mode 1)
