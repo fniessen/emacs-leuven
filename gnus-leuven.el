@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150519.1453
+;; Version: 20150519.1541
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -243,8 +243,8 @@
 
   ;; Strings indicating that the current article has the same subject as the
   ;; previous.
-  (if (char-displayable-p ?\u2514)      ; box drawings
-      (progn                            ; tree layout using Unicode characters
+  (if (char-displayable-p ?\u2514)      ; Box drawings.
+      (progn                            ; Tree layout using Unicode characters.
         (setq gnus-sum-thread-tree-root "")
         (setq gnus-sum-thread-tree-false-root "")
         (setq gnus-sum-thread-tree-single-indent "")
@@ -252,7 +252,7 @@
         (setq gnus-sum-thread-tree-vertical "│   ")
         (setq gnus-sum-thread-tree-leaf-with-other "├───")
         (setq gnus-sum-thread-tree-single-leaf "└───"))
-    (progn                              ; tree layout using ASCII characters
+    (progn                              ; Tree layout using ASCII characters.
       (setq gnus-sum-thread-tree-root "")
       (setq gnus-sum-thread-tree-false-root "")
       (setq gnus-sum-thread-tree-single-indent "")
@@ -388,6 +388,38 @@
   ;; ;; Sort the articles within a thread after it has been gathered together.
   ;; (setq gnus-sort-gathered-threads-function 'gnus-thread-sort-by-date)
 
+;;** 3.18 (info "(gnus)Article Treatment")
+
+  ;; Change a `\205' figure to "...".
+  (add-hook 'gnus-part-display-hook 'article-treat-dumbquotes)
+
+  ;; What is to be considered a signature.
+  (setq gnus-signature-separator
+        '("^-- $"                       ; The standard.
+          "^________*$"))               ; A long line of underscores is also
+                                        ; popular.
+
+  ;; Limit (in lines, in floating point) to what is considered a signature.
+  (setq gnus-signature-limit 20.0)
+
+  (defun leuven-prefix-line ()
+    "Prefix the current line with `>'."
+    (interactive)
+    (beginning-of-line)
+    (while
+        (progn
+          ;; Repeat...
+          (if (looking-at "[>\n]")
+              (insert ">")
+            (insert "> "))
+          (forward-line 1)
+          (beginning-of-line)
+          (not
+           ;; ...until blank line found.
+           (looking-at " *$")))))
+
+  (global-set-key (kbd "<S-f5>") 'leuven-prefix-line)
+
 ;;** 3.19 (info "(gnus)MIME Commands")
 
   ;; Rewrite file names of MIME parts (delete control characters, delete shell
@@ -423,16 +455,15 @@
 ;;*** 1.5 (info "(emacs-mime)Display Customization")
 
   (with-eval-after-load "mm-decode"
-    ;; ;; MIME type that will be displayed externally automatically
+    ;; ;; MIME type that will be displayed externally automatically.
     ;; (add-to-list 'mm-automatic-external-display "text/html")
 
     ;; Do not treat inline images as real attachments (display them, instead).
     (add-to-list 'mm-attachment-override-types "image/.*")
-                                        ; "text/x-vcard"...
 
     ;; Don't render HTML automatically *when plain text alternative is
     ;; available*.
-    (Add-to-list 'mm-discouraged-alternatives "text/html").
+    (add-to-list 'mm-discouraged-alternatives "text/html")
     (add-to-list 'mm-discouraged-alternatives "text/richtext")
     (add-to-list 'mm-discouraged-alternatives "text/enriched")
     (add-to-list 'mm-discouraged-alternatives "multipart/related")
@@ -498,6 +529,16 @@
      (add-to-list 'mailcap-mime-extensions
                   '(".ppt" . "application/vnd.ms-powerpoint")))
                                         ; MIME content-types keyed by file ext.
+
+;;** 4.4 (info "(gnus)Customizing Articles")
+
+  (when (try-require 'gnus-art)
+
+    ;; Add buttons.
+    (setq gnus-treat-buttonize t)
+
+    ;; Add buttons to the head.
+    (setq gnus-treat-buttonize-head 'head))
 
   ;; From Tassilo Horn, 2014-07-17.
   (setq shr-color-visible-distance-min 10)

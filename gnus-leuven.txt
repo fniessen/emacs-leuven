@@ -183,7 +183,7 @@ for logins).
 #+end_note
 
 #+begin_note
-The groups in the gnus-select-method don't get a prefix like "nnimap". Nice!
+The groups in the ~gnus-select-method~ don't get a prefix like ~nnimap~. Nice!
 #+end_note
 
 #+begin_note
@@ -212,16 +212,9 @@ that it does not interfere with your own configuration...
 #+end_src
 
 #+begin_note
-~nnimap-split-methods~ (in ~gnus-select-method~) is NOT necessary for splitting
-under 24.5.
+~nnimap-split-methods~ (in ~gnus-select-method~) is NOT necessary for fancy mail
+splitting under Emacs 24.5.
 #+end_note
-
-#+begin_src emacs-lisp :tangle no
-  ;; ;; Allow "hostname NOT matched" in the server certificate.
-  ;; (setq starttls-extra-arguments '("--insecure"))
-  ;;                                   ;! Not used in an Emacs 24 with built-in
-  ;;                                   ;! gnutls support.
-#+end_src
 
 #+begin_src emacs-lisp
   ;; Using Gnus for news.
@@ -429,21 +422,6 @@ Cleanup all Gnus buffers on exit.
   (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
-  (defface highlight-line-gnus
-    '((t (:background "#DAEAFC")))
-    "Face for highlighting the current line with `highlight-line-gnus'."
-    :group 'hl-line)
-
-  (defun leuven--hl-line-highlight ()
-    "Enable line highlighting in the current buffer."
-    (set (make-local-variable 'hl-line-face) 'highlight-line-gnus)
-    (hl-line-mode 1))
-
-  ;; Highlight current line in group buffer.
-  (add-hook 'gnus-group-mode-hook 'leuven--hl-line-highlight)
-#+end_src
-
 #+begin_src emacs-lisp
   (message "2 Group Buffer... Done")
 #+end_src
@@ -524,8 +502,8 @@ Cleanup all Gnus buffers on exit.
 
   ;; Strings indicating that the current article has the same subject as the
   ;; previous.
-  (if (char-displayable-p ?\u2514)      ; box drawings
-      (progn                            ; tree layout using Unicode characters
+  (if (char-displayable-p ?\u2514)      ; Box drawings.
+      (progn                            ; Tree layout using Unicode characters.
         (setq gnus-sum-thread-tree-root "")
         (setq gnus-sum-thread-tree-false-root "")
         (setq gnus-sum-thread-tree-single-indent "")
@@ -533,7 +511,7 @@ Cleanup all Gnus buffers on exit.
         (setq gnus-sum-thread-tree-vertical "│   ")
         (setq gnus-sum-thread-tree-leaf-with-other "├───")
         (setq gnus-sum-thread-tree-single-leaf "└───"))
-    (progn                              ; tree layout using ASCII characters
+    (progn                              ; Tree layout using ASCII characters.
       (setq gnus-sum-thread-tree-root "")
       (setq gnus-sum-thread-tree-false-root "")
       (setq gnus-sum-thread-tree-single-indent "")
@@ -709,16 +687,6 @@ Use ~T T~ to toggle threading.
   ;; (setq gnus-sort-gathered-threads-function 'gnus-thread-sort-by-date)
 #+end_src
 
-Show/hide threads with ~>~ / ~<~.
-
-#+begin_src emacs-lisp :tangle no
-  (define-key gnus-summary-mode-map
-    (kbd ">") 'gnus-summary-show-thread)
-
-  (define-key gnus-summary-mode-map
-    (kbd "<") 'gnus-summary-hide-thread)
-#+end_src
-
 ** Sorting the Summary Buffer
 
 *Primary* sort key should be the *last* function in the list.
@@ -739,7 +707,7 @@ a thread (older before younger, thus the not). If that still doesn't distinguish
 2 threads, it's sorted by article number (that should always be included as last
 element to guarantee a total ordering).
 
-By the way: in mail groups (except for mailing list groups) I disable scoring,
+By the way: in mail groups (except for mailing list groups), I disable scoring,
 so there the sorting by recency of youngest message in thread is the decision
 maker.  I like that in older-before-younger order, because then I read older
 replies to an article before younger replies.
@@ -758,41 +726,16 @@ replies to an article before younger replies.
   ;; subthreads in the summary buffer.
 #+end_src
 
-** Article Caching
-
-#+begin_src emacs-lisp :tangle no
-;;** 3.12 (info "(gnus)Article Caching")
-
-  ;; Use the cache.
-  (setq gnus-use-cache t)
-
-  ;; ;; Local cache.
-  ;; (setq gnus-cache-directory (concat gnus-directory "cache/"))
-
-  ;; Cache your nnimap groups.
-  (setq gnus-cacheable-groups "^nnimap")
-#+end_src
-
 ** Article Treatment
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 ;;** 3.18 (info "(gnus)Article Treatment")
 
   ;; Change a `\205' figure to "...".
   (add-hook 'gnus-part-display-hook 'article-treat-dumbquotes)
+#+end_src
 
-  ;; Full shampoo of messages you read.
-  (defun leuven-gnus-wash-this-article ()
-    "Wash an article."
-    (interactive)
-    (gnus-article-outlook-deuglify-article)
-    (gnus-article-fill-cited-article nil '79)
-    (gnus-article-capitalize-sentences)
-    (message "Washed this article"))
-
-  (define-key gnus-summary-mode-map
-    (kbd "C-c w") 'leuven-gnus-wash-this-article)
-
+#+begin_src emacs-lisp
   ;; What is to be considered a signature.
   (setq gnus-signature-separator
         '("^-- $"                       ; The standard.
@@ -803,7 +746,7 @@ replies to an article before younger replies.
   (setq gnus-signature-limit 20.0)
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (defun leuven-prefix-line ()
     "Prefix the current line with `>'."
     (interactive)
@@ -877,10 +820,6 @@ replies to an article before younger replies.
 
 #+begin_src emacs-lisp :tangle no
 ;;** 3.27 (info "(gnus)Various Summary Stuff")
-
-  ;; Highlight current line in summary buffer.
-  (when (fboundp 'leuven--hl-line-highlight)
-    (add-hook 'gnus-summary-mode-hook 'leuven--hl-line-highlight))
 
   ;; Search forward for an article containing a given regexp.
   (define-key gnus-summary-mode-map
@@ -1071,16 +1010,15 @@ pressing ~K H~ (~gnus-article-browse-html-article~).
 ;;*** 1.5 (info "(emacs-mime)Display Customization")
 
   (with-eval-after-load "mm-decode"
-    ;; ;; MIME type that will be displayed externally automatically
+    ;; ;; MIME type that will be displayed externally automatically.
     ;; (add-to-list 'mm-automatic-external-display "text/html")
 
-    ;; do not treat inline images as real attachmentS (display them, instead).
+    ;; Do not treat inline images as real attachments (display them, instead).
     (add-to-list 'mm-attachment-override-types "image/.*")
-                                        ; "text/x-vcard"...
 
     ;; Don't render HTML automatically *when plain text alternative is
     ;; available*.
-    (Add-to-list 'mm-discouraged-alternatives "text/html").
+    (add-to-list 'mm-discouraged-alternatives "text/html")
     (add-to-list 'mm-discouraged-alternatives "text/richtext")
     (add-to-list 'mm-discouraged-alternatives "text/enriched")
     (add-to-list 'mm-discouraged-alternatives "multipart/related")
@@ -1156,20 +1094,16 @@ pressing ~K H~ (~gnus-article-browse-html-article~).
 
 * Back to Article Buffer
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 ;;** 4.4 (info "(gnus)Customizing Articles")
 
-  ;; (require 'gnus-art)
+  (when (try-require 'gnus-art)
 
-  ;; Add buttons.
-  (setq gnus-treat-buttonize t)
-  (setq gnus-treat-buttonize-head 'head)
+    ;; Add buttons.
+    (setq gnus-treat-buttonize t)
 
-  ;; Do not display smileys as pictures.
-  (setq gnus-treat-display-smileys nil)
-
-  ;; Sound.
-  (setq gnus-treat-play-sounds t)
+    ;; Add buttons to the head.
+    (setq gnus-treat-buttonize-head 'head))
 #+end_src
 
 Toggle coloring from HTML emails:
@@ -1607,7 +1541,7 @@ See http://www.emacswiki.org/emacs/AutoDictionaryMode.
               (define-key message-mode-map
                 (kbd "C-c C-v") nil)))
 
-  ;; Operates on messages you compose.
+  ;; Operate on messages you compose.
   (defun leuven--message-mode-hook ()
     "Enable Org minor modes and auto-fill."
 
