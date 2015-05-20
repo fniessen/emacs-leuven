@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150520.1312
+;; Version: 20150520.1322
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150520.1312"
+(defconst leuven--emacs-version "20150520.1322"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1422,7 +1422,7 @@ These packages are neither built-in nor already installed nor ignored."
                           (powerline-raw "%l," face1 'l)
                           (powerline-raw "%c" face1 'r)
                           (funcall separator-right face1 'powerline-buffer-position-face)
-                          (powerline-raw " %4p" 'powerline-buffer-position-face 'r)
+                          (powerline-raw " %3p" 'powerline-buffer-position-face 'r)
                           (funcall separator-right 'powerline-buffer-position-face face2)
                           (powerline-buffer-size face2 'l)
                           (powerline-raw " " face2)

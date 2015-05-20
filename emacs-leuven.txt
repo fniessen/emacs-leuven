@@ -2376,15 +2376,15 @@ See https://github.com/bling/vim-airline for the original author.
                           (funcall separator-right mode-line face1)
 #+end_src
 
-Line/column replacement. Shows column in red when we go over the 80th character.
-
+*************** TODO Show column in red when we go over the 80th character
 See http://www.elliotglaysher.org/emacs/
+*************** END
 
 #+begin_src emacs-lisp
                           (powerline-raw "%l," face1 'l)
                           (powerline-raw "%c" face1 'r)
                           (funcall separator-right face1 'powerline-buffer-position-face)
-                          (powerline-raw " %4p" 'powerline-buffer-position-face 'r)
+                          (powerline-raw " %3p" 'powerline-buffer-position-face 'r)
                           (funcall separator-right 'powerline-buffer-position-face face2)
                           (powerline-buffer-size face2 'l)
                           (powerline-raw " " face2)
