@@ -14,18 +14,8 @@
 (setq debug-on-error t)
 (setq debug-on-quit t)
 
-;; No limit when printing values.
-(setq eval-expression-print-length nil)
-(setq eval-expression-print-level nil)
-
-;; Allow input of accented characters (for terminals that use 8-bit charsets).
-(set-input-mode nil nil 1)
-
-;; Enable visualization of matching parens.
-(require 'paren)
-(show-paren-mode 1)
-(setq show-paren-style 'mixed)
-(setq show-paren-ring-bell-on-mismatch t)
+;; Default values for frame creation.
+(setq default-frame-alist '((tool-bar-lines . 0)))
 
 ;; Title bar display of visible frames.
 (setq frame-title-format
@@ -41,6 +31,30 @@
               (format-time-string "%Y-%m-%d" emacs-build-time)
               (emacs-pid)))
 
+;; Allow input of accented characters (for terminals that use 8-bit charsets).
+(set-input-mode nil nil 1)
+
+;; Enable visualization of matching parens.
+(require 'paren)
+(show-paren-mode 1)
+(setq show-paren-style 'mixed)
+(setq show-paren-ring-bell-on-mismatch t)
+
+;; No limit when printing values.
+(setq eval-expression-print-length nil)
+(setq eval-expression-print-level nil)
+
+;; Don't display the "Welcome to GNU Emacs" buffer on startup.
+(setq inhibit-startup-screen t)
+
+;; Initial message displayed in *scratch* buffer at startup.
+(setq initial-scratch-message
+      ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This is Emacs running with a minimal configuration file.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+")
+
 ;; Org-mode (reverse order, so that the Org lisp directory will be found
 ;; before the Org contrib lisp directory).
 ;; (add-to-list 'load-path "~/Public/Repositories/org-mode/testing")
@@ -51,9 +65,8 @@
 
 ;; Getting started.
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)\\'" . org-mode))
-(if (locate-library "org-loaddefs")
-    (require 'org-loaddefs)
-  (require 'org-install))               ; Obsolete since Emacs 24.3.
+(when (locate-library "org-loaddefs")
+  (require 'org-loaddefs))
 
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -62,6 +75,14 @@
 ;;* --[ Variable part Under Test ]--------------------------------------------
 
 ;; Place your test code here.
+
+(setq ispell-program-name "c:/Program Files (x86)/Aspell/bin/aspell.exe")
+
+;; Enable on-the-fly spell checking.
+(add-hook 'org-mode-hook 'flyspell-mode)
+
+(with-eval-after-load "helm-autoloads"
+  (global-set-key (kbd "M-y") 'helm-show-kill-ring))
 
 (message "Loading Minimal Emacs... Done (in %.2f s)"
          (- (float-time) em/emacs-load-time-start))

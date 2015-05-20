@@ -8,7 +8,8 @@
 
 #+PROPERTY:  eval no
 
-#+SETUPFILE: ./bigblow-pirilampo.setup
+# #+SETUPFILE: ./bigblow-pirilampo.setup
+#+SETUPFILE: ~/src/org-html-themes/setup/theme-readtheorg-local-abs.setup
 
 * Example
   :PROPERTIES:
@@ -23,7 +24,7 @@ But =batch= implies =-q=, so you will have to provide a minimal =.emacs= file th
 sets up enough structure to enable you to do what you want, *without any of
 your customizations*.
 
-Here is a minimal Emacs config file.
+Here is such a minimal Emacs config file.
 
 ** Constant part
 
@@ -44,18 +45,8 @@ Here is a minimal Emacs config file.
 (setq debug-on-error t)
 (setq debug-on-quit t)
 
-;; No limit when printing values.
-(setq eval-expression-print-length nil)
-(setq eval-expression-print-level nil)
-
-;; Allow input of accented characters (for terminals that use 8-bit charsets).
-(set-input-mode nil nil 1)
-
-;; Enable visualization of matching parens.
-(require 'paren)
-(show-paren-mode 1)
-(setq show-paren-style 'mixed)
-(setq show-paren-ring-bell-on-mismatch t)
+;; Default values for frame creation.
+(setq default-frame-alist '((tool-bar-lines . 0)))
 
 ;; Title bar display of visible frames.
 (setq frame-title-format
@@ -71,6 +62,32 @@ Here is a minimal Emacs config file.
               (format-time-string "%Y-%m-%d" emacs-build-time)
               (emacs-pid)))
 
+;; Allow input of accented characters (for terminals that use 8-bit charsets).
+(set-input-mode nil nil 1)
+
+;; Enable visualization of matching parens.
+(require 'paren)
+(show-paren-mode 1)
+(setq show-paren-style 'mixed)
+(setq show-paren-ring-bell-on-mismatch t)
+
+;; No limit when printing values.
+(setq eval-expression-print-length nil)
+(setq eval-expression-print-level nil)
+
+;; Don't display the "Welcome to GNU Emacs" buffer on startup.
+(setq inhibit-startup-screen t)
+
+;; Initial message displayed in *scratch* buffer at startup.
+(setq initial-scratch-message
+      ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This is Emacs running with a minimal configuration file.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+")
+#+end_src
+
+#+begin_src emacs-lisp
 ;; Org-mode (reverse order, so that the Org lisp directory will be found
 ;; before the Org contrib lisp directory).
 ;; (add-to-list 'load-path "~/Public/Repositories/org-mode/testing")
@@ -81,9 +98,8 @@ Here is a minimal Emacs config file.
 
 ;; Getting started.
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)\\'" . org-mode))
-(if (locate-library "org-loaddefs")
-    (require 'org-loaddefs)
-  (require 'org-install))               ; Obsolete since Emacs 24.3.
+(when (locate-library "org-loaddefs")
+  (require 'org-loaddefs))
 
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -103,6 +119,14 @@ Here is a minimal Emacs config file.
 
 #+begin_src emacs-lisp :tangle .emacs-minimal.el
 ;; Place your test code here.
+
+(setq ispell-program-name "c:/Program Files (x86)/Aspell/bin/aspell.exe")
+
+;; Enable on-the-fly spell checking.
+(add-hook 'org-mode-hook 'flyspell-mode)
+
+(with-eval-after-load "helm-autoloads"
+  (global-set-key (kbd "M-y") 'helm-show-kill-ring))
 #+end_src
 
 *** Test if function is defined
@@ -244,7 +268,7 @@ You can *get backtraces* at each stopping point by Edebugging =foobar= and
 
 ** ELP
 
-#+begin_src sh
+#+begin_src shell
 emacs -Q --batch -L ~/Public/Repositories/org-mode/lisp \
     --eval '(elp-instrument-package "org")' 400.org --eval '(elp-results)'
 #+end_src
@@ -335,61 +359,17 @@ changing =HOME= for Emacs is a very bad idea. WE DON'T DO THAT!!
 
 ** Emacs-helm.sh
 
+#+begin_verse
 > I was too lazy to test with emacs -Q before.
 
 =emacs-helm.sh= is for that, I am too lazy too to use emacs -Q ;-)
-
-#+begin_src sh :tangle emacs-helm.sh
-#!/bin/bash
-
-## Copyright (C) 2012 Thierry Volpiatto <thierry.volpiatto@gmail.com>
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published by
-## the Free Software Foundation, either version 3 of the License, or
-## (at your option) any later version.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
-## You should have received a copy of the GNU General Public License
-## along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-## Commentary:
-
-# Preconfigured Emacs with a basic helm configuration.
-# Useful to start quickly an emacs -Q with helm.
-# Run it from this directory.
-
-TMP="/tmp/helm-cfg.el"
-LOADPATH=`dirname $0`
-cat > $TMP <<EOF
-(setq default-frame-alist '((vertical-scroll-bars . nil)
-                            (tool-bar-lines . 0)
-                            (menu-bar-lines . 0)
-                            (fullscreen . nil)))
-(blink-cursor-mode -1)
-(add-to-list 'load-path (expand-file-name "$LOADPATH"))
-(require 'helm-config)
-(helm-mode 1)
-(define-key global-map [remap find-file] 'helm-find-files)
-(define-key global-map [remap occur] 'helm-occur)
-(define-key global-map [remap list-buffers] 'helm-buffers-list)
-(define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
-(define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)
-(add-hook 'kill-emacs-hook #'(lambda () (delete-file "$TMP")))
-(cd "~/")
-EOF
-emacs -Q -l $TMP
-#+end_src
+#+end_verse
 
 ** Code
 
 *Call this script emacs-q?*
 
-#+begin_src sh :tangle emacs-minimal :var workingDir=(file-name-directory (or load-file-name (buffer-file-name))) :padline no :shebang #!/bin/sh
+#+begin_src shell :tangle emacs-minimal :var workingDir=(file-name-directory (or load-file-name (buffer-file-name))) :padline no :shebang #!/bin/sh
 TESTEL=
 TESTFILE=~/test.el
 if test -e $TESTFILE # file exists
@@ -408,12 +388,12 @@ eval "$cmd"
 echo "Exit status: $?"
 #+end_src
 
-#+begin_src sh
+#+begin_src shell
 alias em=emacs-minimal
 #+end_src
 
 Install it, by symlinking the file.
 
-#+begin_src sh :results silent :var workingDir=(file-name-directory (or load-file-name (buffer-file-name)))
+#+begin_src shell :results silent :var workingDir=(file-name-directory (or load-file-name (buffer-file-name)))
 ln -f -s $workingDir/emacs-minimal ~/bin/emacs-minimal
 #+end_src
