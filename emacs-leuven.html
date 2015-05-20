@@ -433,7 +433,7 @@ this set of customizations to &ldquo;short-cut&rdquo; that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150520.1542</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150520.2207</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150520.1542"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150520.2207"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2176,8 +2176,9 @@ Interactively insert items from kill ring with <code>M-x helm-show-kill-ring</co
 <h3 id="orgheadline41">Rectangles</h3>
 <div class="outline-text-3" id="text-orgheadline41">
 <p>
-To kill the text of a rectangular area, use <code>C-x r k</code> (<code>kill-rectangle</code>).  Or just
-&ldquo;delete&rdquo; the &ldquo;region-rectangle&rdquo; (without &ldquo;killing&rdquo; it) with <code>C-x r d</code>.
+To kill the text of a rectangular area (vertically selected text), use <code>C-x r k</code>
+(<code>kill-rectangle</code>).  Or just &ldquo;delete&rdquo; the &ldquo;region-rectangle&rdquo; (without &ldquo;killing&rdquo;
+it) with <code>C-x r d</code>.
 </p>
 
 <p>
@@ -2378,13 +2379,15 @@ Key bindings:
 </p>
 
 <dl class="org-dl">
-<dt><code>C-x p RET</code> (C-F2 in Sublime Text and TextMate)</dt><dd><b>Set</b> (or delete) a <b>bookmark</b> at point.</dd>
+<dt><code>C-x p RET</code> (<code>C-F2</code> in Sublime Text and TextMate)</dt><dd><b>Set</b> (or delete) a <b>bookmark</b> at point.</dd>
 
-<dt><code>C-x p C-down</code> (F2 in Sublime Text and TextMate)</dt><dd>Cycle to the <b>next</b> highlighted <b>bookmark</b> in the current buffer.</dd>
+<dt><code>C-x p C-down</code> (<code>F2</code> in Sublime Text and TextMate)</dt><dd>Cycle to the <b>next</b> highlighted <b>bookmark</b> in the current buffer.</dd>
 
-<dt><code>C-x p C-up</code> (S-F2 in Sublime Text and TextMate)</dt><dd>Cycle to the <b>previous</b> highlighted <b>bookmark</b> in the current buffer.</dd>
+<dt><code>C-x p C-up</code> (<code>S-F2</code> in Sublime Text and TextMate)</dt><dd>Cycle to the <b>previous</b> highlighted <b>bookmark</b> in the current buffer.</dd>
 
 <dt><code>C-x (4) j h</code></dt><dd>Jump to a highlighted bookmark (in another window).</dd>
+
+<dt>C-x p ,</dt><dd>Show the bookmark list just for bookmarks for the current file/buffer.</dd>
 </dl>
 
 <p>
@@ -2399,14 +2402,20 @@ In TeXStudio:
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Extensions to standard library `</span><span class="org-constant"><span class="org-comment">bookmark.el</span></span><span class="org-comment">'.</span>
-    (try-require 'bookmark+)
+    (<span class="org-keyword">when</span> (try-require 'bookmark+)
+      (global-set-key (kbd <span class="org-string">"&lt;C-f2&gt;"</span>) 'bmkp-toggle-autonamed-bookmark-set/delete)
+      (global-set-key (kbd <span class="org-string">"&lt;S-f2&gt;"</span>) 'bmkp-next-bookmark-this-file/buffer-repeat))
+
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"bookmark+"</span>
 
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Default highlight style for autonamed bookmarks.</span>
-(setq bmkp-light-style-autonamed 'rfringe)
+      (setq bmkp-light-left-fringe-bitmap 'filled-square)
+      (setq bmkp-light-right-fringe-bitmap 'filled-square)
 
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Default highlight style for non-autonamed bookmarks.</span>
-(setq bmkp-light-style-non-autonamed 'rfringe)
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Default highlight style for autonamed (= default) bookmarks.</span>
+      (setq bmkp-light-style-autonamed 'lfringe)
+
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Default highlight style for non-autonamed bookmarks.</span>
+      (setq bmkp-light-style-non-autonamed 'lfringe)
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Automatically highlight bookmarks when set.</span>
       (setq bmkp-auto-light-when-set 'any-bookmark)
@@ -14979,7 +14988,7 @@ See demo of it: <a href="http://www.youtube.com/watch?v=TMoPuv-xXMM">http://www.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">dynamic evaluation replacement with emacs</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Dynamic evaluation replacement with Emacs.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"litable-autoloads"</span>
 
     (add-hook 'lisp-interaction-mode-hook 'litable-mode))
@@ -14997,10 +15006,10 @@ See demo of it: <a href="http://www.youtube.com/watch?v=TMoPuv-xXMM">http://www.
 
   (leuven--section <span class="org-string">"27.10 (emacs)Lisp Interaction Buffers"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">don't display the "Welcome to GNU Emacs" buffer on startup</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't display the "Welcome to GNU Emacs" buffer on startup.</span>
   (setq inhibit-startup-screen t)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">don't insert instructions in the `</span><span class="org-constant"><span class="org-comment">*scratch*</span></span><span class="org-comment">' buffer at startup</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't insert instructions in the `</span><span class="org-constant"><span class="org-comment">*scratch*</span></span><span class="org-comment">' buffer at startup.</span>
   (setq initial-scratch-message nil)
 </pre>
 </div>
@@ -15012,7 +15021,7 @@ or Org specific stuff gets loaded at each startup time.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">major mode command symbol to use for the initial `</span><span class="org-constant"><span class="org-comment">*scratch*</span></span><span class="org-comment">' buffer</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Major mode command symbol to use for the initial `</span><span class="org-constant"><span class="org-comment">*scratch*</span></span><span class="org-comment">' buffer.</span>
   (setq initial-major-mode 'fundamental-mode)
 </pre>
 </div>
@@ -15029,7 +15038,7 @@ To evaluate a non-interactive command, simply use <code>IELM</code>.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 27 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 27 ends here.</span>
 </pre>
 </div>
 </div>

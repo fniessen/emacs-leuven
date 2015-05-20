@@ -1542,8 +1542,9 @@ Interactively insert items from kill ring with ~M-x helm-show-kill-ring~ (see
 
 ** Rectangles
 
-To kill the text of a rectangular area, use ~C-x r k~ (~kill-rectangle~).  Or just
-"delete" the "region-rectangle" (without "killing" it) with ~C-x r d~.
+To kill the text of a rectangular area (vertically selected text), use ~C-x r k~
+(~kill-rectangle~).  Or just "delete" the "region-rectangle" (without "killing"
+it) with ~C-x r d~.
 
 To copy a (series of) Org column(s) while avoiding the use of registers:
 1. select the region-rectangle,
@@ -1675,17 +1676,20 @@ Visible bookmarks in buffer.
 
 Key bindings:
 
-- ~C-x p RET~ (C-F2 in Sublime Text and TextMate) ::
+- ~C-x p RET~ (~C-F2~ in Sublime Text and TextMate) ::
      *Set* (or delete) a *bookmark* at point.
 
-- ~C-x p C-down~ (F2 in Sublime Text and TextMate) ::
+- ~C-x p C-down~ (~F2~ in Sublime Text and TextMate) ::
      Cycle to the *next* highlighted *bookmark* in the current buffer.
 
-- ~C-x p C-up~ (S-F2 in Sublime Text and TextMate) ::
+- ~C-x p C-up~ (~S-F2~ in Sublime Text and TextMate) ::
      Cycle to the *previous* highlighted *bookmark* in the current buffer.
 
 - ~C-x (4) j h~ ::
      Jump to a highlighted bookmark (in another window).
+
+- C-x p , ::
+     Show the bookmark list just for bookmarks for the current file/buffer.
 
 In TeXStudio:
 
@@ -1694,14 +1698,20 @@ In TeXStudio:
 
 #+begin_src emacs-lisp
     ;; Extensions to standard library `bookmark.el'.
-    (try-require 'bookmark+)
+    (when (try-require 'bookmark+)
+      (global-set-key (kbd "<C-f2>") 'bmkp-toggle-autonamed-bookmark-set/delete)
+      (global-set-key (kbd "<S-f2>") 'bmkp-next-bookmark-this-file/buffer-repeat))
+
     (with-eval-after-load "bookmark+"
 
-;; Default highlight style for autonamed bookmarks.
-(setq bmkp-light-style-autonamed 'rfringe)
+      (setq bmkp-light-left-fringe-bitmap 'filled-square)
+      (setq bmkp-light-right-fringe-bitmap 'filled-square)
 
-;; Default highlight style for non-autonamed bookmarks.
-(setq bmkp-light-style-non-autonamed 'rfringe)
+      ;; Default highlight style for autonamed (= default) bookmarks.
+      (setq bmkp-light-style-autonamed 'lfringe)
+
+      ;; Default highlight style for non-autonamed bookmarks.
+      (setq bmkp-light-style-non-autonamed 'lfringe)
 
       ;; Automatically highlight bookmarks when set.
       (setq bmkp-auto-light-when-set 'any-bookmark)
@@ -11704,7 +11714,7 @@ https://github.com/Fuco1/litable.
 See demo of it: http://www.youtube.com/watch?v=TMoPuv-xXMM.
 
 #+begin_src emacs-lisp
-  ;; dynamic evaluation replacement with emacs
+  ;; Dynamic evaluation replacement with Emacs.
   (with-eval-after-load "litable-autoloads"
 
     (add-hook 'lisp-interaction-mode-hook 'litable-mode))
@@ -11717,10 +11727,10 @@ See demo of it: http://www.youtube.com/watch?v=TMoPuv-xXMM.
 
   (leuven--section "27.10 (emacs)Lisp Interaction Buffers")
 
-  ;; don't display the "Welcome to GNU Emacs" buffer on startup
+  ;; Don't display the "Welcome to GNU Emacs" buffer on startup.
   (setq inhibit-startup-screen t)
 
-  ;; don't insert instructions in the `*scratch*' buffer at startup
+  ;; Don't insert instructions in the `*scratch*' buffer at startup.
   (setq initial-scratch-message nil)
 #+end_src
 
@@ -11728,7 +11738,7 @@ Don't use any specific mode for the initial buffer.  That ensure that no Lisp
 or Org specific stuff gets loaded at each startup time.
 
 #+begin_src emacs-lisp
-  ;; major mode command symbol to use for the initial `*scratch*' buffer
+  ;; Major mode command symbol to use for the initial `*scratch*' buffer.
   (setq initial-major-mode 'fundamental-mode)
 #+end_src
 
@@ -11739,7 +11749,7 @@ mode.
 To evaluate a non-interactive command, simply use ~IELM~.
 
 #+begin_src emacs-lisp
-)                                       ; chapter 27 ends here
+)                                       ; Chapter 27 ends here.
 #+end_src
 
 * Maintaining Programs

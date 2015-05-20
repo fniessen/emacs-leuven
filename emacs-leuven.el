@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150520.1541
+;; Version: 20150520.2206
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150520.1541"
+(defconst leuven--emacs-version "20150520.2206"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -968,14 +968,20 @@ These packages are neither built-in nor already installed nor ignored."
     (setq bookmark-save-flag 1)
 
     ;; Extensions to standard library `bookmark.el'.
-    (try-require 'bookmark+)
+    (when (try-require 'bookmark+)
+      (global-set-key (kbd "<C-f2>") 'bmkp-toggle-autonamed-bookmark-set/delete)
+      (global-set-key (kbd "<S-f2>") 'bmkp-next-bookmark-this-file/buffer-repeat))
+
     (with-eval-after-load "bookmark+"
 
-;; Default highlight style for autonamed bookmarks.
-(setq bmkp-light-style-autonamed 'rfringe)
+      (setq bmkp-light-left-fringe-bitmap 'filled-square)
+      (setq bmkp-light-right-fringe-bitmap 'filled-square)
 
-;; Default highlight style for non-autonamed bookmarks.
-(setq bmkp-light-style-non-autonamed 'rfringe)
+      ;; Default highlight style for autonamed (= default) bookmarks.
+      (setq bmkp-light-style-autonamed 'lfringe)
+
+      ;; Default highlight style for non-autonamed bookmarks.
+      (setq bmkp-light-style-non-autonamed 'lfringe)
 
       ;; Automatically highlight bookmarks when set.
       (setq bmkp-auto-light-when-set 'any-bookmark)
@@ -7303,7 +7309,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (global-set-key (kbd "C-c e") 'eval-and-replace)
 
-  ;; dynamic evaluation replacement with emacs
+  ;; Dynamic evaluation replacement with Emacs.
   (with-eval-after-load "litable-autoloads"
 
     (add-hook 'lisp-interaction-mode-hook 'litable-mode))
@@ -7312,16 +7318,16 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "27.10 (emacs)Lisp Interaction Buffers")
 
-  ;; don't display the "Welcome to GNU Emacs" buffer on startup
+  ;; Don't display the "Welcome to GNU Emacs" buffer on startup.
   (setq inhibit-startup-screen t)
 
-  ;; don't insert instructions in the `*scratch*' buffer at startup
+  ;; Don't insert instructions in the `*scratch*' buffer at startup.
   (setq initial-scratch-message nil)
 
-  ;; major mode command symbol to use for the initial `*scratch*' buffer
+  ;; Major mode command symbol to use for the initial `*scratch*' buffer.
   (setq initial-major-mode 'fundamental-mode)
 
-)                                       ; chapter 27 ends here
+)                                       ; Chapter 27 ends here.
 
 ;;* 28 (info "(emacs)Maintaining") Programs
 
