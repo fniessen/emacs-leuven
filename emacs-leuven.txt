@@ -2595,18 +2595,26 @@ the user see truly invisible matches before replacing them.
   ;; Show number of matches in mode-line while searching.
   (with-eval-after-load "anzu-autoloads"
 
-    ;; Enable Global-Anzu mode.
-    (global-anzu-mode 1)
-
-    (global-set-key (kbd "M-%") 'anzu-query-replace)
-    (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
-
     ;; Lighter of anzu-mode.
     (setq anzu-mode-lighter "")
 
-    ;; (setq anzu-deactivate-region t)
-    ;; (setq anzu-search-threshold 1000)
-    ;; (setq anzu-replace-to-string-separator " => ")
+    ;; Limit of search number.
+    (setq anzu-search-threshold 1000)
+
+    ;; Deactive region if you use anzu a replace command with region.
+    (setq anzu-deactivate-region t)
+
+    ;; Separator of `to' string.
+    (setq anzu-replace-to-string-separator " => ")
+
+    ;; Enable Global-Anzu mode.
+    (global-anzu-mode 1)
+
+    ;; Override binding for `query-replace'.
+    (global-set-key (kbd "M-%") 'anzu-query-replace)
+    (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
+
+    ;; (define-key isearch-mode-map (kbd "M-%") 'anzu-query-replace)
     )
 #+end_src
 

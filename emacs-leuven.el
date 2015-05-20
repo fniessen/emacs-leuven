@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150520.1357
+;; Version: 20150520.1457
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150520.1357"
+(defconst leuven--emacs-version "20150520.1457"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1571,18 +1571,26 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Show number of matches in mode-line while searching.
   (with-eval-after-load "anzu-autoloads"
 
-    ;; Enable Global-Anzu mode.
-    (global-anzu-mode 1)
-
-    (global-set-key (kbd "M-%") 'anzu-query-replace)
-    (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
-
     ;; Lighter of anzu-mode.
     (setq anzu-mode-lighter "")
 
-    ;; (setq anzu-deactivate-region t)
-    ;; (setq anzu-search-threshold 1000)
-    ;; (setq anzu-replace-to-string-separator " => ")
+    ;; Limit of search number.
+    (setq anzu-search-threshold 1000)
+
+    ;; Deactive region if you use anzu a replace command with region.
+    (setq anzu-deactivate-region t)
+
+    ;; Separator of `to' string.
+    (setq anzu-replace-to-string-separator " => ")
+
+    ;; Enable Global-Anzu mode.
+    (global-anzu-mode 1)
+
+    ;; Override binding for `query-replace'.
+    (global-set-key (kbd "M-%") 'anzu-query-replace)
+    (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
+
+    ;; (define-key isearch-mode-map (kbd "M-%") 'anzu-query-replace)
     )
 
 ;;** 15.5 (info "(emacs)Regexp Search")

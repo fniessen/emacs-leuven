@@ -433,7 +433,7 @@ this set of customizations to &ldquo;short-cut&rdquo; that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150520.1358</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150520.1458</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150520.1358"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150520.1458"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -3519,18 +3519,26 @@ the user see truly invisible matches before replacing them.
 <pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Show number of matches in mode-line while searching.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"anzu-autoloads"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Global-Anzu mode.</span>
-    (global-anzu-mode 1)
-
-    (global-set-key (kbd <span class="org-string">"M-%"</span>) 'anzu-query-replace)
-    (global-set-key (kbd <span class="org-string">"C-M-%"</span>) 'anzu-query-replace-regexp)
-
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Lighter of anzu-mode.</span>
     (setq anzu-mode-lighter <span class="org-string">""</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq anzu-deactivate-region t)</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq anzu-search-threshold 1000)</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq anzu-replace-to-string-separator " =&gt; ")</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Limit of search number.</span>
+    (setq anzu-search-threshold 1000)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Deactive region if you use anzu a replace command with region.</span>
+    (setq anzu-deactivate-region t)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Separator of `</span><span class="org-constant"><span class="org-comment">to</span></span><span class="org-comment">' string.</span>
+    (setq anzu-replace-to-string-separator <span class="org-string">" =&gt; "</span>)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Global-Anzu mode.</span>
+    (global-anzu-mode 1)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Override binding for `</span><span class="org-constant"><span class="org-comment">query-replace</span></span><span class="org-comment">'.</span>
+    (global-set-key (kbd <span class="org-string">"M-%"</span>) 'anzu-query-replace)
+    (global-set-key (kbd <span class="org-string">"C-M-%"</span>) 'anzu-query-replace-regexp)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(define-key isearch-mode-map (kbd "M-%") 'anzu-query-replace)</span>
     )
 </pre>
 </div>
