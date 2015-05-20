@@ -2287,6 +2287,13 @@ See https://github.com/bling/vim-airline for the original author.
     "Face to fontify another dictionary in inactive buffers."
     :group 'powerline)
 
+  (defface powerline-buffer-position-face
+    '((((class color))
+       (:background "#D2D2D2" :foreground "#282828"))
+      (t (:weight bold)))
+    "Face to fontify buffer position."
+    :group 'powerline)
+
   (defun powerline-leuven-theme ()
     "Setup the leuven mode-line."
     (interactive)
@@ -2374,13 +2381,11 @@ Line/column replacement. Shows column in red when we go over the 80th character.
 See http://www.elliotglaysher.org/emacs/
 
 #+begin_src emacs-lisp
-                          (powerline-raw "%l" face1 'l)
-                          (powerline-raw ", " face1 'l)
+                          (powerline-raw "%l," face1 'l)
                           (powerline-raw "%c" face1 'r)
-                          (funcall separator-right face1 mode-line)
-                          (powerline-raw " ")
-                          (powerline-raw "%4p" nil 'r)
-                          (funcall separator-right mode-line face2)
+                          (funcall separator-right face1 'powerline-buffer-position-face)
+                          (powerline-raw " %4p" 'powerline-buffer-position-face 'r)
+                          (funcall separator-right 'powerline-buffer-position-face face2)
                           (powerline-buffer-size face2 'l)
                           (powerline-raw " " face2)
 
@@ -2446,7 +2451,7 @@ See http://www.elliotglaysher.org/emacs/
   ;; Extensions to hl-line.el.
   (with-eval-after-load "hl-line+-autoloads"
 
-    ;; Disable Global Hl-Line mode.x
+    ;; Disable Global Hl-Line mode.
     (global-hl-line-mode -1)
 
     ;; Turn on `global-hl-line-mode' only when Emacs is idle.
@@ -3377,8 +3382,12 @@ You can review the diff of all file changes, either:
 - unified (Diff mode) or
 - split (Ediff mode).
 
-In Diff mode, I can *select a hunk and apply it (in reverse)*.  Nice following
-~C-x v =~ to show what's changed, and decide to reverse a change.
+In Diff mode, the changes specified in a patch are grouped into "hunks", which
+are contiguous chunks of text that contain one or more changed lines.
+
+Use ~C-x v =~ to show what's changed.
+
+You can also decide to revert a change: *select a hunk and apply it (in reverse)*.
 
 #+begin_src emacs-lisp
 ;;** 18.10 (info "(emacs)Diff Mode")
@@ -15287,16 +15296,17 @@ https://github.com/emacsmirror/dedicated.
 
 * Using Emacs Server
 
+#+begin_note
 The Emacs version you're using and the ~emacsclient~ version you're using must be
 from the *same Emacs version*...  If the latter is not the cause of a refused
 connection, re-try ~M-x server-start~ in Emacs.
-
+#+end_note
 
 ~emacsclient~ is waiting for Emacs to tell it it's done editing that file.
 That's important if you use ~emacsclient~ as your ~EDITOR~.  If you want
 ~emacsclient~ to return immediately, use the ~-n~ option.
 
-Do you use ~emacsclient~ in terminals? If not, just use parameter ~-c -n~, which
+Do you use ~emacsclient~ in terminals?  If not, just use parameter ~-c -n~, which
 creates an X Window and doesn't wait for ~(server-edit)~.
 
 #+begin_src emacs-lisp
@@ -15304,27 +15314,27 @@ creates an X Window and doesn't wait for ~(server-edit)~.
 
 (leuven--chapter leuven-load-chapter-37-emacs-server "37 Using Emacs as a Server"
 
-  ;; use Emacs as a server (with the `emacsclient' program)
+  ;; Use Emacs as a server (with the `emacsclient' program).
   (GNUEmacs
 
     (unless noninteractive
-      (idle-require 'server))           ; after init
+      (idle-require 'server))           ; After init.
 
     (with-eval-after-load "server"
 
-      ;; test whether server is (definitely) running, avoiding the message of
-      ;; "server-start" while opening another Emacs session
+      ;; Test whether server is (definitely) running, avoiding the message of
+      ;; "server-start" while opening another Emacs session.
       (or (equal (server-running-p) t)
 
-          ;; start the Emacs server
+          ;; Start the Emacs server.
           (server-start))               ; ~ 0.20 s
 
-      ;; save file without confirmation before returning to the client
+      ;; Save file without confirmation before returning to the client.
       (defadvice server-edit (before save-buffer-if-needed activate)
         "Save current buffer before marking it as done."
         (when server-buffer-clients (save-buffer)))))
 
-)                                       ; chapter 37 ends here
+)                                       ; Chapter 37 ends here.
 #+end_src
 
 Since GNU Emacs 23, there is also a ~--daemon~ flag to start the server in a

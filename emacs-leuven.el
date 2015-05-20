@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150519.2354
+;; Version: 20150520.1312
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150519.2354"
+(defconst leuven--emacs-version "20150520.1312"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1331,6 +1331,13 @@ These packages are neither built-in nor already installed nor ignored."
     "Face to fontify another dictionary in inactive buffers."
     :group 'powerline)
 
+  (defface powerline-buffer-position-face
+    '((((class color))
+       (:background "#D2D2D2" :foreground "#282828"))
+      (t (:weight bold)))
+    "Face to fontify buffer position."
+    :group 'powerline)
+
   (defun powerline-leuven-theme ()
     "Setup the leuven mode-line."
     (interactive)
@@ -1412,13 +1419,11 @@ These packages are neither built-in nor already installed nor ignored."
                (rhs (list (powerline-raw global-mode-string mode-line 'r)
                           (funcall separator-right mode-line face1)
 
-                          (powerline-raw "%l" face1 'l)
-                          (powerline-raw ", " face1 'l)
+                          (powerline-raw "%l," face1 'l)
                           (powerline-raw "%c" face1 'r)
-                          (funcall separator-right face1 mode-line)
-                          (powerline-raw " ")
-                          (powerline-raw "%4p" nil 'r)
-                          (funcall separator-right mode-line face2)
+                          (funcall separator-right face1 'powerline-buffer-position-face)
+                          (powerline-raw " %4p" 'powerline-buffer-position-face 'r)
+                          (funcall separator-right 'powerline-buffer-position-face face2)
                           (powerline-buffer-size face2 'l)
                           (powerline-raw " " face2)
 
@@ -9218,27 +9223,27 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 (leuven--chapter leuven-load-chapter-37-emacs-server "37 Using Emacs as a Server"
 
-  ;; use Emacs as a server (with the `emacsclient' program)
+  ;; Use Emacs as a server (with the `emacsclient' program).
   (GNUEmacs
 
     (unless noninteractive
-      (idle-require 'server))           ; after init
+      (idle-require 'server))           ; After init.
 
     (with-eval-after-load "server"
 
-      ;; test whether server is (definitely) running, avoiding the message of
-      ;; "server-start" while opening another Emacs session
+      ;; Test whether server is (definitely) running, avoiding the message of
+      ;; "server-start" while opening another Emacs session.
       (or (equal (server-running-p) t)
 
-          ;; start the Emacs server
+          ;; Start the Emacs server.
           (server-start))               ; ~ 0.20 s
 
-      ;; save file without confirmation before returning to the client
+      ;; Save file without confirmation before returning to the client.
       (defadvice server-edit (before save-buffer-if-needed activate)
         "Save current buffer before marking it as done."
         (when server-buffer-clients (save-buffer)))))
 
-)                                       ; chapter 37 ends here
+)                                       ; Chapter 37 ends here.
 
 ;;* 38 (info "(emacs)Printing")
 
