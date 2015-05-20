@@ -26,7 +26,7 @@ your customizations*.
 
 Here is such a minimal Emacs config file.
 
-** Constant part
+** Header
 
 #+begin_src emacs-lisp
 ;;; .emacs-minimal --- Minimal configuration file for Emacs
@@ -38,7 +38,11 @@ Here is such a minimal Emacs config file.
 (message "Loading Minimal Emacs...")
 
 (defconst em/emacs-load-time-start (float-time))
+#+end_src
 
+** Constant part
+
+#+begin_src emacs-lisp
 ;;* --[ Constant part ]-------------------------------------------------------
 
 ;; Activate debugging.
