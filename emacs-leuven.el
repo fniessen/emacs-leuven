@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150519.1103
+;; Version: 20150519.2354
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150519.1103"
+(defconst leuven--emacs-version "20150519.2354"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -434,13 +434,16 @@ Last time is saved in global variable `leuven--before-section-time'."
 
       (defconst leuven-elpa-packages
         '(ace-jump-mode ace-link ace-window aggressive-indent anzu auctex
-          auto-complete bbdb bookmark+ boxquote calfw circe
+          auto-complete bbdb bookmark+ boxquote
+          ;; calfw
+          circe
           color-identifiers-mode company company-quickhelp csv-mode cygwin-mount
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck flycheck-ledger fuzzy
           git-commit-mode git-messenger git-timemachine google-this
           google-translate goto-chg graphviz-dot-mode graphviz-dot-mode
           guide-key helm helm-descbinds helm-swoop hideshowvis highlight-symbol
+          hl-line+
           htmlize indent-guide key-chord litable idle-require imenu-anywhere
           info+ interaction-log ledger-mode leuven-theme magit multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
@@ -1474,6 +1477,15 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Toggle line highlighting in all buffers (Global Hl-Line mode).
   (global-hl-line-mode 1)               ; XXX Perhaps only in prog-modes?
 
+  ;; Extensions to hl-line.el.
+  (with-eval-after-load "hl-line+-autoloads"
+
+    ;; Disable Global Hl-Line mode.
+    (global-hl-line-mode -1)
+
+    ;; Turn on `global-hl-line-mode' only when Emacs is idle.
+    (toggle-hl-line-when-idle))
+
 ;;** 14.21 (info "(emacs)Line Truncation")
 
   (leuven--section "14.21 (emacs)Line Truncation")
@@ -2346,7 +2358,10 @@ These packages are neither built-in nor already installed nor ignored."
       ;; Buffer list.
       (global-set-key (kbd "C-x b") 'helm-mini) ; OK.
                                         ; = `helm-buffers-list' + recents.
+
       (global-set-key (kbd "C-x C-b") 'helm-buffers-list) ; OK.
+
+      ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
 
       (global-set-key (kbd "C-x r l") 'helm-bookmarks)
       (global-set-key (kbd "C-x r l") 'helm-filtered-bookmarks) ; XXX?
@@ -2503,11 +2518,17 @@ These packages are neither built-in nor already installed nor ignored."
     ;; (with-eval-after-load "helm-utils"
     ;;   (setq helm-yank-symbol-first t)
 
+  ;; Lisp complete.
+  (define-key lisp-interaction-mode-map
+    [remap completion-at-point] 'helm-lisp-completion-at-point)
+  (define-key emacs-lisp-mode-map
+    [remap completion-at-point] 'helm-lisp-completion-at-point)
+
     ;; efficiently hopping squeezed lines powered by Helm interface
     ;; (= Helm occur + Follow mode!)
     (with-eval-after-load "helm-swoop-autoloads"
 
-      ;; better version of `occur'
+      ;; Better version of `(helm-)occur'.
       (global-set-key (kbd "C-o") 'helm-swoop)
       (global-set-key (kbd "M-s o") 'helm-swoop)
       ;; (global-set-key (kbd "M-i") 'helm-swoop)

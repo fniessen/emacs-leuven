@@ -728,13 +728,16 @@ like this into your configuration file:
 
       (defconst leuven-elpa-packages
         '(ace-jump-mode ace-link ace-window aggressive-indent anzu auctex
-          auto-complete bbdb bookmark+ boxquote calfw circe
+          auto-complete bbdb bookmark+ boxquote
+          ;; calfw
+          circe
           color-identifiers-mode company company-quickhelp csv-mode cygwin-mount
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck flycheck-ledger fuzzy
           git-commit-mode git-messenger git-timemachine google-this
           google-translate goto-chg graphviz-dot-mode graphviz-dot-mode
           guide-key helm helm-descbinds helm-swoop hideshowvis highlight-symbol
+          hl-line+
           htmlize indent-guide key-chord litable idle-require imenu-anywhere
           info+ interaction-log ledger-mode leuven-theme magit multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
@@ -2439,6 +2442,15 @@ See http://www.elliotglaysher.org/emacs/
 
   ;; Toggle line highlighting in all buffers (Global Hl-Line mode).
   (global-hl-line-mode 1)               ; XXX Perhaps only in prog-modes?
+
+  ;; Extensions to hl-line.el.
+  (with-eval-after-load "hl-line+-autoloads"
+
+    ;; Disable Global Hl-Line mode.x
+    (global-hl-line-mode -1)
+
+    ;; Turn on `global-hl-line-mode' only when Emacs is idle.
+    (toggle-hl-line-when-idle))
 #+end_src
 
 ** Truncation of Lines
@@ -4095,14 +4107,19 @@ See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-
       ;; Buffer list.
       (global-set-key (kbd "C-x b") 'helm-mini) ; OK.
                                         ; = `helm-buffers-list' + recents.
+
       (global-set-key (kbd "C-x C-b") 'helm-buffers-list) ; OK.
+
+      ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
 
       (global-set-key (kbd "C-x r l") 'helm-bookmarks)
       (global-set-key (kbd "C-x r l") 'helm-filtered-bookmarks) ; XXX?
 
       ;; Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.
       (global-set-key (kbd "C-x r b") 'helm-bookmark-ext)
+#+end_src
 
+#+begin_src emacs-lisp
       (defun leuven-helm-org-prog-menu ()
         "Jump to a place in the buffer using an Index menu.
       For Org mode buffers, show Org headlines.
@@ -4114,7 +4131,9 @@ See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-
 
       (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
                                         ; and `C-c =' (like in RefTeX)?
+#+end_src
 
+#+begin_src emacs-lisp
       (global-set-key (kbd "M-y") 'helm-show-kill-ring) ; OK.
 
       ;; (global-set-key (kbd "M-5") 'helm-etags-select)
@@ -4325,13 +4344,17 @@ changing the buffer's contents!
 #+end_warning
 
 #+begin_src emacs-lisp :tangle no
-  ;; Lisp complete or indent
+  ;; Lisp complete or indent.
   (define-key lisp-interaction-mode-map
     [remap indent-for-tab-command] 'helm-lisp-completion-at-point-or-indent)
   (define-key emacs-lisp-mode-map
     [remap indent-for-tab-command] 'helm-lisp-completion-at-point-or-indent)
+#+end_src
 
-  ;; Lisp complete
+~M-TAB~?
+
+#+begin_src emacs-lisp
+  ;; Lisp complete.
   (define-key lisp-interaction-mode-map
     [remap completion-at-point] 'helm-lisp-completion-at-point)
   (define-key emacs-lisp-mode-map
@@ -4343,12 +4366,14 @@ changing the buffer's contents!
 # Occur Edit mode applies edits made in ~*Occur*~ buffers to the original buffers.
 # It is bound to ~e~ in Occur mode.
 
+Pressing twice C-o goes from Helm Swoop to Helm Multi Swoop...
+
 #+begin_src emacs-lisp
     ;; efficiently hopping squeezed lines powered by Helm interface
     ;; (= Helm occur + Follow mode!)
     (with-eval-after-load "helm-swoop-autoloads"
 
-      ;; better version of `occur'
+      ;; Better version of `(helm-)occur'.
       (global-set-key (kbd "C-o") 'helm-swoop)
       (global-set-key (kbd "M-s o") 'helm-swoop)
       ;; (global-set-key (kbd "M-i") 'helm-swoop)
@@ -13936,6 +13961,10 @@ the command ~M-x holidays~.
 
 After displaying your ~calfw~ buffer, you can get a HTML buffer with ~M-x
 htmlfontify-buffer~.
+
+#+begin_warning
+~Calfw~ requires ~Google-maps~!?
+#+end_warning
 
 #+begin_src emacs-lisp
 ;;* Calendar view framework on Emacs
