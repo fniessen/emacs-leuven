@@ -433,7 +433,7 @@ this set of customizations to &ldquo;short-cut&rdquo; that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150520.1322</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150520.1358</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150520.1322"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150520.1358"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2946,6 +2946,9 @@ Remove trailing whitespace <b>in edited lines</b> with <code>ws-butler</code>:
 
     (add-hook 'text-mode-hook 'ws-butler-mode)
     (add-hook 'prog-mode-hook 'ws-butler-mode))
+
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ws-butler"</span>
+    (diminish 'ws-butler-mode))
 </pre>
 </div>
 
@@ -3301,7 +3304,7 @@ See <a href="http://www.elliotglaysher.org/emacs/">http://www.elliotglaysher.org
       <span class="org-doc">"Change cursor color according to some minor modes."</span>
       (<span class="org-keyword">let</span> ((color (<span class="org-keyword">cond</span> (buffer-read-only <span class="org-string">"purple1"</span>)
                          (overwrite-mode   <span class="org-string">"red"</span>)
-                         (t                <span class="org-string">"#21BDFF"</span>))) <span class="org-comment-delimiter">; </span><span class="org-comment">Black.</span>
+                         (t                <span class="org-string">"#21BDFF"</span>))) <span class="org-comment-delimiter">; </span><span class="org-comment">Or `</span><span class="org-constant"><span class="org-comment">black</span></span><span class="org-comment">'?</span>
             (type (<span class="org-keyword">if</span> (null overwrite-mode)
                       'bar
                     'box)))
@@ -7063,19 +7066,13 @@ file) is beginning at column 0.
     (setq indent-guide-char <span class="org-string">"┆"</span>)
     (setq indent-guide-char <span class="org-string">"╎"</span>)
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq indent-guide-char ":")</span>
-    )
+
+    (diminish 'indent-guide-mode))
 </pre>
 </div>
 
 <div class="inlinetask">
-<b><span class="todo TODO">TODO</span> Look at the `dtrt-indent&rsquo; and `aggressive-indent&rsquo; packages</b><br  />
-<p>
-Aggressive-indent-mode seems very, very nice.
-</p>
-</div>
-
-<div class="inlinetask">
-<b><span class="todo TODO">TODO</span> Look at the `indent-guide&rsquo;</b><br  />
+<b><span class="todo TODO">TODO</span> Look at the `dtrt-indent&rsquo; package</b><br  />
 nil</div>
 </div>
 </div>
@@ -20568,8 +20565,7 @@ See as well Print keybindings (pkb).
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable guide-key-mode.</span>
     (guide-key-mode 1)
 
-    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"guide-key"</span>
-      (diminish 'guide-key-mode)))
+    (diminish 'guide-key-mode))
 </pre>
 </div>
 </div>

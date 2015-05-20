@@ -2117,6 +2117,9 @@ Remove trailing whitespace *in edited lines* with ~ws-butler~:
 
     (add-hook 'text-mode-hook 'ws-butler-mode)
     (add-hook 'prog-mode-hook 'ws-butler-mode))
+
+  (with-eval-after-load "ws-butler"
+    (diminish 'ws-butler-mode))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2426,7 +2429,7 @@ See http://www.elliotglaysher.org/emacs/
       "Change cursor color according to some minor modes."
       (let ((color (cond (buffer-read-only "purple1")
                          (overwrite-mode   "red")
-                         (t                "#21BDFF"))) ; Black.
+                         (t                "#21BDFF"))) ; Or `black'?
             (type (if (null overwrite-mode)
                       'bar
                     'box)))
@@ -5347,14 +5350,11 @@ file) is beginning at column 0.
     (setq indent-guide-char "┆")
     (setq indent-guide-char "╎")
     ;; (setq indent-guide-char ":")
-    )
+
+    (diminish 'indent-guide-mode))
 #+end_src
 
-*************** TODO Look at the `dtrt-indent' and `aggressive-indent' packages
-Aggressive-indent-mode seems very, very nice.
-*************** END
-
-*************** TODO Look at the `indent-guide'
+*************** TODO Look at the `dtrt-indent' package
 *************** END
 
 ** Tabs vs. Spaces
@@ -15994,8 +15994,7 @@ See as well Print keybindings (pkb).
     ;; Enable guide-key-mode.
     (guide-key-mode 1)
 
-    (with-eval-after-load "guide-key"
-      (diminish 'guide-key-mode)))
+    (diminish 'guide-key-mode))
 #+end_src
 
 ** Syntax Table

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150520.1322
+;; Version: 20150520.1357
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150520.1322"
+(defconst leuven--emacs-version "20150520.1357"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1208,6 +1208,9 @@ These packages are neither built-in nor already installed nor ignored."
     (add-hook 'text-mode-hook 'ws-butler-mode)
     (add-hook 'prog-mode-hook 'ws-butler-mode))
 
+  (with-eval-after-load "ws-butler"
+    (diminish 'ws-butler-mode))
+
   ;; Visually indicate empty lines after the buffer end in the fringe.
   (setq-default indicate-empty-lines t)
 
@@ -1460,7 +1463,7 @@ These packages are neither built-in nor already installed nor ignored."
       "Change cursor color according to some minor modes."
       (let ((color (cond (buffer-read-only "purple1")
                          (overwrite-mode   "red")
-                         (t                "#21BDFF"))) ; Black.
+                         (t                "#21BDFF"))) ; Or `black'?
             (type (if (null overwrite-mode)
                       'bar
                     'box)))
@@ -3189,7 +3192,8 @@ These packages are neither built-in nor already installed nor ignored."
     (setq indent-guide-char "┆")
     (setq indent-guide-char "╎")
     ;; (setq indent-guide-char ":")
-    )
+
+    (diminish 'indent-guide-mode))
 
 ;;** 24.3 TABs vs. (info "(emacs)Just Spaces")
 
@@ -9742,8 +9746,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Enable guide-key-mode.
     (guide-key-mode 1)
 
-    (with-eval-after-load "guide-key"
-      (diminish 'guide-key-mode)))
+    (diminish 'guide-key-mode))
 
 ;;** 48.5 The (info "(emacs)Syntax") Table
 
