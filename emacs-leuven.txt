@@ -1669,7 +1669,7 @@ Visible bookmarks in buffer.
 - You can tag bookmarks or files, using arbitrary strings as tags.  You can do
   this programmatically and interactively, by regexp, name, or Dired markings.
   Tags give you a great way to define sets of bookmarks or files -- sets that
-  can overlap etc.  They serve to categorize, but they can do more than that.
+  can overlap, etc.  They serve to categorize, but they can do more than that.
   You can use tags to, in effect, merge projects, split projects, define
   subprojects, and so on.
 
@@ -1707,7 +1707,7 @@ In TeXStudio:
       (setq bmkp-light-right-fringe-bitmap 'filled-square)
 
       ;; Default highlight style for autonamed (= default) bookmarks.
-      (setq bmkp-light-style-autonamed 'lfringe)
+      (setq bmkp-light-style-autonamed 'line+lfringe)
 
       ;; Default highlight style for non-autonamed bookmarks.
       (setq bmkp-light-style-non-autonamed 'lfringe)
@@ -4852,16 +4852,18 @@ Use ~M-x scroll-all-mode~ to scroll all visible windows together in parallel.
   (leuven--section "21.6 (emacs)Creating Frames")
 #+end_src
 
-1. Resize the frame to the size you want
-2. Enter ~(frame-parameters)~ in the ~*scratch*~ buffer
-3. Evaluate the form: place the cursor after the closing paren, and type ~C-j~,
-   so that the output goes right into the ~*scratch*~ buffer
+1. Resize the frame to the size you want.
+2. Enter ~(frame-parameters)~ in the ~*scratch*~ buffer.
+3. Evaluate the form: place the cursor after the closing parenthesis, and type
+   ~C-j~, so that the output goes right into the ~*scratch*~ buffer.
 
-By putting customizations ~default-frame-alist~ in your init file, you can
+By putting customizations of ~default-frame-alist~ in your init file, you can
 control the appearance of *all the frames* Emacs creates, including the initial
 one.
 
+#+begin_note
 ~initial-frame-alist~ is just for overriding properties for the first frame.
+#+end_note
 
 #+begin_src emacs-lisp
   (when (display-graphic-p)

@@ -433,7 +433,7 @@ this set of customizations to &ldquo;short-cut&rdquo; that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150521.1039</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150521.1455</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150521.1039"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150521.1455"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2368,7 +2368,7 @@ bookmark.</li>
 <li>You can tag bookmarks or files, using arbitrary strings as tags.  You can do
 this programmatically and interactively, by regexp, name, or Dired markings.
 Tags give you a great way to define sets of bookmarks or files &#x2013; sets that
-can overlap etc.  They serve to categorize, but they can do more than that.
+can overlap, etc.  They serve to categorize, but they can do more than that.
 You can use tags to, in effect, merge projects, split projects, define
 subprojects, and so on.</li>
 </ul>
@@ -2411,7 +2411,7 @@ In TeXStudio:
       (setq bmkp-light-right-fringe-bitmap 'filled-square)
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Default highlight style for autonamed (= default) bookmarks.</span>
-      (setq bmkp-light-style-autonamed 'lfringe)
+      (setq bmkp-light-style-autonamed 'line+lfringe)
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Default highlight style for non-autonamed bookmarks.</span>
       (setq bmkp-light-style-non-autonamed 'lfringe)
@@ -6416,21 +6416,24 @@ Use <code>M-x scroll-all-mode</code> to scroll all visible windows together in p
 </div>
 
 <ol class="org-ol">
-<li>Resize the frame to the size you want</li>
-<li>Enter <code>(frame-parameters)</code> in the <code>*scratch*</code> buffer</li>
-<li>Evaluate the form: place the cursor after the closing paren, and type <code>C-j</code>,
-so that the output goes right into the <code>*scratch*</code> buffer</li>
+<li>Resize the frame to the size you want.</li>
+<li>Enter <code>(frame-parameters)</code> in the <code>*scratch*</code> buffer.</li>
+<li>Evaluate the form: place the cursor after the closing parenthesis, and type
+<code>C-j</code>, so that the output goes right into the <code>*scratch*</code> buffer.</li>
 </ol>
 
 <p>
-By putting customizations <code>default-frame-alist</code> in your init file, you can
+By putting customizations of <code>default-frame-alist</code> in your init file, you can
 control the appearance of <b>all the frames</b> Emacs creates, including the initial
 one.
 </p>
 
+<div class="note">
 <p>
 <code>initial-frame-alist</code> is just for overriding properties for the first frame.
 </p>
+
+</div>
 
 <div class="org-src-container">
 
