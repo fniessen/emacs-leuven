@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150520.2206
+;; Version: 20150521.1038
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150520.2206"
+(defconst leuven--emacs-version "20150521.1038"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -443,7 +443,6 @@ Last time is saved in global variable `leuven--before-section-time'."
           git-commit-mode git-messenger git-timemachine google-this
           google-translate goto-chg graphviz-dot-mode graphviz-dot-mode
           guide-key helm helm-descbinds helm-swoop hideshowvis highlight-symbol
-          hl-line+
           htmlize indent-guide key-chord litable idle-require imenu-anywhere
           info+ interaction-log ledger-mode leuven-theme magit multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
@@ -2376,6 +2375,7 @@ These packages are neither built-in nor already installed nor ignored."
       ;; Better version of `occur'.
       (global-set-key (kbd "C-o") 'helm-occur)
 
+      ;; Speedy file opening.
       (global-set-key (kbd "<f3>") 'helm-for-files)
 
       ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
@@ -2744,7 +2744,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "20.1 (emacs)Basic Window")
 
-  ;; turn off this horrible tab thingy in XEmacs
+  ;; Turn off this horrible tab thingy in XEmacs.
   (XEmacs
     (when (boundp 'default-gutter-visible-p)
       (set-specifier default-gutter-visible-p nil)))
@@ -2753,10 +2753,10 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "20.3 (emacs)Other Window")
 
-  ;; cycle through all windows on current frame
+  ;; Cycle through all windows on current frame.
   (global-set-key (kbd "<f6>") 'other-window)
 
-  ;; reverse operation of `C-x o' (or `f6')
+  ;; Reverse operation of `C-x o' (or `f6').
   (global-set-key (kbd "<S-f6>")
     (lambda ()
       (interactive)
@@ -2792,10 +2792,10 @@ These packages are neither built-in nor already installed nor ignored."
           (t
            (delete-other-windows))))
 
-  ;; delete all windows in the selected frame except the selected window
+  ;; Delete all windows in the selected frame except the selected window.
   (global-set-key (kbd "<f5>") 'leuven-delete-or-split-window)
 
-  ;; swap 2 windows
+  ;; Swap 2 windows.
   (defun leuven-swap-windows ()
     "If you have 2 windows, swap them."
     (interactive)
@@ -2851,13 +2851,13 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "20.6 (emacs)Pop Up Window")
 
-  ;; don't allow splitting windows vertically
+  ;; Don't allow splitting windows vertically.
   (setq split-height-threshold nil)
 
-  ;; minimum width for splitting windows horizontally
-  (setq split-width-threshold 160)
+  ;; Minimum width for splitting windows horizontally.
+  (setq split-width-threshold 160)      ; See `split-window-sensibly'.
 
-)                                       ; chapter 20 ends here
+)                                       ; Chapter 20 ends here.
 
 ;;* 21 (info "(emacs)Frames") and Graphical Displays
 

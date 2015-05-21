@@ -433,7 +433,7 @@ this set of customizations to &ldquo;short-cut&rdquo; that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150520.2207</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150521.1039</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150520.2207"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150521.1039"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1116,7 +1116,6 @@ like this into your configuration file:
           git-commit-mode git-messenger git-timemachine google-this
           google-translate goto-chg graphviz-dot-mode graphviz-dot-mode
           guide-key helm helm-descbinds helm-swoop hideshowvis highlight-symbol
-          hl-line+
           htmlize indent-guide key-chord litable idle-require imenu-anywhere
           info+ interaction-log ledger-mode leuven-theme magit multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
@@ -3331,8 +3330,12 @@ See <a href="http://www.elliotglaysher.org/emacs/">http://www.elliotglaysher.org
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Cursor blinks forever.</span>
   (setq blink-cursor-blinks 0)
+</pre>
+</div>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Toggle line highlighting in all buffers (Global Hl-Line mode).</span>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Toggle line highlighting in all buffers (Global Hl-Line mode).</span>
   (global-hl-line-mode 1)               <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> Perhaps only in prog-modes?</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Extensions to hl-line.el.</span>
@@ -5497,7 +5500,8 @@ See <a href="http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-an
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">      (global-set-key (kbd <span class="org-string">"&lt;f3&gt;"</span>) 'helm-for-files)
+<pre class="src src-emacs-lisp">      <span class="org-comment-delimiter">;; </span><span class="org-comment">Speedy file opening.</span>
+      (global-set-key (kbd <span class="org-string">"&lt;f3&gt;"</span>) 'helm-for-files)
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-x C-f") 'helm-find-files)</span>
 
@@ -5686,12 +5690,30 @@ usually search for info on.
 </div>
 
 <div id="outline-container-orgheadline92" class="outline-5">
-<h5 id="orgheadline92">Helm M-x</h5>
+<h5 id="orgheadline92">Helm M-x (search for a command)</h5>
 <div class="outline-text-5" id="text-orgheadline92">
+<p>
+There&rsquo;s no denying it: it&rsquo;s really difficult to remember all of these various
+commands. Rather than falling back to using the mouse and menu selections,
+instead type <code>M-x</code>.
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">    (global-set-key (kbd <span class="org-string">"M-x"</span>) 'helm-M-x)
 </pre>
+</div>
+
+<p>
+This will bring up a Helm menu, where you can then search for your desired
+command.
+</p>
+
+<div class="inlinetask">
+<b><span class="todo TODO">TODO</span> Get gray for common text of candidates</b><br  />
+<p>
+See <a href="http://code.tutsplus.com/tutorials/essential-textmate-shortcuts-tips-and-techniques--net-21168">http://code.tutsplus.com/tutorials/essential-textmate-shortcuts-tips-and-techniques--net-21168</a>
+</p>
 </div>
 
 <div class="note">
@@ -5772,8 +5794,13 @@ interface <code>es.exe</code>.
 </div>
 
 <div id="outline-container-orgheadline95" class="outline-5">
-<h5 id="orgheadline95">Helm show kill ring</h5>
+<h5 id="orgheadline95">Helm show kill ring (clipboard history)</h5>
 <div class="outline-text-5" id="text-orgheadline95">
+<p>
+By pressing <code>M-y</code>, you will see the list of all previous clippings and can pick
+the one you want to paste using arrow keys. Use <code>RET</code> to insert it.
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">kill-ring, mark-ring, and register browsers for Helm.</span>
@@ -6155,7 +6182,7 @@ respectively.
 
   (leuven--section <span class="org-string">"20.1 (emacs)Basic Window"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">turn off this horrible tab thingy in XEmacs</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Turn off this horrible tab thingy in XEmacs.</span>
   (XEmacs
     (<span class="org-keyword">when</span> (boundp 'default-gutter-visible-p)
       (set-specifier default-gutter-visible-p nil)))
@@ -6173,10 +6200,10 @@ respectively.
 
   (leuven--section <span class="org-string">"20.3 (emacs)Other Window"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">cycle through all windows on current frame</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Cycle through all windows on current frame.</span>
   (global-set-key (kbd <span class="org-string">"&lt;f6&gt;"</span>) 'other-window)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">reverse operation of `C-x o' (or `</span><span class="org-constant"><span class="org-comment">f6</span></span><span class="org-comment">')</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Reverse operation of `C-x o' (or `</span><span class="org-constant"><span class="org-comment">f6</span></span><span class="org-comment">').</span>
   (global-set-key (kbd <span class="org-string">"&lt;S-f6&gt;"</span>)
     (<span class="org-keyword">lambda</span> ()
       (interactive)
@@ -6221,7 +6248,7 @@ respectively.
           (t
            (delete-other-windows))))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">delete all windows in the selected frame except the selected window</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Delete all windows in the selected frame except the selected window.</span>
   (global-set-key (kbd <span class="org-string">"&lt;f5&gt;"</span>) 'leuven-delete-or-split-window)
 </pre>
 </div>
@@ -6233,7 +6260,7 @@ down.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">swap 2 windows</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Swap 2 windows.</span>
   (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-swap-windows</span> ()
     <span class="org-doc">"If you have 2 windows, swap them."</span>
     (interactive)
@@ -6321,11 +6348,11 @@ See as well <code>split-window-preferred-function</code>.
 
   (leuven--section <span class="org-string">"20.6 (emacs)Pop Up Window"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">don't allow splitting windows vertically</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't allow splitting windows vertically.</span>
   (setq split-height-threshold nil)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">minimum width for splitting windows horizontally</span>
-  (setq split-width-threshold 160)
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Minimum width for splitting windows horizontally.</span>
+  (setq split-width-threshold 160)      <span class="org-comment-delimiter">; </span><span class="org-comment">See `</span><span class="org-constant"><span class="org-comment">split-window-sensibly</span></span><span class="org-comment">'.</span>
 </pre>
 </div>
 </div>
@@ -6340,7 +6367,7 @@ Use <code>M-x scroll-all-mode</code> to scroll all visible windows together in p
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 20 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 20 ends here.</span>
 </pre>
 </div>
 </div>
