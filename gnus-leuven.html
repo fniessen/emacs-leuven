@@ -178,7 +178,7 @@ This covers the basics of Gnus:
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150520.1403</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150522.1359</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, gnus, dotfile, config</span>
 </pre>
 </div>
@@ -610,7 +610,7 @@ Cleanup all Gnus buffers on exit.
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** 2.15 (info "(gnus)Exiting Gnus")</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Quit Gnus properly, if it is running ...</span>
-  (<span class="org-keyword">defun</span> <span class="org-function-name">exit-gnus</span> ()
+  (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--exit-gnus</span> ()
     <span class="org-doc">"Save and exit Gnus."</span>
     (<span class="org-keyword">if</span> (and (fboundp 'gnus-group-exit)
              (gnus-alive-p))
@@ -619,7 +619,7 @@ Cleanup all Gnus buffers on exit.
             (gnus-group-exit)))))
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">... before exiting Emacs (not leaving auto-save files around).</span>
-  (add-hook 'kill-emacs-hook 'exit-gnus)
+  (add-hook 'kill-emacs-hook 'leuven--exit-gnus)
 </pre>
 </div>
 </div>
@@ -2587,6 +2587,24 @@ It comes with Gnus.  You don&rsquo;t even need to configure anything for searchi
        (vertical 1.0
                  (summary 0.40 point)
                  (article 1.0)))))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(gnus-add-configuration
+ '(article
+   (horizontal 1.0
+               (vertical 60 (group 1.0))
+               (vertical 1.0
+                         (summary 0.40 point)
+                         (article 1.0)))))
+
+(gnus-add-configuration
+ '(summary
+   (horizontal 1.0
+               (vertical 60 (group 1.0))
+               (vertical 1.0 (summary 1.0 point)))))
 </pre>
 </div>
 </div>

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150520.1403
+;; Version: 20150522.1359
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -152,7 +152,7 @@
 ;;** 2.15 (info "(gnus)Exiting Gnus")
 
   ;; Quit Gnus properly, if it is running ...
-  (defun exit-gnus ()
+  (defun leuven--exit-gnus ()
     "Save and exit Gnus."
     (if (and (fboundp 'gnus-group-exit)
              (gnus-alive-p))
@@ -161,7 +161,7 @@
             (gnus-group-exit)))))
 
   ;; ... before exiting Emacs (not leaving auto-save files around).
-  (add-hook 'kill-emacs-hook 'exit-gnus)
+  (add-hook 'kill-emacs-hook 'leuven--exit-gnus)
 
 ;;** 2.16 (info "(gnus)Group Topics")
 

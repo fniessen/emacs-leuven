@@ -369,7 +369,7 @@ Cleanup all Gnus buffers on exit.
 ;;** 2.15 (info "(gnus)Exiting Gnus")
 
   ;; Quit Gnus properly, if it is running ...
-  (defun exit-gnus ()
+  (defun leuven--exit-gnus ()
     "Save and exit Gnus."
     (if (and (fboundp 'gnus-group-exit)
              (gnus-alive-p))
@@ -378,7 +378,7 @@ Cleanup all Gnus buffers on exit.
             (gnus-group-exit)))))
 
   ;; ... before exiting Emacs (not leaving auto-save files around).
-  (add-hook 'kill-emacs-hook 'exit-gnus)
+  (add-hook 'kill-emacs-hook 'leuven--exit-gnus)
 #+end_src
 
 ** Group Topics
@@ -1951,6 +1951,22 @@ It comes with Gnus.  You don't even need to configure anything for searching
        (vertical 1.0
                  (summary 0.40 point)
                  (article 1.0)))))
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+(gnus-add-configuration
+ '(article
+   (horizontal 1.0
+               (vertical 60 (group 1.0))
+               (vertical 1.0
+                         (summary 0.40 point)
+                         (article 1.0)))))
+
+(gnus-add-configuration
+ '(summary
+   (horizontal 1.0
+               (vertical 60 (group 1.0))
+               (vertical 1.0 (summary 1.0 point)))))
 #+end_src
 
 ** The Gnus Registry
