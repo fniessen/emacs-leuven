@@ -369,32 +369,37 @@
 <ul>
 <li><a href="#orgheadline407">Color</a></li>
 <li><a href="#orgheadline408">Color theme</a></li>
-<li><a href="#orgheadline409">Not sorted</a></li>
-<li><a href="#orgheadline410">Variables</a></li>
-<li><a href="#orgheadline411">Key Bindings</a></li>
-<li><a href="#orgheadline412">Syntax Table</a></li>
+<li><a href="#orgheadline409">Variables</a></li>
+<li><a href="#orgheadline410">Key Bindings</a></li>
+<li><a href="#orgheadline411">Syntax Table</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline413">Emacs Display</a>
+<li><a href="#orgheadline412">Emacs Display</a>
 <ul>
-<li><a href="#orgheadline414">Faces</a></li>
+<li><a href="#orgheadline413">Faces</a></li>
 <li><a href="#orgheadline282">Images</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline418">Calc</a>
+<li><a href="#orgheadline421">Emacs Lisp</a>
 <ul>
-<li><a href="#orgheadline421">Introduction</a></li>
-<li><a href="#orgheadline422">Embedded Mode</a></li>
+<li><a href="#orgheadline418">Variables</a></li>
+<li><a href="#orgheadline420">GNU Emacs Internals</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline423">IRC client for Emacs</a></li>
-<li><a href="#orgheadline424">Emacs and Microsoft Windows/MS-DOS</a></li>
-<li><a href="#orgheadline425">Profiler</a></li>
-<li><a href="#orgheadline426">Reporting Bugs</a></li>
-<li><a href="#orgheadline427">Leuven</a>
+<li><a href="#orgheadline422">Calc</a>
 <ul>
-<li><a href="#orgheadline428">Feature</a></li>
-<li><a href="#orgheadline429">File Local Variables</a></li>
+<li><a href="#orgheadline425">Introduction</a></li>
+<li><a href="#orgheadline426">Embedded Mode</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline427">IRC client for Emacs</a></li>
+<li><a href="#orgheadline428">Emacs and Microsoft Windows/MS-DOS</a></li>
+<li><a href="#orgheadline429">Profiler</a></li>
+<li><a href="#orgheadline430">Reporting Bugs</a></li>
+<li><a href="#orgheadline431">Leuven</a>
+<ul>
+<li><a href="#orgheadline432">Feature</a></li>
+<li><a href="#orgheadline433">File Local Variables</a></li>
 </ul>
 </li>
 </ul>
@@ -434,7 +439,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150522.2215</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150523.0033</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -515,7 +520,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150522.2215"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150523.0033"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -3360,7 +3365,7 @@ See <a href="http://www.elliotglaysher.org/emacs/">http://www.elliotglaysher.org
       <span class="org-doc">"Change cursor color according to some minor modes."</span>
       (<span class="org-keyword">let</span> ((color (<span class="org-keyword">cond</span> (buffer-read-only <span class="org-string">"purple1"</span>)
                          (overwrite-mode   <span class="org-string">"red"</span>)
-                         (t                <span class="org-string">"black"</span>))) <span class="org-comment-delimiter">; </span><span class="org-comment">Or `#21BDFF'?</span>
+                         (t                <span class="org-string">"black"</span>))) <span class="org-comment-delimiter">; </span><span class="org-comment">#21BDFF is less visible.</span>
             (type (<span class="org-keyword">if</span> (null overwrite-mode)
                       'bar
                     'box)))
@@ -15055,6 +15060,14 @@ To (attempt to) cleanly reevaluate a buffer of Emacs Lisp code, use
 
 <div class="org-src-container">
 
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Limit serving to catch infinite recursions for you before they</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; cause actual stack overflow in C, which would be fatal for Emacs.</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq max-lisp-eval-depth 600)        ; 1000?</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
 <pre class="src src-emacs-lisp">  (<span class="org-keyword">defun</span> <span class="org-function-name">eval-and-replace</span> ()
     <span class="org-doc">"Replace the preceding sexp with its value."</span>
     (interactive)
@@ -20467,44 +20480,8 @@ particular color&#x2026;
 </div>
 
 <div id="outline-container-orgheadline409" class="outline-3">
-<h3 id="orgheadline409">Not sorted</h3>
+<h3 id="orgheadline409">Variables</h3>
 <div class="outline-text-3" id="text-orgheadline409">
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; limit serving to catch infinite recursions for you before they</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; cause actual stack overflow in C, which would be fatal for Emacs</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq max-lisp-eval-depth 600)        ; 1000?</span>
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">limit on number of Lisp variable bindings &amp; unwind-protects</span>
-  (setq max-specpdl-size 3000)          <span class="org-comment-delimiter">; </span><span class="org-comment">XEmacs 21.5.29</span>
-</pre>
-</div>
-
-<p>
-By default Emacs will initiate GC every 0.76 MB allocated (<code>gc-cons-threshold</code> ==
-800,000).
-</p>
-
-<p>
-If you have a modern machine, I encourage you to add the following:
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">speed up things by preventing garbage collections</span>
-  (setq gc-cons-threshold (* 20 1024 1024)) <span class="org-comment-delimiter">; </span><span class="org-comment">20 MB.</span>
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">don't display messages at start and end of garbage collection (as it hides</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">too many interesting messages)</span>
-  (setq garbage-collection-messages nil)
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgheadline410" class="outline-3">
-<h3 id="orgheadline410">Variables</h3>
-<div class="outline-text-3" id="text-orgheadline410">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** 48.3 (info "(emacs)Variables")</span>
@@ -20543,9 +20520,9 @@ Have a look at (info &ldquo;(emacs)Directory Variables&rdquo;).
 </div>
 </div>
 
-<div id="outline-container-orgheadline411" class="outline-3">
-<h3 id="orgheadline411">Key Bindings</h3>
-<div class="outline-text-3" id="text-orgheadline411">
+<div id="outline-container-orgheadline410" class="outline-3">
+<h3 id="orgheadline410">Key Bindings</h3>
+<div class="outline-text-3" id="text-orgheadline410">
 <p>
 The keys <code>C-c LETTER</code> are <a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html">reserved for user functions</a>.
 </p>
@@ -20684,9 +20661,9 @@ See as well Print keybindings (pkb).
 </div>
 </div>
 
-<div id="outline-container-orgheadline412" class="outline-3">
-<h3 id="orgheadline412">Syntax Table</h3>
-<div class="outline-text-3" id="text-orgheadline412">
+<div id="outline-container-orgheadline411" class="outline-3">
+<h3 id="orgheadline411">Syntax Table</h3>
+<div class="outline-text-3" id="text-orgheadline411">
 <p>
 The syntax table contains information that tells Emacs how to operate on text,
 words, sentences etc.  It will make Emacs know enough about all the symbols in
@@ -20727,9 +20704,9 @@ considered part of the word (depending on the current major mode).
 </div>
 </div>
 
-<div id="outline-container-orgheadline413" class="outline-2">
-<h2 id="orgheadline413">Emacs Display</h2>
-<div class="outline-text-2" id="text-orgheadline413">
+<div id="outline-container-orgheadline412" class="outline-2">
+<h2 id="orgheadline412">Emacs Display</h2>
+<div class="outline-text-2" id="text-orgheadline412">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* Emacs Display</span>
@@ -20739,9 +20716,9 @@ considered part of the word (depending on the current major mode).
 </div>
 </div>
 
-<div id="outline-container-orgheadline414" class="outline-3">
-<h3 id="orgheadline414">Faces</h3>
-<div class="outline-text-3" id="text-orgheadline414">
+<div id="outline-container-orgheadline413" class="outline-3">
+<h3 id="orgheadline413">Faces</h3>
+<div class="outline-text-3" id="text-orgheadline413">
 <p>
 You can get text properties of any char by typing <code>C-u C-x =</code>.
 </p>
@@ -20858,9 +20835,9 @@ or restart your X11 to validate the modification.  I let Emacs do this for me:
 </div>
 </div>
 
-<div id="outline-container-orgheadline415" class="outline-4">
-<h4 id="orgheadline415">UTF-8</h4>
-<div class="outline-text-4" id="text-orgheadline415">
+<div id="outline-container-orgheadline414" class="outline-4">
+<h4 id="orgheadline414">UTF-8</h4>
+<div class="outline-text-4" id="text-orgheadline414">
 <p>
 Fonts that have a good UTF-8 coverage are:
 </p>
@@ -20878,9 +20855,9 @@ and regular, one regular and oblique.
 </div>
 </div>
 
-<div id="outline-container-orgheadline416" class="outline-4">
-<h4 id="orgheadline416">Anti-aliasing</h4>
-<div class="outline-text-4" id="text-orgheadline416">
+<div id="outline-container-orgheadline415" class="outline-4">
+<h4 id="orgheadline415">Anti-aliasing</h4>
+<div class="outline-text-4" id="text-orgheadline415">
 <p>
 To see if anti-aliasing is active, use <code>xmag</code> (under Linux) or any of the other
 magnifier applications.  The fonts should have gray edges.
@@ -20888,9 +20865,9 @@ magnifier applications.  The fonts should have gray edges.
 </div>
 </div>
 
-<div id="outline-container-orgheadline417" class="outline-4">
-<h4 id="orgheadline417">Adjust the height of the default face</h4>
-<div class="outline-text-4" id="text-orgheadline417">
+<div id="outline-container-orgheadline416" class="outline-4">
+<h4 id="orgheadline416">Adjust the height of the default face</h4>
+<div class="outline-text-4" id="text-orgheadline416">
 <p>
 There are a few commands to adjust the font sizes:
 </p>
@@ -21015,29 +20992,78 @@ No need for ImageMagick.
 </div>
 </div>
 
-<div id="outline-container-orgheadline418" class="outline-2">
-<h2 id="orgheadline418">Calc</h2>
-<div class="outline-text-2" id="text-orgheadline418">
+<div id="outline-container-orgheadline421" class="outline-2">
+<h2 id="orgheadline421">Emacs Lisp</h2>
+<div class="outline-text-2" id="text-orgheadline421">
+</div><div id="outline-container-orgheadline418" class="outline-3">
+<h3 id="orgheadline418">Variables</h3>
+<div class="outline-text-3" id="text-orgheadline418">
+</div><div id="outline-container-orgheadline417" class="outline-4">
+<h4 id="orgheadline417">Local Variables</h4>
+<div class="outline-text-4" id="text-orgheadline417">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Limit on number of Lisp variable bindings &amp; unwind-protects.</span>
+  (setq max-specpdl-size 3000)          <span class="org-comment-delimiter">; </span><span class="org-comment">XEmacs 21.5.29</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline420" class="outline-3">
+<h3 id="orgheadline420">GNU Emacs Internals</h3>
+<div class="outline-text-3" id="text-orgheadline420">
+</div><div id="outline-container-orgheadline419" class="outline-4">
+<h4 id="orgheadline419">Garbage Collection</h4>
+<div class="outline-text-4" id="text-orgheadline419">
+<p>
+By default Emacs will initiate GC every 0.76 MB allocated (<code>gc-cons-threshold</code> ==
+800,000).
+</p>
+
+<p>
+If you have a modern machine, I encourage you to add the following:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Speed up things by preventing garbage collections.</span>
+  (setq gc-cons-threshold (* 20 1024 1024)) <span class="org-comment-delimiter">; </span><span class="org-comment">20 MB.</span>
+
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't display messages at start and end of garbage collection (as it hides</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">too many interesting messages).</span>
+  (setq garbage-collection-messages nil)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline422" class="outline-2">
+<h2 id="orgheadline422">Calc</h2>
+<div class="outline-text-2" id="text-orgheadline422">
 <p>
 <code>C-x *</code> invokes the GNU Emacs Calculator.
 </p>
 </div>
 
-<div id="outline-container-orgheadline421" class="outline-3">
-<h3 id="orgheadline421">Introduction</h3>
-<div class="outline-text-3" id="text-orgheadline421">
-</div><div id="outline-container-orgheadline419" class="outline-4">
-<h4 id="orgheadline419">Basic Commands</h4>
-<div class="outline-text-4" id="text-orgheadline419">
+<div id="outline-container-orgheadline425" class="outline-3">
+<h3 id="orgheadline425">Introduction</h3>
+<div class="outline-text-3" id="text-orgheadline425">
+</div><div id="outline-container-orgheadline423" class="outline-4">
+<h4 id="orgheadline423">Basic Commands</h4>
+<div class="outline-text-4" id="text-orgheadline423">
 <p>
 Start the Calc: <code>C-x * c</code>.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgheadline420" class="outline-4">
-<h4 id="orgheadline420">&ldquo;Quick Calculator&rdquo; Mode</h4>
-<div class="outline-text-4" id="text-orgheadline420">
+<div id="outline-container-orgheadline424" class="outline-4">
+<h4 id="orgheadline424">&ldquo;Quick Calculator&rdquo; Mode</h4>
+<div class="outline-text-4" id="text-orgheadline424">
 <p>
 Run the Calculator in the minibuffer: <code>C-x * q</code> (<code>M-x quick-calc</code>).
 </p>
@@ -21045,9 +21071,9 @@ Run the Calculator in the minibuffer: <code>C-x * q</code> (<code>M-x quick-calc
 </div>
 </div>
 
-<div id="outline-container-orgheadline422" class="outline-3">
-<h3 id="orgheadline422">Embedded Mode</h3>
-<div class="outline-text-3" id="text-orgheadline422">
+<div id="outline-container-orgheadline426" class="outline-3">
+<h3 id="orgheadline426">Embedded Mode</h3>
+<div class="outline-text-3" id="text-orgheadline426">
 <p>
 Try the Embedded mode of Calc: <code>C-x * e</code> (no need to mark the region).
 </p>
@@ -21069,9 +21095,9 @@ You need to type <code>C-x * e</code> again to exit the Embedded mode.
 </div>
 </div>
 
-<div id="outline-container-orgheadline423" class="outline-2">
-<h2 id="orgheadline423">IRC client for Emacs</h2>
-<div class="outline-text-2" id="text-orgheadline423">
+<div id="outline-container-orgheadline427" class="outline-2">
+<h2 id="orgheadline427">IRC client for Emacs</h2>
+<div class="outline-text-2" id="text-orgheadline427">
 <p>
 See <a href="http://en.wikipedia.org/wiki/List_of_IRC_commands">List of Internet Relay Chat commands</a>:
 </p>
@@ -21209,9 +21235,9 @@ See <a href="http://en.wikipedia.org/wiki/List_of_IRC_commands">List of Internet
 </div>
 </div>
 
-<div id="outline-container-orgheadline424" class="outline-2">
-<h2 id="orgheadline424">Emacs and Microsoft Windows/MS-DOS</h2>
-<div class="outline-text-2" id="text-orgheadline424">
+<div id="outline-container-orgheadline428" class="outline-2">
+<h2 id="orgheadline428">Emacs and Microsoft Windows/MS-DOS</h2>
+<div class="outline-text-2" id="text-orgheadline428">
 <p>
 Eventually have a look as well at <code>input-decode-map</code>.
 </p>
@@ -21285,9 +21311,9 @@ Use the Caps Lock key as Ctrl:
 </div>
 </div>
 
-<div id="outline-container-orgheadline425" class="outline-2">
-<h2 id="orgheadline425">Profiler</h2>
-<div class="outline-text-2" id="text-orgheadline425">
+<div id="outline-container-orgheadline429" class="outline-2">
+<h2 id="orgheadline429">Profiler</h2>
+<div class="outline-text-2" id="text-orgheadline429">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* Profiler</span>
@@ -21305,9 +21331,9 @@ Use the Caps Lock key as Ctrl:
 </div>
 </div>
 
-<div id="outline-container-orgheadline426" class="outline-2">
-<h2 id="orgheadline426">Reporting Bugs</h2>
-<div class="outline-text-2" id="text-orgheadline426">
+<div id="outline-container-orgheadline430" class="outline-2">
+<h2 id="orgheadline430">Reporting Bugs</h2>
+<div class="outline-text-2" id="text-orgheadline430">
 <p>
 To get a backtrace when a specific regexp is displayed in the echo area (through
 calls to message), set the variable <code>debug-on-message</code>.
@@ -21386,9 +21412,9 @@ calls to message), set the variable <code>debug-on-message</code>.
 </div>
 </div>
 
-<div id="outline-container-orgheadline427" class="outline-2">
-<h2 id="orgheadline427">Leuven</h2>
-<div class="outline-text-2" id="text-orgheadline427">
+<div id="outline-container-orgheadline431" class="outline-2">
+<h2 id="orgheadline431">Leuven</h2>
+<div class="outline-text-2" id="text-orgheadline431">
 <p>
 If you are like me, you want to know if there are:
 </p>
@@ -21465,9 +21491,9 @@ leuven-send-bug-report</code>.
 </div>
 </div>
 
-<div id="outline-container-orgheadline428" class="outline-3">
-<h3 id="orgheadline428">Feature</h3>
-<div class="outline-text-3" id="text-orgheadline428">
+<div id="outline-container-orgheadline432" class="outline-3">
+<h3 id="orgheadline432">Feature</h3>
+<div class="outline-text-3" id="text-orgheadline432">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">(<span class="org-keyword">provide</span> '<span class="org-constant">emacs-leuven</span>)
@@ -21476,9 +21502,9 @@ leuven-send-bug-report</code>.
 </div>
 </div>
 
-<div id="outline-container-orgheadline429" class="outline-3">
-<h3 id="orgheadline429">File Local Variables</h3>
-<div class="outline-text-3" id="text-orgheadline429">
+<div id="outline-container-orgheadline433" class="outline-3">
+<h3 id="orgheadline433">File Local Variables</h3>
+<div class="outline-text-3" id="text-orgheadline433">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">This is for the sake of Emacs.</span>

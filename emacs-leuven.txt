@@ -11762,6 +11762,12 @@ To (attempt to) cleanly reevaluate a buffer of Emacs Lisp code, use
 #+end_src
 
 #+begin_src emacs-lisp
+  ;; ;; Limit serving to catch infinite recursions for you before they
+  ;; ;; cause actual stack overflow in C, which would be fatal for Emacs.
+  ;; (setq max-lisp-eval-depth 600)        ; 1000?
+#+end_src
+
+#+begin_src emacs-lisp
   (defun eval-and-replace ()
     "Replace the preceding sexp with its value."
     (interactive)
@@ -15902,31 +15908,6 @@ particular color...
     (setq options-save-faces t))
 #+end_src
 
-** Not sorted
-
-#+begin_src emacs-lisp
-  ;; ;; limit serving to catch infinite recursions for you before they
-  ;; ;; cause actual stack overflow in C, which would be fatal for Emacs
-  ;; (setq max-lisp-eval-depth 600)        ; 1000?
-
-  ;; limit on number of Lisp variable bindings & unwind-protects
-  (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
-#+end_src
-
-By default Emacs will initiate GC every 0.76 MB allocated (~gc-cons-threshold~ ==
-800,000).
-
-If you have a modern machine, I encourage you to add the following:
-
-#+begin_src emacs-lisp
-  ;; speed up things by preventing garbage collections
-  (setq gc-cons-threshold (* 20 1024 1024)) ; 20 MB.
-
-  ;; don't display messages at start and end of garbage collection (as it hides
-  ;; too many interesting messages)
-  (setq garbage-collection-messages nil)
-#+end_src
-
 ** Variables
 
 #+begin_src emacs-lisp
@@ -16323,6 +16304,35 @@ For animated GIF (or multi-page TIFF):
 - ~f~ steps through image frame frame, and
 - ~RET~ animates.
 No need for ImageMagick.
+
+* Emacs Lisp
+
+** Variables
+
+*** Local Variables
+
+#+begin_src emacs-lisp
+  ;; Limit on number of Lisp variable bindings & unwind-protects.
+  (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
+#+end_src
+
+** GNU Emacs Internals
+
+*** Garbage Collection
+
+By default Emacs will initiate GC every 0.76 MB allocated (~gc-cons-threshold~ ==
+800,000).
+
+If you have a modern machine, I encourage you to add the following:
+
+#+begin_src emacs-lisp
+  ;; Speed up things by preventing garbage collections.
+  (setq gc-cons-threshold (* 20 1024 1024)) ; 20 MB.
+
+  ;; Don't display messages at start and end of garbage collection (as it hides
+  ;; too many interesting messages).
+  (setq garbage-collection-messages nil)
+#+end_src
 
 * Calc
 

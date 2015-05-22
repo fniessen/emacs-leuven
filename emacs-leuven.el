@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150522.2347
+;; Version: 20150523.0031
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150522.2347"
+(defconst leuven--emacs-version "20150523.0031"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -7301,6 +7301,10 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; before abbreviating them.
   (setq eval-expression-print-length nil) ; No limit.
 
+  ;; ;; Limit serving to catch infinite recursions for you before they
+  ;; ;; cause actual stack overflow in C, which would be fatal for Emacs.
+  ;; (setq max-lisp-eval-depth 600)        ; 1000?
+
   (defun eval-and-replace ()
     "Replace the preceding sexp with its value."
     (interactive)
@@ -9622,20 +9626,6 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; properties)
     (setq options-save-faces t))
 
-  ;; ;; limit serving to catch infinite recursions for you before they
-  ;; ;; cause actual stack overflow in C, which would be fatal for Emacs
-  ;; (setq max-lisp-eval-depth 600)        ; 1000?
-
-  ;; limit on number of Lisp variable bindings & unwind-protects
-  (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
-
-  ;; speed up things by preventing garbage collections
-  (setq gc-cons-threshold (* 20 1024 1024)) ; 20 MB.
-
-  ;; don't display messages at start and end of garbage collection (as it hides
-  ;; too many interesting messages)
-  (setq garbage-collection-messages nil)
-
 ;;** 48.3 (info "(emacs)Variables")
 
   (leuven--section "48.3 (emacs)Variables")
@@ -9805,6 +9795,16 @@ a clean buffer we're an order of magnitude laxer about checking."
   (define-key global-map (kbd "C--") 'text-scale-decrease)
 
 )
+
+  ;; Limit on number of Lisp variable bindings & unwind-protects.
+  (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
+
+  ;; Speed up things by preventing garbage collections.
+  (setq gc-cons-threshold (* 20 1024 1024)) ; 20 MB.
+
+  ;; Don't display messages at start and end of garbage collection (as it hides
+  ;; too many interesting messages).
+  (setq garbage-collection-messages nil)
 
 ;;* App G Emacs and (info "(emacs)Microsoft Windows/MS-DOS")
 
