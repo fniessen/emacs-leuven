@@ -434,7 +434,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150522.1712</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150522.2215</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -515,7 +515,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150522.1712"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150522.2215"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -3151,11 +3151,10 @@ See also <b>Outline Mode</b> for another way to hide part of the text in a buffe
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"rainbow-mode"</span> (diminish 'rainbow-mode))
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"simple"</span>       (diminish 'auto-fill-function))
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"whitespace"</span>   (diminish 'whitespace-mode))
-    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"yasnippet"</span>    (diminish 'yas-minor-mode)))
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(diminish-on-load hs-minor-mode-hook hs-minor-mode)</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(with-eval-after-load "glasses"      (diminish 'glasses-mode))</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(with-eval-after-load "redshank"     (diminish 'redshank-mode))</span>
-    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"smartparens"</span>  (diminish 'smartparens-mode))
+    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"smartparens"</span>  (diminish 'smartparens-mode)))
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(with-eval-after-load "whitespace"   (diminish 'whitespace-mode))</span>
 </pre>
 </div>
@@ -3361,7 +3360,7 @@ See <a href="http://www.elliotglaysher.org/emacs/">http://www.elliotglaysher.org
       <span class="org-doc">"Change cursor color according to some minor modes."</span>
       (<span class="org-keyword">let</span> ((color (<span class="org-keyword">cond</span> (buffer-read-only <span class="org-string">"purple1"</span>)
                          (overwrite-mode   <span class="org-string">"red"</span>)
-                         (t                <span class="org-string">"#21BDFF"</span>))) <span class="org-comment-delimiter">; </span><span class="org-comment">Or `</span><span class="org-constant"><span class="org-comment">black</span></span><span class="org-comment">'?</span>
+                         (t                <span class="org-string">"black"</span>))) <span class="org-comment-delimiter">; </span><span class="org-comment">Or `#21BDFF'?</span>
             (type (<span class="org-keyword">if</span> (null overwrite-mode)
                       'bar
                     'box)))
@@ -3590,10 +3589,14 @@ the user see truly invisible matches before replacing them.
     (setq anzu-replace-to-string-separator <span class="org-string">" =&gt; "</span>)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Function which returns mode-line string.</span>
-    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-anzu-update-func</span> (here total)
-      (propertize (format <span class="org-string">" %d/%d "</span> here total)
-                  'face 'anzu-mode-line))
-    (setq anzu-mode-line-update-function 'leuven-anzu-update-func)
+    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--anzu-update-func</span> (here total)
+      (<span class="org-keyword">when</span> anzu--state
+        (<span class="org-keyword">let</span> ((status (<span class="org-keyword">cl-case</span> anzu--state
+                        (search (format <span class="org-string">" %d/%d "</span> here total))
+                        (replace-query (format <span class="org-string">"(%d Replaces)"</span> total))
+                        (replace (format <span class="org-string">" %d/%d "</span> here total)))))
+          (propertize status 'face 'anzu-mode-line))))
+    (setq anzu-mode-line-update-function #'leuven--anzu-update-func)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Global-Anzu mode.</span>
     (global-anzu-mode 1)
@@ -7352,17 +7355,17 @@ Another solution to avoid that is to add <code>fill-french-nobreak-p</code> to
 </pre>
 </div>
 
-<div class="note">
+<div class="warning">
 <p>
 Enabling <code>fci-mode</code> as a global minor mode slows down the tangling of this file by
-a factor 2&#x2026;
+a factor 2!?
 </p>
 
 </div>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Avoid fci-mode and auto-complete popups.</span>
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Avoid `</span><span class="org-constant"><span class="org-comment">fci-mode</span></span><span class="org-comment">' and `</span><span class="org-constant"><span class="org-comment">auto-complete</span></span><span class="org-comment">' popups.</span>
     (<span class="org-keyword">defvar</span> <span class="org-variable-name">sanityinc/fci-mode-suppressed</span> nil)
     (<span class="org-keyword">defadvice</span> <span class="org-function-name">popup-create</span> (before suppress-fci-mode activate)
       <span class="org-doc">"Suspend fci-mode while popups are visible"</span>
@@ -16301,7 +16304,10 @@ XXX Look at <a href="https://github.com/vderyagin/dotemacs/blob/master/conf/yasn
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">      <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq yas-verbosity 1)</span>
+<pre class="src src-emacs-lisp">      (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diminish-autoloads"</span>
+        (diminish 'yas-minor-mode <span class="org-string">" y"</span>))
+
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq yas-verbosity 1)</span>
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Load the snippet tables.</span>
       (yas-reload-all)
@@ -20671,7 +20677,8 @@ See as well Print keybindings (pkb).
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable guide-key-mode.</span>
     (guide-key-mode 1)
 
-    (diminish 'guide-key-mode))
+    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diminish-autoloads"</span>
+      (diminish 'guide-key-mode <span class="org-string">" Gk"</span>)))
 </pre>
 </div>
 </div>

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150522.1710
+;; Version: 20150522.2347
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150522.1710"
+(defconst leuven--emacs-version "20150522.2347"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1287,11 +1287,10 @@ These packages are neither built-in nor already installed nor ignored."
     (with-eval-after-load "rainbow-mode" (diminish 'rainbow-mode))
     (with-eval-after-load "simple"       (diminish 'auto-fill-function))
     (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
-    (with-eval-after-load "yasnippet"    (diminish 'yas-minor-mode)))
     ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
     ;; (with-eval-after-load "glasses"      (diminish 'glasses-mode))
     ;; (with-eval-after-load "redshank"     (diminish 'redshank-mode))
-    (with-eval-after-load "smartparens"  (diminish 'smartparens-mode))
+    (with-eval-after-load "smartparens"  (diminish 'smartparens-mode)))
     ;; (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
 
   (defface powerline-modified-face
@@ -1465,7 +1464,7 @@ These packages are neither built-in nor already installed nor ignored."
       "Change cursor color according to some minor modes."
       (let ((color (cond (buffer-read-only "purple1")
                          (overwrite-mode   "red")
-                         (t                "#21BDFF"))) ; Or `black'?
+                         (t                "black"))) ; #21BDFF is less visible.
             (type (if (null overwrite-mode)
                       'bar
                     'box)))
@@ -1583,10 +1582,14 @@ These packages are neither built-in nor already installed nor ignored."
     (setq anzu-replace-to-string-separator " => ")
 
     ;; Function which returns mode-line string.
-    (defun leuven-anzu-update-func (here total)
-      (propertize (format " %d/%d " here total)
-                  'face 'anzu-mode-line))
-    (setq anzu-mode-line-update-function 'leuven-anzu-update-func)
+    (defun leuven--anzu-update-func (here total)
+      (when anzu--state
+        (let ((status (cl-case anzu--state
+                        (search (format " %d/%d " here total))
+                        (replace-query (format "(%d Replaces)" total))
+                        (replace (format " %d/%d " here total)))))
+          (propertize status 'face 'anzu-mode-line))))
+    (setq anzu-mode-line-update-function #'leuven--anzu-update-func)
 
     ;; Enable Global-Anzu mode.
     (global-anzu-mode 1)
@@ -3288,7 +3291,7 @@ These packages are neither built-in nor already installed nor ignored."
     (add-hook 'message-mode-hook 'fci-mode)
     (add-hook 'org-mode-hook 'fci-mode)
 
-    ;; Avoid fci-mode and auto-complete popups.
+    ;; Avoid `fci-mode' and `auto-complete' popups.
     (defvar sanityinc/fci-mode-suppressed nil)
     (defadvice popup-create (before suppress-fci-mode activate)
       "Suspend fci-mode while popups are visible"
@@ -7751,6 +7754,9 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;; Enable YASnippet in all buffers.
       (yas-global-mode 1)
 
+      (with-eval-after-load "diminish-autoloads"
+        (diminish 'yas-minor-mode " y"))
+
       ;; (setq yas-verbosity 1)
 
       ;; Load the snippet tables.
@@ -9761,7 +9767,8 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Enable guide-key-mode.
     (guide-key-mode 1)
 
-    (diminish 'guide-key-mode))
+    (with-eval-after-load "diminish-autoloads"
+      (diminish 'guide-key-mode " Gk")))
 
 ;;** 48.5 The (info "(emacs)Syntax") Table
 
