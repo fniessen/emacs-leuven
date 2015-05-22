@@ -15172,28 +15172,28 @@ that the directories for ~R~ or ~Rterm~ (see ~inferior-R-program-name~) are in t
 *Customize* variables for ESS (set these variables *before* loading ~ess-site~).
 
 #+begin_src emacs-lisp
-  ;; start R in current working directory, don't ask user
+  ;; Start R in current working directory, don't ask user.
   (setq ess-ask-for-ess-directory nil)
 
-  ;; new inferior ESS process appears in another window in the current frame
+  ;; New inferior ESS process appears in another window in the current frame.
   (setq inferior-ess-same-window nil)
 #+end_src
 
 #+begin_src emacs-lisp
-  (when leuven--cygwin-p                 ; using R from Cygwin
+  (when leuven--cygwin-p                 ; Using R from Cygwin.
 
-    ;; safe 8.3 name for 32-bit programs
+    ;; Safe 8.3 name for 32-bit programs.
     (setq ess-program-files "c:/PROGRA~2")
 
-    ;; safe 8.3 name for 64-bit programs
+    ;; Safe 8.3 name for 64-bit programs.
     (setq ess-program-files-64 "c:/PROGRA~1")
 
-    ;; program name for invoking an inferior ESS with `M-x R'
-    (setq inferior-R-program-name "R")) ; [default: Rterm]
+    ;; Program name for invoking an inferior ESS with `M-x R'.
+    (setq inferior-R-program-name "R")) ; [Default: Rterm].
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; accented characters on graphics
+  ;; Accented characters on graphics.
   (add-to-list 'process-coding-system-alist
                '("R.*" . iso-latin-1))
 #+end_src
@@ -15206,9 +15206,9 @@ that the directories for ~R~ or ~Rterm~ (see ~inferior-R-program-name~) are in t
 *** 5 Sending code to the ESS process
 
 #+begin_src emacs-lisp
-  ;; ;; display input commands in the process buffer
-  ;; (setq ess-eval-visibly 'nowait)       ; but avoid Emacs hanging on large
-  ;;                                       ; evaluations
+  ;; ;; Display input commands in the process buffer.
+  ;; (setq ess-eval-visibly 'nowait)       ; But avoid Emacs hanging on large
+  ;;                                       ; evaluations.
 #+end_src
 
 *** 7 Editing objects and functions
@@ -15218,7 +15218,7 @@ Smart underscore:
 - Pressing underscore twice inserts a literal underscore.
 
 #+begin_src emacs-lisp
-  ;; default ESS indentation style
+  ;; Default ESS indentation style.
   (setq ess-default-style 'DEFAULT)
 #+end_src
 
@@ -15227,7 +15227,7 @@ Smart underscore:
 #+begin_src emacs-lisp
   (with-eval-after-load "ess-site"
 
-    ;; code folding in ESS mode
+    ;; Code folding in ESS mode.
     (add-hook 'ess-mode-hook 'hs-minor-mode)
 #+end_src
 
@@ -15241,7 +15241,7 @@ Auto-Complete.
 #+end_note
 
 #+begin_src emacs-lisp
-    ;; suffix appended by `ac-source-R-args' to candidates
+    ;; Suffix appended by `ac-source-R-args' to candidates.
     (setq ess-ac-R-argument-suffix "=")
 #+end_src
 
@@ -15258,7 +15258,7 @@ See
 - http://code.google.com/p/ess-tracebug/wiki/GettingStarted.
 
 #+begin_src emacs-lisp :tangle no
-    ;; activate ess-tracebug every time r session starts
+    ;; Activate ess-tracebug every time r session starts.
     (add-hook 'ess-post-run-hook 'ess-tracebug)
 #+end_src
 
@@ -15292,13 +15292,13 @@ So, e.g. try:
 **** Highlighting
 
 #+begin_src emacs-lisp
-    ;; font-lock keywords for the R mode
+    ;; Font-lock keywords for the R mode.
     (setq ess-R-font-lock-keywords
-          '((ess-R-fl-keyword:modifiers . t) ; default
-            (ess-R-fl-keyword:fun-defs . t) ; default
-            (ess-R-fl-keyword:keywords . t) ; default
-            (ess-R-fl-keyword:assign-ops . t) ; default
-            (ess-R-fl-keyword:constants . t) ; default
+          '((ess-R-fl-keyword:modifiers . t) ; Default.
+            (ess-R-fl-keyword:fun-defs . t) ; Default.
+            (ess-R-fl-keyword:keywords . t) ; Default.
+            (ess-R-fl-keyword:assign-ops . t) ; Default.
+            (ess-R-fl-keyword:constants . t) ; Default.
             (ess-fl-keyword:fun-calls . t)
             (ess-fl-keyword:numbers . t)
             (ess-fl-keyword:operators . t)
@@ -15306,16 +15306,16 @@ So, e.g. try:
             (ess-fl-keyword:= . t)
             (ess-R-fl-keyword:F&T . t)))
 
-    ;; font-lock patterns used in inferior-R-mode buffers
+    ;; Font-lock patterns used in inferior-R-mode buffers.
     (setq inferior-R-font-lock-keywords
-          '((ess-S-fl-keyword:prompt . t) ; default
-            (ess-R-fl-keyword:messages . t) ; default
-            (ess-R-fl-keyword:modifiers . t) ; default
-            (ess-R-fl-keyword:fun-defs . t) ; default
-            (ess-R-fl-keyword:keywords . t) ; default
-            (ess-R-fl-keyword:assign-ops . t) ; default
-            (ess-R-fl-keyword:constants . t) ; default
-            (ess-fl-keyword:matrix-labels . t) ; default
+          '((ess-S-fl-keyword:prompt . t) ; Default.
+            (ess-R-fl-keyword:messages . t) ; Default.
+            (ess-R-fl-keyword:modifiers . t) ; Default.
+            (ess-R-fl-keyword:fun-defs . t) ; Default.
+            (ess-R-fl-keyword:keywords . t) ; Default.
+            (ess-R-fl-keyword:assign-ops . t) ; Default.
+            (ess-R-fl-keyword:constants . t) ; Default.
+            (ess-fl-keyword:matrix-labels . t) ; Default.
             (ess-fl-keyword:fun-calls . t)
             (ess-fl-keyword:numbers . t)
             (ess-fl-keyword:operators . t)
@@ -15333,7 +15333,7 @@ With your point on the line of a variable,
 - ~d~ will mark the object for deletion (~x~ will actually perform the deletion).
 
 #+begin_src emacs-lisp
-    ;; prototype object browser for R, looks like dired mode
+    ;; Prototype object browser for R, looks like dired mode.
     (autoload 'ess-rdired "ess-rdired"
       "View *R* objects in a dired-like buffer." t)
 #+end_src
@@ -15355,15 +15355,15 @@ https://github.com/emacsmirror/dedicated.
 #+begin_src emacs-lisp
 ;;* Proced
 
-  ;; start Proced in a similar manner to Dired
-  (global-set-key (kbd "C-x p") 'proced)
+  ;; ;; Start Proced in a similar manner to Dired.
+  ;; (global-set-key (kbd "C-x p") 'proced) ; Conflict with Bkmp.
 
   (with-eval-after-load "proced"
 
-    ;; current sort scheme for proced listing
+    ;; Current sort scheme for proced listing.
     (setq-default proced-sort 'start)
 
-    ;; display of Proced buffer as process tree
+    ;; Display of Proced buffer as process tree.
     (setq-default proced-tree-flag t))
 #+end_src
 

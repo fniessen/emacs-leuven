@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150522.1347
+;; Version: 20150522.1419
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150522.1347"
+(defconst leuven--emacs-version "20150522.1419"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -9150,49 +9150,49 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
 
-  ;; start R in current working directory, don't ask user
+  ;; Start R in current working directory, don't ask user.
   (setq ess-ask-for-ess-directory nil)
 
-  ;; new inferior ESS process appears in another window in the current frame
+  ;; New inferior ESS process appears in another window in the current frame.
   (setq inferior-ess-same-window nil)
 
-  (when leuven--cygwin-p                 ; using R from Cygwin
+  (when leuven--cygwin-p                 ; Using R from Cygwin.
 
-    ;; safe 8.3 name for 32-bit programs
+    ;; Safe 8.3 name for 32-bit programs.
     (setq ess-program-files "c:/PROGRA~2")
 
-    ;; safe 8.3 name for 64-bit programs
+    ;; Safe 8.3 name for 64-bit programs.
     (setq ess-program-files-64 "c:/PROGRA~1")
 
-    ;; program name for invoking an inferior ESS with `M-x R'
-    (setq inferior-R-program-name "R")) ; [default: Rterm]
+    ;; Program name for invoking an inferior ESS with `M-x R'.
+    (setq inferior-R-program-name "R")) ; [Default: Rterm].
 
-  ;; accented characters on graphics
+  ;; Accented characters on graphics.
   (add-to-list 'process-coding-system-alist
                '("R.*" . iso-latin-1))
 
-  ;; ;; display input commands in the process buffer
-  ;; (setq ess-eval-visibly 'nowait)       ; but avoid Emacs hanging on large
-  ;;                                       ; evaluations
+  ;; ;; Display input commands in the process buffer.
+  ;; (setq ess-eval-visibly 'nowait)       ; But avoid Emacs hanging on large
+  ;;                                       ; evaluations.
 
-  ;; default ESS indentation style
+  ;; Default ESS indentation style.
   (setq ess-default-style 'DEFAULT)
 
   (with-eval-after-load "ess-site"
 
-    ;; code folding in ESS mode
+    ;; Code folding in ESS mode.
     (add-hook 'ess-mode-hook 'hs-minor-mode)
 
-    ;; suffix appended by `ac-source-R-args' to candidates
+    ;; Suffix appended by `ac-source-R-args' to candidates.
     (setq ess-ac-R-argument-suffix "=")
 
-    ;; font-lock keywords for the R mode
+    ;; Font-lock keywords for the R mode.
     (setq ess-R-font-lock-keywords
-          '((ess-R-fl-keyword:modifiers . t) ; default
-            (ess-R-fl-keyword:fun-defs . t) ; default
-            (ess-R-fl-keyword:keywords . t) ; default
-            (ess-R-fl-keyword:assign-ops . t) ; default
-            (ess-R-fl-keyword:constants . t) ; default
+          '((ess-R-fl-keyword:modifiers . t) ; Default.
+            (ess-R-fl-keyword:fun-defs . t) ; Default.
+            (ess-R-fl-keyword:keywords . t) ; Default.
+            (ess-R-fl-keyword:assign-ops . t) ; Default.
+            (ess-R-fl-keyword:constants . t) ; Default.
             (ess-fl-keyword:fun-calls . t)
             (ess-fl-keyword:numbers . t)
             (ess-fl-keyword:operators . t)
@@ -9200,16 +9200,16 @@ a clean buffer we're an order of magnitude laxer about checking."
             (ess-fl-keyword:= . t)
             (ess-R-fl-keyword:F&T . t)))
 
-    ;; font-lock patterns used in inferior-R-mode buffers
+    ;; Font-lock patterns used in inferior-R-mode buffers.
     (setq inferior-R-font-lock-keywords
-          '((ess-S-fl-keyword:prompt . t) ; default
-            (ess-R-fl-keyword:messages . t) ; default
-            (ess-R-fl-keyword:modifiers . t) ; default
-            (ess-R-fl-keyword:fun-defs . t) ; default
-            (ess-R-fl-keyword:keywords . t) ; default
-            (ess-R-fl-keyword:assign-ops . t) ; default
-            (ess-R-fl-keyword:constants . t) ; default
-            (ess-fl-keyword:matrix-labels . t) ; default
+          '((ess-S-fl-keyword:prompt . t) ; Default.
+            (ess-R-fl-keyword:messages . t) ; Default.
+            (ess-R-fl-keyword:modifiers . t) ; Default.
+            (ess-R-fl-keyword:fun-defs . t) ; Default.
+            (ess-R-fl-keyword:keywords . t) ; Default.
+            (ess-R-fl-keyword:assign-ops . t) ; Default.
+            (ess-R-fl-keyword:constants . t) ; Default.
+            (ess-fl-keyword:matrix-labels . t) ; Default.
             (ess-fl-keyword:fun-calls . t)
             (ess-fl-keyword:numbers . t)
             (ess-fl-keyword:operators . t)
@@ -9217,7 +9217,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (ess-fl-keyword:= . t)
             (ess-R-fl-keyword:F&T . t)))
 
-    ;; prototype object browser for R, looks like dired mode
+    ;; Prototype object browser for R, looks like dired mode.
     (autoload 'ess-rdired "ess-rdired"
       "View *R* objects in a dired-like buffer." t)
 
@@ -9225,15 +9225,15 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;* Proced
 
-  ;; start Proced in a similar manner to Dired
-  (global-set-key (kbd "C-x p") 'proced)
+  ;; ;; Start Proced in a similar manner to Dired.
+  ;; (global-set-key (kbd "C-x p") 'proced) ; Conflict with Bkmp.
 
   (with-eval-after-load "proced"
 
-    ;; current sort scheme for proced listing
+    ;; Current sort scheme for proced listing.
     (setq-default proced-sort 'start)
 
-    ;; display of Proced buffer as process tree
+    ;; Display of Proced buffer as process tree.
     (setq-default proced-tree-flag t))
 
 )
