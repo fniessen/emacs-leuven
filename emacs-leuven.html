@@ -434,7 +434,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150522.1420</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150522.1712</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -515,7 +515,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150522.1420"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150522.1712"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -750,7 +750,8 @@ need to load a single file that define autoloaded functions.
   (leuven-add-to-load-path
    (concat leuven--local-repos-directory <span class="org-string">"babel"</span>))
   (leuven-add-to-load-path
-   (concat leuven--local-repos-directory <span class="org-string">"emacs-bookmark-extension"</span>))
+   (concat leuven--local-repos-directory <span class="org-string">"emacs-bookmark-extension"</span>) <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment">?</span>
+   )
 </pre>
 </div>
 
@@ -2346,15 +2347,26 @@ Setup registers for files I commonly edit.
 <h3 id="orgheadline45">Bookmarks</h3>
 <div class="outline-text-3" id="text-orgheadline45">
 <p>
+If you need to move to somewhere in your document and want a quick way to
+return, you can place a bookmark on the current line.
+</p>
+
+<p>
+This is done by pressing <code>C-x r m &lt;RET&gt;</code> or <code>C-x r m BOOKMARK &lt;RET&gt;</code>.
+</p>
+
+<div class="note">
+<p>
 Bookmarks are <b>persistent</b> across sessions and they have <b>names</b>; not <i>markers</i>.
 Bookmarked positions can also be <b>relocated</b> (found) if they move slightly because
 of text changes.
 </p>
 
+</div>
+
 <p>
-To navigate to a bookmark (linking to a file or directory), just press <code>C-x r b</code>.
-You&rsquo;ll be prompted for the bookmark name, and it will open that file or
-directory.
+When you want to return to a bookmark, you can press <code>C-x r b</code>.  You&rsquo;ll be
+prompted for the bookmark name, and it will open that file or directory.
 </p>
 
 <div class="org-src-container">
@@ -2404,9 +2416,9 @@ Key bindings:
 </p>
 
 <dl class="org-dl">
-<dt><code>C-x p RET</code> (<code>C-F2</code> in Sublime Text and TextMate)</dt><dd><b>Set</b> (or delete) a <b>bookmark</b> at point.</dd>
+<dt><code>C-x p RET</code> (<code>C-F2</code> in Emacs Leuven, Sublime Text and TextMate)</dt><dd><b>Set</b> (or delete) a <b>bookmark</b> at point.</dd>
 
-<dt><code>C-x p C-down</code> (<code>F2</code> in Sublime Text and TextMate)</dt><dd>Cycle to the <b>next</b> highlighted <b>bookmark</b> in the current buffer.</dd>
+<dt><code>C-x p C-down</code> (<code>S-F2</code> in Emacs Leuven, <code>F2</code> in Sublime Text and TextMate)</dt><dd>Cycle to the <b>next</b> highlighted <b>bookmark</b> in the current buffer.</dd>
 
 <dt><code>C-x p C-up</code> (<code>S-F2</code> in Sublime Text and TextMate)</dt><dd>Cycle to the <b>previous</b> highlighted <b>bookmark</b> in the current buffer.</dd>
 
@@ -2414,7 +2426,7 @@ Key bindings:
 
 <dt>C-x p ,</dt><dd>Show the bookmark list just for bookmarks for the current file/buffer.</dd>
 
-<dt>C-x p ,</dt><dd>Clear all bookmarks for the current file/buffer.</dd>
+<dt><code>C-S-f2</code> (in Emacs Leuven)</dt><dd><b>Clear</b> all <b>bookmarks</b> for the current file/buffer.</dd>
 </dl>
 
 <p>
@@ -2487,8 +2499,7 @@ We bookmarks positions, not just lines!!
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ace-link-autoloads"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Setup the defualt shortcuts.</span>
-    (ace-link-setup-default <span class="org-comment-delimiter">;; </span><span class="org-comment">"f"</span>
-     ))
+    (ace-link-setup-default <span class="org-string">"f"</span>))
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Jump to things tree-style.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"avy-jump"</span>
@@ -7156,10 +7167,10 @@ file) is beginning at column 0.
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"indent-guide"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Character used as vertical line.</span>
-    (setq indent-guide-char <span class="org-string">"│"</span>)
-    (setq indent-guide-char <span class="org-string">"┆"</span>)
-    (setq indent-guide-char <span class="org-string">"╎"</span>)
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq indent-guide-char ":")</span>
+    (setq indent-guide-char
+          (<span class="org-keyword">cond</span> ((char-displayable-p ?\u254E) <span class="org-string">"╎"</span>)
+                ((char-displayable-p ?\u2502) <span class="org-string">"│"</span>)
+                (t <span class="org-string">":"</span>)))
 
     (diminish 'indent-guide-mode))
 </pre>
@@ -12212,7 +12223,7 @@ languages which can be evaluated in Org mode buffers.
 <div class="inlinetask">
 <b><span class="todo TODO">TODO</span> Why isn&rsquo;t diff-mode.el found?</b><br  />
 <p>
-<a href="file://d:/Users/fni/org/personal/Org-for-dummies.html">file://d:/Users/fni/org/personal/Org-for-dummies.html</a>
+<a href="file:///cygdrive/d/Users/fni/org/personal/Org-for-dummies.html">file:///cygdrive/d/Users/fni/org/personal/Org-for-dummies.html</a>
 </p>
 </div>
 
@@ -19796,7 +19807,7 @@ Or have it dedicated in a window.  Check out
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"proced"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Current sort scheme for proced listing.</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Current sort scheme for Proced listing.</span>
     (setq-default proced-sort 'start)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Display of Proced buffer as process tree.</span>

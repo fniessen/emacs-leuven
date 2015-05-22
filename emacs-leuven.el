@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150522.1419
+;; Version: 20150522.1710
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150522.1419"
+(defconst leuven--emacs-version "20150522.1710"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -238,7 +238,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven-add-to-load-path
    (concat leuven--local-repos-directory "babel"))
   (leuven-add-to-load-path
-   (concat leuven--local-repos-directory "emacs-bookmark-extension"))
+   (concat leuven--local-repos-directory "emacs-bookmark-extension") ; XXX?
+   )
 
   (defvar leuven-user-lisp-directory (concat user-emacs-directory "lisp/")
     "Directory containing personal additional Emacs Lisp packages.")
@@ -999,8 +1000,7 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "ace-link-autoloads"
 
     ;; Setup the defualt shortcuts.
-    (ace-link-setup-default ;; "f"
-     ))
+    (ace-link-setup-default "f"))
 
   ;; Jump to things tree-style.
   (with-eval-after-load "avy-jump"
@@ -3202,10 +3202,10 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "indent-guide"
 
     ;; Character used as vertical line.
-    (setq indent-guide-char "│")
-    (setq indent-guide-char "┆")
-    (setq indent-guide-char "╎")
-    ;; (setq indent-guide-char ":")
+    (setq indent-guide-char
+          (cond ((char-displayable-p ?\u254E) "╎")
+                ((char-displayable-p ?\u2502) "│")
+                (t ":")))
 
     (diminish 'indent-guide-mode))
 
@@ -9230,7 +9230,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (with-eval-after-load "proced"
 
-    ;; Current sort scheme for proced listing.
+    ;; Current sort scheme for Proced listing.
     (setq-default proced-sort 'start)
 
     ;; Display of Proced buffer as process tree.
