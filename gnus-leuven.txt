@@ -183,7 +183,8 @@ for logins).
 #+end_note
 
 #+begin_note
-The groups in the ~gnus-select-method~ don't get a prefix like ~nnimap~. Nice!
+Mailbox names from the server specified in ~gnus-select-method~ are NOT prefixed
+with ~nnimap~ (or such).  Nice!
 #+end_note
 
 #+begin_note
@@ -265,9 +266,9 @@ buffer.
 #+end_src
 
 #+begin_tip
-To stop the repetitive (and growing) ~nntp read~ messages, ensure you subscribe to
-at least one group for every NNTP server. You can even unsubscribe directly
-afterward...
+To stop the repetitive (and growing) ~nntp read~ messages, you must *subscribe to
+at least one foreign group from every NNTP server*.  You can even unsubscribe
+directly afterward...
 #+end_tip
 
 ** Auto Save
