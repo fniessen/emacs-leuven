@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150521.1454
+;; Version: 20150522.1347
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150521.1454"
+(defconst leuven--emacs-version "20150522.1347"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -433,7 +433,9 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ; and load `<pkg>-autoloads.el'.
 
       (defconst leuven-elpa-packages
-        '(ace-jump-mode ace-link ace-window aggressive-indent anzu auctex
+        '(ace-jump-mode ace-link ace-window
+          ;; aggressive-indent
+          anzu auctex
           auto-complete bbdb bookmark+ boxquote
           ;; calfw
           circe
@@ -444,7 +446,9 @@ Last time is saved in global variable `leuven--before-section-time'."
           google-translate goto-chg graphviz-dot-mode graphviz-dot-mode
           guide-key helm helm-descbinds helm-swoop hideshowvis highlight-symbol
           htmlize indent-guide key-chord litable idle-require imenu-anywhere
-          info+ interaction-log ledger-mode leuven-theme magit multi-term
+          info+ interaction-log ledger-mode leuven-theme
+          ;; magit
+          multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
           undo-tree w3m ws-butler yasnippet
           ;; jabber multi-term paredit redshank
@@ -941,17 +945,6 @@ These packages are neither built-in nor already installed nor ignored."
 
   (global-set-key (kbd "C-j") 'jump-to-register) ; also on `C-x r j'
 
-  (set-register ?a '(file . "/sudo::/etc/apt/sources.list"))
-  (set-register ?b '(file . "~/.bashrc"))
-  (set-register ?e `(file . ,(concat leuven--directory "emacs-leuven.txt")))
-  (when (file-exists-p "~/org/personal/Personal.org")
-    (set-register ?p '(file . "~/org/personal/Personal.org")))
-  (when (file-exists-p "~/org/refile.org")
-    (set-register ?r '(file . "~/org/refile.org")))
-  (when (file-exists-p "~/org/work/Work.org")
-    (set-register ?w '(file . "~/org/work/Work.org")))
-  (set-register ?z '(file . "~/.zshrc"))
-
 ;;** 13.7 (info "(emacs)Bookmarks")
 
   (leuven--section "13.7 (emacs)Bookmarks")
@@ -960,7 +953,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; Where to save the bookmarks.
     (setq bookmark-default-file (concat user-emacs-directory "bookmarks.bmk"))
-                                        ;! a .txt extension would load Org at
+                                        ;! A `.txt' extension would load Org at
                                         ;! the time `bookmark' is required!
 
     ;; Each command that sets a bookmark will also save your bookmarks.
@@ -969,7 +962,8 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Extensions to standard library `bookmark.el'.
     (when (try-require 'bookmark+)
       (global-set-key (kbd "<C-f2>") 'bmkp-toggle-autonamed-bookmark-set/delete)
-      (global-set-key (kbd "<S-f2>") 'bmkp-next-bookmark-this-file/buffer-repeat))
+      (global-set-key (kbd "<S-f2>") 'bmkp-next-bookmark-this-file/buffer-repeat)
+      (global-set-key (kbd "<C-S-f2>") 'bmkp-delete-all-autonamed-for-this-buffer))
 
     (with-eval-after-load "bookmark+"
 
@@ -993,6 +987,9 @@ These packages are neither built-in nor already installed nor ignored."
                                         ; We will often be going back and forth
                                         ; between using Bookmark+ and using
                                         ; vanilla Emacs.
+
+;; ;; Restoring bookmarks when on file find.
+;; (add-hook 'find-file-hook 'bm-buffer-restore)
 
   ;; Quickly jump to a position in the current view.
   (with-eval-after-load "ace-jump-mode-autoloads"
@@ -2401,10 +2398,10 @@ These packages are neither built-in nor already installed nor ignored."
         (interactive)
         (if (derived-mode-p 'org-mode)
             (helm-org-in-buffer-headings)
-          (helm-imenu)))
+          (helm-semantic-or-imenu)))    ; More generic than `helm-imenu'.
 
-      (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
-                                        ; and `C-c =' (like in RefTeX)?
+      (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; Awesome.
+                                        ; And `C-c =' (like in RefTeX)?
 
       (global-set-key (kbd "M-y") 'helm-show-kill-ring) ; OK.
 
@@ -5979,6 +5976,7 @@ this with to-do items than with projects or headings."
     (add-to-list 'org-babel-load-languages '(ledger . t)) ; Requires ledger.
     (add-to-list 'org-babel-load-languages '(makefile . t))
     (add-to-list 'org-babel-load-languages '(org . t))
+    (add-to-list 'org-babel-load-languages '(python . t))
     (if (locate-library "ob-shell")     ; ob-sh renamed on 2013-12-13
         (add-to-list 'org-babel-load-languages '(shell . t))
       (add-to-list 'org-babel-load-languages '(sh . t)))

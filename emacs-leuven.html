@@ -411,7 +411,8 @@ seem (and sometimes are) ugly or awkward.
 
 <p>
 But &#x2013; that&rsquo;s the joy of Emacs &#x2013; nearly everything can be adjusted!  Hence,
-this set of customizations to &ldquo;short-cut&rdquo; that initial process.
+this set of customizations (from one pathological Emacs tweaker) to &ldquo;short-cut&rdquo;
+that initial process.
 </p>
 </div>
 </div>
@@ -433,7 +434,7 @@ this set of customizations to &ldquo;short-cut&rdquo; that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150521.1455</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150522.1348</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +515,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150521.1455"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150522.1348"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1106,7 +1107,9 @@ like this into your configuration file:
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">and load `</span><span class="org-constant"><span class="org-comment">&lt;pkg&gt;-autoloads.el</span></span><span class="org-comment">'.</span>
 
       (<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven-elpa-packages</span>
-        '(ace-jump-mode ace-link ace-window aggressive-indent anzu auctex
+        '(ace-jump-mode ace-link ace-window
+          <span class="org-comment-delimiter">;; </span><span class="org-comment">aggressive-indent</span>
+          anzu auctex
           auto-complete bbdb bookmark+ boxquote
           <span class="org-comment-delimiter">;; </span><span class="org-comment">calfw</span>
           circe
@@ -1117,7 +1120,9 @@ like this into your configuration file:
           google-translate goto-chg graphviz-dot-mode graphviz-dot-mode
           guide-key helm helm-descbinds helm-swoop hideshowvis highlight-symbol
           htmlize indent-guide key-chord litable idle-require imenu-anywhere
-          info+ interaction-log ledger-mode leuven-theme magit multi-term
+          info+ interaction-log ledger-mode leuven-theme
+          <span class="org-comment-delimiter">;; </span><span class="org-comment">magit</span>
+          multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
           undo-tree w3m ws-butler yasnippet
           <span class="org-comment-delimiter">;; </span><span class="org-comment">jabber multi-term paredit redshank</span>
@@ -1792,26 +1797,32 @@ buffer, by calling <code>Info-merge-subnodes</code> (bound to <code>+</code>).
 <h3 id="orgheadline26">Setting the Mark</h3>
 <div class="outline-text-3" id="text-orgheadline26">
 <p>
-Instead of setting the mark in order to operate on a region, you can also use it
-to:
+Instead of setting the <b>mark</b> in order to operate on a region, you can also type:
 </p>
 
-<ul class="org-ul">
-<li><b>"remember" a position</b> in the buffer (by typing <code>C-SPC C-SPC</code> to set the mark
-where point is), and</li>
+<dl class="org-dl">
+<dt><code>C-SPC C-SPC</code></dt><dd><b>"Remember" a position</b> in the buffer (set the mark where point is), and</dd>
 
-<li><p>
-later <b>jump</b> back <b>to the mark</b> in the buffer (by typing <code>C-u C-SPC</code>).
+<dt><code>C-u C-SPC</code></dt><dd>Later <b>jump</b> back <b>to the mark</b> in the buffer.  You can use this repeatedly to
+navigate through the entire mark ring.</dd>
+</dl>
+
+<div class="tip">
+<p>
+Some commands (especially ones which are liable to move you an an unknown or
+arbitrary distance from your original location) will automatically push to the
+mark ring so that you can use <code>C-uC-SPC</code> to return afterwards. This includes
+<code>isearch</code>, so after using <code>C-s</code> to go somewhere, you can easily jump back again.
 </p>
+
+</div>
 
 <div class="inlinetask">
 <b><span class="todo TODO">TODO</span> Look at `back-button&rsquo;</b><br  />
 <p>
 Visual navigation through mark rings.
 </p>
-</div></li>
-</ul>
-
+</div>
 
 <p>
 <b>Go to</b> the <b>place</b> where you <b>last changed</b> something:
@@ -2290,19 +2301,33 @@ highlighting.  Though, since Emacs 24.4, <code>rectangle-mark-mode</code> is the
 <div id="outline-container-orgheadline44" class="outline-3">
 <h3 id="orgheadline44">Saving Positions in Registers</h3>
 <div class="outline-text-3" id="text-orgheadline44">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** 13.1 (info "(emacs)Position Registers")</span>
+
+  (leuven--section <span class="org-string">"13.1 (emacs)Position Registers"</span>)
+</pre>
+</div>
+
+<dl class="org-dl">
+<dt><code>C-x r SPC</code></dt><dd><code>point-to-register</code>. Type any character to specify a register when prompted.</dd>
+
+<dt><code>C-x r j</code></dt><dd><code>jump-to-register</code>.</dd>
+</dl>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  (global-set-key (kbd <span class="org-string">"C-j"</span>) 'jump-to-register) <span class="org-comment-delimiter">; </span><span class="org-comment">also on `C-x r j'</span>
+</pre>
+</div>
+
 <p>
 Setup registers for files I commonly edit.
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** 13.1 (info "(emacs)Position Registers")</span>
-
-  (leuven--section <span class="org-string">"13.1 (emacs)Position Registers"</span>)
-
-  (global-set-key (kbd <span class="org-string">"C-j"</span>) 'jump-to-register) <span class="org-comment-delimiter">; </span><span class="org-comment">also on `C-x r j'</span>
-
-  (set-register ?a '(file . <span class="org-string">"/sudo::/etc/apt/sources.list"</span>))
+<pre class="src src-emacs-lisp">  (set-register ?a '(file . <span class="org-string">"/sudo::/etc/apt/sources.list"</span>))
   (set-register ?b '(file . <span class="org-string">"~/.bashrc"</span>))
   (set-register ?e `(file . ,(concat leuven--directory <span class="org-string">"emacs-leuven.txt"</span>)))
   (<span class="org-keyword">when</span> (file-exists-p <span class="org-string">"~/org/personal/Personal.org"</span>)
@@ -2321,8 +2346,9 @@ Setup registers for files I commonly edit.
 <h3 id="orgheadline45">Bookmarks</h3>
 <div class="outline-text-3" id="text-orgheadline45">
 <p>
-Bookmarks are <b>persistent</b> and they have <b>names</b>; not <i>markers</i>.  Bookmarked positions
-can also be <b>relocated</b> (found) if they move slightly because of text changes.
+Bookmarks are <b>persistent</b> across sessions and they have <b>names</b>; not <i>markers</i>.
+Bookmarked positions can also be <b>relocated</b> (found) if they move slightly because
+of text changes.
 </p>
 
 <p>
@@ -2341,7 +2367,7 @@ directory.
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Where to save the bookmarks.</span>
     (setq bookmark-default-file (concat user-emacs-directory <span class="org-string">"bookmarks.bmk"</span>))
-                                        <span class="org-comment-delimiter">;</span><span class="org-comment">! a .txt extension would load Org at</span>
+                                        <span class="org-comment-delimiter">;</span><span class="org-comment">! A `</span><span class="org-constant"><span class="org-comment">.txt</span></span><span class="org-comment">' extension would load Org at</span>
                                         <span class="org-comment-delimiter">;</span><span class="org-comment">! the time `</span><span class="org-constant"><span class="org-comment">bookmark</span></span><span class="org-comment">' is required!</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Each command that sets a bookmark will also save your bookmarks.</span>
@@ -2350,7 +2376,7 @@ directory.
 </div>
 
 <p>
-Visible bookmarks in buffer.
+<b>Visible</b> bookmarks in buffer.
 </p>
 
 <p>
@@ -2387,23 +2413,32 @@ Key bindings:
 <dt><code>C-x (4) j h</code></dt><dd>Jump to a highlighted bookmark (in another window).</dd>
 
 <dt>C-x p ,</dt><dd>Show the bookmark list just for bookmarks for the current file/buffer.</dd>
+
+<dt>C-x p ,</dt><dd>Clear all bookmarks for the current file/buffer.</dd>
 </dl>
 
 <p>
-In TeXStudio:
+Buffer-local nature of the bookmarks.
 </p>
 
-<ul class="org-ul">
-<li>Set Bookmark 0..9: <code>C-S-0..9</code></li>
-<li>Jump to Bookmark 0..9: <code>C-0..9</code></li>
-</ul>
+<p>
+Annotating bookmarks.
+</p>
+
+<div class="warning">
+<p>
+We bookmarks positions, not just lines!!
+</p>
+
+</div>
 
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Extensions to standard library `</span><span class="org-constant"><span class="org-comment">bookmark.el</span></span><span class="org-comment">'.</span>
     (<span class="org-keyword">when</span> (try-require 'bookmark+)
       (global-set-key (kbd <span class="org-string">"&lt;C-f2&gt;"</span>) 'bmkp-toggle-autonamed-bookmark-set/delete)
-      (global-set-key (kbd <span class="org-string">"&lt;S-f2&gt;"</span>) 'bmkp-next-bookmark-this-file/buffer-repeat))
+      (global-set-key (kbd <span class="org-string">"&lt;S-f2&gt;"</span>) 'bmkp-next-bookmark-this-file/buffer-repeat)
+      (global-set-key (kbd <span class="org-string">"&lt;C-S-f2&gt;"</span>) 'bmkp-delete-all-autonamed-for-this-buffer))
 
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"bookmark+"</span>
 
@@ -2427,6 +2462,9 @@ In TeXStudio:
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">We will often be going back and forth</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">between using Bookmark+ and using</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">vanilla Emacs.</span>
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">;; Restoring bookmarks when on file find.</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">(add-hook 'find-file-hook 'bm-buffer-restore)</span>
 </pre>
 </div>
 </div>
@@ -5530,10 +5568,10 @@ See <a href="http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-an
         (interactive)
         (<span class="org-keyword">if</span> (derived-mode-p 'org-mode)
             (helm-org-in-buffer-headings)
-          (helm-imenu)))
+          (helm-semantic-or-imenu)))    <span class="org-comment-delimiter">; </span><span class="org-comment">More generic than `</span><span class="org-constant"><span class="org-comment">helm-imenu</span></span><span class="org-comment">'.</span>
 
-      (global-set-key (kbd <span class="org-string">"&lt;f4&gt;"</span>) 'leuven-helm-org-prog-menu) <span class="org-comment-delimiter">; </span><span class="org-comment">awesome</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">and `C-c =' (like in RefTeX)?</span>
+      (global-set-key (kbd <span class="org-string">"&lt;f4&gt;"</span>) 'leuven-helm-org-prog-menu) <span class="org-comment-delimiter">; </span><span class="org-comment">Awesome.</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">And `C-c =' (like in RefTeX)?</span>
 </pre>
 </div>
 
@@ -5810,6 +5848,12 @@ the one you want to paste using arrow keys. Use <code>RET</code> to insert it.
       (setq helm-kill-ring-max-lines-number 20))
 </pre>
 </div>
+
+<p>
+<code>helm-all-mark-rings</code> allows you to view the content of the both the local and
+global mark rings in a friendly interface, so you can always jump back to where
+you were.
+</p>
 
 <div class="org-src-container">
 
@@ -12112,6 +12156,7 @@ languages which can be evaluated in Org mode buffers.
     (add-to-list 'org-babel-load-languages '(ledger . t)) <span class="org-comment-delimiter">; </span><span class="org-comment">Requires ledger.</span>
     (add-to-list 'org-babel-load-languages '(makefile . t))
     (add-to-list 'org-babel-load-languages '(org . t))
+    (add-to-list 'org-babel-load-languages '(python . t))
     (<span class="org-keyword">if</span> (locate-library <span class="org-string">"ob-shell"</span>)     <span class="org-comment-delimiter">; </span><span class="org-comment">ob-sh renamed on 2013-12-13</span>
         (add-to-list 'org-babel-load-languages '(shell . t))
       (add-to-list 'org-babel-load-languages '(sh . t)))
@@ -15279,9 +15324,9 @@ When in it:
 </dl>
 
 <p>
-We have at least two pairs of commands (C-x v l vs.  C-x v L <i>and</i> C-x v = vs. C-x
-v D), of which one operates on the current <b>file</b> <i>and</i> the other on the <b>repository</b>
-as a whole.
+We have at least two pairs of commands (<code>C-x v l</code> vs <code>C-x v L</code> <i>and</i> <code>C-x v =</code> vs
+<code>C-x v D</code>), of which one operates on the current <b>file</b> <i>and</i> the other on the
+<b>repository</b> as a whole.
 </p>
 
 <ul class="org-ul">

@@ -148,7 +148,8 @@ Emacs can be very difficult for the beginner, as many of the default choices may
 seem (and sometimes are) ugly or awkward.
 
 But -- that's the joy of Emacs -- nearly everything can be adjusted!  Hence,
-this set of customizations to "short-cut" that initial process.
+this set of customizations (from one pathological Emacs tweaker) to "short-cut"
+that initial process.
 
 * Header
 
@@ -727,7 +728,9 @@ like this into your configuration file:
                                         ; and load `<pkg>-autoloads.el'.
 
       (defconst leuven-elpa-packages
-        '(ace-jump-mode ace-link ace-window aggressive-indent anzu auctex
+        '(ace-jump-mode ace-link ace-window
+          ;; aggressive-indent
+          anzu auctex
           auto-complete bbdb bookmark+ boxquote
           ;; calfw
           circe
@@ -738,7 +741,9 @@ like this into your configuration file:
           google-translate goto-chg graphviz-dot-mode graphviz-dot-mode
           guide-key helm helm-descbinds helm-swoop hideshowvis highlight-symbol
           htmlize indent-guide key-chord litable idle-require imenu-anywhere
-          info+ interaction-log ledger-mode leuven-theme magit multi-term
+          info+ interaction-log ledger-mode leuven-theme
+          ;; magit
+          multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
           undo-tree w3m ws-butler yasnippet
           ;; jabber multi-term paredit redshank
@@ -1265,18 +1270,25 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
 
 ** Setting the Mark
 
-Instead of setting the mark in order to operate on a region, you can also use it
-to:
+Instead of setting the *mark* in order to operate on a region, you can also type:
 
-- *"remember" a position* in the buffer (by typing ~C-SPC C-SPC~ to set the mark
-  where point is), and
+-  ~C-SPC C-SPC~ ::
+     *"Remember" a position* in the buffer (set the mark where point is), and
 
-- later *jump* back *to the mark* in the buffer (by typing ~C-u C-SPC~).
+- ~C-u C-SPC~ ::
+     Later *jump* back *to the mark* in the buffer.  You can use this repeatedly to
+     navigate through the entire mark ring.
+
+#+begin_tip
+Some commands (especially ones which are liable to move you an an unknown or
+arbitrary distance from your original location) will automatically push to the
+mark ring so that you can use ~C-uC-SPC~ to return afterwards. This includes
+~isearch~, so after using ~C-s~ to go somewhere, you can easily jump back again.
+#+end_tip
 
 *************** TODO Look at `back-button'
 Visual navigation through mark rings.
 *************** END
-
 
 *Go to* the *place* where you *last changed* something:
 
@@ -1609,15 +1621,25 @@ highlighting.  Though, since Emacs 24.4, ~rectangle-mark-mode~ is the new way.
 
 ** Saving Positions in Registers
 
-Setup registers for files I commonly edit.
-
 #+begin_src emacs-lisp
 ;;** 13.1 (info "(emacs)Position Registers")
 
   (leuven--section "13.1 (emacs)Position Registers")
+#+end_src
 
+- ~C-x r SPC~ ::
+     ~point-to-register~. Type any character to specify a register when prompted.
+
+- ~C-x r j~ ::
+     ~jump-to-register~.
+
+#+begin_src emacs-lisp
   (global-set-key (kbd "C-j") 'jump-to-register) ; also on `C-x r j'
+#+end_src
 
+Setup registers for files I commonly edit.
+
+#+begin_src emacs-lisp :tangle no
   (set-register ?a '(file . "/sudo::/etc/apt/sources.list"))
   (set-register ?b '(file . "~/.bashrc"))
   (set-register ?e `(file . ,(concat leuven--directory "emacs-leuven.txt")))
@@ -1632,8 +1654,9 @@ Setup registers for files I commonly edit.
 
 ** Bookmarks
 
-Bookmarks are *persistent* and they have *names*; not /markers/.  Bookmarked positions
-can also be *relocated* (found) if they move slightly because of text changes.
+Bookmarks are *persistent* across sessions and they have *names*; not /markers/.
+Bookmarked positions can also be *relocated* (found) if they move slightly because
+of text changes.
 
 To navigate to a bookmark (linking to a file or directory), just press ~C-x r b~.
 You'll be prompted for the bookmark name, and it will open that file or
@@ -1648,14 +1671,14 @@ directory.
 
     ;; Where to save the bookmarks.
     (setq bookmark-default-file (concat user-emacs-directory "bookmarks.bmk"))
-                                        ;! a .txt extension would load Org at
+                                        ;! A `.txt' extension would load Org at
                                         ;! the time `bookmark' is required!
 
     ;; Each command that sets a bookmark will also save your bookmarks.
     (setq bookmark-save-flag 1)
 #+end_src
 
-Visible bookmarks in buffer.
+*Visible* bookmarks in buffer.
 
 *Bookmark+* offers everything that =bm.el= offers, and quite a bit more.
 
@@ -1690,16 +1713,23 @@ Key bindings:
 - C-x p , ::
      Show the bookmark list just for bookmarks for the current file/buffer.
 
-In TeXStudio:
+- C-x p , ::
+     Clear all bookmarks for the current file/buffer.
 
-- Set Bookmark 0..9: ~C-S-0..9~
-- Jump to Bookmark 0..9: ~C-0..9~
+Buffer-local nature of the bookmarks.
+
+Annotating bookmarks.
+
+#+begin_warning
+We bookmarks positions, not just lines!!
+#+end_warning
 
 #+begin_src emacs-lisp
     ;; Extensions to standard library `bookmark.el'.
     (when (try-require 'bookmark+)
       (global-set-key (kbd "<C-f2>") 'bmkp-toggle-autonamed-bookmark-set/delete)
-      (global-set-key (kbd "<S-f2>") 'bmkp-next-bookmark-this-file/buffer-repeat))
+      (global-set-key (kbd "<S-f2>") 'bmkp-next-bookmark-this-file/buffer-repeat)
+      (global-set-key (kbd "<C-S-f2>") 'bmkp-delete-all-autonamed-for-this-buffer))
 
     (with-eval-after-load "bookmark+"
 
@@ -1723,6 +1753,9 @@ In TeXStudio:
                                         ; We will often be going back and forth
                                         ; between using Bookmark+ and using
                                         ; vanilla Emacs.
+
+;; ;; Restoring bookmarks when on file find.
+;; (add-hook 'find-file-hook 'bm-buffer-restore)
 #+end_src
 
 ** Ace Jump
@@ -4162,10 +4195,10 @@ See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-
         (interactive)
         (if (derived-mode-p 'org-mode)
             (helm-org-in-buffer-headings)
-          (helm-imenu)))
+          (helm-semantic-or-imenu)))    ; More generic than `helm-imenu'.
 
-      (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; awesome
-                                        ; and `C-c =' (like in RefTeX)?
+      (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; Awesome.
+                                        ; And `C-c =' (like in RefTeX)?
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4378,6 +4411,10 @@ the one you want to paste using arrow keys. Use ~RET~ to insert it.
       ;; Max number of lines displayed per candidate in kill-ring browser.
       (setq helm-kill-ring-max-lines-number 20))
 #+end_src
+
+~helm-all-mark-rings~ allows you to view the content of the both the local and
+global mark rings in a friendly interface, so you can always jump back to where
+you were.
 
 #+begin_src emacs-lisp
     ;; (with-eval-after-load "helm-utils"
@@ -9433,6 +9470,7 @@ languages which can be evaluated in Org mode buffers.
     (add-to-list 'org-babel-load-languages '(ledger . t)) ; Requires ledger.
     (add-to-list 'org-babel-load-languages '(makefile . t))
     (add-to-list 'org-babel-load-languages '(org . t))
+    (add-to-list 'org-babel-load-languages '(python . t))
     (if (locate-library "ob-shell")     ; ob-sh renamed on 2013-12-13
         (add-to-list 'org-babel-load-languages '(shell . t))
       (add-to-list 'org-babel-load-languages '(sh . t)))
@@ -11920,9 +11958,9 @@ See http://whattheemacsd.com/setup-magit.el-01.html.
      - ~C-m~ to read the commit message,
      - ~d~ to see the corresponding diff.
 
-We have at least two pairs of commands (C-x v l vs.  C-x v L /and/ C-x v = vs. C-x
-v D), of which one operates on the current *file* /and/ the other on the *repository*
-as a whole.
+We have at least two pairs of commands (~C-x v l~ vs ~C-x v L~ /and/ ~C-x v =~ vs
+~C-x v D~), of which one operates on the current *file* /and/ the other on the
+*repository* as a whole.
 
 - ~C-x v l~ to view the file's history.
 - ~n~ and ~p~ to move between commits.
