@@ -439,7 +439,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150526.1002</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150526.1341</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -520,7 +520,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150526.1002"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150526.1341"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -11167,31 +11167,28 @@ launched from Dired?
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Well, almost all code blocks: not the ones of "cached" blocks (they may have</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">taken a long time to be computed, or may not be computable another time), nor</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">the ones with a caption on the results block...</span>
-          (measure-time
-           <span class="org-string">"Buffer saved"</span>
+          (measure-time <span class="org-string">"Buffer saved"</span>
            (<span class="org-keyword">let</span> ((before-save-hook nil))
              (save-buffer)))
-          (measure-time <span class="org-string">"Buffer tangled"</span> (org-babel-tangle))
-          (measure-time
-           <span class="org-string">"Buffer exported to HTML"</span>
-           (<span class="org-keyword">when</span> (file-exists-p htmlfile)
-             (<span class="org-keyword">if</span> (file-newer-than-file-p orgfile htmlfile)
-                 (org-html-export-to-html)
-               (message <span class="org-string">"HTML is up to date with Org file"</span>))))
-          (measure-time
-           <span class="org-string">"Buffer exported to PDF LaTeX"</span>
-           (<span class="org-keyword">when</span> (or (file-exists-p texfile) (file-exists-p pdffile))
-             (<span class="org-keyword">if</span> (or (and (file-exists-p pdffile)
-                          (file-newer-than-file-p orgfile pdffile))
-                     (and (file-exists-p texfile)
-                          (not (file-exists-p pdffile)))
+          (measure-time <span class="org-string">"Buffer tangled"</span>
+           (org-babel-tangle))
+          (<span class="org-keyword">when</span> (file-exists-p htmlfile)
+            (<span class="org-keyword">if</span> (file-newer-than-file-p orgfile htmlfile)
+                (measure-time <span class="org-string">"Buffer exported to HTML"</span>
+                 (org-html-export-to-html))
+              (message <span class="org-string">"HTML is up to date with Org file"</span>)))
+          (<span class="org-keyword">when</span> (or (file-exists-p texfile) (file-exists-p pdffile))
+            (<span class="org-keyword">if</span> (or (and (file-exists-p pdffile)
+                         (file-newer-than-file-p orgfile pdffile))
+                    (and (file-exists-p texfile)
+                         (not (file-exists-p pdffile))))
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">Previous PDF export failed.</span>
-                     )
+                (measure-time <span class="org-string">"Buffer exported to PDF LaTeX"</span>
                  (<span class="org-keyword">if</span> (string-match <span class="org-string">"^#\\+BEAMER_THEME: "</span> (buffer-string))
                      (org-beamer-export-to-pdf)
-                   (org-latex-export-to-pdf))
-               (message <span class="org-string">"PDF is up to date with Org file"</span>))))
-           (beep))))
+                   (org-latex-export-to-pdf)))
+              (message <span class="org-string">"PDF is up to date with Org file"</span>)))
+          (beep))))
 
     (define-key org-mode-map (kbd <span class="org-string">"&lt;f9&gt;"</span>) 'org-save-buffer-and-do-related))
 </pre>
@@ -12233,7 +12230,7 @@ languages which can be evaluated in Org mode buffers.
 <div class="inlinetask">
 <b><span class="todo TODO">TODO</span> Why isn&rsquo;t diff-mode.el found?</b><br  />
 <p>
-<a href="file://d:/Users/fni/org/personal/Org-for-dummies.html">file://d:/Users/fni/org/personal/Org-for-dummies.html</a>
+<a href="file:///cygdrive/d/Users/fni/org/personal/Org-for-dummies.html">file:///cygdrive/d/Users/fni/org/personal/Org-for-dummies.html</a>
 </p>
 </div>
 
@@ -17181,8 +17178,7 @@ interface).
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">switches passed to `</span><span class="org-constant"><span class="org-comment">ls</span></span><span class="org-comment">' for Dired</span>
     (setq dired-listing-switches
-          (<span class="org-keyword">cond</span> ((or leuven--win32-p
-                     leuven--cygwin-p)
+          (<span class="org-keyword">cond</span> (leuven--win32-p
                  <span class="org-string">"-a -F -l"</span>)
                 (t
                  <span class="org-string">"-a -F --group-directories-first -l --time-style=long-iso"</span>)))

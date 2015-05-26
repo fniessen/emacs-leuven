@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150526.1001
+;; Version: 20150526.1339
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150526.1001"
+(defconst leuven--emacs-version "20150526.1339"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5414,31 +5414,28 @@ this with to-do items than with projects or headings."
 ;; Well, almost all code blocks: not the ones of "cached" blocks (they may have
 ;; taken a long time to be computed, or may not be computable another time), nor
 ;; the ones with a caption on the results block...
-          (measure-time
-           "Buffer saved"
+          (measure-time "Buffer saved"
            (let ((before-save-hook nil))
              (save-buffer)))
-          (measure-time "Buffer tangled" (org-babel-tangle))
-          (measure-time
-           "Buffer exported to HTML"
-           (when (file-exists-p htmlfile)
-             (if (file-newer-than-file-p orgfile htmlfile)
-                 (org-html-export-to-html)
-               (message "HTML is up to date with Org file"))))
-          (measure-time
-           "Buffer exported to PDF LaTeX"
-           (when (or (file-exists-p texfile) (file-exists-p pdffile))
-             (if (or (and (file-exists-p pdffile)
-                          (file-newer-than-file-p orgfile pdffile))
-                     (and (file-exists-p texfile)
-                          (not (file-exists-p pdffile)))
+          (measure-time "Buffer tangled"
+           (org-babel-tangle))
+          (when (file-exists-p htmlfile)
+            (if (file-newer-than-file-p orgfile htmlfile)
+                (measure-time "Buffer exported to HTML"
+                 (org-html-export-to-html))
+              (message "HTML is up to date with Org file")))
+          (when (or (file-exists-p texfile) (file-exists-p pdffile))
+            (if (or (and (file-exists-p pdffile)
+                         (file-newer-than-file-p orgfile pdffile))
+                    (and (file-exists-p texfile)
+                         (not (file-exists-p pdffile))))
                                         ; Previous PDF export failed.
-                     )
+                (measure-time "Buffer exported to PDF LaTeX"
                  (if (string-match "^#\\+BEAMER_THEME: " (buffer-string))
                      (org-beamer-export-to-pdf)
-                   (org-latex-export-to-pdf))
-               (message "PDF is up to date with Org file"))))
-           (beep))))
+                   (org-latex-export-to-pdf)))
+              (message "PDF is up to date with Org file")))
+          (beep))))
 
     (define-key org-mode-map (kbd "<f9>") 'org-save-buffer-and-do-related))
 
@@ -8073,8 +8070,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; switches passed to `ls' for Dired
     (setq dired-listing-switches
-          (cond ((or leuven--win32-p
-                     leuven--cygwin-p)
+          (cond (leuven--win32-p
                  "-a -F -l")
                 (t
                  "-a -F --group-directories-first -l --time-style=long-iso")))
