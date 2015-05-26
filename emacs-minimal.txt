@@ -365,6 +365,8 @@ changing =HOME= for Emacs is a very bad idea. WE DON'T DO THAT!!
 =emacs-helm.sh= is for that, I am too lazy too to use emacs -Q ;-)
 #+end_verse
 
+You can use the ~-P~ option of =emacs-helm.sh= to use another Emacs executable file.
+
 ** Code
 
 *Call this script emacs-q?*
