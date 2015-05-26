@@ -2653,14 +2653,16 @@ the user see truly invisible matches before replacing them.
     (setq anzu-replace-to-string-separator " => ")
 
     ;; Function which returns mode-line string.
-    (defun leuven--anzu-update-func (here total)
+    (defun leuven--anzu-update-mode-line (here total)
       (when anzu--state
         (let ((status (cl-case anzu--state
-                        (search (format " %d/%d " here total))
-                        (replace-query (format "(%d Replaces)" total))
+                        (search (format " %s/%d%s "
+                                        (anzu--format-here-position here total)
+                                        total (if anzu--overflow-p "+" "")))
+                        (replace-query (format " %d replace " total))
                         (replace (format " %d/%d " here total)))))
           (propertize status 'face 'anzu-mode-line))))
-    (setq anzu-mode-line-update-function #'leuven--anzu-update-func)
+    (setq anzu-mode-line-update-function #'leuven--anzu-update-mode-line)
 
     ;; Enable Global-Anzu mode.
     (global-anzu-mode 1)

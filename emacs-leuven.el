@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150523.0031
+;; Version: 20150526.1001
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150523.0031"
+(defconst leuven--emacs-version "20150526.1001"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1582,14 +1582,16 @@ These packages are neither built-in nor already installed nor ignored."
     (setq anzu-replace-to-string-separator " => ")
 
     ;; Function which returns mode-line string.
-    (defun leuven--anzu-update-func (here total)
+    (defun leuven--anzu-update-mode-line (here total)
       (when anzu--state
         (let ((status (cl-case anzu--state
-                        (search (format " %d/%d " here total))
-                        (replace-query (format "(%d Replaces)" total))
+                        (search (format " %s/%d%s "
+                                        (anzu--format-here-position here total)
+                                        total (if anzu--overflow-p "+" "")))
+                        (replace-query (format " %d replace " total))
                         (replace (format " %d/%d " here total)))))
           (propertize status 'face 'anzu-mode-line))))
-    (setq anzu-mode-line-update-function #'leuven--anzu-update-func)
+    (setq anzu-mode-line-update-function #'leuven--anzu-update-mode-line)
 
     ;; Enable Global-Anzu mode.
     (global-anzu-mode 1)

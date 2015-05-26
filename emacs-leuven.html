@@ -439,7 +439,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150523.0033</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150526.1002</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -520,7 +520,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150523.0033"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150526.1002"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -3594,14 +3594,16 @@ the user see truly invisible matches before replacing them.
     (setq anzu-replace-to-string-separator <span class="org-string">" =&gt; "</span>)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Function which returns mode-line string.</span>
-    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--anzu-update-func</span> (here total)
+    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--anzu-update-mode-line</span> (here total)
       (<span class="org-keyword">when</span> anzu--state
         (<span class="org-keyword">let</span> ((status (<span class="org-keyword">cl-case</span> anzu--state
-                        (search (format <span class="org-string">" %d/%d "</span> here total))
-                        (replace-query (format <span class="org-string">"(%d Replaces)"</span> total))
+                        (search (format <span class="org-string">" %s/%d%s "</span>
+                                        (anzu--format-here-position here total)
+                                        total (<span class="org-keyword">if</span> anzu--overflow-p <span class="org-string">"+"</span> <span class="org-string">""</span>)))
+                        (replace-query (format <span class="org-string">" %d replace "</span> total))
                         (replace (format <span class="org-string">" %d/%d "</span> here total)))))
           (propertize status 'face 'anzu-mode-line))))
-    (setq anzu-mode-line-update-function #'leuven--anzu-update-func)
+    (setq anzu-mode-line-update-function #'leuven--anzu-update-mode-line)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Global-Anzu mode.</span>
     (global-anzu-mode 1)
@@ -12231,7 +12233,7 @@ languages which can be evaluated in Org mode buffers.
 <div class="inlinetask">
 <b><span class="todo TODO">TODO</span> Why isn&rsquo;t diff-mode.el found?</b><br  />
 <p>
-<a href="file:///cygdrive/d/Users/fni/org/personal/Org-for-dummies.html">file:///cygdrive/d/Users/fni/org/personal/Org-for-dummies.html</a>
+<a href="file://d:/Users/fni/org/personal/Org-for-dummies.html">file://d:/Users/fni/org/personal/Org-for-dummies.html</a>
 </p>
 </div>
 
