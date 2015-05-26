@@ -1509,7 +1509,7 @@ XXX Look at Gnushush to automatically *obfuscate email*, Message-ID, etc.
 ;;*** 3.4 (info "(message)News Headers")
 
   ;; Masquerade domain part of Message-ID.
-  (setq message-user-fqdn "example.com") ; (system-name)
+  (setq message-user-fqdn "example.com") ; (downcase (system-name))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1674,7 +1674,7 @@ functioning under Emacs 24.5.
               ;; Mailing lists (in To: or Cc:).
               (to "foo@bar\\.com" "list.foo")
 
-              ;; Invoke BBDB.           ; XXX with BBDB v2 and v3?
+              ;; Invoke BBDB.
               (: (lambda ()
                    (car (bbdb/gnus-split-method))))
 

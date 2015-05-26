@@ -178,7 +178,7 @@ This covers the basics of Gnus:
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150522.2232</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150526.1032</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, gnus, dotfile, config</span>
 </pre>
 </div>
@@ -362,7 +362,8 @@ for logins).
 
 <div class="note">
 <p>
-The groups in the <code>gnus-select-method</code> don&rsquo;t get a prefix like <code>nnimap</code>. Nice!
+Mailbox names from the server specified in <code>gnus-select-method</code> are NOT prefixed
+with <code>nnimap</code> (or such).  Nice!
 </p>
 
 </div>
@@ -473,9 +474,9 @@ buffer.
 
 <div class="tip">
 <p>
-To stop the repetitive (and growing) <code>nntp read</code> messages, ensure you subscribe to
-at least one group for every NNTP server. You can even unsubscribe directly
-afterward&#x2026;
+To stop the repetitive (and growing) <code>nntp read</code> messages, you must <b>subscribe to
+at least one foreign group from every NNTP server</b>.  You can even unsubscribe
+directly afterward&#x2026;
 </p>
 
 </div>
@@ -2021,7 +2022,7 @@ XXX Look at Gnushush to automatically <b>obfuscate email</b>, Message-ID, etc.
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">*** 3.4 (info "(message)News Headers")</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Masquerade domain part of Message-ID.</span>
-  (setq message-user-fqdn <span class="org-string">"example.com"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">(system-name)</span>
+  (setq message-user-fqdn <span class="org-string">"example.com"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">(downcase (system-name))</span>
 </pre>
 </div>
 
@@ -2241,7 +2242,7 @@ functioning under Emacs 24.5.
               <span class="org-comment-delimiter">;; </span><span class="org-comment">Mailing lists (in To: or Cc:).</span>
               (to <span class="org-string">"foo@bar\\.com"</span> <span class="org-string">"list.foo"</span>)
 
-              <span class="org-comment-delimiter">;; </span><span class="org-comment">Invoke BBDB.           ; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> with BBDB v2 and v3?</span>
+              <span class="org-comment-delimiter">;; </span><span class="org-comment">Invoke BBDB.</span>
               (: (<span class="org-keyword">lambda</span> ()
                    (car (bbdb/gnus-split-method))))
 

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150522.2232
+;; Version: 20150526.1032
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -855,7 +855,7 @@
 ;;*** 3.4 (info "(message)News Headers")
 
   ;; Masquerade domain part of Message-ID.
-  (setq message-user-fqdn "example.com") ; (system-name)
+  (setq message-user-fqdn "example.com") ; (downcase (system-name))
 
 ;;*** 3.6 (info "(message)Insertion Variables")
 
@@ -940,7 +940,7 @@
               ;; Mailing lists (in To: or Cc:).
               (to "foo@bar\\.com" "list.foo")
 
-              ;; Invoke BBDB.           ; XXX with BBDB v2 and v3?
+              ;; Invoke BBDB.
               (: (lambda ()
                    (car (bbdb/gnus-split-method))))
 
