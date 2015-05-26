@@ -69,7 +69,7 @@ In total you completed 2 task(s)!
 
 -   <task>             <project> ●
 
-[[View in Todoist...]]
+[[http://www.example.com][View in Todoist...]]
 
 *2 TASKS OVERDUE*
 
@@ -79,13 +79,13 @@ In total you completed 2 task(s)!
 - 2 day(s) ago, Aug 26, 2013
     <task>             <project> ●
 
-[[View in Todoist...]]
+[[http://www.example.com][View in Todoist...]]
 
 *YOUR PRODUCTIVITY THE LAST 9 DAYS*
 
 <Graph>
 
-[[View more graphs... ]]
+[[http://www.example.com][View more graphs... ]]
 #+end_verse
 
 *** Remember the Milk
@@ -1353,3 +1353,10 @@ Workspaces:
       2. Vacations
       3. Headhunting
 7. Board of Directors
+
+** YouTRACK
+
+Outil de suivi des incidents et de gestion de projets (gratuit pour
+10 utilisateurs).
+
+https://www.jetbrains.com/youtrack/specials/youtrack/fr/birds_eye_view_on_your_projects.jsp
