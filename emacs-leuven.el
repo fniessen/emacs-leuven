@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150526.1339
+;; Version: 20150527.1249
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150526.1339"
+(defconst leuven--emacs-version "20150527.1249"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -213,7 +213,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
     (when (and this-directory
                (file-directory-p this-directory))
-      ;; TODO Add warning if directory does not exist
+      ;; TODO Add warning if directory does not exist.
       (let* ((this-directory (expand-file-name this-directory)))
 
         ;; directories containing a `.nosearch' file (such as
@@ -473,7 +473,7 @@ These packages are neither built-in nor already installed nor ignored."
               (push pkg missing-elpa-packages)))
           missing-elpa-packages))
 
-      ;; Propose to install all the packages specified in `leuven-elpa-packages'
+      ;; Propose to install all the packages specified in `leuven-elpa-packages'.
       ;; which are missing and which shouldn't be ignored.
       (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
         (when missing-elpa-packages
@@ -709,7 +709,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
-  ;; have documentation in Info)
+  ;; have documentation in Info).
   (global-set-key (kbd "<C-f1>") 'info-lookup-symbol)
 
   (with-eval-after-load "info"
@@ -723,7 +723,7 @@ These packages are neither built-in nor already installed nor ignored."
               "c:/cygwin/usr/share/info/"
               ,@Info-directory-list)))
 
-  ;; XXX Replace by add-to-list to ensure we don't insert duplicates (if Cygwin was already there)
+  ;; XXX Replace by add-to-list to ensure we don't insert duplicates (if Cygwin was already there).
 
     (GNUEmacs
       (with-eval-after-load "info+-autoloads"
@@ -988,6 +988,8 @@ These packages are neither built-in nor already installed nor ignored."
                                         ; We will often be going back and forth
                                         ; between using Bookmark+ and using
                                         ; vanilla Emacs.
+
+;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
 
 ;; ;; Restoring bookmarks when on file find.
 ;; (add-hook 'find-file-hook 'bm-buffer-restore)
@@ -3095,7 +3097,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;; priority list for automatic detection.
   (GNUEmacs
    (prefer-coding-system 'utf-8-unix))  ; Unix flavor for code blocks executed
-                                        ; via Org-babel.
+                                        ; via Org-Babel.
 
 ;;** 22.8 (info "(emacs)Specify Coding") System of a File
 
@@ -3989,6 +3991,8 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Don't make tab cycle visibility on plain list items.
   (setq org-cycle-include-plain-lists nil) ;; 'integrate?
+
+  ;; (setq org-cycle-separator-lines -2)
 
 ;;** (info "(org)Footnotes")
 
@@ -5370,7 +5374,7 @@ this with to-do items than with projects or headings."
 
     ;; (define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch)
 
-    ;; XXX temporary (until Org 8 is bundled within Emacs)
+    ;; XXX Temporary (until Org 8 is bundled within Emacs).
     (define-key org-mode-map (kbd "C-c C-e")
       (lambda (&optional arg)
         (interactive "P")
@@ -7060,23 +7064,7 @@ mouse-3: go to end") "]"))))
     ;; no space between an identifier and an opening parenthesis
     (setq glasses-separate-parentheses-p nil))
 
-;;** 26.11 (info "(emacs)Misc for Programs")
-
-  (leuven--section "26.11 (emacs)Misc for Programs")
-
-  ;; Enable Prettify-Symbols mode in all buffers that support it.
-  (global-prettify-symbols-mode 1)      ; XXX Emacs 24.4 needed!
-
-  ;; (add-hook 'prog-mode-hook
-  ;;           (lambda ()
-  ;;             (setq-local prettify-symbols-alist
-  ;;                         '(("lambda" . ?λ)
-  ;;                           ("math.sqrt" . ?√)
-  ;;                           ("math.pi" . ?π)
-  ;;                           ("sum" . ?Σ)))
-  ;;             (prettify-symbols-mode 1)))
-
-)                                       ; chapter 26 ends here
+)                                       ; Chapter 26 ends here.
 
 ;;* 27 (info "(emacs)Building") Compiling and Testing Programs
 

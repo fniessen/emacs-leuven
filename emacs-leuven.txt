@@ -412,7 +412,7 @@ need to load a single file that define autoloaded functions.
     "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
     (when (and this-directory
                (file-directory-p this-directory))
-      ;; TODO Add warning if directory does not exist
+      ;; TODO Add warning if directory does not exist.
       (let* ((this-directory (expand-file-name this-directory)))
 
         ;; directories containing a `.nosearch' file (such as
@@ -768,7 +768,7 @@ These packages are neither built-in nor already installed nor ignored."
               (push pkg missing-elpa-packages)))
           missing-elpa-packages))
 
-      ;; Propose to install all the packages specified in `leuven-elpa-packages'
+      ;; Propose to install all the packages specified in `leuven-elpa-packages'.
       ;; which are missing and which shouldn't be ignored.
       (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
         (when missing-elpa-packages
@@ -1167,7 +1167,7 @@ In a manual, these key bindings will make your life easier:
 
   ;; Display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
-  ;; have documentation in Info)
+  ;; have documentation in Info).
   (global-set-key (kbd "<C-f1>") 'info-lookup-symbol)
 #+end_src
 
@@ -1201,7 +1201,7 @@ Emacs).
               "c:/cygwin/usr/share/info/"
               ,@Info-directory-list)))
 
-  ;; XXX Replace by add-to-list to ensure we don't insert duplicates (if Cygwin was already there)
+  ;; XXX Replace by add-to-list to ensure we don't insert duplicates (if Cygwin was already there).
 #+end_src
 
 ~Info+~ fontifies entries for reference items (functions, macros, commands,
@@ -1760,6 +1760,8 @@ We bookmarks positions, not just lines!!
                                         ; We will often be going back and forth
                                         ; between using Bookmark+ and using
                                         ; vanilla Emacs.
+
+;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
 
 ;; ;; Restoring bookmarks when on file find.
 ;; (add-hook 'find-file-hook 'bm-buffer-restore)
@@ -5235,7 +5237,7 @@ XXX Declare PDF files as binary
   ;; priority list for automatic detection.
   (GNUEmacs
    (prefer-coding-system 'utf-8-unix))  ; Unix flavor for code blocks executed
-                                        ; via Org-babel.
+                                        ; via Org-Babel.
 #+end_src
 
 ** Specifying a File's Coding System
@@ -6577,6 +6579,8 @@ consecutive lists with blank lines, always use two of them.
 
   ;; Don't make tab cycle visibility on plain list items.
   (setq org-cycle-include-plain-lists nil) ;; 'integrate?
+
+  ;; (setq org-cycle-separator-lines -2)
 #+end_src
 
 *** Footnotes 
@@ -8598,7 +8602,7 @@ To list all available entities, run ~M-x org-entities-help~.
 
     ;; (define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch)
 
-    ;; XXX temporary (until Org 8 is bundled within Emacs)
+    ;; XXX Temporary (until Org 8 is bundled within Emacs).
     (define-key org-mode-map (kbd "C-c C-e")
       (lambda (&optional arg)
         (interactive "P")
@@ -11373,30 +11377,8 @@ See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard a
 
     ;; no space between an identifier and an opening parenthesis
     (setq glasses-separate-parentheses-p nil))
-#+end_src
 
-** Other Features Useful for Editing Programs
-
-#+begin_src emacs-lisp
-;;** 26.11 (info "(emacs)Misc for Programs")
-
-  (leuven--section "26.11 (emacs)Misc for Programs")
-
-  ;; Enable Prettify-Symbols mode in all buffers that support it.
-  (global-prettify-symbols-mode 1)      ; XXX Emacs 24.4 needed!
-
-  ;; (add-hook 'prog-mode-hook
-  ;;           (lambda ()
-  ;;             (setq-local prettify-symbols-alist
-  ;;                         '(("lambda" . ?λ)
-  ;;                           ("math.sqrt" . ?√)
-  ;;                           ("math.pi" . ?π)
-  ;;                           ("sum" . ?Σ)))
-  ;;             (prettify-symbols-mode 1)))
-#+end_src
-
-#+begin_src emacs-lisp
-)                                       ; chapter 26 ends here
+)                                       ; Chapter 26 ends here.
 #+end_src
 
 * Compiling and Testing Programs
