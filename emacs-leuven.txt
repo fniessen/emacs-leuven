@@ -517,7 +517,7 @@ distro) without impacting on stuff you have added by hand.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 0-loading-libraries ends here
+)                                       ; Chapter 0-loading-libraries ends here.
 #+end_src
 
 * Environment
@@ -626,7 +626,7 @@ Use ~(display-graphic-p)~ (instead of ~window-system~) in conditions.
     (modify-all-frames-parameters
      '((height . 32))))
 
-)                                       ; chapter 0 ends here
+)                                       ; Chapter 0 ends here.
 #+end_src
 
 *************** TODO Function for finding executables
@@ -653,7 +653,7 @@ See function ~--find-program~ at http://www.visualco.de/src/elisp/.emacs.el.html
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 0 ends here
+)                                       ; Chapter 0 ends here.
 #+end_src
 
 * Emacs Lisp Packages
@@ -789,7 +789,7 @@ These packages are neither built-in nor already installed nor ignored."
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 47 ends here
+)                                       ; Chapter 47 ends here.
 #+end_src
 
 ~Idle-require~ must be loaded *after* ~package-initialize~, and should not be
@@ -833,7 +833,7 @@ cancelable; hence, we put it out of a "chapter".
   ;; Don't truncate the message log buffer when it becomes large.
   (setq message-log-max t)
 
-)                                       ; chapter 1 ends here
+)                                       ; Chapter 1 ends here.
 #+end_src
 
 * Exiting Emacs
@@ -849,7 +849,7 @@ cancelable; hence, we put it out of a "chapter".
   ;; Quit with Alt + F4.
   (global-set-key (kbd "<M-f4>") 'save-buffers-kill-terminal)
 
-)                                       ; chapter 6 ends here
+)                                       ; Chapter 6 ends here.
 #+end_src
 
 * Basic Editing Commands
@@ -952,7 +952,7 @@ Show line numbers temporarily -- just when you're going to a line number with
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 7 ends here
+)                                       ; Chapter 7 ends here.
 #+end_src
 
 * The Minibuffer
@@ -1014,7 +1014,7 @@ Use ~M-x list-command-history~ to display the entire command history, showing al
 the commands ~C-x <ESC> <ESC>~ can repeat, most recent first.
 
 #+begin_src emacs-lisp
-)                                       ; chapter 8 ends here
+)                                       ; Chapter 8 ends here.
 #+end_src
 
 * Help
@@ -1258,7 +1258,7 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 10 ends here
+)                                       ; Chapter 10 ends here.
 #+end_src
 
 * The Mark and the Region
@@ -1425,7 +1425,7 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 11 ends here
+)                                       ; Chapter 11 ends here.
 #+end_src
 
 * Killing and Moving Text
@@ -1609,7 +1609,7 @@ highlighting.  Though, since Emacs 24.4, ~rectangle-mark-mode~ is the new way.
 - ~M-n~ runs the command ~cua-sequence-rectangle~
 
 #+begin_src emacs-lisp
-)                                       ; chapter 12 ends here
+)                                       ; Chapter 12 ends here.
 #+end_src
 
 * Registers
@@ -1791,7 +1791,7 @@ We bookmarks positions, not just lines!!
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 13 ends here
+)                                       ; Chapter 13 ends here.
 #+end_src
 
 * Controlling the Display
@@ -2560,7 +2560,7 @@ screencasts.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 14 ends here
+)                                       ; Chapter 14 ends here.
 #+end_src
 
 * Searching and Replacement
@@ -2797,7 +2797,7 @@ a match for REGEXP.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 15 ends here
+)                                       ; Chapter 15 ends here.
 #+end_src
 
 * Commands for Fixing Typos
@@ -3108,7 +3108,7 @@ What is working for you?
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 16 ends here
+)                                       ; Chapter 16 ends here.
 #+end_src
 
 * Keyboard Macros
@@ -3186,7 +3186,7 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 17 ends here
+)                                       ; Chapter 17 ends here.
 #+end_src
 
 * Files Handling
@@ -4538,7 +4538,7 @@ respectively.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 18 ends here
+)                                       ; Chapter 18 ends here.
 #+end_src
 
 * Using Multiple Buffers
@@ -4702,7 +4702,7 @@ respectively.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 19 ends here
+)                                       ; Chapter 19 ends here.
 #+end_src
 
 * Multiple Windows
@@ -5117,7 +5117,7 @@ one.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 21 ends here
+)                                       ; Chapter 21 ends here.
 #+end_src
 
 * International Character Set Support
@@ -5269,7 +5269,7 @@ XXX Declare PDF files as binary
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 22 ends here
+)                                       ; Chapter 22 ends here.
 #+end_src
 
 * Major and Minor Modes
@@ -5375,7 +5375,7 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 23 ends here
+)                                       ; Chapter 23 ends here.
 #+end_src
 
 * Indentation
@@ -5459,7 +5459,7 @@ Don't tabify.  Instead, _reindent_ everything, e.g. with C-M-\.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 24 ends here
+)                                       ; Chapter 24 ends here.
 #+end_src
 
 * Commands for Human Languages
@@ -6065,7 +6065,7 @@ Region Marked>~.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 25 ends here
+)                                       ; Chapter 25 ends here.
 #+end_src
 
 * Org Mode (Getting Things Done)
@@ -6417,7 +6417,7 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
     ;; ;; Function called to format an inlinetask in LaTeX code.
     ;; (setq org-latex-format-inlinetask-function
     ;;       'leuven--org-latex-format-inlinetask)
-    )                                   ; with-eval-after-load "org-inlinetask" ends here
+    )                                   ; with-eval-after-load "org-inlinetask" ends here.
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -7320,7 +7320,7 @@ Alternative to requiring org-clock in every Emacs session.
 
     (add-hook 'kill-emacs-query-functions 'leuven--org-query-clock-out)
 
-    )                                   ; with-eval-after-load "org-clock" ends here
+    )                                   ; with-eval-after-load "org-clock" ends here.
 #+end_src
 
 *** Effort estimates
@@ -7687,7 +7687,7 @@ From %c"
       (if (equal "capture" (frame-parameter nil 'name))
           (delete-frame)))
 
-    )                                   ; with-eval-after-load "org-capture" ends here
+    )                                   ; with-eval-after-load "org-capture" ends here.
 #+end_src
 
 #+begin_src shell :tangle ~/bin/capture :shebang #!bin/sh
@@ -8020,7 +8020,7 @@ headline (to return any kind of string you want).
             "In %d d"                   ; or "%d d left"
             "%d d ago"))
 
-    )                                   ; with-eval-after-load "org-agenda" ends here
+    )                                   ; with-eval-after-load "org-agenda" ends here.
 
   (with-eval-after-load "org-faces"
 
@@ -8333,7 +8333,7 @@ Commands:
            "~/src/emacs-leuven/org-custom-agenda-views.el"))
       (when (file-exists-p leuven-org-agenda-views)
         (load-file leuven-org-agenda-views))))
-                                        ; with-eval-after-load "org-agenda" ends here
+                                        ; with-eval-after-load "org-agenda" ends here.
 #+end_src
 
 *** Display all active tasks from the current directory
@@ -8758,7 +8758,7 @@ Before exporting...
     (add-to-list 'org-export-snippet-translation-alist
                  '("b" . "beamer"))
 
-    )                                   ; with-eval-after-load "ox" ends here
+    )                                   ; with-eval-after-load "ox" ends here.
 #+end_src
 
 Eric Schulte has proposed the ~by-backend~ function for *backend-dependent
@@ -8853,7 +8853,7 @@ org-export-htmlize-generate-css~ to extract class definitions.
       (add-to-list 'org-export-filter-item-functions
                    'leuven--checkbox-filter)
 
-    )                                   ; with-eval-after-load "ox-html" ends here
+    )                                   ; with-eval-after-load "ox-html" ends here.
 #+end_src
 
 Emacs 23+ users: in order to avoid "Invalid face" errors, you need to use the
@@ -8903,7 +8903,7 @@ directory.
     ;; Key binding.
     (global-set-key (kbd "M-P") 'htmlize-buffer)
 
-    )                                   ; with-eval-after-load "htmlize" ends here
+    )                                   ; with-eval-after-load "htmlize" ends here.
 #+end_src
 
 To get around PostScript problems, you can write the buffer to your browser
@@ -9201,7 +9201,7 @@ headline.  This is useful to support structures like the following:
 #+end_src
 
 #+begin_src emacs-lisp
-    )                                   ; with-eval-after-load "ox-latex" ends here
+    )                                   ; with-eval-after-load "ox-latex" ends here.
 #+end_src
 
 *** LaTeX Beamer and PDF export
@@ -10219,7 +10219,7 @@ Link emails from Org files.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 25.9-org-mode ends here
+)                                       ; Chapter 25.9-org-mode ends here.
 #+end_src
 
 * TeX
@@ -10576,11 +10576,11 @@ current selection.  More general index entries are created with ~C-c <~.
         ;; Current BibTeX dialect.
         (setq bibtex-dialect 'biblatex))
 
-      ))                                ; with-eval-after-load "latex" ends here
+      ))                                ; with-eval-after-load "latex" ends here.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 25.10-tex-mode ends here
+)                                       ; Chapter 25.10-tex-mode ends here.
 #+end_src
 
 * SGML and HTML Modes
@@ -10785,7 +10785,7 @@ need to start Chrome with ~chrome --allow-running-insecure-content~, if you're
 using the user script with HTTPS sites.
 
 #+begin_src emacs-lisp
-)                                       ; chapter 25 ends here
+)                                       ; Chapter 25 ends here.
 #+end_src
 
 * Editing Programs
@@ -12638,7 +12638,7 @@ really like this.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 28 ends here
+)                                       ; Chapter 28 ends here.
 #+end_src
 
 *** Refactoring
@@ -13329,7 +13329,7 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
     ;; Maximum number of lines to show in the popup.
     (setq company-quickhelp-max-lines 10))
 
-)                                       ; chapter 29 ends here
+)                                       ; Chapter 29 ends here.
 #+end_src
 
 * Dired, the Directory Editor
@@ -13755,7 +13755,7 @@ Extra Dired functionality
 #+end_src
 
 #+begin_src emacs-lisp
-    )                                   ; with-eval-after-load "dired" ends here
+    )                                   ; with-eval-after-load "dired" ends here.
 #+end_src
 
 ** Dired+
@@ -13816,7 +13816,7 @@ example.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 30 ends here
+)                                       ; Chapter 30 ends here.
 #+end_src
 
 * The Calendar and the Diary
@@ -14001,7 +14001,7 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
 #+end_src
 
 #+begin_src emacs-lisp
-    )                                   ; with-eval-after-load "appt" ends here
+    )                                   ; with-eval-after-load "appt" ends here.
 #+end_src
 
 ** Advanced Calendar/Diary Usage
@@ -14095,7 +14095,7 @@ htmlfontify-buffer~.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 31 ends here
+)                                       ; Chapter 31 ends here.
 #+end_src
 
 * Sending Mail
@@ -14121,7 +14121,7 @@ Minimal configuration for sending a bug report, for example.
   (setq smtpmail-default-smtp-server "smtp")
                                         ; SMTP process must be running there
 
-)                                       ; chapter 32 ends here
+)                                       ; Chapter 32 ends here.
 #+end_src
 
 * Gnus
@@ -14333,7 +14333,7 @@ make a call.  This is done by modifying ~bbdb-dial-function~.  There are example
 which interface with Skype to make a phone call.
 
 #+begin_src emacs-lisp
-)                                       ; chapter 34 ends here
+)                                       ; Chapter 34 ends here.
 #+end_src
 
 * Document Viewing
@@ -14471,7 +14471,7 @@ Another option, without ~doc-view~, is ~! pdtotext ? - <RET>~.
     (set-buffer-modified-p nil))
   (add-to-list 'auto-mode-alist '("\\.ppt\\'" . no-ppt))
 
-)                                       ; chapter 35 ends here
+)                                       ; Chapter 35 ends here.
 #+end_src
 
 * Web Browsing
@@ -15571,7 +15571,7 @@ printing on Windows.
     ;; Specify line spacing, in points, for ordinary text.
     (setq ps-line-spacing 3))
 
-)                                       ; chapter 38 ends here
+)                                       ; Chapter 38 ends here.
 #+end_src
 
 * Sorting Text
@@ -15584,7 +15584,7 @@ printing on Windows.
   ;; Key binding.
   (global-set-key (kbd "C-c ^") 'sort-lines)
 
-)                                       ; chapter 39 ends here
+)                                       ; Chapter 39 ends here.
 #+end_src
 
 * Saving Emacs Sessions
@@ -15605,7 +15605,7 @@ printing on Windows.
     ;; Name of the file that records `save-place-alist' value.
     (setq save-place-file "~/.emacs.d/.places")
 
-)                                       ; chapter 42 ends here
+)                                       ; Chapter 42 ends here.
 #+end_src
 
 * Hyperlinking and Navigation Features
@@ -15828,7 +15828,7 @@ fniessen
     ;; get rid of the Games in the Tools menu
     (define-key menu-bar-tools-menu [games] nil))
 
-)                                       ; chapter 46 ends here
+)                                       ; Chapter 46 ends here.
 #+end_src
 
 * Customization
@@ -16073,7 +16073,7 @@ considered part of the word (depending on the current major mode).
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; chapter 48 ends here
+)                                       ; Chapter 48 ends here.
 #+end_src
 
 * Emacs Display
@@ -16448,7 +16448,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
     ;; column at which Lui should break output
     (setq lui-fill-column fill-column)
 
-    )                                   ; with-eval-after-load "circe" ends here
+    )                                   ; with-eval-after-load "circe" ends here.
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -16531,7 +16531,7 @@ Use the Caps Lock key as Ctrl:
     (define-key key-translation-map [kp-insert] [insert])
     (define-key key-translation-map [kp-delete] [delete]))
 
-)                                       ; chapter G ends here
+)                                       ; Chapter G ends here.
 #+end_src
 
 * Profiler

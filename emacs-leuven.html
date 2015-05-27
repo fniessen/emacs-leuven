@@ -438,7 +438,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150527.1250</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150527.1255</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -519,7 +519,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150527.1250"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150527.1255"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -846,7 +846,7 @@ distro) without impacting on stuff you have added by hand.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 0-loading-libraries ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 0-loading-libraries ends here.</span>
 </pre>
 </div>
 </div>
@@ -965,7 +965,7 @@ Use <code>(display-graphic-p)</code> (instead of <code>window-system</code>) in 
     (modify-all-frames-parameters
      '((height . 32))))
 
-)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 0 ends here</span>
+)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 0 ends here.</span>
 </pre>
 </div>
 
@@ -1004,7 +1004,7 @@ See function <code>--find-program</code> at <a href="http://www.visualco.de/src/
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 0 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 0 ends here.</span>
 </pre>
 </div>
 </div>
@@ -1174,7 +1174,7 @@ like this into your configuration file:
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 47 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 47 ends here.</span>
 </pre>
 </div>
 
@@ -1228,7 +1228,7 @@ cancelable; hence, we put it out of a &ldquo;chapter&rdquo;.
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't truncate the message log buffer when it becomes large.</span>
   (setq message-log-max t)
 
-)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 1 ends here</span>
+)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 1 ends here.</span>
 </pre>
 </div>
 </div>
@@ -1249,7 +1249,7 @@ cancelable; hence, we put it out of a &ldquo;chapter&rdquo;.
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Quit with Alt + F4.</span>
   (global-set-key (kbd <span class="org-string">"&lt;M-f4&gt;"</span>) 'save-buffers-kill-terminal)
 
-)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 6 ends here</span>
+)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 6 ends here.</span>
 </pre>
 </div>
 </div>
@@ -1385,7 +1385,7 @@ Show line numbers temporarily &#x2013; just when you&rsquo;re going to a line nu
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 7 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 7 ends here.</span>
 </pre>
 </div>
 </div>
@@ -1473,7 +1473,7 @@ the commands <code>C-x &lt;ESC&gt; &lt;ESC&gt;</code> can repeat, most recent fi
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 8 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 8 ends here.</span>
 </pre>
 </div>
 </div>
@@ -1779,7 +1779,7 @@ buffer, by calling <code>Info-merge-subnodes</code> (bound to <code>+</code>).
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 10 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 10 ends here.</span>
 </pre>
 </div>
 </div>
@@ -2028,7 +2028,7 @@ To go from multiple selections to a single selection, press <code>C-g</code> or 
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 11 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 11 ends here.</span>
 </pre>
 </div>
 </div>
@@ -2284,7 +2284,7 @@ highlighting.  Though, since Emacs 24.4, <code>rectangle-mark-mode</code> is the
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 12 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 12 ends here.</span>
 </pre>
 </div>
 </div>
@@ -2518,7 +2518,7 @@ We bookmarks positions, not just lines!!
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 13 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 13 ends here.</span>
 </pre>
 </div>
 </div>
@@ -3467,7 +3467,7 @@ screencasts.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 14 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 14 ends here.</span>
 </pre>
 </div>
 </div>
@@ -3748,7 +3748,7 @@ a match for REGEXP.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 15 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 15 ends here.</span>
 </pre>
 </div>
 </div>
@@ -4143,7 +4143,7 @@ anagrams.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 16 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 16 ends here.</span>
 </pre>
 </div>
 </div>
@@ -4250,7 +4250,7 @@ You can add <code>(interactive)</code> to make it a command, so that you can use
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 17 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 17 ends here.</span>
 </pre>
 </div>
 </div>
@@ -6026,7 +6026,7 @@ respectively.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 18 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 18 ends here.</span>
 </pre>
 </div>
 </div>
@@ -6220,7 +6220,7 @@ respectively.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 19 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 19 ends here.</span>
 </pre>
 </div>
 </div>
@@ -6743,7 +6743,7 @@ nil</div>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 21 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 21 ends here.</span>
 </pre>
 </div>
 </div>
@@ -6955,7 +6955,7 @@ XXX Declare PDF files as binary
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 22 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 22 ends here.</span>
 </pre>
 </div>
 </div>
@@ -7099,7 +7099,7 @@ For a list of buffer beginnings, see <code>magic-mode-alist</code>.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 23 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 23 ends here.</span>
 </pre>
 </div>
 </div>
@@ -7213,7 +7213,7 @@ Don&rsquo;t tabify.  Instead, <span class="underline">reindent</span> everything
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 24 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 24 ends here.</span>
 </pre>
 </div>
 </div>
@@ -7961,7 +7961,7 @@ Region Marked&gt;</code>.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 25 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 25 ends here.</span>
 </pre>
 </div>
 </div>
@@ -8381,7 +8381,7 @@ installs the key binding <code>C-c C-x t</code> to insert a new <b>inline task</
     <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Function called to format an inlinetask in LaTeX code.</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq org-latex-format-inlinetask-function</span>
     <span class="org-comment-delimiter">;;       </span><span class="org-comment">'leuven--org-latex-format-inlinetask)</span>
-    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "org-inlinetask" ends here</span>
+    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "org-inlinetask" ends here.</span>
 </pre>
 </div>
 
@@ -9500,7 +9500,7 @@ Alternative to requiring org-clock in every Emacs session.
 
     (add-hook 'kill-emacs-query-functions 'leuven--org-query-clock-out)
 
-    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "org-clock" ends here</span>
+    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "org-clock" ends here.</span>
 </pre>
 </div>
 </div>
@@ -9928,7 +9928,7 @@ With the clock options, <code>org-capture</code> automatically clocks in.  When 
       (<span class="org-keyword">if</span> (equal <span class="org-string">"capture"</span> (frame-parameter nil 'name))
           (delete-frame)))
 
-    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "org-capture" ends here</span>
+    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "org-capture" ends here.</span>
 </pre>
 </div>
 
@@ -10367,7 +10367,7 @@ headline (to return any kind of string you want).
             <span class="org-string">"In %d d"</span>                   <span class="org-comment-delimiter">; </span><span class="org-comment">or "%d d left"</span>
             <span class="org-string">"%d d ago"</span>))
 
-    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "org-agenda" ends here</span>
+    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "org-agenda" ends here.</span>
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org-faces"</span>
 
@@ -10740,7 +10740,7 @@ Commands:
            <span class="org-string">"~/src/emacs-leuven/org-custom-agenda-views.el"</span>))
       (<span class="org-keyword">when</span> (file-exists-p leuven-org-agenda-views)
         (load-file leuven-org-agenda-views))))
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "org-agenda" ends here</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "org-agenda" ends here.</span>
 </pre>
 </div>
 </div>
@@ -11281,7 +11281,7 @@ Before exporting&#x2026;
     (add-to-list 'org-export-snippet-translation-alist
                  '(<span class="org-string">"b"</span> . <span class="org-string">"beamer"</span>))
 
-    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "ox" ends here</span>
+    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "ox" ends here.</span>
 </pre>
 </div>
 
@@ -11395,7 +11395,7 @@ org-export-htmlize-generate-css</code> to extract class definitions.
       (add-to-list 'org-export-filter-item-functions
                    'leuven--checkbox-filter)
 
-    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "ox-html" ends here</span>
+    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "ox-html" ends here.</span>
 </pre>
 </div>
 
@@ -11449,7 +11449,7 @@ directory.
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Key binding.</span>
     (global-set-key (kbd <span class="org-string">"M-P"</span>) 'htmlize-buffer)
 
-    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "htmlize" ends here</span>
+    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "htmlize" ends here.</span>
 </pre>
 </div>
 
@@ -11815,7 +11815,7 @@ headline.  This is useful to support structures like the following:
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "ox-latex" ends here</span>
+<pre class="src src-emacs-lisp">    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "ox-latex" ends here.</span>
 </pre>
 </div>
 </div>
@@ -13093,7 +13093,7 @@ Link emails from Org files.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 25.9-org-mode ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 25.9-org-mode ends here.</span>
 </pre>
 </div>
 </div>
@@ -13539,13 +13539,13 @@ current selection.  More general index entries are created with <code>C-c &lt;</
         <span class="org-comment-delimiter">;; </span><span class="org-comment">Current BibTeX dialect.</span>
         (setq bibtex-dialect 'biblatex))
 
-      ))                                <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "latex" ends here</span>
+      ))                                <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "latex" ends here.</span>
 </pre>
 </div>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 25.10-tex-mode ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 25.10-tex-mode ends here.</span>
 </pre>
 </div>
 </div>
@@ -13818,7 +13818,7 @@ using the user script with HTTPS sites.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 25 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 25 ends here.</span>
 </pre>
 </div>
 </div>
@@ -16174,7 +16174,7 @@ really like this.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 28 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 28 ends here.</span>
 </pre>
 </div>
 </div>
@@ -17103,7 +17103,7 @@ XXX What about <code>company-search-candidates</code> vs <code>company-filter-ca
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Maximum number of lines to show in the popup.</span>
     (setq company-quickhelp-max-lines 10))
 
-)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 29 ends here</span>
+)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 29 ends here.</span>
 </pre>
 </div>
 </div>
@@ -17717,7 +17717,7 @@ file.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "dired" ends here</span>
+<pre class="src src-emacs-lisp">    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "dired" ends here.</span>
 </pre>
 </div>
 </div>
@@ -17794,7 +17794,7 @@ example.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 30 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 30 ends here.</span>
 </pre>
 </div>
 </div>
@@ -18027,7 +18027,7 @@ nil</div>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "appt" ends here</span>
+<pre class="src src-emacs-lisp">    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "appt" ends here.</span>
 </pre>
 </div>
 </div>
@@ -18142,7 +18142,7 @@ htmlfontify-buffer</code>.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 31 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 31 ends here.</span>
 </pre>
 </div>
 </div>
@@ -18176,7 +18176,7 @@ Minimal configuration for sending a bug report, for example.
   (setq smtpmail-default-smtp-server <span class="org-string">"smtp"</span>)
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">SMTP process must be running there</span>
 
-)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 32 ends here</span>
+)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 32 ends here.</span>
 </pre>
 </div>
 </div>
@@ -18422,7 +18422,7 @@ which interface with Skype to make a phone call.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 34 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 34 ends here.</span>
 </pre>
 </div>
 </div>
@@ -18599,7 +18599,7 @@ Another option, without <code>doc-view</code>, is <code>! pdtotext ? - &lt;RET&g
     (set-buffer-modified-p nil))
   (add-to-list 'auto-mode-alist '(<span class="org-string">"\\.ppt\\'"</span> . no-ppt))
 
-)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 35 ends here</span>
+)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 35 ends here.</span>
 </pre>
 </div>
 </div>
@@ -20050,7 +20050,7 @@ printing on Windows.
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Specify line spacing, in points, for ordinary text.</span>
     (setq ps-line-spacing 3))
 
-)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 38 ends here</span>
+)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 38 ends here.</span>
 </pre>
 </div>
 </div>
@@ -20068,7 +20068,7 @@ printing on Windows.
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Key binding.</span>
   (global-set-key (kbd <span class="org-string">"C-c ^"</span>) 'sort-lines)
 
-)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 39 ends here</span>
+)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 39 ends here.</span>
 </pre>
 </div>
 </div>
@@ -20096,7 +20096,7 @@ nil</div>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Name of the file that records `</span><span class="org-constant"><span class="org-comment">save-place-alist</span></span><span class="org-comment">' value.</span>
     (setq save-place-file <span class="org-string">"~/.emacs.d/.places"</span>)
 
-)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 42 ends here</span>
+)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 42 ends here.</span>
 </pre>
 </div>
 </div>
@@ -20368,7 +20368,7 @@ fniessen
     <span class="org-comment-delimiter">;; </span><span class="org-comment">get rid of the Games in the Tools menu</span>
     (define-key menu-bar-tools-menu [games] nil))
 
-)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 46 ends here</span>
+)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 46 ends here.</span>
 </pre>
 </div>
 </div>
@@ -20669,7 +20669,7 @@ considered part of the word (depending on the current major mode).
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter 48 ends here</span>
+<pre class="src src-emacs-lisp">)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 48 ends here.</span>
 </pre>
 </div>
 </div>
@@ -21179,7 +21179,7 @@ See <a href="http://en.wikipedia.org/wiki/List_of_IRC_commands">List of Internet
     <span class="org-comment-delimiter">;; </span><span class="org-comment">column at which Lui should break output</span>
     (setq lui-fill-column fill-column)
 
-    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "circe" ends here</span>
+    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "circe" ends here.</span>
 </pre>
 </div>
 
@@ -21277,7 +21277,7 @@ Use the Caps Lock key as Ctrl:
     (define-key key-translation-map [kp-insert] [insert])
     (define-key key-translation-map [kp-delete] [delete]))
 
-)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">chapter G ends here</span>
+)                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter G ends here.</span>
 </pre>
 </div>
 </div>

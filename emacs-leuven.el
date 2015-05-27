@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150527.1249
+;; Version: 20150527.1254
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150527.1249"
+(defconst leuven--emacs-version "20150527.1254"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -291,7 +291,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           (bury-buffer)
         (find-file file))))
 
-)                                       ; chapter 0-loading-libraries ends here
+)                                       ; Chapter 0-loading-libraries ends here.
 
 ;;* Environment
 
@@ -392,7 +392,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (modify-all-frames-parameters
      '((height . 32))))
 
-)                                       ; chapter 0 ends here
+)                                       ; Chapter 0 ends here.
 
 ;;* Debugging
 
@@ -407,7 +407,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; Hit `C-g' while it's frozen to get an Emacs Lisp backtrace.
   (setq debug-on-quit t)                ; Will be unset at the end.
 
-)                                       ; chapter 0 ends here
+)                                       ; Chapter 0 ends here.
 
 ;;* 47 Emacs Lisp (info "(emacs)Packages")
 
@@ -492,7 +492,7 @@ These packages are neither built-in nor already installed nor ignored."
                                "the `%s' package next times...") pkg)
               (sit-for 1.5)))))))
 
-)                                       ; chapter 47 ends here
+)                                       ; Chapter 47 ends here.
 
   ;; Load elisp libraries while Emacs is idle.
   (try-require 'idle-require)
@@ -527,7 +527,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Don't truncate the message log buffer when it becomes large.
   (setq message-log-max t)
 
-)                                       ; chapter 1 ends here
+)                                       ; Chapter 1 ends here.
 
 ;;* 6 (info "(emacs)Exiting") Emacs
 
@@ -539,7 +539,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Quit with Alt + F4.
   (global-set-key (kbd "<M-f4>") 'save-buffers-kill-terminal)
 
-)                                       ; chapter 6 ends here
+)                                       ; Chapter 6 ends here.
 
 ;;* 7 (info "(emacs)Basic") Editing Commands
 
@@ -603,7 +603,7 @@ These packages are neither built-in nor already installed nor ignored."
     (global-set-key (kbd "<S-f11>") 'redo)
     (global-set-key (kbd "C-S-z") 'redo))
 
-)                                       ; chapter 7 ends here
+)                                       ; Chapter 7 ends here.
 
 ;;* 8 The (info "(emacs)Minibuffer")
 
@@ -639,7 +639,7 @@ These packages are neither built-in nor already installed nor ignored."
     (autoload 'dircolors "dircolors" nil t)
     (add-hook 'completion-list-mode-hook 'dircolors))
 
-)                                       ; chapter 8 ends here
+)                                       ; Chapter 8 ends here.
 
 ;;* 10 (info "(emacs)Help")
 
@@ -765,7 +765,7 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "woman"
     (defalias 'man 'woman))
 
-)                                       ; chapter 10 ends here
+)                                       ; Chapter 10 ends here.
 
 ;;* 11 The (info "(emacs)Mark") and the Region
 
@@ -834,7 +834,7 @@ These packages are neither built-in nor already installed nor ignored."
             orgtbl-self-insert-command
             yas-expand)))
 
-)                                       ; chapter 11 ends here
+)                                       ; Chapter 11 ends here.
 
 ;;* 12 (info "(emacs)Killing") and Moving Text
 
@@ -934,7 +934,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Make cut, copy and paste (keys and menu bar items) use the clipboard.
     (menu-bar-enable-clipboard))
 
-)                                       ; chapter 12 ends here
+)                                       ; Chapter 12 ends here.
 
 ;;* 13 (info "(emacs)Registers")
 
@@ -1011,7 +1011,7 @@ These packages are neither built-in nor already installed nor ignored."
     (setq avy-keys '(?a ?b ?c ?d ?e ?f ?g ?h ?i ?j ?k ?l ?m
                      ?n ?o ?p ?q ?r ?s ?t ?u ?v ?w ?x ?y ?z)))
 
-)                                       ; chapter 13 ends here
+)                                       ; Chapter 13 ends here.
 
 ;;* 14 Controlling the (info "(emacs)Display")
 
@@ -1532,7 +1532,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Hotkey for showing the log buffer.
     (global-set-key (kbd "C-h C-l") 'leuven-display-interaction-log))
 
-)                                       ; chapter 14 ends here
+)                                       ; Chapter 14 ends here.
 
 ;;* 15 (info "(emacs)Search")ing and Replacement
 
@@ -1663,7 +1663,7 @@ These packages are neither built-in nor already installed nor ignored."
              default-directory)
       (isearch-abort)))
 
-)                                       ; chapter 15 ends here
+)                                       ; Chapter 15 ends here.
 
 ;;* 16 Commands for (info "(emacs)Fixit") Typos
 
@@ -1847,7 +1847,7 @@ These packages are neither built-in nor already installed nor ignored."
       (setq url (concat "http://www.answers.com/main/ntquery?s=" word))
       (w3m-browse-url url)))
 
-)                                       ; chapter 16 ends here
+)                                       ; Chapter 16 ends here.
 
 ;;* 17 (info "(emacs)Keyboard Macros")
 
@@ -1882,7 +1882,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Assign a name to the last keyboard macro defined.
   (global-set-key (kbd "<C-f8>") 'kmacro-name-last-macro)
 
-)                                       ; chapter 17 ends here
+)                                       ; Chapter 17 ends here.
 
 ;;* 18 (info "(emacs)Files") Handling
 
@@ -2600,7 +2600,7 @@ These packages are neither built-in nor already installed nor ignored."
   (GNUEmacs
     (add-hook 'find-file-hook 'auto-image-file-mode))
 
-)                                       ; chapter 18 ends here
+)                                       ; Chapter 18 ends here.
 
 ;;* 19 Using Multiple (info "(emacs)Buffers")
 
@@ -2738,7 +2738,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;; distinguish directories by adding extra separator
     (setq uniquify-trailing-separator-p t))
 
-)                                       ; chapter 19 ends here
+)                                       ; Chapter 19 ends here.
 
 ;;* 20 Multiple (info "(emacs)Windows")
 
@@ -3042,7 +3042,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Disable Tooltip mode (use the echo area for help and GUD tooltips).
   (unless leuven--console-p (tooltip-mode -1))
 
-)                                       ; chapter 21 ends here
+)                                       ; Chapter 21 ends here.
 
 ;;* 22 (info "(emacs)International") Character Set Support
 
@@ -3111,7 +3111,7 @@ These packages are neither built-in nor already installed nor ignored."
           (t
            (set-selection-coding-system 'utf-8))))
 
-)                                       ; chapter 22 ends here
+)                                       ; Chapter 22 ends here.
 
 ;;* 23 (info "(emacs)Modes")
 
@@ -3182,7 +3182,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;; ;; load generic modes which support e.g. batch files
   ;; (try-require 'generic-x)
 
-)                                       ; chapter 23 ends here
+)                                       ; Chapter 23 ends here.
 
 ;;* 24 (info "(emacs)Indentation")
 
@@ -3223,7 +3223,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Indentation can't insert TABs.
   (setq-default indent-tabs-mode nil)
 
-)                                       ; chapter 24 ends here
+)                                       ; Chapter 24 ends here.
 
 ;;* 25 Commands for (info "(emacs)Text") Human Languages
 
@@ -3652,7 +3652,7 @@ These packages are neither built-in nor already installed nor ignored."
     (autoload 'phonetize-region "phonetic"
       "Translate the region according to the phonetic alphabet." t))
 
-)                                       ; chapter 25 ends here
+)                                       ; Chapter 25 ends here.
 
 ;;* 25.9 Org Mode
 
@@ -3897,7 +3897,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;; ;; Function called to format an inlinetask in LaTeX code.
     ;; (setq org-latex-format-inlinetask-function
     ;;       'leuven--org-latex-format-inlinetask)
-    )                                   ; with-eval-after-load "org-inlinetask" ends here
+    )                                   ; with-eval-after-load "org-inlinetask" ends here.
 
 ;;** (info "(org)Visibility cycling")
 
@@ -4525,7 +4525,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     (add-hook 'kill-emacs-query-functions 'leuven--org-query-clock-out)
 
-    )                                   ; with-eval-after-load "org-clock" ends here
+    )                                   ; with-eval-after-load "org-clock" ends here.
 
 ;;** 8.5 (info "(org)Effort estimates")
 
@@ -4749,7 +4749,7 @@ From %c"
       (if (equal "capture" (frame-parameter nil 'name))
           (delete-frame)))
 
-    )                                   ; with-eval-after-load "org-capture" ends here
+    )                                   ; with-eval-after-load "org-capture" ends here.
 
 ;; bug when C-c C-l
   ;; ;; 4.6 Shortcut links.
@@ -4969,7 +4969,7 @@ From %c"
             "In %d d"                   ; or "%d d left"
             "%d d ago"))
 
-    )                                   ; with-eval-after-load "org-agenda" ends here
+    )                                   ; with-eval-after-load "org-agenda" ends here.
 
   (with-eval-after-load "org-faces"
 
@@ -5182,7 +5182,7 @@ From %c"
            "~/src/emacs-leuven/org-custom-agenda-views.el"))
       (when (file-exists-p leuven-org-agenda-views)
         (load-file leuven-org-agenda-views))))
-                                        ; with-eval-after-load "org-agenda" ends here
+                                        ; with-eval-after-load "org-agenda" ends here.
 
   (defun leuven-org-todo-list-current-dir ()
     "Produce a view from all Org files in the current directory."
@@ -5488,7 +5488,7 @@ this with to-do items than with projects or headings."
     (add-to-list 'org-export-snippet-translation-alist
                  '("b" . "beamer"))
 
-    )                                   ; with-eval-after-load "ox" ends here
+    )                                   ; with-eval-after-load "ox" ends here.
 
   (defmacro by-backend (&rest body)
     `(case (if (boundp 'backend) (org-export-backend-name backend) nil) ,@body))
@@ -5561,7 +5561,7 @@ this with to-do items than with projects or headings."
       (add-to-list 'org-export-filter-item-functions
                    'leuven--checkbox-filter)
 
-    )                                   ; with-eval-after-load "ox-html" ends here
+    )                                   ; with-eval-after-load "ox-html" ends here.
 
 ;;** (info "(emacs-goodies-el)htmlize")
 
@@ -5605,7 +5605,7 @@ this with to-do items than with projects or headings."
     ;; Key binding.
     (global-set-key (kbd "M-P") 'htmlize-buffer)
 
-    )                                   ; with-eval-after-load "htmlize" ends here
+    )                                   ; with-eval-after-load "htmlize" ends here.
 
   ;; Quick print preview (to Web browser) with `htmlize-view-buffer'.
   (GNUEmacs
@@ -5793,7 +5793,7 @@ this with to-do items than with projects or headings."
     (add-hook 'org-export-filter-parse-tree-functions
               'leuven--org-export-ignore-headlines)
 
-    )                                   ; with-eval-after-load "ox-latex" ends here
+    )                                   ; with-eval-after-load "ox-latex" ends here.
 
   ;; 12.6.6 Beamer class export.
   ;; (require 'ox-beamer)
@@ -6442,7 +6442,7 @@ this with to-do items than with projects or headings."
       ;; Add the city.
       (setq org-google-weather-format "%C %i %c, %l°-%h°")))
 
-)                                       ; chapter 25.9-org-mode ends here
+)                                       ; Chapter 25.9-org-mode ends here.
 
 ;;** 25.10 (info "(emacs)TeX Mode")
 
@@ -6678,9 +6678,9 @@ this with to-do items than with projects or headings."
         ;; Current BibTeX dialect.
         (setq bibtex-dialect 'biblatex))
 
-      ))                                ; with-eval-after-load "latex" ends here
+      ))                                ; with-eval-after-load "latex" ends here.
 
-)                                       ; chapter 25.10-tex-mode ends here
+)                                       ; Chapter 25.10-tex-mode ends here.
 
 (leuven--chapter leuven-load-chapter-25-text "25 Commands for Human Languages"
 
@@ -6764,7 +6764,7 @@ this with to-do items than with projects or headings."
       (sort-lines nil start end)
       (sort-declarations))))
 
-)                                       ; chapter 25 ends here
+)                                       ; Chapter 25 ends here.
 
 ;;* 26 Editing (info "(emacs)Programs")
 
@@ -7723,7 +7723,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     )
 
-)                                       ; chapter 28 ends here
+)                                       ; Chapter 28 ends here.
 
 ;;* 29 (info "(emacs)Abbrevs")
 
@@ -8043,7 +8043,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Maximum number of lines to show in the popup.
     (setq company-quickhelp-max-lines 10))
 
-)                                       ; chapter 29 ends here
+)                                       ; Chapter 29 ends here.
 
 ;;* 30 (info "(emacs)Dired"), the Directory Editor
 
@@ -8225,7 +8225,7 @@ a clean buffer we're an order of magnitude laxer about checking."
               (lambda ()
                 (load "dired-x")))
 
-    )                                   ; with-eval-after-load "dired" ends here
+    )                                   ; with-eval-after-load "dired" ends here.
 
 ;;** Dired+
 
@@ -8271,7 +8271,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; use localized date/time format
     (setq ls-lisp-use-localized-time-format t))
 
-)                                       ; chapter 30 ends here
+)                                       ; Chapter 30 ends here.
 
 ;;* 31 The (info "(emacs)Calendar/Diary")
 
@@ -8411,7 +8411,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;;               (org-agenda-to-appt))))
       )
 
-    )                                   ; with-eval-after-load "appt" ends here
+    )                                   ; with-eval-after-load "appt" ends here.
 
 ;;** 31.15 (info "(emacs)Advanced Calendar/Diary Usage")
 
@@ -8483,7 +8483,7 @@ a clean buffer we're an order of magnitude laxer about checking."
          ;; table layout
          'display nil))))
 
-)                                       ; chapter 31 ends here
+)                                       ; Chapter 31 ends here.
 
 ;;* 32 (info "(emacs)Sending Mail")
 
@@ -8503,7 +8503,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (setq smtpmail-default-smtp-server "smtp")
                                         ; SMTP process must be running there
 
-)                                       ; chapter 32 ends here
+)                                       ; Chapter 32 ends here.
 
 ;;* 34 (info "(emacs)Gnus")
 
@@ -8683,7 +8683,7 @@ a clean buffer we're an order of magnitude laxer about checking."
                              'face
                              "\\1\\3\\5\\7")))))
 
-)                                       ; chapter 34 ends here
+)                                       ; Chapter 34 ends here.
 
 ;;* 35 (info "(emacs)Document View")
 
@@ -8753,7 +8753,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (set-buffer-modified-p nil))
   (add-to-list 'auto-mode-alist '("\\.ppt\\'" . no-ppt))
 
-)                                       ; chapter 35 ends here
+)                                       ; Chapter 35 ends here.
 
 ;;** Emacs-w3m
 
@@ -9389,7 +9389,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Specify line spacing, in points, for ordinary text.
     (setq ps-line-spacing 3))
 
-)                                       ; chapter 38 ends here
+)                                       ; Chapter 38 ends here.
 
 ;;* 39 (info "(emacs)Sorting") Text
 
@@ -9398,7 +9398,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; Key binding.
   (global-set-key (kbd "C-c ^") 'sort-lines)
 
-)                                       ; chapter 39 ends here
+)                                       ; Chapter 39 ends here.
 
 ;;* 42 (info "(emacs)Saving Emacs Sessions")
 
@@ -9413,7 +9413,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Name of the file that records `save-place-alist' value.
     (setq save-place-file "~/.emacs.d/.places")
 
-)                                       ; chapter 42 ends here
+)                                       ; Chapter 42 ends here.
 
 ;;* 45 (info "(emacs)Hyperlinking")
 
@@ -9575,7 +9575,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; get rid of the Games in the Tools menu
     (define-key menu-bar-tools-menu [games] nil))
 
-)                                       ; chapter 46 ends here
+)                                       ; Chapter 46 ends here.
 
 ;;* 48 (info "(emacs)Customization")
 
@@ -9755,7 +9755,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;;           (lambda ()
   ;;             (modify-syntax-entry ?- "w")))
 
-)                                       ; chapter 48 ends here
+)                                       ; Chapter 48 ends here.
 
 ;;* Emacs Display
 
@@ -9841,7 +9841,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (define-key key-translation-map [kp-insert] [insert])
     (define-key key-translation-map [kp-delete] [delete]))
 
-)                                       ; chapter G ends here
+)                                       ; Chapter G ends here.
 
 ;;* Profiler
 
