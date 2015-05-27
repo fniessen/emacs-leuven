@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150527.1254
+;; Version: 20150527.1302
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150527.1254"
+(defconst leuven--emacs-version "20150527.1302"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1128,7 +1128,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Do not prompt for the face to use. Instead, cycle through them.
     (setq hi-lock-auto-select-face t)
 
-    ;; ;; enable Hi Lock mode for all buffers
+    ;; ;; Enable Hi Lock mode for all buffers.
     ;; (global-hi-lock-mode 1)
     )
 
@@ -1156,13 +1156,13 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Automatic highlighting current symbol.
   (when (try-require 'auto-highlight-symbol)
 
-    ;; add R
+    ;; Add R.
     (add-to-list 'ahs-modes 'ess-mode t)
 
-    ;; ;; toggle Auto-Highlight-Symbol mode in all buffers
+    ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
     ;; (global-auto-highlight-symbol-mode t)
 
-    ;; ;; toggle Auto-Highlight-Symbol mode in all programming mode buffers
+    ;; ;; Toggle Auto-Highlight-Symbol mode in all programming mode buffers.
     ;; (add-hook 'prog-mode-hook 'auto-highlight-symbol-mode)
     )
 
@@ -1543,7 +1543,7 @@ These packages are neither built-in nor already installed nor ignored."
   (leuven--section "15.1 (emacs)Incremental Search")
 
   ;; FIXME Error when selecting search string from kill ring (`M-p')
-  ;; ;; always exit searches at the beginning of the expression found
+  ;; ;; Always exit searches at the beginning of the expression found.
   ;; (add-hook 'isearch-mode-end-hook 'isearch-goto-match-beginning)
   ;;
   ;; (defun isearch-goto-match-beginning ()
@@ -1557,8 +1557,8 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Don't re-hide an invisible match right away.
     (setq isearch-hide-immediately nil)); XXX
 
-  ;; scrolling commands are allowed during incremental search (without
-  ;; canceling Isearch mode)
+  ;; Scrolling commands are allowed during incremental search (without
+  ;; canceling Isearch mode).
   (setq isearch-allow-scroll t)
 
   (GNUEmacs
@@ -1988,7 +1988,7 @@ These packages are neither built-in nor already installed nor ignored."
                                         ; remove the background color.
     (message "Buffer is up to date with file on disk"))
 
-  ;; key binding
+  ;; Key binding.
   (global-set-key (kbd "<C-f12>") 'leuven-revert-buffer-without-query)
 
   ;; Enable Global Auto-Revert mode (auto refresh buffers).
@@ -2135,8 +2135,8 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Do everything in one frame.
     (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-    ;; split the window (horizontally or vertically) depending on the frame
-    ;; width
+    ;; Split the window (horizontally or vertically) depending on the frame
+    ;; width.
     (setq ediff-split-window-function
           (lambda (&optional arg)
             (if (> (frame-width) 160)
@@ -2170,25 +2170,27 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "18.11 (emacs)Misc File Ops")
 
-  ;; use the system's Trash (when it is available)
+  ;; Use the system's Trash (when it is available).
   (setq delete-by-moving-to-trash t)
 
-  ;; the EasyPG Assistant, transparent file encryption
+  ;; The EasyPG Assistant, transparent file encryption.
   (with-eval-after-load "epa-file"
 
-    ;; stop EasyPG from asking for the recipient used for encrypting files
+    ;; Stop EasyPG from asking for the recipient used for encrypting files.
     (setq epa-file-encrypt-to "johndoe@example.com")
-    ;; if no one is selected (""), symmetric encryption will always be
-    ;; performed
+                                        ; If no one is selected (""), symmetric
+                                        ; encryption will always be performed.
 
-    ;; cache passphrase for symmetric encryption (VERY important)
+    ;; Cache passphrase for symmetric encryption (VERY important).
     (setq epa-file-cache-passphrase-for-symmetric-encryption t)
-    ;; Not to sound paranoid.  But if you want caching, it's recommended to
-    ;; use *public-key encryption* instead of symmetric encryption.
-    ;; `gpg-agent' is the preferred way to do this.
+                                        ; Not to sound paranoid.  But if you
+                                        ; want caching, it's recommended to use
+                                        ; *public-key encryption* instead of
+                                        ; symmetric encryption.  `gpg-agent' is
+                                        ; the preferred way to do this.
 
-    ;; prompt for the password in the Emacs minibuffer (instead of using a
-    ;; graphical password prompt for GPG)
+    ;; Prompt for the password in the Emacs minibuffer (instead of using a
+    ;; graphical password prompt for GPG).
     (setenv "GPG_AGENT_INFO" nil))
 
 ;;** 18.14 (info "(emacs)Remote Files")
@@ -2199,28 +2201,28 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "Ange-FTP")
 
-  ;; transparent FTP support
+  ;; Transparent FTP support.
   (with-eval-after-load "ange-ftp"
 
-    ;; try to use passive mode in ftp, if the client program supports it
-    (setq ange-ftp-try-passive-mode t)) ; needed for Ubuntu
+    ;; Try to use passive mode in ftp, if the client program supports it.
+    (setq ange-ftp-try-passive-mode t)) ; Needed for Ubuntu.
 
 ;;*** TRAMP - Transparent Remote Access, Multiple Protocols
 
   (leuven--section "TRAMP")
 
-  (with-eval-after-load "tramp"         ; the autoloads are predefined
+  (with-eval-after-load "tramp"         ; The autoloads are predefined.
 
 ;;* 4 (info "(tramp)Configuration") of TRAMP for use
 
 ;;** 4.6 Selecting a (info "(tramp)Default Method")
 
-    ;; default transfer method
-    (setq tramp-default-method          ; [default: "scp"]
+    ;; Default transfer method.
+    (setq tramp-default-method          ; [Default: "scp"]
           (cond (leuven--win32-p
-                 ;; (issues with Cygwin `ssh' which does not cooperate
+                 ;; (Issues with Cygwin `ssh' which does not cooperate
                  ;; with Emacs processes -> use `plink' from PuTTY, it
-                 ;; definitely does work under Windows)
+                 ;; definitely does work under Windows).
                  ;;
                  ;; `C-x C-f /plink:user@host:/some/directory/file'
                  "plink")
@@ -2255,32 +2257,31 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;** 4.12 (info "(tramp)Password handling") for several connections
 
-    ;; how many seconds passwords are cached
-    (setq password-cache-expiry 60)     ; [default: 16]
+    ;; How many seconds passwords are cached.
+    (setq password-cache-expiry 60)     ; [Default: 16]
 
 ;;** 4.15 (info "(tramp)Remote shell setup") hints
 
-    ;; string used for end of line in rsh connections
-    (setq tramp-rsh-end-of-line         ; [default: "\n"]
+    ;; String used for end of line in rsh connections.
+    (setq tramp-rsh-end-of-line         ; [Default: "\n"]
           (cond (leuven--win32-p "\n")
                 (t "\r")))
 
 ;;** 4.16 (info "(tramp)Auto-save and Backup") configuration
 
-    ;; faster auto saves
+    ;; Faster auto saves.
     (setq tramp-auto-save-directory temporary-file-directory)
 
 ;;* 9 How to Customize (info "(tramp)Traces and Profiles")
 
-    ;; debugging Tramp
-    (setq tramp-verbose 6)              ; [maximum: 10]
+    ;; Debugging Tramp.
+    (setq tramp-verbose 6)              ; [Maximum: 10]
 
-    ;; "turn off" the effect of `backup-directory-alist' for TRAMP
-    ;; files
+    ;; "Turn off" the effect of `backup-directory-alist' for TRAMP files.
     (add-to-list 'backup-directory-alist
                  (cons tramp-file-name-regexp nil))
 
-    ;; make Emacs beep after reading from or writing to the remote host
+    ;; Make Emacs beep after reading from or writing to the remote host.
     (defadvice tramp-handle-write-region ; XXX
       (after leuven-tramp-write-beep-advice activate)
       "Make Tramp beep after writing a file."
@@ -2332,34 +2333,34 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "18.17 (emacs)File Conveniences")
 
-  ;; filenames excluded from the recent list
-  (setq recentf-exclude                 ;! has to be set before your require
-                                        ;! `recentf'
+  ;; Filenames excluded from the recent list.
+  (setq recentf-exclude                 ;! Has to be set before your require
+                                        ;! `recentf'.
         '(
-          "~$"                          ; Emacs (and others) backup
-          "\\.aux$" "\\.log$" "\\.toc$" ; LaTeX
+          "~$"                          ; Emacs (and others) backup.
+          "\\.aux$" "\\.log$" "\\.toc$" ; LaTeX.
           "/tmp/"
           ))
 
-  ;; setup a menu of recently opened files
+  ;; Setup a menu of recently opened files.
   (GNUEmacs
     (idle-require 'recentf))
 
   (with-eval-after-load "recentf"
 
-    ;; maximum number of items that will be saved
-    (setq recentf-max-saved-items 100)  ; just 20 is too recent
+    ;; Maximum number of items that will be saved.
+    (setq recentf-max-saved-items 100)  ; Just 20 is too recent.
 
-    ;; file to save the recent list into
+    ;; File to save the recent list into.
     (setq recentf-save-file (concat user-emacs-directory ".recentf"))
 
-    ;; (when using Tramp) turn off the cleanup feature of `recentf'
-    (setq recentf-auto-cleanup 'never)  ; disable before we start recentf!
+    ;; (When using Tramp) turn off the cleanup feature of `recentf'.
+    (setq recentf-auto-cleanup 'never)  ; Disable before we start recentf!
 
-    ;; save file names relative to my current home directory
+    ;; Save file names relative to my current home directory.
     (setq recentf-filename-handlers '(abbreviate-file-name))
 
-    ;; enable `recentf' mode
+    ;; Enable `recentf' mode.
     (recentf-mode 1))
 
   (GNUEmacs

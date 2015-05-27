@@ -438,7 +438,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150527.1255</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150527.1303</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -519,7 +519,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150527.1255"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150527.1303"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2762,7 +2762,7 @@ throughout a buffer.
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Do not prompt for the face to use. Instead, cycle through them.</span>
     (setq hi-lock-auto-select-face t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; enable Hi Lock mode for all buffers</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Enable Hi Lock mode for all buffers.</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-hi-lock-mode 1)</span>
     )
 </pre>
@@ -2828,13 +2828,13 @@ Toggle Auto-Highlight-Symbol using key chord <code>**</code>.
 <pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Automatic highlighting current symbol.</span>
   (<span class="org-keyword">when</span> (try-require 'auto-highlight-symbol)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">add R</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Add R.</span>
     (add-to-list 'ahs-modes 'ess-mode t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; toggle Auto-Highlight-Symbol mode in all buffers</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Toggle Auto-Highlight-Symbol mode in all buffers.</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-auto-highlight-symbol-mode t)</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; toggle Auto-Highlight-Symbol mode in all programming mode buffers</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Toggle Auto-Highlight-Symbol mode in all programming mode buffers.</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(add-hook 'prog-mode-hook 'auto-highlight-symbol-mode)</span>
     )
 </pre>
@@ -3521,7 +3521,7 @@ Since Emacs 24.3:
   (leuven--section <span class="org-string">"15.1 (emacs)Incremental Search"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class="org-leuven-highlight"><span class="org-comment">FIXME</span></span><span class="org-comment"> Error when selecting search string from kill ring (`</span><span class="org-constant"><span class="org-comment">M-p</span></span><span class="org-comment">')</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; always exit searches at the beginning of the expression found</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Always exit searches at the beginning of the expression found.</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(add-hook 'isearch-mode-end-hook 'isearch-goto-match-beginning)</span>
   <span class="org-comment-delimiter">;;</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(defun isearch-goto-match-beginning ()</span>
@@ -3535,8 +3535,8 @@ Since Emacs 24.3:
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't re-hide an invisible match right away.</span>
     (setq isearch-hide-immediately nil))<span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">scrolling commands are allowed during incremental search (without</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">canceling Isearch mode)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Scrolling commands are allowed during incremental search (without</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">canceling Isearch mode).</span>
   (setq isearch-allow-scroll t)
 </pre>
 </div>
@@ -4421,7 +4421,7 @@ Update time stamps (and copyright notice) automatically.
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">remove the background color.</span>
     (message <span class="org-string">"Buffer is up to date with file on disk"</span>))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">key binding</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Key binding.</span>
   (global-set-key (kbd <span class="org-string">"&lt;C-f12&gt;"</span>) 'leuven-revert-buffer-without-query)
 </pre>
 </div>
@@ -4704,8 +4704,8 @@ vice versa</li>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Do everything in one frame.</span>
     (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">split the window (horizontally or vertically) depending on the frame</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">width</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Split the window (horizontally or vertically) depending on the frame</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">width.</span>
     (setq ediff-split-window-function
           (<span class="org-keyword">lambda</span> (<span class="org-type">&amp;optional</span> arg)
             (<span class="org-keyword">if</span> (&gt; (frame-width) 160)
@@ -4774,7 +4774,7 @@ files in the other directory.
 
   (leuven--section <span class="org-string">"18.11 (emacs)Misc File Ops"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">use the system's Trash (when it is available)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Use the system's Trash (when it is available).</span>
   (setq delete-by-moving-to-trash t)
 </pre>
 </div>
@@ -4868,22 +4868,24 @@ What is PGP/MIME, what is OpenPGP, and how Gnus handles them?
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">the EasyPG Assistant, transparent file encryption</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">The EasyPG Assistant, transparent file encryption.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"epa-file"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">stop EasyPG from asking for the recipient used for encrypting files</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Stop EasyPG from asking for the recipient used for encrypting files.</span>
     (setq epa-file-encrypt-to <span class="org-string">"johndoe@example.com"</span>)
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">if no one is selected (""), symmetric encryption will always be</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">performed</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">If no one is selected (""), symmetric</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">encryption will always be performed.</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">cache passphrase for symmetric encryption (VERY important)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Cache passphrase for symmetric encryption (VERY important).</span>
     (setq epa-file-cache-passphrase-for-symmetric-encryption t)
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Not to sound paranoid.  But if you want caching, it's recommended to</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">use *public-key encryption* instead of symmetric encryption.</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">gpg-agent</span></span><span class="org-comment">' is the preferred way to do this.</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Not to sound paranoid.  But if you</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">want caching, it's recommended to use</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">*public-key encryption* instead of</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">symmetric encryption.  `</span><span class="org-constant"><span class="org-comment">gpg-agent</span></span><span class="org-comment">' is</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">the preferred way to do this.</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">prompt for the password in the Emacs minibuffer (instead of using a</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">graphical password prompt for GPG)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Prompt for the password in the Emacs minibuffer (instead of using a</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">graphical password prompt for GPG).</span>
     (setenv <span class="org-string">"GPG_AGENT_INFO"</span> nil))
 </pre>
 </div>
@@ -4918,11 +4920,11 @@ I should be able to open <i>/CAUCHY/fsd</i>&#x2026;
 
   (leuven--section <span class="org-string">"Ange-FTP"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">transparent FTP support</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Transparent FTP support.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ange-ftp"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">try to use passive mode in ftp, if the client program supports it</span>
-    (setq ange-ftp-try-passive-mode t)) <span class="org-comment-delimiter">; </span><span class="org-comment">needed for Ubuntu</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Try to use passive mode in ftp, if the client program supports it.</span>
+    (setq ange-ftp-try-passive-mode t)) <span class="org-comment-delimiter">; </span><span class="org-comment">Needed for Ubuntu.</span>
 </pre>
 </div>
 </div>
@@ -4983,18 +4985,18 @@ machine editing your cron file on the remote.
 
   (leuven--section <span class="org-string">"TRAMP"</span>)
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"tramp"</span>         <span class="org-comment-delimiter">; </span><span class="org-comment">the autoloads are predefined</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"tramp"</span>         <span class="org-comment-delimiter">; </span><span class="org-comment">The autoloads are predefined.</span>
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">* 4 (info "(tramp)Configuration") of TRAMP for use</span>
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 4.6 Selecting a (info "(tramp)Default Method")</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">default transfer method</span>
-    (setq tramp-default-method          <span class="org-comment-delimiter">; </span><span class="org-comment">[default: "scp"]</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Default transfer method.</span>
+    (setq tramp-default-method          <span class="org-comment-delimiter">; </span><span class="org-comment">[Default: "scp"]</span>
           (<span class="org-keyword">cond</span> (leuven--win32-p
-                 <span class="org-comment-delimiter">;; </span><span class="org-comment">(issues with Cygwin `</span><span class="org-constant"><span class="org-comment">ssh</span></span><span class="org-comment">' which does not cooperate</span>
+                 <span class="org-comment-delimiter">;; </span><span class="org-comment">(Issues with Cygwin `</span><span class="org-constant"><span class="org-comment">ssh</span></span><span class="org-comment">' which does not cooperate</span>
                  <span class="org-comment-delimiter">;; </span><span class="org-comment">with Emacs processes -&gt; use `</span><span class="org-constant"><span class="org-comment">plink</span></span><span class="org-comment">' from PuTTY, it</span>
-                 <span class="org-comment-delimiter">;; </span><span class="org-comment">definitely does work under Windows)</span>
+                 <span class="org-comment-delimiter">;; </span><span class="org-comment">definitely does work under Windows).</span>
                  <span class="org-comment-delimiter">;;</span>
                  <span class="org-comment-delimiter">;; </span><span class="org-comment">`C-x C-f /plink:user@host:/some/directory/file'</span>
                  <span class="org-string">"plink"</span>)
@@ -5029,19 +5031,19 @@ machine editing your cron file on the remote.
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 4.12 (info "(tramp)Password handling") for several connections</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">how many seconds passwords are cached</span>
-    (setq password-cache-expiry 60)     <span class="org-comment-delimiter">; </span><span class="org-comment">[default: 16]</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">How many seconds passwords are cached.</span>
+    (setq password-cache-expiry 60)     <span class="org-comment-delimiter">; </span><span class="org-comment">[Default: 16]</span>
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 4.15 (info "(tramp)Remote shell setup") hints</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">string used for end of line in rsh connections</span>
-    (setq tramp-rsh-end-of-line         <span class="org-comment-delimiter">; </span><span class="org-comment">[default: "\n"]</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">String used for end of line in rsh connections.</span>
+    (setq tramp-rsh-end-of-line         <span class="org-comment-delimiter">; </span><span class="org-comment">[Default: "\n"]</span>
           (<span class="org-keyword">cond</span> (leuven--win32-p <span class="org-string">"\n"</span>)
                 (t <span class="org-string">"\r"</span>)))
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 4.16 (info "(tramp)Auto-save and Backup") configuration</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">faster auto saves</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Faster auto saves.</span>
     (setq tramp-auto-save-directory temporary-file-directory)
 </pre>
 </div>
@@ -5060,15 +5062,14 @@ email, including several trace information for analysis.
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* 9 How to Customize (info "(tramp)Traces and Profiles")</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">debugging Tramp</span>
-    (setq tramp-verbose 6)              <span class="org-comment-delimiter">; </span><span class="org-comment">[maximum: 10]</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Debugging Tramp.</span>
+    (setq tramp-verbose 6)              <span class="org-comment-delimiter">; </span><span class="org-comment">[Maximum: 10]</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">"turn off" the effect of `</span><span class="org-constant"><span class="org-comment">backup-directory-alist</span></span><span class="org-comment">' for TRAMP</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">files</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">"Turn off" the effect of `</span><span class="org-constant"><span class="org-comment">backup-directory-alist</span></span><span class="org-comment">' for TRAMP files.</span>
     (add-to-list 'backup-directory-alist
                  (cons tramp-file-name-regexp nil))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">make Emacs beep after reading from or writing to the remote host</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Make Emacs beep after reading from or writing to the remote host.</span>
     (<span class="org-keyword">defadvice</span> <span class="org-function-name">tramp-handle-write-region</span> <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span>
       (after leuven-tramp-write-beep-advice activate)
       <span class="org-doc">"Make Tramp beep after writing a file."</span>
@@ -5149,34 +5150,34 @@ root using the <code>sudo</code> tramp method.
 
   (leuven--section <span class="org-string">"18.17 (emacs)File Conveniences"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">filenames excluded from the recent list</span>
-  (setq recentf-exclude                 <span class="org-comment-delimiter">;</span><span class="org-comment">! has to be set before your require</span>
-                                        <span class="org-comment-delimiter">;</span><span class="org-comment">! `</span><span class="org-constant"><span class="org-comment">recentf</span></span><span class="org-comment">'</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Filenames excluded from the recent list.</span>
+  (setq recentf-exclude                 <span class="org-comment-delimiter">;</span><span class="org-comment">! Has to be set before your require</span>
+                                        <span class="org-comment-delimiter">;</span><span class="org-comment">! `</span><span class="org-constant"><span class="org-comment">recentf</span></span><span class="org-comment">'.</span>
         '(
-          <span class="org-string">"~$"</span>                          <span class="org-comment-delimiter">; </span><span class="org-comment">Emacs (and others) backup</span>
-          <span class="org-string">"\\.aux$"</span> <span class="org-string">"\\.log$"</span> <span class="org-string">"\\.toc$"</span> <span class="org-comment-delimiter">; </span><span class="org-comment">LaTeX</span>
+          <span class="org-string">"~$"</span>                          <span class="org-comment-delimiter">; </span><span class="org-comment">Emacs (and others) backup.</span>
+          <span class="org-string">"\\.aux$"</span> <span class="org-string">"\\.log$"</span> <span class="org-string">"\\.toc$"</span> <span class="org-comment-delimiter">; </span><span class="org-comment">LaTeX.</span>
           <span class="org-string">"/tmp/"</span>
           ))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">setup a menu of recently opened files</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Setup a menu of recently opened files.</span>
   (GNUEmacs
     (idle-require 'recentf))
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"recentf"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">maximum number of items that will be saved</span>
-    (setq recentf-max-saved-items 100)  <span class="org-comment-delimiter">; </span><span class="org-comment">just 20 is too recent</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Maximum number of items that will be saved.</span>
+    (setq recentf-max-saved-items 100)  <span class="org-comment-delimiter">; </span><span class="org-comment">Just 20 is too recent.</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">file to save the recent list into</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">File to save the recent list into.</span>
     (setq recentf-save-file (concat user-emacs-directory <span class="org-string">".recentf"</span>))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(when using Tramp) turn off the cleanup feature of `</span><span class="org-constant"><span class="org-comment">recentf</span></span><span class="org-comment">'</span>
-    (setq recentf-auto-cleanup 'never)  <span class="org-comment-delimiter">; </span><span class="org-comment">disable before we start recentf!</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(When using Tramp) turn off the cleanup feature of `</span><span class="org-constant"><span class="org-comment">recentf</span></span><span class="org-comment">'.</span>
+    (setq recentf-auto-cleanup 'never)  <span class="org-comment-delimiter">; </span><span class="org-comment">Disable before we start recentf!</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">save file names relative to my current home directory</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Save file names relative to my current home directory.</span>
     (setq recentf-filename-handlers '(abbreviate-file-name))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">enable `</span><span class="org-constant"><span class="org-comment">recentf</span></span><span class="org-comment">' mode</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable `</span><span class="org-constant"><span class="org-comment">recentf</span></span><span class="org-comment">' mode.</span>
     (recentf-mode 1))
 </pre>
 </div>
