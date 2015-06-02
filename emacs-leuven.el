@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150527.1302
+;; Version: 20150602.1553
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150527.1302"
+(defconst leuven--emacs-version "20150602.1553"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -4612,7 +4612,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     (add-to-list 'org-capture-templates
                  `("mT" "Create a TODO Action + edit" entry
-                   (file+headline ,(concat org-directory "/refile.org") "Email") ; #+FILETAGS: :mail:
+                   (file+headline ,(concat org-directory "/refile.org") "Messages") ; #+FILETAGS: :mail:
                    "* TODO %^{Creating action}%? (from %:fromname)
    %:date-timestamp-inactive
 
@@ -4625,7 +4625,7 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("mt" "Create a TODO Action" entry
-                   (file+headline ,(concat org-directory "/refile.org") "Email") ; #+FILETAGS: :mail:
+                   (file+headline ,(concat org-directory "/refile.org") "Messages") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
    %:date-timestamp-inactive
 

@@ -426,19 +426,13 @@ that initial process.
 <div class="outline-text-2" id="text-orgheadline2">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp" id="orgsrcblock1">(format-time-string <span class="org-string">"%Y%m%d.%H%M"</span>)
-</pre>
-</div>
-
-<div class="org-src-container">
-
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;; </span><span class="org-comment">emacs-leuven.el --- Emacs configuration file with more pleasant defaults</span>
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Copyright (C) 1999-2015 Fabrice Niessen</span>
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150527.1303</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150602.1554</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -519,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150527.1303"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150602.1554"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -9756,7 +9750,7 @@ Additional parameters can be included via the commands you use:
 
     (add-to-list 'org-capture-templates
                  `(<span class="org-string">"mT"</span> <span class="org-string">"Create a </span><span class="org-leuven-highlight"><span class="org-string">TODO</span></span><span class="org-string"> Action + edit"</span> entry
-                   (file+headline ,(concat org-directory <span class="org-string">"/refile.org"</span>) <span class="org-string">"Email"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">#+FILETAGS: :mail:</span>
+                   (file+headline ,(concat org-directory <span class="org-string">"/refile.org"</span>) <span class="org-string">"Messages"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">#+FILETAGS: :mail:</span>
                    <span class="org-string">"* </span><span class="org-leuven-highlight"><span class="org-string">TODO</span></span><span class="org-string"> %^{Creating action}%? (from %:fromname)</span>
 <span class="org-string">   %:date-timestamp-inactive</span>
 
@@ -9769,7 +9763,7 @@ Additional parameters can be included via the commands you use:
 
     (add-to-list 'org-capture-templates
                  `(<span class="org-string">"mt"</span> <span class="org-string">"Create a </span><span class="org-leuven-highlight"><span class="org-string">TODO</span></span><span class="org-string"> Action"</span> entry
-                   (file+headline ,(concat org-directory <span class="org-string">"/refile.org"</span>) <span class="org-string">"Email"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">#+FILETAGS: :mail:</span>
+                   (file+headline ,(concat org-directory <span class="org-string">"/refile.org"</span>) <span class="org-string">"Messages"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">#+FILETAGS: :mail:</span>
                    <span class="org-string">"* </span><span class="org-leuven-highlight"><span class="org-string">TODO</span></span><span class="org-string"> %:subject%? (from %:fromname)</span>
 <span class="org-string">   %:date-timestamp-inactive</span>
 
@@ -12234,7 +12228,7 @@ languages which can be evaluated in Org mode buffers.
 <div class="inlinetask">
 <b><span class="todo TODO">TODO</span> Why isn&rsquo;t diff-mode.el found?</b><br  />
 <p>
-<a href="file://d:/Users/fni/org/personal/Org-for-dummies.html">file://d:/Users/fni/org/personal/Org-for-dummies.html</a>
+<a href="file:///cygdrive/d/Users/fni/org/personal/Org-for-dummies.html">file:///cygdrive/d/Users/fni/org/personal/Org-for-dummies.html</a>
 </p>
 </div>
 
@@ -21415,6 +21409,10 @@ See <a href="https://github.com/mordocai/.emacs.d/blob/master/init.el">https://g
 functions implemented in Emacs Lisp.
 </p>
 
+<p>
+&ldquo;Package can be upgraded&rdquo;
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">  (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-update</span> ()
@@ -21449,6 +21447,107 @@ functions implemented in Emacs Lisp.
   (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-emacs-version</span> ()
     (interactive)
     (message <span class="org-string">"Leuven Emacs Config version %s"</span> leuven--emacs-version))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span class="org-keyword">defconst</span> <span class="org-variable-name">spacemacs-repository</span> <span class="org-string">"emacs-leuven"</span>
+  <span class="org-doc">"Name of the Spacemacs remote repository."</span>)
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">spacemacs-repository-owner</span> <span class="org-string">"fniessen"</span>
+  <span class="org-doc">"Name of the Spacemacs remote repository owner."</span>)
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">spacemacs-checkversion-remote</span> <span class="org-string">"origin"</span>
+  <span class="org-doc">"Name of the remote repository used to check for new version."</span>)
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">spacemacs-checkversion-branch</span> <span class="org-string">"master"</span>
+  <span class="org-doc">"Name of the branch used to check for new version."</span>)
+
+(<span class="org-keyword">defun</span> <span class="org-function-name">spacemacs/get-last-version</span> (repo owner remote branch)
+  <span class="org-doc">"Return the last tagged version of BRANCH on REMOTE repository from</span>
+<span class="org-doc">OWNER REPO."</span>
+  (<span class="org-keyword">let</span> ((url (format <span class="org-string">"http://github.com/%s/%s"</span> owner repo)))
+    (<span class="org-keyword">unless</span> (spacemacs/git-has-remote remote)
+      (spacemacs/git-declare-remote remote url)))
+  (spacemacs/git-fetch-tags remote branch)
+  (<span class="org-keyword">let</span> ((version (spacemacs/git-latest-tag remote branch)))
+    (<span class="org-keyword">when</span> version
+      (<span class="org-keyword">save-match-data</span>
+        (string-match <span class="org-string">"^.*</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">[0-9]+\\.[0-9]+\\.[0-9]+</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">$"</span> version)
+        (match-string 1 version)))))
+
+(<span class="org-keyword">defun</span> <span class="org-function-name">spacemacs/check-for-new-version</span> (<span class="org-type">&amp;optional</span> interval)
+  <span class="org-doc">"Periodicly check for new for new Spacemacs version.</span>
+<span class="org-doc">Update `</span><span class="org-constant"><span class="org-doc">spacemacs-new-version</span></span><span class="org-doc">' variable if any new version has been</span>
+<span class="org-doc">found."</span>
+  (message <span class="org-string">"Start checking for new version..."</span>)
+  (async-start
+   (<span class="org-keyword">lambda</span> ()
+     (spacemacs/get-last-version spacemacs-repository
+                                 spacemacs-repository-owner
+                                 spacemacs-checkversion-remote
+                                 spacemacs-checkversion-branch))
+   (<span class="org-keyword">lambda</span> (result)
+     (<span class="org-keyword">if</span> result
+         (<span class="org-keyword">if</span> (or (version&lt; result spacemacs-version)
+                 (string= result spacemacs-version)
+                 (<span class="org-keyword">if</span> spacemacs-new-version
+                     (string= result spacemacs-new-version)))
+             (message <span class="org-string">"Spacemacs is up to date."</span>)
+           (message <span class="org-string">"New version of Spacemacs available: %s"</span> result)
+           (setq spacemacs-new-version result))
+       (message <span class="org-string">"Unable to check for new version."</span>)))))
+
+(<span class="org-keyword">defun</span> <span class="org-function-name">spacemacs/git-has-remote</span> (remote)
+  <span class="org-doc">"Return non nil if REMOTE is declared."</span>
+  (<span class="org-keyword">let</span>((proc-buffer <span class="org-string">"git-has-remote"</span>)
+       (default-directory user-emacs-directory))
+    (<span class="org-keyword">when</span> (eq 0 (process-file <span class="org-string">"git"</span> nil proc-buffer nil <span class="org-string">"remote"</span>))
+        (<span class="org-keyword">with-current-buffer</span> proc-buffer
+          (<span class="org-keyword">prog2</span>
+              (goto-char (point-min))
+              (re-search-forward (format <span class="org-string">"^%s$"</span> remote) nil 'noerror)
+            (kill-buffer proc-buffer))))))
+
+(<span class="org-keyword">defun</span> <span class="org-function-name">spacemacs/git-declare-remote</span> (remote url)
+  <span class="org-doc">"Declare a new REMOTE pointing to URL, return t if no error."</span>
+  (<span class="org-keyword">let</span>((proc-buffer <span class="org-string">"git-declare-remote"</span>)
+       (default-directory user-emacs-directory))
+    (<span class="org-keyword">prog1</span>
+        (eq 0 (process-file <span class="org-string">"git"</span> nil proc-buffer nil
+                            <span class="org-string">"remote"</span> <span class="org-string">"add"</span> remote url))
+      (kill-buffer proc-buffer))))
+
+(<span class="org-keyword">defun</span> <span class="org-function-name">spacemacs/git-fetch-tags</span> (remote branch)
+  <span class="org-doc">"Fetch the tags for BRANCH in REMOTE repository."</span>
+  (<span class="org-keyword">let</span>((proc-buffer <span class="org-string">"git-fetch-tags"</span>)
+       (default-directory user-emacs-directory))
+    (<span class="org-keyword">prog2</span>
+        (eq 0 (process-file <span class="org-string">"git"</span> nil proc-buffer nil
+                            <span class="org-string">"fetch"</span> remote branch))
+        <span class="org-comment-delimiter">;; </span><span class="org-comment">explicitly fetch the new tags</span>
+        (eq 0 (process-file <span class="org-string">"git"</span> nil proc-buffer nil
+                            <span class="org-string">"fetch"</span> <span class="org-string">"--tags"</span> remote branch))
+      (kill-buffer proc-buffer))))
+
+(<span class="org-keyword">defun</span> <span class="org-function-name">spacemacs/git-latest-tag</span> (remote branch)
+  <span class="org-doc">"Returns the latest tag on REMOTE/BRANCH."</span>
+  (<span class="org-keyword">let</span>((proc-buffer <span class="org-string">"git-latest-tag"</span>)
+       (default-directory user-emacs-directory)
+       (where (format <span class="org-string">"%s/%s"</span> remote branch)))
+    (<span class="org-keyword">when</span> (eq 0 (process-file <span class="org-string">"git"</span> nil proc-buffer nil
+                              <span class="org-string">"describe"</span> <span class="org-string">"--tags"</span> <span class="org-string">"--abbrev=0"</span>
+                              <span class="org-string">"--match=v*"</span> where <span class="org-string">"FETCH_HEAD"</span>))
+      (<span class="org-keyword">with-current-buffer</span> proc-buffer
+        (<span class="org-keyword">prog1</span>
+            (<span class="org-keyword">when</span> (buffer-string)
+                (end-of-buffer)
+                (forward-line -1)
+                (replace-regexp-in-string
+                 <span class="org-string">"\n$"</span> <span class="org-string">""</span>
+                 (buffer-substring (line-beginning-position)
+                                   (line-end-position))))
+          (kill-buffer proc-buffer))))))
+
+(spacemacs/check-for-new-version)
 </pre>
 </div>
 
