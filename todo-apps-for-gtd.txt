@@ -392,14 +392,18 @@ now have a "Snooze until..."  button, with choices such as:
 - This weekend
 - Pick a date & time
 
-The defaults views they have is, then:
+The default views are:
 
 - My Todo
 - Snoozed
 - Someday
 - Completed
-- All Team Todo
 - Followed
+- With a due date
+- Sent
+- Sent and completed
+- All Team Todo
+- Team - All Completed Tasks
 #+end_note
 
 Tasks sometimes need some more details to be completed.  You may add checkboxes
