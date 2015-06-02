@@ -382,6 +382,26 @@ Tasks can be planned to be worked:
 
     Un-SCHEDULE'ing it means setting it as SOMEDAY.
 
+#+begin_note
+In the new version https://www.azendoo.com/task-pilot, on [2015-06-02 Tue], they
+now have a "Snooze until..."  button, with choices such as:
+
+- Tomorrow
+- Next week (= Monday?)
+- Later today
+- This weekend
+- Pick a date & time
+
+The defaults views they have is, then:
+
+- My Todo
+- Snoozed
+- Someday
+- Completed
+- All Team Todo
+- Followed
+#+end_note
+
 Tasks sometimes need some more details to be completed.  You may add checkboxes
 *subtasks* to a task's description.
 
