@@ -1389,7 +1389,7 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
 
     ;; Mark all parts of the buffer that matches the current region.
     (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-    (global-set-key (kbd "C-c *") 'mc/mark-all-like-this)
+    ;; (global-set-key (kbd "C-c *") 'mc/mark-all-like-this) ; Conflict in Org tables!
 #+end_src
 
 #+begin_src emacs-lisp
@@ -14809,7 +14809,6 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 See http://tsdh.wordpress.com/category/lisp/emacs-lisp/ to quickly open a Shell
 bufffer from Emacs.
 *************** END
-
 
 ** Shell Prompts
 
