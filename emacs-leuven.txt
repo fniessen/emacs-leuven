@@ -3844,7 +3844,10 @@ It is worth noting that you can customize the prompt that tramp expects
 (~tramp-login-prompt-regexp~) but my advice would rather be to make your prompt
 TRAMP-compatible and not the other way around.
 
-#+begin_src emacs-lisp
+*The author of TRAMP doesn't think this ever needs to be changed, so please tell
+him about it if you need to change this.*
+
+#+begin_src emacs-lisp :tangle no
     ;; String used for end of line in rsh connections.
     (setq tramp-rsh-end-of-line         ; [Default: "\n"]
           (cond (leuven--win32-p "\n")
@@ -6685,19 +6688,19 @@ sure that you're calling ~org-return~ to open (it's bound to ~C-m~).
 #+begin_src emacs-lisp :tangle no
   ;; PDFs visited in Org-mode are opened in Evince (and not in the default choice).
   (add-hook 'org-mode-hook
-        '(lambda ()
-           (delete '("\\.pdf\\'" . default) org-file-apps)
-           (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
+            '(lambda ()
+               (delete '("\\.pdf\\'" . default) org-file-apps)
+               (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
   (add-hook 'org-mode-hook
-        '(lambda ()
-           (delete '("\\.x?html?\\'" . default) org-file-apps)
-           (add-to-list 'org-file-apps '("\\.x?html?\\'" . system))))
+            '(lambda ()
+               (delete '("\\.x?html?\\'" . default) org-file-apps)
+               (add-to-list 'org-file-apps '("\\.x?html?\\'" . system))))
 
-    ;; (setcdr (assq 'tramp-remote-shell (assoc "ssh" tramp-methods))
-    ;;         '("bash -i"))
+  ;; (setcdr (assq 'org-file-apps (assoc "\\.x?html?\\'" org-file-apps))
+  ;;         'system)
 #+end_src
 
 If I inline an image in an Org file, I can toggle its display with ~C-c C-x C-v~
@@ -15675,6 +15678,11 @@ printing on Windows.
                                         ; Defer the decision to Gnome.  We could
                                         ; use "firefox" or "google-chrome" as
                                         ; well.
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+  (setq browse-url-browser-function 'browse-url-generic)
+  (setq browse-url-generic-program "cygstart")
 #+end_src
 
 ** Finding Files and URLs at Point

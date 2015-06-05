@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150605.1609</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150605.1713</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150605.1609"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150605.1713"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -5083,6 +5083,11 @@ It is worth noting that you can customize the prompt that tramp expects
 TRAMP-compatible and not the other way around.
 </p>
 
+<p>
+<b>The author of TRAMP doesn't think this ever needs to be changed, so please tell
+him about it if you need to change this.</b>
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">String used for end of line in rsh connections.</span>
@@ -8762,21 +8767,21 @@ sure that you&rsquo;re calling <code>org-return</code> to open (it&rsquo;s bound
 
 <pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">PDFs visited in Org-mode are opened in Evince (and not in the default choice).</span>
   (add-hook 'org-mode-hook
-        '(<span class="org-keyword">lambda</span> ()
-           (delete '(<span class="org-string">"\\.pdf\\'"</span> . default) org-file-apps)
-           (add-to-list 'org-file-apps '(<span class="org-string">"\\.pdf\\'"</span> . <span class="org-string">"evince %s"</span>))))
+            '(<span class="org-keyword">lambda</span> ()
+               (delete '(<span class="org-string">"\\.pdf\\'"</span> . default) org-file-apps)
+               (add-to-list 'org-file-apps '(<span class="org-string">"\\.pdf\\'"</span> . <span class="org-string">"evince %s"</span>))))
 </pre>
 </div>
 
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">  (add-hook 'org-mode-hook
-        '(<span class="org-keyword">lambda</span> ()
-           (delete '(<span class="org-string">"\\.x?html?\\'"</span> . default) org-file-apps)
-           (add-to-list 'org-file-apps '(<span class="org-string">"\\.x?html?\\'"</span> . system))))
+            '(<span class="org-keyword">lambda</span> ()
+               (delete '(<span class="org-string">"\\.x?html?\\'"</span> . default) org-file-apps)
+               (add-to-list 'org-file-apps '(<span class="org-string">"\\.x?html?\\'"</span> . system))))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setcdr (assq 'tramp-remote-shell (assoc "ssh" tramp-methods))</span>
-    <span class="org-comment-delimiter">;;         </span><span class="org-comment">'("bash -i"))</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">(setcdr (assq 'org-file-apps (assoc "\\.x?html?\\'" org-file-apps))</span>
+  <span class="org-comment-delimiter">;;         </span><span class="org-comment">'system)</span>
 </pre>
 </div>
 
@@ -20200,6 +20205,13 @@ nil</div>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">Defer the decision to Gnome.  We could</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">use "firefox" or "google-chrome" as</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">well.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  (setq browse-url-browser-function 'browse-url-generic)
+  (setq browse-url-generic-program <span class="org-string">"cygstart"</span>)
 </pre>
 </div>
 </div>
