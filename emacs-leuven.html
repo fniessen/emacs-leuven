@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150605.1516</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150605.1609</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150605.1516"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150605.1609"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -4928,7 +4928,7 @@ I should be able to open <i>/CAUCHY/fsd</i>&#x2026;
 <h4 id="orgheadline87">TRAMP</h4>
 <div class="outline-text-4" id="text-orgheadline87">
 <p>
-Open files on a remote machine using TRAMP (other protocols than just FTP) from
+Open files on a remote machine using <a href="http://www.gnu.org/software/tramp/">TRAMP</a> (other protocols than just FTP) from
 your machine, edit and save them!
 </p>
 
@@ -4995,7 +4995,7 @@ As there are <b>issues with Cygwin <code>ssh</code></b> (which only works with C
 
 <div class="tip">
 <p>
-You might try out the <code>rsync</code> external method, which saves the remote files quite
+You might try out the <code>rsync</code> <i>external</i> method, which saves the remote files quite
 a bit faster than SSH.  It&rsquo;s based on SSH, so it works the same, just saves
 faster.
 </p>
@@ -5077,6 +5077,12 @@ far.  The trick is to think from the end.
 </div></li>
 
 <li><a id="orgheadline92"></a>Remote shell setup hints<br  /><div class="outline-text-6" id="text-orgheadline92">
+<p>
+It is worth noting that you can customize the prompt that tramp expects
+(<code>tramp-login-prompt-regexp</code>) but my advice would rather be to make your prompt
+TRAMP-compatible and not the other way around.
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">String used for end of line in rsh connections.</span>
@@ -5113,19 +5119,19 @@ reading from or writing to the remote host.
 
 <pre class="src src-emacs-lisp">    (<span class="org-keyword">defadvice</span> <span class="org-function-name">tramp-handle-write-region</span>
       (after leuven-tramp-write-beep-advice activate)
-      <span class="org-doc">"Make Tramp beep after writing a file."</span>
+      <span class="org-doc">"Make TRAMP beep after writing a file."</span>
       (interactive)
       (beep))
 
     (<span class="org-keyword">defadvice</span> <span class="org-function-name">tramp-handle-do-copy-or-rename-file</span>
       (after leuven-tramp-copy-beep-advice activate)
-      <span class="org-doc">"Make Tramp beep after copying a file."</span>
+      <span class="org-doc">"Make TRAMP beep after copying a file."</span>
       (interactive)
       (beep))
 
     (<span class="org-keyword">defadvice</span> <span class="org-function-name">tramp-handle-insert-file-contents</span>
       (after leuven-tramp-insert-beep-advice activate)
-      <span class="org-doc">"Make Tramp beep after inserting contents of a file."</span>
+      <span class="org-doc">"Make TRAMP beep after inserting contents of a file."</span>
       (interactive)
       (beep))
 </pre>
@@ -5137,19 +5143,19 @@ reading from or writing to the remote host.
 <h5 id="orgheadline96">How to Customize Traces</h5>
 <div class="outline-text-5" id="text-orgheadline96">
 <p>
-The usual way to debug Tramp is to set <code>tramp-verbose</code> to 6.  This will produce a
+The usual way to debug TRAMP is to set <code>tramp-verbose</code> to 6.  This will produce a
 debug buffer, which you can show at <code>tramp-devel@gnu.org</code>.
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Debugging Tramp.</span>
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Debugging TRAMP.</span>
     (setq tramp-verbose 6))             <span class="org-comment-delimiter">; </span><span class="org-comment">[Maximum: 10]</span>
 </pre>
 </div>
 
 <p>
-The best way to report a Tramp bug is to call <code>M-x tramp-bug</code>; this prepares an
+The best way to report a TRAMP bug is to call <code>M-x tramp-bug</code>; this prepares an
 email, including several trace information for analysis.
 </p>
 </div>
@@ -5187,7 +5193,7 @@ email, including several trace information for analysis.
     <span class="org-comment-delimiter">;; </span><span class="org-comment">File to save the recent list into.</span>
     (setq recentf-save-file (concat user-emacs-directory <span class="org-string">".recentf"</span>))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(When using Tramp) turn off the cleanup feature of `</span><span class="org-constant"><span class="org-comment">recentf</span></span><span class="org-comment">'.</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(When using TRAMP) turn off the cleanup feature of `</span><span class="org-constant"><span class="org-comment">recentf</span></span><span class="org-comment">'.</span>
     (setq recentf-auto-cleanup 'never)  <span class="org-comment-delimiter">; </span><span class="org-comment">Disable before we start recentf!</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Save file names relative to my current home directory.</span>

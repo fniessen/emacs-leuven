@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150605.1515
+;; Version: 20150605.1608
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150605.1515"
+(defconst leuven--emacs-version "20150605.1608"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2262,23 +2262,23 @@ These packages are neither built-in nor already installed nor ignored."
 
     (defadvice tramp-handle-write-region
       (after leuven-tramp-write-beep-advice activate)
-      "Make Tramp beep after writing a file."
+      "Make TRAMP beep after writing a file."
       (interactive)
       (beep))
 
     (defadvice tramp-handle-do-copy-or-rename-file
       (after leuven-tramp-copy-beep-advice activate)
-      "Make Tramp beep after copying a file."
+      "Make TRAMP beep after copying a file."
       (interactive)
       (beep))
 
     (defadvice tramp-handle-insert-file-contents
       (after leuven-tramp-insert-beep-advice activate)
-      "Make Tramp beep after inserting contents of a file."
+      "Make TRAMP beep after inserting contents of a file."
       (interactive)
       (beep))
 
-    ;; Debugging Tramp.
+    ;; Debugging TRAMP.
     (setq tramp-verbose 6))             ; [Maximum: 10]
 
 ;;** 18.17 (info "(emacs)File Conveniences")
@@ -2306,7 +2306,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;; File to save the recent list into.
     (setq recentf-save-file (concat user-emacs-directory ".recentf"))
 
-    ;; (When using Tramp) turn off the cleanup feature of `recentf'.
+    ;; (When using TRAMP) turn off the cleanup feature of `recentf'.
     (setq recentf-auto-cleanup 'never)  ; Disable before we start recentf!
 
     ;; Save file names relative to my current home directory.

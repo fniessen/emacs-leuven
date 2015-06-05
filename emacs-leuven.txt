@@ -3726,7 +3726,7 @@ I should be able to open //CAUCHY/fsd/...
 
 *** TRAMP
 
-Open files on a remote machine using TRAMP (other protocols than just FTP) from
+Open files on a remote machine using [[http://www.gnu.org/software/tramp/][TRAMP]] (other protocols than just FTP) from
 your machine, edit and save them!
 
 ~/method:user@host:/path/to/some/file~
@@ -3772,7 +3772,7 @@ As there are *issues with Cygwin ~ssh~* (which only works with Cygwinized Emacs)
 #+end_src
 
 #+begin_tip
-You might try out the ~rsync~ external method, which saves the remote files quite
+You might try out the ~rsync~ /external/ method, which saves the remote files quite
 a bit faster than SSH.  It's based on SSH, so it works the same, just saves
 faster.
 #+end_tip
@@ -3840,6 +3840,10 @@ far.  The trick is to think from the end.
 
 ***** Remote shell setup hints
 
+It is worth noting that you can customize the prompt that tramp expects
+(~tramp-login-prompt-regexp~) but my advice would rather be to make your prompt
+TRAMP-compatible and not the other way around.
+
 #+begin_src emacs-lisp
     ;; String used for end of line in rsh connections.
     (setq tramp-rsh-end-of-line         ; [Default: "\n"]
@@ -3866,34 +3870,34 @@ reading from or writing to the remote host.
 #+begin_src emacs-lisp
     (defadvice tramp-handle-write-region
       (after leuven-tramp-write-beep-advice activate)
-      "Make Tramp beep after writing a file."
+      "Make TRAMP beep after writing a file."
       (interactive)
       (beep))
 
     (defadvice tramp-handle-do-copy-or-rename-file
       (after leuven-tramp-copy-beep-advice activate)
-      "Make Tramp beep after copying a file."
+      "Make TRAMP beep after copying a file."
       (interactive)
       (beep))
 
     (defadvice tramp-handle-insert-file-contents
       (after leuven-tramp-insert-beep-advice activate)
-      "Make Tramp beep after inserting contents of a file."
+      "Make TRAMP beep after inserting contents of a file."
       (interactive)
       (beep))
 #+end_src
 
 **** How to Customize Traces
 
-The usual way to debug Tramp is to set ~tramp-verbose~ to 6.  This will produce a
+The usual way to debug TRAMP is to set ~tramp-verbose~ to 6.  This will produce a
 debug buffer, which you can show at ~tramp-devel@gnu.org~.
 
 #+begin_src emacs-lisp
-    ;; Debugging Tramp.
+    ;; Debugging TRAMP.
     (setq tramp-verbose 6))             ; [Maximum: 10]
 #+end_src
 
-The best way to report a Tramp bug is to call ~M-x tramp-bug~; this prepares an
+The best way to report a TRAMP bug is to call ~M-x tramp-bug~; this prepares an
 email, including several trace information for analysis.
 
 ** Convenience Features for Finding Files
@@ -3924,7 +3928,7 @@ email, including several trace information for analysis.
     ;; File to save the recent list into.
     (setq recentf-save-file (concat user-emacs-directory ".recentf"))
 
-    ;; (When using Tramp) turn off the cleanup feature of `recentf'.
+    ;; (When using TRAMP) turn off the cleanup feature of `recentf'.
     (setq recentf-auto-cleanup 'never)  ; Disable before we start recentf!
 
     ;; Save file names relative to my current home directory.
