@@ -6679,6 +6679,21 @@ has the equal signs escaped, unless you have:
 PDF viewer?  See ~org-file-apps~.  Just change to your favorite viewer.  And make
 sure that you're calling ~org-return~ to open (it's bound to ~C-m~).
 
+#+begin_src emacs-lisp :tangle no
+  ;; PDFs visited in Org-mode are opened in Evince (and not in the default choice).
+  (add-hook 'org-mode-hook
+        '(lambda ()
+           (delete '("\\.pdf\\'" . default) org-file-apps)
+           (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+  (add-hook 'org-mode-hook
+        '(lambda ()
+           (delete '("\\.x?html?\\'" . default) org-file-apps)
+           (add-to-list 'org-file-apps '("\\.x?html?\\'" . system))))
+#+end_src
+
 If I inline an image in an Org file, I can toggle its display with ~C-c C-x C-v~
 and resize it to a specific width.
 
@@ -10137,16 +10152,16 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 ** A.6 Dynamic blocks
 
 #+begin_note
-For some (yet) unknown reason, ~leuven-org-update-buffer~ gets added to a local
-copy of the global variable ~before-save-hook~.  We now decided to add it to the
-hook outside of Org (not anymore in an ~with-eval-after-load~ form).
+For some (yet) unknown reason, ~leuven--org-update-buffer-before-save~ gets added
+to a local copy of the global variable ~before-save-hook~.  We now decided to add
+it to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
 #+end_note
 
 #+begin_src emacs-lisp
 ;;** A.6 (info "(org)Dynamic blocks")
 
-  (defun leuven-org-update-buffer ()
-    "Update all dynamic blocks and all tables in the buffer."
+  (defun leuven--org-update-buffer-before-save ()
+    "Update all dynamic blocks and all tables in the buffer before save."
     (interactive)
     (when (derived-mode-p 'org-mode)
       (message "(Info) Update Org buffer %s"
@@ -10169,7 +10184,7 @@ hook outside of Org (not anymore in an ~with-eval-after-load~ form).
         (when flyspell-mode-before-save (flyspell-mode 1)))))
 
   ;; Make sure that all dynamic blocks and all tables are always up-to-date.
-  (add-hook 'before-save-hook 'leuven-org-update-buffer)
+  (add-hook 'before-save-hook 'leuven--org-update-buffer-before-save)
 #+end_src
 
 ** Org-contrib

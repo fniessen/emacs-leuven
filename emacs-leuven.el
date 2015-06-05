@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150604.1124
+;; Version: 20150605.1008
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150604.1124"
+(defconst leuven--emacs-version "20150605.1008"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -6395,8 +6395,8 @@ this with to-do items than with projects or headings."
 
 ;;** A.6 (info "(org)Dynamic blocks")
 
-  (defun leuven-org-update-buffer ()
-    "Update all dynamic blocks and all tables in the buffer."
+  (defun leuven--org-update-buffer-before-save ()
+    "Update all dynamic blocks and all tables in the buffer before save."
     (interactive)
     (when (derived-mode-p 'org-mode)
       (message "(Info) Update Org buffer %s"
@@ -6419,7 +6419,7 @@ this with to-do items than with projects or headings."
         (when flyspell-mode-before-save (flyspell-mode 1)))))
 
   ;; Make sure that all dynamic blocks and all tables are always up-to-date.
-  (add-hook 'before-save-hook 'leuven-org-update-buffer)
+  (add-hook 'before-save-hook 'leuven--org-update-buffer-before-save)
 
   ;; (with-eval-after-load "org"
   ;;   (message "... Org Effectiveness")

@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150604.1125</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150605.1009</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150604.1125"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150605.1009"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -8730,6 +8730,25 @@ PDF viewer?  See <code>org-file-apps</code>.  Just change to your favorite viewe
 sure that you&rsquo;re calling <code>org-return</code> to open (it&rsquo;s bound to <code>C-m</code>).
 </p>
 
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">PDFs visited in Org-mode are opened in Evince (and not in the default choice).</span>
+  (add-hook 'org-mode-hook
+        '(<span class="org-keyword">lambda</span> ()
+           (delete '(<span class="org-string">"\\.pdf\\'"</span> . default) org-file-apps)
+           (add-to-list 'org-file-apps '(<span class="org-string">"\\.pdf\\'"</span> . <span class="org-string">"evince %s"</span>))))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  (add-hook 'org-mode-hook
+        '(<span class="org-keyword">lambda</span> ()
+           (delete '(<span class="org-string">"\\.x?html?\\'"</span> . default) org-file-apps)
+           (add-to-list 'org-file-apps '(<span class="org-string">"\\.x?html?\\'"</span> . system))))
+</pre>
+</div>
+
 <p>
 If I inline an image in an Org file, I can toggle its display with <code>C-c C-x C-v</code>
 and resize it to a specific width.
@@ -12988,9 +13007,9 @@ See <a href="http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-
 <div class="outline-text-3" id="text-orgheadline235">
 <div class="note">
 <p>
-For some (yet) unknown reason, <code>leuven-org-update-buffer</code> gets added to a local
-copy of the global variable <code>before-save-hook</code>.  We now decided to add it to the
-hook outside of Org (not anymore in an <code>with-eval-after-load</code> form).
+For some (yet) unknown reason, <code>leuven--org-update-buffer-before-save</code> gets added
+to a local copy of the global variable <code>before-save-hook</code>.  We now decided to add
+it to the hook outside of Org (not anymore in an <code>with-eval-after-load</code> form).
 </p>
 
 </div>
@@ -12999,8 +13018,8 @@ hook outside of Org (not anymore in an <code>with-eval-after-load</code> form).
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** A.6 (info "(org)Dynamic blocks")</span>
 
-  (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-org-update-buffer</span> ()
-    <span class="org-doc">"Update all dynamic blocks and all tables in the buffer."</span>
+  (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--org-update-buffer-before-save</span> ()
+    <span class="org-doc">"Update all dynamic blocks and all tables in the buffer before save."</span>
     (interactive)
     (<span class="org-keyword">when</span> (derived-mode-p 'org-mode)
       (message <span class="org-string">"(Info) Update Org buffer %s"</span>
@@ -13023,7 +13042,7 @@ hook outside of Org (not anymore in an <code>with-eval-after-load</code> form).
         (<span class="org-keyword">when</span> flyspell-mode-before-save (flyspell-mode 1)))))
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Make sure that all dynamic blocks and all tables are always up-to-date.</span>
-  (add-hook 'before-save-hook 'leuven-org-update-buffer)
+  (add-hook 'before-save-hook 'leuven--org-update-buffer-before-save)
 </pre>
 </div>
 </div>
