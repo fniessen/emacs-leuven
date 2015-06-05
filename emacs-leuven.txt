@@ -3726,34 +3726,26 @@ I should be able to open //CAUCHY/fsd/...
 
 *** TRAMP
 
-(other protocols than just FTP)
+Open files on a remote machine using TRAMP (other protocols than just FTP) from
+your machine, edit and save them!
 
-~/method:user@host:/path/file~
+~/method:user@host:/path/to/some/file~
 
 Examples:
-- ~C-x C-f /ssh:user@host:/home/user/.bashrc~
-- ~C-x C-f /plink:user@host:/home/user/.bashrc~ (from Windows)
-- ~C-x C-f /sudo:root@localhost:/etc/group~
+- ~C-x C-f /ssh:user@host:/etc/motd RET~ (~root~ to modify it!)
+- ~C-x C-f /plink:user@host:/etc/motd RET~ (from Windows Emacs)
+- ~C-x C-f /sudo:root@localhost:/etc/motd RET~
+- ~C-x C-f /su::/etc/motd RET~ (shortened syntax for the ~root~ account on the
+  local host)
 
 Also ~M-x find-dired~, ~rgrep~, ~lgrep~, ~compile -~ properly work with TRAMP (run on
 remote server and show result in your Emacs).
 
 #+begin_note
-~sshfs~ can give me the same functionality as TRAMP: it is like a personal NFS
+~sshfs~ can give you the same functionality as TRAMP: it is like a personal NFS
 (another mounted file system) over SSH.  If you can SSH to a server, you can
 probably do ~sshfs~.
 #+end_note
-
-> I'm in shell mode, logged in on another machine over ssh, and I want to do
-> some 'crontab -e' editing on that machine.  But that will bring up a new
-> editor, which is whatever you set in your EDITOR env variable, and both vi
-> and emacs cannot be used in this dumb shell.  How can I edit the crontab in
-> my emacs session?
-
-Create the crontab on the remote machine, open it using TRAMP from your
-machine, edit and save and then reinstall it.  That or simply enable X
-forwarding so running emacs on the remote bring up Emacs gtk/x on your main
-machine editing your cron file on the remote.
 
 #+begin_src emacs-lisp
 ;;*** TRAMP - Transparent Remote Access, Multiple Protocols
@@ -3761,49 +3753,48 @@ machine editing your cron file on the remote.
   (leuven--section "TRAMP")
 
   (with-eval-after-load "tramp"         ; The autoloads are predefined.
+#+end_src
 
+#+begin_src emacs-lisp
 ;;* 4 (info "(tramp)Configuration") of TRAMP for use
 
 ;;** 4.6 Selecting a (info "(tramp)Default Method")
+#+end_src
 
+#+begin_note
+As there are *issues with Cygwin ~ssh~* (which only works with Cygwinized Emacs),
+*Windows users* should use the PuTTY implementation of SSH (~plink~ method).
+#+end_note
+
+#+begin_src emacs-lisp
     ;; Default transfer method.
     (setq tramp-default-method          ; [Default: "scp"]
-          (cond (leuven--win32-p
-                 ;; (Issues with Cygwin `ssh' which does not cooperate
-                 ;; with Emacs processes -> use `plink' from PuTTY, it
-                 ;; definitely does work under Windows).
-                 ;;
-                 ;; `C-x C-f /plink:user@host:/some/directory/file'
-                 "plink")
-                (t
-                 "ssh")))
+          (cond (leuven--win32-p "plink")
+                (t "ssh")))
+#+end_src
 
-    ;; You might try out the `rsync' method, which saves the remote
-    ;; files quite a bit faster than SSH.  It's based on SSH, so it
-    ;; works the same, just saves faster.
+#+begin_tip
+You might try out the ~rsync~ external method, which saves the remote files quite
+a bit faster than SSH.  It's based on SSH, so it works the same, just saves
+faster.
+#+end_tip
 
-    ;; (nconc (cadr (assq 'tramp-login-args (assoc "ssh" tramp-methods)))
-    ;;        '(("bash" "-i")))
-    ;; (setcdr (assq 'tramp-remote-sh (assoc "ssh" tramp-methods))
-    ;;         '("bash -i"))
+New proxy system (introduced in 2004, instead of the old "multi-hop" methods) to
+edit files on a remote server by going via another server.
 
-;;** 4.9 Connecting to a remote host using (info "(tramp)Multi-hops")
+#+begin_example
+    ;; Route to be followed for specific host/user pairs.
+    (add-to-list 'tramp-default-proxies-alist
+                 ;;  "final host"    "user"    "proxy in the middle"
+                 '("10.10.13.123" "\\`root\\'" "/ssh:%h:"))
+#+end_example
 
-    ;; new proxy system (introduced with Tramp 2.1, instead of the old
-    ;; "multi-hop" filename syntax) to edit files on a remote server by
-    ;; going via another server
-    (when (boundp 'tramp-default-proxies-alist)
-      (add-to-list 'tramp-default-proxies-alist
-                   ;; "final host" "user" "proxy in the middle"
-                   '("10.10.13.123" "\\`root\\'" "/ssh:%h:")))
-    ;; Opening `/sudo:10.10.13.123:' would connect first `10.10.13.123'
-    ;; via `ssh' under your account name, and perform `sudo -u root' on
-    ;; that host afterwards.  It is important to know that the given
-    ;; method is applied on the host which has been reached so far.  The
-    ;; trick is to think from the end.
+Opening ~/sudo:10.10.13.123:~ would connect first ~10.10.13.123~ via ~ssh~ under your
+account name, and perform ~sudo -u root~ on that host afterwards.  It is important
+to know that the given method is applied on the host which has been reached so
+far.  The trick is to think from the end.
 
-    ;; /ssh:user1@host|sudo:user2@host:
-
+#+begin_src emacs-lisp
 ;;** 4.12 (info "(tramp)Password handling") for several connections
 
     ;; How many seconds passwords are cached.
@@ -6692,6 +6683,9 @@ sure that you're calling ~org-return~ to open (it's bound to ~C-m~).
         '(lambda ()
            (delete '("\\.x?html?\\'" . default) org-file-apps)
            (add-to-list 'org-file-apps '("\\.x?html?\\'" . system))))
+
+    ;; (setcdr (assq 'tramp-remote-shell (assoc "ssh" tramp-methods))
+    ;;         '("bash -i"))
 #+end_src
 
 If I inline an image in an Org file, I can toggle its display with ~C-c C-x C-v~

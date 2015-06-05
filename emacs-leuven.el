@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150605.1008
+;; Version: 20150605.1446
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150605.1008"
+(defconst leuven--emacs-version "20150605.1446"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2219,41 +2219,8 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; Default transfer method.
     (setq tramp-default-method          ; [Default: "scp"]
-          (cond (leuven--win32-p
-                 ;; (Issues with Cygwin `ssh' which does not cooperate
-                 ;; with Emacs processes -> use `plink' from PuTTY, it
-                 ;; definitely does work under Windows).
-                 ;;
-                 ;; `C-x C-f /plink:user@host:/some/directory/file'
-                 "plink")
-                (t
-                 "ssh")))
-
-    ;; You might try out the `rsync' method, which saves the remote
-    ;; files quite a bit faster than SSH.  It's based on SSH, so it
-    ;; works the same, just saves faster.
-
-    ;; (nconc (cadr (assq 'tramp-login-args (assoc "ssh" tramp-methods)))
-    ;;        '(("bash" "-i")))
-    ;; (setcdr (assq 'tramp-remote-sh (assoc "ssh" tramp-methods))
-    ;;         '("bash -i"))
-
-;;** 4.9 Connecting to a remote host using (info "(tramp)Multi-hops")
-
-    ;; new proxy system (introduced with Tramp 2.1, instead of the old
-    ;; "multi-hop" filename syntax) to edit files on a remote server by
-    ;; going via another server
-    (when (boundp 'tramp-default-proxies-alist)
-      (add-to-list 'tramp-default-proxies-alist
-                   ;; "final host" "user" "proxy in the middle"
-                   '("10.10.13.123" "\\`root\\'" "/ssh:%h:")))
-    ;; Opening `/sudo:10.10.13.123:' would connect first `10.10.13.123'
-    ;; via `ssh' under your account name, and perform `sudo -u root' on
-    ;; that host afterwards.  It is important to know that the given
-    ;; method is applied on the host which has been reached so far.  The
-    ;; trick is to think from the end.
-
-    ;; /ssh:user1@host|sudo:user2@host:
+          (cond (leuven--win32-p "plink")
+                (t "ssh")))
 
 ;;** 4.12 (info "(tramp)Password handling") for several connections
 
