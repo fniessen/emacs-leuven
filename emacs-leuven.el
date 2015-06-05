@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150605.1446
+;; Version: 20150605.1455
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150605.1446"
+(defconst leuven--emacs-version "20150605.1455"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2267,7 +2267,7 @@ These packages are neither built-in nor already installed nor ignored."
       (interactive)
       (beep))
 
-    (defun leuven-find-file-sudo-header-warning ()
+    (defun leuven--find-file-sudo-header-warning ()
       "*Display a warning in header line of the current buffer."
       (let* ((warning "WARNING: EDITING FILE WITH ROOT PRIVILEGES!")
              (space (+ 6 (- (frame-width) (length warning))))
@@ -2280,7 +2280,7 @@ These packages are neither built-in nor already installed nor ignored."
       "Open FILENAME with root privileges."
       (interactive "F")
       (set-buffer (find-file (concat "/sudo::" filename)))
-      (leuven-find-file-sudo-header-warning))
+      (leuven--find-file-sudo-header-warning))
 
     ;; ;; XXX already an existing defadvice around find-file!!
     ;; (defadvice find-file (around leuven-find-file activate)

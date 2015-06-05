@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150605.1447</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150605.1456</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150605.1447"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150605.1456"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -5045,10 +5045,23 @@ far.  The trick is to think from the end.
 </pre>
 </div>
 
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* 9 How to Customize (info "(tramp)Traces and Profiles")</span>
+</pre>
+</div>
+
 <p>
 The usual way to debug Tramp is to set <code>tramp-verbose</code> to 6.  This will produce a
 debug buffer, which you can show at <code>tramp-devel@gnu.org</code>.
 </p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Debugging Tramp.</span>
+    (setq tramp-verbose 6)              <span class="org-comment-delimiter">; </span><span class="org-comment">[Maximum: 10]</span>
+</pre>
+</div>
 
 <p>
 The best way to report a Tramp bug is to call <code>M-x tramp-bug</code>; this prepares an
@@ -5057,12 +5070,7 @@ email, including several trace information for analysis.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* 9 How to Customize (info "(tramp)Traces and Profiles")</span>
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Debugging Tramp.</span>
-    (setq tramp-verbose 6)              <span class="org-comment-delimiter">; </span><span class="org-comment">[Maximum: 10]</span>
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">"Turn off" the effect of `</span><span class="org-constant"><span class="org-comment">backup-directory-alist</span></span><span class="org-comment">' for TRAMP files.</span>
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">"Turn off" the effect of `</span><span class="org-constant"><span class="org-comment">backup-directory-alist</span></span><span class="org-comment">' for TRAMP files.</span>
     (add-to-list 'backup-directory-alist
                  (cons tramp-file-name-regexp nil))
 
@@ -5090,10 +5098,10 @@ email, including several trace information for analysis.
 </div>
 
 <div id="outline-container-orgheadline88" class="outline-4">
-<h4 id="orgheadline88">TEST Find file as root</h4>
+<h4 id="orgheadline88"><span class="todo TODO">TODO</span> Find file as root</h4>
 <div class="outline-text-4" id="text-orgheadline88">
 <p>
-You can just do <code>C-x C-f /sudo:user@localhost:/foo/bar/baz.txt &lt;RET&gt;</code>.
+You can just do <code>C-x C-f /sudo:user@localhost:/etc/motd RET</code>.
 </p>
 
 <p>
@@ -5104,7 +5112,7 @@ root using the <code>sudo</code> tramp method.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-find-file-sudo-header-warning</span> ()
+<pre class="src src-emacs-lisp">    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--find-file-sudo-header-warning</span> ()
       <span class="org-doc">"*Display a warning in header line of the current buffer."</span>
       (<span class="org-keyword">let*</span> ((warning <span class="org-string">"WARNING: EDITING FILE WITH ROOT PRIVILEGES!"</span>)
              (space (+ 6 (- (frame-width) (length warning))))
@@ -5117,7 +5125,7 @@ root using the <code>sudo</code> tramp method.
       <span class="org-doc">"Open FILENAME with root privileges."</span>
       (interactive <span class="org-string">"F"</span>)
       (set-buffer (find-file (concat <span class="org-string">"/sudo::"</span> filename)))
-      (leuven-find-file-sudo-header-warning))
+      (leuven--find-file-sudo-header-warning))
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">;; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> already an existing defadvice around find-file!!</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(defadvice find-file (around leuven-find-file activate)</span>

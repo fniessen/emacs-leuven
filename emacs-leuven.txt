@@ -3813,18 +3813,22 @@ far.  The trick is to think from the end.
     (setq tramp-auto-save-directory temporary-file-directory)
 #+end_src
 
+#+begin_src emacs-lisp
+;;* 9 How to Customize (info "(tramp)Traces and Profiles")
+#+end_src
+
 The usual way to debug Tramp is to set ~tramp-verbose~ to 6.  This will produce a
 debug buffer, which you can show at ~tramp-devel@gnu.org~.
+
+#+begin_src emacs-lisp
+    ;; Debugging Tramp.
+    (setq tramp-verbose 6)              ; [Maximum: 10]
+#+end_src
 
 The best way to report a Tramp bug is to call ~M-x tramp-bug~; this prepares an
 email, including several trace information for analysis.
 
 #+begin_src emacs-lisp
-;;* 9 How to Customize (info "(tramp)Traces and Profiles")
-
-    ;; Debugging Tramp.
-    (setq tramp-verbose 6)              ; [Maximum: 10]
-
     ;; "Turn off" the effect of `backup-directory-alist' for TRAMP files.
     (add-to-list 'backup-directory-alist
                  (cons tramp-file-name-regexp nil))
@@ -3849,16 +3853,16 @@ email, including several trace information for analysis.
       (beep))
 #+end_src
 
-*** TEST Find file as root
+*** TODO Find file as root
 
-You can just do ~C-x C-f /sudo:user@localhost:/foo/bar/baz.txt <RET>~.
+You can just do ~C-x C-f /sudo:user@localhost:/etc/motd RET~.
 
 Because I'm lazy, I have a hack (from Tassilo Horn): if I try to open a file
 for which I don't have permissions for, I'm queried if I want to open it as
 root using the ~sudo~ tramp method.
 
 #+begin_src emacs-lisp
-    (defun leuven-find-file-sudo-header-warning ()
+    (defun leuven--find-file-sudo-header-warning ()
       "*Display a warning in header line of the current buffer."
       (let* ((warning "WARNING: EDITING FILE WITH ROOT PRIVILEGES!")
              (space (+ 6 (- (frame-width) (length warning))))
@@ -3871,7 +3875,7 @@ root using the ~sudo~ tramp method.
       "Open FILENAME with root privileges."
       (interactive "F")
       (set-buffer (find-file (concat "/sudo::" filename)))
-      (leuven-find-file-sudo-header-warning))
+      (leuven--find-file-sudo-header-warning))
 
     ;; ;; XXX already an existing defadvice around find-file!!
     ;; (defadvice find-file (around leuven-find-file activate)
