@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150605.1455
+;; Version: 20150605.1515
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150605.1455"
+(defconst leuven--emacs-version "20150605.1515"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2213,59 +2213,10 @@ These packages are neither built-in nor already installed nor ignored."
 
   (with-eval-after-load "tramp"         ; The autoloads are predefined.
 
-;;* 4 (info "(tramp)Configuration") of TRAMP for use
-
-;;** 4.6 Selecting a (info "(tramp)Default Method")
-
     ;; Default transfer method.
     (setq tramp-default-method          ; [Default: "scp"]
           (cond (leuven--win32-p "plink")
                 (t "ssh")))
-
-;;** 4.12 (info "(tramp)Password handling") for several connections
-
-    ;; How many seconds passwords are cached.
-    (setq password-cache-expiry 60)     ; [Default: 16]
-
-;;** 4.15 (info "(tramp)Remote shell setup") hints
-
-    ;; String used for end of line in rsh connections.
-    (setq tramp-rsh-end-of-line         ; [Default: "\n"]
-          (cond (leuven--win32-p "\n")
-                (t "\r")))
-
-;;** 4.16 (info "(tramp)Auto-save and Backup") configuration
-
-    ;; Faster auto saves.
-    (setq tramp-auto-save-directory temporary-file-directory)
-
-;;* 9 How to Customize (info "(tramp)Traces and Profiles")
-
-    ;; Debugging Tramp.
-    (setq tramp-verbose 6)              ; [Maximum: 10]
-
-    ;; "Turn off" the effect of `backup-directory-alist' for TRAMP files.
-    (add-to-list 'backup-directory-alist
-                 (cons tramp-file-name-regexp nil))
-
-    ;; Make Emacs beep after reading from or writing to the remote host.
-    (defadvice tramp-handle-write-region ; XXX
-      (after leuven-tramp-write-beep-advice activate)
-      "Make Tramp beep after writing a file."
-      (interactive)
-      (beep))
-
-    (defadvice tramp-handle-do-copy-or-rename-file ; XXX
-      (after leuven-tramp-copy-beep-advice activate)
-      "Make Tramp beep after copying a file."
-      (interactive)
-      (beep))
-
-    (defadvice tramp-handle-insert-file-contents
-      (after leuven-tramp-insert-beep-advice activate)
-      "Make Tramp beep after inserting contents of a file."
-      (interactive)
-      (beep))
 
     (defun leuven--find-file-sudo-header-warning ()
       "*Display a warning in header line of the current buffer."
@@ -2294,7 +2245,41 @@ These packages are neither built-in nor already installed nor ignored."
     ;;       (leuven-find-file-sudo (ad-get-arg 0))
     ;;     ad-do-it))
 
-    )
+    ;; How many seconds passwords are cached.
+    (setq password-cache-expiry 60)     ; [Default: 16]
+
+    ;; String used for end of line in rsh connections.
+    (setq tramp-rsh-end-of-line         ; [Default: "\n"]
+          (cond (leuven--win32-p "\n")
+                (t "\r")))
+
+    ;; "Turn off" the effect of `backup-directory-alist' for TRAMP files.
+    (add-to-list 'backup-directory-alist
+                 (cons tramp-file-name-regexp nil))
+
+    ;; Faster auto saves.
+    (setq tramp-auto-save-directory temporary-file-directory)
+
+    (defadvice tramp-handle-write-region
+      (after leuven-tramp-write-beep-advice activate)
+      "Make Tramp beep after writing a file."
+      (interactive)
+      (beep))
+
+    (defadvice tramp-handle-do-copy-or-rename-file
+      (after leuven-tramp-copy-beep-advice activate)
+      "Make Tramp beep after copying a file."
+      (interactive)
+      (beep))
+
+    (defadvice tramp-handle-insert-file-contents
+      (after leuven-tramp-insert-beep-advice activate)
+      "Make Tramp beep after inserting contents of a file."
+      (interactive)
+      (beep))
+
+    ;; Debugging Tramp.
+    (setq tramp-verbose 6))             ; [Maximum: 10]
 
 ;;** 18.17 (info "(emacs)File Conveniences")
 

@@ -3755,11 +3755,9 @@ probably do ~sshfs~.
   (with-eval-after-load "tramp"         ; The autoloads are predefined.
 #+end_src
 
-#+begin_src emacs-lisp
-;;* 4 (info "(tramp)Configuration") of TRAMP for use
+**** Configuring TRAMP for use
 
-;;** 4.6 Selecting a (info "(tramp)Default Method")
-#+end_src
+***** Selecting a default method
 
 #+begin_note
 As there are *issues with Cygwin ~ssh~* (which only works with Cygwinized Emacs),
@@ -3779,81 +3777,7 @@ a bit faster than SSH.  It's based on SSH, so it works the same, just saves
 faster.
 #+end_tip
 
-New proxy system (introduced in 2004, instead of the old "multi-hop" methods) to
-edit files on a remote server by going via another server.
-
-#+begin_example
-    ;; Route to be followed for specific host/user pairs.
-    (add-to-list 'tramp-default-proxies-alist
-                 ;;  "final host"    "user"    "proxy in the middle"
-                 '("10.10.13.123" "\\`root\\'" "/ssh:%h:"))
-#+end_example
-
-Opening ~/sudo:10.10.13.123:~ would connect first ~10.10.13.123~ via ~ssh~ under your
-account name, and perform ~sudo -u root~ on that host afterwards.  It is important
-to know that the given method is applied on the host which has been reached so
-far.  The trick is to think from the end.
-
-#+begin_src emacs-lisp
-;;** 4.12 (info "(tramp)Password handling") for several connections
-
-    ;; How many seconds passwords are cached.
-    (setq password-cache-expiry 60)     ; [Default: 16]
-
-;;** 4.15 (info "(tramp)Remote shell setup") hints
-
-    ;; String used for end of line in rsh connections.
-    (setq tramp-rsh-end-of-line         ; [Default: "\n"]
-          (cond (leuven--win32-p "\n")
-                (t "\r")))
-
-;;** 4.16 (info "(tramp)Auto-save and Backup") configuration
-
-    ;; Faster auto saves.
-    (setq tramp-auto-save-directory temporary-file-directory)
-#+end_src
-
-#+begin_src emacs-lisp
-;;* 9 How to Customize (info "(tramp)Traces and Profiles")
-#+end_src
-
-The usual way to debug Tramp is to set ~tramp-verbose~ to 6.  This will produce a
-debug buffer, which you can show at ~tramp-devel@gnu.org~.
-
-#+begin_src emacs-lisp
-    ;; Debugging Tramp.
-    (setq tramp-verbose 6)              ; [Maximum: 10]
-#+end_src
-
-The best way to report a Tramp bug is to call ~M-x tramp-bug~; this prepares an
-email, including several trace information for analysis.
-
-#+begin_src emacs-lisp
-    ;; "Turn off" the effect of `backup-directory-alist' for TRAMP files.
-    (add-to-list 'backup-directory-alist
-                 (cons tramp-file-name-regexp nil))
-
-    ;; Make Emacs beep after reading from or writing to the remote host.
-    (defadvice tramp-handle-write-region ; XXX
-      (after leuven-tramp-write-beep-advice activate)
-      "Make Tramp beep after writing a file."
-      (interactive)
-      (beep))
-
-    (defadvice tramp-handle-do-copy-or-rename-file ; XXX
-      (after leuven-tramp-copy-beep-advice activate)
-      "Make Tramp beep after copying a file."
-      (interactive)
-      (beep))
-
-    (defadvice tramp-handle-insert-file-contents
-      (after leuven-tramp-insert-beep-advice activate)
-      "Make Tramp beep after inserting contents of a file."
-      (interactive)
-      (beep))
-#+end_src
-
-*** TODO Find file as root
+***** TODO Find file as root
 
 You can just do ~C-x C-f /sudo:user@localhost:/etc/motd RET~.
 
@@ -3888,9 +3812,89 @@ root using the ~sudo~ tramp method.
     ;;                              " is read-only.  Open it as root? ")))
     ;;       (leuven-find-file-sudo (ad-get-arg 0))
     ;;     ad-do-it))
-
-    )
 #+end_src
+
+***** Connecting to a remote host using multiple hops
+
+New proxy system (introduced in 2004, instead of the old "multi-hop" methods) to
+edit files on a remote server by going via another server.
+
+#+begin_example
+    ;; Route to be followed for specific host/user pairs.
+    (add-to-list 'tramp-default-proxies-alist
+                 ;;  "final host"    "user"    "proxy in the middle"
+                 '("10.10.13.123" "\\`root\\'" "/ssh:%h:"))
+#+end_example
+
+Opening ~/sudo:10.10.13.123:~ would connect first ~10.10.13.123~ via ~ssh~ under your
+account name, and perform ~sudo -u root~ on that host afterwards.  It is important
+to know that the given method is applied on the host which has been reached so
+far.  The trick is to think from the end.
+
+***** Reusing passwords for several connections
+
+#+begin_src emacs-lisp
+    ;; How many seconds passwords are cached.
+    (setq password-cache-expiry 60)     ; [Default: 16]
+#+end_src
+
+***** Remote shell setup hints
+
+#+begin_src emacs-lisp
+    ;; String used for end of line in rsh connections.
+    (setq tramp-rsh-end-of-line         ; [Default: "\n"]
+          (cond (leuven--win32-p "\n")
+                (t "\r")))
+#+end_src
+
+***** Auto-save and Backup configuration
+
+#+begin_src emacs-lisp
+    ;; "Turn off" the effect of `backup-directory-alist' for TRAMP files.
+    (add-to-list 'backup-directory-alist
+                 (cons tramp-file-name-regexp nil))
+
+    ;; Faster auto saves.
+    (setq tramp-auto-save-directory temporary-file-directory)
+#+end_src
+
+**** Frequently Asked Questions
+
+Be notified when TRAMP file transfers are complete by making Emacs beep after
+reading from or writing to the remote host.
+
+#+begin_src emacs-lisp
+    (defadvice tramp-handle-write-region
+      (after leuven-tramp-write-beep-advice activate)
+      "Make Tramp beep after writing a file."
+      (interactive)
+      (beep))
+
+    (defadvice tramp-handle-do-copy-or-rename-file
+      (after leuven-tramp-copy-beep-advice activate)
+      "Make Tramp beep after copying a file."
+      (interactive)
+      (beep))
+
+    (defadvice tramp-handle-insert-file-contents
+      (after leuven-tramp-insert-beep-advice activate)
+      "Make Tramp beep after inserting contents of a file."
+      (interactive)
+      (beep))
+#+end_src
+
+**** How to Customize Traces
+
+The usual way to debug Tramp is to set ~tramp-verbose~ to 6.  This will produce a
+debug buffer, which you can show at ~tramp-devel@gnu.org~.
+
+#+begin_src emacs-lisp
+    ;; Debugging Tramp.
+    (setq tramp-verbose 6))             ; [Maximum: 10]
+#+end_src
+
+The best way to report a Tramp bug is to call ~M-x tramp-bug~; this prepares an
+email, including several trace information for analysis.
 
 ** Convenience Features for Finding Files
 
