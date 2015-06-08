@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150608.2155
+;; Version: 20150608.2217
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150608.2155"
+(defconst leuven--emacs-version "20150608.2217"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -444,10 +444,10 @@ Last time is saved in global variable `leuven--before-section-time'."
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck flycheck-ledger fuzzy
           git-commit-mode git-messenger git-timemachine google-this
-          google-translate goto-chg graphviz-dot-mode graphviz-dot-mode
-          guide-key helm helm-descbinds helm-swoop hideshowvis highlight-symbol
-          htmlize indent-guide key-chord litable idle-require imenu-anywhere
-          info+ interaction-log ledger-mode leuven-theme
+          google-translate goto-chg graphviz-dot-mode guide-key helm
+          helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
+          indent-guide key-chord litable idle-require imenu-anywhere info+
+          interaction-log ledger-mode leuven-theme
           ;; magit
           multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound

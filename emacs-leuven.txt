@@ -739,10 +739,10 @@ like this into your configuration file:
           dictionary diff-hl diminish dired+ dired-single ess expand-region
           fancy-narrow fill-column-indicator flycheck flycheck-ledger fuzzy
           git-commit-mode git-messenger git-timemachine google-this
-          google-translate goto-chg graphviz-dot-mode graphviz-dot-mode
-          guide-key helm helm-descbinds helm-swoop hideshowvis highlight-symbol
-          htmlize indent-guide key-chord litable idle-require imenu-anywhere
-          info+ interaction-log ledger-mode leuven-theme
+          google-translate goto-chg graphviz-dot-mode guide-key helm
+          helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
+          indent-guide key-chord litable idle-require imenu-anywhere info+
+          interaction-log ledger-mode leuven-theme
           ;; magit
           multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
