@@ -21,9 +21,9 @@ And it is optimized to keep the *Emacs startup time* fast (around *2 seconds*)!
 Get the full Git repository at https://github.com/fniessen/emacs-leuven
 using the following command:
 
-#+BEGIN_SRC sh
+#+begin_src shell
 git clone git://github.com/fniessen/emacs-leuven.git
-#+END_SRC
+#+end_src
 
 ** Installation
 
@@ -31,7 +31,7 @@ Using the Emacs Leuven library is very easy: you just need to...
 
 - Download and install [[https://github.com/fniessen/emacs-leuven][emacs-leuven]].
 
-  #+BEGIN_SRC emacs-lisp
+  #+begin_src emacs-lisp
   ;; Make sure `emacs-leuven.el' is in your `load-path'.
   (add-to-list 'load-path "/path/to/emacs-leuven")
 
@@ -39,7 +39,7 @@ Using the Emacs Leuven library is very easy: you just need to...
   (require 'emacs-leuven)
 
   ;; Place your settings here, which can override the settings of Emacs-Leuven.
-  #+END_SRC
+  #+end_src
 
 - Restart Emacs.
 
@@ -77,7 +77,7 @@ Global key bindings.
 | <S-f2>   | org-save-buffer-and-do-related           |
 | <C-f2>   | (for interaction-log mode)               |
 | <f3>     | find-file (or helm-for-files)            |
-| <f4>     | helm-imenu                               |
+| <f4>     | helm-semantic-or-imenu                   |
 | <M-f4>   | save-buffers-kill-terminal               |
 | <f5>     | delete-other-windows                     |
 | <f6>     | other-window                             |

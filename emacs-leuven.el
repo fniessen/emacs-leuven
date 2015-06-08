@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150605.1712
+;; Version: 20150608.0956
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150605.1712"
+(defconst leuven--emacs-version "20150608.0956"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2351,9 +2351,9 @@ These packages are neither built-in nor already installed nor ignored."
       For Org mode buffers, show Org headlines.
       For programming mode buffers, show functions, variables, etc."
         (interactive)
-        (if (derived-mode-p 'org-mode)
-            (helm-org-in-buffer-headings)
-          (helm-semantic-or-imenu)))    ; More generic than `helm-imenu'.
+        (cond ((derived-mode-p 'org-mode) (helm-org-in-buffer-headings))
+              ((derived-mode-p 'tex-mode) (helm-imenu))
+              (t (helm-semantic-or-imenu)))) ; More generic than `helm-imenu'.
 
       (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; Awesome.
                                         ; And `C-c =' (like in RefTeX)?

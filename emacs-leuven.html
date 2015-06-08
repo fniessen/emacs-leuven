@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150605.1713</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150608.1000</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150605.1713"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150608.1000"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -5616,9 +5616,9 @@ See <a href="http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-an
 <span class="org-doc">      For Org mode buffers, show Org headlines.</span>
 <span class="org-doc">      For programming mode buffers, show functions, variables, etc."</span>
         (interactive)
-        (<span class="org-keyword">if</span> (derived-mode-p 'org-mode)
-            (helm-org-in-buffer-headings)
-          (helm-semantic-or-imenu)))    <span class="org-comment-delimiter">; </span><span class="org-comment">More generic than `</span><span class="org-constant"><span class="org-comment">helm-imenu</span></span><span class="org-comment">'.</span>
+        (<span class="org-keyword">cond</span> ((derived-mode-p 'org-mode) (helm-org-in-buffer-headings))
+              ((derived-mode-p 'tex-mode) (helm-imenu))
+              (t (helm-semantic-or-imenu)))) <span class="org-comment-delimiter">; </span><span class="org-comment">More generic than `</span><span class="org-constant"><span class="org-comment">helm-imenu</span></span><span class="org-comment">'.</span>
 
       (global-set-key (kbd <span class="org-string">"&lt;f4&gt;"</span>) 'leuven-helm-org-prog-menu) <span class="org-comment-delimiter">; </span><span class="org-comment">Awesome.</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">And `C-c =' (like in RefTeX)?</span>
@@ -12283,7 +12283,7 @@ languages which can be evaluated in Org mode buffers.
 <div class="inlinetask">
 <b><span class="todo TODO">TODO</span> Why isn&rsquo;t diff-mode.el found?</b><br  />
 <p>
-<a href="file:///cygdrive/d/Users/fni/org/personal/Org-for-dummies.html">file:///cygdrive/d/Users/fni/org/personal/Org-for-dummies.html</a>
+<a href="file://d:/Users/fni/org/personal/Org-for-dummies.html">file://d:/Users/fni/org/personal/Org-for-dummies.html</a>
 </p>
 </div>
 
