@@ -11119,6 +11119,15 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
   It is more about ease-of-coding them B&D.
 
+  #+begin_note
+  If we believe Xiao Hanyu, smartparens is the future, it is the ultimate
+  solution for paren pairs management in Emacs world. It is flexible, uniform
+  and highly customizable. It is also bundled with a comprehensive
+  documentation, besides the aforementioned wiki, you can also M-x
+  sp-cheat-sheet to get live examples, which, I think, is really a innovative
+  feature.
+  #+end_note
+
   *Bug 18785: Emacs hangs with Org mode when point is in LOGBOOK.*
 
 #+begin_src emacs-lisp :tangle no
@@ -11152,7 +11161,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
 #+end_src
 
   =turn-on-smartparens-strict-mode= add years to one's life to allow for more
-  hacking. Seriously.
+  hacking.  Seriously.
 
 #+begin_src emacs-lisp :tangle no
     ;; ;; Enable smartparens-strict-mode in all Lisp modes.
@@ -13379,12 +13388,18 @@ interface).
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Dired Enter")
 
-  ;; directory-browsing commands
+  ;; Directory-browsing commands.
   (with-eval-after-load "dired"
 
     (leuven--section "30.1 (emacs)Dired Enter")
+#+end_src
 
-    ;; switches passed to `ls' for Dired
+[[id:26d881f0-0f56-4259-9b31-eb4fecb08c88][ls-lisp]], Emacs's own *emulation of ~ls~* is used by default *on MS Windows* (which
+does not have an ~ls~ program).  Though, it does not support as many options as
+GNU ~ls~.
+
+#+begin_src emacs-lisp
+    ;; Switches passed to `ls' for Dired.
     (setq dired-listing-switches
           (cond (leuven--win32-p
                  "-a -F -l")
@@ -13425,7 +13440,7 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go.  Now, they do.
 
     (leuven--section "30.3 (emacs)Dired Deletion")
 
-    ;; recursive deletes allowed, after asking for each directory at top level
+    ;; Recursive deletes allowed, after asking for each directory at top level.
     (setq dired-recursive-deletes 'top)
 #+end_src
 
@@ -13445,12 +13460,12 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go.  Now, they do.
 Single Dired buffer.
 
 #+begin_src emacs-lisp
-    ;; reuse Dired buffers, by running the command
-    ;; `dired-find-alternate-file' (bound to `a') on a directory
+    ;; Reuse Dired buffers, by running the command
+    ;; `dired-find-alternate-file' (bound to `a') on a directory.
     (put 'dired-find-alternate-file 'disabled nil)
 
-    ;; reuse the current Dired directory buffer to visit another directory
-    ;; (limit Dired to 1 single buffer)
+    ;; Reuse the current Dired directory buffer to visit another directory
+    ;; (limit Dired to 1 single buffer).
     (try-require 'dired-single)
     (with-eval-after-load "dired-single"
 
@@ -13458,12 +13473,12 @@ Single Dired buffer.
 
       (define-key dired-mode-map (kbd "<mouse-1>") 'dired-single-buffer-mouse)
 
-      (define-key dired-mode-map (kbd "^")
+      (define-key dired-mode-map (kbd "^") ; Up.
         (lambda ()
           (interactive)
           (dired-single-buffer "..")))
 
-      (define-key dired-mode-map (kbd "C-x C-j")
+      (define-key dired-mode-map (kbd "C-x C-j") ; Up.
         (lambda ()
           (interactive)
           (dired-single-buffer ".."))))
@@ -13573,7 +13588,7 @@ Dired.
 For those under Windows:
 
 #+begin_src emacs-lisp
-    ;; open files using Windows associations
+    ;; Open files using Windows associations.
     (GNUEmacs
       (when (or leuven--win32-p
                 leuven--cygwin-p)
@@ -13586,7 +13601,7 @@ For those under Windows:
              (w32-shell-execute "open" (convert-standard-filename file)))
            (dired-get-marked-files nil arg)))
 
-        ;; bind it to `E' in Dired mode
+        ;; Bind it to `E' in Dired mode.
         (define-key dired-mode-map (kbd "E") 'w32-dired-open-files-externally)))
 #+end_src
 
@@ -13595,14 +13610,14 @@ For those under Windows:
 See news "Opening html-File in Dired with w3m" for extra info.
 
 #+begin_src emacs-lisp
-    ;; open current file with w3m
+    ;; Open current file with w3m.
     (when (executable-find "w3m")
       (defun dired-open-with-w3m ()
         "In Dired, visit (with find-w3m) the file named on this line."
         (interactive)
         (w3m-find-file (file-name-sans-versions (dired-get-filename) t)))
 
-      ;; add a binding "W" -> `dired-open-with-w3m' to Dired
+      ;; Add a binding "W" -> `dired-open-with-w3m' to Dired.
       (define-key dired-mode-map "W" 'dired-open-with-w3m))
 #+end_src
 
@@ -13613,10 +13628,10 @@ See news "Opening html-File in Dired with w3m" for extra info.
 
     (leuven--section "30.7 (emacs)Operating on Files")
 
-    ;; try to guess a default target directory
+    ;; Try to guess a default target directory.
     (setq dired-dwim-target t)
 
-    ;; copy recursively without asking
+    ;; Copy recursively without asking.
     (setq dired-recursive-copies 'always)
 #+end_src
 
@@ -13656,10 +13671,10 @@ Maybe the following fixes this above problem?
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; Dired sort
+    ;; Dired sort.
     (try-require 'dired-sort-map)
-    ;; press `s' then `s', `x', `t', `n' or `d' to sort by
-    ;; Size, eXtension, Time, Name or name grouping Dirs first
+    ;; Press `s' then `s', `x', `t', `n' or `d' to sort by
+    ;; Size, eXtension, Time, Name or name grouping Dirs first.
 #+end_src
 
 ** Dired and ~find~
@@ -13674,22 +13689,23 @@ For searches in Dired, see ~dired-do-search~ (~A~).
 
     (leuven--section "30.16 (emacs)Dired and Find")
 
-    ;; ;; what to use in place of `-ls' as the final argument
+    ;; ;; What to use in place of `-ls' as the final argument.
     ;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
-    ;; ;; quicker to collate the matches and then use `xargs' to run the
-    ;; ;; command (variable defined in `find-dired.el')
+    ;; ;; Quicker to collate the matches and then use `xargs' to run the command
+    ;; ;; (variable defined in `find-dired.el').
 
 ;; (when Cygwin... XXX
-    ;; search for files with names matching a wild card pattern and Dired
-    ;; the output
+
+    ;; Search for files with names matching a wild card pattern and Dired the
+    ;; output.
     (global-set-key (kbd "C-c 1") 'find-name-dired)
       ;; case insensitive if `read-file-name-completion-ignore-case' is non-nil
 
-    ;; `find-grep-dired' case insensitivity
+    ;; `find-grep-dired' case insensitivity.
     (setq find-grep-options "-i -q")
 
-    ;; search for files with contents matching a wild card pattern and Dired
-    ;; the output
+    ;; Search for files with contents matching a wild card pattern and Dired the
+    ;; output.
     (global-set-key (kbd "C-c 2") 'find-grep-dired)
 #+end_src
 
@@ -13707,10 +13723,10 @@ To enter it, type ~C-x C-q~.
 
     (leuven--section "30.17 Editing the (emacs)Wdired Buffer")
 
-    ;; put a Dired buffer in a mode in which filenames are editable
+    ;; Put a Dired buffer in a mode in which filenames are editable.
     (with-eval-after-load "wdired"
 
-      ;; permissions bits of the files are editable
+      ;; Permissions bits of the files are editable.
       (setq wdired-allow-to-change-permissions t))
 #+end_src
 
@@ -13740,16 +13756,16 @@ For more information, see:
 
     (leuven--section "30.18 Viewing Image Thumbnails in Dired")
 
-    ;; use Dired to browse and manipulate your images
+    ;; Use Dired to browse and manipulate your images.
     (with-eval-after-load "image-dired"
 
-      ;; maximum number of files to show before warning the user
+      ;; Maximum number of files to show before warning the user.
       (setq image-dired-show-all-from-dir-max-files 100)
 
-      ;; size of button-like border around thumbnails
+      ;; Size of button-like border around thumbnails.
       (setq image-dired-thumb-relief 0)
 
-      ;; size of the margin around thumbnails
+      ;; Size of the margin around thumbnails.
       (setq image-dired-thumb-margin 4))
 #+end_src
 
@@ -13772,8 +13788,8 @@ Extra Dired functionality
 
     (leuven--section "30.XX (dired-x)Top")
 
-    ;; load `dired-x.el' when Dired is first invoked (for example, when
-    ;; you first type `C-x d')
+    ;; Load `dired-x.el' when Dired is first invoked (for example, when you
+    ;; first type `C-x d').
     (add-hook 'dired-load-hook
               (lambda ()
                 (load "dired-x")))
@@ -13793,16 +13809,16 @@ example.
 
   (leuven--section "30.XX Dired+")
 
-  ;; extensions to Dired (provides fancy highlighting, etc.)
+  ;; Extensions to Dired (provides fancy highlighting, etc.).
   (add-hook 'dired-load-hook
             (lambda ()
-              ;; don't hide details in Dired
+              ;; Don't hide details in Dired.
               (setq diredp-hide-details-initially-flag nil)
 
-              ;; don't display the next Dired buffer the same way as the last
+              ;; Don't display the next Dired buffer the same way as the last.
               (setq diredp-hide-details-propagate-flag nil)
 
-              ;; don't wrap "next" command around to buffer beginning
+              ;; Don't wrap "next" command around to buffer beginning.
               (setq diredp-wrap-around-flag nil)
 
               (try-require 'dired+)))
@@ -13816,27 +13832,42 @@ example.
 #+end_src
 
 ** Emulation of ~ls~ on MS-Windows
+   :PROPERTIES:
+   :ID:       26d881f0-0f56-4259-9b31-eb4fecb08c88
+   :END:
+
+You might want to use Emacs's own emulation of ~ls~, by using:
+
+#+begin_src emacs-lisp :tangle no
+  (when leuven--cygwin-p
+    (setq ls-lisp-use-insert-directory-program nil)
+    (require 'ls-lisp))
+#+end_src
+
+#+begin_note
+This is used by *default on MS Windows*, which does not have an ~ls~ program.
+#+end_note
 
 #+begin_src emacs-lisp
 ;;** (info "(emacs)ls in Lisp")
 
   (leuven--section "G.4 (emacs)ls in Lisp")
 
-  ;; emulate insert-directory completely in Emacs Lisp
+  ;; Emulate insert-directory completely in Emacs Lisp.
   (with-eval-after-load "ls-lisp"
 
-    ;; disable the case sensitive sort of file names
+    ;; Disable the case sensitive sort of file names.
     (setq ls-lisp-ignore-case t)
 
-    ;; sort directories first
+    ;; Sort directories first.
     (setq ls-lisp-dirs-first t)
 
-    ;; use ISO 8601 dates (on MS-Windows)
+    ;; Use ISO 8601 dates (on MS-Windows).
     (setq ls-lisp-format-time-list
           '("%Y-%m-%d %H:%M"
             "%Y-%m-%d %H:%M"))
 
-    ;; use localized date/time format
+    ;; Use localized date/time format.
     (setq ls-lisp-use-localized-time-format t))
 #+end_src
 

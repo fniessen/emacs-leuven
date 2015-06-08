@@ -288,18 +288,18 @@
 </li>
 <li><a href="#orgheadline325">Dired, the Directory Editor</a>
 <ul>
-<li><a href="#orgheadline326">Entering Dired</a></li>
-<li><a href="#orgheadline327">30.2 Navigation in the Dired Buffer</a></li>
-<li><a href="#orgheadline328">Deleting Files with Dired</a></li>
-<li><a href="#orgheadline329">Visiting Files in Dired</a></li>
-<li><a href="#orgheadline335">Operating on Files</a></li>
-<li><a href="#orgheadline336">Updating the Dired Buffer</a></li>
-<li><a href="#orgheadline337">Dired and <code>find</code></a></li>
-<li><a href="#orgheadline338">Editing the Dired Buffer</a></li>
-<li><a href="#orgheadline339">Viewing Image Thumbnails in Dired</a></li>
-<li><a href="#orgheadline340">Dired Extra</a></li>
-<li><a href="#orgheadline341">Dired+</a></li>
-<li><a href="#orgheadline342">Emulation of <code>ls</code> on MS-Windows</a></li>
+<li><a href="#orgheadline327">Entering Dired</a></li>
+<li><a href="#orgheadline328">30.2 Navigation in the Dired Buffer</a></li>
+<li><a href="#orgheadline329">Deleting Files with Dired</a></li>
+<li><a href="#orgheadline330">Visiting Files in Dired</a></li>
+<li><a href="#orgheadline336">Operating on Files</a></li>
+<li><a href="#orgheadline337">Updating the Dired Buffer</a></li>
+<li><a href="#orgheadline338">Dired and <code>find</code></a></li>
+<li><a href="#orgheadline339">Editing the Dired Buffer</a></li>
+<li><a href="#orgheadline340">Viewing Image Thumbnails in Dired</a></li>
+<li><a href="#orgheadline341">Dired Extra</a></li>
+<li><a href="#orgheadline342">Dired+</a></li>
+<li><a href="#orgheadline326">Emulation of <code>ls</code> on MS-Windows</a></li>
 </ul>
 </li>
 <li><a href="#orgheadline343">The Calendar and the Diary</a>
@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150608.1000</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150608.1707</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150608.1000"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150608.1707"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -12283,7 +12283,7 @@ languages which can be evaluated in Org mode buffers.
 <div class="inlinetask">
 <b><span class="todo TODO">TODO</span> Why isn&rsquo;t diff-mode.el found?</b><br  />
 <p>
-<a href="file://d:/Users/fni/org/personal/Org-for-dummies.html">file://d:/Users/fni/org/personal/Org-for-dummies.html</a>
+<a href="file:///cygdrive/d/Users/fni/org/personal/Org-for-dummies.html">file:///cygdrive/d/Users/fni/org/personal/Org-for-dummies.html</a>
 </p>
 </div>
 
@@ -14274,6 +14274,18 @@ If you are less into bondage&amp;submission, <code>smartparens.el</code> is anot
 It is more about ease-of-coding them B&amp;D.
 </p>
 
+<div class="note">
+<p>
+If we believe Xiao Hanyu, smartparens is the future, it is the ultimate
+solution for paren pairs management in Emacs world. It is flexible, uniform
+and highly customizable. It is also bundled with a comprehensive
+documentation, besides the aforementioned wiki, you can also M-x
+sp-cheat-sheet to get live examples, which, I think, is really a innovative
+feature.
+</p>
+
+</div>
+
 <p>
 <b>Bug 18785: Emacs hangs with Org mode when point is in LOGBOOK.</b>
 </p></li>
@@ -14313,7 +14325,7 @@ It is more about ease-of-coding them B&amp;D.
 
 <p>
 <code>turn-on-smartparens-strict-mode</code> add years to one&rsquo;s life to allow for more
-hacking. Seriously.
+hacking.  Seriously.
 </p>
 
 <div class="org-src-container">
@@ -17188,19 +17200,29 @@ interface).
 </div>
 </div>
 
-<div id="outline-container-orgheadline326" class="outline-3">
-<h3 id="orgheadline326">Entering Dired</h3>
-<div class="outline-text-3" id="text-orgheadline326">
+<div id="outline-container-orgheadline327" class="outline-3">
+<h3 id="orgheadline327">Entering Dired</h3>
+<div class="outline-text-3" id="text-orgheadline327">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** (info "(emacs)Dired Enter")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">directory-browsing commands</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Directory-browsing commands.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"dired"</span>
 
     (leuven--section <span class="org-string">"30.1 (emacs)Dired Enter"</span>)
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">switches passed to `</span><span class="org-constant"><span class="org-comment">ls</span></span><span class="org-comment">' for Dired</span>
+</pre>
+</div>
+
+<p>
+<a href="#orgheadline326">ls-lisp</a>, Emacs&rsquo;s own <b>emulation of <code>ls</code></b> is used by default <b>on MS Windows</b> (which
+does not have an <code>ls</code> program).  Though, it does not support as many options as
+GNU <code>ls</code>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Switches passed to `</span><span class="org-constant"><span class="org-comment">ls</span></span><span class="org-comment">' for Dired.</span>
     (setq dired-listing-switches
           (<span class="org-keyword">cond</span> (leuven--win32-p
                  <span class="org-string">"-a -F -l"</span>)
@@ -17211,9 +17233,9 @@ interface).
 </div>
 </div>
 
-<div id="outline-container-orgheadline327" class="outline-3">
-<h3 id="orgheadline327">30.2 Navigation in the Dired Buffer</h3>
-<div class="outline-text-3" id="text-orgheadline327">
+<div id="outline-container-orgheadline328" class="outline-3">
+<h3 id="orgheadline328">30.2 Navigation in the Dired Buffer</h3>
+<div class="outline-text-3" id="text-orgheadline328">
 <p>
 In Dired, <code>M-&gt;</code> and <code>M-&lt;</code> never took me where I wanted to go.  Now, they do.
 </p>
@@ -17244,25 +17266,25 @@ In Dired, <code>M-&gt;</code> and <code>M-&lt;</code> never took me where I want
 </div>
 </div>
 
-<div id="outline-container-orgheadline328" class="outline-3">
-<h3 id="orgheadline328">Deleting Files with Dired</h3>
-<div class="outline-text-3" id="text-orgheadline328">
+<div id="outline-container-orgheadline329" class="outline-3">
+<h3 id="orgheadline329">Deleting Files with Dired</h3>
+<div class="outline-text-3" id="text-orgheadline329">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** (info "(emacs)Dired Deletion")</span>
 
     (leuven--section <span class="org-string">"30.3 (emacs)Dired Deletion"</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">recursive deletes allowed, after asking for each directory at top level</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Recursive deletes allowed, after asking for each directory at top level.</span>
     (setq dired-recursive-deletes 'top)
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgheadline329" class="outline-3">
-<h3 id="orgheadline329">Visiting Files in Dired</h3>
-<div class="outline-text-3" id="text-orgheadline329">
+<div id="outline-container-orgheadline330" class="outline-3">
+<h3 id="orgheadline330">Visiting Files in Dired</h3>
+<div class="outline-text-3" id="text-orgheadline330">
 <dl class="org-dl">
 <dt><code>^</code></dt><dd><code>dired-up-directory</code>.</dd>
 </dl>
@@ -17276,21 +17298,21 @@ In Dired, <code>M-&gt;</code> and <code>M-&lt;</code> never took me where I want
 </div>
 </div>
 
-<div id="outline-container-orgheadline330" class="outline-4">
-<h4 id="orgheadline330">Reuse Dired buffers</h4>
-<div class="outline-text-4" id="text-orgheadline330">
+<div id="outline-container-orgheadline331" class="outline-4">
+<h4 id="orgheadline331">Reuse Dired buffers</h4>
+<div class="outline-text-4" id="text-orgheadline331">
 <p>
 Single Dired buffer.
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">reuse Dired buffers, by running the command</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">dired-find-alternate-file</span></span><span class="org-comment">' (bound to `a') on a directory</span>
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Reuse Dired buffers, by running the command</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">dired-find-alternate-file</span></span><span class="org-comment">' (bound to `a') on a directory.</span>
     (put 'dired-find-alternate-file 'disabled nil)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">reuse the current Dired directory buffer to visit another directory</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(limit Dired to 1 single buffer)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Reuse the current Dired directory buffer to visit another directory</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(limit Dired to 1 single buffer).</span>
     (try-require 'dired-single)
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"dired-single"</span>
 
@@ -17298,12 +17320,12 @@ Single Dired buffer.
 
       (define-key dired-mode-map (kbd <span class="org-string">"&lt;mouse-1&gt;"</span>) 'dired-single-buffer-mouse)
 
-      (define-key dired-mode-map (kbd <span class="org-string">"^"</span>)
+      (define-key dired-mode-map (kbd <span class="org-string">"^"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">Up.</span>
         (<span class="org-keyword">lambda</span> ()
           (interactive)
           (dired-single-buffer <span class="org-string">".."</span>)))
 
-      (define-key dired-mode-map (kbd <span class="org-string">"C-x C-j"</span>)
+      (define-key dired-mode-map (kbd <span class="org-string">"C-x C-j"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">Up.</span>
         (<span class="org-keyword">lambda</span> ()
           (interactive)
           (dired-single-buffer <span class="org-string">".."</span>))))
@@ -17312,9 +17334,9 @@ Single Dired buffer.
 </div>
 </div>
 
-<div id="outline-container-orgheadline331" class="outline-4">
-<h4 id="orgheadline331">Open file with default tool (open directory with Windows Explorer)</h4>
-<div class="outline-text-4" id="text-orgheadline331">
+<div id="outline-container-orgheadline332" class="outline-4">
+<h4 id="orgheadline332">Open file with default tool (open directory with Windows Explorer)</h4>
+<div class="outline-text-4" id="text-orgheadline332">
 <p>
 On top of the traditional ways, there are also these add-ons which open files
 using external programs (such as PDF viewers), based on their extension.
@@ -17428,9 +17450,9 @@ you invoke an external command.
 </div>
 </div>
 
-<div id="outline-container-orgheadline332" class="outline-5">
-<h5 id="orgheadline332">Ask a WWW browser to display file</h5>
-<div class="outline-text-5" id="text-orgheadline332">
+<div id="outline-container-orgheadline333" class="outline-5">
+<h5 id="orgheadline333">Ask a WWW browser to display file</h5>
+<div class="outline-text-5" id="text-orgheadline333">
 <p>
 Just ask a WWW browser to display the current file.
 </p>
@@ -17473,16 +17495,16 @@ Dired.
 </div>
 </div>
 
-<div id="outline-container-orgheadline333" class="outline-5">
-<h5 id="orgheadline333">MANY FILES at once (for Windows)</h5>
-<div class="outline-text-5" id="text-orgheadline333">
+<div id="outline-container-orgheadline334" class="outline-5">
+<h5 id="orgheadline334">MANY FILES at once (for Windows)</h5>
+<div class="outline-text-5" id="text-orgheadline334">
 <p>
 For those under Windows:
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">open files using Windows associations</span>
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Open files using Windows associations.</span>
     (GNUEmacs
       (<span class="org-keyword">when</span> (or leuven--win32-p
                 leuven--cygwin-p)
@@ -17495,7 +17517,7 @@ For those under Windows:
              (w32-shell-execute <span class="org-string">"open"</span> (convert-standard-filename file)))
            (dired-get-marked-files nil arg)))
 
-        <span class="org-comment-delimiter">;; </span><span class="org-comment">bind it to `E' in Dired mode</span>
+        <span class="org-comment-delimiter">;; </span><span class="org-comment">Bind it to `E' in Dired mode.</span>
         (define-key dired-mode-map (kbd <span class="org-string">"E"</span>) 'w32-dired-open-files-externally)))
 </pre>
 </div>
@@ -17503,23 +17525,23 @@ For those under Windows:
 </div>
 </div>
 
-<div id="outline-container-orgheadline334" class="outline-4">
-<h4 id="orgheadline334">Open file with w3m</h4>
-<div class="outline-text-4" id="text-orgheadline334">
+<div id="outline-container-orgheadline335" class="outline-4">
+<h4 id="orgheadline335">Open file with w3m</h4>
+<div class="outline-text-4" id="text-orgheadline335">
 <p>
 See news &ldquo;Opening html-File in Dired with w3m&rdquo; for extra info.
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">open current file with w3m</span>
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Open current file with w3m.</span>
     (<span class="org-keyword">when</span> (executable-find <span class="org-string">"w3m"</span>)
       (<span class="org-keyword">defun</span> <span class="org-function-name">dired-open-with-w3m</span> ()
         <span class="org-doc">"In Dired, visit (with find-w3m) the file named on this line."</span>
         (interactive)
         (w3m-find-file (file-name-sans-versions (dired-get-filename) t)))
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">add a binding "W" -&gt; `</span><span class="org-constant"><span class="org-comment">dired-open-with-w3m</span></span><span class="org-comment">' to Dired</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Add a binding "W" -&gt; `</span><span class="org-constant"><span class="org-comment">dired-open-with-w3m</span></span><span class="org-comment">' to Dired.</span>
       (define-key dired-mode-map <span class="org-string">"W"</span> 'dired-open-with-w3m))
 </pre>
 </div>
@@ -17527,28 +17549,28 @@ See news &ldquo;Opening html-File in Dired with w3m&rdquo; for extra info.
 </div>
 </div>
 
-<div id="outline-container-orgheadline335" class="outline-3">
-<h3 id="orgheadline335">Operating on Files</h3>
-<div class="outline-text-3" id="text-orgheadline335">
+<div id="outline-container-orgheadline336" class="outline-3">
+<h3 id="orgheadline336">Operating on Files</h3>
+<div class="outline-text-3" id="text-orgheadline336">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** (info "(emacs)Operating on Files")</span>
 
     (leuven--section <span class="org-string">"30.7 (emacs)Operating on Files"</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">try to guess a default target directory</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Try to guess a default target directory.</span>
     (setq dired-dwim-target t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">copy recursively without asking</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Copy recursively without asking.</span>
     (setq dired-recursive-copies 'always)
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgheadline336" class="outline-3">
-<h3 id="orgheadline336">Updating the Dired Buffer</h3>
-<div class="outline-text-3" id="text-orgheadline336">
+<div id="outline-container-orgheadline337" class="outline-3">
+<h3 id="orgheadline337">Updating the Dired Buffer</h3>
+<div class="outline-text-3" id="text-orgheadline337">
 <div class="warning">
 <p>
 The following code block is currently disabled, because it causes problems with
@@ -17593,18 +17615,18 @@ Maybe the following fixes this above problem?
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Dired sort</span>
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Dired sort.</span>
     (try-require 'dired-sort-map)
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">press `s' then `s', `x', `t', `n' or `d' to sort by</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Size, eXtension, Time, Name or name grouping Dirs first</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Press `s' then `s', `x', `t', `n' or `d' to sort by</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Size, eXtension, Time, Name or name grouping Dirs first.</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgheadline337" class="outline-3">
-<h3 id="orgheadline337">Dired and <code>find</code></h3>
-<div class="outline-text-3" id="text-orgheadline337">
+<div id="outline-container-orgheadline338" class="outline-3">
+<h3 id="orgheadline338">Dired and <code>find</code></h3>
+<div class="outline-text-3" id="text-orgheadline338">
 <p>
 For searches in Dired, see <code>dired-do-search</code> (<code>A</code>).
 </p>
@@ -17620,31 +17642,32 @@ For searches in Dired, see <code>dired-do-search</code> (<code>A</code>).
 
     (leuven--section <span class="org-string">"30.16 (emacs)Dired and Find"</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; what to use in place of `</span><span class="org-constant"><span class="org-comment">-ls</span></span><span class="org-comment">' as the final argument</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; What to use in place of `</span><span class="org-constant"><span class="org-comment">-ls</span></span><span class="org-comment">' as the final argument.</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; quicker to collate the matches and then use `</span><span class="org-constant"><span class="org-comment">xargs</span></span><span class="org-comment">' to run the</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; command (variable defined in `</span><span class="org-constant"><span class="org-comment">find-dired.el</span></span><span class="org-comment">')</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Quicker to collate the matches and then use `</span><span class="org-constant"><span class="org-comment">xargs</span></span><span class="org-comment">' to run the command</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; (variable defined in `</span><span class="org-constant"><span class="org-comment">find-dired.el</span></span><span class="org-comment">').</span>
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">(when Cygwin... </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">search for files with names matching a wild card pattern and Dired</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">the output</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Search for files with names matching a wild card pattern and Dired the</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">output.</span>
     (global-set-key (kbd <span class="org-string">"C-c 1"</span>) 'find-name-dired)
       <span class="org-comment-delimiter">;; </span><span class="org-comment">case insensitive if `</span><span class="org-constant"><span class="org-comment">read-file-name-completion-ignore-case</span></span><span class="org-comment">' is non-nil</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">find-grep-dired</span></span><span class="org-comment">' case insensitivity</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">find-grep-dired</span></span><span class="org-comment">' case insensitivity.</span>
     (setq find-grep-options <span class="org-string">"-i -q"</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">search for files with contents matching a wild card pattern and Dired</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">the output</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Search for files with contents matching a wild card pattern and Dired the</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">output.</span>
     (global-set-key (kbd <span class="org-string">"C-c 2"</span>) 'find-grep-dired)
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgheadline338" class="outline-3">
-<h3 id="orgheadline338">Editing the Dired Buffer</h3>
-<div class="outline-text-3" id="text-orgheadline338">
+<div id="outline-container-orgheadline339" class="outline-3">
+<h3 id="orgheadline339">Editing the Dired Buffer</h3>
+<div class="outline-text-3" id="text-orgheadline339">
 <p>
 <code>Wdired</code> mode is great for renaming (a lot of) files in a directory, as it allows
 editing the Dired buffer like a text file, using all the power of Emacs.  That
@@ -17662,19 +17685,19 @@ To enter it, type <code>C-x C-q</code>.
 
     (leuven--section <span class="org-string">"30.17 Editing the (emacs)Wdired Buffer"</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">put a Dired buffer in a mode in which filenames are editable</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Put a Dired buffer in a mode in which filenames are editable.</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"wdired"</span>
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">permissions bits of the files are editable</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Permissions bits of the files are editable.</span>
       (setq wdired-allow-to-change-permissions t))
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgheadline339" class="outline-3">
-<h3 id="orgheadline339">Viewing Image Thumbnails in Dired</h3>
-<div class="outline-text-3" id="text-orgheadline339">
+<div id="outline-container-orgheadline340" class="outline-3">
+<h3 id="orgheadline340">Viewing Image Thumbnails in Dired</h3>
+<div class="outline-text-3" id="text-orgheadline340">
 <p>
 <code>M-x image-dired</code> and choose a directory with images.
 </p>
@@ -17712,25 +17735,25 @@ For more information, see:
 
     (leuven--section <span class="org-string">"30.18 Viewing Image Thumbnails in Dired"</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">use Dired to browse and manipulate your images</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Use Dired to browse and manipulate your images.</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"image-dired"</span>
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">maximum number of files to show before warning the user</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Maximum number of files to show before warning the user.</span>
       (setq image-dired-show-all-from-dir-max-files 100)
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">size of button-like border around thumbnails</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Size of button-like border around thumbnails.</span>
       (setq image-dired-thumb-relief 0)
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">size of the margin around thumbnails</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Size of the margin around thumbnails.</span>
       (setq image-dired-thumb-margin 4))
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgheadline340" class="outline-3">
-<h3 id="orgheadline340">Dired Extra</h3>
-<div class="outline-text-3" id="text-orgheadline340">
+<div id="outline-container-orgheadline341" class="outline-3">
+<h3 id="orgheadline341">Dired Extra</h3>
+<div class="outline-text-3" id="text-orgheadline341">
 <p>
 Extra Dired functionality
 </p>
@@ -17757,8 +17780,8 @@ file.
 
     (leuven--section <span class="org-string">"30.XX (dired-x)Top"</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">load `</span><span class="org-constant"><span class="org-comment">dired-x.el</span></span><span class="org-comment">' when Dired is first invoked (for example, when</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">you first type `C-x d')</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Load `</span><span class="org-constant"><span class="org-comment">dired-x.el</span></span><span class="org-comment">' when Dired is first invoked (for example, when you</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">first type `C-x d').</span>
     (add-hook 'dired-load-hook
               (<span class="org-keyword">lambda</span> ()
                 (load <span class="org-string">"dired-x"</span>)))
@@ -17773,9 +17796,9 @@ file.
 </div>
 </div>
 
-<div id="outline-container-orgheadline341" class="outline-3">
-<h3 id="orgheadline341">Dired+</h3>
-<div class="outline-text-3" id="text-orgheadline341">
+<div id="outline-container-orgheadline342" class="outline-3">
+<h3 id="orgheadline342">Dired+</h3>
+<div class="outline-text-3" id="text-orgheadline342">
 <p>
 Library <code>Dired+</code> lets you act on sets of marked files in subdirs, recursively, for
 example.
@@ -17787,16 +17810,16 @@ example.
 
   (leuven--section <span class="org-string">"30.XX Dired+"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">extensions to Dired (provides fancy highlighting, etc.)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Extensions to Dired (provides fancy highlighting, etc.).</span>
   (add-hook 'dired-load-hook
             (<span class="org-keyword">lambda</span> ()
-              <span class="org-comment-delimiter">;; </span><span class="org-comment">don't hide details in Dired</span>
+              <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't hide details in Dired.</span>
               (setq diredp-hide-details-initially-flag nil)
 
-              <span class="org-comment-delimiter">;; </span><span class="org-comment">don't display the next Dired buffer the same way as the last</span>
+              <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't display the next Dired buffer the same way as the last.</span>
               (setq diredp-hide-details-propagate-flag nil)
 
-              <span class="org-comment-delimiter">;; </span><span class="org-comment">don't wrap "next" command around to buffer beginning</span>
+              <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't wrap "next" command around to buffer beginning.</span>
               (setq diredp-wrap-around-flag nil)
 
               (try-require 'dired+)))
@@ -17814,30 +17837,49 @@ example.
 </div>
 </div>
 
-<div id="outline-container-orgheadline342" class="outline-3">
-<h3 id="orgheadline342">Emulation of <code>ls</code> on MS-Windows</h3>
-<div class="outline-text-3" id="text-orgheadline342">
+<div id="outline-container-orgheadline326" class="outline-3">
+<h3 id="orgheadline326"><a id="ID-26d881f0-0f56-4259-9b31-eb4fecb08c88"></a>Emulation of <code>ls</code> on MS-Windows</h3>
+<div class="outline-text-3" id="text-orgheadline326">
+<p>
+You might want to use Emacs&rsquo;s own emulation of <code>ls</code>, by using:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  (<span class="org-keyword">when</span> leuven--cygwin-p
+    (setq ls-lisp-use-insert-directory-program nil)
+    (<span class="org-keyword">require</span> '<span class="org-constant">ls-lisp</span>))
+</pre>
+</div>
+
+<div class="note">
+<p>
+This is used by <b>default on MS Windows</b>, which does not have an <code>ls</code> program.
+</p>
+
+</div>
+
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** (info "(emacs)ls in Lisp")</span>
 
   (leuven--section <span class="org-string">"G.4 (emacs)ls in Lisp"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">emulate insert-directory completely in Emacs Lisp</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Emulate insert-directory completely in Emacs Lisp.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ls-lisp"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">disable the case sensitive sort of file names</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Disable the case sensitive sort of file names.</span>
     (setq ls-lisp-ignore-case t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">sort directories first</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Sort directories first.</span>
     (setq ls-lisp-dirs-first t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">use ISO 8601 dates (on MS-Windows)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Use ISO 8601 dates (on MS-Windows).</span>
     (setq ls-lisp-format-time-list
           '(<span class="org-string">"%Y-%m-%d %H:%M"</span>
             <span class="org-string">"%Y-%m-%d %H:%M"</span>))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">use localized date/time format</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Use localized date/time format.</span>
     (setq ls-lisp-use-localized-time-format t))
 </pre>
 </div>

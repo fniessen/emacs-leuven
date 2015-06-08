@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150608.0956
+;; Version: 20150608.1706
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150608.0956"
+(defconst leuven--emacs-version "20150608.1706"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -7999,12 +7999,12 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;;** (info "(emacs)Dired Enter")
 
-  ;; directory-browsing commands
+  ;; Directory-browsing commands.
   (with-eval-after-load "dired"
 
     (leuven--section "30.1 (emacs)Dired Enter")
 
-    ;; switches passed to `ls' for Dired
+    ;; Switches passed to `ls' for Dired.
     (setq dired-listing-switches
           (cond (leuven--win32-p
                  "-a -F -l")
@@ -8035,19 +8035,19 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (leuven--section "30.3 (emacs)Dired Deletion")
 
-    ;; recursive deletes allowed, after asking for each directory at top level
+    ;; Recursive deletes allowed, after asking for each directory at top level.
     (setq dired-recursive-deletes 'top)
 
 ;;** (info "(emacs)Dired Visiting")
 
     (leuven--section "30.5 (emacs)Dired Visiting")
 
-    ;; reuse Dired buffers, by running the command
-    ;; `dired-find-alternate-file' (bound to `a') on a directory
+    ;; Reuse Dired buffers, by running the command
+    ;; `dired-find-alternate-file' (bound to `a') on a directory.
     (put 'dired-find-alternate-file 'disabled nil)
 
-    ;; reuse the current Dired directory buffer to visit another directory
-    ;; (limit Dired to 1 single buffer)
+    ;; Reuse the current Dired directory buffer to visit another directory
+    ;; (limit Dired to 1 single buffer).
     (try-require 'dired-single)
     (with-eval-after-load "dired-single"
 
@@ -8055,19 +8055,19 @@ a clean buffer we're an order of magnitude laxer about checking."
 
       (define-key dired-mode-map (kbd "<mouse-1>") 'dired-single-buffer-mouse)
 
-      (define-key dired-mode-map (kbd "^")
+      (define-key dired-mode-map (kbd "^") ; Up.
         (lambda ()
           (interactive)
           (dired-single-buffer "..")))
 
-      (define-key dired-mode-map (kbd "C-x C-j")
+      (define-key dired-mode-map (kbd "C-x C-j") ; Up.
         (lambda ()
           (interactive)
           (dired-single-buffer ".."))))
 
     (define-key dired-mode-map (kbd "e") 'browse-url-of-dired-file) ; <C-RET>?
 
-    ;; open files using Windows associations
+    ;; Open files using Windows associations.
     (GNUEmacs
       (when (or leuven--win32-p
                 leuven--cygwin-p)
@@ -8080,27 +8080,27 @@ a clean buffer we're an order of magnitude laxer about checking."
              (w32-shell-execute "open" (convert-standard-filename file)))
            (dired-get-marked-files nil arg)))
 
-        ;; bind it to `E' in Dired mode
+        ;; Bind it to `E' in Dired mode.
         (define-key dired-mode-map (kbd "E") 'w32-dired-open-files-externally)))
 
-    ;; open current file with w3m
+    ;; Open current file with w3m.
     (when (executable-find "w3m")
       (defun dired-open-with-w3m ()
         "In Dired, visit (with find-w3m) the file named on this line."
         (interactive)
         (w3m-find-file (file-name-sans-versions (dired-get-filename) t)))
 
-      ;; add a binding "W" -> `dired-open-with-w3m' to Dired
+      ;; Add a binding "W" -> `dired-open-with-w3m' to Dired.
       (define-key dired-mode-map "W" 'dired-open-with-w3m))
 
 ;;** (info "(emacs)Operating on Files")
 
     (leuven--section "30.7 (emacs)Operating on Files")
 
-    ;; try to guess a default target directory
+    ;; Try to guess a default target directory.
     (setq dired-dwim-target t)
 
-    ;; copy recursively without asking
+    ;; Copy recursively without asking.
     (setq dired-recursive-copies 'always)
 
 ;;** (info "(emacs)Dired Updating")
@@ -8110,65 +8110,66 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Automatically revert Dired buffer on revisiting.
     (setq dired-auto-revert-buffer t)
 
-    ;; Dired sort
+    ;; Dired sort.
     (try-require 'dired-sort-map)
-    ;; press `s' then `s', `x', `t', `n' or `d' to sort by
-    ;; Size, eXtension, Time, Name or name grouping Dirs first
+    ;; Press `s' then `s', `x', `t', `n' or `d' to sort by
+    ;; Size, eXtension, Time, Name or name grouping Dirs first.
 
 ;;** (info "(emacs)Dired and Find")
 
     (leuven--section "30.16 (emacs)Dired and Find")
 
-    ;; ;; what to use in place of `-ls' as the final argument
+    ;; ;; What to use in place of `-ls' as the final argument.
     ;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
-    ;; ;; quicker to collate the matches and then use `xargs' to run the
-    ;; ;; command (variable defined in `find-dired.el')
+    ;; ;; Quicker to collate the matches and then use `xargs' to run the command
+    ;; ;; (variable defined in `find-dired.el').
 
 ;; (when Cygwin... XXX
-    ;; search for files with names matching a wild card pattern and Dired
-    ;; the output
+
+    ;; Search for files with names matching a wild card pattern and Dired the
+    ;; output.
     (global-set-key (kbd "C-c 1") 'find-name-dired)
       ;; case insensitive if `read-file-name-completion-ignore-case' is non-nil
 
-    ;; `find-grep-dired' case insensitivity
+    ;; `find-grep-dired' case insensitivity.
     (setq find-grep-options "-i -q")
 
-    ;; search for files with contents matching a wild card pattern and Dired
-    ;; the output
+    ;; Search for files with contents matching a wild card pattern and Dired the
+    ;; output.
     (global-set-key (kbd "C-c 2") 'find-grep-dired)
 
 ;;** (info "(emacs)Wdired")
 
     (leuven--section "30.17 Editing the (emacs)Wdired Buffer")
 
-    ;; put a Dired buffer in a mode in which filenames are editable
+    ;; Put a Dired buffer in a mode in which filenames are editable.
     (with-eval-after-load "wdired"
 
-      ;; permissions bits of the files are editable
+      ;; Permissions bits of the files are editable.
       (setq wdired-allow-to-change-permissions t))
 
 ;;** (info "(emacs)Image-Dired")
 
     (leuven--section "30.18 Viewing Image Thumbnails in Dired")
 
-    ;; use Dired to browse and manipulate your images
+    ;; Use Dired to browse and manipulate your images.
     (with-eval-after-load "image-dired"
 
-      ;; maximum number of files to show before warning the user
+      ;; Maximum number of files to show before warning the user.
       (setq image-dired-show-all-from-dir-max-files 100)
 
-      ;; size of button-like border around thumbnails
+      ;; Size of button-like border around thumbnails.
       (setq image-dired-thumb-relief 0)
 
-      ;; size of the margin around thumbnails
+      ;; Size of the margin around thumbnails.
       (setq image-dired-thumb-margin 4))
 
 ;;** Dired Extra
 
     (leuven--section "30.XX (dired-x)Top")
 
-    ;; load `dired-x.el' when Dired is first invoked (for example, when
-    ;; you first type `C-x d')
+    ;; Load `dired-x.el' when Dired is first invoked (for example, when you
+    ;; first type `C-x d').
     (add-hook 'dired-load-hook
               (lambda ()
                 (load "dired-x")))
@@ -8179,16 +8180,16 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "30.XX Dired+")
 
-  ;; extensions to Dired (provides fancy highlighting, etc.)
+  ;; Extensions to Dired (provides fancy highlighting, etc.).
   (add-hook 'dired-load-hook
             (lambda ()
-              ;; don't hide details in Dired
+              ;; Don't hide details in Dired.
               (setq diredp-hide-details-initially-flag nil)
 
-              ;; don't display the next Dired buffer the same way as the last
+              ;; Don't display the next Dired buffer the same way as the last.
               (setq diredp-hide-details-propagate-flag nil)
 
-              ;; don't wrap "next" command around to buffer beginning
+              ;; Don't wrap "next" command around to buffer beginning.
               (setq diredp-wrap-around-flag nil)
 
               (try-require 'dired+)))
@@ -8202,21 +8203,21 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "G.4 (emacs)ls in Lisp")
 
-  ;; emulate insert-directory completely in Emacs Lisp
+  ;; Emulate insert-directory completely in Emacs Lisp.
   (with-eval-after-load "ls-lisp"
 
-    ;; disable the case sensitive sort of file names
+    ;; Disable the case sensitive sort of file names.
     (setq ls-lisp-ignore-case t)
 
-    ;; sort directories first
+    ;; Sort directories first.
     (setq ls-lisp-dirs-first t)
 
-    ;; use ISO 8601 dates (on MS-Windows)
+    ;; Use ISO 8601 dates (on MS-Windows).
     (setq ls-lisp-format-time-list
           '("%Y-%m-%d %H:%M"
             "%Y-%m-%d %H:%M"))
 
-    ;; use localized date/time format
+    ;; Use localized date/time format.
     (setq ls-lisp-use-localized-time-format t))
 
 )                                       ; Chapter 30 ends here.
