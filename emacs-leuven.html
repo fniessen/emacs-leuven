@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150608.1707</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150608.2156</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150608.1707"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150608.2156"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1668,7 +1668,7 @@ When Info is called, the variable <code>Info-directory-list</code> is populated 
 </p>
 
 <ol class="org-ol">
-<li>the <code>INFOPATH</code> environment variable, or (if unset)</li>
+<li>the <code>INFOPATH</code> environment variable, or <i>(if unset)</i></li>
 
 <li>the <code>Info-default-directory-list</code> variable &#x2013; non-existent directories will be
 removed when copied to <code>Info-directory-list</code></li>
@@ -1680,15 +1680,15 @@ same manuals outside of Emacs, in the same shell from which you invoke Emacs.
 </p>
 
 <p>
-However, as EmacsW32 doesn&rsquo;t see that Cygwin environment variable (it would well
-work with a Windows environment variable), I prefer to try and put the Windows
-configuration inside the Emacs configuration files.
+However, as Windows Emacs doesn&rsquo;t see that Cygwin environment variable (it would
+well work with a Windows environment variable), I prefer to try and put the
+Windows configuration inside the Emacs configuration files.
 </p>
 
 <p>
 Normally, <code>Info-directory-list</code> is not intended to be settable by the user. But we
 must do so if we want to force our Info manuals before the standard ones (from
-Emacs).
+Emacs). XXX Could we set <code>Info-default-directory-list</code> instead???
 </p>
 
 <div class="org-src-container">
@@ -2316,7 +2316,7 @@ highlighting.  Though, since Emacs 24.4, <code>rectangle-mark-mode</code> is the
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  (global-set-key (kbd <span class="org-string">"C-j"</span>) 'jump-to-register) <span class="org-comment-delimiter">; </span><span class="org-comment">also on `C-x r j'</span>
+<pre class="src src-emacs-lisp">  (global-set-key (kbd <span class="org-string">"C-j"</span>) 'jump-to-register) <span class="org-comment-delimiter">; </span><span class="org-comment">Also on `C-x r j'.</span>
 </pre>
 </div>
 
@@ -21006,8 +21006,9 @@ There are some instructions in the &ldquo;Image support&rdquo; part on page
 
 <p>
 If you use compiled Emacs binaries (available on the <a href="http://ftp.gnu.org/gnu/emacs/windows/">GNU Website</a>), eventually,
-copy those DLLs (<code>libpng16.dll</code>, for example) from an old EmacsW32 installation
-to your Emacs <code>bin</code> directory, and restart Emacs for image support to be enabled.
+copy those DLLs (<code>libpng16.dll</code>, for example) from an old Windows Emacs
+installation to your Emacs <code>bin</code> directory, and restart Emacs for image support to
+be enabled.
 </p>
 
 <p>

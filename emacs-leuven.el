@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150608.1706
+;; Version: 20150608.2155
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150608.1706"
+(defconst leuven--emacs-version "20150608.2155"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -944,7 +944,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "13.1 (emacs)Position Registers")
 
-  (global-set-key (kbd "C-j") 'jump-to-register) ; also on `C-x r j'
+  (global-set-key (kbd "C-j") 'jump-to-register) ; Also on `C-x r j'.
 
 ;;** 13.7 (info "(emacs)Bookmarks")
 

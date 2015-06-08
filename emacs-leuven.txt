@@ -1173,7 +1173,7 @@ In a manual, these key bindings will make your life easier:
 
 When Info is called, the variable ~Info-directory-list~ is populated from:
 
-1. the ~INFOPATH~ environment variable, or (if unset)
+1. the ~INFOPATH~ environment variable, or /(if unset)/
 
 2. the ~Info-default-directory-list~ variable -- non-existent directories will be
    removed when copied to ~Info-directory-list~
@@ -1181,13 +1181,13 @@ When Info is called, the variable ~Info-directory-list~ is populated from:
 The best would be to set the ~INFOPATH~ environment variable so that you see the
 same manuals outside of Emacs, in the same shell from which you invoke Emacs.
 
-However, as EmacsW32 doesn't see that Cygwin environment variable (it would well
-work with a Windows environment variable), I prefer to try and put the Windows
-configuration inside the Emacs configuration files.
+However, as Windows Emacs doesn't see that Cygwin environment variable (it would
+well work with a Windows environment variable), I prefer to try and put the
+Windows configuration inside the Emacs configuration files.
 
 Normally, ~Info-directory-list~ is not intended to be settable by the user. But we
 must do so if we want to force our Info manuals before the standard ones (from
-Emacs).
+Emacs). XXX Could we set ~Info-default-directory-list~ instead???
 
 #+begin_src emacs-lisp
   (with-eval-after-load "info"
@@ -1635,7 +1635,7 @@ highlighting.  Though, since Emacs 24.4, ~rectangle-mark-mode~ is the new way.
      ~jump-to-register~.
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-j") 'jump-to-register) ; also on `C-x r j'
+  (global-set-key (kbd "C-j") 'jump-to-register) ; Also on `C-x r j'.
 #+end_src
 
 Setup registers for files I commonly edit.
@@ -16315,8 +16315,9 @@ There are some instructions in the "Image support" part on page
 #+end_note
 
 If you use compiled Emacs binaries (available on the [[http://ftp.gnu.org/gnu/emacs/windows/][GNU Website]]), eventually,
-copy those DLLs (=libpng16.dll=, for example) from an old EmacsW32 installation
-to your Emacs =bin= directory, and restart Emacs for image support to be enabled.
+copy those DLLs (=libpng16.dll=, for example) from an old Windows Emacs
+installation to your Emacs =bin= directory, and restart Emacs for image support to
+be enabled.
 
 If you use Cygwin Emacs, install ~libpng~ via Cygwin as well.
 
