@@ -2068,10 +2068,10 @@ This feature gives you a really nice at-a-glance view of where you've made
 changes.
 
 #+begin_src emacs-lisp
-  ;; Indicate  changes in the fringe.
   (with-eval-after-load "diff-hl-autoloads"
     (idle-require 'diff-hl))
 
+  ;; Indicate changes in the fringe.
   (with-eval-after-load "diff-hl"
     (global-diff-hl-mode))
 #+end_src
@@ -5723,12 +5723,6 @@ a factor 2!?
     (key-chord-define-global "zk" 'zap-to-char)
 
     (key-chord-define-global ";s" 'set-mark-command)
-
-    (with-eval-after-load "diff-hl"     ; Package.
-      (key-chord-define diff-hl-mode-map "v," 'diff-hl-previous-hunk)
-      (key-chord-define diff-hl-mode-map "v." 'diff-hl-next-hunk)
-      (key-chord-define diff-hl-mode-map "v;" 'diff-hl-next-hunk))
-                                        ; For Azerty keyboards
 
     (with-eval-after-load "org-loaddefs" ; Autoloads file?
       ;; (key-chord-define-global ",a" 'org-agenda) ; Autoloaded.
@@ -13403,6 +13397,8 @@ GNU ~ls~.
     (setq dired-listing-switches
           (cond (leuven--win32-p
                  "-a -F -l")
+                (leuven--cygwin-p
+                 "-a -F --group-directories-first -l")
                 (t
                  "-a -F --group-directories-first -l --time-style=long-iso")))
 #+end_src
@@ -13582,7 +13578,7 @@ appropriate viewer:
       "Open FILE with the default tool on this platform."
       (let ((program (cond (leuven--linux-p "xdg-open")
                            (leuven--mac-p "open")))
-            process-connection-type)
+            process-connect-type)
         (if leuven--win32-p
             (helm-w32-shell-execute-open-file file)
           (start-process "helm-open-file-with-default-tool" nil program file))))
@@ -13866,9 +13862,8 @@ example.
 
 ** VC diff highlighting
 
-On the side of a Dired window.
-
 #+begin_src emacs-lisp
+  ;; Enable VC diff highlighting on the side of a Dired window.
   (with-eval-after-load "diff-hl-autoloads"
     (add-hook 'dired-mode-hook
               (lambda ()

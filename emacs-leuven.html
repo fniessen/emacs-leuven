@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150609.1013</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150609.1021</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150609.1013"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150609.1021"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2869,10 +2869,10 @@ changes.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Indicate  changes in the fringe.</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diff-hl-autoloads"</span>
+<pre class="src src-emacs-lisp">  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diff-hl-autoloads"</span>
     (idle-require 'diff-hl))
 
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Indicate changes in the fringe.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diff-hl"</span>
     (global-diff-hl-mode))
 </pre>
@@ -7550,12 +7550,6 @@ a factor 2!?
     (key-chord-define-global <span class="org-string">"zk"</span> 'zap-to-char)
 
     (key-chord-define-global <span class="org-string">";s"</span> 'set-mark-command)
-
-    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diff-hl"</span>     <span class="org-comment-delimiter">; </span><span class="org-comment">Package.</span>
-      (key-chord-define diff-hl-mode-map <span class="org-string">"v,"</span> 'diff-hl-previous-hunk)
-      (key-chord-define diff-hl-mode-map <span class="org-string">"v."</span> 'diff-hl-next-hunk)
-      (key-chord-define diff-hl-mode-map <span class="org-string">"v;"</span> 'diff-hl-next-hunk))
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">For Azerty keyboards</span>
 
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org-loaddefs"</span> <span class="org-comment-delimiter">; </span><span class="org-comment">Autoloads file?</span>
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(key-chord-define-global ",a" 'org-agenda) ; Autoloaded.</span>
@@ -17227,6 +17221,8 @@ GNU <code>ls</code>.
     (setq dired-listing-switches
           (<span class="org-keyword">cond</span> (leuven--win32-p
                  <span class="org-string">"-a -F -l"</span>)
+                (leuven--cygwin-p
+                 <span class="org-string">"-a -F --group-directories-first -l"</span>)
                 (t
                  <span class="org-string">"-a -F --group-directories-first -l --time-style=long-iso"</span>)))
 </pre>
@@ -17479,7 +17475,7 @@ you invoke an external command.
       <span class="org-doc">"Open FILE with the default tool on this platform."</span>
       (<span class="org-keyword">let</span> ((program (<span class="org-keyword">cond</span> (leuven--linux-p <span class="org-string">"xdg-open"</span>)
                            (leuven--mac-p <span class="org-string">"open"</span>)))
-            process-connection-type)
+            process-connect-type)
         (<span class="org-keyword">if</span> leuven--win32-p
             (helm-w32-shell-execute-open-file file)
           (start-process <span class="org-string">"helm-open-file-with-default-tool"</span> nil program file))))
@@ -17881,13 +17877,10 @@ example.
 <div id="outline-container-orgheadline343" class="outline-3">
 <h3 id="orgheadline343">VC diff highlighting</h3>
 <div class="outline-text-3" id="text-orgheadline343">
-<p>
-On the side of a Dired window.
-</p>
-
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diff-hl-autoloads"</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable VC diff highlighting on the side of a Dired window.</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diff-hl-autoloads"</span>
     (add-hook 'dired-mode-hook
               (<span class="org-keyword">lambda</span> ()
                 (diff-hl-dired-mode 1))))

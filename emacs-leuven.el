@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150609.1012
+;; Version: 20150609.1020
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150609.1012"
+(defconst leuven--emacs-version "20150609.1020"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1171,10 +1171,10 @@ These packages are neither built-in nor already installed nor ignored."
   ;;
   ;;   (add-hook 'after-init-hook 'global-color-identifiers-mode))
 
-  ;; Indicate  changes in the fringe.
   (with-eval-after-load "diff-hl-autoloads"
     (idle-require 'diff-hl))
 
+  ;; Indicate changes in the fringe.
   (with-eval-after-load "diff-hl"
     (global-diff-hl-mode))
 
@@ -3375,12 +3375,6 @@ These packages are neither built-in nor already installed nor ignored."
     (key-chord-define-global "zk" 'zap-to-char)
 
     (key-chord-define-global ";s" 'set-mark-command)
-
-    (with-eval-after-load "diff-hl"     ; Package.
-      (key-chord-define diff-hl-mode-map "v," 'diff-hl-previous-hunk)
-      (key-chord-define diff-hl-mode-map "v." 'diff-hl-next-hunk)
-      (key-chord-define diff-hl-mode-map "v;" 'diff-hl-next-hunk))
-                                        ; For Azerty keyboards
 
     (with-eval-after-load "org-loaddefs" ; Autoloads file?
       ;; (key-chord-define-global ",a" 'org-agenda) ; Autoloaded.
@@ -8008,6 +8002,8 @@ a clean buffer we're an order of magnitude laxer about checking."
     (setq dired-listing-switches
           (cond (leuven--win32-p
                  "-a -F -l")
+                (leuven--cygwin-p
+                 "-a -F --group-directories-first -l")
                 (t
                  "-a -F --group-directories-first -l --time-style=long-iso")))
 
@@ -8215,6 +8211,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
               (try-require 'dired+)))
 
+  ;; Enable VC diff highlighting on the side of a Dired window.
   (with-eval-after-load "diff-hl-autoloads"
     (add-hook 'dired-mode-hook
               (lambda ()
