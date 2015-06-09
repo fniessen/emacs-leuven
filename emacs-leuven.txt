@@ -13407,7 +13407,47 @@ GNU ~ls~.
                  "-a -F --group-directories-first -l --time-style=long-iso")))
 #+end_src
 
-** 30.2 Navigation in the Dired Buffer
+** Emulation of ~ls~ on MS-Windows
+   :PROPERTIES:
+   :ID:       26d881f0-0f56-4259-9b31-eb4fecb08c88
+   :END:
+
+You might want to use Emacs's own emulation of ~ls~, by using:
+
+#+begin_src emacs-lisp :tangle no
+  (when leuven--cygwin-p
+    (setq ls-lisp-use-insert-directory-program nil)
+    (require 'ls-lisp))
+#+end_src
+
+#+begin_note
+This is used by *default on MS Windows*, which does not have an ~ls~ program.
+#+end_note
+
+#+begin_src emacs-lisp
+;;** (info "(emacs)ls in Lisp")
+
+  (leuven--section "G.4 (emacs)ls in Lisp")
+
+  ;; Emulate insert-directory completely in Emacs Lisp.
+  (with-eval-after-load "ls-lisp"
+
+    ;; Disable the case sensitive sort of file names.
+    (setq ls-lisp-ignore-case t)
+
+    ;; Sort directories first.
+    (setq ls-lisp-dirs-first t)
+
+    ;; Use ISO 8601 dates (on MS-Windows).
+    (setq ls-lisp-format-time-list
+          '("%Y-%m-%d %H:%M"
+            "%Y-%m-%d %H:%M"))
+
+    ;; Use localized date/time format.
+    (setq ls-lisp-use-localized-time-format t))
+#+end_src
+
+** Navigation in the Dired Buffer
 
 In Dired, ~M->~ and ~M-<~ never took me where I wanted to go.  Now, they do.
 
@@ -13824,51 +13864,15 @@ example.
               (try-require 'dired+)))
 #+end_src
 
+** VC diff highlighting
+
+On the side of a Dired window.
+
 #+begin_src emacs-lisp
   (with-eval-after-load "diff-hl-autoloads"
     (add-hook 'dired-mode-hook
               (lambda ()
                 (diff-hl-dired-mode 1))))
-#+end_src
-
-** Emulation of ~ls~ on MS-Windows
-   :PROPERTIES:
-   :ID:       26d881f0-0f56-4259-9b31-eb4fecb08c88
-   :END:
-
-You might want to use Emacs's own emulation of ~ls~, by using:
-
-#+begin_src emacs-lisp :tangle no
-  (when leuven--cygwin-p
-    (setq ls-lisp-use-insert-directory-program nil)
-    (require 'ls-lisp))
-#+end_src
-
-#+begin_note
-This is used by *default on MS Windows*, which does not have an ~ls~ program.
-#+end_note
-
-#+begin_src emacs-lisp
-;;** (info "(emacs)ls in Lisp")
-
-  (leuven--section "G.4 (emacs)ls in Lisp")
-
-  ;; Emulate insert-directory completely in Emacs Lisp.
-  (with-eval-after-load "ls-lisp"
-
-    ;; Disable the case sensitive sort of file names.
-    (setq ls-lisp-ignore-case t)
-
-    ;; Sort directories first.
-    (setq ls-lisp-dirs-first t)
-
-    ;; Use ISO 8601 dates (on MS-Windows).
-    (setq ls-lisp-format-time-list
-          '("%Y-%m-%d %H:%M"
-            "%Y-%m-%d %H:%M"))
-
-    ;; Use localized date/time format.
-    (setq ls-lisp-use-localized-time-format t))
 #+end_src
 
 #+begin_src emacs-lisp

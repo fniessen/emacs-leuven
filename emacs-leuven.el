@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150608.2217
+;; Version: 20150609.1012
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150608.2217"
+(defconst leuven--emacs-version "20150609.1012"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -8011,6 +8011,27 @@ a clean buffer we're an order of magnitude laxer about checking."
                 (t
                  "-a -F --group-directories-first -l --time-style=long-iso")))
 
+;;** (info "(emacs)ls in Lisp")
+
+  (leuven--section "G.4 (emacs)ls in Lisp")
+
+  ;; Emulate insert-directory completely in Emacs Lisp.
+  (with-eval-after-load "ls-lisp"
+
+    ;; Disable the case sensitive sort of file names.
+    (setq ls-lisp-ignore-case t)
+
+    ;; Sort directories first.
+    (setq ls-lisp-dirs-first t)
+
+    ;; Use ISO 8601 dates (on MS-Windows).
+    (setq ls-lisp-format-time-list
+          '("%Y-%m-%d %H:%M"
+            "%Y-%m-%d %H:%M"))
+
+    ;; Use localized date/time format.
+    (setq ls-lisp-use-localized-time-format t))
+
 ;;** (info "(emacs)Dired Navigation")
 
     (leuven--section "30.2 (emacs)Dired Navigation")
@@ -8198,27 +8219,6 @@ a clean buffer we're an order of magnitude laxer about checking."
     (add-hook 'dired-mode-hook
               (lambda ()
                 (diff-hl-dired-mode 1))))
-
-;;** (info "(emacs)ls in Lisp")
-
-  (leuven--section "G.4 (emacs)ls in Lisp")
-
-  ;; Emulate insert-directory completely in Emacs Lisp.
-  (with-eval-after-load "ls-lisp"
-
-    ;; Disable the case sensitive sort of file names.
-    (setq ls-lisp-ignore-case t)
-
-    ;; Sort directories first.
-    (setq ls-lisp-dirs-first t)
-
-    ;; Use ISO 8601 dates (on MS-Windows).
-    (setq ls-lisp-format-time-list
-          '("%Y-%m-%d %H:%M"
-            "%Y-%m-%d %H:%M"))
-
-    ;; Use localized date/time format.
-    (setq ls-lisp-use-localized-time-format t))
 
 )                                       ; Chapter 30 ends here.
 
