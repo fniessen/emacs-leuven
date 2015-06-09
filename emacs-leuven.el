@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150609.1020
+;; Version: 20150609.1044
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150609.1020"
+(defconst leuven--emacs-version "20150609.1044"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3606,12 +3606,11 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;** 1.2 (info "(org)Installation")
 
-  ;; Autoload functions.
   (GNUEmacs
-    (try-require 'org-loaddefs))
+    ;; Autoloads.
+    (try-require 'org-loaddefs)
 
-  ;; Getting started.
-  (GNUEmacs
+    ;; Getting started.
     (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
     (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
     (add-to-list 'auto-mode-alist '("\\.org_archive\\'" . org-mode)))
@@ -3619,7 +3618,6 @@ These packages are neither built-in nor already installed nor ignored."
   (define-key global-map (kbd "C-c l") 'org-store-link)
   (define-key global-map (kbd "C-c c") 'org-capture)
   (define-key global-map (kbd "C-c a") 'org-agenda)
-  (define-key global-map (kbd "C-c b") 'org-switchb)
 
   ;; Using links outside Org.
   (global-set-key (kbd "C-c L") 'org-insert-link-global)
@@ -3628,7 +3626,7 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "org"
     ;; Display the Org mode manual in Info mode.
     (define-key global-map (kbd "C-h o") 'org-info))
-                                        ; XXX not autoloaded
+                                        ; XXX Not autoloaded.
 
   (with-eval-after-load "org"
     ;; Unbind `C-j'.
@@ -3984,7 +3982,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Create web links to Google groups or Gmane (instead of Gnus messages).
     (setq org-gnus-prefer-web-links t))
 
-  ;; Global identifiers for Org-mode entries.
+  ;; Global identifiers for Org mode entries.
   (with-eval-after-load "org-id"
 
     ;; Storing a link to an Org file will use entry IDs.
@@ -6170,7 +6168,7 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "org"
     (message "... Org Crypt")
 
-    (try-require 'org-crypt))           ; loads org, gnus-sum, etc...
+    (try-require 'org-crypt))           ; Loads org, gnus-sum, etc...
 
   (with-eval-after-load "org-crypt"
 
@@ -6343,14 +6341,14 @@ this with to-do items than with projects or headings."
       (message "(Info) Update Org buffer %s"
                (file-name-nondirectory (buffer-file-name)))
       ;; (sit-for 1.5)
-      (let ((cache-long-scans nil)    ; Make `forward-line' much faster and
-                                      ; thus `org-goto-line', `org-table-sum',
-                                      ; etc.
+      (let ((cache-long-scans nil)      ; Make `forward-line' much faster and
+                                        ; thus `org-goto-line', `org-table-sum',
+                                        ; etc.
             (flyspell-mode-before-save flyspell-mode)
             (buffer-undo-list buffer-undo-list)) ; For goto-chg.
-        (flyspell-mode -1)            ; Temporarily disable Flyspell to avoid
-                                      ; checking the following modifications
-                                      ; of the buffer.
+        (flyspell-mode -1)              ; Temporarily disable Flyspell to avoid
+                                        ; checking the following modifications
+                                        ; of the buffer.
         (measure-time "Realigned all tags" (org-align-all-tags))
         (measure-time "Updated all dynamic blocks" (org-update-all-dblocks))
         (measure-time "Re-applied formulas to all tables"
@@ -6665,7 +6663,7 @@ this with to-do items than with projects or headings."
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode)))
 
   (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode))
-                                        ; alias for `nxml-mode'
+                                        ; Alias for `nxml-mode'.
 
   (with-eval-after-load "web-mode-autoloads"
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
@@ -6689,7 +6687,7 @@ this with to-do items than with projects or headings."
     (add-hook 'html-mode-hook
               (lambda ()
                 (require 'sgml-mode)
-                ;; when `html-mode-hook' is called from `html-helper-mode'
+                ;; When `html-mode-hook' is called from `html-helper-mode'.
                 (hl-tags-mode 1)))
 
     (add-hook 'nxml-mode-hook 'hl-tags-mode))
@@ -6911,22 +6909,22 @@ mouse-3: go to end") "]"))))
 
   (leuven--section "26.6 (emacs)Documentation Lookup")
 
-  ;; idle time to wait before printing documentation
+  ;; Idle time to wait before printing documentation.
   (setq eldoc-idle-delay 0.2)
 
-  ;; resize echo area to fit documentation
+  ;; Resize echo area to fit documentation.
   (setq eldoc-echo-area-use-multiline-p t)
 
-  ;; show the function arglist or the variable docstring in the echo area
+  ;; Show the function arglist or the variable docstring in the echo area.
   (GNUEmacs
     (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
     (add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
     (add-hook 'ielm-mode-hook 'eldoc-mode)
     (add-hook 'eval-expression-minibuffer-setup-hook 'eldoc-mode)
-    ;; (global-eldoc-mode) ;; in Emacs 25
+    ;; (global-eldoc-mode)                 ; In Emacs 25.
     )
 
-  ;; highlight the arguments in `font-lock-variable-name-face'
+  ;; Highlight the arguments in `font-lock-variable-name-face'.
   (defun leuven--frob-eldoc-argument-list (string)
     "Upcase and fontify STRING for use with `eldoc-mode'."
     (propertize (upcase string)
@@ -6937,12 +6935,12 @@ mouse-3: go to end") "]"))))
 
   (leuven--section "26.7 (emacs)Hideshow minor mode")
 
-  ;; enable Hideshow (code folding) for programming modes
+  ;; Enable Hideshow (code folding) for programming modes.
   (add-hook 'prog-mode-hook 'hs-minor-mode)
 
   (with-eval-after-load "hideshow"
 
-    ;; change those really awkward key bindings with `@' in the middle
+    ;; Change those really awkward key bindings with `@' in the middle.
     (define-key hs-minor-mode-map (kbd "<C-M-S-left>") 'hs-hide-block) ; or H-left? or C-c left?
                                         ; `C-c @ C-h' (collapse current fold) M-l in RStudio
     (define-key hs-minor-mode-map (kbd "<C-M-S-right>") 'hs-show-block)
@@ -6972,7 +6970,7 @@ mouse-3: go to end") "]"))))
 
   (leuven--section "26.8 (emacs)Symbol Completion")
 
-  ;; when you hit `<C-tab>', call the command normally bound to `<M-tab>'
+  ;; When you hit `<C-tab>', call the command normally bound to `<M-tab>'.
   (global-set-key (kbd "<C-tab>")
     (lambda ()
       (interactive)
@@ -6987,23 +6985,23 @@ mouse-3: go to end") "]"))))
 
   (with-eval-after-load "glasses"
 
-    ;; string to be displayed as a visual separator in unreadable identifiers
+    ;; String to be displayed as a visual separator in unreadable identifiers.
     (setq glasses-separator "")
 
-    ;; no display change
+    ;; No display change.
     (setq glasses-original-separator "")
 
-    ;; face to be put on capitals of an identifier looked through glasses
+    ;; Face to be put on capitals of an identifier looked through glasses.
     (make-face 'leuven-glasses-face)
     (set-face-attribute 'leuven-glasses-face nil :weight 'bold)
     (setq glasses-face 'leuven-glasses-face)
-                                        ; avoid the black foreground set in
-                                        ; `emacs-leuven-theme' to face `bold'
+                                        ; Avoid the black foreground set in
+                                        ; `emacs-leuven-theme' to face `bold'.
 
-    ;; set properties of glasses overlays
+    ;; Set properties of glasses overlays.
     (glasses-set-overlay-properties)
 
-    ;; no space between an identifier and an opening parenthesis
+    ;; No space between an identifier and an opening parenthesis.
     (setq glasses-separate-parentheses-p nil))
 
 )                                       ; Chapter 26 ends here.
@@ -7016,17 +7014,17 @@ mouse-3: go to end") "]"))))
 
   (leuven--section "27.1 Running (emacs)Compilations under Emacs")
 
-  ;; invoke a compiler with the same command as in the last invocation of
-  ;; `compile'
+  ;; Invoke a compiler with the same command as in the last invocation of
+  ;; `compile'.
   (autoload 'recompile "compile"
     "Re-compile the program including the current buffer." t)
 
   (global-set-key (kbd "<f9>") 'recompile)
 
-  ;; scroll the `*compilation*' buffer window to follow output as it appears
+  ;; Scroll the `*compilation*' buffer window to follow output as it appears.
   (setq compilation-scroll-output t)
 
-  ;; number of lines in a compilation window
+  ;; Number of lines in a compilation window.
   (setq compilation-window-height 8)
 
   ;; ;; I also don't like that the compilation window sticks around after
@@ -7058,7 +7056,7 @@ mouse-3: go to end") "]"))))
   (defun make-clean (&optional arg)
     "Run a make clean."
     (interactive "P")
-    (require 'compile)                  ; needed for compile-internal
+    (require 'compile)                  ; Needed for compile-internal.
     (if arg
         (setq make-clean-command
               (read-string "Command: " make-clean-command)))
@@ -7071,44 +7069,44 @@ mouse-3: go to end") "]"))))
 
   (leuven--section "27.2 (emacs)Compilation Mode")
 
-  ;; automatically jump to the first error during compilation
+  ;; Automatically jump to the first error during compilation.
   (setq compilation-auto-jump-to-first-error t)
 
-  ;; display the next compiler error message
+  ;; Display the next compiler error message.
   (global-set-key (kbd "<f10>") 'next-error)
-                                        ; also on `C-x `' and `M-g n'
+                                        ; Also on `C-x `' and `M-g n'.
 
-  ;; display the previous compiler error message
+  ;; Display the previous compiler error message.
   (global-set-key (kbd "<S-f10>") 'previous-error)
-                                        ; also on `M-g p'
+                                        ; Also on `M-g p'.
 
-  ;; display the first compiler error message
+  ;; Display the first compiler error message.
   (global-set-key (kbd "<C-f10>") 'first-error)
 
-  ;; ;; prefer fringe
+  ;; ;; Prefer fringe.
   ;; (setq next-error-highlight 'fringe-arrow)
 
-  ;; highlight and parse the whole compilation output as soon as it arrives
+  ;; Highlight and parse the whole compilation output as soon as it arrives.
   (setq compile-auto-highlight t)
 
 ;;** 27.4 (info "(emacs)Grep Searching") under Emacs
 
   (leuven--section "27.4 (emacs)Grep Searching under Emacs")
 
-  ;; ignore case distinctions in the default `grep' command
+  ;; Ignore case distinctions in the default `grep' command.
   (setq grep-command "grep -i -H -n -e ")
 
-  ;; do not append `null-device' (`/dev/null' or `NUL') to `grep' commands
-  (setq grep-use-null-device nil)       ; not necessary if the `grep' program
-                                        ; used supports the `-H' option
+  ;; Do not append `null-device' (`/dev/null' or `NUL') to `grep' commands.
+  (setq grep-use-null-device nil)       ; Not necessary if the `grep' program
+                                        ; used supports the `-H' option.
 
-  ;; ;; for Windows
+  ;; ;; For Windows.
   ;; (setq grep-find-command '("findstr /sn *" . 13))
 
-  ;; use `find -print0' and `xargs -0'
+  ;; Use `find -print0' and `xargs -0'.
   (setq grep-find-use-xargs 'gnu)
 
-  ;; run `grep' via `find', with user-friendly interface
+  ;; Run `grep' via `find', with user-friendly interface.
   (global-set-key (kbd "C-c 3") 'rgrep)
 
   ;; 10.3.5 Org keyword search
@@ -7127,18 +7125,18 @@ mouse-3: go to end") "]"))))
 
   (leuven--section "27.5 (emacs)Flymake")
 
-  ;; modern on-the-fly syntax checking
+  ;; Modern on-the-fly syntax checking.
   (with-eval-after-load "flycheck-autoloads"
 
-    ;; enable Flycheck mode in all programming modes
+    ;; Enable Flycheck mode in all programming modes.
     (add-hook 'prog-mode-hook 'flycheck-mode))
 
   (with-eval-after-load "flycheck"
 
-    ;; delay in seconds before displaying errors at point
+    ;; Delay in seconds before displaying errors at point.
     (setq flycheck-display-errors-delay 0.3)
 
-    ;; ;; indicate errors and warnings via icons in the right fringe
+    ;; ;; Indicate errors and warnings via icons in the right fringe.
     ;; (setq flycheck-indication-mode 'right-fringe)
 
     ;; Remove newline checks, since they would trigger an immediate check when
@@ -7164,7 +7162,7 @@ a clean buffer we're an order of magnitude laxer about checking."
                 1
               20)))
 
-    ;; functions to run after each syntax check
+    ;; Functions to run after each syntax check.
     (add-hook 'flycheck-after-syntax-check-hook
               'leuven--adjust-flycheck-automatic-syntax-eagerness))
 
@@ -7183,15 +7181,15 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (with-eval-after-load "gdb-mi"
 
-    ;; enable Gdb-Many-Windows mode
-    (setq gdb-many-windows t))          ; the only important parameter for GDB
+    ;; Enable Gdb-Many-Windows mode.
+    (setq gdb-many-windows t))          ; The only important parameter for GDB.
 
 ;;** Debugging Lisp programs
 
-  ;; source-level debugger for Emacs Lisp
+  ;; Source-level debugger for Emacs Lisp.
   (with-eval-after-load "edebug"
 
-    ;; ;; display a trace of function entry and exit
+    ;; ;; Display a trace of function entry and exit.
     ;; (setq edebug-trace t)
 
     (defadvice edebug-overlay-arrow (around leuven-highlight-line activate)

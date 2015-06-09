@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150609.1021</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150609.1045</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150609.1021"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150609.1045"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -8023,12 +8023,11 @@ work and tasks with Org mode.
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 1.2 (info "(org)Installation")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Autoload functions.</span>
   (GNUEmacs
-    (try-require 'org-loaddefs))
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Autoloads.</span>
+    (try-require 'org-loaddefs)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Getting started.</span>
-  (GNUEmacs
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Getting started.</span>
     (add-to-list 'auto-mode-alist '(<span class="org-string">"\\.txt\\'"</span> . org-mode))
     (add-to-list 'auto-mode-alist '(<span class="org-string">"\\.org\\'"</span> . org-mode))
     (add-to-list 'auto-mode-alist '(<span class="org-string">"\\.org_archive\\'"</span> . org-mode)))
@@ -8036,7 +8035,6 @@ work and tasks with Org mode.
   (define-key global-map (kbd <span class="org-string">"C-c l"</span>) 'org-store-link)
   (define-key global-map (kbd <span class="org-string">"C-c c"</span>) 'org-capture)
   (define-key global-map (kbd <span class="org-string">"C-c a"</span>) 'org-agenda)
-  (define-key global-map (kbd <span class="org-string">"C-c b"</span>) 'org-switchb)
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Using links outside Org.</span>
   (global-set-key (kbd <span class="org-string">"C-c L"</span>) 'org-insert-link-global)
@@ -8045,7 +8043,7 @@ work and tasks with Org mode.
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org"</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Display the Org mode manual in Info mode.</span>
     (define-key global-map (kbd <span class="org-string">"C-h o"</span>) 'org-info))
-                                        <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> not autoloaded</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> Not autoloaded.</span>
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org"</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Unbind `</span><span class="org-constant"><span class="org-comment">C-j</span></span><span class="org-comment">'.</span>
@@ -8744,7 +8742,7 @@ has the equal signs escaped, unless you have:
 <div class="outline-text-4" id="text-orgheadline169">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Global identifiers for Org-mode entries.</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Global identifiers for Org mode entries.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org-id"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Storing a link to an Org file will use entry IDs.</span>
@@ -8760,7 +8758,7 @@ sure that you&rsquo;re calling <code>org-return</code> to open (it&rsquo;s bound
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">PDFs visited in Org-mode are opened in Evince (and not in the default choice).</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">PDFs visited in Org mode are opened in Evince (and not in the default choice).</span>
   (add-hook 'org-mode-hook
             '(<span class="org-keyword">lambda</span> ()
                (delete '(<span class="org-string">"\\.pdf\\'"</span> . default) org-file-apps)
@@ -12711,7 +12709,7 @@ Org&#x2026;
     <span class="org-comment-delimiter">;; </span><span class="org-comment">is not in a special context.</span>
     (setq org-support-shift-select t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Maximum level for Imenu access to Org-mode headlines.</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Maximum level for Imenu access to Org mode headlines.</span>
     (setq org-imenu-depth 3)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Extension of Imenu.</span>
@@ -12762,7 +12760,7 @@ C-r</code> (fits nicely with the meaning of &ldquo;reveal&rdquo;).
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org"</span>
     (message <span class="org-string">"... Org Crypt"</span>)
 
-    (try-require 'org-crypt))           <span class="org-comment-delimiter">; </span><span class="org-comment">loads org, gnus-sum, etc...</span>
+    (try-require 'org-crypt))           <span class="org-comment-delimiter">; </span><span class="org-comment">Loads org, gnus-sum, etc...</span>
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org-crypt"</span>
 
@@ -13056,14 +13054,14 @@ it to the hook outside of Org (not anymore in an <code>with-eval-after-load</cod
       (message <span class="org-string">"(Info) Update Org buffer %s"</span>
                (file-name-nondirectory (buffer-file-name)))
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(sit-for 1.5)</span>
-      (<span class="org-keyword">let</span> ((cache-long-scans nil)    <span class="org-comment-delimiter">; </span><span class="org-comment">Make `</span><span class="org-constant"><span class="org-comment">forward-line</span></span><span class="org-comment">' much faster and</span>
-                                      <span class="org-comment-delimiter">; </span><span class="org-comment">thus `</span><span class="org-constant"><span class="org-comment">org-goto-line</span></span><span class="org-comment">', `</span><span class="org-constant"><span class="org-comment">org-table-sum</span></span><span class="org-comment">',</span>
-                                      <span class="org-comment-delimiter">; </span><span class="org-comment">etc.</span>
+      (<span class="org-keyword">let</span> ((cache-long-scans nil)      <span class="org-comment-delimiter">; </span><span class="org-comment">Make `</span><span class="org-constant"><span class="org-comment">forward-line</span></span><span class="org-comment">' much faster and</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">thus `</span><span class="org-constant"><span class="org-comment">org-goto-line</span></span><span class="org-comment">', `</span><span class="org-constant"><span class="org-comment">org-table-sum</span></span><span class="org-comment">',</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">etc.</span>
             (flyspell-mode-before-save flyspell-mode)
             (buffer-undo-list buffer-undo-list)) <span class="org-comment-delimiter">; </span><span class="org-comment">For goto-chg.</span>
-        (flyspell-mode -1)            <span class="org-comment-delimiter">; </span><span class="org-comment">Temporarily disable Flyspell to avoid</span>
-                                      <span class="org-comment-delimiter">; </span><span class="org-comment">checking the following modifications</span>
-                                      <span class="org-comment-delimiter">; </span><span class="org-comment">of the buffer.</span>
+        (flyspell-mode -1)              <span class="org-comment-delimiter">; </span><span class="org-comment">Temporarily disable Flyspell to avoid</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">checking the following modifications</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">of the buffer.</span>
         (measure-time <span class="org-string">"Realigned all tags"</span> (org-align-all-tags))
         (measure-time <span class="org-string">"Updated all dynamic blocks"</span> (org-update-all-dblocks))
         (measure-time <span class="org-string">"Re-applied formulas to all tables"</span>
@@ -13723,7 +13721,7 @@ tags around a region you&rsquo;ve specified.
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">  (add-to-list 'auto-mode-alist '(<span class="org-string">"\\.xhtml?\\'"</span> . xml-mode))
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">alias for `</span><span class="org-constant"><span class="org-comment">nxml-mode</span></span><span class="org-comment">'</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Alias for `</span><span class="org-constant"><span class="org-comment">nxml-mode</span></span><span class="org-comment">'.</span>
 </pre>
 </div>
 
@@ -13822,7 +13820,7 @@ Some key bindings:
     (add-hook 'html-mode-hook
               (<span class="org-keyword">lambda</span> ()
                 (<span class="org-keyword">require</span> '<span class="org-constant">sgml-mode</span>)
-                <span class="org-comment-delimiter">;; </span><span class="org-comment">when `</span><span class="org-constant"><span class="org-comment">html-mode-hook</span></span><span class="org-comment">' is called from `</span><span class="org-constant"><span class="org-comment">html-helper-mode</span></span><span class="org-comment">'</span>
+                <span class="org-comment-delimiter">;; </span><span class="org-comment">When `</span><span class="org-constant"><span class="org-comment">html-mode-hook</span></span><span class="org-comment">' is called from `</span><span class="org-constant"><span class="org-comment">html-helper-mode</span></span><span class="org-comment">'.</span>
                 (hl-tags-mode 1)))
 
     (add-hook 'nxml-mode-hook 'hl-tags-mode))
@@ -14347,13 +14345,13 @@ smartparens strict mode&#x2026;
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">minor mode for editing parentheses</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Minor mode for editing parentheses.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"paredit-autoloads"</span>
 
     (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Common Lisp editing extensions</span>
-    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"redshank"</span>    <span class="org-comment-delimiter">; </span><span class="org-comment">requires `</span><span class="org-constant"><span class="org-comment">paredit</span></span><span class="org-comment">'</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Common Lisp editing extensions.</span>
+    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"redshank"</span>    <span class="org-comment-delimiter">; </span><span class="org-comment">Requires `</span><span class="org-constant"><span class="org-comment">paredit</span></span><span class="org-comment">'.</span>
 
       (add-hook 'emacs-lisp-mode-hook 'redshank-mode)))
 </pre>
@@ -14427,22 +14425,22 @@ Function argument hint.
 
   (leuven--section <span class="org-string">"26.6 (emacs)Documentation Lookup"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">idle time to wait before printing documentation</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Idle time to wait before printing documentation.</span>
   (setq eldoc-idle-delay 0.2)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">resize echo area to fit documentation</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Resize echo area to fit documentation.</span>
   (setq eldoc-echo-area-use-multiline-p t)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">show the function arglist or the variable docstring in the echo area</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Show the function arglist or the variable docstring in the echo area.</span>
   (GNUEmacs
     (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
     (add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
     (add-hook 'ielm-mode-hook 'eldoc-mode)
     (add-hook 'eval-expression-minibuffer-setup-hook 'eldoc-mode)
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-eldoc-mode) ;; in Emacs 25</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-eldoc-mode)                 ; In Emacs 25.</span>
     )
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">highlight the arguments in `</span><span class="org-constant"><span class="org-comment">font-lock-variable-name-face</span></span><span class="org-comment">'</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Highlight the arguments in `</span><span class="org-constant"><span class="org-comment">font-lock-variable-name-face</span></span><span class="org-comment">'.</span>
   (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--frob-eldoc-argument-list</span> (string)
     <span class="org-doc">"Upcase and fontify STRING for use with `</span><span class="org-constant"><span class="org-doc">eldoc-mode</span></span><span class="org-doc">'."</span>
     (propertize (upcase string)
@@ -14476,12 +14474,12 @@ many programming modes.
 
   (leuven--section <span class="org-string">"26.7 (emacs)Hideshow minor mode"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">enable Hideshow (code folding) for programming modes</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Hideshow (code folding) for programming modes.</span>
   (add-hook 'prog-mode-hook 'hs-minor-mode)
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"hideshow"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">change those really awkward key bindings with `@' in the middle</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Change those really awkward key bindings with `@' in the middle.</span>
     (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;C-M-S-left&gt;"</span>) 'hs-hide-block) <span class="org-comment-delimiter">; </span><span class="org-comment">or H-left? or C-c left?</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-h' (collapse current fold) M-l in RStudio</span>
     (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;C-M-S-right&gt;"</span>) 'hs-show-block)
@@ -14511,15 +14509,15 @@ many programming modes.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">if hideshowvis is not installed, do not attempt to configure it, as this</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">will prevent packages (including hideshowvis itself) from compiling</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">If hideshowvis is not installed, do not attempt to configure it, as this</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">will prevent packages (including hideshowvis itself) from compiling.</span>
   (<span class="org-keyword">when</span> display-graphic-p
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"hideshowvis-autoloads"</span>
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">enable hideshowvis for programming modes</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable hideshowvis for programming modes.</span>
       (add-hook 'prog-mode-hook
                 (<span class="org-keyword">lambda</span> ()
-                  (<span class="org-keyword">require</span> '<span class="org-constant">fold-dwim</span>)    <span class="org-comment-delimiter">; </span><span class="org-comment">more syntax definitions</span>
+                  (<span class="org-keyword">require</span> '<span class="org-constant">fold-dwim</span>)  <span class="org-comment-delimiter">; </span><span class="org-comment">More syntax definitions.</span>
                   (hideshowvis-enable)))
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(defface hs-fringe-face</span>
@@ -14584,7 +14582,7 @@ you to hit, such as <code>&lt;C-tab&gt;</code>.</li>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">when you hit `</span><span class="org-constant"><span class="org-comment">&lt;C-tab&gt;</span></span><span class="org-comment">', call the command normally bound to `</span><span class="org-constant"><span class="org-comment">&lt;M-tab&gt;</span></span><span class="org-comment">'</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">When you hit `</span><span class="org-constant"><span class="org-comment">&lt;C-tab&gt;</span></span><span class="org-comment">', call the command normally bound to `</span><span class="org-constant"><span class="org-comment">&lt;M-tab&gt;</span></span><span class="org-comment">'.</span>
   (global-set-key (kbd <span class="org-string">"&lt;C-tab&gt;"</span>)
     (<span class="org-keyword">lambda</span> ()
       (interactive)
@@ -14612,23 +14610,23 @@ See also <a href="#orgheadline273">Dabbrev</a>, Emacs&rsquo; standard autocomple
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"glasses"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">string to be displayed as a visual separator in unreadable identifiers</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">String to be displayed as a visual separator in unreadable identifiers.</span>
     (setq glasses-separator <span class="org-string">""</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">no display change</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">No display change.</span>
     (setq glasses-original-separator <span class="org-string">""</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">face to be put on capitals of an identifier looked through glasses</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Face to be put on capitals of an identifier looked through glasses.</span>
     (make-face 'leuven-glasses-face)
     (set-face-attribute 'leuven-glasses-face nil <span class="org-builtin">:weight</span> 'bold)
     (setq glasses-face 'leuven-glasses-face)
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">avoid the black foreground set in</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">emacs-leuven-theme</span></span><span class="org-comment">' to face `</span><span class="org-constant"><span class="org-comment">bold</span></span><span class="org-comment">'</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Avoid the black foreground set in</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">emacs-leuven-theme</span></span><span class="org-comment">' to face `</span><span class="org-constant"><span class="org-comment">bold</span></span><span class="org-comment">'.</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">set properties of glasses overlays</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Set properties of glasses overlays.</span>
     (glasses-set-overlay-properties)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">no space between an identifier and an opening parenthesis</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">No space between an identifier and an opening parenthesis.</span>
     (setq glasses-separate-parentheses-p nil))
 
 )                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 26 ends here.</span>
@@ -14670,17 +14668,17 @@ without a <code>Makefile</code>.
 
   (leuven--section <span class="org-string">"27.1 Running (emacs)Compilations under Emacs"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">invoke a compiler with the same command as in the last invocation of</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">compile</span></span><span class="org-comment">'</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Invoke a compiler with the same command as in the last invocation of</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">compile</span></span><span class="org-comment">'.</span>
   (autoload 'recompile <span class="org-string">"compile"</span>
     <span class="org-doc">"Re-compile the program including the current buffer."</span> t)
 
   (global-set-key (kbd <span class="org-string">"&lt;f9&gt;"</span>) 'recompile)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">scroll the `</span><span class="org-constant"><span class="org-comment">*compilation*</span></span><span class="org-comment">' buffer window to follow output as it appears</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Scroll the `</span><span class="org-constant"><span class="org-comment">*compilation*</span></span><span class="org-comment">' buffer window to follow output as it appears.</span>
   (setq compilation-scroll-output t)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">number of lines in a compilation window</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Number of lines in a compilation window.</span>
   (setq compilation-window-height 8)
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">;; I also don't like that the compilation window sticks around after</span>
@@ -14712,7 +14710,7 @@ without a <code>Makefile</code>.
   (<span class="org-keyword">defun</span> <span class="org-function-name">make-clean</span> (<span class="org-type">&amp;optional</span> arg)
     <span class="org-doc">"Run a make clean."</span>
     (interactive <span class="org-string">"P"</span>)
-    (<span class="org-keyword">require</span> '<span class="org-constant">compile</span>)                  <span class="org-comment-delimiter">; </span><span class="org-comment">needed for compile-internal</span>
+    (<span class="org-keyword">require</span> '<span class="org-constant">compile</span>)                  <span class="org-comment-delimiter">; </span><span class="org-comment">Needed for compile-internal.</span>
     (<span class="org-keyword">if</span> arg
         (setq make-clean-command
               (read-string <span class="org-string">"Command: "</span> make-clean-command)))
@@ -14745,24 +14743,24 @@ variable <code>next-error-highlight</code>.
 
   (leuven--section <span class="org-string">"27.2 (emacs)Compilation Mode"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">automatically jump to the first error during compilation</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Automatically jump to the first error during compilation.</span>
   (setq compilation-auto-jump-to-first-error t)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">display the next compiler error message</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Display the next compiler error message.</span>
   (global-set-key (kbd <span class="org-string">"&lt;f10&gt;"</span>) 'next-error)
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">also on `C-x `' and `M-g n'</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Also on `C-x `' and `M-g n'.</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">display the previous compiler error message</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Display the previous compiler error message.</span>
   (global-set-key (kbd <span class="org-string">"&lt;S-f10&gt;"</span>) 'previous-error)
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">also on `M-g p'</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Also on `M-g p'.</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">display the first compiler error message</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Display the first compiler error message.</span>
   (global-set-key (kbd <span class="org-string">"&lt;C-f10&gt;"</span>) 'first-error)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; prefer fringe</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Prefer fringe.</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq next-error-highlight 'fringe-arrow)</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">highlight and parse the whole compilation output as soon as it arrives</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Highlight and parse the whole compilation output as soon as it arrives.</span>
   (setq compile-auto-highlight t)
 </pre>
 </div>
@@ -14801,20 +14799,20 @@ thereafter.
 
   (leuven--section <span class="org-string">"27.4 (emacs)Grep Searching under Emacs"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">ignore case distinctions in the default `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' command</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Ignore case distinctions in the default `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' command.</span>
   (setq grep-command <span class="org-string">"grep -i -H -n -e "</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">do not append `</span><span class="org-constant"><span class="org-comment">null-device</span></span><span class="org-comment">' (`</span><span class="org-constant"><span class="org-comment">/dev/null</span></span><span class="org-comment">' or `</span><span class="org-constant"><span class="org-comment">NUL</span></span><span class="org-comment">') to `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' commands</span>
-  (setq grep-use-null-device nil)       <span class="org-comment-delimiter">; </span><span class="org-comment">not necessary if the `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' program</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">used supports the `</span><span class="org-constant"><span class="org-comment">-H</span></span><span class="org-comment">' option</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Do not append `</span><span class="org-constant"><span class="org-comment">null-device</span></span><span class="org-comment">' (`</span><span class="org-constant"><span class="org-comment">/dev/null</span></span><span class="org-comment">' or `</span><span class="org-constant"><span class="org-comment">NUL</span></span><span class="org-comment">') to `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' commands.</span>
+  (setq grep-use-null-device nil)       <span class="org-comment-delimiter">; </span><span class="org-comment">Not necessary if the `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' program</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">used supports the `</span><span class="org-constant"><span class="org-comment">-H</span></span><span class="org-comment">' option.</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; for Windows</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; For Windows.</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq grep-find-command '("findstr /sn *" . 13))</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">use `find -print0' and `xargs -0'</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Use `find -print0' and `xargs -0'.</span>
   (setq grep-find-use-xargs 'gnu)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">run `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' via `</span><span class="org-constant"><span class="org-comment">find</span></span><span class="org-comment">', with user-friendly interface</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Run `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' via `</span><span class="org-constant"><span class="org-comment">find</span></span><span class="org-comment">', with user-friendly interface.</span>
   (global-set-key (kbd <span class="org-string">"C-c 3"</span>) 'rgrep)
 </pre>
 </div>
@@ -14881,18 +14879,18 @@ sorting order.</dd>
 
   (leuven--section <span class="org-string">"27.5 (emacs)Flymake"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">modern on-the-fly syntax checking</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Modern on-the-fly syntax checking.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"flycheck-autoloads"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">enable Flycheck mode in all programming modes</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Flycheck mode in all programming modes.</span>
     (add-hook 'prog-mode-hook 'flycheck-mode))
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"flycheck"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">delay in seconds before displaying errors at point</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Delay in seconds before displaying errors at point.</span>
     (setq flycheck-display-errors-delay 0.3)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; indicate errors and warnings via icons in the right fringe</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Indicate errors and warnings via icons in the right fringe.</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq flycheck-indication-mode 'right-fringe)</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Remove newline checks, since they would trigger an immediate check when</span>
@@ -14918,7 +14916,7 @@ sorting order.</dd>
                 1
               20)))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">functions to run after each syntax check</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Functions to run after each syntax check.</span>
     (add-hook 'flycheck-after-syntax-check-hook
               'leuven--adjust-flycheck-automatic-syntax-eagerness))
 </pre>
@@ -14950,8 +14948,8 @@ sorting order.</dd>
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"gdb-mi"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">enable Gdb-Many-Windows mode</span>
-    (setq gdb-many-windows t))          <span class="org-comment-delimiter">; </span><span class="org-comment">the only important parameter for GDB</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Gdb-Many-Windows mode.</span>
+    (setq gdb-many-windows t))          <span class="org-comment-delimiter">; </span><span class="org-comment">The only important parameter for GDB.</span>
 </pre>
 </div>
 </div>
@@ -14977,10 +14975,10 @@ With that source-level debugger for Emacs Lisp, you can:
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** Debugging Lisp programs</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">source-level debugger for Emacs Lisp</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Source-level debugger for Emacs Lisp.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"edebug"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; display a trace of function entry and exit</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Display a trace of function entry and exit.</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq edebug-trace t)</span>
 </pre>
 </div>
