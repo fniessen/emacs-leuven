@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150610.0948
+;; Version: 20150610.1020
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150610.0948"
+(defconst leuven--emacs-version "20150610.1020"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -7994,9 +7994,12 @@ a clean buffer we're an order of magnitude laxer about checking."
                 (t
                  "-a -F --group-directories-first -l --time-style=long-iso")))
 
-    ;; Emulate insert-directory completely in Emacs Lisp.
+    ;; Use `ls-lisp' (for Dired sorting to work OK!) in Cygwin Emacs.
     (when leuven--cygwin-p
+
       (setq ls-lisp-use-insert-directory-program nil)
+
+      ;; Emulate insert-directory completely in Emacs Lisp.
       (require 'ls-lisp))
 
 ;;** (info "(emacs)ls in Lisp")
@@ -8012,7 +8015,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;; Sort directories first.
       (setq ls-lisp-dirs-first t)
 
-      ;; Use ISO 8601 dates (on MS-Windows).
+      ;; Use ISO 8601 dates.
       (setq ls-lisp-format-time-list
             '("%Y-%m-%d %H:%M"
               "%Y-%m-%d %H:%M"))

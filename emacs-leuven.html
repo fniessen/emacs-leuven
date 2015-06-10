@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150610.0949</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150610.1021</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150610.0949"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150610.1021"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -17226,9 +17226,12 @@ Use Emacs&rsquo;s own emulation of <code>ls</code> in Cygwin Emacs as well:
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Emulate insert-directory completely in Emacs Lisp.</span>
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Use `</span><span class="org-constant"><span class="org-comment">ls-lisp</span></span><span class="org-comment">' (for Dired sorting to work OK!) in Cygwin Emacs.</span>
     (<span class="org-keyword">when</span> leuven--cygwin-p
+
       (setq ls-lisp-use-insert-directory-program nil)
+
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Emulate insert-directory completely in Emacs Lisp.</span>
       (<span class="org-keyword">require</span> '<span class="org-constant">ls-lisp</span>))
 </pre>
 </div>
@@ -17255,7 +17258,7 @@ This is used by <b>default on MS Windows</b>, which does not have an <code>ls</c
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Sort directories first.</span>
       (setq ls-lisp-dirs-first t)
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">Use ISO 8601 dates (on MS-Windows).</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Use ISO 8601 dates.</span>
       (setq ls-lisp-format-time-list
             '(<span class="org-string">"%Y-%m-%d %H:%M"</span>
               <span class="org-string">"%Y-%m-%d %H:%M"</span>))

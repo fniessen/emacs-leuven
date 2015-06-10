@@ -13398,9 +13398,12 @@ GNU ~ls~.
 Use Emacs's own emulation of ~ls~ in Cygwin Emacs as well:
 
 #+begin_src emacs-lisp
-    ;; Emulate insert-directory completely in Emacs Lisp.
+    ;; Use `ls-lisp' (for Dired sorting to work OK!) in Cygwin Emacs.
     (when leuven--cygwin-p
+
       (setq ls-lisp-use-insert-directory-program nil)
+
+      ;; Emulate insert-directory completely in Emacs Lisp.
       (require 'ls-lisp))
 #+end_src
 
@@ -13422,7 +13425,7 @@ This is used by *default on MS Windows*, which does not have an ~ls~ program.
       ;; Sort directories first.
       (setq ls-lisp-dirs-first t)
 
-      ;; Use ISO 8601 dates (on MS-Windows).
+      ;; Use ISO 8601 dates.
       (setq ls-lisp-format-time-list
             '("%Y-%m-%d %H:%M"
               "%Y-%m-%d %H:%M"))
