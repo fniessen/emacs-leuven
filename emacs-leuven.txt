@@ -8617,17 +8617,7 @@ To list all available entities, run ~M-x org-entities-help~.
     ;; Libraries in this list will be loaded once the export framework is needed.
     (setq org-export-backends '(ascii html icalendar latex odt))
 
-    ;; (define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch)
-
-    ;; XXX Temporary (until Org 8 is bundled within Emacs).
-    (define-key org-mode-map (kbd "C-c C-e")
-      (lambda (&optional arg)
-        (interactive "P")
-        (if (fboundp 'org-export-dispatch)
-            (funcall 'org-export-dispatch arg)
-          (message (concat "This version of Org mode is no longer supported.  "
-                           "Please upgrade to 8 or later"))
-          (sit-for 1.5)))))
+    (define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch))
 #+end_src
 
 For Org buffers, add an enhanced version of ~save-buffer~ which does:
@@ -13393,10 +13383,9 @@ GNU ~ls~.
 #+begin_src emacs-lisp
     ;; Switches passed to `ls' for Dired.
     (setq dired-listing-switches
-          (cond (leuven--win32-p
+          (cond ((or leuven--win32-p
+                     leuven--cygwin-p)
                  "-a -F -l")
-                (leuven--cygwin-p
-                 "-a -F --group-directories-first -l")
                 (t
                  "-a -F --group-directories-first -l --time-style=long-iso")))
 #+end_src
@@ -13406,12 +13395,13 @@ GNU ~ls~.
    :ID:       26d881f0-0f56-4259-9b31-eb4fecb08c88
    :END:
 
-You might want to use Emacs's own emulation of ~ls~, by using:
+Use Emacs's own emulation of ~ls~ in Cygwin Emacs as well:
 
-#+begin_src emacs-lisp :tangle no
-  (when leuven--cygwin-p
-    (setq ls-lisp-use-insert-directory-program nil)
-    (require 'ls-lisp))
+#+begin_src emacs-lisp
+    ;; Emulate insert-directory completely in Emacs Lisp.
+    (when leuven--cygwin-p
+      (setq ls-lisp-use-insert-directory-program nil)
+      (require 'ls-lisp))
 #+end_src
 
 #+begin_note
@@ -13421,24 +13411,24 @@ This is used by *default on MS Windows*, which does not have an ~ls~ program.
 #+begin_src emacs-lisp
 ;;** (info "(emacs)ls in Lisp")
 
-  (leuven--section "G.4 (emacs)ls in Lisp")
+    (leuven--section "G.4 (emacs)ls in Lisp")
 
-  ;; Emulate insert-directory completely in Emacs Lisp.
-  (with-eval-after-load "ls-lisp"
+    ;; Emulate insert-directory completely in Emacs Lisp.
+    (with-eval-after-load "ls-lisp"
 
-    ;; Disable the case sensitive sort of file names.
-    (setq ls-lisp-ignore-case t)
+      ;; Disable the case sensitive sort of file names.
+      (setq ls-lisp-ignore-case t)
 
-    ;; Sort directories first.
-    (setq ls-lisp-dirs-first t)
+      ;; Sort directories first.
+      (setq ls-lisp-dirs-first t)
 
-    ;; Use ISO 8601 dates (on MS-Windows).
-    (setq ls-lisp-format-time-list
-          '("%Y-%m-%d %H:%M"
-            "%Y-%m-%d %H:%M"))
+      ;; Use ISO 8601 dates (on MS-Windows).
+      (setq ls-lisp-format-time-list
+            '("%Y-%m-%d %H:%M"
+              "%Y-%m-%d %H:%M"))
 
-    ;; Use localized date/time format.
-    (setq ls-lisp-use-localized-time-format t))
+      ;; Use localized date/time format.
+      (setq ls-lisp-use-localized-time-format t))
 #+end_src
 
 ** Navigation in the Dired Buffer
@@ -13861,6 +13851,10 @@ example.
 ** VC diff highlighting
 
 #+begin_src emacs-lisp
+;;** Diff-hl
+
+  (leuven--section "30.XX Diff-hl")
+
   ;; Enable VC diff highlighting on the side of a Dired window.
   (with-eval-after-load "diff-hl-autoloads"
     (add-hook 'dired-mode-hook

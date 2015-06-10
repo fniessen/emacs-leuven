@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150609.1044
+;; Version: 20150610.0948
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150609.1044"
+(defconst leuven--emacs-version "20150610.0948"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5312,17 +5312,7 @@ this with to-do items than with projects or headings."
     ;; Libraries in this list will be loaded once the export framework is needed.
     (setq org-export-backends '(ascii html icalendar latex odt))
 
-    ;; (define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch)
-
-    ;; XXX Temporary (until Org 8 is bundled within Emacs).
-    (define-key org-mode-map (kbd "C-c C-e")
-      (lambda (&optional arg)
-        (interactive "P")
-        (if (fboundp 'org-export-dispatch)
-            (funcall 'org-export-dispatch arg)
-          (message (concat "This version of Org mode is no longer supported.  "
-                           "Please upgrade to 8 or later"))
-          (sit-for 1.5)))))
+    (define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch))
 
   (with-eval-after-load "org"
 
@@ -7998,33 +7988,37 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Switches passed to `ls' for Dired.
     (setq dired-listing-switches
-          (cond (leuven--win32-p
+          (cond ((or leuven--win32-p
+                     leuven--cygwin-p)
                  "-a -F -l")
-                (leuven--cygwin-p
-                 "-a -F --group-directories-first -l")
                 (t
                  "-a -F --group-directories-first -l --time-style=long-iso")))
 
+    ;; Emulate insert-directory completely in Emacs Lisp.
+    (when leuven--cygwin-p
+      (setq ls-lisp-use-insert-directory-program nil)
+      (require 'ls-lisp))
+
 ;;** (info "(emacs)ls in Lisp")
 
-  (leuven--section "G.4 (emacs)ls in Lisp")
+    (leuven--section "G.4 (emacs)ls in Lisp")
 
-  ;; Emulate insert-directory completely in Emacs Lisp.
-  (with-eval-after-load "ls-lisp"
+    ;; Emulate insert-directory completely in Emacs Lisp.
+    (with-eval-after-load "ls-lisp"
 
-    ;; Disable the case sensitive sort of file names.
-    (setq ls-lisp-ignore-case t)
+      ;; Disable the case sensitive sort of file names.
+      (setq ls-lisp-ignore-case t)
 
-    ;; Sort directories first.
-    (setq ls-lisp-dirs-first t)
+      ;; Sort directories first.
+      (setq ls-lisp-dirs-first t)
 
-    ;; Use ISO 8601 dates (on MS-Windows).
-    (setq ls-lisp-format-time-list
-          '("%Y-%m-%d %H:%M"
-            "%Y-%m-%d %H:%M"))
+      ;; Use ISO 8601 dates (on MS-Windows).
+      (setq ls-lisp-format-time-list
+            '("%Y-%m-%d %H:%M"
+              "%Y-%m-%d %H:%M"))
 
-    ;; Use localized date/time format.
-    (setq ls-lisp-use-localized-time-format t))
+      ;; Use localized date/time format.
+      (setq ls-lisp-use-localized-time-format t))
 
 ;;** (info "(emacs)Dired Navigation")
 
@@ -8208,6 +8202,10 @@ a clean buffer we're an order of magnitude laxer about checking."
               (setq diredp-wrap-around-flag nil)
 
               (try-require 'dired+)))
+
+;;** Diff-hl
+
+  (leuven--section "30.XX Diff-hl")
 
   ;; Enable VC diff highlighting on the side of a Dired window.
   (with-eval-after-load "diff-hl-autoloads"

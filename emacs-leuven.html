@@ -3,12 +3,12 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<title>Leuven Emacs Config</title>
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="viewport" content="width=device-width, initial-scale=1" />
+<title>Leuven Emacs Config</title>
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Fabrice Niessen" />
 <meta  name="keywords" content="emacs, dotfile, config" />
-<meta  name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" type="text/css" href="d:/Users/fni/src/org-html-themes/styles/readtheorg/css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="d:/Users/fni/src/org-html-themes/styles/readtheorg/css/readtheorg.css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150609.1045</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150610.0949</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150609.1045"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150610.0949"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -11137,17 +11137,7 @@ To list all available entities, run <code>M-x org-entities-help</code>.
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Libraries in this list will be loaded once the export framework is needed.</span>
     (setq org-export-backends '(ascii html icalendar latex odt))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch)</span>
-
-    <span class="org-comment-delimiter">;; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> Temporary (until Org 8 is bundled within Emacs).</span>
-    (define-key org-mode-map (kbd <span class="org-string">"C-c C-e"</span>)
-      (<span class="org-keyword">lambda</span> (<span class="org-type">&amp;optional</span> arg)
-        (interactive <span class="org-string">"P"</span>)
-        (<span class="org-keyword">if</span> (fboundp 'org-export-dispatch)
-            (funcall 'org-export-dispatch arg)
-          (message (concat <span class="org-string">"This version of Org mode is no longer supported.  "</span>
-                           <span class="org-string">"Please upgrade to 8 or later"</span>))
-          (sit-for 1.5)))))
+    (define-key org-mode-map (kbd <span class="org-string">"C-c C-e"</span>) 'org-export-dispatch))
 </pre>
 </div>
 
@@ -17217,10 +17207,9 @@ GNU <code>ls</code>.
 
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Switches passed to `</span><span class="org-constant"><span class="org-comment">ls</span></span><span class="org-comment">' for Dired.</span>
     (setq dired-listing-switches
-          (<span class="org-keyword">cond</span> (leuven--win32-p
+          (<span class="org-keyword">cond</span> ((or leuven--win32-p
+                     leuven--cygwin-p)
                  <span class="org-string">"-a -F -l"</span>)
-                (leuven--cygwin-p
-                 <span class="org-string">"-a -F --group-directories-first -l"</span>)
                 (t
                  <span class="org-string">"-a -F --group-directories-first -l --time-style=long-iso"</span>)))
 </pre>
@@ -17232,14 +17221,15 @@ GNU <code>ls</code>.
 <h3 id="orgheadline326"><a id="ID-26d881f0-0f56-4259-9b31-eb4fecb08c88"></a>Emulation of <code>ls</code> on MS-Windows</h3>
 <div class="outline-text-3" id="text-orgheadline326">
 <p>
-You might want to use Emacs&rsquo;s own emulation of <code>ls</code>, by using:
+Use Emacs&rsquo;s own emulation of <code>ls</code> in Cygwin Emacs as well:
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  (<span class="org-keyword">when</span> leuven--cygwin-p
-    (setq ls-lisp-use-insert-directory-program nil)
-    (<span class="org-keyword">require</span> '<span class="org-constant">ls-lisp</span>))
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Emulate insert-directory completely in Emacs Lisp.</span>
+    (<span class="org-keyword">when</span> leuven--cygwin-p
+      (setq ls-lisp-use-insert-directory-program nil)
+      (<span class="org-keyword">require</span> '<span class="org-constant">ls-lisp</span>))
 </pre>
 </div>
 
@@ -17254,24 +17244,24 @@ This is used by <b>default on MS Windows</b>, which does not have an <code>ls</c
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** (info "(emacs)ls in Lisp")</span>
 
-  (leuven--section <span class="org-string">"G.4 (emacs)ls in Lisp"</span>)
+    (leuven--section <span class="org-string">"G.4 (emacs)ls in Lisp"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Emulate insert-directory completely in Emacs Lisp.</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ls-lisp"</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Emulate insert-directory completely in Emacs Lisp.</span>
+    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ls-lisp"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Disable the case sensitive sort of file names.</span>
-    (setq ls-lisp-ignore-case t)
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Disable the case sensitive sort of file names.</span>
+      (setq ls-lisp-ignore-case t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Sort directories first.</span>
-    (setq ls-lisp-dirs-first t)
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Sort directories first.</span>
+      (setq ls-lisp-dirs-first t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Use ISO 8601 dates (on MS-Windows).</span>
-    (setq ls-lisp-format-time-list
-          '(<span class="org-string">"%Y-%m-%d %H:%M"</span>
-            <span class="org-string">"%Y-%m-%d %H:%M"</span>))
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Use ISO 8601 dates (on MS-Windows).</span>
+      (setq ls-lisp-format-time-list
+            '(<span class="org-string">"%Y-%m-%d %H:%M"</span>
+              <span class="org-string">"%Y-%m-%d %H:%M"</span>))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Use localized date/time format.</span>
-    (setq ls-lisp-use-localized-time-format t))
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Use localized date/time format.</span>
+      (setq ls-lisp-use-localized-time-format t))
 </pre>
 </div>
 </div>
@@ -17877,7 +17867,11 @@ example.
 <div class="outline-text-3" id="text-orgheadline343">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable VC diff highlighting on the side of a Dired window.</span>
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** Diff-hl</span>
+
+  (leuven--section <span class="org-string">"30.XX Diff-hl"</span>)
+
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable VC diff highlighting on the side of a Dired window.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diff-hl-autoloads"</span>
     (add-hook 'dired-mode-hook
               (<span class="org-keyword">lambda</span> ()
