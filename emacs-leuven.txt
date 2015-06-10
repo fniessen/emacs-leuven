@@ -1000,12 +1000,11 @@ echo area.
   (setq read-buffer-completion-ignore-case t)
 #+end_src
 
-
 #+begin_src emacs-lisp
   ;; Provide the same facility of `ls --color' inside Emacs.
   (when (locate-library "dircolors")
     (autoload 'dircolors "dircolors" nil t)
-    (add-hook 'completion-list-mode-hook 'dircolors))
+    (add-hook 'completion-list-mode-hook #'dircolors))
 #+end_src
 
 ** Repeating Minibuffer Commands
@@ -1764,7 +1763,7 @@ We bookmarks positions, not just lines!!
 ;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
 
 ;; ;; Restoring bookmarks when on file find.
-;; (add-hook 'find-file-hook 'bm-buffer-restore)
+;; (add-hook 'find-file-hook #'bm-buffer-restore)
 #+end_src
 
 ** Ace Jump
@@ -2044,7 +2043,7 @@ Toggle Auto-Highlight-Symbol using key chord ~**~.
     ;; (global-auto-highlight-symbol-mode t)
 
     ;; ;; Toggle Auto-Highlight-Symbol mode in all programming mode buffers.
-    ;; (add-hook 'prog-mode-hook 'auto-highlight-symbol-mode)
+    ;; (add-hook 'prog-mode-hook #'auto-highlight-symbol-mode)
     )
 #+end_src
 
@@ -2056,7 +2055,7 @@ Color Identifiers Mode: *color* every *variable* in its own, consistent color.
 ;; XXX Impact on Org's HTML export?
   ;; (with-eval-after-load "color-identifiers-mode-autoloads"
   ;;
-  ;;   (add-hook 'after-init-hook 'global-color-identifiers-mode))
+  ;;   (add-hook 'after-init-hook #'global-color-identifiers-mode))
 #+end_src
 
 ** Window Fringes
@@ -2164,8 +2163,8 @@ Remove trailing whitespace *in edited lines* with ~ws-butler~:
   ;; Unobtrusively remove trailing whitespace.
   (with-eval-after-load "ws-butler-autoloads"
 
-    (add-hook 'text-mode-hook 'ws-butler-mode)
-    (add-hook 'prog-mode-hook 'ws-butler-mode))
+    (add-hook 'text-mode-hook #'ws-butler-mode)
+    (add-hook 'prog-mode-hook #'ws-butler-mode))
 
   (with-eval-after-load "ws-butler"
     (diminish 'ws-butler-mode))
@@ -2183,8 +2182,8 @@ characters over the default mechanism of ~nobreak-char-display~ and
 #+begin_src emacs-lisp
   (GNUEmacs
     ;; Enable Whitespace mode in all file buffers (not in *vc-dir*, etc.).
-    (add-hook 'text-mode-hook 'whitespace-mode)
-    (add-hook 'prog-mode-hook 'whitespace-mode)
+    (add-hook 'text-mode-hook #'whitespace-mode)
+    (add-hook 'prog-mode-hook #'whitespace-mode)
 
     (with-eval-after-load "whitespace"
 
@@ -2460,7 +2459,7 @@ See http://www.elliotglaysher.org/emacs/
                   (powerline-render rhs)))))))
 
   (with-eval-after-load "powerline-autoloads"
-    (add-hook 'after-init-hook 'powerline-leuven-theme))
+    (add-hook 'after-init-hook #'powerline-leuven-theme))
 #+end_src
 
 ** Displaying the Cursor
@@ -2484,7 +2483,7 @@ See http://www.elliotglaysher.org/emacs/
         (set-cursor-color color)
         (setq cursor-type type)))
 
-    (add-hook 'post-command-hook 'leuven--set-cursor-according-to-mode))
+    (add-hook 'post-command-hook #'leuven--set-cursor-according-to-mode))
 
   ;; Cursor to use.
   (setq-default cursor-type 'bar)
@@ -2595,7 +2594,7 @@ Since Emacs 24.3:
 
   ;; FIXME Error when selecting search string from kill ring (`M-p')
   ;; ;; Always exit searches at the beginning of the expression found.
-  ;; (add-hook 'isearch-mode-end-hook 'isearch-goto-match-beginning)
+  ;; (add-hook 'isearch-mode-end-hook #'isearch-goto-match-beginning)
   ;;
   ;; (defun isearch-goto-match-beginning ()
   ;;   "Use with isearch hook to end search at first char of match."
@@ -2638,7 +2637,7 @@ the user see truly invisible matches before replacing them.
                                         ; This autoload isn't defined in
                                         ; `fuzzy-autoloads'!
 
-      (add-hook 'isearch-mode-hook 'turn-on-fuzzy-isearch)))
+      (add-hook 'isearch-mode-hook #'turn-on-fuzzy-isearch)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2896,7 +2895,7 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
 #+begin_src emacs-lisp
     ;; Prevent Flyspell from finding mistakes in the code, well in comments and
     ;; strings.
-    (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+    (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3281,7 +3280,7 @@ Update time stamps (and copyright notice) automatically.
 
 #+begin_src emacs-lisp
   ;; Update time stamps every time you save a buffer.
-  (add-hook 'before-save-hook 'time-stamp)
+  (add-hook 'before-save-hook #'time-stamp)
 
   ;; Maintain last change time stamps (`Time-stamp: <>' occurring within
   ;; the first 8 lines) in files edited by Emacs.
@@ -3423,7 +3422,7 @@ Make the message "/FILENAME has auto save data/" unmissable:
         (overlay-put leuven--recover-this-file
                      'face 'recover-this-file))))
 
-  (add-hook 'find-file-hook 'leuven--recover-this-file)
+  (add-hook 'find-file-hook #'leuven--recover-this-file)
 #+end_src
 
 ** Comparing Files
@@ -3449,8 +3448,8 @@ variant.
 
 You can review the diff of all file changes, either:
 
-- unified (Diff mode) or
-- split (Ediff mode).
+- *unified* (Diff mode) or
+- *split* (Ediff mode).
 
 In Diff mode, the changes specified in a patch are grouped into "hunks", which
 are contiguous chunks of text that contain one or more changed lines.
@@ -3562,7 +3561,7 @@ In Ediff, press:
         (org-remove-inline-images)))
 
     ;; Force the buffers to unhide (folded) text (in Org files).
-    (add-hook 'ediff-prepare-buffer-hook 'turn-on-visible-mode)
+    (add-hook 'ediff-prepare-buffer-hook #'turn-on-visible-mode)
 
     (defun turn-off-visible-mode ()
       "Disable Visible mode."
@@ -3571,7 +3570,7 @@ In Ediff, press:
       (when (derived-mode-p 'org-mode)
         (org-display-inline-images)))
 
-    (add-hook 'ediff-quit-hook 'turn-off-visible-mode)
+    (add-hook 'ediff-quit-hook #'turn-off-visible-mode)
 
     )
 #+end_src
@@ -4541,7 +4540,7 @@ respectively.
 
   ;; Show image files as images (not as semi-random bits).
   (GNUEmacs
-    (add-hook 'find-file-hook 'auto-image-file-mode))
+    (add-hook 'find-file-hook #'auto-image-file-mode))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -5551,10 +5550,10 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
   (global-set-key (kbd "M-q") 'leuven-fill-paragraph)
 
   ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
-  (add-hook 'fill-nobreak-predicate 'fill-french-nobreak-p)
+  (add-hook 'fill-nobreak-predicate #'fill-french-nobreak-p)
 
   ;; Activate Auto Fill for all text mode buffers.
-  (add-hook 'text-mode-hook 'auto-fill-mode)
+  (add-hook 'text-mode-hook #'auto-fill-mode)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -5572,9 +5571,9 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
     (setq fci-dash-pattern 0.5)
 
     ;; Enable fci-mode in programming, message and Org modes.
-    (add-hook 'prog-mode-hook 'fci-mode)
-    (add-hook 'message-mode-hook 'fci-mode)
-    (add-hook 'org-mode-hook 'fci-mode)
+    (add-hook 'prog-mode-hook #'fci-mode)
+    (add-hook 'message-mode-hook #'fci-mode)
+    (add-hook 'org-mode-hook #'fci-mode)
 #+end_src
 
 #+begin_warning
@@ -5665,14 +5664,13 @@ a factor 2!?
        (t
         (insert "\"")))))
 
-  (defun leuven-smart-punctuation ()
+  (defun leuven--smart-punctuation ()
     "Replace second apostrophe or quotation mark."
-    (interactive)
     (local-set-key [39] 'leuven-smart-punctuation-apostrophe)
     (local-set-key "\"" 'leuven-smart-punctuation-quotation-mark))
 
-  (add-hook 'text-mode-hook 'leuven-smart-punctuation)
-  (add-hook 'message-mode-hook 'leuven-smart-punctuation)
+  (add-hook 'text-mode-hook #'leuven--smart-punctuation)
+  (add-hook 'message-mode-hook #'leuven--smart-punctuation)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -5883,8 +5881,7 @@ You can use ~org-cycle~ in other modes, with ~outline-minor-mode~.
            (,heading-3-regexp 1 'org-level-3 t)
            (,heading-4-regexp 1 'org-level-4 t)))))
 
-    (add-hook 'outline-minor-mode-hook
-              'leuven--outline-minor-mode-hook)
+    (add-hook 'outline-minor-mode-hook #'leuven--outline-minor-mode-hook)
 
     ;; Add the following as the top line of your `.emacs':
     ;;
@@ -5968,7 +5965,7 @@ As for handling "large" files, I use this:
 
   ;; ;; XXX 2010-06-21 Conflicts with outline-minor-mode bindings
   ;; ;; add a hook to use `orgstruct-mode' in Emacs Lisp buffers
-  ;; (add-hook 'emacs-lisp-mode-hook 'orgstruct-mode)
+  ;; (add-hook 'emacs-lisp-mode-hook #'orgstruct-mode)
 
   (defun org-cycle-global ()
     (interactive)
@@ -6680,16 +6677,16 @@ sure that you're calling ~org-return~ to open (it's bound to ~C-m~).
 #+begin_src emacs-lisp :tangle no
   ;; PDFs visited in Org mode are opened in Evince (and not in the default choice).
   (add-hook 'org-mode-hook
-            '(lambda ()
-               (delete '("\\.pdf\\'" . default) org-file-apps)
-               (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
+            (lambda ()
+              (delete '("\\.pdf\\'" . default) org-file-apps)
+              (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
   (add-hook 'org-mode-hook
-            '(lambda ()
-               (delete '("\\.x?html?\\'" . default) org-file-apps)
-               (add-to-list 'org-file-apps '("\\.x?html?\\'" . system))))
+            (lambda ()
+              (delete '("\\.x?html?\\'" . default) org-file-apps)
+              (add-to-list 'org-file-apps '("\\.x?html?\\'" . system))))
 
   ;; (setcdr (assq 'org-file-apps (assoc "\\.x?html?\\'" org-file-apps))
   ;;         'system)
@@ -6991,7 +6988,7 @@ on the format of these entries."
     (let (org-log-done org-log-states)  ; turn off logging
       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
 
-  (add-hook 'org-after-todo-statistics-hook 'leuven--org-summary-todo)
+  (add-hook 'org-after-todo-statistics-hook #'leuven--org-summary-todo)
 #+end_src
 
 ** Tags
@@ -7335,7 +7332,7 @@ Alternative to requiring org-clock in every Emacs session.
           (org-clock-out)
         t))                             ; Only fails on keyboard quit or error.
 
-    (add-hook 'kill-emacs-query-functions 'leuven--org-query-clock-out)
+    (add-hook 'kill-emacs-query-functions #'leuven--org-query-clock-out)
 
     )                                   ; with-eval-after-load "org-clock" ends here.
 #+end_src
@@ -7363,7 +7360,7 @@ When clocking in, ask for a time estimate if the property is not yet defined.
         (unless (equal effort "")
           (org-set-property "Effort" effort)))))
 
-  (add-hook 'org-clock-in-prepare-hook 'leuven--org-ask-effort)
+  (add-hook 'org-clock-in-prepare-hook #'leuven--org-ask-effort)
 #+end_src
 
 XXX We could forbid an empty answer to the effort estimate question!
@@ -7690,7 +7687,7 @@ From %c"
 
     ;; Make the frame contain a single window (by default, `org-capture' splits
     ;; the window).
-    (add-hook 'org-capture-mode-hook 'delete-other-windows)
+    (add-hook 'org-capture-mode-hook #'delete-other-windows)
 
     (defadvice org-capture-finalize
       (after leuven-delete-capture-finalize-frame activate)
@@ -7932,11 +7929,6 @@ arrives -- at which point it will be in all lists.
     (setq org-agenda-tags-todo-honor-ignore-options t)
 #+end_src
 
-#+begin_src emacs-lisp
-    ;; ;; Highlight current line (may bring some slowness).
-    ;; (add-hook 'org-agenda-mode-hook 'hl-line-mode)
-#+end_src
-
 **** Advanced Search
 
 #+begin_src emacs-lisp
@@ -8079,7 +8071,7 @@ headline (to return any kind of string you want).
       "Justify the tags to the right border of the agenda window."
       (let ((org-agenda-tags-column (- 2 (window-width))))
         (org-agenda-align-tags)))
-    (add-hook 'org-agenda-finalize-hook 'leuven--org-agenda-right-justify-tags))
+    (add-hook 'org-agenda-finalize-hook #'leuven--org-agenda-right-justify-tags))
 #+end_src
 
 Show the time grid in the daily agenda but not in the weekly agenda, except
@@ -8154,7 +8146,7 @@ grouped by category)!
 
   ;; FIXME When this is enabled, clicking on a clock line from `v c'
   ;; (log check) does not jump to the right line
-  ;; (add-hook 'org-agenda-after-show-hook 'leuven--compact-follow)
+  ;; (add-hook 'org-agenda-after-show-hook #'leuven--compact-follow)
 
   ;; 10.5 Number of days to include in overview display.
   (setq org-agenda-span 'day)
@@ -8439,10 +8431,11 @@ XXX Does this work?
 **** Emphasize items in agenda
 
 #+begin_src emacs-lisp
-(add-hook 'org-agenda-finalize-hook
-          (lambda () (let ((inhibit-read-only t))
-               (goto-char (point-min))
-               (org-do-emphasis-faces (point-max)))))
+  (add-hook 'org-agenda-finalize-hook
+            (lambda ()
+              (let ((inhibit-read-only t))
+                (goto-char (point-min))
+                (org-do-emphasis-faces (point-max)))))
 #+end_src
 
 **** Mark a task as DONE and create a follow-up task
@@ -8663,7 +8656,7 @@ launched from Dired?
           ;; ;; Update the results in the Org buffer
           ;; (org-babel-execute-buffer)    ; In this case, better than
           ;;                               ; (add-hook 'org-export-first-hook
-          ;;                               ;           'org-babel-execute-buffer):
+          ;;                               ;           #'org-babel-execute-buffer):
           ;;                               ; excuted only once for both exports.
 
 ;; It'd make sense to eval all code blocks which have :cache yes or :exports
@@ -9020,7 +9013,7 @@ of the files produced by LaTeX (~org-latex-logfiles-extensions~) are removed.
                   "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"))))))
 
     ;; Hook run before parsing an export buffer.
-    (add-hook 'org-export-before-parsing-hook 'leuven--change-pdflatex-program)
+    (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
 #+end_src
 
 You can easily customize this variable on a per file basis.  If you seldom use
@@ -9129,7 +9122,7 @@ What about ~apacite~ and ~tikz~ in ~org-latex-packages-alist~?
                    '("frenchb" "babel") t))
 
     ;; Hook run before parsing an export buffer.
-    (add-hook 'org-export-before-parsing-hook 'leuven--change-pdflatex-packages)
+    (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-packages)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -9175,7 +9168,7 @@ headline:
       data)
 
     (add-hook 'org-export-filter-parse-tree-functions
-              'leuven--org-export-ignore-headlines)
+              #'leuven--org-export-ignore-headlines)
 #+end_src
 
 In addition, it promotes all headlines under the removed ~ignore~-tagged
@@ -9297,7 +9290,7 @@ up-to-date.
     ;;             (org-display-inline-images nil t))) ; DOESN'T WORK!
     ;;                                     ; More efficient with refresh == t.
 
-    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+    (add-hook 'org-babel-after-execute-hook #'org-display-inline-images)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -9533,7 +9526,7 @@ languages which can be evaluated in Org mode buffers.
       ;;          (buffer-name (buffer-base-buffer)))
       )
 
-    (add-hook 'org-mode-hook 'org-src-block-check t))
+    (add-hook 'org-mode-hook #'org-src-block-check t))
                                         ; Place this at the end to ensure that
                                         ; errors do not stop applying other
                                         ; functions in the `org-mode-hook' (such
@@ -9566,7 +9559,7 @@ an interactive terminal.
            (0 (progn (compose-region (match-beginning 1) (match-end 1) ?¦)
                      nil))))))
 
-    (add-hook 'org-mode-hook 'prettier-org-code-blocks)
+    (add-hook 'org-mode-hook #'prettier-org-code-blocks)
 #+end_src
 
 *** Library of Babel
@@ -9658,7 +9651,7 @@ Find all entries where :PROPERTIES: is not the first item listed.
                     (unless (bolp) (insert "\n"))))))))))))
 
   (when (boundp 'org-planning-line-re)
-    (add-hook 'org-mode-hook 'org-repair-property-drawers))
+    (add-hook 'org-mode-hook #'org-repair-property-drawers))
 #+end_src
 
 *** Ispell
@@ -9691,7 +9684,7 @@ The ~leuven--org-switch-dictionary~ function is called as well on each code bloc
               (sit-for 1.5)))))))
 
   ;; Guess dictionary.
-  (add-hook 'org-mode-hook 'leuven--org-switch-dictionary)
+  (add-hook 'org-mode-hook #'leuven--org-switch-dictionary)
 #+end_src
 
 *************** TODO Avoid (error "Undefined dictionary: american")
@@ -10009,7 +10002,7 @@ Anonymize Org contents (sanitize the sensitive data).
              (org-set-property "HTML_CONTAINER_CLASS" "inlinetask"))
            match)))))
 
-  (add-hook 'org-export-preprocess-hook 'leuven--org-export-preprocess-hook)
+  (add-hook 'org-export-preprocess-hook #'leuven--org-export-preprocess-hook)
 #+end_src
 
 Promote ignoreheading. Works in ASCII backend too:
@@ -10025,7 +10018,7 @@ Promote ignoreheading. Works in ASCII backend too:
              (org-promote-subtree)
              (delete-region (line-beginning-position) (line-end-position))))))))
 
-  (add-hook 'org-export-before-parsing-hook 'yz/org-export-ignore-headline)
+  (add-hook 'org-export-before-parsing-hook #'yz/org-export-ignore-headline)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -10175,7 +10168,7 @@ it to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
         (when flyspell-mode-before-save (flyspell-mode 1)))))
 
   ;; Make sure that all dynamic blocks and all tables are always up-to-date.
-  (add-hook 'before-save-hook 'leuven--org-update-buffer-before-save)
+  (add-hook 'before-save-hook #'leuven--org-update-buffer-before-save)
 #+end_src
 
 ** Org-contrib
@@ -10397,7 +10390,7 @@ file, AUCTeX gives you a ~Command~ menu.
                           "XeLaTeX"
                         "LaTeX")))))))
 
-      (add-hook 'LaTeX-mode-hook 'leuven--LaTeX-mode-hook)
+      (add-hook 'LaTeX-mode-hook #'leuven--LaTeX-mode-hook)
 
       ;; Don't ask user for permission to save files before starting TeX.
       (setq TeX-save-query nil)
@@ -10560,7 +10553,7 @@ current selection.  More general index entries are created with ~C-c <~.
 ~C-c >~ displays the compiled index.
 
 #+begin_src emacs-lisp
-      (add-hook 'LaTeX-mode-hook 'reftex-mode) ; with AUCTeX LaTeX mode
+      (add-hook 'LaTeX-mode-hook #'reftex-mode) ; with AUCTeX LaTeX mode
 
       ;; Minor mode with distinct support for `\label', `\ref', `\cite' and
       ;; `\index' in LaTeX.
@@ -10647,7 +10640,7 @@ Plug [[http://tidy.sourceforge.net/][HTML Tidy]] with ~tidy.el~.
         (setq sgml-validate-command "tidy"))
 
       ;; Also run from `html-helper-mode'.
-      (add-hook 'html-mode-hook 'leuven--html-mode-hook)))
+      (add-hook 'html-mode-hook #'leuven--html-mode-hook)))
 #+end_src
 
 *** html-helper-mode
@@ -10766,7 +10759,7 @@ Some key bindings:
                 ;; When `html-mode-hook' is called from `html-helper-mode'.
                 (hl-tags-mode 1)))
 
-    (add-hook 'nxml-mode-hook 'hl-tags-mode))
+    (add-hook 'nxml-mode-hook #'hl-tags-mode))
 #+end_src
 
 ** CSS
@@ -10897,7 +10890,7 @@ XXX Autoloaded?
         (condition-case nil
             (imenu-add-to-menubar "Imenu")
           (error nil)))
-      (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
+      (add-hook 'font-lock-mode-hook #'try-to-add-imenu)
 
       ;; Bind Imenu from the mouse.
       (GNUEmacs (global-set-key [S-mouse-3] 'imenu))
@@ -10962,8 +10955,8 @@ things.
     (leuven--section "26.3 (emacs)Program Indentation")
 
     ;; Turn on auto-fill mode in Lisp modes.
-    (add-hook 'lisp-mode-hook 'auto-fill-mode)
-    (add-hook 'emacs-lisp-mode-hook 'auto-fill-mode)
+    (add-hook 'lisp-mode-hook #'auto-fill-mode)
+    (add-hook 'emacs-lisp-mode-hook #'auto-fill-mode)
 
     ;; Auto-indentation: automatically jump to the "correct" column when
     ;; the <RET> key is pressed while editing a program (act as if you
@@ -11029,7 +11022,7 @@ XXX Is the following still necessary?  Paren are highlighted by smartparens?
   (with-eval-after-load "rainbow-delimiters-autoloads"
 
     ;; Enable rainbow-delimiters in programming modes.
-    (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 #+end_src
 
 To customize it, see
@@ -11076,12 +11069,12 @@ Balanced editing: inserting two matching parentheses at once, etc.
       (?~ . ?~))
     "Electric pairs for Org mode.")     ; See `org-emphasis-alist'.
 
-  (defun org-add-electric-pairs ()
+  (defun leuven--org-add-electric-pairs ()
     (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
     ;; (setq-local electric-pair-text-pairs electric-pair-pairs) ; In comments.
   )
 
-  (add-hook 'org-mode-hook 'org-add-electric-pairs)
+  (add-hook 'org-mode-hook #'leuven--org-add-electric-pairs)
 #+end_src
 
   Deleting one bracket doesn't delete the other.  If you want that, install
@@ -11149,7 +11142,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
     ;; ;; Enable smartparens-strict-mode in all Lisp modes.
     ;; (mapc (lambda (mode)
     ;;         (add-hook (intern (format "%s-hook" (symbol-name mode)))
-    ;;                   'smartparens-strict-mode))
+    ;;                   #'smartparens-strict-mode))
     ;;       sp--lisp-modes)
     )
 #+end_src
@@ -11163,12 +11156,12 @@ Balanced editing: inserting two matching parentheses at once, etc.
   ;; Minor mode for editing parentheses.
   (with-eval-after-load "paredit-autoloads"
 
-    (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+    (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
 
     ;; Common Lisp editing extensions.
     (with-eval-after-load "redshank"    ; Requires `paredit'.
 
-      (add-hook 'emacs-lisp-mode-hook 'redshank-mode)))
+      (add-hook 'emacs-lisp-mode-hook #'redshank-mode)))
 #+end_src
 
   Use it in ELisp; use smartparens in other modes (NOT globally!)
@@ -11227,10 +11220,10 @@ Function argument hint.
 
   ;; Show the function arglist or the variable docstring in the echo area.
   (GNUEmacs
-    (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
-    (add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
-    (add-hook 'ielm-mode-hook 'eldoc-mode)
-    (add-hook 'eval-expression-minibuffer-setup-hook 'eldoc-mode)
+    (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
+    (add-hook 'lisp-interaction-mode-hook #'eldoc-mode)
+    (add-hook 'ielm-mode-hook #'eldoc-mode)
+    (add-hook 'eval-expression-minibuffer-setup-hook #'eldoc-mode)
     ;; (global-eldoc-mode)                 ; In Emacs 25.
     )
 
@@ -11261,7 +11254,7 @@ many programming modes.
   (leuven--section "26.7 (emacs)Hideshow minor mode")
 
   ;; Enable Hideshow (code folding) for programming modes.
-  (add-hook 'prog-mode-hook 'hs-minor-mode)
+  (add-hook 'prog-mode-hook #'hs-minor-mode)
 
   (with-eval-after-load "hideshow"
 
@@ -11370,8 +11363,8 @@ See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard a
 
   (leuven--section "26.9 (emacs)Glasses minor mode")
 
-  (add-hook 'ess-mode-hook 'glasses-mode)
-  (add-hook 'inferior-ess-mode-hook 'glasses-mode)
+  (add-hook 'ess-mode-hook #'glasses-mode)
+  (add-hook 'inferior-ess-mode-hook #'glasses-mode)
 
   (with-eval-after-load "glasses"
 
@@ -11599,7 +11592,7 @@ In the error list window the following keybindings are available:
   (with-eval-after-load "flycheck-autoloads"
 
     ;; Enable Flycheck mode in all programming modes.
-    (add-hook 'prog-mode-hook 'flycheck-mode))
+    (add-hook 'prog-mode-hook #'flycheck-mode))
 
   (with-eval-after-load "flycheck"
 
@@ -11634,7 +11627,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Functions to run after each syntax check.
     (add-hook 'flycheck-after-syntax-check-hook
-              'leuven--adjust-flycheck-automatic-syntax-eagerness))
+              #'leuven--adjust-flycheck-automatic-syntax-eagerness))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -11784,7 +11777,7 @@ See demo of it: http://www.youtube.com/watch?v=TMoPuv-xXMM.
   ;; Dynamic evaluation replacement with Emacs.
   (with-eval-after-load "litable-autoloads"
 
-    (add-hook 'lisp-interaction-mode-hook 'litable-mode))
+    (add-hook 'lisp-interaction-mode-hook #'litable-mode))
 #+end_src
 
 ** Lisp Interaction Buffers (~*scratch*~)
@@ -11913,7 +11906,7 @@ it into the commit buffer. So there is no need to "write the same thing twice".
       (setq ispell-local-dictionary "american")
       (flyspell-mode)))
 
-  (add-hook 'vc-log-mode-hook 'leuven--vc-log-mode-setup)
+  (add-hook 'vc-log-mode-hook #'leuven--vc-log-mode-setup)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -11925,7 +11918,7 @@ it into the commit buffer. So there is no need to "write the same thing twice".
   (with-eval-after-load "git-commit-mode"
 
     ;; turn on on-the-fly spell-checking
-    (add-hook 'git-commit-mode-hook 'flyspell-mode)
+    (add-hook 'git-commit-mode-hook #'flyspell-mode)
 
     ;; turn off save-place
     (add-hook 'git-commit-mode-hook
@@ -12453,50 +12446,51 @@ The commands to display *symbol references* are:
 
 #+begin_src emacs-lisp
   (unless (string< emacs-version "23.2")
-    ;; ;; enable global EDE (project management) features
+    ;; ;; Enable global EDE (project management) features.
     ;; (global-ede-mode 1)
 
     (setq semantic-default-submodes
           '(
-            ;; turn Semantic DB mode on (Semantic parsers store the results of
+            ;; Turn Semantic DB mode on (Semantic parsers store the results of
             ;; parsing source code in a database file, which can be saved for
-            ;; future Emacs sessions)
+            ;; future Emacs sessions).
             global-semanticdb-minor-mode
 
-            ;; the idle scheduler will automatically reparse buffers in idle
-            ;; time
+            ;; The idle scheduler will automatically reparse buffers in idle
+            ;; time.
             global-semantic-idle-scheduler-mode ; [minimum-features]
 
-            ;; display a summary of the symbol at point in the echo area
-            ;; (~ ElDoc)
+            ;; Display a summary of the symbol at point in the echo area
+            ;; (~ ElDoc).
             global-semantic-idle-summary-mode ; [code-helpers]
 
-            ;; display a tooltip with a list of possible completions near the
-            ;; cursor
+            ;; Display a tooltip with a list of possible completions near the
+            ;; cursor.
             global-semantic-idle-completions-mode ; [gaudy-code-helpers]
 
-            ;; turn Semantic MRU Bookmarks on (keep track of the Most
-            ;; Recently Used tags)
+            ;; Turn Semantic MRU Bookmarks on (keep track of the Most
+            ;; Recently Used tags).
             global-semantic-mru-bookmark-mode
 
-            ;; enable Semantic-Stickyfunc mode (display a header line that shows
-            ;; the declaration line of the function or tag)
+            ;; Enable Semantic-Stickyfunc mode (display a header line that shows
+            ;; the declaration line of the function or tag).
             global-semantic-stickyfunc-mode ; [gaudy-code-helpers]
 
-            ;; enable Semantic-Highlight-Func mode
+            ;; Enable Semantic-Highlight-Func mode.
             global-semantic-highlight-func-mode ; [excessive-code-helpers]
 
-            ;; turn on all active decorations
+            ;; Turn on all active decorations.
             global-semantic-decoration-mode ; [gaudy-code-helpers]
             ))
 
-    ;; XXX if prog-mode, then Semantic will be launched after Emacs init, as
+    ;; XXX If prog-mode, then Semantic will be launched after Emacs init, as
     ;; the scratch buffer is in Emacs Lisp...
-    (add-hook 'java-mode-hook 'semantic-mode) ; enable parser features (Semantic
-                                        ; mode) and install a `Development' menu
-                                        ; on the menu-bar
+    (add-hook 'java-mode-hook #'semantic-mode)
+                                        ; Enable parser features (Semantic mode)
+                                        ; and install a `Development' menu on
+                                        ; the menu-bar.
 
-    ;; ;; smart completion, and display of information for tags & classes
+    ;; ;; Smart completion, and display of information for tags & classes.
     ;; (require 'semantic/ia)
     ;;
     ;; (require 'semantic/db)
@@ -12504,57 +12498,57 @@ The commands to display *symbol references* are:
     (with-eval-after-load "semantic"
 
       (defun leuven--semantic ()
-        ;; automatically complete whatever symbol you are typing
+        ;; Automatically complete whatever symbol you are typing.
         (local-set-key
-          (kbd "C-c ?") 'semantic-ia-complete-symbol) ; better binding: `M-/'?
+          (kbd "C-c ?") 'semantic-ia-complete-symbol) ; Better binding: `M-/'?
 
-        ;; jump to the definition of the symbol under cursor
+        ;; Jump to the definition of the symbol under cursor.
         (local-set-key
-          (kbd "C-c j") 'semantic-ia-fast-jump) ; where a symbol is declared
+          (kbd "C-c j") 'semantic-ia-fast-jump) ; Where a symbol is declared.
 
-        ;; show the documentation of the symbol under cursor
+        ;; Show the documentation of the symbol under cursor.
         (local-set-key
-          (kbd "C-c q") 'semantic-ia-show-doc) ; show javadoc of the right method
+          (kbd "C-c q") 'semantic-ia-show-doc) ; Show javadoc of the right method.
 
-        ;; show a summary about the symbol under cursor
+        ;; Show a summary about the symbol under cursor.
         (local-set-key
           (kbd "C-c s") 'semantic-ia-show-summary)
 
 
-        ;; show possible public member functions or data members (when at `.'
-        ;; or `->' after an object name)
+        ;; Show possible public member functions or data members (when at `.'
+        ;; or `->' after an object name).
         (local-set-key
           (kbd "C-c >") 'semantic-complete-analyze-inline)
 
-        ;; toggle between the implementation and a prototype of symbol under
-        ;; cursor
+        ;; Toggle between the implementation and a prototype of symbol under
+        ;; cursor.
         (local-set-key
           (kbd "C-c p") 'semantic-analyze-proto-impl-toggle)
 
-        ;; visit the header file under cursor
+        ;; Visit the header file under cursor.
         (local-set-key
           (kbd "C-c =") 'semantic-decoration-include-visit)
 
 
-        ;; unfold the block under cursor
+        ;; Unfold the block under cursor.
         (local-set-key
           (kbd "C-c +") 'semantic-tag-folding-show-block)
 
-        ;; fold the block under cursor
+        ;; Fold the block under cursor.
         (local-set-key
           (kbd "C-c -") 'semantic-tag-folding-fold-block)
 
         ;; C-c C-c is not a prefix key!
-        ;; ;; unfold all
+        ;; ;; Unfold all.
         ;; (local-set-key
         ;;   (kbd "C-c C-c +") 'semantic-tag-folding-show-all)
         ;;
-        ;; ;; fold all
+        ;; ;; Fold all.
         ;; (local-set-key
         ;;   (kbd "C-c C-c -") 'semantic-tag-folding-fold-all)
         )
 
-      (add-hook 'prog-mode-hook 'leuven--semantic)
+      (add-hook 'prog-mode-hook #'leuven--semantic)
 
       (defun leuven--c-mode-semantic ()
         "Completion on `.' or `->'."
@@ -12562,16 +12556,16 @@ The commands to display *symbol references* are:
         (local-set-key (kbd ">") 'semantic-complete-self-insert)
         (local-set-key (kbd "C-c C-r") 'semantic-symref))
 
-      (add-hook 'c-mode-common-hook 'leuven--c-mode-semantic))
+      (add-hook 'c-mode-common-hook #'leuven--c-mode-semantic))
                                         ; Note that this will apply to all
                                         ; cc-modes, e.g. c-mode, c++-mode,
                                         ; php-mode, csharp-mode, awk-mode.
 
-    ;; hooks, specific for Semantic
+    ;; Hooks, specific for Semantic.
     (defun leuven--semantic-imenu ()
       (imenu-add-to-menubar "TAGS"))
 
-    (add-hook 'semantic-init-hooks 'leuven--semantic-imenu)
+    (add-hook 'semantic-init-hooks #'leuven--semantic-imenu)
 
     )
 #+end_src
@@ -12602,12 +12596,12 @@ Keyboard navigation:
      Go to edit buffer.
 
 #+begin_src emacs-lisp :tangle no
-  ;; Emacs Code Browser
+  ;; Emacs Code Browser.
   (custom-set-variables '(ecb-options-version "2.40"))
   (try-require 'ecb-autoloads)
   (with-eval-after-load "ecb-autoloads"
 
-    ;; trick for starting ECB 2.40 (with CEDET merged in Emacs since 23.2)
+    ;; Trick for starting ECB 2.40 (with CEDET merged in Emacs since 23.2).
     (GNUEmacs
       (require 'semantic/analyze))
     (provide 'semantic-analyze)
@@ -12619,10 +12613,10 @@ Keyboard navigation:
 
     (setq stack-trace-on-error t)
 
-    ;; don't show tip of the day at start time of ECB
+    ;; Don't show tip of the day at start time of ECB.
     (setq ecb-tip-of-the-day nil)
 
-    ;; ;; toggle activation of ECB (between `ecb-activate' and `ecb-deactivate')
+    ;; ;; Toggle activation of ECB (between `ecb-activate' and `ecb-deactivate').
     ;; (global-set-key (kbd "C-c e") 'ecb-minor-mode)
 
     ;; (global-set-key (kbd "<M-left>") 'ecb-goto-window-methods)
@@ -12647,7 +12641,7 @@ really like this.
        ;; (local-set-key (kbd "C-c e") 'eassist-list-methods)
        )
 
-     (add-hook 'c-mode-common-hook 'leuven--c-mode-eassist))
+     (add-hook 'c-mode-common-hook #'leuven--c-mode-eassist))
                                         ; Note that this will apply to all
                                         ; cc-modes, e.g. c-mode, c++-mode,
                                         ; php-mode, csharp-mode, awk-mode.
@@ -12725,7 +12719,7 @@ XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-con
 
 #+begin_src emacs-lisp :tangle no
       ;; Enable YASnippet in programming modes only.
-      (add-hook 'prog-mode-hook 'yas-minor-mode)
+      (add-hook 'prog-mode-hook #'yas-minor-mode)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -12779,12 +12773,12 @@ Load additional snippets.
 
       ;; Don't expand when you are typing in a string or comment.
       (add-hook 'prog-mode-hook
-                '(lambda ()
-                   (setq yas-buffer-local-condition
-                         '(if (nth 8 (syntax-ppss))
+                (lambda ()
+                  (setq yas-buffer-local-condition
+                        '(if (nth 8 (syntax-ppss))
                                         ; Non-nil if in a string or comment.
-                              '(require-snippet-condition . force-in-comment)
-                            t))))
+                             '(require-snippet-condition . force-in-comment)
+                           t))))
 
       ;; UI for selecting snippet when there are multiple candidates.
       (setq yas-prompt-functions '(yas-dropdown-prompt))
@@ -12823,7 +12817,7 @@ Automatically reload snippets after saving.
           (yas-reload-all)
           (message "Reloaded all snippets")))
 
-      (add-hook 'after-save-hook 'recompile-and-reload-all-snippets)
+      (add-hook 'after-save-hook #'recompile-and-reload-all-snippets)
 #+end_src
 
 Display all available snippets with ~M-x yas-describe-tables~ (or ~C-c & C-l~ in
@@ -12881,7 +12875,7 @@ See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippe
    loading YASnippet:
 
    #+begin_example
-   (add-hook 'the-major-mode-hook 'yas-minor-mode-on)
+   (add-hook 'the-major-mode-hook #'yas-minor-mode-on)
    #+end_example
 
    where ~the-major-mode~ is the major mode in which ~yas-minor-mode~ isn't enabled
@@ -13193,7 +13187,7 @@ available completions and filter as well.
   (with-eval-after-load "company-autoloads"
 
     ;; Enable Company mode in all buffers ....
-    (add-hook 'after-init-hook 'global-company-mode))
+    (add-hook 'after-init-hook #'global-company-mode))
 
   (with-eval-after-load "company"
 
@@ -13279,7 +13273,7 @@ XXX The following does not work in Org files (TAB does not expand nodes anymore)
     ;; (defun leuven--tab-fix ()
     ;;   (local-set-key (kbd "<tab>") 'leuven-indent-or-complete))
     ;;
-    ;; (add-hook 'prog-mode-hook 'leuven--tab-fix)
+    ;; (add-hook 'prog-mode-hook #'leuven--tab-fix)
 #+end_src
 
 Only trigger the tooltip on manual invocation, but still have the preview (of
@@ -13900,7 +13894,7 @@ example.
 
   ;; mark the current date (by changing its face) after generating a calendar,
   ;; if today's date is visible
-  (add-hook 'calendar-today-visible-hook 'calendar-mark-today)
+  (add-hook 'calendar-today-visible-hook #'calendar-mark-today)
 #+end_src
 
 ** Scroll Calendar
@@ -13975,10 +13969,10 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
 *************** TODO Diff between shell-command and call-process?  Blocking call?
 
 #+begin_src emacs-lisp
-    ;; use a separate window to display appointment reminders
+    ;; Use a separate window to display appointment reminders.
     (setq appt-display-format 'window)
 
-    ;; function called to display appointment reminders *in a window*
+    ;; Function called to display appointment reminders *in a window*.
     (setq appt-disp-window-function (function leuven--appt-display))
 
     (defun leuven--appt-display (mins-to-appt current-time notification-string)
@@ -14002,7 +13996,7 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; turn appointment checking on (enable reminders)
+    ;; Turn appointment checking on (enable reminders).
     (when leuven-load-verbose
       (message "(Info) Enable appointment reminders..."))
     (GNUEmacs
@@ -14014,23 +14008,23 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; enable appointment notification, several minutes beforehand
-    (add-hook 'diary-hook 'appt-make-list)
+    ;; Enable appointment notification, several minutes beforehand.
+    (add-hook 'diary-hook #'appt-make-list)
 #+end_src
 
 #+begin_src emacs-lisp
     (with-eval-after-load "org-agenda"
 
-      ;; keep your appointment list clean: if you delete an appointment from your
-      ;; Org agenda file, delete the corresponding alert
+      ;; Keep your appointment list clean: if you delete an appointment from
+      ;; your Org agenda file, delete the corresponding alert.
       (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
         "Clear the existing `appt-time-msg-list'."
         (setq appt-time-msg-list nil))
 
-      ;; add today's appointments (found in `org-agenda-files') each time the
-      ;; agenda buffer is (re)built
-      (add-hook 'org-agenda-finalize-hook 'org-agenda-to-appt)
-                                          ;! don't use the `org-agenda-mode-hook'
+      ;; Add today's appointments (found in `org-agenda-files') each time the
+      ;; agenda buffer is (re)built.
+      (add-hook 'org-agenda-finalize-hook #'org-agenda-to-appt)
+                                          ;! Don't use the `org-agenda-mode-hook'
                                           ;! because the Org agenda files would be
                                           ;! opened once by `org-agenda-to-appt',
                                           ;! and then killed by
@@ -14040,8 +14034,8 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
                                           ;! weren't already opened), to be
                                           ;! finally re-opened!
 
-      ;; ;; add today's appointments (found in `org-agenda-files') each time such a
-      ;; ;; file is saved
+      ;; ;; Add today's appointments (found in `org-agenda-files') each time
+      ;; ;; such a file is saved.
       ;; (add-hook 'after-save-hook          ; VERY TIME CONSUMING (~ 30 s) at each save...
       ;;           (lambda ()
       ;;             (when (and (derived-mode-p 'org-mode) ; ... of an Org
@@ -14269,8 +14263,8 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
 ;;* (info "(bbdb)Interfaces")
 
     ;; mail aliases (local mailing lists)
-    ;; (add-hook 'message-setup-hook 'bbdb-define-all-aliases) ; BBDB 2.35
-    (add-hook 'message-setup-hook 'bbdb-mail-aliases) ; BBDB 3
+    ;; (add-hook 'message-setup-hook #'bbdb-define-all-aliases) ; BBDB 2.35
+    (add-hook 'message-setup-hook #'bbdb-mail-aliases) ; BBDB 3
 
     ;; always use full name when sending mail
     ;; (even if User Name has an address of the form <user.name@domain>)
@@ -14360,7 +14354,7 @@ You can add the author of a mail or posting to the BBDB by hitting ~:~.
     (setq bbdb-offer-save 'auto)
 
     ;; automatically add some text to the notes field of the BBDB record
-    (add-hook 'bbdb-notice-hook 'bbdb-auto-notes-hook)
+    (add-hook 'bbdb-notice-hook #'bbdb-auto-notes-hook)
 
     ;; capture auto-notes
     (setq bbdb-auto-notes-alist
@@ -14671,7 +14665,7 @@ browser*: you can open the current page in your graphical browser by hitting ~M~
         (define-key w3m-mode-map (kbd "f") 'leuven-w3m-go-to-link-number)
 
         ;; enable link numbering mode by default
-        (add-hook 'w3m-mode-hook 'w3m-lnum-mode))
+        (add-hook 'w3m-mode-hook #'w3m-lnum-mode))
 
       ))
 #+end_src
@@ -14968,8 +14962,8 @@ apply: Buffer name `*shell d:/Users/fni/*' is in use
             (lambda ()
               (leuven--rename-buffer-to-curdir)
               (add-hook 'comint-output-filter-functions
-                        'leuven--rename-buffer-to-curdir nil t)))
-                                        ; local to Shell comint
+                        #'leuven--rename-buffer-to-curdir nil t)))
+                                        ; Local to Shell comint.
 #+end_src
 
 ** Options
@@ -15274,7 +15268,7 @@ Smart underscore:
   (with-eval-after-load "ess-site"
 
     ;; Code folding in ESS mode.
-    (add-hook 'ess-mode-hook 'hs-minor-mode)
+    (add-hook 'ess-mode-hook #'hs-minor-mode)
 #+end_src
 
 *** 9 Completion
@@ -15305,7 +15299,7 @@ See
 
 #+begin_src emacs-lisp :tangle no
     ;; Activate ess-tracebug every time r session starts.
-    (add-hook 'ess-post-run-hook 'ess-tracebug)
+    (add-hook 'ess-post-run-hook #'ess-tracebug)
 #+end_src
 
 *** 11 Other ESS features and tools
@@ -16203,7 +16197,7 @@ or restart your X11 to validate the modification.  I let Emacs do this for me:
         (start-process "xrdb" nil "xrdb" "-merge" (buffer-file-name))
         (message (format "Merged %s into X resource database" file)))))
 
-  (add-hook 'after-save-hook 'leuven--merge-x-resources)
+  (add-hook 'after-save-hook #'leuven--merge-x-resources)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -16616,11 +16610,11 @@ calls to message), set the variable ~debug-on-message~.
 
 (leuven--chapter leuven-load-chapter-99-debugging "99 Debugging"
 
-  ;; get the backtrace when uncaught errors occur
-  (setq debug-on-error nil)             ; was set to `t' at beginning of file
+  ;; Get the backtrace when uncaught errors occur.
+  (setq debug-on-error nil)             ; Was set to `t' at beginning of file.
 
-  ;; hit `C-g' while it's frozen to get an Emacs Lisp backtrace
-  (setq debug-on-quit nil)              ; was set to `t' at beginning of file
+  ;; Hit `C-g' while it's frozen to get an Emacs Lisp backtrace.
+  (setq debug-on-quit nil)              ; Was set to `t' at beginning of file.
 
   (setq debug-on-entry 'user-error))
 #+end_src
@@ -16636,7 +16630,7 @@ calls to message), set the variable ~debug-on-message~.
 (when leuven-load-verbose
   (message "| Chapter | Time |")
   (message "|---------+------|")
-  (mapcar (lambda (el)                  ; FIXME use mapc or dolist
+  (mapcar (lambda (el)                  ; FIXME Use `mapc' or `dolist'.
             (message el))
           (nreverse leuven--load-times-list))
   (message "|---------+------|")
