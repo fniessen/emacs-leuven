@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150610.2027
+;; Version: 20150610.2129
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150610.2027"
+(defconst leuven--emacs-version "20150610.2129"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -6581,6 +6581,9 @@ this with to-do items than with projects or headings."
                  (or (executable-find "gswin32c.exe")
                      "C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"))
                                         ; Default value.
+                (leuven--cygwin-p
+                 (or (executable-find "rungs.exe")
+                     "/cygdrive/c/texlive/2014/bin/win32/rungs"))
                 (t
                  "/usr/bin/gs")))
         (leuven--file-exists-and-executable-p preview-gs-command)

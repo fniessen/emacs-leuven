@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150610.1135</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150610.2130</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150610.1135"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150610.2130"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -716,7 +716,7 @@ need to load a single file that define autoloaded functions.
       (<span class="org-keyword">let*</span> ((this-directory (expand-file-name this-directory)))
 
         <span class="org-comment-delimiter">;; </span><span class="org-comment">directories containing a `</span><span class="org-constant"><span class="org-comment">.nosearch</span></span><span class="org-comment">' file (such as</span>
-        <span class="org-comment-delimiter">;; </span><span class="org-comment">`auctex-11.87\style') should not made part of `</span><span class="org-constant"><span class="org-comment">load-path</span></span><span class="org-comment">'.</span>
+        <span class="org-comment-delimiter">;; </span><span class="org-comment">`auctex-11.88.6\style') should not made part of `</span><span class="org-constant"><span class="org-comment">load-path</span></span><span class="org-comment">'.</span>
         <span class="org-comment-delimiter">;; </span><span class="org-leuven-highlight"><span class="org-comment">TODO</span></span><span class="org-comment"> `</span><span class="org-constant"><span class="org-comment">RCS</span></span><span class="org-comment">' and `</span><span class="org-constant"><span class="org-comment">CVS</span></span><span class="org-comment">' directories should also be excluded.</span>
         (<span class="org-keyword">unless</span> (file-exists-p (concat this-directory <span class="org-string">"/.nosearch"</span>))
           (add-to-list 'load-path this-directory)
@@ -1124,7 +1124,9 @@ like this into your configuration file:
           <span class="org-comment-delimiter">;; </span><span class="org-comment">magit</span>
           multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
-          undo-tree w3m ws-butler yasnippet
+          undo-tree
+          <span class="org-comment-delimiter">;; </span><span class="org-comment">w3m</span>
+          ws-butler yasnippet
           <span class="org-comment-delimiter">;; </span><span class="org-comment">jabber multi-term paredit redshank</span>
           )
         <span class="org-doc">"A list of packages to ensure are installed at Emacs startup."</span>)
@@ -11183,17 +11185,18 @@ launched from Dired?
           <span class="org-comment-delimiter">;; </span><span class="org-comment">(when (locate-library "org-lint")</span>
           <span class="org-comment-delimiter">;;   </span><span class="org-comment">(measure-time "Linted Org mode" (org-lint)))</span>
 
-          <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Update the results in the Org buffer</span>
+          <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Update the results in the Org buffer.</span>
           <span class="org-comment-delimiter">;; </span><span class="org-comment">(org-babel-execute-buffer)    ; In this case, better than</span>
           <span class="org-comment-delimiter">;;                               </span><span class="org-comment">; (add-hook 'org-export-first-hook</span>
           <span class="org-comment-delimiter">;;                               </span><span class="org-comment">;           #'org-babel-execute-buffer):</span>
-          <span class="org-comment-delimiter">;;                               </span><span class="org-comment">; excuted only once for both exports.</span>
+          <span class="org-comment-delimiter">;;                               </span><span class="org-comment">; executed only once for both exports.</span>
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">It'd make sense to eval all code blocks which have :cache yes or :exports</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">results or both... And, before that, to delete all code block results!?</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Well, almost all code blocks: not the ones of "cached" blocks (they may have</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">taken a long time to be computed, or may not be computable another time), nor</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">the ones with a caption on the results block...</span>
+
           (measure-time <span class="org-string">"Buffer saved"</span>
            (<span class="org-keyword">let</span> ((before-save-hook nil))
              (save-buffer)))
@@ -13135,13 +13138,21 @@ Link emails from Org files.
 (leuven--chapter leuven-load-chapter-25.10-tex-mode <span class="org-string">"25.10 TeX Mode"</span>
 </pre>
 </div>
+
+<div class="warning">
+<p>
+Emacs ships with <code>tex-mode.el</code> but that&rsquo;s a separate thing from AUCTeX.  All
+AUCTeX functions start with <code>TeX-*</code> or <code>LaTeX-*</code> (case matters) or <code>font-latex-*</code>.
+</p>
+
+</div>
 </div>
 
 <div id="outline-container-orgheadline249" class="outline-3">
 <h3 id="orgheadline249">Native TeX Mode</h3>
 <div class="outline-text-3" id="text-orgheadline249">
 <dl class="org-dl">
-<dt>(la)tex-mode</dt><dd>Default Emacs built-in (La)TeX mode (menu <code>TeX</code>; text <code>LaTeX</code> displayed in the
+<dt><code>tex-mode</code> or <code>latex-mode</code></dt><dd>Default Emacs built-in (La)TeX mode (menu <code>TeX</code>; text <code>LaTeX</code> displayed in the
 mode line).</dd>
 </dl>
 
@@ -13196,7 +13207,7 @@ tex-shell&rdquo;, and</li>
 <h3 id="orgheadline250">AUCTeX</h3>
 <div class="outline-text-3" id="text-orgheadline250">
 <dl class="org-dl">
-<dt>(La)TeX-mode</dt><dd>AUCTeX (menus <code>Preview</code>, <code>LaTeX</code>, <code>Command</code> and <code>Ref</code>; text <code>LaTeX/P</code> displayed in
+<dt><code>TeX-mode</code> or <code>LaTeX-mode</code></dt><dd>AUCTeX (menus <code>Preview</code>, <code>LaTeX</code>, <code>Command</code> and <code>Ref</code>; text <code>LaTeX/P</code> displayed in
 the mode line).</dd>
 </dl>
 
@@ -13482,6 +13493,9 @@ LaTeX file, <code>preview-latex</code> gives you a <code>Preview</code> menu.
                  (or (executable-find <span class="org-string">"gswin32c.exe"</span>)
                      <span class="org-string">"C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"</span>))
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">Default value.</span>
+                (leuven--cygwin-p
+                 (or (executable-find <span class="org-string">"rungs.exe"</span>)
+                     <span class="org-string">"/cygdrive/c/texlive/2014/bin/win32/rungs"</span>))
                 (t
                  <span class="org-string">"/usr/bin/gs"</span>)))
         (leuven--file-exists-and-executable-p preview-gs-command)
