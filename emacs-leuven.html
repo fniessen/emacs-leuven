@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150610.2130</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150610.2134</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150610.2130"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150610.2134"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -13493,11 +13493,9 @@ LaTeX file, <code>preview-latex</code> gives you a <code>Preview</code> menu.
                  (or (executable-find <span class="org-string">"gswin32c.exe"</span>)
                      <span class="org-string">"C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"</span>))
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">Default value.</span>
-                (leuven--cygwin-p
-                 (or (executable-find <span class="org-string">"rungs.exe"</span>)
-                     <span class="org-string">"/cygdrive/c/texlive/2014/bin/win32/rungs"</span>))
                 (t
-                 <span class="org-string">"/usr/bin/gs"</span>)))
+                 (or (executable-find <span class="org-string">"rungs"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">For Cygwin Emacs.</span>
+                     <span class="org-string">"/usr/bin/gs"</span>))))
         (leuven--file-exists-and-executable-p preview-gs-command)
 
         <span class="org-comment-delimiter">;; </span><span class="org-comment">Scale factor for included previews.</span>

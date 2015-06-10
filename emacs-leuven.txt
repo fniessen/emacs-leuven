@@ -10520,11 +10520,9 @@ LaTeX file, ~preview-latex~ gives you a ~Preview~ menu.
                  (or (executable-find "gswin32c.exe")
                      "C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"))
                                         ; Default value.
-                (leuven--cygwin-p
-                 (or (executable-find "rungs.exe")
-                     "/cygdrive/c/texlive/2014/bin/win32/rungs"))
                 (t
-                 "/usr/bin/gs")))
+                 (or (executable-find "rungs") ; For Cygwin Emacs.
+                     "/usr/bin/gs"))))
         (leuven--file-exists-and-executable-p preview-gs-command)
 
         ;; Scale factor for included previews.
