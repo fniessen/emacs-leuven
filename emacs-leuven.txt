@@ -20,12 +20,6 @@
   :tangle:   no
   :END:
 
-** TODO Use #'<name> when referring to a function
-
-#+begin_src emacs-lisp
-(add-hook 'kill-buffer-hook #'track-closed-buffer)
-#+end_src
-
 ** TODO Improve writing of time-substract
 
 #+begin_src emacs-lisp
@@ -416,7 +410,7 @@ need to load a single file that define autoloaded functions.
       (let* ((this-directory (expand-file-name this-directory)))
 
         ;; directories containing a `.nosearch' file (such as
-        ;; `auctex-11.87\style') should not made part of `load-path'.
+        ;; `auctex-11.88.6\style') should not made part of `load-path'.
         ;; TODO `RCS' and `CVS' directories should also be excluded.
         (unless (file-exists-p (concat this-directory "/.nosearch"))
           (add-to-list 'load-path this-directory)
@@ -746,7 +740,9 @@ like this into your configuration file:
           ;; magit
           multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
-          undo-tree w3m ws-butler yasnippet
+          undo-tree
+          ;; w3m
+          ws-butler yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -8653,17 +8649,18 @@ launched from Dired?
           ;; (when (locate-library "org-lint")
           ;;   (measure-time "Linted Org mode" (org-lint)))
 
-          ;; ;; Update the results in the Org buffer
+          ;; ;; Update the results in the Org buffer.
           ;; (org-babel-execute-buffer)    ; In this case, better than
           ;;                               ; (add-hook 'org-export-first-hook
           ;;                               ;           #'org-babel-execute-buffer):
-          ;;                               ; excuted only once for both exports.
+          ;;                               ; executed only once for both exports.
 
 ;; It'd make sense to eval all code blocks which have :cache yes or :exports
 ;; results or both... And, before that, to delete all code block results!?
 ;; Well, almost all code blocks: not the ones of "cached" blocks (they may have
 ;; taken a long time to be computed, or may not be computable another time), nor
 ;; the ones with a caption on the results block...
+
           (measure-time "Buffer saved"
            (let ((before-save-hook nil))
              (save-buffer)))
@@ -10230,9 +10227,14 @@ Link emails from Org files.
 (leuven--chapter leuven-load-chapter-25.10-tex-mode "25.10 TeX Mode"
 #+end_src
 
+#+begin_warning
+Emacs ships with =tex-mode.el= but that's a separate thing from AUCTeX.  All
+AUCTeX functions start with ~TeX-*~ or ~LaTeX-*~ (case matters) or ~font-latex-*~.
+#+end_warning
+
 ** Native TeX Mode
 
-- (la)tex-mode ::
+- ~tex-mode~ or ~latex-mode~ ::
      Default Emacs built-in (La)TeX mode (menu ~TeX~; text ~LaTeX~ displayed in the
      mode line).
 
@@ -10275,7 +10277,7 @@ Under Windows, in the *native* TeX mode, ~shell-file-name~ must be =cmdproxy.exe
 
 ** AUCTeX
 
-- (La)TeX-mode ::
+- ~TeX-mode~ or ~LaTeX-mode~ ::
      AUCTeX (menus ~Preview~, ~LaTeX~, ~Command~ and ~Ref~; text ~LaTeX/P~ displayed in
      the mode line).
 

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150610.1134
+;; Version: 20150610.2027
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150610.1134"
+(defconst leuven--emacs-version "20150610.2027"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -217,7 +217,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       (let* ((this-directory (expand-file-name this-directory)))
 
         ;; directories containing a `.nosearch' file (such as
-        ;; `auctex-11.87\style') should not made part of `load-path'.
+        ;; `auctex-11.88.6\style') should not made part of `load-path'.
         ;; TODO `RCS' and `CVS' directories should also be excluded.
         (unless (file-exists-p (concat this-directory "/.nosearch"))
           (add-to-list 'load-path this-directory)
@@ -451,7 +451,9 @@ Last time is saved in global variable `leuven--before-section-time'."
           ;; magit
           multi-term
           multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
-          undo-tree w3m ws-butler yasnippet
+          undo-tree
+          ;; w3m
+          ws-butler yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -5333,17 +5335,18 @@ this with to-do items than with projects or headings."
           ;; (when (locate-library "org-lint")
           ;;   (measure-time "Linted Org mode" (org-lint)))
 
-          ;; ;; Update the results in the Org buffer
+          ;; ;; Update the results in the Org buffer.
           ;; (org-babel-execute-buffer)    ; In this case, better than
           ;;                               ; (add-hook 'org-export-first-hook
           ;;                               ;           #'org-babel-execute-buffer):
-          ;;                               ; excuted only once for both exports.
+          ;;                               ; executed only once for both exports.
 
 ;; It'd make sense to eval all code blocks which have :cache yes or :exports
 ;; results or both... And, before that, to delete all code block results!?
 ;; Well, almost all code blocks: not the ones of "cached" blocks (they may have
 ;; taken a long time to be computed, or may not be computable another time), nor
 ;; the ones with a caption on the results block...
+
           (measure-time "Buffer saved"
            (let ((before-save-hook nil))
              (save-buffer)))
