@@ -14576,12 +14576,15 @@ Another option, without ~doc-view~, is ~! pdtotext ? - <RET>~.
 
 * Web Browsing
 
-** Emacs-w3m
+** COMMENT Emacs-w3m                                                   :archive:
+   :PROPERTIES:
+   :tangle:   no
+   :END:
 
 Emacs/W3 is dead, long live [[http://emacs-w3m.namazu.org/][Emacs-w3m]] (a terrific text-based web and file
 browser).
 
-For Win32, use the Cygwin version of the executable.
+For Windows, use the Cygwin version of the ~w3m~ executable.
 
 ~w3m-browse-url~ asks Emacs-w3m to browse a URL.
 

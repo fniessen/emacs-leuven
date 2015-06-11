@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150611.2255
+;; Version: 20150611.2318
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150611.2255"
+(defconst leuven--emacs-version "20150611.2318"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -8684,136 +8684,6 @@ a clean buffer we're an order of magnitude laxer about checking."
       (pdf-tools-install)))
 
 )                                       ; Chapter 35 ends here.
-
-;;** Emacs-w3m
-
-  (leuven--section "Emacs-w3m")
-
-  ;; only use if `w3m' command is available on system
-  (when (executable-find "w3m")
-
-    ;; name of the executable file of the `w3m' command
-    (setq w3m-command "w3m")
-    ;; I don't want `/usr/bin/w3m' (which requires `cygwin-mount')
-
-    ;; an Emacs interface to w3m
-    (with-eval-after-load "w3m"
-
-;;*** 3.1 Browsing Web Pages
-
-      ;; go ahead, just try it
-      (defun leuven-w3m-goto-url ()
-        "Type in directly the URL to visit (avoiding to hit `C-k')."
-        (interactive)
-        (let ((w3m-current-url ""))
-          (call-interactively 'w3m-goto-url)))
-
-      ;; make w3m stop "stealing" my arrow keys, allowing to move the
-      ;; cursor down the lines of an HTML email (in Gnus)
-      (setq w3m-minor-mode-map nil)
-
-      (define-key w3m-mode-map (kbd "U") 'leuven-w3m-goto-url)
-
-      ;; fix inappropriate key bindings for moving from place to place in a page
-      ;; (let the cursor keys behave normally, don't jump from link to link)
-      (define-key w3m-mode-map (kbd "<up>") 'previous-line)
-      (define-key w3m-mode-map (kbd "<down>") 'next-line)
-      (define-key w3m-mode-map (kbd "<left>") 'backward-char)
-      (define-key w3m-mode-map (kbd "<right>") 'forward-char)
-
-      (define-key w3m-mode-map (kbd "<tab>") 'w3m-next-anchor)
-
-      ;; moving from page to page
-      (define-key w3m-mode-map (kbd "F") 'w3m-view-next-page)
-
-;;*** 3.5 Using Tabs
-
-      (define-key w3m-mode-map (kbd "<C-tab>") 'w3m-next-buffer)
-      (define-key w3m-mode-map (kbd "<C-S-tab>") 'w3m-previous-buffer)
-
-      (defun leuven-w3m-new-tab ()
-        (interactive)
-        (w3m-copy-buffer nil nil nil t))
-
-      (define-key w3m-mode-map (kbd "C-t") 'leuven-w3m-new-tab)
-
-      (define-key w3m-mode-map (kbd "C-w") 'w3m-delete-buffer)
-
-;;*** 5.1 General Variables
-
-      ;; send referers only when both the current page and the target page are
-      ;; provided by the same server
-      (setq w3m-add-referer 'lambda)
-
-      ;; home page
-      (setq w3m-home-page "http://www.emacswiki.org/")
-
-      ;; number of steps in columns used when scrolling a window horizontally
-      (setq w3m-horizontal-shift-columns 1)  ; 2
-
-      ;; proxy settings
-      ;; (setq w3m-command-arguments
-      ;;          (nconc w3m-command-arguments
-      ;;                 '("-o" "http_proxy=proxy:8080")))
-      ;;                          ; FIXME https_proxy for HTTPS support
-
-      (setq w3m-no-proxy-domains '("localhost" "127.0.0.1"))
-
-;;*** 5.2 Image Variables
-
-      ;; always display images
-      (setq w3m-default-display-inline-images t)
-
-      ;; show favicon images if they are available
-      (setq w3m-use-favicon t)
-
-;;*** 5.4 Cookie Variables
-
-      ;; functions for cookie processing
-      (with-eval-after-load "w3m-cookie"
-
-        ;; ask user whether accept bad cookies or not
-        (setq w3m-cookie-accept-bad-cookies 'ask)
-
-        ;; list of trusted domains
-        (setq w3m-cookie-accept-domains
-              '("google.com" "google.be"
-                "yahoo.com" ".yahoo.com" "groups.yahoo.com"
-                "www.dyndns.org")))
-
-      ;; enable cookies (mostly required to use sites such as Gmail)
-      (setq w3m-use-cookies t)
-
-;;*** 5.14 Other Variables
-
-      ;; list of content types, regexps (matching a url or a file
-      ;; name), commands to view contents, and filters to override the
-      ;; content type specified at first
-      (setq w3m-content-type-alist
-            (append '(("text/html" "\\.xhtml\\'" nil nil))
-                    w3m-content-type-alist))
-
-      ;; toggle a minor mode showing link numbers
-      (try-require 'w3m-lnum)
-      (with-eval-after-load "w3m-lnum"
-
-        (defun leuven-w3m-go-to-link-number ()
-          "Turn on link numbers and ask for one to go to."
-          (interactive)
-          (let ((active w3m-lnum-mode))
-            (when (not active) (w3m-lnum-mode))
-            (unwind-protect
-                (w3m-move-numbered-anchor (read-number
-                                           "Anchor number: "))
-              (when (not active) (w3m-lnum-mode))
-              (w3m-view-this-url))))
-
-        (define-key w3m-mode-map (kbd "f") 'leuven-w3m-go-to-link-number)
-
-        ;; enable link numbering mode by default
-        (add-hook 'w3m-mode-hook #'w3m-lnum-mode))
-
-      ))
 
 ;;* 36 Running (info "(emacs)Shell") Commands from Emacs
 
