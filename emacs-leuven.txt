@@ -9238,6 +9238,11 @@ add it to ~org-export-backends~.
               "soffice --headless --convert-to %f%x --outdir \"$(cygpath -m %d)\" \"$(cygpath -m %i)\"")))
 #+end_src
 
+#+begin_tip
+With the amazing ~ox-pandoc~, you can *export to ~.docx~ directly*.  No need to go
+through LaTeX!
+#+end_tip
+
 ** Publishing
 
 Publish related Org mode files as a website.
@@ -11399,7 +11404,70 @@ See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard a
 
     ;; No space between an identifier and an opening parenthesis.
     (setq glasses-separate-parentheses-p nil))
+#+end_src
 
+** C and related modes
+
+*** Eclim
+
+[[http://eclim.org/][Eclim]] provides the ability to access [[http://www.eclipse.org/][Eclipse]] code editing features:
+
+- "true" *code completion* (i.e., only completions that are possible),
+- searching,
+- code validation, and
+- [[http://eclim.org/features.html][many more]]
+
+via the command line, allowing those features to be integrated with Emacs.
+
+1. Install [[http://eclim.org/install.html][Eclim]].
+2. Install Emacs-eclim (via ~list-packages~).
+
+[[http://eclim.org/faq.html][FAQ / Troubleshooting]]
+
+# ("C-c C-e l m" . eclim-manage-projects)
+# ("C-c C-e l r" . eclim-run-class)
+# ("C-c C-e l o" . eclim-problems-open)
+# ("C-c C-e l b" . eclim-project-build))
+
+#+begin_src emacs-lisp
+  (when (try-require 'eclim)
+
+    ;; Find Eclim installation.
+    (setq eclim-executable
+          (or (executable-find "eclim")
+              "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim"))
+    ;; https://github.com/senny/emacs-eclim/issues/132
+
+(setq eclim-eclipse-dirs "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim")
+(setq eclim-executable "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim.bat")
+(setq eclim-port 9091)
+
+
+
+    ;; Print debug messages.
+    (setq eclim-print-debug-messages t)
+
+    ;; (global-eclim-mode)
+    (add-hook 'java-mode-hook #'eclim-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; Display compilation error messages in the echo area
+    (setq help-at-pt-display-when-idle t)
+    (setq help-at-pt-timer-delay 0.1)
+    (help-at-pt-set-timer)
+#+end_src
+
+See http://java-coders.com/p/tsdh/emacs-eclim for Company.
+
+#+begin_src emacs-lisp
+    ;; Configure company-mode.
+    (require 'company-emacs-eclim)
+    (company-emacs-eclim-setup)
+    )
+#+end_src
+
+#+begin_src emacs-lisp
 )                                       ; Chapter 26 ends here.
 #+end_src
 
@@ -12969,6 +13037,20 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
   ;;   (setq dabbrev-case-replace nil))
 #+end_src
 
+However, there are 3 amazing "intelligent guessing completion frameworks" in
+Emacs:
+
+- hippie-expand,
+- auto-complete, and
+- company.
+
+Hippe-expand is great (can complete whole code blocks for you, making it possible
+to e.g. cycle through all if-tests in your projects).
+
+But auto-complete and company mode are even better. They'll give you a nice
+IntelliSense style menu, will "learn" as you use it, and allows you to define
+a file with the completions you'd like to be available in the various languages.
+
 *** Hippie-expand
 
 Typically, we bind ~hippie-expand~ to ~M-/~, with ~dabbrev-expand~ (the standard
@@ -13300,7 +13382,7 @@ XXX The following does not work in Org files (TAB does not expand nodes anymore)
 Only trigger the tooltip on manual invocation, but still have the preview (of
 the first candidate) show up immediately:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     (defadvice company-pseudo-tooltip-unless-just-one-frontend
                (around only-show-tooltip-when-invoked activate)
       (when (company-explicit-action-p)

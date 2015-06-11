@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150611.1540
+;; Version: 20150611.1921
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150611.1540"
+(defconst leuven--emacs-version "20150611.1921"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -7003,6 +7003,36 @@ mouse-3: go to end") "]"))))
     ;; No space between an identifier and an opening parenthesis.
     (setq glasses-separate-parentheses-p nil))
 
+  (when (try-require 'eclim)
+
+    ;; Find Eclim installation.
+    (setq eclim-executable
+          (or (executable-find "eclim")
+              "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim"))
+    ;; https://github.com/senny/emacs-eclim/issues/132
+
+(setq eclim-eclipse-dirs "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim")
+(setq eclim-executable "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim.bat")
+(setq eclim-port 9091)
+
+
+
+    ;; Print debug messages.
+    (setq eclim-print-debug-messages t)
+
+    ;; (global-eclim-mode)
+    (add-hook 'java-mode-hook #'eclim-mode))
+
+    ;; Display compilation error messages in the echo area
+    (setq help-at-pt-display-when-idle t)
+    (setq help-at-pt-timer-delay 0.1)
+    (help-at-pt-set-timer)
+
+    ;; Configure company-mode.
+    (require 'company-emacs-eclim)
+    (company-emacs-eclim-setup)
+    )
+
 )                                       ; Chapter 26 ends here.
 
 ;;* 27 (info "(emacs)Building") Compiling and Testing Programs
@@ -7960,11 +7990,6 @@ a clean buffer we're an order of magnitude laxer about checking."
                (self-insert-command 1))
            (funcall fun n))))
      '((name . "Don't complete numbers")))
-
-    (defadvice company-pseudo-tooltip-unless-just-one-frontend
-               (around only-show-tooltip-when-invoked activate)
-      (when (company-explicit-action-p)
-        ad-do-it))
 
     )
 
