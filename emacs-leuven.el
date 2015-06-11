@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150611.2234
+;; Version: 20150611.2255
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150611.2234"
+(defconst leuven--emacs-version "20150611.2255"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -8682,62 +8682,6 @@ a clean buffer we're an order of magnitude laxer about checking."
              )
     (with-eval-after-load "pdf-tools-autoloads"
       (pdf-tools-install)))
-
-  ;; antiword will be run on every `.doc' file you open
-  ;; TODO sudo aptitude install antiword (or via Cygwin setup)
-  (autoload 'no-word "no-word"
-    "Word to txt.")
-  (add-to-list 'auto-mode-alist '("\\.doc\\'" . no-word))
-
-
-
-  (add-to-list 'auto-mode-alist '("\\.docx\\'" . docx2txt))
-
-  (defun docx2txt ()
-    "Run `docx2txt' on the entire buffer."
-    (shell-command-on-region (point-min) (point-max) "docx2txt.pl" t t))
-
-
-
-  ;; un-xls files
-  ;; TODO sudo aptitude install xlhtml
-  (add-to-list 'auto-mode-alist '("\\.xls\\'" . no-xls))
-  (defun no-xls (&optional filename)
-    "Run `xlhtml' and `w3m -dump' on the entire buffer.
-  Optional FILENAME says what filename to use.  This is only necessary for
-  buffers without proper `buffer-file-name'.  FILENAME should be a real
-  filename, not a path."
-    (interactive "fExcel File: ")
-    (when (and filename
-               (not (buffer-file-name)))
-      (write-file (make-temp-file filename)))
-    (erase-buffer)
-    (shell-command
-     (format "xlhtml -nc -te %s | w3m -dump -T text/html"
-             (buffer-file-name))
-     (current-buffer))
-    (setq buffer-file-name nil)
-    (set-buffer-modified-p nil))
-
-  ;; no-ppt
-  ;; TODO sudo aptitude install ppthtml
-  ;; FIXME Not that good! (some text repeated multiple times)
-  (defun no-ppt (&optional filename)
-    "Run `ppthtml' and `w3m -dump' on the entire buffer.
-  Optional FILENAME says what filename to use.  This is only necessary for
-  buffers without proper `buffer-file-name'.  FILENAME should be a real
-  filename, not a path."
-    (interactive "fPowerPoint File: ")
-    (when (and filename
-               (not (buffer-file-name)))
-      (write-file (make-temp-file filename)))
-    (erase-buffer)
-    (shell-command
-     (format "ppthtml %s | w3m -dump -T text/html" (buffer-file-name))
-     (current-buffer))
-    (setq buffer-file-name nil)
-    (set-buffer-modified-p nil))
-  (add-to-list 'auto-mode-alist '("\\.ppt\\'" . no-ppt))
 
 )                                       ; Chapter 35 ends here.
 

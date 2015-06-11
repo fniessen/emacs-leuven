@@ -14570,65 +14570,7 @@ Another option, without ~doc-view~, is ~! pdtotext ? - <RET>~.
 
 ~doc-view-enlarge~ (~+~) and ~doc-view-shrink~ (~-~) work fine to zoom in or out.
 
-** XXX
-
 #+begin_src emacs-lisp
-  ;; antiword will be run on every `.doc' file you open
-  ;; TODO sudo aptitude install antiword (or via Cygwin setup)
-  (autoload 'no-word "no-word"
-    "Word to txt.")
-  (add-to-list 'auto-mode-alist '("\\.doc\\'" . no-word))
-
-
-
-  (add-to-list 'auto-mode-alist '("\\.docx\\'" . docx2txt))
-
-  (defun docx2txt ()
-    "Run `docx2txt' on the entire buffer."
-    (shell-command-on-region (point-min) (point-max) "docx2txt.pl" t t))
-
-
-
-  ;; un-xls files
-  ;; TODO sudo aptitude install xlhtml
-  (add-to-list 'auto-mode-alist '("\\.xls\\'" . no-xls))
-  (defun no-xls (&optional filename)
-    "Run `xlhtml' and `w3m -dump' on the entire buffer.
-  Optional FILENAME says what filename to use.  This is only necessary for
-  buffers without proper `buffer-file-name'.  FILENAME should be a real
-  filename, not a path."
-    (interactive "fExcel File: ")
-    (when (and filename
-               (not (buffer-file-name)))
-      (write-file (make-temp-file filename)))
-    (erase-buffer)
-    (shell-command
-     (format "xlhtml -nc -te %s | w3m -dump -T text/html"
-             (buffer-file-name))
-     (current-buffer))
-    (setq buffer-file-name nil)
-    (set-buffer-modified-p nil))
-
-  ;; no-ppt
-  ;; TODO sudo aptitude install ppthtml
-  ;; FIXME Not that good! (some text repeated multiple times)
-  (defun no-ppt (&optional filename)
-    "Run `ppthtml' and `w3m -dump' on the entire buffer.
-  Optional FILENAME says what filename to use.  This is only necessary for
-  buffers without proper `buffer-file-name'.  FILENAME should be a real
-  filename, not a path."
-    (interactive "fPowerPoint File: ")
-    (when (and filename
-               (not (buffer-file-name)))
-      (write-file (make-temp-file filename)))
-    (erase-buffer)
-    (shell-command
-     (format "ppthtml %s | w3m -dump -T text/html" (buffer-file-name))
-     (current-buffer))
-    (setq buffer-file-name nil)
-    (set-buffer-modified-p nil))
-  (add-to-list 'auto-mode-alist '("\\.ppt\\'" . no-ppt))
-
 )                                       ; Chapter 35 ends here.
 #+end_src
 
