@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150610.2133
+;; Version: 20150611.1350
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150610.2133"
+(defconst leuven--emacs-version "20150611.1350"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -791,16 +791,16 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "multiple-cursors-autoloads"
 
     ;; Add a cursor to each (continuous) line in the current region.
-    (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+    (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines) ;!
 
     ;; Add a cursor and region at the next part of the buffer forwards that
     ;; matches the current region.
-    (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+    (global-set-key (kbd "C->") 'mc/mark-next-like-this) ;!
     ;; (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
 
     ;; Add a cursor and region at the next part of the buffer backwards that
     ;; matches the current region.
-    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this) ;!
     ;; (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
 
     (global-set-key (kbd "C-M->") 'mc/skip-to-next-like-this)
@@ -811,7 +811,7 @@ These packages are neither built-in nor already installed nor ignored."
     (global-set-key (kbd "C-;") 'mc/mark-all-like-this-dwim) ; Like Iedit.
 
     ;; Mark all parts of the buffer that matches the current region.
-    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this) ;!
     ;; (global-set-key (kbd "C-c *") 'mc/mark-all-like-this) ; Conflict in Org tables!
 
     (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended)
@@ -2445,6 +2445,15 @@ These packages are neither built-in nor already installed nor ignored."
       ;; ;; Use `recentf-list' instead of `file-name-history' in `helm-find-files'.
       ;; (setq helm-ff-file-name-history-use-recentf t)
       )
+
+    ;; This set Helm to open files using designated programs.
+    (setq helm-external-programs-associations
+          '(("rmvb" . "smplayer")
+            ("mp4" . "smplayer")))
+
+    ;; Set the warning threshold to 500 MB, which will get ride of "File abc.mp4 is
+    ;; large (330.2M), really open? (y or n)" annoying message.
+    (setq large-file-warning-threshold 500000000)
 
     (with-eval-after-load "helm-grep"
 
@@ -7899,6 +7908,9 @@ a clean buffer we're an order of magnitude laxer about checking."
                 magit-status-mode
                 help-mode))
 
+    ;; Sort candidates according to their occurrences.
+    (setq company-transformers '(company-sort-by-occurrence))
+
     ;; Minimum prefix length for idle completion.
     (setq company-minimum-prefix-length 2)
 
@@ -7919,6 +7931,11 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Completion by TAB.
     (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
+                                        ; `company-complete'?
+
+    ;; Temporarily show the documentation buffer for the selection.
+    (define-key company-active-map (kbd "<f1>") 'company-show-doc-buffer)
+    (define-key company-active-map (kbd "C-?") 'company-show-doc-buffer)
 
     ;; Abort.
     (define-key company-active-map (kbd "C-g") 'company-abort)
@@ -7989,19 +8006,20 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Switches passed to `ls' for Dired.
     (setq dired-listing-switches
-          (cond ((or leuven--win32-p
-                     leuven--cygwin-p)
+          ;; (cond ((or leuven--win32-p
+          ;;            leuven--cygwin-p)
                  "-a -F -l")
-                (t
-                 "-a -F --group-directories-first -l --time-style=long-iso")))
+                ;; (t
+                ;;  "-a -F --group-directories-first -l --time-style=long-iso")))
 
-    ;; Use `ls-lisp' (for Dired sorting to work OK!) in Cygwin Emacs.
-    (when leuven--cygwin-p
+    ;; Use `ls-lisp' (for Dired sorting to work OK!) in all versions of Emacs.
+    ;; (when leuven--cygwin-p
 
       (setq ls-lisp-use-insert-directory-program nil)
 
       ;; Emulate insert-directory completely in Emacs Lisp.
-      (require 'ls-lisp))
+      (require 'ls-lisp)
+      ;; )
 
 ;;** (info "(emacs)ls in Lisp")
 
@@ -8096,15 +8114,14 @@ a clean buffer we're an order of magnitude laxer about checking."
         ;; Bind it to `E' in Dired mode.
         (define-key dired-mode-map (kbd "E") 'w32-dired-open-files-externally)))
 
-    ;; Open current file with w3m.
-    (when (executable-find "w3m")
-      (defun dired-open-with-w3m ()
-        "In Dired, visit (with find-w3m) the file named on this line."
-        (interactive)
-        (w3m-find-file (file-name-sans-versions (dired-get-filename) t)))
+    ;; Open current file with eww.
+    (defun dired-open-with-eww ()
+      "In Dired, visit (with eww) the file named on this line."
+      (interactive)
+      (eww-open-file (file-name-sans-versions (dired-get-filename) t)))
 
-      ;; Add a binding "W" -> `dired-open-with-w3m' to Dired.
-      (define-key dired-mode-map "W" 'dired-open-with-w3m))
+    ;; Add a binding "W" -> `dired-open-with-eww' to Dired.
+    (define-key dired-mode-map "W" 'dired-open-with-eww)
 
 ;;** (info "(emacs)Operating on Files")
 

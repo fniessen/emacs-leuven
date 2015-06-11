@@ -1350,7 +1350,7 @@ the region into lines* which are then *edited simultaneously*.
 
 #+begin_src emacs-lisp
     ;; Add a cursor to each (continuous) line in the current region.
-    (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+    (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines) ;!
 #+end_src
 
 *** Quick add next/previous
@@ -1361,12 +1361,12 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
 #+begin_src emacs-lisp
     ;; Add a cursor and region at the next part of the buffer forwards that
     ;; matches the current region.
-    (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+    (global-set-key (kbd "C->") 'mc/mark-next-like-this) ;!
     ;; (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
 
     ;; Add a cursor and region at the next part of the buffer backwards that
     ;; matches the current region.
-    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this) ;!
     ;; (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
 
     (global-set-key (kbd "C-M->") 'mc/skip-to-next-like-this)
@@ -1383,7 +1383,7 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
     (global-set-key (kbd "C-;") 'mc/mark-all-like-this-dwim) ; Like Iedit.
 
     ;; Mark all parts of the buffer that matches the current region.
-    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this) ;!
     ;; (global-set-key (kbd "C-c *") 'mc/mark-all-like-this) ; Conflict in Org tables!
 #+end_src
 
@@ -4325,6 +4325,17 @@ usually search for info on.
       ;; ;; Use `recentf-list' instead of `file-name-history' in `helm-find-files'.
       ;; (setq helm-ff-file-name-history-use-recentf t)
       )
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; This set Helm to open files using designated programs.
+    (setq helm-external-programs-associations
+          '(("rmvb" . "smplayer")
+            ("mp4" . "smplayer")))
+
+    ;; Set the warning threshold to 500 MB, which will get ride of "File abc.mp4 is
+    ;; large (330.2M), really open? (y or n)" annoying message.
+    (setq large-file-warning-threshold 500000000)
 #+end_src
 
 **** Grep
@@ -13201,6 +13212,9 @@ available completions and filter as well.
                 magit-status-mode
                 help-mode))
 
+    ;; Sort candidates according to their occurrences.
+    (setq company-transformers '(company-sort-by-occurrence))
+
     ;; Minimum prefix length for idle completion.
     (setq company-minimum-prefix-length 2)
 
@@ -13221,6 +13235,11 @@ available completions and filter as well.
 
     ;; Completion by TAB.
     (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
+                                        ; `company-complete'?
+
+    ;; Temporarily show the documentation buffer for the selection.
+    (define-key company-active-map (kbd "<f1>") 'company-show-doc-buffer)
+    (define-key company-active-map (kbd "C-?") 'company-show-doc-buffer)
 
     ;; Abort.
     (define-key company-active-map (kbd "C-g") 'company-abort)
@@ -13380,11 +13399,11 @@ GNU ~ls~.
 #+begin_src emacs-lisp
     ;; Switches passed to `ls' for Dired.
     (setq dired-listing-switches
-          (cond ((or leuven--win32-p
-                     leuven--cygwin-p)
+          ;; (cond ((or leuven--win32-p
+          ;;            leuven--cygwin-p)
                  "-a -F -l")
-                (t
-                 "-a -F --group-directories-first -l --time-style=long-iso")))
+                ;; (t
+                ;;  "-a -F --group-directories-first -l --time-style=long-iso")))
 #+end_src
 
 ** Emulation of ~ls~ on MS-Windows
@@ -13395,13 +13414,14 @@ GNU ~ls~.
 Use Emacs's own emulation of ~ls~ in Cygwin Emacs as well:
 
 #+begin_src emacs-lisp
-    ;; Use `ls-lisp' (for Dired sorting to work OK!) in Cygwin Emacs.
-    (when leuven--cygwin-p
+    ;; Use `ls-lisp' (for Dired sorting to work OK!) in all versions of Emacs.
+    ;; (when leuven--cygwin-p
 
       (setq ls-lisp-use-insert-directory-program nil)
 
       ;; Emulate insert-directory completely in Emacs Lisp.
-      (require 'ls-lisp))
+      (require 'ls-lisp)
+      ;; )
 #+end_src
 
 #+begin_note
@@ -13472,6 +13492,12 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go.  Now, they do.
 
 - ~^~ ::
      ~dired-up-directory~.
+
+- ~o~ ::
+     Open the file or directory in *another window*.
+
+- ~C-o~ ::
+     Open the file but stay on Dired buffer.
 
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Dired Visiting")
@@ -13629,20 +13655,17 @@ For those under Windows:
         (define-key dired-mode-map (kbd "E") 'w32-dired-open-files-externally)))
 #+end_src
 
-*** Open file with w3m
-
-See news "Opening html-File in Dired with w3m" for extra info.
+*** Open file with ~eww~
 
 #+begin_src emacs-lisp
-    ;; Open current file with w3m.
-    (when (executable-find "w3m")
-      (defun dired-open-with-w3m ()
-        "In Dired, visit (with find-w3m) the file named on this line."
-        (interactive)
-        (w3m-find-file (file-name-sans-versions (dired-get-filename) t)))
+    ;; Open current file with eww.
+    (defun dired-open-with-eww ()
+      "In Dired, visit (with eww) the file named on this line."
+      (interactive)
+      (eww-open-file (file-name-sans-versions (dired-get-filename) t)))
 
-      ;; Add a binding "W" -> `dired-open-with-w3m' to Dired.
-      (define-key dired-mode-map "W" 'dired-open-with-w3m))
+    ;; Add a binding "W" -> `dired-open-with-eww' to Dired.
+    (define-key dired-mode-map "W" 'dired-open-with-eww)
 #+end_src
 
 ** Operating on Files
@@ -14429,8 +14452,14 @@ that's really a package anybody's gonna love.  (Oh my god, how well the
 syntex stuff/AUCTeX integration works!)
 #+end_verse
 
-PDF Tools (~pdf-view-mode~) is no external program but a major mode for viewing
-PDFs in Emacs similar (but much more advanced) than ~doc-view-mode~.
+PDF Tools (~pdf-view-mode~) is a major mode for viewing PDFs in Emacs similar (but
+much more advanced) than ~doc-view-mode~.
+
+It offers many features:
+- highlighting search,
+- highlighting selection,
+- annotate,
+- content tree.
 
 It's the best PDF viewer on GNU/Linux (including the ones not running in Emacs).
 
@@ -14680,7 +14709,12 @@ browser*: you can open the current page in your graphical browser by hitting ~M~
 See https://www.gnu.org/software/emacs/manual/html_node/eww/index.html.
 
 - ~&~ (~eww-browse-with-external-browser~) ::
-     Open the Web page in an external browser.
+     Open the Web page in an *external browser*.
+
+*************** TODO See package ~eww-lnum~ (or ~ace-link~?)
+(define-key eww-mode-map "f" 'eww-lnum-follow)
+(define-key eww-mode-map "F" 'eww-lnum-universal)
+*************** END
 
 * Running Shell Commands from Emacs
 

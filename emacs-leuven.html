@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150610.2134</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150611.1351</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150610.2134"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150611.1351"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1927,7 +1927,7 @@ the region into lines</b> which are then <b>edited simultaneously</b>.
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Add a cursor to each (continuous) line in the current region.</span>
-    (global-set-key (kbd <span class="org-string">"C-S-c C-S-c"</span>) 'mc/edit-lines)
+    (global-set-key (kbd <span class="org-string">"C-S-c C-S-c"</span>) 'mc/edit-lines) <span class="org-comment-delimiter">;</span><span class="org-comment">!</span>
 </pre>
 </div>
 </div>
@@ -1945,12 +1945,12 @@ Use Multiple Cursors to <b>rename variables quickly</b>: <b>add the next</b> or 
 
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Add a cursor and region at the next part of the buffer forwards that</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">matches the current region.</span>
-    (global-set-key (kbd <span class="org-string">"C-&gt;"</span>) 'mc/mark-next-like-this)
+    (global-set-key (kbd <span class="org-string">"C-&gt;"</span>) 'mc/mark-next-like-this) <span class="org-comment-delimiter">;</span><span class="org-comment">!</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-c &gt;") 'mc/mark-next-like-this)</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Add a cursor and region at the next part of the buffer backwards that</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">matches the current region.</span>
-    (global-set-key (kbd <span class="org-string">"C-&lt;"</span>) 'mc/mark-previous-like-this)
+    (global-set-key (kbd <span class="org-string">"C-&lt;"</span>) 'mc/mark-previous-like-this) <span class="org-comment-delimiter">;</span><span class="org-comment">!</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-c &lt;") 'mc/mark-previous-like-this)</span>
 
     (global-set-key (kbd <span class="org-string">"C-M-&gt;"</span>) 'mc/skip-to-next-like-this)
@@ -1974,7 +1974,7 @@ Use Multiple Cursors to <b>rename variables quickly</b>: <b>add the next</b> or 
 <pre class="src src-emacs-lisp">    (global-set-key (kbd <span class="org-string">"C-;"</span>) 'mc/mark-all-like-this-dwim) <span class="org-comment-delimiter">; </span><span class="org-comment">Like Iedit.</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Mark all parts of the buffer that matches the current region.</span>
-    (global-set-key (kbd <span class="org-string">"C-c C-&lt;"</span>) 'mc/mark-all-like-this)
+    (global-set-key (kbd <span class="org-string">"C-c C-&lt;"</span>) 'mc/mark-all-like-this) <span class="org-comment-delimiter">;</span><span class="org-comment">!</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-c *") 'mc/mark-all-like-this) ; Conflict in Org tables!</span>
 </pre>
 </div>
@@ -5753,6 +5753,19 @@ usually search for info on.
       <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Use `</span><span class="org-constant"><span class="org-comment">recentf-list</span></span><span class="org-comment">' instead of `</span><span class="org-constant"><span class="org-comment">file-name-history</span></span><span class="org-comment">' in `</span><span class="org-constant"><span class="org-comment">helm-find-files</span></span><span class="org-comment">'.</span>
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq helm-ff-file-name-history-use-recentf t)</span>
       )
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">This set Helm to open files using designated programs.</span>
+    (setq helm-external-programs-associations
+          '((<span class="org-string">"rmvb"</span> . <span class="org-string">"smplayer"</span>)
+            (<span class="org-string">"mp4"</span> . <span class="org-string">"smplayer"</span>)))
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Set the warning threshold to 500 MB, which will get ride of "File abc.mp4 is</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">large (330.2M), really open? (y or n)" annoying message.</span>
+    (setq large-file-warning-threshold 500000000)
 </pre>
 </div>
 </div>
@@ -16977,6 +16990,9 @@ available completions and filter as well.
                 magit-status-mode
                 help-mode))
 
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Sort candidates according to their occurrences.</span>
+    (setq company-transformers '(company-sort-by-occurrence))
+
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Minimum prefix length for idle completion.</span>
     (setq company-minimum-prefix-length 2)
 
@@ -16997,6 +17013,11 @@ available completions and filter as well.
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Completion by TAB.</span>
     (define-key company-active-map (kbd <span class="org-string">"&lt;tab&gt;"</span>) 'company-complete-selection)
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">company-complete</span></span><span class="org-comment">'?</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Temporarily show the documentation buffer for the selection.</span>
+    (define-key company-active-map (kbd <span class="org-string">"&lt;f1&gt;"</span>) 'company-show-doc-buffer)
+    (define-key company-active-map (kbd <span class="org-string">"C-?"</span>) 'company-show-doc-buffer)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Abort.</span>
     (define-key company-active-map (kbd <span class="org-string">"C-g"</span>) 'company-abort)
@@ -17211,11 +17232,11 @@ GNU <code>ls</code>.
 
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Switches passed to `</span><span class="org-constant"><span class="org-comment">ls</span></span><span class="org-comment">' for Dired.</span>
     (setq dired-listing-switches
-          (<span class="org-keyword">cond</span> ((or leuven--win32-p
-                     leuven--cygwin-p)
+          <span class="org-comment-delimiter">;; </span><span class="org-comment">(cond ((or leuven--win32-p</span>
+          <span class="org-comment-delimiter">;;            </span><span class="org-comment">leuven--cygwin-p)</span>
                  <span class="org-string">"-a -F -l"</span>)
-                (t
-                 <span class="org-string">"-a -F --group-directories-first -l --time-style=long-iso"</span>)))
+                <span class="org-comment-delimiter">;; </span><span class="org-comment">(t</span>
+                <span class="org-comment-delimiter">;;  </span><span class="org-comment">"-a -F --group-directories-first -l --time-style=long-iso")))</span>
 </pre>
 </div>
 </div>
@@ -17230,13 +17251,14 @@ Use Emacs&rsquo;s own emulation of <code>ls</code> in Cygwin Emacs as well:
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Use `</span><span class="org-constant"><span class="org-comment">ls-lisp</span></span><span class="org-comment">' (for Dired sorting to work OK!) in Cygwin Emacs.</span>
-    (<span class="org-keyword">when</span> leuven--cygwin-p
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Use `</span><span class="org-constant"><span class="org-comment">ls-lisp</span></span><span class="org-comment">' (for Dired sorting to work OK!) in all versions of Emacs.</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(when leuven--cygwin-p</span>
 
       (setq ls-lisp-use-insert-directory-program nil)
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Emulate insert-directory completely in Emacs Lisp.</span>
-      (<span class="org-keyword">require</span> '<span class="org-constant">ls-lisp</span>))
+      (<span class="org-keyword">require</span> '<span class="org-constant">ls-lisp</span>)
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">)</span>
 </pre>
 </div>
 
@@ -17328,6 +17350,10 @@ In Dired, <code>M-&gt;</code> and <code>M-&lt;</code> never took me where I want
 <div class="outline-text-3" id="text-orgheadline330">
 <dl class="org-dl">
 <dt><code>^</code></dt><dd><code>dired-up-directory</code>.</dd>
+
+<dt><code>o</code></dt><dd>Open the file or directory in <b>another window</b>.</dd>
+
+<dt><code>C-o</code></dt><dd>Open the file but stay on Dired buffer.</dd>
 </dl>
 
 <div class="org-src-container">
@@ -17567,23 +17593,18 @@ For those under Windows:
 </div>
 
 <div id="outline-container-orgheadline335" class="outline-4">
-<h4 id="orgheadline335">Open file with w3m</h4>
+<h4 id="orgheadline335">Open file with <code>eww</code></h4>
 <div class="outline-text-4" id="text-orgheadline335">
-<p>
-See news &ldquo;Opening html-File in Dired with w3m&rdquo; for extra info.
-</p>
-
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Open current file with w3m.</span>
-    (<span class="org-keyword">when</span> (executable-find <span class="org-string">"w3m"</span>)
-      (<span class="org-keyword">defun</span> <span class="org-function-name">dired-open-with-w3m</span> ()
-        <span class="org-doc">"In Dired, visit (with find-w3m) the file named on this line."</span>
-        (interactive)
-        (w3m-find-file (file-name-sans-versions (dired-get-filename) t)))
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Open current file with eww.</span>
+    (<span class="org-keyword">defun</span> <span class="org-function-name">dired-open-with-eww</span> ()
+      <span class="org-doc">"In Dired, visit (with eww) the file named on this line."</span>
+      (interactive)
+      (eww-open-file (file-name-sans-versions (dired-get-filename) t)))
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">Add a binding "W" -&gt; `</span><span class="org-constant"><span class="org-comment">dired-open-with-w3m</span></span><span class="org-comment">' to Dired.</span>
-      (define-key dired-mode-map <span class="org-string">"W"</span> 'dired-open-with-w3m))
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Add a binding "W" -&gt; `</span><span class="org-constant"><span class="org-comment">dired-open-with-eww</span></span><span class="org-comment">' to Dired.</span>
+    (define-key dired-mode-map <span class="org-string">"W"</span> 'dired-open-with-eww)
 </pre>
 </div>
 </div>
@@ -18580,9 +18601,19 @@ syntex stuff/AUCTeX integration works!)<br  />
 </p>
 
 <p>
-PDF Tools (<code>pdf-view-mode</code>) is no external program but a major mode for viewing
-PDFs in Emacs similar (but much more advanced) than <code>doc-view-mode</code>.
+PDF Tools (<code>pdf-view-mode</code>) is a major mode for viewing PDFs in Emacs similar (but
+much more advanced) than <code>doc-view-mode</code>.
 </p>
+
+<p>
+It offers many features:
+</p>
+<ul class="org-ul">
+<li>highlighting search,</li>
+<li>highlighting selection,</li>
+<li>annotate,</li>
+<li>content tree.</li>
+</ul>
 
 <p>
 It&rsquo;s the best PDF viewer on GNU/Linux (including the ones not running in Emacs).
@@ -18882,7 +18913,17 @@ See <a href="https://www.gnu.org/software/emacs/manual/html_node/eww/index.html"
 </p>
 
 <dl class="org-dl">
-<dt><code>&amp;</code> (<code>eww-browse-with-external-browser</code>)</dt><dd>Open the Web page in an external browser.</dd>
+<dt><code>&amp;</code> (<code>eww-browse-with-external-browser</code>)</dt><dd><p>
+     Open the Web page in an <b>external browser</b>.
+</p>
+
+<div class="inlinetask">
+<b><span class="todo TODO">TODO</span> See package <code>eww-lnum</code> (or <code>ace-link</code>?)</b><br  />
+<p>
+(define-key eww-mode-map &ldquo;f&rdquo; &rsquo;eww-lnum-follow)
+(define-key eww-mode-map &ldquo;F&rdquo; &rsquo;eww-lnum-universal)
+</p>
+</div></dd>
 </dl>
 </div>
 </div>
