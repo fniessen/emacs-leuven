@@ -298,7 +298,7 @@
 <li><a href="#orgheadline338">Dired and <code>find</code></a></li>
 <li><a href="#orgheadline339">Editing the Dired Buffer</a></li>
 <li><a href="#orgheadline340">Viewing Image Thumbnails in Dired</a></li>
-<li><a href="#orgheadline341">Dired Extra</a></li>
+<li><a href="#orgheadline341">Dired &ldquo;extra&rdquo; features</a></li>
 <li><a href="#orgheadline342">Dired+</a></li>
 <li><a href="#orgheadline343">VC diff highlighting</a></li>
 </ul>
@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150611.1351</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150611.1541</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150611.1351"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150611.1541"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -3894,14 +3894,13 @@ suggestions.  According to the <code>aspell</code> documentation:
 </p>
 
 <ul class="org-ul">
-<li>&ldquo;ultra&rdquo; is the fastest suggestion mode, which is still twice as slow as
-<code>ispell</code>.</li>
+<li><code>ultra</code> is the fastest suggestion mode, which is still twice as slow as <code>ispell</code>.</li>
 
-<li>If your machine is fast enough, a better option might be to try &ldquo;fast&rdquo; mode,
-which is twice as slow as &ldquo;ultra&rdquo;, but more accurate.</li>
+<li>If your machine is fast enough, a better option might be to try <code>fast</code> mode,
+which is twice as slow as <code>ultra</code>, but more accurate.</li>
 
-<li>The &ldquo;normal&rdquo; mode, which is the <code>aspell</code> default, is even more accurate, but
-is reportedly 10 times slower than &ldquo;fast&rdquo; mode.</li>
+<li>The <code>normal</code> mode, which is the <code>aspell</code> default, is even more accurate, but is
+reportedly 10 times slower than <code>fast</code> mode.</li>
 </ul>
 
 <p>
@@ -17234,9 +17233,9 @@ GNU <code>ls</code>.
     (setq dired-listing-switches
           <span class="org-comment-delimiter">;; </span><span class="org-comment">(cond ((or leuven--win32-p</span>
           <span class="org-comment-delimiter">;;            </span><span class="org-comment">leuven--cygwin-p)</span>
-                 <span class="org-string">"-a -F -l"</span>)
+                 <span class="org-string">"-alF"</span>)
                 <span class="org-comment-delimiter">;; </span><span class="org-comment">(t</span>
-                <span class="org-comment-delimiter">;;  </span><span class="org-comment">"-a -F --group-directories-first -l --time-style=long-iso")))</span>
+                <span class="org-comment-delimiter">;;  </span><span class="org-comment">"-alF --group-directories-first --time-style=long-iso")))</span>
 </pre>
 </div>
 </div>
@@ -17387,15 +17386,16 @@ Single Dired buffer.
 
       (define-key dired-mode-map (kbd <span class="org-string">"&lt;mouse-1&gt;"</span>) 'dired-single-buffer-mouse)
 
-      (define-key dired-mode-map (kbd <span class="org-string">"^"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">Up.</span>
-        (<span class="org-keyword">lambda</span> ()
-          (interactive)
-          (dired-single-buffer <span class="org-string">".."</span>)))
+      (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-dired-up-directory-single-buffer</span> ()
+        <span class="org-doc">"Visit parent directory of current directory in current buffer."</span>
+        (interactive)
+        (dired-single-buffer <span class="org-string">".."</span>))
 
-      (define-key dired-mode-map (kbd <span class="org-string">"C-x C-j"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">Up.</span>
-        (<span class="org-keyword">lambda</span> ()
-          (interactive)
-          (dired-single-buffer <span class="org-string">".."</span>))))
+      (define-key dired-mode-map (kbd <span class="org-string">"^"</span>)
+        'leuven-dired-up-directory-single-buffer) <span class="org-comment-delimiter">; </span><span class="org-comment">Up.</span>
+
+      (define-key dired-mode-map (kbd <span class="org-string">"C-x C-j"</span>)
+        'leuven-dired-up-directory-single-buffer)) <span class="org-comment-delimiter">; </span><span class="org-comment">Up.</span>
 </pre>
 </div>
 </div>
@@ -17709,8 +17709,6 @@ For searches in Dired, see <code>dired-do-search</code> (<code>A</code>).
     <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Quicker to collate the matches and then use `</span><span class="org-constant"><span class="org-comment">xargs</span></span><span class="org-comment">' to run the command</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">;; (variable defined in `</span><span class="org-constant"><span class="org-comment">find-dired.el</span></span><span class="org-comment">').</span>
 
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(when Cygwin... </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span>
-
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Search for files with names matching a wild card pattern and Dired the</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">output.</span>
     (global-set-key (kbd <span class="org-string">"C-c 1"</span>) 'find-name-dired)
@@ -17731,8 +17729,8 @@ For searches in Dired, see <code>dired-do-search</code> (<code>A</code>).
 <h3 id="orgheadline339">Editing the Dired Buffer</h3>
 <div class="outline-text-3" id="text-orgheadline339">
 <p>
-<code>Wdired</code> mode is great for renaming (a lot of) files in a directory, as it allows
-editing the Dired buffer like a text file, using all the power of Emacs.  That
+<code>Wdired</code> mode is <b>great for renaming (a lot of) files</b> in a directory, as it allows
+<b>editing the Dired buffer</b> like a text file, using all the power of Emacs.  That
 is, one can use keyboard macros, search and replace, rectangle mode (great for
 adding prefixes to file names), flip mode bits with the mouse, etc.!
 </p>
@@ -17814,18 +17812,15 @@ For more information, see:
 </div>
 
 <div id="outline-container-orgheadline341" class="outline-3">
-<h3 id="orgheadline341">Dired Extra</h3>
+<h3 id="orgheadline341">Dired &ldquo;extra&rdquo; features</h3>
 <div class="outline-text-3" id="text-orgheadline341">
 <p>
-Extra Dired functionality
+Extra Dired functionality:
 </p>
 
 <ul class="org-ul">
-<li><code>dired-x</code> has a feature to &ldquo;guess&rdquo; the right shell command and the right
-external viewer for documents (see <code>dired-guess-shell-alist-user</code>)</li>
-
 <li><p>
-You can also jump to the Dired buffer corresponding to the current buffer by
+You can <b>jump to the Dired buffer</b> corresponding to the current buffer by
 pressing <code>C-x C-j</code> (<code>dired-jump</code>).  If in Dired already, pop up a level and goto
 old directory&rsquo;s line.
 </p>
@@ -17834,6 +17829,9 @@ old directory&rsquo;s line.
 <b>Standard</b> alternative: <code>C-x d &lt;RET&gt;</code>, though it doesn&rsquo;t set point on the right
 file.
 </p></li>
+
+<li><code>dired-x</code> also has a feature to &ldquo;guess&rdquo; the right shell command and the right
+external viewer for documents (see <code>dired-guess-shell-alist-user</code>)</li>
 </ul>
 
 <div class="org-src-container">
@@ -17862,9 +17860,14 @@ file.
 <h3 id="orgheadline342">Dired+</h3>
 <div class="outline-text-3" id="text-orgheadline342">
 <p>
-Library <code>Dired+</code> lets you act on sets of marked files in subdirs, recursively, for
-example.
+Extensions to Dired:
 </p>
+
+<ul class="org-ul">
+<li>Provide fancy highlighting.</li>
+
+<li>Let you act on sets of marked files in subdirs, recursively, for example.</li>
+</ul>
 
 <div class="org-src-container">
 
@@ -17872,7 +17875,6 @@ example.
 
   (leuven--section <span class="org-string">"30.XX Dired+"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Extensions to Dired (provides fancy highlighting, etc.).</span>
   (add-hook 'dired-load-hook
             (<span class="org-keyword">lambda</span> ()
               <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't hide details in Dired.</span>

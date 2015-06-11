@@ -2907,14 +2907,13 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
 Tell ~aspell~ to speed up, though this reduces somewhat the quality of its
 suggestions.  According to the ~aspell~ documentation:
 
-- "ultra" is the fastest suggestion mode, which is still twice as slow as
-  ~ispell~.
+- ~ultra~ is the fastest suggestion mode, which is still twice as slow as ~ispell~.
 
-- If your machine is fast enough, a better option might be to try "fast" mode,
-  which is twice as slow as "ultra", but more accurate.
+- If your machine is fast enough, a better option might be to try ~fast~ mode,
+  which is twice as slow as ~ultra~, but more accurate.
 
-- The "normal" mode, which is the ~aspell~ default, is even more accurate, but
-  is reportedly 10 times slower than "fast" mode.
+- The ~normal~ mode, which is the ~aspell~ default, is even more accurate, but is
+  reportedly 10 times slower than ~fast~ mode.
 
 Use the ~-C~ option which will ConsiderCamelCaseToBeCorrect.
 
@@ -13401,9 +13400,9 @@ GNU ~ls~.
     (setq dired-listing-switches
           ;; (cond ((or leuven--win32-p
           ;;            leuven--cygwin-p)
-                 "-a -F -l")
+                 "-alF")
                 ;; (t
-                ;;  "-a -F --group-directories-first -l --time-style=long-iso")))
+                ;;  "-alF --group-directories-first --time-style=long-iso")))
 #+end_src
 
 ** Emulation of ~ls~ on MS-Windows
@@ -13523,15 +13522,16 @@ Single Dired buffer.
 
       (define-key dired-mode-map (kbd "<mouse-1>") 'dired-single-buffer-mouse)
 
-      (define-key dired-mode-map (kbd "^") ; Up.
-        (lambda ()
-          (interactive)
-          (dired-single-buffer "..")))
+      (defun leuven-dired-up-directory-single-buffer ()
+        "Visit parent directory of current directory in current buffer."
+        (interactive)
+        (dired-single-buffer ".."))
 
-      (define-key dired-mode-map (kbd "C-x C-j") ; Up.
-        (lambda ()
-          (interactive)
-          (dired-single-buffer ".."))))
+      (define-key dired-mode-map (kbd "^")
+        'leuven-dired-up-directory-single-buffer) ; Up.
+
+      (define-key dired-mode-map (kbd "C-x C-j")
+        'leuven-dired-up-directory-single-buffer)) ; Up.
 #+end_src
 
 *** Open file with default tool (open directory with Windows Explorer)
@@ -13741,8 +13741,6 @@ For searches in Dired, see ~dired-do-search~ (~A~).
     ;; ;; Quicker to collate the matches and then use `xargs' to run the command
     ;; ;; (variable defined in `find-dired.el').
 
-;; (when Cygwin... XXX
-
     ;; Search for files with names matching a wild card pattern and Dired the
     ;; output.
     (global-set-key (kbd "C-c 1") 'find-name-dired)
@@ -13758,8 +13756,8 @@ For searches in Dired, see ~dired-do-search~ (~A~).
 
 ** Editing the Dired Buffer
 
-~Wdired~ mode is great for renaming (a lot of) files in a directory, as it allows
-editing the Dired buffer like a text file, using all the power of Emacs.  That
+~Wdired~ mode is *great for renaming (a lot of) files* in a directory, as it allows
+*editing the Dired buffer* like a text file, using all the power of Emacs.  That
 is, one can use keyboard macros, search and replace, rectangle mode (great for
 adding prefixes to file names), flip mode bits with the mouse, etc.!
 
@@ -13816,19 +13814,19 @@ For more information, see:
       (setq image-dired-thumb-margin 4))
 #+end_src
 
-** Dired Extra
+** Dired "extra" features
 
-Extra Dired functionality
+Extra Dired functionality:
 
-- ~dired-x~ has a feature to "guess" the right shell command and the right
-  external viewer for documents (see ~dired-guess-shell-alist-user~)
-
-- You can also jump to the Dired buffer corresponding to the current buffer by
+- You can *jump to the Dired buffer* corresponding to the current buffer by
   pressing ~C-x C-j~ (~dired-jump~).  If in Dired already, pop up a level and goto
   old directory's line.
 
   *Standard* alternative: ~C-x d <RET>~, though it doesn't set point on the right
   file.
+
+- ~dired-x~ also has a feature to "guess" the right shell command and the right
+  external viewer for documents (see ~dired-guess-shell-alist-user~)
 
 #+begin_src emacs-lisp
 ;;** Dired Extra
@@ -13848,15 +13846,17 @@ Extra Dired functionality
 
 ** Dired+
 
-Library ~Dired+~ lets you act on sets of marked files in subdirs, recursively, for
-example.
+Extensions to Dired:
+
+- Provide fancy highlighting.
+
+- Let you act on sets of marked files in subdirs, recursively, for example.
 
 #+begin_src emacs-lisp
 ;;** Dired+
 
   (leuven--section "30.XX Dired+")
 
-  ;; Extensions to Dired (provides fancy highlighting, etc.).
   (add-hook 'dired-load-hook
             (lambda ()
               ;; Don't hide details in Dired.

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150611.1350
+;; Version: 20150611.1540
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150611.1350"
+(defconst leuven--emacs-version "20150611.1540"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -8008,9 +8008,9 @@ a clean buffer we're an order of magnitude laxer about checking."
     (setq dired-listing-switches
           ;; (cond ((or leuven--win32-p
           ;;            leuven--cygwin-p)
-                 "-a -F -l")
+                 "-alF")
                 ;; (t
-                ;;  "-a -F --group-directories-first -l --time-style=long-iso")))
+                ;;  "-alF --group-directories-first --time-style=long-iso")))
 
     ;; Use `ls-lisp' (for Dired sorting to work OK!) in all versions of Emacs.
     ;; (when leuven--cygwin-p
@@ -8086,15 +8086,16 @@ a clean buffer we're an order of magnitude laxer about checking."
 
       (define-key dired-mode-map (kbd "<mouse-1>") 'dired-single-buffer-mouse)
 
-      (define-key dired-mode-map (kbd "^") ; Up.
-        (lambda ()
-          (interactive)
-          (dired-single-buffer "..")))
+      (defun leuven-dired-up-directory-single-buffer ()
+        "Visit parent directory of current directory in current buffer."
+        (interactive)
+        (dired-single-buffer ".."))
 
-      (define-key dired-mode-map (kbd "C-x C-j") ; Up.
-        (lambda ()
-          (interactive)
-          (dired-single-buffer ".."))))
+      (define-key dired-mode-map (kbd "^")
+        'leuven-dired-up-directory-single-buffer) ; Up.
+
+      (define-key dired-mode-map (kbd "C-x C-j")
+        'leuven-dired-up-directory-single-buffer)) ; Up.
 
     (define-key dired-mode-map (kbd "e") 'browse-url-of-dired-file) ; <C-RET>?
 
@@ -8154,8 +8155,6 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; ;; Quicker to collate the matches and then use `xargs' to run the command
     ;; ;; (variable defined in `find-dired.el').
 
-;; (when Cygwin... XXX
-
     ;; Search for files with names matching a wild card pattern and Dired the
     ;; output.
     (global-set-key (kbd "C-c 1") 'find-name-dired)
@@ -8210,7 +8209,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "30.XX Dired+")
 
-  ;; Extensions to Dired (provides fancy highlighting, etc.).
   (add-hook 'dired-load-hook
             (lambda ()
               ;; Don't hide details in Dired.
