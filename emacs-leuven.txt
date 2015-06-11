@@ -11448,7 +11448,7 @@ via the command line, allowing those features to be integrated with Emacs.
     (setq eclim-print-debug-messages t)
 
     ;; (global-eclim-mode)
-    (add-hook 'java-mode-hook #'eclim-mode))
+    (add-hook 'java-mode-hook #'eclim-mode)
 #+end_src
 
 #+begin_src emacs-lisp

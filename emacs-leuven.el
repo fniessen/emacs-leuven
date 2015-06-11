@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150611.1921
+;; Version: 20150611.2234
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150611.1921"
+(defconst leuven--emacs-version "20150611.2234"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -7021,7 +7021,7 @@ mouse-3: go to end") "]"))))
     (setq eclim-print-debug-messages t)
 
     ;; (global-eclim-mode)
-    (add-hook 'java-mode-hook #'eclim-mode))
+    (add-hook 'java-mode-hook #'eclim-mode)
 
     ;; Display compilation error messages in the echo area
     (setq help-at-pt-display-when-idle t)
