@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150612.2140
+;; Version: 20150612.2227
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150612.2140"
+(defconst leuven--emacs-version "20150612.2227"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -439,13 +439,13 @@ Last time is saved in global variable `leuven--before-section-time'."
           anzu auctex auto-complete bbdb bookmark+ boxquote
           ;; calfw
           circe color-identifiers-mode company company-quickhelp csv-mode
-          cygwin-mount dictionary diff-hl diminish dired+ dired-single
-          emacs-eclim ess expand-region fancy-narrow fill-column-indicator
-          flycheck flycheck-ledger fuzzy git-commit-mode git-messenger
-          git-timemachine google-this google-translate goto-chg
-          graphviz-dot-mode guide-key helm helm-descbinds helm-swoop hideshowvis
-          highlight-symbol htmlize indent-guide key-chord litable idle-require
-          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
+          cygwin-mount dictionary diff-hl diminish dired+ emacs-eclim ess
+          expand-region fancy-narrow fill-column-indicator flycheck
+          flycheck-ledger fuzzy git-commit-mode git-messenger git-timemachine
+          google-this google-translate goto-chg graphviz-dot-mode guide-key helm
+          helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
+          indent-guide key-chord litable idle-require imenu-anywhere info+
+          interaction-log ledger-mode leuven-theme
           ;; magit
           multi-term multiple-cursors pager pdf-tools powerline rainbow-mode
           tidy unbound undo-tree
@@ -8060,30 +8060,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (leuven--section "30.5 (emacs)Dired Visiting")
 
-    ;; Reuse Dired buffers, by running the command
-    ;; `dired-find-alternate-file' (bound to `a') on a directory.
-    (put 'dired-find-alternate-file 'disabled nil)
-
-    ;; Reuse the current Dired directory buffer to visit another directory
-    ;; (limit Dired to 1 single buffer).
-    (try-require 'dired-single)
-    (with-eval-after-load "dired-single"
-
-      (define-key dired-mode-map (kbd "<return>") 'dired-single-buffer)
-
-      (define-key dired-mode-map (kbd "<mouse-1>") 'dired-single-buffer-mouse)
-
-      (defun leuven-dired-up-directory-single-buffer ()
-        "Visit parent directory of current directory in current buffer."
-        (interactive)
-        (dired-single-buffer ".."))
-
-      (define-key dired-mode-map (kbd "^")
-        'leuven-dired-up-directory-single-buffer) ; Up.
-
-      (define-key dired-mode-map (kbd "C-x C-j")
-        'leuven-dired-up-directory-single-buffer)) ; Up.
-
     (define-key dired-mode-map (kbd "e") 'browse-url-of-dired-file) ; <C-RET>?
 
     ;; Open files using Windows associations.
@@ -8198,6 +8174,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (add-hook 'dired-load-hook
             (lambda ()
+
               ;; Don't hide details in Dired.
               (setq diredp-hide-details-initially-flag nil)
 
@@ -8207,7 +8184,14 @@ a clean buffer we're an order of magnitude laxer about checking."
               ;; Don't wrap "next" command around to buffer beginning.
               (setq diredp-wrap-around-flag nil)
 
-              (try-require 'dired+)))
+              (try-require 'dired+)
+
+              ;; Dired `find-file' commands reuse directories.
+              (diredp-toggle-find-file-reuse-dir 1)
+
+              ;; Up, reusing Dired buffers.
+              (define-key dired-mode-map (kbd "C-x C-j")
+                'diredp-up-directory-reuse-dir-buffer)))
 
 ;;** Diff-hl
 

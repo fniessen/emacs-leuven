@@ -728,13 +728,13 @@ like this into your configuration file:
           anzu auctex auto-complete bbdb bookmark+ boxquote
           ;; calfw
           circe color-identifiers-mode company company-quickhelp csv-mode
-          cygwin-mount dictionary diff-hl diminish dired+ dired-single
-          emacs-eclim ess expand-region fancy-narrow fill-column-indicator
-          flycheck flycheck-ledger fuzzy git-commit-mode git-messenger
-          git-timemachine google-this google-translate goto-chg
-          graphviz-dot-mode guide-key helm helm-descbinds helm-swoop hideshowvis
-          highlight-symbol htmlize indent-guide key-chord litable idle-require
-          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
+          cygwin-mount dictionary diff-hl diminish dired+ emacs-eclim ess
+          expand-region fancy-narrow fill-column-indicator flycheck
+          flycheck-ledger fuzzy git-commit-mode git-messenger git-timemachine
+          google-this google-translate goto-chg graphviz-dot-mode guide-key helm
+          helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
+          indent-guide key-chord litable idle-require imenu-anywhere info+
+          interaction-log ledger-mode leuven-theme
           ;; magit
           multi-term multiple-cursors pager pdf-tools powerline rainbow-mode
           tidy unbound undo-tree
@@ -12276,7 +12276,7 @@ Using tags tables is the most generic approach to setup *code navigation*.  A
 There are many situations when you cannot or might not want to use ~tags~.  You
 would like to use [[id:ea687cd8-fff0-461f-999e-c9fbc84b5901][Imenu]] because:
 
-- Imenu is meaningful in non-programing modes and for non-visiting buffers.
+- Imenu is meaningful in non-programming modes and for non-visiting buffers.
 
 - Virtually all modes already define Imenu, so it works out of the box
   everywhere, even if you read a language in which you will never write.
@@ -12299,8 +12299,8 @@ should comes with the ~etags~ program, which supports many different languages.
 Comparison of tools:
 
 - etags (Emacs-style TAGS file) ::
-     Ada, Asm, C, Objective C, C++, C#, Cobol, Erlang, Forth, Fortran, HTML,
-     Java, Lisp, Lua, Makefile, Pascal, Perl, PHP, Postscript, Prolog, Python,
+     Ada, Asm, *C*, Objective C, *C++*, C#, Cobol, Erlang, Forth, Fortran, HTML,
+     *Java*, *Lisp*, Lua, Makefile, Pascal, Perl, *PHP*, Postscript, Prolog, *Python*,
      Scheme, TeX, TeXinfo, and YACC.
 
      On Windows, Emacs comes with ~etags~ and a similar executable file called
@@ -12308,9 +12308,9 @@ Comparison of tools:
      directory.
 
 - Exuberant Ctags ::
-     Ant, Asm, Asp, Awk, Basic, BETA, C, C++, C#, Cobol, DosBatch, Eiffel,
-     Erlang, Flex, Fortran, HTML, Java, JavaScript, Lisp, Lua, Makefile,
-     MatLab, OCaml, Pascal, Perl, PHP, Python, REXX, Ruby, Scheme, Sh, SLang,
+     Ant, Asm, Asp, Awk, Basic, BETA, *C*, *C++*, C#, Cobol, DosBatch, Eiffel,
+     Erlang, Flex, Fortran, HTML, *Java*, JavaScript, *Lisp*, Lua, Makefile,
+     MatLab, OCaml, Pascal, Perl, *PHP*, *Python*, REXX, *Ruby*, Scheme, Sh, SLang,
      SML, SQL, Tcl, TeX, Vera, Verilog, VHDL, Vim, and YACC.
 
      You should download *Exuberant Ctags* from http://ctags.sourceforge.net/ or
@@ -12339,7 +12339,7 @@ Comparison of tools:
 - GNU Idutils ::
 
 - GNU Global (gtags) ::
-     C, C++, Yacc, Java, and PHP4.
+     *C*, *C++*, Yacc, *Java*, and *PHP4*.
 
      Global is a lot smarter about finding tags tables, and is fairly fast to
      update.
@@ -12355,8 +12355,9 @@ would be the fallback method.
 
 Please also see [[http://hub.opensolaris.org/bin/view/Project+opengrok/][Comparison with Similar Tools]].
 
-Once you have a good tagging system in place, many tools become enabled for
-your language, such as:
+Once you have a good tagging system in place, many tools become enabled for your
+language, such as:
+
 - tag decoration mode (like drawing lines over the top of function tags),
 - stickyfunc mode (which shows the current function in the header line),
 - [[id:5032bcdb-ac6b-4101-a0ce-28192fb7e247][Emacs Code Browser]], and
@@ -13612,36 +13613,6 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go.  Now, they do.
     (leuven--section "30.5 (emacs)Dired Visiting")
 #+end_src
 
-*** Reuse Dired buffers
-
-Single Dired buffer.
-
-#+begin_src emacs-lisp
-    ;; Reuse Dired buffers, by running the command
-    ;; `dired-find-alternate-file' (bound to `a') on a directory.
-    (put 'dired-find-alternate-file 'disabled nil)
-
-    ;; Reuse the current Dired directory buffer to visit another directory
-    ;; (limit Dired to 1 single buffer).
-    (try-require 'dired-single)
-    (with-eval-after-load "dired-single"
-
-      (define-key dired-mode-map (kbd "<return>") 'dired-single-buffer)
-
-      (define-key dired-mode-map (kbd "<mouse-1>") 'dired-single-buffer-mouse)
-
-      (defun leuven-dired-up-directory-single-buffer ()
-        "Visit parent directory of current directory in current buffer."
-        (interactive)
-        (dired-single-buffer ".."))
-
-      (define-key dired-mode-map (kbd "^")
-        'leuven-dired-up-directory-single-buffer) ; Up.
-
-      (define-key dired-mode-map (kbd "C-x C-j")
-        'leuven-dired-up-directory-single-buffer)) ; Up.
-#+end_src
-
 *** Open file with default tool (open directory with Windows Explorer)
 
 On top of the traditional ways, there are also these add-ons which open files
@@ -13967,6 +13938,7 @@ Extensions to Dired:
 
   (add-hook 'dired-load-hook
             (lambda ()
+
               ;; Don't hide details in Dired.
               (setq diredp-hide-details-initially-flag nil)
 
@@ -13976,7 +13948,14 @@ Extensions to Dired:
               ;; Don't wrap "next" command around to buffer beginning.
               (setq diredp-wrap-around-flag nil)
 
-              (try-require 'dired+)))
+              (try-require 'dired+)
+
+              ;; Dired `find-file' commands reuse directories.
+              (diredp-toggle-find-file-reuse-dir 1)
+
+              ;; Up, reusing Dired buffers.
+              (define-key dired-mode-map (kbd "C-x C-j")
+                'diredp-up-directory-reuse-dir-buffer)))
 #+end_src
 
 ** VC diff highlighting
