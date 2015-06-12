@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150612.1435
+;; Version: 20150612.1536
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150612.1435"
+(defconst leuven--emacs-version "20150612.1536"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -6989,11 +6989,9 @@ mouse-3: go to end") "]"))))
     ;; Find Eclim installation.
     (setq eclim-executable
           (or (executable-find "eclim")
-              "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim"))
-    ;; https://github.com/senny/emacs-eclim/issues/132
-
-    (setq eclim-eclipse-dirs "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim")
-    (setq eclim-executable "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim.bat")
+              (concat leuven--windows-program-files-dir "eclipse/eclim.bat")))
+    ;; (setq eclim-eclipse-dirs
+    ;;       (concat leuven--windows-program-files-dir "eclipse/eclim"))
     (setq eclim-port 9091)
 
     ;; Print debug messages.

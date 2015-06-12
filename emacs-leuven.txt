@@ -11474,11 +11474,9 @@ eclimd -Dosgi.instance.area.default=@user.home/another_workspace
     ;; Find Eclim installation.
     (setq eclim-executable
           (or (executable-find "eclim")
-              "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim"))
-    ;; https://github.com/senny/emacs-eclim/issues/132
-
-    (setq eclim-eclipse-dirs "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim")
-    (setq eclim-executable "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim.bat")
+              (concat leuven--windows-program-files-dir "eclipse/eclim.bat")))
+    ;; (setq eclim-eclipse-dirs
+    ;;       (concat leuven--windows-program-files-dir "eclipse/eclim"))
     (setq eclim-port 9091)
 
     ;; Print debug messages.
