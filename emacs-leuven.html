@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150612.1537</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150612.2142</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150612.1537"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150612.2142"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1977,7 +1977,7 @@ Use Multiple Cursors to <b>rename variables quickly</b>: <b>add the next</b> or 
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    (global-set-key (kbd <span class="org-string">"C-&lt;return&gt;"</span>) 'mc/mark-more-like-this-extended)
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-&lt;return&gt;") 'mc/mark-more-like-this-extended) ; useful for completion</span>
 </pre>
 </div>
 
@@ -14654,6 +14654,7 @@ XML/DTD/XSD, etc.) has been added.
 <h5 id="orgheadline277">Download / install</h5>
 <div class="outline-text-5" id="text-orgheadline277">
 <ol class="org-ol">
+<li>Install <a href="http://www.eclipse.org/downloads/">Eclipse</a>.</li>
 <li>Install <a href="http://eclim.org/install.html">Eclim</a> (see <code>vim.skip</code> and <code>vim.skip.hint</code>).</li>
 <li>Install <a href="https://github.com/senny/emacs-eclim">Emacs-eclim</a> from MELPA.</li>
 </ol>
@@ -14745,9 +14746,9 @@ To tell eclim <b>which Eclipse workspace to use</b>, you can start eclimd like s
     (setq eclim-executable
           (or (executable-find <span class="org-string">"eclim"</span>)
               (concat leuven--windows-program-files-dir <span class="org-string">"eclipse/eclim.bat"</span>)))
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq eclim-eclipse-dirs</span>
-    <span class="org-comment-delimiter">;;       </span><span class="org-comment">(concat leuven--windows-program-files-dir "eclipse/eclim"))</span>
-    (setq eclim-port 9091)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(add-to-list 'eclim-eclipse-dirs</span>
+    <span class="org-comment-delimiter">;;              </span><span class="org-comment">(concat leuven--windows-program-files-dir "eclipse/eclim"))</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Print debug messages.</span>
     (setq eclim-print-debug-messages t)
@@ -14766,17 +14767,27 @@ To tell eclim <b>which Eclipse workspace to use</b>, you can start eclimd like s
 </pre>
 </div>
 
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Add the emacs-eclim source.</span>
+    (<span class="org-keyword">require</span> '<span class="org-constant">ac-emacs-eclim-source</span>)
+
+    <span class="org-comment-delimiter">;;</span><span class="org-comment">! Limit `</span><span class="org-constant"><span class="org-comment">ac-sources</span></span><span class="org-comment">' to Eclim source.</span>
+    (<span class="org-keyword">defun</span> <span class="org-function-name">ac-emacs-eclim-java-setup</span> ()
+      (setq ac-sources '(ac-source-emacs-eclim)))
+   <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq ac-sources (delete 'ac-source-words-in-same-mode-buffers ac-sources))</span>
+
+    (ac-emacs-eclim-config)
+</pre>
+</div>
+
 <p>
 See <a href="http://java-coders.com/p/tsdh/emacs-eclim">http://java-coders.com/p/tsdh/emacs-eclim</a> for Company.
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Add the emacs-eclim source.</span>
-    (<span class="org-keyword">require</span> '<span class="org-constant">ac-emacs-eclim-source</span>)
-    (ac-emacs-eclim-config)
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Configure company-mode.</span>
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Configure company-mode.</span>
     (<span class="org-keyword">require</span> '<span class="org-constant">company-emacs-eclim</span>)
     (company-emacs-eclim-setup)
 </pre>
@@ -17124,7 +17135,9 @@ available completions and filter as well.
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"company-autoloads-</span><span class="org-leuven-highlight"><span class="org-string">XXX</span></span><span class="org-string">"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Company mode in all buffers ....</span>
-    (add-hook 'after-init-hook #'global-company-mode))
+    (add-hook 'after-init-hook #'global-company-mode)
+
+    (global-set-key (kbd <span class="org-string">"&lt;C-tab&gt;"</span>) 'company-complete))
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"company"</span>
 
@@ -17157,7 +17170,7 @@ available completions and filter as well.
     (define-key company-active-map (kbd <span class="org-string">"M-p"</span>) nil)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Completion by TAB.</span>
-    (define-key company-active-map (kbd <span class="org-string">"&lt;tab&gt;"</span>) 'company-complete-selection)
+    (define-key company-active-map (kbd <span class="org-string">"&lt;tab&gt;"</span>) 'company-complete-selection) <span class="org-comment-delimiter">; </span><span class="org-comment">Complete with the selected candidate</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">company-complete</span></span><span class="org-comment">'?</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Temporarily show the documentation buffer for the selection.</span>

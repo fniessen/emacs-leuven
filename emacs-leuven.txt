@@ -1385,7 +1385,7 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
 #+end_src
 
 #+begin_src emacs-lisp
-    (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended)
+    ;; (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended) ; useful for completion
 #+end_src
 
 #+begin_src emacs-lisp
@@ -11336,7 +11336,7 @@ In that case, you should:
 - bind the command normally bound to ~<M-tab>~ to a key that is convenient for
   you to hit, such as ~<C-tab>~.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; When you hit `<C-tab>', call the command normally bound to `<M-tab>'.
   (global-set-key (kbd "<C-tab>")
     (lambda ()
@@ -11402,8 +11402,9 @@ XML/DTD/XSD, etc.) has been added.
 
 **** Download / install
 
-1. Install [[http://eclim.org/install.html][Eclim]] (see ~vim.skip~ and ~vim.skip.hint~).
-2. Install [[https://github.com/senny/emacs-eclim][Emacs-eclim]] from MELPA.
+1. Install [[http://www.eclipse.org/downloads/][Eclipse]].
+2. Install [[http://eclim.org/install.html][Eclim]] (see ~vim.skip~ and ~vim.skip.hint~).
+3. Install [[https://github.com/senny/emacs-eclim][Emacs-eclim]] from MELPA.
 
 **** Getting started
 
@@ -11475,9 +11476,9 @@ eclimd -Dosgi.instance.area.default=@user.home/another_workspace
     (setq eclim-executable
           (or (executable-find "eclim")
               (concat leuven--windows-program-files-dir "eclipse/eclim.bat")))
-    ;; (setq eclim-eclipse-dirs
-    ;;       (concat leuven--windows-program-files-dir "eclipse/eclim"))
-    (setq eclim-port 9091)
+
+    ;; (add-to-list 'eclim-eclipse-dirs
+    ;;              (concat leuven--windows-program-files-dir "eclipse/eclim"))
 
     ;; Print debug messages.
     (setq eclim-print-debug-messages t)
@@ -11493,13 +11494,21 @@ eclimd -Dosgi.instance.area.default=@user.home/another_workspace
     (help-at-pt-set-timer)
 #+end_src
 
-See http://java-coders.com/p/tsdh/emacs-eclim for Company.
-
 #+begin_src emacs-lisp
     ;; Add the emacs-eclim source.
     (require 'ac-emacs-eclim-source)
-    (ac-emacs-eclim-config)
 
+    ;;! Limit `ac-sources' to Eclim source.
+    (defun ac-emacs-eclim-java-setup ()
+      (setq ac-sources '(ac-source-emacs-eclim)))
+   ;; (setq ac-sources (delete 'ac-source-words-in-same-mode-buffers ac-sources))
+
+    (ac-emacs-eclim-config)
+#+end_src
+
+See http://java-coders.com/p/tsdh/emacs-eclim for Company.
+
+#+begin_src emacs-lisp
     ;; Configure company-mode.
     (require 'company-emacs-eclim)
     (company-emacs-eclim-setup)
@@ -13297,7 +13306,9 @@ available completions and filter as well.
   (with-eval-after-load "company-autoloads-XXX"
 
     ;; Enable Company mode in all buffers ....
-    (add-hook 'after-init-hook #'global-company-mode))
+    (add-hook 'after-init-hook #'global-company-mode)
+
+    (global-set-key (kbd "<C-tab>") 'company-complete))
 
   (with-eval-after-load "company"
 
@@ -13330,7 +13341,7 @@ available completions and filter as well.
     (define-key company-active-map (kbd "M-p") nil)
 
     ;; Completion by TAB.
-    (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
+    (define-key company-active-map (kbd "<tab>") 'company-complete-selection) ; Complete with the selected candidate
                                         ; `company-complete'?
 
     ;; Temporarily show the documentation buffer for the selection.

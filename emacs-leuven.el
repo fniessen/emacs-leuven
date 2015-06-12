@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150612.1536
+;; Version: 20150612.2140
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150612.1536"
+(defconst leuven--emacs-version "20150612.2140"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -811,7 +811,7 @@ These packages are neither built-in nor already installed nor ignored."
     (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this) ;!
     ;; (global-set-key (kbd "C-c *") 'mc/mark-all-like-this) ; Conflict in Org tables!
 
-    (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended)
+    ;; (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended) ; useful for completion
 
     (global-set-key (kbd "C-S-SPC") 'set-rectangular-region-anchor)
     (global-set-key (kbd "C-M-=") 'mc/insert-numbers)
@@ -6943,12 +6943,6 @@ mouse-3: go to end") "]"))))
 
   (leuven--section "26.8 (emacs)Symbol Completion")
 
-  ;; When you hit `<C-tab>', call the command normally bound to `<M-tab>'.
-  (global-set-key (kbd "<C-tab>")
-    (lambda ()
-      (interactive)
-      (call-interactively (key-binding (kbd "<M-tab>")))))
-
 ;;** 26.9 (info "(emacs)Glasses") minor mode
 
   (leuven--section "26.9 (emacs)Glasses minor mode")
@@ -6990,9 +6984,9 @@ mouse-3: go to end") "]"))))
     (setq eclim-executable
           (or (executable-find "eclim")
               (concat leuven--windows-program-files-dir "eclipse/eclim.bat")))
-    ;; (setq eclim-eclipse-dirs
-    ;;       (concat leuven--windows-program-files-dir "eclipse/eclim"))
-    (setq eclim-port 9091)
+
+    ;; (add-to-list 'eclim-eclipse-dirs
+    ;;              (concat leuven--windows-program-files-dir "eclipse/eclim"))
 
     ;; Print debug messages.
     (setq eclim-print-debug-messages t)
@@ -7007,6 +7001,12 @@ mouse-3: go to end") "]"))))
 
     ;; Add the emacs-eclim source.
     (require 'ac-emacs-eclim-source)
+
+    ;;! Limit `ac-sources' to Eclim source.
+    (defun ac-emacs-eclim-java-setup ()
+      (setq ac-sources '(ac-source-emacs-eclim)))
+   ;; (setq ac-sources (delete 'ac-source-words-in-same-mode-buffers ac-sources))
+
     (ac-emacs-eclim-config)
 
     ;; Configure company-mode.
@@ -7887,7 +7887,9 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "company-autoloads-XXX"
 
     ;; Enable Company mode in all buffers ....
-    (add-hook 'after-init-hook #'global-company-mode))
+    (add-hook 'after-init-hook #'global-company-mode)
+
+    (global-set-key (kbd "<C-tab>") 'company-complete))
 
   (with-eval-after-load "company"
 
@@ -7920,7 +7922,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (define-key company-active-map (kbd "M-p") nil)
 
     ;; Completion by TAB.
-    (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
+    (define-key company-active-map (kbd "<tab>") 'company-complete-selection) ; Complete with the selected candidate
                                         ; `company-complete'?
 
     ;; Temporarily show the documentation buffer for the selection.
