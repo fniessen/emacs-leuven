@@ -11401,25 +11401,48 @@ well, such as *Emacs*, Sublime Text 2 and TextMate):
 - [[http://eclim.org/features.html][many more]].
 
 The initial goal was to provide Eclipse *Java* functionality, but support for
-various other languages (C/C++, HTML/CSS, Groovy, JavaScript, *PHP*, *Python*, Ruby,
+various other languages (*C/C++*, HTML/CSS, Groovy, JavaScript, *PHP*, *Python*, *Ruby*,
 XML/DTD/XSD, etc.) has been added.
 
-Getting started:
+**** Download / install
 
 1. Install [[http://eclim.org/install.html][Eclim]] (see ~vim.skip~ and ~vim.skip.hint~).
 2. Install Emacs-eclim (via ~list-packages~).
 
-[[http://eclim.org/faq.html][FAQ / Troubleshooting]]
+**** Getting started
 
-Eclimd (eclim's daemon) can run without a graphical eclipse, but you can also
-run it from plain eclipse. So whenever you need some eclipse's functionalities
+You should *create an Eclipse project first*, and then you can create a Java file
+and open it in Emacs.  Open plain Java file without creating an Eclipse project
+will not work.
+
+"Could not find eclipse project for <file>.java"?  Are you using Cygwin Emacs
+with a Windows Java installation?  ~/cygdrive~ paths won't be understood...
+
+**** The Eclim daemon
+
+Eclimd (Eclim's daemon) can run without a graphical Eclipse, but you can also
+run it from plain Eclipse.  So whenever you need some eclipse's functionalities
 that aren't (yet) supported by either ~emacs-eclim~ or ~eclim~, you can switch to it
 (e.g. the debugger or the profiler).
 
-# ("C-c C-e l b" . eclim-project-build))
+**** [[http://eclim.org/faq.html][FAQ / Troubleshooting]]
 
-- M-x eclim-run-class ::
-     *Run the current class*.
+To tell eclim *which Eclipse workspace to use*, you can start eclimd like so:
+
+#+begin_src shell :tangle no
+eclimd -Dosgi.instance.area.default=@user.home/another_workspace
+#+end_src
+
+**** Core functionality
+
+- ~C-c C-e p c~ (or ~M-x eclim-project-create~) ::
+     Not documented.
+
+- ~M-x eclim-manage-projects~ ::
+     *Manage all your eclim projects* in one buffer.
+
+- ~M-x eclim-project-build~ ::
+     Triggers a *build* of *the current project*.
 
 - ~C-c C-e b~ (or ~M-x eclim-problems~) ::
      *Show current compilation problems* in a separate window.
@@ -11428,18 +11451,15 @@ that aren't (yet) supported by either ~emacs-eclim~ or ~eclim~, you can switch t
      Opens a new window inside the current frame showing the current project
      *compilation problems*.
 
-- ~M-x eclim-manage-projects~ ::
-     *Manage all your eclim projects* in one buffer.
-
-- ~C-c C-e p c~ (or ~M-x eclim-project-create~) ::
-     Not documented.
-
 - ~C-c C-e f d~ (or ~M-x eclim-java-find-declaration~ or ~M-.~ in Emacs Leuven) ::
      *Find* and display the *declaration* of the *Java identifier at point*.
 
 - ~C-c C-e f r~ (or ~M-x eclim-java-find-references~) ::
      *Find* and display *references* for the *Java identifier at point*
      = list callers.
+
+- M-x eclim-run-class ::
+     *Run the current class*.
 
 - ~C-c C-e t~ (or ~M-x eclim-run-junit~) ::
      *Run* the current *JUnit* class or method at point.
