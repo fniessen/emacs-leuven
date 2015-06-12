@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150612.2248
+;; Version: 20150612.2312
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150612.2248"
+(defconst leuven--emacs-version "20150612.2312"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -575,14 +575,16 @@ These packages are neither built-in nor already installed nor ignored."
   (leuven--section "7.4 (emacs)Basic Undoing Changes")
 
   ;; Undo some previous changes.
-  (global-set-key (kbd "<f11>") 'undo)
   (global-set-key (kbd "C-z") 'undo)
+  (global-set-key (kbd "<f11>") 'undo)
 
   ;; Treat undo history as a tree.
   (with-eval-after-load "undo-tree-autoloads"
 
     ;; Enable Global-Undo-Tree mode.
-    (global-undo-tree-mode 1)
+    (global-undo-tree-mode 1))
+
+  (with-eval-after-load "undo-tree"
 
     (with-eval-after-load "diminish-autoloads"
       (diminish 'undo-tree-mode))
@@ -596,9 +598,11 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Display diff by default in undo-tree visualizer.
     (setq undo-tree-visualizer-diff t) ; Toggle the diff display using `d'.
 
-    (defalias 'redo 'undo-tree-redo)
-    (global-set-key (kbd "<S-f11>") 'redo)
-    (global-set-key (kbd "C-S-z") 'redo))
+    (define-key undo-tree-map (kbd "C-/") nil)
+
+    ;; (defalias 'redo 'undo-tree-redo)
+    (global-set-key (kbd "C-S-z") 'undo-tree-redo)
+    (global-set-key (kbd "<S-f11>") 'undo-tree-redo))
 
 )                                       ; Chapter 7 ends here.
 
@@ -803,7 +807,8 @@ These packages are neither built-in nor already installed nor ignored."
 
     (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
 
-    (global-set-key (kbd "C-;") 'mc/mark-all-like-this-dwim) ; Like Iedit.
+    (global-set-key (kbd "C-;") 'mc/mark-all-like-this-dwim) ;! Like Iedit.
+    ;; (global-set-key (kbd "C-x C-;") 'mc/mark-all-like-this-dwim)
 
     ;; Mark all parts of the buffer that matches the current region.
     (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this) ;!
@@ -7887,9 +7892,12 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Enable Company mode in all buffers ....
     (add-hook 'after-init-hook #'global-company-mode)
 
-    (global-set-key (kbd "<C-tab>") 'company-complete))
+    (global-set-key (kbd "<C-tab>") 'company-complete)
+    (global-set-key (kbd "C-/") 'company-complete))
 
   (with-eval-after-load "company"
+
+    (global-set-key (kbd "C-/") 'company-complete-common)
 
     ;; ... Except in some modes.
     (setq company-global-modes
@@ -7926,6 +7934,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Temporarily show the documentation buffer for the selection.
     (define-key company-active-map (kbd "<f1>") 'company-show-doc-buffer)
     (define-key company-active-map (kbd "C-?") 'company-show-doc-buffer)
+    (define-key company-active-map (kbd "C-c C-d") 'company-show-doc-buffer)
 
     ;; Abort.
     (define-key company-active-map (kbd "C-g") 'company-abort)
@@ -8634,7 +8643,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 (leuven--chapter leuven-load-chapter-36-shell "36 Running Shell Commands from Emacs"
 
-  ;; transform shell names to what they really are
+  ;; Transform shell names to what they really are.
   (with-eval-after-load "sh-script"
 
     (add-to-list 'sh-alias-alist '(sh . bash)))
@@ -8649,14 +8658,14 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "36.1 Single Shell")
 
-  ;; force interactive behavior (to get my handy shell aliases)
+  ;; Force interactive behavior (to get my handy shell aliases).
   ;; FIXME Fix for Zsh (zsh:1: command not found: shopt)
   ;; (defadvice shell-command (before leuven-shell-command activate)
   ;;   (ad-set-arg 0
   ;;               (concat "source ~/.bashrc; shopt -s -q expand_aliases;\n "
   ;;                       (ad-get-arg 0))))
 
-  ;; for single shell commands (= "the" reference)
+  ;; For single shell commands (= "the" reference).
   (setq shell-file-name                 ; must be in the `PATH'
         (or (ignore-errors
               (file-name-nondirectory (or (executable-find "zsh")
@@ -8664,13 +8673,13 @@ a clean buffer we're an order of magnitude laxer about checking."
                                           (executable-find "sh"))))
             (when leuven--win32-p "cmdproxy.exe")))
 
-  ;; use `shell-file-name' as the default shell
+  ;; Use `shell-file-name' as the default shell.
   (setenv "SHELL" shell-file-name)
 
-  ;; switch used to have the shell execute its command line argument
-  (setq shell-command-switch "-c")      ; `/c' does not work with XEmacs
+  ;; Switch used to have the shell execute its command line argument.
+  (setq shell-command-switch "-c")      ; `/c' does not work with XEmacs.
 
-  ;; quote process arguments to ensure correct parsing on Windows
+  ;; Quote process arguments to ensure correct parsing on Windows.
   (setq w32-quote-process-args t)
 
   ;; ;; Workaround for Cygwin when 'shell-file-name' is 'bash'.
@@ -8680,44 +8689,45 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "36.2 Interactive Shell")
 
-  ;; for the interactive (sub)shell (and AUCTeX compilation?)
+  ;; For the interactive (sub)shell (and AUCTeX compilation?).
   (setq explicit-shell-file-name shell-file-name)
 
 ;;** 36.3 Shell Mode
 
   (leuven--section "36.3 Shell Mode")
 
-  ;; general command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
-  ;; Python, ...)
+  ;; General command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
+  ;; Python, ...).
   ;; (try-require 'comint)
   ;; (with-eval-after-load "comint"
 
-    ;; comint prompt is read only
+    ;; Comint prompt is read only.
     (setq comint-prompt-read-only t)    ; Text is read-only (in ESS)?
 
-    ;; no duplicates in command history
+    ;; No duplicates in command history.
     (setq-default comint-input-ignoredups t)
 
-    ;; input to interpreter causes windows showing the buffer to scroll
-    ;; (insert at the bottom)
+    ;; Input to interpreter causes windows showing the buffer to scroll
+    ;; (insert at the bottom).
     (setq-default comint-scroll-to-bottom-on-input t)
 
-    ;; output to interpreter causes windows showing the buffer to scroll
-    ;; (add output at the bottom)
+    ;; Output to interpreter causes windows showing the buffer to scroll
+    ;; (add output at the bottom).
     (setq-default comint-move-point-for-output t)
 
-    ;; maximum size in lines for Comint buffers
-    (setq comint-buffer-maximum-size (* 5 1024)) ; if the function
+    ;; Maximum size in lines for Comint buffers.
+    (setq comint-buffer-maximum-size (* 5 1024))
+                                        ; If the function
                                         ; `comint-truncate-buffer' is added to
-                                        ; `comint-output-filter-functions'
+                                        ; `comint-output-filter-functions'.
 
-    ;; strip `^M' characters
+    ;; Strip `^M' characters.
     (add-to-list 'process-coding-system-alist
                  '("bash" . (undecided-dos . undecided-unix)))
     (add-to-list 'process-coding-system-alist
                  '("zsh" . (undecided-dos . undecided-unix)))
 
-    ;; show completion list when ambiguous
+    ;; Show completion list when ambiguous.
     (setq comint-completion-autolist t)
 
     (defun leuven-comint-clear-buffer ()
@@ -8735,10 +8745,10 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "36.4 Shell Prompts")
 
-  ;; regexp to match prompts in the inferior shell
+  ;; Regexp to match prompts in the inferior shell.
   (setq shell-prompt-pattern "^[^#$%>\n]*[#$%>] *")
 
-  ;; regexp to recognize prompts in the inferior process
+  ;; Regexp to recognize prompts in the inferior process.
   (setq comint-prompt-regexp shell-prompt-pattern)
                                         ;! only used if the variable
                                         ;! `comint-use-prompt-regexp' is non-nil
@@ -8747,7 +8757,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "36.5 Shell Command History")
 
-  ;; rejects short commands
+  ;; Rejects short commands.
   (setq comint-input-filter
     #'(lambda (str)
         (and (not (string-match "\\`\\s *\\'" str))
@@ -8755,7 +8765,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (with-eval-after-load "comint"
 
-    ;; cycle backwards/forwards through input history
+    ;; Cycle backwards/forwards through input history.
     (define-key comint-mode-map
       (kbd "C-p") 'comint-previous-input) ; Shell
     (define-key comint-mode-map
@@ -8765,8 +8775,8 @@ a clean buffer we're an order of magnitude laxer about checking."
     (define-key comint-mode-map
       (kbd "<down>") 'comint-next-input) ; Shell + RStudio
 
-    ;; search backwards/forwards through input history for match for current
-    ;; input
+    ;; Search backwards/forwards through input history for match for current
+    ;; input.
     (define-key comint-mode-map
       (kbd "M-p") 'comint-previous-matching-input-from-input) ; Shell
     (define-key comint-mode-map
@@ -8777,7 +8787,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (kbd "<C-down>") 'comint-next-matching-input-from-input) ; RStudio
 
     (when (featurep 'helm-misc)
-      ;; provide completion of `comint' history
+      ;; Provide completion of `comint' history.
       (define-key comint-mode-map
         (kbd "C-c C-l") 'helm-comint-input-ring)))
 
@@ -8800,7 +8810,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "36.7 Options")
 
-  ;; disable command echoing
+  ;; Disable command echoing.
   (setq-default comint-process-echoes t) ; for Linux (not needed for Cygwin)
 
   (setenv "PAGER" "/usr/bin/cat")
@@ -8813,8 +8823,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "36.9 Term Mode")
 
-  ;; managing multiple terminal buffers in Emacs
-  ;; (and fixing some troubles of `term-mode': key bindings, etc.)
+  ;; Managing multiple terminal buffers in Emacs
+  ;; (and fixing some troubles of `term-mode': key bindings, etc.).
 
   ;; "multi-term on POSIX hosts has let me switch from using screen, with one
   ;; Emacs screen and lots of shell screens; to just using Emacs, with lots of
@@ -8823,19 +8833,19 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "multi-term-autoloads"
 
     ;; (global-set-key (kbd "C-c t") 'multi-term-next)
-    (global-set-key (kbd "C-c T") 'multi-term)) ; create a new one
+    (global-set-key (kbd "C-c T") 'multi-term)) ; Create a new one.
 
   (with-eval-after-load "multi-term"
 
     (setq multi-term-program shell-file-name))
 
-  ;; ;; run an inferior shell, with I/O through buffer `*shell*'
+  ;; ;; Run an inferior shell, with I/O through buffer `*shell*'.
   ;; (global-set-key
   ;;   (kbd "C-c !")
   ;;   (cond (leuven--win32-p 'shell)
   ;;         (t 'term)))
 
-  ;; toggle to and from the `*shell*' buffer
+  ;; Toggle to and from the `*shell*' buffer.
   (global-set-key (kbd "C-!")
     (lambda ()
       (interactive)
@@ -8845,12 +8855,12 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "36.10 Remote Host Shell")
 
-  ;; load ssh.el file
+  ;; Load ssh.el file.
   (add-to-list 'same-window-regexps "^\\*ssh-.*\\*\\(\\|<[0-9]+>\\)")
   (autoload 'ssh "ssh"
     "Open a network login connection via `ssh'." t)
-    ;; this is to run ESS remotely on another computer in my own Emacs, or just
-    ;; plain old reading remote files
+    ;; This is to run ESS remotely on another computer in my own Emacs, or just
+    ;; plain old reading remote files.
 
   ;; See http://emacs.1067599.n5.nabble.com/SSH-inside-Emacs-td225528.html
   ;; - plink (with `dumb' terminal option?) as interactive shell
@@ -8860,7 +8870,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; Let Emacs recognize Cygwin paths (e.g. /usr/local/lib).
   (when (and leuven--win32-p
-             (executable-find "mount")) ; Cygwin bin directory found
+             (executable-find "mount")) ; Cygwin bin directory found.
 
     (with-eval-after-load "cygwin-mount-autoloads"
 

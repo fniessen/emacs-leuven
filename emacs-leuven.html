@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150612.2249</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150612.2313</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150612.2249"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150612.2313"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1336,8 +1336,8 @@ Show line numbers temporarily &#x2013; just when you&rsquo;re going to a line nu
   (leuven--section <span class="org-string">"7.4 (emacs)Basic Undoing Changes"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Undo some previous changes.</span>
-  (global-set-key (kbd <span class="org-string">"&lt;f11&gt;"</span>) 'undo)
   (global-set-key (kbd <span class="org-string">"C-z"</span>) 'undo)
+  (global-set-key (kbd <span class="org-string">"&lt;f11&gt;"</span>) 'undo)
 </pre>
 </div>
 
@@ -1354,7 +1354,9 @@ Show line numbers temporarily &#x2013; just when you&rsquo;re going to a line nu
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"undo-tree-autoloads"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Global-Undo-Tree mode.</span>
-    (global-undo-tree-mode 1)
+    (global-undo-tree-mode 1))
+
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"undo-tree"</span>
 
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diminish-autoloads"</span>
       (diminish 'undo-tree-mode))
@@ -1368,9 +1370,11 @@ Show line numbers temporarily &#x2013; just when you&rsquo;re going to a line nu
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Display diff by default in undo-tree visualizer.</span>
     (setq undo-tree-visualizer-diff t) <span class="org-comment-delimiter">; </span><span class="org-comment">Toggle the diff display using `d'.</span>
 
-    (<span class="org-keyword">defalias</span> '<span class="org-function-name">redo</span> 'undo-tree-redo)
-    (global-set-key (kbd <span class="org-string">"&lt;S-f11&gt;"</span>) 'redo)
-    (global-set-key (kbd <span class="org-string">"C-S-z"</span>) 'redo))
+    (define-key undo-tree-map (kbd <span class="org-string">"C-/"</span>) nil)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(defalias 'redo 'undo-tree-redo)</span>
+    (global-set-key (kbd <span class="org-string">"C-S-z"</span>) 'undo-tree-redo)
+    (global-set-key (kbd <span class="org-string">"&lt;S-f11&gt;"</span>) 'undo-tree-redo))
 </pre>
 </div>
 
@@ -1965,7 +1969,8 @@ Use Multiple Cursors to <b>rename variables quickly</b>: <b>add the next</b> or 
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    (global-set-key (kbd <span class="org-string">"C-;"</span>) 'mc/mark-all-like-this-dwim) <span class="org-comment-delimiter">; </span><span class="org-comment">Like Iedit.</span>
+<pre class="src src-emacs-lisp">    (global-set-key (kbd <span class="org-string">"C-;"</span>) 'mc/mark-all-like-this-dwim) <span class="org-comment-delimiter">;</span><span class="org-comment">! Like Iedit.</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-x C-;") 'mc/mark-all-like-this-dwim)</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Mark all parts of the buffer that matches the current region.</span>
     (global-set-key (kbd <span class="org-string">"C-c C-&lt;"</span>) 'mc/mark-all-like-this) <span class="org-comment-delimiter">;</span><span class="org-comment">!</span>
@@ -17136,9 +17141,12 @@ available completions and filter as well.
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Company mode in all buffers ....</span>
     (add-hook 'after-init-hook #'global-company-mode)
 
-    (global-set-key (kbd <span class="org-string">"&lt;C-tab&gt;"</span>) 'company-complete))
+    (global-set-key (kbd <span class="org-string">"&lt;C-tab&gt;"</span>) 'company-complete)
+    (global-set-key (kbd <span class="org-string">"C-/"</span>) 'company-complete))
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"company"</span>
+
+    (global-set-key (kbd <span class="org-string">"C-/"</span>) 'company-complete-common)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">... Except in some modes.</span>
     (setq company-global-modes
@@ -17175,6 +17183,7 @@ available completions and filter as well.
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Temporarily show the documentation buffer for the selection.</span>
     (define-key company-active-map (kbd <span class="org-string">"&lt;f1&gt;"</span>) 'company-show-doc-buffer)
     (define-key company-active-map (kbd <span class="org-string">"C-?"</span>) 'company-show-doc-buffer)
+    (define-key company-active-map (kbd <span class="org-string">"C-c C-d"</span>) 'company-show-doc-buffer)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Abort.</span>
     (define-key company-active-map (kbd <span class="org-string">"C-g"</span>) 'company-abort)
@@ -18855,7 +18864,7 @@ See customizations at <a href="http://snarfed.org/why_i_run_shells_inside_emacs"
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">transform shell names to what they really are</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Transform shell names to what they really are.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"sh-script"</span>
 
     (add-to-list 'sh-alias-alist '(sh . bash)))
@@ -18889,14 +18898,14 @@ and <b>replaces</b> it with the output from the shell command.
 
   (leuven--section <span class="org-string">"36.1 Single Shell"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">force interactive behavior (to get my handy shell aliases)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Force interactive behavior (to get my handy shell aliases).</span>
   <span class="org-comment-delimiter">;; </span><span class="org-leuven-highlight"><span class="org-comment">FIXME</span></span><span class="org-comment"> Fix for Zsh (zsh:1: command not found: shopt)</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(defadvice shell-command (before leuven-shell-command activate)</span>
   <span class="org-comment-delimiter">;;   </span><span class="org-comment">(ad-set-arg 0</span>
   <span class="org-comment-delimiter">;;               </span><span class="org-comment">(concat "source ~/.bashrc; shopt -s -q expand_aliases;\n "</span>
   <span class="org-comment-delimiter">;;                       </span><span class="org-comment">(ad-get-arg 0))))</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">for single shell commands (= "the" reference)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">For single shell commands (= "the" reference).</span>
   (setq shell-file-name                 <span class="org-comment-delimiter">; </span><span class="org-comment">must be in the `</span><span class="org-constant"><span class="org-comment">PATH</span></span><span class="org-comment">'</span>
         (or (<span class="org-keyword">ignore-errors</span>
               (file-name-nondirectory (or (executable-find <span class="org-string">"zsh"</span>)
@@ -18904,13 +18913,13 @@ and <b>replaces</b> it with the output from the shell command.
                                           (executable-find <span class="org-string">"sh"</span>))))
             (<span class="org-keyword">when</span> leuven--win32-p <span class="org-string">"cmdproxy.exe"</span>)))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">use `</span><span class="org-constant"><span class="org-comment">shell-file-name</span></span><span class="org-comment">' as the default shell</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Use `</span><span class="org-constant"><span class="org-comment">shell-file-name</span></span><span class="org-comment">' as the default shell.</span>
   (setenv <span class="org-string">"SHELL"</span> shell-file-name)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">switch used to have the shell execute its command line argument</span>
-  (setq shell-command-switch <span class="org-string">"-c"</span>)      <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">/c</span></span><span class="org-comment">' does not work with XEmacs</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Switch used to have the shell execute its command line argument.</span>
+  (setq shell-command-switch <span class="org-string">"-c"</span>)      <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">/c</span></span><span class="org-comment">' does not work with XEmacs.</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">quote process arguments to ensure correct parsing on Windows</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Quote process arguments to ensure correct parsing on Windows.</span>
   (setq w32-quote-process-args t)
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Workaround for Cygwin when 'shell-file-name' is 'bash'.</span>
@@ -18934,7 +18943,7 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 
   (leuven--section <span class="org-string">"36.2 Interactive Shell"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">for the interactive (sub)shell (and AUCTeX compilation?)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">For the interactive (sub)shell (and AUCTeX compilation?).</span>
   (setq explicit-shell-file-name shell-file-name)
 </pre>
 </div>
@@ -18994,37 +19003,38 @@ shells).</dd>
 
   (leuven--section <span class="org-string">"36.3 Shell Mode"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">general command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Python, ...)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">General command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Python, ...).</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(try-require 'comint)</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(with-eval-after-load "comint"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">comint prompt is read only</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Comint prompt is read only.</span>
     (setq comint-prompt-read-only t)    <span class="org-comment-delimiter">; </span><span class="org-comment">Text is read-only (in ESS)?</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">no duplicates in command history</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">No duplicates in command history.</span>
     (setq-default comint-input-ignoredups t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">input to interpreter causes windows showing the buffer to scroll</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(insert at the bottom)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Input to interpreter causes windows showing the buffer to scroll</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(insert at the bottom).</span>
     (setq-default comint-scroll-to-bottom-on-input t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">output to interpreter causes windows showing the buffer to scroll</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(add output at the bottom)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Output to interpreter causes windows showing the buffer to scroll</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(add output at the bottom).</span>
     (setq-default comint-move-point-for-output t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">maximum size in lines for Comint buffers</span>
-    (setq comint-buffer-maximum-size (* 5 1024)) <span class="org-comment-delimiter">; </span><span class="org-comment">if the function</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Maximum size in lines for Comint buffers.</span>
+    (setq comint-buffer-maximum-size (* 5 1024))
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">If the function</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">comint-truncate-buffer</span></span><span class="org-comment">' is added to</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">comint-output-filter-functions</span></span><span class="org-comment">'</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">comint-output-filter-functions</span></span><span class="org-comment">'.</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">strip `</span><span class="org-constant"><span class="org-comment">^M</span></span><span class="org-comment">' characters</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Strip `</span><span class="org-constant"><span class="org-comment">^M</span></span><span class="org-comment">' characters.</span>
     (add-to-list 'process-coding-system-alist
                  '(<span class="org-string">"bash"</span> . (undecided-dos . undecided-unix)))
     (add-to-list 'process-coding-system-alist
                  '(<span class="org-string">"zsh"</span> . (undecided-dos . undecided-unix)))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">show completion list when ambiguous</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Show completion list when ambiguous.</span>
     (setq comint-completion-autolist t)
 
     (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-comint-clear-buffer</span> ()
@@ -19060,10 +19070,10 @@ bufffer from Emacs.
 
   (leuven--section <span class="org-string">"36.4 Shell Prompts"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">regexp to match prompts in the inferior shell</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Regexp to match prompts in the inferior shell.</span>
   (setq shell-prompt-pattern <span class="org-string">"^[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string">#$%&gt;\n]*[#$%&gt;] *"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">regexp to recognize prompts in the inferior process</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Regexp to recognize prompts in the inferior process.</span>
   (setq comint-prompt-regexp shell-prompt-pattern)
                                         <span class="org-comment-delimiter">;</span><span class="org-comment">! only used if the variable</span>
                                         <span class="org-comment-delimiter">;</span><span class="org-comment">! `</span><span class="org-constant"><span class="org-comment">comint-use-prompt-regexp</span></span><span class="org-comment">' is non-nil</span>
@@ -19081,7 +19091,7 @@ bufffer from Emacs.
 
   (leuven--section <span class="org-string">"36.5 Shell Command History"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">rejects short commands</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Rejects short commands.</span>
   (setq comint-input-filter
     #'(<span class="org-keyword">lambda</span> (str)
         (and (not (string-match <span class="org-string">"\\`\\s *\\'"</span> str))
@@ -19089,7 +19099,7 @@ bufffer from Emacs.
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"comint"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">cycle backwards/forwards through input history</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Cycle backwards/forwards through input history.</span>
     (define-key comint-mode-map
       (kbd <span class="org-string">"C-p"</span>) 'comint-previous-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell</span>
     (define-key comint-mode-map
@@ -19099,8 +19109,8 @@ bufffer from Emacs.
     (define-key comint-mode-map
       (kbd <span class="org-string">"&lt;down&gt;"</span>) 'comint-next-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell + RStudio</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">search backwards/forwards through input history for match for current</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">input</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Search backwards/forwards through input history for match for current</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">input.</span>
     (define-key comint-mode-map
       (kbd <span class="org-string">"M-p"</span>) 'comint-previous-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell</span>
     (define-key comint-mode-map
@@ -19111,7 +19121,7 @@ bufffer from Emacs.
       (kbd <span class="org-string">"&lt;C-down&gt;"</span>) 'comint-next-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">RStudio</span>
 
     (<span class="org-keyword">when</span> (<span class="org-keyword">featurep</span> '<span class="org-constant">helm-misc</span>)
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">provide completion of `</span><span class="org-constant"><span class="org-comment">comint</span></span><span class="org-comment">' history</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Provide completion of `</span><span class="org-constant"><span class="org-comment">comint</span></span><span class="org-comment">' history.</span>
       (define-key comint-mode-map
         (kbd <span class="org-string">"C-c C-l"</span>) 'helm-comint-input-ring)))
 </pre>
@@ -19195,7 +19205,7 @@ apply: Buffer name `*shell d:/Users/fni/*&rsquo; is in use
 
   (leuven--section <span class="org-string">"36.7 Options"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">disable command echoing</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Disable command echoing.</span>
   (setq-default comint-process-echoes t) <span class="org-comment-delimiter">; </span><span class="org-comment">for Linux (not needed for Cygwin)</span>
 </pre>
 </div>
@@ -19364,8 +19374,8 @@ shell or term.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">managing multiple terminal buffers in Emacs</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">(and fixing some troubles of `</span><span class="org-constant"><span class="org-comment">term-mode</span></span><span class="org-comment">': key bindings, etc.)</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Managing multiple terminal buffers in Emacs</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">(and fixing some troubles of `</span><span class="org-constant"><span class="org-comment">term-mode</span></span><span class="org-comment">': key bindings, etc.).</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">"multi-term on POSIX hosts has let me switch from using screen, with one</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Emacs screen and lots of shell screens; to just using Emacs, with lots of</span>
@@ -19374,7 +19384,7 @@ shell or term.
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"multi-term-autoloads"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-c t") 'multi-term-next)</span>
-    (global-set-key (kbd <span class="org-string">"C-c T"</span>) 'multi-term)) <span class="org-comment-delimiter">; </span><span class="org-comment">create a new one</span>
+    (global-set-key (kbd <span class="org-string">"C-c T"</span>) 'multi-term)) <span class="org-comment-delimiter">; </span><span class="org-comment">Create a new one.</span>
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"multi-term"</span>
 
@@ -19388,13 +19398,13 @@ nil</div>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; run an inferior shell, with I/O through buffer `</span><span class="org-constant"><span class="org-comment">*shell*</span></span><span class="org-comment">'</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Run an inferior shell, with I/O through buffer `</span><span class="org-constant"><span class="org-comment">*shell*</span></span><span class="org-comment">'.</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key</span>
   <span class="org-comment-delimiter">;;   </span><span class="org-comment">(kbd "C-c !")</span>
   <span class="org-comment-delimiter">;;   </span><span class="org-comment">(cond (leuven--win32-p 'shell)</span>
   <span class="org-comment-delimiter">;;         </span><span class="org-comment">(t 'term)))</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">toggle to and from the `</span><span class="org-constant"><span class="org-comment">*shell*</span></span><span class="org-comment">' buffer</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Toggle to and from the `</span><span class="org-constant"><span class="org-comment">*shell*</span></span><span class="org-comment">' buffer.</span>
   (global-set-key (kbd <span class="org-string">"C-!"</span>)
     (<span class="org-keyword">lambda</span> ()
       (interactive)
@@ -19413,12 +19423,12 @@ nil</div>
 
   (leuven--section <span class="org-string">"36.10 Remote Host Shell"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">load ssh.el file</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Load ssh.el file.</span>
   (add-to-list 'same-window-regexps <span class="org-string">"^\\*ssh-.*\\*</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">&lt;[0-9]+&gt;</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">"</span>)
   (autoload 'ssh <span class="org-string">"ssh"</span>
     <span class="org-doc">"Open a network login connection via `</span><span class="org-constant"><span class="org-doc">ssh</span></span><span class="org-doc">'."</span> t)
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">this is to run ESS remotely on another computer in my own Emacs, or just</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">plain old reading remote files</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">This is to run ESS remotely on another computer in my own Emacs, or just</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">plain old reading remote files.</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">See http://emacs.1067599.n5.nabble.com/SSH-inside-Emacs-td225528.html</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">- plink (with `</span><span class="org-constant"><span class="org-comment">dumb</span></span><span class="org-comment">' terminal option?) as interactive shell</span>
@@ -19460,7 +19470,7 @@ Those problems disappear as soon as we do <code>cygwin-mount-deactivate</code>&#
 
 <pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Let Emacs recognize Cygwin paths (e.g. /usr/local/lib).</span>
   (<span class="org-keyword">when</span> (and leuven--win32-p
-             (executable-find <span class="org-string">"mount"</span>)) <span class="org-comment-delimiter">; </span><span class="org-comment">Cygwin bin directory found</span>
+             (executable-find <span class="org-string">"mount"</span>)) <span class="org-comment-delimiter">; </span><span class="org-comment">Cygwin bin directory found.</span>
 
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"cygwin-mount-autoloads"</span>
 

@@ -909,8 +909,8 @@ Show line numbers temporarily -- just when you're going to a line number with
   (leuven--section "7.4 (emacs)Basic Undoing Changes")
 
   ;; Undo some previous changes.
-  (global-set-key (kbd "<f11>") 'undo)
   (global-set-key (kbd "C-z") 'undo)
+  (global-set-key (kbd "<f11>") 'undo)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -923,7 +923,9 @@ Show line numbers temporarily -- just when you're going to a line number with
   (with-eval-after-load "undo-tree-autoloads"
 
     ;; Enable Global-Undo-Tree mode.
-    (global-undo-tree-mode 1)
+    (global-undo-tree-mode 1))
+
+  (with-eval-after-load "undo-tree"
 
     (with-eval-after-load "diminish-autoloads"
       (diminish 'undo-tree-mode))
@@ -937,9 +939,11 @@ Show line numbers temporarily -- just when you're going to a line number with
     ;; Display diff by default in undo-tree visualizer.
     (setq undo-tree-visualizer-diff t) ; Toggle the diff display using `d'.
 
-    (defalias 'redo 'undo-tree-redo)
-    (global-set-key (kbd "<S-f11>") 'redo)
-    (global-set-key (kbd "C-S-z") 'redo))
+    (define-key undo-tree-map (kbd "C-/") nil)
+
+    ;; (defalias 'redo 'undo-tree-redo)
+    (global-set-key (kbd "C-S-z") 'undo-tree-redo)
+    (global-set-key (kbd "<S-f11>") 'undo-tree-redo))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1375,7 +1379,8 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
 *Add all occurrences of the current word to the selection.*
 
 #+begin_src emacs-lisp
-    (global-set-key (kbd "C-;") 'mc/mark-all-like-this-dwim) ; Like Iedit.
+    (global-set-key (kbd "C-;") 'mc/mark-all-like-this-dwim) ;! Like Iedit.
+    ;; (global-set-key (kbd "C-x C-;") 'mc/mark-all-like-this-dwim)
 
     ;; Mark all parts of the buffer that matches the current region.
     (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this) ;!
@@ -13307,9 +13312,12 @@ available completions and filter as well.
     ;; Enable Company mode in all buffers ....
     (add-hook 'after-init-hook #'global-company-mode)
 
-    (global-set-key (kbd "<C-tab>") 'company-complete))
+    (global-set-key (kbd "<C-tab>") 'company-complete)
+    (global-set-key (kbd "C-/") 'company-complete))
 
   (with-eval-after-load "company"
+
+    (global-set-key (kbd "C-/") 'company-complete-common)
 
     ;; ... Except in some modes.
     (setq company-global-modes
@@ -13346,6 +13354,7 @@ available completions and filter as well.
     ;; Temporarily show the documentation buffer for the selection.
     (define-key company-active-map (kbd "<f1>") 'company-show-doc-buffer)
     (define-key company-active-map (kbd "C-?") 'company-show-doc-buffer)
+    (define-key company-active-map (kbd "C-c C-d") 'company-show-doc-buffer)
 
     ;; Abort.
     (define-key company-active-map (kbd "C-g") 'company-abort)
@@ -14608,7 +14617,7 @@ See customizations at http://snarfed.org/why_i_run_shells_inside_emacs.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; transform shell names to what they really are
+  ;; Transform shell names to what they really are.
   (with-eval-after-load "sh-script"
 
     (add-to-list 'sh-alias-alist '(sh . bash)))
@@ -14634,14 +14643,14 @@ and *replaces* it with the output from the shell command.
 
   (leuven--section "36.1 Single Shell")
 
-  ;; force interactive behavior (to get my handy shell aliases)
+  ;; Force interactive behavior (to get my handy shell aliases).
   ;; FIXME Fix for Zsh (zsh:1: command not found: shopt)
   ;; (defadvice shell-command (before leuven-shell-command activate)
   ;;   (ad-set-arg 0
   ;;               (concat "source ~/.bashrc; shopt -s -q expand_aliases;\n "
   ;;                       (ad-get-arg 0))))
 
-  ;; for single shell commands (= "the" reference)
+  ;; For single shell commands (= "the" reference).
   (setq shell-file-name                 ; must be in the `PATH'
         (or (ignore-errors
               (file-name-nondirectory (or (executable-find "zsh")
@@ -14649,13 +14658,13 @@ and *replaces* it with the output from the shell command.
                                           (executable-find "sh"))))
             (when leuven--win32-p "cmdproxy.exe")))
 
-  ;; use `shell-file-name' as the default shell
+  ;; Use `shell-file-name' as the default shell.
   (setenv "SHELL" shell-file-name)
 
-  ;; switch used to have the shell execute its command line argument
-  (setq shell-command-switch "-c")      ; `/c' does not work with XEmacs
+  ;; Switch used to have the shell execute its command line argument.
+  (setq shell-command-switch "-c")      ; `/c' does not work with XEmacs.
 
-  ;; quote process arguments to ensure correct parsing on Windows
+  ;; Quote process arguments to ensure correct parsing on Windows.
   (setq w32-quote-process-args t)
 
   ;; ;; Workaround for Cygwin when 'shell-file-name' is 'bash'.
@@ -14672,7 +14681,7 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 
   (leuven--section "36.2 Interactive Shell")
 
-  ;; for the interactive (sub)shell (and AUCTeX compilation?)
+  ;; For the interactive (sub)shell (and AUCTeX compilation?).
   (setq explicit-shell-file-name shell-file-name)
 #+end_src
 
@@ -14721,37 +14730,38 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 
   (leuven--section "36.3 Shell Mode")
 
-  ;; general command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
-  ;; Python, ...)
+  ;; General command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
+  ;; Python, ...).
   ;; (try-require 'comint)
   ;; (with-eval-after-load "comint"
 
-    ;; comint prompt is read only
+    ;; Comint prompt is read only.
     (setq comint-prompt-read-only t)    ; Text is read-only (in ESS)?
 
-    ;; no duplicates in command history
+    ;; No duplicates in command history.
     (setq-default comint-input-ignoredups t)
 
-    ;; input to interpreter causes windows showing the buffer to scroll
-    ;; (insert at the bottom)
+    ;; Input to interpreter causes windows showing the buffer to scroll
+    ;; (insert at the bottom).
     (setq-default comint-scroll-to-bottom-on-input t)
 
-    ;; output to interpreter causes windows showing the buffer to scroll
-    ;; (add output at the bottom)
+    ;; Output to interpreter causes windows showing the buffer to scroll
+    ;; (add output at the bottom).
     (setq-default comint-move-point-for-output t)
 
-    ;; maximum size in lines for Comint buffers
-    (setq comint-buffer-maximum-size (* 5 1024)) ; if the function
+    ;; Maximum size in lines for Comint buffers.
+    (setq comint-buffer-maximum-size (* 5 1024))
+                                        ; If the function
                                         ; `comint-truncate-buffer' is added to
-                                        ; `comint-output-filter-functions'
+                                        ; `comint-output-filter-functions'.
 
-    ;; strip `^M' characters
+    ;; Strip `^M' characters.
     (add-to-list 'process-coding-system-alist
                  '("bash" . (undecided-dos . undecided-unix)))
     (add-to-list 'process-coding-system-alist
                  '("zsh" . (undecided-dos . undecided-unix)))
 
-    ;; show completion list when ambiguous
+    ;; Show completion list when ambiguous.
     (setq comint-completion-autolist t)
 
     (defun leuven-comint-clear-buffer ()
@@ -14778,10 +14788,10 @@ bufffer from Emacs.
 
   (leuven--section "36.4 Shell Prompts")
 
-  ;; regexp to match prompts in the inferior shell
+  ;; Regexp to match prompts in the inferior shell.
   (setq shell-prompt-pattern "^[^#$%>\n]*[#$%>] *")
 
-  ;; regexp to recognize prompts in the inferior process
+  ;; Regexp to recognize prompts in the inferior process.
   (setq comint-prompt-regexp shell-prompt-pattern)
                                         ;! only used if the variable
                                         ;! `comint-use-prompt-regexp' is non-nil
@@ -14794,7 +14804,7 @@ bufffer from Emacs.
 
   (leuven--section "36.5 Shell Command History")
 
-  ;; rejects short commands
+  ;; Rejects short commands.
   (setq comint-input-filter
     #'(lambda (str)
         (and (not (string-match "\\`\\s *\\'" str))
@@ -14802,7 +14812,7 @@ bufffer from Emacs.
 
   (with-eval-after-load "comint"
 
-    ;; cycle backwards/forwards through input history
+    ;; Cycle backwards/forwards through input history.
     (define-key comint-mode-map
       (kbd "C-p") 'comint-previous-input) ; Shell
     (define-key comint-mode-map
@@ -14812,8 +14822,8 @@ bufffer from Emacs.
     (define-key comint-mode-map
       (kbd "<down>") 'comint-next-input) ; Shell + RStudio
 
-    ;; search backwards/forwards through input history for match for current
-    ;; input
+    ;; Search backwards/forwards through input history for match for current
+    ;; input.
     (define-key comint-mode-map
       (kbd "M-p") 'comint-previous-matching-input-from-input) ; Shell
     (define-key comint-mode-map
@@ -14824,7 +14834,7 @@ bufffer from Emacs.
       (kbd "<C-down>") 'comint-next-matching-input-from-input) ; RStudio
 
     (when (featurep 'helm-misc)
-      ;; provide completion of `comint' history
+      ;; Provide completion of `comint' history.
       (define-key comint-mode-map
         (kbd "C-c C-l") 'helm-comint-input-ring)))
 #+end_src
@@ -14891,7 +14901,7 @@ apply: Buffer name `*shell d:/Users/fni/*' is in use
 
   (leuven--section "36.7 Options")
 
-  ;; disable command echoing
+  ;; Disable command echoing.
   (setq-default comint-process-echoes t) ; for Linux (not needed for Cygwin)
 #+end_src
 
@@ -14998,8 +15008,8 @@ MultiTerm (http://www.emacswiki.org/emacs/MultiTerm) works much better than
 shell or term.
 
 #+begin_src emacs-lisp
-  ;; managing multiple terminal buffers in Emacs
-  ;; (and fixing some troubles of `term-mode': key bindings, etc.)
+  ;; Managing multiple terminal buffers in Emacs
+  ;; (and fixing some troubles of `term-mode': key bindings, etc.).
 
   ;; "multi-term on POSIX hosts has let me switch from using screen, with one
   ;; Emacs screen and lots of shell screens; to just using Emacs, with lots of
@@ -15008,7 +15018,7 @@ shell or term.
   (with-eval-after-load "multi-term-autoloads"
 
     ;; (global-set-key (kbd "C-c t") 'multi-term-next)
-    (global-set-key (kbd "C-c T") 'multi-term)) ; create a new one
+    (global-set-key (kbd "C-c T") 'multi-term)) ; Create a new one.
 
   (with-eval-after-load "multi-term"
 
@@ -15018,13 +15028,13 @@ shell or term.
 *************** TODO Try /visual/ commands (like ~top~ or ~less~) in ~multi-term~
 
 #+begin_src emacs-lisp
-  ;; ;; run an inferior shell, with I/O through buffer `*shell*'
+  ;; ;; Run an inferior shell, with I/O through buffer `*shell*'.
   ;; (global-set-key
   ;;   (kbd "C-c !")
   ;;   (cond (leuven--win32-p 'shell)
   ;;         (t 'term)))
 
-  ;; toggle to and from the `*shell*' buffer
+  ;; Toggle to and from the `*shell*' buffer.
   (global-set-key (kbd "C-!")
     (lambda ()
       (interactive)
@@ -15038,7 +15048,7 @@ shell or term.
 
   (leuven--section "36.10 Remote Host Shell")
 
-  ;; load ssh.el file
+  ;; Load ssh.el file.
   (add-to-list 'same-window-regexps "^\\*ssh-.*\\*\\(\\|<[0-9]+>\\)")
   (autoload 'ssh "ssh"
     "Open a network login connection via `ssh'." t)
@@ -15069,7 +15079,7 @@ Those problems disappear as soon as we do ~cygwin-mount-deactivate~...
 #+begin_src emacs-lisp
   ;; Let Emacs recognize Cygwin paths (e.g. /usr/local/lib).
   (when (and leuven--win32-p
-             (executable-find "mount")) ; Cygwin bin directory found
+             (executable-find "mount")) ; Cygwin bin directory found.
 
     (with-eval-after-load "cygwin-mount-autoloads"
 
