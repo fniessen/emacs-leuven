@@ -11351,6 +11351,9 @@ See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard a
 
 ** Glasses minor mode
 
+Add overlays to use a different face for the capital letters in symbols like
+~CamelCaseUnreadableSymbol~, to make them easier to read.
+
 #+begin_src emacs-lisp
 ;;** 26.9 (info "(emacs)Glasses") minor mode
 
@@ -11358,6 +11361,7 @@ See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard a
 
   (add-hook 'ess-mode-hook #'glasses-mode)
   (add-hook 'inferior-ess-mode-hook #'glasses-mode)
+  (add-hook 'java-mode-hook #'glasses-mode)
 
   (with-eval-after-load "glasses"
 
@@ -11381,6 +11385,8 @@ See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard a
     (setq glasses-separate-parentheses-p nil))
 #+end_src
 
+subword-mode : M-f/M-b in ~CamelCaseUnreadableSymbol~.
+
 ** C and related modes
 
 *** Eclim
@@ -11390,7 +11396,7 @@ third party clients have been created to add eclim support to other editors as
 well, such as *Emacs*, Sublime Text 2 and TextMate):
 
 - "true" *code completion* (i.e., only completions that are possible),
-- searching,
+- searching for references or occurrences,
 - code validation (report any validation errors found), and
 - [[http://eclim.org/features.html][many more]].
 
@@ -11405,18 +11411,46 @@ Getting started:
 
 [[http://eclim.org/faq.html][FAQ / Troubleshooting]]
 
-# ("C-c C-e l r" . eclim-run-class)
+Eclimd (eclim's daemon) can run without a graphical eclipse, but you can also
+run it from plain eclipse. So whenever you need some eclipse's functionalities
+that aren't (yet) supported by either ~emacs-eclim~ or ~eclim~, you can switch to it
+(e.g. the debugger or the profiler).
+
 # ("C-c C-e l b" . eclim-project-build))
 
-- ~C-c C-e o~ (~eclim-problems-open~) ::
-     Opens a new (emacs) window inside the current frame showing the current
-     project compilation problems.
+- M-x eclim-run-class ::
+     *Run the current class*.
 
-- ~eclim-manage-projects~ ::
-     Manage all your eclim projects in one buffer.
+- ~C-c C-e b~ (or ~M-x eclim-problems~) ::
+     *Show current compilation problems* in a separate window.
+
+- ~C-c C-e o~ (or ~M-x eclim-problems-open~) ::
+     Opens a new window inside the current frame showing the current project
+     *compilation problems*.
+
+- ~M-x eclim-manage-projects~ ::
+     *Manage all your eclim projects* in one buffer.
+
+- ~C-c C-e p c~ (or ~M-x eclim-project-create~) ::
+     Not documented.
+
+- ~C-c C-e f d~ (or ~M-x eclim-java-find-declaration~ or ~M-.~ in Emacs Leuven) ::
+     *Find* and display the *declaration* of the *Java identifier at point*.
+
+- ~C-c C-e f r~ (or ~M-x eclim-java-find-references~) ::
+     *Find* and display *references* for the *Java identifier at point*
+     = list callers.
+
+- ~C-c C-e t~ (or ~M-x eclim-run-junit~) ::
+     *Run* the current *JUnit* class or method at point.
 
 #+begin_src emacs-lisp
   (when (try-require 'eclim)
+
+    (add-hook 'java-mode-hook #'eclim-mode)
+
+    ;; eclim daemon.
+    (require 'eclimd)
 
     ;; Find Eclim installation.
     (setq eclim-executable
@@ -11424,21 +11458,19 @@ Getting started:
               "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim"))
     ;; https://github.com/senny/emacs-eclim/issues/132
 
-(setq eclim-eclipse-dirs "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim")
-(setq eclim-executable "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim.bat")
-(setq eclim-port 9091)
-
-
+    (setq eclim-eclipse-dirs "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim")
+    (setq eclim-executable "/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim.bat")
+    (setq eclim-port 9091)
 
     ;; Print debug messages.
     (setq eclim-print-debug-messages t)
 
-    ;; (global-eclim-mode)
-    (add-hook 'java-mode-hook #'eclim-mode)
+    ;; Add key binding.
+    (define-key eclim-mode-map (kbd "M-.") 'eclim-java-find-declaration)
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; Display compilation error messages in the echo area
+    ;; Display compilation error messages in the echo area.
     (setq help-at-pt-display-when-idle t)
     (setq help-at-pt-timer-delay 0.1)
     (help-at-pt-set-timer)
@@ -11447,6 +11479,10 @@ Getting started:
 See http://java-coders.com/p/tsdh/emacs-eclim for Company.
 
 #+begin_src emacs-lisp
+    ;; ;; Add the emacs-eclim source.
+    ;; (require 'ac-emacs-eclim-source)
+    ;; (ac-emacs-eclim-config)
+
     ;; Configure company-mode.
     (require 'company-emacs-eclim)
     (company-emacs-eclim-setup)
@@ -12992,18 +13028,19 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
 However, there are 3 amazing "intelligent guessing completion frameworks" in
 Emacs:
 
-- hippie-expand,
-- auto-complete, and
-- company.
+- "Hippie" expansion,
+- Auto-Complete and Company.
 
 Hippe-expand is great (can complete whole code blocks for you, making it possible
 to e.g. cycle through all if-tests in your projects).
 
-But auto-complete and company mode are even better. They'll give you a nice
+But Auto-Complete and Company mode are even better. They'll give you a nice
 IntelliSense style menu, will "learn" as you use it, and allows you to define
 a file with the completions you'd like to be available in the various languages.
 
-*** Hippie-expand
+I prefer Company over Auto-Complete but YMMV.
+
+*** "Hippie" expansion (Autotype)
 
 Typically, we bind ~hippie-expand~ to ~M-/~, with ~dabbrev-expand~ (the standard
 binding of ~M-/~) providing one of the expansion possibilities.

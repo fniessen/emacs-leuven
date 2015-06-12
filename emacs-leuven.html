@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150612.1011</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150612.1102</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150612.1011"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150612.1102"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -14584,6 +14584,11 @@ See also <a href="#orgheadline273">Dabbrev</a>, Emacs&rsquo; standard autocomple
 <div id="outline-container-orgheadline275" class="outline-3">
 <h3 id="orgheadline275">Glasses minor mode</h3>
 <div class="outline-text-3" id="text-orgheadline275">
+<p>
+Add overlays to use a different face for the capital letters in symbols like
+<code>CamelCaseUnreadableSymbol</code>, to make them easier to read.
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** 26.9 (info "(emacs)Glasses") minor mode</span>
@@ -14592,6 +14597,7 @@ See also <a href="#orgheadline273">Dabbrev</a>, Emacs&rsquo; standard autocomple
 
   (add-hook 'ess-mode-hook #'glasses-mode)
   (add-hook 'inferior-ess-mode-hook #'glasses-mode)
+  (add-hook 'java-mode-hook #'glasses-mode)
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"glasses"</span>
 
@@ -14615,6 +14621,10 @@ See also <a href="#orgheadline273">Dabbrev</a>, Emacs&rsquo; standard autocomple
     (setq glasses-separate-parentheses-p nil))
 </pre>
 </div>
+
+<p>
+subword-mode : M-f/M-b in <code>CamelCaseUnreadableSymbol</code>.
+</p>
 </div>
 </div>
 
@@ -14632,7 +14642,7 @@ well, such as <b>Emacs</b>, Sublime Text 2 and TextMate):
 
 <ul class="org-ul">
 <li>&ldquo;true&rdquo; <b>code completion</b> (i.e., only completions that are possible),</li>
-<li>searching,</li>
+<li>searching for references or occurrences,</li>
 <li>code validation (report any validation errors found), and</li>
 <li><a href="http://eclim.org/features.html">many more</a>.</li>
 </ul>
@@ -14656,17 +14666,42 @@ Getting started:
 <a href="http://eclim.org/faq.html">FAQ / Troubleshooting</a>
 </p>
 
+<p>
+Eclimd (eclim&rsquo;s daemon) can run without a graphical eclipse, but you can also
+run it from plain eclipse. So whenever you need some eclipse&rsquo;s functionalities
+that aren&rsquo;t (yet) supported by either <code>emacs-eclim</code> or <code>eclim</code>, you can switch to it
+(e.g. the debugger or the profiler).
+</p>
+
 
 <dl class="org-dl">
-<dt><code>C-c C-e o</code> (<code>eclim-problems-open</code>)</dt><dd>Opens a new (emacs) window inside the current frame showing the current
-project compilation problems.</dd>
+<dt>M-x eclim-run-class</dt><dd><b>Run the current class</b>.</dd>
 
-<dt><code>eclim-manage-projects</code></dt><dd>Manage all your eclim projects in one buffer.</dd>
+<dt><code>C-c C-e b</code> (or <code>M-x eclim-problems</code>)</dt><dd><b>Show current compilation problems</b> in a separate window.</dd>
+
+<dt><code>C-c C-e o</code> (or <code>M-x eclim-problems-open</code>)</dt><dd>Opens a new window inside the current frame showing the current project
+<b>compilation problems</b>.</dd>
+
+<dt><code>M-x eclim-manage-projects</code></dt><dd><b>Manage all your eclim projects</b> in one buffer.</dd>
+
+<dt><code>C-c C-e p c</code> (or <code>M-x eclim-project-create</code>)</dt><dd>Not documented.</dd>
+
+<dt><code>C-c C-e f d</code> (or <code>M-x eclim-java-find-declaration</code> or <code>M-.</code> in Emacs Leuven)</dt><dd><b>Find</b> and display the <b>declaration</b> of the <b>Java identifier at point</b>.</dd>
+
+<dt><code>C-c C-e f r</code> (or <code>M-x eclim-java-find-references</code>)</dt><dd><b>Find</b> and display <b>references</b> for the <b>Java identifier at point</b>
+     = list callers.</dd>
+
+<dt><code>C-c C-e t</code> (or <code>M-x eclim-run-junit</code>)</dt><dd><b>Run</b> the current <b>JUnit</b> class or method at point.</dd>
 </dl>
 
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">  (<span class="org-keyword">when</span> (try-require 'eclim)
+
+    (add-hook 'java-mode-hook #'eclim-mode)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">eclim daemon.</span>
+    (<span class="org-keyword">require</span> '<span class="org-constant">eclimd</span>)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Find Eclim installation.</span>
     (setq eclim-executable
@@ -14674,23 +14709,21 @@ project compilation problems.</dd>
               <span class="org-string">"/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim"</span>))
     <span class="org-comment-delimiter">;; </span><span class="org-comment">https://github.com/senny/emacs-eclim/issues/132</span>
 
-(setq eclim-eclipse-dirs <span class="org-string">"/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim"</span>)
-(setq eclim-executable <span class="org-string">"/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim.bat"</span>)
-(setq eclim-port 9091)
-
-
+    (setq eclim-eclipse-dirs <span class="org-string">"/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim"</span>)
+    (setq eclim-executable <span class="org-string">"/cygdrive/c/Users/Fabrice/Downloads/eclipse/eclim.bat"</span>)
+    (setq eclim-port 9091)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Print debug messages.</span>
     (setq eclim-print-debug-messages t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-eclim-mode)</span>
-    (add-hook 'java-mode-hook #'eclim-mode)
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Add key binding.</span>
+    (define-key eclim-mode-map (kbd <span class="org-string">"M-."</span>) 'eclim-java-find-declaration)
 </pre>
 </div>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Display compilation error messages in the echo area</span>
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Display compilation error messages in the echo area.</span>
     (setq help-at-pt-display-when-idle t)
     (setq help-at-pt-timer-delay 0.1)
     (help-at-pt-set-timer)
@@ -14703,7 +14736,11 @@ See <a href="http://java-coders.com/p/tsdh/emacs-eclim">http://java-coders.com/p
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Configure company-mode.</span>
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Add the emacs-eclim source.</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(require 'ac-emacs-eclim-source)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(ac-emacs-eclim-config)</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Configure company-mode.</span>
     (<span class="org-keyword">require</span> '<span class="org-constant">company-emacs-eclim</span>)
     (company-emacs-eclim-setup)
     )
@@ -16721,9 +16758,8 @@ Emacs:
 </p>
 
 <ul class="org-ul">
-<li>hippie-expand,</li>
-<li>auto-complete, and</li>
-<li>company.</li>
+<li>&ldquo;Hippie&rdquo; expansion,</li>
+<li>Auto-Complete and Company.</li>
 </ul>
 
 <p>
@@ -16732,14 +16768,18 @@ to e.g. cycle through all if-tests in your projects).
 </p>
 
 <p>
-But auto-complete and company mode are even better. They&rsquo;ll give you a nice
+But Auto-Complete and Company mode are even better. They&rsquo;ll give you a nice
 IntelliSense style menu, will &ldquo;learn&rdquo; as you use it, and allows you to define
 a file with the completions you&rsquo;d like to be available in the various languages.
+</p>
+
+<p>
+I prefer Company over Auto-Complete but YMMV.
 </p>
 </div>
 
 <div id="outline-container-orgheadline322" class="outline-4">
-<h4 id="orgheadline322">Hippie-expand</h4>
+<h4 id="orgheadline322">&ldquo;Hippie&rdquo; expansion (Autotype)</h4>
 <div class="outline-text-4" id="text-orgheadline322">
 <p>
 Typically, we bind <code>hippie-expand</code> to <code>M-/</code>, with <code>dabbrev-expand</code> (the standard
