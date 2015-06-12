@@ -11391,13 +11391,12 @@ subword-mode : M-f/M-b in ~CamelCaseUnreadableSymbol~.
 
 *** Eclim
 
-[[http://eclim.org/][Eclim]] provides the ability to *bring [[http://www.eclipse.org/][Eclipse]] code editing features* (to Vim -- but
-third party clients have been created to add eclim support to other editors as
-well, such as *Emacs*, Sublime Text 2 and TextMate):
+[[http://eclim.org/][Eclim]] provides the ability to *bring [[http://www.eclipse.org/][Eclipse]] code editing features* (to Vim, but
+also to other editors thanks to third party clients):
 
-- "true" *code completion* (i.e., only completions that are possible),
-- searching for references or occurrences XXX,
-- code validation (report any validation errors found), and
+- "true" *code completion* (i.e., only context-sensitive completions),
+- *code validation* (report any validation errors found),
+- searching for declarations or references, and
 - [[http://eclim.org/features.html][many more]].
 
 The initial goal was to provide Eclipse *Java* functionality, but support for
@@ -11415,8 +11414,10 @@ You should *create an Eclipse project first*, and then you can create a Java fil
 and open it in Emacs.  Open plain Java file without creating an Eclipse project
 will not work.
 
-"Could not find eclipse project for <file>.java"?  Are you using Cygwin Emacs
+#+begin_note
+"Could not find eclipse project for <file>.java"?  Are you using *Cygwin Emacs*
 with a Windows Java installation?  ~/cygdrive~ paths won't be understood...
+#+end_note
 
 **** The Eclim daemon
 
