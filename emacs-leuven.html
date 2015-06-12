@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150612.2313</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150613.0011</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150612.2313"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150613.0011"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -17002,7 +17002,7 @@ Eventually, see <a href="http://stackoverflow.com/questions/19900949/how-to-make
 <pre class="src src-emacs-lisp">  (GNUEmacs
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Auto Completion.</span>
-    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"auto-complete-autoloads"</span>
+    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"auto-complete-autoloads-</span><span class="org-leuven-highlight"><span class="org-string">XXX</span></span><span class="org-string">"</span>
       (idle-require 'auto-complete-config))
 
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"auto-complete-config"</span>
@@ -17136,7 +17136,7 @@ available completions and filter as well.
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Modular text completion framework.</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"company-autoloads-</span><span class="org-leuven-highlight"><span class="org-string">XXX</span></span><span class="org-string">"</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"company-autoloads"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Company mode in all buffers ....</span>
     (add-hook 'after-init-hook #'global-company-mode)

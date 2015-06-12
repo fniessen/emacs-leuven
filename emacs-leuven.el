@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150612.2312
+;; Version: 20150613.0009
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150612.2312"
+(defconst leuven--emacs-version "20150613.0009"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -7818,7 +7818,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (GNUEmacs
 
     ;; Auto Completion.
-    (with-eval-after-load "auto-complete-autoloads"
+    (with-eval-after-load "auto-complete-autoloads-XXX"
       (idle-require 'auto-complete-config))
 
     (with-eval-after-load "auto-complete-config"
@@ -7887,7 +7887,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (ac-flyspell-workaround)))
 
   ;; Modular text completion framework.
-  (with-eval-after-load "company-autoloads-XXX"
+  (with-eval-after-load "company-autoloads"
 
     ;; Enable Company mode in all buffers ....
     (add-hook 'after-init-hook #'global-company-mode)
