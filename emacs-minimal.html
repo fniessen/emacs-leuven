@@ -3,11 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<title>Minimal .emacs</title>
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="viewport" content="width=device-width, initial-scale=1" />
+<title>Minimal .emacs</title>
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Fabrice Niessen" />
-<meta  name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" type="text/css" href="d:/Users/fni/src/org-html-themes/styles/readtheorg/css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="d:/Users/fni/src/org-html-themes/styles/readtheorg/css/readtheorg.css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -58,7 +58,7 @@
 <ul>
 <li><a href="#orgheadline18">From the man page</a></li>
 <li><a href="#orgheadline19">Ideal</a></li>
-<li><a href="#orgheadline20">Emacs-helm.sh</a></li>
+<li><a href="#orgheadline20">emacs-helm.sh (from Thierry Volpiatto)</a></li>
 <li><a href="#orgheadline21">Code</a></li>
 </ul>
 </li>
@@ -91,15 +91,15 @@ Here is such a minimal Emacs config file.
 <div class="outline-text-3" id="text-orgheadline2">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;; </span><span class="org-comment">.emacs-minimal --- Minimal configuration file for Emacs</span>
-
-<span class="org-comment-delimiter">;;; </span><span class="org-comment">Commentary:</span>
-
-<span class="org-comment-delimiter">;;; </span><span class="org-comment">Code:</span>
-
-(message <span class="org-string">"Loading Minimal Emacs..."</span>)
-
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">em/emacs-load-time-start</span> (float-time))
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;; </span><span class="org-comment">.emacs-minimal --- Minimal configuration file for Emacs</span>
+
+<span class="org-comment-delimiter">;;; </span><span class="org-comment">Commentary:</span>
+
+<span class="org-comment-delimiter">;;; </span><span class="org-comment">Code:</span>
+
+(message <span class="org-string">"Loading Minimal Emacs..."</span>)
+
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">em/emacs-load-time-start</span> (float-time))
 </pre>
 </div>
 </div>
@@ -110,73 +110,73 @@ Here is such a minimal Emacs config file.
 <div class="outline-text-3" id="text-orgheadline3">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* --[ Constant part ]-------------------------------------------------------</span>
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Activate debugging.</span>
-(setq debug-on-error t)
-(setq debug-on-quit t)
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Default values for frame creation.</span>
-(setq default-frame-alist '((tool-bar-lines . 0)))
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Title bar display of visible frames.</span>
-(setq frame-title-format
-      (format <span class="org-string">"Minimal Emacs %s%s of %s - PID: %d"</span>
-              emacs-version
-              (<span class="org-keyword">if</span> (and (boundp 'emacs-repository-version)
-                       emacs-repository-version)
-                  (concat <span class="org-string">" (r"</span>
-                          (replace-regexp-in-string <span class="org-string">" .*"</span> <span class="org-string">""</span>
-                                                    emacs-repository-version)
-                          <span class="org-string">")"</span>)
-                <span class="org-string">""</span>)
-              (format-time-string <span class="org-string">"%Y-%m-%d"</span> emacs-build-time)
-              (emacs-pid)))
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Allow input of accented characters (for terminals that use 8-bit charsets).</span>
-(set-input-mode nil nil 1)
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Enable visualization of matching parens.</span>
-(<span class="org-keyword">require</span> '<span class="org-constant">paren</span>)
-(show-paren-mode 1)
-(setq show-paren-style 'mixed)
-(setq show-paren-ring-bell-on-mismatch t)
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">No limit when printing values.</span>
-(setq eval-expression-print-length nil)
-(setq eval-expression-print-level nil)
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Don't display the "Welcome to GNU Emacs" buffer on startup.</span>
-(setq inhibit-startup-screen t)
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Initial message displayed in *scratch* buffer at startup.</span>
-(setq initial-scratch-message
-      <span class="org-string">";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
-<span class="org-string">;; This is Emacs running with a minimal configuration file.</span>
-<span class="org-string">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
-
-<span class="org-string">"</span>)
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* --[ Constant part ]-------------------------------------------------------</span>
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Activate debugging.</span>
+(setq debug-on-error t)
+(setq debug-on-quit t)
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Default values for frame creation.</span>
+(setq default-frame-alist '((tool-bar-lines . 0)))
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Title bar display of visible frames.</span>
+(setq frame-title-format
+      (format <span class="org-string">"Minimal Emacs %s%s of %s - PID: %d"</span>
+              emacs-version
+              (<span class="org-keyword">if</span> (and (boundp 'emacs-repository-version)
+                       emacs-repository-version)
+                  (concat <span class="org-string">" (r"</span>
+                          (replace-regexp-in-string <span class="org-string">" .*"</span> <span class="org-string">""</span>
+                                                    emacs-repository-version)
+                          <span class="org-string">")"</span>)
+                <span class="org-string">""</span>)
+              (format-time-string <span class="org-string">"%Y-%m-%d"</span> emacs-build-time)
+              (emacs-pid)))
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Allow input of accented characters (for terminals that use 8-bit charsets).</span>
+(set-input-mode nil nil 1)
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Enable visualization of matching parens.</span>
+(<span class="org-keyword">require</span> '<span class="org-constant">paren</span>)
+(show-paren-mode 1)
+(setq show-paren-style 'mixed)
+(setq show-paren-ring-bell-on-mismatch t)
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">No limit when printing values.</span>
+(setq eval-expression-print-length nil)
+(setq eval-expression-print-level nil)
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Don't display the "Welcome to GNU Emacs" buffer on startup.</span>
+(setq inhibit-startup-screen t)
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Initial message displayed in *scratch* buffer at startup.</span>
+(setq initial-scratch-message
+      <span class="org-string">";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
+<span class="org-string">;; This is Emacs running with a minimal configuration file.</span>
+<span class="org-string">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
+
+<span class="org-string">"</span>)
 </pre>
 </div>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Org-mode (reverse order, so that the Org lisp directory will be found</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">before the Org contrib lisp directory).</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(add-to-list 'load-path "~/Public/Repositories/org-mode/testing")</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(add-to-list 'load-path "~/Public/Repositories/org-mode/contrib/lisp") ; htmlize</span>
-(add-to-list 'load-path <span class="org-string">"~/Public/Repositories/org-mode/lisp"</span>)
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Modify the paths to suit your</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">environment!</span>
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Getting started.</span>
-(add-to-list 'auto-mode-alist '(<span class="org-string">"\\.</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">org</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">org_archive</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">txt</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">\\'"</span> . org-mode))
-(<span class="org-keyword">when</span> (locate-library <span class="org-string">"org-loaddefs"</span>)
-  (<span class="org-keyword">require</span> '<span class="org-constant">org-loaddefs</span>))
-
-(global-set-key (kbd <span class="org-string">"C-c l"</span>) 'org-store-link)
-(global-set-key (kbd <span class="org-string">"C-c a"</span>) 'org-agenda)
-(global-set-key (kbd <span class="org-string">"C-c c"</span>) 'org-capture)
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Org-mode (reverse order, so that the Org lisp directory will be found</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">before the Org contrib lisp directory).</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">(add-to-list 'load-path "~/Public/Repositories/org-mode/testing")</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">(add-to-list 'load-path "~/Public/Repositories/org-mode/contrib/lisp") ; htmlize</span>
+(add-to-list 'load-path <span class="org-string">"~/Public/Repositories/org-mode/lisp"</span>)
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Modify the paths to suit your</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">environment!</span>
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Getting started.</span>
+(add-to-list 'auto-mode-alist '(<span class="org-string">"\\.</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">org</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">org_archive</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">txt</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">\\'"</span> . org-mode))
+(<span class="org-keyword">when</span> (locate-library <span class="org-string">"org-loaddefs"</span>)
+  (<span class="org-keyword">require</span> '<span class="org-constant">org-loaddefs</span>))
+
+(global-set-key (kbd <span class="org-string">"C-c l"</span>) 'org-store-link)
+(global-set-key (kbd <span class="org-string">"C-c a"</span>) 'org-agenda)
+(global-set-key (kbd <span class="org-string">"C-c c"</span>) 'org-capture)
 </pre>
 </div>
 </div>
@@ -187,7 +187,7 @@ Here is such a minimal Emacs config file.
 <div class="outline-text-3" id="text-orgheadline4">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* --[ Variable part Under Test ]--------------------------------------------</span>
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* --[ Variable part Under Test ]--------------------------------------------</span>
 </pre>
 </div>
 </div>
@@ -197,15 +197,15 @@ Here is such a minimal Emacs config file.
 <div class="outline-text-4" id="text-orgheadline5">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Place your test code here.</span>
-
-(setq ispell-program-name <span class="org-string">"c:/Program Files (x86)/Aspell/bin/aspell.exe"</span>)
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Enable on-the-fly spell checking.</span>
-(add-hook 'org-mode-hook 'flyspell-mode)
-
-(<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-autoloads"</span>
-  (global-set-key (kbd <span class="org-string">"M-y"</span>) 'helm-show-kill-ring))
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Place your test code here.</span>
+
+(setq ispell-program-name <span class="org-string">"c:/Program Files (x86)/Aspell/bin/aspell.exe"</span>)
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Enable on-the-fly spell checking.</span>
+(add-hook 'org-mode-hook 'flyspell-mode)
+
+(<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-autoloads"</span>
+  (global-set-key (kbd <span class="org-string">"M-y"</span>) 'helm-show-kill-ring))
 </pre>
 </div>
 </div>
@@ -216,7 +216,7 @@ Here is such a minimal Emacs config file.
 <div class="outline-text-4" id="text-orgheadline6">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(message <span class="org-string">"defined? %S"</span> (functionp (quote org-babel-do-load-languages)))
+<pre class="src src-emacs-lisp">(message <span class="org-string">"defined? %S"</span> (functionp (quote org-babel-do-load-languages)))
 </pre>
 </div>
 </div>
@@ -234,10 +234,10 @@ You can see the problem by running the following code:
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org"</span>
-  (message <span class="org-string">"LOADED org.el"</span>)
-  (sit-for 3)
-  (message <span class="org-string">""</span>))
+<pre class="src src-emacs-lisp">(<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org"</span>
+  (message <span class="org-string">"LOADED org.el"</span>)
+  (sit-for 3)
+  (message <span class="org-string">""</span>))
 </pre>
 </div>
 </div>
@@ -253,12 +253,12 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">foobar</span> ()
-  (message <span class="org-string">"LOADED org.el"</span>)
-  (sit-for 3)
-  (message <span class="org-string">""</span>))
-
-(setq org-load-hook (function foobar))
+<pre class="src src-emacs-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">foobar</span> ()
+  (message <span class="org-string">"LOADED org.el"</span>)
+  (sit-for 3)
+  (message <span class="org-string">""</span>))
+
+(setq org-load-hook (function foobar))
 </pre>
 </div>
 </div>
@@ -270,9 +270,9 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 <div class="outline-text-4" id="text-orgheadline10">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(<span class="org-keyword">let</span> ((org-confirm-babel-evaluate nil)) <span class="org-comment-delimiter">; </span><span class="org-comment">Preference over the explicit setq.</span>
-  (find-file <span class="org-string">"file-to-export.org"</span>)
-  (org-export-as-html 3))
+<pre class="src src-emacs-lisp">(<span class="org-keyword">let</span> ((org-confirm-babel-evaluate nil)) <span class="org-comment-delimiter">; </span><span class="org-comment">Preference over the explicit setq.</span>
+  (find-file <span class="org-string">"file-to-export.org"</span>)
+  (org-export-as-html 3))
 </pre>
 </div>
 </div>
@@ -283,9 +283,9 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 <div class="outline-text-4" id="text-orgheadline11">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Change the pathname appropriately!</span>
-(add-to-list 'load-path (expand-file-name <span class="org-string">"~/Public/Repositories/org-mode/testing"</span>))
-(load-library <span class="org-string">"org-test"</span>)
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Change the pathname appropriately!</span>
+(add-to-list 'load-path (expand-file-name <span class="org-string">"~/Public/Repositories/org-mode/testing"</span>))
+(load-library <span class="org-string">"org-test"</span>)
 </pre>
 </div>
 </div>
@@ -295,22 +295,22 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 <div class="outline-text-5" id="text-orgheadline12">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(ert-deftest test-org/end-of-line ()
-  <span class="org-string">"Test `</span><span class="org-constant"><span class="org-string">org-end-of-line</span></span><span class="org-string">' specifications."</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">At an headline without special movement.</span>
-  (should
-   (org-test-with-temp-text <span class="org-string">"* Headline2 :tag:\n"</span>
-     (<span class="org-keyword">let</span> ((org-special-ctrl-a/e nil))
-       (and (<span class="org-keyword">progn</span>
-              (message <span class="org-string">"FOO"</span>)
-              (org-end-of-line)
-              (message (format <span class="org-string">"%d"</span> (point)))
-              (eolp))
-            (<span class="org-keyword">progn</span>
-              (org-end-of-line)
-              (eolp)))))))
-
-(ert 'test-org/end-of-line)
+<pre class="src src-emacs-lisp">(ert-deftest test-org/end-of-line ()
+  <span class="org-string">"Test `</span><span class="org-constant"><span class="org-string">org-end-of-line</span></span><span class="org-string">' specifications."</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">At an headline without special movement.</span>
+  (should
+   (org-test-with-temp-text <span class="org-string">"* Headline2 :tag:\n"</span>
+     (<span class="org-keyword">let</span> ((org-special-ctrl-a/e nil))
+       (and (<span class="org-keyword">progn</span>
+              (message <span class="org-string">"FOO"</span>)
+              (org-end-of-line)
+              (message (format <span class="org-string">"%d"</span> (point)))
+              (eolp))
+            (<span class="org-keyword">progn</span>
+              (org-end-of-line)
+              (eolp)))))))
+
+(ert 'test-org/end-of-line)
 </pre>
 </div>
 </div>
@@ -321,10 +321,10 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 <div class="outline-text-5" id="text-orgheadline13">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Change the pathname appropriately!</span>
-(add-to-list 'load-path (expand-file-name <span class="org-string">"~/Public/Repositories/org-mode/testing/lisp"</span>))
-(load-library <span class="org-string">"test-org"</span>)
-(ert-run-tests-batch-and-exit 'test-org/end-of-line)
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Change the pathname appropriately!</span>
+(add-to-list 'load-path (expand-file-name <span class="org-string">"~/Public/Repositories/org-mode/testing/lisp"</span>))
+(load-library <span class="org-string">"test-org"</span>)
+(ert-run-tests-batch-and-exit 'test-org/end-of-line)
 </pre>
 </div>
 </div>
@@ -336,42 +336,42 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 <div class="outline-text-4" id="text-orgheadline14">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">(setq org-babel-load-languages '((emacs-lisp . t) (latex . t)))</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(setq org-confirm-babel-evaluate nil)</span>
-
-(<span class="org-keyword">require</span> '<span class="org-constant">org</span>)
-(<span class="org-keyword">require</span> '<span class="org-constant">org-agenda</span>)
-(<span class="org-keyword">require</span> '<span class="org-constant">outline</span>)
-(<span class="org-keyword">require</span> '<span class="org-constant">font-lock</span>)
-(<span class="org-keyword">require</span> '<span class="org-constant">flyspell</span>)
-(<span class="org-keyword">require</span> '<span class="org-constant">ispell</span>)
-(<span class="org-keyword">require</span> '<span class="org-constant">calendar</span>)
-(<span class="org-keyword">require</span> '<span class="org-constant">cal-iso</span>)
-(<span class="org-keyword">require</span> '<span class="org-constant">diary-lib</span>)
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Profile some times... CAUTION: require the packages first (to get results)!</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(elp-instrument-list '(org-agenda-next-line next-line line-move))</span>
-(<span class="org-keyword">when</span> (<span class="org-keyword">require</span> '<span class="org-constant">elp</span>)
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">the most important ones</span>
-  (elp-instrument-package <span class="org-string">"org"</span>)
-  (elp-instrument-package <span class="org-string">"org-agenda"</span>)
-  (elp-instrument-package <span class="org-string">"outline"</span>)
-  (elp-instrument-package <span class="org-string">"font-lock"</span>)
-  (elp-instrument-package <span class="org-string">"flyspell"</span>)
-  (elp-instrument-package <span class="org-string">"ispell"</span>)
-  (elp-instrument-package <span class="org-string">"emacs-leuven"</span>)
-  (elp-instrument-package <span class="org-string">"calendar"</span>)
-  (elp-instrument-package <span class="org-string">"cal-iso"</span>)
-  (elp-instrument-package <span class="org-string">"diary-lib"</span>)
-
-  (global-set-key (kbd <span class="org-string">"C-c e"</span>) 'elp-results))
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Improve readability of profile results, give milliseconds.</span>
-(<span class="org-keyword">defun</span> <span class="org-function-name">elp-pack-number</span> (number width)
-  (format (concat <span class="org-string">"%"</span> (number-to-string (- width 3)) <span class="org-string">".2f"</span>)
-          (* 100 (string-to-number number))))
-
-(setq org-agenda-files '(<span class="org-string">"~/org/tests/org-test.txt"</span>))
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">(setq org-babel-load-languages '((emacs-lisp . t) (latex . t)))</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">(setq org-confirm-babel-evaluate nil)</span>
+
+(<span class="org-keyword">require</span> '<span class="org-constant">org</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">org-agenda</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">outline</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">font-lock</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">flyspell</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">ispell</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">calendar</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">cal-iso</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">diary-lib</span>)
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Profile some times... CAUTION: require the packages first (to get results)!</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">(elp-instrument-list '(org-agenda-next-line next-line line-move))</span>
+(<span class="org-keyword">when</span> (<span class="org-keyword">require</span> '<span class="org-constant">elp</span>)
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">the most important ones</span>
+  (elp-instrument-package <span class="org-string">"org"</span>)
+  (elp-instrument-package <span class="org-string">"org-agenda"</span>)
+  (elp-instrument-package <span class="org-string">"outline"</span>)
+  (elp-instrument-package <span class="org-string">"font-lock"</span>)
+  (elp-instrument-package <span class="org-string">"flyspell"</span>)
+  (elp-instrument-package <span class="org-string">"ispell"</span>)
+  (elp-instrument-package <span class="org-string">"emacs-leuven"</span>)
+  (elp-instrument-package <span class="org-string">"calendar"</span>)
+  (elp-instrument-package <span class="org-string">"cal-iso"</span>)
+  (elp-instrument-package <span class="org-string">"diary-lib"</span>)
+
+  (global-set-key (kbd <span class="org-string">"C-c e"</span>) 'elp-results))
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Improve readability of profile results, give milliseconds.</span>
+(<span class="org-keyword">defun</span> <span class="org-function-name">elp-pack-number</span> (number width)
+  (format (concat <span class="org-string">"%"</span> (number-to-string (- width 3)) <span class="org-string">".2f"</span>)
+          (* 100 (string-to-number number))))
+
+(setq org-agenda-files '(<span class="org-string">"~/org/tests/org-test.txt"</span>))
 </pre>
 </div>
 </div>
@@ -383,12 +383,12 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 <div class="outline-text-3" id="text-orgheadline15">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(message <span class="org-string">"Loading Minimal Emacs... Done (in %.2f s)"</span>
-         (- (float-time) em/emacs-load-time-start))
-
-(<span class="org-keyword">provide</span> '<span class="org-constant">.emacs-minimal</span>)
-
-<span class="org-comment-delimiter">;;; </span><span class="org-comment">.emacs-minimal.el ends here</span>
+<pre class="src src-emacs-lisp">(message <span class="org-string">"Loading Minimal Emacs... Done (in %.2f s)"</span>
+         (- (float-time) em/emacs-load-time-start))
+
+(<span class="org-keyword">provide</span> '<span class="org-constant">.emacs-minimal</span>)
+
+<span class="org-comment-delimiter">;;; </span><span class="org-comment">.emacs-minimal.el ends here</span>
 </pre>
 </div>
 </div>
@@ -403,8 +403,8 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 <div class="outline-text-3" id="text-orgheadline16">
 <div class="org-src-container">
 
-<pre class="src src-shell">emacs -Q --batch -L ~/Public/Repositories/org-mode/lisp <span class="org-sh-escaped-newline">\</span>
-    --eval <span class="org-string">'(elp-instrument-package "org")'</span> 400.org --eval <span class="org-string">'(elp-results)'</span>
+<pre class="src src-shell">emacs -Q --batch -L ~/Public/Repositories/org-mode/lisp <span class="org-sh-escaped-newline">\</span>
+    --eval <span class="org-string">'(elp-instrument-package "org")'</span> 400.org --eval <span class="org-string">'(elp-results)'</span>
 </pre>
 </div>
 </div>
@@ -459,8 +459,8 @@ For example:
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">major mode command symbol to use for the initial `</span><span class="org-constant"><span class="org-comment">*scratch*</span></span><span class="org-comment">' buffer</span>
-  (setq initial-major-mode 'fundamental-mode)
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">major mode command symbol to use for the initial `</span><span class="org-constant"><span class="org-comment">*scratch*</span></span><span class="org-comment">' buffer</span>
+  (setq initial-major-mode 'fundamental-mode)
 </pre>
 </div>
 
@@ -484,7 +484,7 @@ changing <code>HOME</code> for Emacs is a very bad idea. WE DON&rsquo;T DO THAT!
 </div>
 
 <div id="outline-container-orgheadline20" class="outline-3">
-<h3 id="orgheadline20">Emacs-helm.sh</h3>
+<h3 id="orgheadline20">emacs-helm.sh (from Thierry Volpiatto)</h3>
 <div class="outline-text-3" id="text-orgheadline20">
 <p class="verse">
 &gt; I was too lazy to test with emacs -Q before.<br  />
@@ -493,7 +493,8 @@ changing <code>HOME</code> for Emacs is a very bad idea. WE DON&rsquo;T DO THAT!
 </p>
 
 <p>
-You can use the <code>-P</code> option of <code>emacs-helm.sh</code> to use another Emacs executable file.
+If <code>emacs</code> is pointing to an Emacs executable which is not fully working, you can
+use the <code>-P</code> option of <code>emacs-helm.sh</code> to use another Emacs executable file.
 </p>
 </div>
 </div>
@@ -507,28 +508,28 @@ You can use the <code>-P</code> option of <code>emacs-helm.sh</code> to use anot
 
 <div class="org-src-container">
 
-<pre class="src src-shell"><span class="org-variable-name">TESTEL</span>=
-<span class="org-variable-name">TESTFILE</span>=~/test.el
-<span class="org-keyword">if</span> test -e $<span class="org-variable-name">TESTFILE</span> <span class="org-comment-delimiter"># </span><span class="org-comment">file exists</span>
-<span class="org-keyword">then</span>
-    <span class="org-variable-name">TESTEL</span>=<span class="org-string">"-l $TESTFILE"</span>
-<span class="org-keyword">fi</span>
-
-<span class="org-variable-name">EMACS</span>=<span class="org-string">"/cygdrive/c/Program\ Files\ \(x86\)/emacs-trunk/bin/emacs"</span>
-
-<span class="org-comment-delimiter"># </span><span class="org-comment">no init file</span>
-<span class="org-variable-name">cmd</span>=<span class="org-string">"$EMACS -q -l ${workingDir}.emacs-minimal.el $TESTEL"</span>
-
-<span class="org-builtin">echo</span> <span class="org-string">"Launching '$cmd'..."</span>
-<span class="org-builtin">eval</span> <span class="org-string">"$cmd"</span>
-
-<span class="org-builtin">echo</span> <span class="org-string">"Exit status: $?"</span>
+<pre class="src src-shell"><span class="org-variable-name">TESTEL</span>=
+<span class="org-variable-name">TESTFILE</span>=~/test.el
+<span class="org-keyword">if</span> test -e $<span class="org-variable-name">TESTFILE</span> <span class="org-comment-delimiter"># </span><span class="org-comment">file exists</span>
+<span class="org-keyword">then</span>
+    <span class="org-variable-name">TESTEL</span>=<span class="org-string">"-l $TESTFILE"</span>
+<span class="org-keyword">fi</span>
+
+<span class="org-variable-name">EMACS</span>=<span class="org-string">"/cygdrive/c/Program\ Files\ \(x86\)/emacs-trunk/bin/emacs"</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">no init file</span>
+<span class="org-variable-name">cmd</span>=<span class="org-string">"$EMACS -q -l ${workingDir}.emacs-minimal.el $TESTEL"</span>
+
+<span class="org-builtin">echo</span> <span class="org-string">"Launching '$cmd'..."</span>
+<span class="org-builtin">eval</span> <span class="org-string">"$cmd"</span>
+
+<span class="org-builtin">echo</span> <span class="org-string">"Exit status: $?"</span>
 </pre>
 </div>
 
 <div class="org-src-container">
 
-<pre class="src src-shell"><span class="org-builtin">alias</span> <span class="org-variable-name">em</span>=emacs-minimal
+<pre class="src src-shell"><span class="org-builtin">alias</span> <span class="org-variable-name">em</span>=emacs-minimal
 </pre>
 </div>
 
@@ -538,7 +539,7 @@ Install it, by symlinking the file.
 
 <div class="org-src-container">
 
-<pre class="src src-shell">ln -f -s $<span class="org-variable-name">workingDir</span>/emacs-minimal ~/bin/emacs-minimal
+<pre class="src src-shell">ln -f -s $<span class="org-variable-name">workingDir</span>/emacs-minimal ~/bin/emacs-minimal
 </pre>
 </div>
 </div>

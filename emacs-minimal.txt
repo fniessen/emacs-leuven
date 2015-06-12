@@ -357,7 +357,7 @@ not recommended, because it could mess up external programs that Emacs calls.
 And _because_ Emacs relies so much on external programs, notably the shell,
 changing =HOME= for Emacs is a very bad idea. WE DON'T DO THAT!!
 
-** Emacs-helm.sh
+** emacs-helm.sh (from Thierry Volpiatto)
 
 #+begin_verse
 > I was too lazy to test with emacs -Q before.
@@ -365,7 +365,8 @@ changing =HOME= for Emacs is a very bad idea. WE DON'T DO THAT!!
 =emacs-helm.sh= is for that, I am too lazy too to use emacs -Q ;-)
 #+end_verse
 
-You can use the ~-P~ option of =emacs-helm.sh= to use another Emacs executable file.
+If ~emacs~ is pointing to an Emacs executable which is not fully working, you can
+use the ~-P~ option of =emacs-helm.sh= to use another Emacs executable file.
 
 ** Code
 
