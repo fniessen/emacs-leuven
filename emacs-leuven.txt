@@ -5414,7 +5414,7 @@ file) is beginning at column 0.
 
 #+begin_src emacs-lisp
   ;; Show vertical lines to guide indentation.
-  (with-eval-after-load "indent-guide-autoloads"
+  (with-eval-after-load "indent-guide-autoloads-XXX" ; Display problems with CrossMapIntegration.java
 
     ;; Enable indent-guide-mode automatically.
     (add-hook 'prog-mode-hook #'indent-guide-mode))
@@ -11396,7 +11396,7 @@ third party clients have been created to add eclim support to other editors as
 well, such as *Emacs*, Sublime Text 2 and TextMate):
 
 - "true" *code completion* (i.e., only completions that are possible),
-- searching for references or occurrences,
+- searching for references or occurrences XXX,
 - code validation (report any validation errors found), and
 - [[http://eclim.org/features.html][many more]].
 
@@ -11479,13 +11479,13 @@ that aren't (yet) supported by either ~emacs-eclim~ or ~eclim~, you can switch t
 See http://java-coders.com/p/tsdh/emacs-eclim for Company.
 
 #+begin_src emacs-lisp
-    ;; ;; Add the emacs-eclim source.
-    ;; (require 'ac-emacs-eclim-source)
-    ;; (ac-emacs-eclim-config)
+    ;; Add the emacs-eclim source.
+    (require 'ac-emacs-eclim-source)
+    (ac-emacs-eclim-config)
 
-    ;; Configure company-mode.
-    (require 'company-emacs-eclim)
-    (company-emacs-eclim-setup)
+    ;; ;; Configure company-mode.
+    ;; (require 'company-emacs-eclim)
+    ;; (company-emacs-eclim-setup)
     )
 #+end_src
 
@@ -13162,7 +13162,7 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
   (GNUEmacs
 
     ;; Auto Completion.
-    (with-eval-after-load "auto-complete-autoloads-XXX"
+    (with-eval-after-load "auto-complete-autoloads"
       (idle-require 'auto-complete-config))
 
     (with-eval-after-load "auto-complete-config"
@@ -13271,7 +13271,7 @@ available completions and filter as well.
 
 #+begin_src emacs-lisp
   ;; Modular text completion framework.
-  (with-eval-after-load "company-autoloads"
+  (with-eval-after-load "company-autoloads-XXX"
 
     ;; Enable Company mode in all buffers ....
     (add-hook 'after-init-hook #'global-company-mode))

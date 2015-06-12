@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150612.1101
+;; Version: 20150612.1308
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150612.1101"
+(defconst leuven--emacs-version "20150612.1308"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3138,7 +3138,7 @@ These packages are neither built-in nor already installed nor ignored."
   (global-set-key (kbd "C-x \\") 'align-regexp)
 
   ;; Show vertical lines to guide indentation.
-  (with-eval-after-load "indent-guide-autoloads"
+  (with-eval-after-load "indent-guide-autoloads-XXX" ; Display problems with CrossMapIntegration.java
 
     ;; Enable indent-guide-mode automatically.
     (add-hook 'prog-mode-hook #'indent-guide-mode))
@@ -7009,13 +7009,13 @@ mouse-3: go to end") "]"))))
     (setq help-at-pt-timer-delay 0.1)
     (help-at-pt-set-timer)
 
-    ;; ;; Add the emacs-eclim source.
-    ;; (require 'ac-emacs-eclim-source)
-    ;; (ac-emacs-eclim-config)
+    ;; Add the emacs-eclim source.
+    (require 'ac-emacs-eclim-source)
+    (ac-emacs-eclim-config)
 
-    ;; Configure company-mode.
-    (require 'company-emacs-eclim)
-    (company-emacs-eclim-setup)
+    ;; ;; Configure company-mode.
+    ;; (require 'company-emacs-eclim)
+    ;; (company-emacs-eclim-setup)
     )
 
 )                                       ; Chapter 26 ends here.
@@ -7815,7 +7815,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (GNUEmacs
 
     ;; Auto Completion.
-    (with-eval-after-load "auto-complete-autoloads-XXX"
+    (with-eval-after-load "auto-complete-autoloads"
       (idle-require 'auto-complete-config))
 
     (with-eval-after-load "auto-complete-config"
@@ -7884,7 +7884,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (ac-flyspell-workaround)))
 
   ;; Modular text completion framework.
-  (with-eval-after-load "company-autoloads"
+  (with-eval-after-load "company-autoloads-XXX"
 
     ;; Enable Company mode in all buffers ....
     (add-hook 'after-init-hook #'global-company-mode))

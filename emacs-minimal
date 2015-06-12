@@ -1,5 +1,4 @@
 #!/bin/sh
-workingDir='d:/Users/fni/src/emacs-leuven/'
 TESTEL=
 TESTFILE=~/test.el
 if test -e $TESTFILE # file exists
