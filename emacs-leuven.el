@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150612.1418
+;; Version: 20150612.1435
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150612.1418"
+(defconst leuven--emacs-version "20150612.1435"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -436,22 +436,19 @@ Last time is saved in global variable `leuven--before-section-time'."
       (defconst leuven-elpa-packages
         '(ace-jump-mode ace-link ace-window
           ;; aggressive-indent
-          anzu auctex
-          auto-complete bbdb bookmark+ boxquote
+          anzu auctex auto-complete bbdb bookmark+ boxquote
           ;; calfw
-          circe
-          color-identifiers-mode company company-quickhelp csv-mode cygwin-mount
-          dictionary diff-hl diminish dired+ dired-single ess expand-region
-          fancy-narrow fill-column-indicator flycheck flycheck-ledger fuzzy
-          git-commit-mode git-messenger git-timemachine google-this
-          google-translate goto-chg graphviz-dot-mode guide-key helm
-          helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
-          indent-guide key-chord litable idle-require imenu-anywhere info+
-          interaction-log ledger-mode leuven-theme
+          circe color-identifiers-mode company company-quickhelp csv-mode
+          cygwin-mount dictionary diff-hl diminish dired+ dired-single
+          emacs-eclim ess expand-region fancy-narrow fill-column-indicator
+          flycheck flycheck-ledger fuzzy git-commit-mode git-messenger
+          git-timemachine google-this google-translate goto-chg
+          graphviz-dot-mode guide-key helm helm-descbinds helm-swoop hideshowvis
+          highlight-symbol htmlize indent-guide key-chord litable idle-require
+          imenu-anywhere info+ interaction-log ledger-mode leuven-theme
           ;; magit
-          multi-term
-          multiple-cursors pager pdf-tools powerline rainbow-mode tidy unbound
-          undo-tree
+          multi-term multiple-cursors pager pdf-tools powerline rainbow-mode
+          tidy unbound undo-tree
           ;; w3m
           ws-butler yasnippet
           ;; jabber multi-term paredit redshank
@@ -6981,12 +6978,13 @@ mouse-3: go to end") "]"))))
     ;; No space between an identifier and an opening parenthesis.
     (setq glasses-separate-parentheses-p nil))
 
-  (when (try-require 'eclim)
+  ;; An interface to the Eclipse IDE.
+  (with-eval-after-load "emacs-eclim-autoloads"
 
-    (add-hook 'java-mode-hook #'eclim-mode)
+    ;; Enable Eclim mode in Java.
+    (add-hook 'java-mode-hook #'eclim-mode))
 
-    ;; Control the Eclim daemon from Emacs.
-    (require 'eclimd)
+  (with-eval-after-load "eclim"
 
     ;; Find Eclim installation.
     (setq eclim-executable
@@ -7013,9 +7011,13 @@ mouse-3: go to end") "]"))))
     (require 'ac-emacs-eclim-source)
     (ac-emacs-eclim-config)
 
-    ;; ;; Configure company-mode.
-    ;; (require 'company-emacs-eclim)
-    ;; (company-emacs-eclim-setup)
+    ;; Configure company-mode.
+    (require 'company-emacs-eclim)
+    (company-emacs-eclim-setup)
+
+    ;; Control the Eclim daemon from Emacs.
+    (require 'eclimd)
+
     )
 
 )                                       ; Chapter 26 ends here.
