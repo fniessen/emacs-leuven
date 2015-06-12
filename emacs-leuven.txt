@@ -11406,7 +11406,7 @@ XML/DTD/XSD, etc.) has been added.
 **** Download / install
 
 1. Install [[http://eclim.org/install.html][Eclim]] (see ~vim.skip~ and ~vim.skip.hint~).
-2. Install Emacs-eclim (via ~list-packages~).
+2. Install [[https://github.com/senny/emacs-eclim][Emacs-eclim]] from MELPA.
 
 **** Getting started
 
@@ -11470,7 +11470,7 @@ eclimd -Dosgi.instance.area.default=@user.home/another_workspace
 
     (add-hook 'java-mode-hook #'eclim-mode)
 
-    ;; eclim daemon.
+    ;; Control the Eclim daemon from Emacs.
     (require 'eclimd)
 
     ;; Find Eclim installation.

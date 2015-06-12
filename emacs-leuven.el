@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150612.1308
+;; Version: 20150612.1418
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150612.1308"
+(defconst leuven--emacs-version "20150612.1418"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -6985,7 +6985,7 @@ mouse-3: go to end") "]"))))
 
     (add-hook 'java-mode-hook #'eclim-mode)
 
-    ;; eclim daemon.
+    ;; Control the Eclim daemon from Emacs.
     (require 'eclimd)
 
     ;; Find Eclim installation.
