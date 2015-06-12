@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150612.2228</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150612.2249</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150612.2228"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150612.2249"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1120,9 +1120,7 @@ like this into your configuration file:
           interaction-log ledger-mode leuven-theme
           <span class="org-comment-delimiter">;; </span><span class="org-comment">magit</span>
           multi-term multiple-cursors pager pdf-tools powerline rainbow-mode
-          tidy unbound undo-tree
-          <span class="org-comment-delimiter">;; </span><span class="org-comment">w3m</span>
-          ws-butler yasnippet
+          tidy unbound undo-tree ws-butler yasnippet
           <span class="org-comment-delimiter">;; </span><span class="org-comment">jabber multi-term paredit redshank</span>
           )
         <span class="org-doc">"A list of packages to ensure are installed at Emacs startup."</span>)
@@ -17649,7 +17647,8 @@ Just ask a WWW browser to display the current file.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    (define-key dired-mode-map (kbd <span class="org-string">"e"</span>) 'browse-url-of-dired-file) <span class="org-comment-delimiter">; </span><span class="org-comment">&lt;C-RET&gt;?</span>
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">In Dired, ask a WWW browser to display the file named on this line.</span>
+    (define-key dired-mode-map (kbd <span class="org-string">"e"</span>) 'browse-url-of-dired-file) <span class="org-comment-delimiter">; </span><span class="org-comment">&lt;C-RET&gt;?</span>
 </pre>
 </div>
 
@@ -18817,9 +18816,14 @@ Another option, without <code>doc-view</code>, is <code>! pdtotext ? - &lt;RET&g
 See <a href="https://www.gnu.org/software/emacs/manual/html_node/eww/index.html">https://www.gnu.org/software/emacs/manual/html_node/eww/index.html</a>.
 </p>
 
+<p>
+<code>M-x eww</code> asks EWW to browse a URL.
+</p>
+
 <dl class="org-dl">
 <dt><code>&amp;</code> (<code>eww-browse-with-external-browser</code>)</dt><dd><p>
-     Open the Web page in an <b>external browser</b>.
+     Open the Web page in an <b>external browser</b> (when JavaScript is needed or the
+&ldquo;design&rdquo; is just too bad).
 </p>
 
 <div class="inlinetask">
@@ -20183,7 +20187,7 @@ nil</div>
               (leuven--mac-p
                'browse-url-default-macosx-browser)
               ((not (display-graphic-p)) <span class="org-comment-delimiter">; </span><span class="org-comment">Console.</span>
-               'eww-browse-url)         <span class="org-comment-delimiter">; </span><span class="org-comment">'w3m-browse-url</span>
+               'eww-browse-url)
               (t                        <span class="org-comment-delimiter">; </span><span class="org-comment">Linux.</span>
                'browse-url-generic)))
 
@@ -20216,15 +20220,15 @@ nil</div>
 
   (<span class="org-keyword">unless</span> (<span class="org-keyword">featurep</span> '<span class="org-constant">helm-config</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">visit a file</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Visit a file.</span>
     (global-set-key (kbd <span class="org-string">"&lt;f3&gt;"</span>) 'find-file-at-point))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">find file (or URL) at point</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Find file (or URL) at point.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ffap"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">function called to fetch an URL</span>
-    (setq ffap-url-fetcher 'browse-url))<span class="org-comment-delimiter">; </span><span class="org-comment">could be `</span><span class="org-constant"><span class="org-comment">browse-url-emacs</span></span><span class="org-comment">' or</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">w3m-browse-url</span></span><span class="org-comment">'</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Function called to fetch an URL.</span>
+    (setq ffap-url-fetcher 'browse-url))<span class="org-comment-delimiter">; </span><span class="org-comment">Could be `</span><span class="org-constant"><span class="org-comment">browse-url-emacs</span></span><span class="org-comment">' or</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">eww-browse-url</span></span><span class="org-comment">'.</span>
 </pre>
 </div>
 </div>
@@ -20243,7 +20247,9 @@ nil</div>
 
 <dl class="org-dl">
 <dt><code>C-c g SPC</code></dt><dd><code>google-this-region</code></dd>
+
 <dt><code>C-c g n</code></dt><dd><code>google-this-noconfirm</code></dd>
+
 <dt><code>C-c g t</code></dt><dd><code>google-this</code></dd>
 </dl>
 

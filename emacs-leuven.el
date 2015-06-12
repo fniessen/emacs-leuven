@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150612.2227
+;; Version: 20150612.2248
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150612.2227"
+(defconst leuven--emacs-version "20150612.2248"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -448,9 +448,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           interaction-log ledger-mode leuven-theme
           ;; magit
           multi-term multiple-cursors pager pdf-tools powerline rainbow-mode
-          tidy unbound undo-tree
-          ;; w3m
-          ws-butler yasnippet
+          tidy unbound undo-tree ws-butler yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -8060,6 +8058,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (leuven--section "30.5 (emacs)Dired Visiting")
 
+    ;; In Dired, ask a WWW browser to display the file named on this line.
     (define-key dired-mode-map (kbd "e") 'browse-url-of-dired-file) ; <C-RET>?
 
     ;; Open files using Windows associations.
@@ -9186,7 +9185,7 @@ a clean buffer we're an order of magnitude laxer about checking."
               (leuven--mac-p
                'browse-url-default-macosx-browser)
               ((not (display-graphic-p)) ; Console.
-               'eww-browse-url)         ; 'w3m-browse-url
+               'eww-browse-url)
               (t                        ; Linux.
                'browse-url-generic)))
 
@@ -9203,15 +9202,15 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (unless (featurep 'helm-config)
 
-    ;; visit a file
+    ;; Visit a file.
     (global-set-key (kbd "<f3>") 'find-file-at-point))
 
-  ;; find file (or URL) at point
+  ;; Find file (or URL) at point.
   (with-eval-after-load "ffap"
 
-    ;; function called to fetch an URL
-    (setq ffap-url-fetcher 'browse-url)); could be `browse-url-emacs' or
-                                        ; `w3m-browse-url'
+    ;; Function called to fetch an URL.
+    (setq ffap-url-fetcher 'browse-url)); Could be `browse-url-emacs' or
+                                        ; `eww-browse-url'.
 
 ;;** Web search
 
