@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150611.2318
+;; Version: 20150612.1010
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150611.2318"
+(defconst leuven--emacs-version "20150612.1010"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -209,7 +209,7 @@ Last time is saved in global variable `leuven--before-section-time'."
 (leuven--chapter leuven-load-chapter-0-loading-libraries "0 Loading Libraries"
 
   ;; Load-path enhancement.
-  (defun leuven-add-to-load-path (this-directory)
+  (defun leuven--add-to-load-path (this-directory)
     "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
     (when (and this-directory
                (file-directory-p this-directory))
@@ -229,22 +229,22 @@ Last time is saved in global variable `leuven--before-section-time'."
     (file-name-directory (or load-file-name (buffer-file-name)))
     "Directory path of Leuven Emacs Config installation.")
 
-  (leuven-add-to-load-path
+  (leuven--add-to-load-path
    (concat leuven--directory "site-lisp"))
 
   (defvar leuven--local-repos-directory "~/Public/Repositories/"
     "Directory containing additional Emacs Lisp public repositories.")
 
-  (leuven-add-to-load-path
+  (leuven--add-to-load-path
    (concat leuven--local-repos-directory "babel"))
-  (leuven-add-to-load-path
+  (leuven--add-to-load-path
    (concat leuven--local-repos-directory "emacs-bookmark-extension") ; XXX?
    )
 
   (defvar leuven-user-lisp-directory (concat user-emacs-directory "lisp/")
     "Directory containing personal additional Emacs Lisp packages.")
 
-  (leuven-add-to-load-path leuven-user-lisp-directory)
+  (leuven--add-to-load-path leuven-user-lisp-directory)
 
   ;; Require a feature/library if available; if not, fail silently.
   (unless (fboundp 'try-require)
@@ -1826,28 +1826,6 @@ These packages are neither built-in nor already installed nor ignored."
     (if leuven--console-p
         (global-dictionary-tooltip-mode 0)
       (global-dictionary-tooltip-mode 1)))
-
-  ;; XXX excellent!
-  (defun leuven-answers-define ()
-    "Look up the word under cursor in a browser."
-    (interactive)
-    (browse-url
-     (concat "http://www.answers.com/main/ntquery?s=" (find-tag-default))))
-
-  (defun leuven-lookup-word-definition-in-w3m ()
-    "Look up the word's definition in a emacs-w3m.
-  If a region is active (a phrase), lookup that phrase."
-    (interactive)
-    (let (word
-          url)
-      (setq word
-            (if (use-region-p)
-                (buffer-substring-no-properties (region-beginning)
-                                                (region-end))
-              (find-tag-default)))
-      (setq word (replace-regexp-in-string " " "%20" word))
-      (setq url (concat "http://www.answers.com/main/ntquery?s=" word))
-      (w3m-browse-url url)))
 
 )                                       ; Chapter 16 ends here.
 
@@ -4544,11 +4522,11 @@ These packages are neither built-in nor already installed nor ignored."
 
     (add-to-list 'org-capture-templates
                  `("Z" "Refile me!" entry
-                   (function leuven-find-location)
+                   (function leuven--find-location)
                    "** TODO Put this in some other file\n\n"
                    :prepend t) t)
 
-    (defun leuven-find-location ()
+    (defun leuven--find-location ()
       "Find my CollectBox file and some headline in the current buffer."
       (find-file org-default-notes-file)
       (goto-char (point-min))
@@ -6334,7 +6312,6 @@ this with to-do items than with projects or headings."
 
   (defun leuven--org-update-buffer-before-save ()
     "Update all dynamic blocks and all tables in the buffer before save."
-    (interactive)
     (when (derived-mode-p 'org-mode)
       (message "(Info) Update Org buffer %s"
                (file-name-nondirectory (buffer-file-name)))
@@ -7298,31 +7275,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "28.1 (emacs)Version Control")
 
-;;*** 28.1.2 (info "(emacs)VC Mode Line")
-
-  (leuven--section "28.1.2 Version Control and the Mode Line")
-
-  ;; (with-eval-after-load "vc"
-  ;;
-  ;;   (GNUEmacs
-  ;;     (when (image-type-available-p 'png)
-  ;;       ;; http://www.emacswiki.org/emacs/VcIcon
-  ;;       (defun vc-icon ()
-  ;;         "Display a colored icon indicating the vc status of the current file."
-  ;;         (let ((icon (if (eq (vc-state buffer-file-name) 'up-to-date)
-  ;;                         (concat leuven--directory "Pictures/NormalIcon.png")
-  ;;                       (concat leuven--directory "Pictures/ModifiedIcon.png")))
-  ;;               (bg-colour (face-attribute 'mode-line :background)))
-  ;;           (propertize
-  ;;            "  "
-  ;;            'display (find-image `((:type png
-  ;;                                    :file ,icon
-  ;;                                    :ascent center
-  ;;                                    :background ,bg-colour))))))
-  ;;
-  ;;       (setq-default mode-line-format
-  ;;                     (push '(vc-mode (:eval (vc-icon))) mode-line-format)))))
-
 ;;*** 28.1.4 (info "(emacs)Log Buffer")
 
   (defun leuven--vc-log-mode-setup ()
@@ -7335,15 +7287,15 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (with-eval-after-load "vc-git"
 
-    ;; major mode for editing git commit messages
+    ;; Major mode for editing git commit messages.
     (try-require 'git-commit-mode))
 
   (with-eval-after-load "git-commit-mode"
 
-    ;; turn on on-the-fly spell-checking
+    ;; Turn on on-the-fly spell-checking.
     (add-hook 'git-commit-mode-hook #'flyspell-mode)
 
-    ;; turn off save-place
+    ;; Turn off save-place.
     (add-hook 'git-commit-mode-hook
               (lambda ()
                 (toggle-save-place 0))))
@@ -7357,7 +7309,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "28.1.6 Examining And Comparing Old Revisions")
 
-  ;; switches for diff under VC
+  ;; Switches for diff under VC.
   (setq vc-diff-switches diff-switches)
 
 ;;*** 28.1.7 (info "(emacs)VC Change Log")

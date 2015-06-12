@@ -402,7 +402,7 @@ need to load a single file that define autoloaded functions.
 
 #+begin_src emacs-lisp
   ;; Load-path enhancement.
-  (defun leuven-add-to-load-path (this-directory)
+  (defun leuven--add-to-load-path (this-directory)
     "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
     (when (and this-directory
                (file-directory-p this-directory))
@@ -424,7 +424,7 @@ need to load a single file that define autoloaded functions.
     (file-name-directory (or load-file-name (buffer-file-name)))
     "Directory path of Leuven Emacs Config installation.")
 
-  (leuven-add-to-load-path
+  (leuven--add-to-load-path
    (concat leuven--directory "site-lisp"))
 #+end_src
 
@@ -434,9 +434,9 @@ need to load a single file that define autoloaded functions.
   (defvar leuven--local-repos-directory "~/Public/Repositories/"
     "Directory containing additional Emacs Lisp public repositories.")
 
-  (leuven-add-to-load-path
+  (leuven--add-to-load-path
    (concat leuven--local-repos-directory "babel"))
-  (leuven-add-to-load-path
+  (leuven--add-to-load-path
    (concat leuven--local-repos-directory "emacs-bookmark-extension") ; XXX?
    )
 #+end_src
@@ -454,7 +454,7 @@ distro) without impacting on stuff you have added by hand.
   (defvar leuven-user-lisp-directory (concat user-emacs-directory "lisp/")
     "Directory containing personal additional Emacs Lisp packages.")
 
-  (leuven-add-to-load-path leuven-user-lisp-directory)
+  (leuven--add-to-load-path leuven-user-lisp-directory)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1043,8 +1043,8 @@ FYI, ~catman~ create the database files that are used by ~apropos~ or ~man -k~.
 
 Note about PHP documentation lookup -- PHP Mode has a nice feature to lookup the
 function's definition in PHP's manual in your web browser (~M-x
-php-search-documentation~ or ~C-c C-f~).  You can combine it with Emacs-w3m to get
-the relevant manual page without leaving Emacs.
+php-search-documentation~ or ~C-c C-f~).  You can combine it with EWW to get the
+relevant manual page without leaving Emacs.
 
 *Close* the help buffer by pressing ~Q~.
 
@@ -3075,30 +3075,6 @@ What is working for you?
     (if leuven--console-p
         (global-dictionary-tooltip-mode 0)
       (global-dictionary-tooltip-mode 1)))
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; XXX excellent!
-  (defun leuven-answers-define ()
-    "Look up the word under cursor in a browser."
-    (interactive)
-    (browse-url
-     (concat "http://www.answers.com/main/ntquery?s=" (find-tag-default))))
-
-  (defun leuven-lookup-word-definition-in-w3m ()
-    "Look up the word's definition in a emacs-w3m.
-  If a region is active (a phrase), lookup that phrase."
-    (interactive)
-    (let (word
-          url)
-      (setq word
-            (if (use-region-p)
-                (buffer-substring-no-properties (region-beginning)
-                                                (region-end))
-              (find-tag-default)))
-      (setq word (replace-regexp-in-string " " "%20" word))
-      (setq url (concat "http://www.answers.com/main/ntquery?s=" word))
-      (w3m-browse-url url)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -7486,11 +7462,11 @@ Find a location for refiling on capture.
 #+begin_src emacs-lisp
     (add-to-list 'org-capture-templates
                  `("Z" "Refile me!" entry
-                   (function leuven-find-location)
+                   (function leuven--find-location)
                    "** TODO Put this in some other file\n\n"
                    :prepend t) t)
 
-    (defun leuven-find-location ()
+    (defun leuven--find-location ()
       "Find my CollectBox file and some headline in the current buffer."
       (find-file org-default-notes-file)
       (goto-char (point-min))
@@ -10158,7 +10134,6 @@ it to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
 
   (defun leuven--org-update-buffer-before-save ()
     "Update all dynamic blocks and all tables in the buffer before save."
-    (interactive)
     (when (derived-mode-p 'org-mode)
       (message "(Info) Update Org buffer %s"
                (file-name-nondirectory (buffer-file-name)))
@@ -10866,8 +10841,8 @@ See an example in SQL Server Management Studio
 ** Major Modes for Programming Languages
 
 Have a look at:
-- [[http://cedet.sourceforge.net][CEDET]] for development in AWK, C/C++, C#, Calc,
-  Erlang, Java, Javascript, Make, PHP, Python, Ruby and Scheme,
+- [[http://cedet.sourceforge.net][CEDET]] for development in AWK, C/C++, C#, Calc, Erlang, Java, Javascript, Make,
+  PHP, Python, Ruby and Scheme,
 - [[http://common-lisp.net/project/slime][SLIME]] for Common Lisp development,
 - JDEE for Java programs.
 
@@ -11410,24 +11385,35 @@ See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard a
 
 *** Eclim
 
-[[http://eclim.org/][Eclim]] provides the ability to access [[http://www.eclipse.org/][Eclipse]] code editing features:
+[[http://eclim.org/][Eclim]] provides the ability to *bring [[http://www.eclipse.org/][Eclipse]] code editing features* (to Vim -- but
+third party clients have been created to add eclim support to other editors as
+well, such as *Emacs*, Sublime Text 2 and TextMate):
 
 - "true" *code completion* (i.e., only completions that are possible),
 - searching,
-- code validation, and
-- [[http://eclim.org/features.html][many more]]
+- code validation (report any validation errors found), and
+- [[http://eclim.org/features.html][many more]].
 
-via the command line, allowing those features to be integrated with Emacs.
+The initial goal was to provide Eclipse *Java* functionality, but support for
+various other languages (C/C++, HTML/CSS, Groovy, JavaScript, *PHP*, *Python*, Ruby,
+XML/DTD/XSD, etc.) has been added.
 
-1. Install [[http://eclim.org/install.html][Eclim]].
+Getting started:
+
+1. Install [[http://eclim.org/install.html][Eclim]] (see ~vim.skip~ and ~vim.skip.hint~).
 2. Install Emacs-eclim (via ~list-packages~).
 
 [[http://eclim.org/faq.html][FAQ / Troubleshooting]]
 
-# ("C-c C-e l m" . eclim-manage-projects)
 # ("C-c C-e l r" . eclim-run-class)
-# ("C-c C-e l o" . eclim-problems-open)
 # ("C-c C-e l b" . eclim-project-build))
+
+- ~C-c C-e o~ (~eclim-problems-open~) ::
+     Opens a new (emacs) window inside the current frame showing the current
+     project compilation problems.
+
+- ~eclim-manage-projects~ ::
+     Manage all your eclim projects in one buffer.
 
 #+begin_src emacs-lisp
   (when (try-require 'eclim)
@@ -11926,40 +11912,6 @@ Version control systems that interact with Emacs in a generic way.
 indicator, and modified buffers have ~:~ (e.g., ~CVS-1.2~ vs. ~CVS:1.2~).  The
 tooltip over the VC indicator also says more explicitly.
 
-#+begin_src emacs-lisp
-;;*** 28.1.2 (info "(emacs)VC Mode Line")
-
-  (leuven--section "28.1.2 Version Control and the Mode Line")
-
-  ;; (with-eval-after-load "vc"
-  ;;
-  ;;   (GNUEmacs
-  ;;     (when (image-type-available-p 'png)
-  ;;       ;; http://www.emacswiki.org/emacs/VcIcon
-  ;;       (defun vc-icon ()
-  ;;         "Display a colored icon indicating the vc status of the current file."
-  ;;         (let ((icon (if (eq (vc-state buffer-file-name) 'up-to-date)
-  ;;                         (concat leuven--directory "Pictures/NormalIcon.png")
-  ;;                       (concat leuven--directory "Pictures/ModifiedIcon.png")))
-  ;;               (bg-colour (face-attribute 'mode-line :background)))
-  ;;           (propertize
-  ;;            "  "
-  ;;            'display (find-image `((:type png
-  ;;                                    :file ,icon
-  ;;                                    :ascent center
-  ;;                                    :background ,bg-colour))))))
-  ;;
-  ;;       (setq-default mode-line-format
-  ;;                     (push '(vc-mode (:eval (vc-icon))) mode-line-format)))))
-#+end_src
-
-If you choose a JPG icon, you must set its type to ~jpeg~ (*NOT* ~jpg~) in
-~find-image~.
-
-But don't forget that JPEG images can't have /transparent backgrounds/...
-
-If PNG images are not correctly supported, see [[id:9432da83-fa9d-4466-a4da-57f33d662bbd][Images]].
-
 *************** Lisp expression in mode-line-format
 The Lisp expressions supported in ~mode-line-format~ are those documented in the
 manual, and nothing else.  In particular, the ~:eval~ part must appear
@@ -11993,15 +11945,15 @@ it into the commit buffer. So there is no need to "write the same thing twice".
 #+begin_src emacs-lisp
   (with-eval-after-load "vc-git"
 
-    ;; major mode for editing git commit messages
+    ;; Major mode for editing git commit messages.
     (try-require 'git-commit-mode))
 
   (with-eval-after-load "git-commit-mode"
 
-    ;; turn on on-the-fly spell-checking
+    ;; Turn on on-the-fly spell-checking.
     (add-hook 'git-commit-mode-hook #'flyspell-mode)
 
-    ;; turn off save-place
+    ;; Turn off save-place.
     (add-hook 'git-commit-mode-hook
               (lambda ()
                 (toggle-save-place 0))))
@@ -12023,7 +11975,7 @@ See http://whattheemacsd.com/setup-magit.el-01.html.
 
   (leuven--section "28.1.6 Examining And Comparing Old Revisions")
 
-  ;; switches for diff under VC
+  ;; Switches for diff under VC.
   (setq vc-diff-switches diff-switches)
 #+end_src
 
@@ -13144,7 +13096,10 @@ There are other ways to select candidates:
 - ~M-2~ to select candidate 2,
 - and so on (until 9).
 
-Other operations are enabled temporarily when completion is started:
+Other operations are enabled temporarily *once the completion is started*:
+
+- ~C-n~ or ~C-p~ ::
+     Proceed to the *next match* or to the *previous match*.
 
 - ~C-s~ (~ac-isearch~) ::
      *Filter* completion candidates.
