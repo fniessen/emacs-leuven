@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150615.1426
+;; Version: 20150615.1508
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150615.1426"
+(defconst leuven--emacs-version "20150615.1508"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -7797,14 +7797,26 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; List of expansion functions tried (in order) by `hippie-expand'
     ;; (completion strategy).
     (setq hippie-expand-try-functions-list
-          '(try-expand-dabbrev          ; Current buffer.
-            try-expand-dabbrev-visible  ; Visible (parts of all) buffers.
-            ;; try-expand-dabbrev-all-buffers ; (Almost) all buffers (see `hippie-expand-ignore-buffers').
+          '(;; Searching the current buffer.
+            try-expand-dabbrev
 
+            ;; Searching visible window parts.
+            try-expand-dabbrev-visible
+
+            ;; ;; Searching (almost) all other buffers (see
+            ;; ;; `hippie-expand-ignore-buffers').
+            ;; try-expand-dabbrev-all-buffers
+
+            ;; Emacs Lisp symbol, as many characters as unique.
             try-complete-lisp-symbol-partially
+
+            ;; Emacs Lisp symbol.
             try-complete-lisp-symbol
 
-            try-complete-file-name-partially ; File names.
+            ;; File name, as many characters as unique.
+            try-complete-file-name-partially
+
+            ;; File name.
             try-complete-file-name))
 
     ;; integrate YASnippet with `hippie-expand'

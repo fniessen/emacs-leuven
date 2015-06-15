@@ -13102,14 +13102,26 @@ command which would look if the major mode is Org and then act differently...
     ;; List of expansion functions tried (in order) by `hippie-expand'
     ;; (completion strategy).
     (setq hippie-expand-try-functions-list
-          '(try-expand-dabbrev          ; Current buffer.
-            try-expand-dabbrev-visible  ; Visible (parts of all) buffers.
-            ;; try-expand-dabbrev-all-buffers ; (Almost) all buffers (see `hippie-expand-ignore-buffers').
+          '(;; Searching the current buffer.
+            try-expand-dabbrev
 
+            ;; Searching visible window parts.
+            try-expand-dabbrev-visible
+
+            ;; ;; Searching (almost) all other buffers (see
+            ;; ;; `hippie-expand-ignore-buffers').
+            ;; try-expand-dabbrev-all-buffers
+
+            ;; Emacs Lisp symbol, as many characters as unique.
             try-complete-lisp-symbol-partially
+
+            ;; Emacs Lisp symbol.
             try-complete-lisp-symbol
 
-            try-complete-file-name-partially ; File names.
+            ;; File name, as many characters as unique.
+            try-complete-file-name-partially
+
+            ;; File name.
             try-complete-file-name))
 #+end_src
 

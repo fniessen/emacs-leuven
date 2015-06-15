@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150615.1427</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150615.1509</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150615.1427"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150615.1509"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -16873,14 +16873,26 @@ command which would look if the major mode is Org and then act differently&#x202
     <span class="org-comment-delimiter">;; </span><span class="org-comment">List of expansion functions tried (in order) by `</span><span class="org-constant"><span class="org-comment">hippie-expand</span></span><span class="org-comment">'</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(completion strategy).</span>
     (setq hippie-expand-try-functions-list
-          '(try-expand-dabbrev          <span class="org-comment-delimiter">; </span><span class="org-comment">Current buffer.</span>
-            try-expand-dabbrev-visible  <span class="org-comment-delimiter">; </span><span class="org-comment">Visible (parts of all) buffers.</span>
-            <span class="org-comment-delimiter">;; </span><span class="org-comment">try-expand-dabbrev-all-buffers ; (Almost) all buffers (see `</span><span class="org-constant"><span class="org-comment">hippie-expand-ignore-buffers</span></span><span class="org-comment">').</span>
+          '(<span class="org-comment-delimiter">;; </span><span class="org-comment">Searching the current buffer.</span>
+            try-expand-dabbrev
 
+            <span class="org-comment-delimiter">;; </span><span class="org-comment">Searching visible window parts.</span>
+            try-expand-dabbrev-visible
+
+            <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Searching (almost) all other buffers (see</span>
+            <span class="org-comment-delimiter">;; </span><span class="org-comment">;; `</span><span class="org-constant"><span class="org-comment">hippie-expand-ignore-buffers</span></span><span class="org-comment">').</span>
+            <span class="org-comment-delimiter">;; </span><span class="org-comment">try-expand-dabbrev-all-buffers</span>
+
+            <span class="org-comment-delimiter">;; </span><span class="org-comment">Emacs Lisp symbol, as many characters as unique.</span>
             try-complete-lisp-symbol-partially
+
+            <span class="org-comment-delimiter">;; </span><span class="org-comment">Emacs Lisp symbol.</span>
             try-complete-lisp-symbol
 
-            try-complete-file-name-partially <span class="org-comment-delimiter">; </span><span class="org-comment">File names.</span>
+            <span class="org-comment-delimiter">;; </span><span class="org-comment">File name, as many characters as unique.</span>
+            try-complete-file-name-partially
+
+            <span class="org-comment-delimiter">;; </span><span class="org-comment">File name.</span>
             try-complete-file-name))
 </pre>
 </div>
