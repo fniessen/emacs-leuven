@@ -13102,20 +13102,15 @@ command which would look if the major mode is Org and then act differently...
     ;; List of expansion functions tried (in order) by `hippie-expand'
     ;; (completion strategy).
     (setq hippie-expand-try-functions-list
-          '(try-expand-all-abbrevs      ; Abbreviations.
-
-            try-expand-dabbrev          ; Current buffer.
+          '(try-expand-dabbrev          ; Current buffer.
             try-expand-dabbrev-visible  ; Visible (parts of all) buffers.
             ;; try-expand-dabbrev-all-buffers ; (Almost) all buffers (see `hippie-expand-ignore-buffers').
-            try-expand-dabbrev-from-kill ; Kill ring.
-
-            try-complete-file-name-partially ; File names.
-            try-complete-file-name
 
             try-complete-lisp-symbol-partially
             try-complete-lisp-symbol
 
-            try-expand-whole-kill))
+            try-complete-file-name-partially ; File names.
+            try-complete-file-name))
 #+end_src
 
 Configure Hippie-expand to also expand YASnippets (on the key used by

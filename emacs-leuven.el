@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150615.1412
+;; Version: 20150615.1426
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150615.1412"
+(defconst leuven--emacs-version "20150615.1426"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -7797,20 +7797,15 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; List of expansion functions tried (in order) by `hippie-expand'
     ;; (completion strategy).
     (setq hippie-expand-try-functions-list
-          '(try-expand-all-abbrevs      ; Abbreviations.
-
-            try-expand-dabbrev          ; Current buffer.
+          '(try-expand-dabbrev          ; Current buffer.
             try-expand-dabbrev-visible  ; Visible (parts of all) buffers.
             ;; try-expand-dabbrev-all-buffers ; (Almost) all buffers (see `hippie-expand-ignore-buffers').
-            try-expand-dabbrev-from-kill ; Kill ring.
-
-            try-complete-file-name-partially ; File names.
-            try-complete-file-name
 
             try-complete-lisp-symbol-partially
             try-complete-lisp-symbol
 
-            try-expand-whole-kill))
+            try-complete-file-name-partially ; File names.
+            try-complete-file-name))
 
     ;; integrate YASnippet with `hippie-expand'
     (with-eval-after-load "yasnippet"
