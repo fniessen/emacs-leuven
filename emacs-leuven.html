@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150615.1104</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150615.1404</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150615.1104"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150615.1404"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -6596,40 +6596,33 @@ screen decorations.</dd>
 
   (leuven--section <span class="org-string">"21.7 (emacs)Frame Commands"</span>)
 
-  (<span class="org-keyword">when</span> leuven--x-window-p
-    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-toggle-fullscreen</span> ()
-      <span class="org-doc">"Toggle between full screen and partial screen display in X servers."</span>
-      (interactive)
-      (x-send-client-message nil 0 nil <span class="org-string">"_NET_WM_STATE"</span> 32
-                             '(2 <span class="org-string">"_NET_WM_STATE_FULLSCREEN"</span> 0)))
-
-    (global-set-key (kbd <span class="org-string">"C-c z"</span>) 'leuven-toggle-fullscreen))
-
   (GNUEmacs
-    (<span class="org-keyword">when</span> (or leuven--win32-p
-              leuven--cygwin-p)
-      (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-w32-maximize-frame</span> ()
-        <span class="org-doc">"Maximize the current frame."</span>
-        (interactive)
-        (w32-send-sys-command 61488)
-        (global-set-key (kbd <span class="org-string">"C-c z"</span>) 'leuven-w32-restore-frame))
+    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-maximize-frame</span> ()
+      <span class="org-doc">"Maximize the current frame."</span>
+      (interactive)
+      (<span class="org-keyword">cond</span> ((or leuven--win32-p leuven--cygwin-p)
+             (w32-send-sys-command 61488))
+            (leuven--x-window-p
+             (x-send-client-message nil 0 nil <span class="org-string">"_NET_WM_STATE"</span> 32
+                                    '(2 <span class="org-string">"_NET_WM_STATE_FULLSCREEN"</span> 0))))
+      (global-set-key (kbd <span class="org-string">"C-c z"</span>) 'leuven-restore-frame))
 
-      (global-set-key (kbd <span class="org-string">"C-c z"</span>) 'leuven-w32-maximize-frame)
+    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-restore-frame</span> ()
+      <span class="org-doc">"Restore a minimized frame."</span>
+      (interactive)
+      (<span class="org-keyword">cond</span> ((or leuven--win32-p leuven--cygwin-p)
+             (w32-send-sys-command 61728))
+            (leuven--x-window-p
+             (x-send-client-message nil 0 nil <span class="org-string">"_NET_WM_STATE"</span> 32
+                                    '(2 <span class="org-string">"_NET_WM_STATE_FULLSCREEN"</span> 0))))
+      (global-set-key (kbd <span class="org-string">"C-c z"</span>) 'leuven-maximize-frame))
 
-      (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-w32-restore-frame</span> ()
-        <span class="org-doc">"Restore a minimized frame."</span>
-        (interactive)
-        (w32-send-sys-command 61728)
-        (global-set-key (kbd <span class="org-string">"C-c z"</span>) 'leuven-w32-maximize-frame))))
+    (global-set-key (kbd <span class="org-string">"C-c z"</span>) 'leuven-maximize-frame))
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Maximize Emacs frame by default.</span>
   (modify-all-frames-parameters '((fullscreen . maximized)))
 </pre>
 </div>
-
-<div class="inlinetask">
-<b><span class="todo TODO">TODO</span> Try to use the name <code>leuven-toggle-fullscreen</code> for Windows as well</b><br  />
-nil</div>
 </div>
 </div>
 

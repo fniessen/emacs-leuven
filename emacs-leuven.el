@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150615.1103
+;; Version: 20150615.1404
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150615.1103"
+(defconst leuven--emacs-version "20150615.1404"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2870,31 +2870,28 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "21.7 (emacs)Frame Commands")
 
-  (when leuven--x-window-p
-    (defun leuven-toggle-fullscreen ()
-      "Toggle between full screen and partial screen display in X servers."
-      (interactive)
-      (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-                             '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
-
-    (global-set-key (kbd "C-c z") 'leuven-toggle-fullscreen))
-
   (GNUEmacs
-    (when (or leuven--win32-p
-              leuven--cygwin-p)
-      (defun leuven-w32-maximize-frame ()
-        "Maximize the current frame."
-        (interactive)
-        (w32-send-sys-command 61488)
-        (global-set-key (kbd "C-c z") 'leuven-w32-restore-frame))
+    (defun leuven-maximize-frame ()
+      "Maximize the current frame."
+      (interactive)
+      (cond ((or leuven--win32-p leuven--cygwin-p)
+             (w32-send-sys-command 61488))
+            (leuven--x-window-p
+             (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+                                    '(2 "_NET_WM_STATE_FULLSCREEN" 0))))
+      (global-set-key (kbd "C-c z") 'leuven-restore-frame))
 
-      (global-set-key (kbd "C-c z") 'leuven-w32-maximize-frame)
+    (defun leuven-restore-frame ()
+      "Restore a minimized frame."
+      (interactive)
+      (cond ((or leuven--win32-p leuven--cygwin-p)
+             (w32-send-sys-command 61728))
+            (leuven--x-window-p
+             (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+                                    '(2 "_NET_WM_STATE_FULLSCREEN" 0))))
+      (global-set-key (kbd "C-c z") 'leuven-maximize-frame))
 
-      (defun leuven-w32-restore-frame ()
-        "Restore a minimized frame."
-        (interactive)
-        (w32-send-sys-command 61728)
-        (global-set-key (kbd "C-c z") 'leuven-w32-maximize-frame))))
+    (global-set-key (kbd "C-c z") 'leuven-maximize-frame))
 
   ;; Maximize Emacs frame by default.
   (modify-all-frames-parameters '((fullscreen . maximized)))
