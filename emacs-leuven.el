@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150613.0009
+;; Version: 20150615.1103
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150613.0009"
+(defconst leuven--emacs-version "20150615.1103"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -825,7 +825,9 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; Commands to run for all cursors in multiple-cursors-mode.
     (setq mc/cmds-to-run-for-all
-          '(leuven-fill-paragraph
+          '(isearch-abort
+            isearch-printing-char
+            leuven-fill-paragraph
             org-beginning-of-line
             org-end-of-line
             org-kill-line
@@ -2119,7 +2121,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;; width.
     (setq ediff-split-window-function
           (lambda (&optional arg)
-            (if (> (frame-width) 160)
+            (if (> (frame-width) split-width-threshold)
                 (split-window-horizontally arg)
               (split-window-vertically arg))))
 
@@ -2710,25 +2712,24 @@ These packages are neither built-in nor already installed nor ignored."
   (defun leuven-delete-or-split-window ()
     "Cycle between 1 window and 2 windows.
 
-  When splitting the window, the cursor is moved to the other
-  window, as it makes more sense to do something there first.
+  When splitting the window, the new window is selected, as it
+  makes more sense to do something there first.
 
   The window's contents is unchanged by default.
 
-  Do you want to see another part of the same file, you've
+  Do you want to see another part of the same file?  You've
   nothing to do.
 
-  Do you want to see the last file you were visiting,
-  simply bury the current buffer (f12).
+  Do you want to see the last file you were visiting?  Simply
+  bury the current buffer (f12).
 
-  Do you want to go back to the first window, switch to it (f6)."
+  Do you want to go back to the first window?  Switch to
+  it (f6)."
     (interactive)
     (cond ((= (count-windows) 1)
-           (delete-other-windows)
-           (if (> (frame-width) 160)
+           (if (> (frame-width) split-width-threshold)
                (split-window-horizontally)
              (split-window-vertically))
-           ;; (set-window-buffer (next-window) (other-buffer))
            (other-window 1))
           (t
            (delete-other-windows))))
@@ -2795,8 +2796,8 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Don't allow splitting windows vertically.
   (setq split-height-threshold nil)
 
-  ;; Minimum width for splitting windows horizontally.
-  (setq split-width-threshold 160)      ; See `split-window-sensibly'.
+  ;; ;; Minimum width for splitting windows horizontally.
+  ;; (setq split-width-threshold 160)      ; See `split-window-sensibly'.
 
 )                                       ; Chapter 20 ends here.
 

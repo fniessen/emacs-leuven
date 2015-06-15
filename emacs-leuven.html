@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150613.0011</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150615.1104</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150613.0011"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150615.1104"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2008,7 +2008,9 @@ To go from multiple selections to a single selection, press <code>C-g</code> or 
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Commands to run for all cursors in multiple-cursors-mode.</span>
     (setq mc/cmds-to-run-for-all
-          '(leuven-fill-paragraph
+          '(isearch-abort
+            isearch-printing-char
+            leuven-fill-paragraph
             org-beginning-of-line
             org-end-of-line
             org-kill-line
@@ -4676,7 +4678,7 @@ vice versa</li>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">width.</span>
     (setq ediff-split-window-function
           (<span class="org-keyword">lambda</span> (<span class="org-type">&amp;optional</span> arg)
-            (<span class="org-keyword">if</span> (&gt; (frame-width) 160)
+            (<span class="org-keyword">if</span> (&gt; (frame-width) split-width-threshold)
                 (split-window-horizontally arg)
               (split-window-vertically arg))))
 
@@ -6306,25 +6308,24 @@ respectively.
   (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-delete-or-split-window</span> ()
     <span class="org-doc">"Cycle between 1 window and 2 windows.</span>
 
-<span class="org-doc">  When splitting the window, the cursor is moved to the other</span>
-<span class="org-doc">  window, as it makes more sense to do something there first.</span>
+<span class="org-doc">  When splitting the window, the new window is selected, as it</span>
+<span class="org-doc">  makes more sense to do something there first.</span>
 
 <span class="org-doc">  The window's contents is unchanged by default.</span>
 
-<span class="org-doc">  Do you want to see another part of the same file, you've</span>
+<span class="org-doc">  Do you want to see another part of the same file?  You've</span>
 <span class="org-doc">  nothing to do.</span>
 
-<span class="org-doc">  Do you want to see the last file you were visiting,</span>
-<span class="org-doc">  simply bury the current buffer (f12).</span>
+<span class="org-doc">  Do you want to see the last file you were visiting?  Simply</span>
+<span class="org-doc">  bury the current buffer (f12).</span>
 
-<span class="org-doc">  Do you want to go back to the first window, switch to it (f6)."</span>
+<span class="org-doc">  Do you want to go back to the first window?  Switch to</span>
+<span class="org-doc">  it (f6)."</span>
     (interactive)
     (<span class="org-keyword">cond</span> ((= (count-windows) 1)
-           (delete-other-windows)
-           (<span class="org-keyword">if</span> (&gt; (frame-width) 160)
+           (<span class="org-keyword">if</span> (&gt; (frame-width) split-width-threshold)
                (split-window-horizontally)
              (split-window-vertically))
-           <span class="org-comment-delimiter">;; </span><span class="org-comment">(set-window-buffer (next-window) (other-buffer))</span>
            (other-window 1))
           (t
            (delete-other-windows))))
@@ -6432,8 +6433,8 @@ See as well <code>split-window-preferred-function</code>.
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't allow splitting windows vertically.</span>
   (setq split-height-threshold nil)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Minimum width for splitting windows horizontally.</span>
-  (setq split-width-threshold 160)      <span class="org-comment-delimiter">; </span><span class="org-comment">See `</span><span class="org-constant"><span class="org-comment">split-window-sensibly</span></span><span class="org-comment">'.</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Minimum width for splitting windows horizontally.</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq split-width-threshold 160)      ; See `</span><span class="org-constant"><span class="org-comment">split-window-sensibly</span></span><span class="org-comment">'.</span>
 </pre>
 </div>
 </div>
