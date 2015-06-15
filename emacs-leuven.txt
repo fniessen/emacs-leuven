@@ -5395,6 +5395,15 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
   (global-set-key (kbd "C-x \\") 'align-regexp)
 #+end_src
 
+#+begin_src emacs-lisp
+  (defun leuven-align-to-equals (begin end)
+    "Align region to equal signs."
+    (interactive "r")
+    (align-regexp begin end "\\(\\s-*\\)=" 1 1))
+
+  (global-set-key (kbd "C-c =") 'leuven-align-to-equals)
+#+end_src
+
 #+begin_src emacs-lisp :tangle no
   ;; Minor mode to aggressively keep your code always indented.
   (with-eval-after-load "aggressive-indent-autoloads"
