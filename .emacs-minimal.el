@@ -19,7 +19,8 @@
 
 ;; Title bar display of visible frames.
 (setq frame-title-format
-      (format "Minimal Emacs %s%s of %s - PID: %d"
+      (format "Minimal %s Emacs %s%s of %s - PID: %d"
+              (capitalize (symbol-name system-type))
               emacs-version
               (if (and (boundp 'emacs-repository-version)
                        emacs-repository-version)

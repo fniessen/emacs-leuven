@@ -121,7 +121,8 @@ Here is such a minimal Emacs config file.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Title bar display of visible frames.</span>
 (setq frame-title-format
-      (format <span class="org-string">"Minimal Emacs %s%s of %s - PID: %d"</span>
+      (format <span class="org-string">"Minimal %s Emacs %s%s of %s - PID: %d"</span>
+              (capitalize (symbol-name system-type))
               emacs-version
               (<span class="org-keyword">if</span> (and (boundp 'emacs-repository-version)
                        emacs-repository-version)
