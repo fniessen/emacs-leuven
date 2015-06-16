@@ -4840,6 +4840,26 @@ windows.  Useful when Emacs opens the window below instead at the side.
   (global-set-key (kbd "C-c |") 'leuven-toggle-window-split)
 #+end_src
 
+** Dedicated windows
+
+How to avoid displaying another buffer in a specific window, making the current
+window always display this buffer ("sticky window").
+
+#+begin_src emacs-lisp
+  (defun toggle-current-window-dedication ()
+    "Toggle whether the current active window is dedicated or not."
+    (interactive)
+    (let* ((window (selected-window))
+           (dedicated (window-dedicated-p window)))
+      (set-window-dedicated-p window (not dedicated))
+      (message "Window %sdedicated to %s"
+               (if dedicated "no longer " "")
+               (buffer-name))))
+
+  ;; Press [pause] key in each window you want to "freeze".
+  (global-set-key (kbd "<pause>") #'toggle-current-window-dedication)
+#+end_src
+
 ** Displaying a Buffer in a Window
 
 Splits screen vertically if the width of the window is large enough.
@@ -10434,11 +10454,12 @@ SumatraPDF as your PDF viewer.
 
       ;; Use a saner PDF viewer (evince, SumatraPDF).
       (setcdr (assoc "^pdf$" TeX-output-view-style)
-              (cond ((or leuven--win32-p
-                         leuven--cygwin-p)
+              (cond (leuven--win32-p
                      `("." (concat "\"" ,sumatrapdf-command "\" %o")))
-                    ;; under Windows, we could open the PDF file with
-                    ;; `start "" xxx.pdf' (in a command prompt)
+                    ;; Under Windows, we could open the PDF file with
+                    ;; `start "" xxx.pdf' (in a command prompt).
+                    (leuven--cygwin-p
+                     `("." (concat "\"" ,sumatrapdf-command "\" $(cygpath -m %o)")))
                     (t
                      '("." "evince %o"))))
 
@@ -11172,6 +11193,8 @@ Balanced editing: inserting two matching parentheses at once, etc.
 #+end_src
 
   Use it in ELisp; use smartparens in other modes (NOT globally!)
+
+  Keep looking at the [[http://www.emacswiki.org/emacs/PareditCheatsheet][cheatsheet]] until you've got the hang of it.
 
 - autopair
 
@@ -13839,11 +13862,12 @@ Maybe the following fixes this above problem?
     (setq dired-auto-revert-buffer t)
 #+end_src
 
+Press `s' then `s', `x', `t', `n' or `d' to sort by
+Size, eXtension, *Time*, *Name* or name grouping Dirs first.
+
 #+begin_src emacs-lisp
     ;; Dired sort.
     (try-require 'dired-sort-map)
-    ;; Press `s' then `s', `x', `t', `n' or `d' to sort by
-    ;; Size, eXtension, Time, Name or name grouping Dirs first.
 #+end_src
 
 ** Dired and ~find~

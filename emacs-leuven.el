@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150616.1435
+;; Version: 20150616.2221
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150616.1435"
+(defconst leuven--emacs-version "20150616.2221"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2787,6 +2787,19 @@ These packages are neither built-in nor already installed nor ignored."
                (if this-win-2nd (other-window 1)))))))
 
   (global-set-key (kbd "C-c |") 'leuven-toggle-window-split)
+
+  (defun toggle-current-window-dedication ()
+    "Toggle whether the current active window is dedicated or not."
+    (interactive)
+    (let* ((window (selected-window))
+           (dedicated (window-dedicated-p window)))
+      (set-window-dedicated-p window (not dedicated))
+      (message "Window %sdedicated to %s"
+               (if dedicated "no longer " "")
+               (buffer-name))))
+
+  ;; Press [pause] key in each window you want to "freeze".
+  (global-set-key (kbd "<pause>") #'toggle-current-window-dedication)
 
 ;;** 20.6 (info "(emacs)Displaying Buffers")
 
@@ -6498,11 +6511,12 @@ this with to-do items than with projects or headings."
 
       ;; Use a saner PDF viewer (evince, SumatraPDF).
       (setcdr (assoc "^pdf$" TeX-output-view-style)
-              (cond ((or leuven--win32-p
-                         leuven--cygwin-p)
+              (cond (leuven--win32-p
                      `("." (concat "\"" ,sumatrapdf-command "\" %o")))
-                    ;; under Windows, we could open the PDF file with
-                    ;; `start "" xxx.pdf' (in a command prompt)
+                    ;; Under Windows, we could open the PDF file with
+                    ;; `start "" xxx.pdf' (in a command prompt).
+                    (leuven--cygwin-p
+                     `("." (concat "\"" ,sumatrapdf-command "\" $(cygpath -m %o)")))
                     (t
                      '("." "evince %o"))))
 
@@ -8127,8 +8141,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Dired sort.
     (try-require 'dired-sort-map)
-    ;; Press `s' then `s', `x', `t', `n' or `d' to sort by
-    ;; Size, eXtension, Time, Name or name grouping Dirs first.
 
 ;;** (info "(emacs)Dired and Find")
 
