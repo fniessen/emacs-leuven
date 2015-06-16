@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150616.1204
+;; Version: 20150616.1435
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150616.1204"
+(defconst leuven--emacs-version "20150616.1435"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -625,15 +625,14 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "8.4 (emacs)Completion")
 
-  ;; Don't consider case significant in completion (GNU Emacs default).
-  (XEmacs
-    (setq completion-ignore-case t))
+  ;; Don't consider case significant in completion.
+  (setq completion-ignore-case t)
 
   ;; Ignore case when reading a file name.
-  (setq read-file-name-completion-ignore-case t)
+  (setq read-file-name-completion-ignore-case t) ; [Default: t on Windows]
 
   ;; Ignore case when reading a buffer name.
-  (setq read-buffer-completion-ignore-case t)
+  (setq read-buffer-completion-ignore-case t) ; [Default: nil].
 
   ;; Provide the same facility of `ls --color' inside Emacs.
   (when (locate-library "dircolors")
@@ -7865,6 +7864,9 @@ a clean buffer we're an order of magnitude laxer about checking."
                       snippet-mode
                       sql-mode
                       text-mode)))
+
+      ;; 7.9 Just ignore case.
+      (setq ac-ignore-case t)
 
       ;; 8.1 Delay to completions will be available.
       (setq ac-delay 0)               ; Faster than default 0.1.

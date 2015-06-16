@@ -984,15 +984,24 @@ echo area.
 
   (leuven--section "8.4 (emacs)Completion")
 
-  ;; Don't consider case significant in completion (GNU Emacs default).
-  (XEmacs
-    (setq completion-ignore-case t))
+  ;; Don't consider case significant in completion.
+  (setq completion-ignore-case t)
+#+end_src
 
+Within ~read-file-name~, this variable is overridden by
+~read-file-name-completion-ignore-case~.
+
+#+begin_src emacs-lisp
   ;; Ignore case when reading a file name.
-  (setq read-file-name-completion-ignore-case t)
+  (setq read-file-name-completion-ignore-case t) ; [Default: t on Windows]
+#+end_src
 
+Within ~read-buffer~, ~completion-ignore-case~ is overridden by
+~read-buffer-completion-ignore-case~.
+
+#+begin_src emacs-lisp
   ;; Ignore case when reading a buffer name.
-  (setq read-buffer-completion-ignore-case t)
+  (setq read-buffer-completion-ignore-case t) ; [Default: nil].
 #+end_src
 
 #+begin_src emacs-lisp
@@ -11514,6 +11523,13 @@ eclimd -Dosgi.instance.area.default=@user.home/another_workspace
     (ac-emacs-eclim-config)
 #+end_src
 
+#+begin_note
+There are 2 Eclim Company-mode backends:
+- ~company-eclim~, the built-in one.
+- ~company-emacs-eclim~, which is a bit more feature-rich (it uses Yasnippet, for
+  instance), and also a bit buggier.
+#+end_note
+
 See http://java-coders.com/p/tsdh/emacs-eclim for Company.
 
 #+begin_src emacs-lisp
@@ -13245,6 +13261,9 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
                       snippet-mode
                       sql-mode
                       text-mode)))
+
+      ;; 7.9 Just ignore case.
+      (setq ac-ignore-case t)
 
       ;; 8.1 Delay to completions will be available.
       (setq ac-delay 0)               ; Faster than default 0.1.

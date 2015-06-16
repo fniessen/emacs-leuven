@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150616.1205</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150616.1436</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150616.1205"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150616.1436"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1434,15 +1434,32 @@ echo area.
 
   (leuven--section <span class="org-string">"8.4 (emacs)Completion"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't consider case significant in completion (GNU Emacs default).</span>
-  (XEmacs
-    (setq completion-ignore-case t))
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Ignore case when reading a file name.</span>
-  (setq read-file-name-completion-ignore-case t)
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Ignore case when reading a buffer name.</span>
-  (setq read-buffer-completion-ignore-case t)
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't consider case significant in completion.</span>
+  (setq completion-ignore-case t)
+</pre>
+</div>
+
+<p>
+Within <code>read-file-name</code>, this variable is overridden by
+<code>read-file-name-completion-ignore-case</code>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Ignore case when reading a file name.</span>
+  (setq read-file-name-completion-ignore-case t) <span class="org-comment-delimiter">; </span><span class="org-comment">[Default: t on Windows]</span>
+</pre>
+</div>
+
+<p>
+Within <code>read-buffer</code>, <code>completion-ignore-case</code> is overridden by
+<code>read-buffer-completion-ignore-case</code>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Ignore case when reading a buffer name.</span>
+  (setq read-buffer-completion-ignore-case t) <span class="org-comment-delimiter">; </span><span class="org-comment">[Default: nil].</span>
 </pre>
 </div>
 
@@ -14789,6 +14806,18 @@ To tell eclim <b>which Eclipse workspace to use</b>, you can start eclimd like s
 </pre>
 </div>
 
+<div class="note">
+<p>
+There are 2 Eclim Company-mode backends:
+</p>
+<ul class="org-ul">
+<li><code>company-eclim</code>, the built-in one.</li>
+<li><code>company-emacs-eclim</code>, which is a bit more feature-rich (it uses Yasnippet, for
+instance), and also a bit buggier.</li>
+</ul>
+
+</div>
+
 <p>
 See <a href="http://java-coders.com/p/tsdh/emacs-eclim">http://java-coders.com/p/tsdh/emacs-eclim</a> for Company.
 </p>
@@ -17049,6 +17078,9 @@ Eventually, see <a href="http://stackoverflow.com/questions/19900949/how-to-make
                       snippet-mode
                       sql-mode
                       text-mode)))
+
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">7.9 Just ignore case.</span>
+      (setq ac-ignore-case t)
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">8.1 Delay to completions will be available.</span>
       (setq ac-delay 0)               <span class="org-comment-delimiter">; </span><span class="org-comment">Faster than default 0.1.</span>
