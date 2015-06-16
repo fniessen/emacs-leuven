@@ -200,7 +200,11 @@ Here is such a minimal Emacs config file.
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Place your test code here.</span>
 
-(setq ispell-program-name <span class="org-string">"c:/Program Files (x86)/Aspell/bin/aspell.exe"</span>)
+(setq ispell-program-name
+      (<span class="org-keyword">cond</span> ((eq system-type 'cygwin)
+             <span class="org-string">"/cygdrive/c/Program Files (x86)/Aspell/bin/aspell.exe"</span>)
+            ((eq system-type 'windows-nt)
+             <span class="org-string">"c:/Program Files (x86)/Aspell/bin/aspell.exe"</span>)))
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable on-the-fly spell checking.</span>
 (add-hook 'org-mode-hook 'flyspell-mode)

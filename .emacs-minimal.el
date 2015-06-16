@@ -77,7 +77,11 @@
 
 ;; Place your test code here.
 
-(setq ispell-program-name "c:/Program Files (x86)/Aspell/bin/aspell.exe")
+(setq ispell-program-name
+      (cond ((eq system-type 'cygwin)
+             "/cygdrive/c/Program Files (x86)/Aspell/bin/aspell.exe")
+            ((eq system-type 'windows-nt)
+             "c:/Program Files (x86)/Aspell/bin/aspell.exe")))
 
 ;; Enable on-the-fly spell checking.
 (add-hook 'org-mode-hook 'flyspell-mode)
