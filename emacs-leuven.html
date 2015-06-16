@@ -432,7 +432,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150615.1509</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150616.1205</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -513,7 +513,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150615.1509"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150616.1205"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -3807,13 +3807,13 @@ it to the <b>file word list</b> (<code>ispell-add-per-file-word-list</code>).
             <span class="org-comment-delimiter">;; </span><span class="org-comment">nil                      ; [Default: "ispell"]</span>
             ))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Check if `</span><span class="org-constant"><span class="org-comment">ispell-program-name</span></span><span class="org-comment">' seems correct.</span>
-  (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--ispell-check-program-name</span> ()
-    <span class="org-doc">"Ensure that `</span><span class="org-constant"><span class="org-doc">ispell-program-name</span></span><span class="org-doc">' is defined and non-nil."</span>
+  (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--executable-ispell-program-name-p</span> ()
+    <span class="org-doc">"Ensure that `</span><span class="org-constant"><span class="org-doc">ispell-program-name</span></span><span class="org-doc">' is an executable program name."</span>
     (and (boundp 'ispell-program-name)
+         (file-executable-p ispell-program-name)
          ispell-program-name))
 
-  (<span class="org-keyword">when</span> (leuven--ispell-check-program-name)
+  (<span class="org-keyword">when</span> (leuven--executable-ispell-program-name-p)
 
     (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-ispell-region-or-buffer</span> ()
       <span class="org-doc">"Interactively check the current region or buffer for spelling errors."</span>
@@ -4880,7 +4880,7 @@ What is PGP/MIME, what is OpenPGP, and how Gnus handles them?
 <div class="inlinetask">
 <b><span class="todo TODO">TODO</span> Check out why network share aren&rsquo;t accessible</b><br  />
 <p>
-I should be able to open <i>/CAUCHY/fsd</i>&#x2026;
+I should be able to open <i>/SERVER/d</i> via SMB!?
 </p>
 </div>
 
@@ -6323,10 +6323,10 @@ respectively.
 <span class="org-doc">  it (f6)."</span>
     (interactive)
     (<span class="org-keyword">cond</span> ((= (count-windows) 1)
-           (<span class="org-keyword">if</span> (&gt; (frame-width) split-width-threshold)
-               (split-window-horizontally)
-             (split-window-vertically))
-           (other-window 1))
+           (select-window
+            (<span class="org-keyword">if</span> (&gt; (frame-width) split-width-threshold)
+                (split-window-horizontally)
+              (split-window-vertically))))
           (t
            (delete-other-windows))))
 
@@ -15436,8 +15436,7 @@ it into the commit buffer. So there is no need to &ldquo;write the same thing tw
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">*** 28.1.4 (info "(emacs)Log Buffer")</span>
 
   (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--vc-log-mode-setup</span> ()
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">check if `</span><span class="org-constant"><span class="org-comment">ispell-program-name</span></span><span class="org-comment">' seems correct</span>
-    (<span class="org-keyword">when</span> (leuven--ispell-check-program-name)
+    (<span class="org-keyword">when</span> (leuven--executable-ispell-program-name-p)
       (setq ispell-local-dictionary <span class="org-string">"american"</span>)
       (flyspell-mode)))
 
@@ -16847,7 +16846,7 @@ I prefer Company over Auto-Complete but YMMV.
 <h4 id="orgheadline327">&ldquo;Hippie&rdquo; expansion (Autotype)</h4>
 <div class="outline-text-4" id="text-orgheadline327">
 <p>
-Typically, we bind <code>hippie-expand</code> to <code>M-/</code>, with <code>dabbrev-expand</code> (the standard
+Typically, <b>we bind <code>hippie-expand</code> to <code>M-/</code></b>, with <code>dabbrev-expand</code> (the standard
 binding of <code>M-/</code>) providing one of the expansion possibilities.
 </p>
 
@@ -17166,8 +17165,17 @@ available completions and filter as well.
                 inferior-ess-mode       <span class="org-comment-delimiter">; </span><span class="org-comment">enabled by default.</span>
                 magit-status-mode
                 help-mode))
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Sort candidates according to their occurrences.</span>
+</pre>
+</div>
+
+<p>
+By default, the list of candidates is sorted alphabetically, unless the backend
+(or we) chooses to sort them in a different way.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Sort candidates according to their occurrences.</span>
     (setq company-transformers '(company-sort-by-occurrence))
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Minimum prefix length for idle completion.</span>
@@ -21158,18 +21166,18 @@ See <a href="http://en.wikipedia.org/wiki/List_of_IRC_commands">List of Internet
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* Emacs IRC client</span>
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Other IRC for Emacs: rcirc, circe, bitlbee, liece, riece, zenirc, erc</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Circe is advised by Tassilo (contributor)</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Circe is advised by Tassilo (contributor).</span>
 
   (autoload 'circe <span class="org-string">"circe"</span>
     <span class="org-doc">"Connect to an IRC server."</span> t)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">connect to the Freenode network</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Connect to the Freenode network</span>
   (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-irc-connect</span> ()
     <span class="org-doc">"Connect to Freenode."</span>
     (interactive)
     (circe <span class="org-string">"irc.freenode.net"</span> <span class="org-string">"6667"</span> <span class="org-string">"freenode"</span>))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">... upon hitting `C-c i'</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">... upon hitting `C-c i'.</span>
   (global-set-key (kbd <span class="org-string">"C-c i"</span>)
     (<span class="org-keyword">lambda</span> ()
       (interactive)
@@ -21179,7 +21187,7 @@ See <a href="http://en.wikipedia.org/wiki/List_of_IRC_commands">List of Internet
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** 1 Basics</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">default channels to join whenever connecting to Freenode</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Default channels to join whenever connecting to Freenode.</span>
     (setq circe-server-auto-join-channels
           '((<span class="org-string">"^freenode$"</span>
              <span class="org-string">"#emacs"</span>
@@ -21196,13 +21204,13 @@ See <a href="http://en.wikipedia.org/wiki/List_of_IRC_commands">List of Internet
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">*** 2.3 Configuration</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">default nick</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Default nick.</span>
     (setq circe-default-nick <span class="org-string">"johndoe"</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">your "real name" on IRC</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Your "real name" on IRC.</span>
     (setq circe-default-realname <span class="org-string">"John Doe"</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">authentication info</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Authentication info.</span>
     (setq freenode-passwd <span class="org-string">""</span>)
     (setq circe-nickserv-passwords
           `((<span class="org-string">"freenode"</span> ,freenode-passwd)))
@@ -21217,13 +21225,13 @@ See <a href="http://en.wikipedia.org/wiki/List_of_IRC_commands">List of Internet
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">*** 3.3 Keywords</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">list of keywords to highlight</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">List of keywords to highlight.</span>
     (setq lui-highlight-keywords
           '(
             <span class="org-comment-delimiter">;; </span><span class="org-comment">"[</span><span class="org-negation-char"><span class="org-comment">^</span></span><span class="org-comment">&lt;]vauban"</span>
             <span class="org-string">"org"</span> <span class="org-string">"beamer"</span> <span class="org-string">"ledger"</span> <span class="org-string">"tikz"</span>))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">add IRC color support to LUI</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Add IRC color support to LUI.</span>
     (try-require 'lui-irc-colors)
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"lui-irc-colors"</span>
       (add-to-list 'lui-pre-output-hook 'lui-irc-colors))
@@ -21232,8 +21240,7 @@ See <a href="http://en.wikipedia.org/wiki/List_of_IRC_commands">List of Internet
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">*** 4.2 Using fly spell mode</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">check if `</span><span class="org-constant"><span class="org-comment">ispell-program-name</span></span><span class="org-comment">' seems correct</span>
-    (<span class="org-keyword">when</span> (leuven--ispell-check-program-name)
+    (<span class="org-keyword">when</span> (leuven--executable-ispell-program-name-p)
       (setq lui-flyspell-p t)
       (setq lui-flyspell-alist '((<span class="org-string">"."</span> <span class="org-string">"american"</span>))))
 
@@ -21245,13 +21252,13 @@ See <a href="http://en.wikipedia.org/wiki/List_of_IRC_commands">List of Internet
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"circe-highlight-all-nicks"</span>
       (enable-circe-highlight-all-nicks))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">format for messages to queries or channels</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Format for messages to queries or channels.</span>
     (setq circe-format-self-say <span class="org-string">"&lt;{nick}&gt; {body}"</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">truncate the buffer (at the top) if it grows too much</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Truncate the buffer (at the top) if it grows too much.</span>
     (setq lui-max-buffer-size 30000)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">column at which Lui should break output</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Column at which Lui should break output.</span>
     (setq lui-fill-column fill-column)
 
     )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "circe" ends here.</span>
@@ -21260,7 +21267,7 @@ See <a href="http://en.wikipedia.org/wiki/List_of_IRC_commands">List of Internet
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Jabber (GTalk)</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Jabber (GTalk).</span>
   (try-require 'jabber-autoloads-<span class="org-leuven-highlight">XXX</span>)
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"jabber-autoloads-</span><span class="org-leuven-highlight"><span class="org-string">XXX</span></span><span class="org-string">"</span>
     (setq jabber-account-list '((<span class="org-string">"johndoe@example.com"</span>

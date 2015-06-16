@@ -2835,13 +2835,13 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
             ;; nil                      ; [Default: "ispell"]
             ))
 
-  ;; Check if `ispell-program-name' seems correct.
-  (defun leuven--ispell-check-program-name ()
-    "Ensure that `ispell-program-name' is defined and non-nil."
+  (defun leuven--executable-ispell-program-name-p ()
+    "Ensure that `ispell-program-name' is an executable program name."
     (and (boundp 'ispell-program-name)
+         (file-executable-p ispell-program-name)
          ispell-program-name))
 
-  (when (leuven--ispell-check-program-name)
+  (when (leuven--executable-ispell-program-name-p)
 
     (defun leuven-ispell-region-or-buffer ()
       "Interactively check the current region or buffer for spelling errors."
@@ -3681,7 +3681,7 @@ What is PGP/MIME, what is OpenPGP, and how Gnus handles them?
 *** Ange-FTP
 
 *************** TODO Check out why network share aren't accessible
-I should be able to open //CAUCHY/fsd/...
+I should be able to open //SERVER/d/ via SMB!?
 *************** END
 
 #+begin_src emacs-lisp
@@ -4758,10 +4758,10 @@ respectively.
   it (f6)."
     (interactive)
     (cond ((= (count-windows) 1)
-           (if (> (frame-width) split-width-threshold)
-               (split-window-horizontally)
-             (split-window-vertically))
-           (other-window 1))
+           (select-window
+            (if (> (frame-width) split-width-threshold)
+                (split-window-horizontally)
+              (split-window-vertically))))
           (t
            (delete-other-windows))))
 
@@ -12010,8 +12010,7 @@ it into the commit buffer. So there is no need to "write the same thing twice".
 ;;*** 28.1.4 (info "(emacs)Log Buffer")
 
   (defun leuven--vc-log-mode-setup ()
-    ;; check if `ispell-program-name' seems correct
-    (when (leuven--ispell-check-program-name)
+    (when (leuven--executable-ispell-program-name-p)
       (setq ispell-local-dictionary "american")
       (flyspell-mode)))
 
@@ -13083,7 +13082,7 @@ I prefer Company over Auto-Complete but YMMV.
 
 *** "Hippie" expansion (Autotype)
 
-Typically, we bind ~hippie-expand~ to ~M-/~, with ~dabbrev-expand~ (the standard
+Typically, *we bind ~hippie-expand~ to ~M-/~*, with ~dabbrev-expand~ (the standard
 binding of ~M-/~) providing one of the expansion possibilities.
 
 #+begin_src emacs-lisp
@@ -13337,7 +13336,12 @@ available completions and filter as well.
                 inferior-ess-mode       ; enabled by default.
                 magit-status-mode
                 help-mode))
+#+end_src
 
+By default, the list of candidates is sorted alphabetically, unless the backend
+(or we) chooses to sort them in a different way.
+
+#+begin_src emacs-lisp
     ;; Sort candidates according to their occurrences.
     (setq company-transformers '(company-sort-by-occurrence))
 
@@ -16343,18 +16347,18 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 ;;* Emacs IRC client
 
 ;; Other IRC for Emacs: rcirc, circe, bitlbee, liece, riece, zenirc, erc
-;; Circe is advised by Tassilo (contributor)
+;; Circe is advised by Tassilo (contributor).
 
   (autoload 'circe "circe"
     "Connect to an IRC server." t)
 
-  ;; connect to the Freenode network
+  ;; Connect to the Freenode network
   (defun leuven-irc-connect ()
     "Connect to Freenode."
     (interactive)
     (circe "irc.freenode.net" "6667" "freenode"))
 
-  ;; ... upon hitting `C-c i'
+  ;; ... upon hitting `C-c i'.
   (global-set-key (kbd "C-c i")
     (lambda ()
       (interactive)
@@ -16364,7 +16368,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 
 ;;** 1 Basics
 
-    ;; default channels to join whenever connecting to Freenode
+    ;; Default channels to join whenever connecting to Freenode.
     (setq circe-server-auto-join-channels
           '(("^freenode$"
              "#emacs"
@@ -16381,13 +16385,13 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 
 ;;*** 2.3 Configuration
 
-    ;; default nick
+    ;; Default nick.
     (setq circe-default-nick "johndoe")
 
-    ;; your "real name" on IRC
+    ;; Your "real name" on IRC.
     (setq circe-default-realname "John Doe")
 
-    ;; authentication info
+    ;; Authentication info.
     (setq freenode-passwd "")
     (setq circe-nickserv-passwords
           `(("freenode" ,freenode-passwd)))
@@ -16402,13 +16406,13 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 
 ;;*** 3.3 Keywords
 
-    ;; list of keywords to highlight
+    ;; List of keywords to highlight.
     (setq lui-highlight-keywords
           '(
             ;; "[^<]vauban"
             "org" "beamer" "ledger" "tikz"))
 
-    ;; add IRC color support to LUI
+    ;; Add IRC color support to LUI.
     (try-require 'lui-irc-colors)
     (with-eval-after-load "lui-irc-colors"
       (add-to-list 'lui-pre-output-hook 'lui-irc-colors))
@@ -16417,8 +16421,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 
 ;;*** 4.2 Using fly spell mode
 
-    ;; check if `ispell-program-name' seems correct
-    (when (leuven--ispell-check-program-name)
+    (when (leuven--executable-ispell-program-name-p)
       (setq lui-flyspell-p t)
       (setq lui-flyspell-alist '(("." "american"))))
 
@@ -16430,20 +16433,20 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
     (with-eval-after-load "circe-highlight-all-nicks"
       (enable-circe-highlight-all-nicks))
 
-    ;; format for messages to queries or channels
+    ;; Format for messages to queries or channels.
     (setq circe-format-self-say "<{nick}> {body}")
 
-    ;; truncate the buffer (at the top) if it grows too much
+    ;; Truncate the buffer (at the top) if it grows too much.
     (setq lui-max-buffer-size 30000)
 
-    ;; column at which Lui should break output
+    ;; Column at which Lui should break output.
     (setq lui-fill-column fill-column)
 
     )                                   ; with-eval-after-load "circe" ends here.
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-  ;; Jabber (GTalk)
+  ;; Jabber (GTalk).
   (try-require 'jabber-autoloads-XXX)
   (with-eval-after-load "jabber-autoloads-XXX"
     (setq jabber-account-list '(("johndoe@example.com"

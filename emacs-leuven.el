@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150615.1508
+;; Version: 20150616.1204
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150615.1508"
+(defconst leuven--emacs-version "20150616.1204"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1684,13 +1684,13 @@ These packages are neither built-in nor already installed nor ignored."
             ;; nil                      ; [Default: "ispell"]
             ))
 
-  ;; Check if `ispell-program-name' seems correct.
-  (defun leuven--ispell-check-program-name ()
-    "Ensure that `ispell-program-name' is defined and non-nil."
+  (defun leuven--executable-ispell-program-name-p ()
+    "Ensure that `ispell-program-name' is an executable program name."
     (and (boundp 'ispell-program-name)
+         (file-executable-p ispell-program-name)
          ispell-program-name))
 
-  (when (leuven--ispell-check-program-name)
+  (when (leuven--executable-ispell-program-name-p)
 
     (defun leuven-ispell-region-or-buffer ()
       "Interactively check the current region or buffer for spelling errors."
@@ -2727,10 +2727,10 @@ These packages are neither built-in nor already installed nor ignored."
   it (f6)."
     (interactive)
     (cond ((= (count-windows) 1)
-           (if (> (frame-width) split-width-threshold)
-               (split-window-horizontally)
-             (split-window-vertically))
-           (other-window 1))
+           (select-window
+            (if (> (frame-width) split-width-threshold)
+                (split-window-horizontally)
+              (split-window-vertically))))
           (t
            (delete-other-windows))))
 
@@ -7294,8 +7294,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 ;;*** 28.1.4 (info "(emacs)Log Buffer")
 
   (defun leuven--vc-log-mode-setup ()
-    ;; check if `ispell-program-name' seems correct
-    (when (leuven--ispell-check-program-name)
+    (when (leuven--executable-ispell-program-name-p)
       (setq ispell-local-dictionary "american")
       (flyspell-mode)))
 
