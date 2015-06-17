@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150617.1415
+;; Version: 20150617.1433
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150617.1415"
+(defconst leuven--emacs-version "20150617.1433"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -6504,29 +6504,25 @@ this with to-do items than with projects or headings."
 
       (leuven--section "4.2 (auctex)Viewing the formatted output")
 
-      (defvar sumatrapdf-command
+      (defvar leuven--sumatrapdf-command
         (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
         "Path to the SumatraPDF executable.")
 
       ;; Use a saner PDF viewer (evince, SumatraPDF).
       (setcdr (assoc "^pdf$" TeX-output-view-style)
-              (cond (leuven--win32-p
-                     `("." (concat "\"" ,sumatrapdf-command "\" %o")))
-                    ;; Under Windows, we could open the PDF file with
-                    ;; `start "" xxx.pdf' (in a command prompt).
-                    (leuven--cygwin-p
-                     `("." (concat "\"" ,sumatrapdf-command "\" $(cygpath -m %o)")))
+              (cond ((or leuven--win32-p leuven--cygwin-p)
+                     `("." (concat "\"" ,leuven--sumatrapdf-command "\" %o")))
                     (t
                      '("." "evince %o"))))
 
       ;; For AUCTeX 11.86+.
-      (when (boundp 'TeX-view-program-list)
-        (add-to-list 'TeX-view-program-list
-                     `("SumatraPDF"
-                       (concat "\"" ,sumatrapdf-command "\" %o"))))
+      (when (or leuven--win32-p leuven--cygwin-p)
+        (when (boundp 'TeX-view-program-list)
+          (add-to-list 'TeX-view-program-list
+                       `("SumatraPDF"
+                         (concat "\"" ,leuven--sumatrapdf-command "\" %o")))))
 
-      (when (or leuven--win32-p
-                leuven--cygwin-p)
+      (when (or leuven--win32-p leuven--cygwin-p)
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '("SumatraPDF")))
 

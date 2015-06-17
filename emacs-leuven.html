@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150617.1416</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150617.1434</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150617.1416"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150617.1434"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -13422,32 +13422,36 @@ SumatraPDF as your PDF viewer.
 
       (leuven--section <span class="org-string">"4.2 (auctex)Viewing the formatted output"</span>)
 
-      (<span class="org-keyword">defvar</span> <span class="org-variable-name">sumatrapdf-command</span>
+      (<span class="org-keyword">defvar</span> <span class="org-variable-name">leuven--sumatrapdf-command</span>
         (concat leuven--windows-program-files-dir <span class="org-string">"SumatraPDF/SumatraPDF.exe"</span>)
         <span class="org-doc">"Path to the SumatraPDF executable."</span>)
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Use a saner PDF viewer (evince, SumatraPDF).</span>
       (setcdr (assoc <span class="org-string">"^pdf$"</span> TeX-output-view-style)
-              (<span class="org-keyword">cond</span> (leuven--win32-p
-                     `(<span class="org-string">"."</span> (concat <span class="org-string">"\""</span> ,sumatrapdf-command <span class="org-string">"\" %o"</span>)))
-                    <span class="org-comment-delimiter">;; </span><span class="org-comment">Under Windows, we could open the PDF file with</span>
-                    <span class="org-comment-delimiter">;; </span><span class="org-comment">`start "" xxx.pdf' (in a command prompt).</span>
-                    (leuven--cygwin-p
-                     `(<span class="org-string">"."</span> (concat <span class="org-string">"\""</span> ,sumatrapdf-command <span class="org-string">"\" $(cygpath -m %o)"</span>)))
+              (<span class="org-keyword">cond</span> ((or leuven--win32-p leuven--cygwin-p)
+                     `(<span class="org-string">"."</span> (concat <span class="org-string">"\""</span> ,leuven--sumatrapdf-command <span class="org-string">"\" %o"</span>)))
                     (t
                      '(<span class="org-string">"."</span> <span class="org-string">"evince %o"</span>))))
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">For AUCTeX 11.86+.</span>
-      (<span class="org-keyword">when</span> (boundp 'TeX-view-program-list)
-        (add-to-list 'TeX-view-program-list
-                     `(<span class="org-string">"SumatraPDF"</span>
-                       (concat <span class="org-string">"\""</span> ,sumatrapdf-command <span class="org-string">"\" %o"</span>))))
+      (<span class="org-keyword">when</span> (or leuven--win32-p leuven--cygwin-p)
+        (<span class="org-keyword">when</span> (boundp 'TeX-view-program-list)
+          (add-to-list 'TeX-view-program-list
+                       `(<span class="org-string">"SumatraPDF"</span>
+                         (concat <span class="org-string">"\""</span> ,leuven--sumatrapdf-command <span class="org-string">"\" %o"</span>)))))
 
-      (<span class="org-keyword">when</span> (or leuven--win32-p
-                leuven--cygwin-p)
+      (<span class="org-keyword">when</span> (or leuven--win32-p leuven--cygwin-p)
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '(<span class="org-string">"SumatraPDF"</span>)))
 </pre>
+</div>
+
+<div class="tip">
+<p>
+Under Windows, we could open the PDF file with <code>start "" xxx.pdf</code> (in a command
+prompt).
+</p>
+
 </div>
 
 <div class="org-src-container">

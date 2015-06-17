@@ -10445,32 +10445,33 @@ SumatraPDF as your PDF viewer.
 
       (leuven--section "4.2 (auctex)Viewing the formatted output")
 
-      (defvar sumatrapdf-command
+      (defvar leuven--sumatrapdf-command
         (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
         "Path to the SumatraPDF executable.")
 
       ;; Use a saner PDF viewer (evince, SumatraPDF).
       (setcdr (assoc "^pdf$" TeX-output-view-style)
-              (cond (leuven--win32-p
-                     `("." (concat "\"" ,sumatrapdf-command "\" %o")))
-                    ;; Under Windows, we could open the PDF file with
-                    ;; `start "" xxx.pdf' (in a command prompt).
-                    (leuven--cygwin-p
-                     `("." (concat "\"" ,sumatrapdf-command "\" $(cygpath -m %o)")))
+              (cond ((or leuven--win32-p leuven--cygwin-p)
+                     `("." (concat "\"" ,leuven--sumatrapdf-command "\" %o")))
                     (t
                      '("." "evince %o"))))
 
       ;; For AUCTeX 11.86+.
-      (when (boundp 'TeX-view-program-list)
-        (add-to-list 'TeX-view-program-list
-                     `("SumatraPDF"
-                       (concat "\"" ,sumatrapdf-command "\" %o"))))
+      (when (or leuven--win32-p leuven--cygwin-p)
+        (when (boundp 'TeX-view-program-list)
+          (add-to-list 'TeX-view-program-list
+                       `("SumatraPDF"
+                         (concat "\"" ,leuven--sumatrapdf-command "\" %o")))))
 
-      (when (or leuven--win32-p
-                leuven--cygwin-p)
+      (when (or leuven--win32-p leuven--cygwin-p)
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '("SumatraPDF")))
 #+end_src
+
+#+begin_tip
+Under Windows, we could open the PDF file with ~start "" xxx.pdf~ (in a command
+prompt).
+#+end_tip
 
 #+begin_src emacs-lisp
 ;;** 4.7 (info "(auctex)Documentation")
