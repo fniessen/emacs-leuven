@@ -838,7 +838,7 @@ cancelable; hence, we put it out of a "chapter".
   (global-unset-key (kbd "C-z"))
 
   ;; Quit with Alt + F4.
-  (global-set-key (kbd "<M-f4>") 'save-buffers-kill-terminal)
+  (global-set-key (kbd "<M-f4>") #'save-buffers-kill-terminal)
 
 )                                       ; Chapter 6 ends here.
 #+end_src
@@ -882,7 +882,7 @@ cancelable; hence, we put it out of a "chapter".
   (setq next-line-add-newlines nil)
 
   ;; Print the current buffer line number.
-  (global-set-key (kbd "M-G") 'what-line)
+  (global-set-key (kbd "M-G") #'what-line)
 #+end_src
 
 Show line numbers temporarily -- just when you're going to a line number with
@@ -898,7 +898,7 @@ Show line numbers temporarily -- just when you're going to a line number with
           (goto-line (read-number "Goto line: ")))
       (linum-mode -1)))
 
-  (global-set-key [remap goto-line] 'goto-line-with-feedback)
+  (global-set-key [remap goto-line] #'goto-line-with-feedback)
 #+end_src
 
 ** Basic Undoing Changes
@@ -909,8 +909,8 @@ Show line numbers temporarily -- just when you're going to a line number with
   (leuven--section "7.4 (emacs)Basic Undoing Changes")
 
   ;; Undo some previous changes.
-  (global-set-key (kbd "C-z") 'undo)
-  (global-set-key (kbd "<f11>") 'undo)
+  (global-set-key (kbd "C-z") #'undo)
+  (global-set-key (kbd "<f11>") #'undo)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -942,8 +942,8 @@ Show line numbers temporarily -- just when you're going to a line number with
     (define-key undo-tree-map (kbd "C-/") nil)
 
     ;; (defalias 'redo 'undo-tree-redo)
-    (global-set-key (kbd "C-S-z") 'undo-tree-redo)
-    (global-set-key (kbd "<S-f11>") 'undo-tree-redo))
+    (global-set-key (kbd "C-S-z") #'undo-tree-redo)
+    (global-set-key (kbd "<S-f11>") #'undo-tree-redo))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1076,7 +1076,7 @@ relevant manual page without leaving Emacs.
     (describe-function major-mode))
 
   ;; Look up subject in (the indices of the) Emacs Lisp manual.
-  (global-set-key (kbd "C-h E") 'elisp-index-search)
+  (global-set-key (kbd "C-h E") #'elisp-index-search)
 #+end_src
 
 ** Apropos
@@ -1152,7 +1152,7 @@ In a manual, these key bindings will make your life easier:
   (leuven--section "10.8 (emacs)Misc Help")
 
   ;; Enter Info documentation browser.
-  (global-set-key (kbd "<f1>") 'info)
+  (global-set-key (kbd "<f1>") #'info)
 
   (defun leuven-describe-elisp-symbol-at-point ()
     "Get help for the symbol at point."
@@ -1166,12 +1166,12 @@ In a manual, these key bindings will make your life easier:
                  (describe-variable sym)))
         (message "nothing"))))
 
-  (global-set-key (kbd "<f1>") 'leuven-describe-elisp-symbol-at-point)
+  (global-set-key (kbd "<f1>") #'leuven-describe-elisp-symbol-at-point)
 
   ;; Display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
   ;; have documentation in Info).
-  (global-set-key (kbd "<C-f1>") 'info-lookup-symbol)
+  (global-set-key (kbd "<C-f1>") #'info-lookup-symbol)
 #+end_src
 
 When Info is called, the variable ~Info-directory-list~ is populated from:
@@ -1246,7 +1246,7 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
 
 #+begin_src emacs-lisp
   ;; Get a Unix manual page of the item under point.
-  (global-set-key (kbd "<S-f1>") 'man-follow)
+  (global-set-key (kbd "<S-f1>") #'man-follow)
 
   (with-eval-after-load "man"
     ;; Make the manpage the current buffer in the current window.
@@ -1299,7 +1299,7 @@ Visual navigation through mark rings.
 #+begin_src emacs-lisp
   ;; Goto last change.
   (with-eval-after-load "goto-chg-autoloads"
-    (global-set-key (kbd "<C-S-backspace>") 'goto-last-change))
+    (global-set-key (kbd "<C-S-backspace>") #'goto-last-change))
 #+end_src
 
 It moves point through ~buffer-undo-list~ positions.
@@ -1317,8 +1317,8 @@ It moves point through ~buffer-undo-list~ positions.
   ;; Increase selected region by semantic units.
   (with-eval-after-load "expand-region-autoloads"
 
-    (global-set-key (kbd "C-+") 'er/expand-region)
-    (global-set-key (kbd "C--") 'er/contract-region))
+    (global-set-key (kbd "C-+") #'er/expand-region)
+    (global-set-key (kbd "C--") #'er/contract-region))
 #+end_src
 
 *************** TODO Those key bindings are overridden by ~text-scale-increase~
@@ -1358,7 +1358,7 @@ the region into lines* which are then *edited simultaneously*.
 
 #+begin_src emacs-lisp
     ;; Add a cursor to each (continuous) line in the current region.
-    (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines) ;!
+    (global-set-key (kbd "C-S-c C-S-c") #'mc/edit-lines) ;!
 #+end_src
 
 *** Quick add next/previous
@@ -1369,18 +1369,18 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
 #+begin_src emacs-lisp
     ;; Add a cursor and region at the next part of the buffer forwards that
     ;; matches the current region.
-    (global-set-key (kbd "C->") 'mc/mark-next-like-this) ;!
-    ;; (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
+    (global-set-key (kbd "C->") #'mc/mark-next-like-this) ;!
+    ;; (global-set-key (kbd "C-c >") #'mc/mark-next-like-this)
 
     ;; Add a cursor and region at the next part of the buffer backwards that
     ;; matches the current region.
-    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this) ;!
-    ;; (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
+    (global-set-key (kbd "C-<") #'mc/mark-previous-like-this) ;!
+    ;; (global-set-key (kbd "C-c <") #'mc/mark-previous-like-this)
 
-    (global-set-key (kbd "C-M->") 'mc/skip-to-next-like-this)
-    (global-set-key (kbd "C-M-<") 'mc/skip-to-previous-like-this)
+    (global-set-key (kbd "C-M->") #'mc/skip-to-next-like-this)
+    (global-set-key (kbd "C-M-<") #'mc/skip-to-previous-like-this)
 
-    (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+    (global-set-key (kbd "C-S-<mouse-1>") #'mc/add-cursor-on-click)
 #+end_src
 
 *** Find All
@@ -1388,21 +1388,21 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
 *Add all occurrences of the current word to the selection.*
 
 #+begin_src emacs-lisp
-    (global-set-key (kbd "C-;") 'mc/mark-all-like-this-dwim) ;! Like Iedit.
-    ;; (global-set-key (kbd "C-x C-;") 'mc/mark-all-like-this-dwim)
+    (global-set-key (kbd "C-;") #'mc/mark-all-like-this-dwim) ;! Like Iedit.
+    ;; (global-set-key (kbd "C-x C-;") #'mc/mark-all-like-this-dwim)
 
     ;; Mark all parts of the buffer that matches the current region.
-    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this) ;!
-    ;; (global-set-key (kbd "C-c *") 'mc/mark-all-like-this) ; Conflict in Org tables!
+    (global-set-key (kbd "C-c C-<") #'mc/mark-all-like-this) ;!
+    ;; (global-set-key (kbd "C-c *") #'mc/mark-all-like-this) ; Conflict in Org tables!
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended) ; useful for completion
+    ;; (global-set-key (kbd "C-<return>") #'mc/mark-more-like-this-extended) ; useful for completion
 #+end_src
 
 #+begin_src emacs-lisp
-    (global-set-key (kbd "C-S-SPC") 'set-rectangular-region-anchor)
-    (global-set-key (kbd "C-M-=") 'mc/insert-numbers)
+    (global-set-key (kbd "C-S-SPC") #'set-rectangular-region-anchor)
+    (global-set-key (kbd "C-M-=") #'mc/insert-numbers)
   )
 #+end_src
 
@@ -1517,7 +1517,7 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
         (open-line 1)
         (insert line-text))))
 
-  (global-set-key (kbd "C-c d") 'duplicate-current-line)
+  (global-set-key (kbd "C-c d") #'duplicate-current-line)
 #+end_src
 
 ** Yanking
@@ -1641,7 +1641,7 @@ highlighting.  Though, since Emacs 24.4, ~rectangle-mark-mode~ is the new way.
      ~jump-to-register~.
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-j") 'jump-to-register) ; Also on `C-x r j'.
+  (global-set-key (kbd "C-j") #'jump-to-register) ; Also on `C-x r j'.
 #+end_src
 
 Setup registers for files I commonly edit.
@@ -1740,9 +1740,9 @@ We bookmarks positions, not just lines!!
 #+begin_src emacs-lisp
     ;; Extensions to standard library `bookmark.el'.
     (when (try-require 'bookmark+)
-      (global-set-key (kbd "<C-f2>") 'bmkp-toggle-autonamed-bookmark-set/delete)
-      (global-set-key (kbd "<S-f2>") 'bmkp-next-bookmark-this-file/buffer-repeat)
-      (global-set-key (kbd "<C-S-f2>") 'bmkp-delete-all-autonamed-for-this-buffer))
+      (global-set-key (kbd "<C-f2>") #'bmkp-toggle-autonamed-bookmark-set/delete)
+      (global-set-key (kbd "<S-f2>") #'bmkp-next-bookmark-this-file/buffer-repeat)
+      (global-set-key (kbd "<C-S-f2>") #'bmkp-delete-all-autonamed-for-this-buffer))
 
     (with-eval-after-load "bookmark+"
 
@@ -1829,8 +1829,8 @@ We bookmarks positions, not just lines!!
     (autoload 'pager-page-down "pager"
       "Like scroll-up, but moves a fixed amount of lines." t)
 
-    (global-set-key (kbd "<prior>") 'pager-page-up)
-    (global-set-key (kbd "<next>") 'pager-page-down))
+    (global-set-key (kbd "<prior>") #'pager-page-up)
+    (global-set-key (kbd "<next>") #'pager-page-down))
 #+end_src
 
 ** Automatic Scrolling
@@ -2014,11 +2014,11 @@ to follow some key variables through a block of code.
   (with-eval-after-load "highlight-symbol-autoloads"
 
     ;; Emulation of Vim's `*' search.
-    (global-set-key (kbd "C-*") 'highlight-symbol-at-point)
-    ;; (global-set-key (kbd "C-<f4>") 'highlight-symbol-next)
-    ;; (global-set-key (kbd "S-<f4>") 'highlight-symbol-prev)
-    (global-set-key (kbd "C-M-*") 'highlight-symbol-remove-all)
-    ;; (global-set-key (kbd "+") 'highlight-symbol-query-replace)
+    (global-set-key (kbd "C-*") #'highlight-symbol-at-point)
+    ;; (global-set-key (kbd "C-<f4>") #'highlight-symbol-next)
+    ;; (global-set-key (kbd "S-<f4>") #'highlight-symbol-prev)
+    (global-set-key (kbd "C-M-*") #'highlight-symbol-remove-all)
+    ;; (global-set-key (kbd "+") #'highlight-symbol-query-replace)
     )
 
   (with-eval-after-load "highlight-symbol"
@@ -2562,7 +2562,7 @@ screencasts.
       (display-buffer ilog-buffer-name))
 
     ;; Hotkey for showing the log buffer.
-    (global-set-key (kbd "C-h C-l") 'leuven-display-interaction-log))
+    (global-set-key (kbd "C-h C-l") #'leuven-display-interaction-log))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2676,8 +2676,8 @@ the user see truly invisible matches before replacing them.
     (global-anzu-mode 1)
 
     ;; Override binding for `query-replace'.
-    (global-set-key (kbd "M-%") 'anzu-query-replace)
-    (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
+    (global-set-key (kbd "M-%") #'anzu-query-replace)
+    (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
 
     ;; (define-key isearch-mode-map (kbd "M-%") 'anzu-query-replace)
     )
@@ -2709,12 +2709,12 @@ Optimize regexps with =regexp-opt.el=.
 
 #+begin_src emacs-lisp :tangle no
   ;; Use regexps by default (allows searching across line breaks).
-  (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-  (global-set-key (kbd "C-r") 'isearch-backward-regexp)
+  (global-set-key (kbd "C-s") #'isearch-forward-regexp)
+  (global-set-key (kbd "C-r") #'isearch-backward-regexp)
 
   ;; Shift the meaning of `C-M-s/r' with `C-s/r'.
-  (global-set-key (kbd "C-M-s") 'isearch-forward)
-  (global-set-key (kbd "C-M-r") 'isearch-backward)
+  (global-set-key (kbd "C-M-s") #'isearch-forward)
+  (global-set-key (kbd "C-M-r") #'isearch-backward)
 #+end_src
 
 *** IELM                                                              :noexport:
@@ -2787,7 +2787,7 @@ a match for REGEXP.
   (global-unset-key (kbd "M-o")) ; XXX???
 
   ;; "Multi-occur" easily inside Isearch.
-  (define-key isearch-mode-map (kbd "M-o") 'helm-multi-swoop-all)
+  (define-key isearch-mode-map (kbd "M-o") #'helm-multi-swoop-all)
 
   ;; Grep all same extension files from inside Isearch.
   (define-key isearch-mode-map (kbd "C-M-o")
@@ -2862,8 +2862,8 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
           (ispell-buffer)))
 
     ;; Key bindings (or `C-c i' prefix key binding?).
-    (global-set-key (kbd "C-$") 'leuven-ispell-region-or-buffer)
-    (global-set-key (kbd "C-M-$") 'ispell-change-dictionary)
+    (global-set-key (kbd "C-$") #'leuven-ispell-region-or-buffer)
+    (global-set-key (kbd "C-M-$") #'ispell-change-dictionary)
 
     ;; ;; Default dictionary to use (if `ispell-local-dictionary' is nil, that
     ;; ;; is if there is no local dictionary to use in the buffer).
@@ -3040,8 +3040,8 @@ of possible corrections for misspelled word before point.
            (flyspell-buffer))))
 
      ;; Key bindings.
-     (global-set-key (kbd "C-$") 'flyspell-buffer)
-     (global-set-key (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary)
+     (global-set-key (kbd "C-$") #'flyspell-buffer)
+     (global-set-key (kbd "C-M-$") #'leuven-flyspell-toggle-dictionary)
 
      ;; Spell-check your XHTML (by adding `nxml-text-face' to the list of
      ;; faces corresponding to text in programming-mode buffers).
@@ -3076,9 +3076,9 @@ What is working for you?
   (try-require "dictionary-autoloads")
   (with-eval-after-load "dictionary-autoloads"
 
-    (global-set-key (kbd "C-c C-d s") 'dictionary-search)
-    (global-set-key (kbd "C-c C-d l") 'dictionary-lookup-definition)
-    (global-set-key (kbd "C-c C-d m") 'dictionary-match-words))
+    (global-set-key (kbd "C-c C-d s") #'dictionary-search)
+    (global-set-key (kbd "C-c C-d l") #'dictionary-lookup-definition)
+    (global-set-key (kbd "C-c C-d m") #'dictionary-match-words))
 
   (with-eval-after-load "dictionary"
 
@@ -3125,20 +3125,20 @@ If you want to repeat forever or until error, type ~C-u 0 <f8>~.
   (defun leuven-kmacro-turn-on-recording ()
     "Start recording a keyboard macro and toggle functionality of key binding."
     (interactive)
-    (global-set-key (kbd "<S-f8>") 'leuven-kmacro-turn-off-recording)
+    (global-set-key (kbd "<S-f8>") #'leuven-kmacro-turn-off-recording)
     (kmacro-start-macro nil))
 
   (defun leuven-kmacro-turn-off-recording ()
     "Stop recording a keyboard macro and toggle functionality of key binding."
     (interactive)
-    (global-set-key (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
+    (global-set-key (kbd "<S-f8>") #'leuven-kmacro-turn-on-recording)
     (kmacro-end-macro nil))
 
   ;; Start/stop recording a keyboard macro.
-  (global-set-key (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
+  (global-set-key (kbd "<S-f8>") #'leuven-kmacro-turn-on-recording)
 
   ;; Execute the most recent keyboard macro.
-  (global-set-key (kbd "<f8>") 'kmacro-call-macro)
+  (global-set-key (kbd "<f8>") #'kmacro-call-macro)
 #+end_src
 
 ** Naming and Saving Keyboard Macros
@@ -3163,7 +3163,7 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
   (leuven--section "17.5 (emacs)Name and Save Keyboard Macros")
 
   ;; Assign a name to the last keyboard macro defined.
-  (global-set-key (kbd "<C-f8>") 'kmacro-name-last-macro)
+  (global-set-key (kbd "<C-f8>") #'kmacro-name-last-macro)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3195,7 +3195,7 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
                (- (float-time) find-file-time-start))))
 
   ;; Visit a file.
-  (global-set-key (kbd "<f3>") 'find-file)
+  (global-set-key (kbd "<f3>") #'find-file)
 #+end_src
 
 ** Saving Files
@@ -3218,7 +3218,7 @@ a remote location.
                (- (float-time) save-buffer-time-start))))
 
   ;; Make your changes permanent.
-  (global-set-key (kbd "<f2>") 'save-buffer)
+  (global-set-key (kbd "<f2>") #'save-buffer)
 #+end_src
 
 Builtin file version control of Emacs.
@@ -3305,7 +3305,7 @@ Update time stamps (and copyright notice) automatically.
     (message "Buffer is up to date with file on disk"))
 
   ;; Key binding.
-  (global-set-key (kbd "<C-f12>") 'leuven-revert-buffer-without-query)
+  (global-set-key (kbd "<C-f12>") #'leuven-revert-buffer-without-query)
 #+end_src
 
 Turn on auto-revert mode globally.
@@ -3418,7 +3418,7 @@ Make the message "/FILENAME has auto save data/" unmissable:
   (setq diff-switches "-u")
 
   ;; Compare text in current window with text in next window.
-  (global-set-key (kbd "C-=") 'compare-windows)
+  (global-set-key (kbd "C-=") #'compare-windows)
 #+end_src
 
 You can use ~M-x smerge-mode~ to edit a file with conflict markers (output from
@@ -4150,7 +4150,7 @@ XXX Look at helm-dictionary.
     (leuven--section "Helm")
 
     ;; Change `helm-command-prefix-key'
-    (global-set-key (kbd "C-c h") 'helm-command-prefix)
+    (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
     ;; Open Helm (QuickSilver-like candidate-selection framework).
     (when (try-require 'helm-config)    ; [default `helm-command-prefix-key']
@@ -4160,7 +4160,7 @@ XXX Look at helm-dictionary.
       (global-unset-key (kbd "C-x c"))
 
       ;; Better version of `occur'.
-      (global-set-key (kbd "C-o") 'helm-occur)
+      (global-set-key (kbd "C-o") #'helm-occur)
 #+end_src
 
 See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-or-instant-search-for-emacs][Sublime Text 2's "Goto Anything" (or instant search) for Emacs?]]
@@ -4168,23 +4168,23 @@ See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-
 
 #+begin_src emacs-lisp
       ;; Speedy file opening.
-      (global-set-key (kbd "<f3>") 'helm-for-files)
+      (global-set-key (kbd "<f3>") #'helm-for-files)
 
-      ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+      ;; (global-set-key (kbd "C-x C-f") #'helm-find-files)
 
       ;; Buffer list.
-      (global-set-key (kbd "C-x b") 'helm-mini) ; OK.
+      (global-set-key (kbd "C-x b") #'helm-mini) ; OK.
                                         ; = `helm-buffers-list' + recents.
 
-      (global-set-key (kbd "C-x C-b") 'helm-buffers-list) ; OK.
+      (global-set-key (kbd "C-x C-b") #'helm-buffers-list) ; OK.
 
       ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
 
-      (global-set-key (kbd "C-x r l") 'helm-bookmarks)
-      (global-set-key (kbd "C-x r l") 'helm-filtered-bookmarks) ; XXX?
+      (global-set-key (kbd "C-x r l") #'helm-bookmarks)
+      (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks) ; XXX?
 
       ;; Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.
-      (global-set-key (kbd "C-x r b") 'helm-bookmark-ext)
+      (global-set-key (kbd "C-x r b") #'helm-bookmark-ext)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4197,28 +4197,28 @@ See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-
               ((derived-mode-p 'tex-mode) (helm-imenu))
               (t (helm-semantic-or-imenu)))) ; More generic than `helm-imenu'.
 
-      (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; Awesome.
+      (global-set-key (kbd "<f4>") #'leuven-helm-org-prog-menu) ; Awesome.
                                         ; And `C-c =' (like in RefTeX)?
 #+end_src
 
 #+begin_src emacs-lisp
-      (global-set-key (kbd "M-y") 'helm-show-kill-ring) ; OK.
+      (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
 
-      ;; (global-set-key (kbd "M-5") 'helm-etags-select)
-      (global-set-key (kbd "C-h a") 'helm-apropos)
-      (global-set-key (kbd "C-h i") 'helm-info-emacs)
-      ;; (global-set-key (kbd "C-h d") 'helm-info-at-point)
-      ;; (global-set-key (kbd "C-h 4") 'helm-info-elisp)
-      ;; (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+      ;; (global-set-key (kbd "M-5") #'helm-etags-select)
+      (global-set-key (kbd "C-h a") #'helm-apropos)
+      (global-set-key (kbd "C-h i") #'helm-info-emacs)
+      ;; (global-set-key (kbd "C-h d") #'helm-info-at-point)
+      ;; (global-set-key (kbd "C-h 4") #'helm-info-elisp)
+      ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
 
-      ;; (global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)
+      ;; (global-set-key (kbd "C-S-h C-c") #'helm-wikipedia-suggest)
 #+end_src
 
 Use the separate Helm Descbinds to get a quick *key bindings* overview.  It will
 make your life much easier with million Emacs keys.
 
 #+begin_src emacs-lisp
-      (global-set-key (kbd "C-h b") 'helm-descbinds)
+      (global-set-key (kbd "C-h b") #'helm-descbinds)
     )
 #+end_src
 
@@ -4231,8 +4231,8 @@ them. It's very convenient and you can easily add actions for other sites you
 usually search for info on.
 
 #+begin_src emacs-lisp
-    (global-set-key (kbd "C-c h g") 'helm-google)
-    (global-set-key (kbd "C-c h s") 'helm-google-suggest)
+    (global-set-key (kbd "C-c h g") #'helm-google)
+    (global-set-key (kbd "C-c h s") #'helm-google-suggest)
 
     ;; ;; Emacs Helm Interface for quick Google searches
     ;; (with-eval-after-load "helm-google"
@@ -4347,7 +4347,7 @@ commands. Rather than falling back to using the mouse and menu selections,
 instead type ~M-x~.
 
 #+begin_src emacs-lisp
-    (global-set-key (kbd "M-x") 'helm-M-x)
+    (global-set-key (kbd "M-x") #'helm-M-x)
 #+end_src
 
 This will bring up a Helm menu, where you can then search for your desired
@@ -4471,16 +4471,16 @@ Pressing twice C-o goes from Helm Swoop to Helm Multi Swoop...
     (with-eval-after-load "helm-swoop-autoloads"
 
       ;; Better version of `(helm-)occur'.
-      (global-set-key (kbd "C-o") 'helm-swoop)
-      (global-set-key (kbd "M-s o") 'helm-swoop)
-      ;; (global-set-key (kbd "M-i") 'helm-swoop)
-      ;; (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+      (global-set-key (kbd "C-o") #'helm-swoop)
+      (global-set-key (kbd "M-s o") #'helm-swoop)
+      ;; (global-set-key (kbd "M-i") #'helm-swoop)
+      ;; (global-set-key (kbd "M-I") #'helm-swoop-back-to-last-point)
 
-      (global-set-key (kbd "M-s O") 'helm-multi-swoop)
-      (global-set-key (kbd "M-s /") 'helm-multi-swoop)
-      ;; (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+      (global-set-key (kbd "M-s O") #'helm-multi-swoop)
+      (global-set-key (kbd "M-s /") #'helm-multi-swoop)
+      ;; (global-set-key (kbd "C-c M-i") #'helm-multi-swoop)
 
-      ;; (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+      ;; (global-set-key (kbd "C-x M-i") #'helm-multi-swoop-all)
 
       ;; when doing Isearch, hand the word over to `helm-swoop'
       (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
@@ -4560,14 +4560,14 @@ respectively.
   (leuven--section "19.2 (emacs)List Buffers")
 
   ;; rebind `C-x C-b'
-  (global-set-key (kbd "C-x C-b") 'electric-buffer-list)
+  (global-set-key (kbd "C-x C-b") #'electric-buffer-list)
                                         ; `buffer-menu' moves point in the
                                         ; window which lists your buffers
                                         ; `electric-buffer-list' pops up
                                         ; a buffer describing the set of buffers
 
   ;; operate on buffers like Dired
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  (global-set-key (kbd "C-x C-b") #'ibuffer)
 
   (with-eval-after-load "ibuffer"
 
@@ -4668,7 +4668,7 @@ respectively.
     (kill-buffer nil))
 
   ;; key binding
-  (global-set-key (kbd "<S-f12>") 'leuven-kill-this-buffer-without-query)
+  (global-set-key (kbd "<S-f12>") #'leuven-kill-this-buffer-without-query)
 #+end_src
 
 ** Operating on Several Buffers
@@ -4679,7 +4679,7 @@ respectively.
   (leuven--section "19.5 (emacs)Several Buffers")
 
   ;; put the current buffer at the end of the list of all buffers
-  (global-set-key (kbd "<f12>") 'bury-buffer)
+  (global-set-key (kbd "<f12>") #'bury-buffer)
                                         ; conflict when GDB'ing Emacs under
                                         ; Win32
 #+end_src
@@ -4733,9 +4733,10 @@ respectively.
   (leuven--section "20.3 (emacs)Other Window")
 
   ;; Cycle through all windows on current frame.
-  (global-set-key (kbd "<f6>") 'other-window)
+  (global-set-key (kbd "<f6>") #'other-window)
 
   ;; Reverse operation of `C-x o' (or `f6').
+  ;; XXX Name the command!
   (global-set-key (kbd "<S-f6>")
     (lambda ()
       (interactive)
@@ -4775,7 +4776,7 @@ respectively.
            (delete-other-windows))))
 
   ;; Delete all windows in the selected frame except the selected window.
-  (global-set-key (kbd "<f5>") 'leuven-delete-or-split-window)
+  (global-set-key (kbd "<f5>") #'leuven-delete-or-split-window)
 #+end_src
 
 The following code flips a two-window frame, so that left is right, or up is
@@ -4800,7 +4801,7 @@ down.
              (set-window-start wind-1 start-2)
              (set-window-start wind-2 start-1)))))
 
-  (global-set-key (kbd "C-c ~") 'leuven-swap-windows)
+  (global-set-key (kbd "C-c ~") #'leuven-swap-windows)
 #+end_src
 
 The following code toggles between horizontal and vertical layout of two
@@ -4837,7 +4838,7 @@ windows.  Useful when Emacs opens the window below instead at the side.
                (select-window first-win)
                (if this-win-2nd (other-window 1)))))))
 
-  (global-set-key (kbd "C-c |") 'leuven-toggle-window-split)
+  (global-set-key (kbd "C-c |") #'leuven-toggle-window-split)
 #+end_src
 
 ** Dedicated windows
@@ -5010,7 +5011,7 @@ one.
             (leuven--x-window-p
              (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                                     '(2 "_NET_WM_STATE_FULLSCREEN" 0))))
-      (global-set-key (kbd "C-c z") 'leuven-restore-frame))
+      (global-set-key (kbd "C-c z") #'leuven-restore-frame))
 
     (defun leuven-restore-frame ()
       "Restore a minimized frame."
@@ -5020,9 +5021,9 @@ one.
             (leuven--x-window-p
              (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                                     '(2 "_NET_WM_STATE_FULLSCREEN" 0))))
-      (global-set-key (kbd "C-c z") 'leuven-maximize-frame))
+      (global-set-key (kbd "C-c z") #'leuven-maximize-frame))
 
-    (global-set-key (kbd "C-c z") 'leuven-maximize-frame))
+    (global-set-key (kbd "C-c z") #'leuven-maximize-frame))
 
   ;; Maximize Emacs frame by default.
   (modify-all-frames-parameters '((fullscreen . maximized)))
@@ -5038,7 +5039,7 @@ one.
   (unless (featurep 'helm-config)       ; Helm is better than speedbar!
 
     ;; Jump to speedbar frame.
-    (global-set-key (kbd "<f4>") 'speedbar-get-focus))
+    (global-set-key (kbd "<f4>") #'speedbar-get-focus))
 
   ;; Everything browser (into individual source files), or Dired on steroids.
   (with-eval-after-load "speedbar"
@@ -5068,7 +5069,7 @@ one.
                (locate-library "sr-speedbar"))
 
       (autoload 'sr-speedbar-toggle "sr-speedbar" nil t)
-      (global-set-key (kbd "<f4>") 'sr-speedbar-toggle)))
+      (global-set-key (kbd "<f4>") #'sr-speedbar-toggle)))
 #+end_src
 
 ** Scroll Bars
@@ -5421,7 +5422,7 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
 #+end_src
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-x \\") 'align-regexp)
+  (global-set-key (kbd "C-x \\") #'align-regexp)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -5430,7 +5431,7 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
     (interactive "r")
     (align-regexp begin end "\\(\\s-*\\)=" 1 1))
 
-  (global-set-key (kbd "C-c =") 'leuven-align-to-equals)
+  (global-set-key (kbd "C-c =") #'leuven-align-to-equals)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -5501,7 +5502,7 @@ Don't tabify.  Instead, _reindent_ everything, e.g. with C-M-\.
 
   ;; GNU Emacs default for killing back to the beginning of a word.
   (XEmacs
-    (global-set-key (kbd "<C-backspace>") 'backward-kill-word))
+    (global-set-key (kbd "<C-backspace>") #'backward-kill-word))
 #+end_src
 
 ** Sentences
@@ -5536,7 +5537,7 @@ There are several *no-break space* characters required for French punctuation:
     (interactive)
     (insert-char ?\u00A0))
 
-  (global-set-key (kbd "S-SPC") 'leuven-nbsp-command)
+  (global-set-key (kbd "S-SPC") #'leuven-nbsp-command)
   #+end_src
 
 They could be used to avoid breaking at certain bad places.
@@ -5563,7 +5564,7 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
                          fill-column)))
       (fill-paragraph nil)))
 
-  (global-set-key (kbd "M-q") 'leuven-fill-paragraph)
+  (global-set-key (kbd "M-q") #'leuven-fill-paragraph)
 
   ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
   (add-hook 'fill-nobreak-predicate #'fill-french-nobreak-p)
@@ -5682,8 +5683,8 @@ a factor 2!?
 
   (defun leuven--smart-punctuation ()
     "Replace second apostrophe or quotation mark."
-    (local-set-key [39] 'leuven-smart-punctuation-apostrophe)
-    (local-set-key "\"" 'leuven-smart-punctuation-quotation-mark))
+    (local-set-key [39] #'leuven-smart-punctuation-apostrophe)
+    (local-set-key "\"" #'leuven-smart-punctuation-quotation-mark))
 
   (add-hook 'text-mode-hook #'leuven--smart-punctuation)
   (add-hook 'message-mode-hook #'leuven--smart-punctuation)
@@ -5770,10 +5771,10 @@ a factor 2!?
     ;; (key-chord-define-global "fc" 'flycheck-mode)
     ;; (key-chord-define-global "fv" (lambda () (interactive) (kill-buffer (buffer-name))))
     ;; (key-chord-define-global "sv" 'save-buffer)
-    ;; (global-set-key (kbd "M-2") 'highlight-symbol-occur)
+    ;; (global-set-key (kbd "M-2") #'highlight-symbol-occur)
     ;; (global-set-key (kbd "M-3") (lambda () (interactive) (highlight-symbol-jump -1)))
     ;; (global-set-key (kbd "M-4") (lambda () (interactive) (highlight-symbol-jump 1)))
-    ;; (key-chord-define-global "vg" 'vc-git-grep)
+    ;; (key-chord-define-global "vg" #'vc-git-grep)
 
     ;; (key-chord-define-global "''" "`'\C-b")
     ;; (key-chord-define-global "dq" "\"\"\C-b")
@@ -5957,7 +5958,7 @@ demotion* functionality.
 *** org
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "<S-tab>") 'org-cycle) ; that works (but on level 1+)
+  (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
   ;; TODO Look at org-cycle-global and local below, they work better, but
   ;; still on level 1+
   ;; TODO Replace it by a function which alternatively does `hide-body' and
@@ -5987,7 +5988,7 @@ As for handling "large" files, I use this:
     (interactive)
     (org-cycle t))
 
-  (global-set-key (kbd "C-M-]") 'org-cycle-global)
+  (global-set-key (kbd "C-M-]") #'org-cycle-global)
                                         ; XXX ok on Emacs Lisp, not on LaTeX
                                         ; <S-tab>?
 
@@ -6004,7 +6005,7 @@ As for handling "large" files, I use this:
       (beginning-of-defun))
     (org-cycle))
 
-  (global-set-key (kbd "M-]") 'org-cycle-local)
+  (global-set-key (kbd "M-]") #'org-cycle-local)
                                         ; XXX ok on Emacs Lisp, not on LaTeX
 
 ;; C-M-] and M-] fold the whole buffer or the current defun.
@@ -6016,9 +6017,9 @@ This helps me survive in files like ~org.el~ and ~org-agenda.el~.
 
 *** fold-dwim
 
-# (global-set-key (kbd "C-c +")   'fold-dwim-toggle)
-# (global-set-key (kbd "C-c C-+") 'fold-dwim-show-all)
-# (global-set-key (kbd "C-c C--") 'fold-dwim-hide-all)
+# (global-set-key (kbd "C-c +")   #'fold-dwim-toggle)
+# (global-set-key (kbd "C-c C-+") #'fold-dwim-show-all)
+# (global-set-key (kbd "C-c C--") #'fold-dwim-hide-all)
 
 *** fold-dwim-org
 
@@ -6030,7 +6031,7 @@ This helps me survive in files like ~org.el~ and ~org-agenda.el~.
 
 #+begin_src emacs-lisp
   ;; 25.8.2
-  (global-set-key (kbd "<M-f6>") 'visible-mode)
+  (global-set-key (kbd "<M-f6>") #'visible-mode)
 #+end_src
 
 ** Boxquote
@@ -6043,7 +6044,7 @@ Use Unicode characters.
   (leuven--section "(emacs-goodies-el)boxquote")
 
   (with-eval-after-load "boxquote-autoloads"
-    (global-set-key (kbd "C-c q") 'boxquote-region))
+    (global-set-key (kbd "C-c q") #'boxquote-region))
 
   (with-eval-after-load "boxquote"
     (setq boxquote-top-and-tail  "────")
@@ -6123,8 +6124,8 @@ work and tasks with Org mode.
   (define-key global-map (kbd "C-c a") 'org-agenda)
 
   ;; Using links outside Org.
-  (global-set-key (kbd "C-c L") 'org-insert-link-global)
-  (global-set-key (kbd "C-c O") 'org-open-at-point-global)
+  (global-set-key (kbd "C-c L") #'org-insert-link-global)
+  (global-set-key (kbd "C-c O") #'org-open-at-point-global)
 
   (with-eval-after-load "org"
     ;; Display the Org mode manual in Info mode.
@@ -6249,14 +6250,14 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
   (add-hook 'org-mode-hook
             (lambda ()
               ;; ;; Create a binding for `org-show-subtree'.
-              ;; (local-set-key (kbd "C-c C-S-s") 'org-show-subtree)
-              ;; (local-set-key (kbd "C-c s") 'org-show-subtree)
+              ;; (local-set-key (kbd "C-c C-S-s") #'org-show-subtree)
+              ;; (local-set-key (kbd "C-c s") #'org-show-subtree)
 
-              ;; (local-set-key (kbd "C-c h") 'hide-other) ; I should use it!!
+              ;; (local-set-key (kbd "C-c h") #'hide-other) ; I should use it!!
 
               ;; Table.
-              (local-set-key (kbd "C-M-w") 'org-table-copy-region)
-              (local-set-key (kbd "C-M-y") 'org-table-paste-rectangle)
+              (local-set-key (kbd "C-M-w") #'org-table-copy-region)
+              (local-set-key (kbd "C-M-y") #'org-table-paste-rectangle)
 
               ;; Remove some bindings.
               (local-unset-key (kbd "C-c SPC")) ; Used by Ace Jump.
@@ -6491,12 +6492,12 @@ full outline path.
   ;; Lisp files.
   (add-hook 'org-mode-hook
             (lambda ()
-              ;; (local-set-key (kbd "M-n") 'outline-next-visible-heading)
-              ;; (local-set-key (kbd "M-p") 'outline-previous-visible-heading)
+              ;; (local-set-key (kbd "M-n") #'outline-next-visible-heading)
+              ;; (local-set-key (kbd "M-p") #'outline-previous-visible-heading)
               ;;
-              (local-set-key (kbd "C-M-n") 'outline-next-visible-heading)
-              (local-set-key (kbd "C-M-p") 'outline-previous-visible-heading)
-              (local-set-key (kbd "C-M-u") 'outline-up-heading)))
+              (local-set-key (kbd "C-M-n") #'outline-next-visible-heading)
+              (local-set-key (kbd "C-M-p") #'outline-previous-visible-heading)
+              (local-set-key (kbd "C-M-u") #'outline-up-heading)))
 #+end_src
 
 Move through an Org file like ~cd~ on a file system with ~org-goto~:
@@ -6604,7 +6605,7 @@ consecutive lists with blank lines, always use two of them.
 
   ;; Use `C-c C-x f' to add a footnote, to go back to the message
   ;; *and* to go to a footnote.
-  (global-set-key (kbd "C-c C-x f") 'org-footnote-action)
+  (global-set-key (kbd "C-c C-x f") #'org-footnote-action)
 #+end_src
 
 ** Tables
@@ -7240,9 +7241,9 @@ Alternative to requiring org-clock in every Emacs session.
 
   (leuven--section "8.4 (org)Clocking work time")
 
-  (global-set-key (kbd "C-c C-x C-i") 'org-clock-in)
-  (global-set-key (kbd "C-c C-x C-j") 'org-clock-goto)
-  (global-set-key (kbd "C-c C-x C-o") 'org-clock-out)
+  (global-set-key (kbd "C-c C-x C-i") #'org-clock-in)
+  (global-set-key (kbd "C-c C-x C-j") #'org-clock-goto)
+  (global-set-key (kbd "C-c C-x C-o") #'org-clock-out)
 
   ;; The time clocking code for Org mode.
   ;; (require 'org-clock)               ;! needed for trying to automatically
@@ -7300,7 +7301,7 @@ Alternative to requiring org-clock in every Emacs session.
             (org-clock-in nil))
         (org-clock-out)))
 
-    (global-set-key (kbd "C-c C-x C-q") 'leuven-org-clock-in-interrupted-task)
+    (global-set-key (kbd "C-c C-x C-q") #'leuven-org-clock-in-interrupted-task)
 
     ;; 8.4.3 Resolve open clocks if the user is idle more than 120 minutes.
     (setq org-clock-idle-time 120)
@@ -7867,10 +7868,10 @@ Avoid any possibility of getting a customized version of ~org-agenda-files~ adde
 at the end of your =.emacs= file.
 
 #+begin_example
-(add-hook 'org-mode-hook
-          (lambda ()
-            (local-set-key (kbd "C-c [") 'undefined)
-            (local-set-key (kbd "C-c ]") 'undefined)))
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (local-unset-key (kbd "C-c ["))
+                (local-unset-key (kbd "C-c ]"))))
 #+end_example
 
 *** The agenda dispatcher
@@ -8388,7 +8389,7 @@ example).
       (org-todo-list)))
 
   ;; "TODO list" without asking for a directory.
-  (global-set-key (kbd "<C-f3>") 'leuven-org-todo-list-current-dir)
+  (global-set-key (kbd "<C-f3>") #'leuven-org-todo-list-current-dir)
 #+end_src
 
 *** Exporting Agenda Views
@@ -8918,7 +8919,7 @@ directory.
     (setq htmlize-convert-nonascii-to-entities nil)
 
     ;; Key binding.
-    (global-set-key (kbd "M-P") 'htmlize-buffer)
+    (global-set-key (kbd "M-P") #'htmlize-buffer)
 
     )                                   ; with-eval-after-load "htmlize" ends here.
 #+end_src
@@ -8935,7 +8936,7 @@ This adds a Quick Print option to your menu bar (under File).
       "Convert buffer to html preserving faces and view in web browser." t)
 
     ;; Same key binding as Org export to HTML (open in browser).
-    (global-set-key (kbd "C-c C-e h o") 'htmlize-view-buffer)
+    (global-set-key (kbd "C-c C-e h o") #'htmlize-view-buffer)
 
     ;; View current buffer as html in web browser.
     (with-eval-after-load "htmlize-view"
@@ -10089,7 +10090,7 @@ the mail message:
 
     (add-hook 'org-mode-hook
               (lambda ()
-                (local-set-key (kbd "C-c m") 'org-mime-subtree)))
+                (local-set-key (kbd "C-c m") #'org-mime-subtree)))
 
     (defun leuven-mail-subtree ()
       (interactive)
@@ -10098,7 +10099,7 @@ the mail message:
 
     (add-hook 'org-agenda-mode-hook
               (lambda ()
-                (local-set-key (kbd "C-c m") 'leuven-mail-subtree)))
+                (local-set-key (kbd "C-c m") #'leuven-mail-subtree)))
 
     ;; Add a `mail_composed' property with the current time when
     ;; `org-mime-subtree' is called.
@@ -10663,7 +10664,7 @@ Plug [[http://tidy.sourceforge.net/][HTML Tidy]] with ~tidy.el~.
           (tidy-build-menu html-helper-mode-map))
 
         ;; Bind the key sequence `C-c C-c' to `tidy-buffer'.
-        (local-set-key (kbd "C-c C-c") 'tidy-buffer)
+        (local-set-key (kbd "C-c C-c") #'tidy-buffer)
 
         (setq sgml-validate-command "tidy"))
 
@@ -10845,8 +10846,8 @@ Move the current line up or down.
   (GNUEmacs24
     (add-hook 'prog-mode-hook
               (lambda ()
-                (local-set-key (kbd "<C-S-up>") 'leuven-move-line-up)
-                (local-set-key (kbd "<C-S-down>") 'leuven-move-line-down))))
+                (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)
+                (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down))))
                                         ; Sublime Text
 #+end_src
 
@@ -10864,8 +10865,8 @@ Move the current line up or down.
   (GNUEmacs24
     (add-hook 'prog-mode-hook
               (lambda ()
-                (local-set-key (kbd "<C-up>") 'leuven-scroll-up-one-line)
-                (local-set-key (kbd "<C-down>") 'leuven-scroll-down-one-line))))
+                (local-set-key (kbd "<C-up>") #'leuven-scroll-up-one-line)
+                (local-set-key (kbd "<C-down>") #'leuven-scroll-down-one-line))))
                                         ; Sublime Text + SQL Management Studio
 #+end_src
 
@@ -10921,8 +10922,8 @@ XXX Autoloaded?
       (add-hook 'font-lock-mode-hook #'try-to-add-imenu)
 
       ;; Bind Imenu from the mouse.
-      (GNUEmacs (global-set-key [S-mouse-3] 'imenu))
-      (XEmacs (global-set-key [(shift button3)] 'imenu))
+      (GNUEmacs (global-set-key [S-mouse-3] #'imenu))
+      (XEmacs (global-set-key [(shift button3)] #'imenu))
 
       ;; String to display in the mode line when current function is unknown.
       (setq which-func-unknown "(Top Level)")
@@ -10965,7 +10966,7 @@ is often more convenient as you don't have to explicitly build the ~etags~ table
     (with-eval-after-load "imenu-anywhere-autoloads"
 
       ;; `helm' source for `imenu-anywhere'.
-      (global-set-key (kbd "C-.") 'helm-imenu-anywhere)))
+      (global-set-key (kbd "C-.") #'helm-imenu-anywhere)))
                                         ; XXX Conflict with
                                         ; `flyspell-auto-correct-word'
 #+end_src
@@ -10992,7 +10993,7 @@ things.
     (GNUEmacs24
       (add-hook 'prog-mode-hook
                 (lambda ()
-                  (local-set-key (kbd "<return>") 'newline-and-indent))))
+                  (local-set-key (kbd "<return>") #'newline-and-indent))))
 
     ;; (defun back-to-indentation-or-beginning ()
     ;;   (interactive)
@@ -11066,7 +11067,7 @@ http://yoo2080.wordpress.com/2013/12/21/small-rainbow-delimiters-tutorial/.
     (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
           ((looking-at "\\s\)") (forward-char 1) (backward-list 1))))
 
-  (global-set-key (kbd "C-)") 'leuven-match-paren)
+  (global-set-key (kbd "C-)") #'leuven-match-paren)
 #+end_src
 
 *** Matching Parentheses
@@ -11599,7 +11600,7 @@ without a =Makefile=.
   (autoload 'recompile "compile"
     "Re-compile the program including the current buffer." t)
 
-  (global-set-key (kbd "<f9>") 'recompile)
+  (global-set-key (kbd "<f9>") #'recompile)
 
   ;; Scroll the `*compilation*' buffer window to follow output as it appears.
   (setq compilation-scroll-output t)
@@ -11643,7 +11644,7 @@ without a =Makefile=.
     (save-some-buffers (not compilation-ask-about-save) nil)
     (compile-internal make-clean-command "No more errors"))
 
-  (global-set-key (kbd "<S-f9>") 'make-clean)
+  (global-set-key (kbd "<S-f9>") #'make-clean)
 #+end_src
 
 You're debugging Bash code?  I normally use =mode-compile.el= for this.
@@ -11664,15 +11665,15 @@ variable ~next-error-highlight~.
   (setq compilation-auto-jump-to-first-error t)
 
   ;; Display the next compiler error message.
-  (global-set-key (kbd "<f10>") 'next-error)
+  (global-set-key (kbd "<f10>") #'next-error)
                                         ; Also on `C-x `' and `M-g n'.
 
   ;; Display the previous compiler error message.
-  (global-set-key (kbd "<S-f10>") 'previous-error)
+  (global-set-key (kbd "<S-f10>") #'previous-error)
                                         ; Also on `M-g p'.
 
   ;; Display the first compiler error message.
-  (global-set-key (kbd "<C-f10>") 'first-error)
+  (global-set-key (kbd "<C-f10>") #'first-error)
 
   ;; ;; Prefer fringe.
   ;; (setq next-error-highlight 'fringe-arrow)
@@ -11715,7 +11716,7 @@ thereafter.
   (setq grep-find-use-xargs 'gnu)
 
   ;; Run `grep' via `find', with user-friendly interface.
-  (global-set-key (kbd "C-c 3") 'rgrep)
+  (global-set-key (kbd "C-c 3") #'rgrep)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -11813,7 +11814,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 #+end_src
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-x C-S-e") 'elint-current-buffer)
+  (global-set-key (kbd "C-x C-S-e") #'elint-current-buffer)
 
   (with-eval-after-load "elint"
     (add-to-list 'elint-standard-variables 'current-prefix-arg)
@@ -11947,7 +11948,7 @@ To (attempt to) cleanly reevaluate a buffer of Emacs Lisp code, use
       (kill-sexp -1)
       (insert (format "%S" value))))
 
-  (global-set-key (kbd "C-c e") 'eval-and-replace)
+  (global-set-key (kbd "C-c e") #'eval-and-replace)
 #+end_src
 
 For on-the-fly evaluation/substitution of Emacs Lisp code, see
@@ -12145,14 +12146,14 @@ can use the following keys to navigate historic versions of the file:
     ;; Number of chars from the full SHA1 hash to use for abbreviation.
     (setq git-timemachine-abbreviation-length 7)
 
-    (global-set-key (kbd "C-x v t") 'git-timemachine))
+    (global-set-key (kbd "C-x v t") #'git-timemachine))
 #+end_src
 
 #+begin_src emacs-lisp
   ;; Pop up last commit information of current line.
   (with-eval-after-load "git-messenger-autoloads"
 
-    (global-set-key (kbd "C-x v p") 'git-messenger:popup-message) ; `C-h g'.
+    (global-set-key (kbd "C-x v p") #'git-messenger:popup-message) ; `C-h g'.
 
     ;; Pop up commit ID and author name too.
     (setq git-messenger:show-detail t))
@@ -12178,7 +12179,7 @@ can use the following keys to navigate historic versions of the file:
       (vc-dir dname)))
 
   ;; vc status without asking for a directory
-  (global-set-key (kbd "<C-f9>") 'leuven-vc-jump)
+  (global-set-key (kbd "<C-f9>") #'leuven-vc-jump)
 
   (add-hook  'vc-dir-mode-hook
              (lambda ()
@@ -12500,7 +12501,7 @@ To continue searching for next match, use ~M-,~.
   (with-eval-after-load "etags-select"
 
     ;; do a `find-tag-at-point', and display all exact matches
-    (global-set-key (kbd "M-?") 'etags-select-find-tag-at-point))
+    (global-set-key (kbd "M-?") #'etags-select-find-tag-at-point))
 #+end_src
 
 However, the default Emacs' etag feature is not quite good. You should use etags
@@ -12648,61 +12649,61 @@ The commands to display *symbol references* are:
       (defun leuven--semantic ()
         ;; Automatically complete whatever symbol you are typing.
         (local-set-key
-          (kbd "C-c ?") 'semantic-ia-complete-symbol) ; Better binding: `M-/'?
+          (kbd "C-c ?") #'semantic-ia-complete-symbol) ; Better binding: `M-/'?
 
         ;; Jump to the definition of the symbol under cursor.
         (local-set-key
-          (kbd "C-c j") 'semantic-ia-fast-jump) ; Where a symbol is declared.
+          (kbd "C-c j") #'semantic-ia-fast-jump) ; Where a symbol is declared.
 
         ;; Show the documentation of the symbol under cursor.
         (local-set-key
-          (kbd "C-c q") 'semantic-ia-show-doc) ; Show javadoc of the right method.
+          (kbd "C-c q") #'semantic-ia-show-doc) ; Show javadoc of the right method.
 
         ;; Show a summary about the symbol under cursor.
         (local-set-key
-          (kbd "C-c s") 'semantic-ia-show-summary)
+          (kbd "C-c s") #'semantic-ia-show-summary)
 
 
         ;; Show possible public member functions or data members (when at `.'
         ;; or `->' after an object name).
         (local-set-key
-          (kbd "C-c >") 'semantic-complete-analyze-inline)
+          (kbd "C-c >") #'semantic-complete-analyze-inline)
 
         ;; Toggle between the implementation and a prototype of symbol under
         ;; cursor.
         (local-set-key
-          (kbd "C-c p") 'semantic-analyze-proto-impl-toggle)
+          (kbd "C-c p") #'semantic-analyze-proto-impl-toggle)
 
         ;; Visit the header file under cursor.
         (local-set-key
-          (kbd "C-c =") 'semantic-decoration-include-visit)
+          (kbd "C-c =") #'semantic-decoration-include-visit)
 
 
         ;; Unfold the block under cursor.
         (local-set-key
-          (kbd "C-c +") 'semantic-tag-folding-show-block)
+          (kbd "C-c +") #'semantic-tag-folding-show-block)
 
         ;; Fold the block under cursor.
         (local-set-key
-          (kbd "C-c -") 'semantic-tag-folding-fold-block)
+          (kbd "C-c -") #'semantic-tag-folding-fold-block)
 
         ;; C-c C-c is not a prefix key!
         ;; ;; Unfold all.
         ;; (local-set-key
-        ;;   (kbd "C-c C-c +") 'semantic-tag-folding-show-all)
+        ;;   (kbd "C-c C-c +") #'semantic-tag-folding-show-all)
         ;;
         ;; ;; Fold all.
         ;; (local-set-key
-        ;;   (kbd "C-c C-c -") 'semantic-tag-folding-fold-all)
+        ;;   (kbd "C-c C-c -") #'semantic-tag-folding-fold-all)
         )
 
       (add-hook 'prog-mode-hook #'leuven--semantic)
 
       (defun leuven--c-mode-semantic ()
         "Completion on `.' or `->'."
-        (local-set-key (kbd ".") 'semantic-complete-self-insert)
-        (local-set-key (kbd ">") 'semantic-complete-self-insert)
-        (local-set-key (kbd "C-c C-r") 'semantic-symref))
+        (local-set-key (kbd ".") #'semantic-complete-self-insert)
+        (local-set-key (kbd ">") #'semantic-complete-self-insert)
+        (local-set-key (kbd "C-c C-r") #'semantic-symref))
 
       (add-hook 'c-mode-common-hook #'leuven--c-mode-semantic))
                                         ; Note that this will apply to all
@@ -12765,10 +12766,10 @@ Keyboard navigation:
     (setq ecb-tip-of-the-day nil)
 
     ;; ;; Toggle activation of ECB (between `ecb-activate' and `ecb-deactivate').
-    ;; (global-set-key (kbd "C-c e") 'ecb-minor-mode)
+    ;; (global-set-key (kbd "C-c e") #'ecb-minor-mode)
 
-    ;; (global-set-key (kbd "<M-left>") 'ecb-goto-window-methods)
-    ;; (global-set-key (kbd "<M-right>") 'ecb-goto-window-edit1)
+    ;; (global-set-key (kbd "<M-left>") #'ecb-goto-window-methods)
+    ;; (global-set-key (kbd "<M-right>") #'ecb-goto-window-edit1)
     )
 #+end_src
 
@@ -12784,9 +12785,9 @@ really like this.
    (with-eval-after-load "eassist"
 
      (defun leuven--c-mode-eassist ()
-       (local-set-key (kbd "C-c t") 'eassist-switch-h-cpp)
-       (local-set-key (kbd "C-x t") 'eassist-switch-h-cpp)
-       ;; (local-set-key (kbd "C-c e") 'eassist-list-methods)
+       (local-set-key (kbd "C-c t") #'eassist-switch-h-cpp)
+       (local-set-key (kbd "C-x t") #'eassist-switch-h-cpp)
+       ;; (local-set-key (kbd "C-c e") #'eassist-list-methods)
        )
 
      (add-hook 'c-mode-common-hook #'leuven--c-mode-eassist))
@@ -12951,7 +12952,7 @@ After editing your snippets:
 - ~M-x yas-reload-all~ to reload them all.
 
 #+begin_src emacs-lisp
-      (global-set-key (kbd "C-c & C-r") 'yas-reload-all)
+      (global-set-key (kbd "C-c & C-r") #'yas-reload-all)
 #+end_src
 
 Automatically reload snippets after saving.
@@ -12972,7 +12973,7 @@ Display all available snippets with ~M-x yas-describe-tables~ (or ~C-c & C-l~ in
 Emacs Leuven):
 
 #+begin_src emacs-lisp
-      (global-set-key (kbd "C-c & C-l") 'yas-describe-tables)
+      (global-set-key (kbd "C-c & C-l") #'yas-describe-tables)
 #+end_src
 
 See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippet.
@@ -13000,7 +13001,7 @@ See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippe
                 :visible (yas--show-menu-p ',major-mode)))
           (popup-menu lawlist-context-menu-map event prefix))
 
-      (global-set-key [mouse-3] 'lawlist-popup-context-menu)
+      (global-set-key [mouse-3] #'lawlist-popup-context-menu)
 #+end_src
 
 *** Frequently Asked Questions
@@ -13126,7 +13127,7 @@ binding of ~M-/~) providing one of the expansion possibilities.
 
 #+begin_src emacs-lisp
   ;; Expand text trying various ways to find its expansion.
-  (global-set-key (kbd "M-/") 'hippie-expand) ; Built-in.
+  (global-set-key (kbd "M-/") #'hippie-expand) ; Built-in.
 #+end_src
 
 #+begin_note
@@ -13365,12 +13366,12 @@ available completions and filter as well.
     ;; Enable Company mode in all buffers ....
     (add-hook 'after-init-hook #'global-company-mode)
 
-    (global-set-key (kbd "<C-tab>") 'company-complete)
-    (global-set-key (kbd "C-/") 'company-complete))
+    (global-set-key (kbd "<C-tab>") #'company-complete)
+    (global-set-key (kbd "C-/") #'company-complete))
 
   (with-eval-after-load "company"
 
-    (global-set-key (kbd "C-/") 'company-complete-common)
+    (global-set-key (kbd "C-/") #'company-complete-common)
 
     ;; ... Except in some modes.
     (setq company-global-modes
@@ -13466,7 +13467,7 @@ XXX The following does not work in Org files (TAB does not expand nodes anymore)
     (define-key company-mode-map (kbd "<tab>") 'leuven-indent-or-complete)
 
     ;; (defun leuven--tab-fix ()
-    ;;   (local-set-key (kbd "<tab>") 'leuven-indent-or-complete))
+    ;;   (local-set-key (kbd "<tab>") #'leuven-indent-or-complete))
     ;;
     ;; (add-hook 'prog-mode-hook #'leuven--tab-fix)
 #+end_src
@@ -13517,7 +13518,7 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
 
 #+begin_src emacs-lisp :tangle no
     (setq company-idle-delay nil)
-    (global-set-key (kbd "<tab>") 'company-complete-selection)
+    (global-set-key (kbd "<tab>") #'company-complete-selection)
 #+end_src
 
 **** Company-quickhelp
@@ -13889,7 +13890,7 @@ For searches in Dired, see ~dired-do-search~ (~A~).
 
     ;; Search for files with names matching a wild card pattern and Dired the
     ;; output.
-    (global-set-key (kbd "C-c 1") 'find-name-dired)
+    (global-set-key (kbd "C-c 1") #'find-name-dired)
       ;; case insensitive if `read-file-name-completion-ignore-case' is non-nil
 
     ;; `find-grep-dired' case insensitivity.
@@ -13897,7 +13898,7 @@ For searches in Dired, see ~dired-do-search~ (~A~).
 
     ;; Search for files with contents matching a wild card pattern and Dired the
     ;; output.
-    (global-set-key (kbd "C-c 2") 'find-grep-dired)
+    (global-set-key (kbd "C-c 2") #'find-grep-dired)
 #+end_src
 
 ** Editing the Dired Buffer
@@ -14261,7 +14262,7 @@ the command ~M-x holidays~.
                         ((equal prefix '(16)) "%Y-%m-%d %a %H:%M"))))
       (insert (format-time-string format))))
 
-  (global-set-key (kbd "C-c .") 'leuven-insert-current-date)
+  (global-set-key (kbd "C-c .") #'leuven-insert-current-date)
 #+end_src
 
 ** Calendar framework
@@ -14408,7 +14409,7 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
       "Hook BBDB into `message-mode'."))
 
   ;; search the BBDB
-  (global-set-key (kbd "<C-f11>") 'bbdb)
+  (global-set-key (kbd "<C-f11>") #'bbdb)
 
   (with-eval-after-load "bbdb"
 
@@ -15076,8 +15077,8 @@ shell or term.
 
   (with-eval-after-load "multi-term-autoloads"
 
-    ;; (global-set-key (kbd "C-c t") 'multi-term-next)
-    (global-set-key (kbd "C-c T") 'multi-term)) ; Create a new one.
+    ;; (global-set-key (kbd "C-c t") #'multi-term-next)
+    (global-set-key (kbd "C-c T") #'multi-term)) ; Create a new one.
 
   (with-eval-after-load "multi-term"
 
@@ -15383,7 +15384,7 @@ https://github.com/emacsmirror/dedicated.
 ;;* Proced
 
   ;; ;; Start Proced in a similar manner to Dired.
-  ;; (global-set-key (kbd "C-x p") 'proced) ; Conflict with Bkmp.
+  ;; (global-set-key (kbd "C-x p") #'proced) ; Conflict with Bkmp.
 
   (with-eval-after-load "proced"
 
@@ -15504,9 +15505,9 @@ printing on Windows.
       ;; Override `Print Screen' globally used as a hotkey by Windows.
       (w32-register-hot-key (kbd "<snapshot>"))
       (global-set-key
-        (kbd "<snapshot>") 'leuven-ps-print-buffer-with-faces-query)))
+        (kbd "<snapshot>") #'leuven-ps-print-buffer-with-faces-query)))
 
-  (global-set-key (kbd "M-p") 'leuven-ps-print-buffer-with-faces-query)
+  (global-set-key (kbd "M-p") #'leuven-ps-print-buffer-with-faces-query)
 
   (XEmacs
     (setq toolbar-print-function 'ps-print-buffer-with-faces))
@@ -15612,7 +15613,7 @@ printing on Windows.
 (leuven--chapter leuven-load-chapter-39-sorting "39 Sorting Text"
 
   ;; Key binding.
-  (global-set-key (kbd "C-c ^") 'sort-lines)
+  (global-set-key (kbd "C-c ^") #'sort-lines)
 
 )                                       ; Chapter 39 ends here.
 #+end_src
@@ -15699,7 +15700,7 @@ printing on Windows.
   (unless (featurep 'helm-config)
 
     ;; Visit a file.
-    (global-set-key (kbd "<f3>") 'find-file-at-point))
+    (global-set-key (kbd "<f3>") #'find-file-at-point))
 
   ;; Find file (or URL) at point.
   (with-eval-after-load "ffap"
@@ -15787,8 +15788,8 @@ bind it to a key:
         "https://duckduckgo.com/?q="
         (url-hexify-string query)))))
 
-  (global-set-key (kbd "C-c g G") 'leuven-google-search-active-region-or-word-at-point)
-  (global-set-key (kbd "C-c g D") 'leuven-duckduckgo-search-active-region-or-word-at-point)
+  (global-set-key (kbd "C-c g G") #'leuven-google-search-active-region-or-word-at-point)
+  (global-set-key (kbd "C-c g D") #'leuven-duckduckgo-search-active-region-or-word-at-point)
 #+end_src
 
 ** Babel translator
@@ -15838,7 +15839,7 @@ using ~C-n~ and ~C-p~ key bindings.
   (with-eval-after-load "google-translate-autoloads"
 
     ;; translate a text using translation directions
-    (global-set-key "\C-ct" 'google-translate-smooth-translate))
+    (global-set-key (kbd "C-c t") #'google-translate-smooth-translate))
 
   ;; just another UI to Google
   (with-eval-after-load "google-translate-smooth-ui"

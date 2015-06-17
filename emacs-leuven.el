@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150616.2221
+;; Version: 20150616.2305
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150616.2221"
+(defconst leuven--emacs-version "20150616.2305"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -534,7 +534,7 @@ These packages are neither built-in nor already installed nor ignored."
   (global-unset-key (kbd "C-z"))
 
   ;; Quit with Alt + F4.
-  (global-set-key (kbd "<M-f4>") 'save-buffers-kill-terminal)
+  (global-set-key (kbd "<M-f4>") #'save-buffers-kill-terminal)
 
 )                                       ; Chapter 6 ends here.
 
@@ -557,7 +557,7 @@ These packages are neither built-in nor already installed nor ignored."
   (setq next-line-add-newlines nil)
 
   ;; Print the current buffer line number.
-  (global-set-key (kbd "M-G") 'what-line)
+  (global-set-key (kbd "M-G") #'what-line)
 
   (defun goto-line-with-feedback ()
     "Show line numbers temporarily, while prompting for the line number input"
@@ -568,15 +568,15 @@ These packages are neither built-in nor already installed nor ignored."
           (goto-line (read-number "Goto line: ")))
       (linum-mode -1)))
 
-  (global-set-key [remap goto-line] 'goto-line-with-feedback)
+  (global-set-key [remap goto-line] #'goto-line-with-feedback)
 
 ;;** 7.4 (info "(emacs)Basic Undo")ing Changes
 
   (leuven--section "7.4 (emacs)Basic Undoing Changes")
 
   ;; Undo some previous changes.
-  (global-set-key (kbd "C-z") 'undo)
-  (global-set-key (kbd "<f11>") 'undo)
+  (global-set-key (kbd "C-z") #'undo)
+  (global-set-key (kbd "<f11>") #'undo)
 
   ;; Treat undo history as a tree.
   (with-eval-after-load "undo-tree-autoloads"
@@ -601,8 +601,8 @@ These packages are neither built-in nor already installed nor ignored."
     (define-key undo-tree-map (kbd "C-/") nil)
 
     ;; (defalias 'redo 'undo-tree-redo)
-    (global-set-key (kbd "C-S-z") 'undo-tree-redo)
-    (global-set-key (kbd "<S-f11>") 'undo-tree-redo))
+    (global-set-key (kbd "C-S-z") #'undo-tree-redo)
+    (global-set-key (kbd "<S-f11>") #'undo-tree-redo))
 
 )                                       ; Chapter 7 ends here.
 
@@ -656,7 +656,7 @@ These packages are neither built-in nor already installed nor ignored."
     (describe-function major-mode))
 
   ;; Look up subject in (the indices of the) Emacs Lisp manual.
-  (global-set-key (kbd "C-h E") 'elisp-index-search)
+  (global-set-key (kbd "C-h E") #'elisp-index-search)
 
 ;;** 10.4 (info "(emacs)Apropos")
 
@@ -691,7 +691,7 @@ These packages are neither built-in nor already installed nor ignored."
   (leuven--section "10.8 (emacs)Misc Help")
 
   ;; Enter Info documentation browser.
-  (global-set-key (kbd "<f1>") 'info)
+  (global-set-key (kbd "<f1>") #'info)
 
   (defun leuven-describe-elisp-symbol-at-point ()
     "Get help for the symbol at point."
@@ -705,12 +705,12 @@ These packages are neither built-in nor already installed nor ignored."
                  (describe-variable sym)))
         (message "nothing"))))
 
-  (global-set-key (kbd "<f1>") 'leuven-describe-elisp-symbol-at-point)
+  (global-set-key (kbd "<f1>") #'leuven-describe-elisp-symbol-at-point)
 
   ;; Display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
   ;; have documentation in Info).
-  (global-set-key (kbd "<C-f1>") 'info-lookup-symbol)
+  (global-set-key (kbd "<C-f1>") #'info-lookup-symbol)
 
   (with-eval-after-load "info"
     ;; List of directories to search for Info documentation files (in the order
@@ -752,7 +752,7 @@ These packages are neither built-in nor already installed nor ignored."
     )
 
   ;; Get a Unix manual page of the item under point.
-  (global-set-key (kbd "<S-f1>") 'man-follow)
+  (global-set-key (kbd "<S-f1>") #'man-follow)
 
   (with-eval-after-load "man"
     ;; Make the manpage the current buffer in the current window.
@@ -773,13 +773,13 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Goto last change.
   (with-eval-after-load "goto-chg-autoloads"
-    (global-set-key (kbd "<C-S-backspace>") 'goto-last-change))
+    (global-set-key (kbd "<C-S-backspace>") #'goto-last-change))
 
   ;; Increase selected region by semantic units.
   (with-eval-after-load "expand-region-autoloads"
 
-    (global-set-key (kbd "C-+") 'er/expand-region)
-    (global-set-key (kbd "C--") 'er/contract-region))
+    (global-set-key (kbd "C-+") #'er/expand-region)
+    (global-set-key (kbd "C--") #'er/contract-region))
 
   ;; Inserting text while the mark is active causes the text in the region to be
   ;; deleted first.
@@ -789,34 +789,34 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "multiple-cursors-autoloads"
 
     ;; Add a cursor to each (continuous) line in the current region.
-    (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines) ;!
+    (global-set-key (kbd "C-S-c C-S-c") #'mc/edit-lines) ;!
 
     ;; Add a cursor and region at the next part of the buffer forwards that
     ;; matches the current region.
-    (global-set-key (kbd "C->") 'mc/mark-next-like-this) ;!
-    ;; (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
+    (global-set-key (kbd "C->") #'mc/mark-next-like-this) ;!
+    ;; (global-set-key (kbd "C-c >") #'mc/mark-next-like-this)
 
     ;; Add a cursor and region at the next part of the buffer backwards that
     ;; matches the current region.
-    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this) ;!
-    ;; (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
+    (global-set-key (kbd "C-<") #'mc/mark-previous-like-this) ;!
+    ;; (global-set-key (kbd "C-c <") #'mc/mark-previous-like-this)
 
-    (global-set-key (kbd "C-M->") 'mc/skip-to-next-like-this)
-    (global-set-key (kbd "C-M-<") 'mc/skip-to-previous-like-this)
+    (global-set-key (kbd "C-M->") #'mc/skip-to-next-like-this)
+    (global-set-key (kbd "C-M-<") #'mc/skip-to-previous-like-this)
 
-    (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+    (global-set-key (kbd "C-S-<mouse-1>") #'mc/add-cursor-on-click)
 
-    (global-set-key (kbd "C-;") 'mc/mark-all-like-this-dwim) ;! Like Iedit.
-    ;; (global-set-key (kbd "C-x C-;") 'mc/mark-all-like-this-dwim)
+    (global-set-key (kbd "C-;") #'mc/mark-all-like-this-dwim) ;! Like Iedit.
+    ;; (global-set-key (kbd "C-x C-;") #'mc/mark-all-like-this-dwim)
 
     ;; Mark all parts of the buffer that matches the current region.
-    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this) ;!
-    ;; (global-set-key (kbd "C-c *") 'mc/mark-all-like-this) ; Conflict in Org tables!
+    (global-set-key (kbd "C-c C-<") #'mc/mark-all-like-this) ;!
+    ;; (global-set-key (kbd "C-c *") #'mc/mark-all-like-this) ; Conflict in Org tables!
 
-    ;; (global-set-key (kbd "C-<return>") 'mc/mark-more-like-this-extended) ; useful for completion
+    ;; (global-set-key (kbd "C-<return>") #'mc/mark-more-like-this-extended) ; useful for completion
 
-    (global-set-key (kbd "C-S-SPC") 'set-rectangular-region-anchor)
-    (global-set-key (kbd "C-M-=") 'mc/insert-numbers)
+    (global-set-key (kbd "C-S-SPC") #'set-rectangular-region-anchor)
+    (global-set-key (kbd "C-M-=") #'mc/insert-numbers)
   )
 
   ;; Multiple cursors for Emacs.
@@ -910,7 +910,7 @@ These packages are neither built-in nor already installed nor ignored."
         (open-line 1)
         (insert line-text))))
 
-  (global-set-key (kbd "C-c d") 'duplicate-current-line)
+  (global-set-key (kbd "C-c d") #'duplicate-current-line)
 
 ;;** 12.2 (info "(emacs)Yanking")
 
@@ -947,7 +947,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "13.1 (emacs)Position Registers")
 
-  (global-set-key (kbd "C-j") 'jump-to-register) ; Also on `C-x r j'.
+  (global-set-key (kbd "C-j") #'jump-to-register) ; Also on `C-x r j'.
 
 ;;** 13.7 (info "(emacs)Bookmarks")
 
@@ -965,9 +965,9 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; Extensions to standard library `bookmark.el'.
     (when (try-require 'bookmark+)
-      (global-set-key (kbd "<C-f2>") 'bmkp-toggle-autonamed-bookmark-set/delete)
-      (global-set-key (kbd "<S-f2>") 'bmkp-next-bookmark-this-file/buffer-repeat)
-      (global-set-key (kbd "<C-S-f2>") 'bmkp-delete-all-autonamed-for-this-buffer))
+      (global-set-key (kbd "<C-f2>") #'bmkp-toggle-autonamed-bookmark-set/delete)
+      (global-set-key (kbd "<S-f2>") #'bmkp-next-bookmark-this-file/buffer-repeat)
+      (global-set-key (kbd "<C-S-f2>") #'bmkp-delete-all-autonamed-for-this-buffer))
 
     (with-eval-after-load "bookmark+"
 
@@ -1038,8 +1038,8 @@ These packages are neither built-in nor already installed nor ignored."
     (autoload 'pager-page-down "pager"
       "Like scroll-up, but moves a fixed amount of lines." t)
 
-    (global-set-key (kbd "<prior>") 'pager-page-up)
-    (global-set-key (kbd "<next>") 'pager-page-down))
+    (global-set-key (kbd "<prior>") #'pager-page-up)
+    (global-set-key (kbd "<next>") #'pager-page-down))
 
 ;;** 14.3 (info "(emacs)Auto Scrolling")
 
@@ -1138,11 +1138,11 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "highlight-symbol-autoloads"
 
     ;; Emulation of Vim's `*' search.
-    (global-set-key (kbd "C-*") 'highlight-symbol-at-point)
-    ;; (global-set-key (kbd "C-<f4>") 'highlight-symbol-next)
-    ;; (global-set-key (kbd "S-<f4>") 'highlight-symbol-prev)
-    (global-set-key (kbd "C-M-*") 'highlight-symbol-remove-all)
-    ;; (global-set-key (kbd "+") 'highlight-symbol-query-replace)
+    (global-set-key (kbd "C-*") #'highlight-symbol-at-point)
+    ;; (global-set-key (kbd "C-<f4>") #'highlight-symbol-next)
+    ;; (global-set-key (kbd "S-<f4>") #'highlight-symbol-prev)
+    (global-set-key (kbd "C-M-*") #'highlight-symbol-remove-all)
+    ;; (global-set-key (kbd "+") #'highlight-symbol-query-replace)
     )
 
   (with-eval-after-load "highlight-symbol"
@@ -1533,7 +1533,7 @@ These packages are neither built-in nor already installed nor ignored."
       (display-buffer ilog-buffer-name))
 
     ;; Hotkey for showing the log buffer.
-    (global-set-key (kbd "C-h C-l") 'leuven-display-interaction-log))
+    (global-set-key (kbd "C-h C-l") #'leuven-display-interaction-log))
 
 )                                       ; Chapter 14 ends here.
 
@@ -1602,8 +1602,8 @@ These packages are neither built-in nor already installed nor ignored."
     (global-anzu-mode 1)
 
     ;; Override binding for `query-replace'.
-    (global-set-key (kbd "M-%") 'anzu-query-replace)
-    (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
+    (global-set-key (kbd "M-%") #'anzu-query-replace)
+    (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
 
     ;; (define-key isearch-mode-map (kbd "M-%") 'anzu-query-replace)
     )
@@ -1652,7 +1652,7 @@ These packages are neither built-in nor already installed nor ignored."
   (global-unset-key (kbd "M-o")) ; XXX???
 
   ;; "Multi-occur" easily inside Isearch.
-  (define-key isearch-mode-map (kbd "M-o") 'helm-multi-swoop-all)
+  (define-key isearch-mode-map (kbd "M-o") #'helm-multi-swoop-all)
 
   ;; Grep all same extension files from inside Isearch.
   (define-key isearch-mode-map (kbd "C-M-o")
@@ -1701,8 +1701,8 @@ These packages are neither built-in nor already installed nor ignored."
           (ispell-buffer)))
 
     ;; Key bindings (or `C-c i' prefix key binding?).
-    (global-set-key (kbd "C-$") 'leuven-ispell-region-or-buffer)
-    (global-set-key (kbd "C-M-$") 'ispell-change-dictionary)
+    (global-set-key (kbd "C-$") #'leuven-ispell-region-or-buffer)
+    (global-set-key (kbd "C-M-$") #'ispell-change-dictionary)
 
     ;; ;; Default dictionary to use (if `ispell-local-dictionary' is nil, that
     ;; ;; is if there is no local dictionary to use in the buffer).
@@ -1806,8 +1806,8 @@ These packages are neither built-in nor already installed nor ignored."
            (flyspell-buffer))))
 
      ;; Key bindings.
-     (global-set-key (kbd "C-$") 'flyspell-buffer)
-     (global-set-key (kbd "C-M-$") 'leuven-flyspell-toggle-dictionary)
+     (global-set-key (kbd "C-$") #'flyspell-buffer)
+     (global-set-key (kbd "C-M-$") #'leuven-flyspell-toggle-dictionary)
 
      ;; Spell-check your XHTML (by adding `nxml-text-face' to the list of
      ;; faces corresponding to text in programming-mode buffers).
@@ -1817,9 +1817,9 @@ These packages are neither built-in nor already installed nor ignored."
   (try-require "dictionary-autoloads")
   (with-eval-after-load "dictionary-autoloads"
 
-    (global-set-key (kbd "C-c C-d s") 'dictionary-search)
-    (global-set-key (kbd "C-c C-d l") 'dictionary-lookup-definition)
-    (global-set-key (kbd "C-c C-d m") 'dictionary-match-words))
+    (global-set-key (kbd "C-c C-d s") #'dictionary-search)
+    (global-set-key (kbd "C-c C-d l") #'dictionary-lookup-definition)
+    (global-set-key (kbd "C-c C-d m") #'dictionary-match-words))
 
   (with-eval-after-load "dictionary"
 
@@ -1841,27 +1841,27 @@ These packages are neither built-in nor already installed nor ignored."
   (defun leuven-kmacro-turn-on-recording ()
     "Start recording a keyboard macro and toggle functionality of key binding."
     (interactive)
-    (global-set-key (kbd "<S-f8>") 'leuven-kmacro-turn-off-recording)
+    (global-set-key (kbd "<S-f8>") #'leuven-kmacro-turn-off-recording)
     (kmacro-start-macro nil))
 
   (defun leuven-kmacro-turn-off-recording ()
     "Stop recording a keyboard macro and toggle functionality of key binding."
     (interactive)
-    (global-set-key (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
+    (global-set-key (kbd "<S-f8>") #'leuven-kmacro-turn-on-recording)
     (kmacro-end-macro nil))
 
   ;; Start/stop recording a keyboard macro.
-  (global-set-key (kbd "<S-f8>") 'leuven-kmacro-turn-on-recording)
+  (global-set-key (kbd "<S-f8>") #'leuven-kmacro-turn-on-recording)
 
   ;; Execute the most recent keyboard macro.
-  (global-set-key (kbd "<f8>") 'kmacro-call-macro)
+  (global-set-key (kbd "<f8>") #'kmacro-call-macro)
 
 ;;** 17.5 Name and (info "(emacs)Save Keyboard Macro")s
 
   (leuven--section "17.5 (emacs)Name and Save Keyboard Macros")
 
   ;; Assign a name to the last keyboard macro defined.
-  (global-set-key (kbd "<C-f8>") 'kmacro-name-last-macro)
+  (global-set-key (kbd "<C-f8>") #'kmacro-name-last-macro)
 
 )                                       ; Chapter 17 ends here.
 
@@ -1883,7 +1883,7 @@ These packages are neither built-in nor already installed nor ignored."
                (- (float-time) find-file-time-start))))
 
   ;; Visit a file.
-  (global-set-key (kbd "<f3>") 'find-file)
+  (global-set-key (kbd "<f3>") #'find-file)
 
 ;;** 18.3 (info "(emacs)Saving") Files
 
@@ -1899,7 +1899,7 @@ These packages are neither built-in nor already installed nor ignored."
                (- (float-time) save-buffer-time-start))))
 
   ;; Make your changes permanent.
-  (global-set-key (kbd "<f2>") 'save-buffer)
+  (global-set-key (kbd "<f2>") #'save-buffer)
 
   ;; Make numbered backups.
   (setq version-control t)
@@ -1970,7 +1970,7 @@ These packages are neither built-in nor already installed nor ignored."
     (message "Buffer is up to date with file on disk"))
 
   ;; Key binding.
-  (global-set-key (kbd "<C-f12>") 'leuven-revert-buffer-without-query)
+  (global-set-key (kbd "<C-f12>") #'leuven-revert-buffer-without-query)
 
   ;; Enable Global Auto-Revert mode (auto refresh buffers).
   (global-auto-revert-mode 1)           ; Can generate a lot of network traffic
@@ -2048,7 +2048,7 @@ These packages are neither built-in nor already installed nor ignored."
   (setq diff-switches "-u")
 
   ;; Compare text in current window with text in next window.
-  (global-set-key (kbd "C-=") 'compare-windows)
+  (global-set-key (kbd "C-=") #'compare-windows)
 
 ;;** 18.10 (info "(emacs)Diff Mode")
 
@@ -2296,7 +2296,7 @@ These packages are neither built-in nor already installed nor ignored."
     (leuven--section "Helm")
 
     ;; Change `helm-command-prefix-key'
-    (global-set-key (kbd "C-c h") 'helm-command-prefix)
+    (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
     ;; Open Helm (QuickSilver-like candidate-selection framework).
     (when (try-require 'helm-config)    ; [default `helm-command-prefix-key']
@@ -2306,26 +2306,26 @@ These packages are neither built-in nor already installed nor ignored."
       (global-unset-key (kbd "C-x c"))
 
       ;; Better version of `occur'.
-      (global-set-key (kbd "C-o") 'helm-occur)
+      (global-set-key (kbd "C-o") #'helm-occur)
 
       ;; Speedy file opening.
-      (global-set-key (kbd "<f3>") 'helm-for-files)
+      (global-set-key (kbd "<f3>") #'helm-for-files)
 
-      ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+      ;; (global-set-key (kbd "C-x C-f") #'helm-find-files)
 
       ;; Buffer list.
-      (global-set-key (kbd "C-x b") 'helm-mini) ; OK.
+      (global-set-key (kbd "C-x b") #'helm-mini) ; OK.
                                         ; = `helm-buffers-list' + recents.
 
-      (global-set-key (kbd "C-x C-b") 'helm-buffers-list) ; OK.
+      (global-set-key (kbd "C-x C-b") #'helm-buffers-list) ; OK.
 
       ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
 
-      (global-set-key (kbd "C-x r l") 'helm-bookmarks)
-      (global-set-key (kbd "C-x r l") 'helm-filtered-bookmarks) ; XXX?
+      (global-set-key (kbd "C-x r l") #'helm-bookmarks)
+      (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks) ; XXX?
 
       ;; Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.
-      (global-set-key (kbd "C-x r b") 'helm-bookmark-ext)
+      (global-set-key (kbd "C-x r b") #'helm-bookmark-ext)
 
       (defun leuven-helm-org-prog-menu ()
         "Jump to a place in the buffer using an Index menu.
@@ -2336,25 +2336,25 @@ These packages are neither built-in nor already installed nor ignored."
               ((derived-mode-p 'tex-mode) (helm-imenu))
               (t (helm-semantic-or-imenu)))) ; More generic than `helm-imenu'.
 
-      (global-set-key (kbd "<f4>") 'leuven-helm-org-prog-menu) ; Awesome.
+      (global-set-key (kbd "<f4>") #'leuven-helm-org-prog-menu) ; Awesome.
                                         ; And `C-c =' (like in RefTeX)?
 
-      (global-set-key (kbd "M-y") 'helm-show-kill-ring) ; OK.
+      (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
 
-      ;; (global-set-key (kbd "M-5") 'helm-etags-select)
-      (global-set-key (kbd "C-h a") 'helm-apropos)
-      (global-set-key (kbd "C-h i") 'helm-info-emacs)
-      ;; (global-set-key (kbd "C-h d") 'helm-info-at-point)
-      ;; (global-set-key (kbd "C-h 4") 'helm-info-elisp)
-      ;; (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+      ;; (global-set-key (kbd "M-5") #'helm-etags-select)
+      (global-set-key (kbd "C-h a") #'helm-apropos)
+      (global-set-key (kbd "C-h i") #'helm-info-emacs)
+      ;; (global-set-key (kbd "C-h d") #'helm-info-at-point)
+      ;; (global-set-key (kbd "C-h 4") #'helm-info-elisp)
+      ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
 
-      ;; (global-set-key (kbd "C-S-h C-c") 'helm-wikipedia-suggest)
+      ;; (global-set-key (kbd "C-S-h C-c") #'helm-wikipedia-suggest)
 
-      (global-set-key (kbd "C-h b") 'helm-descbinds)
+      (global-set-key (kbd "C-h b") #'helm-descbinds)
     )
 
-    (global-set-key (kbd "C-c h g") 'helm-google)
-    (global-set-key (kbd "C-c h s") 'helm-google-suggest)
+    (global-set-key (kbd "C-c h g") #'helm-google)
+    (global-set-key (kbd "C-c h s") #'helm-google-suggest)
 
     ;; ;; Emacs Helm Interface for quick Google searches
     ;; (with-eval-after-load "helm-google"
@@ -2446,7 +2446,7 @@ These packages are neither built-in nor already installed nor ignored."
                                           :skip-subdirs t)))
           (helm-do-grep-1 files))))
 
-    (global-set-key (kbd "M-x") 'helm-M-x)
+    (global-set-key (kbd "M-x") #'helm-M-x)
 
     (with-eval-after-load "helm-command"
 
@@ -2496,16 +2496,16 @@ These packages are neither built-in nor already installed nor ignored."
     (with-eval-after-load "helm-swoop-autoloads"
 
       ;; Better version of `(helm-)occur'.
-      (global-set-key (kbd "C-o") 'helm-swoop)
-      (global-set-key (kbd "M-s o") 'helm-swoop)
-      ;; (global-set-key (kbd "M-i") 'helm-swoop)
-      ;; (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+      (global-set-key (kbd "C-o") #'helm-swoop)
+      (global-set-key (kbd "M-s o") #'helm-swoop)
+      ;; (global-set-key (kbd "M-i") #'helm-swoop)
+      ;; (global-set-key (kbd "M-I") #'helm-swoop-back-to-last-point)
 
-      (global-set-key (kbd "M-s O") 'helm-multi-swoop)
-      (global-set-key (kbd "M-s /") 'helm-multi-swoop)
-      ;; (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+      (global-set-key (kbd "M-s O") #'helm-multi-swoop)
+      (global-set-key (kbd "M-s /") #'helm-multi-swoop)
+      ;; (global-set-key (kbd "C-c M-i") #'helm-multi-swoop)
 
-      ;; (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+      ;; (global-set-key (kbd "C-x M-i") #'helm-multi-swoop-all)
 
       ;; when doing Isearch, hand the word over to `helm-swoop'
       (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
@@ -2549,14 +2549,14 @@ These packages are neither built-in nor already installed nor ignored."
   (leuven--section "19.2 (emacs)List Buffers")
 
   ;; rebind `C-x C-b'
-  (global-set-key (kbd "C-x C-b") 'electric-buffer-list)
+  (global-set-key (kbd "C-x C-b") #'electric-buffer-list)
                                         ; `buffer-menu' moves point in the
                                         ; window which lists your buffers
                                         ; `electric-buffer-list' pops up
                                         ; a buffer describing the set of buffers
 
   ;; operate on buffers like Dired
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  (global-set-key (kbd "C-x C-b") #'ibuffer)
 
   (with-eval-after-load "ibuffer"
 
@@ -2653,14 +2653,14 @@ These packages are neither built-in nor already installed nor ignored."
     (kill-buffer nil))
 
   ;; key binding
-  (global-set-key (kbd "<S-f12>") 'leuven-kill-this-buffer-without-query)
+  (global-set-key (kbd "<S-f12>") #'leuven-kill-this-buffer-without-query)
 
 ;;** 19.5 (info "(emacs)Several Buffers")
 
   (leuven--section "19.5 (emacs)Several Buffers")
 
   ;; put the current buffer at the end of the list of all buffers
-  (global-set-key (kbd "<f12>") 'bury-buffer)
+  (global-set-key (kbd "<f12>") #'bury-buffer)
                                         ; conflict when GDB'ing Emacs under
                                         ; Win32
 
@@ -2696,9 +2696,10 @@ These packages are neither built-in nor already installed nor ignored."
   (leuven--section "20.3 (emacs)Other Window")
 
   ;; Cycle through all windows on current frame.
-  (global-set-key (kbd "<f6>") 'other-window)
+  (global-set-key (kbd "<f6>") #'other-window)
 
   ;; Reverse operation of `C-x o' (or `f6').
+  ;; XXX Name the command!
   (global-set-key (kbd "<S-f6>")
     (lambda ()
       (interactive)
@@ -2734,7 +2735,7 @@ These packages are neither built-in nor already installed nor ignored."
            (delete-other-windows))))
 
   ;; Delete all windows in the selected frame except the selected window.
-  (global-set-key (kbd "<f5>") 'leuven-delete-or-split-window)
+  (global-set-key (kbd "<f5>") #'leuven-delete-or-split-window)
 
   ;; Swap 2 windows.
   (defun leuven-swap-windows ()
@@ -2754,7 +2755,7 @@ These packages are neither built-in nor already installed nor ignored."
              (set-window-start wind-1 start-2)
              (set-window-start wind-2 start-1)))))
 
-  (global-set-key (kbd "C-c ~") 'leuven-swap-windows)
+  (global-set-key (kbd "C-c ~") #'leuven-swap-windows)
 
   (defun leuven-toggle-window-split ()
     "Toggle between vertical and horizontal split.
@@ -2786,7 +2787,7 @@ These packages are neither built-in nor already installed nor ignored."
                (select-window first-win)
                (if this-win-2nd (other-window 1)))))))
 
-  (global-set-key (kbd "C-c |") 'leuven-toggle-window-split)
+  (global-set-key (kbd "C-c |") #'leuven-toggle-window-split)
 
   (defun toggle-current-window-dedication ()
     "Toggle whether the current active window is dedicated or not."
@@ -2891,7 +2892,7 @@ These packages are neither built-in nor already installed nor ignored."
             (leuven--x-window-p
              (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                                     '(2 "_NET_WM_STATE_FULLSCREEN" 0))))
-      (global-set-key (kbd "C-c z") 'leuven-restore-frame))
+      (global-set-key (kbd "C-c z") #'leuven-restore-frame))
 
     (defun leuven-restore-frame ()
       "Restore a minimized frame."
@@ -2901,9 +2902,9 @@ These packages are neither built-in nor already installed nor ignored."
             (leuven--x-window-p
              (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                                     '(2 "_NET_WM_STATE_FULLSCREEN" 0))))
-      (global-set-key (kbd "C-c z") 'leuven-maximize-frame))
+      (global-set-key (kbd "C-c z") #'leuven-maximize-frame))
 
-    (global-set-key (kbd "C-c z") 'leuven-maximize-frame))
+    (global-set-key (kbd "C-c z") #'leuven-maximize-frame))
 
   ;; Maximize Emacs frame by default.
   (modify-all-frames-parameters '((fullscreen . maximized)))
@@ -2915,7 +2916,7 @@ These packages are neither built-in nor already installed nor ignored."
   (unless (featurep 'helm-config)       ; Helm is better than speedbar!
 
     ;; Jump to speedbar frame.
-    (global-set-key (kbd "<f4>") 'speedbar-get-focus))
+    (global-set-key (kbd "<f4>") #'speedbar-get-focus))
 
   ;; Everything browser (into individual source files), or Dired on steroids.
   (with-eval-after-load "speedbar"
@@ -2945,7 +2946,7 @@ These packages are neither built-in nor already installed nor ignored."
                (locate-library "sr-speedbar"))
 
       (autoload 'sr-speedbar-toggle "sr-speedbar" nil t)
-      (global-set-key (kbd "<f4>") 'sr-speedbar-toggle)))
+      (global-set-key (kbd "<f4>") #'sr-speedbar-toggle)))
 
 ;;** 21.12 (info "(emacs)Scroll Bars")
 
@@ -3145,14 +3146,14 @@ These packages are neither built-in nor already installed nor ignored."
     (save-excursion
       (indent-region (point-min) (point-max) nil)))
 
-  (global-set-key (kbd "C-x \\") 'align-regexp)
+  (global-set-key (kbd "C-x \\") #'align-regexp)
 
   (defun leuven-align-to-equals (begin end)
     "Align region to equal signs."
     (interactive "r")
     (align-regexp begin end "\\(\\s-*\\)=" 1 1))
 
-  (global-set-key (kbd "C-c =") 'leuven-align-to-equals)
+  (global-set-key (kbd "C-c =") #'leuven-align-to-equals)
 
   ;; Show vertical lines to guide indentation.
   (with-eval-after-load "indent-guide-autoloads-XXX" ; Display problems with CrossMapIntegration.java
@@ -3189,7 +3190,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; GNU Emacs default for killing back to the beginning of a word.
   (XEmacs
-    (global-set-key (kbd "<C-backspace>") 'backward-kill-word))
+    (global-set-key (kbd "<C-backspace>") #'backward-kill-word))
 
 ;;** 25.2 (info "(emacs)Sentences")
 
@@ -3203,7 +3204,7 @@ These packages are neither built-in nor already installed nor ignored."
     (interactive)
     (insert-char ?\u00A0))
 
-  (global-set-key (kbd "S-SPC") 'leuven-nbsp-command)
+  (global-set-key (kbd "S-SPC") #'leuven-nbsp-command)
 
 ;;** 25.5 (info "(emacs)Filling") Text
 
@@ -3223,7 +3224,7 @@ These packages are neither built-in nor already installed nor ignored."
                          fill-column)))
       (fill-paragraph nil)))
 
-  (global-set-key (kbd "M-q") 'leuven-fill-paragraph)
+  (global-set-key (kbd "M-q") #'leuven-fill-paragraph)
 
   ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
   (add-hook 'fill-nobreak-predicate #'fill-french-nobreak-p)
@@ -3327,8 +3328,8 @@ These packages are neither built-in nor already installed nor ignored."
 
   (defun leuven--smart-punctuation ()
     "Replace second apostrophe or quotation mark."
-    (local-set-key [39] 'leuven-smart-punctuation-apostrophe)
-    (local-set-key "\"" 'leuven-smart-punctuation-quotation-mark))
+    (local-set-key [39] #'leuven-smart-punctuation-apostrophe)
+    (local-set-key "\"" #'leuven-smart-punctuation-quotation-mark))
 
   (add-hook 'text-mode-hook #'leuven--smart-punctuation)
   (add-hook 'message-mode-hook #'leuven--smart-punctuation)
@@ -3413,10 +3414,10 @@ These packages are neither built-in nor already installed nor ignored."
     ;; (key-chord-define-global "fc" 'flycheck-mode)
     ;; (key-chord-define-global "fv" (lambda () (interactive) (kill-buffer (buffer-name))))
     ;; (key-chord-define-global "sv" 'save-buffer)
-    ;; (global-set-key (kbd "M-2") 'highlight-symbol-occur)
+    ;; (global-set-key (kbd "M-2") #'highlight-symbol-occur)
     ;; (global-set-key (kbd "M-3") (lambda () (interactive) (highlight-symbol-jump -1)))
     ;; (global-set-key (kbd "M-4") (lambda () (interactive) (highlight-symbol-jump 1)))
-    ;; (key-chord-define-global "vg" 'vc-git-grep)
+    ;; (key-chord-define-global "vg" #'vc-git-grep)
 
     ;; (key-chord-define-global "''" "`'\C-b")
     ;; (key-chord-define-global "dq" "\"\"\C-b")
@@ -3530,7 +3531,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;;     (define-key outline-minor-mode-map [(control tab)] 'org-cycle)
   ;;     (define-key outline-minor-mode-map [(shift tab)] 'org-global-cycle))) ; backtab?
 
-  (global-set-key (kbd "<S-tab>") 'org-cycle) ; that works (but on level 1+)
+  (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
   ;; TODO Look at org-cycle-global and local below, they work better, but
   ;; still on level 1+
   ;; TODO Replace it by a function which alternatively does `hide-body' and
@@ -3546,7 +3547,7 @@ These packages are neither built-in nor already installed nor ignored."
     (interactive)
     (org-cycle t))
 
-  (global-set-key (kbd "C-M-]") 'org-cycle-global)
+  (global-set-key (kbd "C-M-]") #'org-cycle-global)
                                         ; XXX ok on Emacs Lisp, not on LaTeX
                                         ; <S-tab>?
 
@@ -3563,7 +3564,7 @@ These packages are neither built-in nor already installed nor ignored."
       (beginning-of-defun))
     (org-cycle))
 
-  (global-set-key (kbd "M-]") 'org-cycle-local)
+  (global-set-key (kbd "M-]") #'org-cycle-local)
                                         ; XXX ok on Emacs Lisp, not on LaTeX
 
 ;; C-M-] and M-] fold the whole buffer or the current defun.
@@ -3573,14 +3574,14 @@ These packages are neither built-in nor already installed nor ignored."
   ;;   (try-require 'fold-dwim-org))
 
   ;; 25.8.2
-  (global-set-key (kbd "<M-f6>") 'visible-mode)
+  (global-set-key (kbd "<M-f6>") #'visible-mode)
 
 ;;** (info "(emacs-goodies-el)boxquote")
 
   (leuven--section "(emacs-goodies-el)boxquote")
 
   (with-eval-after-load "boxquote-autoloads"
-    (global-set-key (kbd "C-c q") 'boxquote-region))
+    (global-set-key (kbd "C-c q") #'boxquote-region))
 
   (with-eval-after-load "boxquote"
     (setq boxquote-top-and-tail  "────")
@@ -3624,8 +3625,8 @@ These packages are neither built-in nor already installed nor ignored."
   (define-key global-map (kbd "C-c a") 'org-agenda)
 
   ;; Using links outside Org.
-  (global-set-key (kbd "C-c L") 'org-insert-link-global)
-  (global-set-key (kbd "C-c O") 'org-open-at-point-global)
+  (global-set-key (kbd "C-c L") #'org-insert-link-global)
+  (global-set-key (kbd "C-c O") #'org-open-at-point-global)
 
   (with-eval-after-load "org"
     ;; Display the Org mode manual in Info mode.
@@ -3686,14 +3687,14 @@ These packages are neither built-in nor already installed nor ignored."
   (add-hook 'org-mode-hook
             (lambda ()
               ;; ;; Create a binding for `org-show-subtree'.
-              ;; (local-set-key (kbd "C-c C-S-s") 'org-show-subtree)
-              ;; (local-set-key (kbd "C-c s") 'org-show-subtree)
+              ;; (local-set-key (kbd "C-c C-S-s") #'org-show-subtree)
+              ;; (local-set-key (kbd "C-c s") #'org-show-subtree)
 
-              ;; (local-set-key (kbd "C-c h") 'hide-other) ; I should use it!!
+              ;; (local-set-key (kbd "C-c h") #'hide-other) ; I should use it!!
 
               ;; Table.
-              (local-set-key (kbd "C-M-w") 'org-table-copy-region)
-              (local-set-key (kbd "C-M-y") 'org-table-paste-rectangle)
+              (local-set-key (kbd "C-M-w") #'org-table-copy-region)
+              (local-set-key (kbd "C-M-y") #'org-table-paste-rectangle)
 
               ;; Remove some bindings.
               (local-unset-key (kbd "C-c SPC")) ; Used by Ace Jump.
@@ -3870,12 +3871,12 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Lisp files.
   (add-hook 'org-mode-hook
             (lambda ()
-              ;; (local-set-key (kbd "M-n") 'outline-next-visible-heading)
-              ;; (local-set-key (kbd "M-p") 'outline-previous-visible-heading)
+              ;; (local-set-key (kbd "M-n") #'outline-next-visible-heading)
+              ;; (local-set-key (kbd "M-p") #'outline-previous-visible-heading)
               ;;
-              (local-set-key (kbd "C-M-n") 'outline-next-visible-heading)
-              (local-set-key (kbd "C-M-p") 'outline-previous-visible-heading)
-              (local-set-key (kbd "C-M-u") 'outline-up-heading)))
+              (local-set-key (kbd "C-M-n") #'outline-next-visible-heading)
+              (local-set-key (kbd "C-M-p") #'outline-previous-visible-heading)
+              (local-set-key (kbd "C-M-u") #'outline-up-heading)))
 
   ;; Headlines in the current buffer are offered via completion
   ;; (interface also used by the `refile' command).
@@ -3944,7 +3945,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Use `C-c C-x f' to add a footnote, to go back to the message
   ;; *and* to go to a footnote.
-  (global-set-key (kbd "C-c C-x f") 'org-footnote-action)
+  (global-set-key (kbd "C-c C-x f") #'org-footnote-action)
 
 ;;* 3 (info "(org)Tables")
 
@@ -4359,9 +4360,9 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "8.4 (org)Clocking work time")
 
-  (global-set-key (kbd "C-c C-x C-i") 'org-clock-in)
-  (global-set-key (kbd "C-c C-x C-j") 'org-clock-goto)
-  (global-set-key (kbd "C-c C-x C-o") 'org-clock-out)
+  (global-set-key (kbd "C-c C-x C-i") #'org-clock-in)
+  (global-set-key (kbd "C-c C-x C-j") #'org-clock-goto)
+  (global-set-key (kbd "C-c C-x C-o") #'org-clock-out)
 
   ;; The time clocking code for Org mode.
   ;; (require 'org-clock)               ;! needed for trying to automatically
@@ -4419,7 +4420,7 @@ These packages are neither built-in nor already installed nor ignored."
             (org-clock-in nil))
         (org-clock-out)))
 
-    (global-set-key (kbd "C-c C-x C-q") 'leuven-org-clock-in-interrupted-task)
+    (global-set-key (kbd "C-c C-x C-q") #'leuven-org-clock-in-interrupted-task)
 
     ;; 8.4.3 Resolve open clocks if the user is idle more than 120 minutes.
     (setq org-clock-idle-time 120)
@@ -5143,7 +5144,7 @@ From %c"
       (org-todo-list)))
 
   ;; "TODO list" without asking for a directory.
-  (global-set-key (kbd "<C-f3>") 'leuven-org-todo-list-current-dir)
+  (global-set-key (kbd "<C-f3>") #'leuven-org-todo-list-current-dir)
 
 ;;** 10.7 (info "(org)Exporting Agenda Views")
 
@@ -5536,7 +5537,7 @@ this with to-do items than with projects or headings."
     (setq htmlize-convert-nonascii-to-entities nil)
 
     ;; Key binding.
-    (global-set-key (kbd "M-P") 'htmlize-buffer)
+    (global-set-key (kbd "M-P") #'htmlize-buffer)
 
     )                                   ; with-eval-after-load "htmlize" ends here.
 
@@ -5546,7 +5547,7 @@ this with to-do items than with projects or headings."
       "Convert buffer to html preserving faces and view in web browser." t)
 
     ;; Same key binding as Org export to HTML (open in browser).
-    (global-set-key (kbd "C-c C-e h o") 'htmlize-view-buffer)
+    (global-set-key (kbd "C-c C-e h o") #'htmlize-view-buffer)
 
     ;; View current buffer as html in web browser.
     (with-eval-after-load "htmlize-view"
@@ -6273,7 +6274,7 @@ this with to-do items than with projects or headings."
 
     (add-hook 'org-mode-hook
               (lambda ()
-                (local-set-key (kbd "C-c m") 'org-mime-subtree)))
+                (local-set-key (kbd "C-c m") #'org-mime-subtree)))
 
     (defun leuven-mail-subtree ()
       (interactive)
@@ -6282,7 +6283,7 @@ this with to-do items than with projects or headings."
 
     (add-hook 'org-agenda-mode-hook
               (lambda ()
-                (local-set-key (kbd "C-c m") 'leuven-mail-subtree)))
+                (local-set-key (kbd "C-c m") #'leuven-mail-subtree)))
 
     ;; Add a `mail_composed' property with the current time when
     ;; `org-mime-subtree' is called.
@@ -6635,7 +6636,7 @@ this with to-do items than with projects or headings."
           (tidy-build-menu html-helper-mode-map))
 
         ;; Bind the key sequence `C-c C-c' to `tidy-buffer'.
-        (local-set-key (kbd "C-c C-c") 'tidy-buffer)
+        (local-set-key (kbd "C-c C-c") #'tidy-buffer)
 
         (setq sgml-validate-command "tidy"))
 
@@ -6722,8 +6723,8 @@ this with to-do items than with projects or headings."
   (GNUEmacs24
     (add-hook 'prog-mode-hook
               (lambda ()
-                (local-set-key (kbd "<C-S-up>") 'leuven-move-line-up)
-                (local-set-key (kbd "<C-S-down>") 'leuven-move-line-down))))
+                (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)
+                (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down))))
                                         ; Sublime Text
 
   (defun leuven-scroll-up-one-line ()
@@ -6739,8 +6740,8 @@ this with to-do items than with projects or headings."
   (GNUEmacs24
     (add-hook 'prog-mode-hook
               (lambda ()
-                (local-set-key (kbd "<C-up>") 'leuven-scroll-up-one-line)
-                (local-set-key (kbd "<C-down>") 'leuven-scroll-down-one-line))))
+                (local-set-key (kbd "<C-up>") #'leuven-scroll-up-one-line)
+                (local-set-key (kbd "<C-down>") #'leuven-scroll-down-one-line))))
                                         ; Sublime Text + SQL Management Studio
 
 ;;** 26.1 Major Modes for (info "(emacs)Program Modes")
@@ -6764,8 +6765,8 @@ this with to-do items than with projects or headings."
       (add-hook 'font-lock-mode-hook #'try-to-add-imenu)
 
       ;; Bind Imenu from the mouse.
-      (GNUEmacs (global-set-key [S-mouse-3] 'imenu))
-      (XEmacs (global-set-key [(shift button3)] 'imenu))
+      (GNUEmacs (global-set-key [S-mouse-3] #'imenu))
+      (XEmacs (global-set-key [(shift button3)] #'imenu))
 
       ;; String to display in the mode line when current function is unknown.
       (setq which-func-unknown "(Top Level)")
@@ -6793,7 +6794,7 @@ mouse-3: go to end") "]"))))
     (with-eval-after-load "imenu-anywhere-autoloads"
 
       ;; `helm' source for `imenu-anywhere'.
-      (global-set-key (kbd "C-.") 'helm-imenu-anywhere)))
+      (global-set-key (kbd "C-.") #'helm-imenu-anywhere)))
                                         ; XXX Conflict with
                                         ; `flyspell-auto-correct-word'
 
@@ -6811,7 +6812,7 @@ mouse-3: go to end") "]"))))
     (GNUEmacs24
       (add-hook 'prog-mode-hook
                 (lambda ()
-                  (local-set-key (kbd "<return>") 'newline-and-indent))))
+                  (local-set-key (kbd "<return>") #'newline-and-indent))))
 
     ;; (defun back-to-indentation-or-beginning ()
     ;;   (interactive)
@@ -6862,7 +6863,7 @@ mouse-3: go to end") "]"))))
     (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
           ((looking-at "\\s\)") (forward-char 1) (backward-list 1))))
 
-  (global-set-key (kbd "C-)") 'leuven-match-paren)
+  (global-set-key (kbd "C-)") #'leuven-match-paren)
 
   ;; Enable automatic parens pairing (Electric Pair mode).
   (electric-pair-mode 1)
@@ -7054,7 +7055,7 @@ mouse-3: go to end") "]"))))
   (autoload 'recompile "compile"
     "Re-compile the program including the current buffer." t)
 
-  (global-set-key (kbd "<f9>") 'recompile)
+  (global-set-key (kbd "<f9>") #'recompile)
 
   ;; Scroll the `*compilation*' buffer window to follow output as it appears.
   (setq compilation-scroll-output t)
@@ -7098,7 +7099,7 @@ mouse-3: go to end") "]"))))
     (save-some-buffers (not compilation-ask-about-save) nil)
     (compile-internal make-clean-command "No more errors"))
 
-  (global-set-key (kbd "<S-f9>") 'make-clean)
+  (global-set-key (kbd "<S-f9>") #'make-clean)
 
 ;;** 27.2 (info "(emacs)Compilation Mode")
 
@@ -7108,15 +7109,15 @@ mouse-3: go to end") "]"))))
   (setq compilation-auto-jump-to-first-error t)
 
   ;; Display the next compiler error message.
-  (global-set-key (kbd "<f10>") 'next-error)
+  (global-set-key (kbd "<f10>") #'next-error)
                                         ; Also on `C-x `' and `M-g n'.
 
   ;; Display the previous compiler error message.
-  (global-set-key (kbd "<S-f10>") 'previous-error)
+  (global-set-key (kbd "<S-f10>") #'previous-error)
                                         ; Also on `M-g p'.
 
   ;; Display the first compiler error message.
-  (global-set-key (kbd "<C-f10>") 'first-error)
+  (global-set-key (kbd "<C-f10>") #'first-error)
 
   ;; ;; Prefer fringe.
   ;; (setq next-error-highlight 'fringe-arrow)
@@ -7142,7 +7143,7 @@ mouse-3: go to end") "]"))))
   (setq grep-find-use-xargs 'gnu)
 
   ;; Run `grep' via `find', with user-friendly interface.
-  (global-set-key (kbd "C-c 3") 'rgrep)
+  (global-set-key (kbd "C-c 3") #'rgrep)
 
   ;; 10.3.5 Org keyword search
   (defun leuven-grep-org-files (regexp &optional context)
@@ -7201,7 +7202,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (add-hook 'flycheck-after-syntax-check-hook
               #'leuven--adjust-flycheck-automatic-syntax-eagerness))
 
-  (global-set-key (kbd "C-x C-S-e") 'elint-current-buffer)
+  (global-set-key (kbd "C-x C-S-e") #'elint-current-buffer)
 
   (with-eval-after-load "elint"
     (add-to-list 'elint-standard-variables 'current-prefix-arg)
@@ -7274,7 +7275,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (kill-sexp -1)
       (insert (format "%S" value))))
 
-  (global-set-key (kbd "C-c e") 'eval-and-replace)
+  (global-set-key (kbd "C-c e") #'eval-and-replace)
 
   ;; Dynamic evaluation replacement with Emacs.
   (with-eval-after-load "litable-autoloads"
@@ -7350,12 +7351,12 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Number of chars from the full SHA1 hash to use for abbreviation.
     (setq git-timemachine-abbreviation-length 7)
 
-    (global-set-key (kbd "C-x v t") 'git-timemachine))
+    (global-set-key (kbd "C-x v t") #'git-timemachine))
 
   ;; Pop up last commit information of current line.
   (with-eval-after-load "git-messenger-autoloads"
 
-    (global-set-key (kbd "C-x v p") 'git-messenger:popup-message) ; `C-h g'.
+    (global-set-key (kbd "C-x v p") #'git-messenger:popup-message) ; `C-h g'.
 
     ;; Pop up commit ID and author name too.
     (setq git-messenger:show-detail t))
@@ -7377,7 +7378,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (vc-dir dname)))
 
   ;; vc status without asking for a directory
-  (global-set-key (kbd "<C-f9>") 'leuven-vc-jump)
+  (global-set-key (kbd "<C-f9>") #'leuven-vc-jump)
 
   (add-hook  'vc-dir-mode-hook
              (lambda ()
@@ -7524,7 +7525,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "etags-select"
 
     ;; do a `find-tag-at-point', and display all exact matches
-    (global-set-key (kbd "M-?") 'etags-select-find-tag-at-point))
+    (global-set-key (kbd "M-?") #'etags-select-find-tag-at-point))
 
   ;; find the definition of the Emacs Lisp function or variable near point
   (GNUEmacs
@@ -7604,61 +7605,61 @@ a clean buffer we're an order of magnitude laxer about checking."
       (defun leuven--semantic ()
         ;; Automatically complete whatever symbol you are typing.
         (local-set-key
-          (kbd "C-c ?") 'semantic-ia-complete-symbol) ; Better binding: `M-/'?
+          (kbd "C-c ?") #'semantic-ia-complete-symbol) ; Better binding: `M-/'?
 
         ;; Jump to the definition of the symbol under cursor.
         (local-set-key
-          (kbd "C-c j") 'semantic-ia-fast-jump) ; Where a symbol is declared.
+          (kbd "C-c j") #'semantic-ia-fast-jump) ; Where a symbol is declared.
 
         ;; Show the documentation of the symbol under cursor.
         (local-set-key
-          (kbd "C-c q") 'semantic-ia-show-doc) ; Show javadoc of the right method.
+          (kbd "C-c q") #'semantic-ia-show-doc) ; Show javadoc of the right method.
 
         ;; Show a summary about the symbol under cursor.
         (local-set-key
-          (kbd "C-c s") 'semantic-ia-show-summary)
+          (kbd "C-c s") #'semantic-ia-show-summary)
 
 
         ;; Show possible public member functions or data members (when at `.'
         ;; or `->' after an object name).
         (local-set-key
-          (kbd "C-c >") 'semantic-complete-analyze-inline)
+          (kbd "C-c >") #'semantic-complete-analyze-inline)
 
         ;; Toggle between the implementation and a prototype of symbol under
         ;; cursor.
         (local-set-key
-          (kbd "C-c p") 'semantic-analyze-proto-impl-toggle)
+          (kbd "C-c p") #'semantic-analyze-proto-impl-toggle)
 
         ;; Visit the header file under cursor.
         (local-set-key
-          (kbd "C-c =") 'semantic-decoration-include-visit)
+          (kbd "C-c =") #'semantic-decoration-include-visit)
 
 
         ;; Unfold the block under cursor.
         (local-set-key
-          (kbd "C-c +") 'semantic-tag-folding-show-block)
+          (kbd "C-c +") #'semantic-tag-folding-show-block)
 
         ;; Fold the block under cursor.
         (local-set-key
-          (kbd "C-c -") 'semantic-tag-folding-fold-block)
+          (kbd "C-c -") #'semantic-tag-folding-fold-block)
 
         ;; C-c C-c is not a prefix key!
         ;; ;; Unfold all.
         ;; (local-set-key
-        ;;   (kbd "C-c C-c +") 'semantic-tag-folding-show-all)
+        ;;   (kbd "C-c C-c +") #'semantic-tag-folding-show-all)
         ;;
         ;; ;; Fold all.
         ;; (local-set-key
-        ;;   (kbd "C-c C-c -") 'semantic-tag-folding-fold-all)
+        ;;   (kbd "C-c C-c -") #'semantic-tag-folding-fold-all)
         )
 
       (add-hook 'prog-mode-hook #'leuven--semantic)
 
       (defun leuven--c-mode-semantic ()
         "Completion on `.' or `->'."
-        (local-set-key (kbd ".") 'semantic-complete-self-insert)
-        (local-set-key (kbd ">") 'semantic-complete-self-insert)
-        (local-set-key (kbd "C-c C-r") 'semantic-symref))
+        (local-set-key (kbd ".") #'semantic-complete-self-insert)
+        (local-set-key (kbd ">") #'semantic-complete-self-insert)
+        (local-set-key (kbd "C-c C-r") #'semantic-symref))
 
       (add-hook 'c-mode-common-hook #'leuven--c-mode-semantic))
                                         ; Note that this will apply to all
@@ -7738,7 +7739,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;; UI for selecting snippet when there are multiple candidates.
       (setq yas-prompt-functions '(yas-dropdown-prompt))
 
-      (global-set-key (kbd "C-c & C-r") 'yas-reload-all)
+      (global-set-key (kbd "C-c & C-r") #'yas-reload-all)
 
       ;; Automatically reload snippets after saving.
       (defun recompile-and-reload-all-snippets ()
@@ -7750,7 +7751,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
       (add-hook 'after-save-hook #'recompile-and-reload-all-snippets)
 
-      (global-set-key (kbd "C-c & C-l") 'yas-describe-tables)
+      (global-set-key (kbd "C-c & C-l") #'yas-describe-tables)
 
       (defvar lawlist-context-menu-map
         (let ((map (make-sparse-keymap "Context Menu")))
@@ -7774,7 +7775,7 @@ a clean buffer we're an order of magnitude laxer about checking."
                 :visible (yas--show-menu-p ',major-mode)))
           (popup-menu lawlist-context-menu-map event prefix))
 
-      (global-set-key [mouse-3] 'lawlist-popup-context-menu)
+      (global-set-key [mouse-3] #'lawlist-popup-context-menu)
 
       (add-hook 'snippet-mode-hook
                 (lambda ()
@@ -7802,7 +7803,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;;   (setq dabbrev-case-replace nil))
 
   ;; Expand text trying various ways to find its expansion.
-  (global-set-key (kbd "M-/") 'hippie-expand) ; Built-in.
+  (global-set-key (kbd "M-/") #'hippie-expand) ; Built-in.
 
   (with-eval-after-load "hippie-exp"
 
@@ -7919,12 +7920,12 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Enable Company mode in all buffers ....
     (add-hook 'after-init-hook #'global-company-mode)
 
-    (global-set-key (kbd "<C-tab>") 'company-complete)
-    (global-set-key (kbd "C-/") 'company-complete))
+    (global-set-key (kbd "<C-tab>") #'company-complete)
+    (global-set-key (kbd "C-/") #'company-complete))
 
   (with-eval-after-load "company"
 
-    (global-set-key (kbd "C-/") 'company-complete-common)
+    (global-set-key (kbd "C-/") #'company-complete-common)
 
     ;; ... Except in some modes.
     (setq company-global-modes
@@ -8153,7 +8154,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Search for files with names matching a wild card pattern and Dired the
     ;; output.
-    (global-set-key (kbd "C-c 1") 'find-name-dired)
+    (global-set-key (kbd "C-c 1") #'find-name-dired)
       ;; case insensitive if `read-file-name-completion-ignore-case' is non-nil
 
     ;; `find-grep-dired' case insensitivity.
@@ -8161,7 +8162,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Search for files with contents matching a wild card pattern and Dired the
     ;; output.
-    (global-set-key (kbd "C-c 2") 'find-grep-dired)
+    (global-set-key (kbd "C-c 2") #'find-grep-dired)
 
 ;;** (info "(emacs)Wdired")
 
@@ -8403,7 +8404,7 @@ a clean buffer we're an order of magnitude laxer about checking."
                         ((equal prefix '(16)) "%Y-%m-%d %a %H:%M"))))
       (insert (format-time-string format))))
 
-  (global-set-key (kbd "C-c .") 'leuven-insert-current-date)
+  (global-set-key (kbd "C-c .") #'leuven-insert-current-date)
 
 ;;* Calendar view framework on Emacs
 
@@ -8521,7 +8522,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       "Hook BBDB into `message-mode'."))
 
   ;; search the BBDB
-  (global-set-key (kbd "<C-f11>") 'bbdb)
+  (global-set-key (kbd "<C-f11>") #'bbdb)
 
   (with-eval-after-load "bbdb"
 
@@ -8857,8 +8858,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (with-eval-after-load "multi-term-autoloads"
 
-    ;; (global-set-key (kbd "C-c t") 'multi-term-next)
-    (global-set-key (kbd "C-c T") 'multi-term)) ; Create a new one.
+    ;; (global-set-key (kbd "C-c t") #'multi-term-next)
+    (global-set-key (kbd "C-c T") #'multi-term)) ; Create a new one.
 
   (with-eval-after-load "multi-term"
 
@@ -9002,7 +9003,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 ;;* Proced
 
   ;; ;; Start Proced in a similar manner to Dired.
-  ;; (global-set-key (kbd "C-x p") 'proced) ; Conflict with Bkmp.
+  ;; (global-set-key (kbd "C-x p") #'proced) ; Conflict with Bkmp.
 
   (with-eval-after-load "proced"
 
@@ -9072,9 +9073,9 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;; Override `Print Screen' globally used as a hotkey by Windows.
       (w32-register-hot-key (kbd "<snapshot>"))
       (global-set-key
-        (kbd "<snapshot>") 'leuven-ps-print-buffer-with-faces-query)))
+        (kbd "<snapshot>") #'leuven-ps-print-buffer-with-faces-query)))
 
-  (global-set-key (kbd "M-p") 'leuven-ps-print-buffer-with-faces-query)
+  (global-set-key (kbd "M-p") #'leuven-ps-print-buffer-with-faces-query)
 
   (XEmacs
     (setq toolbar-print-function 'ps-print-buffer-with-faces))
@@ -9176,7 +9177,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 (leuven--chapter leuven-load-chapter-39-sorting "39 Sorting Text"
 
   ;; Key binding.
-  (global-set-key (kbd "C-c ^") 'sort-lines)
+  (global-set-key (kbd "C-c ^") #'sort-lines)
 
 )                                       ; Chapter 39 ends here.
 
@@ -9238,7 +9239,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (unless (featurep 'helm-config)
 
     ;; Visit a file.
-    (global-set-key (kbd "<f3>") 'find-file-at-point))
+    (global-set-key (kbd "<f3>") #'find-file-at-point))
 
   ;; Find file (or URL) at point.
   (with-eval-after-load "ffap"
@@ -9292,8 +9293,8 @@ a clean buffer we're an order of magnitude laxer about checking."
         "https://duckduckgo.com/?q="
         (url-hexify-string query)))))
 
-  (global-set-key (kbd "C-c g G") 'leuven-google-search-active-region-or-word-at-point)
-  (global-set-key (kbd "C-c g D") 'leuven-duckduckgo-search-active-region-or-word-at-point)
+  (global-set-key (kbd "C-c g G") #'leuven-google-search-active-region-or-word-at-point)
+  (global-set-key (kbd "C-c g D") #'leuven-duckduckgo-search-active-region-or-word-at-point)
 
 ;;** Babel
 
@@ -9334,7 +9335,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "google-translate-autoloads"
 
     ;; translate a text using translation directions
-    (global-set-key "\C-ct" 'google-translate-smooth-translate))
+    (global-set-key (kbd "C-c t") #'google-translate-smooth-translate))
 
   ;; just another UI to Google
   (with-eval-after-load "google-translate-smooth-ui"
