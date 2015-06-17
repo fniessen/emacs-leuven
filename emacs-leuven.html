@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150617.1541</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150617.2215</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150617.1541"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150617.2215"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -5904,7 +5904,30 @@ the one you want to paste using arrow keys. Use <code>RET</code> to insert it.
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-ring"</span>
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Max number of lines displayed per candidate in kill-ring browser.</span>
-      (setq helm-kill-ring-max-lines-number 20))
+      (setq helm-kill-ring-max-lines-number 20)
+
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">[2015-06-17 Wed] Patched `</span><span class="org-constant"><span class="org-comment">helm-show-kill-ring</span></span><span class="org-comment">' (which disables Flyspell</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">before running the Helm kill-ring).</span>
+      (<span class="org-keyword">defun</span> <span class="org-function-name">helm-show-kill-ring</span> ()
+        <span class="org-doc">"Preconfigured `</span><span class="org-constant"><span class="org-doc">helm</span></span><span class="org-doc">' for `</span><span class="org-constant"><span class="org-doc">kill-ring</span></span><span class="org-doc">'.</span>
+<span class="org-doc">      It is drop-in replacement of `</span><span class="org-constant"><span class="org-doc">yank-pop</span></span><span class="org-doc">'.</span>
+
+<span class="org-doc">      First call open the kill-ring browser, next calls move to next line."</span>
+        (interactive)
+        (<span class="org-keyword">let</span> ((enable-recursive-minibuffers t)
+              (fly-state (<span class="org-keyword">with-helm-current-buffer</span>
+                           (and (boundp 'flyspell-mode)
+                                (<span class="org-keyword">if</span> flyspell-mode 1 -1)))))
+          (and fly-state (flyspell-mode -1))
+          (<span class="org-keyword">unwind-protect</span>
+              (helm <span class="org-builtin">:sources</span> helm-source-kill-ring
+                    <span class="org-builtin">:buffer</span> <span class="org-string">"*helm kill ring*"</span>
+                    <span class="org-builtin">:resume</span> 'noresume
+                    <span class="org-builtin">:allow-nest</span> t)
+            (<span class="org-keyword">with-helm-current-buffer</span>
+              (run-with-idle-timer 0.01 nil
+                                   (<span class="org-keyword">lambda</span> ()
+                                     (and fly-state (flyspell-mode fly-state)))))))))
 </pre>
 </div>
 
@@ -11604,7 +11627,7 @@ of the files produced by LaTeX (<code>org-latex-logfiles-extensions</code>) are 
 <pre class="src src-emacs-lisp">    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--change-pdflatex-program</span> (backend)
       <span class="org-doc">"Automatically run XeLaTeX, if asked, when exporting to LaTeX."</span>
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">Default (in Windows binary).</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Default.</span>
       (setq org-latex-pdf-process
             (<span class="org-keyword">cond</span>
              ((and leuven--win32-p (executable-find <span class="org-string">"latexmk"</span>))
@@ -13082,9 +13105,11 @@ it to the hook outside of Org (not anymore in an <code>with-eval-after-load</cod
       (<span class="org-keyword">let</span> ((cache-long-scans nil)      <span class="org-comment-delimiter">; </span><span class="org-comment">Make `</span><span class="org-constant"><span class="org-comment">forward-line</span></span><span class="org-comment">' much faster and</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">thus `</span><span class="org-constant"><span class="org-comment">org-goto-line</span></span><span class="org-comment">', `</span><span class="org-constant"><span class="org-comment">org-table-sum</span></span><span class="org-comment">',</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">etc.</span>
-            (flyspell-mode-before-save flyspell-mode)
+            (fly-state (and (boundp 'flyspell-mode)
+                            (<span class="org-keyword">if</span> flyspell-mode 1 -1)))
             (buffer-undo-list buffer-undo-list)) <span class="org-comment-delimiter">; </span><span class="org-comment">For goto-chg.</span>
-        (flyspell-mode -1)              <span class="org-comment-delimiter">; </span><span class="org-comment">Temporarily disable Flyspell to avoid</span>
+        (and fly-state (flyspell-mode -1))
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Temporarily disable Flyspell to avoid</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">checking the following modifications</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">of the buffer.</span>
         (measure-time <span class="org-string">"Realigned all tags"</span> (org-align-all-tags))
@@ -13093,7 +13118,7 @@ it to the hook outside of Org (not anymore in an <code>with-eval-after-load</cod
                       (org-table-iterate-buffer-tables))
         (<span class="org-keyword">when</span> (file-exists-p (buffer-file-name (current-buffer)))
           (leuven-org-remove-redundant-tags))
-        (<span class="org-keyword">when</span> flyspell-mode-before-save (flyspell-mode 1)))))
+        (and fly-state (flyspell-mode fly-state)))))
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Make sure that all dynamic blocks and all tables are always up-to-date.</span>
   (add-hook 'before-save-hook #'leuven--org-update-buffer-before-save)

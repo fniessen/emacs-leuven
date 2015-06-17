@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150617.1540
+;; Version: 20150617.2214
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150617.1540"
+(defconst leuven--emacs-version "20150617.2214"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2482,7 +2482,30 @@ These packages are neither built-in nor already installed nor ignored."
     (with-eval-after-load "helm-ring"
 
       ;; Max number of lines displayed per candidate in kill-ring browser.
-      (setq helm-kill-ring-max-lines-number 20))
+      (setq helm-kill-ring-max-lines-number 20)
+
+      ;; [2015-06-17 Wed] Patched `helm-show-kill-ring' (which disables Flyspell
+      ;; before running the Helm kill-ring).
+      (defun helm-show-kill-ring ()
+        "Preconfigured `helm' for `kill-ring'.
+      It is drop-in replacement of `yank-pop'.
+
+      First call open the kill-ring browser, next calls move to next line."
+        (interactive)
+        (let ((enable-recursive-minibuffers t)
+              (fly-state (with-helm-current-buffer
+                           (and (boundp 'flyspell-mode)
+                                (if flyspell-mode 1 -1)))))
+          (and fly-state (flyspell-mode -1))
+          (unwind-protect
+              (helm :sources helm-source-kill-ring
+                    :buffer "*helm kill ring*"
+                    :resume 'noresume
+                    :allow-nest t)
+            (with-helm-current-buffer
+              (run-with-idle-timer 0.01 nil
+                                   (lambda ()
+                                     (and fly-state (flyspell-mode fly-state)))))))))
 
     ;; (with-eval-after-load "helm-utils"
     ;;   (setq helm-yank-symbol-first t)
@@ -5591,7 +5614,7 @@ this with to-do items than with projects or headings."
     (defun leuven--change-pdflatex-program (backend)
       "Automatically run XeLaTeX, if asked, when exporting to LaTeX."
 
-      ;; Default (in Windows binary).
+      ;; Default.
       (setq org-latex-pdf-process
             (cond
              ((and leuven--win32-p (executable-find "latexmk"))
@@ -6335,9 +6358,11 @@ this with to-do items than with projects or headings."
       (let ((cache-long-scans nil)      ; Make `forward-line' much faster and
                                         ; thus `org-goto-line', `org-table-sum',
                                         ; etc.
-            (flyspell-mode-before-save flyspell-mode)
+            (fly-state (and (boundp 'flyspell-mode)
+                            (if flyspell-mode 1 -1)))
             (buffer-undo-list buffer-undo-list)) ; For goto-chg.
-        (flyspell-mode -1)              ; Temporarily disable Flyspell to avoid
+        (and fly-state (flyspell-mode -1))
+                                        ; Temporarily disable Flyspell to avoid
                                         ; checking the following modifications
                                         ; of the buffer.
         (measure-time "Realigned all tags" (org-align-all-tags))
@@ -6346,7 +6371,7 @@ this with to-do items than with projects or headings."
                       (org-table-iterate-buffer-tables))
         (when (file-exists-p (buffer-file-name (current-buffer)))
           (leuven-org-remove-redundant-tags))
-        (when flyspell-mode-before-save (flyspell-mode 1)))))
+        (and fly-state (flyspell-mode fly-state)))))
 
   ;; Make sure that all dynamic blocks and all tables are always up-to-date.
   (add-hook 'before-save-hook #'leuven--org-update-buffer-before-save)
