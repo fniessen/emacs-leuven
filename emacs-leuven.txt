@@ -4736,11 +4736,7 @@ respectively.
   (global-set-key (kbd "<f6>") #'other-window)
 
   ;; Reverse operation of `C-x o' (or `f6').
-  ;; XXX Name the command!
-  (global-set-key (kbd "<S-f6>")
-    (lambda ()
-      (interactive)
-      (other-window -1)))
+  (global-set-key (kbd "<S-f6>") #'previous-multiframe-window)
 #+end_src
 
 ** Deleting and Rearranging Windows

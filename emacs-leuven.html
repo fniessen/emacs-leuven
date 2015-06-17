@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150616.2306</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150617.1023</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150616.2306"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150617.1023"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -6305,11 +6305,7 @@ respectively.
   (global-set-key (kbd <span class="org-string">"&lt;f6&gt;"</span>) #'other-window)
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Reverse operation of `C-x o' (or `</span><span class="org-constant"><span class="org-comment">f6</span></span><span class="org-comment">').</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> Name the command!</span>
-  (global-set-key (kbd <span class="org-string">"&lt;S-f6&gt;"</span>)
-    (<span class="org-keyword">lambda</span> ()
-      (interactive)
-      (other-window -1)))
+  (global-set-key (kbd <span class="org-string">"&lt;S-f6&gt;"</span>) #'previous-multiframe-window)
 </pre>
 </div>
 </div>
