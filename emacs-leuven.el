@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150617.1433
+;; Version: 20150617.1540
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150617.1433"
+(defconst leuven--emacs-version "20150617.1540"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -8887,6 +8887,16 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; - ssh -t -t user@host
   ;; - Cygwin'ized Emacs
   ;; - MSYS (MinGW)
+
+  ;; Let Cygwin Emacs recognize Windows paths (e.g. C:/Program Files/).
+  (when leuven--cygwin-p
+
+    (try-require 'windows-path)
+
+    (with-eval-after-load "windows-path"
+
+      ;; Activate windows-path-style-handling.
+      (windows-path-activate)))
 
   (leuven--section "Utilities -- ESS")
 

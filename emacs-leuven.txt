@@ -15126,7 +15126,7 @@ Since GNU Emacs 23, there's now support for serial port access.  The new command
 
 ** Helper for GNU Emacs on w32
 
-Let Emacs, for example, find the program =/usr/bin/w3m=.
+Let Emacs, for example, find the program =/usr/bin/gunzip=.
 
 *But ~cygwin-mount-activate~ causes problems (Emacs crashes or unable to connect)
 when reading mail with Gnus...*
@@ -15151,7 +15151,10 @@ See =w32-settings.el= for more!
 
 ** Helper for Cygwin Emacs
 
-#+begin_src emacs-lisp :tangle no
+If you want the *backslashes* in the *Windows paths* returned by Everything to be
+interpreted correctly, you should use ~windows-path~.
+
+#+begin_src emacs-lisp
   ;; Let Cygwin Emacs recognize Windows paths (e.g. C:/Program Files/).
   (when leuven--cygwin-p
 
