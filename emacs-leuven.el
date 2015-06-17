@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150617.1022
+;; Version: 20150617.1415
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150617.1022"
+(defconst leuven--emacs-version "20150617.1415"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -319,12 +319,14 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 ;;** MS Windows
 
-  ;; FIXME The path is not correct under Cygwin Emacs (gsprint.exe not found)
-  (defconst leuven--windows-program-files-dir   ; sys-path
-    (if leuven--win32-p
-        (file-name-as-directory (getenv "PROGRAMFILES"))
-      "/usr/local/bin/")
-    "Defines the default Windows Program Files folder.")
+  (defconst leuven--windows-program-files-dir ; sys-path.
+    (cond (leuven--win32-p
+           (file-name-as-directory (getenv "ProgramFiles(x86)")))
+          (leuven--cygwin-p
+           "/cygdrive/c/Program Files (x86)/")
+          (t
+           "/usr/local/bin/"))
+    "Default Windows Program Files folder.")
 
 ;;** Window system
 
@@ -8889,28 +8891,6 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; - ssh -t -t user@host
   ;; - Cygwin'ized Emacs
   ;; - MSYS (MinGW)
-
-  ;; Let Emacs recognize Cygwin paths (e.g. /usr/local/lib).
-  (when (and leuven--win32-p
-             (executable-find "mount")) ; Cygwin bin directory found.
-
-    (with-eval-after-load "cygwin-mount-autoloads"
-
-      (autoload 'cygwin-mount-activate "cygwin-mount"
-        "Activate cygwin-mount- and cygwin-style-handling." t)
-
-      ;; (cygwin-mount-activate)           ; This is sometimes VERY SLOW!
-      ))
-
-  ;; Let Emacs recognize Windows paths (e.g. C:/Program Files/).
-  (when leuven--cygwin-p
-
-    (try-require 'windows-path)
-
-    (with-eval-after-load "windows-path"
-
-      ;; Activate windows-path-style-handling.
-      (windows-path-activate)))
 
   (leuven--section "Utilities -- ESS")
 

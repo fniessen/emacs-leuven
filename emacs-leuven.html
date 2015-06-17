@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150617.1023</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150617.1416</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150617.1023"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150617.1416"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -879,12 +879,14 @@ distro) without impacting on stuff you have added by hand.
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">** MS Windows</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-leuven-highlight"><span class="org-comment">FIXME</span></span><span class="org-comment"> The path is not correct under Cygwin Emacs (gsprint.exe not found)</span>
-  (<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--windows-program-files-dir</span>   <span class="org-comment-delimiter">; </span><span class="org-comment">sys-path</span>
-    (<span class="org-keyword">if</span> leuven--win32-p
-        (file-name-as-directory (getenv <span class="org-string">"PROGRAMFILES"</span>))
-      <span class="org-string">"/usr/local/bin/"</span>)
-    <span class="org-doc">"Defines the default Windows Program Files folder."</span>)
+  (<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--windows-program-files-dir</span> <span class="org-comment-delimiter">; </span><span class="org-comment">sys-path.</span>
+    (<span class="org-keyword">cond</span> (leuven--win32-p
+           (file-name-as-directory (getenv <span class="org-string">"ProgramFiles(x86)"</span>)))
+          (leuven--cygwin-p
+           <span class="org-string">"/cygdrive/c/Program Files (x86)/"</span>)
+          (t
+           <span class="org-string">"/usr/local/bin/"</span>))
+    <span class="org-doc">"Default Windows Program Files folder."</span>)
 </pre>
 </div>
 
@@ -19553,7 +19555,7 @@ Those problems disappear as soon as we do <code>cygwin-mount-deactivate</code>&#
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Let Emacs recognize Cygwin paths (e.g. /usr/local/lib).</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Let Windows Emacs recognize Cygwin paths (e.g. /usr/local/lib).</span>
   (<span class="org-keyword">when</span> (and leuven--win32-p
              (executable-find <span class="org-string">"mount"</span>)) <span class="org-comment-delimiter">; </span><span class="org-comment">Cygwin bin directory found.</span>
 
@@ -19578,7 +19580,7 @@ See <code>w32-settings.el</code> for more!
 <div class="outline-text-3" id="text-orgheadline391">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Let Emacs recognize Windows paths (e.g. C:/Program Files/).</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Let Cygwin Emacs recognize Windows paths (e.g. C:/Program Files/).</span>
   (<span class="org-keyword">when</span> leuven--cygwin-p
 
     (try-require 'windows-path)

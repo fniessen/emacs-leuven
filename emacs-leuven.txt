@@ -8,16 +8,14 @@
 #+OPTIONS:   H:4 num:nil toc:2
 #+EXCLUDE_TAGS: noexport
 
-#+PROPERTY:  eval never
-#+PROPERTY:  padline yes
-#+PROPERTY:  tangle yes
+#+PROPERTY:  header-args :eval never :padline yes :tangle yes
 
 # #+SETUPFILE: ./bigblow-pirilampo.setup
 #+SETUPFILE: ~/src/org-html-themes/setup/theme-readtheorg-local-abs.setup
 
 * Tasks                                                               :noexport:
   :PROPERTIES:
-  :tangle:   no
+  :header-args: :tangle no
   :END:
 
 ** TODO Improve writing of time-substract
@@ -51,7 +49,7 @@ https://support.rstudio.com/hc/en-us/articles/200710523
 
 ** TODO Automate reporting of style errors
    :PROPERTIES:
-   :tangle:   no
+   :header-args: :tangle no
    :END:
 
 Report all errors with:
@@ -79,7 +77,7 @@ Report all errors with:
 
 ** TODO Optimize startup time
    :PROPERTIES:
-   :tangle:   no
+   :header-args: :tangle no
    :END:
 
 *** Context
@@ -543,12 +541,14 @@ distro) without impacting on stuff you have added by hand.
 
 ;;** MS Windows
 
-  ;; FIXME The path is not correct under Cygwin Emacs (gsprint.exe not found)
-  (defconst leuven--windows-program-files-dir   ; sys-path
-    (if leuven--win32-p
-        (file-name-as-directory (getenv "PROGRAMFILES"))
-      "/usr/local/bin/")
-    "Defines the default Windows Program Files folder.")
+  (defconst leuven--windows-program-files-dir ; sys-path.
+    (cond (leuven--win32-p
+           (file-name-as-directory (getenv "ProgramFiles(x86)")))
+          (leuven--cygwin-p
+           "/cygdrive/c/Program Files (x86)/")
+          (t
+           "/usr/local/bin/"))
+    "Default Windows Program Files folder.")
 #+end_src
 
 Use ~(display-graphic-p)~ (instead of ~window-system~) in conditions.
@@ -15132,8 +15132,8 @@ when reading mail with Gnus...*
 
 Those problems disappear as soon as we do ~cygwin-mount-deactivate~...
 
-#+begin_src emacs-lisp
-  ;; Let Emacs recognize Cygwin paths (e.g. /usr/local/lib).
+#+begin_src emacs-lisp :tangle no
+  ;; Let Windows Emacs recognize Cygwin paths (e.g. /usr/local/lib).
   (when (and leuven--win32-p
              (executable-find "mount")) ; Cygwin bin directory found.
 
@@ -15150,8 +15150,8 @@ See =w32-settings.el= for more!
 
 ** Helper for Cygwin Emacs
 
-#+begin_src emacs-lisp
-  ;; Let Emacs recognize Windows paths (e.g. C:/Program Files/).
+#+begin_src emacs-lisp :tangle no
+  ;; Let Cygwin Emacs recognize Windows paths (e.g. C:/Program Files/).
   (when leuven--cygwin-p
 
     (try-require 'windows-path)
@@ -16234,7 +16234,7 @@ Those bindings are global and repeatable, e.g. ~C-x C-+ C-+ C-+~.
 ** Images
    :PROPERTIES:
    :ID:       9432da83-fa9d-4466-a4da-57f33d662bbd
-   :tangle:   no
+   :header-args: :tangle no
    :END:
 
 #+begin_src emacs-lisp
