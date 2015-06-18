@@ -8686,7 +8686,7 @@ To list all available entities, run ~M-x org-entities-help~.
     (message "... Org Exporting")
 
     ;; Libraries in this list will be loaded once the export framework is needed.
-    (setq org-export-backends '(ascii html icalendar latex odt))
+    (setq org-export-backends '(ascii html icalendar latex odt md))
 
     (define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch))
 #+end_src
@@ -8715,6 +8715,7 @@ launched from Dired?
       (interactive)
       (let* ((orgfile (buffer-file-name))
              (base-name (file-name-base orgfile))
+             (mdfile (concat base-name ".md"))
              (htmlfile (concat base-name ".html"))
              (texfile (concat base-name ".tex"))
              (pdffile (concat base-name ".pdf")))
@@ -8748,6 +8749,11 @@ launched from Dired?
              (save-buffer)))
           (measure-time "Buffer tangled"
            (org-babel-tangle))
+          (when (file-exists-p mdfile)
+            (if (file-newer-than-file-p orgfile mdfile)
+                (measure-time "Buffer exported to Markdown"
+                 (org-md-export-to-markdown))
+              (message "Markdown is up to date with Org file")))
           (when (file-exists-p htmlfile)
             (if (file-newer-than-file-p orgfile htmlfile)
                 (measure-time "Buffer exported to HTML"

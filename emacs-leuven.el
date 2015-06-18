@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150618.1439
+;; Version: 20150618.1449
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150618.1439"
+(defconst leuven--emacs-version "20150618.1449"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5343,7 +5343,7 @@ this with to-do items than with projects or headings."
     (message "... Org Exporting")
 
     ;; Libraries in this list will be loaded once the export framework is needed.
-    (setq org-export-backends '(ascii html icalendar latex odt))
+    (setq org-export-backends '(ascii html icalendar latex odt md))
 
     (define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch))
 
@@ -5354,6 +5354,7 @@ this with to-do items than with projects or headings."
       (interactive)
       (let* ((orgfile (buffer-file-name))
              (base-name (file-name-base orgfile))
+             (mdfile (concat base-name ".md"))
              (htmlfile (concat base-name ".html"))
              (texfile (concat base-name ".tex"))
              (pdffile (concat base-name ".pdf")))
@@ -5387,6 +5388,11 @@ this with to-do items than with projects or headings."
              (save-buffer)))
           (measure-time "Buffer tangled"
            (org-babel-tangle))
+          (when (file-exists-p mdfile)
+            (if (file-newer-than-file-p orgfile mdfile)
+                (measure-time "Buffer exported to Markdown"
+                 (org-md-export-to-markdown))
+              (message "Markdown is up to date with Org file")))
           (when (file-exists-p htmlfile)
             (if (file-newer-than-file-p orgfile htmlfile)
                 (measure-time "Buffer exported to HTML"

@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150618.0957</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150618.1450</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150618.0957"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150618.1450"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -11249,7 +11249,7 @@ To list all available entities, run <code>M-x org-entities-help</code>.
     (message <span class="org-string">"... Org Exporting"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Libraries in this list will be loaded once the export framework is needed.</span>
-    (setq org-export-backends '(ascii html icalendar latex odt))
+    (setq org-export-backends '(ascii html icalendar latex odt md))
 
     (define-key org-mode-map (kbd <span class="org-string">"C-c C-e"</span>) 'org-export-dispatch))
 </pre>
@@ -11290,6 +11290,7 @@ launched from Dired?
       (interactive)
       (<span class="org-keyword">let*</span> ((orgfile (buffer-file-name))
              (base-name (file-name-base orgfile))
+             (mdfile (concat base-name <span class="org-string">".md"</span>))
              (htmlfile (concat base-name <span class="org-string">".html"</span>))
              (texfile (concat base-name <span class="org-string">".tex"</span>))
              (pdffile (concat base-name <span class="org-string">".pdf"</span>)))
@@ -11323,6 +11324,11 @@ launched from Dired?
              (save-buffer)))
           (measure-time <span class="org-string">"Buffer tangled"</span>
            (org-babel-tangle))
+          (<span class="org-keyword">when</span> (file-exists-p mdfile)
+            (<span class="org-keyword">if</span> (file-newer-than-file-p orgfile mdfile)
+                (measure-time <span class="org-string">"Buffer exported to Markdown"</span>
+                 (org-md-export-to-markdown))
+              (message <span class="org-string">"Markdown is up to date with Org file"</span>)))
           (<span class="org-keyword">when</span> (file-exists-p htmlfile)
             (<span class="org-keyword">if</span> (file-newer-than-file-p orgfile htmlfile)
                 (measure-time <span class="org-string">"Buffer exported to HTML"</span>
