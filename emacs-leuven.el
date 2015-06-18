@@ -3038,8 +3038,8 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "22.1 (emacs)International Chars")
 
-  ;; Add binding for "zero width space".
-  (define-key iso-transl-ctl-x-8-map (kbd "0") [?​])
+  ;; ;; Add binding for "zero width space".
+  ;; (define-key iso-transl-ctl-x-8-map (kbd "0") [?​])
 
 ;;** 22.4 (info "(emacs)Input Methods")
 

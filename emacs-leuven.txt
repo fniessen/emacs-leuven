@@ -5262,8 +5262,8 @@ To see all the non-ASCII characters you can type with the ~C-x 8~ prefix, type
 
   (leuven--section "22.1 (emacs)International Chars")
 
-  ;; Add binding for "zero width space".
-  (define-key iso-transl-ctl-x-8-map (kbd "0") [?​])
+  ;; ;; Add binding for "zero width space".
+  ;; (define-key iso-transl-ctl-x-8-map (kbd "0") [?​])
 #+end_src
 
 #+begin_src emacs-lisp
