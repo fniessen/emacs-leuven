@@ -3922,72 +3922,64 @@ email, including several trace information for analysis.
     (recentf-mode 1))
 #+end_src
 
-*** Helm (successor of Anything)
+*** Helm
     :PROPERTIES:
     :ID:       59418189-b87e-45a2-b128-5cbdc8a16430
     :END:
 
-Helm is a incremental completion and selection narrowing framework for emacs. It
-will help steer you in the right direction when you're looking for stuff in
-Emacs (like buffers, files, etc).
+**** What is Helm?
 
-XXX Sort this section following
-https://github.com/emacs-helm/helm/wiki#generalhelmcommands and following.
+Helm (successor of Anything) is a incremental completion and selection narrowing
+framework for Emacs.
 
-Nice guide: http://tuhdo.github.io/helm-intro.html.
+It will help *steer* you in the right direction when you're looking for stuff in
+Emacs (like buffers, files, etc).  You don't have anymore to remember the
+structure of your working directory; you can focus on more important things.
 
-For Helm documentation, see the [[https://github.com/emacs-helm/helm/wiki][Emacs-helm wiki]] and the [[https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el][Helm configuration file
-of Thierry Volpiatto]]!
+**** How does it work?
 
-The /default/ prefix for Helm commands is ~C-x c~.
+The /default/ prefix for Helm commands is ~C-x c~.  In Emacs Leuven, we changed it
+to ~C-c h~.
 
-Since I use Helm, I never bother to remember the structure of my working
-directory. And that's the point: I don't have to remember such trivial details
-and I can focus my mind on other more important things.
+In Helm, generally, look at the *mode line*: you will see ~C-c ?:Help~, it is your
+friend; hit it for more info.
 
-Here is another example that make sure of Helm interface nicely:
-helm-semantic-or-imenu. Demo:
-http://tuhdo.github.io/static/part3/helm-semantic-or-imenu.gif
+- Narrow the list by typing some patterns (use the *space as separator* for
+  multiple patterns),
 
-You can think of it as an outline tree in regular IDE, but Helm makes it
-interactive, and fast. I can ask question like "is there something that is
-function and has int in it that the function name contains memory?".
+- Select an element with ~<Up>~ / ~<Down>~ / ~<PageUp>~ / ~<PageDown>~ / ~C-p~ / ~C-n~ /
+  ~C-v~ / ~M-v~,
 
-Here is another demo on Helm's homepage: https://github.com/emacs-helm/helm#advanced-usage
+- Choose with ~<RET>~.
 
-Finally, the strings in Helm are not just strings; they are regexp and I think
-they are more powerful then normal fuzzy matcher.
+- ~C-z~ executes an action without quitting the Helm session (persistent action).
 
-Helm allows you to do interesting things with its interactive interface. For
-example:
+  #+begin_note
+  For ~helm-find-files~:
 
-- interactive grep: http://tuhdo.github.io/static/live_grep.gif
-- interactive occur: http://tuhdo.github.io/static/part3/helm-occur.gif
-- interactive kill ring: http://tuhdo.github.io/static/part3/helm-kill-ring.gif
-- interactive mark ring: http://tuhdo.github.io/helm-intro.html#sec-15
+  + On a regular file,
+    1. First hit on ~C-z~ expands the file name
+    2. Second hit opens the file and displays its contents in the other window
+    3. Third hit kills the buffer (unless it was already open before starting
+       helm session).
 
-I think helm-find-files is much better than stock ido-find-file or even ido-find-file because:
+  + On image files (~.jpg~, etc..)
+    1. Second hit (or ~C-u C-z~) displays the image in the other window
+    2. If you then turn on ~helm-follow-mode~ (~C-c C-f~), you turn on Helm in
+       *image browser* (i.e., use ~C-n/p~ or ~arrows/down/up~).
+    3. You can rotate image with ~M-l/r~ (these are persistent actions too).
+  #+end_note
 
-- It has fuzzy matching by default. You have to install flx to get fuzzy
-  matching in ido.
-- Some people find that Ido horizontal listing is messy, so they create
-  `ido-vertical-mode` for cleaner looking. With Helm, you get this by default
-  with its interface. If you worry the Helm buffer is a bit big, you can always
-  customize its size.
-- It has highlighting on candidates depend on types: directory has a color,
-  plain file has a color, executable has a color, shell script has a color.
-- Depends on what file type your highlighting candidate is, Helm opens it
-  appropriately. For example, if you RET on a directory, Helm opens dired; if
-  you RET on a file, Helm opens that file. You can also customize the
-  application to open the files. Stock find-file at least can open directory;
-  Ido simply can't.
-- You can open multiple files with helm-find-files by marking with C-SPC and
-  press RET. If you want to everything at current directory, you can use M-a to
-  mark all then RET. You can even use wildcard expression like stock find-file
-- Helm has a list of actions to apply on your files: checksum file, open file
-  externally, switch to eshell, grep, diff...
-- Helm is compatible with both Linux and Windows path. Ido can't; you have to
-  drop into stock find-file.
+Kill your buffers with ~C-u C-z~ one by one.
+
+To go back to the *previous element* of the minibuffer history, use ~M-p~.
+
+To mark all candidates in a Helm buffer, use ~M-a~ (~helm-mark-all~) or ~M-m~
+(~helm-toggle-all-marks~).
+
+Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
+
+**** Changes in key bindings
 
 In `helm-find-file', you may want to try using the left arrow to go to the
 parent directory!
@@ -4019,9 +4011,36 @@ Something not <tab> can be "C-z", "C-<tab>", and "<SPC>.
 (define-key helm-grep-mode-map (kbd "p")  'helm-grep-mode-jump-other-window-backward)
 #+end_src
 
-In helm-find-files, you can alway invoke helm-ff-do-grep with C-s or C-u C-s for
-recursive searching. Probably helm-projectile can replace helm-find-files more
-if it has this feature? I think you can do this by reusing projectile-grep.
+**** Helm documentation
+
+- *Advanced usage* on [[https://github.com/emacs-helm/helm#advanced-usage][Emacs-helm]] page
+- [[https://github.com/emacs-helm/helm/wiki][Emacs-helm wiki]]
+- [[https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el][Helm configuration file of Thierry Volpiatto]]!
+- http://tuhdo.github.io/helm-intro.html
+
+
+Helm allows you to do interesting things with its interactive interface. For
+example:
+
+- interactive grep: http://tuhdo.github.io/static/live_grep.gif
+- interactive occur: http://tuhdo.github.io/static/part3/helm-occur.gif
+
+**** Vocabulary
+
+- ~volatile~ means your candidates are recomputed each time you enter a character
+  in pattern (cached candidates are not reused).  Async sources are by essence
+  volatile.
+
+- ~delayed~ means your candidates are computed after ~helm-input-idle-delay~
+  seconds.
+
+- ~no-matchplugin~ means to not use the multi regexp matching provided by
+  ~helm-match-plugin.el~.
+
+**** Features
+
+Finally, the strings in Helm are not just strings; they are *regexps* and I think
+they are more powerful then normal fuzzy matcher.
 
 Grep in Helm is interactive, unlike the stock grep/rgrep. Demo:
 http://tuhdo.github.io/static/live_grep.gif
@@ -4035,108 +4054,13 @@ No package does any of this:
 + Demo 2:
 https://cloud.githubusercontent.com/assets/4818719/4102208/cda8f392-311e-11e4-9c83-e68df38ef68e.gif
 
-- Show local/global mark ring with nice highlighting of major modes:
-http://tuhdo.github.io/static/part3/helm-all-mark-rings.gif
-
 - Interactively select color and faces: http://tuhdo.github.io/static/part3/helm-color.gif
 
 - Interactive Eshell history, certainly superior to the stock C-c C-l:
 http://tuhdo.github.io/static/part3/helm-eshell-history.gif . I store a large
 amount of eshell/shell history, so I want a quick way to narrow down.
 
-helm-find-files can even find file at point. That is, you don't need to remember
-ffap as well. If you write Emacs lisp, move point over the required file and
-execute helm-find-files, it will prompt the file location and you simply RET to
-enter. All in once nice package.
 
-
-Exploring large projects with Projectile and Helm Projectile:
-http://tuhdo.github.io/helm-projectile.html
-
-I wrote this guide after many new changes in Helm Projectile. The new Helm
-Projectile is not just a single command `helm-projectile` anymore; it can now
-replace many Projectile "core commands", such as `projectile-find-file`.
-
-A few demos:
-
-- Select and open multiple files,
-http://tuhdo.github.io/static/helm-projectile/helm-projectile-find-files-1.gif :
-Now we can open multiple files at once with `helm-projectile`. It outweighs Ido
-+ flx for finding files, since you can only open one file in Ido. Yes, you can
-open one file faster in Helm, but when you need to open two or more files, Helm
-is more suitable for the large.
-
-- Jump to any file depends on context, even if the file path is in a text file,
-http://tuhdo.github.io/static/helm-projectile/helm-projectile-find-files-dwim-1.gif
-
-- Switch between other files with same names but different extensions,
-http://tuhdo.github.io/static/helm-projectile/helm-projectile-find-other-file.gif
-. Work not only for C/C++ but other languages, and is customizable. You don't
-have to configure anything, like adding include paths for the command to
-search. Everything is automatic. Just use it as it is.
-
-- Ediff two selected files from helm-projectile-find-file,
-http://tuhdo.github.io/static/helm-projectile/helm-projectile-find-file-ediff.gif.
-
-- Invoke Etags while in helm-projectile-find-file session; when in Etags
-session, you can switch back later to helm-projectile-find-file,
-http://tuhdo.github.io/static/helm-projectile/helm-projectile-etags.gif.
-
-- You can invoke `helm-do-grep` on any project directory when using a `helm-projectile` command.
-
-
-
-In Helm, generally, look at the mode line; you will see ~C-c ?:Help~, it is your
-friend: hit it for more info.
-
-- Narrow the list by typing some patterns (use the *space as separator* for
-  multiple patterns),
-
-- Select an element with ~<Up>~ / ~<Down>~ / ~<PageUp>~ / ~<PageDown>~ / ~C-p~ / ~C-n~ /
-  ~C-v~ / ~M-v~,
-
-- Choose with ~<RET>~.
-
-- ~C-z~ executes an action without quitting the Helm session (persistent action):
-
-  For ~helm-find-files~:
-
-  + On a regular file,
-    1. First hit on ~C-z~ expands the file name
-    2. Second hit opens the file and displays its contents in the other window
-    3. Third hit kills the buffer (unless it was already open before starting
-       helm session).
-
-  + On image files (~.jpg~, etc..)
-    1. Second hit (or ~C-u C-z~) displays the image in the other window
-    2. If you then turn on ~helm-follow-mode~ (~C-c C-f~), you turn on Helm in
-       *image browser* (i.e., use ~C-n/p~ or ~arrows/down/up~).
-    3. You can rotate image with ~M-l/r~ (these are persistent actions too).
-
-Kill your buffers with ~C-u C-z~ one by one.
-
-To go back to the *previous element* of the minibuffer history, use ~M-p~.
-
-As a starting point for all *searches in buffers and files*, use
-~helm-buffers-list~ and ~helm-find-files~: you can launch ~helm-multi-occur~ and
-~helm-do-grep~ from there.
-
-You can also use the ~@~ prefix to *search buffer contents*.
-
-To mark all candidates in a Helm buffer, use ~M-a~ (~helm-mark-all~) or ~M-m~
-(~helm-toggle-all-marks~).
-
-Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
-
-- ~volatile~ means your candidates are recomputed each time you enter a character
-  in pattern (cached candidates are not reused).  Async sources are by essence
-  volatile.
-
-- ~delayed~ means your candidates are computed after ~helm-input-idle-delay~
-  seconds.
-
-- ~no-matchplugin~ means to not use the multi regexp matching provided by
-  ~helm-match-plugin.el~.
 
 XXX Helm is also very useful to look up Elisp variable/function documentation
 and for finding stuff in the Info Manuals (e.g. helm-info-elisp or
@@ -4149,7 +4073,7 @@ XXX Look at helm-dictionary.
 
     (leuven--section "Helm")
 
-    ;; Change `helm-command-prefix-key'
+    ;; Change `helm-command-prefix-key'.
     (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
     ;; Open Helm (QuickSilver-like candidate-selection framework).
@@ -4158,31 +4082,38 @@ XXX Look at helm-dictionary.
                                         ; CAUTION for recursive loads...
 
       (global-unset-key (kbd "C-x c"))
-
-      ;; Better version of `occur'.
-      (global-set-key (kbd "C-o") #'helm-occur)
 #+end_src
 
-See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-or-instant-search-for-emacs][Sublime Text 2's "Goto Anything" (or instant search) for Emacs?]]
-+ https://github.com/xiaohanyu/oh-my-emacs/blob/master/core/ome-completion.org
+#+begin_src emacs-lisp
+      ;; Better version of `occur'.
+      (global-set-key (kbd "C-o") #'helm-occur) ; helm-regexp.el
+#+end_src
 
 #+begin_src emacs-lisp
       ;; Speedy file opening.
       (global-set-key (kbd "<f3>") #'helm-for-files)
 
       ;; (global-set-key (kbd "C-x C-f") #'helm-find-files)
+#+end_src
 
+#+begin_src emacs-lisp
       ;; Buffer list.
       (global-set-key (kbd "C-x b") #'helm-mini) ; OK.
                                         ; = `helm-buffers-list' + recents.
 
       (global-set-key (kbd "C-x C-b") #'helm-buffers-list) ; OK.
+#+end_src
 
+#+begin_src emacs-lisp
       ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
+#+end_src
 
+#+begin_src emacs-lisp
       (global-set-key (kbd "C-x r l") #'helm-bookmarks)
       (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks) ; XXX?
+#+end_src
 
+#+begin_src emacs-lisp
       ;; Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.
       (global-set-key (kbd "C-x r b") #'helm-bookmark-ext)
 #+end_src
@@ -4203,14 +4134,24 @@ See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-
 
 #+begin_src emacs-lisp
       (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
+      ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
+#+end_src
 
+#+begin_src emacs-lisp
       ;; (global-set-key (kbd "M-5") #'helm-etags-select)
+#+end_src
+
+#+begin_src emacs-lisp
       (global-set-key (kbd "C-h a") #'helm-apropos)
+#+end_src
+
+#+begin_src emacs-lisp
       (global-set-key (kbd "C-h i") #'helm-info-emacs)
       ;; (global-set-key (kbd "C-h d") #'helm-info-at-point)
       ;; (global-set-key (kbd "C-h 4") #'helm-info-elisp)
-      ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
+#+end_src
 
+#+begin_src emacs-lisp
       ;; (global-set-key (kbd "C-S-h C-c") #'helm-wikipedia-suggest)
 #+end_src
 
@@ -4219,82 +4160,101 @@ make your life much easier with million Emacs keys.
 
 #+begin_src emacs-lisp
       (global-set-key (kbd "C-h b") #'helm-descbinds)
-    )
 #+end_src
 
-Try out ~helm-google-suggest~, because it's very efficient when you get
-completions from google (so you can type only a few characters to get relevant
-completions) and then you can send this completion to various services
-(e.g. wiki lookup), so you don't have to start a separate wikipedia lookup,
-youtube lookup, etc. command, because you can use the same command for any of
-them. It's very convenient and you can easily add actions for other sites you
-usually search for info on.
+#+begin_src emacs-lisp
+      (global-set-key (kbd "C-c h g") #'helm-google)
+      (global-set-key (kbd "C-c h s") #'helm-google-suggest)
+#+end_src
 
 #+begin_src emacs-lisp
-    (global-set-key (kbd "C-c h g") #'helm-google)
-    (global-set-key (kbd "C-c h s") #'helm-google-suggest)
-
-    ;; ;; Emacs Helm Interface for quick Google searches
-    ;; (with-eval-after-load "helm-google"
-    ;;
-    ;;   ;; (when (executable-find "curl")
-    ;;   ;;   (setq helm-google-suggest-use-curl-p t))
-    ;;   )
+    )
 #+end_src
 
 #+begin_src emacs-lisp
     (with-eval-after-load "helm"
 
-      ;; various functions for Helm (Shell history, etc.)
+      ;; Various functions for Helm (Shell history, etc.).
       (require 'helm-misc)
-      ;; for multi-line items in e.g. minibuffer history, match entire items,
+      ;; For multi-line items in e.g. minibuffer history, match entire items,
       ;; not individual lines within items.
 
       ;; (try-require 'helm-ls-git)
       ;; (try-require 'helm-dictionary)
 
-      ;; use the *current window* (no popup) to show the candidates
+      ;; Use the *current window* (no popup) to show the candidates.
       (setq helm-full-frame nil)
 
-      ;; open `helm-buffer' in another window
+      ;; Open `helm-buffer' in another window.
       (setq helm-split-window-default-side 'other)
 
-      ;; default function used for splitting window
+      ;; Default function used for splitting window.
       (setq helm-split-window-preferred-function
             (lambda (window)
               (split-window-sensibly)))
 
-      ;; ;; move to end or beginning of source when reaching top or bottom of
-      ;; ;; source
+      ;; ;; Move to end or beginning of source when reaching top or bottom of
+      ;; ;; source.
       ;; (setq helm-move-to-line-cycle-in-source t)
 
-      ;; candidates separator of `multiline' source (such as
-      ;; `helm-show-kill-ring')
+      ;; Candidates separator of `multiline' source (such as
+      ;; `helm-show-kill-ring').
       (setq helm-candidate-separator
             "--8<-----------------------separator------------------------>8---")
 
-      ;; suppress displaying sources which are out of screen at first
+      ;; Suppress displaying sources which are out of screen at first.
       (setq helm-quick-update t)
 
-      ;; ;; time that the user has to be idle for, before candidates from
-      ;; ;; DELAYED sources are collected
+      ;; ;; Time that the user has to be idle for, before candidates from
+      ;; ;; DELAYED sources are collected.
       ;; (setq helm-idle-delay 0.01)
 
-      ;; time that the user has to be idle for, before ALL candidates are
+      ;; Time that the user has to be idle for, before ALL candidates are
       ;; collected (>= `helm-idle-delay') -- also effective for NON-DELAYED
-      ;; sources
+      ;; sources.
       (setq helm-input-idle-delay 0.1)  ; 0.06 OK
 
-      ;; ;; enable adaptive sorting in all sources
+      ;; ;; Enable adaptive sorting in all sources.
       ;; (helm-adaptive-mode 1)
 
-      ;; ;; enable generic Helm completion (for all functions in Emacs that use
-      ;; ;; `completing-read' or `read-file-name' and friends)
+      ;; ;; Enable generic Helm completion (for all functions in Emacs that use
+      ;; ;; `completing-read' or `read-file-name' and friends).
       ;; (helm-mode 1)
       )
 #+end_src
 
 **** Helm find files
+
+~helm-find-files~ is powerful because:
+
+- It has *fuzzy matching* by default (well, not enabled by default).
+
+- It has highlighting on candidates depend on types: directory has a color,
+  plain file has a color, executable has a color, shell script has a color.
+
+- Depends on what file type your highlighting candidate is, Helm opens it
+  appropriately. For example, if you RET on a directory, Helm opens dired; if
+  you RET on a file, Helm opens that file. You can also customize the
+  application to open the files. Stock find-file at least can open directory;
+  Ido simply can't.
+
+- You can open multiple files with helm-find-files by marking with C-SPC and
+  press RET. If you want to everything at current directory, you can use M-a to
+  mark all then RET. You can even use wildcard expression like stock find-file
+
+- Helm has a list of actions to apply on your files: checksum file, open file
+  externally, switch to eshell, grep, diff...
+
+
+In helm-find-files, you can alway invoke helm-ff-do-grep with C-s or C-u C-s for
+recursive searching. Probably helm-projectile can replace helm-find-files more
+if it has this feature? I think you can do this by reusing projectile-grep.
+
+helm-find-files can even find file at point. That is, you don't need to remember
+ffap as well. If you write Emacs lisp, move point over the required file and
+execute helm-find-files, it will prompt the file location and you simply RET to
+enter. All in once nice package.
+
 
 - ~C-l~ ::
      Delete the last segment of a file name (in the minibuffer).
@@ -4323,6 +4283,9 @@ usually search for info on.
     ;; large (330.2M), really open? (y or n)" annoying message.
     (setq large-file-warning-threshold 500000000)
 #+end_src
+
+See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-or-instant-search-for-emacs][Sublime Text 2's "Goto Anything" (or instant search) for Emacs?]]
++ https://github.com/xiaohanyu/oh-my-emacs/blob/master/core/ome-completion.org
 
 **** Grep
 
@@ -4382,16 +4345,20 @@ interface ~es.exe~.
 #+begin_src emacs-lisp
     (with-eval-after-load "helm-locate"
 
-      (when (and (or leuven--win32-p
-                     leuven--cygwin-p)
-                 (executable-find "es")); we could check for it in
-                                        ; (concat (getenv "USERPROFILE") "/Downloads")
+      (when (and (or leuven--win32-p leuven--cygwin-p)
+                 (executable-find "es"))
 
-        ;; sort locate results by full path
+        ;; Sort locate results by full path.
         (setq helm-locate-command "es -s %s %s")))
 #+end_src
 
 **** Helm for buffers
+
+As a starting point for all *searches in buffers and files*, use ~helm-buffers-list~
+and ~helm-find-files~: you can launch ~helm-multi-occur~ and ~helm-do-grep~ from
+there.
+
+You can also use the ~@~ prefix to *search buffer contents*.
 
 #+begin_src emacs-lisp
     (with-eval-after-load "helm-buffers"
@@ -4410,10 +4377,15 @@ interface ~es.exe~.
     ;;   (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history))
 #+end_src
 
-**** Helm show kill ring (clipboard history)
+**** Helm ring
 
-By pressing ~M-y~, you will see the list of all previous clippings and can pick
-the one you want to paste using arrow keys. Use ~RET~ to insert it.
+By pressing ~M-y~, you will see the *clipboard history* (list of all previous
+clippings) and can pick the one you want to paste using arrow keys.  Use ~RET~ to
+insert it.
+
+~helm-all-mark-rings~ allows you to view the content of the both the *local and
+global mark rings* in a friendly interface, so you can always jump back to where
+you were.
 
 #+begin_src emacs-lisp
     ;; kill-ring, mark-ring, and register browsers for Helm.
@@ -4446,14 +4418,74 @@ the one you want to paste using arrow keys. Use ~RET~ to insert it.
                                      (and fly-state (flyspell-mode fly-state)))))))))
 #+end_src
 
-~helm-all-mark-rings~ allows you to view the content of the both the local and
-global mark rings in a friendly interface, so you can always jump back to where
-you were.
-
 #+begin_src emacs-lisp
     ;; (with-eval-after-load "helm-utils"
     ;;   (setq helm-yank-symbol-first t)
 #+end_src
+
+**** Imenu
+
+Imenu is like an outline tree in regular IDE, but Helm makes it interactive, and
+fast.  You can ask questions such as "Is there a ~function~ whose name contains
+~memory~?".
+
+**** Google
+
+~helm-google-suggest~ is very efficient when you get completions from Google (so
+you can type only a few characters to get relevant completions) and then you can
+send this completion to various services (e.g. wiki lookup), so you don't have
+to start a separate Wikipedia lookup, Youtube lookup, etc. command, because you
+can use the same command for any of them.
+
+#+begin_note
+You can easily add actions for other sites you usually search for info on.
+#+end_note
+
+#+begin_src emacs-lisp
+    ;; ;; Emacs Helm Interface for quick Google searches
+    ;; (with-eval-after-load "helm-google"
+    ;;
+    ;;   ;; (when (executable-find "curl")
+    ;;   ;;   (setq helm-google-suggest-use-curl-p t))
+    ;;   )
+#+end_src
+
+**** Helm projectile
+
+Exploring large projects with Projectile and Helm Projectile:
+http://tuhdo.github.io/helm-projectile.html
+
+The new Helm Projectile is not just a single command `helm-projectile` anymore;
+it can now replace many Projectile "core commands", such as
+`projectile-find-file`.
+
+A few demos:
+
+- Select and open multiple files,
+  http://tuhdo.github.io/static/helm-projectile/helm-projectile-find-files-1.gif :
+  Now we can open multiple files at once with `helm-projectile`. It outweighs Ido
+  + flx for finding files, since you can only open one file in Ido. Yes, you can
+  open one file faster in Helm, but when you need to open two or more files,
+  Helm is more suitable for the large.
+
+- Jump to any file depends on context, even if the file path is in a text file,
+  http://tuhdo.github.io/static/helm-projectile/helm-projectile-find-files-dwim-1.gif
+
+- Switch between other files with same names but different extensions,
+  http://tuhdo.github.io/static/helm-projectile/helm-projectile-find-other-file.gif. Work
+  not only for C/C++ but other languages, and is customizable. You don't have to
+  configure anything, like adding include paths for the command to
+  search. Everything is automatic. Just use it as it is.
+
+- Ediff two selected files from helm-projectile-find-file,
+  http://tuhdo.github.io/static/helm-projectile/helm-projectile-find-file-ediff.gif.
+
+- Invoke Etags while in helm-projectile-find-file session; when in Etags
+  session, you can switch back later to helm-projectile-find-file,
+  http://tuhdo.github.io/static/helm-projectile/helm-projectile-etags.gif.
+
+- You can invoke `helm-do-grep` on any project directory when using
+  a `helm-projectile` command.
 
 **** Lisp completion
 

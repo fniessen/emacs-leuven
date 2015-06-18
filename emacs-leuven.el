@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150617.2214
+;; Version: 20150618.0915
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150617.2214"
+(defconst leuven--emacs-version "20150618.0915"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2297,7 +2297,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     (leuven--section "Helm")
 
-    ;; Change `helm-command-prefix-key'
+    ;; Change `helm-command-prefix-key'.
     (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
     ;; Open Helm (QuickSilver-like candidate-selection framework).
@@ -2308,7 +2308,7 @@ These packages are neither built-in nor already installed nor ignored."
       (global-unset-key (kbd "C-x c"))
 
       ;; Better version of `occur'.
-      (global-set-key (kbd "C-o") #'helm-occur)
+      (global-set-key (kbd "C-o") #'helm-occur) ; helm-regexp.el
 
       ;; Speedy file opening.
       (global-set-key (kbd "<f3>") #'helm-for-files)
@@ -2342,76 +2342,72 @@ These packages are neither built-in nor already installed nor ignored."
                                         ; And `C-c =' (like in RefTeX)?
 
       (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
+      ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
 
       ;; (global-set-key (kbd "M-5") #'helm-etags-select)
+
       (global-set-key (kbd "C-h a") #'helm-apropos)
+
       (global-set-key (kbd "C-h i") #'helm-info-emacs)
       ;; (global-set-key (kbd "C-h d") #'helm-info-at-point)
       ;; (global-set-key (kbd "C-h 4") #'helm-info-elisp)
-      ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
 
       ;; (global-set-key (kbd "C-S-h C-c") #'helm-wikipedia-suggest)
 
       (global-set-key (kbd "C-h b") #'helm-descbinds)
+
+      (global-set-key (kbd "C-c h g") #'helm-google)
+      (global-set-key (kbd "C-c h s") #'helm-google-suggest)
+
     )
-
-    (global-set-key (kbd "C-c h g") #'helm-google)
-    (global-set-key (kbd "C-c h s") #'helm-google-suggest)
-
-    ;; ;; Emacs Helm Interface for quick Google searches
-    ;; (with-eval-after-load "helm-google"
-    ;;
-    ;;   ;; (when (executable-find "curl")
-    ;;   ;;   (setq helm-google-suggest-use-curl-p t))
-    ;;   )
 
     (with-eval-after-load "helm"
 
-      ;; various functions for Helm (Shell history, etc.)
+      ;; Various functions for Helm (Shell history, etc.).
       (require 'helm-misc)
-      ;; for multi-line items in e.g. minibuffer history, match entire items,
+      ;; For multi-line items in e.g. minibuffer history, match entire items,
       ;; not individual lines within items.
 
       ;; (try-require 'helm-ls-git)
       ;; (try-require 'helm-dictionary)
 
-      ;; use the *current window* (no popup) to show the candidates
+      ;; Use the *current window* (no popup) to show the candidates.
       (setq helm-full-frame nil)
 
-      ;; open `helm-buffer' in another window
+      ;; Open `helm-buffer' in another window.
       (setq helm-split-window-default-side 'other)
 
-      ;; default function used for splitting window
+      ;; Default function used for splitting window.
       (setq helm-split-window-preferred-function
             (lambda (window)
               (split-window-sensibly)))
 
-      ;; ;; move to end or beginning of source when reaching top or bottom of
-      ;; ;; source
+      ;; ;; Move to end or beginning of source when reaching top or bottom of
+      ;; ;; source.
       ;; (setq helm-move-to-line-cycle-in-source t)
 
-      ;; candidates separator of `multiline' source (such as
-      ;; `helm-show-kill-ring')
+      ;; Candidates separator of `multiline' source (such as
+      ;; `helm-show-kill-ring').
       (setq helm-candidate-separator
             "--8<-----------------------separator------------------------>8---")
 
-      ;; suppress displaying sources which are out of screen at first
+      ;; Suppress displaying sources which are out of screen at first.
       (setq helm-quick-update t)
 
-      ;; ;; time that the user has to be idle for, before candidates from
-      ;; ;; DELAYED sources are collected
+      ;; ;; Time that the user has to be idle for, before candidates from
+      ;; ;; DELAYED sources are collected.
       ;; (setq helm-idle-delay 0.01)
 
-      ;; time that the user has to be idle for, before ALL candidates are
+      ;; Time that the user has to be idle for, before ALL candidates are
       ;; collected (>= `helm-idle-delay') -- also effective for NON-DELAYED
-      ;; sources
+      ;; sources.
       (setq helm-input-idle-delay 0.1)  ; 0.06 OK
 
-      ;; ;; enable adaptive sorting in all sources
+      ;; ;; Enable adaptive sorting in all sources.
       ;; (helm-adaptive-mode 1)
 
-      ;; ;; enable generic Helm completion (for all functions in Emacs that use
-      ;; ;; `completing-read' or `read-file-name' and friends)
+      ;; ;; Enable generic Helm completion (for all functions in Emacs that use
+      ;; ;; `completing-read' or `read-file-name' and friends).
       ;; (helm-mode 1)
       )
 
@@ -2457,12 +2453,10 @@ These packages are neither built-in nor already installed nor ignored."
 
     (with-eval-after-load "helm-locate"
 
-      (when (and (or leuven--win32-p
-                     leuven--cygwin-p)
-                 (executable-find "es")); we could check for it in
-                                        ; (concat (getenv "USERPROFILE") "/Downloads")
+      (when (and (or leuven--win32-p leuven--cygwin-p)
+                 (executable-find "es"))
 
-        ;; sort locate results by full path
+        ;; Sort locate results by full path.
         (setq helm-locate-command "es -s %s %s")))
 
     (with-eval-after-load "helm-buffers"
@@ -2509,6 +2503,13 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; (with-eval-after-load "helm-utils"
     ;;   (setq helm-yank-symbol-first t)
+
+    ;; ;; Emacs Helm Interface for quick Google searches
+    ;; (with-eval-after-load "helm-google"
+    ;;
+    ;;   ;; (when (executable-find "curl")
+    ;;   ;;   (setq helm-google-suggest-use-curl-p t))
+    ;;   )
 
   ;; Lisp complete.
   (define-key lisp-interaction-mode-map
