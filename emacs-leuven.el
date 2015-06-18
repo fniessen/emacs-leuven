@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150618.0915
+;; Version: 20150618.1439
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150618.0915"
+(defconst leuven--emacs-version "20150618.1439"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2478,28 +2478,29 @@ These packages are neither built-in nor already installed nor ignored."
       ;; Max number of lines displayed per candidate in kill-ring browser.
       (setq helm-kill-ring-max-lines-number 20)
 
-      ;; [2015-06-17 Wed] Patched `helm-show-kill-ring' (which disables Flyspell
-      ;; before running the Helm kill-ring).
-      (defun helm-show-kill-ring ()
-        "Preconfigured `helm' for `kill-ring'.
-      It is drop-in replacement of `yank-pop'.
+      ;; [2015-06-17 Wed] Patched `helm-show-kill-ring' for Windows Emacs (which
+      ;; disables Flyspell before running the Helm kill-ring).
+      (when leuven--win32-p
+        (defun helm-show-kill-ring ()
+          "Preconfigured `helm' for `kill-ring'.
+        It is drop-in replacement of `yank-pop'.
 
-      First call open the kill-ring browser, next calls move to next line."
-        (interactive)
-        (let ((enable-recursive-minibuffers t)
-              (fly-state (with-helm-current-buffer
-                           (and (boundp 'flyspell-mode)
-                                (if flyspell-mode 1 -1)))))
-          (and fly-state (flyspell-mode -1))
-          (unwind-protect
-              (helm :sources helm-source-kill-ring
-                    :buffer "*helm kill ring*"
-                    :resume 'noresume
-                    :allow-nest t)
-            (with-helm-current-buffer
-              (run-with-idle-timer 0.01 nil
-                                   (lambda ()
-                                     (and fly-state (flyspell-mode fly-state)))))))))
+        First call open the kill-ring browser, next calls move to next line."
+          (interactive)
+          (let ((enable-recursive-minibuffers t)
+                (fly-state (with-helm-current-buffer
+                             (and (boundp 'flyspell-mode)
+                                  (if flyspell-mode 1 -1)))))
+            (and fly-state (flyspell-mode -1))
+            (unwind-protect
+                (helm :sources helm-source-kill-ring
+                      :buffer "*helm kill ring*"
+                      :resume 'noresume
+                      :allow-nest t)
+              (with-helm-current-buffer
+                (run-with-idle-timer 0.01 nil
+                                     (lambda ()
+                                       (and fly-state (flyspell-mode fly-state))))))))))
 
     ;; (with-eval-after-load "helm-utils"
     ;;   (setq helm-yank-symbol-first t)
@@ -3032,6 +3033,13 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; (setq system-time-locale (getenv "LANG"))
                                         ; For weekdays in your locale settings.
+
+;;** 22.1 (info "(emacs)International Chars")
+
+  (leuven--section "22.1 (emacs)International Chars")
+
+  ;; Add binding for "zero width space".
+  (define-key iso-transl-ctl-x-8-map (kbd "0") [?​])
 
 ;;** 22.4 (info "(emacs)Input Methods")
 

@@ -4394,28 +4394,29 @@ you were.
       ;; Max number of lines displayed per candidate in kill-ring browser.
       (setq helm-kill-ring-max-lines-number 20)
 
-      ;; [2015-06-17 Wed] Patched `helm-show-kill-ring' (which disables Flyspell
-      ;; before running the Helm kill-ring).
-      (defun helm-show-kill-ring ()
-        "Preconfigured `helm' for `kill-ring'.
-      It is drop-in replacement of `yank-pop'.
+      ;; [2015-06-17 Wed] Patched `helm-show-kill-ring' for Windows Emacs (which
+      ;; disables Flyspell before running the Helm kill-ring).
+      (when leuven--win32-p
+        (defun helm-show-kill-ring ()
+          "Preconfigured `helm' for `kill-ring'.
+        It is drop-in replacement of `yank-pop'.
 
-      First call open the kill-ring browser, next calls move to next line."
-        (interactive)
-        (let ((enable-recursive-minibuffers t)
-              (fly-state (with-helm-current-buffer
-                           (and (boundp 'flyspell-mode)
-                                (if flyspell-mode 1 -1)))))
-          (and fly-state (flyspell-mode -1))
-          (unwind-protect
-              (helm :sources helm-source-kill-ring
-                    :buffer "*helm kill ring*"
-                    :resume 'noresume
-                    :allow-nest t)
-            (with-helm-current-buffer
-              (run-with-idle-timer 0.01 nil
-                                   (lambda ()
-                                     (and fly-state (flyspell-mode fly-state)))))))))
+        First call open the kill-ring browser, next calls move to next line."
+          (interactive)
+          (let ((enable-recursive-minibuffers t)
+                (fly-state (with-helm-current-buffer
+                             (and (boundp 'flyspell-mode)
+                                  (if flyspell-mode 1 -1)))))
+            (and fly-state (flyspell-mode -1))
+            (unwind-protect
+                (helm :sources helm-source-kill-ring
+                      :buffer "*helm kill ring*"
+                      :resume 'noresume
+                      :allow-nest t)
+              (with-helm-current-buffer
+                (run-with-idle-timer 0.01 nil
+                                     (lambda ()
+                                       (and fly-state (flyspell-mode fly-state))))))))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -5255,6 +5256,15 @@ Emacs).
 
 To see all the non-ASCII characters you can type with the ~C-x 8~ prefix, type
 ~C-x 8 C-h~.
+
+#+begin_src emacs-lisp
+;;** 22.1 (info "(emacs)International Chars")
+
+  (leuven--section "22.1 (emacs)International Chars")
+
+  ;; Add binding for "zero width space".
+  (define-key iso-transl-ctl-x-8-map (kbd "0") [?​])
+#+end_src
 
 #+begin_src emacs-lisp
 ;;** 22.4 (info "(emacs)Input Methods")

@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150618.0916</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150618.0957</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150618.0916"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150618.0957"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -5868,28 +5868,29 @@ you were.
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Max number of lines displayed per candidate in kill-ring browser.</span>
       (setq helm-kill-ring-max-lines-number 20)
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">[2015-06-17 Wed] Patched `</span><span class="org-constant"><span class="org-comment">helm-show-kill-ring</span></span><span class="org-comment">' (which disables Flyspell</span>
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">before running the Helm kill-ring).</span>
-      (<span class="org-keyword">defun</span> <span class="org-function-name">helm-show-kill-ring</span> ()
-        <span class="org-doc">"Preconfigured `</span><span class="org-constant"><span class="org-doc">helm</span></span><span class="org-doc">' for `</span><span class="org-constant"><span class="org-doc">kill-ring</span></span><span class="org-doc">'.</span>
-<span class="org-doc">      It is drop-in replacement of `</span><span class="org-constant"><span class="org-doc">yank-pop</span></span><span class="org-doc">'.</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">[2015-06-17 Wed] Patched `</span><span class="org-constant"><span class="org-comment">helm-show-kill-ring</span></span><span class="org-comment">' for Windows Emacs (which</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">disables Flyspell before running the Helm kill-ring).</span>
+      (<span class="org-keyword">when</span> leuven--win32-p
+        (<span class="org-keyword">defun</span> <span class="org-function-name">helm-show-kill-ring</span> ()
+          <span class="org-doc">"Preconfigured `</span><span class="org-constant"><span class="org-doc">helm</span></span><span class="org-doc">' for `</span><span class="org-constant"><span class="org-doc">kill-ring</span></span><span class="org-doc">'.</span>
+<span class="org-doc">        It is drop-in replacement of `</span><span class="org-constant"><span class="org-doc">yank-pop</span></span><span class="org-doc">'.</span>
 
-<span class="org-doc">      First call open the kill-ring browser, next calls move to next line."</span>
-        (interactive)
-        (<span class="org-keyword">let</span> ((enable-recursive-minibuffers t)
-              (fly-state (<span class="org-keyword">with-helm-current-buffer</span>
-                           (and (boundp 'flyspell-mode)
-                                (<span class="org-keyword">if</span> flyspell-mode 1 -1)))))
-          (and fly-state (flyspell-mode -1))
-          (<span class="org-keyword">unwind-protect</span>
-              (helm <span class="org-builtin">:sources</span> helm-source-kill-ring
-                    <span class="org-builtin">:buffer</span> <span class="org-string">"*helm kill ring*"</span>
-                    <span class="org-builtin">:resume</span> 'noresume
-                    <span class="org-builtin">:allow-nest</span> t)
-            (<span class="org-keyword">with-helm-current-buffer</span>
-              (run-with-idle-timer 0.01 nil
-                                   (<span class="org-keyword">lambda</span> ()
-                                     (and fly-state (flyspell-mode fly-state)))))))))
+<span class="org-doc">        First call open the kill-ring browser, next calls move to next line."</span>
+          (interactive)
+          (<span class="org-keyword">let</span> ((enable-recursive-minibuffers t)
+                (fly-state (<span class="org-keyword">with-helm-current-buffer</span>
+                             (and (boundp 'flyspell-mode)
+                                  (<span class="org-keyword">if</span> flyspell-mode 1 -1)))))
+            (and fly-state (flyspell-mode -1))
+            (<span class="org-keyword">unwind-protect</span>
+                (helm <span class="org-builtin">:sources</span> helm-source-kill-ring
+                      <span class="org-builtin">:buffer</span> <span class="org-string">"*helm kill ring*"</span>
+                      <span class="org-builtin">:resume</span> 'noresume
+                      <span class="org-builtin">:allow-nest</span> t)
+              (<span class="org-keyword">with-helm-current-buffer</span>
+                (run-with-idle-timer 0.01 nil
+                                     (<span class="org-keyword">lambda</span> ()
+                                       (and fly-state (flyspell-mode fly-state))))))))))
 </pre>
 </div>
 
@@ -6980,6 +6981,17 @@ Emacs).
 To see all the non-ASCII characters you can type with the <code>C-x 8</code> prefix, type
 <code>C-x 8 C-h</code>.
 </p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** 22.1 (info "(emacs)International Chars")</span>
+
+  (leuven--section <span class="org-string">"22.1 (emacs)International Chars"</span>)
+
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Add binding for "zero width space".</span>
+  (define-key iso-transl-ctl-x-8-map (kbd <span class="org-string">"0"</span>) [?​])
+</pre>
+</div>
 
 <div class="org-src-container">
 
