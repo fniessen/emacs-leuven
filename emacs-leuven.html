@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150618.1450</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150618.1700</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150618.1450"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150618.1700"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -18192,26 +18192,26 @@ Extensions to Dired:
 
   (leuven--section <span class="org-string">"30.XX Dired+"</span>)
 
-  (add-hook 'dired-load-hook
-            (<span class="org-keyword">lambda</span> ()
+  (<span class="org-keyword">when</span> (try-require 'dired+)
 
-              <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't hide details in Dired.</span>
-              (setq diredp-hide-details-initially-flag nil)
+    (add-hook 'dired-load-hook
+              (<span class="org-keyword">lambda</span> ()
 
-              <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't display the next Dired buffer the same way as the last.</span>
-              (setq diredp-hide-details-propagate-flag nil)
+                <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't hide details in Dired.</span>
+                (setq diredp-hide-details-initially-flag nil)
 
-              <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't wrap "next" command around to buffer beginning.</span>
-              (setq diredp-wrap-around-flag nil)
+                <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't display the next Dired buffer the same way as the last.</span>
+                (setq diredp-hide-details-propagate-flag nil)
 
-              (try-require 'dired+)
+                <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't wrap "next" command around to buffer beginning.</span>
+                (setq diredp-wrap-around-flag nil)
 
-              <span class="org-comment-delimiter">;; </span><span class="org-comment">Dired `</span><span class="org-constant"><span class="org-comment">find-file</span></span><span class="org-comment">' commands reuse directories.</span>
-              (diredp-toggle-find-file-reuse-dir 1)
+                <span class="org-comment-delimiter">;; </span><span class="org-comment">Dired `</span><span class="org-constant"><span class="org-comment">find-file</span></span><span class="org-comment">' commands reuse directories.</span>
+                (diredp-toggle-find-file-reuse-dir 1)
 
-              <span class="org-comment-delimiter">;; </span><span class="org-comment">Up, reusing Dired buffers.</span>
-              (define-key dired-mode-map (kbd <span class="org-string">"C-x C-j"</span>)
-                'diredp-up-directory-reuse-dir-buffer)))
+                <span class="org-comment-delimiter">;; </span><span class="org-comment">Up, reusing Dired buffers.</span>
+                (define-key dired-mode-map (kbd <span class="org-string">"C-x C-j"</span>)
+                  'diredp-up-directory-reuse-dir-buffer))))
 </pre>
 </div>
 </div>

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150618.1449
+;; Version: 20150618.1659
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150618.1449"
+(defconst leuven--emacs-version "20150618.1659"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -8240,26 +8240,26 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "30.XX Dired+")
 
-  (add-hook 'dired-load-hook
-            (lambda ()
+  (when (try-require 'dired+)
 
-              ;; Don't hide details in Dired.
-              (setq diredp-hide-details-initially-flag nil)
+    (add-hook 'dired-load-hook
+              (lambda ()
 
-              ;; Don't display the next Dired buffer the same way as the last.
-              (setq diredp-hide-details-propagate-flag nil)
+                ;; Don't hide details in Dired.
+                (setq diredp-hide-details-initially-flag nil)
 
-              ;; Don't wrap "next" command around to buffer beginning.
-              (setq diredp-wrap-around-flag nil)
+                ;; Don't display the next Dired buffer the same way as the last.
+                (setq diredp-hide-details-propagate-flag nil)
 
-              (try-require 'dired+)
+                ;; Don't wrap "next" command around to buffer beginning.
+                (setq diredp-wrap-around-flag nil)
 
-              ;; Dired `find-file' commands reuse directories.
-              (diredp-toggle-find-file-reuse-dir 1)
+                ;; Dired `find-file' commands reuse directories.
+                (diredp-toggle-find-file-reuse-dir 1)
 
-              ;; Up, reusing Dired buffers.
-              (define-key dired-mode-map (kbd "C-x C-j")
-                'diredp-up-directory-reuse-dir-buffer)))
+                ;; Up, reusing Dired buffers.
+                (define-key dired-mode-map (kbd "C-x C-j")
+                  'diredp-up-directory-reuse-dir-buffer))))
 
 ;;** Diff-hl
 
