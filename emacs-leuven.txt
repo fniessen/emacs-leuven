@@ -9015,7 +9015,9 @@ of the files produced by LaTeX (~org-latex-logfiles-extensions~) are removed.
       ;; Default.
       (setq org-latex-pdf-process
             (cond
-             ((and leuven--win32-p (executable-find "latexmk"))
+             ((and
+               ;; leuven--win32-p
+               (executable-find "latexmk"))
               '("latexmk -CF -pdf %f && latexmk -c"))
                                         ; Must clean .fdb_latexmk, .fls, .ilg,
                                         ; .ind, etc.

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150619.1615
+;; Version: 20150619.1655
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150619.1615"
+(defconst leuven--emacs-version "20150619.1655"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5584,7 +5584,9 @@ this with to-do items than with projects or headings."
       ;; Default.
       (setq org-latex-pdf-process
             (cond
-             ((and leuven--win32-p (executable-find "latexmk"))
+             ((and
+               ;; leuven--win32-p
+               (executable-find "latexmk"))
               '("latexmk -CF -pdf %f && latexmk -c"))
                                         ; Must clean .fdb_latexmk, .fls, .ilg,
                                         ; .ind, etc.
