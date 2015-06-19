@@ -162,6 +162,25 @@ Here is such a minimal Emacs config file.
 
 <div class="org-src-container">
 
+<pre class="src src-emacs-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">try-require</span> (feature)
+  <span class="org-doc">"Attempt to load a FEATURE (or library).</span>
+<span class="org-doc">    Return true if the library given as argument is successfully loaded.  If</span>
+<span class="org-doc">    not, just print a message."</span>
+  (<span class="org-keyword">condition-case</span> err
+      (<span class="org-keyword">progn</span>
+        (<span class="org-keyword">if</span> (stringp feature)
+            (load-library feature)
+          (<span class="org-keyword">require</span> <span class="org-constant">feature</span>))
+        t)                              <span class="org-comment-delimiter">; </span><span class="org-comment">Necessary for correct behavior in</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">conditional expressions.</span>
+    (file-error
+     (message <span class="org-string">"Requiring `</span><span class="org-constant"><span class="org-string">%s</span></span><span class="org-string">'... missing"</span> feature)
+     nil)))
+</pre>
+</div>
+
+<div class="org-src-container">
+
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Org-mode (reverse order, so that the Org lisp directory will be found</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">before the Org contrib lisp directory).</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">(add-to-list 'load-path "~/Public/Repositories/org-mode/testing")</span>

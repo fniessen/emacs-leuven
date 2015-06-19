@@ -56,6 +56,21 @@
 
 ")
 
+(defun try-require (feature)
+  "Attempt to load a FEATURE (or library).
+    Return true if the library given as argument is successfully loaded.  If
+    not, just print a message."
+  (condition-case err
+      (progn
+        (if (stringp feature)
+            (load-library feature)
+          (require feature))
+        t)                              ; Necessary for correct behavior in
+                                        ; conditional expressions.
+    (file-error
+     (message "Requiring `%s'... missing" feature)
+     nil)))
+
 ;; Org-mode (reverse order, so that the Org lisp directory will be found
 ;; before the Org contrib lisp directory).
 ;; (add-to-list 'load-path "~/Public/Repositories/org-mode/testing")
