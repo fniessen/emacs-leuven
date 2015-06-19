@@ -1095,6 +1095,12 @@ pressing ~K H~ (~gnus-article-browse-html-article~).
                                         ; MIME content-types keyed by file ext.
 #+end_src
 
+#+begin_tip
+In Cygwin Emacs, clicking on a PDF or HTML attachment, for example, will launch
+the application specified in your =~/.mailcap= file.  Put there ~cygstart "%s"~ to
+launch the default apps.
+#+end_tip
+
 * Back to Article Buffer
 
 #+begin_src emacs-lisp
