@@ -5198,12 +5198,6 @@ For any user who needs symbols that are not in the 7-bit ASCII set, our
 recommendation is to move to Unicode UTF-8.  That is the only encoding that is
 the same across all platforms and operating systems that support it.
 
-To open (or save) a file in UTF-8, you can press ~C-x <RET> c utf-8 <RET>~
-(~universal-coding-system-argument~) before the ~C-x C-f~ (or ~C-x C-s~).
-
-To help you find all the chars you need to replace by escape sequences, you
-can use ~C-u C-s [^[:ascii:]]~.
-
 To check your locale settings, you can have a look to what Emacs produce (in a
 mail buffer) under "Important settings" when you type
 ~M-x report-emacs-bug <RET> foo <RET>~:
@@ -5221,12 +5215,37 @@ mail buffer) under "Important settings" when you type
 - ~locale-coding-system~: ~utf-8-unix~
 - ~default-enable-multibyte-characters~: ~t~
 
+** Introduction to International Character Sets
+
+To open (or save) a file in UTF-8, you can press ~C-x <RET> c utf-8 <RET>~
+(~universal-coding-system-argument~) before the ~C-x C-f~ (or ~C-x C-s~).
+
+To help you find all the chars you need to replace by escape sequences, you can
+use ~C-u C-s [^[:ascii:]]~.
+
+~M-x describe-coding-system <RET> <RET>~
+
+To see all the non-ASCII characters you can type with the ~C-x 8~ prefix, type
+~C-x 8 C-h~.
+
+#+begin_src emacs-lisp
+;;** 22.1 (info "(emacs)International Chars")
+
+  (leuven--section "22.1 (emacs)International Chars")
+
+  ;; Keyboard input definitions for ISO 8859-1.
+  (with-eval-after-load "iso-transl"
+
+    ;; Add binding for "zero width space".
+    (define-key iso-transl-ctl-x-8-map (kbd "0") [?​]))
+#+end_src
+
 ** Language Environments
 
 #+begin_src emacs-lisp
-;;** 22.3 (info "(emacs)Language Environments")
+;;** 22.2 (info "(emacs)Language Environments")
 
-  (leuven--section "22.3 (emacs)Language Environments")
+  (leuven--section "22.2 (emacs)Language Environments")
 
   ;; Specify your character-set locale.
   (setenv "LANG" "en_US.utf8")          ; For `svn' not to report warnings.
@@ -5247,32 +5266,14 @@ One could use:
 - ~LC_ALL~ or
 - ~LANG~
 
-but this won't work for a Windows binary (well for the Cygwin version of
-Emacs).
+but this won't work for a Windows binary (well for the Cygwin version) of Emacs.
 
 ** Input Methods
 
-~M-x describe-coding-system <RET> <RET>~
-
-To see all the non-ASCII characters you can type with the ~C-x 8~ prefix, type
-~C-x 8 C-h~.
-
 #+begin_src emacs-lisp
-;;** 22.1 (info "(emacs)International Chars")
+;;** 22.3 (info "(emacs)Input Methods")
 
-  (leuven--section "22.1 (emacs)International Chars")
-
-  ;; Keyboard input definitions for ISO 8859-1.
-  (with-eval-after-load "iso-transl"
-
-    ;; Add binding for "zero width space".
-    (define-key iso-transl-ctl-x-8-map (kbd "0") [?​]))
-#+end_src
-
-#+begin_src emacs-lisp
-;;** 22.4 (info "(emacs)Input Methods")
-
-  (leuven--section "22.4 (emacs)Input Methods")
+  (leuven--section "22.3 (emacs)Input Methods")
 
   ;; Get 8-bit characters in terminal mode (Cygwin Emacs).
   (set-input-mode (car (current-input-mode))
@@ -5307,9 +5308,9 @@ In GNU Emacs, when you specify the coding explicitly in the file via an explicit
 XXX Declare PDF files as binary
 
 #+begin_src emacs-lisp
-;;** 22.7 (info "(emacs)Recognize Coding") Systems
+;;** 22.6 (info "(emacs)Recognize Coding") Systems
 
-  (leuven--section "22.7 (emacs)Recognize Coding Systems")
+  (leuven--section "22.6 (emacs)Recognize Coding Systems")
 
   ;; Default coding system (for new files), also moved to the front of the
   ;; priority list for automatic detection.
@@ -5321,9 +5322,9 @@ XXX Declare PDF files as binary
 ** Specifying a File's Coding System
 
 #+begin_src emacs-lisp
-;;** 22.8 (info "(emacs)Specify Coding") System of a File
+;;** 22.7 (info "(emacs)Specify Coding") System of a File
 
-  (leuven--section "22.8 (emacs)Specify Coding System of a File")
+  (leuven--section "22.7 (emacs)Specify Coding System of a File")
 
   (GNUEmacs
     ;; To copy and paste to and from Emacs through the clipboard (with coding
@@ -5337,9 +5338,9 @@ XXX Declare PDF files as binary
 ** Bidirectional Editing
 
 #+begin_src emacs-lisp :tangle no
-;;** 22.20 (info "(emacs)Bidirectional Editing")
+;;** 22.19 (info "(emacs)Bidirectional Editing")
 
-  (leuven--section "22.20 (emacs)Bidirectional Editing")
+  (leuven--section "22.19 (emacs)Bidirectional Editing")
 
   ;; Faster scrolling (if you never expect to have to display bidirectional
   ;; scripts, such as Arabic and Hebrew).

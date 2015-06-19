@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150619.0920
+;; Version: 20150619.0931
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150619.0920"
+(defconst leuven--emacs-version "20150619.0931"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3019,21 +3019,6 @@ These packages are neither built-in nor already installed nor ignored."
 
 (leuven--chapter leuven-load-chapter-22-international "22 International Character Set Support"
 
-;;** 22.3 (info "(emacs)Language Environments")
-
-  (leuven--section "22.3 (emacs)Language Environments")
-
-  ;; Specify your character-set locale.
-  (setenv "LANG" "en_US.utf8")          ; For svn not to report warnings.
-
-  ;; System locale to use for formatting time values.
-  (setq system-time-locale "C")         ; Make sure that the weekdays in the
-                                        ; time stamps of your Org mode files and
-                                        ; in the agenda appear in English.
-
-  ;; (setq system-time-locale (getenv "LANG"))
-                                        ; For weekdays in your locale settings.
-
 ;;** 22.1 (info "(emacs)International Chars")
 
   (leuven--section "22.1 (emacs)International Chars")
@@ -3044,9 +3029,24 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Add binding for "zero width space".
     (define-key iso-transl-ctl-x-8-map (kbd "0") [?​]))
 
-;;** 22.4 (info "(emacs)Input Methods")
+;;** 22.2 (info "(emacs)Language Environments")
 
-  (leuven--section "22.4 (emacs)Input Methods")
+  (leuven--section "22.2 (emacs)Language Environments")
+
+  ;; Specify your character-set locale.
+  (setenv "LANG" "en_US.utf8")          ; For `svn' not to report warnings.
+
+  ;; System locale to use for formatting time values.
+  (setq system-time-locale "C")         ; Make sure that the weekdays in the
+                                        ; time stamps of your Org mode files and
+                                        ; in the agenda appear in English.
+
+  ;; (setq system-time-locale (getenv "LANG"))
+                                        ; For weekdays in your locale settings.
+
+;;** 22.3 (info "(emacs)Input Methods")
+
+  (leuven--section "22.3 (emacs)Input Methods")
 
   ;; Get 8-bit characters in terminal mode (Cygwin Emacs).
   (set-input-mode (car (current-input-mode))
@@ -3070,9 +3070,9 @@ These packages are neither built-in nor already installed nor ignored."
             (insert (cdr c))
             (insert (format "\t%s\n" (car c))))))))
 
-;;** 22.7 (info "(emacs)Recognize Coding") Systems
+;;** 22.6 (info "(emacs)Recognize Coding") Systems
 
-  (leuven--section "22.7 (emacs)Recognize Coding Systems")
+  (leuven--section "22.6 (emacs)Recognize Coding Systems")
 
   ;; Default coding system (for new files), also moved to the front of the
   ;; priority list for automatic detection.
@@ -3080,9 +3080,9 @@ These packages are neither built-in nor already installed nor ignored."
    (prefer-coding-system 'utf-8-unix))  ; Unix flavor for code blocks executed
                                         ; via Org-Babel.
 
-;;** 22.8 (info "(emacs)Specify Coding") System of a File
+;;** 22.7 (info "(emacs)Specify Coding") System of a File
 
-  (leuven--section "22.8 (emacs)Specify Coding System of a File")
+  (leuven--section "22.7 (emacs)Specify Coding System of a File")
 
   (GNUEmacs
     ;; To copy and paste to and from Emacs through the clipboard (with coding
