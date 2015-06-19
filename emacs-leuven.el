@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150619.0931
+;; Version: 20150619.1344
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150619.0931"
+(defconst leuven--emacs-version "20150619.1344"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -449,8 +449,8 @@ Last time is saved in global variable `leuven--before-section-time'."
           indent-guide key-chord litable idle-require imenu-anywhere info+
           interaction-log ledger-mode leuven-theme
           ;; magit
-          multi-term multiple-cursors pager pdf-tools powerline rainbow-mode
-          tidy unbound undo-tree ws-butler yasnippet
+          markdown-mode multi-term multiple-cursors pager pdf-tools powerline
+          rainbow-mode tidy unbound undo-tree ws-butler yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")

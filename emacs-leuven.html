@@ -434,7 +434,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150619.0932</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150619.1345</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -515,7 +515,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150619.0932"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150619.1345"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1123,8 +1123,8 @@ like this into your configuration file:
           indent-guide key-chord litable idle-require imenu-anywhere info+
           interaction-log ledger-mode leuven-theme
           <span class="org-comment-delimiter">;; </span><span class="org-comment">magit</span>
-          multi-term multiple-cursors pager pdf-tools powerline rainbow-mode
-          tidy unbound undo-tree ws-butler yasnippet
+          markdown-mode multi-term multiple-cursors pager pdf-tools powerline
+          rainbow-mode tidy unbound undo-tree ws-butler yasnippet
           <span class="org-comment-delimiter">;; </span><span class="org-comment">jabber multi-term paredit redshank</span>
           )
         <span class="org-doc">"A list of packages to ensure are installed at Emacs startup."</span>)
@@ -6924,10 +6924,13 @@ mail buffer) under &ldquo;Important settings&rdquo; when you type
 <div id="outline-container-orgheadline138" class="outline-3">
 <h3 id="orgheadline138">Introduction to International Character Sets</h3>
 <div class="outline-text-3" id="text-orgheadline138">
+<div class="tip">
 <p>
 To open (or save) a file in UTF-8, you can press <code>C-x &lt;RET&gt; c utf-8 &lt;RET&gt;</code>
 (<code>universal-coding-system-argument</code>) before the <code>C-x C-f</code> (or <code>C-x C-s</code>).
 </p>
+
+</div>
 
 <p>
 To help you find all the chars you need to replace by escape sequences, you can

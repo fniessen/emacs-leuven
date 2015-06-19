@@ -736,8 +736,8 @@ like this into your configuration file:
           indent-guide key-chord litable idle-require imenu-anywhere info+
           interaction-log ledger-mode leuven-theme
           ;; magit
-          multi-term multiple-cursors pager pdf-tools powerline rainbow-mode
-          tidy unbound undo-tree ws-butler yasnippet
+          markdown-mode multi-term multiple-cursors pager pdf-tools powerline
+          rainbow-mode tidy unbound undo-tree ws-butler yasnippet
           ;; jabber multi-term paredit redshank
           )
         "A list of packages to ensure are installed at Emacs startup.")
@@ -5217,8 +5217,10 @@ mail buffer) under "Important settings" when you type
 
 ** Introduction to International Character Sets
 
+#+begin_tip
 To open (or save) a file in UTF-8, you can press ~C-x <RET> c utf-8 <RET>~
 (~universal-coding-system-argument~) before the ~C-x C-f~ (or ~C-x C-s~).
+#+end_tip
 
 To help you find all the chars you need to replace by escape sequences, you can
 use ~C-u C-s [^[:ascii:]]~.
