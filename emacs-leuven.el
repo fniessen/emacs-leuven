@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150619.1524
+;; Version: 20150619.1558
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150619.1524"
+(defconst leuven--emacs-version "20150619.1558"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -7859,7 +7859,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Auto Completion.
     (with-eval-after-load "auto-complete-autoloads-XXX"
-      (idle-require 'auto-complete-config))
+      (idle-require 'auto-complete-config)
+
+      (global-set-key (kbd "C-/") #'auto-complete))
 
     (with-eval-after-load "auto-complete-config"
 
