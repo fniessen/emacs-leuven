@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150619.1344
+;; Version: 20150619.1524
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150619.1344"
+(defconst leuven--emacs-version "20150619.1524"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2476,31 +2476,7 @@ These packages are neither built-in nor already installed nor ignored."
     (with-eval-after-load "helm-ring"
 
       ;; Max number of lines displayed per candidate in kill-ring browser.
-      (setq helm-kill-ring-max-lines-number 20)
-
-      ;; [2015-06-17 Wed] Patched `helm-show-kill-ring' for Windows Emacs (which
-      ;; disables Flyspell before running the Helm kill-ring).
-      (when leuven--win32-p
-        (defun helm-show-kill-ring ()
-          "Preconfigured `helm' for `kill-ring'.
-        It is drop-in replacement of `yank-pop'.
-
-        First call open the kill-ring browser, next calls move to next line."
-          (interactive)
-          (let ((enable-recursive-minibuffers t)
-                (fly-state (with-helm-current-buffer
-                             (and (boundp 'flyspell-mode)
-                                  (if flyspell-mode 1 -1)))))
-            (and fly-state (flyspell-mode -1))
-            (unwind-protect
-                (helm :sources helm-source-kill-ring
-                      :buffer "*helm kill ring*"
-                      :resume 'noresume
-                      :allow-nest t)
-              (with-helm-current-buffer
-                (run-with-idle-timer 0.01 nil
-                                     (lambda ()
-                                       (and fly-state (flyspell-mode fly-state))))))))))
+      (setq helm-kill-ring-max-lines-number 20))
 
     ;; (with-eval-after-load "helm-utils"
     ;;   (setq helm-yank-symbol-first t)
@@ -7043,6 +7019,8 @@ mouse-3: go to end") "]"))))
     (setq eclim-executable
           (or (executable-find "eclim")
               (concat leuven--windows-program-files-dir "eclipse/eclim.bat")))
+    ;; (setq eclim-executable "C:/PROGRA~2/eclipse/eclim.bat")
+    ;; (setq eclim-executable "C:/Users/Fabrice/Downloads/eclipse/eclim.bat")
 
     ;; (add-to-list 'eclim-eclipse-dirs
     ;;              (concat leuven--windows-program-files-dir "eclipse/eclim"))

@@ -253,7 +253,7 @@ You can *get backtraces* at each stopping point by Edebugging =foobar= and
 ;; Profile some times... CAUTION: require the packages first (to get results)!
 ;; (elp-instrument-list '(org-agenda-next-line next-line line-move))
 (when (require 'elp)
-  ;; the most important ones
+  ;; The most important ones.
   (elp-instrument-package "org")
   (elp-instrument-package "org-agenda")
   (elp-instrument-package "outline")
@@ -364,7 +364,7 @@ emacs -Q --batch -L ~/Public/Repositories/org-mode/lisp \
 For example:
 
 #+begin_src emacs-lisp
-  ;; major mode command symbol to use for the initial `*scratch*' buffer
+  ;; Major mode command symbol to use for the initial `*scratch*' buffer.
   (setq initial-major-mode 'fundamental-mode)
 #+end_src
 
@@ -404,7 +404,7 @@ fi
 
 EMACS="/cygdrive/c/Program\ Files\ \(x86\)/emacs-trunk/bin/emacs"
 
-# no init file
+# No init file.
 cmd="$EMACS -q -l ${workingDir}.emacs-minimal.el $TESTEL"
 
 echo "Launching '$cmd'..."
