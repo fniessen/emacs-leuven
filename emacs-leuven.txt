@@ -5229,7 +5229,7 @@ mail buffer) under "Important settings" when you type
   (leuven--section "22.3 (emacs)Language Environments")
 
   ;; Specify your character-set locale.
-  (setenv "LANG" "en_US.utf8")          ; For svn not to report warnings.
+  (setenv "LANG" "en_US.utf8")          ; For `svn' not to report warnings.
 
   ;; System locale to use for formatting time values.
   (setq system-time-locale "C")         ; Make sure that the weekdays in the
@@ -5262,8 +5262,11 @@ To see all the non-ASCII characters you can type with the ~C-x 8~ prefix, type
 
   (leuven--section "22.1 (emacs)International Chars")
 
-  ;; ;; Add binding for "zero width space".
-  ;; (define-key iso-transl-ctl-x-8-map (kbd "0") [?​])
+  ;; Keyboard input definitions for ISO 8859-1.
+  (with-eval-after-load "iso-transl"
+
+    ;; Add binding for "zero width space".
+    (define-key iso-transl-ctl-x-8-map (kbd "0") [?​]))
 #+end_src
 
 #+begin_src emacs-lisp

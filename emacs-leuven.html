@@ -433,7 +433,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150618.1700</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150619.0921</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -514,7 +514,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150618.1700"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150619.0921"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -6988,8 +6988,11 @@ To see all the non-ASCII characters you can type with the <code>C-x 8</code> pre
 
   (leuven--section <span class="org-string">"22.1 (emacs)International Chars"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Add binding for "zero width space".</span>
-  (define-key iso-transl-ctl-x-8-map (kbd <span class="org-string">"0"</span>) [?​])
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Keyboard input definitions for ISO 8859-1.</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"iso-transl"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Add binding for "zero width space".</span>
+    (define-key iso-transl-ctl-x-8-map (kbd <span class="org-string">"0"</span>) [?​]))
 </pre>
 </div>
 
