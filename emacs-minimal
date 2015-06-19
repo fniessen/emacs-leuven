@@ -8,7 +8,7 @@ fi
 
 EMACS="/cygdrive/c/Program\ Files\ \(x86\)/emacs-trunk/bin/emacs"
 
-# no init file
+# No init file.
 cmd="$EMACS -q -l ${workingDir}.emacs-minimal.el $TESTEL"
 
 echo "Launching '$cmd'..."

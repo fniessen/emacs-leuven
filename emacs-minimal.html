@@ -152,9 +152,9 @@ Here is such a minimal Emacs config file.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Initial message displayed in *scratch* buffer at startup.</span>
 (setq initial-scratch-message
-      <span class="org-string">";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
+      <span class="org-string">";;----------------------------------------------------------------------</span>
 <span class="org-string">;; This is Emacs running with a minimal configuration file.</span>
-<span class="org-string">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
+<span class="org-string">;;----------------------------------------------------------------------</span>
 
 <span class="org-string">"</span>)
 </pre>
@@ -376,7 +376,7 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Profile some times... CAUTION: require the packages first (to get results)!</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">(elp-instrument-list '(org-agenda-next-line next-line line-move))</span>
 (<span class="org-keyword">when</span> (<span class="org-keyword">require</span> '<span class="org-constant">elp</span>)
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">the most important ones</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">The most important ones.</span>
   (elp-instrument-package <span class="org-string">"org"</span>)
   (elp-instrument-package <span class="org-string">"org-agenda"</span>)
   (elp-instrument-package <span class="org-string">"outline"</span>)
@@ -483,7 +483,7 @@ For example:
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">major mode command symbol to use for the initial `</span><span class="org-constant"><span class="org-comment">*scratch*</span></span><span class="org-comment">' buffer</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Major mode command symbol to use for the initial `</span><span class="org-constant"><span class="org-comment">*scratch*</span></span><span class="org-comment">' buffer.</span>
   (setq initial-major-mode 'fundamental-mode)
 </pre>
 </div>
@@ -541,7 +541,7 @@ use the <code>-P</code> option of <code>emacs-helm.sh</code> to use another Emac
 
 <span class="org-variable-name">EMACS</span>=<span class="org-string">"/cygdrive/c/Program\ Files\ \(x86\)/emacs-trunk/bin/emacs"</span>
 
-<span class="org-comment-delimiter"># </span><span class="org-comment">no init file</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">No init file.</span>
 <span class="org-variable-name">cmd</span>=<span class="org-string">"$EMACS -q -l ${workingDir}.emacs-minimal.el $TESTEL"</span>
 
 <span class="org-builtin">echo</span> <span class="org-string">"Launching '$cmd'..."</span>
