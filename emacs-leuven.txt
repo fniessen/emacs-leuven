@@ -385,7 +385,7 @@ with Emacs, and loaded before the path to the *newest* versions are set).
 The most important directories are the last to be added to ~load-path~ (so that
 they become the first of the list)!
 
-Use ~M-x list-load-path-shadows <RET>~ to display a list of external Emacs Lisp
+Use ~M-x list-load-path-shadows RET~ to display a list of external Emacs Lisp
 files that shadow Emacs builtins (listing potential load path problems).
 
 Some Emacs modes are over 10K lines of code (e.g. ~nxml-mode~, ~CEDET~).  Many
@@ -858,7 +858,7 @@ cancelable; hence, we put it out of a "chapter".
 
   (leuven--section "7.1 (emacs)Inserting Text")
 
-  ;; Enter characters by their code in octal (for `C-q NNN <RET>').
+  ;; Enter characters by their code in octal (for `C-q NNN RET').
   (setq read-quoted-char-radix 8)       ; 16 for hexadecimal (for Unicode char)
 #+end_src
 
@@ -1027,7 +1027,7 @@ functions and documentation.
 
 - ~apropos-documentation~ (~C-h d~) ::
      *Show symbols whose documentation contains matches for PATTERN.*
-     For example, ~C-h d yank properties <RET>~.
+     For example, ~C-h d yank properties RET~.
 
 - ~describe-function~ (~C-h f~) ::
      Used with TAB completion to show documentation of functions.
@@ -1081,8 +1081,8 @@ relevant manual page without leaving Emacs.
 
 ** Apropos
 
-You can ask what pertains to a given topic by typing ~M-x apropos <RET> pattern
-<RET>~.
+You can ask what pertains to a given topic by typing ~M-x apropos RET pattern
+RET~.
 
 #+begin_src emacs-lisp
 ;;** 10.4 (info "(emacs)Apropos")
@@ -1581,7 +1581,7 @@ columns intact, use ~kill-rectangle~ and ~yank-rectangle~.
 To delete whitespace in each of the lines on the specified rectangle, use
 ~M-x delete-whitespace-rectangle~.
 
-Use ~C-x r t STRING <RET>~ to replace each line of a region-rectangle with a given
+Use ~C-x r t STRING RET~ to replace each line of a region-rectangle with a given
 string.
 
 #+begin_note
@@ -1664,7 +1664,7 @@ Setup registers for files I commonly edit.
 If you need to move to somewhere in your document and want a quick way to
 return, you can place a bookmark on the current line.
 
-This is done by pressing ~C-x r m <RET>~ or ~C-x r m BOOKMARK <RET>~.
+This is done by pressing ~C-x r m RET~ or ~C-x r m BOOKMARK RET~.
 
 #+begin_note
 Bookmarks are *persistent* across sessions and they have *names*; not /markers/.
@@ -1970,19 +1970,19 @@ See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
 You can use *Hi Lock* (part of Emacs) to highlight a regexp (identical tokens)
 throughout a buffer.
 
-- ~M-x hi-lock-mode <RET>~ ::
+- ~M-x hi-lock-mode RET~ ::
      Enable or disable Hi Lock mode.
 
 - ~M-s h .~ ::
       *Highlight* each instance of the *symbol at point*.
 
-- ~M-s h r REGEXP <RET>~ ::
+- ~M-s h r REGEXP RET~ ::
      Highlight text that *matches REGEXP*.
 
-- ~M-s h l REGEXP <RET>~ ::
+- ~M-s h l REGEXP RET~ ::
      Highlight *entire lines* containing a match for REGEXP.
 
-- ~M-s h u REGEXP <RET>~ ::
+- ~M-s h u REGEXP RET~ ::
      *Unhighlight* REGEXP.
 
 #+begin_src emacs-lisp
@@ -3950,7 +3950,7 @@ friend; hit it for more info.
 - Select an element with ~<Up>~ / ~<Down>~ / ~<PageUp>~ / ~<PageDown>~ / ~C-p~ / ~C-n~ /
   ~C-v~ / ~M-v~,
 
-- Choose with ~<RET>~.
+- Choose with ~RET~.
 
 - ~C-z~ executes an action without quitting the Helm session (persistent action).
 
@@ -3966,7 +3966,7 @@ friend; hit it for more info.
   + On image files (~.jpg~, etc..)
     1. Second hit (or ~C-u C-z~) displays the image in the other window
     2. If you then turn on ~helm-follow-mode~ (~C-c C-f~), you turn on Helm in
-       *image browser* (i.e., use ~C-n/p~ or ~arrows/down/up~).
+       *image browser* (i.e., use ~C-n/p~ or arrows ~down/up~).
     3. You can rotate image with ~M-l/r~ (these are persistent actions too).
   #+end_note
 
@@ -3984,13 +3984,13 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 In `helm-find-file', you may want to try using the left arrow to go to the
 parent directory!
 
-You can reassign <tab> only during `helm-find-file'.  The
+You can reassign ~TAB~ only during `helm-find-file'.  The
 `helm-find-file' almost looks like Dired and I assign "^" for going
 up.  Minor side effect is you cannot type in "^" without using C-q.
 
-Sometimes you want to hit <tab> for `helm-selection-action'; however,
-you chose not to happen.  Now look for substitute for <tab>.
-Something not <tab> can be "C-z", "C-<tab>", and "<SPC>.
+Sometimes you want to hit ~TAB~ for `helm-selection-action'; however,
+you chose not to happen.  Now look for substitute for ~TAB~.
+Something not ~TAB~ can be "C-z", "C-TAB", and "SPC".
 
 #+begin_src emacs-lisp :tangle no
 (define-key helm-find-files-map (kbd "<tab>")    'helm-execute-persistent-action)
@@ -4468,7 +4468,7 @@ A few demos:
 
 #+begin_warning
 This (from Thierry Volpiatto) seems good, except that it changes the behavior of
-TAB when done in a word.  Instead of indenting, it completes the word at point,
+~TAB~ when done in a word.  Instead of indenting, it completes the word at point,
 changing the buffer's contents!
 #+end_warning
 
@@ -5176,7 +5176,7 @@ the same across all platforms and operating systems that support it.
 
 To check your locale settings, you can have a look to what Emacs produce (in a
 mail buffer) under "Important settings" when you type
-~M-x report-emacs-bug <RET> foo <RET>~:
+~M-x report-emacs-bug RET foo RET~:
 
 *Important settings*:
 - value of ~$LC_ALL~: ~nil~
@@ -5194,14 +5194,14 @@ mail buffer) under "Important settings" when you type
 ** Introduction to International Character Sets
 
 #+begin_tip
-To open (or save) a file in UTF-8, you can press ~C-x <RET> c utf-8 <RET>~
+To open (or save) a file in UTF-8, you can press ~C-x RET c utf-8 RET~
 (~universal-coding-system-argument~) before the ~C-x C-f~ (or ~C-x C-s~).
 #+end_tip
 
 To help you find all the chars you need to replace by escape sequences, you can
 use ~C-u C-s [^[:ascii:]]~.
 
-~M-x describe-coding-system <RET> <RET>~
+~M-x describe-coding-system RET RET~
 
 To see all the non-ASCII characters you can type with the ~C-x 8~ prefix, type
 ~C-x 8 C-h~.
@@ -5974,10 +5974,10 @@ for opening/closing elements).
 The visibility-cycling features are written in a way that they are independent
 of the outline setup.  The following setup provides standard Org mode
 functionality (headline folding and unfolding) in ~outline-minor-mode~ on
-~<C-tab>~ and ~<S-tab>~.  We use ~<C-tab>~ instead of ~<tab>~, because ~<tab>~ usually
+~C-TAB~ and ~S-TAB~.  We use ~C-TAB~ instead of ~TAB~, because ~TAB~ usually
 has mode-specific tasks.
 
-Note that for ~<C-tab>~ to work, the cursor needs to be on a headline (the line
+Note that for ~C-TAB~ to work, the cursor needs to be on a headline (the line
 where the ellipsis shows).
 
 #+begin_src emacs-lisp
@@ -6033,7 +6033,7 @@ As for handling "large" files, I use this:
 
   (global-set-key (kbd "C-M-]") #'org-cycle-global)
                                         ; XXX ok on Emacs Lisp, not on LaTeX
-                                        ; <S-tab>?
+                                        ; S-TAB?
 
   ;; (defun org-cycle-local ()
   ;;   (interactive)
@@ -6258,7 +6258,7 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 #+begin_src emacs-lisp
   ;; Globally unique ID for Org mode entries (see `org-store-link')
   ;; (takes care of automatically creating unique targets for internal
-  ;; links, see `C-h v org-id-link-to-org-use-id <RET>').
+  ;; links, see `C-h v org-id-link-to-org-use-id RET').
   (add-to-list 'org-modules 'org-id)
 #+end_src
 
@@ -6352,7 +6352,7 @@ unsetting local keys?
               " \u25BA"                 ; String (black right-pointing pointer) XXX #929490
             'org-ellipsis)))            ; Face.
 
-  ;; <RET> follows links (except in tables, where you must use `C-c C-o').
+  ;; RET follows links (except in tables, where you must use `C-c C-o').
   (setq org-return-follows-link t)
 
   ;; Blank lines.
@@ -6544,7 +6544,7 @@ full outline path.
 #+end_src
 
 Move through an Org file like ~cd~ on a file system with ~org-goto~:
-~C-c C-j /foo/bar/baz <RET>~
+~C-c C-j /foo/bar/baz RET~
 
 vs ~C-u C-c C-j~
 
@@ -7731,41 +7731,8 @@ From %c"
     (setq org-protocol-default-template-key "w")
 #+end_src
 
-**** Capture from command line
-
 #+begin_src emacs-lisp
-    (defun leuven-make-capture-frame ()
-      "Create a new frame and run `org-capture'."
-      (interactive)
-      (make-frame '((name . "capture")
-                    (width . 80)
-                    (height . 10)))
-      (select-frame-by-name "capture")
-      ;; ;; Setup buffer to wrap.
-      ;; (setq truncate-lines nil)
-      (org-capture))
-
-    ;; Make the frame contain a single window (by default, `org-capture' splits
-    ;; the window).
-    (add-hook 'org-capture-mode-hook #'delete-other-windows)
-
-    (defadvice org-capture-finalize
-      (after leuven-delete-capture-finalize-frame activate)
-      "Advise org-capture-finalize to close the frame (if it is the capture frame)."
-      (if (equal "capture" (frame-parameter nil 'name))
-          (delete-frame)))
-
-    (defadvice org-capture-destroy      ; XXX
-      (after leuven-delete-capture-destroy-frame activate)
-      "Advise capture-destroy to close the frame (if it is the capture frame)."
-      (if (equal "capture" (frame-parameter nil 'name))
-          (delete-frame)))
-
     )                                   ; with-eval-after-load "org-capture" ends here.
-#+end_src
-
-#+begin_src shell :tangle ~/bin/capture :shebang #!bin/sh
-emacsclient -n -e '(leuven-make-capture-frame)'
 #+end_src
 
 *** Attachments
@@ -8301,7 +8268,7 @@ possible, based on my location:
 I can now define the function ~leuven--org-auto-exclude-function~ to auto-exclude
 based on this type of context information.
 
-All I have to do is type ~/ <RET>~ in the agenda view now, and it excludes based
+All I have to do is type ~/ RET~ in the agenda view now, and it excludes based
 on my machine's current temporal and physical context.
 
 #+begin_src emacs-lisp
@@ -8362,7 +8329,7 @@ on my machine's current temporal and physical context.
 
 *************** TODO We should ensure that appointments don't disappear when filtering late at nite
 - Look at appointments tagged ~errands~
-- Filter at 23:00 with ~/ <RET>~
+- Filter at 23:00 with ~/ RET~
 - Appointments such as "going to the doctor" will be removed from the agenda
   view...
 *************** END
@@ -10387,10 +10354,10 @@ aliases ~(la)tex-mode~ to ~(La)TeX-mode~.
 You can detect the *successful activation of AUCTeX*: after loading a LaTeX
 file, AUCTeX gives you a ~Command~ menu.
 
-- Press ~C-c C-c File <RET> <RET>~ to run ~dvips~ (note that the command is ~File~ and
+- Press ~C-c C-c File RET RET~ to run ~dvips~ (note that the command is ~File~ and
   not ~Dvips~ as one might expect)
 
-- Press ~C-c C-c Print <RET> <RET>~ to run ~GSview~ (also somewhat misleading name)
+- Press ~C-c C-c Print RET RET~ to run ~GSview~ (also somewhat misleading name)
 
 - If you want to print the document, do it from ~GSview~.
 
@@ -10426,7 +10393,7 @@ file, AUCTeX gives you a ~Command~ menu.
       (add-to-list 'LaTeX-indent-environment-list '("tikzpicture"))
 
       ;; Auto-indentation (suggested by the AUCTeX manual -- instead of adding
-      ;; a local key binding to `<RET>' in the `LaTeX-mode-hook').
+      ;; a local key binding to `RET' in the `LaTeX-mode-hook').
       (setq TeX-newline-function 'newline-and-indent)
 #+end_src
 
@@ -11040,7 +11007,7 @@ things.
     (add-hook 'emacs-lisp-mode-hook #'auto-fill-mode)
 
     ;; Auto-indentation: automatically jump to the "correct" column when
-    ;; the <RET> key is pressed while editing a program (act as if you
+    ;; the RET key is pressed while editing a program (act as if you
     ;; pressed `C-j').
     (GNUEmacs24
       (add-hook 'prog-mode-hook
@@ -11424,7 +11391,7 @@ switching between windows) and is not passed to applications.
 
 In that case, you should:
 
-- type ~C-M-i~ (or ~<escape> <tab>~) for completion, or
+- type ~ESC TAB~ or ~C-M-i~ for completion, or
 
 - bind the command normally bound to ~<M-tab>~ to a key that is convenient for
   you to hit, such as ~<C-tab>~.
@@ -12485,7 +12452,7 @@ TAGS:
                      \) -print | /usr/bin/ctags -e -
 #+end_src
 
-You can create a =TAGS= file by using ~M-x compile <RET> tags <RET>~.  Every time
+You can create a =TAGS= file by using ~M-x compile RET tags RET~.  Every time
 you changes your source file, you need to regenerate the tag file.
 
 Alternatively,
@@ -12508,7 +12475,7 @@ when the search fails.
 *** Selecting a Tags Table
 
 After this, you can select the tag file to use with the command
-~M-x visit-tags-table <RET>~.
+~M-x visit-tags-table RET~.
 
 #+begin_src emacs-lisp
   ;; list of file names of tags tables to search
@@ -12542,7 +12509,7 @@ symbol at point using a number of possible methods, such as semantic, tags, etc.
 *** Select from multiple TAGS files
 
 You can search for *occurrences* of tags that match you regexp on all files in
-the TAGS table, by using ~M-x tags-search <RET>~.
+the TAGS table, by using ~M-x tags-search RET~.
 
 To continue searching for next match, use ~M-,~.
 
@@ -13092,10 +13059,10 @@ See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippe
    will show you the result.
 
    You'll see a buffer prompted by Emacs saying that ~TAB~ runs the command "...".
-   Alternatively, you might see ~<tab>~ runs the command "...". Note the
-   difference between ~TAB~ and ~<tab>~ where the latter has priority.
+   Alternatively, you might see ~TAB~ runs the command "...". Note the
+   difference between ~TAB~ and ~TAB~ where the latter has priority.
 
-   If you see ~<tab>~ bound to a command other than ~yas-expand~ (e.g. in org-mode),
+   If you see ~TAB~ bound to a command other than ~yas-expand~ (e.g. in org-mode),
    you can try a work around. See
    https://github.com/capitaomorte/yasnippet/blob/master/doc/faq.org.
 
@@ -13238,7 +13205,7 @@ typing only a few characters -- really brilliant!
 
 Auto-complete uses the variable ~ac-modes~ to decide whether to enable
 auto-completion in a particular mode; by default, ~org-mode~ (which interprets the
-~<tab>~ key) is not present in this list. So, to enable auto-completion in Org
+~TAB~ key) is not present in this list. So, to enable auto-completion in Org
 mode, simply add it to the ~ac-modes~:
 
 #+begin_example
@@ -13400,7 +13367,7 @@ See https://github.com/company-mode/company-mode/issues/68 for a *feature
 comparison* between both.
 
 Completion will start automatically after you type a few letters. Use ~M-n~ and
-~M-p~ to select, ~<return>~ to complete or ~<tab>~ to complete the common
+~M-p~ to select, ~RET~ to complete or ~TAB~ to complete the common
 part. *Search through the completions* with ~C-s~, ~C-r~ and ~C-o~. Press ~M-(digit)~ to
 quickly complete with one of the first 10 candidates.
 
@@ -13830,7 +13797,7 @@ It opens the Windows Explorer for:
 See code of ~w32-dired-open-files-externally~.
 *************** END
 
-*************** TODO ~C-u <RET>~ opens dired on Org link
+*************** TODO ~C-u RET~ opens dired on Org link
 We should probably have the same type of key binding for opening Explorer from
 Dired.
 *************** END
@@ -14025,7 +13992,7 @@ Extra Dired functionality:
   pressing ~C-x C-j~ (~dired-jump~).  If in Dired already, pop up a level and goto
   old directory's line.
 
-  *Standard* alternative: ~C-x d <RET>~, though it doesn't set point on the right
+  *Standard* alternative: ~C-x d RET~, though it doesn't set point on the right
   file.
 
 - ~dired-x~ also has a feature to "guess" the right shell command and the right
@@ -14695,7 +14662,7 @@ In addition, by pressing ~C-c C-t~, you can open the *text*-only representation
 (actually, the output of the command ~pdftotext~) of the current doc in a new
 buffer, which is more suitable for heavy manipulation of the text of the PDF.
 
-Another option, without ~doc-view~, is ~! pdtotext ? - <RET>~.
+Another option, without ~doc-view~, is ~! pdtotext ? - RET~.
 
 ~doc-view-enlarge~ (~+~) and ~doc-view-shrink~ (~-~) work fine to zoom in or out.
 
@@ -15068,7 +15035,7 @@ work ("page-at-a-time" feature).
 
 Shell mode buffers do not use ptys (pseudo-terminals), so programs running in
 such a buffer (the shell, the programs run by the shell, etc.) can't perform
-character-at-a-time input.  Each line is typed in full and only sent when ~<RET>~
+character-at-a-time input.  Each line is typed in full and only sent when ~RET~
 is pressed.  To see proof, run the ~tty~ command in a Shell mode buffer, and its
 output will be ~not a tty~.
 
@@ -15520,7 +15487,7 @@ server.
 
 * Printing Hard Copies
 
-You can print any buffer with ~C-u M-x ps-print-buffer-with-faces <RET>~.  Because
+You can print any buffer with ~C-u M-x ps-print-buffer-with-faces RET~.  Because
 of the ~C-u~, it will prompt for a file to place the PostScript into.  You can
 then convert PS to PDF, if so desired.
 
@@ -16027,7 +15994,7 @@ The keys ~C-c LETTER~ are [[http://www.gnu.org/software/emacs/manual/html_node/e
 You can get a list of all the disabled functions by typing:
 
 #+begin_src emacs-lisp :tangle no
-M-: (let (lst) (mapatoms (lambda (x) (if (get x 'disabled) (push x lst)))) lst) <RET>
+M-: (let (lst) (mapatoms (lambda (x) (if (get x 'disabled) (push x lst)))) lst) RET
 #+end_src
 
 #+begin_src emacs-lisp
@@ -16189,7 +16156,7 @@ Under Windows, you can get the current *font* by typing ~(w32-select-font)~
 followed by ~C-x C-e~.
 
 You can find the current *font string* by typing
-~M-x ielm <RET> (frame-parameters) <RET>~ -- see the line ~font~.
+~M-x ielm RET (frame-parameters) RET~ -- see the line ~font~.
 
 To check if some font is available in Emacs do following:
 

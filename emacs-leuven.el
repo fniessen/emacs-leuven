@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150619.1558
+;; Version: 20150619.1615
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -72,7 +72,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150619.1558"
+(defconst leuven--emacs-version "20150619.1615"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -548,7 +548,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "7.1 (emacs)Inserting Text")
 
-  ;; Enter characters by their code in octal (for `C-q NNN <RET>').
+  ;; Enter characters by their code in octal (for `C-q NNN RET').
   (setq read-quoted-char-radix 8)       ; 16 for hexadecimal (for Unicode char)
 
 ;;** 7.2 (info "(emacs)Moving Point") Location
@@ -3558,7 +3558,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   (global-set-key (kbd "C-M-]") #'org-cycle-global)
                                         ; XXX ok on Emacs Lisp, not on LaTeX
-                                        ; <S-tab>?
+                                        ; S-TAB?
 
   ;; (defun org-cycle-local ()
   ;;   (interactive)
@@ -3681,7 +3681,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Globally unique ID for Org mode entries (see `org-store-link')
   ;; (takes care of automatically creating unique targets for internal
-  ;; links, see `C-h v org-id-link-to-org-use-id <RET>').
+  ;; links, see `C-h v org-id-link-to-org-use-id RET').
   (add-to-list 'org-modules 'org-id)
 
   ;; Support for links to Gnus groups and messages from within Org mode.
@@ -3742,7 +3742,7 @@ These packages are neither built-in nor already installed nor ignored."
               " \u25BA"                 ; String (black right-pointing pointer) XXX #929490
             'org-ellipsis)))            ; Face.
 
-  ;; <RET> follows links (except in tables, where you must use `C-c C-o').
+  ;; RET follows links (except in tables, where you must use `C-c C-o').
   (setq org-return-follows-link t)
 
   ;; Blank lines.
@@ -4675,33 +4675,6 @@ From %c"
 
     ;; Default `org-capture-templates' key to use.
     (setq org-protocol-default-template-key "w")
-
-    (defun leuven-make-capture-frame ()
-      "Create a new frame and run `org-capture'."
-      (interactive)
-      (make-frame '((name . "capture")
-                    (width . 80)
-                    (height . 10)))
-      (select-frame-by-name "capture")
-      ;; ;; Setup buffer to wrap.
-      ;; (setq truncate-lines nil)
-      (org-capture))
-
-    ;; Make the frame contain a single window (by default, `org-capture' splits
-    ;; the window).
-    (add-hook 'org-capture-mode-hook #'delete-other-windows)
-
-    (defadvice org-capture-finalize
-      (after leuven-delete-capture-finalize-frame activate)
-      "Advise org-capture-finalize to close the frame (if it is the capture frame)."
-      (if (equal "capture" (frame-parameter nil 'name))
-          (delete-frame)))
-
-    (defadvice org-capture-destroy      ; XXX
-      (after leuven-delete-capture-destroy-frame activate)
-      "Advise capture-destroy to close the frame (if it is the capture frame)."
-      (if (equal "capture" (frame-parameter nil 'name))
-          (delete-frame)))
 
     )                                   ; with-eval-after-load "org-capture" ends here.
 
@@ -6463,7 +6436,7 @@ this with to-do items than with projects or headings."
       (add-to-list 'LaTeX-indent-environment-list '("tikzpicture"))
 
       ;; Auto-indentation (suggested by the AUCTeX manual -- instead of adding
-      ;; a local key binding to `<RET>' in the `LaTeX-mode-hook').
+      ;; a local key binding to `RET' in the `LaTeX-mode-hook').
       (setq TeX-newline-function 'newline-and-indent)
 
 ;;* 3 Controlling Screen (info "(auctex)Display")
@@ -6820,7 +6793,7 @@ mouse-3: go to end") "]"))))
     (add-hook 'emacs-lisp-mode-hook #'auto-fill-mode)
 
     ;; Auto-indentation: automatically jump to the "correct" column when
-    ;; the <RET> key is pressed while editing a program (act as if you
+    ;; the RET key is pressed while editing a program (act as if you
     ;; pressed `C-j').
     (GNUEmacs24
       (add-hook 'prog-mode-hook
