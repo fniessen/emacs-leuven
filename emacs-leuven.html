@@ -420,6 +420,22 @@ But &#x2013; that&rsquo;s the joy of Emacs &#x2013; nearly everything can be adj
 this set of customizations (from one pathological Emacs tweaker) to &ldquo;short-cut&rdquo;
 that initial process.
 </p>
+
+<p>
+Citations:
+</p>
+
+<ul class="org-ul">
+<li>&ldquo;Show me your ~/.emacs and I will tell you who you are.&rdquo; <br  />
+&#x2013; Bogdan Maryniuk</li>
+
+<li>&ldquo;Emacs is like a laser guided missile.  It only has to be slightly
+mis-configured to ruin your whole day.&rdquo; <br  />
+&#x2013; Sean McGrath</li>
+
+<li>&ldquo;While any text editor can save your files, only Emacs can save your soul.&rdquo; <br  />
+&#x2013; Per Abrahamsen</li>
+</ul>
 </div>
 </div>
 
@@ -434,7 +450,7 @@ that initial process.
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150619.1656</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150622.1041</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -485,18 +501,6 @@ that initial process.
 <span class="org-comment-delimiter">;;     </span><span class="org-comment">(setq leuven-elpa-packages nil)</span>
 <span class="org-comment-delimiter">;;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">For help on the Emacs Editor, see (info "(emacs)")  &lt;== `C-x C-e' here!</span>
-
-<span class="org-comment-delimiter">;;; </span><span class="org-comment">Citations:</span>
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">- Show me your ~/.emacs and I will tell you who you are.</span>
-<span class="org-comment-delimiter">;;   </span><span class="org-comment">-- Bogdan Maryniuk</span>
-<span class="org-comment-delimiter">;;</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">- Emacs is like a laser guided missile.  It only has to be slightly</span>
-<span class="org-comment-delimiter">;;   </span><span class="org-comment">mis-configured to ruin your whole day.</span>
-<span class="org-comment-delimiter">;;   </span><span class="org-comment">-- Sean McGrath</span>
-<span class="org-comment-delimiter">;;</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">- While any text editor can save your files, only Emacs can save your soul.</span>
-<span class="org-comment-delimiter">;;   </span><span class="org-comment">-- Per Abrahamsen</span>
 </pre>
 </div>
 </div>
@@ -515,7 +519,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150619.1656"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150622.1041"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2526,7 +2530,7 @@ We bookmarks positions, not just lines!!
     (ace-link-setup-default <span class="org-string">"f"</span>))
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Jump to things tree-style.</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"avy-jump"</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"avy"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Default keys for jumping.</span>
     (setq avy-keys '(?a ?b ?c ?d ?e ?f ?g ?h ?i ?j ?k ?l ?m
@@ -7074,7 +7078,16 @@ XXX Declare PDF files as binary
 
   (leuven--section <span class="org-string">"22.19 (emacs)Bidirectional Editing"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Faster scrolling (if you never expect to have to display bidirectional</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't reorder bidirectional text for display in the visual order.</span>
+  (setq-default bidi-display-reordering nil)
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Workaround for bug #362 in Company</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">mode.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Faster scrolling (if you never expect to have to display bidirectional</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">scripts, such as Arabic and Hebrew).</span>
   (setq-default bidi-paragraph-direction 'left-to-right)
 </pre>
@@ -11640,6 +11653,13 @@ capabilities.
 Look at the variable <code>org-latex-remove-logfiles</code>, which controls whether some
 of the files produced by LaTeX (<code>org-latex-logfiles-extensions</code>) are removed.
 </p>
+
+<div class="warning">
+<p>
+XXX Maybe we should test for (executable-find &ldquo;/usr/bin/latexmk&rdquo;), etc.?
+</p>
+
+</div>
 
 <div class="org-src-container">
 

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150619.1655
+;; Version: 20150622.1040
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -56,23 +56,11 @@
 ;;
 ;; For help on the Emacs Editor, see (info "(emacs)")  <== `C-x C-e' here!
 
-;;; Citations:
-
-;; - Show me your ~/.emacs and I will tell you who you are.
-;;   -- Bogdan Maryniuk
-;;
-;; - Emacs is like a laser guided missile.  It only has to be slightly
-;;   mis-configured to ruin your whole day.
-;;   -- Sean McGrath
-;;
-;; - While any text editor can save your files, only Emacs can save your soul.
-;;   -- Per Abrahamsen
-
 ;;; Code:
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150619.1655"
+(defconst leuven--emacs-version "20150622.1040"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1010,7 +998,7 @@ These packages are neither built-in nor already installed nor ignored."
     (ace-link-setup-default "f"))
 
   ;; Jump to things tree-style.
-  (with-eval-after-load "avy-jump"
+  (with-eval-after-load "avy"
 
     ;; Default keys for jumping.
     (setq avy-keys '(?a ?b ?c ?d ?e ?f ?g ?h ?i ?j ?k ?l ?m
@@ -3067,6 +3055,15 @@ These packages are neither built-in nor already installed nor ignored."
            (set-selection-coding-system 'compound-text-with-extensions))
           (t
            (set-selection-coding-system 'utf-8))))
+
+;;** 22.19 (info "(emacs)Bidirectional Editing")
+
+  (leuven--section "22.19 (emacs)Bidirectional Editing")
+
+  ;; Don't reorder bidirectional text for display in the visual order.
+  (setq-default bidi-display-reordering nil)
+                                        ; Workaround for bug #362 in Company
+                                        ; mode.
 
 )                                       ; Chapter 22 ends here.
 

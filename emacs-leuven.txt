@@ -143,6 +143,18 @@ But -- that's the joy of Emacs -- nearly everything can be adjusted!  Hence,
 this set of customizations (from one pathological Emacs tweaker) to "short-cut"
 that initial process.
 
+Citations:
+
+- "Show me your ~/.emacs and I will tell you who you are." \\
+  -- Bogdan Maryniuk
+
+- "Emacs is like a laser guided missile.  It only has to be slightly
+  mis-configured to ruin your whole day." \\
+  -- Sean McGrath
+
+- "While any text editor can save your files, only Emacs can save your soul." \\
+  -- Per Abrahamsen
+
 * Header
 
 #+name: current-time
@@ -209,17 +221,6 @@ that initial process.
 ;;
 ;; For help on the Emacs Editor, see (info "(emacs)")  <== `C-x C-e' here!
 
-;;; Citations:
-
-;; - Show me your ~/.emacs and I will tell you who you are.
-;;   -- Bogdan Maryniuk
-;;
-;; - Emacs is like a laser guided missile.  It only has to be slightly
-;;   mis-configured to ruin your whole day.
-;;   -- Sean McGrath
-;;
-;; - While any text editor can save your files, only Emacs can save your soul.
-;;   -- Per Abrahamsen
 #+end_src
 
 * Code
@@ -1789,7 +1790,7 @@ We bookmarks positions, not just lines!!
     (ace-link-setup-default "f"))
 
   ;; Jump to things tree-style.
-  (with-eval-after-load "avy-jump"
+  (with-eval-after-load "avy"
 
     ;; Default keys for jumping.
     (setq avy-keys '(?a ?b ?c ?d ?e ?f ?g ?h ?i ?j ?k ?l ?m
@@ -5315,11 +5316,18 @@ XXX Declare PDF files as binary
 
 ** Bidirectional Editing
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 ;;** 22.19 (info "(emacs)Bidirectional Editing")
 
   (leuven--section "22.19 (emacs)Bidirectional Editing")
 
+  ;; Don't reorder bidirectional text for display in the visual order.
+  (setq-default bidi-display-reordering nil)
+                                        ; Workaround for bug #362 in Company
+                                        ; mode.
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
   ;; Faster scrolling (if you never expect to have to display bidirectional
   ;; scripts, such as Arabic and Hebrew).
   (setq-default bidi-paragraph-direction 'left-to-right)
@@ -9007,6 +9015,10 @@ capabilities.
 
 Look at the variable ~org-latex-remove-logfiles~, which controls whether some
 of the files produced by LaTeX (~org-latex-logfiles-extensions~) are removed.
+
+#+begin_warning
+XXX Maybe we should test for (executable-find "/usr/bin/latexmk"), etc.?
+#+end_warning
 
 #+begin_src emacs-lisp
     (defun leuven--change-pdflatex-program (backend)
