@@ -451,7 +451,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150622.1636</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150622.1656</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -520,7 +520,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150622.1636"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150622.1656"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -17991,7 +17991,9 @@ For searches in Dired, see <code>dired-do-search</code> (<code>A</code>).
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Search for files with names matching a wild card pattern and Dired the</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">output.</span>
     (global-set-key (kbd <span class="org-string">"C-c 1"</span>) #'find-name-dired)
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">case insensitive if `</span><span class="org-constant"><span class="org-comment">read-file-name-completion-ignore-case</span></span><span class="org-comment">' is non-nil</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Case insensitive if</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">read-file-name-completion-ignore-case</span></span><span class="org-comment">'</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">is non-nil.</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">find-grep-dired</span></span><span class="org-comment">' case insensitivity.</span>
     (setq find-grep-options <span class="org-string">"-i -q"</span>)
@@ -18099,9 +18101,12 @@ into the kill ring (in order to make use of it elsewhere), use
 <code>dired-copy-filename-as-kill</code>, which is bound to <code>w</code> in Dired.
 </p>
 
+<div class="tip">
 <p>
 Use <code>0 w</code> to put the <b>full path</b>.
 </p>
+
+</div>
 </div>
 </div>
 
@@ -18226,22 +18231,22 @@ Extensions to Dired:
 
   (leuven--section <span class="org-string">"31.1 (emacs)Calendar Motion"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">years must be written in full</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Years must be written in full.</span>
   (setq diary-abbreviated-year-flag nil)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">set the style of calendar and diary dates to ISO (how to interpret the</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">dates)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Set the style of calendar and diary dates to ISO (how to interpret the</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">dates).</span>
   (setq calendar-date-style 'iso)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">week in the calendar begins on Monday</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Week in the calendar begins on Monday.</span>
   (setq calendar-week-start-day 1)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">mark all visible dates that have diary entries</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Mark all visible dates that have diary entries.</span>
   (<span class="org-keyword">when</span> (file-exists-p <span class="org-string">"~/diary"</span>)
     (setq calendar-mark-diary-entries-flag t))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">mark the current date (by changing its face) after generating a calendar,</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">if today's date is visible</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Mark the current date (by changing its face) after generating a calendar,</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">if today's date is visible.</span>
   (add-hook 'calendar-today-visible-hook #'calendar-mark-today)
 </pre>
 </div>
@@ -18257,7 +18262,7 @@ Extensions to Dired:
 
   (leuven--section <span class="org-string">"31.2 (emacs)Scroll Calendar"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">fix foolish calendar-mode scrolling after loading `</span><span class="org-constant"><span class="org-comment">calendar.el</span></span><span class="org-comment">'</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Fix foolish calendar-mode scrolling after loading `</span><span class="org-constant"><span class="org-comment">calendar.el</span></span><span class="org-comment">'.</span>
   (add-hook 'calendar-load-hook
             (<span class="org-keyword">lambda</span> ()
               (define-key calendar-mode-map (kbd <span class="org-string">"&gt;"</span>) 'calendar-scroll-left)
@@ -18276,16 +18281,16 @@ Extensions to Dired:
 
   (leuven--section <span class="org-string">"31.7 Times of (emacs)Sunrise/Sunset"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; calendar functions for solar events</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Calendar functions for solar events.</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(with-eval-after-load "solar"</span>
   <span class="org-comment-delimiter">;;</span>
-  <span class="org-comment-delimiter">;;   </span><span class="org-comment">;; name of the calendar location</span>
+  <span class="org-comment-delimiter">;;   </span><span class="org-comment">;; Name of the calendar location.</span>
   <span class="org-comment-delimiter">;;   </span><span class="org-comment">(setq calendar-location-name "Leuven, BE")</span>
   <span class="org-comment-delimiter">;;</span>
-  <span class="org-comment-delimiter">;;   </span><span class="org-comment">;; latitude of `</span><span class="org-constant"><span class="org-comment">calendar-location-name</span></span><span class="org-comment">'</span>
+  <span class="org-comment-delimiter">;;   </span><span class="org-comment">;; Latitude of `</span><span class="org-constant"><span class="org-comment">calendar-location-name</span></span><span class="org-comment">'.</span>
   <span class="org-comment-delimiter">;;   </span><span class="org-comment">(setq calendar-latitude 50.88)</span>
   <span class="org-comment-delimiter">;;</span>
-  <span class="org-comment-delimiter">;;   </span><span class="org-comment">;; longitude of `</span><span class="org-constant"><span class="org-comment">calendar-location-name</span></span><span class="org-comment">'</span>
+  <span class="org-comment-delimiter">;;   </span><span class="org-comment">;; Longitude of `</span><span class="org-constant"><span class="org-comment">calendar-location-name</span></span><span class="org-comment">'.</span>
   <span class="org-comment-delimiter">;;   </span><span class="org-comment">(setq calendar-longitude 4.70))</span>
 </pre>
 </div>
@@ -18316,18 +18321,18 @@ But <a href="#orgheadline167">Org</a> outperforms it!
 
   (leuven--section <span class="org-string">"31.11 (emacs)Appointments"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">insinuate appt if `</span><span class="org-constant"><span class="org-comment">diary-file</span></span><span class="org-comment">' exists</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Insinuate appt if `</span><span class="org-constant"><span class="org-comment">diary-file</span></span><span class="org-comment">' exists.</span>
   (<span class="org-keyword">if</span> (file-readable-p <span class="org-string">"~/diary"</span>)
-      (try-require 'appt)               <span class="org-comment-delimiter">; </span><span class="org-comment">requires `</span><span class="org-constant"><span class="org-comment">diary-lib</span></span><span class="org-comment">', which requires</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">diary-loaddefs</span></span><span class="org-comment">'</span>
+      (try-require 'appt)               <span class="org-comment-delimiter">; </span><span class="org-comment">Requires `</span><span class="org-constant"><span class="org-comment">diary-lib</span></span><span class="org-comment">', which requires</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">diary-loaddefs</span></span><span class="org-comment">'.</span>
     (message <span class="org-string">"Appointment reminders lib `</span><span class="org-constant"><span class="org-string">appt</span></span><span class="org-string">' not loaded (no diary file found)"</span>))
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"appt"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">send the first warning 60 minutes before an appointment</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Send the first warning 60 minutes before an appointment.</span>
     (setq appt-message-warning-time 60) <span class="org-comment-delimiter">; </span><span class="org-comment">[default: 12]</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">warn every 15 minutes</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Warn every 15 minutes.</span>
     (setq appt-display-interval 15)     <span class="org-comment-delimiter">; </span><span class="org-comment">[default: 3]</span>
 </pre>
 </div>
@@ -18446,15 +18451,15 @@ nil</div>
 
   (leuven--section <span class="org-string">"31.15 (emacs)Advanced Calendar/Diary Usage"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">get rid of some holidays</span>
-  (setq holiday-general-holidays nil)   <span class="org-comment-delimiter">; </span><span class="org-comment">too U.S.-centric holidays</span>
-  (setq holiday-oriental-holidays nil)  <span class="org-comment-delimiter">; </span><span class="org-comment">Oriental holidays</span>
-  (setq holiday-hebrew-holidays nil)    <span class="org-comment-delimiter">; </span><span class="org-comment">religious holidays</span>
-  (setq holiday-islamic-holidays nil)   <span class="org-comment-delimiter">; </span><span class="org-comment">religious holidays</span>
-  (setq holiday-bahai-holidays nil)     <span class="org-comment-delimiter">; </span><span class="org-comment">Baha'i holidays</span>
-  (setq holiday-solar-holidays nil)     <span class="org-comment-delimiter">; </span><span class="org-comment">sun-related holidays</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Get rid of some holidays.</span>
+  (setq holiday-general-holidays nil)   <span class="org-comment-delimiter">; </span><span class="org-comment">Too U.S.-centric holidays.</span>
+  (setq holiday-oriental-holidays nil)  <span class="org-comment-delimiter">; </span><span class="org-comment">Oriental holidays.</span>
+  (setq holiday-hebrew-holidays nil)    <span class="org-comment-delimiter">; </span><span class="org-comment">Religious holidays.</span>
+  (setq holiday-islamic-holidays nil)   <span class="org-comment-delimiter">; </span><span class="org-comment">Religious holidays.</span>
+  (setq holiday-bahai-holidays nil)     <span class="org-comment-delimiter">; </span><span class="org-comment">Baha'i holidays.</span>
+  (setq holiday-solar-holidays nil)     <span class="org-comment-delimiter">; </span><span class="org-comment">Sun-related holidays.</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">mark dates of holidays in the calendar window</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Mark dates of holidays in the calendar window.</span>
   (setq calendar-mark-holidays-flag t)
 </pre>
 </div>
@@ -18501,10 +18506,10 @@ htmlfontify-buffer</code>.
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* Calendar view framework on Emacs</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">calendar view framework on Emacs</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Calendar view framework on Emacs.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"calfw"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Unicode characters</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Unicode characters.</span>
     (setq cfw:fchar-junction ?╋
           cfw:fchar-vertical-line ?┃
           cfw:fchar-horizontal-line ?━
@@ -18514,10 +18519,10 @@ htmlfontify-buffer</code>.
           cfw:fchar-top-left-corner ?┏
           cfw:fchar-top-right-corner ?┓))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">calendar view for org-agenda</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Calendar view for org-agenda.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"calfw-org"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">remove some strings (tags and filenames) from item summary</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Remove some strings (tags and filenames) from item summary.</span>
     (<span class="org-keyword">defun</span> <span class="org-function-name">cfw:org-summary-format</span> (item)
       <span class="org-doc">"Format an item (How should it be displayed?)."</span>
       (<span class="org-keyword">let*</span> ((time (cfw:org-tp item 'time))
@@ -18539,7 +18544,7 @@ htmlfontify-buffer</code>.
           )
          'keymap cfw:org-text-keymap
          <span class="org-comment-delimiter">;; </span><span class="org-comment">Delete the display property, since displaying images will break our</span>
-         <span class="org-comment-delimiter">;; </span><span class="org-comment">table layout</span>
+         <span class="org-comment-delimiter">;; </span><span class="org-comment">table layout.</span>
          'display nil))))
 </pre>
 </div>
@@ -18566,19 +18571,19 @@ Minimal configuration for sending a bug report, for example.
 
 (leuven--chapter leuven-load-chapter-32-sending-mail <span class="org-string">"32 Sending Mail"</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">full name of this user</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Full name of this user.</span>
   (setq user-full-name <span class="org-string">"John Doe"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">full mailing address of this user</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">(used in MAIL envelope FROM, and to select the default personality ID)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Full mailing address of this user</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">(used in MAIL envelope FROM, and to select the default personality ID).</span>
   (setq user-mail-address <span class="org-string">"johndoe@example.com"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">sending mail</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Sending mail.</span>
   (setq send-mail-function 'smtpmail-send-it)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">default SMTP server (overriden by `</span><span class="org-constant"><span class="org-comment">smtpmail-smtp-server</span></span><span class="org-comment">')</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Default SMTP server (overriden by `</span><span class="org-constant"><span class="org-comment">smtpmail-smtp-server</span></span><span class="org-comment">').</span>
   (setq smtpmail-default-smtp-server <span class="org-string">"smtp"</span>)
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">SMTP process must be running there</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">SMTP process must be running there.</span>
 
 )                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 32 ends here.</span>
 </pre>
@@ -18600,20 +18605,19 @@ Minimal configuration for sending a bug report, for example.
       (interactive)
       (switch-or-start 'gnus <span class="org-string">"*Group*"</span>)))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">directory beneath which additional per-user Gnus-specific files are placed</span>
-  (setq gnus-directory <span class="org-string">"~/.gnus.d/"</span>)    <span class="org-comment-delimiter">; </span><span class="org-comment">this should end with a directory</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">separator</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Directory beneath which additional per-user Gnus-specific files are placed.</span>
+  (setq gnus-directory <span class="org-string">"~/.gnus.d/"</span>)    <span class="org-comment-delimiter">; </span><span class="org-comment">Should end with a directory separator.</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">a newsreader for GNU Emacs</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">A newsreader for GNU Emacs.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"gnus"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">package to compose an outgoing mail (Message, with Gnus paraphernalia)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Package to compose an outgoing mail (Message, with Gnus paraphernalia).</span>
     (setq mail-user-agent 'gnus-user-agent)
 
     (XEmacs
       (setq toolbar-mail-reader 'gnus))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">reading mail with Gnus</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Reading mail with Gnus.</span>
     (setq read-mail-command 'gnus))
 </pre>
 </div>
@@ -18653,33 +18657,33 @@ bbdb3: <a href="https://savannah.nongnu.org/projects/bbdb">https://savannah.nong
     (autoload 'bbdb-insinuate-message <span class="org-string">"bbdb-message"</span>
       <span class="org-doc">"Hook BBDB into `</span><span class="org-constant"><span class="org-doc">message-mode</span></span><span class="org-doc">'."</span>))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">search the BBDB</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Search the BBDB.</span>
   (global-set-key (kbd <span class="org-string">"&lt;C-f11&gt;"</span>) #'bbdb)
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"bbdb"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">coding system used for reading and writing `</span><span class="org-constant"><span class="org-comment">bbdb-file</span></span><span class="org-comment">'</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Coding system used for reading and writing `</span><span class="org-constant"><span class="org-comment">bbdb-file</span></span><span class="org-comment">'.</span>
     (setq bbdb-file-coding-system 'utf-8)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">ensure `</span><span class="org-constant"><span class="org-comment">~/.bbdb</span></span><span class="org-comment">' never becomes non utf-8 again (it is defined with</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">defconst</span></span><span class="org-comment">', so it is reset whenever `</span><span class="org-constant"><span class="org-comment">bbdb.el</span></span><span class="org-comment">' is loaded)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Ensure `</span><span class="org-constant"><span class="org-comment">~/.bbdb</span></span><span class="org-comment">' never becomes non utf-8 again (it is defined with</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">defconst</span></span><span class="org-comment">', so it is reset whenever `</span><span class="org-constant"><span class="org-comment">bbdb.el</span></span><span class="org-comment">' is loaded).</span>
     (add-hook 'bbdb-load-hook
               (<span class="org-keyword">lambda</span> ()
                 (setq bbdb-file-coding-system 'utf-8)))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">enable the various package-specific BBDB functions</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable the various package-specific BBDB functions.</span>
     (bbdb-initialize 'gnus 'message)
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">- add bindings for the default keys to Gnus and configure Gnus to notify</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">- Add bindings for the default keys to Gnus and configure Gnus to notify</span>
     <span class="org-comment-delimiter">;;   </span><span class="org-comment">the BBDB when new messages are loaded (required if the BBDB is to be</span>
-    <span class="org-comment-delimiter">;;   </span><span class="org-comment">able to display BBDB entries for messages displayed in Gnus)</span>
+    <span class="org-comment-delimiter">;;   </span><span class="org-comment">able to display BBDB entries for messages displayed in Gnus).</span>
     <span class="org-comment-delimiter">;;</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">- add a binding for `</span><span class="org-constant"><span class="org-comment">M-TAB</span></span><span class="org-comment">' to Message mode.  This will enable completion</span>
-    <span class="org-comment-delimiter">;;   </span><span class="org-comment">of addresses based on BBDB records</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">- Add a binding for `</span><span class="org-constant"><span class="org-comment">M-TAB</span></span><span class="org-comment">' to Message mode.  This will enable completion</span>
+    <span class="org-comment-delimiter">;;   </span><span class="org-comment">of addresses based on BBDB records.</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">what do we do when invoking bbdb interactively (`:' to display sender)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">What do we do when invoking bbdb interactively (`:' to display sender).</span>
     (setq bbdb-mua-update-interactive-p '(query . create))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">update BBDB silently (don't display an auto-updated BBDB window)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Update BBDB silently (don't display an auto-updated BBDB window).</span>
     (setq bbdb-mua-pop-up nil)
 </pre>
 </div>
@@ -18692,19 +18696,19 @@ bbdb3: <a href="https://savannah.nongnu.org/projects/bbdb">https://savannah.nong
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* (info "(bbdb)Interfaces")</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">mail aliases (local mailing lists)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Mail aliases (local mailing lists).</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(add-hook 'message-setup-hook #'bbdb-define-all-aliases) ; BBDB 2.35</span>
     (add-hook 'message-setup-hook #'bbdb-mail-aliases) <span class="org-comment-delimiter">; </span><span class="org-comment">BBDB 3</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">always use full name when sending mail</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Always use full name when sending mail.</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(even if User Name has an address of the form <a href="mailto:user.name%40domain">&lt;user.name@domain&gt;</a>)</span>
     (setq bbdb-dwim-net-address-allow-redundancy t) <span class="org-comment-delimiter">; </span><span class="org-comment">BBDB 2.35</span>
     (setq bbdb-mail-avoid-redundancy nil) <span class="org-comment-delimiter">; </span><span class="org-comment">BBDB 3</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">no popup on auto-complete</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">No popup on auto-complete.</span>
     (setq bbdb-completion-display-record nil)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">completion is done across the set of all full-names and user-ids</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Completion is done across the set of all full-names and user-ids.</span>
     (setq bbdb-completion-type nil)
 </pre>
 </div>
@@ -18718,17 +18722,17 @@ bbdb3: <a href="https://savannah.nongnu.org/projects/bbdb">https://savannah.nong
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* (info "(bbdb)Reader-specific Features")</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">marking posters with records in the BBDB</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Marking posters with records in the BBDB.</span>
     (setq bbdb/gnus-summary-mark-known-posters t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">mark authors in the Summary Buffer who have records in the BBDB</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Mark authors in the Summary Buffer who have records in the BBDB.</span>
     (setq bbdb/gnus-summary-known-poster-mark <span class="org-string">"B"</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">display the poster's name from the BBDB if we have one</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Display the poster's name from the BBDB if we have one.</span>
     (setq bbdb/gnus-summary-prefer-real-names t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">replace the information provided in the From header with data from the</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">BBDB if we have one</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Replace the information provided in the From header with data from the</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">BBDB if we have one.</span>
     (setq bbdb/gnus-summary-prefer-bbdb-data t)
 
     (setq bbdb/gnus-summary-show-bbdb-names t)
@@ -18748,35 +18752,35 @@ You can add the author of a mail or posting to the BBDB by hitting <code>:</code
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* (info "(bbdb)Options")</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">no default area code to use when prompting for a new phone number</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">No default area code to use when prompting for a new phone number.</span>
     (setq bbdb-default-area-code nil)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">default country to use if none is specified</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Default country to use if none is specified.</span>
     (setq bbdb-default-country <span class="org-string">""</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">disable syntax-checking of telephone numbers</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Disable syntax-checking of telephone numbers.</span>
     (setq bbdb-north-american-phone-numbers-p nil) <span class="org-comment-delimiter">; </span><span class="org-comment">BBDB 2.35</span>
     (setq bbdb-phone-style nil)         <span class="org-comment-delimiter">; </span><span class="org-comment">BBDB 3</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">restoration of the window configuration</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Restoration of the window configuration.</span>
     (setq bbdb-electric-p t)            <span class="org-comment-delimiter">; </span><span class="org-comment">BBDB 2.35</span>
     (setq bbdb-electric t)              <span class="org-comment-delimiter">; </span><span class="org-comment">BBDB 3</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">don't display a continuously-updating BBDB window while in GNUS</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't display a continuously-updating BBDB window while in GNUS.</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq bbdb-use-pop-up nil)       ; BBDB 2.35</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq bbdb-pop-up-layout nil)    ; BBDB 3</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">desired number of lines in a GNUS pop-up BBDB window</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Desired number of lines in a GNUS pop-up BBDB window.</span>
     (setq bbdb-pop-up-target-lines 1)   <span class="org-comment-delimiter">; </span><span class="org-comment">BBDB 2.35</span>
     (setq bbdb-pop-up-window-size 1)    <span class="org-comment-delimiter">; </span><span class="org-comment">BBDB 3</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">default display layout</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Default display layout.</span>
     (setq bbdb-display-layout 'multi-line)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">default display layout pop-up BBDB buffers</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Default display layout pop-up BBDB buffers.</span>
     (setq bbdb-pop-up-display-layout 'one-line)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">omit creation-date and time stamp from BBDB display</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Omit creation-date and time stamp from BBDB display.</span>
     (setq bbdb-display-layout-alist
           '((one-line          (order     . (phones notes))
                                (name-end  . 24)
@@ -18788,22 +18792,22 @@ You can add the author of a mail or posting to the BBDB by hitting <code>:</code
                                (omit      . (AKA creation-date timestamp)))
             (pop-up-multi-line (indention . 14))))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">allow cycling of email addresses while completing them</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Allow cycling of email addresses while completing them.</span>
     (setq bbdb-complete-name-allow-cycling t) <span class="org-comment-delimiter">; </span><span class="org-comment">BBDB 2.35</span>
     (setq bbdb-complete-mail-allow-cycling t) <span class="org-comment-delimiter">; </span><span class="org-comment">BBDB 3</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">save the database without asking (any time it would ask)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Save the database without asking (any time it would ask).</span>
     (setq bbdb-offer-save 'auto)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">automatically add some text to the notes field of the BBDB record</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Automatically add some text to the notes field of the BBDB record.</span>
     (add-hook 'bbdb-notice-hook #'bbdb-auto-notes-hook)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">capture auto-notes</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Capture auto-notes.</span>
     (setq bbdb-auto-notes-alist
-          <span class="org-comment-delimiter">;; </span><span class="org-comment">organization</span>
+          <span class="org-comment-delimiter">;; </span><span class="org-comment">Organization.</span>
           `((<span class="org-string">"Organization"</span> (<span class="org-string">".*"</span> Organization 0))
 
-            <span class="org-comment-delimiter">;; </span><span class="org-comment">X-Face bitmaps of the people</span>
+            <span class="org-comment-delimiter">;; </span><span class="org-comment">X-Face bitmaps of the people.</span>
             (<span class="org-string">"x-face"</span> ,(list (concat <span class="org-string">"[ \t\n]*</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string"> \t\n]*</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">"</span>
                                      <span class="org-string">"</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">[ \t\n]+</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string"> \t\n]+</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">?"</span>
                                      <span class="org-string">"</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">[ \t\n]+</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string"> \t\n]+</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">?"</span>
@@ -18858,7 +18862,7 @@ if <code>doc-view-pdftotext-program</code> is on your <code>PATH</code>.
 
 (leuven--chapter leuven-load-chapter-35-document-view <span class="org-string">"35 Document Viewing"</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">view PDF/PostScript/DVI files in Emacs</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">View PDF/PostScript/DVI files in Emacs.</span>
 </pre>
 </div>
 
@@ -19520,14 +19524,16 @@ MultiTerm (<a href="http://www.emacswiki.org/emacs/MultiTerm">http://www.emacswi
 shell or term.
 </p>
 
+<p>
+&ldquo;Multi-term on POSIX hosts has let me switch from using screen, with one Emacs
+screen and lots of shell screens; to just using Emacs, with lots of terminals
+inside it.&rdquo;
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Managing multiple terminal buffers in Emacs</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(and fixing some troubles of `</span><span class="org-constant"><span class="org-comment">term-mode</span></span><span class="org-comment">': key bindings, etc.).</span>
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">"multi-term on POSIX hosts has let me switch from using screen, with one</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Emacs screen and lots of shell screens; to just using Emacs, with lots of</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">terminals inside it."</span>
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"multi-term-autoloads"</span>
 

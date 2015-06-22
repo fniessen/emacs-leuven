@@ -13914,7 +13914,9 @@ For searches in Dired, see ~dired-do-search~ (~A~).
     ;; Search for files with names matching a wild card pattern and Dired the
     ;; output.
     (global-set-key (kbd "C-c 1") #'find-name-dired)
-      ;; case insensitive if `read-file-name-completion-ignore-case' is non-nil
+                                        ; Case insensitive if
+                                        ; `read-file-name-completion-ignore-case'
+                                        ; is non-nil.
 
     ;; `find-grep-dired' case insensitivity.
     (setq find-grep-options "-i -q")
@@ -13990,7 +13992,9 @@ To copy the *name* of the file at point (or the folder you're looking at in Dire
 into the kill ring (in order to make use of it elsewhere), use
 ~dired-copy-filename-as-kill~, which is bound to ~w~ in Dired.
 
+#+begin_tip
 Use ~0 w~ to put the *full path*.
+#+end_tip
 
 ** Dired "extra" features
 
@@ -14077,22 +14081,22 @@ Extensions to Dired:
 
   (leuven--section "31.1 (emacs)Calendar Motion")
 
-  ;; years must be written in full
+  ;; Years must be written in full.
   (setq diary-abbreviated-year-flag nil)
 
-  ;; set the style of calendar and diary dates to ISO (how to interpret the
-  ;; dates)
+  ;; Set the style of calendar and diary dates to ISO (how to interpret the
+  ;; dates).
   (setq calendar-date-style 'iso)
 
-  ;; week in the calendar begins on Monday
+  ;; Week in the calendar begins on Monday.
   (setq calendar-week-start-day 1)
 
-  ;; mark all visible dates that have diary entries
+  ;; Mark all visible dates that have diary entries.
   (when (file-exists-p "~/diary")
     (setq calendar-mark-diary-entries-flag t))
 
-  ;; mark the current date (by changing its face) after generating a calendar,
-  ;; if today's date is visible
+  ;; Mark the current date (by changing its face) after generating a calendar,
+  ;; if today's date is visible.
   (add-hook 'calendar-today-visible-hook #'calendar-mark-today)
 #+end_src
 
@@ -14103,7 +14107,7 @@ Extensions to Dired:
 
   (leuven--section "31.2 (emacs)Scroll Calendar")
 
-  ;; fix foolish calendar-mode scrolling after loading `calendar.el'
+  ;; Fix foolish calendar-mode scrolling after loading `calendar.el'.
   (add-hook 'calendar-load-hook
             (lambda ()
               (define-key calendar-mode-map (kbd ">") 'calendar-scroll-left)
@@ -14117,16 +14121,16 @@ Extensions to Dired:
 
   (leuven--section "31.7 Times of (emacs)Sunrise/Sunset")
 
-  ;; ;; calendar functions for solar events
+  ;; ;; Calendar functions for solar events.
   ;; (with-eval-after-load "solar"
   ;;
-  ;;   ;; name of the calendar location
+  ;;   ;; Name of the calendar location.
   ;;   (setq calendar-location-name "Leuven, BE")
   ;;
-  ;;   ;; latitude of `calendar-location-name'
+  ;;   ;; Latitude of `calendar-location-name'.
   ;;   (setq calendar-latitude 50.88)
   ;;
-  ;;   ;; longitude of `calendar-location-name'
+  ;;   ;; Longitude of `calendar-location-name'.
   ;;   (setq calendar-longitude 4.70))
 #+end_src
 
@@ -14145,18 +14149,18 @@ But [[id:737b836b-ac1f-4120-94ca-c9e0282268f0][Org]] outperforms it!
 
   (leuven--section "31.11 (emacs)Appointments")
 
-  ;; insinuate appt if `diary-file' exists
+  ;; Insinuate appt if `diary-file' exists.
   (if (file-readable-p "~/diary")
-      (try-require 'appt)               ; requires `diary-lib', which requires
-                                        ; `diary-loaddefs'
+      (try-require 'appt)               ; Requires `diary-lib', which requires
+                                        ; `diary-loaddefs'.
     (message "Appointment reminders lib `appt' not loaded (no diary file found)"))
 
   (with-eval-after-load "appt"
 
-    ;; send the first warning 60 minutes before an appointment
+    ;; Send the first warning 60 minutes before an appointment.
     (setq appt-message-warning-time 60) ; [default: 12]
 
-    ;; warn every 15 minutes
+    ;; Warn every 15 minutes.
     (setq appt-display-interval 15)     ; [default: 3]
 #+end_src
 
@@ -14254,15 +14258,15 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
 
   (leuven--section "31.15 (emacs)Advanced Calendar/Diary Usage")
 
-  ;; get rid of some holidays
-  (setq holiday-general-holidays nil)   ; too U.S.-centric holidays
-  (setq holiday-oriental-holidays nil)  ; Oriental holidays
-  (setq holiday-hebrew-holidays nil)    ; religious holidays
-  (setq holiday-islamic-holidays nil)   ; religious holidays
-  (setq holiday-bahai-holidays nil)     ; Baha'i holidays
-  (setq holiday-solar-holidays nil)     ; sun-related holidays
+  ;; Get rid of some holidays.
+  (setq holiday-general-holidays nil)   ; Too U.S.-centric holidays.
+  (setq holiday-oriental-holidays nil)  ; Oriental holidays.
+  (setq holiday-hebrew-holidays nil)    ; Religious holidays.
+  (setq holiday-islamic-holidays nil)   ; Religious holidays.
+  (setq holiday-bahai-holidays nil)     ; Baha'i holidays.
+  (setq holiday-solar-holidays nil)     ; Sun-related holidays.
 
-  ;; mark dates of holidays in the calendar window
+  ;; Mark dates of holidays in the calendar window.
   (setq calendar-mark-holidays-flag t)
 #+end_src
 
@@ -14295,10 +14299,10 @@ htmlfontify-buffer~.
 #+begin_src emacs-lisp
 ;;* Calendar view framework on Emacs
 
-  ;; calendar view framework on Emacs
+  ;; Calendar view framework on Emacs.
   (with-eval-after-load "calfw"
 
-    ;; Unicode characters
+    ;; Unicode characters.
     (setq cfw:fchar-junction ?╋
           cfw:fchar-vertical-line ?┃
           cfw:fchar-horizontal-line ?━
@@ -14308,10 +14312,10 @@ htmlfontify-buffer~.
           cfw:fchar-top-left-corner ?┏
           cfw:fchar-top-right-corner ?┓))
 
-  ;; calendar view for org-agenda
+  ;; Calendar view for org-agenda.
   (with-eval-after-load "calfw-org"
 
-    ;; remove some strings (tags and filenames) from item summary
+    ;; Remove some strings (tags and filenames) from item summary.
     (defun cfw:org-summary-format (item)
       "Format an item (How should it be displayed?)."
       (let* ((time (cfw:org-tp item 'time))
@@ -14333,7 +14337,7 @@ htmlfontify-buffer~.
           )
          'keymap cfw:org-text-keymap
          ;; Delete the display property, since displaying images will break our
-         ;; table layout
+         ;; table layout.
          'display nil))))
 #+end_src
 
@@ -14350,19 +14354,19 @@ Minimal configuration for sending a bug report, for example.
 
 (leuven--chapter leuven-load-chapter-32-sending-mail "32 Sending Mail"
 
-  ;; full name of this user
+  ;; Full name of this user.
   (setq user-full-name "John Doe")
 
-  ;; full mailing address of this user
-  ;; (used in MAIL envelope FROM, and to select the default personality ID)
+  ;; Full mailing address of this user
+  ;; (used in MAIL envelope FROM, and to select the default personality ID).
   (setq user-mail-address "johndoe@example.com")
 
-  ;; sending mail
+  ;; Sending mail.
   (setq send-mail-function 'smtpmail-send-it)
 
-  ;; default SMTP server (overriden by `smtpmail-smtp-server')
+  ;; Default SMTP server (overriden by `smtpmail-smtp-server').
   (setq smtpmail-default-smtp-server "smtp")
-                                        ; SMTP process must be running there
+                                        ; SMTP process must be running there.
 
 )                                       ; Chapter 32 ends here.
 #+end_src
@@ -14379,20 +14383,19 @@ Minimal configuration for sending a bug report, for example.
       (interactive)
       (switch-or-start 'gnus "*Group*")))
 
-  ;; directory beneath which additional per-user Gnus-specific files are placed
-  (setq gnus-directory "~/.gnus.d/")    ; this should end with a directory
-                                        ; separator
+  ;; Directory beneath which additional per-user Gnus-specific files are placed.
+  (setq gnus-directory "~/.gnus.d/")    ; Should end with a directory separator.
 
-  ;; a newsreader for GNU Emacs
+  ;; A newsreader for GNU Emacs.
   (with-eval-after-load "gnus"
 
-    ;; package to compose an outgoing mail (Message, with Gnus paraphernalia)
+    ;; Package to compose an outgoing mail (Message, with Gnus paraphernalia).
     (setq mail-user-agent 'gnus-user-agent)
 
     (XEmacs
       (setq toolbar-mail-reader 'gnus))
 
-    ;; reading mail with Gnus
+    ;; Reading mail with Gnus.
     (setq read-mail-command 'gnus))
 #+end_src
 
@@ -14426,33 +14429,33 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
     (autoload 'bbdb-insinuate-message "bbdb-message"
       "Hook BBDB into `message-mode'."))
 
-  ;; search the BBDB
+  ;; Search the BBDB.
   (global-set-key (kbd "<C-f11>") #'bbdb)
 
   (with-eval-after-load "bbdb"
 
-    ;; coding system used for reading and writing `bbdb-file'
+    ;; Coding system used for reading and writing `bbdb-file'.
     (setq bbdb-file-coding-system 'utf-8)
 
-    ;; ensure `~/.bbdb' never becomes non utf-8 again (it is defined with
-    ;; `defconst', so it is reset whenever `bbdb.el' is loaded)
+    ;; Ensure `~/.bbdb' never becomes non utf-8 again (it is defined with
+    ;; `defconst', so it is reset whenever `bbdb.el' is loaded).
     (add-hook 'bbdb-load-hook
               (lambda ()
                 (setq bbdb-file-coding-system 'utf-8)))
 
-    ;; enable the various package-specific BBDB functions
+    ;; Enable the various package-specific BBDB functions.
     (bbdb-initialize 'gnus 'message)
-    ;; - add bindings for the default keys to Gnus and configure Gnus to notify
+    ;; - Add bindings for the default keys to Gnus and configure Gnus to notify
     ;;   the BBDB when new messages are loaded (required if the BBDB is to be
-    ;;   able to display BBDB entries for messages displayed in Gnus)
+    ;;   able to display BBDB entries for messages displayed in Gnus).
     ;;
-    ;; - add a binding for `M-TAB' to Message mode.  This will enable completion
-    ;;   of addresses based on BBDB records
+    ;; - Add a binding for `M-TAB' to Message mode.  This will enable completion
+    ;;   of addresses based on BBDB records.
 
-    ;; what do we do when invoking bbdb interactively (`:' to display sender)
+    ;; What do we do when invoking bbdb interactively (`:' to display sender).
     (setq bbdb-mua-update-interactive-p '(query . create))
 
-    ;; update BBDB silently (don't display an auto-updated BBDB window)
+    ;; Update BBDB silently (don't display an auto-updated BBDB window).
     (setq bbdb-mua-pop-up nil)
 #+end_src
 
@@ -14461,19 +14464,19 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
 #+begin_src emacs-lisp
 ;;* (info "(bbdb)Interfaces")
 
-    ;; mail aliases (local mailing lists)
+    ;; Mail aliases (local mailing lists).
     ;; (add-hook 'message-setup-hook #'bbdb-define-all-aliases) ; BBDB 2.35
     (add-hook 'message-setup-hook #'bbdb-mail-aliases) ; BBDB 3
 
-    ;; always use full name when sending mail
+    ;; Always use full name when sending mail.
     ;; (even if User Name has an address of the form <user.name@domain>)
     (setq bbdb-dwim-net-address-allow-redundancy t) ; BBDB 2.35
     (setq bbdb-mail-avoid-redundancy nil) ; BBDB 3
 
-    ;; no popup on auto-complete
+    ;; No popup on auto-complete.
     (setq bbdb-completion-display-record nil)
 
-    ;; completion is done across the set of all full-names and user-ids
+    ;; Completion is done across the set of all full-names and user-ids.
     (setq bbdb-completion-type nil)
 #+end_src
 
@@ -14482,17 +14485,17 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
 #+begin_src emacs-lisp
 ;;* (info "(bbdb)Reader-specific Features")
 
-    ;; marking posters with records in the BBDB
+    ;; Marking posters with records in the BBDB.
     (setq bbdb/gnus-summary-mark-known-posters t)
 
-    ;; mark authors in the Summary Buffer who have records in the BBDB
+    ;; Mark authors in the Summary Buffer who have records in the BBDB.
     (setq bbdb/gnus-summary-known-poster-mark "B")
 
-    ;; display the poster's name from the BBDB if we have one
+    ;; Display the poster's name from the BBDB if we have one.
     (setq bbdb/gnus-summary-prefer-real-names t)
 
-    ;; replace the information provided in the From header with data from the
-    ;; BBDB if we have one
+    ;; Replace the information provided in the From header with data from the
+    ;; BBDB if we have one.
     (setq bbdb/gnus-summary-prefer-bbdb-data t)
 
     (setq bbdb/gnus-summary-show-bbdb-names t)
@@ -14505,35 +14508,35 @@ You can add the author of a mail or posting to the BBDB by hitting ~:~.
 #+begin_src emacs-lisp
 ;;* (info "(bbdb)Options")
 
-    ;; no default area code to use when prompting for a new phone number
+    ;; No default area code to use when prompting for a new phone number.
     (setq bbdb-default-area-code nil)
 
-    ;; default country to use if none is specified
+    ;; Default country to use if none is specified.
     (setq bbdb-default-country "")
 
-    ;; disable syntax-checking of telephone numbers
+    ;; Disable syntax-checking of telephone numbers.
     (setq bbdb-north-american-phone-numbers-p nil) ; BBDB 2.35
     (setq bbdb-phone-style nil)         ; BBDB 3
 
-    ;; restoration of the window configuration
+    ;; Restoration of the window configuration.
     (setq bbdb-electric-p t)            ; BBDB 2.35
     (setq bbdb-electric t)              ; BBDB 3
 
-    ;; don't display a continuously-updating BBDB window while in GNUS
+    ;; Don't display a continuously-updating BBDB window while in GNUS.
     ;; (setq bbdb-use-pop-up nil)       ; BBDB 2.35
     ;; (setq bbdb-pop-up-layout nil)    ; BBDB 3
 
-    ;; desired number of lines in a GNUS pop-up BBDB window
+    ;; Desired number of lines in a GNUS pop-up BBDB window.
     (setq bbdb-pop-up-target-lines 1)   ; BBDB 2.35
     (setq bbdb-pop-up-window-size 1)    ; BBDB 3
 
-    ;; default display layout
+    ;; Default display layout.
     (setq bbdb-display-layout 'multi-line)
 
-    ;; default display layout pop-up BBDB buffers
+    ;; Default display layout pop-up BBDB buffers.
     (setq bbdb-pop-up-display-layout 'one-line)
 
-    ;; omit creation-date and time stamp from BBDB display
+    ;; Omit creation-date and time stamp from BBDB display.
     (setq bbdb-display-layout-alist
           '((one-line          (order     . (phones notes))
                                (name-end  . 24)
@@ -14545,22 +14548,22 @@ You can add the author of a mail or posting to the BBDB by hitting ~:~.
                                (omit      . (AKA creation-date timestamp)))
             (pop-up-multi-line (indention . 14))))
 
-    ;; allow cycling of email addresses while completing them
+    ;; Allow cycling of email addresses while completing them.
     (setq bbdb-complete-name-allow-cycling t) ; BBDB 2.35
     (setq bbdb-complete-mail-allow-cycling t) ; BBDB 3
 
-    ;; save the database without asking (any time it would ask)
+    ;; Save the database without asking (any time it would ask).
     (setq bbdb-offer-save 'auto)
 
-    ;; automatically add some text to the notes field of the BBDB record
+    ;; Automatically add some text to the notes field of the BBDB record.
     (add-hook 'bbdb-notice-hook #'bbdb-auto-notes-hook)
 
-    ;; capture auto-notes
+    ;; Capture auto-notes.
     (setq bbdb-auto-notes-alist
-          ;; organization
+          ;; Organization.
           `(("Organization" (".*" Organization 0))
 
-            ;; X-Face bitmaps of the people
+            ;; X-Face bitmaps of the people.
             ("x-face" ,(list (concat "[ \t\n]*\\([^ \t\n]*\\)"
                                      "\\([ \t\n]+\\([^ \t\n]+\\)\\)?"
                                      "\\([ \t\n]+\\([^ \t\n]+\\)\\)?"
@@ -14595,7 +14598,7 @@ if ~doc-view-pdftotext-program~ is on your ~PATH~.
 
 (leuven--chapter leuven-load-chapter-35-document-view "35 Document Viewing"
 
-  ;; view PDF/PostScript/DVI files in Emacs
+  ;; View PDF/PostScript/DVI files in Emacs.
 #+end_src
 
 #+begin_verse
@@ -15085,13 +15088,13 @@ Note that ~TERM~ is different in both environments:
 MultiTerm (http://www.emacswiki.org/emacs/MultiTerm) works much better than
 shell or term.
 
+"Multi-term on POSIX hosts has let me switch from using screen, with one Emacs
+screen and lots of shell screens; to just using Emacs, with lots of terminals
+inside it."
+
 #+begin_src emacs-lisp
   ;; Managing multiple terminal buffers in Emacs
   ;; (and fixing some troubles of `term-mode': key bindings, etc.).
-
-  ;; "multi-term on POSIX hosts has let me switch from using screen, with one
-  ;; Emacs screen and lots of shell screens; to just using Emacs, with lots of
-  ;; terminals inside it."
 
   (with-eval-after-load "multi-term-autoloads"
 
