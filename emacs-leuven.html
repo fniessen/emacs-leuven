@@ -451,7 +451,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150622.1440</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150622.1636</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -520,7 +520,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150622.1440"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150622.1636"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1199,13 +1199,10 @@ cancelable; hence, we put it out of a &ldquo;chapter&rdquo;.
     (setq idle-require-idle-delay 5)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Time in seconds between automatically loaded functions.</span>
-    (setq idle-require-load-break 2))
+    (setq idle-require-load-break 2)
 
-  (add-hook 'after-init-hook
-            (<span class="org-keyword">lambda</span> ()
-              (<span class="org-keyword">when</span> (fboundp 'idle-require-mode)
-                <span class="org-comment-delimiter">;; </span><span class="org-comment">Starts loading.</span>
-                (idle-require-mode 1))))
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Starts loading.</span>
+    (add-hook 'after-init-hook #'idle-require-mode))
 </pre>
 </div>
 </div>
@@ -4446,6 +4443,10 @@ changes outside.
 <div id="outline-container-orgheadline78" class="outline-3">
 <h3 id="orgheadline78">Auto Reverting Non-File Buffers</h3>
 <div class="outline-text-3" id="text-orgheadline78">
+<p>
+Auto-refresh Dired.
+</p>
+
 <p>
 XXX See if <code>dired-auto-revert-buffer</code> is sufficient or not.
 </p>
@@ -13935,7 +13936,7 @@ Some key bindings:
               (<span class="org-keyword">lambda</span> ()
                 (<span class="org-keyword">require</span> '<span class="org-constant">sgml-mode</span>)
                 <span class="org-comment-delimiter">;; </span><span class="org-comment">When `</span><span class="org-constant"><span class="org-comment">html-mode-hook</span></span><span class="org-comment">' is called from `</span><span class="org-constant"><span class="org-comment">html-helper-mode</span></span><span class="org-comment">'.</span>
-                (hl-tags-mode 1)))
+                (hl-tags-mode 1)))      <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> Can't we simplify this form?</span>
 
     (add-hook 'nxml-mode-hook #'hl-tags-mode))
 </pre>
@@ -17541,11 +17542,14 @@ XXX What about <code>company-search-candidates</code> vs <code>company-filter-ca
 </pre>
 </div>
 
+<div class="note">
 <p>
-<a href="#orgheadline342">ls-lisp</a>, Emacs&rsquo;s own <b>emulation of <code>ls</code></b> is used by default <b>on MS Windows</b> (which
+<a href="#orgheadline342">ls-lisp</a>, Emacs&rsquo;s own <b>emulation of <code>ls</code></b> is used by <b>default on MS Windows</b> (which
 does not have an <code>ls</code> program).  Though, it does not support as many options as
 GNU <code>ls</code>.
 </p>
+
+</div>
 
 <div class="org-src-container">
 
@@ -17565,35 +17569,22 @@ Use Emacs&rsquo;s own emulation of <code>ls</code> in all versions of Emacs.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Use `</span><span class="org-constant"><span class="org-comment">ls-lisp</span></span><span class="org-comment">' (for Dired sorting to work OK!) in all versions of Emacs.</span>
-    (setq ls-lisp-use-insert-directory-program nil)
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Emulate insert-directory completely in Emacs Lisp.</span>
-    (<span class="org-keyword">require</span> '<span class="org-constant">ls-lisp</span>)
-</pre>
-</div>
-
-<div class="note">
-<p>
-This is used by <b>default on MS Windows</b>, which does not have an <code>ls</code> program.
-</p>
-
-</div>
-
-<div class="org-src-container">
-
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** (info "(emacs)ls in Lisp")</span>
 
     (leuven--section <span class="org-string">"G.4 (emacs)ls in Lisp"</span>)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Emulate insert-directory completely in Emacs Lisp.</span>
-    (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ls-lisp"</span>
+    (<span class="org-keyword">when</span> (<span class="org-keyword">require</span> '<span class="org-constant">ls-lisp</span>)
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Disable the case sensitive sort of file names.</span>
       (setq ls-lisp-ignore-case t)
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Sort directories first.</span>
       (setq ls-lisp-dirs-first t)
+
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Use `</span><span class="org-constant"><span class="org-comment">ls-lisp</span></span><span class="org-comment">' in all versions of Emacs (for Dired sorting to work OK!).</span>
+      (setq ls-lisp-use-insert-directory-program nil)
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">[Default: nil for Windows, t otherwise]</span>
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Use ISO 8601 dates.</span>
       (setq ls-lisp-format-time-list
@@ -17983,13 +17974,21 @@ For searches in Dired, see <code>dired-do-search</code> (<code>A</code>).
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** (info "(emacs)Dired and Find")</span>
 
     (leuven--section <span class="org-string">"30.16 (emacs)Dired and Find"</span>)
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; What to use in place of `</span><span class="org-constant"><span class="org-comment">-ls</span></span><span class="org-comment">' as the final argument.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; What to use in place of `</span><span class="org-constant"><span class="org-comment">-ls</span></span><span class="org-comment">' as the final argument.</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Quicker to collate the matches and then use `</span><span class="org-constant"><span class="org-comment">xargs</span></span><span class="org-comment">' to run the command</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">;; (variable defined in `</span><span class="org-constant"><span class="org-comment">find-dired.el</span></span><span class="org-comment">').</span>
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Search for files with names matching a wild card pattern and Dired the</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Search for files with names matching a wild card pattern and Dired the</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">output.</span>
     (global-set-key (kbd <span class="org-string">"C-c 1"</span>) #'find-name-dired)
       <span class="org-comment-delimiter">;; </span><span class="org-comment">case insensitive if `</span><span class="org-constant"><span class="org-comment">read-file-name-completion-ignore-case</span></span><span class="org-comment">' is non-nil</span>
@@ -18135,13 +18134,7 @@ external viewer for documents (see <code>dired-guess-shell-alist-user</code>)</l
 
     (leuven--section <span class="org-string">"30.XX (dired-x)Top"</span>)
 
-    (<span class="org-keyword">require</span> '<span class="org-constant">dired-x</span>)
-</pre>
-</div>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">    )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "dired" ends here.</span>
+    (<span class="org-keyword">require</span> '<span class="org-constant">dired-x</span>))                 <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "dired" ends here.</span>
 </pre>
 </div>
 </div>
@@ -18199,9 +18192,7 @@ Extensions to Dired:
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable VC diff highlighting on the side of a Dired window.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"diff-hl-autoloads"</span>
-    (add-hook 'dired-mode-hook
-              (<span class="org-keyword">lambda</span> ()
-                (diff-hl-dired-mode 1))))
+    (add-hook 'dired-mode-hook #'diff-hl-dired-mode))
 </pre>
 </div>
 

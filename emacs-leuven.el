@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150622.1439
+;; Version: 20150622.1635
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150622.1439"
+(defconst leuven--emacs-version "20150622.1635"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -495,13 +495,10 @@ These packages are neither built-in nor already installed nor ignored."
     (setq idle-require-idle-delay 5)
 
     ;; Time in seconds between automatically loaded functions.
-    (setq idle-require-load-break 2))
+    (setq idle-require-load-break 2)
 
-  (add-hook 'after-init-hook
-            (lambda ()
-              (when (fboundp 'idle-require-mode)
-                ;; Starts loading.
-                (idle-require-mode 1))))
+    ;; Starts loading.
+    (add-hook 'after-init-hook #'idle-require-mode))
 
 ;;* 1 The Organization of the (info "(emacs)Screen")
 
@@ -6667,7 +6664,7 @@ this with to-do items than with projects or headings."
               (lambda ()
                 (require 'sgml-mode)
                 ;; When `html-mode-hook' is called from `html-helper-mode'.
-                (hl-tags-mode 1)))
+                (hl-tags-mode 1)))      ; XXX Can't we simplify this form?
 
     (add-hook 'nxml-mode-hook #'hl-tags-mode))
 
@@ -8017,24 +8014,22 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Switches passed to `ls' for Dired.
     (setq dired-listing-switches "-alF")
 
-    ;; Use `ls-lisp' (for Dired sorting to work OK!) in all versions of Emacs.
-    (setq ls-lisp-use-insert-directory-program nil)
-
-    ;; Emulate insert-directory completely in Emacs Lisp.
-    (require 'ls-lisp)
-
 ;;** (info "(emacs)ls in Lisp")
 
     (leuven--section "G.4 (emacs)ls in Lisp")
 
     ;; Emulate insert-directory completely in Emacs Lisp.
-    (with-eval-after-load "ls-lisp"
+    (when (require 'ls-lisp)
 
       ;; Disable the case sensitive sort of file names.
       (setq ls-lisp-ignore-case t)
 
       ;; Sort directories first.
       (setq ls-lisp-dirs-first t)
+
+      ;; Use `ls-lisp' in all versions of Emacs (for Dired sorting to work OK!).
+      (setq ls-lisp-use-insert-directory-program nil)
+                                        ; [Default: nil for Windows, t otherwise]
 
       ;; Use ISO 8601 dates.
       (setq ls-lisp-format-time-list
@@ -8128,11 +8123,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (leuven--section "30.16 (emacs)Dired and Find")
 
-    ;; ;; What to use in place of `-ls' as the final argument.
-    ;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
-    ;; ;; Quicker to collate the matches and then use `xargs' to run the command
-    ;; ;; (variable defined in `find-dired.el').
-
     ;; Search for files with names matching a wild card pattern and Dired the
     ;; output.
     (global-set-key (kbd "C-c 1") #'find-name-dired)
@@ -8175,9 +8165,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (leuven--section "30.XX (dired-x)Top")
 
-    (require 'dired-x)
-
-    )                                   ; with-eval-after-load "dired" ends here.
+    (require 'dired-x))                 ; with-eval-after-load "dired" ends here.
 
 ;;** Dired+
 
@@ -8207,9 +8195,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; Enable VC diff highlighting on the side of a Dired window.
   (with-eval-after-load "diff-hl-autoloads"
-    (add-hook 'dired-mode-hook
-              (lambda ()
-                (diff-hl-dired-mode 1))))
+    (add-hook 'dired-mode-hook #'diff-hl-dired-mode))
 
 )                                       ; Chapter 30 ends here.
 
