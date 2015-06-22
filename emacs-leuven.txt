@@ -5807,7 +5807,6 @@ a factor 2!?
       ;; (key-chord-define org-mode-map ",g" 'er/open-org-calendar)         ;; Open calendar integration. :Functions.el:
       ;; (key-chord-define org-mode-map ",h" 'org-toggle-heading)           ;; Toggle heading for current line/list item.
       ;; (key-chord-define org-mode-map ",k" 'org-cut-subtree)              ;; Kill subtree.
-      ;; (key-chord-define org-mode-map ",l" 'org-store-link)               ;; Store link (useful for agenda ref).
       ;; (key-chord-define org-mode-map ",n" 'er/org-narrow-and-reveal)     ;; Narrow region and reveal. :Functions.el:
       ;; (key-chord-define org-mode-map ",o" 'org-open-at-point)            ;; Open link at point.
       ;; (key-chord-define org-mode-map ",p" 'org-priority)                 ;; Toggle priority.
@@ -6269,6 +6268,12 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
   ;; links, see `C-h v org-id-link-to-org-use-id RET').
   (add-to-list 'org-modules 'org-id)
 #+end_src
+
+#+begin_note
+If you want to insert a *link to a file* in an Org mode document, you can also
+call ~org-insert-link~ (~C-c C-l~) with a ~C-u~ prefix (to get the regular ~find-file~
+interface).
+#+end_note
 
 #+begin_src emacs-lisp
   ;; Support for links to Gnus groups and messages from within Org mode.
@@ -13583,15 +13588,6 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
 (leuven--chapter leuven-load-chapter-30-dired "30 Dired, the Directory Editor"
 #+end_src
 
-Type ~0 w~ (~dired-copy-filename-as-kill~) in Dired to put the *full path* to some
-local file into the kill ring.
-
-#+begin_note
-If you want to insert a link to a file in an Org mode document, you can also
-call ~org-insert-link~ (~C-c C-l~) with a ~C-u~ prefix (to get the regular ~find-file~
-interface).
-#+end_note
-
 ** Entering Dired
 
 #+begin_src emacs-lisp
@@ -13609,12 +13605,7 @@ GNU ~ls~.
 
 #+begin_src emacs-lisp
     ;; Switches passed to `ls' for Dired.
-    (setq dired-listing-switches
-          ;; (cond ((or leuven--win32-p
-          ;;            leuven--cygwin-p)
-                 "-alF")
-                ;; (t
-                ;;  "-alF --group-directories-first --time-style=long-iso")))
+    (setq dired-listing-switches "-alF")
 #+end_src
 
 ** Emulation of ~ls~ on MS-Windows
@@ -13622,17 +13613,14 @@ GNU ~ls~.
    :ID:       26d881f0-0f56-4259-9b31-eb4fecb08c88
    :END:
 
-Use Emacs's own emulation of ~ls~ in Cygwin Emacs as well:
+Use Emacs's own emulation of ~ls~ in all versions of Emacs.
 
 #+begin_src emacs-lisp
     ;; Use `ls-lisp' (for Dired sorting to work OK!) in all versions of Emacs.
-    ;; (when leuven--cygwin-p
+    (setq ls-lisp-use-insert-directory-program nil)
 
-      (setq ls-lisp-use-insert-directory-program nil)
-
-      ;; Emulate insert-directory completely in Emacs Lisp.
-      (require 'ls-lisp)
-      ;; )
+    ;; Emulate insert-directory completely in Emacs Lisp.
+    (require 'ls-lisp)
 #+end_src
 
 #+begin_note
@@ -13858,7 +13846,8 @@ For those under Windows:
 
     (leuven--section "30.7 (emacs)Operating on Files")
 
-    ;; Try to guess a default target directory.
+    ;; Try to guess a default target directory (if there is a Dired buffer
+    ;; displayed in the next window).
     (setq dired-dwim-target t)
 
     ;; Copy recursively without asking.
@@ -13881,12 +13870,12 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
 #+end_warning
 
 #+begin_src emacs-lisp :tangle no
-(add-hook 'dired-mode-hook
-          (lambda ()
+    (add-hook 'dired-mode-hook
+              (lambda ()
 
-            ;; Auto-refresh Dired on file change.
-            (auto-revert-mode)
-            (setq-default auto-revert-interval 1)))
+                ;; Auto-refresh Dired on file change.
+                (auto-revert-mode)
+                (setq-default auto-revert-interval 1)))
 #+end_src
 
 Maybe the following fixes this above problem?
@@ -13900,8 +13889,8 @@ Maybe the following fixes this above problem?
     (setq dired-auto-revert-buffer t)
 #+end_src
 
-Press `s' then `s', `x', `t', `n' or `d' to sort by
-Size, eXtension, *Time*, *Name* or name grouping Dirs first.
+Press ~s~ then ~s~, ~x~, ~t~, ~n~ or ~d~ to sort by Size, eXtension, *Time*, *Name* or name
+grouping Dirs first:
 
 #+begin_src emacs-lisp
     ;; Dired sort.
@@ -13998,12 +13987,20 @@ For more information, see:
       (setq image-dired-thumb-margin 4))
 #+end_src
 
+** Other Dired features
+
+To copy the *name* of the file at point (or the folder you're looking at in Dired)
+into the kill ring (in order to make use of it elsewhere), use
+~dired-copy-filename-as-kill~, which is bound to ~w~ in Dired.
+
+Use ~0 w~ to put the *full path*.
+
 ** Dired "extra" features
 
 Extra Dired functionality:
 
 - You can *jump to the Dired buffer* corresponding to the current buffer by
-  pressing ~C-x C-j~ (~dired-jump~).  If in Dired already, pop up a level and goto
+  pressing *~C-x C-j~* (~dired-jump~).  If in Dired already, pop up a level and goto
   old directory's line.
 
   *Standard* alternative: ~C-x d RET~, though it doesn't set point on the right
@@ -14017,11 +14014,7 @@ Extra Dired functionality:
 
     (leuven--section "30.XX (dired-x)Top")
 
-    ;; Load `dired-x.el' when Dired is first invoked (for example, when you
-    ;; first type `C-x d').
-    (add-hook 'dired-load-hook
-              (lambda ()
-                (load "dired-x")))
+    (require 'dired-x)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -14032,7 +14025,7 @@ Extra Dired functionality:
 
 Extensions to Dired:
 
-- Provide fancy highlighting.
+- Provide fancy *highlighting*.
 
 - Let you act on sets of marked files in subdirs, recursively, for example.
 
@@ -14043,24 +14036,21 @@ Extensions to Dired:
 
   (when (try-require 'dired+)
 
-    (add-hook 'dired-load-hook
-              (lambda ()
+    ;; Don't hide details in Dired.
+    (setq diredp-hide-details-initially-flag nil)
 
-                ;; Don't hide details in Dired.
-                (setq diredp-hide-details-initially-flag nil)
+    ;; Don't display the next Dired buffer the same way as the last.
+    (setq diredp-hide-details-propagate-flag nil)
 
-                ;; Don't display the next Dired buffer the same way as the last.
-                (setq diredp-hide-details-propagate-flag nil)
+    ;; Don't wrap "next" command around to buffer beginning.
+    (setq diredp-wrap-around-flag nil)
 
-                ;; Don't wrap "next" command around to buffer beginning.
-                (setq diredp-wrap-around-flag nil)
+    ;; Dired `find-file' commands reuse directories.
+    (diredp-toggle-find-file-reuse-dir 1)
 
-                ;; Dired `find-file' commands reuse directories.
-                (diredp-toggle-find-file-reuse-dir 1)
-
-                ;; Up, reusing Dired buffers.
-                (define-key dired-mode-map (kbd "C-x C-j")
-                  'diredp-up-directory-reuse-dir-buffer))))
+    ;; Up, reusing Dired buffers.
+    (define-key dired-mode-map (kbd "C-x C-j")
+      'diredp-up-directory-reuse-dir-buffer))
 #+end_src
 
 ** VC diff highlighting

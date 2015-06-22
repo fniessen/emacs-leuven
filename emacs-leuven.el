@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150622.1040
+;; Version: 20150622.1439
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150622.1040"
+(defconst leuven--emacs-version "20150622.1439"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3405,7 +3405,6 @@ These packages are neither built-in nor already installed nor ignored."
       ;; (key-chord-define org-mode-map ",g" 'er/open-org-calendar)         ;; Open calendar integration. :Functions.el:
       ;; (key-chord-define org-mode-map ",h" 'org-toggle-heading)           ;; Toggle heading for current line/list item.
       ;; (key-chord-define org-mode-map ",k" 'org-cut-subtree)              ;; Kill subtree.
-      ;; (key-chord-define org-mode-map ",l" 'org-store-link)               ;; Store link (useful for agenda ref).
       ;; (key-chord-define org-mode-map ",n" 'er/org-narrow-and-reveal)     ;; Narrow region and reveal. :Functions.el:
       ;; (key-chord-define org-mode-map ",o" 'org-open-at-point)            ;; Open link at point.
       ;; (key-chord-define org-mode-map ",p" 'org-priority)                 ;; Toggle priority.
@@ -8016,21 +8015,13 @@ a clean buffer we're an order of magnitude laxer about checking."
     (leuven--section "30.1 (emacs)Dired Enter")
 
     ;; Switches passed to `ls' for Dired.
-    (setq dired-listing-switches
-          ;; (cond ((or leuven--win32-p
-          ;;            leuven--cygwin-p)
-                 "-alF")
-                ;; (t
-                ;;  "-alF --group-directories-first --time-style=long-iso")))
+    (setq dired-listing-switches "-alF")
 
     ;; Use `ls-lisp' (for Dired sorting to work OK!) in all versions of Emacs.
-    ;; (when leuven--cygwin-p
+    (setq ls-lisp-use-insert-directory-program nil)
 
-      (setq ls-lisp-use-insert-directory-program nil)
-
-      ;; Emulate insert-directory completely in Emacs Lisp.
-      (require 'ls-lisp)
-      ;; )
+    ;; Emulate insert-directory completely in Emacs Lisp.
+    (require 'ls-lisp)
 
 ;;** (info "(emacs)ls in Lisp")
 
@@ -8116,7 +8107,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (leuven--section "30.7 (emacs)Operating on Files")
 
-    ;; Try to guess a default target directory.
+    ;; Try to guess a default target directory (if there is a Dired buffer
+    ;; displayed in the next window).
     (setq dired-dwim-target t)
 
     ;; Copy recursively without asking.
@@ -8183,11 +8175,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (leuven--section "30.XX (dired-x)Top")
 
-    ;; Load `dired-x.el' when Dired is first invoked (for example, when you
-    ;; first type `C-x d').
-    (add-hook 'dired-load-hook
-              (lambda ()
-                (load "dired-x")))
+    (require 'dired-x)
 
     )                                   ; with-eval-after-load "dired" ends here.
 
@@ -8197,24 +8185,21 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (when (try-require 'dired+)
 
-    (add-hook 'dired-load-hook
-              (lambda ()
+    ;; Don't hide details in Dired.
+    (setq diredp-hide-details-initially-flag nil)
 
-                ;; Don't hide details in Dired.
-                (setq diredp-hide-details-initially-flag nil)
+    ;; Don't display the next Dired buffer the same way as the last.
+    (setq diredp-hide-details-propagate-flag nil)
 
-                ;; Don't display the next Dired buffer the same way as the last.
-                (setq diredp-hide-details-propagate-flag nil)
+    ;; Don't wrap "next" command around to buffer beginning.
+    (setq diredp-wrap-around-flag nil)
 
-                ;; Don't wrap "next" command around to buffer beginning.
-                (setq diredp-wrap-around-flag nil)
+    ;; Dired `find-file' commands reuse directories.
+    (diredp-toggle-find-file-reuse-dir 1)
 
-                ;; Dired `find-file' commands reuse directories.
-                (diredp-toggle-find-file-reuse-dir 1)
-
-                ;; Up, reusing Dired buffers.
-                (define-key dired-mode-map (kbd "C-x C-j")
-                  'diredp-up-directory-reuse-dir-buffer))))
+    ;; Up, reusing Dired buffers.
+    (define-key dired-mode-map (kbd "C-x C-j")
+      'diredp-up-directory-reuse-dir-buffer))
 
 ;;** Diff-hl
 
