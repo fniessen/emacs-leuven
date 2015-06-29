@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150622.1655
+;; Version: 20150629.1525
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150622.1655"
+(defconst leuven--emacs-version "20150629.1525"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1092,14 +1092,14 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Add highlighting keywords for selected major modes *and* all major modes
   ;; derived from them.
   (dolist (hook '(prog-mode-hook
-                  ;; text-mode-hook     ; avoid Org
+                  ;; text-mode-hook     ; Avoid Org.
                   css-mode-hook         ; [parent: fundamental]
                   latex-mode-hook
                   shell-mode-hook       ; [parent: fundamental]
                   ssh-config-mode-hook))
     (add-hook hook
      (lambda ()
-       (font-lock-add-keywords nil      ; in the current buffer
+       (font-lock-add-keywords nil      ; In the current buffer.
         `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend)) 'end))))
         ;; FIXME                      0                        t          t
 
@@ -1960,25 +1960,26 @@ These packages are neither built-in nor already installed nor ignored."
   (global-set-key (kbd "<C-f12>") #'leuven-revert-buffer-without-query)
 
   ;; Enable Global Auto-Revert mode (auto refresh buffers).
-  (global-auto-revert-mode 1)           ; Can generate a lot of network traffic
+  (unless leuven--cygwin-p
+    (global-auto-revert-mode 1))        ; Can generate a lot of network traffic
                                         ; if `auto-revert-remote-files' is set
                                         ; to non-nil.
 
-  ;; ;; Global Auto-Revert mode operates on all buffers (Dired, among others)
-  ;; (setq global-auto-revert-non-file-buffers t)
+  ;; Global Auto-Revert mode operates on all buffers (Dired, etc.)
+  (setq global-auto-revert-non-file-buffers t)
 
-  ;; ;; Do not generate any messages (be quiet about refreshing Dired).
-  ;; (setq auto-revert-verbose nil)     ; Avoid "Reverting buffer `some-dir/'.".
+  ;; Do not generate any messages (be quiet about refreshing Dired).
+  (setq auto-revert-verbose nil)        ; Avoid "Reverting buffer `some-dir/'.".
 
 ;;** 18.6 (info "(emacs)Auto Save"): Protection Against Disasters
 
   (leuven--section "18.6 (emacs)Auto Save: Protection Against Disasters")
 
   ;; Auto-save every 100 input events.
-  (setq auto-save-interval 100)         ; [default: 300]
+  (setq auto-save-interval 100)         ; [Default: 300].
 
   ;; Auto-save after 10 seconds idle time.
-  (setq auto-save-timeout 10)           ; [default: 30]
+  (setq auto-save-timeout 10)           ; [Default: 30].
 
   (define-minor-mode sensitive-mode
     "For sensitive files like password lists.
@@ -4397,11 +4398,11 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; 8.4.2 Format string used when creating CLOCKSUM lines and when generating
     ;; a time duration (avoid showing days).
-    (setq org-time-clocksum-format      ;! works with Org 8 only
+    (setq org-time-clocksum-format
           '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
-                                        ; some clocktable functions cannot
+                                        ; Some clocktable functions cannot
                                         ; digest day formats (e.g.,
-                                        ; org-clock-time%)
+                                        ; org-clock-time%).
 
     ;; ;; 8.4.2 Use fractional times.
     ;; (setq org-time-clocksum-use-fractional t)
@@ -4452,6 +4453,9 @@ These packages are neither built-in nor already installed nor ignored."
     ;;! Use start-process to have an external program play the sound to
     ;;! avoid ignored keystrokes until after the sound plays (start-process
     ;;! "ding" nil "play" "~/Public/Music/Sounds/alarm.wav")
+
+    ;; Default range when displaying clocks with `org-clock-display'.
+    (setq org-clock-display-default-range 'untilnow)
 
     ;; Remove the clock line when the resulting time is 0:00.
     (setq org-clock-out-remove-zero-time-clocks t)
@@ -5313,8 +5317,9 @@ this with to-do items than with projects or headings."
                                         ; special #+KEYWORD lines
                                         ; (like `C-c C-c')
 
-          ;; (when (locate-library "org-lint")
-          ;;   (measure-time "Linted Org mode" (org-lint)))
+          ;; Linting for Org documents.
+          (when (try-require "org-lint")
+            (measure-time "Linted Org mode" (org-lint)))
 
           ;; ;; Update the results in the Org buffer.
           ;; (org-babel-execute-buffer)    ; In this case, better than
@@ -5927,19 +5932,21 @@ this with to-do items than with projects or headings."
                           (line-number-at-pos
                            (org-element-property :post-affiliated sb))
                           (buffer-name)))
-                  ((and (not (assoc-string language org-babel-load-languages))
-                        (not (assoc-string language org-src-lang-modes))
-                        ;; (locate-library (concat language "-mode")) ; would allow `sh-mode'
-                        )
-                                        ; XXX This should be stricter: must be
-                                        ; in org-babel-load-languages for
-                                        ; evaluated code blocks. Must be in both
-                                        ; other cases for edited code blocks.
-                   (error "Unknown language `%s' at line %d in `%s'"
-                          language
-                          (line-number-at-pos
-                           (org-element-property :post-affiliated sb))
-                          (buffer-name)))))))
+                  ;; ((and (not (assoc-string language org-babel-load-languages))
+                  ;;       (not (assoc-string language org-src-lang-modes))
+                  ;;       ;; (locate-library (concat language "-mode")) ; would allow `sh-mode'
+                  ;;       )
+                  ;;                       ; XXX This should be stricter: must be
+                  ;;                       ; in org-babel-load-languages for
+                  ;;                       ; evaluated code blocks. Must be in both
+                  ;;                       ; other cases for edited code blocks.
+                  ;;  (error "Unknown language `%s' at line %d in `%s'"
+                  ;;         language
+                  ;;         (line-number-at-pos
+                  ;;          (org-element-property :post-affiliated sb))
+                  ;;         (buffer-name)))
+                  ))))
+
       ;; (message "Source blocks checked in %s."
       ;;          (buffer-name (buffer-base-buffer)))
       )
@@ -6272,8 +6279,7 @@ this with to-do items than with projects or headings."
     ;; `org-mime-subtree' is called.
     (add-hook 'org-mime-send-subtree-hook
               (lambda ()
-                (org-entry-put (point) "mail_composed"
-                               (current-time-string)))))
+                (org-entry-put (point) "mail_composed" (current-time-string)))))
 
 ;;** A.3 (info "(org)Adding hyperlink types")
 
@@ -6869,7 +6875,7 @@ mouse-3: go to end") "]"))))
 
   (leuven--section "26.5 (emacs)Comments")
 
-  ;; always comments out empty lines
+  ;; Always comments out empty lines.
   (setq comment-empty-lines t)
 
   (GNUEmacs
@@ -7985,7 +7991,10 @@ a clean buffer we're an order of magnitude laxer about checking."
     (setq company-dabbrev-ignore-case nil)
 
     ;; Don't downcase the returned candidates.
-    (setq company-dabbrev-downcase nil))
+    (setq company-dabbrev-downcase nil)
+
+    ;; Skip invisible text (Org drawers, etc.).
+    (setq company-dabbrev-ignore-invisible t))
 
   (with-eval-after-load "company-quickhelp-autoloads"
 
@@ -8113,7 +8122,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (leuven--section "30.15 (emacs)Dired Updating")
 
-    ;; Automatically revert Dired buffer on revisiting.
+    ;; Automatically revert Dired buffer *on revisiting*.
     (setq dired-auto-revert-buffer t)
 
     ;; Dired sort.

@@ -1935,14 +1935,14 @@ leuven-highlight-keywords, so that only one expression can be used for *all* mod
   ;; Add highlighting keywords for selected major modes *and* all major modes
   ;; derived from them.
   (dolist (hook '(prog-mode-hook
-                  ;; text-mode-hook     ; avoid Org
+                  ;; text-mode-hook     ; Avoid Org.
                   css-mode-hook         ; [parent: fundamental]
                   latex-mode-hook
                   shell-mode-hook       ; [parent: fundamental]
                   ssh-config-mode-hook))
     (add-hook hook
      (lambda ()
-       (font-lock-add-keywords nil      ; in the current buffer
+       (font-lock-add-keywords nil      ; In the current buffer.
         `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend)) 'end))))
         ;; FIXME                      0                        t          t
 #+end_src
@@ -3310,7 +3310,8 @@ Turn on auto-revert mode globally.
 
 #+begin_src emacs-lisp
   ;; Enable Global Auto-Revert mode (auto refresh buffers).
-  (global-auto-revert-mode 1)           ; Can generate a lot of network traffic
+  (unless leuven--cygwin-p
+    (global-auto-revert-mode 1))        ; Can generate a lot of network traffic
                                         ; if `auto-revert-remote-files' is set
                                         ; to non-nil.
 #+end_src
@@ -3319,18 +3320,21 @@ Auto-revert will automatically reload files that have changed outside of Emacs.
 It won't revert a buffer that you've edited inside Emacs, even if the file also
 changes outside.
 
+#+begin_warning
+~global-auto-revert-mode~ blocks Cygwin Emacs for more than 5 seconds at many
+points in time. Disabled for now, under Cygwin.
+#+end_warning
+
 ** Auto Reverting Non-File Buffers
 
 Auto-refresh Dired.
 
-XXX See if ~dired-auto-revert-buffer~ is sufficient or not.
-
 #+begin_src emacs-lisp
-  ;; ;; Global Auto-Revert mode operates on all buffers (Dired, among others)
-  ;; (setq global-auto-revert-non-file-buffers t)
+  ;; Global Auto-Revert mode operates on all buffers (Dired, etc.)
+  (setq global-auto-revert-non-file-buffers t)
 
-  ;; ;; Do not generate any messages (be quiet about refreshing Dired).
-  ;; (setq auto-revert-verbose nil)     ; Avoid "Reverting buffer `some-dir/'.".
+  ;; Do not generate any messages (be quiet about refreshing Dired).
+  (setq auto-revert-verbose nil)        ; Avoid "Reverting buffer `some-dir/'.".
 #+end_src
 
 ** Auto-Saving: Protection Against Disasters
@@ -3343,10 +3347,10 @@ How to get Emacs to auto-save to your local disk (=#file#=).
   (leuven--section "18.6 (emacs)Auto Save: Protection Against Disasters")
 
   ;; Auto-save every 100 input events.
-  (setq auto-save-interval 100)         ; [default: 300]
+  (setq auto-save-interval 100)         ; [Default: 300].
 
   ;; Auto-save after 10 seconds idle time.
-  (setq auto-save-timeout 10)           ; [default: 30]
+  (setq auto-save-timeout 10)           ; [Default: 30].
 #+end_src
 
 Disable backups and auto-save only in the current buffer with
@@ -7331,11 +7335,11 @@ Alternative to requiring org-clock in every Emacs session.
 
     ;; 8.4.2 Format string used when creating CLOCKSUM lines and when generating
     ;; a time duration (avoid showing days).
-    (setq org-time-clocksum-format      ;! works with Org 8 only
+    (setq org-time-clocksum-format
           '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
-                                        ; some clocktable functions cannot
+                                        ; Some clocktable functions cannot
                                         ; digest day formats (e.g.,
-                                        ; org-clock-time%)
+                                        ; org-clock-time%).
 
     ;; ;; 8.4.2 Use fractional times.
     ;; (setq org-time-clocksum-use-fractional t)
@@ -7386,6 +7390,9 @@ Alternative to requiring org-clock in every Emacs session.
     ;;! Use start-process to have an external program play the sound to
     ;;! avoid ignored keystrokes until after the sound plays (start-process
     ;;! "ding" nil "play" "~/Public/Music/Sounds/alarm.wav")
+
+    ;; Default range when displaying clocks with `org-clock-display'.
+    (setq org-clock-display-default-range 'untilnow)
 
     ;; Remove the clock line when the resulting time is 0:00.
     (setq org-clock-out-remove-zero-time-clocks t)
@@ -8364,6 +8371,13 @@ Links to common agenda views:
 - [[elisp:(org-agenda nil "w")][Show Waiting Tasks]]
 - [[elisp:(org-agenda nil "p")][Show Projects]]
 
+or even:
+
+: [[org-search:+work-boss-TODO="DONE"]]
+
+if you define a new type of link.  See [[http://endlessparentheses.com/use-org-mode-links-for-absolutely-anything.html][Use Org-Mode Links for Absolutely Anything]]
+for more.
+
 You can as well use your agenda and use ~/~ to limit the view to what you want
 (~C-c a a / TAG~).
 
@@ -8690,8 +8704,9 @@ launched from Dired?
                                         ; special #+KEYWORD lines
                                         ; (like `C-c C-c')
 
-          ;; (when (locate-library "org-lint")
-          ;;   (measure-time "Linted Org mode" (org-lint)))
+          ;; Linting for Org documents.
+          (when (try-require "org-lint")
+            (measure-time "Linted Org mode" (org-lint)))
 
           ;; ;; Update the results in the Org buffer.
           ;; (org-babel-execute-buffer)    ; In this case, better than
@@ -8735,6 +8750,11 @@ launched from Dired?
 
     (define-key org-mode-map (kbd "<f9>") 'org-save-buffer-and-do-related))
 #+end_src
+
+#+begin_note
+When called non-interactively, ~org-lint~ returns the reports, as an alist or nil,
+so it can be used as a predicate.
+#+end_note
 
 *************** TODO Execute all code blocks in buffer
 Ce qui serait mieux :
@@ -9566,19 +9586,21 @@ languages which can be evaluated in Org mode buffers.
                           (line-number-at-pos
                            (org-element-property :post-affiliated sb))
                           (buffer-name)))
-                  ((and (not (assoc-string language org-babel-load-languages))
-                        (not (assoc-string language org-src-lang-modes))
-                        ;; (locate-library (concat language "-mode")) ; would allow `sh-mode'
-                        )
-                                        ; XXX This should be stricter: must be
-                                        ; in org-babel-load-languages for
-                                        ; evaluated code blocks. Must be in both
-                                        ; other cases for edited code blocks.
-                   (error "Unknown language `%s' at line %d in `%s'"
-                          language
-                          (line-number-at-pos
-                           (org-element-property :post-affiliated sb))
-                          (buffer-name)))))))
+                  ;; ((and (not (assoc-string language org-babel-load-languages))
+                  ;;       (not (assoc-string language org-src-lang-modes))
+                  ;;       ;; (locate-library (concat language "-mode")) ; would allow `sh-mode'
+                  ;;       )
+                  ;;                       ; XXX This should be stricter: must be
+                  ;;                       ; in org-babel-load-languages for
+                  ;;                       ; evaluated code blocks. Must be in both
+                  ;;                       ; other cases for edited code blocks.
+                  ;;  (error "Unknown language `%s' at line %d in `%s'"
+                  ;;         language
+                  ;;         (line-number-at-pos
+                  ;;          (org-element-property :post-affiliated sb))
+                  ;;         (buffer-name)))
+                  ))))
+
       ;; (message "Source blocks checked in %s."
       ;;          (buffer-name (buffer-base-buffer)))
       )
@@ -10139,8 +10161,7 @@ the mail message:
     ;; `org-mime-subtree' is called.
     (add-hook 'org-mime-send-subtree-hook
               (lambda ()
-                (org-entry-put (point) "mail_composed"
-                               (current-time-string)))))
+                (org-entry-put (point) "mail_composed" (current-time-string)))))
 #+end_src
 
 ** A.3 Adding hyperlink types
@@ -11239,14 +11260,11 @@ Balanced editing: inserting two matching parentheses at once, etc.
 #+begin_src emacs-lisp :tangle no
   (with-eval-after-load "autopair-autoloads"
 
-    (add-hook 'prog-mode-hook
-              (lambda ()
+    ;; Attempts to wrap the selected region.
+    (setq autopair-autowrap t)
 
-                ;; Attempts to wrap the selected region.
-                (setq autopair-autowrap t)
-
-                ;; Enable Autopair-Global mode.
-                (autopair-global-mode 1))))
+    ;; Enable Autopair-Global mode.
+    (autopair-global-mode 1))
 #+end_src
 
 ** Manipulating Comments
@@ -11256,7 +11274,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
   (leuven--section "26.5 (emacs)Comments")
 
-  ;; always comments out empty lines
+  ;; Always comments out empty lines.
   (setq comment-empty-lines t)
 #+end_src
 
@@ -13552,7 +13570,10 @@ good|
     (setq company-dabbrev-ignore-case nil)
 
     ;; Don't downcase the returned candidates.
-    (setq company-dabbrev-downcase nil))
+    (setq company-dabbrev-downcase nil)
+
+    ;; Skip invisible text (Org drawers, etc.).
+    (setq company-dabbrev-ignore-invisible t))
 #+end_src
 
 XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
@@ -13878,7 +13899,7 @@ Maybe the following fixes this above problem?
 
     (leuven--section "30.15 (emacs)Dired Updating")
 
-    ;; Automatically revert Dired buffer on revisiting.
+    ;; Automatically revert Dired buffer *on revisiting*.
     (setq dired-auto-revert-buffer t)
 #+end_src
 

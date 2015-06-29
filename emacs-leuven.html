@@ -451,7 +451,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150622.1656</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150629.1554</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -520,7 +520,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150622.1656"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150629.1554"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2718,14 +2718,14 @@ leuven-highlight-keywords, so that only one expression can be used for <b>all</b
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Add highlighting keywords for selected major modes *and* all major modes</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">derived from them.</span>
   (<span class="org-keyword">dolist</span> (hook '(prog-mode-hook
-                  <span class="org-comment-delimiter">;; </span><span class="org-comment">text-mode-hook     ; avoid Org</span>
+                  <span class="org-comment-delimiter">;; </span><span class="org-comment">text-mode-hook     ; Avoid Org.</span>
                   css-mode-hook         <span class="org-comment-delimiter">; </span><span class="org-comment">[parent: fundamental]</span>
                   latex-mode-hook
                   shell-mode-hook       <span class="org-comment-delimiter">; </span><span class="org-comment">[parent: fundamental]</span>
                   ssh-config-mode-hook))
     (add-hook hook
      (<span class="org-keyword">lambda</span> ()
-       (font-lock-add-keywords nil      <span class="org-comment-delimiter">; </span><span class="org-comment">in the current buffer</span>
+       (font-lock-add-keywords nil      <span class="org-comment-delimiter">; </span><span class="org-comment">In the current buffer.</span>
         `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend)) 'end))))
         <span class="org-comment-delimiter">;; </span><span class="org-leuven-highlight"><span class="org-comment">FIXME</span></span><span class="org-comment">                      0                        t          t</span>
 </pre>
@@ -4426,7 +4426,8 @@ Turn on auto-revert mode globally.
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Global Auto-Revert mode (auto refresh buffers).</span>
-  (global-auto-revert-mode 1)           <span class="org-comment-delimiter">; </span><span class="org-comment">Can generate a lot of network traffic</span>
+  (<span class="org-keyword">unless</span> leuven--cygwin-p
+    (global-auto-revert-mode 1))        <span class="org-comment-delimiter">; </span><span class="org-comment">Can generate a lot of network traffic</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">if `</span><span class="org-constant"><span class="org-comment">auto-revert-remote-files</span></span><span class="org-comment">' is set</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">to non-nil.</span>
 </pre>
@@ -4437,6 +4438,14 @@ Auto-revert will automatically reload files that have changed outside of Emacs.
 It won&rsquo;t revert a buffer that you&rsquo;ve edited inside Emacs, even if the file also
 changes outside.
 </p>
+
+<div class="warning">
+<p>
+<code>global-auto-revert-mode</code> blocks Cygwin Emacs for more than 5 seconds at many
+points in time. Disabled for now, under Cygwin.
+</p>
+
+</div>
 </div>
 </div>
 
@@ -4447,17 +4456,13 @@ changes outside.
 Auto-refresh Dired.
 </p>
 
-<p>
-XXX See if <code>dired-auto-revert-buffer</code> is sufficient or not.
-</p>
-
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Global Auto-Revert mode operates on all buffers (Dired, among others)</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq global-auto-revert-non-file-buffers t)</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Global Auto-Revert mode operates on all buffers (Dired, etc.)</span>
+  (setq global-auto-revert-non-file-buffers t)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Do not generate any messages (be quiet about refreshing Dired).</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq auto-revert-verbose nil)     ; Avoid "Reverting buffer `</span><span class="org-constant"><span class="org-comment">some-dir/</span></span><span class="org-comment">'.".</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Do not generate any messages (be quiet about refreshing Dired).</span>
+  (setq auto-revert-verbose nil)        <span class="org-comment-delimiter">; </span><span class="org-comment">Avoid "Reverting buffer `</span><span class="org-constant"><span class="org-comment">some-dir/</span></span><span class="org-comment">'.".</span>
 </pre>
 </div>
 </div>
@@ -4477,10 +4482,10 @@ How to get Emacs to auto-save to your local disk (<code>#file#</code>).
   (leuven--section <span class="org-string">"18.6 (emacs)Auto Save: Protection Against Disasters"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Auto-save every 100 input events.</span>
-  (setq auto-save-interval 100)         <span class="org-comment-delimiter">; </span><span class="org-comment">[default: 300]</span>
+  (setq auto-save-interval 100)         <span class="org-comment-delimiter">; </span><span class="org-comment">[Default: 300].</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Auto-save after 10 seconds idle time.</span>
-  (setq auto-save-timeout 10)           <span class="org-comment-delimiter">; </span><span class="org-comment">[default: 30]</span>
+  (setq auto-save-timeout 10)           <span class="org-comment-delimiter">; </span><span class="org-comment">[Default: 30].</span>
 </pre>
 </div>
 
@@ -9598,11 +9603,11 @@ Alternative to requiring org-clock in every Emacs session.
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">8.4.2 Format string used when creating CLOCKSUM lines and when generating</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">a time duration (avoid showing days).</span>
-    (setq org-time-clocksum-format      <span class="org-comment-delimiter">;</span><span class="org-comment">! works with Org 8 only</span>
+    (setq org-time-clocksum-format
           '(<span class="org-builtin">:hours</span> <span class="org-string">"%d"</span> <span class="org-builtin">:require-hours</span> t <span class="org-builtin">:minutes</span> <span class="org-string">":%02d"</span> <span class="org-builtin">:require-minutes</span> t))
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">some clocktable functions cannot</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Some clocktable functions cannot</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">digest day formats (e.g.,</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">org-clock-time%)</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">org-clock-time%).</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">;; 8.4.2 Use fractional times.</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq org-time-clocksum-use-fractional t)</span>
@@ -9653,6 +9658,9 @@ Alternative to requiring org-clock in every Emacs session.
     <span class="org-comment-delimiter">;;</span><span class="org-comment">! Use start-process to have an external program play the sound to</span>
     <span class="org-comment-delimiter">;;</span><span class="org-comment">! avoid ignored keystrokes until after the sound plays (start-process</span>
     <span class="org-comment-delimiter">;;</span><span class="org-comment">! "ding" nil "play" "~/Public/Music/Sounds/alarm.wav")</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Default range when displaying clocks with `</span><span class="org-constant"><span class="org-comment">org-clock-display</span></span><span class="org-comment">'.</span>
+    (setq org-clock-display-default-range 'untilnow)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Remove the clock line when the resulting time is 0:00.</span>
     (setq org-clock-out-remove-zero-time-clocks t)
@@ -10845,6 +10853,19 @@ Links to common agenda views:
 </ul>
 
 <p>
+or even:
+</p>
+
+<pre class="example">
+[[org-search:+work-boss-TODO="DONE"]]
+</pre>
+
+<p>
+if you define a new type of link.  See <a href="http://endlessparentheses.com/use-org-mode-links-for-absolutely-anything.html">Use Org-Mode Links for Absolutely Anything</a>
+for more.
+</p>
+
+<p>
 You can as well use your agenda and use <code>/</code> to limit the view to what you want
 (<code>C-c a a / TAG</code>).
 </p>
@@ -11276,8 +11297,9 @@ launched from Dired?
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">special #+KEYWORD lines</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">(like `C-c C-c')</span>
 
-          <span class="org-comment-delimiter">;; </span><span class="org-comment">(when (locate-library "org-lint")</span>
-          <span class="org-comment-delimiter">;;   </span><span class="org-comment">(measure-time "Linted Org mode" (org-lint)))</span>
+          <span class="org-comment-delimiter">;; </span><span class="org-comment">Linting for Org documents.</span>
+          (<span class="org-keyword">when</span> (try-require <span class="org-string">"org-lint"</span>)
+            (measure-time <span class="org-string">"Linted Org mode"</span> (org-lint)))
 
           <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Update the results in the Org buffer.</span>
           <span class="org-comment-delimiter">;; </span><span class="org-comment">(org-babel-execute-buffer)    ; In this case, better than</span>
@@ -11321,6 +11343,14 @@ launched from Dired?
 
     (define-key org-mode-map (kbd <span class="org-string">"&lt;f9&gt;"</span>) 'org-save-buffer-and-do-related))
 </pre>
+</div>
+
+<div class="note">
+<p>
+When called non-interactively, <code>org-lint</code> returns the reports, as an alist or nil,
+so it can be used as a predicate.
+</p>
+
 </div>
 
 <div class="inlinetask">
@@ -12348,19 +12378,21 @@ languages which can be evaluated in Org mode buffers.
                           (line-number-at-pos
                            (org-element-property <span class="org-builtin">:post-affiliated</span> sb))
                           (buffer-name)))
-                  ((and (not (assoc-string language org-babel-load-languages))
-                        (not (assoc-string language org-src-lang-modes))
-                        <span class="org-comment-delimiter">;; </span><span class="org-comment">(locate-library (concat language "-mode")) ; would allow `</span><span class="org-constant"><span class="org-comment">sh-mode</span></span><span class="org-comment">'</span>
-                        )
-                                        <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> This should be stricter: must be</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">in org-babel-load-languages for</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">evaluated code blocks. Must be in both</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">other cases for edited code blocks.</span>
-                   (<span class="org-warning">error</span> <span class="org-string">"Unknown language `</span><span class="org-constant"><span class="org-string">%s</span></span><span class="org-string">' at line %d in `</span><span class="org-constant"><span class="org-string">%s</span></span><span class="org-string">'"</span>
-                          language
-                          (line-number-at-pos
-                           (org-element-property <span class="org-builtin">:post-affiliated</span> sb))
-                          (buffer-name)))))))
+                  <span class="org-comment-delimiter">;; </span><span class="org-comment">((and (not (assoc-string language org-babel-load-languages))</span>
+                  <span class="org-comment-delimiter">;;       </span><span class="org-comment">(not (assoc-string language org-src-lang-modes))</span>
+                  <span class="org-comment-delimiter">;;       </span><span class="org-comment">;; (locate-library (concat language "-mode")) ; would allow `</span><span class="org-constant"><span class="org-comment">sh-mode</span></span><span class="org-comment">'</span>
+                  <span class="org-comment-delimiter">;;       </span><span class="org-comment">)</span>
+                  <span class="org-comment-delimiter">;;                       </span><span class="org-comment">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> This should be stricter: must be</span>
+                  <span class="org-comment-delimiter">;;                       </span><span class="org-comment">; in org-babel-load-languages for</span>
+                  <span class="org-comment-delimiter">;;                       </span><span class="org-comment">; evaluated code blocks. Must be in both</span>
+                  <span class="org-comment-delimiter">;;                       </span><span class="org-comment">; other cases for edited code blocks.</span>
+                  <span class="org-comment-delimiter">;;  </span><span class="org-comment">(error "Unknown language `</span><span class="org-constant"><span class="org-comment">%s</span></span><span class="org-comment">' at line %d in `</span><span class="org-constant"><span class="org-comment">%s</span></span><span class="org-comment">'"</span>
+                  <span class="org-comment-delimiter">;;         </span><span class="org-comment">language</span>
+                  <span class="org-comment-delimiter">;;         </span><span class="org-comment">(line-number-at-pos</span>
+                  <span class="org-comment-delimiter">;;          </span><span class="org-comment">(org-element-property :post-affiliated sb))</span>
+                  <span class="org-comment-delimiter">;;         </span><span class="org-comment">(buffer-name)))</span>
+                  ))))
+
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(message "Source blocks checked in %s."</span>
       <span class="org-comment-delimiter">;;          </span><span class="org-comment">(buffer-name (buffer-base-buffer)))</span>
       )
@@ -12376,7 +12408,7 @@ languages which can be evaluated in Org mode buffers.
 <div class="inlinetask">
 <b><span class="todo TODO">TODO</span> Why isn&rsquo;t diff-mode.el found?</b><br  />
 <p>
-<a href="file://d:/Users/fni/org/personal/Org-for-dummies.html">file://d:/Users/fni/org/personal/Org-for-dummies.html</a>
+<a href="file:///cygdrive/d/Users/fni/org/personal/Org-for-dummies.html">file:///cygdrive/d/Users/fni/org/personal/Org-for-dummies.html</a>
 </p>
 </div>
 
@@ -13063,8 +13095,7 @@ the mail message:
     <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">org-mime-subtree</span></span><span class="org-comment">' is called.</span>
     (add-hook 'org-mime-send-subtree-hook
               (<span class="org-keyword">lambda</span> ()
-                (org-entry-put (point) <span class="org-string">"mail_composed"</span>
-                               (current-time-string)))))
+                (org-entry-put (point) <span class="org-string">"mail_composed"</span> (current-time-string)))))
 </pre>
 </div>
 </div>
@@ -14488,14 +14519,11 @@ Keep looking at the <a href="http://www.emacswiki.org/emacs/PareditCheatsheet">c
 
 <pre class="src src-emacs-lisp">  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"autopair-autoloads"</span>
 
-    (add-hook 'prog-mode-hook
-              (<span class="org-keyword">lambda</span> ()
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Attempts to wrap the selected region.</span>
+    (setq autopair-autowrap t)
 
-                <span class="org-comment-delimiter">;; </span><span class="org-comment">Attempts to wrap the selected region.</span>
-                (setq autopair-autowrap t)
-
-                <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Autopair-Global mode.</span>
-                (autopair-global-mode 1))))
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Autopair-Global mode.</span>
+    (autopair-global-mode 1))
 </pre>
 </div>
 </div>
@@ -14511,7 +14539,7 @@ Keep looking at the <a href="http://www.emacswiki.org/emacs/PareditCheatsheet">c
 
   (leuven--section <span class="org-string">"26.5 (emacs)Comments"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">always comments out empty lines</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Always comments out empty lines.</span>
   (setq comment-empty-lines t)
 </pre>
 </div>
@@ -17475,7 +17503,10 @@ good|
     (setq company-dabbrev-ignore-case nil)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't downcase the returned candidates.</span>
-    (setq company-dabbrev-downcase nil))
+    (setq company-dabbrev-downcase nil)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Skip invisible text (Org drawers, etc.).</span>
+    (setq company-dabbrev-ignore-invisible t))
 </pre>
 </div>
 
@@ -17938,7 +17969,7 @@ Maybe the following fixes this above problem?
 
     (leuven--section <span class="org-string">"30.15 (emacs)Dired Updating"</span>)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Automatically revert Dired buffer on revisiting.</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Automatically revert Dired buffer *on revisiting*.</span>
     (setq dired-auto-revert-buffer t)
 </pre>
 </div>
