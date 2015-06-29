@@ -8706,7 +8706,11 @@ launched from Dired?
 
           ;; Linting for Org documents.
           (when (try-require "org-lint")
-            (measure-time "Linted Org mode" (org-lint)))
+            (measure-time "Linted Org mode"
+                          (if (org-lint)
+                              (progn
+                                (message "You should run `org-lint'!")
+                                (sit-for 1)))))
 
           ;; ;; Update the results in the Org buffer.
           ;; (org-babel-execute-buffer)    ; In this case, better than
