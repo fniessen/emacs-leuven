@@ -1,22 +1,37 @@
+#+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DESCRIPTION: Emacs configuration file
 #+KEYWORDS:  emacs, configuration, init file
 #+LANGUAGE:  en
 
-#+PROPERTY:  eval no
+#+PROPERTY:  header-args :eval no
 
-* Emacs Leuven [[http://opensource.org/licenses/GPL-3.0][http://img.shields.io/:license-gpl-blue.svg]] [[https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VCVAS6KPDQ4JC&lc=BE&item_number=emacs%2dleuven&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted][https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif]]
+#+begin_html
+<a href="http://opensource.org/licenses/GPL-3.0">
+  <img src="http://img.shields.io/:license-gpl-blue.svg" alt=":license-gpl-blue.svg" />
+</a>
+
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VCVAS6KPDQ4JC&lc=BE&item_number=emacs%2dleuven&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted">
+  <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="btn_donate_LG.gif" />
+</a>
+#+end_html
 
 Looking for an Emacs *configuration file* with many packages already enabled and
-a more *pleasant set of defaults*?  Here's the place to find one!
+a more *pleasant set of defaults*?  Here's the place to find one!  That will save
+you hours (and hours) of configuration...
 
 The "Emacs Leuven" configuration file is packaged as an Emacs Lisp library, and
 ready to be used by you.
 
 And it is optimized to keep the *Emacs startup time* fast (around *2 seconds*)!
 
-** Download
+#+begin_note
+Emacs Leuven should not shadow any default Emacs key binding.  It just adds its
+own, for productivity reasons, but keeps everything from the Emacs manual.
+#+end_note
+
+* Download
 
 Get the full Git repository at https://github.com/fniessen/emacs-leuven
 using the following command:
@@ -25,7 +40,7 @@ using the following command:
 git clone git://github.com/fniessen/emacs-leuven.git
 #+end_src
 
-** Installation
+* Installation
 
 Using the Emacs Leuven library is very easy: you just need to...
 
@@ -43,11 +58,77 @@ Using the Emacs Leuven library is very easy: you just need to...
 
 - Restart Emacs.
 
-** Some better defaults
+* Some better defaults
 
 - Unnecessary spaces at the end of the lines are indicated by red blocks.
 
-** Packages
+* Packages
+
+| Subject                              | Package                | Description |
+|--------------------------------------+------------------------+-------------|
+| Basic editing commands               | undo-tree              |             |
+| Help                                 | info+                  |             |
+| The mark and the region              | goto-chg               |             |
+|                                      | expand-region          |             |
+|                                      | multiple-cursors       |             |
+|                                      | ace-jump-mode          |             |
+|                                      | ace-link               |             |
+| Controlling the display              | pager                  |             |
+|                                      | fancy-narrow           |             |
+|                                      | highlight-symbol       |             |
+|                                      | color-identifiers-mode |             |
+|                                      | diff-hl                |             |
+|                                      | ws-butler              |             |
+|                                      | powerline              |             |
+|                                      | interaction-log        |             |
+| Searching and replacement            | fuzzy                  |             |
+|                                      | anzu                   |             |
+| Commands for fixing typos            | dictionary             |             |
+| Files Handling                       | helm                   |             |
+|                                      | helm-swoop             |             |
+| Major and minor modes                | csv-mode               |             |
+|                                      | helm-descbinds         |             |
+| Indentation                          | indent-guide           |             |
+| Commands for human languages         | key-chord              |             |
+|                                      | boxquote               |             |
+| SGML and HTML modes                  | tidy                   |             |
+| Editing Programs                     | imenu-anywhere         |             |
+|                                      | hideshowvis            |             |
+|                                      | flycheck               |             |
+| Maintaining programs                 | litable                |             |
+|                                      | git-timemachine        |             |
+|                                      | git-messenger          |             |
+| Abbrevs                              | yasnippet              |             |
+|                                      | auto-complete          |             |
+|                                      | company                |             |
+|                                      | company-quickhelp      |             |
+| Gnus                                 | bbdb                   |             |
+| Document viewing                     | pdf-tools              |             |
+| Running shell commands from Emacs    | multi-term             |             |
+|                                      | cygwin-mount           |             |
+| Hyperlinking and navigation features | google-this            |             |
+|                                      | google-translate       |             |
+| Customization                        | guide-key              |             |
+|--------------------------------------+------------------------+-------------|
+|                                      | ace-window             |             |
+|                                      | auctex                 |             |
+|                                      | bookmark+              |             |
+|                                      | circe                  |             |
+|                                      | diminish               |             |
+|                                      | dired+                 |             |
+|                                      | dired-single           |             |
+|                                      | ess                    |             |
+|                                      | fill-column-indicator  |             |
+|                                      | flycheck               |             |
+|                                      | flycheck-ledger        |             |
+|                                      | git-commit-mode        |             |
+|                                      | graphviz-dot-mode      |             |
+|                                      | htmlize                |             |
+|                                      | idle-require           |             |
+|                                      | ledger-mode            |             |
+|                                      | leuven-theme           |             |
+|                                      | rainbow-mode           |             |
+|                                      | unbound                |             |
 
 To list packages which should NOT be installed by Emacs Leuven (neither proposed
 for installation), add something like this into your configuration file:
@@ -57,14 +138,14 @@ for installation), add something like this into your configuration file:
       '(useless-package other-annoying-package))
 #+end_src
 
-** Keyboard shortcuts
+* Keyboard shortcuts
 
 Save time and boost your productivity with Emacs Leuven keyboard shortcuts.
 
 Key binding conventions:
 http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html
 
-*** General shortcuts
+** General shortcuts
 
 Global key bindings.
 
@@ -99,7 +180,7 @@ Global key bindings.
 | <S-f12>  | leuven-kill-this-buffer-without-query    |
 | <C-f12>  | leuven-revert-buffer-without-query       |
 
-*** Shortcuts for Org mode
+** Shortcuts for Org mode
 
 | Shortcut    | What it runs                                 |
 |-------------+----------------------------------------------|
@@ -137,7 +218,7 @@ Global key bindings.
 | N           | leuven-org-agenda-new                        |
 | Z           | leuven-org-agenda-mark-done-and-add-followup |
 
-*** Shortcuts for Dired
+** Shortcuts for Dired
 
 | Shortcut  | What it runs                    |
 |-----------+---------------------------------|
@@ -150,7 +231,7 @@ Global key bindings.
 | C-c 2     | find-grep-dired                 |
 | C-c 3     | rgrep                           |
 
-*** Other shortcuts
+** Other shortcuts
 
 | Shortcut | What it runs                                   |
 |----------+------------------------------------------------|
@@ -167,7 +248,7 @@ Global key bindings.
 | M-/      | hippie-expand                                  |
 | <tab>    | ac-expand                                      |
 
-*** Other shortcuts
+** Other shortcuts
 
 I still have to sort them out, by mode (when applicable).
 
@@ -240,17 +321,17 @@ I still have to sort them out, by mode (when applicable).
 | M-x           | helm-M-x                                  |
 | U             | leuven-w3m-goto-url                       |
 
-** Contributing
+* Contributing
 
-*** Issues
+** Issues
 
 Report issues and suggest features and improvements on the [[https://github.com/fniessen/emacs-leuven/issues/new][GitHub issue tracker]].
 
-*** Patches
+** Patches
 
 I love contributions!  Patches under any form are always welcome!
 
-*** Donations
+** Donations
 
 If you like the emacs-leuven project, you can show your appreciation and help
 support future development by making a [[https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VCVAS6KPDQ4JC&lc=BE&item_number=emacs%2dleuven&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted][donation]] through PayPal.
@@ -258,7 +339,7 @@ support future development by making a [[https://www.paypal.com/cgi-bin/webscr?c
 Regardless of the donations, emacs-leuven will always be free both as in
 beer and as in speech.
 
-** License
+* License
 
 Copyright (C) 1999-2015 Free Software Foundation, Inc.
 
