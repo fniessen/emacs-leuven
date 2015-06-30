@@ -26,19 +26,6 @@
   (format "%ss" (time-to-seconds (time-subtract (current-time) time))))
 #+end_src
 
-** TODO Standardize comments
-
-The main documentation we follow for coding style is the GNU Coding Standard
-(https://www.gnu.org/prep/standards/html_node/Comments.html) which says, among
-other things: "Also, please write complete sentences and capitalize the first
-word."
-
-Stefan prefers to capitalize and punctuate ";; pattern found" as well, treating
-*all* comments the same way.
-
-Note that a lot of code in Emacs does not follow the convention, because we're
-not strict enough about enforcing it.
-
 ** TODO Improve documentation of navigation and search
 
 Excellent example:
