@@ -451,7 +451,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150629.1642</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150630.1035</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -520,7 +520,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150629.1642"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150630.1035"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -4425,9 +4425,15 @@ Turn on auto-revert mode globally.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Global Auto-Revert mode (auto refresh buffers).</span>
-  (<span class="org-keyword">unless</span> leuven--cygwin-p
-    (global-auto-revert-mode 1))        <span class="org-comment-delimiter">; </span><span class="org-comment">Can generate a lot of network traffic</span>
+<pre class="src src-emacs-lisp">  (<span class="org-keyword">when</span> leuven--cygwin-p                <span class="org-comment-delimiter">; </span><span class="org-comment">Cygwin Emacs uses gfilenotify (based</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">on GLib) and there are performance</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">problems... Emacs bug #20927</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't use file notification functions.</span>
+    (setq auto-revert-use-notify nil))
+
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Global Auto-Revert mode (auto refresh buffers).</span>
+  (global-auto-revert-mode 1)           <span class="org-comment-delimiter">; </span><span class="org-comment">Can generate a lot of network traffic</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">if `</span><span class="org-constant"><span class="org-comment">auto-revert-remote-files</span></span><span class="org-comment">' is set</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">to non-nil.</span>
 </pre>

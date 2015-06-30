@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150629.1641
+;; Version: 20150630.1034
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150629.1641"
+(defconst leuven--emacs-version "20150630.1034"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1959,9 +1959,15 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Key binding.
   (global-set-key (kbd "<C-f12>") #'leuven-revert-buffer-without-query)
 
+  (when leuven--cygwin-p                ; Cygwin Emacs uses gfilenotify (based
+                                        ; on GLib) and there are performance
+                                        ; problems... Emacs bug #20927
+
+    ;; Don't use file notification functions.
+    (setq auto-revert-use-notify nil))
+
   ;; Enable Global Auto-Revert mode (auto refresh buffers).
-  (unless leuven--cygwin-p
-    (global-auto-revert-mode 1))        ; Can generate a lot of network traffic
+  (global-auto-revert-mode 1)           ; Can generate a lot of network traffic
                                         ; if `auto-revert-remote-files' is set
                                         ; to non-nil.
 
