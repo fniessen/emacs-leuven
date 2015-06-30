@@ -6,9 +6,7 @@
 #+LANGUAGE:  en
 #+OPTIONS:   H:4 num:nil
 
-#+PROPERTY:  eval never
-#+PROPERTY:  padline yes
-#+PROPERTY:  tangle yes
+#+PROPERTY:  header-args :eval never :padline yes :tangle yes
 
 # #+SETUPFILE: ./bigblow-pirilampo.setup
 #+SETUPFILE: ~/src/org-html-themes/setup/theme-readtheorg-local-abs.setup
@@ -1096,9 +1094,9 @@ pressing ~K H~ (~gnus-article-browse-html-article~).
 #+end_src
 
 #+begin_tip
-In Cygwin Emacs, clicking on a PDF or HTML attachment, for example, will launch
-the application specified in your =~/.mailcap= file.  Put there ~cygstart "%s"~ to
-launch the default apps.
+In both Windows and Cygwin Emacs, clicking on an attachment will launch the
+application specified in your =~/.mailcap= file.  Put there ~cygstart "%s"~ to
+launch the default apps!
 #+end_tip
 
 * Back to Article Buffer
