@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150630.1034
+;; Version: 20150702.1136
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150630.1034"
+(defconst leuven--emacs-version "20150702.1136"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -81,10 +81,10 @@
 
 (defmacro measure-time (message &rest body)
   "Measure the time it takes to evaluate BODY."
-  `(let ((time (current-time)))
+  `(let ((start (current-time)))
      ,@body
      (message "__%s (in %.02f s)___________________________"
-              ,message (float-time (time-since time)))))
+              ,message (float-time (time-since start)))))
 
 ;;; User Customizable Internal Variables
 
@@ -3059,15 +3059,6 @@ These packages are neither built-in nor already installed nor ignored."
            (set-selection-coding-system 'compound-text-with-extensions))
           (t
            (set-selection-coding-system 'utf-8))))
-
-;;** 22.19 (info "(emacs)Bidirectional Editing")
-
-  (leuven--section "22.19 (emacs)Bidirectional Editing")
-
-  ;; Don't reorder bidirectional text for display in the visual order.
-  (setq-default bidi-display-reordering nil)
-                                        ; Workaround for bug #362 in Company
-                                        ; mode.
 
 )                                       ; Chapter 22 ends here.
 

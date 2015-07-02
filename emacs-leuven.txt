@@ -242,10 +242,10 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
 #+begin_src emacs-lisp
 (defmacro measure-time (message &rest body)
   "Measure the time it takes to evaluate BODY."
-  `(let ((time (current-time)))
+  `(let ((start (current-time)))
      ,@body
      (message "__%s (in %.02f s)___________________________"
-              ,message (float-time (time-since time)))))
+              ,message (float-time (time-since start)))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -5312,18 +5312,11 @@ XXX Declare PDF files as binary
 
 ** Bidirectional Editing
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;;** 22.19 (info "(emacs)Bidirectional Editing")
 
   (leuven--section "22.19 (emacs)Bidirectional Editing")
 
-  ;; Don't reorder bidirectional text for display in the visual order.
-  (setq-default bidi-display-reordering nil)
-                                        ; Workaround for bug #362 in Company
-                                        ; mode.
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
   ;; Faster scrolling (if you never expect to have to display bidirectional
   ;; scripts, such as Arabic and Hebrew).
   (setq-default bidi-paragraph-direction 'left-to-right)

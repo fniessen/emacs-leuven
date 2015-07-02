@@ -451,7 +451,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150630.1035</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150702.1137</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -520,7 +520,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150630.1035"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150702.1137"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -545,10 +545,10 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <pre class="src src-emacs-lisp">(<span class="org-keyword">defmacro</span> <span class="org-function-name">measure-time</span> (message <span class="org-type">&amp;rest</span> body)
   <span class="org-doc">"Measure the time it takes to evaluate BODY."</span>
-  `(<span class="org-keyword">let</span> ((time (current-time)))
+  `(<span class="org-keyword">let</span> ((start (current-time)))
      ,@body
      (message <span class="org-string">"__%s (in %.02f s)___________________________"</span>
-              ,message (float-time (time-since time)))))
+              ,message (float-time (time-since start)))))
 </pre>
 </div>
 
@@ -7091,16 +7091,7 @@ XXX Declare PDF files as binary
 
   (leuven--section <span class="org-string">"22.19 (emacs)Bidirectional Editing"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't reorder bidirectional text for display in the visual order.</span>
-  (setq-default bidi-display-reordering nil)
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Workaround for bug #362 in Company</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">mode.</span>
-</pre>
-</div>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Faster scrolling (if you never expect to have to display bidirectional</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Faster scrolling (if you never expect to have to display bidirectional</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">scripts, such as Arabic and Hebrew).</span>
   (setq-default bidi-paragraph-direction 'left-to-right)
 </pre>
