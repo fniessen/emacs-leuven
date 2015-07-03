@@ -8695,7 +8695,8 @@ launched from Dired?
             (measure-time "Linted Org mode"
                           (if (org-lint)
                               (progn
-                                (message "You should run `org-lint'!")
+                                (message "You should run `org-lint'!!!")
+                                (beep)
                                 (sit-for 1)))))
 
           ;; ;; Update the results in the Org buffer.

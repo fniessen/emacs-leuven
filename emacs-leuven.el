@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150702.1136
+;; Version: 20150703.1510
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150702.1136"
+(defconst leuven--emacs-version "20150703.1510"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5319,7 +5319,8 @@ this with to-do items than with projects or headings."
             (measure-time "Linted Org mode"
                           (if (org-lint)
                               (progn
-                                (message "You should run `org-lint'!")
+                                (message "You should run `org-lint'!!!")
+                                (beep)
                                 (sit-for 1)))))
 
           ;; ;; Update the results in the Org buffer.
