@@ -6,14 +6,14 @@
 #+LANGUAGE:  en
 #+OPTIONS:   H:4 num:nil
 
-#+PROPERTY:  eval no
+#+PROPERTY:  header-args :eval no
 
 # #+SETUPFILE: ./bigblow-pirilampo.setup
 #+SETUPFILE: ~/src/org-html-themes/setup/theme-readtheorg-local-abs.setup
 
 * Example
   :PROPERTIES:
-  :tangle:   .emacs-minimal.el
+  :header-args: :tangle .emacs-minimal.el
   :END:
 
 The usual method to find a problem while avoiding to disturb a running Emacs
@@ -130,7 +130,7 @@ Here is such a minimal Emacs config file.
 
 ** Variable part
    :PROPERTIES:
-   :tangle:   no
+   :header-args: :tangle no
    :END:
 
 #+begin_src emacs-lisp :tangle .emacs-minimal.el
