@@ -2149,6 +2149,8 @@ Remove trailing whitespace (right trim lines) *in all lines*:
                   (delete-trailing-whitespace)))))
 #+end_src
 
+This command also deletes all *empty lines at the end of the buffer*.
+
 Remove trailing whitespace *in edited lines* with ~ws-butler~:
 
 #+begin_src emacs-lisp
@@ -6880,20 +6882,20 @@ verified before really closing the task.
   ;; List of TODO entry keyword sequences (+ fast access keys and specifiers
   ;; for state change logging).
   (setq org-todo-keywords
-        '((sequence "NEW(n!)"           ; proposal, idea (under review)
-                    "TODO(t!)"          ; open, not (yet) started
-                    "STRT(s!)"          ; in progress, working on, doing
-                    "WAIT(w!)"          ; on hold, assigned, feedback
-                    "SDAY(y!)"          ; someday, maybe, perhaps, wish
+        '((sequence "NEW(n!)"           ; Proposal, idea (under review).
+                    "TODO(t!)"          ; Open, not (yet) started.
+                    "STRT(s!)"          ; In progress, working on, doing.
+                    "WAIT(w!)"          ; On hold, assigned, feedback.
+                    "SDAY(y!)"          ; Someday, maybe, perhaps, wish.
                     "|"
-                    "DONE(d!)"          ; completed, closed, resolved
-                    "CANX(x!)")         ; wontfix, rejected
+                    "DONE(d!)"          ; Completed, closed, resolved.
+                    "CANX(x!)")         ; Wontfix, rejected.
 
-          (sequence "QTE(q!)"           ; planning
-                    "QTD(Q!)"           ; awaiting approval
+          (sequence "QTE(q!)"           ; Planning.
+                    "QTD(Q!)"           ; Awaiting approval.
                     "|"
-                    "APP(A!)"           ; approved
-                    "REJ(R!)")          ; rejected
+                    "APP(A!)"           ; Approved.
+                    "REJ(R!)")          ; Rejected.
 
           (sequence "OPENPO(O!)"
                     "|"
@@ -9078,6 +9080,8 @@ XXX Maybe we should test for (executable-find "/usr/bin/latexmk"), etc.?
     ;; Hook run before parsing an export buffer.
     (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
 #+end_src
+
+XXX Show how to use ~remove-hook~ if one wants to get rid of this behavior
 
 You can easily customize this variable on a per file basis.  If you seldom use
 ~bibtex~, have the default be to run ~pdflatex~ just once or twice.  Then, for any
@@ -15835,7 +15839,7 @@ bind it to a key:
 
   (leuven--section "Babel")
 
-  ;; interface to web translation services such as Babelfish
+  ;; Interface to web translation services such as Babelfish.
   (when (locate-library "babel")
 
     (autoload 'babel "babel"
@@ -15871,16 +15875,16 @@ Switch between different translation directions directly from minibuffer by
 using ~C-n~ and ~C-p~ key bindings.
 
 #+begin_src emacs-lisp
-  ;; Emacs interface to Google Translate
+  ;; Emacs interface to Google Translate.
   (with-eval-after-load "google-translate-autoloads"
 
-    ;; translate a text using translation directions
+    ;; Translate a text using translation directions.
     (global-set-key (kbd "C-c t") #'google-translate-smooth-translate))
 
-  ;; just another UI to Google
+  ;; Just another UI to Google.
   (with-eval-after-load "google-translate-smooth-ui"
 
-    ;; translation directions
+    ;; Translation directions.
     (setq google-translate-translation-directions-alist
           '(("fr" . "en") ("en" . "fr")
             ("fr" . "nl") ("nl" . "fr")
@@ -15896,10 +15900,10 @@ fniessen
 
 (leuven--chapter leuven-load-chapter-46-amusements "46 Other Amusements"
 
-  ;; define a default menu bar
+  ;; Define a default menu bar.
   (with-eval-after-load "menu-bar"
 
-    ;; get rid of the Games in the Tools menu
+    ;; Get rid of the Games in the Tools menu.
     (define-key menu-bar-tools-menu [games] nil))
 
 )                                       ; Chapter 46 ends here.
@@ -15931,7 +15935,7 @@ You can govern the sort order of colors now such as HSV or RGB distance from a
 particular color...
 
 #+begin_src emacs-lisp
-  ;; color sort order for `list-colors-display'
+  ;; Color sort order for `list-colors-display'.
   (setq list-colors-sort '(rgb-dist . "#FFFFFF"))
 #+end_src
 
@@ -15939,26 +15943,26 @@ particular color...
 
 #+begin_src emacs-lisp
   (XEmacs
-    ;; the real color theme functions
+    ;; The real color theme functions.
     (try-require 'color-theme-autoloads)
     (with-eval-after-load "color-theme-autoloads"
 
-      ;; `color-theme-print' allows to keep what you see
+      ;; `color-theme-print' allows to keep what you see.
 
-      ;; initialize the color theme package
+      ;; Initialize the color theme package.
       (if (fboundp 'color-theme-initialize)
           (color-theme-initialize))
 
-      ;; color themes will be installed for all frames
+      ;; Color themes will be installed for all frames.
       (setq color-theme-is-global t)
 
-      ;; set my default color theme
+      ;; Set my default color theme.
       (try-require 'color-theme-leuven)
       (with-eval-after-load "color-theme-leuven"
         (color-theme-leuven)))
 
-    ;; save whatever changes you make to the faces (colors and other font
-    ;; properties)
+    ;; Save whatever changes you make to the faces (colors and other font
+    ;; properties).
     (setq options-save-faces t))
 #+end_src
 
@@ -15969,14 +15973,14 @@ particular color...
 
   (leuven--section "48.3 (emacs)Variables")
 
-  ;; file local variables specifications are obeyed, without query --
+  ;; File local variables specifications are obeyed, without query --
   ;; RISKY!
   (setq enable-local-variables t)
 
-  ;; obey `eval' variables -- RISKY!
+  ;; Obey `eval' variables -- RISKY!
   (setq enable-local-eval t)
 
-  ;; record safe values for some local variables
+  ;; Record safe values for some local variables.
   (setq safe-local-variable-values
         '((TeX-master . t)
           (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
@@ -16016,7 +16020,7 @@ M-: (let (lst) (mapatoms (lambda (x) (if (get x 'disabled) (push x lst)))) lst) 
 See as well Print keybindings (pkb).
 
 #+begin_src emacs-lisp
-  ;; print the key bindings in a tabular form
+  ;; Print the key bindings in a tabular form.
   (GNUEmacs
    (defun leuven-keytable (arg)
      "Print the key bindings in a tabular form."
@@ -16140,7 +16144,7 @@ considered part of the word (depending on the current major mode).
 
   (leuven--section "48.5 The (emacs)Syntax Table")
 
-  ;; now '-' is not considered a word-delimiter
+  ;; Now "-" is not considered a word-delimiter.
   ;; (add-hook 'emacs-lisp-mode-hook
   ;;           (lambda ()
   ;;             (modify-syntax-entry ?- "w")))

@@ -451,7 +451,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150703.1511</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150703.1622</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -520,7 +520,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150703.1511"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150703.1622"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -11708,46 +11708,40 @@ XXX Maybe we should test for (executable-find &ldquo;/usr/bin/latexmk&rdquo;), e
 <pre class="src src-emacs-lisp">    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--change-pdflatex-program</span> (backend)
       <span class="org-doc">"Automatically run XeLaTeX, if asked, when exporting to LaTeX."</span>
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">Default.</span>
-      (setq org-latex-pdf-process
-            (<span class="org-keyword">cond</span>
-             ((and
-               <span class="org-comment-delimiter">;; </span><span class="org-comment">leuven--win32-p</span>
-               (executable-find <span class="org-string">"latexmk"</span>))
-              '(<span class="org-string">"latexmk -CF -pdf %f &amp;&amp; latexmk -c"</span>))
+      (<span class="org-keyword">let*</span> ((org-latex-pdf-command
+              (<span class="org-keyword">cond</span> ((executable-find <span class="org-string">"latexmk"</span>)
+                     (executable-find <span class="org-string">"latexmk"</span>))
+                    ((string-match <span class="org-string">"^#\\+LATEX_CMD: xelatex"</span> (buffer-string))
+                     (executable-find <span class="org-string">"xelatex"</span>))
+                    (t
+                     (executable-find <span class="org-string">"pdflatex"</span>))))
+             (full-file-name
+              (<span class="org-keyword">cond</span> ((string-match <span class="org-string">"^/usr/bin/"</span> org-latex-pdf-command)
+                     <span class="org-string">"$(cygpath -m %f)"</span>)
+                    (t
+                     <span class="org-string">"%f"</span>))))
+
+        (setq org-latex-pdf-process
+              (<span class="org-keyword">cond</span> ((and (executable-find <span class="org-string">"latexmk"</span>)
+                          (string-match <span class="org-string">"^#\\+LATEX_CMD: xelatex"</span> (buffer-string)))
+                     `(,(concat org-latex-pdf-command <span class="org-string">" -CF -pdf -pdflatex=xelatex "</span> full-file-name <span class="org-string">" &amp;&amp; latexmk -c"</span>)))
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">Must clean .fdb_latexmk, .fls, .ilg,</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">.ind, etc.</span>
-             ((and leuven--cygwin-p (executable-find <span class="org-string">"latexmk"</span>))
-              '(<span class="org-string">"latexmk -CF -pdf $(cygpath -m %f) &amp;&amp; latexmk -c"</span>))
-             (leuven--win32-p
-              '(<span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o %f"</span>
-                <span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o %f"</span>
-                <span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o %f"</span>))
-             (leuven--cygwin-p
-              '(<span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>
-                <span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>
-                <span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>))))
-
-      (<span class="org-keyword">when</span> (string-match <span class="org-string">"^#\\+LATEX_CMD: xelatex"</span> (buffer-string))
-        (setq org-latex-pdf-process
-              (<span class="org-keyword">cond</span>
-               ((and leuven--win32-p (executable-find <span class="org-string">"latexmk"</span>))
-                '(<span class="org-string">"latexmk -CF -pdf -pdflatex=xelatex %f &amp;&amp; latexmk -c"</span>))
-               ((and leuven--cygwin-p (executable-find <span class="org-string">"latexmk"</span>))
-                '(<span class="org-string">"latexmk -CF -pdf -pdflatex=xelatex $(cygpath -m %f) &amp;&amp; latexmk -c"</span>))
-               (leuven--win32-p
-                '(<span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o %f"</span>
-                  <span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o %f"</span>
-                  <span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o %f"</span>))
-               (leuven--cygwin-p
-                '(<span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>
-                  <span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>
-                  <span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>))))))
+                    ((executable-find <span class="org-string">"latexmk"</span>)
+                     `(,(concat org-latex-pdf-command <span class="org-string">" -CF -pdf "</span> full-file-name <span class="org-string">" &amp;&amp; latexmk -c"</span>)))
+                    (t
+                     `(,(concat org-latex-pdf-command <span class="org-string">" -interaction=nonstopmode -output-directory=%o "</span> full-file-name)
+                       ,(concat org-latex-pdf-command <span class="org-string">" -interaction=nonstopmode -output-directory=%o "</span> full-file-name)
+                       ,(concat org-latex-pdf-command<span class="org-string">" -interaction=nonstopmode -output-directory=%o "</span> full-file-name)))))))
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Hook run before parsing an export buffer.</span>
     (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
 </pre>
 </div>
+
+<p>
+XXX Show how to use <code>remove-hook</code> if one wants to get rid of this behavior
+</p>
 
 <p>
 You can easily customize this variable on a per file basis.  If you seldom use

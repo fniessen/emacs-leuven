@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150703.1510
+;; Version: 20150710.1425
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150703.1510"
+(defconst leuven--emacs-version "20150710.1425"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -4054,20 +4054,20 @@ These packages are neither built-in nor already installed nor ignored."
   ;; List of TODO entry keyword sequences (+ fast access keys and specifiers
   ;; for state change logging).
   (setq org-todo-keywords
-        '((sequence "NEW(n!)"           ; proposal, idea (under review)
-                    "TODO(t!)"          ; open, not (yet) started
-                    "STRT(s!)"          ; in progress, working on, doing
-                    "WAIT(w!)"          ; on hold, assigned, feedback
-                    "SDAY(y!)"          ; someday, maybe, perhaps, wish
+        '((sequence "NEW(n!)"           ; Proposal, idea (under review).
+                    "TODO(t!)"          ; Open, not (yet) started.
+                    "STRT(s!)"          ; In progress, working on, doing.
+                    "WAIT(w!)"          ; On hold, assigned, feedback.
+                    "SDAY(y!)"          ; Someday, maybe, perhaps, wish.
                     "|"
-                    "DONE(d!)"          ; completed, closed, resolved
-                    "CANX(x!)")         ; wontfix, rejected
+                    "DONE(d!)"          ; Completed, closed, resolved.
+                    "CANX(x!)")         ; Wontfix, rejected.
 
-          (sequence "QTE(q!)"           ; planning
-                    "QTD(Q!)"           ; awaiting approval
+          (sequence "QTE(q!)"           ; Planning.
+                    "QTD(Q!)"           ; Awaiting approval.
                     "|"
-                    "APP(A!)"           ; approved
-                    "REJ(R!)")          ; rejected
+                    "APP(A!)"           ; Approved.
+                    "REJ(R!)")          ; Rejected.
 
           (sequence "OPENPO(O!)"
                     "|"
@@ -9256,7 +9256,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "Babel")
 
-  ;; interface to web translation services such as Babelfish
+  ;; Interface to web translation services such as Babelfish.
   (when (locate-library "babel")
 
     (autoload 'babel "babel"
@@ -9287,16 +9287,16 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 )
 
-  ;; Emacs interface to Google Translate
+  ;; Emacs interface to Google Translate.
   (with-eval-after-load "google-translate-autoloads"
 
-    ;; translate a text using translation directions
+    ;; Translate a text using translation directions.
     (global-set-key (kbd "C-c t") #'google-translate-smooth-translate))
 
-  ;; just another UI to Google
+  ;; Just another UI to Google.
   (with-eval-after-load "google-translate-smooth-ui"
 
-    ;; translation directions
+    ;; Translation directions.
     (setq google-translate-translation-directions-alist
           '(("fr" . "en") ("en" . "fr")
             ("fr" . "nl") ("nl" . "fr")
@@ -9306,10 +9306,10 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 (leuven--chapter leuven-load-chapter-46-amusements "46 Other Amusements"
 
-  ;; define a default menu bar
+  ;; Define a default menu bar.
   (with-eval-after-load "menu-bar"
 
-    ;; get rid of the Games in the Tools menu
+    ;; Get rid of the Games in the Tools menu.
     (define-key menu-bar-tools-menu [games] nil))
 
 )                                       ; Chapter 46 ends here.
@@ -9323,44 +9323,44 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;; Load custom theme "Leuven" and enable it.
       (load-theme 'leuven t)))
 
-  ;; color sort order for `list-colors-display'
+  ;; Color sort order for `list-colors-display'.
   (setq list-colors-sort '(rgb-dist . "#FFFFFF"))
 
   (XEmacs
-    ;; the real color theme functions
+    ;; The real color theme functions.
     (try-require 'color-theme-autoloads)
     (with-eval-after-load "color-theme-autoloads"
 
-      ;; `color-theme-print' allows to keep what you see
+      ;; `color-theme-print' allows to keep what you see.
 
-      ;; initialize the color theme package
+      ;; Initialize the color theme package.
       (if (fboundp 'color-theme-initialize)
           (color-theme-initialize))
 
-      ;; color themes will be installed for all frames
+      ;; Color themes will be installed for all frames.
       (setq color-theme-is-global t)
 
-      ;; set my default color theme
+      ;; Set my default color theme.
       (try-require 'color-theme-leuven)
       (with-eval-after-load "color-theme-leuven"
         (color-theme-leuven)))
 
-    ;; save whatever changes you make to the faces (colors and other font
-    ;; properties)
+    ;; Save whatever changes you make to the faces (colors and other font
+    ;; properties).
     (setq options-save-faces t))
 
 ;;** 48.3 (info "(emacs)Variables")
 
   (leuven--section "48.3 (emacs)Variables")
 
-  ;; file local variables specifications are obeyed, without query --
+  ;; File local variables specifications are obeyed, without query --
   ;; RISKY!
   (setq enable-local-variables t)
 
-  ;; obey `eval' variables -- RISKY!
+  ;; Obey `eval' variables -- RISKY!
   (setq enable-local-eval t)
 
-  ;; record safe values for some local variables
+  ;; Record safe values for some local variables.
   (setq safe-local-variable-values
         '((TeX-master . t)
           (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
@@ -9381,7 +9381,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "48.4 Customizing (emacs)Key Bindings")
 
-  ;; print the key bindings in a tabular form
+  ;; Print the key bindings in a tabular form.
   (GNUEmacs
    (defun leuven-keytable (arg)
      "Print the key bindings in a tabular form."
@@ -9487,7 +9487,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "48.5 The (emacs)Syntax Table")
 
-  ;; now '-' is not considered a word-delimiter
+  ;; Now "-" is not considered a word-delimiter.
   ;; (add-hook 'emacs-lisp-mode-hook
   ;;           (lambda ()
   ;;             (modify-syntax-entry ?- "w")))
