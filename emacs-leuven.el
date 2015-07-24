@@ -6121,7 +6121,7 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "ob-core"
 
     ;;!! Don't be prompted on every code block evaluation.
-    (setq org-confirm-babel-evaluate nil)
+    (setq org-confirm-babel-evaluate nil))
 
 ;;** 15.8 A (info "(org)Clean view")
 
