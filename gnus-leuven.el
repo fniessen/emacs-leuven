@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150526.1032
+;; Version: 20150724.1642
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -38,11 +38,13 @@
       (setq gnus-select-method
             '(nnimap "mail"
                      (nnimap-address "mail")
-                     (nnimap-server-port 993)
+                     (nnimap-server-port 993) ; imaps
                      (nnimap-stream ssl)
-                     ;; (nnimap-split-methods default) ; << ABSOLUTELY NEEDED
-                     ;; (nnimap-split-methods nnimap-split-fancy) ; <<< NOT QUOTED!!!
-                     ;;                        ; XXX when (try-require 'bbdb-gnus)...
+
+                     ;; Necessary HERE for fancy splitting in Emacs 25.0!
+                     (nnimap-inbox "INBOX")
+                     (nnimap-split-methods nnmail-split-fancy) ; NOT QUOTED!!!
+                                        ; XXX when (try-require 'bbdb-gnus)...
                      ))
 
     (setq gnus-select-method '(nnnil "")))
@@ -89,7 +91,7 @@
 ;;** 1.8 (info "(gnus)The Active File")
 
   ;;  Gnus will only know about the groups in my `.newsrc' file
-  (setq gnus-read-active-file nil)  ; speed-up
+  (setq gnus-read-active-file nil)      ; Speed-up.
 
   (message "1 Starting Gnus... Done")
 
@@ -915,9 +917,6 @@
 
 ;;** 6.3 (info "(gnus)Using IMAP")
 
-  ;; Name(s) of IMAP mailboxes to split mail from.
-  (setq nnimap-inbox "INBOX")           ; Necessary for splitting under 24.5.
-
 ;;** 6.4 (info "(gnus)Getting Mail")
 
 ;;*** 6.4.3 (info "(gnus)Splitting Mail") (in IMAP)
@@ -930,11 +929,8 @@
   ;; BBDB (Big Brother DataBase) is loaded from my `.emacs' file.
   (when (try-require 'bbdb-gnus)
 
-    ;; Split function to use (sorting mails into groups using BBDB).
-    (setq nnimap-split-methods 'nnimap-split-fancy)
-
     ;; Specify how to split mail.
-    (setq nnimap-split-fancy            ; XXX vs `nnmail-split-fancy'?
+    (setq nnmail-split-fancy
           '(|                           ; Split to the *first* match.
 
               ;; Mailing lists (in To: or Cc:).

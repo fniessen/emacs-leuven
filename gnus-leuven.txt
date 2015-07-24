@@ -200,20 +200,17 @@ that it does not interfere with your own configuration...
       (setq gnus-select-method
             '(nnimap "mail"
                      (nnimap-address "mail")
-                     (nnimap-server-port 993)
+                     (nnimap-server-port 993) ; imaps
                      (nnimap-stream ssl)
-                     ;; (nnimap-split-methods default) ; << ABSOLUTELY NEEDED
-                     ;; (nnimap-split-methods nnimap-split-fancy) ; <<< NOT QUOTED!!!
-                     ;;                        ; XXX when (try-require 'bbdb-gnus)...
+
+                     ;; Necessary HERE for fancy splitting in Emacs 25.0!
+                     (nnimap-inbox "INBOX")
+                     (nnimap-split-methods nnmail-split-fancy) ; NOT QUOTED!!!
+                                        ; XXX when (try-require 'bbdb-gnus)...
                      ))
 
     (setq gnus-select-method '(nnnil "")))
 #+end_src
-
-#+begin_note
-~nnimap-split-methods~ (in ~gnus-select-method~) is NOT necessary for fancy mail
-splitting under Emacs 24.5.
-#+end_note
 
 #+begin_src emacs-lisp
   ;; Using Gnus for news.
@@ -223,6 +220,11 @@ splitting under Emacs 24.5.
           (nntp "eternal-september"
                 (nntp-address "news.eternal-september.org"))))
 #+end_src
+
+#+begin_note
+When the above config (for NNTP servers) is left out, then no password is asked
+to open the GPG file!
+#+end_note
 
 ** New Groups
 
@@ -287,7 +289,7 @@ directly afterward...
 ;;** 1.8 (info "(gnus)The Active File")
 
   ;;  Gnus will only know about the groups in my `.newsrc' file
-  (setq gnus-read-active-file nil)  ; speed-up
+  (setq gnus-read-active-file nil)      ; Speed-up.
 
   (message "1 Starting Gnus... Done")
 #+end_src
@@ -1633,13 +1635,6 @@ Newsgroups in which I'm interested:
   (setq nnimap-record-commands t)
 #+end_src
 
-*** Client-Side IMAP Splitting
-
-#+begin_src emacs-lisp
-  ;; Name(s) of IMAP mailboxes to split mail from.
-  (setq nnimap-inbox "INBOX")           ; Necessary for splitting under 24.5.
-#+end_src
-
 ** Getting Mail
 
 #+begin_src emacs-lisp
@@ -1657,22 +1652,14 @@ Newsgroups in which I'm interested:
 
 *** Fancy Mail Splitting
 
-#+begin_note
-When renaming ~nnimap-split-methods~ to ~nnmail-split-methods~ here, splitting stops
-functioning under Emacs 24.5.
-#+end_note
-
 #+begin_src emacs-lisp
 ;;*** 6.4.6 (info "(gnus)Fancy Mail Splitting")
 
   ;; BBDB (Big Brother DataBase) is loaded from my `.emacs' file.
   (when (try-require 'bbdb-gnus)
 
-    ;; Split function to use (sorting mails into groups using BBDB).
-    (setq nnimap-split-methods 'nnimap-split-fancy)
-
     ;; Specify how to split mail.
-    (setq nnimap-split-fancy            ; XXX vs `nnmail-split-fancy'?
+    (setq nnmail-split-fancy
           '(|                           ; Split to the *first* match.
 
               ;; Mailing lists (in To: or Cc:).
