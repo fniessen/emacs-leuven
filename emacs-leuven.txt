@@ -9889,7 +9889,7 @@ For security resons, evaluation is not turned on by default.
     (setq org-confirm-babel-evaluate nil)
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     (defface org-block-executing
       '((t (:background "#FFE0FF")))
       "Face used for the source block background when executed.")
@@ -9904,6 +9904,12 @@ For security resons, evaluation is not turned on by default.
         (measure-time "Executed code block" ad-do-it)
         (delete-overlay o))))
 #+end_src
+
+#+begin_note
+We've disabled the advice ~ad-Advice-org-babel-execute-src-block~ because of the
+error message ~`recenter'ing a window that does not display current-buffer~ when
+exporting =gnus-leuven.txt= to HTML.
+#+end_note
 
 *** A cleaner outline view
 
