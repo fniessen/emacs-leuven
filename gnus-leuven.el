@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150724.1642
+;; Version: 20150727.1145
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -944,8 +944,9 @@
               ("X-Spam-Status" "[Yy]es"
                "INBOX.Spam")
 
-              ;; Unmatched mail goes to the catch-all group (default mailbox).
-              "INBOX"))                 ; Undecided.
+              ;; ;; Unmatched mail goes to the catch-all group (default mailbox).
+              ;; "INBOX"
+              ))                 ; Undecided.
 
     ;; For records which don't have `gnus-private' set, the rules in
     ;; `split-fancy' are invoked.

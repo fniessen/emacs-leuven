@@ -1673,8 +1673,9 @@ Newsgroups in which I'm interested:
               ("X-Spam-Status" "[Yy]es"
                "INBOX.Spam")
 
-              ;; Unmatched mail goes to the catch-all group (default mailbox).
-              "INBOX"))                 ; Undecided.
+              ;; ;; Unmatched mail goes to the catch-all group (default mailbox).
+              ;; "INBOX"
+              ))                 ; Undecided.
 
     ;; For records which don't have `gnus-private' set, the rules in
     ;; `split-fancy' are invoked.
