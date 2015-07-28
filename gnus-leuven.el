@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150727.1145
+;; Version: 20150728.1653
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -519,36 +519,8 @@
     ;; All images fit in the buffer.
     (setq mm-inline-large-images t)
 
-    ;; ;; Always show HTML mails as attachments (even if they can be
-    ;; ;; displayed) use `browse-url-browser-function' (firefox) to render
-    ;; ;; HTML mails.
-    ;; (push "text/html" mm-inline-override-types)
-
-    ;; Use `w3m' browser (if installed) to render HTML-only mails.
-    (setq mm-text-html-renderer
-          (cond ((executable-find "w3m") 'w3m) ; or `gnus-w3m'?
-                (t 'html2text)))        ; Emacs built-in
-
-    ;; Recent Gnusae have a built-in HTML renderer which even (somewhat)
-    ;; handles CSS.
-    (setq mm-text-html-renderer 'shr) ; eww-backend?
-    )
-
-  (with-eval-after-load "w3m"
-     ;; (setq browse-url-browser-function 'w3m-browse-url)
-     (setq mm-inline-text-html-renderer
-           'mm-inline-text-html-render-with-w3m)
-     (setq gnus-article-wash-function
-           'gnus-article-wash-html-with-w3m)
-
-     ;; Whenever you try to browse URLs found in articles, Gnus
-     ;; (`emacs-w3m', in fact) complains that "This link is considered
-     ;; unsafe...". To turn it off, frob the variables
-     ;; `w3m-safe-url-regexp' and `mm-w3m-safe-url-regexp'.
-     )
-
-  ;; allow retrieving images in HTML contents with the <img> tags
-  (setq mm-inline-text-html-with-images t)
+    ;; Allow retrieving images in HTML contents with the <img> tags.
+    (setq mm-inline-text-html-with-images t))
 
 ;;*** 1.6 (info "(emacs-mime)Files and Directories")
 
@@ -901,8 +873,7 @@
       (set (make-local-variable
             'org-footnote-tag-for-non-org-mode-files) nil)))
 
-  (when (featurep 'org)
-    (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append))
+    (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append)
 
 ;;*** 3.9 (info "(message)Message Buffers")
 

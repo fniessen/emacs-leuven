@@ -170,7 +170,12 @@ over HTTP.
 
 Download and *install* of [[http://www.gnu.org/software/gnutls/][GnuTLS library]] may be required.
 
-Go to [[http://schwarzvogel.de/ssl_tls_testing.shtml][Testing SSL and TLS services]] to test the *opening of TLS connections*.
+#+begin_note
+If this is on Windows, check what ~M-: (gnutls-available-p) RET~ yield...
+#+end_note
+
+Go to [[http://schwarzvogel.de/ssl_tls_testing.shtml][Testing SSL and TLS services]] to test the *opening of TLS connections* with
+~gnutls-cli~.
 
 Setting the following right is the only thing really required! The rest is
 customization.
@@ -1006,6 +1011,9 @@ to insert the contents of the MIME object into the buffer
 
 ** Display Customization
 
+Recent Gnus has a built-in HTML renderer (the EWW backend?) -- which even
+somewhat handles CSS -- to render HTML-only mails.
+
 You can view ~text/html~ parts of the current article with a Web browser by
 pressing ~K H~ (~gnus-article-browse-html-article~).
 
@@ -1029,36 +1037,8 @@ pressing ~K H~ (~gnus-article-browse-html-article~).
     ;; All images fit in the buffer.
     (setq mm-inline-large-images t)
 
-    ;; ;; Always show HTML mails as attachments (even if they can be
-    ;; ;; displayed) use `browse-url-browser-function' (firefox) to render
-    ;; ;; HTML mails.
-    ;; (push "text/html" mm-inline-override-types)
-
-    ;; Use `w3m' browser (if installed) to render HTML-only mails.
-    (setq mm-text-html-renderer
-          (cond ((executable-find "w3m") 'w3m) ; or `gnus-w3m'?
-                (t 'html2text)))        ; Emacs built-in
-
-    ;; Recent Gnusae have a built-in HTML renderer which even (somewhat)
-    ;; handles CSS.
-    (setq mm-text-html-renderer 'shr) ; eww-backend?
-    )
-
-  (with-eval-after-load "w3m"
-     ;; (setq browse-url-browser-function 'w3m-browse-url)
-     (setq mm-inline-text-html-renderer
-           'mm-inline-text-html-render-with-w3m)
-     (setq gnus-article-wash-function
-           'gnus-article-wash-html-with-w3m)
-
-     ;; Whenever you try to browse URLs found in articles, Gnus
-     ;; (`emacs-w3m', in fact) complains that "This link is considered
-     ;; unsafe...". To turn it off, frob the variables
-     ;; `w3m-safe-url-regexp' and `mm-w3m-safe-url-regexp'.
-     )
-
-  ;; allow retrieving images in HTML contents with the <img> tags
-  (setq mm-inline-text-html-with-images t)
+    ;; Allow retrieving images in HTML contents with the <img> tags.
+    (setq mm-inline-text-html-with-images t))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1174,7 +1154,9 @@ Toggle coloring from HTML emails:
   ;; TO command (or when we simply enter an email address without its
   ;; domain extension).
   (setq smtpmail-sendto-domain "local")
+#+end_src
 
+#+begin_src emacs-lisp :tangle no
   ;; Print info in buffer *trace of SMTP session to <somewhere>*.
   (setq smtpmail-debug-info t)          ; Only to debug problems.
 
@@ -1576,8 +1558,7 @@ See http://www.emacswiki.org/emacs/AutoDictionaryMode.
       (set (make-local-variable
             'org-footnote-tag-for-non-org-mode-files) nil)))
 
-  (when (featurep 'org)
-    (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append))
+    (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append)
 
 ;;*** 3.9 (info "(message)Message Buffers")
 

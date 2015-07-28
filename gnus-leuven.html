@@ -177,7 +177,7 @@ This covers the basics of Gnus:
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150727.1145</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150728.1653</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, gnus, dotfile, config</span>
 </pre>
 </div>
@@ -342,8 +342,16 @@ over HTTP.<br  />
 Download and <b>install</b> of <a href="http://www.gnu.org/software/gnutls/">GnuTLS library</a> may be required.
 </p>
 
+<div class="note">
 <p>
-Go to <a href="http://schwarzvogel.de/ssl_tls_testing.shtml">Testing SSL and TLS services</a> to test the <b>opening of TLS connections</b>.
+If this is on Windows, check what <code>M-: (gnutls-available-p) RET</code> yield&#x2026;
+</p>
+
+</div>
+
+<p>
+Go to <a href="http://schwarzvogel.de/ssl_tls_testing.shtml">Testing SSL and TLS services</a> to test the <b>opening of TLS connections</b> with
+<code>gnutls-cli</code>.
 </p>
 
 <p>
@@ -1408,6 +1416,11 @@ to insert the contents of the MIME object into the buffer
 <h3 id="orgheadline36">Display Customization</h3>
 <div class="outline-text-3" id="text-orgheadline36">
 <p>
+Recent Gnus has a built-in HTML renderer (the EWW backend?) &#x2013; which even
+somewhat handles CSS &#x2013; to render HTML-only mails.
+</p>
+
+<p>
 You can view <code>text/html</code> parts of the current article with a Web browser by
 pressing <code>K H</code> (<code>gnus-article-browse-html-article</code>).
 </p>
@@ -1433,36 +1446,8 @@ pressing <code>K H</code> (<code>gnus-article-browse-html-article</code>).
     <span class="org-comment-delimiter">;; </span><span class="org-comment">All images fit in the buffer.</span>
     (<span class="org-keyword">setq</span> mm-inline-large-images t)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Always show HTML mails as attachments (even if they can be</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; displayed) use `</span><span class="org-constant"><span class="org-comment">browse-url-browser-function</span></span><span class="org-comment">' (firefox) to render</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; HTML mails.</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(push "text/html" mm-inline-override-types)</span>
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Use `</span><span class="org-constant"><span class="org-comment">w3m</span></span><span class="org-comment">' browser (if installed) to render HTML-only mails.</span>
-    (<span class="org-keyword">setq</span> mm-text-html-renderer
-          (<span class="org-keyword">cond</span> ((executable-find <span class="org-string">"w3m"</span>) 'w3m) <span class="org-comment-delimiter">; </span><span class="org-comment">or `</span><span class="org-constant"><span class="org-comment">gnus-w3m</span></span><span class="org-comment">'?</span>
-                (t 'html2text)))        <span class="org-comment-delimiter">; </span><span class="org-comment">Emacs built-in</span>
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Recent Gnusae have a built-in HTML renderer which even (somewhat)</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">handles CSS.</span>
-    (<span class="org-keyword">setq</span> mm-text-html-renderer 'shr) <span class="org-comment-delimiter">; </span><span class="org-comment">eww-backend?</span>
-    )
-
-  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"w3m"</span>
-     <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq browse-url-browser-function 'w3m-browse-url)</span>
-     (<span class="org-keyword">setq</span> mm-inline-text-html-renderer
-           'mm-inline-text-html-render-with-w3m)
-     (<span class="org-keyword">setq</span> gnus-article-wash-function
-           'gnus-article-wash-html-with-w3m)
-
-     <span class="org-comment-delimiter">;; </span><span class="org-comment">Whenever you try to browse URLs found in articles, Gnus</span>
-     <span class="org-comment-delimiter">;; </span><span class="org-comment">(`</span><span class="org-constant"><span class="org-comment">emacs-w3m</span></span><span class="org-comment">', in fact) complains that "This link is considered</span>
-     <span class="org-comment-delimiter">;; </span><span class="org-comment">unsafe...". To turn it off, frob the variables</span>
-     <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">w3m-safe-url-regexp</span></span><span class="org-comment">' and `</span><span class="org-constant"><span class="org-comment">mm-w3m-safe-url-regexp</span></span><span class="org-comment">'.</span>
-     )
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">allow retrieving images in HTML contents with the &lt;img&gt; tags</span>
-  (<span class="org-keyword">setq</span> mm-inline-text-html-with-images t)
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Allow retrieving images in HTML contents with the &lt;img&gt; tags.</span>
+    (<span class="org-keyword">setq</span> mm-inline-text-html-with-images t))
 </pre>
 </div>
 
@@ -1618,8 +1603,12 @@ Toggle coloring from HTML emails:
   <span class="org-comment-delimiter">;; </span><span class="org-comment">TO command (or when we simply enter an email address without its</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">domain extension).</span>
   (<span class="org-keyword">setq</span> smtpmail-sendto-domain <span class="org-string">"local"</span>)
-
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Print info in buffer *trace of SMTP session to &lt;somewhere&gt;*.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Print info in buffer *trace of SMTP session to &lt;somewhere&gt;*.</span>
   (<span class="org-keyword">setq</span> smtpmail-debug-info t)          <span class="org-comment-delimiter">; </span><span class="org-comment">Only to debug problems.</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Send the SMTP VERB command (enabling verbose information from the SMTP</span>
@@ -2102,8 +2091,7 @@ See <a href="http://www.emacswiki.org/emacs/AutoDictionaryMode">http://www.emacs
       (set (make-local-variable
             'org-footnote-tag-for-non-org-mode-files) <span class="org-warning">nil)))</span>
 
-  (<span class="org-keyword">when</span> (<span class="org-keyword">featurep</span> '<span class="org-constant">org</span>)
-    (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append))
+    (add-hook 'message-mode-hook 'leuven--message-mode-hook 'append)
 
 <span class="org-comment-delimiter">;;</span><span class="org-comment">*** 3.9 (info "(message)Message Buffers")</span>
 
