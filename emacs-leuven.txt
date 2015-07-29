@@ -718,7 +718,7 @@ like this into your configuration file:
           circe color-identifiers-mode company company-quickhelp csv-mode
           cygwin-mount dictionary diff-hl diminish dired+ emacs-eclim ess
           expand-region fancy-narrow fill-column-indicator flycheck
-          flycheck-ledger fuzzy git-commit-mode git-messenger git-timemachine
+          flycheck-ledger git-commit-mode git-messenger git-timemachine
           google-this google-translate goto-chg graphviz-dot-mode guide-key helm
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
           indent-guide key-chord litable idle-require imenu-anywhere info+
@@ -1437,6 +1437,11 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
 
   (leuven--section "12.1 (emacs)Deletion and Killing")
 
+  ;; Manipulate whitespace around point in a smart way.
+  (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
+#+end_src
+
+#+begin_src emacs-lisp
   (GNUEmacs
 ;; old ([2012-09-07 Fri] remove "compile" after "activate")
 
@@ -1800,9 +1805,15 @@ We bookmarks positions, not just lines!!
 
   (leuven--section "14.1 (emacs)Scrolling")
 
-  ;; Keep screen position of point when scrolling.
-  (setq scroll-preserve-screen-position t)
+  ;; Always keep screen position of point when scrolling.
+  (setq scroll-preserve-screen-position 1)
 
+  ;; Scroll window up/down by one line.
+  (global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
+  (global-set-key (kbd "M-p") (kbd "C-u 1 M-v"))
+#+end_src
+
+#+begin_src emacs-lisp
   ;; Better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
   ;; place the point at the same place).
   (with-eval-after-load "pager-autoloads"
@@ -2622,7 +2633,7 @@ Juri's solution to add ~'open-all~ could also be used in ~perform-replace~ to le
 the user see truly invisible matches before replacing them.
 #+end_note
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (GNUEmacs
     ;; Fuzzy matching utilities (a must-have).
     (with-eval-after-load "fuzzy-autoloads"
@@ -2742,6 +2753,12 @@ ELISP> (save-excursion (set-buffer "BUFFER")
   ;; override this).
   (setq-default case-fold-search t)
 #+end_src
+
+*Case folding* folds together "a" and "A".
+
+*Char folding* allows simple ASCII characters to match their complex Unicode
+counterparts.  For instance, if you search for "a", you will also match "á" and
+"ã"; that is, char folding folds together "a", "á" and "ã".
 
 ** Replacement Commands
 
@@ -7980,7 +7997,7 @@ arrives -- at which point it will be in all lists.
     ;; Match part of a word.
     (setq org-agenda-search-view-force-full-words nil)
 
-    ;; Don't search headline for a time-of-day.
+    ;; Don't search headline for a time-of-day (unwanted side effects).
     (setq org-agenda-search-headline-for-time nil)
 #+end_src
 
@@ -8834,8 +8851,8 @@ export]] for more information.
 
 *** HTML export
 
-To get a start for your CSS file, use the command ~M-x
-org-export-htmlize-generate-css~ to extract class definitions.
+To get a start for your CSS file, use the command
+~M-x org-export-htmlize-generate-css~ to extract class definitions.
 
 #+begin_src emacs-lisp
 ;;** 12.5 (info "(org)HTML export")
@@ -8943,7 +8960,7 @@ directory.
     This forces the `css' style and only returns the HTML body, but without the
     BODY tag.  This should make it useful for inserting the text to another HTML
     buffer."
-      (let* ((htmlize-output-type 'css)  ; was `inline-css'
+      (let* ((htmlize-output-type 'css)  ; Was `inline-css'.
              (htmlbuf (htmlize-region beg end)))
         (unwind-protect
             (with-current-buffer htmlbuf
@@ -9081,7 +9098,11 @@ XXX Maybe we should test for (executable-find "/usr/bin/latexmk"), etc.?
     (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
 #+end_src
 
-XXX Show how to use ~remove-hook~ if one wants to get rid of this behavior
+#+begin_tip
+You can clear out this individual function by calling ~remove-hook~:
+
+: (remove-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
+#+end_tip
 
 You can easily customize this variable on a per file basis.  If you seldom use
 ~bibtex~, have the default be to run ~pdflatex~ just once or twice.  Then, for any
@@ -9886,10 +9907,12 @@ For security resons, evaluation is not turned on by default.
   (with-eval-after-load "ob-core"
 
     ;;!! Don't be prompted on every code block evaluation.
-    (setq org-confirm-babel-evaluate nil)
+    (setq org-confirm-babel-evaluate nil))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
+  (with-eval-after-load "ob-core"
+
     (defface org-block-executing
       '((t (:background "#FFE0FF")))
       "Face used for the source block background when executed.")
@@ -15552,8 +15575,6 @@ printing on Windows.
       (w32-register-hot-key (kbd "<snapshot>"))
       (global-set-key
         (kbd "<snapshot>") #'leuven-ps-print-buffer-with-faces-query)))
-
-  (global-set-key (kbd "M-p") #'leuven-ps-print-buffer-with-faces-query)
 
   (XEmacs
     (setq toolbar-print-function 'ps-print-buffer-with-faces))

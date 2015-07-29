@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150724.1659
+;; Version: 20150729.1122
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150724.1659"
+(defconst leuven--emacs-version "20150729.1122"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -431,7 +431,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           circe color-identifiers-mode company company-quickhelp csv-mode
           cygwin-mount dictionary diff-hl diminish dired+ emacs-eclim ess
           expand-region fancy-narrow fill-column-indicator flycheck
-          flycheck-ledger fuzzy git-commit-mode git-messenger git-timemachine
+          flycheck-ledger git-commit-mode git-messenger git-timemachine
           google-this google-translate goto-chg graphviz-dot-mode guide-key helm
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
           indent-guide key-chord litable idle-require imenu-anywhere info+
@@ -834,6 +834,9 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "12.1 (emacs)Deletion and Killing")
 
+  ;; Manipulate whitespace around point in a smart way.
+  (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
+
   (GNUEmacs
 ;; old ([2012-09-07 Fri] remove "compile" after "activate")
 
@@ -1011,8 +1014,12 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "14.1 (emacs)Scrolling")
 
-  ;; Keep screen position of point when scrolling.
-  (setq scroll-preserve-screen-position t)
+  ;; Always keep screen position of point when scrolling.
+  (setq scroll-preserve-screen-position 1)
+
+  ;; Scroll window up/down by one line.
+  (global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
+  (global-set-key (kbd "M-p") (kbd "C-u 1 M-v"))
 
   ;; Better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
   ;; place the point at the same place).
@@ -1550,16 +1557,6 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Scrolling commands are allowed during incremental search (without
   ;; canceling Isearch mode).
   (setq isearch-allow-scroll t)
-
-  (GNUEmacs
-    ;; Fuzzy matching utilities (a must-have).
-    (with-eval-after-load "fuzzy-autoloads"
-
-      (autoload 'turn-on-fuzzy-isearch "fuzzy" nil t)
-                                        ; This autoload isn't defined in
-                                        ; `fuzzy-autoloads'!
-
-      (add-hook 'isearch-mode-hook #'turn-on-fuzzy-isearch)))
 
   ;; Show number of matches in mode-line while searching.
   (with-eval-after-load "anzu-autoloads"
@@ -4825,7 +4822,7 @@ From %c"
     ;; Match part of a word.
     (setq org-agenda-search-view-force-full-words nil)
 
-    ;; Don't search headline for a time-of-day.
+    ;; Don't search headline for a time-of-day (unwanted side effects).
     (setq org-agenda-search-headline-for-time nil)
 
     ;; 10.3.6 How to identify stuck projects.
@@ -5508,7 +5505,7 @@ this with to-do items than with projects or headings."
     This forces the `css' style and only returns the HTML body, but without the
     BODY tag.  This should make it useful for inserting the text to another HTML
     buffer."
-      (let* ((htmlize-output-type 'css)  ; was `inline-css'
+      (let* ((htmlize-output-type 'css)  ; Was `inline-css'.
              (htmlbuf (htmlize-region beg end)))
         (unwind-protect
             (with-current-buffer htmlbuf
@@ -9016,8 +9013,6 @@ a clean buffer we're an order of magnitude laxer about checking."
       (w32-register-hot-key (kbd "<snapshot>"))
       (global-set-key
         (kbd "<snapshot>") #'leuven-ps-print-buffer-with-faces-query)))
-
-  (global-set-key (kbd "M-p") #'leuven-ps-print-buffer-with-faces-query)
 
   (XEmacs
     (setq toolbar-print-function 'ps-print-buffer-with-faces))
