@@ -6,9 +6,7 @@
 #+LANGUAGE:  en
 #+OPTIONS:   H:4 num:nil
 
-#+PROPERTY:  tangle org-custom-agenda-views.el
-#+PROPERTY:  padline yes
-#+PROPERTY:  eval no
+#+PROPERTY:  header-args :tangle org-custom-agenda-views.el :padline yes :eval no
 
 #+SETUPFILE: ~/src/org-html-themes/setup/theme-readtheorg.setup
 
@@ -1227,7 +1225,7 @@ If you want to show TODO items neither *scheduled* nor *deadline*'d, you can use
 
 ** Future
    :PROPERTIES:
-   :tangle:   no
+   :header-args+: :tangle no
    :END:
 
 FIXME C'est scheduled qu'il faut checker, plutôt que deadline ?
@@ -1337,6 +1335,9 @@ From Tracks:
 ** Tasks by assignee
 
 * EMAIL notifications
+
+See
+https://groups.google.com/forum/#!search/messageid$3Amailman.7594.1438153952.904.help-gnu-emacs@gnu.org/gnu.emacs.help/uBCS3K_ZJFQ/KBfe2RXAtgsJ.
 
 ** Task assigned
 
@@ -1548,7 +1549,7 @@ Search any word or regexp within your task name or in the note field:
 
 * Buggy commands
   :PROPERTIES:
-  :tangle:   no
+  :header-args+: :tangle no
   :END:
 
 #+begin_src emacs-lisp
@@ -1702,7 +1703,7 @@ Search any word or regexp within your task name or in the note field:
 
 * Org mode
   :PROPERTIES:
-  :tangle:   no
+  :header-args+: :tangle no
   :END:
 
 ** Lists
@@ -1910,10 +1911,7 @@ devraient être considérés comme erronés...
 ;;; org-custom-agenda-views.el ends here
 #+end_src
 
-* Notes                                                               :noexport:
-  :PROPERTIES:
-  :tangle:   no
-  :END:
+* COMMENT Notes
 
 > Is it possible, for tasks that have a repeated DEADLINE, to get Org-Mode to
 > clear the non-repeated SCHEDULED date?
