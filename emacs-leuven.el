@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150730.1223
+;; Version: 20150730.1437
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150730.1223"
+(defconst leuven--emacs-version "20150730.1437"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2856,8 +2856,11 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Title bar display of visible frames.
   (setq frame-title-format
-        (format "%s Emacs %s%s of %s - PID: %d"
+        (format "%s Emacs%s %s%s of %s - PID: %d"
                 (capitalize (symbol-name system-type))
+                (if (string-match "^x86_64-.*" system-configuration)
+                    "-w64"
+                  "-w32")
                 emacs-version
                 (if (and (boundp 'emacs-repository-version)
                          emacs-repository-version)

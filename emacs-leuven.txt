@@ -5007,8 +5007,11 @@ one.
 #+begin_src emacs-lisp
   ;; Title bar display of visible frames.
   (setq frame-title-format
-        (format "%s Emacs %s%s of %s - PID: %d"
+        (format "%s Emacs%s %s%s of %s - PID: %d"
                 (capitalize (symbol-name system-type))
+                (if (string-match "^x86_64-.*" system-configuration)
+                    "-w64"
+                  "-w32")
                 emacs-version
                 (if (and (boundp 'emacs-repository-version)
                          emacs-repository-version)
