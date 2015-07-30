@@ -14077,6 +14077,17 @@ Extensions to Dired:
 
 - Let you act on sets of marked files in subdirs, recursively, for example.
 
+There are global key bindings that Dired+ makes:
+
+- ~C-x D~ :: ~diredp-dired-union~
+- ~C-x E~ :: ~diredp-add-to-dired-buffer~
+- ~C-x C-M-f~ :: ~diredp-fileset~
+- ~C-x R~ :: ~diredp-dired-recent-dirs~
+
+These are not bindings for Dired mode.  They are global bindings that set up
+a Dired buffer.  They are thus similar to the default global bindings ~C-x d~ and
+~C-x C-j~.
+
 #+begin_src emacs-lisp
 ;;** Dired+
 
