@@ -5650,7 +5650,7 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
     (setq fci-dash-pattern 0.5)
 
     ;; Enable fci-mode in programming, message and Org modes.
-    (add-hook 'prog-mode-hook #'fci-mode)
+    ;; (add-hook 'prog-mode-hook #'fci-mode) ; 3 special chars at the end of every line when exporting code blocks to HTML!!!
     (add-hook 'message-mode-hook #'fci-mode)
     (add-hook 'org-mode-hook #'fci-mode)
 #+end_src
