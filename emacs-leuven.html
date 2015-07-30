@@ -451,7 +451,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150729.1123</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150730.1224</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -520,7 +520,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150729.1123"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150730.1224"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1122,7 +1122,7 @@ like this into your configuration file:
           circe color-identifiers-mode company company-quickhelp csv-mode
           cygwin-mount dictionary diff-hl diminish dired+ emacs-eclim ess
           expand-region fancy-narrow fill-column-indicator flycheck
-          flycheck-ledger git-commit-mode git-messenger git-timemachine
+          flycheck-ledger fuzzy git-commit-mode git-messenger git-timemachine
           google-this google-translate goto-chg graphviz-dot-mode guide-key helm
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
           indent-guide key-chord litable idle-require imenu-anywhere info+
@@ -15825,12 +15825,12 @@ can use the following keys to navigate historic versions of the file:
       (message <span class="org-string">"VC status for directory: %s"</span> dname)
       (vc-dir dname)))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">vc status without asking for a directory</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">VC status without asking for a directory.</span>
   (global-set-key (kbd <span class="org-string">"&lt;C-f9&gt;"</span>) #'leuven-vc-jump)
 
   (add-hook  'vc-dir-mode-hook
              (<span class="org-keyword">lambda</span> ()
-               <span class="org-comment-delimiter">;; </span><span class="org-comment">hide up-to-date and unregistered files</span>
+               <span class="org-comment-delimiter">;; </span><span class="org-comment">Hide up-to-date and unregistered files.</span>
                (define-key vc-dir-mode-map
                  (kbd <span class="org-string">"x"</span>) 'leuven-vc-dir-hide-up-to-date-and-unregistered)
                (define-key vc-dir-mode-map
@@ -15850,8 +15850,8 @@ can use the following keys to navigate historic versions of the file:
     (<span class="org-keyword">interactive</span>)
     (<span class="org-keyword">let</span> ((crt (ewoc-nth vc-ewoc -1))
           (first (ewoc-nth vc-ewoc 0)))
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">go over from the last item to the first and remove the</span>
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">unregistered files and directories with no child files</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Go over from the last item to the first and remove the unregistered</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">files and directories with no child files.</span>
       (<span class="org-keyword">while</span> (not (eq crt first))
         (<span class="org-keyword">let*</span> ((data (ewoc-data crt))
                (dir (vc-dir-fileinfo-&gt;directory data))
@@ -15860,14 +15860,14 @@ can use the following keys to navigate historic versions of the file:
                <span class="org-comment-delimiter">;; </span><span class="org-comment">ewoc-delete does not work without this...</span>
                (inhibit-read-only t))
           (<span class="org-keyword">when</span> (<span class="org-keyword">or</span>
-                 <span class="org-comment-delimiter">;; </span><span class="org-comment">remove directories with no child files</span>
+                 <span class="org-comment-delimiter">;; </span><span class="org-comment">Remove directories with no child files.</span>
                  (<span class="org-keyword">and</span> dir
                       (<span class="org-keyword">or</span>
-                       <span class="org-comment-delimiter">;; </span><span class="org-comment">nothing follows this directory</span>
+                       <span class="org-comment-delimiter">;; </span><span class="org-comment">Nothing follows this directory.</span>
                        (not next)
-                       <span class="org-comment-delimiter">;; </span><span class="org-comment">next item is a directory</span>
+                       <span class="org-comment-delimiter">;; </span><span class="org-comment">Next item is a directory.</span>
                        (vc-dir-fileinfo-&gt;directory (ewoc-data next))))
-                 <span class="org-comment-delimiter">;; </span><span class="org-comment">remove files in the unregistered state</span>
+                 <span class="org-comment-delimiter">;; </span><span class="org-comment">Remove files in the unregistered state.</span>
                  (eq (vc-dir-fileinfo-&gt;state data) 'unregistered))
             (ewoc-delete vc-ewoc crt))
           (<span class="org-keyword">setq</span> crt prev)))))
@@ -15892,11 +15892,11 @@ can use the following keys to navigate historic versions of the file:
 
   (leuven--section <span class="org-string">"28.1.13 Customizing VC"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">files covered by VC get backups (as with other files)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Files covered by VC get backups (as with other files).</span>
   (<span class="org-keyword">setq</span> vc-make-backup-files t)
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">http://www.emacswiki.org/emacs/VcTopDirectory</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">For git</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">For Git.</span>
   (<span class="org-keyword">defadvice</span> <span class="org-function-name">vc-dir-prepare-status-buffer</span>
              (before leuven-vcs-goto-top-directory activate compile)
     (<span class="org-keyword">let*</span> ((backend (ad-get-arg 2))
@@ -15956,11 +15956,11 @@ nil</div>
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"add-log"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">don't make a new entry, when the last entry was made by you and on</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">the same date</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't make a new entry, when the last entry was made by you and on the</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">same date.</span>
     (<span class="org-keyword">setq</span> add-log-always-start-new-record nil)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">adds the file's version number to the change log entry</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Add the file's version number to the change log entry.</span>
     (<span class="org-keyword">setq</span> change-log-version-info-enabled t)
 
     (add-hook 'change-log-mode-hook
@@ -16160,7 +16160,7 @@ Alternatively,
 
 <pre class="src src-emacs-lisp">  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"etags"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">tags enhancements</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Tags enhancements.</span>
     (try-require 'sure-tags))
 </pre>
 </div>
@@ -16191,7 +16191,7 @@ After this, you can select the tag file to use with the command
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">list of file names of tags tables to search</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">List of file names of tags tables to search.</span>
   (<span class="org-keyword">setq</span> tags-table-list
         '(
           <span class="org-string">"~/TAGS"</span>
@@ -16251,12 +16251,12 @@ To continue searching for next match, use ~M-,~.
 
 <pre class="src src-emacs-lisp">  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"etags"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">select from multiple tags</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Select from multiple tags.</span>
     (try-require 'etags-select))
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"etags-select"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">do a `</span><span class="org-constant"><span class="org-comment">find-tag-at-point</span></span><span class="org-comment">', and display all exact matches</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Do a `</span><span class="org-constant"><span class="org-comment">find-tag-at-point</span></span><span class="org-comment">', and display all exact matches.</span>
     (global-set-key (kbd <span class="org-string">"M-?"</span>) #'etags-select-find-tag-at-point))
 </pre>
 </div>
@@ -16284,9 +16284,11 @@ Find the definition of the Emacs Lisp symbol near point:
 <dl class="org-dl">
 <dt><code>C-x F</code></dt><dd>Find <b>function</b>.</dd>
 
+<dt><code>C-x K</code></dt><dd>Find function <b>bound to key</b> sequence.</dd>
+
 <dt><code>C-x V</code></dt><dd>Find <b>variable</b>.</dd>
 
-<dt><code>C-x K</code></dt><dd>Find function <b>bound to key</b> sequence.</dd>
+<dt><code>M-x find-face-definition</code></dt><dd>Find <b>face</b>.</dd>
 </dl>
 
 <p>
@@ -16296,7 +16298,7 @@ another frame.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">find the definition of the Emacs Lisp function or variable near point</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Find the definition of the Emacs Lisp function or variable near point.</span>
   (<span class="org-keyword">GNUEmacs</span>
     (find-function-setup-keys))
 </pre>

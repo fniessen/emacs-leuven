@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150729.1122
+;; Version: 20150730.1223
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150729.1122"
+(defconst leuven--emacs-version "20150730.1223"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -431,7 +431,7 @@ Last time is saved in global variable `leuven--before-section-time'."
           circe color-identifiers-mode company company-quickhelp csv-mode
           cygwin-mount dictionary diff-hl diminish dired+ emacs-eclim ess
           expand-region fancy-narrow fill-column-indicator flycheck
-          flycheck-ledger git-commit-mode git-messenger git-timemachine
+          flycheck-ledger fuzzy git-commit-mode git-messenger git-timemachine
           google-this google-translate goto-chg graphviz-dot-mode guide-key helm
           helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
           indent-guide key-chord litable idle-require imenu-anywhere info+
@@ -1557,6 +1557,16 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Scrolling commands are allowed during incremental search (without
   ;; canceling Isearch mode).
   (setq isearch-allow-scroll t)
+
+  (GNUEmacs
+    ;; Fuzzy matching utilities (a must-have).
+    (with-eval-after-load "fuzzy-autoloads"
+
+      (autoload 'turn-on-fuzzy-isearch "fuzzy" nil t)
+                                        ; This autoload isn't defined in
+                                        ; `fuzzy-autoloads'!
+
+      (add-hook 'isearch-mode-hook #'turn-on-fuzzy-isearch)))
 
   ;; Show number of matches in mode-line while searching.
   (with-eval-after-load "anzu-autoloads"
@@ -7351,12 +7361,12 @@ a clean buffer we're an order of magnitude laxer about checking."
       (message "VC status for directory: %s" dname)
       (vc-dir dname)))
 
-  ;; vc status without asking for a directory
+  ;; VC status without asking for a directory.
   (global-set-key (kbd "<C-f9>") #'leuven-vc-jump)
 
   (add-hook  'vc-dir-mode-hook
              (lambda ()
-               ;; hide up-to-date and unregistered files
+               ;; Hide up-to-date and unregistered files.
                (define-key vc-dir-mode-map
                  (kbd "x") 'leuven-vc-dir-hide-up-to-date-and-unregistered)
                (define-key vc-dir-mode-map
@@ -7376,8 +7386,8 @@ a clean buffer we're an order of magnitude laxer about checking."
     (interactive)
     (let ((crt (ewoc-nth vc-ewoc -1))
           (first (ewoc-nth vc-ewoc 0)))
-      ;; go over from the last item to the first and remove the
-      ;; unregistered files and directories with no child files
+      ;; Go over from the last item to the first and remove the unregistered
+      ;; files and directories with no child files.
       (while (not (eq crt first))
         (let* ((data (ewoc-data crt))
                (dir (vc-dir-fileinfo->directory data))
@@ -7386,14 +7396,14 @@ a clean buffer we're an order of magnitude laxer about checking."
                ;; ewoc-delete does not work without this...
                (inhibit-read-only t))
           (when (or
-                 ;; remove directories with no child files
+                 ;; Remove directories with no child files.
                  (and dir
                       (or
-                       ;; nothing follows this directory
+                       ;; Nothing follows this directory.
                        (not next)
-                       ;; next item is a directory
+                       ;; Next item is a directory.
                        (vc-dir-fileinfo->directory (ewoc-data next))))
-                 ;; remove files in the unregistered state
+                 ;; Remove files in the unregistered state.
                  (eq (vc-dir-fileinfo->state data) 'unregistered))
             (ewoc-delete vc-ewoc crt))
           (setq crt prev)))))
@@ -7409,11 +7419,11 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "28.1.13 Customizing VC")
 
-  ;; files covered by VC get backups (as with other files)
+  ;; Files covered by VC get backups (as with other files).
   (setq vc-make-backup-files t)
 
   ;; http://www.emacswiki.org/emacs/VcTopDirectory
-  ;; For git
+  ;; For Git.
   (defadvice vc-dir-prepare-status-buffer
              (before leuven-vcs-goto-top-directory activate compile)
     (let* ((backend (ad-get-arg 2))
@@ -7459,11 +7469,11 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (with-eval-after-load "add-log"
 
-    ;; don't make a new entry, when the last entry was made by you and on
-    ;; the same date
+    ;; Don't make a new entry, when the last entry was made by you and on the
+    ;; same date.
     (setq add-log-always-start-new-record nil)
 
-    ;; adds the file's version number to the change log entry
+    ;; Add the file's version number to the change log entry.
     (setq change-log-version-info-enabled t)
 
     (add-hook 'change-log-mode-hook
@@ -7479,7 +7489,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "28.3 (emacs)Tags Tables")
 
-  ;; list of file names of tags tables to search
+  ;; List of file names of tags tables to search.
   (setq tags-table-list
         '(
           "~/TAGS"
@@ -7493,15 +7503,15 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (with-eval-after-load "etags"
 
-    ;; select from multiple tags
+    ;; Select from multiple tags.
     (try-require 'etags-select))
 
   (with-eval-after-load "etags-select"
 
-    ;; do a `find-tag-at-point', and display all exact matches
+    ;; Do a `find-tag-at-point', and display all exact matches.
     (global-set-key (kbd "M-?") #'etags-select-find-tag-at-point))
 
-  ;; find the definition of the Emacs Lisp function or variable near point
+  ;; Find the definition of the Emacs Lisp function or variable near point.
   (GNUEmacs
     (find-function-setup-keys))
 
