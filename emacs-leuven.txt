@@ -26,6 +26,18 @@
   (format "%ss" (time-to-seconds (time-subtract (current-time) time))))
 #+end_src
 
+** TODO Update setcdr assoc constructs
+
+: (setcdr (assoc value alist) new-value)
+
+works pretty well (but you'll probably need to add a not-found check).
+
+In Emacs 25:
+
+: (setf (alist-get key alist) new-value)
+
+even without not-found checking.
+
 ** TODO Improve documentation of navigation and search
 
 Excellent example:
