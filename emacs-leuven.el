@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150730.1743
+;; Version: 20150803.1623
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150730.1743"
+(defconst leuven--emacs-version "20150803.1623"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5597,11 +5597,21 @@ this with to-do items than with projects or headings."
              ((and
                ;; leuven--win32-p
                (executable-find "latexmk"))
-              '("latexmk -CF -pdf %f && latexmk -c"))
+              '("echo f = %f"
+                "echo quotedf = '%f'"
+                "echo cygpath = $(cygpath %f)"
+                "echo o = %o"
+                "echo b = %b"
+                "latexmk -CF -pdf %f && latexmk -c"))
                                         ; Must clean .fdb_latexmk, .fls, .ilg,
                                         ; .ind, etc.
              ((and leuven--cygwin-p (executable-find "latexmk"))
-              '("latexmk -CF -pdf $(cygpath -m %f) && latexmk -c"))
+              '("echo f = %f"
+                "echo quotedf = '%f'"
+                "echo cygpath = $(cygpath %f)"
+                "echo o = %o"
+                "echo b = %b"
+                "latexmk -CF -pdf $(cygpath -m %f) && latexmk -c"))
              (leuven--win32-p
               '("pdflatex -interaction=nonstopmode -output-directory=%o %f"
                 "pdflatex -interaction=nonstopmode -output-directory=%o %f"
@@ -5625,7 +5635,9 @@ this with to-do items than with projects or headings."
                (leuven--cygwin-p
                 '("xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
                   "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
-                  "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"))))))
+                  "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)")))))
+
+        (message ">>> org-latex-pdf-process: %S <<<" org-latex-pdf-process))
 
     ;; Hook run before parsing an export buffer.
     (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)

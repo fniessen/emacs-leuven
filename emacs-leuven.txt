@@ -9079,11 +9079,21 @@ XXX Maybe we should test for (executable-find "/usr/bin/latexmk"), etc.?
              ((and
                ;; leuven--win32-p
                (executable-find "latexmk"))
-              '("latexmk -CF -pdf %f && latexmk -c"))
+              '("echo f = %f"
+                "echo quotedf = '%f'"
+                "echo cygpath = $(cygpath %f)"
+                "echo o = %o"
+                "echo b = %b"
+                "latexmk -CF -pdf %f && latexmk -c"))
                                         ; Must clean .fdb_latexmk, .fls, .ilg,
                                         ; .ind, etc.
              ((and leuven--cygwin-p (executable-find "latexmk"))
-              '("latexmk -CF -pdf $(cygpath -m %f) && latexmk -c"))
+              '("echo f = %f"
+                "echo quotedf = '%f'"
+                "echo cygpath = $(cygpath %f)"
+                "echo o = %o"
+                "echo b = %b"
+                "latexmk -CF -pdf $(cygpath -m %f) && latexmk -c"))
              (leuven--win32-p
               '("pdflatex -interaction=nonstopmode -output-directory=%o %f"
                 "pdflatex -interaction=nonstopmode -output-directory=%o %f"
@@ -9107,7 +9117,9 @@ XXX Maybe we should test for (executable-find "/usr/bin/latexmk"), etc.?
                (leuven--cygwin-p
                 '("xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
                   "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
-                  "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"))))))
+                  "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)")))))
+
+        (message ">>> org-latex-pdf-process: %S <<<" org-latex-pdf-process))
 
     ;; Hook run before parsing an export buffer.
     (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
