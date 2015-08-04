@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150804.1653
+;; Version: 20150804.2130
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150804.1653"
+(defconst leuven--emacs-version "20150804.2130"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5591,21 +5591,23 @@ this with to-do items than with projects or headings."
     (defun leuven--change-pdflatex-program (backend)
       "Automatically run XeLaTeX, if asked, when exporting to LaTeX."
 
-      (let* ((org-latex-pdf-engine-path
+      (let* ((org-latex-pdf-engine-full-path
               (cond ((string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
-                     (executable-find "xelatex"))
+                     (or (executable-find "xelatex")
+                         (error "Please install XeLaTeX."))
                     (t
-                     (executable-find "pdflatex"))))
+                     (or (executable-find "pdflatex"))
+                         (error "Please install PDFLaTeX.")))))
 
              (org-latex-pdf-command
               (cond ((executable-find "latexmk")
                      "latexmk")
                     (t
-                     (file-name-base org-latex-pdf-engine-path))))
+                     (file-name-base org-latex-pdf-engine-full-path))))
                                         ; "xelatex" or "pdflatex".
 
              (latex-file
-              (cond ((string-match "^/usr/bin/" org-latex-pdf-engine-path)
+              (cond ((string-match "^/usr/bin/" org-latex-pdf-engine-full-path)
                      "$(cygpath -m %f)")
                     (t
                      "%f"))))
@@ -5614,7 +5616,7 @@ this with to-do items than with projects or headings."
               (cond ((equal org-latex-pdf-command "latexmk")
                      `(;; "echo f = %f" "echo quotedf = '%f'" "echo cygpath = $(cygpath %f)"
                        "latexmk --version"
-                       ,(concat "latexmk -cd -f -pdf -pdflatex=" (file-name-base org-latex-pdf-engine-path) " " latex-file
+                       ,(concat "latexmk -cd -f -pdf -pdflatex=" (file-name-base org-latex-pdf-engine-full-path) " " latex-file
                                 " && latexmk -c"))) ; Clean up all nonessential files.
                     ((equal org-latex-pdf-command "xelatex")
                      `(,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)
