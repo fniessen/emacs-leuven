@@ -451,7 +451,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150804.1505</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150804.1648</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -520,7 +520,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150804.1505"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150804.1648"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -11733,34 +11733,39 @@ of the files produced by LaTeX (<code>org-latex-logfiles-extensions</code>) are 
 <pre class="src src-emacs-lisp">    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--change-pdflatex-program</span> (backend)
       <span class="org-doc">"Automatically run XeLaTeX, if asked, when exporting to LaTeX."</span>
 
-      (<span class="org-keyword">let*</span> ((org-latex-pdf-command
-              (<span class="org-keyword">cond</span> ((executable-find <span class="org-string">"latexmk"</span>)
-                     (executable-find <span class="org-string">"latexmk"</span>))
-                    ((string-match <span class="org-string">"^#\\+LATEX_CMD: xelatex"</span> (buffer-string))
+      (<span class="org-keyword">let*</span> ((org-latex-pdf-engine-path
+              (<span class="org-keyword">cond</span> ((string-match <span class="org-string">"^#\\+LATEX_CMD: xelatex"</span> (buffer-string))
                      (executable-find <span class="org-string">"xelatex"</span>))
                     (t
                      (executable-find <span class="org-string">"pdflatex"</span>))))
-             (full-file-name
-              (<span class="org-keyword">cond</span> ((string-match <span class="org-string">"^/usr/bin/"</span> org-latex-pdf-command)
+
+             (org-latex-pdf-command
+              (<span class="org-keyword">cond</span> ((executable-find <span class="org-string">"latexmk"</span>)
+                     (<span class="org-string">"latexmk"</span>))
+                    (t
+                     (file-name-base org-latex-pdf-engine-path))))
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">xelatex</span></span><span class="org-comment">' or `</span><span class="org-constant"><span class="org-comment">pdflatex</span></span><span class="org-comment">'.</span>
+
+             (latex-file
+              (<span class="org-keyword">cond</span> ((string-match <span class="org-string">"^/usr/bin/"</span> org-latex-pdf-engine-path)
                      <span class="org-string">"$(cygpath -m %f)"</span>)
                     (t
                      <span class="org-string">"%f"</span>))))
 
         (<span class="org-keyword">setq</span> org-latex-pdf-process
-              (<span class="org-keyword">cond</span> ((<span class="org-keyword">and</span> (executable-find <span class="org-string">"latexmk"</span>)
-                          (string-match <span class="org-string">"^#\\+LATEX_CMD: xelatex"</span> (buffer-string)))
-                     `(,(concat org-latex-pdf-command <span class="org-string">" --version"</span>)
-                       ,(concat org-latex-pdf-command <span class="org-string">" -cd -f -pdf -pdflatex=xelatex "</span> full-file-name
-                                <span class="org-string">" &amp;&amp; latexmk -c"</span>))) <span class="org-comment-delimiter">; </span><span class="org-comment">Clean up all nonessential files.</span>
-                    ((executable-find <span class="org-string">"latexmk"</span>)
+              (<span class="org-keyword">cond</span> ((equal org-latex-pdf-command <span class="org-string">"latexmk"</span>)
                      `(<span class="org-comment-delimiter">;; </span><span class="org-comment">"echo f = %f" "echo quotedf = '</span><span class="org-constant"><span class="org-comment">%f</span></span><span class="org-comment">'" "echo cygpath = $(cygpath %f)"</span>
-                       ,(concat org-latex-pdf-command <span class="org-string">" --version"</span>)
-                       ,(concat org-latex-pdf-command <span class="org-string">" -cd -f -pdf "</span> full-file-name
+                       <span class="org-string">"latexmk --version"</span>
+                       ,(concat <span class="org-string">"latexmk -cd -f -pdf -pdflatex="</span> (file-name-base org-latex-pdf-engine-path) <span class="org-string">" "</span> latex-file
                                 <span class="org-string">" &amp;&amp; latexmk -c"</span>))) <span class="org-comment-delimiter">; </span><span class="org-comment">Clean up all nonessential files.</span>
+                    ((equal org-latex-pdf-command <span class="org-string">"xelatex"</span>)
+                     `(,(concat <span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o "</span> latex-file)
+                       ,(concat <span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o "</span> latex-file)
+                       ,(concat <span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o "</span> latex-file)))
                     (t
-                     `(,(concat org-latex-pdf-command <span class="org-string">" -interaction=nonstopmode -output-directory=%o "</span> full-file-name)
-                       ,(concat org-latex-pdf-command <span class="org-string">" -interaction=nonstopmode -output-directory=%o "</span> full-file-name)
-                       ,(concat org-latex-pdf-command<span class="org-string">" -interaction=nonstopmode -output-directory=%o "</span> full-file-name)))))
+                     `(,(concat <span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o "</span> latex-file)
+                       ,(concat <span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o "</span> latex-file)
+                       ,(concat <span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o "</span> latex-file)))))
         <span class="org-comment-delimiter">;; </span><span class="org-comment">(message "Export command: %S" org-latex-pdf-process)</span>
         ))
 
