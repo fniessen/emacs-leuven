@@ -9077,10 +9077,10 @@ of the files produced by LaTeX (~org-latex-logfiles-extensions~) are removed.
 
              (org-latex-pdf-command
               (cond ((executable-find "latexmk")
-                     ("latexmk"))
+                     "latexmk")
                     (t
                      (file-name-base org-latex-pdf-engine-path))))
-                                        ; `xelatex' or `pdflatex'.
+                                        ; "xelatex" or "pdflatex".
 
              (latex-file
               (cond ((string-match "^/usr/bin/" org-latex-pdf-engine-path)
