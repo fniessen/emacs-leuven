@@ -9065,65 +9065,50 @@ capabilities.
 Look at the variable ~org-latex-remove-logfiles~, which controls whether some
 of the files produced by LaTeX (~org-latex-logfiles-extensions~) are removed.
 
-#+begin_warning
-XXX Maybe we should test for (executable-find "/usr/bin/latexmk"), etc.?
-#+end_warning
-
 #+begin_src emacs-lisp
     (defun leuven--change-pdflatex-program (backend)
       "Automatically run XeLaTeX, if asked, when exporting to LaTeX."
 
-      ;; Default.
-      (setq org-latex-pdf-process
-            (cond
-             ((and
-               ;; leuven--win32-p
-               (executable-find "latexmk"))
-              '("echo f = %f"
-                "echo quotedf = '%f'"
-                "echo cygpath = $(cygpath %f)"
-                "echo o = %o"
-                "echo b = %b"
-                "latexmk -CF -pdf %f && latexmk -c"))
-                                        ; Must clean .fdb_latexmk, .fls, .ilg,
-                                        ; .ind, etc.
-             ((and leuven--cygwin-p (executable-find "latexmk"))
-              '("echo f = %f"
-                "echo quotedf = '%f'"
-                "echo cygpath = $(cygpath %f)"
-                "echo o = %o"
-                "echo b = %b"
-                "latexmk -CF -pdf $(cygpath -m %f) && latexmk -c"))
-             (leuven--win32-p
-              '("pdflatex -interaction=nonstopmode -output-directory=%o %f"
-                "pdflatex -interaction=nonstopmode -output-directory=%o %f"
-                "pdflatex -interaction=nonstopmode -output-directory=%o %f"))
-             (leuven--cygwin-p
-              '("pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
-                "pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
-                "pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"))))
+      (let* ((org-latex-pdf-command
+              (cond ((executable-find "latexmk")
+                     (executable-find "latexmk"))
+                    ((string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
+                     (executable-find "xelatex"))
+                    (t
+                     (executable-find "pdflatex"))))
+             (full-file-name
+              (cond ((string-match "^/usr/bin/" org-latex-pdf-command)
+                     "$(cygpath -m %f)")
+                    (t
+                     "%f"))))
 
-      (when (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
         (setq org-latex-pdf-process
-              (cond
-               ((and leuven--win32-p (executable-find "latexmk"))
-                '("latexmk -CF -pdf -pdflatex=xelatex %f && latexmk -c"))
-               ((and leuven--cygwin-p (executable-find "latexmk"))
-                '("latexmk -CF -pdf -pdflatex=xelatex $(cygpath -m %f) && latexmk -c"))
-               (leuven--win32-p
-                '("xelatex -interaction=nonstopmode -output-directory=%o %f"
-                  "xelatex -interaction=nonstopmode -output-directory=%o %f"
-                  "xelatex -interaction=nonstopmode -output-directory=%o %f"))
-               (leuven--cygwin-p
-                '("xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
-                  "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
-                  "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)")))))
-
-        (message ">>> org-latex-pdf-process: %S <<<" org-latex-pdf-process))
+              (cond ((and (executable-find "latexmk")
+                          (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string)))
+                     `(,(concat org-latex-pdf-command " --version")
+                       ,(concat org-latex-pdf-command " -cd -f -pdf -pdflatex=xelatex " full-file-name
+                                " && latexmk -c"))) ; Clean up all nonessential files.
+                    ((executable-find "latexmk")
+                     `(;; "echo f = %f" "echo quotedf = '%f'" "echo cygpath = $(cygpath %f)"
+                       ,(concat org-latex-pdf-command " --version")
+                       ,(concat org-latex-pdf-command " -cd -f -pdf " full-file-name
+                                " && latexmk -c"))) ; Clean up all nonessential files.
+                    (t
+                     `(,(concat org-latex-pdf-command " -interaction=nonstopmode -output-directory=%o " full-file-name)
+                       ,(concat org-latex-pdf-command " -interaction=nonstopmode -output-directory=%o " full-file-name)
+                       ,(concat org-latex-pdf-command" -interaction=nonstopmode -output-directory=%o " full-file-name)))))
+        ;; (message "Export command: %S" org-latex-pdf-process)
+        ))
 
     ;; Hook run before parsing an export buffer.
     (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
 #+end_src
+
+#+begin_note
+If LaTeXmk succeeds, the =.tex= file should be removed as well (as we can produce
+it independently anyway); but adding ~rm $(cygpath %f)~ did not do the trick (in
+Windows Emacs, well in Cygwin Emacs!?)...
+#+end_note
 
 #+begin_tip
 You can clear out this individual function by calling ~remove-hook~:
@@ -10653,7 +10638,7 @@ LaTeX file, ~preview-latex~ gives you a ~Preview~ menu.
         (setq preview-gs-command
           (cond (leuven--win32-p
                  (or (executable-find "gswin32c.exe")
-                     "C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"))
+                     "C:/texlive/2015/tlpkg/tlgs/bin/gswin32c.exe"))
                                         ; Default value.
                 (t
                  (or (executable-find "rungs") ; For Cygwin Emacs.
@@ -10663,6 +10648,13 @@ LaTeX file, ~preview-latex~ gives you a ~Preview~ menu.
         ;; Scale factor for included previews.
         (setq preview-scale-function 1.2))
 #+end_src
+
+#+begin_note
+This is also called when exporting from Org to PDF.  Why?
+
+To show it, just edit the path to ~gswin32c~ and you'll see a message "Can't find
+executable" in the echo area.
+#+end_note
 
 ** RefTeX
 
@@ -11658,7 +11650,7 @@ eclimd -Dosgi.instance.area.default=@user.home/another_workspace
 #+begin_note
 There are 2 Eclim Company-mode backends:
 - ~company-eclim~, the built-in one.
-- ~company-emacs-eclim~, which is a bit more feature-rich (it uses Yasnippet, for
+- ~company-emacs-eclim~, which is a bit more feature-rich (it uses YASnippet, for
   instance), and also a bit buggier.
 #+end_note
 
@@ -12937,7 +12929,8 @@ into a specified *expansion*.
 
 ** Controlling Abbrev Expansion
 
-Inspired by [[http://macromates.com/][TextMate]].
+Inspired by [[http://macromates.com/][TextMate]].  In fact, many editors support snippets: Eclipse,
+Notepad++, etc.
 
 For complex templates, I use ~YASnippet~.  For example, new file templates (where
 it's Lisp evaluation is handy), class and function templates with docblocks,

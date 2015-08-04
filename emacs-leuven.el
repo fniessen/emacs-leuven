@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150803.1623
+;; Version: 20150804.1504
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150803.1623"
+(defconst leuven--emacs-version "20150804.1504"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5591,53 +5591,36 @@ this with to-do items than with projects or headings."
     (defun leuven--change-pdflatex-program (backend)
       "Automatically run XeLaTeX, if asked, when exporting to LaTeX."
 
-      ;; Default.
-      (setq org-latex-pdf-process
-            (cond
-             ((and
-               ;; leuven--win32-p
-               (executable-find "latexmk"))
-              '("echo f = %f"
-                "echo quotedf = '%f'"
-                "echo cygpath = $(cygpath %f)"
-                "echo o = %o"
-                "echo b = %b"
-                "latexmk -CF -pdf %f && latexmk -c"))
-                                        ; Must clean .fdb_latexmk, .fls, .ilg,
-                                        ; .ind, etc.
-             ((and leuven--cygwin-p (executable-find "latexmk"))
-              '("echo f = %f"
-                "echo quotedf = '%f'"
-                "echo cygpath = $(cygpath %f)"
-                "echo o = %o"
-                "echo b = %b"
-                "latexmk -CF -pdf $(cygpath -m %f) && latexmk -c"))
-             (leuven--win32-p
-              '("pdflatex -interaction=nonstopmode -output-directory=%o %f"
-                "pdflatex -interaction=nonstopmode -output-directory=%o %f"
-                "pdflatex -interaction=nonstopmode -output-directory=%o %f"))
-             (leuven--cygwin-p
-              '("pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
-                "pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
-                "pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"))))
+      (let* ((org-latex-pdf-command
+              (cond ((executable-find "latexmk")
+                     (executable-find "latexmk"))
+                    ((string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
+                     (executable-find "xelatex"))
+                    (t
+                     (executable-find "pdflatex"))))
+             (full-file-name
+              (cond ((string-match "^/usr/bin/" org-latex-pdf-command)
+                     "$(cygpath -m %f)")
+                    (t
+                     "%f"))))
 
-      (when (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
         (setq org-latex-pdf-process
-              (cond
-               ((and leuven--win32-p (executable-find "latexmk"))
-                '("latexmk -CF -pdf -pdflatex=xelatex %f && latexmk -c"))
-               ((and leuven--cygwin-p (executable-find "latexmk"))
-                '("latexmk -CF -pdf -pdflatex=xelatex $(cygpath -m %f) && latexmk -c"))
-               (leuven--win32-p
-                '("xelatex -interaction=nonstopmode -output-directory=%o %f"
-                  "xelatex -interaction=nonstopmode -output-directory=%o %f"
-                  "xelatex -interaction=nonstopmode -output-directory=%o %f"))
-               (leuven--cygwin-p
-                '("xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
-                  "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"
-                  "xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)")))))
-
-        (message ">>> org-latex-pdf-process: %S <<<" org-latex-pdf-process))
+              (cond ((and (executable-find "latexmk")
+                          (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string)))
+                     `(,(concat org-latex-pdf-command " --version")
+                       ,(concat org-latex-pdf-command " -cd -f -pdf -pdflatex=xelatex " full-file-name
+                                " && latexmk -c"))) ; Clean up all nonessential files.
+                    ((executable-find "latexmk")
+                     `(;; "echo f = %f" "echo quotedf = '%f'" "echo cygpath = $(cygpath %f)"
+                       ,(concat org-latex-pdf-command " --version")
+                       ,(concat org-latex-pdf-command " -cd -f -pdf " full-file-name
+                                " && latexmk -c"))) ; Clean up all nonessential files.
+                    (t
+                     `(,(concat org-latex-pdf-command " -interaction=nonstopmode -output-directory=%o " full-file-name)
+                       ,(concat org-latex-pdf-command " -interaction=nonstopmode -output-directory=%o " full-file-name)
+                       ,(concat org-latex-pdf-command" -interaction=nonstopmode -output-directory=%o " full-file-name)))))
+        ;; (message "Export command: %S" org-latex-pdf-process)
+        ))
 
     ;; Hook run before parsing an export buffer.
     (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
@@ -6581,7 +6564,7 @@ this with to-do items than with projects or headings."
         (setq preview-gs-command
           (cond (leuven--win32-p
                  (or (executable-find "gswin32c.exe")
-                     "C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"))
+                     "C:/texlive/2015/tlpkg/tlgs/bin/gswin32c.exe"))
                                         ; Default value.
                 (t
                  (or (executable-find "rungs") ; For Cygwin Emacs.

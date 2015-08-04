@@ -451,7 +451,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150803.1624</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150804.1505</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -520,7 +520,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150803.1624"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150804.1505"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -11728,69 +11728,54 @@ Look at the variable <code>org-latex-remove-logfiles</code>, which controls whet
 of the files produced by LaTeX (<code>org-latex-logfiles-extensions</code>) are removed.
 </p>
 
-<div class="warning">
-<p>
-XXX Maybe we should test for (executable-find &ldquo;/usr/bin/latexmk&rdquo;), etc.?
-</p>
-
-</div>
-
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--change-pdflatex-program</span> (backend)
       <span class="org-doc">"Automatically run XeLaTeX, if asked, when exporting to LaTeX."</span>
 
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">Default.</span>
-      (<span class="org-keyword">setq</span> org-latex-pdf-process
-            (<span class="org-keyword">cond</span>
-             ((<span class="org-keyword">and</span>
-               <span class="org-comment-delimiter">;; </span><span class="org-comment">leuven--win32-p</span>
-               (executable-find <span class="org-string">"latexmk"</span>))
-              '(<span class="org-string">"echo f = %f"</span>
-                <span class="org-string">"echo quotedf = '</span><span class="org-constant"><span class="org-string">%f</span></span><span class="org-string">'"</span>
-                <span class="org-string">"echo cygpath = $(cygpath %f)"</span>
-                <span class="org-string">"echo o = %o"</span>
-                <span class="org-string">"echo b = %b"</span>
-                <span class="org-string">"latexmk -CF -pdf %f &amp;&amp; latexmk -c"</span>))
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Must clean .fdb_latexmk, .fls, .ilg,</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">.ind, etc.</span>
-             ((<span class="org-keyword">and</span> leuven--cygwin-p (executable-find <span class="org-string">"latexmk"</span>))
-              '(<span class="org-string">"echo f = %f"</span>
-                <span class="org-string">"echo quotedf = '</span><span class="org-constant"><span class="org-string">%f</span></span><span class="org-string">'"</span>
-                <span class="org-string">"echo cygpath = $(cygpath %f)"</span>
-                <span class="org-string">"echo o = %o"</span>
-                <span class="org-string">"echo b = %b"</span>
-                <span class="org-string">"latexmk -CF -pdf $(cygpath -m %f) &amp;&amp; latexmk -c"</span>))
-             (leuven--win32-p
-              '(<span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o %f"</span>
-                <span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o %f"</span>
-                <span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o %f"</span>))
-             (leuven--cygwin-p
-              '(<span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>
-                <span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>
-                <span class="org-string">"pdflatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>))))
+      (<span class="org-keyword">let*</span> ((org-latex-pdf-command
+              (<span class="org-keyword">cond</span> ((executable-find <span class="org-string">"latexmk"</span>)
+                     (executable-find <span class="org-string">"latexmk"</span>))
+                    ((string-match <span class="org-string">"^#\\+LATEX_CMD: xelatex"</span> (buffer-string))
+                     (executable-find <span class="org-string">"xelatex"</span>))
+                    (t
+                     (executable-find <span class="org-string">"pdflatex"</span>))))
+             (full-file-name
+              (<span class="org-keyword">cond</span> ((string-match <span class="org-string">"^/usr/bin/"</span> org-latex-pdf-command)
+                     <span class="org-string">"$(cygpath -m %f)"</span>)
+                    (t
+                     <span class="org-string">"%f"</span>))))
 
-      (<span class="org-keyword">when</span> (string-match <span class="org-string">"^#\\+LATEX_CMD: xelatex"</span> (buffer-string))
         (<span class="org-keyword">setq</span> org-latex-pdf-process
-              (<span class="org-keyword">cond</span>
-               ((<span class="org-keyword">and</span> leuven--win32-p (executable-find <span class="org-string">"latexmk"</span>))
-                '(<span class="org-string">"latexmk -CF -pdf -pdflatex=xelatex %f &amp;&amp; latexmk -c"</span>))
-               ((<span class="org-keyword">and</span> leuven--cygwin-p (executable-find <span class="org-string">"latexmk"</span>))
-                '(<span class="org-string">"latexmk -CF -pdf -pdflatex=xelatex $(cygpath -m %f) &amp;&amp; latexmk -c"</span>))
-               (leuven--win32-p
-                '(<span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o %f"</span>
-                  <span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o %f"</span>
-                  <span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o %f"</span>))
-               (leuven--cygwin-p
-                '(<span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>
-                  <span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>
-                  <span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o $(cygpath -m %f)"</span>)))))
-
-        (message <span class="org-string">"&gt;&gt;&gt; org-latex-pdf-process: %S &lt;&lt;&lt;"</span> org-latex-pdf-process))
+              (<span class="org-keyword">cond</span> ((<span class="org-keyword">and</span> (executable-find <span class="org-string">"latexmk"</span>)
+                          (string-match <span class="org-string">"^#\\+LATEX_CMD: xelatex"</span> (buffer-string)))
+                     `(,(concat org-latex-pdf-command <span class="org-string">" --version"</span>)
+                       ,(concat org-latex-pdf-command <span class="org-string">" -cd -f -pdf -pdflatex=xelatex "</span> full-file-name
+                                <span class="org-string">" &amp;&amp; latexmk -c"</span>))) <span class="org-comment-delimiter">; </span><span class="org-comment">Clean up all nonessential files.</span>
+                    ((executable-find <span class="org-string">"latexmk"</span>)
+                     `(<span class="org-comment-delimiter">;; </span><span class="org-comment">"echo f = %f" "echo quotedf = '</span><span class="org-constant"><span class="org-comment">%f</span></span><span class="org-comment">'" "echo cygpath = $(cygpath %f)"</span>
+                       ,(concat org-latex-pdf-command <span class="org-string">" --version"</span>)
+                       ,(concat org-latex-pdf-command <span class="org-string">" -cd -f -pdf "</span> full-file-name
+                                <span class="org-string">" &amp;&amp; latexmk -c"</span>))) <span class="org-comment-delimiter">; </span><span class="org-comment">Clean up all nonessential files.</span>
+                    (t
+                     `(,(concat org-latex-pdf-command <span class="org-string">" -interaction=nonstopmode -output-directory=%o "</span> full-file-name)
+                       ,(concat org-latex-pdf-command <span class="org-string">" -interaction=nonstopmode -output-directory=%o "</span> full-file-name)
+                       ,(concat org-latex-pdf-command<span class="org-string">" -interaction=nonstopmode -output-directory=%o "</span> full-file-name)))))
+        <span class="org-comment-delimiter">;; </span><span class="org-comment">(message "Export command: %S" org-latex-pdf-process)</span>
+        ))
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Hook run before parsing an export buffer.</span>
     (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
 </pre>
+</div>
+
+<div class="note">
+<p>
+If LaTeXmk succeeds, the <code>.tex</code> file should be removed as well (as we can produce
+it independently anyway); but adding <code>rm $(cygpath %f)</code> did not do the trick (in
+Windows Emacs, well in Cygwin Emacs!?)&#x2026;
+</p>
+
 </div>
 
 <div class="tip">
@@ -13712,7 +13697,7 @@ LaTeX file, <code>preview-latex</code> gives you a <code>Preview</code> menu.
         (<span class="org-keyword">setq</span> preview-gs-command
           (<span class="org-keyword">cond</span> (leuven--win32-p
                  (<span class="org-keyword">or</span> (executable-find <span class="org-string">"gswin32c.exe"</span>)
-                     <span class="org-string">"C:/texlive/2014/tlpkg/tlgs/bin/gswin32c.exe"</span>))
+                     <span class="org-string">"C:/texlive/2015/tlpkg/tlgs/bin/gswin32c.exe"</span>))
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">Default value.</span>
                 (t
                  (<span class="org-keyword">or</span> (executable-find <span class="org-string">"rungs"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">For Cygwin Emacs.</span>
@@ -13722,6 +13707,18 @@ LaTeX file, <code>preview-latex</code> gives you a <code>Preview</code> menu.
         <span class="org-comment-delimiter">;; </span><span class="org-comment">Scale factor for included previews.</span>
         (<span class="org-keyword">setq</span> preview-scale-function 1.2))
 </pre>
+</div>
+
+<div class="note">
+<p>
+This is also called when exporting from Org to PDF.  Why?
+</p>
+
+<p>
+To show it, just edit the path to <code>gswin32c</code> and you&rsquo;ll see a message &ldquo;Can&rsquo;t find
+executable&rdquo; in the echo area.
+</p>
+
 </div>
 </div>
 </div>
@@ -15022,7 +15019,7 @@ There are 2 Eclim Company-mode backends:
 </p>
 <ul class="org-ul">
 <li><code>company-eclim</code>, the built-in one.</li>
-<li><code>company-emacs-eclim</code>, which is a bit more feature-rich (it uses Yasnippet, for
+<li><code>company-emacs-eclim</code>, which is a bit more feature-rich (it uses YASnippet, for
 instance), and also a bit buggier.</li>
 </ul>
 
@@ -16661,7 +16658,8 @@ into a specified <b>expansion</b>.
 <h3 id="orgheadline324">Controlling Abbrev Expansion</h3>
 <div class="outline-text-3" id="text-orgheadline324">
 <p>
-Inspired by <a href="http://macromates.com/">TextMate</a>.
+Inspired by <a href="http://macromates.com/">TextMate</a>.  In fact, many editors support snippets: Eclipse,
+Notepad++, etc.
 </p>
 
 <p>
