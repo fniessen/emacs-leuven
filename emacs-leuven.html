@@ -451,7 +451,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150804.1654</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150805.1421</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -520,7 +520,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150804.1654"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150805.1421"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -11728,35 +11728,59 @@ Look at the variable <code>org-latex-remove-logfiles</code>, which controls whet
 of the files produced by LaTeX (<code>org-latex-logfiles-extensions</code>) are removed.
 </p>
 
+<div class="warning">
+<p>
+Under Windows Emacs, <code>executable-find</code> searches for <code>latexmk.exe</code> only; it <b>never
+will find the Cygwin symlink</b> to <code>latexmk.pl</code>, though Cygwin bin directory is first
+in the PATH.
+</p>
+
+<p>
+OTOH, when commands will be launched by the Org export process, as that will run
+in the Bash/Zsh shell, Org will call the first match for <code>latexmk</code>, hence the one
+from Cygwin&#x2026;
+</p>
+
+<p>
+Not very coherent!
+</p>
+
+</div>
+
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">    (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--change-pdflatex-program</span> (backend)
       <span class="org-doc">"Automatically run XeLaTeX, if asked, when exporting to LaTeX."</span>
 
-      (<span class="org-keyword">let*</span> ((org-latex-pdf-engine-path
+      (<span class="org-keyword">let*</span> ((org-latex-pdf-engine-full-path
               (<span class="org-keyword">cond</span> ((string-match <span class="org-string">"^#\\+LATEX_CMD: xelatex"</span> (buffer-string))
-                     (executable-find <span class="org-string">"xelatex"</span>))
+                     (<span class="org-keyword">or</span> (executable-find <span class="org-string">"xelatex"</span>)
+                         (<span class="org-warning">error</span> <span class="org-string">"Please install XeLaTeX."</span>)))
                     (t
-                     (executable-find <span class="org-string">"pdflatex"</span>))))
+                     (<span class="org-keyword">or</span> (executable-find <span class="org-string">"pdflatex"</span>)
+                         (<span class="org-warning">error</span> <span class="org-string">"Please install PDFLaTeX."</span>)))))
 
              (org-latex-pdf-command
               (<span class="org-keyword">cond</span> ((executable-find <span class="org-string">"latexmk"</span>)
                      <span class="org-string">"latexmk"</span>)
                     (t
-                     (file-name-base org-latex-pdf-engine-path))))
+                     (file-name-base org-latex-pdf-engine-full-path))))
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">"xelatex" or "pdflatex".</span>
 
              (latex-file
-              (<span class="org-keyword">cond</span> ((string-match <span class="org-string">"^/usr/bin/"</span> org-latex-pdf-engine-path)
+              (<span class="org-keyword">cond</span> ((string-match <span class="org-string">"^/usr/bin/"</span> org-latex-pdf-engine-full-path)
                      <span class="org-string">"$(cygpath -m %f)"</span>)
                     (t
                      <span class="org-string">"%f"</span>))))
+
+        (message <span class="org-string">"(Info) LaTeX engine: %s"</span> org-latex-pdf-engine-full-path)
+        (message <span class="org-string">"(Info) LaTeX command: %s"</span> org-latex-pdf-command)
 
         (<span class="org-keyword">setq</span> org-latex-pdf-process
               (<span class="org-keyword">cond</span> ((equal org-latex-pdf-command <span class="org-string">"latexmk"</span>)
                      `(<span class="org-comment-delimiter">;; </span><span class="org-comment">"echo f = %f" "echo quotedf = '</span><span class="org-constant"><span class="org-comment">%f</span></span><span class="org-comment">'" "echo cygpath = $(cygpath %f)"</span>
                        <span class="org-string">"latexmk --version"</span>
-                       ,(concat <span class="org-string">"latexmk -cd -f -pdf -pdflatex="</span> (file-name-base org-latex-pdf-engine-path) <span class="org-string">" "</span> latex-file
+                       ,(concat <span class="org-string">"latexmk -cd -f -pdf -pdflatex="</span> (file-name-base org-latex-pdf-engine-full-path) <span class="org-string">" "</span> latex-file
                                 <span class="org-string">" &amp;&amp; latexmk -c"</span>))) <span class="org-comment-delimiter">; </span><span class="org-comment">Clean up all nonessential files.</span>
                     ((equal org-latex-pdf-command <span class="org-string">"xelatex"</span>)
                      `(,(concat <span class="org-string">"xelatex -interaction=nonstopmode -output-directory=%o "</span> latex-file)
@@ -19179,7 +19203,7 @@ and <b>replaces</b> it with the output from the shell command.
   <span class="org-comment-delimiter">;;                       </span><span class="org-comment">(ad-get-arg 0))))</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">For single shell commands (= "the" reference).</span>
-  (<span class="org-keyword">setq</span> shell-file-name                 <span class="org-comment-delimiter">; </span><span class="org-comment">must be in the `</span><span class="org-constant"><span class="org-comment">PATH</span></span><span class="org-comment">'</span>
+  (<span class="org-keyword">setq</span> shell-file-name                 <span class="org-comment-delimiter">; </span><span class="org-comment">Must be in the `</span><span class="org-constant"><span class="org-comment">PATH</span></span><span class="org-comment">'.</span>
         (<span class="org-keyword">or</span> (<span class="org-keyword">ignore-errors</span>
               (file-name-nondirectory (<span class="org-keyword">or</span> (executable-find <span class="org-string">"zsh"</span>)
                                           (executable-find <span class="org-string">"bash"</span>)
@@ -20836,7 +20860,7 @@ Have a look at (info &ldquo;(emacs)Directory Variables&rdquo;).
 <h3 id="orgheadline433">Key Bindings</h3>
 <div class="outline-text-3" id="text-orgheadline433">
 <p>
-The keys <code>C-c LETTER</code> are <a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html">reserved for user functions</a>.
+The keys <code>C-c LETTER</code> are <a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html%20">reserved for user functions</a>.
 </p>
 
 <p>

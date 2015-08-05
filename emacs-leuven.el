@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150805.1004
+;; Version: 20150805.1421
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150805.1004"
+(defconst leuven--emacs-version "20150805.1421"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5612,8 +5612,8 @@ this with to-do items than with projects or headings."
                     (t
                      "%f"))))
 
-        (message "LaTeX engine: %s" org-latex-pdf-engine-full-path)
-        (message "LaTeX command: %s" org-latex-pdf-command)
+        (message "(Info) LaTeX engine: %s" org-latex-pdf-engine-full-path)
+        (message "(Info) LaTeX command: %s" org-latex-pdf-command)
 
         (setq org-latex-pdf-process
               (cond ((equal org-latex-pdf-command "latexmk")
@@ -8665,7 +8665,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;;                       (ad-get-arg 0))))
 
   ;; For single shell commands (= "the" reference).
-  (setq shell-file-name                 ; must be in the `PATH'
+  (setq shell-file-name                 ; Must be in the `PATH'.
         (or (ignore-errors
               (file-name-nondirectory (or (executable-find "zsh")
                                           (executable-find "bash")

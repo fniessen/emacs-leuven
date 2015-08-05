@@ -9065,6 +9065,18 @@ capabilities.
 Look at the variable ~org-latex-remove-logfiles~, which controls whether some
 of the files produced by LaTeX (~org-latex-logfiles-extensions~) are removed.
 
+#+begin_warning
+Under Windows Emacs, ~executable-find~ searches for =latexmk.exe= only; it *never
+will find the Cygwin symlink* to =latexmk.pl=, though Cygwin bin directory is first
+in the PATH.
+
+OTOH, when commands will be launched by the Org export process, as that will run
+in the Bash/Zsh shell, Org will call the first match for ~latexmk~, hence the one
+from Cygwin...
+
+Not very coherent!
+#+end_warning
+
 #+begin_src emacs-lisp
     (defun leuven--change-pdflatex-program (backend)
       "Automatically run XeLaTeX, if asked, when exporting to LaTeX."
@@ -9090,8 +9102,8 @@ of the files produced by LaTeX (~org-latex-logfiles-extensions~) are removed.
                     (t
                      "%f"))))
 
-        (message "LaTeX engine: %s" org-latex-pdf-engine-full-path)
-        (message "LaTeX command: %s" org-latex-pdf-command)
+        (message "(Info) LaTeX engine: %s" org-latex-pdf-engine-full-path)
+        (message "(Info) LaTeX command: %s" org-latex-pdf-command)
 
         (setq org-latex-pdf-process
               (cond ((equal org-latex-pdf-command "latexmk")
@@ -14821,7 +14833,7 @@ and *replaces* it with the output from the shell command.
   ;;                       (ad-get-arg 0))))
 
   ;; For single shell commands (= "the" reference).
-  (setq shell-file-name                 ; must be in the `PATH'
+  (setq shell-file-name                 ; Must be in the `PATH'.
         (or (ignore-errors
               (file-name-nondirectory (or (executable-find "zsh")
                                           (executable-find "bash")
