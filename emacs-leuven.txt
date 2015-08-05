@@ -9074,8 +9074,8 @@ of the files produced by LaTeX (~org-latex-logfiles-extensions~) are removed.
                      (or (executable-find "xelatex")
                          (error "Please install XeLaTeX.")))
                     (t
-                     (or (executable-find "pdflatex"))
-                         (error "Please install PDFLaTeX."))))
+                     (or (executable-find "pdflatex")
+                         (error "Please install PDFLaTeX.")))))
 
              (org-latex-pdf-command
               (cond ((executable-find "latexmk")
@@ -9089,6 +9089,9 @@ of the files produced by LaTeX (~org-latex-logfiles-extensions~) are removed.
                      "$(cygpath -m %f)")
                     (t
                      "%f"))))
+
+        (message "LaTeX engine: %s" org-latex-pdf-engine-full-path)
+        (message "LaTeX command: %s" org-latex-pdf-command)
 
         (setq org-latex-pdf-process
               (cond ((equal org-latex-pdf-command "latexmk")
