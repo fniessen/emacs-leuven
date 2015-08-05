@@ -9072,10 +9072,10 @@ of the files produced by LaTeX (~org-latex-logfiles-extensions~) are removed.
       (let* ((org-latex-pdf-engine-full-path
               (cond ((string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
                      (or (executable-find "xelatex")
-                         (error "Please install XeLaTeX."))
+                         (error "Please install XeLaTeX.")))
                     (t
                      (or (executable-find "pdflatex"))
-                         (error "Please install PDFLaTeX.")))))
+                         (error "Please install PDFLaTeX."))))
 
              (org-latex-pdf-command
               (cond ((executable-find "latexmk")
