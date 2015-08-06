@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150805.1421
+;; Version: 20150806.1100
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,21 +60,13 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150805.1421"
+(defconst leuven--emacs-version "20150806.1100"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
-
-;; Uptimes.
-(when (string-match "XEmacs" (version))
-  ;; XEmacs doesn't have `float-time'.
-  (defun float-time ()
-    "Convert `current-time' to a floating point number."
-    (multiple-value-bind (s0 s1 s2) (current-time)
-      (+ (* (float (ash 1 16)) s0) (float s1) (* 0.0000001 s2)))))
 
 (defconst leuven--before-time (float-time)
   "Value of `float-time' before loading the Leuven Emacs Config library.")
@@ -328,33 +320,6 @@ Last time is saved in global variable `leuven--before-section-time'."
     (eq window-system 'x)
     "Running a X Window system.")
 
-;;** Testing Emacs versions
-
-  (leuven--section "Emacs version")
-
-  (defconst leuven--gnu-emacs-p
-    (string-match "GNU Emacs" (version))
-    "Running GNU Emacs.")
-
-  (defconst leuven--xemacs-p
-    (string-match "XEmacs" (version))
-    "Running XEmacs.")
-
-  (defmacro GNUEmacs (&rest body)
-    "Execute any number of forms if running GNU Emacs."
-    (list 'if leuven--gnu-emacs-p
-          (cons 'progn body)))
-
-  (defmacro GNUEmacs24 (&rest body)
-    "Execute any number of forms if running GNU Emacs 24."
-    (list 'if (string-match "GNU Emacs 24" (version))
-          (cons 'progn body)))
-
-  (defmacro XEmacs (&rest body)
-    "Execute any number of forms if running XEmacs."
-    (list 'if leuven--xemacs-p
-          (cons 'progn body)))
-
 ;;** Testing file accessibility
 
   (defun leuven--file-exists-and-executable-p (file)
@@ -371,16 +336,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (leuven--section "Init")
 
-  (XEmacs
-    ;; Don't load init file from `~/.xemacs/init.el' (and don't offer its
-    ;; migration).
-    (setq load-home-init-file t))
-
-  (GNUEmacs
-    ;; Ensure that the echo area is always visible during the early stage of
-    ;; startup (useful in case of error).
-    (modify-all-frames-parameters
-     '((height . 32))))
+  ;; Ensure that the echo area is always visible during the early stage of
+  ;; startup (useful in case of error).
+  (modify-all-frames-parameters
+   '((height . 32)))
 
 )                                       ; Chapter 0 ends here.
 
@@ -390,9 +349,6 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   ;; Get the backtrace when uncaught errors occur.
   (setq debug-on-error t)               ; Will be unset at the end.
-
-  (XEmacs
-    (setq stack-trace-on-error t))
 
   ;; Hit `C-g' while it's frozen to get an Emacs Lisp backtrace.
   (setq debug-on-quit t)                ; Will be unset at the end.
@@ -408,76 +364,75 @@ Last time is saved in global variable `leuven--before-section-time'."
   (leuven--section "47.2 Package Installation")
 
   ;; Simple package system for GNU Emacs.
-  (GNUEmacs
-    (try-require 'package)
-    (with-eval-after-load "package"
+  (try-require 'package)
+  (with-eval-after-load "package"
 
-      ;; Archives from which to fetch.
-      (setq package-archives
-            (append '(("org"          . "http://orgmode.org/elpa/")
-                      ;; ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
-                      ("melpa"        . "http://melpa.milkbox.net/packages/"))
-                    package-archives))
+    ;; Archives from which to fetch.
+    (setq package-archives
+          (append '(("org"          . "http://orgmode.org/elpa/")
+                    ;; ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
+                    ("melpa"        . "http://melpa.milkbox.net/packages/"))
+                  package-archives))
 
-      ;; Load the latest version of all installed packages, and activate them.
-      (package-initialize)              ; Add ALL ELPA subdirs to `load-path'
+    ;; Load the latest version of all installed packages, and activate them.
+    (package-initialize)                ; Add ALL ELPA subdirs to `load-path'
                                         ; and load `<pkg>-autoloads.el'.
 
-      (defconst leuven-elpa-packages
-        '(ace-jump-mode ace-link ace-window
-          ;; aggressive-indent
-          anzu auctex auto-complete bbdb bookmark+ boxquote
-          ;; calfw
-          circe color-identifiers-mode company company-quickhelp csv-mode
-          cygwin-mount dictionary diff-hl diminish dired+ emacs-eclim ess
-          expand-region fancy-narrow fill-column-indicator flycheck
-          flycheck-ledger fuzzy git-commit-mode git-messenger git-timemachine
-          google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-          helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
-          indent-guide key-chord litable idle-require imenu-anywhere info+
-          interaction-log ledger-mode leuven-theme
-          ;; magit
-          markdown-mode multi-term multiple-cursors pager pdf-tools powerline
-          rainbow-mode tidy unbound undo-tree ws-butler yasnippet
-          ;; jabber multi-term paredit redshank
-          )
-        "A list of packages to ensure are installed at Emacs startup.")
+    (defconst leuven-elpa-packages
+      '(ace-jump-mode ace-link ace-window
+        ;; aggressive-indent
+        anzu auctex auto-complete bbdb bookmark+ boxquote
+        ;; calfw
+        circe color-identifiers-mode company company-quickhelp csv-mode
+        cygwin-mount dictionary diff-hl diminish dired+ emacs-eclim ess
+        expand-region fancy-narrow fill-column-indicator flycheck
+        flycheck-ledger fuzzy git-commit-mode git-messenger git-timemachine
+        google-this google-translate goto-chg graphviz-dot-mode guide-key helm
+        helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
+        indent-guide key-chord litable idle-require imenu-anywhere info+
+        interaction-log ledger-mode leuven-theme
+        ;; magit
+        markdown-mode multi-term multiple-cursors pager pdf-tools powerline
+        rainbow-mode tidy unbound undo-tree ws-butler yasnippet
+        ;; jabber multi-term paredit redshank
+        )
+      "A list of packages to ensure are installed at Emacs startup.")
 
-      (defcustom leuven-elpa-ignored-packages
-        nil
-        "List of packages that should be ignored by Leuven Emacs Config."
-        :group 'emacs-leuven
-        :type '(repeat (string)))
+    (defcustom leuven-elpa-ignored-packages
+      nil
+      "List of packages that should be ignored by Leuven Emacs Config."
+      :group 'emacs-leuven
+      :type '(repeat (string)))
 
-      (defun leuven--missing-elpa-packages ()
-        "List packages to install for a full blown Leuven installation.
+    (defun leuven--missing-elpa-packages ()
+      "List packages to install for a full blown Leuven installation.
 These packages are neither built-in nor already installed nor ignored."
-        (let (missing-elpa-packages)
-          (dolist (pkg leuven-elpa-packages)
-            (unless (or (package-installed-p pkg)
-                        (locate-library (symbol-name pkg))
-                        (member pkg leuven-elpa-ignored-packages))
-              (push pkg missing-elpa-packages)))
-          missing-elpa-packages))
+      (let (missing-elpa-packages)
+        (dolist (pkg leuven-elpa-packages)
+          (unless (or (package-installed-p pkg)
+                      (locate-library (symbol-name pkg))
+                      (member pkg leuven-elpa-ignored-packages))
+            (push pkg missing-elpa-packages)))
+        missing-elpa-packages))
 
-      ;; Propose to install all the packages specified in `leuven-elpa-packages'.
-      ;; which are missing and which shouldn't be ignored.
-      (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
-        (when missing-elpa-packages
-          ;; Download once the ELPA archive description.
-          (package-refresh-contents)    ; Ensure that the list of packages is
+    ;; Propose to install all the packages specified in `leuven-elpa-packages'.
+    ;; which are missing and which shouldn't be ignored.
+    (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
+      (when missing-elpa-packages
+        ;; Download once the ELPA archive description.
+        (package-refresh-contents)      ; Ensure that the list of packages is
                                         ; up-to-date.  Otherwise, new packages
                                         ; (not present in the cache of the ELPA
                                         ; contents) won't install.
-          (dolist (pkg missing-elpa-packages)
-            (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
-                (ignore-errors
-                  (package-install pkg))
+        (dolist (pkg missing-elpa-packages)
+          (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
+              (ignore-errors
+                (package-install pkg))
                                         ; Must be run after initializing
                                         ; `package-initialize'.
-              (message (concat "Customize Emacs Leuven to ignore "
-                               "the `%s' package next times...") pkg)
-              (sit-for 1.5)))))))
+            (message (concat "Customize Emacs Leuven to ignore "
+                             "the `%s' package next times...") pkg)
+            (sit-for 1.5))))))
 
 )                                       ; Chapter 47 ends here.
 
@@ -651,27 +606,23 @@ These packages are neither built-in nor already installed nor ignored."
 
   (with-eval-after-load "apropos"
 
-    ;; Check all variables and non-interactive functions as well.
+    ;; Apropos commands will search more extensively, checking all variables and
+    ;; non-interactive functions as well.
     (setq apropos-do-all t))
 
-  (GNUEmacs
+  ;; (defun apropos-user-option (string)
+  ;;   "Like apropos, but lists only symbols that are names of user
+  ;; modifiable variables.  Argument REGEXP is a regular expression.
+  ;;    Returns a list of symbols, and documentation found"
+  ;;   (interactive "sVariable apropos (regexp): ")
+  ;;   (let ((message
+  ;;          (let ((standard-output (get-buffer-create "*Help*")))
+  ;;            (print-help-return-message 'identity))))
+  ;;     (if (apropos string  'user-variable-p)
+  ;;         (and message (message message)))))
 
-    ;; apropos commands will search more extensively.
-    (setq apropos-do-all t)
-
-    ;; (defun apropos-user-option (string)
-    ;;   "Like apropos, but lists only symbols that are names of user
-    ;; modifiable variables.  Argument REGEXP is a regular expression.
-    ;;    Returns a list of symbols, and documentation found"
-    ;;   (interactive "sVariable apropos (regexp): ")
-    ;;   (let ((message
-    ;;          (let ((standard-output (get-buffer-create "*Help*")))
-    ;;            (print-help-return-message 'identity))))
-    ;;     (if (apropos string  'user-variable-p)
-    ;;         (and message (message message)))))
-
-    ;; Show all variables whose name matches the pattern.
-    (define-key help-map (kbd "A") 'apropos-user-option))
+  ;; Show all variables whose name matches the pattern.
+  (define-key help-map (kbd "A") 'apropos-user-option)
 
 ;;** 10.8 (info "(emacs)Misc Help")
 
@@ -710,19 +661,18 @@ These packages are neither built-in nor already installed nor ignored."
               "c:/cygwin/usr/share/info/"
               ,@Info-directory-list)))
 
-  ;; XXX Replace by add-to-list to ensure we don't insert duplicates (if Cygwin was already there).
+    ;; XXX Replace by add-to-list to ensure we don't insert duplicates (if Cygwin was already there).
 
-    (GNUEmacs
-      (with-eval-after-load "info+-autoloads"
-        (idle-require 'info+))
+    (with-eval-after-load "info+-autoloads"
+      (idle-require 'info+))
 
-      (with-eval-after-load "info+"
+    (with-eval-after-load "info+"
 
-        ;; Show breadcrumbs in the header line.
-        (setq Info-breadcrumbs-in-header-flag t)
+      ;; Show breadcrumbs in the header line.
+      (setq Info-breadcrumbs-in-header-flag t)
 
-        ;; Don't show breadcrumbs in the mode line.
-        (setq Info-breadcrumbs-in-mode-line-mode nil)))
+      ;; Don't show breadcrumbs in the mode line.
+      (setq Info-breadcrumbs-in-mode-line-mode nil))
 
     ;; Some info related functions (to insert links such as `(info
     ;; "(message)Insertion Variables")').
@@ -837,27 +787,26 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Manipulate whitespace around point in a smart way.
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
 
-  (GNUEmacs
 ;; old ([2012-09-07 Fri] remove "compile" after "activate")
 
-    ;; Add the ability to copy the current line without marking it (no
-    ;; selection).
-    (defadvice kill-ring-save (before leuven-slick-copy activate)
-      "When called with no active region, copy the current line instead."
-      (interactive
-       (if (use-region-p) (list (region-beginning) (region-end))
-         (message "Copied the current line")
-         (list (line-beginning-position)
-               (line-beginning-position 2)))))
+  ;; Add the ability to copy the current line without marking it (no
+  ;; selection).
+  (defadvice kill-ring-save (before leuven-slick-copy activate)
+    "When called with no active region, copy the current line instead."
+    (interactive
+     (if (use-region-p) (list (region-beginning) (region-end))
+       (message "Copied the current line")
+       (list (line-beginning-position)
+             (line-beginning-position 2)))))
 
-    ;; Add the ability to cut the current line without marking it (no
-    ;; selection).
-    (defadvice kill-region (before leuven-slick-cut activate)
-      "When called with no active region, kill the current line instead."
-      (interactive
-       (if (use-region-p) (list (region-beginning) (region-end))
-         (list (line-beginning-position)
-               (line-beginning-position 2))))))
+  ;; Add the ability to cut the current line without marking it (no
+  ;; selection).
+  (defadvice kill-region (before leuven-slick-cut activate)
+    "When called with no active region, kill the current line instead."
+    (interactive
+     (if (use-region-p) (list (region-beginning) (region-end))
+       (list (line-beginning-position)
+             (line-beginning-position 2)))))
 
 ;; new
 
@@ -922,10 +871,8 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "12.3 (emacs)Cut and Paste on Graphical Displays")
 
-  ;; Copy/paste with Gnome desktop.
-  (GNUEmacs
-    ;; Make cut, copy and paste (keys and menu bar items) use the clipboard.
-    (menu-bar-enable-clipboard))
+  ;; Make cut, copy and paste (keys and menu bar items) use the clipboard.
+  (menu-bar-enable-clipboard)
 
 )                                       ; Chapter 12 ends here.
 
@@ -1062,13 +1009,6 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "14.12 (emacs)Font Lock")
 
-  (XEmacs
-    ;; Stop showing that annoying progress bar when fontifying.
-    (setq progress-feedback-use-echo-area nil)
-
-    ;; Enable Font Lock mode.
-    (font-lock-mode))
-
   ;; Highlight FIXME notes.
   (defvar leuven-highlight-keywords
     "\\(TODO\\|FIXME\\|XXX\\|BUG\\)"
@@ -1120,14 +1060,11 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "14.13 (emacs)Highlight Interactively by Matching")
 
-  (GNUEmacs
+  ;; Do not prompt for the face to use. Instead, cycle through them.
+  (setq hi-lock-auto-select-face t)
 
-    ;; Do not prompt for the face to use. Instead, cycle through them.
-    (setq hi-lock-auto-select-face t)
-
-    ;; ;; Enable Hi Lock mode for all buffers.
-    ;; (global-hi-lock-mode 1)
-    )
+  ;; ;; Enable Hi Lock mode for all buffers.
+  ;; (global-hi-lock-mode 1)
 
   (with-eval-after-load "highlight-symbol-autoloads"
 
@@ -1215,39 +1152,38 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Visually indicate empty lines after the buffer end in the fringe.
   (setq-default indicate-empty-lines t)
 
-  (GNUEmacs
-    ;; Enable Whitespace mode in all file buffers (not in *vc-dir*, etc.).
-    (add-hook 'text-mode-hook #'whitespace-mode)
-    (add-hook 'prog-mode-hook #'whitespace-mode)
+  ;; Enable Whitespace mode in all file buffers (not in *vc-dir*, etc.).
+  (add-hook 'text-mode-hook #'whitespace-mode)
+  (add-hook 'prog-mode-hook #'whitespace-mode)
 
-    (with-eval-after-load "whitespace"
+  (with-eval-after-load "whitespace"
 
-      ;; Which kind of blank is visualized.
-      (setq whitespace-style
-            '(face
-              trailing
-              tabs
-              ;; lines-tail
-              indentation::space
-              space-mark
-              tab-mark))
+    ;; Which kind of blank is visualized.
+    (setq whitespace-style
+          '(face
+            trailing
+            tabs
+            ;; lines-tail
+            indentation::space
+            space-mark
+            tab-mark))
 
-      ;; Column beyond which the line is highlighted.
-      (setq whitespace-line-column 80)
+    ;; Column beyond which the line is highlighted.
+    (setq whitespace-line-column 80)
 
-      ;; Mappings for displaying characters.
-      (setq whitespace-display-mappings
-            '((space-mark ?\u00A0       ; No-break space.
-                          [?_]          ; Spacing underscore.
-                          [?_])         ; Spacing underscore.
+    ;; Mappings for displaying characters.
+    (setq whitespace-display-mappings
+          '((space-mark ?\u00A0         ; No-break space.
+                        [?_]            ; Spacing underscore.
+                        [?_])           ; Spacing underscore.
 
-              (space-mark ?\u202F       ; Narrow no-break space.
-                          [?\u00B7]     ; Middle dot.
-                          [?.])
+            (space-mark ?\u202F         ; Narrow no-break space.
+                        [?\u00B7]       ; Middle dot.
+                        [?.])
 
-              (tab-mark ?\t             ; Tabulation.
-                        [?\u25BA ?\t]   ; Black right-pointing pointer.
-                        [?\\ ?\t])))))
+            (tab-mark ?\t               ; Tabulation.
+                      [?\u25BA ?\t]     ; Black right-pointing pointer.
+                      [?\\ ?\t]))))
 
   ;; ;; Control highlighting of non-ASCII space and hyphen chars, using the
   ;; ;; `nobreak-space' or `escape-glyph' face respectively.
@@ -1456,28 +1392,23 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "14.20 (emacs)The Cursor Display")
 
-  (GNUEmacs
-    ;; Use cursor color and type to indicate some modes (read-only, overwrite
-    ;; and normal insert modes).
-    (defun leuven--set-cursor-according-to-mode ()
-      "Change cursor color according to some minor modes."
-      (let ((color (cond (buffer-read-only "purple1")
-                         (overwrite-mode   "red")
-                         (t                "black"))) ; #21BDFF is less visible.
-            (type (if (null overwrite-mode)
-                      'bar
-                    'box)))
-        (set-cursor-color color)
-        (setq cursor-type type)))
+  ;; Use cursor color and type to indicate some modes (read-only, overwrite
+  ;; and normal insert modes).
+  (defun leuven--set-cursor-according-to-mode ()
+    "Change cursor color according to some minor modes."
+    (let ((color (cond (buffer-read-only "purple1")
+                       (overwrite-mode   "red")
+                       (t                "black"))) ; #21BDFF is less visible.
+          (type (if (null overwrite-mode)
+                    'bar
+                  'box)))
+      (set-cursor-color color)
+      (setq cursor-type type)))
 
-    (add-hook 'post-command-hook #'leuven--set-cursor-according-to-mode))
+  (add-hook 'post-command-hook #'leuven--set-cursor-according-to-mode)
 
   ;; Cursor to use.
   (setq-default cursor-type 'bar)
-
-  ;; Cursor of the selected window blinks.
-  (XEmacs
-    (blink-cursor-mode))
 
   ;; Cursor blinks forever.
   (setq blink-cursor-blinks 0)
@@ -1547,26 +1478,24 @@ These packages are neither built-in nor already installed nor ignored."
   ;;   "Use with isearch hook to end search at first char of match."
   ;;   (when isearch-forward (goto-char isearch-other-end)))
 
-  (GNUEmacs
-    ;; ;; Incremental search/query-replace will open the contents.
-    ;; (setq search-invisible 'open)       ; XXX
+  ;; ;; Incremental search/query-replace will open the contents.
+  ;; (setq search-invisible 'open)         ; XXX
 
-    ;; Don't re-hide an invisible match right away.
-    (setq isearch-hide-immediately nil)); XXX
+  ;; Don't re-hide an invisible match right away.
+  (setq isearch-hide-immediately nil)   ; XXX
 
   ;; Scrolling commands are allowed during incremental search (without
   ;; canceling Isearch mode).
   (setq isearch-allow-scroll t)
 
-  (GNUEmacs
-    ;; Fuzzy matching utilities (a must-have).
-    (with-eval-after-load "fuzzy-autoloads"
+  ;; Fuzzy matching utilities (a must-have).
+  (with-eval-after-load "fuzzy-autoloads"
 
-      (autoload 'turn-on-fuzzy-isearch "fuzzy" nil t)
+    (autoload 'turn-on-fuzzy-isearch "fuzzy" nil t)
                                         ; This autoload isn't defined in
                                         ; `fuzzy-autoloads'!
 
-      (add-hook 'isearch-mode-hook #'turn-on-fuzzy-isearch)))
+    (add-hook 'isearch-mode-hook #'turn-on-fuzzy-isearch))
 
   ;; Show number of matches in mode-line while searching.
   (with-eval-after-load "anzu-autoloads"
@@ -1900,18 +1829,18 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Save backup files (i.e., `foo~' or `foo.~i~') in one central location
   ;; (instead of in the local directory).
-  (GNUEmacs
-    ;; Filenames matching a regexp are backed up in the corresponding
-    ;; directory.
-    (setq backup-directory-alist
-          ;; Emacs will `make-directory' it, if necessary.
-          '((".*" . "~/.emacs.d/backups/")))) ; regexp => directory mappings
+  (setq backup-directory-alist
+        '((".*" . "~/.emacs.d/backups/")))
+                                        ; Filenames matching a regexp are backed
+                                        ; up in the corresponding directory.
+                                        ; Emacs will `make-directory' it, if
+                                        ; necessary.
 
   ;; ;; Number of oldest versions to keep when a new numbeRed backup is made.
-  ;; (setq kept-old-versions 0)            ; [default: 2]
+  ;; (setq kept-old-versions 0)            ; [Default: 2]
 
   ;; Number of newest versions to keep when a new numbered backup is made.
-  (setq kept-new-versions 5)            ; [default: 2]
+  (setq kept-new-versions 5)            ; [Default: 2]
 
   ;; Don't ask me about deleting excess backup versions.
   (setq delete-old-versions t)
@@ -1931,19 +1860,18 @@ These packages are neither built-in nor already installed nor ignored."
   ;; the first 8 lines) in files edited by Emacs.
   (with-eval-after-load "time-stamp"
 
-   ;; Format of the string inserted by `M-x time-stamp':
-   ;; `YYYY-MM-DD Day HH:MM' (see `system-time-locale' for non-numeric
-   ;; formatted items of time).
-   (setq-default time-stamp-format "%:y-%02m-%02d %3a %02H:%02M"))
+    ;; Format of the string inserted by `M-x time-stamp':
+    ;; `YYYY-MM-DD Day HH:MM' (see `system-time-locale' for non-numeric
+    ;; formatted items of time).
+    (setq-default time-stamp-format "%:y-%02m-%02d %3a %02H:%02M"))
 
-  (GNUEmacs
-    ;; Update the copyright notice to indicate the current year.
-    (add-hook 'before-save-hook
-              (lambda ()                ; Except for ...
-                (unless (derived-mode-p 'diff-mode)
+  ;; Update the copyright notice to indicate the current year.
+  (add-hook 'before-save-hook
+            (lambda ()                  ; Except for ...
+              (unless (derived-mode-p 'diff-mode)
                                         ; ... where the patch file can't be
                                         ; changed!
-                  (copyright-update)))))
+                (copyright-update))))
 
 ;;** 18.4 (info "(emacs)Reverting") a Buffer
 
@@ -2272,8 +2200,7 @@ These packages are neither built-in nor already installed nor ignored."
           ))
 
   ;; Setup a menu of recently opened files.
-  (GNUEmacs
-    (idle-require 'recentf))
+  (idle-require 'recentf)
 
   (with-eval-after-load "recentf"
 
@@ -2292,200 +2219,198 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Enable `recentf' mode.
     (recentf-mode 1))
 
-  (GNUEmacs
+  (leuven--section "Helm")
 
-    (leuven--section "Helm")
+  ;; Change `helm-command-prefix-key'.
+  (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
-    ;; Change `helm-command-prefix-key'.
-    (global-set-key (kbd "C-c h") #'helm-command-prefix)
-
-    ;; Open Helm (QuickSilver-like candidate-selection framework).
-    (when (try-require 'helm-config)    ; [default `helm-command-prefix-key']
+  ;; Open Helm (QuickSilver-like candidate-selection framework).
+  (when (try-require 'helm-config)      ; [default `helm-command-prefix-key']
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
 
-      (global-unset-key (kbd "C-x c"))
+    (global-unset-key (kbd "C-x c"))
 
-      ;; Better version of `occur'.
-      (global-set-key (kbd "C-o") #'helm-occur) ; helm-regexp.el
+    ;; Better version of `occur'.
+    (global-set-key (kbd "C-o") #'helm-occur) ; helm-regexp.el
 
-      ;; Speedy file opening.
-      (global-set-key (kbd "<f3>") #'helm-for-files)
+    ;; Speedy file opening.
+    (global-set-key (kbd "<f3>") #'helm-for-files)
 
-      ;; (global-set-key (kbd "C-x C-f") #'helm-find-files)
+    ;; (global-set-key (kbd "C-x C-f") #'helm-find-files)
 
-      ;; Buffer list.
-      (global-set-key (kbd "C-x b") #'helm-mini) ; OK.
+    ;; Buffer list.
+    (global-set-key (kbd "C-x b") #'helm-mini) ; OK.
                                         ; = `helm-buffers-list' + recents.
 
-      (global-set-key (kbd "C-x C-b") #'helm-buffers-list) ; OK.
+    (global-set-key (kbd "C-x C-b") #'helm-buffers-list) ; OK.
 
-      ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
+    ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
 
-      (global-set-key (kbd "C-x r l") #'helm-bookmarks)
-      (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks) ; XXX?
+    (global-set-key (kbd "C-x r l") #'helm-bookmarks)
+    (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks) ; XXX?
 
-      ;; Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.
-      (global-set-key (kbd "C-x r b") #'helm-bookmark-ext)
+    ;; Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.
+    (global-set-key (kbd "C-x r b") #'helm-bookmark-ext)
 
-      (defun leuven-helm-org-prog-menu ()
-        "Jump to a place in the buffer using an Index menu.
-      For Org mode buffers, show Org headlines.
-      For programming mode buffers, show functions, variables, etc."
-        (interactive)
-        (cond ((derived-mode-p 'org-mode) (helm-org-in-buffer-headings))
-              ((derived-mode-p 'tex-mode) (helm-imenu))
-              (t (helm-semantic-or-imenu)))) ; More generic than `helm-imenu'.
+    (defun leuven-helm-org-prog-menu ()
+      "Jump to a place in the buffer using an Index menu.
+    For Org mode buffers, show Org headlines.
+    For programming mode buffers, show functions, variables, etc."
+      (interactive)
+      (cond ((derived-mode-p 'org-mode) (helm-org-in-buffer-headings))
+            ((derived-mode-p 'tex-mode) (helm-imenu))
+            (t (helm-semantic-or-imenu)))) ; More generic than `helm-imenu'.
 
-      (global-set-key (kbd "<f4>") #'leuven-helm-org-prog-menu) ; Awesome.
+    (global-set-key (kbd "<f4>") #'leuven-helm-org-prog-menu) ; Awesome.
                                         ; And `C-c =' (like in RefTeX)?
 
-      (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
-      ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
+    (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
+    ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
 
-      ;; (global-set-key (kbd "M-5") #'helm-etags-select)
+    ;; (global-set-key (kbd "M-5") #'helm-etags-select)
 
-      (global-set-key (kbd "C-h a") #'helm-apropos)
+    (global-set-key (kbd "C-h a") #'helm-apropos)
 
-      (global-set-key (kbd "C-h i") #'helm-info-emacs)
-      ;; (global-set-key (kbd "C-h d") #'helm-info-at-point)
-      ;; (global-set-key (kbd "C-h 4") #'helm-info-elisp)
+    (global-set-key (kbd "C-h i") #'helm-info-emacs)
+    ;; (global-set-key (kbd "C-h d") #'helm-info-at-point)
+    ;; (global-set-key (kbd "C-h 4") #'helm-info-elisp)
 
-      ;; (global-set-key (kbd "C-S-h C-c") #'helm-wikipedia-suggest)
+    ;; (global-set-key (kbd "C-S-h C-c") #'helm-wikipedia-suggest)
 
-      (global-set-key (kbd "C-h b") #'helm-descbinds)
+    (global-set-key (kbd "C-h b") #'helm-descbinds)
 
-      (global-set-key (kbd "C-c h g") #'helm-google)
-      (global-set-key (kbd "C-c h s") #'helm-google-suggest)
+    (global-set-key (kbd "C-c h g") #'helm-google)
+    (global-set-key (kbd "C-c h s") #'helm-google-suggest)
 
+  )
+
+  (with-eval-after-load "helm"
+
+    ;; Various functions for Helm (Shell history, etc.).
+    (require 'helm-misc)
+    ;; For multi-line items in e.g. minibuffer history, match entire items,
+    ;; not individual lines within items.
+
+    ;; (try-require 'helm-ls-git)
+    ;; (try-require 'helm-dictionary)
+
+    ;; Use the *current window* (no popup) to show the candidates.
+    (setq helm-full-frame nil)
+
+    ;; Open `helm-buffer' in another window.
+    (setq helm-split-window-default-side 'other)
+
+    ;; Default function used for splitting window.
+    (setq helm-split-window-preferred-function
+          (lambda (window)
+            (split-window-sensibly)))
+
+    ;; ;; Move to end or beginning of source when reaching top or bottom of
+    ;; ;; source.
+    ;; (setq helm-move-to-line-cycle-in-source t)
+
+    ;; Candidates separator of `multiline' source (such as
+    ;; `helm-show-kill-ring').
+    (setq helm-candidate-separator
+          "--8<-----------------------separator------------------------>8---")
+
+    ;; Suppress displaying sources which are out of screen at first.
+    (setq helm-quick-update t)
+
+    ;; ;; Time that the user has to be idle for, before candidates from
+    ;; ;; DELAYED sources are collected.
+    ;; (setq helm-idle-delay 0.01)
+
+    ;; Time that the user has to be idle for, before ALL candidates are
+    ;; collected (>= `helm-idle-delay') -- also effective for NON-DELAYED
+    ;; sources.
+    (setq helm-input-idle-delay 0.1)    ; 0.06 OK
+
+    ;; ;; Enable adaptive sorting in all sources.
+    ;; (helm-adaptive-mode 1)
+
+    ;; ;; Enable generic Helm completion (for all functions in Emacs that use
+    ;; ;; `completing-read' or `read-file-name' and friends).
+    ;; (helm-mode 1)
     )
 
-    (with-eval-after-load "helm"
+  (with-eval-after-load "helm-files"
 
-      ;; Various functions for Helm (Shell history, etc.).
-      (require 'helm-misc)
-      ;; For multi-line items in e.g. minibuffer history, match entire items,
-      ;; not individual lines within items.
+    ;; Don't show only basename of candidates in `helm-find-files'.
+    (setq helm-ff-transformer-show-only-basename nil)
 
-      ;; (try-require 'helm-ls-git)
-      ;; (try-require 'helm-dictionary)
+    ;; Search for library in `require' and `declare-function' sexp.
+    (setq helm-ff-search-library-in-sexp t)
 
-      ;; Use the *current window* (no popup) to show the candidates.
-      (setq helm-full-frame nil)
+    ;; ;; Use `recentf-list' instead of `file-name-history' in `helm-find-files'.
+    ;; (setq helm-ff-file-name-history-use-recentf t)
+    )
 
-      ;; Open `helm-buffer' in another window.
-      (setq helm-split-window-default-side 'other)
+  ;; This set Helm to open files using designated programs.
+  (setq helm-external-programs-associations
+        '(("rmvb" . "smplayer")
+          ("mp4" . "smplayer")))
 
-      ;; Default function used for splitting window.
-      (setq helm-split-window-preferred-function
-            (lambda (window)
-              (split-window-sensibly)))
+  ;; Set the warning threshold to 500 MB, which will get ride of "File abc.mp4 is
+  ;; large (330.2M), really open? (y or n)" annoying message.
+  (setq large-file-warning-threshold 500000000)
 
-      ;; ;; Move to end or beginning of source when reaching top or bottom of
-      ;; ;; source.
-      ;; (setq helm-move-to-line-cycle-in-source t)
+  (with-eval-after-load "helm-grep"
 
-      ;; Candidates separator of `multiline' source (such as
-      ;; `helm-show-kill-ring').
-      (setq helm-candidate-separator
-            "--8<-----------------------separator------------------------>8---")
+    (defun leuven-helm-grep-org-files ()
+      "Launch grep on Org files in `~/org'."
+      (interactive)
+      (let ((files (helm-walk-directory "~/org"
+                                        :path 'full
+                                        :directories nil
+                                        :match ".*\\.\\(org\\|txt\\)$"
+                                        :skip-subdirs t)))
+        (helm-do-grep-1 files))))
 
-      ;; Suppress displaying sources which are out of screen at first.
-      (setq helm-quick-update t)
+  (global-set-key (kbd "M-x") #'helm-M-x)
 
-      ;; ;; Time that the user has to be idle for, before candidates from
-      ;; ;; DELAYED sources are collected.
-      ;; (setq helm-idle-delay 0.01)
+  (with-eval-after-load "helm-command"
 
-      ;; Time that the user has to be idle for, before ALL candidates are
-      ;; collected (>= `helm-idle-delay') -- also effective for NON-DELAYED
-      ;; sources.
-      (setq helm-input-idle-delay 0.1)  ; 0.06 OK
+    ;; Save command even when it fails.
+    (setq helm-M-x-always-save-history t))
 
-      ;; ;; Enable adaptive sorting in all sources.
-      ;; (helm-adaptive-mode 1)
+  (with-eval-after-load "helm-locate"
 
-      ;; ;; Enable generic Helm completion (for all functions in Emacs that use
-      ;; ;; `completing-read' or `read-file-name' and friends).
-      ;; (helm-mode 1)
-      )
+    (when (and (or leuven--win32-p leuven--cygwin-p)
+               (executable-find "es"))
 
-    (with-eval-after-load "helm-files"
+      ;; Sort locate results by full path.
+      (setq helm-locate-command "es -s %s %s")))
 
-      ;; Don't show only basename of candidates in `helm-find-files'.
-      (setq helm-ff-transformer-show-only-basename nil)
+  (with-eval-after-load "helm-buffers"
 
-      ;; Search for library in `require' and `declare-function' sexp.
-      (setq helm-ff-search-library-in-sexp t)
+    ;; Don't truncate buffer names.
+    (setq helm-buffer-max-length nil)
 
-      ;; ;; Use `recentf-list' instead of `file-name-history' in `helm-find-files'.
-      ;; (setq helm-ff-file-name-history-use-recentf t)
-      )
+    ;; Never show details in buffer list.
+    (setq helm-buffer-details-flag nil))
 
-    ;; This set Helm to open files using designated programs.
-    (setq helm-external-programs-associations
-          '(("rmvb" . "smplayer")
-            ("mp4" . "smplayer")))
+  ;; (with-eval-after-load "helm-adaptive"
+  ;;
+  ;;   ;; don't save history information to file
+  ;;   (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history))
 
-    ;; Set the warning threshold to 500 MB, which will get ride of "File abc.mp4 is
-    ;; large (330.2M), really open? (y or n)" annoying message.
-    (setq large-file-warning-threshold 500000000)
+  ;; kill-ring, mark-ring, and register browsers for Helm.
+  (with-eval-after-load "helm-ring"
 
-    (with-eval-after-load "helm-grep"
+    ;; Max number of lines displayed per candidate in kill-ring browser.
+    (setq helm-kill-ring-max-lines-number 20))
 
-      (defun leuven-helm-grep-org-files ()
-        "Launch grep on Org files in `~/org'."
-        (interactive)
-        (let ((files (helm-walk-directory "~/org"
-                                          :path 'full
-                                          :directories nil
-                                          :match ".*\\.\\(org\\|txt\\)$"
-                                          :skip-subdirs t)))
-          (helm-do-grep-1 files))))
+  ;; (with-eval-after-load "helm-utils"
+  ;;   (setq helm-yank-symbol-first t)
 
-    (global-set-key (kbd "M-x") #'helm-M-x)
-
-    (with-eval-after-load "helm-command"
-
-      ;; Save command even when it fails.
-      (setq helm-M-x-always-save-history t))
-
-    (with-eval-after-load "helm-locate"
-
-      (when (and (or leuven--win32-p leuven--cygwin-p)
-                 (executable-find "es"))
-
-        ;; Sort locate results by full path.
-        (setq helm-locate-command "es -s %s %s")))
-
-    (with-eval-after-load "helm-buffers"
-
-      ;; Don't truncate buffer names.
-      (setq helm-buffer-max-length nil)
-
-      ;; Never show details in buffer list.
-      (setq helm-buffer-details-flag nil))
-
-    ;; (with-eval-after-load "helm-adaptive"
-    ;;
-    ;;   ;; don't save history information to file
-    ;;   (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history))
-
-    ;; kill-ring, mark-ring, and register browsers for Helm.
-    (with-eval-after-load "helm-ring"
-
-      ;; Max number of lines displayed per candidate in kill-ring browser.
-      (setq helm-kill-ring-max-lines-number 20))
-
-    ;; (with-eval-after-load "helm-utils"
-    ;;   (setq helm-yank-symbol-first t)
-
-    ;; ;; Emacs Helm Interface for quick Google searches
-    ;; (with-eval-after-load "helm-google"
-    ;;
-    ;;   ;; (when (executable-find "curl")
-    ;;   ;;   (setq helm-google-suggest-use-curl-p t))
-    ;;   )
+  ;; ;; Emacs Helm Interface for quick Google searches
+  ;; (with-eval-after-load "helm-google"
+  ;;
+  ;;   ;; (when (executable-find "curl")
+  ;;   ;;   (setq helm-google-suggest-use-curl-p t))
+  ;;   )
 
   ;; Lisp complete.
   (define-key lisp-interaction-mode-map
@@ -2493,52 +2418,51 @@ These packages are neither built-in nor already installed nor ignored."
   (define-key emacs-lisp-mode-map
     [remap completion-at-point] 'helm-lisp-completion-at-point)
 
-    ;; efficiently hopping squeezed lines powered by Helm interface
-    ;; (= Helm occur + Follow mode!)
-    (with-eval-after-load "helm-swoop-autoloads"
+  ;; Efficiently hopping squeezed lines powered by Helm interface
+  ;; (= Helm occur + Follow mode!).
+  (with-eval-after-load "helm-swoop-autoloads"
 
-      ;; Better version of `(helm-)occur'.
-      (global-set-key (kbd "C-o") #'helm-swoop)
-      (global-set-key (kbd "M-s o") #'helm-swoop)
-      ;; (global-set-key (kbd "M-i") #'helm-swoop)
-      ;; (global-set-key (kbd "M-I") #'helm-swoop-back-to-last-point)
+    ;; Better version of `(helm-)occur'.
+    (global-set-key (kbd "C-o") #'helm-swoop)
+    (global-set-key (kbd "M-s o") #'helm-swoop)
+    ;; (global-set-key (kbd "M-i") #'helm-swoop)
+    ;; (global-set-key (kbd "M-I") #'helm-swoop-back-to-last-point)
 
-      (global-set-key (kbd "M-s O") #'helm-multi-swoop)
-      (global-set-key (kbd "M-s /") #'helm-multi-swoop)
-      ;; (global-set-key (kbd "C-c M-i") #'helm-multi-swoop)
+    (global-set-key (kbd "M-s O") #'helm-multi-swoop)
+    (global-set-key (kbd "M-s /") #'helm-multi-swoop)
+    ;; (global-set-key (kbd "C-c M-i") #'helm-multi-swoop)
 
-      ;; (global-set-key (kbd "C-x M-i") #'helm-multi-swoop-all)
+    ;; (global-set-key (kbd "C-x M-i") #'helm-multi-swoop-all)
 
-      ;; when doing Isearch, hand the word over to `helm-swoop'
-      (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
-      ;; (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+    ;; When doing Isearch, hand the word over to `helm-swoop'.
+    (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
+    ;; (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
 
-      (with-eval-after-load "dired"
-        (define-key dired-mode-map (kbd "C-o") 'helm-swoop)
-        ;; (define-key dired-mode-map (kbd "M-i") 'helm-swoop)
-        ))
+    (with-eval-after-load "dired"
+      (define-key dired-mode-map (kbd "C-o") 'helm-swoop)
+      ;; (define-key dired-mode-map (kbd "M-i") 'helm-swoop)
+      ))
 
-    (with-eval-after-load "helm-swoop"
+  (with-eval-after-load "helm-swoop"
 
-      ;; from `helm-swoop' to `helm-multi-swoop-all'
-      (define-key helm-swoop-map (kbd "C-o") 'helm-multi-swoop-all-from-helm-swoop)
-      ;; (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+    ;; From `helm-swoop' to `helm-multi-swoop-all'.
+    (define-key helm-swoop-map (kbd "C-o") 'helm-multi-swoop-all-from-helm-swoop)
+    ;; (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
 
-      ;; don't slightly boost invoke speed in exchange for text color
-      (setq helm-swoop-speed-or-color t)
+    ;; Don't slightly boost invoke speed in exchange for text color.
+    (setq helm-swoop-speed-or-color t)
 
-      ;; split direction
-      ;; (setq helm-swoop-split-direction 'split-window-horizontally)
-      (setq helm-swoop-split-direction 'split-window-sensibly)
+    ;; Split direction.
+    ;; (setq helm-swoop-split-direction 'split-window-horizontally)
+    (setq helm-swoop-split-direction 'split-window-sensibly)
 
-      ;; don't save each buffer you edit when editing is complete
-      (setq helm-multi-swoop-edit-save nil)))
+    ;; Don't save each buffer you edit when editing is complete.
+    (setq helm-multi-swoop-edit-save nil))
 
   (leuven--section "Image mode")
 
   ;; Show image files as images (not as semi-random bits).
-  (GNUEmacs
-    (add-hook 'find-file-hook #'auto-image-file-mode))
+  (add-hook 'find-file-hook #'auto-image-file-mode)
 
 )                                       ; Chapter 18 ends here.
 
@@ -2688,11 +2612,6 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "20.1 (emacs)Basic Window")
 
-  ;; Turn off this horrible tab thingy in XEmacs.
-  (XEmacs
-    (when (boundp 'default-gutter-visible-p)
-      (set-specifier default-gutter-visible-p nil)))
-
 ;;** 20.3 (info "(emacs)Other Window")
 
   (leuven--section "20.3 (emacs)Other Window")
@@ -2836,23 +2755,17 @@ These packages are neither built-in nor already installed nor ignored."
           '((top . 0)
             (left . 0)))
 
-    (GNUEmacs
-      ;; Auto-detect the screen dimensions and compute the height of Emacs.
-      (add-to-list 'default-frame-alist
-                   (cons 'height
-                         (/ (-
-                             ;; Height of Display 1.
-                             (nth 4
-                                  (assq 'geometry
-                                        (car (display-monitor-attributes-list)))) ; XXX Emacs 24.4 needed!
-                             106)       ; Allow for Emacs' title bar and taskbar
-                                        ; (from the OS).
-                            (frame-char-height)))))
-
-    (XEmacs
-      (set-frame-position (buffer-dedicated-frame) 0 0)
-      (set-frame-width (buffer-dedicated-frame) 80)
-      (set-frame-height (buffer-dedicated-frame) 42)))
+    ;; Auto-detect the screen dimensions and compute the height of Emacs.
+    (add-to-list 'default-frame-alist
+                 (cons 'height
+                       (/ (-
+                           ;; Height of Display 1.
+                           (nth 4
+                                (assq 'geometry
+                                      (car (display-monitor-attributes-list)))) ; XXX Emacs 24.4 needed!
+                           106)       ; Allow for Emacs' title bar and taskbar
+                                      ; (from the OS).
+                          (frame-char-height)))))
 
   ;; Title bar display of visible frames.
   (setq frame-title-format
@@ -2884,28 +2797,27 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "21.7 (emacs)Frame Commands")
 
-  (GNUEmacs
-    (defun leuven-maximize-frame ()
-      "Maximize the current frame."
-      (interactive)
-      (cond ((or leuven--win32-p leuven--cygwin-p)
-             (w32-send-sys-command 61488))
-            (leuven--x-window-p
-             (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-                                    '(2 "_NET_WM_STATE_FULLSCREEN" 0))))
-      (global-set-key (kbd "C-c z") #'leuven-restore-frame))
+  (defun leuven-maximize-frame ()
+    "Maximize the current frame."
+    (interactive)
+    (cond ((or leuven--win32-p leuven--cygwin-p)
+           (w32-send-sys-command 61488))
+          (leuven--x-window-p
+           (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+                                  '(2 "_NET_WM_STATE_FULLSCREEN" 0))))
+    (global-set-key (kbd "C-c z") #'leuven-restore-frame))
 
-    (defun leuven-restore-frame ()
-      "Restore a minimized frame."
-      (interactive)
-      (cond ((or leuven--win32-p leuven--cygwin-p)
-             (w32-send-sys-command 61728))
-            (leuven--x-window-p
-             (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-                                    '(2 "_NET_WM_STATE_FULLSCREEN" 0))))
-      (global-set-key (kbd "C-c z") #'leuven-maximize-frame))
-
+  (defun leuven-restore-frame ()
+    "Restore a minimized frame."
+    (interactive)
+    (cond ((or leuven--win32-p leuven--cygwin-p)
+           (w32-send-sys-command 61728))
+          (leuven--x-window-p
+           (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+                                  '(2 "_NET_WM_STATE_FULLSCREEN" 0))))
     (global-set-key (kbd "C-c z") #'leuven-maximize-frame))
+
+  (global-set-key (kbd "C-c z") #'leuven-maximize-frame)
 
   ;; Maximize Emacs frame by default.
   (modify-all-frames-parameters '((fullscreen . maximized)))
@@ -2969,10 +2881,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Turn tool bar off.
   (when (display-graphic-p)
-    (GNUEmacs
-      (tool-bar-mode -1))
-    (XEmacs
-      (set-specifier default-toolbar-visible-p nil)))
+    (tool-bar-mode -1))
 
 ;;** 21.16 Using (info "(emacs)Dialog Boxes")
 
@@ -3054,21 +2963,19 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Default coding system (for new files), also moved to the front of the
   ;; priority list for automatic detection.
-  (GNUEmacs
-   (prefer-coding-system 'utf-8-unix))  ; Unix flavor for code blocks executed
+  (prefer-coding-system 'utf-8-unix)    ; Unix flavor for code blocks executed
                                         ; via Org-Babel.
 
 ;;** 22.7 (info "(emacs)Specify Coding") System of a File
 
   (leuven--section "22.7 (emacs)Specify Coding System of a File")
 
-  (GNUEmacs
-    ;; To copy and paste to and from Emacs through the clipboard (with coding
-    ;; system conversion).
-    (cond (leuven--win32-p
-           (set-selection-coding-system 'compound-text-with-extensions))
-          (t
-           (set-selection-coding-system 'utf-8))))
+  ;; To copy and paste to and from Emacs through the clipboard (with coding
+  ;; system conversion).
+  (cond (leuven--win32-p
+         (set-selection-coding-system 'compound-text-with-extensions))
+        (t
+         (set-selection-coding-system 'utf-8)))
 
 )                                       ; Chapter 22 ends here.
 
@@ -3198,10 +3105,6 @@ These packages are neither built-in nor already installed nor ignored."
 ;;** 25.1 (info "(emacs)Words")
 
   (leuven--section "25.1 (emacs)Words")
-
-  ;; GNU Emacs default for killing back to the beginning of a word.
-  (XEmacs
-    (global-set-key (kbd "<C-backspace>") #'backward-kill-word))
 
 ;;** 25.2 (info "(emacs)Sentences")
 
@@ -3580,8 +3483,7 @@ These packages are neither built-in nor already installed nor ignored."
 ;; C-M-] and M-] fold the whole buffer or the current defun.
 
   ;; ;; Unified user interface for Emacs folding modes, bound to Org key-strokes.
-  ;; (GNUEmacs
-  ;;   (try-require 'fold-dwim-org))
+  ;; (try-require 'fold-dwim-org)
 
   ;; 25.8.2
   (global-set-key (kbd "<M-f6>") #'visible-mode)
@@ -3621,14 +3523,13 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;;** 1.2 (info "(org)Installation")
 
-  (GNUEmacs
-    ;; Autoloads.
-    (try-require 'org-loaddefs)
+  ;; Autoloads.
+  (try-require 'org-loaddefs)
 
-    ;; Getting started.
-    (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
-    (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-    (add-to-list 'auto-mode-alist '("\\.org_archive\\'" . org-mode)))
+  ;; Getting started.
+  (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
+  (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+  (add-to-list 'auto-mode-alist '("\\.org_archive\\'" . org-mode))
 
   (define-key global-map (kbd "C-c l") 'org-store-link)
   (define-key global-map (kbd "C-c c") 'org-capture)
@@ -5540,18 +5441,17 @@ this with to-do items than with projects or headings."
     )                                   ; with-eval-after-load "htmlize" ends here.
 
   ;; Quick print preview (to Web browser) with `htmlize-view-buffer'.
-  (GNUEmacs
-    (autoload 'htmlize-view-buffer "htmlize-view"
-      "Convert buffer to html preserving faces and view in web browser." t)
+  (autoload 'htmlize-view-buffer "htmlize-view"
+    "Convert buffer to html preserving faces and view in web browser." t)
 
-    ;; Same key binding as Org export to HTML (open in browser).
-    (global-set-key (kbd "C-c C-e h o") #'htmlize-view-buffer)
+  ;; Same key binding as Org export to HTML (open in browser).
+  (global-set-key (kbd "C-c C-e h o") #'htmlize-view-buffer)
 
-    ;; View current buffer as html in web browser.
-    (with-eval-after-load "htmlize-view"
+  ;; View current buffer as html in web browser.
+  (with-eval-after-load "htmlize-view"
 
-      ;; Add "Quick Print" entry to file menu.
-      (htmlize-view-add-to-files-menu)))
+    ;; Add "Quick Print" entry to file menu.
+    (htmlize-view-add-to-files-menu))
 
 ;;** 12.6 (info "(org)LaTeX and PDF export")
 
@@ -6358,16 +6258,15 @@ this with to-do items than with projects or headings."
   ;;                 (org-effectiveness-count-todo)
   ;;                 (sit-for 0.2)))))
 
-  (GNUEmacs
-    ;; Add weather forecast in your Org agenda.
-    (autoload 'org-google-weather "org-google-weather"
-      "Return Org entry with the weather for LOCATION in LANGUAGE." t)
+  ;; Add weather forecast in your Org agenda.
+  (autoload 'org-google-weather "org-google-weather"
+    "Return Org entry with the weather for LOCATION in LANGUAGE." t)
 
-    (with-eval-after-load "org-google-weather"
-      ;; (try-require 'url)
+  (with-eval-after-load "org-google-weather"
+    ;; (try-require 'url)
 
-      ;; Add the city.
-      (setq org-google-weather-format "%C %i %c, %l°-%h°")))
+    ;; Add the city.
+    (setq org-google-weather-format "%C %i %c, %l°-%h°"))
 
 )                                       ; Chapter 25.9-org-mode ends here.
 
@@ -6408,202 +6307,200 @@ this with to-do items than with projects or headings."
   (try-require 'tex-site)
 
   ;; Support for LaTeX documents.
-  (GNUEmacs
-    (with-eval-after-load "latex"
+  (with-eval-after-load "latex"
 
-      ;; ;; LaTeX-sensitive spell checking
-      ;; (add-hook 'tex-mode-hook
-      ;;           (lambda ()
-      ;;             (make-local-variable 'ispell-parser)
-      ;;             (setq ispell-parser 'tex)))
+    ;; ;; LaTeX-sensitive spell checking
+    ;; (add-hook 'tex-mode-hook
+    ;;           (lambda ()
+    ;;             (make-local-variable 'ispell-parser)
+    ;;             (setq ispell-parser 'tex)))
 
 ;;** 2.1 (info "(auctex)Quotes")
 
-      (leuven--section "2.1 (auctex)Quotes")
+    (leuven--section "2.1 (auctex)Quotes")
 
-      ;; Insert right brace with suitable macro after typing left brace.
-      (setq LaTeX-electric-left-right-brace t)
+    ;; Insert right brace with suitable macro after typing left brace.
+    (setq LaTeX-electric-left-right-brace t)
 
 ;;** 2.6 (info "(auctex)Completion")
 
-      (leuven--section "2.6 (auctex)Completion")
+    (leuven--section "2.6 (auctex)Completion")
 
-      ;; If this is non-nil when AUCTeX is loaded, the TeX escape character `\'
-      ;; will be bound to `TeX-electric-macro'.
-      (setq TeX-electric-escape t)
+    ;; If this is non-nil when AUCTeX is loaded, the TeX escape character `\'
+    ;; will be bound to `TeX-electric-macro'.
+    (setq TeX-electric-escape t)
 
 ;;** 2.8 (info "(auctex)Indenting")
 
-      (leuven--section "2.8 (auctex)Indenting")
+    (leuven--section "2.8 (auctex)Indenting")
 
-      ;; Leave the `tikzpicture' code unfilled when doing `M-q'.
-      (add-to-list 'LaTeX-indent-environment-list '("tikzpicture"))
+    ;; Leave the `tikzpicture' code unfilled when doing `M-q'.
+    (add-to-list 'LaTeX-indent-environment-list '("tikzpicture"))
 
-      ;; Auto-indentation (suggested by the AUCTeX manual -- instead of adding
-      ;; a local key binding to `RET' in the `LaTeX-mode-hook').
-      (setq TeX-newline-function 'newline-and-indent)
+    ;; Auto-indentation (suggested by the AUCTeX manual -- instead of adding
+    ;; a local key binding to `RET' in the `LaTeX-mode-hook').
+    (setq TeX-newline-function 'newline-and-indent)
 
 ;;* 3 Controlling Screen (info "(auctex)Display")
 
 ;;** 3.1 (info "(auctex)Font Locking")
 
-      (leuven--section "3.1 (auctex)Font Locking")
+    (leuven--section "3.1 (auctex)Font Locking")
 
-      ;; (for Org mode) Add the `comment' environment to the variable
-      ;; `LaTeX-verbatim-environments' so that, if the `#+TBLFM' line contains
-      ;; an odd number of dollar characters, this does not cause problems with
-      ;; font-lock in LaTeX-mode.
-      (add-to-list 'LaTeX-verbatim-environments "comment")
+    ;; (for Org mode) Add the `comment' environment to the variable
+    ;; `LaTeX-verbatim-environments' so that, if the `#+TBLFM' line contains
+    ;; an odd number of dollar characters, this does not cause problems with
+    ;; font-lock in LaTeX-mode.
+    (add-to-list 'LaTeX-verbatim-environments "comment")
 
 ;;** 4.1 Executing (info "(auctex)Commands")
 
-      (leuven--section "4.1 Executing (auctex)Commands")
+    (leuven--section "4.1 Executing (auctex)Commands")
 
-      ;; Add a command to execute on the LaTeX document.
-      (add-to-list 'TeX-command-list
-                   '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+    ;; Add a command to execute on the LaTeX document.
+    (add-to-list 'TeX-command-list
+                 '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
 
-      (defun leuven--LaTeX-mode-hook ()
-        ;; Default command to run in the LaTeX buffer.
-        (setq TeX-command-default
-              (save-excursion
-                (save-restriction
-                  (widen)
-                  (goto-char (point-min))
-                  (let ((re (concat
-                             "^\\s-*\\\\usepackage\\(?:\\[.*\\]\\)?"
-                             "{.*\\<\\(?:font\\|math\\)spec\\>.*}")))
-                    (save-match-data
-                      (if (re-search-forward re 3000 t)
-                          "XeLaTeX"
-                        "LaTeX")))))))
+    (defun leuven--LaTeX-mode-hook ()
+      ;; Default command to run in the LaTeX buffer.
+      (setq TeX-command-default
+            (save-excursion
+              (save-restriction
+                (widen)
+                (goto-char (point-min))
+                (let ((re (concat
+                           "^\\s-*\\\\usepackage\\(?:\\[.*\\]\\)?"
+                           "{.*\\<\\(?:font\\|math\\)spec\\>.*}")))
+                  (save-match-data
+                    (if (re-search-forward re 3000 t)
+                        "XeLaTeX"
+                      "LaTeX")))))))
 
-      (add-hook 'LaTeX-mode-hook #'leuven--LaTeX-mode-hook)
+    (add-hook 'LaTeX-mode-hook #'leuven--LaTeX-mode-hook)
 
-      ;; Don't ask user for permission to save files before starting TeX.
-      (setq TeX-save-query nil)
+    ;; Don't ask user for permission to save files before starting TeX.
+    (setq TeX-save-query nil)
 
-      (defun TeX-default ()
-        "Choose the default command from `C-c C-c'."
-        (interactive)
-        (TeX-save-document "")          ; or just use `TeX-save-query'
-        (execute-kbd-macro (kbd "C-c C-c RET")))
+    (defun TeX-default ()
+      "Choose the default command from `C-c C-c'."
+      (interactive)
+      (TeX-save-document "")          ; or just use `TeX-save-query'
+      (execute-kbd-macro (kbd "C-c C-c RET")))
 
-      ;; Rebind the "compile command" to default command from `C-c C-c' (in
-      ;; LaTeX mode only).
-      (define-key LaTeX-mode-map (kbd "<f9>") 'TeX-default)
+    ;; Rebind the "compile command" to default command from `C-c C-c' (in LaTeX
+    ;; mode only).
+    (define-key LaTeX-mode-map (kbd "<f9>") 'TeX-default)
 
-      ;; Use PDF mode by default (instead of DVI).
-      (setq-default TeX-PDF-mode t)
+    ;; Use PDF mode by default (instead of DVI).
+    (setq-default TeX-PDF-mode t)
 
 ;;** 4.2 (info "(auctex)Viewing") the formatted output
 
-      (leuven--section "4.2 (auctex)Viewing the formatted output")
+    (leuven--section "4.2 (auctex)Viewing the formatted output")
 
-      (defvar leuven--sumatrapdf-command
-        (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
-        "Path to the SumatraPDF executable.")
+    (defvar leuven--sumatrapdf-command
+      (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
+      "Path to the SumatraPDF executable.")
 
-      ;; Use a saner PDF viewer (evince, SumatraPDF).
-      (setcdr (assoc "^pdf$" TeX-output-view-style)
-              (cond ((or leuven--win32-p leuven--cygwin-p)
-                     `("." (concat "\"" ,leuven--sumatrapdf-command "\" %o")))
-                    (t
-                     '("." "evince %o"))))
+    ;; Use a saner PDF viewer (evince, SumatraPDF).
+    (setcdr (assoc "^pdf$" TeX-output-view-style)
+            (cond ((or leuven--win32-p leuven--cygwin-p)
+                   `("." (concat "\"" ,leuven--sumatrapdf-command "\" %o")))
+                  (t
+                   '("." "evince %o"))))
 
-      ;; For AUCTeX 11.86+.
-      (when (or leuven--win32-p leuven--cygwin-p)
-        (when (boundp 'TeX-view-program-list)
-          (add-to-list 'TeX-view-program-list
-                       `("SumatraPDF"
-                         (concat "\"" ,leuven--sumatrapdf-command "\" %o")))))
+    ;; For AUCTeX 11.86+.
+    (when (or leuven--win32-p leuven--cygwin-p)
+      (when (boundp 'TeX-view-program-list)
+        (add-to-list 'TeX-view-program-list
+                     `("SumatraPDF"
+                       (concat "\"" ,leuven--sumatrapdf-command "\" %o")))))
 
-      (when (or leuven--win32-p leuven--cygwin-p)
-        (setcdr (assoc 'output-pdf TeX-view-program-selection)
-                '("SumatraPDF")))
+    (when (or leuven--win32-p leuven--cygwin-p)
+      (setcdr (assoc 'output-pdf TeX-view-program-selection)
+              '("SumatraPDF")))
 
 ;;** 4.7 (info "(auctex)Documentation")
 
 ;;** 5.2 (info "(auctex)Multifile") Documents
 
-      ;; ;; Assume that the file is a master file itself.
-      ;; (setq-default TeX-master t)
+    ;; ;; Assume that the file is a master file itself.
+    ;; (setq-default TeX-master t)
 
 ;;** 5.3 Automatic (info "(auctex)Parsing Files")
 
-      ;; Enable parse on load (if no style hook is found for the file).
-      (setq TeX-parse-self t)
+    ;; Enable parse on load (if no style hook is found for the file).
+    (setq TeX-parse-self t)
 
-      ;; Enable automatic save of parsed style information when saving the
-      ;; buffer.
-      (setq TeX-auto-save t)
+    ;; Enable automatic save of parsed style information when saving the buffer.
+    (setq TeX-auto-save t)
 
 ;;** 5.4 (info "(auctex)Internationalization")
 
-      ;; ;; Insert a literal hyphen XXX
-      ;; (setq LaTeX-babel-insert-hyphen nil)
+    ;; ;; XXX Insert a literal hyphen.
+    ;; (setq LaTeX-babel-insert-hyphen nil)
 
 ;;** 5.5 (info "(auctex)Automatic") Customization
 
-      ;; TODO Add beamer.el to TeX-style-path
+    ;; TODO Add beamer.el to TeX-style-path
 
 ;;*** 5.5.1 (info "(auctex)Automatic Global") Customization for the Site
 
-      (leuven--section "5.5.1 (auctex)Automatic Global Customization for the Site")
+    (leuven--section "5.5.1 (auctex)Automatic Global Customization for the Site")
 
-      ;; Directory containing automatically generated TeX information.
-      (setq TeX-auto-global
-            (concat user-emacs-directory "auctex-auto-generated-info/"))
+    ;; Directory containing automatically generated TeX information.
+    (setq TeX-auto-global
+          (concat user-emacs-directory "auctex-auto-generated-info/"))
                                         ; Must end with a slash.
 
 ;;*** 5.5.3 (info "(auctex)Automatic Local") Customization for a Directory
 
-      (leuven--section "5.5.3 (auctex)Automatic Local Customization for a Directory")
+    (leuven--section "5.5.3 (auctex)Automatic Local Customization for a Directory")
 
-      ;; Directory containing automatically generated TeX information.
-      (setq TeX-auto-local (concat user-emacs-directory "auctex-auto-generated-info/"))
+    ;; Directory containing automatically generated TeX information.
+    (setq TeX-auto-local (concat user-emacs-directory "auctex-auto-generated-info/"))
                                         ; Must end with a slash.
 
 ;;** (info "(preview-latex)Top")
 
-      (leuven--section "(preview-latex)Top")
+    (leuven--section "(preview-latex)Top")
 
-      (with-eval-after-load "preview"
+    (with-eval-after-load "preview"
 
-        ;; Path to `gs' command (for format conversions).
-        (setq preview-gs-command
-          (cond (leuven--win32-p
-                 (or (executable-find "gswin32c.exe")
-                     "C:/texlive/2015/tlpkg/tlgs/bin/gswin32c.exe"))
+      ;; Path to `gs' command (for format conversions).
+      (setq preview-gs-command
+        (cond (leuven--win32-p
+               (or (executable-find "gswin32c.exe")
+                   "C:/texlive/2015/tlpkg/tlgs/bin/gswin32c.exe"))
                                         ; Default value.
-                (t
-                 (or (executable-find "rungs") ; For Cygwin Emacs.
-                     "/usr/bin/gs"))))
-        (leuven--file-exists-and-executable-p preview-gs-command)
+              (t
+               (or (executable-find "rungs") ; For Cygwin Emacs.
+                   "/usr/bin/gs"))))
+      (leuven--file-exists-and-executable-p preview-gs-command)
 
-        ;; Scale factor for included previews.
-        (setq preview-scale-function 1.2))
+      ;; Scale factor for included previews.
+      (setq preview-scale-function 1.2))
 
-      (add-hook 'LaTeX-mode-hook #'reftex-mode) ; with AUCTeX LaTeX mode
+    (add-hook 'LaTeX-mode-hook #'reftex-mode) ; with AUCTeX LaTeX mode
 
-      ;; Minor mode with distinct support for `\label', `\ref', `\cite' and
-      ;; `\index' in LaTeX.
-      (with-eval-after-load "reftex"
+    ;; Minor mode with distinct support for `\label', `\ref', `\cite' and
+    ;; `\index' in LaTeX.
+    (with-eval-after-load "reftex"
 
-        ;; Turn all plug-ins on.
-        (setq reftex-plug-into-AUCTeX t)
+      ;; Turn all plug-ins on.
+      (setq reftex-plug-into-AUCTeX t)
 
-        ;; Use a separate selection buffer for each label type -- so the menu
-        ;; generally comes up faster.
-        (setq reftex-use-multiple-selection-buffers t))
+      ;; Use a separate selection buffer for each label type -- so the menu
+      ;; generally comes up faster.
+      (setq reftex-use-multiple-selection-buffers t))
 
-      ;; BibTeX mode.
-      (with-eval-after-load "bibtex"
+    ;; BibTeX mode.
+    (with-eval-after-load "bibtex"
 
-        ;; Current BibTeX dialect.
-        (setq bibtex-dialect 'biblatex))
+      ;; Current BibTeX dialect.
+      (setq bibtex-dialect 'biblatex))
 
-      ))                                ; with-eval-after-load "latex" ends here.
+    )                                   ; with-eval-after-load "latex" ends here.
 
 )                                       ; Chapter 25.10-tex-mode ends here.
 
@@ -6710,11 +6607,10 @@ this with to-do items than with projects or headings."
     (transpose-lines 1)
     (forward-line -1))
 
-  (GNUEmacs24
-    (add-hook 'prog-mode-hook
-              (lambda ()
-                (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)
-                (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down))))
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)
+              (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down)))
                                         ; Sublime Text
 
   (defun leuven-scroll-up-one-line ()
@@ -6727,11 +6623,10 @@ this with to-do items than with projects or headings."
     (interactive)
     (scroll-down 1))
 
-  (GNUEmacs24
-    (add-hook 'prog-mode-hook
-              (lambda ()
-                (local-set-key (kbd "<C-up>") #'leuven-scroll-up-one-line)
-                (local-set-key (kbd "<C-down>") #'leuven-scroll-down-one-line))))
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (local-set-key (kbd "<C-up>") #'leuven-scroll-up-one-line)
+              (local-set-key (kbd "<C-down>") #'leuven-scroll-down-one-line)))
                                         ; Sublime Text + SQL Management Studio
 
 ;;** 26.1 Major Modes for (info "(emacs)Program Modes")
@@ -6742,49 +6637,46 @@ this with to-do items than with projects or headings."
 
   (leuven--section "26.2 Top-Level Definitions, or (emacs)Defuns")
 
-  (GNUEmacs
-    ;; Making buffer indexes as menus.
-    (try-require 'imenu)                ; Awesome!
-    (with-eval-after-load "imenu"
+  ;; Making buffer indexes as menus.
+  (try-require 'imenu)                  ; Awesome!
+  (with-eval-after-load "imenu"
 
-      ;; Add Imenu to the menu bar in any mode that supports it.
-      (defun try-to-add-imenu ()
-        (condition-case nil
-            (imenu-add-to-menubar "Imenu")
-          (error nil)))
-      (add-hook 'font-lock-mode-hook #'try-to-add-imenu)
+    ;; Add Imenu to the menu bar in any mode that supports it.
+    (defun try-to-add-imenu ()
+      (condition-case nil
+          (imenu-add-to-menubar "Imenu")
+        (error nil)))
+    (add-hook 'font-lock-mode-hook #'try-to-add-imenu)
 
-      ;; Bind Imenu from the mouse.
-      (GNUEmacs (global-set-key [S-mouse-3] #'imenu))
-      (XEmacs (global-set-key [(shift button3)] #'imenu))
+    ;; Bind Imenu from the mouse.
+    (global-set-key [S-mouse-3] #'imenu)
 
-      ;; String to display in the mode line when current function is unknown.
-      (setq which-func-unknown "(Top Level)")
+    ;; String to display in the mode line when current function is unknown.
+    (setq which-func-unknown "(Top Level)")
 
-      ;; Show current function in mode line (based on Imenu).
-      (which-function-mode 1)           ; ~ Stickyfunc mode (in header line)
+    ;; Show current function in mode line (based on Imenu).
+    (which-function-mode 1)             ; ~ Stickyfunc mode (in header line)
 
-      (defun my-which-func-current ()
-        (let ((current (gethash (selected-window) which-func-table)))
-          (if current
-              (truncate-string-to-width current 20 nil nil "...")
-            which-func-unknown)))
+    (defun my-which-func-current ()
+      (let ((current (gethash (selected-window) which-func-table)))
+        (if current
+            (truncate-string-to-width current 20 nil nil "...")
+          which-func-unknown)))
 
-      (setq which-func-format
-            `("[" (:propertize (:eval (my-which-func-current))
-                               local-map ,which-func-keymap
-                               face which-func
-                               mouse-face mode-line-highlight
-                               help-echo "mouse-1: go to beginning\n\
+    (setq which-func-format
+          `("[" (:propertize (:eval (my-which-func-current))
+                             local-map ,which-func-keymap
+                             face which-func
+                             mouse-face mode-line-highlight
+                             help-echo "mouse-1: go to beginning\n\
 mouse-2: toggle rest visibility\n\
-mouse-3: go to end") "]"))))
+mouse-3: go to end") "]")))
 
-  (GNUEmacs
-    ;; Helm Imenu tag selection across all buffers with the same mode.
-    (with-eval-after-load "imenu-anywhere-autoloads"
+  ;; Helm Imenu tag selection across all buffers with the same mode.
+  (with-eval-after-load "imenu-anywhere-autoloads"
 
-      ;; `helm' source for `imenu-anywhere'.
-      (global-set-key (kbd "C-.") #'helm-imenu-anywhere)))
+    ;; `helm' source for `imenu-anywhere'.
+    (global-set-key (kbd "C-.") #'helm-imenu-anywhere))
                                         ; XXX Conflict with
                                         ; `flyspell-auto-correct-word'
 
@@ -6799,10 +6691,9 @@ mouse-3: go to end") "]"))))
     ;; Auto-indentation: automatically jump to the "correct" column when
     ;; the RET key is pressed while editing a program (act as if you
     ;; pressed `C-j').
-    (GNUEmacs24
-      (add-hook 'prog-mode-hook
-                (lambda ()
-                  (local-set-key (kbd "<return>") #'newline-and-indent))))
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (local-set-key (kbd "<return>") #'newline-and-indent)))
 
     ;; (defun back-to-indentation-or-beginning ()
     ;;   (interactive)
@@ -6826,12 +6717,9 @@ mouse-3: go to end") "]"))))
   (leuven--section "26.4 Commands for Editing with (emacs)Parentheses")
 
   ;; Highlight matching paren.
-  (GNUEmacs
-    (show-paren-mode 1)
-    (setq show-paren-style 'mixed)
-    (setq show-paren-ring-bell-on-mismatch t))
-  (XEmacs
-    (paren-set-mode 'paren))
+  (show-paren-mode 1)
+  (setq show-paren-style 'mixed)
+  (setq show-paren-ring-bell-on-mismatch t)
 
   ;; Highlight (nearest) surrounding parentheses (abd brackets).
   (with-eval-after-load "highlight-parentheses"
@@ -6881,14 +6769,13 @@ mouse-3: go to end") "]"))))
   ;; Always comments out empty lines.
   (setq comment-empty-lines t)
 
-  (GNUEmacs
-    (defadvice comment-dwim (around leuven-comment activate)
-      "When called interactively with no active region, comment a single line instead."
-      (if (or (use-region-p) (not (called-interactively-p 'any)))
-          ad-do-it
-        (comment-or-uncomment-region (line-beginning-position)
-                                     (line-end-position))
-        (message "Commented line"))))
+  (defadvice comment-dwim (around leuven-comment activate)
+    "When called interactively with no active region, comment a single line instead."
+    (if (or (use-region-p) (not (called-interactively-p 'any)))
+        ad-do-it
+      (comment-or-uncomment-region (line-beginning-position)
+                                   (line-end-position))
+      (message "Commented line")))
 
 ;;** 26.6 (info "(emacs)Documentation") Lookup
 
@@ -6901,13 +6788,11 @@ mouse-3: go to end") "]"))))
   (setq eldoc-echo-area-use-multiline-p t)
 
   ;; Show the function arglist or the variable docstring in the echo area.
-  (GNUEmacs
-    (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
-    (add-hook 'lisp-interaction-mode-hook #'eldoc-mode)
-    (add-hook 'ielm-mode-hook #'eldoc-mode)
-    (add-hook 'eval-expression-minibuffer-setup-hook #'eldoc-mode)
-    ;; (global-eldoc-mode)                 ; In Emacs 25.
-    )
+  (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
+  (add-hook 'lisp-interaction-mode-hook #'eldoc-mode)
+  (add-hook 'ielm-mode-hook #'eldoc-mode)
+  (add-hook 'eval-expression-minibuffer-setup-hook #'eldoc-mode)
+  ;; (global-eldoc-mode)                 ; In Emacs 25.
 
   ;; Highlight the arguments in `font-lock-variable-name-face'.
   (defun leuven--frob-eldoc-argument-list (string)
@@ -7069,14 +6954,13 @@ mouse-3: go to end") "]"))))
   ;;           (run-at-time 0.5 nil 'delete-windows-on buf)
   ;;           (message "NO COMPILATION ERRORS!"))))
 
-  (GNUEmacs
-    (defun cc-goto-first-error( buffer exit-condition )
-      (with-current-buffer buffer
-        (goto-char (point-min))
-        (compilation-next-error 1)
-        (beep)))
+  (defun cc-goto-first-error( buffer exit-condition )
+    (with-current-buffer buffer
+      (goto-char (point-min))
+      (compilation-next-error 1)
+      (beep)))
 
-    (add-to-list 'compilation-finish-functions 'cc-goto-first-error))
+  (add-to-list 'compilation-finish-functions 'cc-goto-first-error)
 
   (defvar make-clean-command "make clean all"
     "*Command used by the `make-clean' function.")
@@ -7440,36 +7324,35 @@ a clean buffer we're an order of magnitude laxer about checking."
       (when (stringp vcs-top-dir)
         (ad-set-arg 1 vcs-top-dir))))
 
-  (GNUEmacs
-    (defun leuven--ediff-revision (file rev1 &optional rev2)
-      "Run Ediff by comparing 'master' against the 'current'."
-      (require 'ediff)
-      (find-file file)
-      (if (and (buffer-modified-p)
-               (y-or-n-p (format "Buffer %s is modified.  Save buffer? "
-                                 (buffer-name))))
-          (save-buffer (current-buffer)))
-      (ediff-load-version-control)
-      (funcall
-       (intern (format "ediff-%S-internal" ediff-version-control-package))
-       rev1 rev2 nil))
+  (defun leuven--ediff-revision (file rev1 &optional rev2)
+    "Run Ediff by comparing 'master' against the 'current'."
+    (require 'ediff)
+    (find-file file)
+    (if (and (buffer-modified-p)
+             (y-or-n-p (format "Buffer %s is modified.  Save buffer? "
+                               (buffer-name))))
+        (save-buffer (current-buffer)))
+    (ediff-load-version-control)
+    (funcall
+     (intern (format "ediff-%S-internal" ediff-version-control-package))
+     rev1 rev2 nil))
 
-    (defun leuven-vc-diff (&optional arg)
-      (interactive "P")
-      (call-interactively
-       (cond (arg
-              (lambda ()
-                (interactive)
-                (vc-diff nil)))
-             (t
-              (lambda ()
-                (interactive)
-                (leuven--ediff-revision (buffer-file-name)
-                                        (read-string "revision? "
-                                                     "HEAD" nil "HEAD")
-                                        ""))))))
+  (defun leuven-vc-diff (&optional arg)
+    (interactive "P")
+    (call-interactively
+     (cond (arg
+            (lambda ()
+              (interactive)
+              (vc-diff nil)))
+           (t
+            (lambda ()
+              (interactive)
+              (leuven--ediff-revision (buffer-file-name)
+                                      (read-string "revision? "
+                                                   "HEAD" nil "HEAD")
+                                      ""))))))
 
-    (define-key vc-prefix-map (kbd "=") 'leuven-vc-diff))
+  (define-key vc-prefix-map (kbd "=") 'leuven-vc-diff)
 
 ;;** 28.2 (info "(emacs)Change Log")
 
@@ -7520,8 +7403,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (global-set-key (kbd "M-?") #'etags-select-find-tag-at-point))
 
   ;; Find the definition of the Emacs Lisp function or variable near point.
-  (GNUEmacs
-    (find-function-setup-keys))
+  (find-function-setup-keys)
 
   (with-eval-after-load "lisp-mode"
 
@@ -7679,111 +7561,110 @@ a clean buffer we're an order of magnitude laxer about checking."
   (leuven--section "29.3 Controlling Expanding Abbrevs")
 
   ;; Yet Another Snippet extension for Emacs
-  (GNUEmacs
-    (with-eval-after-load "yasnippet-autoloads"
-      (idle-require 'yasnippet))
+  (with-eval-after-load "yasnippet-autoloads"
+    (idle-require 'yasnippet))
 
-    (with-eval-after-load "yasnippet"
+  (with-eval-after-load "yasnippet"
 
-      ;; Enable YASnippet in all buffers.
-      (yas-global-mode 1)
+    ;; Enable YASnippet in all buffers.
+    (yas-global-mode 1)
 
-      (with-eval-after-load "diminish-autoloads"
-        (diminish 'yas-minor-mode " y"))
+    (with-eval-after-load "diminish-autoloads"
+      (diminish 'yas-minor-mode " y"))
 
-      ;; (setq yas-verbosity 1)
+    ;; (setq yas-verbosity 1)
 
-      ;; Load the snippet tables.
-      (yas-reload-all)
+    ;; Load the snippet tables.
+    (yas-reload-all)
 
-      ;; Add root directories that store the snippets.
-      (let ((leuven-snippets            ; Additional YASnippets.
-             (concat leuven--directory "snippets"))
-            (org-snippets
-             (concat leuven--local-repos-directory "yasnippet-org-mode")))
+    ;; Add root directories that store the snippets.
+    (let ((leuven-snippets              ; Additional YASnippets.
+           (concat leuven--directory "snippets"))
+          (org-snippets
+           (concat leuven--local-repos-directory "yasnippet-org-mode")))
 
-        (when (file-directory-p org-snippets)
-          (add-to-list 'yas-snippet-dirs org-snippets))
+      (when (file-directory-p org-snippets)
+        (add-to-list 'yas-snippet-dirs org-snippets))
 
-        (when (file-directory-p leuven-snippets)
-          (add-to-list 'yas-snippet-dirs leuven-snippets)))
+      (when (file-directory-p leuven-snippets)
+        (add-to-list 'yas-snippet-dirs leuven-snippets)))
                                         ; The first element (inserted last) is
                                         ; always the user-created snippets
                                         ; directory.
 
-      ;; Use Snippet mode for files with a `yasnippet' extension.
-      (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
+    ;; Use Snippet mode for files with a `yasnippet' extension.
+    (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
 
-      ;; Bind `yas-expand' to SPC.
-      (define-key yas-minor-mode-map (kbd "<tab>") nil)
-      (define-key yas-minor-mode-map (kbd "TAB") nil)
-      (define-key yas-minor-mode-map (kbd "SPC") 'yas-expand)
+    ;; Bind `yas-expand' to SPC.
+    (define-key yas-minor-mode-map (kbd "<tab>") nil)
+    (define-key yas-minor-mode-map (kbd "TAB") nil)
+    (define-key yas-minor-mode-map (kbd "SPC") 'yas-expand)
 
-      ;; Don't expand when you are typing in a string or comment.
-      (add-hook 'prog-mode-hook
-                (lambda ()
-                  (setq yas-buffer-local-condition
-                        '(if (nth 8 (syntax-ppss))
+    ;; Don't expand when you are typing in a string or comment.
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (setq yas-buffer-local-condition
+                      '(if (nth 8 (syntax-ppss))
                                         ; Non-nil if in a string or comment.
-                             '(require-snippet-condition . force-in-comment)
-                           t))))
+                           '(require-snippet-condition . force-in-comment)
+                         t))))
 
-      ;; UI for selecting snippet when there are multiple candidates.
-      (setq yas-prompt-functions '(yas-dropdown-prompt))
+    ;; UI for selecting snippet when there are multiple candidates.
+    (setq yas-prompt-functions '(yas-dropdown-prompt))
 
-      (global-set-key (kbd "C-c & C-r") #'yas-reload-all)
+    (global-set-key (kbd "C-c & C-r") #'yas-reload-all)
 
-      ;; Automatically reload snippets after saving.
-      (defun recompile-and-reload-all-snippets ()
-        (interactive)
-        (when (derived-mode-p 'snippet-mode)
-          (yas-recompile-all)
-          (yas-reload-all)
-          (message "Reloaded all snippets")))
+    ;; Automatically reload snippets after saving.
+    (defun recompile-and-reload-all-snippets ()
+      (interactive)
+      (when (derived-mode-p 'snippet-mode)
+        (yas-recompile-all)
+        (yas-reload-all)
+        (message "Reloaded all snippets")))
 
-      (add-hook 'after-save-hook #'recompile-and-reload-all-snippets)
+    (add-hook 'after-save-hook #'recompile-and-reload-all-snippets)
 
-      (global-set-key (kbd "C-c & C-l") #'yas-describe-tables)
+    (global-set-key (kbd "C-c & C-l") #'yas-describe-tables)
 
-      (defvar lawlist-context-menu-map
-        (let ((map (make-sparse-keymap "Context Menu")))
-          (define-key map [help-for-help] (cons "Help" 'help-for-help))
-          (define-key map [seperator-two] '(menu-item "--"))
-          (define-key map [my-menu] (cons "LAWLIST" (make-sparse-keymap "My Menu")))
-          (define-key map [my-menu 01] (cons "Next Line" 'next-line))
-          (define-key map [my-menu 02] (cons "Previous Line" 'previous-line))
-          (define-key map [seperator-one] '(menu-item "--"))
-        map) "Keymap for the LAWLIST context menu.")
+    (defvar lawlist-context-menu-map
+      (let ((map (make-sparse-keymap "Context Menu")))
+        (define-key map [help-for-help] (cons "Help" 'help-for-help))
+        (define-key map [seperator-two] '(menu-item "--"))
+        (define-key map [my-menu] (cons "LAWLIST" (make-sparse-keymap "My Menu")))
+        (define-key map [my-menu 01] (cons "Next Line" 'next-line))
+        (define-key map [my-menu 02] (cons "Previous Line" 'previous-line))
+        (define-key map [seperator-one] '(menu-item "--"))
+      map) "Keymap for the LAWLIST context menu.")
 
-      (defun lawlist-popup-context-menu  (event &optional prefix)
-        "Popup a context menu."
-        (interactive "@e \nP")
-          (define-key lawlist-context-menu-map [lawlist-major-mode-menu]
-            `(menu-item ,(symbol-name major-mode)
-              ,(mouse-menu-major-mode-map) :visible t))
-          (define-key lawlist-context-menu-map (vector major-mode)
-            `(menu-item ,(concat "YAS " (symbol-name major-mode))
-              ,(gethash major-mode yas--menu-table)
-                :visible (yas--show-menu-p ',major-mode)))
-          (popup-menu lawlist-context-menu-map event prefix))
+    (defun lawlist-popup-context-menu  (event &optional prefix)
+      "Popup a context menu."
+      (interactive "@e \nP")
+        (define-key lawlist-context-menu-map [lawlist-major-mode-menu]
+          `(menu-item ,(symbol-name major-mode)
+            ,(mouse-menu-major-mode-map) :visible t))
+        (define-key lawlist-context-menu-map (vector major-mode)
+          `(menu-item ,(concat "YAS " (symbol-name major-mode))
+            ,(gethash major-mode yas--menu-table)
+              :visible (yas--show-menu-p ',major-mode)))
+        (popup-menu lawlist-context-menu-map event prefix))
 
-      (global-set-key [mouse-3] #'lawlist-popup-context-menu)
+    (global-set-key [mouse-3] #'lawlist-popup-context-menu)
 
-      (add-hook 'snippet-mode-hook
-                (lambda ()
-                  (setq require-final-newline nil)))
+    (add-hook 'snippet-mode-hook
+              (lambda ()
+                (setq require-final-newline nil)))
 
-      ;; ;; Make the "yas/minor-mode"'s expansion behavior to take input word
-      ;; ;; including hyphen.
-      ;; (setq yas-key-syntaxes '("w_" "w_." "^ "))
+    ;; ;; Make the "yas/minor-mode"'s expansion behavior to take input word
+    ;; ;; including hyphen.
+    ;; (setq yas-key-syntaxes '("w_" "w_." "^ "))
                                         ; [default:
                                         ; '("w" "w_" "w_." "w_.()"
                                         ;   yas-try-key-from-whitespace)]
 
-      )
+    )
 
-      ;; Log level for `yas--message'.
-      (setq yas-verbosity 2))           ; Warning.
+    ;; Log level for `yas--message'.
+    (setq yas-verbosity 2)              ; Warning.
 
 ;;** 29.7 (info "(emacs)Dabbrev Customization")
 
@@ -7824,7 +7705,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             ;; File name.
             try-complete-file-name))
 
-    ;; integrate YASnippet with `hippie-expand'
+    ;; Integrate YASnippet with `hippie-expand'.
     (with-eval-after-load "yasnippet"
 
       (add-to-list 'hippie-expand-try-functions-list
@@ -7832,81 +7713,79 @@ a clean buffer we're an order of magnitude laxer about checking."
                                         ; Makes more sense when placed at the
                                         ; top of the list.
 
-  (GNUEmacs
+  ;; Auto Completion.
+  (with-eval-after-load "auto-complete-autoloads-XXX"
+    (idle-require 'auto-complete-config)
 
-    ;; Auto Completion.
-    (with-eval-after-load "auto-complete-autoloads-XXX"
-      (idle-require 'auto-complete-config)
+    (global-set-key (kbd "C-/") #'auto-complete))
 
-      (global-set-key (kbd "C-/") #'auto-complete))
+  (with-eval-after-load "auto-complete-config"
 
-    (with-eval-after-load "auto-complete-config"
-
-      ;; 6.1 Set a list of sources to use (by default + for some major modes)
-      (ac-config-default))              ; ... and enable Auto-Complete mode in
+    ;; 6.1 Set a list of sources to use (by default + for some major modes)
+    (ac-config-default))                ; ... and enable Auto-Complete mode in
                                         ; all buffers.
 
-    (with-eval-after-load "auto-complete"
+  (with-eval-after-load "auto-complete"
                                         ; Required by ESS.
 
-      ;; ;; 5.4 Completion will be started automatically by inserting 2 characters.
-      ;; (setq ac-auto-start 2)            ; Also applies on arguments after opening
-      ;;                                   ; parenthesis in ESS.
+    ;; ;; 5.4 Completion will be started automatically by inserting 2 characters.
+    ;; (setq ac-auto-start 2)              ; Also applies on arguments after opening
+    ;;                                     ; parenthesis in ESS.
 
-      ;; 7.5 Use `C-n/C-p' to select candidates (only when completion menu is
-      ;; displayed).
-      (setq ac-use-menu-map t)
-      (define-key ac-menu-map (kbd "C-n") 'ac-next)
-      (define-key ac-menu-map (kbd "C-p") 'ac-previous)
+    ;; 7.5 Use `C-n/C-p' to select candidates (only when completion menu is
+    ;; displayed).
+    (setq ac-use-menu-map t)
+    (define-key ac-menu-map (kbd "C-n") 'ac-next)
+    (define-key ac-menu-map (kbd "C-p") 'ac-previous)
 
-      ;; Unbind some keys (inconvenient in Comint buffers).
-      (define-key ac-completing-map (kbd "M-n") nil)
-      (define-key ac-completing-map (kbd "M-p") nil)
+    ;; Unbind some keys (inconvenient in Comint buffers).
+    (define-key ac-completing-map (kbd "M-n") nil)
+    (define-key ac-completing-map (kbd "M-p") nil)
 
-      ;; Add other modes into `ac-modes'.
-      (setq ac-modes
-            (append ac-modes
-                    '(change-log-mode
-                      latex-mode
-                      org-mode
-                      prog-mode       ; Programming modes.
-                      snippet-mode
-                      sql-mode
-                      text-mode)))
+    ;; Add other modes into `ac-modes'.
+    (setq ac-modes
+          (append ac-modes
+                  '(change-log-mode
+                    latex-mode
+                    org-mode
+                    prog-mode           ; Programming modes.
+                    snippet-mode
+                    sql-mode
+                    text-mode)))
 
-      ;; 7.9 Just ignore case.
-      (setq ac-ignore-case t)
+    ;; 7.9 Just ignore case.
+    (setq ac-ignore-case t)
 
-      ;; 8.1 Delay to completions will be available.
-      (setq ac-delay 0)               ; Faster than default 0.1.
+    ;; 8.1 Delay to completions will be available.
+    (setq ac-delay 0)                   ; Faster than default 0.1.
 
-      ;; 8.2 Completion menu will be automatically shown.
-      (setq ac-auto-show-menu 0.2)    ; [Default: 0.8].
+    ;; 8.2 Completion menu will be automatically shown.
+    (setq ac-auto-show-menu 0.2)        ; [Default: 0.8].
 
-      ;; 8.13 Delay to show quick help.
-      (setq ac-quick-help-delay 0.5)
+    ;; 8.13 Delay to show quick help.
+    (setq ac-quick-help-delay 0.5)
 
-      ;; 8.15 Max height of quick help.
-      (setq ac-quick-help-height 10)  ; Same as `ac-menu-height'.
+    ;; 8.15 Max height of quick help.
+    (setq ac-quick-help-height 10)      ; Same as `ac-menu-height'.
 
-      ;; 8.16 Limit on number of candidates.
-      (setq ac-candidate-limit 100)
+    ;; 8.16 Limit on number of candidates.
+    (setq ac-candidate-limit 100)
 
-      ;; (setq ac-disable-inline t)
-      ;; (setq ac-candidate-menu-min 0)
+    ;; (setq ac-disable-inline t)
+    ;; (setq ac-candidate-menu-min 0)
 
-      ;; Completion by TAB.
-      (define-key ac-completing-map (kbd "<tab>") 'ac-complete)
+    ;; Completion by TAB.
+    (define-key ac-completing-map (kbd "<tab>") 'ac-complete)
 
-      ;; Completion by RET.
-      (define-key ac-completing-map (kbd "<return>") 'ac-complete)
+    ;; Completion by RET.
+    (define-key ac-completing-map (kbd "<return>") 'ac-complete)
 
-      ;; Abort.
-      (define-key ac-completing-map (kbd "C-g") 'ac-stop)
-      (define-key ac-completing-map (kbd "<left>") 'ac-stop)
+    ;; Abort.
+    (define-key ac-completing-map (kbd "C-g") 'ac-stop)
+    (define-key ac-completing-map (kbd "<left>") 'ac-stop)
 
-      ;; 11.1 Avoid Flyspell processes when auto completion is being started.
-      (ac-flyspell-workaround)))
+    ;; 11.1 Avoid Flyspell processes when auto completion is being started.
+    (ac-flyspell-workaround))
 
   ;; Modular text completion framework.
   (with-eval-after-load "company-autoloads"
@@ -8086,20 +7965,19 @@ a clean buffer we're an order of magnitude laxer about checking."
     (define-key dired-mode-map (kbd "e") 'browse-url-of-dired-file) ; <C-RET>?
 
     ;; Open files using Windows associations.
-    (GNUEmacs
-      (when (or leuven--win32-p
-                leuven--cygwin-p)
-        (defun w32-dired-open-files-externally (&optional arg)
-          "In Dired, open the marked files (or directories) with the default
-        Windows tool."
-          (interactive "P")
-          (mapcar
-           (lambda (file)
-             (w32-shell-execute "open" (convert-standard-filename file)))
-           (dired-get-marked-files nil arg)))
+    (when (or leuven--win32-p
+              leuven--cygwin-p)
+      (defun w32-dired-open-files-externally (&optional arg)
+        "In Dired, open the marked files (or directories) with the default
+      Windows tool."
+        (interactive "P")
+        (mapcar
+         (lambda (file)
+           (w32-shell-execute "open" (convert-standard-filename file)))
+         (dired-get-marked-files nil arg)))
 
-        ;; Bind it to `E' in Dired mode.
-        (define-key dired-mode-map (kbd "E") 'w32-dired-open-files-externally)))
+      ;; Bind it to `E' in Dired mode.
+      (define-key dired-mode-map (kbd "E") 'w32-dired-open-files-externally))
 
     ;; Open current file with eww.
     (defun dired-open-with-eww ()
@@ -8311,10 +8189,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Turn appointment checking on (enable reminders).
     (when leuven-load-verbose
       (message "(Info) Enable appointment reminders..."))
-    (GNUEmacs
-      (appt-activate 1))
-    (XEmacs
-      (appt-initialize))
+    (appt-activate 1)
     (when leuven-load-verbose
       (message "(Info) Enable appointment reminders... Done"))
 
@@ -8462,9 +8337,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Package to compose an outgoing mail (Message, with Gnus paraphernalia).
     (setq mail-user-agent 'gnus-user-agent)
-
-    (XEmacs
-      (setq toolbar-mail-reader 'gnus))
 
     ;; Reading mail with Gnus.
     (setq read-mail-command 'gnus))
@@ -8977,24 +8849,22 @@ a clean buffer we're an order of magnitude laxer about checking."
 (leuven--chapter leuven-load-chapter-37-emacs-server "37 Using Emacs as a Server"
 
   ;; Use Emacs as a server (with the `emacsclient' program).
-  (GNUEmacs
+  (unless noninteractive
+    (idle-require 'server))             ; After init.
 
-    (unless noninteractive
-      (idle-require 'server))           ; After init.
+  (with-eval-after-load "server"
 
-    (with-eval-after-load "server"
+    ;; Test whether server is (definitely) running, avoiding the message of
+    ;; "server-start" while opening another Emacs session.
+    (or (equal (server-running-p) t)
 
-      ;; Test whether server is (definitely) running, avoiding the message of
-      ;; "server-start" while opening another Emacs session.
-      (or (equal (server-running-p) t)
+        ;; Start the Emacs server.
+        (server-start))                 ; ~ 0.20 s
 
-          ;; Start the Emacs server.
-          (server-start))               ; ~ 0.20 s
-
-      ;; Save file without confirmation before returning to the client.
-      (defadvice server-edit (before save-buffer-if-needed activate)
-        "Save current buffer before marking it as done."
-        (when server-buffer-clients (save-buffer)))))
+    ;; Save file without confirmation before returning to the client.
+    (defadvice server-edit (before save-buffer-if-needed activate)
+      "Save current buffer before marking it as done."
+      (when server-buffer-clients (save-buffer))))
 
 )                                       ; Chapter 37 ends here.
 
@@ -9025,15 +8895,11 @@ a clean buffer we're an order of magnitude laxer about checking."
       (ps-print-buffer-with-faces)))
 
   ;; Generate and print a PostScript image of the buffer.
-  (GNUEmacs
-    (when leuven--win32-p
-      ;; Override `Print Screen' globally used as a hotkey by Windows.
-      (w32-register-hot-key (kbd "<snapshot>"))
-      (global-set-key
-        (kbd "<snapshot>") #'leuven-ps-print-buffer-with-faces-query)))
-
-  (XEmacs
-    (setq toolbar-print-function 'ps-print-buffer-with-faces))
+  (when leuven--win32-p
+    ;; Override `Print Screen' globally used as a hotkey by Windows.
+    (w32-register-hot-key (kbd "<snapshot>"))
+    (global-set-key
+      (kbd "<snapshot>") #'leuven-ps-print-buffer-with-faces-query))
 
   ;; Print text from the buffer as PostScript.
   (with-eval-after-load "ps-print"
@@ -9317,36 +9183,12 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 (leuven--chapter leuven-load-chapter-48-customization "48 Customization"
 
-  (GNUEmacs24
-    (ignore-errors
-      ;; Load custom theme "Leuven" and enable it.
-      (load-theme 'leuven t)))
+  (ignore-errors
+    ;; Load custom theme "Leuven" and enable it.
+    (load-theme 'leuven t))
 
   ;; Color sort order for `list-colors-display'.
   (setq list-colors-sort '(rgb-dist . "#FFFFFF"))
-
-  (XEmacs
-    ;; The real color theme functions.
-    (try-require 'color-theme-autoloads)
-    (with-eval-after-load "color-theme-autoloads"
-
-      ;; `color-theme-print' allows to keep what you see.
-
-      ;; Initialize the color theme package.
-      (if (fboundp 'color-theme-initialize)
-          (color-theme-initialize))
-
-      ;; Color themes will be installed for all frames.
-      (setq color-theme-is-global t)
-
-      ;; Set my default color theme.
-      (try-require 'color-theme-leuven)
-      (with-eval-after-load "color-theme-leuven"
-        (color-theme-leuven)))
-
-    ;; Save whatever changes you make to the faces (colors and other font
-    ;; properties).
-    (setq options-save-faces t))
 
 ;;** 48.3 (info "(emacs)Variables")
 
@@ -9381,68 +9223,67 @@ a clean buffer we're an order of magnitude laxer about checking."
   (leuven--section "48.4 Customizing (emacs)Key Bindings")
 
   ;; Print the key bindings in a tabular form.
-  (GNUEmacs
-   (defun leuven-keytable (arg)
-     "Print the key bindings in a tabular form."
-     (interactive "sEnter a modifier string:")
-     (with-output-to-temp-buffer "*Key table*"
-       (let* ((i 0)
-              (keys (list "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l"
-                          "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x"
-                          "y" "z" "<return>" "<down>" "<up>" "<right>"
-                          "<left>" "<home>" "<end>" "<f1>" "<f2>" "<f3>"
-                          "<f4>" "<f5>" "<f6>" "<f7>" "<f8>" "<f9>"
-                          "<f10>" "<f11>" "<f12>" "1" "2" "3" "4" "5" "6"
-                          "7" "8" "9" "0" "`" "~" "!" "@" "#" "$" "%" "^"
-                          "&" "*" "(" ")" "-" "_" "=" "+" "\\" "|" "{" "["
-                          "]" "}" ";" "'" ":" "\"" "<" ">" "," "." "/" "?"
-                          ))
-              (n (length keys))
-              (modifiers (list "" "S-" "C-" "M-" "M-C-"))
-              (k))
-         (or (string= arg "") (setq modifiers (list arg)))
-         (setq k (length modifiers))
-         (princ (format " %-10.10s |" "Key"))
-         (let ((j 0))
-           (while (< j k)
-             (princ (format " %-28.28s |" (nth j modifiers)))
-             (setq j (1+ j))))
-         (princ "\n")
-         (princ (format "_%-10.10s_|" "__________"))
-         (let ((j 0))
-           (while (< j k)
-             (princ (format "_%-28.28s_|"
-                            "_______________________________"))
-             (setq j (1+ j))))
-         (princ "\n")
-         (while (< i n)
-           (princ (format " %-10.10s |" (nth i keys)))
-           (let ((j 0))
-             (while (< j k)
-               (let* ((binding
-                       (key-binding (read-kbd-macro
-                                     (concat (nth j modifiers)
-                                             (nth i keys)))))
-                      (binding-string "_"))
-                 (when binding
-                   (if (eq binding 'self-insert-command)
-                       (setq binding-string (concat "'" (nth i keys) "'"))
-                     (setq binding-string (format "%s" binding))))
-                 (setq binding-string
-                       (substring binding-string 0
-                                  (min (length binding-string) 28)))
-                 (princ (format " %-28.28s |" binding-string))
-                 (setq j (1+ j)))))
-           (princ "\n")
-           (setq i (1+ i)))
-         (princ (format "_%-10.10s_|" "__________"))
-         (let ((j 0))
-           (while (< j k)
-             (princ (format "_%-28.28s_|"
-                            "_______________________________"))
-             (setq j (1+ j))))))
-     (delete-window)
-     (setq truncate-lines t)))
+  (defun leuven-keytable (arg)
+    "Print the key bindings in a tabular form."
+    (interactive "sEnter a modifier string:")
+    (with-output-to-temp-buffer "*Key table*"
+      (let* ((i 0)
+             (keys (list "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l"
+                         "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x"
+                         "y" "z" "<return>" "<down>" "<up>" "<right>"
+                         "<left>" "<home>" "<end>" "<f1>" "<f2>" "<f3>"
+                         "<f4>" "<f5>" "<f6>" "<f7>" "<f8>" "<f9>"
+                         "<f10>" "<f11>" "<f12>" "1" "2" "3" "4" "5" "6"
+                         "7" "8" "9" "0" "`" "~" "!" "@" "#" "$" "%" "^"
+                         "&" "*" "(" ")" "-" "_" "=" "+" "\\" "|" "{" "["
+                         "]" "}" ";" "'" ":" "\"" "<" ">" "," "." "/" "?"
+                         ))
+             (n (length keys))
+             (modifiers (list "" "S-" "C-" "M-" "M-C-"))
+             (k))
+        (or (string= arg "") (setq modifiers (list arg)))
+        (setq k (length modifiers))
+        (princ (format " %-10.10s |" "Key"))
+        (let ((j 0))
+          (while (< j k)
+            (princ (format " %-28.28s |" (nth j modifiers)))
+            (setq j (1+ j))))
+        (princ "\n")
+        (princ (format "_%-10.10s_|" "__________"))
+        (let ((j 0))
+          (while (< j k)
+            (princ (format "_%-28.28s_|"
+                           "_______________________________"))
+            (setq j (1+ j))))
+        (princ "\n")
+        (while (< i n)
+          (princ (format " %-10.10s |" (nth i keys)))
+          (let ((j 0))
+            (while (< j k)
+              (let* ((binding
+                      (key-binding (read-kbd-macro
+                                    (concat (nth j modifiers)
+                                            (nth i keys)))))
+                     (binding-string "_"))
+                (when binding
+                  (if (eq binding 'self-insert-command)
+                      (setq binding-string (concat "'" (nth i keys) "'"))
+                    (setq binding-string (format "%s" binding))))
+                (setq binding-string
+                      (substring binding-string 0
+                                 (min (length binding-string) 28)))
+                (princ (format " %-28.28s |" binding-string))
+                (setq j (1+ j)))))
+          (princ "\n")
+          (setq i (1+ i)))
+        (princ (format "_%-10.10s_|" "__________"))
+        (let ((j 0))
+          (while (< j k)
+            (princ (format "_%-28.28s_|"
+                           "_______________________________"))
+            (setq j (1+ j))))))
+    (delete-window)
+    (setq truncate-lines t))
 
   ;; Guide the following key bindings automatically and dynamically.
   (with-eval-after-load "guide-key-autoloads"
@@ -9532,50 +9373,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 (leuven--chapter leuven-load-chapter-AppG-ms-dos "Appendix G Emacs and MS-DOS"
 
-  ;; ;; read the Caps Lock key as <capslock>
-  ;; (setq w32-enable-caps-lock nil)
-  ;;
-  ;; ;; map the Caps Lock key to Control
-  ;; (define-key function-key-map (kbd "<capslock>") 'event-apply-control-modifier)
-
-  ;; divide key (needed in GNU Emacs for Windows)
-  (GNUEmacs
-    (global-set-key (kbd "<kp-divide>") (kbd "/")))
-
-  ;; numeric keypad (needed in XEmacs for Windows)
-  (XEmacs
-    ;; keys to the right of the regular keyboard
-    (define-key key-translation-map [kp-divide]     [?/])
-    (define-key key-translation-map [kp-multiply]   [?*])
-    (define-key key-translation-map [kp-subtract]   [?-])
-    (define-key key-translation-map [kp-add]        [?+])
-    (define-key key-translation-map [kp-enter]     [?\r])
-    (define-key key-translation-map [kp-decimal]    [?.])
-
-    ;; keys with digits
-    (define-key key-translation-map [kp-0]          [?0])
-    (define-key key-translation-map [kp-1]          [?1])
-    (define-key key-translation-map [kp-2]          [?2])
-    (define-key key-translation-map [kp-3]          [?3])
-    (define-key key-translation-map [kp-4]          [?4])
-    (define-key key-translation-map [kp-5]          [?5])
-    (define-key key-translation-map [kp-6]          [?6])
-    (define-key key-translation-map [kp-7]          [?7])
-    (define-key key-translation-map [kp-8]          [?8])
-    (define-key key-translation-map [kp-9]          [?9])
-
-    ;; additional keypad duplicates of keys ordinarily found elsewhere
-    (define-key key-translation-map [kp-left]     [left])
-    (define-key key-translation-map [kp-right]   [right])
-    (define-key key-translation-map [kp-up]         [up])
-    (define-key key-translation-map [kp-down]     [down])
-    (define-key key-translation-map [kp-begin]   [begin])
-    (define-key key-translation-map [kp-home]     [home])
-    (define-key key-translation-map [kp-end]       [end])
-    (define-key key-translation-map [kp-next]     [next])
-    (define-key key-translation-map [kp-prior]   [prior])
-    (define-key key-translation-map [kp-insert] [insert])
-    (define-key key-translation-map [kp-delete] [delete]))
+  ;; Divide key (needed in GNU Emacs for Windows).
+  (global-set-key (kbd "<kp-divide>") (kbd "/"))
 
 )                                       ; Chapter G ends here.
 
