@@ -8381,15 +8381,26 @@ example).
 
 *** Not sorted
 
+#+begin_src emacs-lisp
+  (with-eval-after-load "org-agenda"
+#+end_src
+
+#+begin_src emacs-lisp
+    (defadvice org-agenda-switch-to
+      (after leuven-org-agenda-switch-to activate)
+      "Recenter after jumping to the file which contains the item at point."
+      (recenter))
+#+end_src
+
 **** Mouse cursor doesn't highlight agenda lines
 
 XXX Does this work?
 
 #+begin_src emacs-lisp
-  (add-hook 'org-agenda-finalize-hook
-            (lambda ()
-              (remove-text-properties (point-min) (point-max)
-                                      '(mouse-face t))))
+    (add-hook 'org-agenda-finalize-hook
+              (lambda ()
+                (remove-text-properties (point-min) (point-max)
+                                        '(mouse-face t))))
 #+end_src
 
 *************** TODO Adding ":tangle yes" on the above code block results in partial tangling!
@@ -8397,18 +8408,16 @@ XXX Does this work?
 **** Emphasize items in agenda
 
 #+begin_src emacs-lisp
-  (add-hook 'org-agenda-finalize-hook
-            (lambda ()
-              (let ((inhibit-read-only t))
-                (goto-char (point-min))
-                (org-do-emphasis-faces (point-max)))))
+    (add-hook 'org-agenda-finalize-hook
+              (lambda ()
+                (let ((inhibit-read-only t))
+                  (goto-char (point-min))
+                  (org-do-emphasis-faces (point-max)))))
 #+end_src
 
 **** Mark a task as DONE and create a follow-up task
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "org-agenda"
-
     (defun leuven-org-agenda-mark-done-and-add-followup ()
       "Mark the current TODO as done and add another task after it.
 Creates it at the same level as the previous task, so it's better to use
@@ -8437,6 +8446,9 @@ this with to-do items than with projects or headings."
 
     ;; ;; New key assignment (overrides `org-agenda-next-item').
     ;; (define-key org-agenda-mode-map "N" 'leuven-org-agenda-new)
+#+end_src
+
+#+begin_src emacs-lisp
   )
 #+end_src
 
@@ -9293,14 +9305,14 @@ Literate programming and reproducible research.
 
 #+begin_src emacs-lisp
 ;;* 14 (info "(org)Working With Source Code")
-
-  (with-eval-after-load "ob-core"
 #+end_src
 
 Automate the redisplay of inline images, so that the images are always
 up-to-date.
 
 #+begin_src emacs-lisp
+  (with-eval-after-load "ob-core"
+
     ;; Make the images in the Emacs buffer automatically refresh after
     ;; execution.
 
@@ -9309,27 +9321,7 @@ up-to-date.
     ;;             (org-display-inline-images nil t))) ; DOESN'T WORK!
     ;;                                     ; More efficient with refresh == t.
 
-    (add-hook 'org-babel-after-execute-hook #'org-display-inline-images)
-#+end_src
-
-#+begin_src emacs-lisp
-    (defadvice org-babel-next-src-block
-      (after leuven-org-babel-next-src-block activate)
-      "Recenter after jumping to the next source block."
-      (recenter))
-
-    (defadvice org-babel-previous-src-block
-      (after leuven-org-babel-previous-src-block activate)
-      "Recenter after jumping to the previous source block."
-      (recenter))
-    )
-#+end_src
-
-#+begin_src emacs-lisp
-    (defadvice org-agenda-switch-to
-      (after leuven-org-agenda-switch-to activate)
-      "Recenter after jumping to the file which contains the item at point."
-      (recenter))
+    (add-hook 'org-babel-after-execute-hook #'org-display-inline-images))
 #+end_src
 
 *** Editing source code
@@ -9585,9 +9577,11 @@ an interactive terminal.
 
 *** Library of Babel
 
+#+begin_note
 As the LOB contains code blocks of different languages, and as we now *check that
 languages are known*, this section 14.6 has been moved *after* the section 14.7
 where we *load languages* such as R, etc.
+#+end_note
 
 #+begin_src emacs-lisp
 ;;** 14.6 (info "(org)Library of Babel")
@@ -9602,6 +9596,24 @@ where we *load languages* such as R, etc.
                             "../doc/library-of-babel.org")))
       (when (file-exists-p lob-file)
         (org-babel-lob-ingest lob-file))))
+#+end_src
+
+*** Key bindings and useful functions
+
+#+begin_src emacs-lisp
+  (leuven--section "14.11 (org)Key bindings and useful functions")
+
+  (with-eval-after-load "ob-core"
+
+    (defadvice org-babel-next-src-block
+      (after leuven-org-babel-next-src-block activate)
+      "Recenter after jumping to the next source block."
+      (recenter))
+
+    (defadvice org-babel-previous-src-block
+      (after leuven-org-babel-previous-src-block activate)
+      "Recenter after jumping to the previous source block."
+      (recenter)))
 #+end_src
 
 ** Miscellaneous

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150806.1100
+;; Version: 20150807.1220
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150806.1100"
+(defconst leuven--emacs-version "20150807.1220"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5061,18 +5061,23 @@ From %c"
   ;; DUPLICATE Obey `eval' variables -- RISKY!
   (setq enable-local-eval t)
 
-  (add-hook 'org-agenda-finalize-hook
-            (lambda ()
-              (remove-text-properties (point-min) (point-max)
-                                      '(mouse-face t))))
-
-  (add-hook 'org-agenda-finalize-hook
-            (lambda ()
-              (let ((inhibit-read-only t))
-                (goto-char (point-min))
-                (org-do-emphasis-faces (point-max)))))
-
   (with-eval-after-load "org-agenda"
+
+    (defadvice org-agenda-switch-to
+      (after leuven-org-agenda-switch-to activate)
+      "Recenter after jumping to the file which contains the item at point."
+      (recenter))
+
+    (add-hook 'org-agenda-finalize-hook
+              (lambda ()
+                (remove-text-properties (point-min) (point-max)
+                                        '(mouse-face t))))
+
+    (add-hook 'org-agenda-finalize-hook
+              (lambda ()
+                (let ((inhibit-read-only t))
+                  (goto-char (point-min))
+                  (org-do-emphasis-faces (point-max)))))
 
     (defun leuven-org-agenda-mark-done-and-add-followup ()
       "Mark the current TODO as done and add another task after it.
@@ -5096,6 +5101,7 @@ this with to-do items than with projects or headings."
 
     ;; ;; New key assignment (overrides `org-agenda-next-item').
     ;; (define-key org-agenda-mode-map "N" 'leuven-org-agenda-new)
+
   )
 
 ;;* 11 (info "(org)Markup")
@@ -5680,23 +5686,7 @@ this with to-do items than with projects or headings."
     ;;             (org-display-inline-images nil t))) ; DOESN'T WORK!
     ;;                                     ; More efficient with refresh == t.
 
-    (add-hook 'org-babel-after-execute-hook #'org-display-inline-images)
-
-    (defadvice org-babel-next-src-block
-      (after leuven-org-babel-next-src-block activate)
-      "Recenter after jumping to the next source block."
-      (recenter))
-
-    (defadvice org-babel-previous-src-block
-      (after leuven-org-babel-previous-src-block activate)
-      "Recenter after jumping to the previous source block."
-      (recenter))
-    )
-
-    (defadvice org-agenda-switch-to
-      (after leuven-org-agenda-switch-to activate)
-      "Recenter after jumping to the file which contains the item at point."
-      (recenter))
+    (add-hook 'org-babel-after-execute-hook #'org-display-inline-images))
 
 ;;** 14.2 (info "(org)Editing source code")
 
@@ -5886,6 +5876,20 @@ this with to-do items than with projects or headings."
                             "../doc/library-of-babel.org")))
       (when (file-exists-p lob-file)
         (org-babel-lob-ingest lob-file))))
+
+  (leuven--section "14.11 (org)Key bindings and useful functions")
+
+  (with-eval-after-load "ob-core"
+
+    (defadvice org-babel-next-src-block
+      (after leuven-org-babel-next-src-block activate)
+      "Recenter after jumping to the next source block."
+      (recenter))
+
+    (defadvice org-babel-previous-src-block
+      (after leuven-org-babel-previous-src-block activate)
+      "Recenter after jumping to the previous source block."
+      (recenter)))
 
 ;;* 15 (info "(org)Miscellaneous")
 
