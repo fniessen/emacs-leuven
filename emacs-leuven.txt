@@ -4924,7 +4924,8 @@ one.
   ;; Title bar display of visible frames.
   (setq frame-title-format
         (format "%s Emacs%s %s%s of %s - PID: %d"
-                (capitalize (symbol-name system-type))
+                (replace-regexp-in-string "-.*$" ""
+                                          (capitalize (symbol-name system-type)))
                 (if (string-match "^x86_64-.*" system-configuration)
                     "-w64"
                   "-w32")
