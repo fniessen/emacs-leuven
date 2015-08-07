@@ -4933,8 +4933,9 @@ one.
                 (if (and (boundp 'emacs-repository-version)
                          emacs-repository-version)
                     (concat " (r"
-                            (replace-regexp-in-string " .*" ""
-                                                      emacs-repository-version)
+                            (substring
+                             (replace-regexp-in-string
+                              " .*" "" emacs-repository-version) 0 7)
                             ")")
                   "")
                 (format-time-string "%Y-%m-%d" emacs-build-time)
