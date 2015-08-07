@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150807.1227
+;; Version: 20150807.1444
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150807.1227"
+(defconst leuven--emacs-version "20150807.1444"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -748,7 +748,6 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; Mark all parts of the buffer that matches the current region.
     (global-set-key (kbd "C-c C-<") #'mc/mark-all-like-this) ;!
-    ;; (global-set-key (kbd "C-c *") #'mc/mark-all-like-this) ; Conflict in Org tables!
 
     ;; (global-set-key (kbd "C-<return>") #'mc/mark-more-like-this-extended) ; useful for completion
 
@@ -2777,11 +2776,9 @@ These packages are neither built-in nor already installed nor ignored."
                 emacs-version
                 (if (and (boundp 'emacs-repository-version)
                          emacs-repository-version)
-                    (concat " (r"
-                            (substring
-                             (replace-regexp-in-string
-                              " .*" "" emacs-repository-version) 0 7)
-                            ")")
+                    (concat " (" (substring
+                                  (replace-regexp-in-string
+                                   " .*" "" emacs-repository-version) 0 7) ")")
                   "")
                 (format-time-string "%Y-%m-%d" emacs-build-time)
                 (emacs-pid)))
@@ -3611,7 +3608,6 @@ These packages are neither built-in nor already installed nor ignored."
               ;; Remove some bindings.
               (local-unset-key (kbd "C-c SPC")) ; Used by Ace Jump.
               (local-unset-key (kbd "C-c C-<")) ; Used by Multiple Cursors.
-              (local-unset-key (kbd "C-c *")) ; Used by Multiple Cursors.
               ;; (local-unset-key (kbd "C-c %")) ; XXX
               ;; (local-unset-key (kbd "C-c &")) ; XXX
 

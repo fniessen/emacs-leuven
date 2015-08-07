@@ -1334,7 +1334,6 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
 
     ;; Mark all parts of the buffer that matches the current region.
     (global-set-key (kbd "C-c C-<") #'mc/mark-all-like-this) ;!
-    ;; (global-set-key (kbd "C-c *") #'mc/mark-all-like-this) ; Conflict in Org tables!
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4932,11 +4931,9 @@ one.
                 emacs-version
                 (if (and (boundp 'emacs-repository-version)
                          emacs-repository-version)
-                    (concat " (r"
-                            (substring
-                             (replace-regexp-in-string
-                              " .*" "" emacs-repository-version) 0 7)
-                            ")")
+                    (concat " (" (substring
+                                  (replace-regexp-in-string
+                                   " .*" "" emacs-repository-version) 0 7) ")")
                   "")
                 (format-time-string "%Y-%m-%d" emacs-build-time)
                 (emacs-pid)))
@@ -6235,7 +6232,6 @@ interface).
               ;; Remove some bindings.
               (local-unset-key (kbd "C-c SPC")) ; Used by Ace Jump.
               (local-unset-key (kbd "C-c C-<")) ; Used by Multiple Cursors.
-              (local-unset-key (kbd "C-c *")) ; Used by Multiple Cursors.
               ;; (local-unset-key (kbd "C-c %")) ; XXX
               ;; (local-unset-key (kbd "C-c &")) ; XXX
 

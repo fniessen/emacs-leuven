@@ -450,7 +450,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150807.1227</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150807.1445</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -519,7 +519,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150807.1227"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150807.1445"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1934,7 +1934,6 @@ Use Multiple Cursors to <b>rename variables quickly</b>: <b>add the next</b> or 
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Mark all parts of the buffer that matches the current region.</span>
     (global-set-key (kbd <span class="org-string">"C-c C-&lt;"</span>) #'mc/mark-all-like-this) <span class="org-comment-delimiter">;</span><span class="org-comment">!</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-c *") #'mc/mark-all-like-this) ; Conflict in Org tables!</span>
 </pre>
 </div>
 
@@ -6597,11 +6596,9 @@ one.
                 emacs-version
                 (<span class="org-keyword">if</span> (<span class="org-keyword">and</span> (boundp 'emacs-repository-version)
                          emacs-repository-version)
-                    (concat <span class="org-string">" (r"</span>
-                            (substring
-                             (replace-regexp-in-string
-                              <span class="org-string">" .*"</span> <span class="org-string">""</span> emacs-repository-version) <span class="org-warning">0 7)</span>
-                            <span class="org-string">")"</span>)
+                    (concat <span class="org-string">" ("</span> (substring
+                                  (replace-regexp-in-string
+                                   <span class="org-string">" .*"</span> <span class="org-string">""</span> emacs-repository-version) 0 7) <span class="org-string">")"</span>)
                   <span class="org-string">""</span>)
                 (format-time-string <span class="org-string">"%Y-%m-%d"</span> emacs-build-time)
                 (emacs-pid)))
@@ -8261,7 +8258,6 @@ interface).
               <span class="org-comment-delimiter">;; </span><span class="org-comment">Remove some bindings.</span>
               (local-unset-key (kbd <span class="org-string">"C-c SPC"</span>)) <span class="org-comment-delimiter">; </span><span class="org-comment">Used by Ace Jump.</span>
               (local-unset-key (kbd <span class="org-string">"C-c C-&lt;"</span>)) <span class="org-comment-delimiter">; </span><span class="org-comment">Used by Multiple Cursors.</span>
-              (local-unset-key (kbd <span class="org-string">"C-c *"</span>)) <span class="org-comment-delimiter">; </span><span class="org-comment">Used by Multiple Cursors.</span>
               <span class="org-comment-delimiter">;; </span><span class="org-comment">(local-unset-key (kbd "C-c %")) ; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span>
               <span class="org-comment-delimiter">;; </span><span class="org-comment">(local-unset-key (kbd "C-c &amp;")) ; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span>
 
