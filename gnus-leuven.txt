@@ -142,30 +142,6 @@ See http://www.emacswiki.org/emacs/GnusEncryptedAuthInfo.
     (setq auth-source-debug t))
 #+end_src
 
-#+begin_verse
-Richard Stallman <rms@gnu.org> writes:
-
-> http://www.theguardian.com/technology/2014/sep/29/londoners-wi-fi-security-herod-clause
->
-> says that POP3 passwords are sometimes transmitted in plain text.
->
-> Is plaintext transmission of passwords inherent in POP3
-> or is it optional?
-
-Modern pop3 servers support STARTTLS, and Emacs will upgrade to a TLS
-connection whenever the server supports it.  (If you have an Emacs
-compiled with gnutls support, but I would guess that almost all Emacs
-instances has that.)
-
-Virtually all the Emacs network transports that I know of will upgrade
-to TLS opportunistically, if the servers allow it, so Emacs should send
-no passwords unencrypted.
-
-The only exceptions are HTTP and IRC, unless the latter has been fixed
-lately.  And there are hopefully nobody who does a login that matters
-over HTTP.
-#+end_verse
-
 ** Finding the News
 
 Download and *install* of [[http://www.gnu.org/software/gnutls/][GnuTLS library]] may be required.
@@ -177,18 +153,27 @@ If this is on Windows, check what ~M-: (gnutls-available-p) RET~ yield...
 Go to [[http://schwarzvogel.de/ssl_tls_testing.shtml][Testing SSL and TLS services]] to test the *opening of TLS connections* with
 ~gnutls-cli~.
 
-Setting the following right is the only thing really required! The rest is
+#+begin_note
+STARTTLS is an extension to plain text communication protocols to provide
+encrypted communication over the Internet.
+
+STARTTLS enables plain text unsecured SMTP connection to be upgraded to
+a SSL/TLS encrypted session on the same port.
+
+Modern POP3 servers support STARTTLS, and Emacs will upgrade to a TLS connection
+whenever the server supports it.  (If you have an Emacs compiled with GnuTLS
+support, but I would guess that almost all Emacs instances has that.)
+
+Virtually all the Emacs network transports will upgrade to TLS
+opportunistically, if the servers allow it, so Emacs should send no passwords
+unencrypted.
+
+The only exceptions are HTTP and IRC, unless the latter has been fixed lately.
+And there are hopefully nobody who does a login that matters over HTTP.
+#+end_note
+
+Setting the following right is the only thing really required!  The rest is
 customization.
-
-#+begin_note
-The account label allows for multiple accounts on the same server (see =.authinfo=
-for logins).
-#+end_note
-
-#+begin_note
-Mailbox names from the server specified in ~gnus-select-method~ are NOT prefixed
-with ~nnimap~ (or such).  Nice!
-#+end_note
 
 #+begin_note
 The following configuration, given as example (which works if your mail server
@@ -216,6 +201,16 @@ that it does not interfere with your own configuration...
 
     (setq gnus-select-method '(nnnil "")))
 #+end_src
+
+#+begin_note
+The account label allows for multiple accounts on the same server (see =.authinfo=
+for logins).
+#+end_note
+
+#+begin_note
+Mailbox names from the server specified in ~gnus-select-method~ are NOT prefixed
+with ~nnimap~ (or such).  Nice!
+#+end_note
 
 #+begin_src emacs-lisp
   ;; Using Gnus for news.
@@ -848,6 +843,17 @@ replies to an article before younger replies.
   (add-hook 'gnus-summary-mode-hook
             (lambda ()
               (set (make-local-variable 'column-number-mode) nil)))
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+  (add-hook 'gnus-summary-mode-hook
+            (lambda ()
+              (local-set-key "D" 'delete-then-read-next)
+              (local-set-key "d" 'gnus-summary-put-mark-as-expirable-next)
+              (local-set-key "u" 'gnus-summary-clear-mark-forward)
+              (local-set-key "x" 'expunge-and-reload)
+              (local-set-key "v" 'gnus-article-view-part)
+              (local-set-key (kbd "C-a") 'gnus-summary-save-parts)))
 #+end_src
 
 *** [[http://www.emacswiki.org/emacs/GnusStripes][Gnus Stripes]]
