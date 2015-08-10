@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150807.1455
+;; Version: 20150810.1142
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150807.1455"
+(defconst leuven--emacs-version "20150810.1142"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -674,18 +674,6 @@ These packages are neither built-in nor already installed nor ignored."
       ;; Don't show breadcrumbs in the mode line.
       (setq Info-breadcrumbs-in-mode-line-mode nil))
 
-    ;; Some info related functions (to insert links such as `(info
-    ;; "(message)Insertion Variables")').
-    (when (locate-library "rs-info")
-      (autoload 'rs-info-insert-current-node "rs-info"
-        "Insert reference to current Info node using STYPE in buffer." t)
-      (autoload 'rs-info-boxquote "rs-info"
-        "Yank text (from an info node), box it and use current info node as title." t)
-      (autoload 'rs-info-reload "rs-info"
-        "Reload current info node." t)
-      (autoload 'rs-info-insert-node-for-variable "rs-info"
-        "Insert a custom style info node for the top level form at point." t)
-      (defalias 'boxquote-info 'rs-info-boxquote))
     )
 
   ;; Get a Unix manual page of the item under point.

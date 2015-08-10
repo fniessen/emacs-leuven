@@ -1169,19 +1169,12 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
       (setq Info-breadcrumbs-in-mode-line-mode nil))
 #+end_src
 
+In an Info page, ~w~ will copy the reference to the current node (the ~(%s)%s~ part
+of your format string).
+
+When called with a 0 argument (~M-0 w~), you get ~(info \"(%s)%s\")~.
+
 #+begin_src emacs-lisp
-    ;; Some info related functions (to insert links such as `(info
-    ;; "(message)Insertion Variables")').
-    (when (locate-library "rs-info")
-      (autoload 'rs-info-insert-current-node "rs-info"
-        "Insert reference to current Info node using STYPE in buffer." t)
-      (autoload 'rs-info-boxquote "rs-info"
-        "Yank text (from an info node), box it and use current info node as title." t)
-      (autoload 'rs-info-reload "rs-info"
-        "Reload current info node." t)
-      (autoload 'rs-info-insert-node-for-variable "rs-info"
-        "Insert a custom style info node for the top level form at point." t)
-      (defalias 'boxquote-info 'rs-info-boxquote))
     )
 #+end_src
 
@@ -15050,7 +15043,8 @@ defeat the purpose of running it inside Emacs):
 - In the default character mode, ~C-c~ is the key prefix.
 - In line mode, you don't need a prefix.
 
-Try also to use ~M-x ansi-term~ that is much better than ~term~:
+Try also to use ~M-x ansi-term~ (Emacs terminal that accepts the ANSI-terminal
+escape sequences) that is much better than ~term~:
 - with ~M-x term~, you can run *only one shell*;
 - with ~M-x ansi-term~, you can start more than one (~*ansi-term*<2>~,
   ~*ansi-term*<3>~).

@@ -450,7 +450,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150807.1456</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150810.1143</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -519,7 +519,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150807.1456"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150810.1143"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1695,21 +1695,18 @@ buffer, by calling <code>Info-merge-subnodes</code> (bound to <code>+</code>).
 </pre>
 </div>
 
+<p>
+In an Info page, <code>w</code> will copy the reference to the current node (the <code>(%s)%s</code> part
+of your format string).
+</p>
+
+<p>
+When called with a 0 argument (<code>M-0 w</code>), you get <code>(info \"(%s)%s\")</code>.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Some info related functions (to insert links such as `(info</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">"(message)Insertion Variables")').</span>
-    (<span class="org-keyword">when</span> (locate-library <span class="org-string">"rs-info"</span>)
-      (autoload 'rs-info-insert-current-node <span class="org-string">"rs-info"</span>
-        <span class="org-doc">"Insert reference to current Info node using STYPE in buffer."</span> t)
-      (autoload 'rs-info-boxquote <span class="org-string">"rs-info"</span>
-        <span class="org-doc">"Yank text (from an info node), box it and use current info node as title."</span> t)
-      (autoload 'rs-info-reload <span class="org-string">"rs-info"</span>
-        <span class="org-doc">"Reload current info node."</span> t)
-      (autoload 'rs-info-insert-node-for-variable <span class="org-string">"rs-info"</span>
-        <span class="org-doc">"Insert a custom style info node for the top level form at point."</span> t)
-      (<span class="org-keyword">defalias</span> '<span class="org-function-name">boxquote-info</span> 'rs-info-boxquote))
-    )
+<pre class="src src-emacs-lisp">    )
 </pre>
 </div>
 
@@ -19521,7 +19518,8 @@ defeat the purpose of running it inside Emacs):
 </ul>
 
 <p>
-Try also to use <code>M-x ansi-term</code> that is much better than <code>term</code>:
+Try also to use <code>M-x ansi-term</code> (Emacs terminal that accepts the ANSI-terminal
+escape sequences) that is much better than <code>term</code>:
 </p>
 <ul class="org-ul">
 <li>with <code>M-x term</code>, you can run <b>only one shell</b>;</li>
