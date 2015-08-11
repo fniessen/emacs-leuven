@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150811.1343
+;; Version: 20150811.1418
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150811.1343"
+(defconst leuven--emacs-version "20150811.1418"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5805,6 +5805,10 @@ this with to-do items than with projects or headings."
     (org-babel-do-load-languages        ; Loads org, gnus-sum, etc...
      'org-babel-load-languages org-babel-load-languages)
 
+    ;; Don't use getline for command-line editing and assert interactive use.
+    (setq org-babel-R-command
+          (concat org-babel-R-command " --ess"))
+
     ;; Accented characters on graphics.
     (setq org-babel-R-command
           (concat org-babel-R-command " --encoding=UTF-8"))
@@ -8525,19 +8529,19 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;;               (concat "source ~/.bashrc; shopt -s -q expand_aliases;\n "
   ;;                       (ad-get-arg 0))))
 
-  ;; For single shell commands (= "the" reference).
-  (setq shell-file-name                 ; Must be in the `PATH'.
-        (or (ignore-errors
-              (file-name-nondirectory (or (executable-find "zsh")
-                                          (executable-find "bash")
-                                          (executable-find "sh"))))
-            (when leuven--win32-p "cmdproxy.exe")))
-
-  ;; Use `shell-file-name' as the default shell.
-  (setenv "SHELL" shell-file-name)
-
-  ;; Switch used to have the shell execute its command line argument.
-  (setq shell-command-switch "-c")      ; `/c' does not work with XEmacs.
+  ;; ;; For single shell commands (= "the" reference).
+  ;; (setq shell-file-name                 ; Must be in the `PATH'.
+  ;;       (or (ignore-errors
+  ;;             (file-name-nondirectory (or (executable-find "zsh")
+  ;;                                         (executable-find "bash")
+  ;;                                         (executable-find "sh"))))
+  ;;           (when leuven--win32-p "cmdproxy.exe")))
+  ;;
+  ;; ;; Use `shell-file-name' as the default shell.
+  ;; (setenv "SHELL" shell-file-name)
+  ;;
+  ;; ;; Switch used to have the shell execute its command line argument.
+  ;; (setq shell-command-switch "-c")      ; `/c' did not work with XEmacs.
 
   ;; Quote process arguments to ensure correct parsing on Windows.
   (setq w32-quote-process-args t)
@@ -8549,8 +8553,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "36.2 Interactive Shell")
 
-  ;; For the interactive (sub)shell (and AUCTeX compilation?).
-  (setq explicit-shell-file-name shell-file-name)
+  ;; ;; For the interactive (sub)shell (and AUCTeX compilation?).
+  ;; (setq explicit-shell-file-name shell-file-name)
 
 ;;** 36.3 Shell Mode
 

@@ -9491,6 +9491,10 @@ languages which can be evaluated in Org mode buffers.
     (org-babel-do-load-languages        ; Loads org, gnus-sum, etc...
      'org-babel-load-languages org-babel-load-languages)
 
+    ;; Don't use getline for command-line editing and assert interactive use.
+    (setq org-babel-R-command
+          (concat org-babel-R-command " --ess"))
+
     ;; Accented characters on graphics.
     (setq org-babel-R-command
           (concat org-babel-R-command " --encoding=UTF-8"))
@@ -14697,19 +14701,19 @@ and *replaces* it with the output from the shell command.
   ;;               (concat "source ~/.bashrc; shopt -s -q expand_aliases;\n "
   ;;                       (ad-get-arg 0))))
 
-  ;; For single shell commands (= "the" reference).
-  (setq shell-file-name                 ; Must be in the `PATH'.
-        (or (ignore-errors
-              (file-name-nondirectory (or (executable-find "zsh")
-                                          (executable-find "bash")
-                                          (executable-find "sh"))))
-            (when leuven--win32-p "cmdproxy.exe")))
-
-  ;; Use `shell-file-name' as the default shell.
-  (setenv "SHELL" shell-file-name)
-
-  ;; Switch used to have the shell execute its command line argument.
-  (setq shell-command-switch "-c")      ; `/c' does not work with XEmacs.
+  ;; ;; For single shell commands (= "the" reference).
+  ;; (setq shell-file-name                 ; Must be in the `PATH'.
+  ;;       (or (ignore-errors
+  ;;             (file-name-nondirectory (or (executable-find "zsh")
+  ;;                                         (executable-find "bash")
+  ;;                                         (executable-find "sh"))))
+  ;;           (when leuven--win32-p "cmdproxy.exe")))
+  ;;
+  ;; ;; Use `shell-file-name' as the default shell.
+  ;; (setenv "SHELL" shell-file-name)
+  ;;
+  ;; ;; Switch used to have the shell execute its command line argument.
+  ;; (setq shell-command-switch "-c")      ; `/c' did not work with XEmacs.
 
   ;; Quote process arguments to ensure correct parsing on Windows.
   (setq w32-quote-process-args t)
@@ -14728,8 +14732,8 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 
   (leuven--section "36.2 Interactive Shell")
 
-  ;; For the interactive (sub)shell (and AUCTeX compilation?).
-  (setq explicit-shell-file-name shell-file-name)
+  ;; ;; For the interactive (sub)shell (and AUCTeX compilation?).
+  ;; (setq explicit-shell-file-name shell-file-name)
 #+end_src
 
 ** Shell Mode
