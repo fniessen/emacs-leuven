@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150810.1142
+;; Version: 20150811.1343
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150810.1142"
+(defconst leuven--emacs-version "20150811.1343"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1097,9 +1097,8 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Indicate changes in the fringe.
   (with-eval-after-load "diff-hl"
-    (global-diff-hl-mode))
 
-  (with-eval-after-load "diff-hl"
+    (global-diff-hl-mode)
 
     ;; Jump to next hunk (also on `C-x v ]').
     (define-key diff-hl-mode-map (kbd "C-x v >") 'diff-hl-next-hunk)
@@ -3147,7 +3146,7 @@ These packages are neither built-in nor already installed nor ignored."
     (setq fci-dash-pattern 0.5)
 
     ;; Enable fci-mode in programming, message and Org modes.
-    ;; (add-hook 'prog-mode-hook #'fci-mode) ; 3 special chars at the end of every line when exporting code blocks to HTML!!!
+    (add-hook 'prog-mode-hook #'fci-mode) ; 3 special chars at the end of every line when exporting code blocks to HTML!!!
     (add-hook 'message-mode-hook #'fci-mode)
     (add-hook 'org-mode-hook #'fci-mode)
 
@@ -5348,8 +5347,8 @@ this with to-do items than with projects or headings."
     ;; 13.1.5 Don't include the JavaScript snippets in exported HTML files.
     (setq org-html-head-include-scripts nil)
 
-    ;; 12.5.9 Turn inclusion of the default CSS style off.
-    (setq org-html-head-include-default-style nil)
+    ;; ;; 12.5.9 Turn inclusion of the default CSS style off.
+    ;; (setq org-html-head-include-default-style nil)
 
     ;; Check that `tidy' is in PATH, and that configuration file exists.
     (when (and (executable-find "tidy")

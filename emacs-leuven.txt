@@ -2008,21 +2008,14 @@ changes.
 
   ;; Indicate changes in the fringe.
   (with-eval-after-load "diff-hl"
-    (global-diff-hl-mode))
+
+    (global-diff-hl-mode)
 #+end_src
 
 If you're using some package other than ~vc~ to commit changes, it might not run
 ~vc-checkin-hook~ after commits.  In that case, you'll need to either add
 ~diff-hl-update~ to the hook it does run, or advise some function that's called in
 the buffer after its state has changed.
-
-#+begin_src emacs-lisp :tangle no
-  (defadvice magit-refresh (after diff-hl-refresh-after-magit-refresh activate)
-    (dolist (buffer (buffer-list))
-      (with-current-buffer buffer
-        (when diff-hl-mode
-          (diff-hl-update)))))
-#+end_src
 
 #+begin_note
 Of course, ~diff-hl~ is not updated when we commit changes with ~sendpatch~...
@@ -2031,8 +2024,6 @@ Of course, ~diff-hl~ is not updated when we commit changes with ~sendpatch~...
 Jump between changes:
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "diff-hl"
-
     ;; Jump to next hunk (also on `C-x v ]').
     (define-key diff-hl-mode-map (kbd "C-x v >") 'diff-hl-next-hunk)
 
@@ -2048,6 +2039,14 @@ Act on changes:
 
     ;; Revert current hunk (also on `C-x v n').
     (define-key diff-hl-mode-map (kbd "C-x v u") 'diff-hl-revert-hunk))
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+  (defadvice magit-refresh (after diff-hl-refresh-after-magit-refresh activate)
+    (dolist (buffer (buffer-list))
+      (with-current-buffer buffer
+        (when diff-hl-mode
+          (diff-hl-update)))))
 #+end_src
 
 ** Displaying Boundaries
@@ -5549,7 +5548,7 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
     (setq fci-dash-pattern 0.5)
 
     ;; Enable fci-mode in programming, message and Org modes.
-    ;; (add-hook 'prog-mode-hook #'fci-mode) ; 3 special chars at the end of every line when exporting code blocks to HTML!!!
+    (add-hook 'prog-mode-hook #'fci-mode) ; 3 special chars at the end of every line when exporting code blocks to HTML!!!
     (add-hook 'message-mode-hook #'fci-mode)
     (add-hook 'org-mode-hook #'fci-mode)
 #+end_src
@@ -8796,8 +8795,8 @@ To get a start for your CSS file, use the command
     ;; 13.1.5 Don't include the JavaScript snippets in exported HTML files.
     (setq org-html-head-include-scripts nil)
 
-    ;; 12.5.9 Turn inclusion of the default CSS style off.
-    (setq org-html-head-include-default-style nil)
+    ;; ;; 12.5.9 Turn inclusion of the default CSS style off.
+    ;; (setq org-html-head-include-default-style nil)
 #+end_src
 
 [[http://tidy.sourceforge.net/][HTML Tidy]] is a HTML linter.  Please see [[http://www.htmlpedia.org/wiki/HTML_Tidy][List of the Tidy errors]].
