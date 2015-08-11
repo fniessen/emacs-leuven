@@ -1336,8 +1336,69 @@ From Tracks:
 
 * EMAIL notifications
 
+** Examples
+
 See
 https://groups.google.com/forum/#!search/messageid$3Amailman.7594.1438153952.904.help-gnu-emacs@gnu.org/gnu.emacs.help/uBCS3K_ZJFQ/KBfe2RXAtgsJ.
+
+Other posts:
+
+#+begin_verse
+Automatic send email to myself:
+
+(defun email-heading-to-me ()
+  "Send the current org-mode heading as the body of an email, with headline as the subject."
+  (interactive)
+  (save-excursion
+    (org-mark-subtree)
+    (let ((content (buffer-substring (point) (mark)))
+          (SUBJECT (nth 4 (org-heading-components))))
+
+      (compose-mail "your@email.here" SUBJECT)
+      (message-goto-body)
+      (insert content)
+      (message-send)
+      (message-kill-buffer))))
+#+end_verse
+
+From [[http://mid.gmane.org/m2egjh60nb.fsf%2540andrew.cmu.edu][Email from John Kitchin: Re: create a "send plain text/]]
+
+Create a "send plain text/pdf email with current header" function:
+
+#+begin_verse
+(defvar my-spam-sent-names nil
+ "Make sure that, even if we have to run this multiple times, people
+ don't get spammed more than once.")
+
+(defun my-spam-headline ()
+  (org-narrow-to-subtree)
+  (cl-flet ((mp (p) (org-entry-get nil p t)))
+    (let* ((org-inhibit-logging t)
+           (file (buffer-file-name (current-buffer)))
+           (subject "Sign up for my stuff")
+           (name (mp "NAME"))
+           (to (mp "MAIL_TO"))
+           (from "Eric Abrahamsen <eric@ericabrahamsen.net>")
+           (salutation (mp "SALUTATION"))
+           (body (replace-regexp-in-string "XXXX" salutation letter-text t)))
+      (when (equal "PITCH" (mp "TODO"))
+        (unless (member name my-spam-sent-names)
+          (save-excursion
+            (org-mime-compose body 'html file (concat name " <" to ">")
+                              subject `((from . ,from)))
+            (message-send-and-exit))
+          (push name my-spam-sent-names)
+          (org-todo "WAITING")))))
+  (setq org-map-continue-from (point-max))
+  (widen))
+
+(defun my-spam-tree ()
+  (interactive)
+  (let ((letter-text "long string with XXXXs in it."))
+    (org-map-entries #'my-spam-subtree "TODO=\"PITCH\"" 'tree)))
+#+end_verse
+
+From [[http://mid.gmane.org/871tfhylwu.fsf%2540ericabrahamsen.net][Email from Eric Abrahamsen: Re: create a "send plain text/]]
 
 ** Task assigned
 
