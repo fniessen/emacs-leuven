@@ -535,7 +535,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150811.1418</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150814.1704</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -604,7 +604,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150811.1418"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150814.1704"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1639,7 +1639,7 @@ RET</code>.
   <span class="org-comment-delimiter">;;         </span><span class="org-comment">(and message (message message)))))</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Show all variables whose name matches the pattern.</span>
-  (define-key help-map (kbd <span class="org-string">"A"</span>) 'apropos-user-option)
+  (define-key help-map (kbd <span class="org-string">"A"</span>) #'apropos-user-option)
 </pre>
 </div>
 </div>
@@ -2537,7 +2537,7 @@ We bookmarks positions, not just lines!!
 
 <pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Quickly jump to a position in the current view.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ace-jump-mode-autoloads"</span>
-    (define-key global-map (kbd <span class="org-string">"C-c SPC"</span>) 'ace-jump-mode))
+    (global-set-key (kbd <span class="org-string">"C-c SPC"</span>) #'ace-jump-mode))
 </pre>
 </div>
 
@@ -2941,10 +2941,10 @@ Jump between changes:
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Jump to next hunk (also on `C-x v ]').</span>
-    (define-key diff-hl-mode-map (kbd <span class="org-string">"C-x v &gt;"</span>) 'diff-hl-next-hunk)
+    (define-key diff-hl-mode-map (kbd <span class="org-string">"C-x v &gt;"</span>) #'diff-hl-next-hunk)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Jump to previous hunk (also on `C-x v [').</span>
-    (define-key diff-hl-mode-map (kbd <span class="org-string">"C-x v &lt;"</span>) 'diff-hl-previous-hunk)
+    (define-key diff-hl-mode-map (kbd <span class="org-string">"C-x v &lt;"</span>) #'diff-hl-previous-hunk)
 </pre>
 </div>
 
@@ -2955,10 +2955,10 @@ Act on changes:
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Popup current diff.</span>
-    (define-key diff-hl-mode-map (kbd <span class="org-string">"C-x v ="</span>) 'diff-hl-diff-goto-hunk)
+    (define-key diff-hl-mode-map (kbd <span class="org-string">"C-x v ="</span>) #'diff-hl-diff-goto-hunk)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Revert current hunk (also on `C-x v n').</span>
-    (define-key diff-hl-mode-map (kbd <span class="org-string">"C-x v u"</span>) 'diff-hl-revert-hunk))
+    (define-key diff-hl-mode-map (kbd <span class="org-string">"C-x v u"</span>) #'diff-hl-revert-hunk))
 </pre>
 </div>
 
@@ -3644,7 +3644,7 @@ the user see truly invisible matches before replacing them.
     (global-set-key (kbd <span class="org-string">"M-%"</span>) #'anzu-query-replace)
     (global-set-key (kbd <span class="org-string">"C-M-%"</span>) #'anzu-query-replace-regexp)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(define-key isearch-mode-map (kbd "M-%") 'anzu-query-replace)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(define-key isearch-mode-map (kbd "M-%") #'anzu-query-replace)</span>
     )
 </pre>
 </div>
@@ -3766,7 +3766,7 @@ a match for REGEXP.
   <span class="org-comment-delimiter">;;          </span><span class="org-comment">(regexp-quote isearch-string))))))</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">When doing Isearch, hand the word over to `</span><span class="org-constant"><span class="org-comment">helm-swoop</span></span><span class="org-comment">'.</span>
-  (define-key isearch-mode-map (kbd <span class="org-string">"C-o"</span>) 'helm-swoop-from-isearch)
+  (define-key isearch-mode-map (kbd <span class="org-string">"C-o"</span>) #'helm-swoop-from-isearch)
 
   (global-unset-key (kbd <span class="org-string">"M-o"</span>)) <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment">???</span>
 
@@ -5357,24 +5357,24 @@ Something not <code>TAB</code> can be &ldquo;C-z&rdquo;, &ldquo;C-TAB&rdquo;, an
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(define-key helm-find-files-map (kbd <span class="org-string">"&lt;tab&gt;"</span>)    'helm-execute-persistent-action)
-(define-key helm-find-files-map (kbd <span class="org-string">"C-&lt;tab&gt;"</span>)  'helm-select-action)
-(define-key helm-find-files-map (kbd <span class="org-string">"C-z"</span>)      'helm-select-action)
-(define-key helm-find-files-map (kbd <span class="org-string">"&lt;SPC&gt;"</span>)    'helm-select-action)
-(define-key helm-find-files-map (kbd <span class="org-string">"&lt;return&gt;"</span>) 'helm-confirm-and-exit-minibuffer)
-(define-key helm-find-files-map (kbd <span class="org-string">"^"</span>)        'helm-find-files-up-one-level)
+<pre class="src src-emacs-lisp">(define-key helm-find-files-map (kbd <span class="org-string">"&lt;tab&gt;"</span>)    #'helm-execute-persistent-action)
+(define-key helm-find-files-map (kbd <span class="org-string">"C-&lt;tab&gt;"</span>)  #'helm-select-action)
+(define-key helm-find-files-map (kbd <span class="org-string">"C-z"</span>)      #'helm-select-action)
+(define-key helm-find-files-map (kbd <span class="org-string">"&lt;SPC&gt;"</span>)    #'helm-select-action)
+(define-key helm-find-files-map (kbd <span class="org-string">"&lt;return&gt;"</span>) #'helm-confirm-and-exit-minibuffer)
+(define-key helm-find-files-map (kbd <span class="org-string">"^"</span>)        #'helm-find-files-up-one-level)
 </pre>
 </div>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(define-key helm-map (kbd <span class="org-string">"&lt;tab&gt;"</span>) 'helm-execute-persistent-action) <span class="org-comment-delimiter">; </span><span class="org-comment">rebihnd tab to do persistent action</span>
-(define-key helm-map (kbd <span class="org-string">"C-i"</span>) 'helm-execute-persistent-action) <span class="org-comment-delimiter">; </span><span class="org-comment">make TAB works in terminal</span>
-(define-key helm-map (kbd <span class="org-string">"C-z"</span>)  'helm-select-action) <span class="org-comment-delimiter">; </span><span class="org-comment">list actions using C-z</span>
+<pre class="src src-emacs-lisp">(define-key helm-map (kbd <span class="org-string">"&lt;tab&gt;"</span>) #'helm-execute-persistent-action) <span class="org-comment-delimiter">; </span><span class="org-comment">Rebind TAB to do persistent action.</span>
+(define-key helm-map (kbd <span class="org-string">"C-i"</span>) #'helm-execute-persistent-action) <span class="org-comment-delimiter">; </span><span class="org-comment">Make TAB works in terminal.</span>
+(define-key helm-map (kbd <span class="org-string">"C-z"</span>) #'helm-select-action) <span class="org-comment-delimiter">; </span><span class="org-comment">List actions using C-z.</span>
 
-(define-key helm-grep-mode-map (kbd <span class="org-string">"&lt;return&gt;"</span>)  'helm-grep-mode-jump-other-window)
-(define-key helm-grep-mode-map (kbd <span class="org-string">"n"</span>)  'helm-grep-mode-jump-other-window-forward)
-(define-key helm-grep-mode-map (kbd <span class="org-string">"p"</span>)  'helm-grep-mode-jump-other-window-backward)
+(define-key helm-grep-mode-map (kbd <span class="org-string">"&lt;return&gt;"</span>)  #'helm-grep-mode-jump-other-window)
+(define-key helm-grep-mode-map (kbd <span class="org-string">"n"</span>) #'helm-grep-mode-jump-other-window-forward)
+(define-key helm-grep-mode-map (kbd <span class="org-string">"p"</span>) #'helm-grep-mode-jump-other-window-backward)
 </pre>
 </div>
 </div>
@@ -5500,7 +5500,7 @@ XXX Look at helm-dictionary.
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Speedy file opening.</span>
     (global-set-key (kbd <span class="org-string">"&lt;f3&gt;"</span>) #'helm-for-files)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-x C-f") #'helm-find-files)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-x C-f") #'helm-find-files) ; OK.</span>
 </pre>
 </div>
 
@@ -5565,7 +5565,7 @@ XXX Look at helm-dictionary.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    (global-set-key (kbd <span class="org-string">"C-h a"</span>) #'helm-apropos)
+<pre class="src src-emacs-lisp">    (global-set-key (kbd <span class="org-string">"C-h a"</span>) #'helm-apropos) <span class="org-comment-delimiter">; </span><span class="org-comment">OK.</span>
 </pre>
 </div>
 
@@ -5865,7 +5865,10 @@ You can also use the <code>@</code> prefix to <b>search buffer contents</b>.
     (<span class="org-keyword">setq</span> helm-buffer-max-length nil)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Never show details in buffer list.</span>
-    (<span class="org-keyword">setq</span> helm-buffer-details-flag nil))
+    (<span class="org-keyword">setq</span> helm-buffer-details-flag nil)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">String to display at end of truncated buffer names.</span>
+    (<span class="org-keyword">setq</span> helm-buffers-end-truncated-string <span class="org-string">"…"</span>))
 </pre>
 </div>
 
@@ -6074,19 +6077,19 @@ Pressing twice C-o goes from Helm Swoop to Helm Multi Swoop&#x2026;
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(global-set-key (kbd "C-x M-i") #'helm-multi-swoop-all)</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">When doing Isearch, hand the word over to `</span><span class="org-constant"><span class="org-comment">helm-swoop</span></span><span class="org-comment">'.</span>
-    (define-key isearch-mode-map (kbd <span class="org-string">"C-o"</span>) 'helm-swoop-from-isearch)
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)</span>
+    (define-key isearch-mode-map (kbd <span class="org-string">"C-o"</span>) #'helm-swoop-from-isearch)
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(define-key isearch-mode-map (kbd "M-i") #'helm-swoop-from-isearch)</span>
 
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"dired"</span>
-      (define-key dired-mode-map (kbd <span class="org-string">"C-o"</span>) 'helm-swoop)
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">(define-key dired-mode-map (kbd "M-i") 'helm-swoop)</span>
+      (define-key dired-mode-map (kbd <span class="org-string">"C-o"</span>) #'helm-swoop)
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(define-key dired-mode-map (kbd "M-i") #'helm-swoop)</span>
       ))
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-swoop"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">From `</span><span class="org-constant"><span class="org-comment">helm-swoop</span></span><span class="org-comment">' to `</span><span class="org-constant"><span class="org-comment">helm-multi-swoop-all</span></span><span class="org-comment">'.</span>
-    (define-key helm-swoop-map (kbd <span class="org-string">"C-o"</span>) 'helm-multi-swoop-all-from-helm-swoop)
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)</span>
+    (define-key helm-swoop-map (kbd <span class="org-string">"C-o"</span>) #'helm-multi-swoop-all-from-helm-swoop)
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(define-key helm-swoop-map (kbd "M-i") #'helm-multi-swoop-all-from-helm-swoop)</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't slightly boost invoke speed in exchange for text color.</span>
     (<span class="org-keyword">setq</span> helm-swoop-speed-or-color t)
@@ -6774,8 +6777,8 @@ screen decorations.</dd>
        <span class="org-string">".w"</span> <span class="org-string">"README"</span>))
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Bind the arrow keys in the speedbar tree.</span>
-    (define-key speedbar-mode-map (kbd <span class="org-string">"&lt;right&gt;"</span>) 'speedbar-expand-line)
-    (define-key speedbar-mode-map (kbd <span class="org-string">"&lt;left&gt;"</span>) 'speedbar-contract-line)
+    (define-key speedbar-mode-map (kbd <span class="org-string">"&lt;right&gt;"</span>) #'speedbar-expand-line)
+    (define-key speedbar-mode-map (kbd <span class="org-string">"&lt;left&gt;"</span>) #'speedbar-contract-line)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Parameters to use when creating the speedbar frame in Emacs.</span>
     (<span class="org-keyword">setq</span> speedbar-frame-parameters '((width . 30)
@@ -7801,15 +7804,15 @@ You can use <code>org-cycle</code> in other modes, with <code>outline-minor-mode
     <span class="org-comment-delimiter">;;   </span><span class="org-comment">(add-hook 'outline-minor-mode-hook</span>
     <span class="org-comment-delimiter">;;             </span><span class="org-comment">(lambda ()</span>
     <span class="org-comment-delimiter">;;               </span><span class="org-comment">(define-key outline-minor-mode-map</span>
-    <span class="org-comment-delimiter">;;                 </span><span class="org-comment">(kbd "&lt;S-tab&gt;") 'outline-cycle)</span>
+    <span class="org-comment-delimiter">;;                 </span><span class="org-comment">(kbd "&lt;S-tab&gt;") #'outline-cycle)</span>
     <span class="org-comment-delimiter">;;               </span><span class="org-comment">(define-key outline-minor-mode-map</span>
-    <span class="org-comment-delimiter">;;                 </span><span class="org-comment">(kbd "&lt;M-left&gt;") 'outline-promote)</span>
+    <span class="org-comment-delimiter">;;                 </span><span class="org-comment">(kbd "&lt;M-left&gt;") #'outline-promote)</span>
     <span class="org-comment-delimiter">;;               </span><span class="org-comment">(define-key outline-minor-mode-map</span>
-    <span class="org-comment-delimiter">;;                 </span><span class="org-comment">(kbd "&lt;M-right&gt;") 'outline-demote)</span>
+    <span class="org-comment-delimiter">;;                 </span><span class="org-comment">(kbd "&lt;M-right&gt;") #'outline-demote)</span>
     <span class="org-comment-delimiter">;;               </span><span class="org-comment">(define-key outline-minor-mode-map</span>
-    <span class="org-comment-delimiter">;;                 </span><span class="org-comment">(kbd "&lt;M-up&gt;") 'outline-move-subtree-up)</span>
+    <span class="org-comment-delimiter">;;                 </span><span class="org-comment">(kbd "&lt;M-up&gt;") #'outline-move-subtree-up)</span>
     <span class="org-comment-delimiter">;;               </span><span class="org-comment">(define-key outline-minor-mode-map</span>
-    <span class="org-comment-delimiter">;;                 </span><span class="org-comment">(kbd "&lt;M-down&gt;") 'outline-move-subtree-down))))</span>
+    <span class="org-comment-delimiter">;;                 </span><span class="org-comment">(kbd "&lt;M-down&gt;") #'outline-move-subtree-down))))</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Extra support for outline minor mode.</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(try-require 'out-xtra)</span>
@@ -8151,9 +8154,9 @@ work and tasks with Org mode.
   (add-to-list 'auto-mode-alist '(<span class="org-string">"\\.org\\'"</span> . org-mode))
   (add-to-list 'auto-mode-alist '(<span class="org-string">"\\.org_archive\\'"</span> . org-mode))
 
-  (define-key global-map (kbd <span class="org-string">"C-c l"</span>) 'org-store-link)
-  (define-key global-map (kbd <span class="org-string">"C-c c"</span>) 'org-capture)
-  (define-key global-map (kbd <span class="org-string">"C-c a"</span>) 'org-agenda)
+  (global-set-key (kbd <span class="org-string">"C-c l"</span>) #'org-store-link)
+  (global-set-key (kbd <span class="org-string">"C-c c"</span>) #'org-capture)
+  (global-set-key (kbd <span class="org-string">"C-c a"</span>) #'org-agenda)
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Using links outside Org.</span>
   (global-set-key (kbd <span class="org-string">"C-c L"</span>) #'org-insert-link-global)
@@ -8161,7 +8164,7 @@ work and tasks with Org mode.
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org"</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Display the Org mode manual in Info mode.</span>
-    (define-key global-map (kbd <span class="org-string">"C-h o"</span>) 'org-info))
+    (global-set-key (kbd <span class="org-string">"C-h o"</span>) #'org-info))
                                         <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> Not autoloaded.</span>
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org"</span>
@@ -8590,7 +8593,7 @@ nil</div>
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org"</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Create indirect buffer and narrow it to current subtree.</span>
-    (define-key org-mode-map (kbd <span class="org-string">"&lt;H-return&gt;"</span>) 'org-tree-to-indirect-buffer))
+    (define-key org-mode-map (kbd <span class="org-string">"&lt;H-return&gt;"</span>) #'org-tree-to-indirect-buffer))
 </pre>
 </div>
 
@@ -8652,7 +8655,7 @@ vs <code>C-u C-c C-j</code>
           (org-reveal t)
         (org-show-siblings)))
 
-    (define-key org-mode-map (kbd <span class="org-string">"C-c C-r"</span>) 'leuven-org-reveal))
+    (define-key org-mode-map (kbd <span class="org-string">"C-c C-r"</span>) #'leuven-org-reveal))
 </pre>
 </div>
 
@@ -10475,7 +10478,7 @@ headline (to return any kind of string you want).
       (org-agenda-redo))
 
     (define-key org-agenda-mode-map
-      (kbd <span class="org-string">"("</span>) 'leuven-org-agenda-toggle-tasks-details)
+      (kbd <span class="org-string">"("</span>) #'leuven-org-agenda-toggle-tasks-details)
 </pre>
 </div>
 
@@ -11255,7 +11258,7 @@ To list all available entities, run <code>M-x org-entities-help</code>.
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Libraries in this list will be loaded once the export framework is needed.</span>
     (<span class="org-keyword">setq</span> org-export-backends '(ascii html icalendar latex odt md))
 
-    (define-key org-mode-map (kbd <span class="org-string">"C-c C-e"</span>) 'org-export-dispatch))
+    (define-key org-mode-map (kbd <span class="org-string">"C-c C-e"</span>) #'org-export-dispatch))
 </pre>
 </div>
 
@@ -11357,7 +11360,7 @@ launched from Dired?
               (message <span class="org-string">"PDF is up to date with Org file"</span>)))
           (beep))))
 
-    (define-key org-mode-map (kbd <span class="org-string">"&lt;f9&gt;"</span>) 'org-save-buffer-and-do-related))
+    (define-key org-mode-map (kbd <span class="org-string">"&lt;f9&gt;"</span>) #'org-save-buffer-and-do-related))
 </pre>
 </div>
 
@@ -12242,7 +12245,7 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
   <span class="org-comment-delimiter">;;         </span><span class="org-comment">(indent-region arg)))</span>
   <span class="org-comment-delimiter">;;</span>
   <span class="org-comment-delimiter">;;   </span><span class="org-comment">;; Make `C-c C-v C-x C-M-\' more convenient.</span>
-  <span class="org-comment-delimiter">;;   </span><span class="org-comment">(define-key org-mode-map (kbd "C-M-\\") 'leuven-org-indent-region))</span>
+  <span class="org-comment-delimiter">;;   </span><span class="org-comment">(define-key org-mode-map (kbd "C-M-\\") #'leuven-org-indent-region))</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Prevent auto-filling in src blocks.</span>
   (<span class="org-keyword">setq</span> org-src-prevent-auto-filling t)
@@ -12778,7 +12781,7 @@ using &ldquo;hyper&rdquo;:
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Run from current line to end of code block (mapped to H-e?).</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Run current code block.</span>
-    (define-key org-mode-map (kbd <span class="org-string">"H-e"</span>) 'org-babel-execute-maybe)
+    (define-key org-mode-map (kbd <span class="org-string">"H-e"</span>) #'org-babel-execute-maybe)
 
     (<span class="org-keyword">defun</span> <span class="org-function-name">org-babel-force-execute-src-block</span> ()
       <span class="org-doc">"Force execution of the current source code block."</span>
@@ -12786,7 +12789,7 @@ using &ldquo;hyper&rdquo;:
       (org-babel-execute-src-block nil nil '((<span class="org-builtin">:eval</span> . <span class="org-string">"yes"</span>))))
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Run current code block (force execution).</span>
-    (define-key org-mode-map (kbd <span class="org-string">"H-f"</span>) 'org-babel-force-execute-src-block)
+    (define-key org-mode-map (kbd <span class="org-string">"H-f"</span>) #'org-babel-force-execute-src-block)
 </pre>
 </div>
 
@@ -12796,7 +12799,7 @@ To <b>tangle</b>:
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    (define-key org-mode-map (kbd <span class="org-string">"H-t"</span>) 'org-babel-tangle)
+<pre class="src src-emacs-lisp">    (define-key org-mode-map (kbd <span class="org-string">"H-t"</span>) #'org-babel-tangle)
 </pre>
 </div>
 
@@ -13119,7 +13122,7 @@ Promote ignoreheading. Works in ASCII backend too:
         (<span class="org-keyword">unless</span> (looking-at <span class="org-string">"="</span>) (insert-and-inherit <span class="org-string">"="</span>))))))
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Must be in eval-after-load "org"?</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">(define-key org-mode-map (kbd "=") 'insert-one-equal-or-two)</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">(define-key org-mode-map (kbd "=") #'insert-one-equal-or-two)</span>
 </pre>
 </div>
 
@@ -13571,7 +13574,7 @@ not <code>Dvips</code> as one might expect)</li>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Rebind the "compile command" to default command from `C-c C-c' (in LaTeX</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">mode only).</span>
-    (define-key LaTeX-mode-map (kbd <span class="org-string">"&lt;f9&gt;"</span>) 'TeX-default)
+    (define-key LaTeX-mode-map (kbd <span class="org-string">"&lt;f9&gt;"</span>) #'TeX-default)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Use PDF mode by default (instead of DVI).</span>
     (<span class="org-keyword">setq-default</span> TeX-PDF-mode t)
@@ -14024,7 +14027,7 @@ Some key bindings:
     (define-key nxml-mode-map (kbd <span class="org-string">"C-c C-x"</span>) nil)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">View the buffer contents in a browser.</span>
-    (define-key nxml-mode-map (kbd <span class="org-string">"C-c C-v"</span>) 'browse-url-of-buffer))
+    (define-key nxml-mode-map (kbd <span class="org-string">"C-c C-v"</span>) #'browse-url-of-buffer))
                                         <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> Normally bound to.</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">rng-validate-mode</span></span><span class="org-comment">'</span>
 </pre>
@@ -14693,13 +14696,13 @@ many programming modes.
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"hideshow"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Change those really awkward key bindings with `@' in the middle.</span>
-    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;C-M-S-left&gt;"</span>) 'hs-hide-block) <span class="org-comment-delimiter">; </span><span class="org-comment">or H-left? or C-c left?</span>
+    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;C-M-S-left&gt;"</span>) #'hs-hide-block) <span class="org-comment-delimiter">; </span><span class="org-comment">or H-left? or C-c left?</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-h' (collapse current fold) M-l in RStudio</span>
-    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;C-M-S-right&gt;"</span>) 'hs-show-block)
+    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;C-M-S-right&gt;"</span>) #'hs-show-block)
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-s' (expand current fold) M-S-l</span>
-    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;C-M-S-up&gt;"</span>) 'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;C-M-S-up&gt;"</span>) #'hs-hide-all)
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-M-h' (collapse all folds) M-o</span>
-    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;C-M-S-down&gt;"</span>) 'hs-show-all)
+    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;C-M-S-down&gt;"</span>) #'hs-show-all)
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-M-s' (expand all folds) M-S-o</span>
 
     (<span class="org-keyword">defcustom</span> <span class="org-variable-name">hs-face</span> 'hs-face
@@ -14987,7 +14990,7 @@ To tell eclim <b>which Eclipse workspace to use</b>, you can start eclimd like s
     (<span class="org-keyword">setq</span> eclim-print-debug-messages t)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Add key binding.</span>
-    (define-key eclim-mode-map (kbd <span class="org-string">"M-."</span>) 'eclim-java-find-declaration)
+    (define-key eclim-mode-map (kbd <span class="org-string">"M-."</span>) #'eclim-java-find-declaration)
 </pre>
 </div>
 
@@ -15844,11 +15847,11 @@ can use the following keys to navigate historic versions of the file:
              (<span class="org-keyword">lambda</span> ()
                <span class="org-comment-delimiter">;; </span><span class="org-comment">Hide up-to-date and unregistered files.</span>
                (define-key vc-dir-mode-map
-                 (kbd <span class="org-string">"x"</span>) 'leuven-vc-dir-hide-up-to-date-and-unregistered)
+                 (kbd <span class="org-string">"x"</span>) #'leuven-vc-dir-hide-up-to-date-and-unregistered)
                (define-key vc-dir-mode-map
-                 (kbd <span class="org-string">"E"</span>) 'vc-ediff)
+                 (kbd <span class="org-string">"E"</span>) #'vc-ediff)
                (define-key vc-dir-mode-map
-                 (kbd <span class="org-string">"#"</span>) 'vc-ediff-ignore-whitespace)
+                 (kbd <span class="org-string">"#"</span>) #'vc-ediff-ignore-whitespace)
                                          <span class="org-comment-delimiter">; </span><span class="org-comment">ediff-windows-wordwise?</span>
                ))
 
@@ -15945,7 +15948,7 @@ can use the following keys to navigate historic versions of the file:
                                                    <span class="org-string">"HEAD"</span> nil <span class="org-string">"HEAD"</span>)
                                       <span class="org-string">""</span>))))))
 
-  (define-key vc-prefix-map (kbd <span class="org-string">"="</span>) 'leuven-vc-diff)
+  (define-key vc-prefix-map (kbd <span class="org-string">"="</span>) #'leuven-vc-diff)
 </pre>
 </div>
 
@@ -16333,7 +16336,7 @@ Go to source code for symbol at point:
                    (_                      'find-variable))
                  sym)))
 
-    (define-key emacs-lisp-mode-map (kbd <span class="org-string">"M-."</span>) 'leuven-goto-lisp-symbol-at-point))
+    (define-key emacs-lisp-mode-map (kbd <span class="org-string">"M-."</span>) #'leuven-goto-lisp-symbol-at-point))
 </pre>
 </div>
 </div>
@@ -16624,7 +16627,7 @@ really like this.
   (<span class="org-keyword">progn</span> (emr-initialize)
                  (define-key emacs-lisp-mode-map
                    (kbd <span class="org-string">"M-RET"</span>)
-                   'emr-show-refactor-menu)))
+                   #'emr-show-refactor-menu)))
 </pre>
 </div>
 </div>
@@ -16786,7 +16789,7 @@ Load additional snippets.
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Bind `</span><span class="org-constant"><span class="org-comment">yas-expand</span></span><span class="org-comment">' to SPC.</span>
     (define-key yas-minor-mode-map (kbd <span class="org-string">"&lt;tab&gt;"</span>) nil)
     (define-key yas-minor-mode-map (kbd <span class="org-string">"TAB"</span>) nil)
-    (define-key yas-minor-mode-map (kbd <span class="org-string">"SPC"</span>) 'yas-expand)
+    (define-key yas-minor-mode-map (kbd <span class="org-string">"SPC"</span>) #'yas-expand)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't expand when you are typing in a string or comment.</span>
     (add-hook 'prog-mode-hook
@@ -17267,8 +17270,8 @@ Eventually, see <a href="http://stackoverflow.com/questions/19900949/how-to-make
     <span class="org-comment-delimiter">;; </span><span class="org-comment">7.5 Use `</span><span class="org-constant"><span class="org-comment">C-n/C-p</span></span><span class="org-comment">' to select candidates (only when completion menu is</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">displayed).</span>
     (<span class="org-keyword">setq</span> ac-use-menu-map t)
-    (define-key ac-menu-map (kbd <span class="org-string">"C-n"</span>) 'ac-next)
-    (define-key ac-menu-map (kbd <span class="org-string">"C-p"</span>) 'ac-previous)
+    (define-key ac-menu-map (kbd <span class="org-string">"C-n"</span>) #'ac-next)
+    (define-key ac-menu-map (kbd <span class="org-string">"C-p"</span>) #'ac-previous)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Unbind some keys (inconvenient in Comint buffers).</span>
     (define-key ac-completing-map (kbd <span class="org-string">"M-n"</span>) nil)
@@ -17307,14 +17310,14 @@ Eventually, see <a href="http://stackoverflow.com/questions/19900949/how-to-make
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq ac-candidate-menu-min 0)</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Completion by TAB.</span>
-    (define-key ac-completing-map (kbd <span class="org-string">"&lt;tab&gt;"</span>) 'ac-complete)
+    (define-key ac-completing-map (kbd <span class="org-string">"&lt;tab&gt;"</span>) #'ac-complete)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Completion by RET.</span>
-    (define-key ac-completing-map (kbd <span class="org-string">"&lt;return&gt;"</span>) 'ac-complete)
+    (define-key ac-completing-map (kbd <span class="org-string">"&lt;return&gt;"</span>) #'ac-complete)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Abort.</span>
-    (define-key ac-completing-map (kbd <span class="org-string">"C-g"</span>) 'ac-stop)
-    (define-key ac-completing-map (kbd <span class="org-string">"&lt;left&gt;"</span>) 'ac-stop)
+    (define-key ac-completing-map (kbd <span class="org-string">"C-g"</span>) #'ac-stop)
+    (define-key ac-completing-map (kbd <span class="org-string">"&lt;left&gt;"</span>) #'ac-stop)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">11.1 Avoid Flyspell processes when auto completion is being started.</span>
     (ac-flyspell-workaround))
@@ -17388,10 +17391,13 @@ available completions and filter as well.
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"company-autoloads"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable Company mode in all buffers ....</span>
-    (add-hook 'after-init-hook #'global-company-mode)
+    (global-company-mode 1)
 
     (global-set-key (kbd <span class="org-string">"&lt;C-tab&gt;"</span>) #'company-complete)
-    (global-set-key (kbd <span class="org-string">"C-/"</span>) #'company-complete))
+    (global-set-key (kbd <span class="org-string">"C-/"</span>) #'company-complete)
+
+    (global-set-key (kbd <span class="org-string">"C-c y"</span>) #'company-yasnippet) <span class="org-comment-delimiter">; </span><span class="org-comment">Test.</span>
+    )
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"company"</span>
 
@@ -17427,25 +17433,32 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Use `</span><span class="org-constant"><span class="org-comment">C-n/C-p</span></span><span class="org-comment">' to select candidates (only when completion menu is</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">displayed).</span>
-    (define-key company-active-map (kbd <span class="org-string">"C-n"</span>) 'company-select-next)
-    (define-key company-active-map (kbd <span class="org-string">"C-p"</span>) 'company-select-previous)
+    (define-key company-active-map (kbd <span class="org-string">"C-n"</span>) #'company-select-next)
+    (define-key company-active-map (kbd <span class="org-string">"C-p"</span>) #'company-select-previous)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Unbind some keys (inconvenient in Comint buffers).</span>
     (define-key company-active-map (kbd <span class="org-string">"M-n"</span>) nil)
     (define-key company-active-map (kbd <span class="org-string">"M-p"</span>) nil)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Completion by TAB.</span>
-    (define-key company-active-map (kbd <span class="org-string">"&lt;tab&gt;"</span>) 'company-complete-selection) <span class="org-comment-delimiter">; </span><span class="org-comment">Complete with the selected candidate</span>
+    (define-key company-active-map (kbd <span class="org-string">"&lt;tab&gt;"</span>) #'company-complete-selection) <span class="org-comment-delimiter">; </span><span class="org-comment">Complete with the selected candidate</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">company-complete</span></span><span class="org-comment">'?</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Temporarily show the documentation buffer for the selection.</span>
-    (define-key company-active-map (kbd <span class="org-string">"&lt;f1&gt;"</span>) 'company-show-doc-buffer)
-    (define-key company-active-map (kbd <span class="org-string">"C-?"</span>) 'company-show-doc-buffer)
-    (define-key company-active-map (kbd <span class="org-string">"C-c C-d"</span>) 'company-show-doc-buffer)
+    (define-key company-active-map (kbd <span class="org-string">"&lt;f1&gt;"</span>) #'company-show-doc-buffer)
+    (define-key company-active-map (kbd <span class="org-string">"C-?"</span>) #'company-show-doc-buffer)
+    (define-key company-active-map (kbd <span class="org-string">"C-c C-d"</span>) #'company-show-doc-buffer)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Abort.</span>
-    (define-key company-active-map (kbd <span class="org-string">"C-g"</span>) 'company-abort)
-    (define-key company-active-map (kbd <span class="org-string">"&lt;left&gt;"</span>) 'company-abort)
+    (define-key company-active-map (kbd <span class="org-string">"C-g"</span>) #'company-abort)
+    (define-key company-active-map (kbd <span class="org-string">"&lt;left&gt;"</span>) #'company-abort)
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">    (<span class="org-keyword">setq</span> company-idle-delay nil)
+    (global-set-key (kbd <span class="org-string">"&lt;tab&gt;"</span>) #'company-complete-selection)
 </pre>
 </div>
 
@@ -17456,7 +17469,7 @@ By default, the list of candidates is sorted alphabetically, unless the backend
       '(dotimes (i 10)
          (define-key company-active-map
            (read-kbd-macro (format <span class="org-string">"&lt;kp-%d&gt;"</span> i))
-           'company-complete-number)))
+           #'company-complete-number)))
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Do nothing if the indicated candidate contains digits (actually, it will</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">try to insert the digit you type).</span>
@@ -17502,7 +17515,7 @@ XXX The following does not work in Org files (TAB does not expand nodes anymore)
                    (looking-at <span class="org-string">"\\_&gt;"</span>))
           (call-interactively 'company-complete-selection))))
 
-    (define-key company-mode-map (kbd <span class="org-string">"&lt;tab&gt;"</span>) 'leuven-indent-or-complete)
+    (define-key company-mode-map (kbd <span class="org-string">"&lt;tab&gt;"</span>) #'leuven-indent-or-complete)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(defun leuven--tab-fix ()</span>
     <span class="org-comment-delimiter">;;   </span><span class="org-comment">(local-set-key (kbd "&lt;tab&gt;") #'leuven-indent-or-complete))</span>
@@ -17553,9 +17566,37 @@ good|
 <li>the prefix &ldquo;GOOD&rdquo; will match &ldquo;GOODBYE&rdquo; only.</li>
 </ul>
 
+<p>
+In &ldquo;code&rdquo; modes (see <code>company-dabbrev-code-modes</code>) and their derivatives, Company
+will &#x2013; by default &#x2013; complete only symbols, not text in comments or strings.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"company-dabbrev"</span>
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Dabbrev-like company-mode back-end for code.</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"company-dabbrev-code"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Search all other buffers</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq company-dabbrev-code-other-buffers 'all)</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Offer completions in comments and strings.</span>
+    (<span class="org-keyword">setq</span> company-dabbrev-code-everywhere t)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Ignore case when collecting completion candidates.</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq company-dabbrev-code-ignore-case t)</span>
+    )
+</pre>
+</div>
+
+<p>
+In the other modes, Company will pass control to other back-ends
+(e.g. <code>company-dabbrev</code>).
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Dabbrev-like company-mode completion back-end.</span>
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"company-dabbrev"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Only search in the current buffer</span>
     (<span class="org-keyword">setq</span> company-dabbrev-other-buffers nil) <span class="org-comment-delimiter">; </span><span class="org-comment">Prevent Company completing</span>
@@ -17575,13 +17616,6 @@ good|
 <p>
 XXX What about <code>company-search-candidates</code> vs <code>company-filter-candidates</code>?
 </p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">    (<span class="org-keyword">setq</span> company-idle-delay nil)
-    (global-set-key (kbd <span class="org-string">"&lt;tab&gt;"</span>) #'company-complete-selection)
-</pre>
-</div>
 </div>
 
 <div id="outline-container-orgheadline341" class="outline-5">
@@ -17710,7 +17744,7 @@ In Dired, <code>M-&gt;</code> and <code>M-&lt;</code> never took me where I want
       (dired-next-line 4))
 
     (define-key dired-mode-map
-      (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
+      (vector 'remap 'beginning-of-buffer) #'dired-back-to-top)
 
     (<span class="org-keyword">defun</span> <span class="org-function-name">dired-jump-to-bottom</span> ()
       (<span class="org-keyword">interactive</span>)
@@ -17718,7 +17752,7 @@ In Dired, <code>M-&gt;</code> and <code>M-&lt;</code> never took me where I want
       (dired-next-line -1))
 
     (define-key dired-mode-map
-      (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
+      (vector 'remap 'end-of-buffer) #'dired-jump-to-bottom)
 </pre>
 </div>
 </div>
@@ -17871,7 +17905,7 @@ you invoke an external command.
         (dired-do-shell-command program nil
                                 (dired-get-marked-files t current-prefix-arg))))
 
-    (define-key dired-mode-map (kbd <span class="org-string">"F"</span>) 'dired-open)
+    (define-key dired-mode-map (kbd <span class="org-string">"F"</span>) #'dired-open)
 </pre>
 </div>
 </div>
@@ -17886,7 +17920,7 @@ Just ask a WWW browser to display the current file.
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">In Dired, ask a WWW browser to display the file named on this line.</span>
-    (define-key dired-mode-map (kbd <span class="org-string">"e"</span>) 'browse-url-of-dired-file) <span class="org-comment-delimiter">; </span><span class="org-comment">&lt;C-RET&gt;?</span>
+    (define-key dired-mode-map (kbd <span class="org-string">"e"</span>) #'browse-url-of-dired-file) <span class="org-comment-delimiter">; </span><span class="org-comment">&lt;C-RET&gt;?</span>
 </pre>
 </div>
 
@@ -17944,7 +17978,7 @@ For those under Windows:
          (dired-get-marked-files nil arg)))
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Bind it to `E' in Dired mode.</span>
-      (define-key dired-mode-map (kbd <span class="org-string">"E"</span>) 'w32-dired-open-files-externally))
+      (define-key dired-mode-map (kbd <span class="org-string">"E"</span>) #'w32-dired-open-files-externally))
 </pre>
 </div>
 </div>
@@ -18289,7 +18323,7 @@ a Dired buffer.  They are thus similar to the default global bindings <code>C-x 
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Up, reusing Dired buffers.</span>
     (define-key dired-mode-map (kbd <span class="org-string">"C-x C-j"</span>)
-      'diredp-up-directory-reuse-dir-buffer))
+      #'diredp-up-directory-reuse-dir-buffer))
 </pre>
 </div>
 </div>
@@ -18374,8 +18408,8 @@ a Dired buffer.  They are thus similar to the default global bindings <code>C-x 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Fix foolish calendar-mode scrolling after loading `</span><span class="org-constant"><span class="org-comment">calendar.el</span></span><span class="org-comment">'.</span>
   (add-hook 'calendar-load-hook
             (<span class="org-keyword">lambda</span> ()
-              (define-key calendar-mode-map (kbd <span class="org-string">"&gt;"</span>) 'calendar-scroll-left)
-              (define-key calendar-mode-map (kbd <span class="org-string">"&lt;"</span>) 'calendar-scroll-right)))
+              (define-key calendar-mode-map (kbd <span class="org-string">"&gt;"</span>) #'calendar-scroll-left)
+              (define-key calendar-mode-map (kbd <span class="org-string">"&lt;"</span>) #'calendar-scroll-right)))
 </pre>
 </div>
 </div>
@@ -19299,7 +19333,7 @@ shells).</dd>
         (comint-truncate-buffer)))
 
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"comint"</span>
-      (define-key comint-mode-map (kbd <span class="org-string">"C-c C-k"</span>) 'leuven-comint-clear-buffer))
+      (define-key comint-mode-map (kbd <span class="org-string">"C-c C-k"</span>) #'leuven-comint-clear-buffer))
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">)</span>
 </pre>
@@ -19356,29 +19390,29 @@ bufffer from Emacs.
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Cycle backwards/forwards through input history.</span>
     (define-key comint-mode-map
-      (kbd <span class="org-string">"C-p"</span>) 'comint-previous-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell</span>
+      (kbd <span class="org-string">"C-p"</span>) #'comint-previous-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell</span>
     (define-key comint-mode-map
-      (kbd <span class="org-string">"&lt;up&gt;"</span>) 'comint-previous-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell + RStudio</span>
+      (kbd <span class="org-string">"&lt;up&gt;"</span>) #'comint-previous-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell + RStudio</span>
     (define-key comint-mode-map
-      (kbd <span class="org-string">"C-n"</span>) 'comint-next-input)   <span class="org-comment-delimiter">; </span><span class="org-comment">Shell</span>
+      (kbd <span class="org-string">"C-n"</span>) #'comint-next-input)  <span class="org-comment-delimiter">; </span><span class="org-comment">Shell</span>
     (define-key comint-mode-map
-      (kbd <span class="org-string">"&lt;down&gt;"</span>) 'comint-next-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell + RStudio</span>
+      (kbd <span class="org-string">"&lt;down&gt;"</span>) #'comint-next-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell + RStudio</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Search backwards/forwards through input history for match for current</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">input.</span>
     (define-key comint-mode-map
-      (kbd <span class="org-string">"M-p"</span>) 'comint-previous-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell</span>
+      (kbd <span class="org-string">"M-p"</span>) #'comint-previous-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell</span>
     (define-key comint-mode-map
-      (kbd <span class="org-string">"&lt;C-up&gt;"</span>) 'comint-previous-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">RStudio</span>
+      (kbd <span class="org-string">"&lt;C-up&gt;"</span>) #'comint-previous-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">RStudio</span>
     (define-key comint-mode-map
-      (kbd <span class="org-string">"M-n"</span>) 'comint-next-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell</span>
+      (kbd <span class="org-string">"M-n"</span>) #'comint-next-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell</span>
     (define-key comint-mode-map
-      (kbd <span class="org-string">"&lt;C-down&gt;"</span>) 'comint-next-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">RStudio</span>
+      (kbd <span class="org-string">"&lt;C-down&gt;"</span>) #'comint-next-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">RStudio</span>
 
     (<span class="org-keyword">when</span> (<span class="org-keyword">featurep</span> '<span class="org-constant">helm-misc</span>)
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Provide completion of `</span><span class="org-constant"><span class="org-comment">comint</span></span><span class="org-comment">' history.</span>
       (define-key comint-mode-map
-        (kbd <span class="org-string">"C-c C-l"</span>) 'helm-comint-input-ring)))
+        (kbd <span class="org-string">"C-c C-l"</span>) #'helm-comint-input-ring)))
 </pre>
 </div>
 </div>
@@ -21141,8 +21175,8 @@ Those bindings are global and repeatable, e.g. <code>C-x C-+ C-+ C-+</code>.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  (define-key global-map (kbd <span class="org-string">"C-+"</span>) 'text-scale-increase)
-  (define-key global-map (kbd <span class="org-string">"C--"</span>) 'text-scale-decrease)
+<pre class="src src-emacs-lisp">  (global-set-key (kbd <span class="org-string">"C-+"</span>) #'text-scale-increase)
+  (global-set-key (kbd <span class="org-string">"C--"</span>) #'text-scale-decrease)
 </pre>
 </div>
 

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150811.1418
+;; Version: 20150814.1703
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150811.1418"
+(defconst leuven--emacs-version "20150814.1703"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -622,7 +622,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;;         (and message (message message)))))
 
   ;; Show all variables whose name matches the pattern.
-  (define-key help-map (kbd "A") 'apropos-user-option)
+  (define-key help-map (kbd "A") #'apropos-user-option)
 
 ;;** 10.8 (info "(emacs)Misc Help")
 
@@ -923,7 +923,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Quickly jump to a position in the current view.
   (with-eval-after-load "ace-jump-mode-autoloads"
-    (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
+    (global-set-key (kbd "C-c SPC") #'ace-jump-mode))
 
   ;; Quickly follow links using `ace-jump-mode'.
   (with-eval-after-load "ace-link-autoloads"
@@ -1101,16 +1101,16 @@ These packages are neither built-in nor already installed nor ignored."
     (global-diff-hl-mode)
 
     ;; Jump to next hunk (also on `C-x v ]').
-    (define-key diff-hl-mode-map (kbd "C-x v >") 'diff-hl-next-hunk)
+    (define-key diff-hl-mode-map (kbd "C-x v >") #'diff-hl-next-hunk)
 
     ;; Jump to previous hunk (also on `C-x v [').
-    (define-key diff-hl-mode-map (kbd "C-x v <") 'diff-hl-previous-hunk)
+    (define-key diff-hl-mode-map (kbd "C-x v <") #'diff-hl-previous-hunk)
 
     ;; Popup current diff.
-    (define-key diff-hl-mode-map (kbd "C-x v =") 'diff-hl-diff-goto-hunk)
+    (define-key diff-hl-mode-map (kbd "C-x v =") #'diff-hl-diff-goto-hunk)
 
     ;; Revert current hunk (also on `C-x v n').
-    (define-key diff-hl-mode-map (kbd "C-x v u") 'diff-hl-revert-hunk))
+    (define-key diff-hl-mode-map (kbd "C-x v u") #'diff-hl-revert-hunk))
 
 ;;** 14.15 (info "(emacs)Displaying Boundaries")
 
@@ -1514,7 +1514,7 @@ These packages are neither built-in nor already installed nor ignored."
     (global-set-key (kbd "M-%") #'anzu-query-replace)
     (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
 
-    ;; (define-key isearch-mode-map (kbd "M-%") 'anzu-query-replace)
+    ;; (define-key isearch-mode-map (kbd "M-%") #'anzu-query-replace)
     )
 
 ;;** 15.5 (info "(emacs)Regexp Search")
@@ -1556,7 +1556,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;;          (regexp-quote isearch-string))))))
 
   ;; When doing Isearch, hand the word over to `helm-swoop'.
-  (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
+  (define-key isearch-mode-map (kbd "C-o") #'helm-swoop-from-isearch)
 
   (global-unset-key (kbd "M-o")) ; XXX???
 
@@ -2223,7 +2223,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Speedy file opening.
     (global-set-key (kbd "<f3>") #'helm-for-files)
 
-    ;; (global-set-key (kbd "C-x C-f") #'helm-find-files)
+    ;; (global-set-key (kbd "C-x C-f") #'helm-find-files) ; OK.
 
     ;; Buffer list.
     (global-set-key (kbd "C-x b") #'helm-mini) ; OK.
@@ -2256,7 +2256,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; (global-set-key (kbd "M-5") #'helm-etags-select)
 
-    (global-set-key (kbd "C-h a") #'helm-apropos)
+    (global-set-key (kbd "C-h a") #'helm-apropos) ; OK.
 
     (global-set-key (kbd "C-h i") #'helm-info-emacs)
     ;; (global-set-key (kbd "C-h d") #'helm-info-at-point)
@@ -2375,7 +2375,10 @@ These packages are neither built-in nor already installed nor ignored."
     (setq helm-buffer-max-length nil)
 
     ;; Never show details in buffer list.
-    (setq helm-buffer-details-flag nil))
+    (setq helm-buffer-details-flag nil)
+
+    ;; String to display at end of truncated buffer names.
+    (setq helm-buffers-end-truncated-string "…"))
 
   ;; (with-eval-after-load "helm-adaptive"
   ;;
@@ -2421,19 +2424,19 @@ These packages are neither built-in nor already installed nor ignored."
     ;; (global-set-key (kbd "C-x M-i") #'helm-multi-swoop-all)
 
     ;; When doing Isearch, hand the word over to `helm-swoop'.
-    (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
-    ;; (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+    (define-key isearch-mode-map (kbd "C-o") #'helm-swoop-from-isearch)
+    ;; (define-key isearch-mode-map (kbd "M-i") #'helm-swoop-from-isearch)
 
     (with-eval-after-load "dired"
-      (define-key dired-mode-map (kbd "C-o") 'helm-swoop)
-      ;; (define-key dired-mode-map (kbd "M-i") 'helm-swoop)
+      (define-key dired-mode-map (kbd "C-o") #'helm-swoop)
+      ;; (define-key dired-mode-map (kbd "M-i") #'helm-swoop)
       ))
 
   (with-eval-after-load "helm-swoop"
 
     ;; From `helm-swoop' to `helm-multi-swoop-all'.
-    (define-key helm-swoop-map (kbd "C-o") 'helm-multi-swoop-all-from-helm-swoop)
-    ;; (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+    (define-key helm-swoop-map (kbd "C-o") #'helm-multi-swoop-all-from-helm-swoop)
+    ;; (define-key helm-swoop-map (kbd "M-i") #'helm-multi-swoop-all-from-helm-swoop)
 
     ;; Don't slightly boost invoke speed in exchange for text color.
     (setq helm-swoop-speed-or-color t)
@@ -2830,8 +2833,8 @@ These packages are neither built-in nor already installed nor ignored."
        ".w" "README"))
 
     ;; Bind the arrow keys in the speedbar tree.
-    (define-key speedbar-mode-map (kbd "<right>") 'speedbar-expand-line)
-    (define-key speedbar-mode-map (kbd "<left>") 'speedbar-contract-line)
+    (define-key speedbar-mode-map (kbd "<right>") #'speedbar-expand-line)
+    (define-key speedbar-mode-map (kbd "<left>") #'speedbar-contract-line)
 
     ;; Parameters to use when creating the speedbar frame in Emacs.
     (setq speedbar-frame-parameters '((width . 30)
@@ -3355,15 +3358,15 @@ These packages are neither built-in nor already installed nor ignored."
     ;;   (add-hook 'outline-minor-mode-hook
     ;;             (lambda ()
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<S-tab>") 'outline-cycle)
+    ;;                 (kbd "<S-tab>") #'outline-cycle)
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<M-left>") 'outline-promote)
+    ;;                 (kbd "<M-left>") #'outline-promote)
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<M-right>") 'outline-demote)
+    ;;                 (kbd "<M-right>") #'outline-demote)
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<M-up>") 'outline-move-subtree-up)
+    ;;                 (kbd "<M-up>") #'outline-move-subtree-up)
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<M-down>") 'outline-move-subtree-down))))
+    ;;                 (kbd "<M-down>") #'outline-move-subtree-down))))
 
     ;; ;; Extra support for outline minor mode.
     ;; (try-require 'out-xtra)
@@ -3517,9 +3520,9 @@ These packages are neither built-in nor already installed nor ignored."
   (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
   (add-to-list 'auto-mode-alist '("\\.org_archive\\'" . org-mode))
 
-  (define-key global-map (kbd "C-c l") 'org-store-link)
-  (define-key global-map (kbd "C-c c") 'org-capture)
-  (define-key global-map (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c l") #'org-store-link)
+  (global-set-key (kbd "C-c c") #'org-capture)
+  (global-set-key (kbd "C-c a") #'org-agenda)
 
   ;; Using links outside Org.
   (global-set-key (kbd "C-c L") #'org-insert-link-global)
@@ -3527,7 +3530,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   (with-eval-after-load "org"
     ;; Display the Org mode manual in Info mode.
-    (define-key global-map (kbd "C-h o") 'org-info))
+    (global-set-key (kbd "C-h o") #'org-info))
                                         ; XXX Not autoloaded.
 
   (with-eval-after-load "org"
@@ -3757,7 +3760,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   (with-eval-after-load "org"
     ;; Create indirect buffer and narrow it to current subtree.
-    (define-key org-mode-map (kbd "<H-return>") 'org-tree-to-indirect-buffer))
+    (define-key org-mode-map (kbd "<H-return>") #'org-tree-to-indirect-buffer))
 
 ;;** (info "(org)Motion")
 
@@ -3788,7 +3791,7 @@ These packages are neither built-in nor already installed nor ignored."
           (org-reveal t)
         (org-show-siblings)))
 
-    (define-key org-mode-map (kbd "C-c C-r") 'leuven-org-reveal))
+    (define-key org-mode-map (kbd "C-c C-r") #'leuven-org-reveal))
 
 ;;** (info "(org)Structure editing")
 
@@ -4767,7 +4770,7 @@ From %c"
       (org-agenda-redo))
 
     (define-key org-agenda-mode-map
-      (kbd "(") 'leuven-org-agenda-toggle-tasks-details)
+      (kbd "(") #'leuven-org-agenda-toggle-tasks-details)
 
     ;; Text preceding scheduled items in the agenda view.
     (setq org-agenda-scheduled-leaders
@@ -5193,7 +5196,7 @@ this with to-do items than with projects or headings."
     ;; Libraries in this list will be loaded once the export framework is needed.
     (setq org-export-backends '(ascii html icalendar latex odt md))
 
-    (define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch))
+    (define-key org-mode-map (kbd "C-c C-e") #'org-export-dispatch))
 
   (with-eval-after-load "org"
 
@@ -5265,7 +5268,7 @@ this with to-do items than with projects or headings."
               (message "PDF is up to date with Org file")))
           (beep))))
 
-    (define-key org-mode-map (kbd "<f9>") 'org-save-buffer-and-do-related))
+    (define-key org-mode-map (kbd "<f9>") #'org-save-buffer-and-do-related))
 
 ;;** 12.2 (info "(org)Export options")
 
@@ -5720,7 +5723,7 @@ this with to-do items than with projects or headings."
   ;;         (indent-region arg)))
   ;;
   ;;   ;; Make `C-c C-v C-x C-M-\' more convenient.
-  ;;   (define-key org-mode-map (kbd "C-M-\\") 'leuven-org-indent-region))
+  ;;   (define-key org-mode-map (kbd "C-M-\\") #'leuven-org-indent-region))
 
   ;; Prevent auto-filling in src blocks.
   (setq org-src-prevent-auto-filling t)
@@ -6008,7 +6011,7 @@ this with to-do items than with projects or headings."
     ;; Run from current line to end of code block (mapped to H-e?).
 
     ;; Run current code block.
-    (define-key org-mode-map (kbd "H-e") 'org-babel-execute-maybe)
+    (define-key org-mode-map (kbd "H-e") #'org-babel-execute-maybe)
 
     (defun org-babel-force-execute-src-block ()
       "Force execution of the current source code block."
@@ -6016,9 +6019,9 @@ this with to-do items than with projects or headings."
       (org-babel-execute-src-block nil nil '((:eval . "yes"))))
 
     ;; Run current code block (force execution).
-    (define-key org-mode-map (kbd "H-f") 'org-babel-force-execute-src-block)
+    (define-key org-mode-map (kbd "H-f") #'org-babel-force-execute-src-block)
 
-    (define-key org-mode-map (kbd "H-t") 'org-babel-tangle)
+    (define-key org-mode-map (kbd "H-t") #'org-babel-tangle)
 
   )
 
@@ -6148,7 +6151,7 @@ this with to-do items than with projects or headings."
         (unless (looking-at "=") (insert-and-inherit "="))))))
 
   ;; Must be in eval-after-load "org"?
-  ;; (define-key org-mode-map (kbd "=") 'insert-one-equal-or-two)
+  ;; (define-key org-mode-map (kbd "=") #'insert-one-equal-or-two)
 
   (with-eval-after-load "org"
     (message "... Org Mime")
@@ -6382,7 +6385,7 @@ this with to-do items than with projects or headings."
 
     ;; Rebind the "compile command" to default command from `C-c C-c' (in LaTeX
     ;; mode only).
-    (define-key LaTeX-mode-map (kbd "<f9>") 'TeX-default)
+    (define-key LaTeX-mode-map (kbd "<f9>") #'TeX-default)
 
     ;; Use PDF mode by default (instead of DVI).
     (setq-default TeX-PDF-mode t)
@@ -6551,7 +6554,7 @@ this with to-do items than with projects or headings."
     (define-key nxml-mode-map (kbd "C-c C-x") nil)
 
     ;; View the buffer contents in a browser.
-    (define-key nxml-mode-map (kbd "C-c C-v") 'browse-url-of-buffer))
+    (define-key nxml-mode-map (kbd "C-c C-v") #'browse-url-of-buffer))
                                         ; XXX Normally bound to.
                                         ; `rng-validate-mode'
 
@@ -6804,13 +6807,13 @@ mouse-3: go to end") "]")))
   (with-eval-after-load "hideshow"
 
     ;; Change those really awkward key bindings with `@' in the middle.
-    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") 'hs-hide-block) ; or H-left? or C-c left?
+    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") #'hs-hide-block) ; or H-left? or C-c left?
                                         ; `C-c @ C-h' (collapse current fold) M-l in RStudio
-    (define-key hs-minor-mode-map (kbd "<C-M-S-right>") 'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "<C-M-S-right>") #'hs-show-block)
                                         ; `C-c @ C-s' (expand current fold) M-S-l
-    (define-key hs-minor-mode-map (kbd "<C-M-S-up>") 'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "<C-M-S-up>") #'hs-hide-all)
                                         ; `C-c @ C-M-h' (collapse all folds) M-o
-    (define-key hs-minor-mode-map (kbd "<C-M-S-down>") 'hs-show-all)
+    (define-key hs-minor-mode-map (kbd "<C-M-S-down>") #'hs-show-all)
                                         ; `C-c @ C-M-s' (expand all folds) M-S-o
 
     (defcustom hs-face 'hs-face
@@ -6884,7 +6887,7 @@ mouse-3: go to end") "]")))
     (setq eclim-print-debug-messages t)
 
     ;; Add key binding.
-    (define-key eclim-mode-map (kbd "M-.") 'eclim-java-find-declaration)
+    (define-key eclim-mode-map (kbd "M-.") #'eclim-java-find-declaration)
 
     ;; Display compilation error messages in the echo area.
     (setq help-at-pt-display-when-idle t)
@@ -7253,11 +7256,11 @@ a clean buffer we're an order of magnitude laxer about checking."
              (lambda ()
                ;; Hide up-to-date and unregistered files.
                (define-key vc-dir-mode-map
-                 (kbd "x") 'leuven-vc-dir-hide-up-to-date-and-unregistered)
+                 (kbd "x") #'leuven-vc-dir-hide-up-to-date-and-unregistered)
                (define-key vc-dir-mode-map
-                 (kbd "E") 'vc-ediff)
+                 (kbd "E") #'vc-ediff)
                (define-key vc-dir-mode-map
-                 (kbd "#") 'vc-ediff-ignore-whitespace)
+                 (kbd "#") #'vc-ediff-ignore-whitespace)
                                          ; ediff-windows-wordwise?
                ))
 
@@ -7345,7 +7348,7 @@ a clean buffer we're an order of magnitude laxer about checking."
                                                    "HEAD" nil "HEAD")
                                       ""))))))
 
-  (define-key vc-prefix-map (kbd "=") 'leuven-vc-diff)
+  (define-key vc-prefix-map (kbd "=") #'leuven-vc-diff)
 
 ;;** 28.2 (info "(emacs)Change Log")
 
@@ -7411,7 +7414,7 @@ a clean buffer we're an order of magnitude laxer about checking."
                    (_                      'find-variable))
                  sym)))
 
-    (define-key emacs-lisp-mode-map (kbd "M-.") 'leuven-goto-lisp-symbol-at-point))
+    (define-key emacs-lisp-mode-map (kbd "M-.") #'leuven-goto-lisp-symbol-at-point))
 
 ;;** 28.4 (info "(emacs)EDE")
 
@@ -7591,7 +7594,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Bind `yas-expand' to SPC.
     (define-key yas-minor-mode-map (kbd "<tab>") nil)
     (define-key yas-minor-mode-map (kbd "TAB") nil)
-    (define-key yas-minor-mode-map (kbd "SPC") 'yas-expand)
+    (define-key yas-minor-mode-map (kbd "SPC") #'yas-expand)
 
     ;; Don't expand when you are typing in a string or comment.
     (add-hook 'prog-mode-hook
@@ -7728,8 +7731,8 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; 7.5 Use `C-n/C-p' to select candidates (only when completion menu is
     ;; displayed).
     (setq ac-use-menu-map t)
-    (define-key ac-menu-map (kbd "C-n") 'ac-next)
-    (define-key ac-menu-map (kbd "C-p") 'ac-previous)
+    (define-key ac-menu-map (kbd "C-n") #'ac-next)
+    (define-key ac-menu-map (kbd "C-p") #'ac-previous)
 
     ;; Unbind some keys (inconvenient in Comint buffers).
     (define-key ac-completing-map (kbd "M-n") nil)
@@ -7768,14 +7771,14 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; (setq ac-candidate-menu-min 0)
 
     ;; Completion by TAB.
-    (define-key ac-completing-map (kbd "<tab>") 'ac-complete)
+    (define-key ac-completing-map (kbd "<tab>") #'ac-complete)
 
     ;; Completion by RET.
-    (define-key ac-completing-map (kbd "<return>") 'ac-complete)
+    (define-key ac-completing-map (kbd "<return>") #'ac-complete)
 
     ;; Abort.
-    (define-key ac-completing-map (kbd "C-g") 'ac-stop)
-    (define-key ac-completing-map (kbd "<left>") 'ac-stop)
+    (define-key ac-completing-map (kbd "C-g") #'ac-stop)
+    (define-key ac-completing-map (kbd "<left>") #'ac-stop)
 
     ;; 11.1 Avoid Flyspell processes when auto completion is being started.
     (ac-flyspell-workaround))
@@ -7784,10 +7787,13 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "company-autoloads"
 
     ;; Enable Company mode in all buffers ....
-    (add-hook 'after-init-hook #'global-company-mode)
+    (global-company-mode 1)
 
     (global-set-key (kbd "<C-tab>") #'company-complete)
-    (global-set-key (kbd "C-/") #'company-complete))
+    (global-set-key (kbd "C-/") #'company-complete)
+
+    (global-set-key (kbd "C-c y") #'company-yasnippet) ; Test.
+    )
 
   (with-eval-after-load "company"
 
@@ -7814,32 +7820,32 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Use `C-n/C-p' to select candidates (only when completion menu is
     ;; displayed).
-    (define-key company-active-map (kbd "C-n") 'company-select-next)
-    (define-key company-active-map (kbd "C-p") 'company-select-previous)
+    (define-key company-active-map (kbd "C-n") #'company-select-next)
+    (define-key company-active-map (kbd "C-p") #'company-select-previous)
 
     ;; Unbind some keys (inconvenient in Comint buffers).
     (define-key company-active-map (kbd "M-n") nil)
     (define-key company-active-map (kbd "M-p") nil)
 
     ;; Completion by TAB.
-    (define-key company-active-map (kbd "<tab>") 'company-complete-selection) ; Complete with the selected candidate
+    (define-key company-active-map (kbd "<tab>") #'company-complete-selection) ; Complete with the selected candidate
                                         ; `company-complete'?
 
     ;; Temporarily show the documentation buffer for the selection.
-    (define-key company-active-map (kbd "<f1>") 'company-show-doc-buffer)
-    (define-key company-active-map (kbd "C-?") 'company-show-doc-buffer)
-    (define-key company-active-map (kbd "C-c C-d") 'company-show-doc-buffer)
+    (define-key company-active-map (kbd "<f1>") #'company-show-doc-buffer)
+    (define-key company-active-map (kbd "C-?") #'company-show-doc-buffer)
+    (define-key company-active-map (kbd "C-c C-d") #'company-show-doc-buffer)
 
     ;; Abort.
-    (define-key company-active-map (kbd "C-g") 'company-abort)
-    (define-key company-active-map (kbd "<left>") 'company-abort)
+    (define-key company-active-map (kbd "C-g") #'company-abort)
+    (define-key company-active-map (kbd "<left>") #'company-abort)
 
     ;; Add support for keypad events (`<kp-numbers>' without the modifier).
     (eval-after-load 'company
       '(dotimes (i 10)
          (define-key company-active-map
            (read-kbd-macro (format "<kp-%d>" i))
-           'company-complete-number)))
+           #'company-complete-number)))
 
     ;; Do nothing if the indicated candidate contains digits (actually, it will
     ;; try to insert the digit you type).
@@ -7856,6 +7862,20 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     )
 
+  ;; Dabbrev-like company-mode back-end for code.
+  (with-eval-after-load "company-dabbrev-code"
+
+    ;; ;; Search all other buffers
+    ;; (setq company-dabbrev-code-other-buffers 'all)
+
+    ;; Offer completions in comments and strings.
+    (setq company-dabbrev-code-everywhere t)
+
+    ;; ;; Ignore case when collecting completion candidates.
+    ;; (setq company-dabbrev-code-ignore-case t)
+    )
+
+  ;; Dabbrev-like company-mode completion back-end.
   (with-eval-after-load "company-dabbrev"
 
     ;; Only search in the current buffer
@@ -7933,7 +7953,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (dired-next-line 4))
 
     (define-key dired-mode-map
-      (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
+      (vector 'remap 'beginning-of-buffer) #'dired-back-to-top)
 
     (defun dired-jump-to-bottom ()
       (interactive)
@@ -7941,7 +7961,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (dired-next-line -1))
 
     (define-key dired-mode-map
-      (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
+      (vector 'remap 'end-of-buffer) #'dired-jump-to-bottom)
 
 ;;** (info "(emacs)Dired Deletion")
 
@@ -7955,7 +7975,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (leuven--section "30.5 (emacs)Dired Visiting")
 
     ;; In Dired, ask a WWW browser to display the file named on this line.
-    (define-key dired-mode-map (kbd "e") 'browse-url-of-dired-file) ; <C-RET>?
+    (define-key dired-mode-map (kbd "e") #'browse-url-of-dired-file) ; <C-RET>?
 
     ;; Open files using Windows associations.
     (when (or leuven--win32-p
@@ -7970,7 +7990,7 @@ a clean buffer we're an order of magnitude laxer about checking."
          (dired-get-marked-files nil arg)))
 
       ;; Bind it to `E' in Dired mode.
-      (define-key dired-mode-map (kbd "E") 'w32-dired-open-files-externally))
+      (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally))
 
     ;; Open current file with eww.
     (defun dired-open-with-eww ()
@@ -8072,7 +8092,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Up, reusing Dired buffers.
     (define-key dired-mode-map (kbd "C-x C-j")
-      'diredp-up-directory-reuse-dir-buffer))
+      #'diredp-up-directory-reuse-dir-buffer))
 
 ;;** Diff-hl
 
@@ -8117,8 +8137,8 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; Fix foolish calendar-mode scrolling after loading `calendar.el'.
   (add-hook 'calendar-load-hook
             (lambda ()
-              (define-key calendar-mode-map (kbd ">") 'calendar-scroll-left)
-              (define-key calendar-mode-map (kbd "<") 'calendar-scroll-right)))
+              (define-key calendar-mode-map (kbd ">") #'calendar-scroll-left)
+              (define-key calendar-mode-map (kbd "<") #'calendar-scroll-right)))
 
 ;;** 31.7 Times of (info "(emacs)Sunrise/Sunset")
 
@@ -8601,7 +8621,7 @@ a clean buffer we're an order of magnitude laxer about checking."
         (comint-truncate-buffer)))
 
     (with-eval-after-load "comint"
-      (define-key comint-mode-map (kbd "C-c C-k") 'leuven-comint-clear-buffer))
+      (define-key comint-mode-map (kbd "C-c C-k") #'leuven-comint-clear-buffer))
 
 ;; )
 
@@ -8631,29 +8651,29 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Cycle backwards/forwards through input history.
     (define-key comint-mode-map
-      (kbd "C-p") 'comint-previous-input) ; Shell
+      (kbd "C-p") #'comint-previous-input) ; Shell
     (define-key comint-mode-map
-      (kbd "<up>") 'comint-previous-input) ; Shell + RStudio
+      (kbd "<up>") #'comint-previous-input) ; Shell + RStudio
     (define-key comint-mode-map
-      (kbd "C-n") 'comint-next-input)   ; Shell
+      (kbd "C-n") #'comint-next-input)  ; Shell
     (define-key comint-mode-map
-      (kbd "<down>") 'comint-next-input) ; Shell + RStudio
+      (kbd "<down>") #'comint-next-input) ; Shell + RStudio
 
     ;; Search backwards/forwards through input history for match for current
     ;; input.
     (define-key comint-mode-map
-      (kbd "M-p") 'comint-previous-matching-input-from-input) ; Shell
+      (kbd "M-p") #'comint-previous-matching-input-from-input) ; Shell
     (define-key comint-mode-map
-      (kbd "<C-up>") 'comint-previous-matching-input-from-input) ; RStudio
+      (kbd "<C-up>") #'comint-previous-matching-input-from-input) ; RStudio
     (define-key comint-mode-map
-      (kbd "M-n") 'comint-next-matching-input-from-input) ; Shell
+      (kbd "M-n") #'comint-next-matching-input-from-input) ; Shell
     (define-key comint-mode-map
-      (kbd "<C-down>") 'comint-next-matching-input-from-input) ; RStudio
+      (kbd "<C-down>") #'comint-next-matching-input-from-input) ; RStudio
 
     (when (featurep 'helm-misc)
       ;; Provide completion of `comint' history.
       (define-key comint-mode-map
-        (kbd "C-c C-l") 'helm-comint-input-ring)))
+        (kbd "C-c C-l") #'helm-comint-input-ring)))
 
 ;;** 36.6 Directory Tracking
 
@@ -9347,8 +9367,8 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; allow any scalable font
   (setq scalable-fonts-allowed t)
 
-  (define-key global-map (kbd "C-+") 'text-scale-increase)
-  (define-key global-map (kbd "C--") 'text-scale-decrease)
+  (global-set-key (kbd "C-+") #'text-scale-increase)
+  (global-set-key (kbd "C--") #'text-scale-decrease)
 
 )
 

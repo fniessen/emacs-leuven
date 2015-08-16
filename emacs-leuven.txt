@@ -1056,7 +1056,7 @@ RET~.
   ;;         (and message (message message)))))
 
   ;; Show all variables whose name matches the pattern.
-  (define-key help-map (kbd "A") 'apropos-user-option)
+  (define-key help-map (kbd "A") #'apropos-user-option)
 #+end_src
 
 ** Misc Help Commands
@@ -1713,7 +1713,7 @@ We bookmarks positions, not just lines!!
 #+begin_src emacs-lisp
   ;; Quickly jump to a position in the current view.
   (with-eval-after-load "ace-jump-mode-autoloads"
-    (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
+    (global-set-key (kbd "C-c SPC") #'ace-jump-mode))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2025,20 +2025,20 @@ Jump between changes:
 
 #+begin_src emacs-lisp
     ;; Jump to next hunk (also on `C-x v ]').
-    (define-key diff-hl-mode-map (kbd "C-x v >") 'diff-hl-next-hunk)
+    (define-key diff-hl-mode-map (kbd "C-x v >") #'diff-hl-next-hunk)
 
     ;; Jump to previous hunk (also on `C-x v [').
-    (define-key diff-hl-mode-map (kbd "C-x v <") 'diff-hl-previous-hunk)
+    (define-key diff-hl-mode-map (kbd "C-x v <") #'diff-hl-previous-hunk)
 #+end_src
 
 Act on changes:
 
 #+begin_src emacs-lisp
     ;; Popup current diff.
-    (define-key diff-hl-mode-map (kbd "C-x v =") 'diff-hl-diff-goto-hunk)
+    (define-key diff-hl-mode-map (kbd "C-x v =") #'diff-hl-diff-goto-hunk)
 
     ;; Revert current hunk (also on `C-x v n').
-    (define-key diff-hl-mode-map (kbd "C-x v u") 'diff-hl-revert-hunk))
+    (define-key diff-hl-mode-map (kbd "C-x v u") #'diff-hl-revert-hunk))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -2601,7 +2601,7 @@ the user see truly invisible matches before replacing them.
     (global-set-key (kbd "M-%") #'anzu-query-replace)
     (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
 
-    ;; (define-key isearch-mode-map (kbd "M-%") 'anzu-query-replace)
+    ;; (define-key isearch-mode-map (kbd "M-%") #'anzu-query-replace)
     )
 #+end_src
 
@@ -2710,7 +2710,7 @@ a match for REGEXP.
   ;;          (regexp-quote isearch-string))))))
 
   ;; When doing Isearch, hand the word over to `helm-swoop'.
-  (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
+  (define-key isearch-mode-map (kbd "C-o") #'helm-swoop-from-isearch)
 
   (global-unset-key (kbd "M-o")) ; XXX???
 
@@ -3931,22 +3931,22 @@ you chose not to happen.  Now look for substitute for ~TAB~.
 Something not ~TAB~ can be "C-z", "C-TAB", and "SPC".
 
 #+begin_src emacs-lisp :tangle no
-(define-key helm-find-files-map (kbd "<tab>")    'helm-execute-persistent-action)
-(define-key helm-find-files-map (kbd "C-<tab>")  'helm-select-action)
-(define-key helm-find-files-map (kbd "C-z")      'helm-select-action)
-(define-key helm-find-files-map (kbd "<SPC>")    'helm-select-action)
-(define-key helm-find-files-map (kbd "<return>") 'helm-confirm-and-exit-minibuffer)
-(define-key helm-find-files-map (kbd "^")        'helm-find-files-up-one-level)
+(define-key helm-find-files-map (kbd "<tab>")    #'helm-execute-persistent-action)
+(define-key helm-find-files-map (kbd "C-<tab>")  #'helm-select-action)
+(define-key helm-find-files-map (kbd "C-z")      #'helm-select-action)
+(define-key helm-find-files-map (kbd "<SPC>")    #'helm-select-action)
+(define-key helm-find-files-map (kbd "<return>") #'helm-confirm-and-exit-minibuffer)
+(define-key helm-find-files-map (kbd "^")        #'helm-find-files-up-one-level)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+(define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action) ; Rebind TAB to do persistent action.
+(define-key helm-map (kbd "C-i") #'helm-execute-persistent-action) ; Make TAB works in terminal.
+(define-key helm-map (kbd "C-z") #'helm-select-action) ; List actions using C-z.
 
-(define-key helm-grep-mode-map (kbd "<return>")  'helm-grep-mode-jump-other-window)
-(define-key helm-grep-mode-map (kbd "n")  'helm-grep-mode-jump-other-window-forward)
-(define-key helm-grep-mode-map (kbd "p")  'helm-grep-mode-jump-other-window-backward)
+(define-key helm-grep-mode-map (kbd "<return>")  #'helm-grep-mode-jump-other-window)
+(define-key helm-grep-mode-map (kbd "n") #'helm-grep-mode-jump-other-window-forward)
+(define-key helm-grep-mode-map (kbd "p") #'helm-grep-mode-jump-other-window-backward)
 #+end_src
 
 **** Helm documentation
@@ -4029,7 +4029,7 @@ XXX Look at helm-dictionary.
     ;; Speedy file opening.
     (global-set-key (kbd "<f3>") #'helm-for-files)
 
-    ;; (global-set-key (kbd "C-x C-f") #'helm-find-files)
+    ;; (global-set-key (kbd "C-x C-f") #'helm-find-files) ; OK.
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4078,7 +4078,7 @@ XXX Look at helm-dictionary.
 #+end_src
 
 #+begin_src emacs-lisp
-    (global-set-key (kbd "C-h a") #'helm-apropos)
+    (global-set-key (kbd "C-h a") #'helm-apropos) ; OK.
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4303,7 +4303,10 @@ You can also use the ~@~ prefix to *search buffer contents*.
     (setq helm-buffer-max-length nil)
 
     ;; Never show details in buffer list.
-    (setq helm-buffer-details-flag nil))
+    (setq helm-buffer-details-flag nil)
+
+    ;; String to display at end of truncated buffer names.
+    (setq helm-buffers-end-truncated-string "…"))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4451,19 +4454,19 @@ Pressing twice C-o goes from Helm Swoop to Helm Multi Swoop...
     ;; (global-set-key (kbd "C-x M-i") #'helm-multi-swoop-all)
 
     ;; When doing Isearch, hand the word over to `helm-swoop'.
-    (define-key isearch-mode-map (kbd "C-o") 'helm-swoop-from-isearch)
-    ;; (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+    (define-key isearch-mode-map (kbd "C-o") #'helm-swoop-from-isearch)
+    ;; (define-key isearch-mode-map (kbd "M-i") #'helm-swoop-from-isearch)
 
     (with-eval-after-load "dired"
-      (define-key dired-mode-map (kbd "C-o") 'helm-swoop)
-      ;; (define-key dired-mode-map (kbd "M-i") 'helm-swoop)
+      (define-key dired-mode-map (kbd "C-o") #'helm-swoop)
+      ;; (define-key dired-mode-map (kbd "M-i") #'helm-swoop)
       ))
 
   (with-eval-after-load "helm-swoop"
 
     ;; From `helm-swoop' to `helm-multi-swoop-all'.
-    (define-key helm-swoop-map (kbd "C-o") 'helm-multi-swoop-all-from-helm-swoop)
-    ;; (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+    (define-key helm-swoop-map (kbd "C-o") #'helm-multi-swoop-all-from-helm-swoop)
+    ;; (define-key helm-swoop-map (kbd "M-i") #'helm-multi-swoop-all-from-helm-swoop)
 
     ;; Don't slightly boost invoke speed in exchange for text color.
     (setq helm-swoop-speed-or-color t)
@@ -5008,8 +5011,8 @@ one.
        ".w" "README"))
 
     ;; Bind the arrow keys in the speedbar tree.
-    (define-key speedbar-mode-map (kbd "<right>") 'speedbar-expand-line)
-    (define-key speedbar-mode-map (kbd "<left>") 'speedbar-contract-line)
+    (define-key speedbar-mode-map (kbd "<right>") #'speedbar-expand-line)
+    (define-key speedbar-mode-map (kbd "<left>") #'speedbar-contract-line)
 
     ;; Parameters to use when creating the speedbar frame in Emacs.
     (setq speedbar-frame-parameters '((width . 30)
@@ -5805,15 +5808,15 @@ You can use ~org-cycle~ in other modes, with ~outline-minor-mode~.
     ;;   (add-hook 'outline-minor-mode-hook
     ;;             (lambda ()
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<S-tab>") 'outline-cycle)
+    ;;                 (kbd "<S-tab>") #'outline-cycle)
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<M-left>") 'outline-promote)
+    ;;                 (kbd "<M-left>") #'outline-promote)
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<M-right>") 'outline-demote)
+    ;;                 (kbd "<M-right>") #'outline-demote)
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<M-up>") 'outline-move-subtree-up)
+    ;;                 (kbd "<M-up>") #'outline-move-subtree-up)
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<M-down>") 'outline-move-subtree-down))))
+    ;;                 (kbd "<M-down>") #'outline-move-subtree-down))))
 
     ;; ;; Extra support for outline minor mode.
     ;; (try-require 'out-xtra)
@@ -6076,9 +6079,9 @@ work and tasks with Org mode.
   (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
   (add-to-list 'auto-mode-alist '("\\.org_archive\\'" . org-mode))
 
-  (define-key global-map (kbd "C-c l") 'org-store-link)
-  (define-key global-map (kbd "C-c c") 'org-capture)
-  (define-key global-map (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c l") #'org-store-link)
+  (global-set-key (kbd "C-c c") #'org-capture)
+  (global-set-key (kbd "C-c a") #'org-agenda)
 
   ;; Using links outside Org.
   (global-set-key (kbd "C-c L") #'org-insert-link-global)
@@ -6086,7 +6089,7 @@ work and tasks with Org mode.
 
   (with-eval-after-load "org"
     ;; Display the Org mode manual in Info mode.
-    (define-key global-map (kbd "C-h o") 'org-info))
+    (global-set-key (kbd "C-h o") #'org-info))
                                         ; XXX Not autoloaded.
 
   (with-eval-after-load "org"
@@ -6437,7 +6440,7 @@ options.
 
   (with-eval-after-load "org"
     ;; Create indirect buffer and narrow it to current subtree.
-    (define-key org-mode-map (kbd "<H-return>") 'org-tree-to-indirect-buffer))
+    (define-key org-mode-map (kbd "<H-return>") #'org-tree-to-indirect-buffer))
 #+end_src
 
 Note that *Imenu* does display the current *Org subtree* in the mode line, not the
@@ -6484,7 +6487,7 @@ vs ~C-u C-c C-j~
           (org-reveal t)
         (org-show-siblings)))
 
-    (define-key org-mode-map (kbd "C-c C-r") 'leuven-org-reveal))
+    (define-key org-mode-map (kbd "C-c C-r") #'leuven-org-reveal))
 #+end_src
 
 See also [[id:a9fe61b7-cdbd-478e-a4af-da9e122fb2d9][Sparse trees]] for behavior when revealing a location.
@@ -7960,7 +7963,7 @@ headline (to return any kind of string you want).
       (org-agenda-redo))
 
     (define-key org-agenda-mode-map
-      (kbd "(") 'leuven-org-agenda-toggle-tasks-details)
+      (kbd "(") #'leuven-org-agenda-toggle-tasks-details)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8578,7 +8581,7 @@ To list all available entities, run ~M-x org-entities-help~.
     ;; Libraries in this list will be loaded once the export framework is needed.
     (setq org-export-backends '(ascii html icalendar latex odt md))
 
-    (define-key org-mode-map (kbd "C-c C-e") 'org-export-dispatch))
+    (define-key org-mode-map (kbd "C-c C-e") #'org-export-dispatch))
 #+end_src
 
 For Org buffers, add an enhanced version of ~save-buffer~ which does:
@@ -8668,7 +8671,7 @@ launched from Dired?
               (message "PDF is up to date with Org file")))
           (beep))))
 
-    (define-key org-mode-map (kbd "<f9>") 'org-save-buffer-and-do-related))
+    (define-key org-mode-map (kbd "<f9>") #'org-save-buffer-and-do-related))
 #+end_src
 
 #+begin_note
@@ -9370,7 +9373,7 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
   ;;         (indent-region arg)))
   ;;
   ;;   ;; Make `C-c C-v C-x C-M-\' more convenient.
-  ;;   (define-key org-mode-map (kbd "C-M-\\") 'leuven-org-indent-region))
+  ;;   (define-key org-mode-map (kbd "C-M-\\") #'leuven-org-indent-region))
 
   ;; Prevent auto-filling in src blocks.
   (setq org-src-prevent-auto-filling t)
@@ -9806,7 +9809,7 @@ using "hyper":
     ;; Run from current line to end of code block (mapped to H-e?).
 
     ;; Run current code block.
-    (define-key org-mode-map (kbd "H-e") 'org-babel-execute-maybe)
+    (define-key org-mode-map (kbd "H-e") #'org-babel-execute-maybe)
 
     (defun org-babel-force-execute-src-block ()
       "Force execution of the current source code block."
@@ -9814,13 +9817,13 @@ using "hyper":
       (org-babel-execute-src-block nil nil '((:eval . "yes"))))
 
     ;; Run current code block (force execution).
-    (define-key org-mode-map (kbd "H-f") 'org-babel-force-execute-src-block)
+    (define-key org-mode-map (kbd "H-f") #'org-babel-force-execute-src-block)
 #+end_src
 
 To *tangle*:
 
 #+begin_src emacs-lisp
-    (define-key org-mode-map (kbd "H-t") 'org-babel-tangle)
+    (define-key org-mode-map (kbd "H-t") #'org-babel-tangle)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -10078,7 +10081,7 @@ Promote ignoreheading. Works in ASCII backend too:
         (unless (looking-at "=") (insert-and-inherit "="))))))
 
   ;; Must be in eval-after-load "org"?
-  ;; (define-key org-mode-map (kbd "=") 'insert-one-equal-or-two)
+  ;; (define-key org-mode-map (kbd "=") #'insert-one-equal-or-two)
 #+end_src
 
 Export the current subtree into an email body, using *properties* to populate
@@ -10441,7 +10444,7 @@ file, AUCTeX gives you a ~Command~ menu.
 
     ;; Rebind the "compile command" to default command from `C-c C-c' (in LaTeX
     ;; mode only).
-    (define-key LaTeX-mode-map (kbd "<f9>") 'TeX-default)
+    (define-key LaTeX-mode-map (kbd "<f9>") #'TeX-default)
 
     ;; Use PDF mode by default (instead of DVI).
     (setq-default TeX-PDF-mode t)
@@ -10788,7 +10791,7 @@ Some key bindings:
     (define-key nxml-mode-map (kbd "C-c C-x") nil)
 
     ;; View the buffer contents in a browser.
-    (define-key nxml-mode-map (kbd "C-c C-v") 'browse-url-of-buffer))
+    (define-key nxml-mode-map (kbd "C-c C-v") #'browse-url-of-buffer))
                                         ; XXX Normally bound to.
                                         ; `rng-validate-mode'
 #+end_src
@@ -11293,13 +11296,13 @@ many programming modes.
   (with-eval-after-load "hideshow"
 
     ;; Change those really awkward key bindings with `@' in the middle.
-    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") 'hs-hide-block) ; or H-left? or C-c left?
+    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") #'hs-hide-block) ; or H-left? or C-c left?
                                         ; `C-c @ C-h' (collapse current fold) M-l in RStudio
-    (define-key hs-minor-mode-map (kbd "<C-M-S-right>") 'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "<C-M-S-right>") #'hs-show-block)
                                         ; `C-c @ C-s' (expand current fold) M-S-l
-    (define-key hs-minor-mode-map (kbd "<C-M-S-up>") 'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "<C-M-S-up>") #'hs-hide-all)
                                         ; `C-c @ C-M-h' (collapse all folds) M-o
-    (define-key hs-minor-mode-map (kbd "<C-M-S-down>") 'hs-show-all)
+    (define-key hs-minor-mode-map (kbd "<C-M-S-down>") #'hs-show-all)
                                         ; `C-c @ C-M-s' (expand all folds) M-S-o
 
     (defcustom hs-face 'hs-face
@@ -11530,7 +11533,7 @@ eclimd -Dosgi.instance.area.default=@user.home/another_workspace
     (setq eclim-print-debug-messages t)
 
     ;; Add key binding.
-    (define-key eclim-mode-map (kbd "M-.") 'eclim-java-find-declaration)
+    (define-key eclim-mode-map (kbd "M-.") #'eclim-java-find-declaration)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -12189,11 +12192,11 @@ can use the following keys to navigate historic versions of the file:
              (lambda ()
                ;; Hide up-to-date and unregistered files.
                (define-key vc-dir-mode-map
-                 (kbd "x") 'leuven-vc-dir-hide-up-to-date-and-unregistered)
+                 (kbd "x") #'leuven-vc-dir-hide-up-to-date-and-unregistered)
                (define-key vc-dir-mode-map
-                 (kbd "E") 'vc-ediff)
+                 (kbd "E") #'vc-ediff)
                (define-key vc-dir-mode-map
-                 (kbd "#") 'vc-ediff-ignore-whitespace)
+                 (kbd "#") #'vc-ediff-ignore-whitespace)
                                          ; ediff-windows-wordwise?
                ))
 
@@ -12285,7 +12288,7 @@ can use the following keys to navigate historic versions of the file:
                                                    "HEAD" nil "HEAD")
                                       ""))))))
 
-  (define-key vc-prefix-map (kbd "=") 'leuven-vc-diff)
+  (define-key vc-prefix-map (kbd "=") #'leuven-vc-diff)
 #+end_src
 
 *************** TODO Customize `vc-annotate-background' (and future `vc-annotate-foreground')
@@ -12554,7 +12557,7 @@ Go to source code for symbol at point:
                    (_                      'find-variable))
                  sym)))
 
-    (define-key emacs-lisp-mode-map (kbd "M-.") 'leuven-goto-lisp-symbol-at-point))
+    (define-key emacs-lisp-mode-map (kbd "M-.") #'leuven-goto-lisp-symbol-at-point))
 #+end_src
 
 ** Emacs Development Environment
@@ -12812,7 +12815,7 @@ really like this.
   (progn (emr-initialize)
                  (define-key emacs-lisp-mode-map
                    (kbd "M-RET")
-                   'emr-show-refactor-menu)))
+                   #'emr-show-refactor-menu)))
 #+end_src
 
 * Abbrevs
@@ -12922,7 +12925,7 @@ Load additional snippets.
     ;; Bind `yas-expand' to SPC.
     (define-key yas-minor-mode-map (kbd "<tab>") nil)
     (define-key yas-minor-mode-map (kbd "TAB") nil)
-    (define-key yas-minor-mode-map (kbd "SPC") 'yas-expand)
+    (define-key yas-minor-mode-map (kbd "SPC") #'yas-expand)
 
     ;; Don't expand when you are typing in a string or comment.
     (add-hook 'prog-mode-hook
@@ -13272,8 +13275,8 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
     ;; 7.5 Use `C-n/C-p' to select candidates (only when completion menu is
     ;; displayed).
     (setq ac-use-menu-map t)
-    (define-key ac-menu-map (kbd "C-n") 'ac-next)
-    (define-key ac-menu-map (kbd "C-p") 'ac-previous)
+    (define-key ac-menu-map (kbd "C-n") #'ac-next)
+    (define-key ac-menu-map (kbd "C-p") #'ac-previous)
 
     ;; Unbind some keys (inconvenient in Comint buffers).
     (define-key ac-completing-map (kbd "M-n") nil)
@@ -13312,14 +13315,14 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
     ;; (setq ac-candidate-menu-min 0)
 
     ;; Completion by TAB.
-    (define-key ac-completing-map (kbd "<tab>") 'ac-complete)
+    (define-key ac-completing-map (kbd "<tab>") #'ac-complete)
 
     ;; Completion by RET.
-    (define-key ac-completing-map (kbd "<return>") 'ac-complete)
+    (define-key ac-completing-map (kbd "<return>") #'ac-complete)
 
     ;; Abort.
-    (define-key ac-completing-map (kbd "C-g") 'ac-stop)
-    (define-key ac-completing-map (kbd "<left>") 'ac-stop)
+    (define-key ac-completing-map (kbd "C-g") #'ac-stop)
+    (define-key ac-completing-map (kbd "<left>") #'ac-stop)
 
     ;; 11.1 Avoid Flyspell processes when auto completion is being started.
     (ac-flyspell-workaround))
@@ -13368,10 +13371,13 @@ available completions and filter as well.
   (with-eval-after-load "company-autoloads"
 
     ;; Enable Company mode in all buffers ....
-    (add-hook 'after-init-hook #'global-company-mode)
+    (global-company-mode 1)
 
     (global-set-key (kbd "<C-tab>") #'company-complete)
-    (global-set-key (kbd "C-/") #'company-complete))
+    (global-set-key (kbd "C-/") #'company-complete)
+
+    (global-set-key (kbd "C-c y") #'company-yasnippet) ; Test.
+    )
 
   (with-eval-after-load "company"
 
@@ -13403,25 +13409,30 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 
     ;; Use `C-n/C-p' to select candidates (only when completion menu is
     ;; displayed).
-    (define-key company-active-map (kbd "C-n") 'company-select-next)
-    (define-key company-active-map (kbd "C-p") 'company-select-previous)
+    (define-key company-active-map (kbd "C-n") #'company-select-next)
+    (define-key company-active-map (kbd "C-p") #'company-select-previous)
 
     ;; Unbind some keys (inconvenient in Comint buffers).
     (define-key company-active-map (kbd "M-n") nil)
     (define-key company-active-map (kbd "M-p") nil)
 
     ;; Completion by TAB.
-    (define-key company-active-map (kbd "<tab>") 'company-complete-selection) ; Complete with the selected candidate
+    (define-key company-active-map (kbd "<tab>") #'company-complete-selection) ; Complete with the selected candidate
                                         ; `company-complete'?
 
     ;; Temporarily show the documentation buffer for the selection.
-    (define-key company-active-map (kbd "<f1>") 'company-show-doc-buffer)
-    (define-key company-active-map (kbd "C-?") 'company-show-doc-buffer)
-    (define-key company-active-map (kbd "C-c C-d") 'company-show-doc-buffer)
+    (define-key company-active-map (kbd "<f1>") #'company-show-doc-buffer)
+    (define-key company-active-map (kbd "C-?") #'company-show-doc-buffer)
+    (define-key company-active-map (kbd "C-c C-d") #'company-show-doc-buffer)
 
     ;; Abort.
-    (define-key company-active-map (kbd "C-g") 'company-abort)
-    (define-key company-active-map (kbd "<left>") 'company-abort)
+    (define-key company-active-map (kbd "C-g") #'company-abort)
+    (define-key company-active-map (kbd "<left>") #'company-abort)
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+    (setq company-idle-delay nil)
+    (global-set-key (kbd "<tab>") #'company-complete-selection)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -13430,7 +13441,7 @@ By default, the list of candidates is sorted alphabetically, unless the backend
       '(dotimes (i 10)
          (define-key company-active-map
            (read-kbd-macro (format "<kp-%d>" i))
-           'company-complete-number)))
+           #'company-complete-number)))
 
     ;; Do nothing if the indicated candidate contains digits (actually, it will
     ;; try to insert the digit you type).
@@ -13468,7 +13479,7 @@ XXX The following does not work in Org files (TAB does not expand nodes anymore)
                    (looking-at "\\_>"))
           (call-interactively 'company-complete-selection))))
 
-    (define-key company-mode-map (kbd "<tab>") 'leuven-indent-or-complete)
+    (define-key company-mode-map (kbd "<tab>") #'leuven-indent-or-complete)
 
     ;; (defun leuven--tab-fix ()
     ;;   (local-set-key (kbd "<tab>") #'leuven-indent-or-complete))
@@ -13504,7 +13515,29 @@ good|
 - the prefix "good" will match no word (no completion to "goodBYE"!) while
 - the prefix "GOOD" will match "GOODBYE" only.
 
+In "code" modes (see ~company-dabbrev-code-modes~) and their derivatives, Company
+will -- by default -- complete only symbols, not text in comments or strings.
+
 #+begin_src emacs-lisp
+  ;; Dabbrev-like company-mode back-end for code.
+  (with-eval-after-load "company-dabbrev-code"
+
+    ;; ;; Search all other buffers
+    ;; (setq company-dabbrev-code-other-buffers 'all)
+
+    ;; Offer completions in comments and strings.
+    (setq company-dabbrev-code-everywhere t)
+
+    ;; ;; Ignore case when collecting completion candidates.
+    ;; (setq company-dabbrev-code-ignore-case t)
+    )
+#+end_src
+
+In the other modes, Company will pass control to other back-ends
+(e.g. ~company-dabbrev~).
+
+#+begin_src emacs-lisp
+  ;; Dabbrev-like company-mode completion back-end.
   (with-eval-after-load "company-dabbrev"
 
     ;; Only search in the current buffer
@@ -13522,11 +13555,6 @@ good|
 #+end_src
 
 XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
-
-#+begin_src emacs-lisp :tangle no
-    (setq company-idle-delay nil)
-    (global-set-key (kbd "<tab>") #'company-complete-selection)
-#+end_src
 
 **** Company-quickhelp
 
@@ -13624,7 +13652,7 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go.  Now, they do.
       (dired-next-line 4))
 
     (define-key dired-mode-map
-      (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
+      (vector 'remap 'beginning-of-buffer) #'dired-back-to-top)
 
     (defun dired-jump-to-bottom ()
       (interactive)
@@ -13632,7 +13660,7 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go.  Now, they do.
       (dired-next-line -1))
 
     (define-key dired-mode-map
-      (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
+      (vector 'remap 'end-of-buffer) #'dired-jump-to-bottom)
 #+end_src
 
 ** Deleting Files with Dired
@@ -13735,7 +13763,7 @@ appropriate viewer:
         (dired-do-shell-command program nil
                                 (dired-get-marked-files t current-prefix-arg))))
 
-    (define-key dired-mode-map (kbd "F") 'dired-open)
+    (define-key dired-mode-map (kbd "F") #'dired-open)
 #+end_src
 
 **** Ask a WWW browser to display file
@@ -13744,7 +13772,7 @@ Just ask a WWW browser to display the current file.
 
 #+begin_src emacs-lisp
     ;; In Dired, ask a WWW browser to display the file named on this line.
-    (define-key dired-mode-map (kbd "e") 'browse-url-of-dired-file) ; <C-RET>?
+    (define-key dired-mode-map (kbd "e") #'browse-url-of-dired-file) ; <C-RET>?
 #+end_src
 
 It works for files as well as for directories.
@@ -13781,7 +13809,7 @@ For those under Windows:
          (dired-get-marked-files nil arg)))
 
       ;; Bind it to `E' in Dired mode.
-      (define-key dired-mode-map (kbd "E") 'w32-dired-open-files-externally))
+      (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally))
 #+end_src
 
 *** Open file with ~eww~
@@ -14023,7 +14051,7 @@ a Dired buffer.  They are thus similar to the default global bindings ~C-x d~ an
 
     ;; Up, reusing Dired buffers.
     (define-key dired-mode-map (kbd "C-x C-j")
-      'diredp-up-directory-reuse-dir-buffer))
+      #'diredp-up-directory-reuse-dir-buffer))
 #+end_src
 
 ** VC diff highlighting
@@ -14086,8 +14114,8 @@ a Dired buffer.  They are thus similar to the default global bindings ~C-x d~ an
   ;; Fix foolish calendar-mode scrolling after loading `calendar.el'.
   (add-hook 'calendar-load-hook
             (lambda ()
-              (define-key calendar-mode-map (kbd ">") 'calendar-scroll-left)
-              (define-key calendar-mode-map (kbd "<") 'calendar-scroll-right)))
+              (define-key calendar-mode-map (kbd ">") #'calendar-scroll-left)
+              (define-key calendar-mode-map (kbd "<") #'calendar-scroll-right)))
 #+end_src
 
 ** Times of Sunrise/Sunset
@@ -14822,7 +14850,7 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
         (comint-truncate-buffer)))
 
     (with-eval-after-load "comint"
-      (define-key comint-mode-map (kbd "C-c C-k") 'leuven-comint-clear-buffer))
+      (define-key comint-mode-map (kbd "C-c C-k") #'leuven-comint-clear-buffer))
 
 ;; )
 #+end_src
@@ -14865,29 +14893,29 @@ bufffer from Emacs.
 
     ;; Cycle backwards/forwards through input history.
     (define-key comint-mode-map
-      (kbd "C-p") 'comint-previous-input) ; Shell
+      (kbd "C-p") #'comint-previous-input) ; Shell
     (define-key comint-mode-map
-      (kbd "<up>") 'comint-previous-input) ; Shell + RStudio
+      (kbd "<up>") #'comint-previous-input) ; Shell + RStudio
     (define-key comint-mode-map
-      (kbd "C-n") 'comint-next-input)   ; Shell
+      (kbd "C-n") #'comint-next-input)  ; Shell
     (define-key comint-mode-map
-      (kbd "<down>") 'comint-next-input) ; Shell + RStudio
+      (kbd "<down>") #'comint-next-input) ; Shell + RStudio
 
     ;; Search backwards/forwards through input history for match for current
     ;; input.
     (define-key comint-mode-map
-      (kbd "M-p") 'comint-previous-matching-input-from-input) ; Shell
+      (kbd "M-p") #'comint-previous-matching-input-from-input) ; Shell
     (define-key comint-mode-map
-      (kbd "<C-up>") 'comint-previous-matching-input-from-input) ; RStudio
+      (kbd "<C-up>") #'comint-previous-matching-input-from-input) ; RStudio
     (define-key comint-mode-map
-      (kbd "M-n") 'comint-next-matching-input-from-input) ; Shell
+      (kbd "M-n") #'comint-next-matching-input-from-input) ; Shell
     (define-key comint-mode-map
-      (kbd "<C-down>") 'comint-next-matching-input-from-input) ; RStudio
+      (kbd "<C-down>") #'comint-next-matching-input-from-input) ; RStudio
 
     (when (featurep 'helm-misc)
       ;; Provide completion of `comint' history.
       (define-key comint-mode-map
-        (kbd "C-c C-l") 'helm-comint-input-ring)))
+        (kbd "C-c C-l") #'helm-comint-input-ring)))
 #+end_src
 
 *** Command History
@@ -16185,8 +16213,8 @@ There are a few commands to adjust the font sizes:
 Those bindings are global and repeatable, e.g. ~C-x C-+ C-+ C-+~.
 
 #+begin_src emacs-lisp
-  (define-key global-map (kbd "C-+") 'text-scale-increase)
-  (define-key global-map (kbd "C--") 'text-scale-decrease)
+  (global-set-key (kbd "C-+") #'text-scale-increase)
+  (global-set-key (kbd "C--") #'text-scale-decrease)
 #+end_src
 
 #+begin_src emacs-lisp
