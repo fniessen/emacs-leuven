@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150814.1703
+;; Version: 20150816.2223
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150814.1703"
+(defconst leuven--emacs-version "20150816.2223"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -103,7 +103,7 @@
 (defvar leuven-load-chapter-0-environment t) ; required
 (defvar leuven-load-chapter-0-loading-libraries t) ; required
 (defvar leuven-load-chapter-0-debugging t)
-(defvar leuven-load-chapter-47-packages t)
+(defvar leuven-load-chapter-48-packages t)
 (defvar leuven-load-chapter-1-screen t)
 (defvar leuven-load-chapter-6-exiting t)
 (defvar leuven-load-chapter-7-basic t)
@@ -134,15 +134,15 @@
 (defvar leuven-load-chapter-31-calendar-diary t)
 (defvar leuven-load-chapter-32-sending-mail t)
 (defvar leuven-load-chapter-34-gnus t)
-(defvar leuven-load-chapter-35-document-view t)
-(defvar leuven-load-chapter-36-shell t)
-(defvar leuven-load-chapter-37-emacs-server t)
-(defvar leuven-load-chapter-38-printing t)
-(defvar leuven-load-chapter-39-sorting t)
-(defvar leuven-load-chapter-42-saving-emacs-sessions t)
-(defvar leuven-load-chapter-45-hyperlinking t)
-(defvar leuven-load-chapter-46-amusements t)
-(defvar leuven-load-chapter-48-customization t)
+(defvar leuven-load-chapter-36-document-view t)
+(defvar leuven-load-chapter-38-shell t)
+(defvar leuven-load-chapter-39-emacs-server t)
+(defvar leuven-load-chapter-40-printing t)
+(defvar leuven-load-chapter-41-sorting t)
+(defvar leuven-load-chapter-44-saving-emacs-sessions t)
+(defvar leuven-load-chapter-46-hyperlinking t)
+(defvar leuven-load-chapter-47-amusements t)
+(defvar leuven-load-chapter-49-customization t)
 (defvar leuven-load-chapter-AppG-ms-dos t)
 (defvar leuven-load-chapter-XX-emacs-display t)
 (defvar leuven-load-chapter-99-debugging t)
@@ -355,13 +355,13 @@ Last time is saved in global variable `leuven--before-section-time'."
 
 )                                       ; Chapter 0 ends here.
 
-;;* 47 Emacs Lisp (info "(emacs)Packages")
+;;* 48 Emacs Lisp (info "(emacs)Packages")
 
-(leuven--chapter leuven-load-chapter-47-packages "47 Emacs Lisp Packages"
+(leuven--chapter leuven-load-chapter-48-packages "48 Emacs Lisp Packages"
 
-;;** 47.2 Package Installation
+;;** 48.2 Package Installation
 
-  (leuven--section "47.2 Package Installation")
+  (leuven--section "48.2 Package Installation")
 
   ;; Simple package system for GNU Emacs.
   (try-require 'package)
@@ -434,7 +434,7 @@ These packages are neither built-in nor already installed nor ignored."
                              "the `%s' package next times...") pkg)
             (sit-for 1.5))))))
 
-)                                       ; Chapter 47 ends here.
+)                                       ; Chapter 48 ends here.
 
   ;; Load elisp libraries while Emacs is idle.
   (try-require 'idle-require)
@@ -2403,9 +2403,9 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Lisp complete.
   (define-key lisp-interaction-mode-map
-    [remap completion-at-point] 'helm-lisp-completion-at-point)
+    [remap completion-at-point] #'helm-lisp-completion-at-point)
   (define-key emacs-lisp-mode-map
-    [remap completion-at-point] 'helm-lisp-completion-at-point)
+    [remap completion-at-point] #'helm-lisp-completion-at-point)
 
   ;; Efficiently hopping squeezed lines powered by Helm interface
   ;; (= Helm occur + Follow mode!).
@@ -3430,8 +3430,8 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; (add-hook 'outline-minor-mode-hook
   ;;   (lambda ()
-  ;;     (define-key outline-minor-mode-map [(control tab)] 'org-cycle)
-  ;;     (define-key outline-minor-mode-map [(shift tab)] 'org-global-cycle))) ; backtab?
+  ;;     (define-key outline-minor-mode-map (kbd "<C-tab>") #'org-cycle)
+  ;;     (define-key outline-minor-mode-map (kbd "<S-tab>") #'org-global-cycle))) ; backtab?
 
   (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
   ;; TODO Look at org-cycle-global and local below, they work better, but
@@ -5077,7 +5077,7 @@ this with to-do items than with projects or headings."
       (org-capture 0 "t"))
 
     (define-key org-agenda-mode-map
-      "Z" 'leuven-org-agenda-mark-done-and-add-followup)
+      (kbd "Z") #'leuven-org-agenda-mark-done-and-add-followup)
 
     (defun leuven-org-agenda-new ()
       "Create a new note or task at the current agenda item.
@@ -5088,7 +5088,7 @@ this with to-do items than with projects or headings."
       (org-capture 0))
 
     ;; ;; New key assignment (overrides `org-agenda-next-item').
-    ;; (define-key org-agenda-mode-map "N" 'leuven-org-agenda-new)
+    ;; (define-key org-agenda-mode-map (kbd "N") #'leuven-org-agenda-new)
 
   )
 
@@ -7112,7 +7112,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (hl-line-mode -1)
       (top-level))
 
-    (define-key edebug-mode-map [remap top-level] 'leuven-edebug-quit))
+    (define-key edebug-mode-map [remap top-level] #'leuven-edebug-quit))
 
 ;;** 27.8 (info "(emacs)Lisp Libraries") for Emacs
 
@@ -7999,7 +7999,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (eww-open-file (file-name-sans-versions (dired-get-filename) t)))
 
     ;; Add a binding "W" -> `dired-open-with-eww' to Dired.
-    (define-key dired-mode-map "W" 'dired-open-with-eww)
+    (define-key dired-mode-map (kbd "W") 'dired-open-with-eww)
 
 ;;** (info "(emacs)Operating on Files")
 
@@ -8509,9 +8509,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 )                                       ; Chapter 34 ends here.
 
-;;* 35 (info "(emacs)Document View")
+;;* 36 (info "(emacs)Document View")
 
-(leuven--chapter leuven-load-chapter-35-document-view "35 Document Viewing"
+(leuven--chapter leuven-load-chapter-36-document-view "36 Document Viewing"
 
   ;; View PDF/PostScript/DVI files in Emacs.
 
@@ -8521,11 +8521,11 @@ a clean buffer we're an order of magnitude laxer about checking."
     (with-eval-after-load "pdf-tools-autoloads"
       (pdf-tools-install)))
 
-)                                       ; Chapter 35 ends here.
+)                                       ; Chapter 36 ends here.
 
-;;* 36 Running (info "(emacs)Shell") Commands from Emacs
+;;* 38 Running (info "(emacs)Shell") Commands from Emacs
 
-(leuven--chapter leuven-load-chapter-36-shell "36 Running Shell Commands from Emacs"
+(leuven--chapter leuven-load-chapter-38-shell "38 Running Shell Commands from Emacs"
 
   ;; Transform shell names to what they really are.
   (with-eval-after-load "sh-script"
@@ -8538,9 +8538,9 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; (setq explicit-bash-args '("-i")) ; --noediting added in Emacs 24.4
   ;; (setq explicit-sh-args '("-i"))
 
-;;** 36.1 Single Shell
+;;** 38.1 Single Shell
 
-  (leuven--section "36.1 Single Shell")
+  (leuven--section "38.1 Single Shell")
 
   ;; Force interactive behavior (to get my handy shell aliases).
   ;; FIXME Fix for Zsh (zsh:1: command not found: shopt)
@@ -8569,16 +8569,16 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; ;; Workaround for Cygwin when 'shell-file-name' is 'bash'.
   ;; (setq null-device "/dev/null"))
 
-;;** 36.2 Interactive Shell
+;;** 38.2 Interactive Subshell
 
-  (leuven--section "36.2 Interactive Shell")
+  (leuven--section "38.2 Interactive Subshell")
 
   ;; ;; For the interactive (sub)shell (and AUCTeX compilation?).
   ;; (setq explicit-shell-file-name shell-file-name)
 
-;;** 36.3 Shell Mode
+;;** 38.3 Shell Mode
 
-  (leuven--section "36.3 Shell Mode")
+  (leuven--section "38.3 Shell Mode")
 
   ;; General command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
   ;; Python, ...).
@@ -8625,9 +8625,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 ;; )
 
-;;** 36.4 Shell Prompts
+;;** 38.4 Shell Prompts
 
-  (leuven--section "36.4 Shell Prompts")
+  (leuven--section "38.4 Shell Prompts")
 
   ;; Regexp to match prompts in the inferior shell.
   (setq shell-prompt-pattern "^[^#$%>\n]*[#$%>] *")
@@ -8637,9 +8637,9 @@ a clean buffer we're an order of magnitude laxer about checking."
                                         ;! only used if the variable
                                         ;! `comint-use-prompt-regexp' is non-nil
 
-;;** 36.5 Shell Command History
+;;** 38.5 Shell Command History
 
-  (leuven--section "36.5 Shell Command History")
+  (leuven--section "38.5 Shell Command History")
 
   ;; Rejects short commands.
   (setq comint-input-filter
@@ -8675,9 +8675,9 @@ a clean buffer we're an order of magnitude laxer about checking."
       (define-key comint-mode-map
         (kbd "C-c C-l") #'helm-comint-input-ring)))
 
-;;** 36.6 Directory Tracking
+;;** 38.6 Directory Tracking
 
-  (leuven--section "36.6 Directory Tracking")
+  (leuven--section "38.6 Directory Tracking")
 
   (defun leuven--rename-buffer-to-curdir (&optional _string)
     "Change Shell buffer's name to current directory."
@@ -8690,22 +8690,18 @@ a clean buffer we're an order of magnitude laxer about checking."
                         #'leuven--rename-buffer-to-curdir nil t)))
                                         ; Local to Shell comint.
 
-;;** 36.7 Options
+;;** 38.7 Options
 
-  (leuven--section "36.7 Options")
+  (leuven--section "38.7 Options")
 
   ;; Disable command echoing.
   (setq-default comint-process-echoes t) ; for Linux (not needed for Cygwin)
 
   (setenv "PAGER" "/usr/bin/cat")
 
-;;** 36.8 Terminal emulator
+;;** 38.9 Term Mode
 
-  (leuven--section "36.8 Terminal emulator")
-
-;;** 36.9 Term Mode
-
-  (leuven--section "36.9 Term Mode")
+  (leuven--section "38.9 Term Mode")
 
   ;; Managing multiple terminal buffers in Emacs
   ;; (and fixing some troubles of `term-mode': key bindings, etc.).
@@ -8731,9 +8727,9 @@ a clean buffer we're an order of magnitude laxer about checking."
       (interactive)
       (switch-or-start 'shell "*shell*")))
 
-;;** 36.10 Remote Host Shell
+;;** 38.10 Remote Host Shell
 
-  (leuven--section "36.10 Remote Host Shell")
+  (leuven--section "38.10 Remote Host Shell")
 
   ;; Load ssh.el file.
   (add-to-list 'same-window-regexps "^\\*ssh-.*\\*\\(\\|<[0-9]+>\\)")
@@ -8857,9 +8853,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 )
 
-;;* 37 (info "(emacs)Emacs Server")
+;;* 39 (info "(emacs)Emacs Server")
 
-(leuven--chapter leuven-load-chapter-37-emacs-server "37 Using Emacs as a Server"
+(leuven--chapter leuven-load-chapter-39-emacs-server "39 Using Emacs as a Server"
 
   ;; Use Emacs as a server (with the `emacsclient' program).
   (unless noninteractive
@@ -8879,11 +8875,11 @@ a clean buffer we're an order of magnitude laxer about checking."
       "Save current buffer before marking it as done."
       (when server-buffer-clients (save-buffer))))
 
-)                                       ; Chapter 37 ends here.
+)                                       ; Chapter 39 ends here.
 
-;;* 38 (info "(emacs)Printing")
+;;* 40 (info "(emacs)Printing")
 
-(leuven--chapter leuven-load-chapter-38-printing "38 Printing Hard Copies"
+(leuven--chapter leuven-load-chapter-40-printing "40 Printing Hard Copies"
 
   ;; Print Emacs buffer on line printer
   ;; for {lpr,print}-{buffer,region}.
@@ -9004,20 +9000,20 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Specify line spacing, in points, for ordinary text.
     (setq ps-line-spacing 3))
 
-)                                       ; Chapter 38 ends here.
+)                                       ; Chapter 40 ends here.
 
-;;* 39 (info "(emacs)Sorting") Text
+;;* 41 (info "(emacs)Sorting") Text
 
-(leuven--chapter leuven-load-chapter-39-sorting "39 Sorting Text"
+(leuven--chapter leuven-load-chapter-41-sorting "41 Sorting Text"
 
   ;; Key binding.
   (global-set-key (kbd "C-c ^") #'sort-lines)
 
-)                                       ; Chapter 39 ends here.
+)                                       ; Chapter 41 ends here.
 
-;;* 42 (info "(emacs)Saving Emacs Sessions")
+;;* 44 (info "(emacs)Saving Emacs Sessions")
 
-(leuven--chapter leuven-load-chapter-42-saving-emacs-sessions "42 Saving Emacs Sessions"
+(leuven--chapter leuven-load-chapter-44-saving-emacs-sessions "44 Saving Emacs Sessions"
 
   (try-require 'saveplace)
   (with-eval-after-load "saveplace"
@@ -9028,11 +9024,11 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Name of the file that records `save-place-alist' value.
     (setq save-place-file "~/.emacs.d/.places")
 
-)                                       ; Chapter 42 ends here.
+)                                       ; Chapter 44 ends here.
 
-;;* 45 (info "(emacs)Hyperlinking")
+;;* 46 (info "(emacs)Hyperlinking")
 
-(leuven--chapter leuven-load-chapter-45-hyperlinking "45 Hyperlinking and Navigation Features"
+(leuven--chapter leuven-load-chapter-46-hyperlinking "46 Hyperlinking and Navigation Features"
 
   ;; Use proxy.
   (setq url-proxy-services              ;! Emacs expects just hostname and port
@@ -9180,9 +9176,9 @@ a clean buffer we're an order of magnitude laxer about checking."
             ("fr" . "nl") ("nl" . "fr")
             ("fr" . "es") ("es" . "fr"))))
 
-;;* 46 Other (info "(emacs)Amusements")
+;;* 47 Other (info "(emacs)Amusements")
 
-(leuven--chapter leuven-load-chapter-46-amusements "46 Other Amusements"
+(leuven--chapter leuven-load-chapter-47-amusements "47 Other Amusements"
 
   ;; Define a default menu bar.
   (with-eval-after-load "menu-bar"
@@ -9190,11 +9186,11 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Get rid of the Games in the Tools menu.
     (define-key menu-bar-tools-menu [games] nil))
 
-)                                       ; Chapter 46 ends here.
+)                                       ; Chapter 47 ends here.
 
-;;* 48 (info "(emacs)Customization")
+;;* 49 (info "(emacs)Customization")
 
-(leuven--chapter leuven-load-chapter-48-customization "48 Customization"
+(leuven--chapter leuven-load-chapter-49-customization "49 Customization"
 
   (ignore-errors
     ;; Load custom theme "Leuven" and enable it.
@@ -9203,9 +9199,9 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; Color sort order for `list-colors-display'.
   (setq list-colors-sort '(rgb-dist . "#FFFFFF"))
 
-;;** 48.3 (info "(emacs)Variables")
+;;** 49.3 (info "(emacs)Variables")
 
-  (leuven--section "48.3 (emacs)Variables")
+  (leuven--section "49.3 (emacs)Variables")
 
   ;; File local variables specifications are obeyed, without query --
   ;; RISKY!
@@ -9231,9 +9227,9 @@ a clean buffer we're an order of magnitude laxer about checking."
                             empty space-after-tab::space space-mark tab-mark
                             newline-mark)))
 
-;;** 48.4 Customizing (info "(emacs)Key Bindings")
+;;** 49.4 Customizing (info "(emacs)Key Bindings")
 
-  (leuven--section "48.4 Customizing (emacs)Key Bindings")
+  (leuven--section "49.4 Customizing (emacs)Key Bindings")
 
   ;; Print the key bindings in a tabular form.
   (defun leuven-keytable (arg)
@@ -9336,16 +9332,16 @@ a clean buffer we're an order of magnitude laxer about checking."
     (with-eval-after-load "diminish-autoloads"
       (diminish 'guide-key-mode " Gk")))
 
-;;** 48.5 The (info "(emacs)Syntax") Table
+;;** 49.5 The (info "(emacs)Syntax") Table
 
-  (leuven--section "48.5 The (emacs)Syntax Table")
+  (leuven--section "49.5 The (emacs)Syntax Table")
 
   ;; Now "-" is not considered a word-delimiter.
   ;; (add-hook 'emacs-lisp-mode-hook
   ;;           (lambda ()
   ;;             (modify-syntax-entry ?- "w")))
 
-)                                       ; Chapter 48 ends here.
+)                                       ; Chapter 49 ends here.
 
 ;;* Emacs Display
 

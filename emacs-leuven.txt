@@ -282,7 +282,7 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
 (defvar leuven-load-chapter-0-environment t) ; required
 (defvar leuven-load-chapter-0-loading-libraries t) ; required
 (defvar leuven-load-chapter-0-debugging t)
-(defvar leuven-load-chapter-47-packages t)
+(defvar leuven-load-chapter-48-packages t)
 (defvar leuven-load-chapter-1-screen t)
 (defvar leuven-load-chapter-6-exiting t)
 (defvar leuven-load-chapter-7-basic t)
@@ -313,15 +313,15 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
 (defvar leuven-load-chapter-31-calendar-diary t)
 (defvar leuven-load-chapter-32-sending-mail t)
 (defvar leuven-load-chapter-34-gnus t)
-(defvar leuven-load-chapter-35-document-view t)
-(defvar leuven-load-chapter-36-shell t)
-(defvar leuven-load-chapter-37-emacs-server t)
-(defvar leuven-load-chapter-38-printing t)
-(defvar leuven-load-chapter-39-sorting t)
-(defvar leuven-load-chapter-42-saving-emacs-sessions t)
-(defvar leuven-load-chapter-45-hyperlinking t)
-(defvar leuven-load-chapter-46-amusements t)
-(defvar leuven-load-chapter-48-customization t)
+(defvar leuven-load-chapter-36-document-view t)
+(defvar leuven-load-chapter-38-shell t)
+(defvar leuven-load-chapter-39-emacs-server t)
+(defvar leuven-load-chapter-40-printing t)
+(defvar leuven-load-chapter-41-sorting t)
+(defvar leuven-load-chapter-44-saving-emacs-sessions t)
+(defvar leuven-load-chapter-46-hyperlinking t)
+(defvar leuven-load-chapter-47-amusements t)
+(defvar leuven-load-chapter-49-customization t)
 (defvar leuven-load-chapter-AppG-ms-dos t)
 (defvar leuven-load-chapter-XX-emacs-display t)
 (defvar leuven-load-chapter-99-debugging t)
@@ -620,9 +620,9 @@ If you require something from Org mode, it must be after ~package-initialize~.
 ** The Package Menu Buffer
 
 #+begin_src emacs-lisp
-;;* 47 Emacs Lisp (info "(emacs)Packages")
+;;* 48 Emacs Lisp (info "(emacs)Packages")
 
-(leuven--chapter leuven-load-chapter-47-packages "47 Emacs Lisp Packages"
+(leuven--chapter leuven-load-chapter-48-packages "48 Emacs Lisp Packages"
 #+end_src
 
 To upgrade packages after running ~package-list-packages~, type:
@@ -658,9 +658,9 @@ like this into your configuration file:
 #+end_example
 
 #+begin_src emacs-lisp
-;;** 47.2 Package Installation
+;;** 48.2 Package Installation
 
-  (leuven--section "47.2 Package Installation")
+  (leuven--section "48.2 Package Installation")
 
   ;; Simple package system for GNU Emacs.
   (try-require 'package)
@@ -735,7 +735,7 @@ These packages are neither built-in nor already installed nor ignored."
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 47 ends here.
+)                                       ; Chapter 48 ends here.
 #+end_src
 
 ~Idle-require~ must be loaded *after* ~package-initialize~, and should not be
@@ -3931,12 +3931,12 @@ you chose not to happen.  Now look for substitute for ~TAB~.
 Something not ~TAB~ can be "C-z", "C-TAB", and "SPC".
 
 #+begin_src emacs-lisp :tangle no
-(define-key helm-find-files-map (kbd "<tab>")    #'helm-execute-persistent-action)
-(define-key helm-find-files-map (kbd "C-<tab>")  #'helm-select-action)
-(define-key helm-find-files-map (kbd "C-z")      #'helm-select-action)
-(define-key helm-find-files-map (kbd "<SPC>")    #'helm-select-action)
+(define-key helm-find-files-map (kbd "<tab>") #'helm-execute-persistent-action)
+(define-key helm-find-files-map (kbd "C-<tab>") #'helm-select-action)
+(define-key helm-find-files-map (kbd "C-z") #'helm-select-action)
+(define-key helm-find-files-map (kbd "<SPC>") #'helm-select-action)
 (define-key helm-find-files-map (kbd "<return>") #'helm-confirm-and-exit-minibuffer)
-(define-key helm-find-files-map (kbd "^")        #'helm-find-files-up-one-level)
+(define-key helm-find-files-map (kbd "^") #'helm-find-files-up-one-level)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -3944,7 +3944,7 @@ Something not ~TAB~ can be "C-z", "C-TAB", and "SPC".
 (define-key helm-map (kbd "C-i") #'helm-execute-persistent-action) ; Make TAB works in terminal.
 (define-key helm-map (kbd "C-z") #'helm-select-action) ; List actions using C-z.
 
-(define-key helm-grep-mode-map (kbd "<return>")  #'helm-grep-mode-jump-other-window)
+(define-key helm-grep-mode-map (kbd "<return>") #'helm-grep-mode-jump-other-window)
 (define-key helm-grep-mode-map (kbd "n") #'helm-grep-mode-jump-other-window-forward)
 (define-key helm-grep-mode-map (kbd "p") #'helm-grep-mode-jump-other-window-backward)
 #+end_src
@@ -4414,9 +4414,9 @@ changing the buffer's contents!
 #+begin_src emacs-lisp :tangle no
   ;; Lisp complete or indent.
   (define-key lisp-interaction-mode-map
-    [remap indent-for-tab-command] 'helm-lisp-completion-at-point-or-indent)
+    [remap indent-for-tab-command] #'helm-lisp-completion-at-point-or-indent)
   (define-key emacs-lisp-mode-map
-    [remap indent-for-tab-command] 'helm-lisp-completion-at-point-or-indent)
+    [remap indent-for-tab-command] #'helm-lisp-completion-at-point-or-indent)
 #+end_src
 
 ~M-TAB~?
@@ -4424,9 +4424,9 @@ changing the buffer's contents!
 #+begin_src emacs-lisp
   ;; Lisp complete.
   (define-key lisp-interaction-mode-map
-    [remap completion-at-point] 'helm-lisp-completion-at-point)
+    [remap completion-at-point] #'helm-lisp-completion-at-point)
   (define-key emacs-lisp-mode-map
-    [remap completion-at-point] 'helm-lisp-completion-at-point)
+    [remap completion-at-point] #'helm-lisp-completion-at-point)
 #+end_src
 
 **** Helm swoop
@@ -5902,8 +5902,8 @@ where the ellipsis shows).
 #+begin_src emacs-lisp
   ;; (add-hook 'outline-minor-mode-hook
   ;;   (lambda ()
-  ;;     (define-key outline-minor-mode-map [(control tab)] 'org-cycle)
-  ;;     (define-key outline-minor-mode-map [(shift tab)] 'org-global-cycle))) ; backtab?
+  ;;     (define-key outline-minor-mode-map (kbd "<C-tab>") #'org-cycle)
+  ;;     (define-key outline-minor-mode-map (kbd "<S-tab>") #'org-global-cycle))) ; backtab?
 #+end_src
 
 Now doing
@@ -8421,7 +8421,7 @@ this with to-do items than with projects or headings."
       (org-capture 0 "t"))
 
     (define-key org-agenda-mode-map
-      "Z" 'leuven-org-agenda-mark-done-and-add-followup)
+      (kbd "Z") #'leuven-org-agenda-mark-done-and-add-followup)
 #+end_src
 
 Source: Sacha Chua.
@@ -8438,7 +8438,7 @@ this with to-do items than with projects or headings."
       (org-capture 0))
 
     ;; ;; New key assignment (overrides `org-agenda-next-item').
-    ;; (define-key org-agenda-mode-map "N" 'leuven-org-agenda-new)
+    ;; (define-key org-agenda-mode-map (kbd "N") #'leuven-org-agenda-new)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -11880,7 +11880,7 @@ values for each expression it evaluates.
       (hl-line-mode -1)
       (top-level))
 
-    (define-key edebug-mode-map [remap top-level] 'leuven-edebug-quit))
+    (define-key edebug-mode-map [remap top-level] #'leuven-edebug-quit))
 #+end_src
 
 ** Executing Lisp Expressions
@@ -13822,7 +13822,7 @@ For those under Windows:
       (eww-open-file (file-name-sans-versions (dired-get-filename) t)))
 
     ;; Add a binding "W" -> `dired-open-with-eww' to Dired.
-    (define-key dired-mode-map "W" 'dired-open-with-eww)
+    (define-key dired-mode-map (kbd "W") 'dired-open-with-eww)
 #+end_src
 
 ** Operating on Files
@@ -14592,9 +14592,9 @@ In that case, ~doc-view~ falls back to show you the plain text contents of the P
 if ~doc-view-pdftotext-program~ is on your ~PATH~.
 
 #+begin_src emacs-lisp
-;;* 35 (info "(emacs)Document View")
+;;* 36 (info "(emacs)Document View")
 
-(leuven--chapter leuven-load-chapter-35-document-view "35 Document Viewing"
+(leuven--chapter leuven-load-chapter-36-document-view "36 Document Viewing"
 
   ;; View PDF/PostScript/DVI files in Emacs.
 #+end_src
@@ -14663,7 +14663,7 @@ Another option, without ~doc-view~, is ~! pdtotext ? - RET~.
 ~doc-view-enlarge~ (~+~) and ~doc-view-shrink~ (~-~) work fine to zoom in or out.
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 35 ends here.
+)                                       ; Chapter 36 ends here.
 #+end_src
 
 * Web Browsing
@@ -14681,8 +14681,8 @@ See https://www.gnu.org/software/emacs/manual/html_node/eww/index.html.
      "design" is just too bad).
 
 *************** TODO See package ~eww-lnum~ (or ~ace-link~?)
-(define-key eww-mode-map "f" 'eww-lnum-follow)
-(define-key eww-mode-map "F" 'eww-lnum-universal)
+(define-key eww-mode-map (kbd "f") #'eww-lnum-follow)
+(define-key eww-mode-map (kbd "F") #'eww-lnum-universal)
 *************** END
 
 * Running Shell Commands from Emacs
@@ -14690,9 +14690,9 @@ See https://www.gnu.org/software/emacs/manual/html_node/eww/index.html.
 See customizations at http://snarfed.org/why_i_run_shells_inside_emacs.
 
 #+begin_src emacs-lisp
-;;* 36 Running (info "(emacs)Shell") Commands from Emacs
+;;* 38 Running (info "(emacs)Shell") Commands from Emacs
 
-(leuven--chapter leuven-load-chapter-36-shell "36 Running Shell Commands from Emacs"
+(leuven--chapter leuven-load-chapter-38-shell "38 Running Shell Commands from Emacs"
 #+end_src
 
 #+begin_src emacs-lisp
@@ -14718,9 +14718,9 @@ input to the shell command.  By prefixing it with ~C-u~, it deletes the old regi
 and *replaces* it with the output from the shell command.
 
 #+begin_src emacs-lisp
-;;** 36.1 Single Shell
+;;** 38.1 Single Shell
 
-  (leuven--section "36.1 Single Shell")
+  (leuven--section "38.1 Single Shell")
 
   ;; Force interactive behavior (to get my handy shell aliases).
   ;; FIXME Fix for Zsh (zsh:1: command not found: shopt)
@@ -14753,18 +14753,25 @@ and *replaces* it with the output from the shell command.
 The above assignments may *NOT* be done *in an eval-after-load* as those variables
 are used by the (La)TeX modes (default + AUCTeX) among others.
 
-** Interactive Shell
+** Interactive Subshell
+
+To run a subshell interactively, type ~M-x shell~.  This creates (or reuses)
+a buffer named ~*shell*~, and runs a shell subprocess with input coming from and
+output going to that buffer.
 
 #+begin_src emacs-lisp
-;;** 36.2 Interactive Shell
+;;** 38.2 Interactive Subshell
 
-  (leuven--section "36.2 Interactive Shell")
+  (leuven--section "38.2 Interactive Subshell")
 
   ;; ;; For the interactive (sub)shell (and AUCTeX compilation?).
   ;; (setq explicit-shell-file-name shell-file-name)
 #+end_src
 
 ** Shell Mode
+   :PROPERTIES:
+   :ID:       9e938c3d-3752-4c12-b3a8-cc12cdcdfd88
+   :END:
 
 *** Entering commands and fixing mistakes
 
@@ -14805,9 +14812,9 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
      Send ~EOF~ character.
 
 #+begin_src emacs-lisp
-;;** 36.3 Shell Mode
+;;** 38.3 Shell Mode
 
-  (leuven--section "36.3 Shell Mode")
+  (leuven--section "38.3 Shell Mode")
 
   ;; General command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
   ;; Python, ...).
@@ -14863,9 +14870,9 @@ bufffer from Emacs.
 ** Shell Prompts
 
 #+begin_src emacs-lisp
-;;** 36.4 Shell Prompts
+;;** 38.4 Shell Prompts
 
-  (leuven--section "36.4 Shell Prompts")
+  (leuven--section "38.4 Shell Prompts")
 
   ;; Regexp to match prompts in the inferior shell.
   (setq shell-prompt-pattern "^[^#$%>\n]*[#$%>] *")
@@ -14879,9 +14886,9 @@ bufffer from Emacs.
 ** History
 
 #+begin_src emacs-lisp
-;;** 36.5 Shell Command History
+;;** 38.5 Shell Command History
 
-  (leuven--section "36.5 Shell Command History")
+  (leuven--section "38.5 Shell Command History")
 
   ;; Rejects short commands.
   (setq comint-input-filter
@@ -14951,9 +14958,9 @@ bufffer from Emacs.
 ** Directory Tracking
 
 #+begin_src emacs-lisp
-;;** 36.6 Directory Tracking
+;;** 38.6 Directory Tracking
 
-  (leuven--section "36.6 Directory Tracking")
+  (leuven--section "38.6 Directory Tracking")
 #+end_src
 
 *************** TODO Fix case when 2 Shell buffers are run in the same dir (same name error!)
@@ -14976,9 +14983,9 @@ apply: Buffer name `*shell d:/Users/fni/*' is in use
 ** Options
 
 #+begin_src emacs-lisp
-;;** 36.7 Options
+;;** 38.7 Options
 
-  (leuven--section "36.7 Options")
+  (leuven--section "38.7 Options")
 
   ;; Disable command echoing.
   (setq-default comint-process-echoes t) ; for Linux (not needed for Cygwin)
@@ -14998,18 +15005,24 @@ solves this problem:
   (setenv "PAGER" "/usr/bin/cat")
 #+end_src
 
-** Terminal emulator
+** Term Mode
    :PROPERTIES:
    :ID:       d12c2e1e-8147-4b39-8128-aaa70fbf4657
    :END:
 
-Full terminal emulation is available.
+To run a subshell in a text *terminal emulator*, use ~M-x term~.  This creates (or
+reuses) a buffer named ~*terminal*~, and runs a subshell with input coming from
+your keyboard, and output going to that buffer.
 
-#+begin_src emacs-lisp
-;;** 36.8 Terminal emulator
+The terminal emulator uses Term mode, which has two input modes.
 
-  (leuven--section "36.8 Terminal emulator")
-#+end_src
+- In "line mode", Term basically acts like [[id:9e938c3d-3752-4c12-b3a8-cc12cdcdfd88][Shell Mode]].
+
+- In "char mode", each character is sent directly to the subshell, as terminal
+  input; the sole exception is the terminal escape character, which by default
+  is ~C-c~.
+
+#+begin_note
 
 From my experience, none of the terminal emulators in Emacs (~term~, ~ansi-term~,
 ~multi-term~) is supported under Windows.  It looks like the main reason is all of
@@ -15017,13 +15030,12 @@ them rely on low-level support for terminals (~stty~, etc.) which is not provide
 by Windows.
 
 Though, ~term~, ~ansi-term~, and ~multi-term~ do *work in Cygwin Emacs*.
-
-** Term Mode
+#+end_note
 
 #+begin_src emacs-lisp
-;;** 36.9 Term Mode
+;;** 38.9 Term Mode
 
-  (leuven--section "36.9 Term Mode")
+  (leuven--section "38.9 Term Mode")
 #+end_src
 
 Emacs *Shell mode* doesn't support (all) terminal control codes, so ~less~ doesn't
@@ -15124,9 +15136,9 @@ inside it."
 ** Remote Host
 
 #+begin_src emacs-lisp
-;;** 36.10 Remote Host Shell
+;;** 38.10 Remote Host Shell
 
-  (leuven--section "36.10 Remote Host Shell")
+  (leuven--section "38.10 Remote Host Shell")
 
   ;; Load ssh.el file.
   (add-to-list 'same-window-regexps "^\\*ssh-.*\\*\\(\\|<[0-9]+>\\)")
@@ -15438,9 +15450,9 @@ Do you use ~emacsclient~ in terminals?  If not, just use parameter ~-c -n~, whic
 creates an X Window and doesn't wait for ~(server-edit)~.
 
 #+begin_src emacs-lisp
-;;* 37 (info "(emacs)Emacs Server")
+;;* 39 (info "(emacs)Emacs Server")
 
-(leuven--chapter leuven-load-chapter-37-emacs-server "37 Using Emacs as a Server"
+(leuven--chapter leuven-load-chapter-39-emacs-server "39 Using Emacs as a Server"
 
   ;; Use Emacs as a server (with the `emacsclient' program).
   (unless noninteractive
@@ -15460,7 +15472,7 @@ creates an X Window and doesn't wait for ~(server-edit)~.
       "Save current buffer before marking it as done."
       (when server-buffer-clients (save-buffer))))
 
-)                                       ; Chapter 37 ends here.
+)                                       ; Chapter 39 ends here.
 #+end_src
 
 Since GNU Emacs 23, there is also a ~--daemon~ flag to start the server in a
@@ -15494,9 +15506,9 @@ See ~(info "(emacs)Windows Printing")~ for several methods of correctly setting 
 printing on Windows.
 
 #+begin_src emacs-lisp
-;;* 38 (info "(emacs)Printing")
+;;* 40 (info "(emacs)Printing")
 
-(leuven--chapter leuven-load-chapter-38-printing "38 Printing Hard Copies"
+(leuven--chapter leuven-load-chapter-40-printing "40 Printing Hard Copies"
 
   ;; Print Emacs buffer on line printer
   ;; for {lpr,print}-{buffer,region}.
@@ -15617,20 +15629,20 @@ printing on Windows.
     ;; Specify line spacing, in points, for ordinary text.
     (setq ps-line-spacing 3))
 
-)                                       ; Chapter 38 ends here.
+)                                       ; Chapter 40 ends here.
 #+end_src
 
 * Sorting Text
 
 #+begin_src emacs-lisp
-;;* 39 (info "(emacs)Sorting") Text
+;;* 41 (info "(emacs)Sorting") Text
 
-(leuven--chapter leuven-load-chapter-39-sorting "39 Sorting Text"
+(leuven--chapter leuven-load-chapter-41-sorting "41 Sorting Text"
 
   ;; Key binding.
   (global-set-key (kbd "C-c ^") #'sort-lines)
 
-)                                       ; Chapter 39 ends here.
+)                                       ; Chapter 41 ends here.
 #+end_src
 
 * Saving Emacs Sessions
@@ -15638,9 +15650,9 @@ printing on Windows.
 *************** TODO Check that there is no extra ~/.saves directory!
 
 #+begin_src emacs-lisp
-;;* 42 (info "(emacs)Saving Emacs Sessions")
+;;* 44 (info "(emacs)Saving Emacs Sessions")
 
-(leuven--chapter leuven-load-chapter-42-saving-emacs-sessions "42 Saving Emacs Sessions"
+(leuven--chapter leuven-load-chapter-44-saving-emacs-sessions "44 Saving Emacs Sessions"
 
   (try-require 'saveplace)
   (with-eval-after-load "saveplace"
@@ -15651,15 +15663,15 @@ printing on Windows.
     ;; Name of the file that records `save-place-alist' value.
     (setq save-place-file "~/.emacs.d/.places")
 
-)                                       ; Chapter 42 ends here.
+)                                       ; Chapter 44 ends here.
 #+end_src
 
 * Hyperlinking and Navigation Features
 
 #+begin_src emacs-lisp
-;;* 45 (info "(emacs)Hyperlinking")
+;;* 46 (info "(emacs)Hyperlinking")
 
-(leuven--chapter leuven-load-chapter-45-hyperlinking "45 Hyperlinking and Navigation Features"
+(leuven--chapter leuven-load-chapter-46-hyperlinking "46 Hyperlinking and Navigation Features"
 #+end_src
 
 ** Following URLs
@@ -15866,14 +15878,12 @@ using ~C-n~ and ~C-p~ key bindings.
             ("fr" . "es") ("es" . "fr"))))
 #+end_src
 
-fniessen
-
 * Other Amusements
 
 #+begin_src emacs-lisp
-;;* 46 Other (info "(emacs)Amusements")
+;;* 47 Other (info "(emacs)Amusements")
 
-(leuven--chapter leuven-load-chapter-46-amusements "46 Other Amusements"
+(leuven--chapter leuven-load-chapter-47-amusements "47 Other Amusements"
 
   ;; Define a default menu bar.
   (with-eval-after-load "menu-bar"
@@ -15881,7 +15891,7 @@ fniessen
     ;; Get rid of the Games in the Tools menu.
     (define-key menu-bar-tools-menu [games] nil))
 
-)                                       ; Chapter 46 ends here.
+)                                       ; Chapter 47 ends here.
 #+end_src
 
 * Customization
@@ -15894,9 +15904,9 @@ Install Leuven Theme via the [[id:8c71fa50-b62e-49ae-bcbb-2ed1ee7a5d65][Emacs Li
 Emacs 24.4).
 
 #+begin_src emacs-lisp
-;;* 48 (info "(emacs)Customization")
+;;* 49 (info "(emacs)Customization")
 
-(leuven--chapter leuven-load-chapter-48-customization "48 Customization"
+(leuven--chapter leuven-load-chapter-49-customization "49 Customization"
 
   (ignore-errors
     ;; Load custom theme "Leuven" and enable it.
@@ -15916,9 +15926,9 @@ particular color...
 ** Variables
 
 #+begin_src emacs-lisp
-;;** 48.3 (info "(emacs)Variables")
+;;** 49.3 (info "(emacs)Variables")
 
-  (leuven--section "48.3 (emacs)Variables")
+  (leuven--section "49.3 (emacs)Variables")
 
   ;; File local variables specifications are obeyed, without query --
   ;; RISKY!
@@ -15959,9 +15969,9 @@ M-: (let (lst) (mapatoms (lambda (x) (if (get x 'disabled) (push x lst)))) lst) 
 #+end_src
 
 #+begin_src emacs-lisp
-;;** 48.4 Customizing (info "(emacs)Key Bindings")
+;;** 49.4 Customizing (info "(emacs)Key Bindings")
 
-  (leuven--section "48.4 Customizing (emacs)Key Bindings")
+  (leuven--section "49.4 Customizing (emacs)Key Bindings")
 #+end_src
 
 See as well Print keybindings (pkb).
@@ -16086,9 +16096,9 @@ Evaluate ~current-word~ and see whether characters such as ~-~ and ~_~ are
 considered part of the word (depending on the current major mode).
 
 #+begin_src emacs-lisp
-;;** 48.5 The (info "(emacs)Syntax") Table
+;;** 49.5 The (info "(emacs)Syntax") Table
 
-  (leuven--section "48.5 The (emacs)Syntax Table")
+  (leuven--section "49.5 The (emacs)Syntax Table")
 
   ;; Now "-" is not considered a word-delimiter.
   ;; (add-hook 'emacs-lisp-mode-hook
@@ -16097,7 +16107,7 @@ considered part of the word (depending on the current major mode).
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 48 ends here.
+)                                       ; Chapter 49 ends here.
 #+end_src
 
 * Emacs Display
@@ -16228,7 +16238,7 @@ Those bindings are global and repeatable, e.g. ~C-x C-+ C-+ C-+~.
    :END:
 
 #+begin_src emacs-lisp
-;;** 38.16 (info "(elisp)Images")
+;;** 37.17 (info "(elisp)Images")
 #+end_src
 
 How do I get image support? See ~image-library-alist~, a list of image types vs.
