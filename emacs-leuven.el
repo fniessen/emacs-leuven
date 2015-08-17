@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150816.2223
+;; Version: 20150817.1035
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150816.2223"
+(defconst leuven--emacs-version "20150817.1035"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -737,7 +737,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Mark all parts of the buffer that matches the current region.
     (global-set-key (kbd "C-c C-<") #'mc/mark-all-like-this) ;!
 
-    ;; (global-set-key (kbd "C-<return>") #'mc/mark-more-like-this-extended) ; useful for completion
+    ;; (global-set-key (kbd "<C-RET>") #'mc/mark-more-like-this-extended) ; useful for completion
 
     (global-set-key (kbd "C-S-SPC") #'set-rectangular-region-anchor)
     (global-set-key (kbd "C-M-=") #'mc/insert-numbers)
@@ -2342,18 +2342,6 @@ These packages are neither built-in nor already installed nor ignored."
   ;; large (330.2M), really open? (y or n)" annoying message.
   (setq large-file-warning-threshold 500000000)
 
-  (with-eval-after-load "helm-grep"
-
-    (defun leuven-helm-grep-org-files ()
-      "Launch grep on Org files in `~/org'."
-      (interactive)
-      (let ((files (helm-walk-directory "~/org"
-                                        :path 'full
-                                        :directories nil
-                                        :match ".*\\.\\(org\\|txt\\)$"
-                                        :skip-subdirs t)))
-        (helm-do-grep-1 files))))
-
   (global-set-key (kbd "M-x") #'helm-M-x)
 
   (with-eval-after-load "helm-command"
@@ -3358,7 +3346,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;;   (add-hook 'outline-minor-mode-hook
     ;;             (lambda ()
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<S-tab>") #'outline-cycle)
+    ;;                 (kbd "<S-TAB>") #'outline-cycle)
     ;;               (define-key outline-minor-mode-map
     ;;                 (kbd "<M-left>") #'outline-promote)
     ;;               (define-key outline-minor-mode-map
@@ -3417,7 +3405,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;; ; -*- mode: emacs-lisp; eval: (outline-minor-mode 1); -*-
     ;;
     ;; Now you can add `;;' and `;;*', etc. as headings in your `.emacs'
-    ;; and cycle using `<S-tab>', `<M-left>' and `<M-right>' will collapse
+    ;; and cycle using `<S-TAB>', `<M-left>' and `<M-right>' will collapse
     ;; or expand all headings respectively.  I am guessing you mean to make
     ;; segments such as `;; SHORTCUTS' and `;; VARIABLES', this will do
     ;; that, but not too much more.
@@ -3430,10 +3418,10 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; (add-hook 'outline-minor-mode-hook
   ;;   (lambda ()
-  ;;     (define-key outline-minor-mode-map (kbd "<C-tab>") #'org-cycle)
-  ;;     (define-key outline-minor-mode-map (kbd "<S-tab>") #'org-global-cycle))) ; backtab?
+  ;;     (define-key outline-minor-mode-map (kbd "<C-TAB>") #'org-cycle)
+  ;;     (define-key outline-minor-mode-map (kbd "<S-TAB>") #'org-global-cycle))) ; backtab?
 
-  (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
+  (global-set-key (kbd "<S-TAB>") #'org-cycle) ; that works (but on level 1+)
   ;; TODO Look at org-cycle-global and local below, they work better, but
   ;; still on level 1+
   ;; TODO Replace it by a function which alternatively does `hide-body' and
@@ -3760,7 +3748,7 @@ These packages are neither built-in nor already installed nor ignored."
 
   (with-eval-after-load "org"
     ;; Create indirect buffer and narrow it to current subtree.
-    (define-key org-mode-map (kbd "<H-return>") #'org-tree-to-indirect-buffer))
+    (define-key org-mode-map (kbd "<H-RET>") #'org-tree-to-indirect-buffer))
 
 ;;** (info "(org)Motion")
 
@@ -5705,11 +5693,11 @@ this with to-do items than with projects or headings."
                                         ;! `org-block-background' and remove
                                         ;! text property `org-block'.
 
-  ;; Preserve spaces and `tab' characters in source code blocks.
+  ;; Preserve spaces and `TAB' characters in source code blocks.
   (setq org-src-preserve-indentation t) ; Or add a `-i' flag to you source block.
 
-  ;; Same effect for `tab' as in the language major mode buffer (indenting
-  ;; properly when hitting the `tab' key).
+  ;; Same effect for `TAB' as in the language major mode buffer (indenting
+  ;; properly when hitting the `TAB' key).
   (setq org-src-tab-acts-natively t)
 
 
@@ -6689,7 +6677,7 @@ mouse-3: go to end") "]")))
     ;; pressed `C-j').
     (add-hook 'prog-mode-hook
               (lambda ()
-                (local-set-key (kbd "<return>") #'newline-and-indent)))
+                (local-set-key (kbd "<RET>") #'newline-and-indent)))
 
     ;; (defun back-to-indentation-or-beginning ()
     ;;   (interactive)
@@ -7771,10 +7759,10 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; (setq ac-candidate-menu-min 0)
 
     ;; Completion by TAB.
-    (define-key ac-completing-map (kbd "<tab>") #'ac-complete)
+    (define-key ac-completing-map (kbd "<TAB>") #'ac-complete)
 
     ;; Completion by RET.
-    (define-key ac-completing-map (kbd "<return>") #'ac-complete)
+    (define-key ac-completing-map (kbd "<RET>") #'ac-complete)
 
     ;; Abort.
     (define-key ac-completing-map (kbd "C-g") #'ac-stop)
@@ -7789,7 +7777,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Enable Company mode in all buffers ....
     (global-company-mode 1)
 
-    (global-set-key (kbd "<C-tab>") #'company-complete)
+    (global-set-key (kbd "<C-TAB>") #'company-complete)
     (global-set-key (kbd "C-/") #'company-complete)
 
     (global-set-key (kbd "C-c y") #'company-yasnippet) ; Test.
@@ -7828,7 +7816,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (define-key company-active-map (kbd "M-p") nil)
 
     ;; Completion by TAB.
-    (define-key company-active-map (kbd "<tab>") #'company-complete-selection) ; Complete with the selected candidate
+    (define-key company-active-map (kbd "<TAB>") #'company-complete-selection) ; Complete with the selected candidate
                                         ; `company-complete'?
 
     ;; Temporarily show the documentation buffer for the selection.
@@ -9239,7 +9227,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (let* ((i 0)
              (keys (list "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l"
                          "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x"
-                         "y" "z" "<return>" "<down>" "<up>" "<right>"
+                         "y" "z" "<RET>" "<down>" "<up>" "<right>"
                          "<left>" "<home>" "<end>" "<f1>" "<f2>" "<f3>"
                          "<f4>" "<f5>" "<f6>" "<f7>" "<f8>" "<f9>"
                          "<f10>" "<f11>" "<f12>" "1" "2" "3" "4" "5" "6"

@@ -1330,7 +1330,7 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; (global-set-key (kbd "C-<return>") #'mc/mark-more-like-this-extended) ; useful for completion
+    ;; (global-set-key (kbd "<C-RET>") #'mc/mark-more-like-this-extended) ; useful for completion
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3919,32 +3919,33 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 
 **** Changes in key bindings
 
-In `helm-find-file', you may want to try using the left arrow to go to the
-parent directory!
+In ~helm-find-file~, you may want to try using the left arrow to go to the parent
+directory!
 
 You can reassign ~TAB~ only during `helm-find-file'.  The
-`helm-find-file' almost looks like Dired and I assign "^" for going
-up.  Minor side effect is you cannot type in "^" without using C-q.
+~helm-find-file~ almost looks like Dired and I assign ~^~ for going
+up.  Minor side effect is you cannot type in ~^~ without using ~C-q~.
 
 Sometimes you want to hit ~TAB~ for `helm-selection-action'; however,
 you chose not to happen.  Now look for substitute for ~TAB~.
-Something not ~TAB~ can be "C-z", "C-TAB", and "SPC".
+Something not ~TAB~ can be ~C-z~, ~C-TAB~, and ~SPC~.
 
 #+begin_src emacs-lisp :tangle no
-(define-key helm-find-files-map (kbd "<tab>") #'helm-execute-persistent-action)
-(define-key helm-find-files-map (kbd "C-<tab>") #'helm-select-action)
+(define-key helm-find-files-map (kbd "<TAB>") #'helm-execute-persistent-action)
+(define-key helm-find-files-map (kbd "<C-TAB>") #'helm-select-action)
 (define-key helm-find-files-map (kbd "C-z") #'helm-select-action)
 (define-key helm-find-files-map (kbd "<SPC>") #'helm-select-action)
-(define-key helm-find-files-map (kbd "<return>") #'helm-confirm-and-exit-minibuffer)
+(define-key helm-find-files-map (kbd "<RET>") #'helm-confirm-and-exit-minibuffer)
 (define-key helm-find-files-map (kbd "^") #'helm-find-files-up-one-level)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-(define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action) ; Rebind TAB to do persistent action.
+(define-key helm-map (kbd "<TAB>") #'helm-execute-persistent-action) ; Rebind TAB to do persistent action.
 (define-key helm-map (kbd "C-i") #'helm-execute-persistent-action) ; Make TAB works in terminal.
+
 (define-key helm-map (kbd "C-z") #'helm-select-action) ; List actions using C-z.
 
-(define-key helm-grep-mode-map (kbd "<return>") #'helm-grep-mode-jump-other-window)
+(define-key helm-grep-mode-map (kbd "<RET>") #'helm-grep-mode-jump-other-window)
 (define-key helm-grep-mode-map (kbd "n") #'helm-grep-mode-jump-other-window-forward)
 (define-key helm-grep-mode-map (kbd "p") #'helm-grep-mode-jump-other-window-backward)
 #+end_src
@@ -4222,22 +4223,6 @@ enter. All in once nice package.
 
 See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-or-instant-search-for-emacs][Sublime Text 2's "Goto Anything" (or instant search) for Emacs?]]
 + https://github.com/xiaohanyu/oh-my-emacs/blob/master/core/ome-completion.org
-
-**** Grep
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "helm-grep"
-
-    (defun leuven-helm-grep-org-files ()
-      "Launch grep on Org files in `~/org'."
-      (interactive)
-      (let ((files (helm-walk-directory "~/org"
-                                        :path 'full
-                                        :directories nil
-                                        :match ".*\\.\\(org\\|txt\\)$"
-                                        :skip-subdirs t)))
-        (helm-do-grep-1 files))))
-#+end_src
 
 **** Helm M-x (search for a command)
 
@@ -5808,7 +5793,7 @@ You can use ~org-cycle~ in other modes, with ~outline-minor-mode~.
     ;;   (add-hook 'outline-minor-mode-hook
     ;;             (lambda ()
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<S-tab>") #'outline-cycle)
+    ;;                 (kbd "<S-TAB>") #'outline-cycle)
     ;;               (define-key outline-minor-mode-map
     ;;                 (kbd "<M-left>") #'outline-promote)
     ;;               (define-key outline-minor-mode-map
@@ -5867,7 +5852,7 @@ You can use ~org-cycle~ in other modes, with ~outline-minor-mode~.
     ;; ; -*- mode: emacs-lisp; eval: (outline-minor-mode 1); -*-
     ;;
     ;; Now you can add `;;' and `;;*', etc. as headings in your `.emacs'
-    ;; and cycle using `<S-tab>', `<M-left>' and `<M-right>' will collapse
+    ;; and cycle using `<S-TAB>', `<M-left>' and `<M-right>' will collapse
     ;; or expand all headings respectively.  I am guessing you mean to make
     ;; segments such as `;; SHORTCUTS' and `;; VARIABLES', this will do
     ;; that, but not too much more.
@@ -5902,8 +5887,8 @@ where the ellipsis shows).
 #+begin_src emacs-lisp
   ;; (add-hook 'outline-minor-mode-hook
   ;;   (lambda ()
-  ;;     (define-key outline-minor-mode-map (kbd "<C-tab>") #'org-cycle)
-  ;;     (define-key outline-minor-mode-map (kbd "<S-tab>") #'org-global-cycle))) ; backtab?
+  ;;     (define-key outline-minor-mode-map (kbd "<C-TAB>") #'org-cycle)
+  ;;     (define-key outline-minor-mode-map (kbd "<S-TAB>") #'org-global-cycle))) ; backtab?
 #+end_src
 
 Now doing
@@ -5920,7 +5905,7 @@ demotion* functionality.
 *** org
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
+  (global-set-key (kbd "<S-TAB>") #'org-cycle) ; that works (but on level 1+)
   ;; TODO Look at org-cycle-global and local below, they work better, but
   ;; still on level 1+
   ;; TODO Replace it by a function which alternatively does `hide-body' and
@@ -6440,7 +6425,7 @@ options.
 
   (with-eval-after-load "org"
     ;; Create indirect buffer and narrow it to current subtree.
-    (define-key org-mode-map (kbd "<H-return>") #'org-tree-to-indirect-buffer))
+    (define-key org-mode-map (kbd "<H-RET>") #'org-tree-to-indirect-buffer))
 #+end_src
 
 Note that *Imenu* does display the current *Org subtree* in the mode line, not the
@@ -9355,11 +9340,11 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
                                         ;! `org-block-background' and remove
                                         ;! text property `org-block'.
 
-  ;; Preserve spaces and `tab' characters in source code blocks.
+  ;; Preserve spaces and `TAB' characters in source code blocks.
   (setq org-src-preserve-indentation t) ; Or add a `-i' flag to you source block.
 
-  ;; Same effect for `tab' as in the language major mode buffer (indenting
-  ;; properly when hitting the `tab' key).
+  ;; Same effect for `TAB' as in the language major mode buffer (indenting
+  ;; properly when hitting the `TAB' key).
   (setq org-src-tab-acts-natively t)
 
 
@@ -11008,7 +10993,7 @@ things.
     ;; pressed `C-j').
     (add-hook 'prog-mode-hook
               (lambda ()
-                (local-set-key (kbd "<return>") #'newline-and-indent)))
+                (local-set-key (kbd "<RET>") #'newline-and-indent)))
 
     ;; (defun back-to-indentation-or-beginning ()
     ;;   (interactive)
@@ -11371,24 +11356,24 @@ many programming modes.
 #+end_src
 
 It's more or less a convention that each language mode binds its symbol
-completion command (~completion-at-point~) to ~<M-tab>~.
+completion command (~completion-at-point~) to ~<M-TAB>~.
 
-Note that ~<M-tab>~ is used by many window managers themselves (typically for
+Note that ~<M-TAB>~ is used by many window managers themselves (typically for
 switching between windows) and is not passed to applications.
 
 In that case, you should:
 
 - type ~ESC TAB~ or ~C-M-i~ for completion, or
 
-- bind the command normally bound to ~<M-tab>~ to a key that is convenient for
-  you to hit, such as ~<C-tab>~.
+- bind the command normally bound to ~<M-TAB>~ to a key that is convenient for
+  you to hit, such as ~<C-TAB>~.
 
 #+begin_src emacs-lisp :tangle no
-  ;; When you hit `<C-tab>', call the command normally bound to `<M-tab>'.
-  (global-set-key (kbd "<C-tab>")
+  ;; When you hit `<C-TAB>', call the command normally bound to `<M-TAB>'.
+  (global-set-key (kbd "<C-TAB>")
     (lambda ()
       (interactive)
-      (call-interactively (key-binding (kbd "<M-tab>")))))
+      (call-interactively (key-binding (kbd "<M-TAB>")))))
 #+end_src
 
 See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard autocompletion (on by default).
@@ -11739,8 +11724,6 @@ thereafter.
                                  " -e <R> <F>")))
       (rgrep regexp "*.org" org-directory)))
 #+end_src
-
-See ~leuven-helm-grep-org-files~.
 
 ** Finding Syntax Errors On The Fly
 
@@ -13315,10 +13298,10 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
     ;; (setq ac-candidate-menu-min 0)
 
     ;; Completion by TAB.
-    (define-key ac-completing-map (kbd "<tab>") #'ac-complete)
+    (define-key ac-completing-map (kbd "<TAB>") #'ac-complete)
 
     ;; Completion by RET.
-    (define-key ac-completing-map (kbd "<return>") #'ac-complete)
+    (define-key ac-completing-map (kbd "<RET>") #'ac-complete)
 
     ;; Abort.
     (define-key ac-completing-map (kbd "C-g") #'ac-stop)
@@ -13373,7 +13356,7 @@ available completions and filter as well.
     ;; Enable Company mode in all buffers ....
     (global-company-mode 1)
 
-    (global-set-key (kbd "<C-tab>") #'company-complete)
+    (global-set-key (kbd "<C-TAB>") #'company-complete)
     (global-set-key (kbd "C-/") #'company-complete)
 
     (global-set-key (kbd "C-c y") #'company-yasnippet) ; Test.
@@ -13417,7 +13400,7 @@ By default, the list of candidates is sorted alphabetically, unless the backend
     (define-key company-active-map (kbd "M-p") nil)
 
     ;; Completion by TAB.
-    (define-key company-active-map (kbd "<tab>") #'company-complete-selection) ; Complete with the selected candidate
+    (define-key company-active-map (kbd "<TAB>") #'company-complete-selection) ; Complete with the selected candidate
                                         ; `company-complete'?
 
     ;; Temporarily show the documentation buffer for the selection.
@@ -13432,7 +13415,7 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 
 #+begin_src emacs-lisp :tangle no
     (setq company-idle-delay nil)
-    (global-set-key (kbd "<tab>") #'company-complete-selection)
+    (global-set-key (kbd "<TAB>") #'company-complete-selection)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -13479,10 +13462,10 @@ XXX The following does not work in Org files (TAB does not expand nodes anymore)
                    (looking-at "\\_>"))
           (call-interactively 'company-complete-selection))))
 
-    (define-key company-mode-map (kbd "<tab>") #'leuven-indent-or-complete)
+    (define-key company-mode-map (kbd "<TAB>") #'leuven-indent-or-complete)
 
     ;; (defun leuven--tab-fix ()
-    ;;   (local-set-key (kbd "<tab>") #'leuven-indent-or-complete))
+    ;;   (local-set-key (kbd "<TAB>") #'leuven-indent-or-complete))
     ;;
     ;; (add-hook 'prog-mode-hook #'leuven--tab-fix)
 #+end_src
@@ -15985,7 +15968,7 @@ See as well Print keybindings (pkb).
       (let* ((i 0)
              (keys (list "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l"
                          "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x"
-                         "y" "z" "<return>" "<down>" "<up>" "<right>"
+                         "y" "z" "<RET>" "<down>" "<up>" "<right>"
                          "<left>" "<home>" "<end>" "<f1>" "<f2>" "<f3>"
                          "<f4>" "<f5>" "<f6>" "<f7>" "<f8>" "<f9>"
                          "<f10>" "<f11>" "<f12>" "1" "2" "3" "4" "5" "6"
@@ -16730,7 +16713,7 @@ found."
       (kill-buffer proc-buffer))))
 
 (defun spacemacs/git-latest-tag (remote branch)
-  "Returns the latest tag on REMOTE/BRANCH."
+  "Return the latest tag on REMOTE/BRANCH."
   (let((proc-buffer "git-latest-tag")
        (default-directory user-emacs-directory)
        (where (format "%s/%s" remote branch)))
