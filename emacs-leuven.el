@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150817.1035
+;; Version: 20150817.1431
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150817.1035"
+(defconst leuven--emacs-version "20150817.1431"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -8629,34 +8629,34 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "38.5 Shell Command History")
 
-  ;; Rejects short commands.
-  (setq comint-input-filter
-    #'(lambda (str)
-        (and (not (string-match "\\`\\s *\\'" str))
-             (> (length str) 2))))      ; ignore '!!' and kin
-
   (with-eval-after-load "comint"
+
+    ;; Rejects short commands.
+    (setq comint-input-filter
+      #'(lambda (str)
+          (and (not (string-match "\\`\\s *\\'" str))
+               (> (length str) 2))))    ; Ignore '!!' and kin.
 
     ;; Cycle backwards/forwards through input history.
     (define-key comint-mode-map
-      (kbd "C-p") #'comint-previous-input) ; Shell
+      (kbd "C-p") #'comint-previous-input) ; Shell.
     (define-key comint-mode-map
-      (kbd "<up>") #'comint-previous-input) ; Shell + RStudio
+      (kbd "<up>") #'comint-previous-input) ; Shell + RStudio.
     (define-key comint-mode-map
-      (kbd "C-n") #'comint-next-input)  ; Shell
+      (kbd "C-n") #'comint-next-input)  ; Shell.
     (define-key comint-mode-map
-      (kbd "<down>") #'comint-next-input) ; Shell + RStudio
+      (kbd "<down>") #'comint-next-input) ; Shell + RStudio.
 
     ;; Search backwards/forwards through input history for match for current
     ;; input.
     (define-key comint-mode-map
-      (kbd "M-p") #'comint-previous-matching-input-from-input) ; Shell
+      (kbd "M-p") #'comint-previous-matching-input-from-input) ; Shell.
     (define-key comint-mode-map
-      (kbd "<C-up>") #'comint-previous-matching-input-from-input) ; RStudio
+      (kbd "<C-up>") #'comint-previous-matching-input-from-input) ; RStudio.
     (define-key comint-mode-map
-      (kbd "M-n") #'comint-next-matching-input-from-input) ; Shell
+      (kbd "M-n") #'comint-next-matching-input-from-input) ; Shell.
     (define-key comint-mode-map
-      (kbd "<C-down>") #'comint-next-matching-input-from-input) ; RStudio
+      (kbd "<C-down>") #'comint-next-matching-input-from-input) ; RStudio.
 
     (when (featurep 'helm-misc)
       ;; Provide completion of `comint' history.

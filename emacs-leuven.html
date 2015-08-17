@@ -426,7 +426,7 @@
 <li><a href="#orgheadline383">Interactive Subshell</a></li>
 <li><a href="#orgheadline384">Shell Mode</a></li>
 <li><a href="#orgheadline389">Shell Prompts</a></li>
-<li><a href="#orgheadline390">History</a></li>
+<li><a href="#orgheadline390">Shell Command History</a></li>
 <li><a href="#orgheadline393">Directory Tracking</a></li>
 <li><a href="#orgheadline394">Options</a></li>
 <li><a href="#orgheadline395">Term Mode</a></li>
@@ -534,7 +534,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150817.1048</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150817.1433</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -603,7 +603,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150817.1048"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150817.1433"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -19363,7 +19363,7 @@ bufffer from Emacs.
 </div>
 
 <div id="outline-container-orgheadline390" class="outline-3">
-<h3 id="orgheadline390">History</h3>
+<h3 id="orgheadline390">Shell Command History</h3>
 <div class="outline-text-3" id="text-orgheadline390">
 <div class="org-src-container">
 
@@ -19371,45 +19371,19 @@ bufffer from Emacs.
 
   (leuven--section <span class="org-string">"38.5 Shell Command History"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Rejects short commands.</span>
-  (<span class="org-keyword">setq</span> comint-input-filter
-    #'(lambda (str)
-        (<span class="org-keyword">and</span> (not (string-match <span class="org-string">"\\`\\s *\\'"</span> str))
-             (&gt; (length str) 2))))      <span class="org-comment-delimiter">; </span><span class="org-comment">ignore '</span><span class="org-constant"><span class="org-comment">!!</span></span><span class="org-comment">' and kin</span>
-
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"comint"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Cycle backwards/forwards through input history.</span>
-    (define-key comint-mode-map
-      (kbd <span class="org-string">"C-p"</span>) #'comint-previous-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell</span>
-    (define-key comint-mode-map
-      (kbd <span class="org-string">"&lt;up&gt;"</span>) #'comint-previous-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell + RStudio</span>
-    (define-key comint-mode-map
-      (kbd <span class="org-string">"C-n"</span>) #'comint-next-input)  <span class="org-comment-delimiter">; </span><span class="org-comment">Shell</span>
-    (define-key comint-mode-map
-      (kbd <span class="org-string">"&lt;down&gt;"</span>) #'comint-next-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell + RStudio</span>
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Search backwards/forwards through input history for match for current</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">input.</span>
-    (define-key comint-mode-map
-      (kbd <span class="org-string">"M-p"</span>) #'comint-previous-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell</span>
-    (define-key comint-mode-map
-      (kbd <span class="org-string">"&lt;C-up&gt;"</span>) #'comint-previous-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">RStudio</span>
-    (define-key comint-mode-map
-      (kbd <span class="org-string">"M-n"</span>) #'comint-next-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell</span>
-    (define-key comint-mode-map
-      (kbd <span class="org-string">"&lt;C-down&gt;"</span>) #'comint-next-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">RStudio</span>
-
-    (<span class="org-keyword">when</span> (<span class="org-keyword">featurep</span> '<span class="org-constant">helm-misc</span>)
-      <span class="org-comment-delimiter">;; </span><span class="org-comment">Provide completion of `</span><span class="org-constant"><span class="org-comment">comint</span></span><span class="org-comment">' history.</span>
-      (define-key comint-mode-map
-        (kbd <span class="org-string">"C-c C-l"</span>) #'helm-comint-input-ring)))
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Rejects short commands.</span>
+    (<span class="org-keyword">setq</span> comint-input-filter
+      #'(lambda (str)
+          (<span class="org-keyword">and</span> (not (string-match <span class="org-string">"\\`\\s *\\'"</span> str))
+               (&gt; (length str) 2))))    <span class="org-comment-delimiter">; </span><span class="org-comment">Ignore '</span><span class="org-constant"><span class="org-comment">!!</span></span><span class="org-comment">' and kin.</span>
 </pre>
 </div>
 </div>
 
 <div id="outline-container-orgheadline391" class="outline-4">
-<h4 id="orgheadline391">Command History</h4>
+<h4 id="orgheadline391">Shell History Ring</h4>
 <div class="outline-text-4" id="text-orgheadline391">
 <dl class="org-dl">
 <dt><code>C-p</code> (or <code>&lt;up&gt;</code>)</dt><dd>Fetch the next <b>earlier</b> command in the history (doesn&rsquo;t execute it).</dd>
@@ -19426,12 +19400,46 @@ far (doesn&rsquo;t execute it).</dd>
 
 <dt><code>C-c C-l</code></dt><dd>Display the current buffer&rsquo;s <b>history</b> of shell commands.</dd>
 </dl>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Cycle backwards/forwards through input history.</span>
+    (define-key comint-mode-map
+      (kbd <span class="org-string">"C-p"</span>) #'comint-previous-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell.</span>
+    (define-key comint-mode-map
+      (kbd <span class="org-string">"&lt;up&gt;"</span>) #'comint-previous-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell + RStudio.</span>
+    (define-key comint-mode-map
+      (kbd <span class="org-string">"C-n"</span>) #'comint-next-input)  <span class="org-comment-delimiter">; </span><span class="org-comment">Shell.</span>
+    (define-key comint-mode-map
+      (kbd <span class="org-string">"&lt;down&gt;"</span>) #'comint-next-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell + RStudio.</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Search backwards/forwards through input history for match for current</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">input.</span>
+    (define-key comint-mode-map
+      (kbd <span class="org-string">"M-p"</span>) #'comint-previous-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell.</span>
+    (define-key comint-mode-map
+      (kbd <span class="org-string">"&lt;C-up&gt;"</span>) #'comint-previous-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">RStudio.</span>
+    (define-key comint-mode-map
+      (kbd <span class="org-string">"M-n"</span>) #'comint-next-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">Shell.</span>
+    (define-key comint-mode-map
+      (kbd <span class="org-string">"&lt;C-down&gt;"</span>) #'comint-next-matching-input-from-input) <span class="org-comment-delimiter">; </span><span class="org-comment">RStudio.</span>
+
+    (<span class="org-keyword">when</span> (<span class="org-keyword">featurep</span> '<span class="org-constant">helm-misc</span>)
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Provide completion of `</span><span class="org-constant"><span class="org-comment">comint</span></span><span class="org-comment">' history.</span>
+      (define-key comint-mode-map
+        (kbd <span class="org-string">"C-c C-l"</span>) #'helm-comint-input-ring)))
+</pre>
+</div>
 </div>
 </div>
 
 <div id="outline-container-orgheadline392" class="outline-4">
-<h4 id="orgheadline392">Manipulating the transcript: Viewing older commands</h4>
+<h4 id="orgheadline392">Shell History Copying</h4>
 <div class="outline-text-4" id="text-orgheadline392">
+<p>
+Manipulating the transcript: Viewing older commands.
+</p>
+
 <dl class="org-dl">
 <dt><code>C-c C-p</code></dt><dd>Move point to <b>previous command prompt</b>.</dd>
 

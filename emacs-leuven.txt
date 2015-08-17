@@ -14868,49 +14868,23 @@ bufffer from Emacs.
                                         ;! `comint-use-prompt-regexp' is non-nil
 #+end_src
 
-** History
+** Shell Command History
 
 #+begin_src emacs-lisp
 ;;** 38.5 Shell Command History
 
   (leuven--section "38.5 Shell Command History")
 
-  ;; Rejects short commands.
-  (setq comint-input-filter
-    #'(lambda (str)
-        (and (not (string-match "\\`\\s *\\'" str))
-             (> (length str) 2))))      ; ignore '!!' and kin
-
   (with-eval-after-load "comint"
 
-    ;; Cycle backwards/forwards through input history.
-    (define-key comint-mode-map
-      (kbd "C-p") #'comint-previous-input) ; Shell
-    (define-key comint-mode-map
-      (kbd "<up>") #'comint-previous-input) ; Shell + RStudio
-    (define-key comint-mode-map
-      (kbd "C-n") #'comint-next-input)  ; Shell
-    (define-key comint-mode-map
-      (kbd "<down>") #'comint-next-input) ; Shell + RStudio
-
-    ;; Search backwards/forwards through input history for match for current
-    ;; input.
-    (define-key comint-mode-map
-      (kbd "M-p") #'comint-previous-matching-input-from-input) ; Shell
-    (define-key comint-mode-map
-      (kbd "<C-up>") #'comint-previous-matching-input-from-input) ; RStudio
-    (define-key comint-mode-map
-      (kbd "M-n") #'comint-next-matching-input-from-input) ; Shell
-    (define-key comint-mode-map
-      (kbd "<C-down>") #'comint-next-matching-input-from-input) ; RStudio
-
-    (when (featurep 'helm-misc)
-      ;; Provide completion of `comint' history.
-      (define-key comint-mode-map
-        (kbd "C-c C-l") #'helm-comint-input-ring)))
+    ;; Rejects short commands.
+    (setq comint-input-filter
+      #'(lambda (str)
+          (and (not (string-match "\\`\\s *\\'" str))
+               (> (length str) 2))))    ; Ignore '!!' and kin.
 #+end_src
 
-*** Command History
+*** Shell History Ring
 
 - ~C-p~ (or ~<up>~) ::
      Fetch the next *earlier* command in the history (doesn't execute it).
@@ -14932,7 +14906,37 @@ bufffer from Emacs.
 - ~C-c C-l~ ::
      Display the current buffer's *history* of shell commands.
 
-*** Manipulating the transcript: Viewing older commands
+#+begin_src emacs-lisp
+    ;; Cycle backwards/forwards through input history.
+    (define-key comint-mode-map
+      (kbd "C-p") #'comint-previous-input) ; Shell.
+    (define-key comint-mode-map
+      (kbd "<up>") #'comint-previous-input) ; Shell + RStudio.
+    (define-key comint-mode-map
+      (kbd "C-n") #'comint-next-input)  ; Shell.
+    (define-key comint-mode-map
+      (kbd "<down>") #'comint-next-input) ; Shell + RStudio.
+
+    ;; Search backwards/forwards through input history for match for current
+    ;; input.
+    (define-key comint-mode-map
+      (kbd "M-p") #'comint-previous-matching-input-from-input) ; Shell.
+    (define-key comint-mode-map
+      (kbd "<C-up>") #'comint-previous-matching-input-from-input) ; RStudio.
+    (define-key comint-mode-map
+      (kbd "M-n") #'comint-next-matching-input-from-input) ; Shell.
+    (define-key comint-mode-map
+      (kbd "<C-down>") #'comint-next-matching-input-from-input) ; RStudio.
+
+    (when (featurep 'helm-misc)
+      ;; Provide completion of `comint' history.
+      (define-key comint-mode-map
+        (kbd "C-c C-l") #'helm-comint-input-ring)))
+#+end_src
+
+*** Shell History Copying
+
+Manipulating the transcript: Viewing older commands.
 
 - ~C-c C-p~ ::
      Move point to *previous command prompt*.
