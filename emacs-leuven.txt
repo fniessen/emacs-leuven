@@ -5964,9 +5964,11 @@ This helps me survive in files like ~org.el~ and ~org-agenda.el~.
 
 *** fold-dwim
 
-# (global-set-key (kbd "C-c +")   #'fold-dwim-toggle)
-# (global-set-key (kbd "C-c C-+") #'fold-dwim-show-all)
-# (global-set-key (kbd "C-c C--") #'fold-dwim-hide-all)
+#+begin_src emacs-lisp :tangle no
+  ;; (global-set-key (kbd "C-c +") #'fold-dwim-toggle)
+  ;; (global-set-key (kbd "C-c C-+") #'fold-dwim-show-all)
+  ;; (global-set-key (kbd "C-c C--") #'fold-dwim-hide-all)
+#+end_src
 
 *** fold-dwim-org
 
