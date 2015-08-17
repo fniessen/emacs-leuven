@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150817.1431
+;; Version: 20150817.2302
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150817.1431"
+(defconst leuven--emacs-version "20150817.2302"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -124,8 +124,8 @@
 (defvar leuven-load-chapter-23-major-and-minor-modes t)
 (defvar leuven-load-chapter-24-indentation t)
 (defvar leuven-load-chapter-25-text t)
-(defvar leuven-load-chapter-25.9-org-mode t)
-(defvar leuven-load-chapter-25.10-tex-mode t)
+(defvar leuven-load-chapter-25.10-org-mode t)
+(defvar leuven-load-chapter-25.11-tex-mode t)
 (defvar leuven-load-chapter-26-programs t)
 (defvar leuven-load-chapter-27-building t)
 (defvar leuven-load-chapter-28-maintaining t)
@@ -3346,7 +3346,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;;   (add-hook 'outline-minor-mode-hook
     ;;             (lambda ()
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<S-TAB>") #'outline-cycle)
+    ;;                 (kbd "<S-tab>") #'outline-cycle)
     ;;               (define-key outline-minor-mode-map
     ;;                 (kbd "<M-left>") #'outline-promote)
     ;;               (define-key outline-minor-mode-map
@@ -3405,7 +3405,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;; ; -*- mode: emacs-lisp; eval: (outline-minor-mode 1); -*-
     ;;
     ;; Now you can add `;;' and `;;*', etc. as headings in your `.emacs'
-    ;; and cycle using `<S-TAB>', `<M-left>' and `<M-right>' will collapse
+    ;; and cycle using `<S-tab>', `<M-left>' and `<M-right>' will collapse
     ;; or expand all headings respectively.  I am guessing you mean to make
     ;; segments such as `;; SHORTCUTS' and `;; VARIABLES', this will do
     ;; that, but not too much more.
@@ -3418,10 +3418,10 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; (add-hook 'outline-minor-mode-hook
   ;;   (lambda ()
-  ;;     (define-key outline-minor-mode-map (kbd "<C-TAB>") #'org-cycle)
-  ;;     (define-key outline-minor-mode-map (kbd "<S-TAB>") #'org-global-cycle))) ; backtab?
+  ;;     (define-key outline-minor-mode-map (kbd "<C-tab>") #'org-cycle)
+  ;;     (define-key outline-minor-mode-map (kbd "<S-tab>") #'org-global-cycle))) ; backtab?
 
-  (global-set-key (kbd "<S-TAB>") #'org-cycle) ; that works (but on level 1+)
+  (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
   ;; TODO Look at org-cycle-global and local below, they work better, but
   ;; still on level 1+
   ;; TODO Replace it by a function which alternatively does `hide-body' and
@@ -3490,11 +3490,11 @@ These packages are neither built-in nor already installed nor ignored."
 
 )                                       ; Chapter 25 ends here.
 
-;;* 25.9 Org Mode
+;;* 25.10 Org Mode
 
 ;; (info "(org)Top") outline-based notes management and organizer
 
-(leuven--chapter leuven-load-chapter-25.9-org-mode "25.9 Getting Things Done (with Org mode)"
+(leuven--chapter leuven-load-chapter-25.10-org-mode "25.10 Getting Things Done (with Org mode)"
 
 ;;* 1 (info "(org)Introduction")
 
@@ -6252,13 +6252,13 @@ this with to-do items than with projects or headings."
     ;; Add the city.
     (setq org-google-weather-format "%C %i %c, %l°-%h°"))
 
-)                                       ; Chapter 25.9-org-mode ends here.
+)                                       ; Chapter 25.10-org-mode ends here.
 
-;;** 25.10 (info "(emacs)TeX Mode")
+;;** 25.11 (info "(emacs)TeX Mode")
 
-(leuven--chapter leuven-load-chapter-25.10-tex-mode "25.10 TeX Mode"
+(leuven--chapter leuven-load-chapter-25.11-tex-mode "25.11 TeX Mode"
 
-  (leuven--section "25.10 (emacs)TeX Mode")
+  (leuven--section "25.11 (emacs)TeX Mode")
 
   ;; Get colored PDFLaTeX output.
   (define-derived-mode latex-output-mode fundamental-mode "LaTeX-Output"
@@ -6284,7 +6284,7 @@ this with to-do items than with projects or headings."
     (with-selected-window (get-buffer-window (TeX-active-buffer))
       (latex-output-mode)))
 
-  (leuven--section "25.10 (emacs)AUCTeX Mode")
+  (leuven--section "25.11 (emacs)AUCTeX Mode")
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
 
@@ -6486,13 +6486,13 @@ this with to-do items than with projects or headings."
 
     )                                   ; with-eval-after-load "latex" ends here.
 
-)                                       ; Chapter 25.10-tex-mode ends here.
+)                                       ; Chapter 25.11-tex-mode ends here.
 
 (leuven--chapter leuven-load-chapter-25-text "25 Commands for Human Languages"
 
-;;** 25.11 (info "(emacs)HTML Mode")
+;;** 25.12 (info "(emacs)HTML Mode")
 
-  (leuven--section "25.11 (emacs)HTML Mode")
+  (leuven--section "25.12 (emacs)HTML Mode")
 
   (with-eval-after-load "tidy-autoloads"
     (when (executable-find "tidy")
@@ -7759,7 +7759,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; (setq ac-candidate-menu-min 0)
 
     ;; Completion by TAB.
-    (define-key ac-completing-map (kbd "<TAB>") #'ac-complete)
+    (define-key ac-completing-map (kbd "<tab>") #'ac-complete)
 
     ;; Completion by RET.
     (define-key ac-completing-map (kbd "<RET>") #'ac-complete)
@@ -7777,7 +7777,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Enable Company mode in all buffers ....
     (global-company-mode 1)
 
-    (global-set-key (kbd "<C-TAB>") #'company-complete)
+    (global-set-key (kbd "<C-tab>") #'company-complete)
     (global-set-key (kbd "C-/") #'company-complete)
 
     (global-set-key (kbd "C-c y") #'company-yasnippet) ; Test.
@@ -7816,7 +7816,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (define-key company-active-map (kbd "M-p") nil)
 
     ;; Completion by TAB.
-    (define-key company-active-map (kbd "<TAB>") #'company-complete-selection) ; Complete with the selected candidate
+    (define-key company-active-map (kbd "<tab>") #'company-complete-selection) ; Complete with the selected candidate
                                         ; `company-complete'?
 
     ;; Temporarily show the documentation buffer for the selection.

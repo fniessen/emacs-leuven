@@ -303,8 +303,8 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
 (defvar leuven-load-chapter-23-major-and-minor-modes t)
 (defvar leuven-load-chapter-24-indentation t)
 (defvar leuven-load-chapter-25-text t)
-(defvar leuven-load-chapter-25.9-org-mode t)
-(defvar leuven-load-chapter-25.10-tex-mode t)
+(defvar leuven-load-chapter-25.10-org-mode t)
+(defvar leuven-load-chapter-25.11-tex-mode t)
 (defvar leuven-load-chapter-26-programs t)
 (defvar leuven-load-chapter-27-building t)
 (defvar leuven-load-chapter-28-maintaining t)
@@ -3931,8 +3931,8 @@ you chose not to happen.  Now look for substitute for ~TAB~.
 Something not ~TAB~ can be ~C-z~, ~C-TAB~, and ~SPC~.
 
 #+begin_src emacs-lisp :tangle no
-(define-key helm-find-files-map (kbd "<TAB>") #'helm-execute-persistent-action)
-(define-key helm-find-files-map (kbd "<C-TAB>") #'helm-select-action)
+(define-key helm-find-files-map (kbd "<tab>") #'helm-execute-persistent-action)
+(define-key helm-find-files-map (kbd "<C-tab>") #'helm-select-action)
 (define-key helm-find-files-map (kbd "C-z") #'helm-select-action)
 (define-key helm-find-files-map (kbd "<SPC>") #'helm-select-action)
 (define-key helm-find-files-map (kbd "<RET>") #'helm-confirm-and-exit-minibuffer)
@@ -3940,7 +3940,7 @@ Something not ~TAB~ can be ~C-z~, ~C-TAB~, and ~SPC~.
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-(define-key helm-map (kbd "<TAB>") #'helm-execute-persistent-action) ; Rebind TAB to do persistent action.
+(define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action) ; Rebind TAB to do persistent action.
 (define-key helm-map (kbd "C-i") #'helm-execute-persistent-action) ; Make TAB works in terminal.
 
 (define-key helm-map (kbd "C-z") #'helm-select-action) ; List actions using C-z.
@@ -5793,7 +5793,7 @@ You can use ~org-cycle~ in other modes, with ~outline-minor-mode~.
     ;;   (add-hook 'outline-minor-mode-hook
     ;;             (lambda ()
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<S-TAB>") #'outline-cycle)
+    ;;                 (kbd "<S-tab>") #'outline-cycle)
     ;;               (define-key outline-minor-mode-map
     ;;                 (kbd "<M-left>") #'outline-promote)
     ;;               (define-key outline-minor-mode-map
@@ -5852,7 +5852,7 @@ You can use ~org-cycle~ in other modes, with ~outline-minor-mode~.
     ;; ; -*- mode: emacs-lisp; eval: (outline-minor-mode 1); -*-
     ;;
     ;; Now you can add `;;' and `;;*', etc. as headings in your `.emacs'
-    ;; and cycle using `<S-TAB>', `<M-left>' and `<M-right>' will collapse
+    ;; and cycle using `<S-tab>', `<M-left>' and `<M-right>' will collapse
     ;; or expand all headings respectively.  I am guessing you mean to make
     ;; segments such as `;; SHORTCUTS' and `;; VARIABLES', this will do
     ;; that, but not too much more.
@@ -5887,8 +5887,8 @@ where the ellipsis shows).
 #+begin_src emacs-lisp
   ;; (add-hook 'outline-minor-mode-hook
   ;;   (lambda ()
-  ;;     (define-key outline-minor-mode-map (kbd "<C-TAB>") #'org-cycle)
-  ;;     (define-key outline-minor-mode-map (kbd "<S-TAB>") #'org-global-cycle))) ; backtab?
+  ;;     (define-key outline-minor-mode-map (kbd "<C-tab>") #'org-cycle)
+  ;;     (define-key outline-minor-mode-map (kbd "<S-tab>") #'org-global-cycle))) ; backtab?
 #+end_src
 
 Now doing
@@ -5905,7 +5905,7 @@ demotion* functionality.
 *** org
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "<S-TAB>") #'org-cycle) ; that works (but on level 1+)
+  (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
   ;; TODO Look at org-cycle-global and local below, they work better, but
   ;; still on level 1+
   ;; TODO Replace it by a function which alternatively does `hide-body' and
@@ -6043,11 +6043,11 @@ Region Marked>~.
   http://repo.or.cz/w/Worg.git/tree/HEAD:/org-configs
 
 #+begin_src emacs-lisp
-;;* 25.9 Org Mode
+;;* 25.10 Org Mode
 
 ;; (info "(org)Top") outline-based notes management and organizer
 
-(leuven--chapter leuven-load-chapter-25.9-org-mode "25.9 Getting Things Done (with Org mode)"
+(leuven--chapter leuven-load-chapter-25.10-org-mode "25.10 Getting Things Done (with Org mode)"
 #+end_src
 
 After all the configuration has been done, you can easily manage your daily
@@ -10243,15 +10243,15 @@ Link emails from Org files.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 25.9-org-mode ends here.
+)                                       ; Chapter 25.10-org-mode ends here.
 #+end_src
 
 * TeX
 
 #+begin_src emacs-lisp
-;;** 25.10 (info "(emacs)TeX Mode")
+;;** 25.11 (info "(emacs)TeX Mode")
 
-(leuven--chapter leuven-load-chapter-25.10-tex-mode "25.10 TeX Mode"
+(leuven--chapter leuven-load-chapter-25.11-tex-mode "25.11 TeX Mode"
 #+end_src
 
 #+begin_warning
@@ -10266,7 +10266,7 @@ AUCTeX functions start with ~TeX-*~ or ~LaTeX-*~ (case matters) or ~font-latex-*
      mode line).
 
 #+begin_src emacs-lisp
-  (leuven--section "25.10 (emacs)TeX Mode")
+  (leuven--section "25.11 (emacs)TeX Mode")
 #+end_src
 
 Under Windows, in the *native* TeX mode, ~shell-file-name~ must be =cmdproxy.exe= to:
@@ -10324,7 +10324,7 @@ AUCTeX defines the ~tex-mode.el~ mode names as alias of its own modes: it
 aliases ~(la)tex-mode~ to ~(La)TeX-mode~.
 
 #+begin_src emacs-lisp
-  (leuven--section "25.10 (emacs)AUCTeX Mode")
+  (leuven--section "25.11 (emacs)AUCTeX Mode")
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
 
@@ -10617,7 +10617,7 @@ current selection.  More general index entries are created with ~C-c <~.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 25.10-tex-mode ends here.
+)                                       ; Chapter 25.11-tex-mode ends here.
 #+end_src
 
 * SGML and HTML Modes
@@ -10625,9 +10625,9 @@ current selection.  More general index entries are created with ~C-c <~.
 #+begin_src emacs-lisp
 (leuven--chapter leuven-load-chapter-25-text "25 Commands for Human Languages"
 
-;;** 25.11 (info "(emacs)HTML Mode")
+;;** 25.12 (info "(emacs)HTML Mode")
 
-  (leuven--section "25.11 (emacs)HTML Mode")
+  (leuven--section "25.12 (emacs)HTML Mode")
 #+end_src
 
 ** HTML
@@ -11358,24 +11358,24 @@ many programming modes.
 #+end_src
 
 It's more or less a convention that each language mode binds its symbol
-completion command (~completion-at-point~) to ~<M-TAB>~.
+completion command (~completion-at-point~) to ~<M-tab>~.
 
-Note that ~<M-TAB>~ is used by many window managers themselves (typically for
+Note that ~<M-tab>~ is used by many window managers themselves (typically for
 switching between windows) and is not passed to applications.
 
 In that case, you should:
 
 - type ~ESC TAB~ or ~C-M-i~ for completion, or
 
-- bind the command normally bound to ~<M-TAB>~ to a key that is convenient for
-  you to hit, such as ~<C-TAB>~.
+- bind the command normally bound to ~<M-tab>~ to a key that is convenient for
+  you to hit, such as ~<C-tab>~.
 
 #+begin_src emacs-lisp :tangle no
-  ;; When you hit `<C-TAB>', call the command normally bound to `<M-TAB>'.
-  (global-set-key (kbd "<C-TAB>")
+  ;; When you hit `<C-tab>', call the command normally bound to `<M-tab>'.
+  (global-set-key (kbd "<C-tab>")
     (lambda ()
       (interactive)
-      (call-interactively (key-binding (kbd "<M-TAB>")))))
+      (call-interactively (key-binding (kbd "<M-tab>")))))
 #+end_src
 
 See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard autocompletion (on by default).
@@ -13300,7 +13300,7 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
     ;; (setq ac-candidate-menu-min 0)
 
     ;; Completion by TAB.
-    (define-key ac-completing-map (kbd "<TAB>") #'ac-complete)
+    (define-key ac-completing-map (kbd "<tab>") #'ac-complete)
 
     ;; Completion by RET.
     (define-key ac-completing-map (kbd "<RET>") #'ac-complete)
@@ -13358,7 +13358,7 @@ available completions and filter as well.
     ;; Enable Company mode in all buffers ....
     (global-company-mode 1)
 
-    (global-set-key (kbd "<C-TAB>") #'company-complete)
+    (global-set-key (kbd "<C-tab>") #'company-complete)
     (global-set-key (kbd "C-/") #'company-complete)
 
     (global-set-key (kbd "C-c y") #'company-yasnippet) ; Test.
@@ -13402,7 +13402,7 @@ By default, the list of candidates is sorted alphabetically, unless the backend
     (define-key company-active-map (kbd "M-p") nil)
 
     ;; Completion by TAB.
-    (define-key company-active-map (kbd "<TAB>") #'company-complete-selection) ; Complete with the selected candidate
+    (define-key company-active-map (kbd "<tab>") #'company-complete-selection) ; Complete with the selected candidate
                                         ; `company-complete'?
 
     ;; Temporarily show the documentation buffer for the selection.
@@ -13417,7 +13417,7 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 
 #+begin_src emacs-lisp :tangle no
     (setq company-idle-delay nil)
-    (global-set-key (kbd "<TAB>") #'company-complete-selection)
+    (global-set-key (kbd "<tab>") #'company-complete-selection)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -13464,10 +13464,10 @@ XXX The following does not work in Org files (TAB does not expand nodes anymore)
                    (looking-at "\\_>"))
           (call-interactively 'company-complete-selection))))
 
-    (define-key company-mode-map (kbd "<TAB>") #'leuven-indent-or-complete)
+    (define-key company-mode-map (kbd "<tab>") #'leuven-indent-or-complete)
 
     ;; (defun leuven--tab-fix ()
-    ;;   (local-set-key (kbd "<TAB>") #'leuven-indent-or-complete))
+    ;;   (local-set-key (kbd "<tab>") #'leuven-indent-or-complete))
     ;;
     ;; (add-hook 'prog-mode-hook #'leuven--tab-fix)
 #+end_src
