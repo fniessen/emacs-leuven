@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150817.2302
+;; Version: 20150818.1443
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150817.2302"
+(defconst leuven--emacs-version "20150818.1443"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -388,8 +388,8 @@ Last time is saved in global variable `leuven--before-section-time'."
         expand-region fancy-narrow fill-column-indicator flycheck
         flycheck-ledger fuzzy git-commit-mode git-messenger git-timemachine
         google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-        helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
-        indent-guide key-chord litable idle-require imenu-anywhere info+
+        helm-descbinds helm-ls-git helm-swoop hideshowvis highlight-symbol
+        htmlize indent-guide key-chord litable idle-require imenu-anywhere info+
         interaction-log ledger-mode leuven-theme
         ;; magit
         markdown-mode multi-term multiple-cursors pager pdf-tools powerline
@@ -2278,7 +2278,6 @@ These packages are neither built-in nor already installed nor ignored."
     ;; For multi-line items in e.g. minibuffer history, match entire items,
     ;; not individual lines within items.
 
-    ;; (try-require 'helm-ls-git)
     ;; (try-require 'helm-dictionary)
 
     ;; Use the *current window* (no popup) to show the candidates.
@@ -2381,6 +2380,12 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; (with-eval-after-load "helm-utils"
   ;;   (setq helm-yank-symbol-first t)
+
+  ;; List Git files.
+  (with-eval-after-load "helm-ls-git-autoloads"
+
+    (global-set-key (kbd "C-c C-f") 'helm-ls-git-ls)
+    (global-set-key (kbd "M-+") 'helm-ls-git-ls))
 
   ;; ;; Emacs Helm Interface for quick Google searches
   ;; (with-eval-after-load "helm-google"
@@ -7780,7 +7785,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (global-set-key (kbd "<C-tab>") #'company-complete)
     (global-set-key (kbd "C-/") #'company-complete)
 
-    (global-set-key (kbd "C-c y") #'company-yasnippet) ; Test.
+    (global-set-key (kbd "C-c y") #'company-yasnippet) ; Test. Or helm-c-yas-complete?
     )
 
   (with-eval-after-load "company"

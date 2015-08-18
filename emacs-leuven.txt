@@ -687,8 +687,8 @@ like this into your configuration file:
         expand-region fancy-narrow fill-column-indicator flycheck
         flycheck-ledger fuzzy git-commit-mode git-messenger git-timemachine
         google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-        helm-descbinds helm-swoop hideshowvis highlight-symbol htmlize
-        indent-guide key-chord litable idle-require imenu-anywhere info+
+        helm-descbinds helm-ls-git helm-swoop hideshowvis highlight-symbol
+        htmlize indent-guide key-chord litable idle-require imenu-anywhere info+
         interaction-log ledger-mode leuven-theme
         ;; magit
         markdown-mode multi-term multiple-cursors pager pdf-tools powerline
@@ -4116,7 +4116,6 @@ make your life much easier with million Emacs keys.
     ;; For multi-line items in e.g. minibuffer history, match entire items,
     ;; not individual lines within items.
 
-    ;; (try-require 'helm-ls-git)
     ;; (try-require 'helm-dictionary)
 
     ;; Use the *current window* (no popup) to show the candidates.
@@ -4323,6 +4322,19 @@ you were.
   ;; (with-eval-after-load "helm-utils"
   ;;   (setq helm-yank-symbol-first t)
 #+end_src
+
+**** Helm-ls-git
+
+#+begin_src emacs-lisp
+  ;; List Git files.
+  (with-eval-after-load "helm-ls-git-autoloads"
+
+    (global-set-key (kbd "C-c C-f") 'helm-ls-git-ls)
+    (global-set-key (kbd "M-+") 'helm-ls-git-ls))
+#+end_src
+
+See http://edvorg.com/edvorg/emacs-configs/blob/master/init.d/init-helm.el for
+much more configs with Git...
 
 **** Imenu
 
@@ -13361,7 +13373,7 @@ available completions and filter as well.
     (global-set-key (kbd "<C-tab>") #'company-complete)
     (global-set-key (kbd "C-/") #'company-complete)
 
-    (global-set-key (kbd "C-c y") #'company-yasnippet) ; Test.
+    (global-set-key (kbd "C-c y") #'company-yasnippet) ; Test. Or helm-c-yas-complete?
     )
 
   (with-eval-after-load "company"
