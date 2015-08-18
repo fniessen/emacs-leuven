@@ -534,7 +534,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150818.1444</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150818.1601</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -603,7 +603,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150818.1444"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150818.1601"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1153,7 +1153,7 @@ like this into your configuration file:
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">and load `</span><span class="org-constant"><span class="org-comment">&lt;pkg&gt;-autoloads.el</span></span><span class="org-comment">'.</span>
 
     (<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven-elpa-packages</span>
-      '(ace-jump-mode ace-link ace-window
+      '(ace-jump-helm-line ace-jump-mode ace-link ace-window
         <span class="org-comment-delimiter">;; </span><span class="org-comment">aggressive-indent</span>
         anzu auctex auto-complete bbdb bookmark+ boxquote
         <span class="org-comment-delimiter">;; </span><span class="org-comment">calfw</span>
@@ -5657,6 +5657,15 @@ make your life much easier with million Emacs keys.
     <span class="org-comment-delimiter">;; </span><span class="org-comment">;; `</span><span class="org-constant"><span class="org-comment">completing-read</span></span><span class="org-comment">' or `</span><span class="org-constant"><span class="org-comment">read-file-name</span></span><span class="org-comment">' and friends).</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">(helm-mode 1)</span>
     )
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Ace-Jump to a candidate line in Helm window.</span>
+    (define-key helm-map (kbd <span class="org-string">"@"</span>) 'ace-jump-helm-line))
 </pre>
 </div>
 </div>

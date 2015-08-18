@@ -678,7 +678,7 @@ like this into your configuration file:
                                         ; and load `<pkg>-autoloads.el'.
 
     (defconst leuven-elpa-packages
-      '(ace-jump-mode ace-link ace-window
+      '(ace-jump-helm-line ace-jump-mode ace-link ace-window
         ;; aggressive-indent
         anzu auctex auto-complete bbdb bookmark+ boxquote
         ;; calfw
@@ -4157,6 +4157,13 @@ make your life much easier with million Emacs keys.
     ;; ;; `completing-read' or `read-file-name' and friends).
     ;; (helm-mode 1)
     )
+#+end_src
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "helm"
+
+    ;; Ace-Jump to a candidate line in Helm window.
+    (define-key helm-map (kbd "@") 'ace-jump-helm-line))
 #+end_src
 
 **** Helm find files

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150818.1443
+;; Version: 20150818.1600
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150818.1443"
+(defconst leuven--emacs-version "20150818.1600"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -379,7 +379,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                         ; and load `<pkg>-autoloads.el'.
 
     (defconst leuven-elpa-packages
-      '(ace-jump-mode ace-link ace-window
+      '(ace-jump-helm-line ace-jump-mode ace-link ace-window
         ;; aggressive-indent
         anzu auctex auto-complete bbdb bookmark+ boxquote
         ;; calfw
@@ -2319,6 +2319,11 @@ These packages are neither built-in nor already installed nor ignored."
     ;; ;; `completing-read' or `read-file-name' and friends).
     ;; (helm-mode 1)
     )
+
+  (with-eval-after-load "helm"
+
+    ;; Ace-Jump to a candidate line in Helm window.
+    (define-key helm-map (kbd "@") 'ace-jump-helm-line))
 
   (with-eval-after-load "helm-files"
 
