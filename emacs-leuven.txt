@@ -6525,22 +6525,7 @@ See also [[id:a9fe61b7-cdbd-478e-a4af-da9e122fb2d9][Sparse trees]] for behavior 
   (with-eval-after-load "org"
 #+end_src
 
-#+begin_src emacs-lisp
-    ;; Show full hierarchy when revealing a location.
-    (setq org-show-hierarchy-above t)     ; OBSOLETE
-
-    ;; Don't show following heading when revealing a location.
-    (setq org-show-following-heading nil) ; OBSOLETE
-
-    ;; Don't show all sibling headings when revealing a location.
-    (setq org-show-siblings nil)          ; OBSOLETE
-
-    ;; Show the entry below a headline when revealing a location.
-    (setq org-show-entry-below t)         ; OBSOLETE
-    (setq org-show-entry-below '((org-goto . t)))
-#+end_src
-
-If you're using development version, see ~org-show-context-detail~ instead:
+To control visibility when revealing a location, see ~org-show-context-detail~:
 
 #+begin_src emacs-lisp
     (when (boundp 'org-show-context-detail)
@@ -11040,6 +11025,10 @@ things.
 ;;** 26.4 Commands for Editing with (info "(emacs)Parentheses")
 
   (leuven--section "26.4 Commands for Editing with (emacs)Parentheses")
+
+  ;; Move cursor to offscreen open-paren when close-paren is inserted.
+  (setq blink-matching-paren 'jump-offscreen) ; Doesn't work when
+                                              ; ‘show-paren-mode’ is enabled.
 
   ;; Highlight matching paren.
   (show-paren-mode 1)

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150818.1600
+;; Version: 20150819.2024
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150818.1600"
+(defconst leuven--emacs-version "20150819.2024"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3807,19 +3807,6 @@ These packages are neither built-in nor already installed nor ignored."
 
   (with-eval-after-load "org"
 
-    ;; Show full hierarchy when revealing a location.
-    (setq org-show-hierarchy-above t)     ; OBSOLETE
-
-    ;; Don't show following heading when revealing a location.
-    (setq org-show-following-heading nil) ; OBSOLETE
-
-    ;; Don't show all sibling headings when revealing a location.
-    (setq org-show-siblings nil)          ; OBSOLETE
-
-    ;; Show the entry below a headline when revealing a location.
-    (setq org-show-entry-below t)         ; OBSOLETE
-    (setq org-show-entry-below '((org-goto . t)))
-
     (when (boundp 'org-show-context-detail)
       (add-to-list 'org-show-context-detail '(tags-tree . minimal))
       (add-to-list 'org-show-context-detail '(occur-tree . minimal))))
@@ -6709,6 +6696,10 @@ mouse-3: go to end") "]")))
 ;;** 26.4 Commands for Editing with (info "(emacs)Parentheses")
 
   (leuven--section "26.4 Commands for Editing with (emacs)Parentheses")
+
+  ;; Move cursor to offscreen open-paren when close-paren is inserted.
+  (setq blink-matching-paren 'jump-offscreen) ; Doesn't work when
+                                              ; ‘show-paren-mode’ is enabled.
 
   ;; Highlight matching paren.
   (show-paren-mode 1)
