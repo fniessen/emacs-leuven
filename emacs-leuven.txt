@@ -14362,6 +14362,9 @@ Minimal configuration for sending a bug report, for example.
   (setq smtpmail-default-smtp-server "smtp")
                                         ; SMTP process must be running there.
 
+  ;; ;; SMTP service port number.
+  ;; (setq smtpmail-smtp-service 587)
+
 )                                       ; Chapter 32 ends here.
 #+end_src
 

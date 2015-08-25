@@ -534,7 +534,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150819.2025</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150825.1035</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -603,7 +603,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150819.2025"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150825.1035"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -18722,6 +18722,9 @@ Minimal configuration for sending a bug report, for example.
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Default SMTP server (overriden by `</span><span class="org-constant"><span class="org-comment">smtpmail-smtp-server</span></span><span class="org-comment">').</span>
   (<span class="org-keyword">setq</span> smtpmail-default-smtp-server <span class="org-string">"smtp"</span>)
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">SMTP process must be running there.</span>
+
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; SMTP service port number.</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq smtpmail-smtp-service 587)</span>
 
 )                                       <span class="org-comment-delimiter">; </span><span class="org-comment">Chapter 32 ends here.</span>
 </pre>

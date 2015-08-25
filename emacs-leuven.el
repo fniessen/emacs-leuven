@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150819.2024
+;; Version: 20150825.1034
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150819.2024"
+(defconst leuven--emacs-version "20150825.1034"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -8319,6 +8319,9 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; Default SMTP server (overriden by `smtpmail-smtp-server').
   (setq smtpmail-default-smtp-server "smtp")
                                         ; SMTP process must be running there.
+
+  ;; ;; SMTP service port number.
+  ;; (setq smtpmail-smtp-service 587)
 
 )                                       ; Chapter 32 ends here.
 
