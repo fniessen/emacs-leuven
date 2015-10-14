@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20150728.1653
+;; Version: 20151014.1108
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -597,7 +597,7 @@
   (defun leuven-choose-gcc()
     (interactive)
     (let* (;; if this "group" is chosen the default "Gcc" remains
-           (default "INBOX")
+           (default "INBOX")            ; INBOX.Sent?
            ;; if this "group" is chosen the default "Gcc" is deleted
            (delete "INBOX.Trash")
            ;; else the choosen group is inserted as "Gcc:"

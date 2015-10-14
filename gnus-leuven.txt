@@ -151,7 +151,8 @@ If this is on Windows, check what ~M-: (gnutls-available-p) RET~ yield...
 #+end_note
 
 Go to [[http://schwarzvogel.de/ssl_tls_testing.shtml][Testing SSL and TLS services]] to test the *opening of TLS connections* with
-~gnutls-cli~.
+~gnutls-cli~, the program used by default (see ~starttls-gnutls-program~) when
+GnuTLS is used (see ~starttls-use-gnutls~).
 
 #+begin_note
 STARTTLS is an extension to plain text communication protocols to provide
@@ -1199,7 +1200,7 @@ header in the ~message-send-hook~.
   (defun leuven-choose-gcc()
     (interactive)
     (let* (;; if this "group" is chosen the default "Gcc" remains
-           (default "INBOX")
+           (default "INBOX")            ; INBOX.Sent?
            ;; if this "group" is chosen the default "Gcc" is deleted
            (delete "INBOX.Trash")
            ;; else the choosen group is inserted as "Gcc:"
@@ -1847,7 +1848,7 @@ of the score file local for the group) by pressing ~M-i a I~ or ~M-i a L~.
   ;; ;; Increase score of messages that are replies to my own postings.
   ;; ;; TODO only for newsgroups (and not for mails)!
   ;; (add-hook 'message-sent-hook 'gnus-score-followup-article)
-  ;; (add-hook 'message-sent-hook 'gnus-score-followup-thread)
+  ;; (add-hook 'message-sent-hook 'gnus-score-followup-thread) ; Cool trick.
 
   (message "7 Scoring... Done")
 #+end_src
