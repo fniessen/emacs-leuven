@@ -1349,8 +1349,11 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
 
     ;; Commands to run for all cursors in multiple-cursors-mode.
     (setq mc/cmds-to-run-for-all
-          '(isearch-abort
+          '(cycle-spacing
+            isearch-abort
             isearch-printing-char
+            just-one-space
+            kill-region
             leuven-fill-paragraph
             org-beginning-of-line
             org-end-of-line
@@ -1702,7 +1705,7 @@ We bookmarks positions, not just lines!!
                                         ; between using Bookmark+ and using
                                         ; vanilla Emacs.
 
-;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
+    ;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
 
 ;; ;; Restoring bookmarks when on file find.
 ;; (add-hook 'find-file-hook #'bm-buffer-restore)
@@ -6791,14 +6794,17 @@ verified before really closing the task.
   ;; List of TODO entry keyword sequences (+ fast access keys and specifiers
   ;; for state change logging).
   (setq org-todo-keywords
-        '((sequence "NEW(n!)"           ; Proposal, idea (under review).
+        '((sequence "NEW(n!)"           ; Proposal, idea (under review), to be
+                                        ; prioritized.
                     "TODO(t!)"          ; Open, not (yet) started.
                     "STRT(s!)"          ; In progress, working on, doing.
-                    "WAIT(w!)"          ; On hold, assigned, feedback.
+                    "WAIT(w!)"          ; On hold, to be discussed, assigned,
+                                        ; feedback.
                     "SDAY(y!)"          ; Someday, maybe, perhaps, wish.
                     "|"
-                    "DONE(d!)"          ; Completed, closed, resolved.
-                    "CANX(x!)")         ; Wontfix, rejected.
+                    "DONE(d!)"          ; Completed, closed, fixed, resolved,
+                                        ; verified.
+                    "CANX(x!)")         ; Wontfix, rejected, ignored.
 
           (sequence "QTE(q!)"           ; Planning.
                     "QTD(Q!)"           ; Awaiting approval.
@@ -7969,7 +7975,7 @@ headline (to return any kind of string you want).
     ;; Text preceding deadline items in the agenda view.
     (setq org-agenda-deadline-leaders
           '("Deadline   "
-            "In %d d"                   ; or "%d d left"
+            "In %d d"                   ; Or "%d d left".
             "%d d ago"))
 
     )                                   ; with-eval-after-load "org-agenda" ends here.
@@ -7983,7 +7989,7 @@ headline (to return any kind of string you want).
             (0.8571 . leuven-org-deadline-tomorrow) ; = 6/7, see `org-deadline-warning-days'
             (0.0000 . leuven-org-deadline-future)))
 
-    ;; see http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
+    ;; See http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61.
 
     ;; Org non-standard faces.
     (defface leuven-org-deadline-overdue
@@ -7995,11 +8001,11 @@ headline (to return any kind of string you want).
       "Face used to highlight tasks whose due date is today.")
 
     (defface leuven-org-deadline-tomorrow
-      '((t (:foreground "#34AD00")))
+      '((t (:foreground "#40A80B")))
       "Face used to highlight tasks whose due date is tomorrow.")
 
     (defface leuven-org-deadline-future
-      '((t (:foreground "#34AD00")))
+      '((t (:foreground "#40A80B")))
       "Face used to highlight tasks whose due date is for later."))
 #+end_src
 
@@ -8152,9 +8158,9 @@ If you press ~E~, it will *show* the *first notes* about the tasks.
 
   ;; Faces for specific Priorities (#A, #B and #C).
   (setq org-priority-faces
-        '((?A . (:weight bold :foreground "#5F3731" :background "#EFC4C0"))
-          (?B . (:foreground "#475443" :background "#D5E1D0"))
-          (?C . (:foreground "#2D373F" :background "#C9DBE3"))))
+        '((?A . (:foreground "#CC0000" :background "#FFE3E3"))
+          (?B . (:foreground "#64992C" :background "#EBF4DD"))
+          (?C . (:foreground "#64992C" :background "#FFFFFF"))))
 #+end_src
 
 Contextual auto-exclusion for tags in the Agenda view.  For example, I use the
@@ -8741,13 +8747,13 @@ Before exporting...
     )                                   ; with-eval-after-load "ox" ends here.
 #+end_src
 
-Eric Schulte has proposed the ~by-backend~ function for *backend-dependent
-execution* (for example, conditionally export TikZ to an SVG image on HTML export
-and insert TikZ "as is" on PDF export):
+Eric Schulte has proposed the ~by-backend~ function (updated by Nicolas Goaziou)
+for *backend-dependent execution* (for example, conditionally export TikZ to an
+SVG image on HTML export and insert TikZ "as is" on PDF export):
 
 #+begin_src emacs-lisp
   (defmacro by-backend (&rest body)
-    `(case (if (boundp 'backend) (org-export-backend-name backend) nil) ,@body))
+    `(case org-export-current-backend ,@body))
 #+end_src
 
 See [[http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-LaTeX.html#sec-4-3][Backend dependent execution -- conditionally export tikz to SVG on HTML
@@ -9013,6 +9019,11 @@ Not very coherent!
     ;; Hook run before parsing an export buffer.
     (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
 #+end_src
+
+#+begin_warning
+As of 2015-09-29, it seems that ~LATEX_COMPILER~ is the keyword to use the above
+functionality in standard Org mode!
+#+end_warning
 
 #+begin_note
 If LaTeXmk succeeds, the =.tex= file should be removed as well (as we can produce
@@ -12230,7 +12241,7 @@ can use the following keys to navigate historic versions of the file:
     (interactive (list current-prefix-arg t))
     (require 'ediff)
     (let ((ediff-ignore-similar-regions t))
-      (call-interactively 'vc-ediff)))  ; XXX does not work yet
+      (call-interactively 'vc-ediff)))  ; XXX does not work yet!
 #+end_src
 
 *** Customizing VC
@@ -12489,7 +12500,8 @@ symbol at point using a number of possible methods, such as semantic, tags, etc.
 You can search for *occurrences* of tags that match you regexp on all files in
 the TAGS table, by using ~M-x tags-search RET~.
 
-To continue searching for next match, use ~M-,~.
+To continue searching for next match (or to *pop back* to where ~M-.~ was last
+invoked??), use "M-,".
 
 #+begin_src emacs-lisp
   (with-eval-after-load "etags"
@@ -14360,7 +14372,10 @@ Minimal configuration for sending a bug report, for example.
 
   ;; Default SMTP server (overriden by `smtpmail-smtp-server').
   (setq smtpmail-default-smtp-server "smtp")
-                                        ; SMTP process must be running there.
+                                        ; SMTP process must be running
+                                        ; there... and it should be Google's own
+                                        ; mail server for GMail user mail
+                                        ; addresses...
 
   ;; ;; SMTP service port number.
   ;; (setq smtpmail-smtp-service 587)

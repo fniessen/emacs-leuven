@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20150825.1034
+;; Version: 20151019.2328
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20150825.1034"
+(defconst leuven--emacs-version "20151019.2328"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -748,8 +748,11 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; Commands to run for all cursors in multiple-cursors-mode.
     (setq mc/cmds-to-run-for-all
-          '(isearch-abort
+          '(cycle-spacing
+            isearch-abort
             isearch-printing-char
+            just-one-space
+            kill-region
             leuven-fill-paragraph
             org-beginning-of-line
             org-end-of-line
@@ -916,7 +919,7 @@ These packages are neither built-in nor already installed nor ignored."
                                         ; between using Bookmark+ and using
                                         ; vanilla Emacs.
 
-;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
+    ;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
 
 ;; ;; Restoring bookmarks when on file find.
 ;; (add-hook 'find-file-hook #'bm-buffer-restore)
@@ -3938,14 +3941,17 @@ These packages are neither built-in nor already installed nor ignored."
   ;; List of TODO entry keyword sequences (+ fast access keys and specifiers
   ;; for state change logging).
   (setq org-todo-keywords
-        '((sequence "NEW(n!)"           ; Proposal, idea (under review).
+        '((sequence "NEW(n!)"           ; Proposal, idea (under review), to be
+                                        ; prioritized.
                     "TODO(t!)"          ; Open, not (yet) started.
                     "STRT(s!)"          ; In progress, working on, doing.
-                    "WAIT(w!)"          ; On hold, assigned, feedback.
+                    "WAIT(w!)"          ; On hold, to be discussed, assigned,
+                                        ; feedback.
                     "SDAY(y!)"          ; Someday, maybe, perhaps, wish.
                     "|"
-                    "DONE(d!)"          ; Completed, closed, resolved.
-                    "CANX(x!)")         ; Wontfix, rejected.
+                    "DONE(d!)"          ; Completed, closed, fixed, resolved,
+                                        ; verified.
+                    "CANX(x!)")         ; Wontfix, rejected, ignored.
 
           (sequence "QTE(q!)"           ; Planning.
                     "QTD(Q!)"           ; Awaiting approval.
@@ -4768,7 +4774,7 @@ From %c"
     ;; Text preceding deadline items in the agenda view.
     (setq org-agenda-deadline-leaders
           '("Deadline   "
-            "In %d d"                   ; or "%d d left"
+            "In %d d"                   ; Or "%d d left".
             "%d d ago"))
 
     )                                   ; with-eval-after-load "org-agenda" ends here.
@@ -4782,7 +4788,7 @@ From %c"
             (0.8571 . leuven-org-deadline-tomorrow) ; = 6/7, see `org-deadline-warning-days'
             (0.0000 . leuven-org-deadline-future)))
 
-    ;; see http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
+    ;; See http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61.
 
     ;; Org non-standard faces.
     (defface leuven-org-deadline-overdue
@@ -4794,11 +4800,11 @@ From %c"
       "Face used to highlight tasks whose due date is today.")
 
     (defface leuven-org-deadline-tomorrow
-      '((t (:foreground "#34AD00")))
+      '((t (:foreground "#40A80B")))
       "Face used to highlight tasks whose due date is tomorrow.")
 
     (defface leuven-org-deadline-future
-      '((t (:foreground "#34AD00")))
+      '((t (:foreground "#40A80B")))
       "Face used to highlight tasks whose due date is for later."))
 
   (with-eval-after-load "org-agenda"
@@ -4908,9 +4914,9 @@ From %c"
 
   ;; Faces for specific Priorities (#A, #B and #C).
   (setq org-priority-faces
-        '((?A . (:weight bold :foreground "#5F3731" :background "#EFC4C0"))
-          (?B . (:foreground "#475443" :background "#D5E1D0"))
-          (?C . (:foreground "#2D373F" :background "#C9DBE3"))))
+        '((?A . (:foreground "#CC0000" :background "#FFE3E3"))
+          (?B . (:foreground "#64992C" :background "#EBF4DD"))
+          (?C . (:foreground "#64992C" :background "#FFFFFF"))))
 
   ;; 10.5 Commands in the agenda buffer.
   (defun leuven--weekday-p ()
@@ -5303,7 +5309,7 @@ this with to-do items than with projects or headings."
     )                                   ; with-eval-after-load "ox" ends here.
 
   (defmacro by-backend (&rest body)
-    `(case (if (boundp 'backend) (org-export-backend-name backend) nil) ,@body))
+    `(case org-export-current-backend ,@body))
 
 ;;** 12.5 (info "(org)HTML export")
 
@@ -7290,7 +7296,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (interactive (list current-prefix-arg t))
     (require 'ediff)
     (let ((ediff-ignore-similar-regions t))
-      (call-interactively 'vc-ediff)))  ; XXX does not work yet
+      (call-interactively 'vc-ediff)))  ; XXX does not work yet!
 
 ;;*** 28.1.13 (info "(emacs)Customizing VC")
 
@@ -8318,7 +8324,10 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; Default SMTP server (overriden by `smtpmail-smtp-server').
   (setq smtpmail-default-smtp-server "smtp")
-                                        ; SMTP process must be running there.
+                                        ; SMTP process must be running
+                                        ; there... and it should be Google's own
+                                        ; mail server for GMail user mail
+                                        ; addresses...
 
   ;; ;; SMTP service port number.
   ;; (setq smtpmail-smtp-service 587)

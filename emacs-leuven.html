@@ -534,7 +534,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20150825.1035</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151019.2329</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -603,7 +603,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20150825.1035"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151019.2329"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -797,7 +797,7 @@ need to load a single file that define autoloaded functions.
       (<span class="org-keyword">let*</span> ((this-directory (expand-file-name this-directory)))
 
         <span class="org-comment-delimiter">;; </span><span class="org-comment">directories containing a `</span><span class="org-constant"><span class="org-comment">.nosearch</span></span><span class="org-comment">' file (such as</span>
-        <span class="org-comment-delimiter">;; </span><span class="org-comment">`auctex-11.88.6\style') should not made part of `</span><span class="org-constant"><span class="org-comment">load-path</span></span><span class="org-comment">'.</span>
+        <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">auctex-11.88.6\style</span></span><span class="org-comment">') should not made part of `</span><span class="org-constant"><span class="org-comment">load-path</span></span><span class="org-comment">'.</span>
         <span class="org-comment-delimiter">;; </span><span class="org-leuven-highlight"><span class="org-comment">TODO</span></span><span class="org-comment"> `</span><span class="org-constant"><span class="org-comment">RCS</span></span><span class="org-comment">' and `</span><span class="org-constant"><span class="org-comment">CVS</span></span><span class="org-comment">' directories should also be excluded.</span>
         (<span class="org-keyword">unless</span> (file-exists-p (concat this-directory <span class="org-string">"/.nosearch"</span>))
           (add-to-list 'load-path this-directory)
@@ -2048,8 +2048,11 @@ To go from multiple selections to a single selection, press <code>C-g</code> or 
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Commands to run for all cursors in multiple-cursors-mode.</span>
     (<span class="org-keyword">setq</span> mc/cmds-to-run-for-all
-          '(isearch-abort
+          '(cycle-spacing
+            isearch-abort
             isearch-printing-char
+            just-one-space
+            kill-region
             leuven-fill-paragraph
             org-beginning-of-line
             org-end-of-line
@@ -2520,7 +2523,7 @@ We bookmarks positions, not just lines!!
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">between using Bookmark+ and using</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">vanilla Emacs.</span>
 
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(setq bmkp-last-as-first-bookmark-file bookmark-default-file)</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq bmkp-last-as-first-bookmark-file bookmark-default-file)</span>
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Restoring bookmarks when on file find.</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">(add-hook 'find-file-hook #'bm-buffer-restore)</span>
@@ -9070,14 +9073,17 @@ verified before really closing the task.
   <span class="org-comment-delimiter">;; </span><span class="org-comment">List of </span><span class="org-leuven-highlight"><span class="org-comment">TODO</span></span><span class="org-comment"> entry keyword sequences (+ fast access keys and specifiers</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">for state change logging).</span>
   (<span class="org-keyword">setq</span> org-todo-keywords
-        '((sequence <span class="org-string">"NEW(n!)"</span>           <span class="org-comment-delimiter">; </span><span class="org-comment">Proposal, idea (under review).</span>
+        '((sequence <span class="org-string">"NEW(n!)"</span>           <span class="org-comment-delimiter">; </span><span class="org-comment">Proposal, idea (under review), to be</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">prioritized.</span>
                     <span class="org-string">"</span><span class="org-leuven-highlight"><span class="org-string">TODO</span></span><span class="org-string">(t!)"</span>          <span class="org-comment-delimiter">; </span><span class="org-comment">Open, not (yet) started.</span>
                     <span class="org-string">"STRT(s!)"</span>          <span class="org-comment-delimiter">; </span><span class="org-comment">In progress, working on, doing.</span>
-                    <span class="org-string">"WAIT(w!)"</span>          <span class="org-comment-delimiter">; </span><span class="org-comment">On hold, assigned, feedback.</span>
+                    <span class="org-string">"WAIT(w!)"</span>          <span class="org-comment-delimiter">; </span><span class="org-comment">On hold, to be discussed, assigned,</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">feedback.</span>
                     <span class="org-string">"SDAY(y!)"</span>          <span class="org-comment-delimiter">; </span><span class="org-comment">Someday, maybe, perhaps, wish.</span>
                     <span class="org-string">"|"</span>
-                    <span class="org-string">"DONE(d!)"</span>          <span class="org-comment-delimiter">; </span><span class="org-comment">Completed, closed, resolved.</span>
-                    <span class="org-string">"CANX(x!)"</span>)         <span class="org-comment-delimiter">; </span><span class="org-comment">Wontfix, rejected.</span>
+                    <span class="org-string">"DONE(d!)"</span>          <span class="org-comment-delimiter">; </span><span class="org-comment">Completed, closed, fixed, resolved,</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">verified.</span>
+                    <span class="org-string">"CANX(x!)"</span>)         <span class="org-comment-delimiter">; </span><span class="org-comment">Wontfix, rejected, ignored.</span>
 
           (sequence <span class="org-string">"QTE(q!)"</span>           <span class="org-comment-delimiter">; </span><span class="org-comment">Planning.</span>
                     <span class="org-string">"QTD(Q!)"</span>           <span class="org-comment-delimiter">; </span><span class="org-comment">Awaiting approval.</span>
@@ -10417,7 +10423,7 @@ arrives &#x2013; at which point it will be in all lists.
 <div class="outline-text-4" id="text-orgheadline209">
 <p>
 See
-<a href="http://www.dgtale.ch/index.php?option=com_content&amp;view=article&amp;id=52&amp;Itemid=61">http://www.dgtale.ch/index.php?option=com_content&amp;view=article&amp;id=52&amp;Itemid=61</a>
+<a href="http://www.dgtale.ch/index.php?option=com_content&amp;view=article&amp;id=52&amp;Itemid=61">http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61</a>
 </p>
 
 <div class="org-src-container">
@@ -10493,7 +10499,7 @@ headline (to return any kind of string you want).
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Text preceding deadline items in the agenda view.</span>
     (<span class="org-keyword">setq</span> org-agenda-deadline-leaders
           '(<span class="org-string">"Deadline   "</span>
-            <span class="org-string">"In %d d"</span>                   <span class="org-comment-delimiter">; </span><span class="org-comment">or "%d d left"</span>
+            <span class="org-string">"In %d d"</span>                   <span class="org-comment-delimiter">; </span><span class="org-comment">Or "%d d left".</span>
             <span class="org-string">"%d d ago"</span>))
 
     )                                   <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "org-agenda" ends here.</span>
@@ -10507,7 +10513,7 @@ headline (to return any kind of string you want).
             (0.8571 . leuven-org-deadline-tomorrow) <span class="org-comment-delimiter">; </span><span class="org-comment">= 6/7, see `</span><span class="org-constant"><span class="org-comment">org-deadline-warning-days</span></span><span class="org-comment">'</span>
             (0.0000 . leuven-org-deadline-future)))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">see http://www.dgtale.ch/index.php?option=com_content&amp;view=article&amp;id=52&amp;Itemid=61</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">See http://www.dgtale.ch/index.php?option=com_content&amp;view=article&amp;id=52&amp;Itemid=61.</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Org non-standard faces.</span>
     (<span class="org-keyword">defface</span> <span class="org-variable-name">leuven-org-deadline-overdue</span>
@@ -10519,11 +10525,11 @@ headline (to return any kind of string you want).
       <span class="org-doc">"Face used to highlight tasks whose due date is today."</span>)
 
     (<span class="org-keyword">defface</span> <span class="org-variable-name">leuven-org-deadline-tomorrow</span>
-      '((t (<span class="org-builtin">:foreground</span> <span class="org-string">"#34AD00"</span>)))
+      '((t (<span class="org-builtin">:foreground</span> <span class="org-string">"#40A80B"</span>)))
       <span class="org-doc">"Face used to highlight tasks whose due date is tomorrow."</span>)
 
     (<span class="org-keyword">defface</span> <span class="org-variable-name">leuven-org-deadline-future</span>
-      '((t (<span class="org-builtin">:foreground</span> <span class="org-string">"#34AD00"</span>)))
+      '((t (<span class="org-builtin">:foreground</span> <span class="org-string">"#40A80B"</span>)))
       <span class="org-doc">"Face used to highlight tasks whose due date is for later."</span>))
 </pre>
 </div>
@@ -10708,9 +10714,9 @@ If you press <code>E</code>, it will <b>show</b> the <b>first notes</b> about th
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Faces for specific Priorities (#A, #B and #C).</span>
   (<span class="org-keyword">setq</span> org-priority-faces
-        '((?A . (<span class="org-builtin">:weight</span> bold <span class="org-builtin">:foreground</span> <span class="org-string">"#5F3731"</span> <span class="org-builtin">:background</span> <span class="org-string">"#EFC4C0"</span>))
-          (?B . (<span class="org-builtin">:foreground</span> <span class="org-string">"#475443"</span> <span class="org-builtin">:background</span> <span class="org-string">"#D5E1D0"</span>))
-          (?C . (<span class="org-builtin">:foreground</span> <span class="org-string">"#2D373F"</span> <span class="org-builtin">:background</span> <span class="org-string">"#C9DBE3"</span>))))
+        '((?A . (<span class="org-builtin">:foreground</span> <span class="org-string">"#CC0000"</span> <span class="org-builtin">:background</span> <span class="org-string">"#FFE3E3"</span>))
+          (?B . (<span class="org-builtin">:foreground</span> <span class="org-string">"#64992C"</span> <span class="org-builtin">:background</span> <span class="org-string">"#EBF4DD"</span>))
+          (?C . (<span class="org-builtin">:foreground</span> <span class="org-string">"#64992C"</span> <span class="org-builtin">:background</span> <span class="org-string">"#FFFFFF"</span>))))
 </pre>
 </div>
 
@@ -11459,15 +11465,15 @@ Before exporting&#x2026;
 </div>
 
 <p>
-Eric Schulte has proposed the <code>by-backend</code> function for <b>backend-dependent
-execution</b> (for example, conditionally export TikZ to an SVG image on HTML export
-and insert TikZ &ldquo;as is&rdquo; on PDF export):
+Eric Schulte has proposed the <code>by-backend</code> function (updated by Nicolas Goaziou)
+for <b>backend-dependent execution</b> (for example, conditionally export TikZ to an
+SVG image on HTML export and insert TikZ &ldquo;as is&rdquo; on PDF export):
 </p>
 
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">  (<span class="org-keyword">defmacro</span> <span class="org-function-name">by-backend</span> (<span class="org-type">&amp;rest</span> body)
-    `(<span class="org-keyword">case</span> (<span class="org-keyword">if</span> (boundp 'backend) (org-export-backend-name backend) nil) ,@body))
+    `(<span class="org-keyword">case</span> org-export-current-backend ,@body))
 </pre>
 </div>
 
@@ -11780,6 +11786,14 @@ Not very coherent!
 </pre>
 </div>
 
+<div class="warning">
+<p>
+As of 2015-09-29, it seems that <code>LATEX_COMPILER</code> is the keyword to use the above
+functionality in standard Org mode!
+</p>
+
+</div>
+
 <div class="note">
 <p>
 If LaTeXmk succeeds, the <code>.tex</code> file should be removed as well (as we can produce
@@ -11923,7 +11937,7 @@ What about <code>apacite</code> and <code>tikz</code> in <code>org-latex-package
           (<span class="org-keyword">setq</span> org-export-latex-packages-alist
                 '((<span class="org-string">""</span> <span class="org-string">"fontspec"</span> t)
                   (<span class="org-string">""</span> <span class="org-string">"xunicode"</span> t)
-                  <span class="org-comment-delimiter">;; </span><span class="org-comment">Add here things like `\setmainfont{Georgia}'.</span>
+                  <span class="org-comment-delimiter">;; </span><span class="org-comment">Add here things like `</span><span class="org-constant"><span class="org-comment">\setmainfont{Georgia}</span></span><span class="org-comment">'.</span>
                   ))
 
         <span class="org-comment-delimiter">;; </span><span class="org-comment">Packages to include when PDFLaTeX is used.</span>
@@ -13552,7 +13566,7 @@ not <code>Dvips</code> as one might expect)</li>
                 (widen)
                 (goto-char (point-min))
                 (<span class="org-keyword">let</span> ((re (concat
-                           <span class="org-string">"^\\s-*\\\\usepackage</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(?:</span></span><span class="org-string">\\[.*\\]</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">?"</span>
+                           <span class="org-string">"^\\s-*\\\\usepackage</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(?:</span></span><span class="org-string">\\[</span><span class="org-constant"><span class="org-string">.*\\</span></span><span class="org-string">]</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">?"</span>
                            <span class="org-string">"{.*\\&lt;</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(?:</span></span><span class="org-string">font</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">math</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">spec\\&gt;.*}"</span>)))
                   (<span class="org-keyword">save-match-data</span>
                     (<span class="org-keyword">if</span> (re-search-forward re 3000 t)
@@ -13781,8 +13795,8 @@ current selection.  More general index entries are created with <code>C-c &lt;</
 
 <pre class="src src-emacs-lisp">    (add-hook 'LaTeX-mode-hook #'reftex-mode) <span class="org-comment-delimiter">; </span><span class="org-comment">with AUCTeX LaTeX mode</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Minor mode with distinct support for `\label', `\ref', `\cite' and</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">`\index' in LaTeX.</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Minor mode with distinct support for `</span><span class="org-constant"><span class="org-comment">\label</span></span><span class="org-comment">', `</span><span class="org-constant"><span class="org-comment">\ref</span></span><span class="org-comment">', `</span><span class="org-constant"><span class="org-comment">\cite</span></span><span class="org-comment">' and</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">\index</span></span><span class="org-comment">' in LaTeX.</span>
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"reftex"</span>
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Turn all plug-ins on.</span>
@@ -14520,7 +14534,7 @@ feature.
     (show-smartparens-global-mode 1)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Add local pairs in Org mode.</span>
-    (sp-with-modes 'org-mode
+    (<span class="org-keyword">sp-with-modes</span> 'org-mode
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(sp-local-pair "'" nil :actions nil)</span>
       (sp-local-tag <span class="org-string">"*"</span> <span class="org-string">"*"</span> <span class="org-string">"*"</span> <span class="org-builtin">:actions</span> '(wrap)) <span class="org-comment-delimiter">; </span><span class="org-comment">Bold.</span>
       (sp-local-tag <span class="org-string">"/"</span> <span class="org-string">"/"</span> <span class="org-string">"/"</span> <span class="org-builtin">:actions</span> '(wrap)) <span class="org-comment-delimiter">; </span><span class="org-comment">Italic.</span>
@@ -15890,7 +15904,7 @@ can use the following keys to navigate historic versions of the file:
     (<span class="org-keyword">interactive</span> (list current-prefix-arg t))
     (<span class="org-keyword">require</span> '<span class="org-constant">ediff</span>)
     (<span class="org-keyword">let</span> ((ediff-ignore-similar-regions t))
-      (call-interactively 'vc-ediff)))  <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> does not work yet</span>
+      (call-interactively 'vc-ediff)))  <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> does not work yet!</span>
 </pre>
 </div>
 </div>
@@ -16256,7 +16270,8 @@ the TAGS table, by using <code>M-x tags-search RET</code>.
 </p>
 
 <p>
-To continue searching for next match, use ~M-,~.
+To continue searching for next match (or to <b>pop back</b> to where <code>M-.</code> was last
+invoked??), use &ldquo;M-,&rdquo;.
 </p>
 
 <div class="org-src-container">
@@ -18721,7 +18736,10 @@ Minimal configuration for sending a bug report, for example.
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Default SMTP server (overriden by `</span><span class="org-constant"><span class="org-comment">smtpmail-smtp-server</span></span><span class="org-comment">').</span>
   (<span class="org-keyword">setq</span> smtpmail-default-smtp-server <span class="org-string">"smtp"</span>)
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">SMTP process must be running there.</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">SMTP process must be running</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">there... and it should be Google's own</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">mail server for GMail user mail</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">addresses...</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">;; SMTP service port number.</span>
   <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq smtpmail-smtp-service 587)</span>
