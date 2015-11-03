@@ -534,7 +534,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151019.2329</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151103.1057</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -603,7 +603,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151019.2329"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151103.1057"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -802,7 +802,7 @@ need to load a single file that define autoloaded functions.
         (<span class="org-keyword">unless</span> (file-exists-p (concat this-directory <span class="org-string">"/.nosearch"</span>))
           (add-to-list 'load-path this-directory)
           (<span class="org-keyword">when</span> leuven-load-verbose
-            (message <span class="org-string">"(Info) Added `</span><span class="org-constant"><span class="org-string">%s</span></span><span class="org-string">' to `</span><span class="org-constant"><span class="org-string">load-path</span></span><span class="org-string">'"</span> this-directory))))))
+            (message <span class="org-string">"INFO- Added `</span><span class="org-constant"><span class="org-string">%s</span></span><span class="org-string">' to `</span><span class="org-constant"><span class="org-string">load-path</span></span><span class="org-string">'"</span> this-directory))))))
 </pre>
 </div>
 
@@ -996,7 +996,7 @@ Use <code>(display-graphic-p)</code> (instead of <code>window-system</code>) in 
     (<span class="org-keyword">if</span> file
         (<span class="org-keyword">if</span> (file-executable-p file)
             file
-          (message <span class="org-string">"(warning) Can't find executable `</span><span class="org-constant"><span class="org-string">%s</span></span><span class="org-string">'"</span> file)
+          (message <span class="org-string">"WARN- Can't find executable `</span><span class="org-constant"><span class="org-string">%s</span></span><span class="org-string">'"</span> file)
           <span class="org-comment-delimiter">;; </span><span class="org-comment">Sleep 1.5 s so that you can see the warning.</span>
           (sit-for 1.5))
       (<span class="org-warning">error</span> <span class="org-string">"Missing argument to \"leuven--file-exists-and-executable-p\""</span>)))
@@ -1207,6 +1207,27 @@ like this into your configuration file:
             (message (concat <span class="org-string">"Customize Emacs Leuven to ignore "</span>
                              <span class="org-string">"the `</span><span class="org-constant"><span class="org-string">%s</span></span><span class="org-string">' package next times..."</span>) <span class="org-warning">pkg)</span>
             (sit-for 1.5))))))
+</pre>
+</div>
+
+<p>
+The following code will be used when Emacs 25 will be made mandatory:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">    (<span class="org-keyword">setq</span> package-selected-packages
+          '(auctex ess
+            company
+            js2-mode
+            magit
+            pdf-tools
+            paredit
+            visual-regexp))
+
+    (package-initialize)
+    (<span class="org-keyword">when</span> (fboundp 'package-install-selected-packages) <span class="org-comment-delimiter">; </span><span class="org-comment">Emacs-v25</span>
+      (package-install-selected-packages))
 </pre>
 </div>
 
@@ -3856,6 +3877,7 @@ it to the <b>file word list</b> (<code>ispell-add-per-file-word-list</code>).
   (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--executable-ispell-program-name-p</span> ()
     <span class="org-doc">"Ensure that `</span><span class="org-constant"><span class="org-doc">ispell-program-name</span></span><span class="org-doc">' is an executable program name."</span>
     (<span class="org-keyword">and</span> (boundp 'ispell-program-name)
+         ispell-program-name            <span class="org-comment-delimiter">; </span><span class="org-comment">It can be nil!</span>
          (file-executable-p ispell-program-name)
          ispell-program-name))
 
@@ -4298,9 +4320,9 @@ You can add <code>(interactive)</code> to make it a command, so that you can use
     <span class="org-doc">"Open the file named FILENAME and report time spent."</span>
     (<span class="org-keyword">let</span> ((filename (ad-get-arg 0))
           (find-file-time-start (float-time)))
-      (message <span class="org-string">"(Info) Finding file %s..."</span> filename)
+      (message <span class="org-string">"INFO- Finding file %s..."</span> filename)
       ad-do-it
-      (message <span class="org-string">"(Info) Found file %s in %.2f s"</span> filename
+      (message <span class="org-string">"INFO- Found file %s in %.2f s"</span> filename
                (- (float-time) find-file-time-start))))
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Visit a file.</span>
@@ -4328,9 +4350,9 @@ a remote location.
     <span class="org-doc">"Save the file named FILENAME and report time spent."</span>
     (<span class="org-keyword">let</span> ((filename (buffer-file-name))
           (save-buffer-time-start (float-time)))
-      (message <span class="org-string">"(Info) Saving file %s..."</span> filename)
+      (message <span class="org-string">"INFO- Saving file %s..."</span> filename)
       ad-do-it
-      (message <span class="org-string">"(Info) Saved file %s in %.2f s"</span> filename
+      (message <span class="org-string">"INFO- Saved file %s in %.2f s"</span> filename
                (- (float-time) save-buffer-time-start))))
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Make your changes permanent.</span>
@@ -9720,7 +9742,7 @@ When clocking in, ask for a time estimate if the property is not yet defined.
 </div>
 
 <p>
-XXX We could forbid an empty answer to the effort estimate question!
+XXX We could forbid an empty answer to the effort estimate question! XXX
 </p>
 
 <p>
@@ -10261,7 +10283,7 @@ header under which the entry will be placed.
     (leuven--section <span class="org-string">"10.1 (org)Agenda files"</span>)
 
     (<span class="org-keyword">when</span> (boundp 'org-agenda-files)
-      (message <span class="org-string">"(Info) Found %s entries in `</span><span class="org-constant"><span class="org-string">org-agenda-files</span></span><span class="org-string">'"</span>
+      (message <span class="org-string">"INFO- Found %s entries in `</span><span class="org-constant"><span class="org-string">org-agenda-files</span></span><span class="org-string">'"</span>
                (length org-agenda-files))
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(sit-for 0.5)</span>
       )
@@ -11761,8 +11783,8 @@ Not very coherent!
                     (t
                      <span class="org-string">"%f"</span>))))
 
-        (message <span class="org-string">"(Info) LaTeX engine: %s"</span> org-latex-pdf-engine-full-path)
-        (message <span class="org-string">"(Info) LaTeX command: %s"</span> org-latex-pdf-command)
+        (message <span class="org-string">"INFO- LaTeX engine: %s"</span> org-latex-pdf-engine-full-path)
+        (message <span class="org-string">"INFO- LaTeX command: %s"</span> org-latex-pdf-command)
 
         (<span class="org-keyword">setq</span> org-latex-pdf-process
               (<span class="org-keyword">cond</span> ((equal org-latex-pdf-command <span class="org-string">"latexmk"</span>)
@@ -13265,7 +13287,7 @@ it to the hook outside of Org (not anymore in an <code>with-eval-after-load</cod
   (<span class="org-keyword">defun</span> <span class="org-function-name">leuven--org-update-buffer-before-save</span> ()
     <span class="org-doc">"Update all dynamic blocks and all tables in the buffer before save."</span>
     (<span class="org-keyword">when</span> (derived-mode-p 'org-mode)
-      (message <span class="org-string">"(Info) Update Org buffer %s"</span>
+      (message <span class="org-string">"INFO- Update Org buffer %s"</span>
                (file-name-nondirectory (buffer-file-name)))
       <span class="org-comment-delimiter">;; </span><span class="org-comment">(sit-for 1.5)</span>
       (<span class="org-keyword">let</span> ((cache-long-scans nil)      <span class="org-comment-delimiter">; </span><span class="org-comment">Make `</span><span class="org-constant"><span class="org-comment">forward-line</span></span><span class="org-comment">' much faster and</span>
@@ -18539,10 +18561,10 @@ nil</div>
 
 <pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Turn appointment checking on (enable reminders).</span>
     (<span class="org-keyword">when</span> leuven-load-verbose
-      (message <span class="org-string">"(Info) Enable appointment reminders..."</span>))
+      (message <span class="org-string">"INFO- Enable appointment reminders..."</span>))
     (appt-activate 1)
     (<span class="org-keyword">when</span> leuven-load-verbose
-      (message <span class="org-string">"(Info) Enable appointment reminders... Done"</span>))
+      (message <span class="org-string">"INFO- Enable appointment reminders... Done"</span>))
 </pre>
 </div>
 

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20151019.2328
+;; Version: 20151103.1056
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20151019.2328"
+(defconst leuven--emacs-version "20151103.1056"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -202,7 +202,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         (unless (file-exists-p (concat this-directory "/.nosearch"))
           (add-to-list 'load-path this-directory)
           (when leuven-load-verbose
-            (message "(Info) Added `%s' to `load-path'" this-directory))))))
+            (message "INFO- Added `%s' to `load-path'" this-directory))))))
 
   ;; Remember this directory.
   (defconst leuven--directory
@@ -327,7 +327,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (if file
         (if (file-executable-p file)
             file
-          (message "(warning) Can't find executable `%s'" file)
+          (message "WARN- Can't find executable `%s'" file)
           ;; Sleep 1.5 s so that you can see the warning.
           (sit-for 1.5))
       (error "Missing argument to \"leuven--file-exists-and-executable-p\"")))
@@ -1598,6 +1598,7 @@ These packages are neither built-in nor already installed nor ignored."
   (defun leuven--executable-ispell-program-name-p ()
     "Ensure that `ispell-program-name' is an executable program name."
     (and (boundp 'ispell-program-name)
+         ispell-program-name            ; It can be nil!
          (file-executable-p ispell-program-name)
          ispell-program-name))
 
@@ -1789,9 +1790,9 @@ These packages are neither built-in nor already installed nor ignored."
     "Open the file named FILENAME and report time spent."
     (let ((filename (ad-get-arg 0))
           (find-file-time-start (float-time)))
-      (message "(Info) Finding file %s..." filename)
+      (message "INFO- Finding file %s..." filename)
       ad-do-it
-      (message "(Info) Found file %s in %.2f s" filename
+      (message "INFO- Found file %s in %.2f s" filename
                (- (float-time) find-file-time-start))))
 
   ;; Visit a file.
@@ -1805,9 +1806,9 @@ These packages are neither built-in nor already installed nor ignored."
     "Save the file named FILENAME and report time spent."
     (let ((filename (buffer-file-name))
           (save-buffer-time-start (float-time)))
-      (message "(Info) Saving file %s..." filename)
+      (message "INFO- Saving file %s..." filename)
       ad-do-it
-      (message "(Info) Saved file %s in %.2f s" filename
+      (message "INFO- Saved file %s in %.2f s" filename
                (- (float-time) save-buffer-time-start))))
 
   ;; Make your changes permanent.
@@ -4652,7 +4653,7 @@ From %c"
     (leuven--section "10.1 (org)Agenda files")
 
     (when (boundp 'org-agenda-files)
-      (message "(Info) Found %s entries in `org-agenda-files'"
+      (message "INFO- Found %s entries in `org-agenda-files'"
                (length org-agenda-files))
       ;; (sit-for 0.5)
       )
@@ -5497,8 +5498,8 @@ this with to-do items than with projects or headings."
                     (t
                      "%f"))))
 
-        (message "(Info) LaTeX engine: %s" org-latex-pdf-engine-full-path)
-        (message "(Info) LaTeX command: %s" org-latex-pdf-command)
+        (message "INFO- LaTeX engine: %s" org-latex-pdf-engine-full-path)
+        (message "INFO- LaTeX command: %s" org-latex-pdf-command)
 
         (setq org-latex-pdf-process
               (cond ((equal org-latex-pdf-command "latexmk")
@@ -6210,7 +6211,7 @@ this with to-do items than with projects or headings."
   (defun leuven--org-update-buffer-before-save ()
     "Update all dynamic blocks and all tables in the buffer before save."
     (when (derived-mode-p 'org-mode)
-      (message "(Info) Update Org buffer %s"
+      (message "INFO- Update Org buffer %s"
                (file-name-nondirectory (buffer-file-name)))
       ;; (sit-for 1.5)
       (let ((cache-long-scans nil)      ; Make `forward-line' much faster and
@@ -8196,10 +8197,10 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Turn appointment checking on (enable reminders).
     (when leuven-load-verbose
-      (message "(Info) Enable appointment reminders..."))
+      (message "INFO- Enable appointment reminders..."))
     (appt-activate 1)
     (when leuven-load-verbose
-      (message "(Info) Enable appointment reminders... Done"))
+      (message "INFO- Enable appointment reminders... Done"))
 
     ;; Enable appointment notification, several minutes beforehand.
     (add-hook 'diary-hook #'appt-make-list)

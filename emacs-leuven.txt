@@ -405,7 +405,7 @@ need to load a single file that define autoloaded functions.
         (unless (file-exists-p (concat this-directory "/.nosearch"))
           (add-to-list 'load-path this-directory)
           (when leuven-load-verbose
-            (message "(Info) Added `%s' to `load-path'" this-directory))))))
+            (message "INFO- Added `%s' to `load-path'" this-directory))))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -565,7 +565,7 @@ Use ~(display-graphic-p)~ (instead of ~window-system~) in conditions.
     (if file
         (if (file-executable-p file)
             file
-          (message "(warning) Can't find executable `%s'" file)
+          (message "WARN- Can't find executable `%s'" file)
           ;; Sleep 1.5 s so that you can see the warning.
           (sit-for 1.5))
       (error "Missing argument to \"leuven--file-exists-and-executable-p\"")))
@@ -732,6 +732,23 @@ These packages are neither built-in nor already installed nor ignored."
             (message (concat "Customize Emacs Leuven to ignore "
                              "the `%s' package next times...") pkg)
             (sit-for 1.5))))))
+#+end_src
+
+The following code will be used when Emacs 25 will be made mandatory:
+
+#+begin_src emacs-lisp :tangle no
+    (setq package-selected-packages
+          '(auctex ess
+            company
+            js2-mode
+            magit
+            pdf-tools
+            paredit
+            visual-regexp))
+
+    (package-initialize)
+    (when (fboundp 'package-install-selected-packages) ; Emacs-v25
+      (package-install-selected-packages))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2778,6 +2795,7 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
   (defun leuven--executable-ispell-program-name-p ()
     "Ensure that `ispell-program-name' is an executable program name."
     (and (boundp 'ispell-program-name)
+         ispell-program-name            ; It can be nil!
          (file-executable-p ispell-program-name)
          ispell-program-name))
 
@@ -3120,9 +3138,9 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
     "Open the file named FILENAME and report time spent."
     (let ((filename (ad-get-arg 0))
           (find-file-time-start (float-time)))
-      (message "(Info) Finding file %s..." filename)
+      (message "INFO- Finding file %s..." filename)
       ad-do-it
-      (message "(Info) Found file %s in %.2f s" filename
+      (message "INFO- Found file %s in %.2f s" filename
                (- (float-time) find-file-time-start))))
 
   ;; Visit a file.
@@ -3143,9 +3161,9 @@ a remote location.
     "Save the file named FILENAME and report time spent."
     (let ((filename (buffer-file-name))
           (save-buffer-time-start (float-time)))
-      (message "(Info) Saving file %s..." filename)
+      (message "INFO- Saving file %s..." filename)
       ad-do-it
-      (message "(Info) Saved file %s in %.2f s" filename
+      (message "INFO- Saved file %s in %.2f s" filename
                (- (float-time) save-buffer-time-start))))
 
   ;; Make your changes permanent.
@@ -7345,7 +7363,7 @@ When clocking in, ask for a time estimate if the property is not yet defined.
   (add-hook 'org-clock-in-prepare-hook #'leuven--org-ask-effort)
 #+end_src
 
-XXX We could forbid an empty answer to the effort estimate question!
+XXX We could forbid an empty answer to the effort estimate question! XXX
 
 XXX We could ask for a ranged estimate (best case - worst case).
 
@@ -7790,7 +7808,7 @@ header under which the entry will be placed.
     (leuven--section "10.1 (org)Agenda files")
 
     (when (boundp 'org-agenda-files)
-      (message "(Info) Found %s entries in `org-agenda-files'"
+      (message "INFO- Found %s entries in `org-agenda-files'"
                (length org-agenda-files))
       ;; (sit-for 0.5)
       )
@@ -8996,8 +9014,8 @@ Not very coherent!
                     (t
                      "%f"))))
 
-        (message "(Info) LaTeX engine: %s" org-latex-pdf-engine-full-path)
-        (message "(Info) LaTeX command: %s" org-latex-pdf-command)
+        (message "INFO- LaTeX engine: %s" org-latex-pdf-engine-full-path)
+        (message "INFO- LaTeX command: %s" org-latex-pdf-command)
 
         (setq org-latex-pdf-process
               (cond ((equal org-latex-pdf-command "latexmk")
@@ -10186,7 +10204,7 @@ it to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
   (defun leuven--org-update-buffer-before-save ()
     "Update all dynamic blocks and all tables in the buffer before save."
     (when (derived-mode-p 'org-mode)
-      (message "(Info) Update Org buffer %s"
+      (message "INFO- Update Org buffer %s"
                (file-name-nondirectory (buffer-file-name)))
       ;; (sit-for 1.5)
       (let ((cache-long-scans nil)      ; Make `forward-line' much faster and
@@ -14210,10 +14228,10 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
 #+begin_src emacs-lisp
     ;; Turn appointment checking on (enable reminders).
     (when leuven-load-verbose
-      (message "(Info) Enable appointment reminders..."))
+      (message "INFO- Enable appointment reminders..."))
     (appt-activate 1)
     (when leuven-load-verbose
-      (message "(Info) Enable appointment reminders... Done"))
+      (message "INFO- Enable appointment reminders... Done"))
 #+end_src
 
 #+begin_src emacs-lisp
