@@ -2005,7 +2005,7 @@ It comes with Gnus.  You don't even need to configure anything for searching
 #+begin_src emacs-lisp
   ;; Warn that some packages were missing.
   (dolist (pkg leuven--missing-packages)
-    (message "(warning) Package `%s' not found" pkg))
+    (message "WARN- Package `%s' not found" pkg))
 
   (message "\n")
 #+end_src

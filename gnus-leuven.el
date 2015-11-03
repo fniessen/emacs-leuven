@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20151014.1108
+;; Version: 20151103.1050
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -984,7 +984,7 @@
 
   ;; Warn that some packages were missing.
   (dolist (pkg leuven--missing-packages)
-    (message "(warning) Package `%s' not found" pkg))
+    (message "WARN- Package `%s' not found" pkg))
 
   (message "\n")
 
