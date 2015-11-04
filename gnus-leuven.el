@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20151103.1050
+;; Version: 20151104.1656
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -36,8 +36,8 @@
 
       ;; Configure incoming mail.
       (setq gnus-select-method
-            '(nnimap "mail"
-                     (nnimap-address "mail")
+            '(nnimap "work"
+                     (nnimap-address "frozen.nocdirect.com")
                      (nnimap-server-port 993) ; imaps
                      (nnimap-stream ssl)
 
@@ -769,7 +769,7 @@
                 "Accept-Language\\|acceptlanguage\\|Auto-Submitted\\|"
                 "BCc\\|"
                 "Cancel-Lock\\|Content-Class\\|Content-language\\|"
-                "DKIM-Signature\\|Delivered-To\\|"
+                "DKIM-Signature\\|Delivered-To\\|Delivery-date\\|"
                 "Disposition-Notification-To\\|DomainKey-Signature\\|"
                 "Envelope-to\\|Errors-To\\|"
                 "Face\\|"
@@ -781,7 +781,8 @@
                 "Path\\|Precedence\\|Priority\\|"
                 "Received-SPF\\|Received\\|References\\|Reply-To\\|"
                 "Return-Path\\|Return-Receipt-To\\|"
-                "Sender\\|Sensitivity\\|"
+                "Sender\\|Sensitivity\\|spamdiagnosticoutput\\|"
+                "spamdiagnosticmetadata\\|"
                 "Thread-Index\\|Thread-Topic\\|"
                 "User-Agent\\|"
                 "X.*"

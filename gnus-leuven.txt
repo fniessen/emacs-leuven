@@ -189,8 +189,8 @@ that it does not interfere with your own configuration...
 
       ;; Configure incoming mail.
       (setq gnus-select-method
-            '(nnimap "mail"
-                     (nnimap-address "mail")
+            '(nnimap "work"
+                     (nnimap-address "frozen.nocdirect.com")
                      (nnimap-server-port 993) ; imaps
                      (nnimap-stream ssl)
 
@@ -207,6 +207,12 @@ that it does not interfere with your own configuration...
 The account label allows for multiple accounts on the same server (see =.authinfo=
 for logins).
 #+end_note
+
+#+begin_warning
+When trying to access mail on a shared server, it's possible you have to use
+a username such as ~user@domain.com~. So, don't forget the ~@domain.com~ part, to
+avoid "Authentication failed" messages!
+#+end_warning
 
 #+begin_note
 Mailbox names from the server specified in ~gnus-select-method~ are NOT prefixed
@@ -1428,7 +1434,7 @@ below to set the variables.
                 "Accept-Language\\|acceptlanguage\\|Auto-Submitted\\|"
                 "BCc\\|"
                 "Cancel-Lock\\|Content-Class\\|Content-language\\|"
-                "DKIM-Signature\\|Delivered-To\\|"
+                "DKIM-Signature\\|Delivered-To\\|Delivery-date\\|"
                 "Disposition-Notification-To\\|DomainKey-Signature\\|"
                 "Envelope-to\\|Errors-To\\|"
                 "Face\\|"
@@ -1440,7 +1446,8 @@ below to set the variables.
                 "Path\\|Precedence\\|Priority\\|"
                 "Received-SPF\\|Received\\|References\\|Reply-To\\|"
                 "Return-Path\\|Return-Receipt-To\\|"
-                "Sender\\|Sensitivity\\|"
+                "Sender\\|Sensitivity\\|spamdiagnosticoutput\\|"
+                "spamdiagnosticmetadata\\|"
                 "Thread-Index\\|Thread-Topic\\|"
                 "User-Agent\\|"
                 "X.*"
