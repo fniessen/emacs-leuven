@@ -262,7 +262,7 @@ This covers the basics of Gnus:
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151104.1559</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151105.1511</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, gnus, dotfile, config</span>
 </pre>
 </div>
@@ -491,6 +491,10 @@ for logins).
 
 </div>
 
+<p>
+See <a href="http://www.cataclysmicmutation.com/2010/11/multiple-gmail-accounts-in-gnus/">Multiple GMail Accounts in Gnus</a>.
+</p>
+
 <div class="warning">
 <p>
 When trying to access mail on a shared server, it&rsquo;s possible you have to use
@@ -549,9 +553,12 @@ buffer.
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** 1.4 (info "(gnus)New Groups")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Gnus will not check for new newsgroups at startup.</span>
-  (<span class="org-keyword">setq</span> gnus-check-new-newsgroups nil)  <span class="org-comment-delimiter">; </span><span class="org-comment">Save you some time at startup and when</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">you do the `g' command.</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Gnus will not check for new newsgroups at startup.</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq gnus-check-new-newsgroups nil)  ; Save you some time at startup and when</span>
+  <span class="org-comment-delimiter">;;                                       </span><span class="org-comment">; you do the `g' command.</span>
+
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Gnus will ask you to auto-subscribe on *all* new IMAP groups.</span>
+  (<span class="org-keyword">setq</span> gnus-subscribe-newsgroup-method #'gnus-subscribe-interactively)
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't save the list of killed groups.</span>
   (<span class="org-keyword">setq</span> gnus-save-killed-list nil)      <span class="org-comment-delimiter">; </span><span class="org-comment">WARNING -- As Gnus has no record of</span>

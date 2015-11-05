@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20151104.1656
+;; Version: 20151105.1528
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -58,9 +58,12 @@
 
 ;;** 1.4 (info "(gnus)New Groups")
 
-  ;; Gnus will not check for new newsgroups at startup.
-  (setq gnus-check-new-newsgroups nil)  ; Save you some time at startup and when
-                                        ; you do the `g' command.
+  ;; ;; Gnus will not check for new newsgroups at startup.
+  ;; (setq gnus-check-new-newsgroups nil)  ; Save you some time at startup and when
+  ;;                                       ; you do the `g' command.
+
+  ;; Gnus will ask you to auto-subscribe on *all* new IMAP groups.
+  (setq gnus-subscribe-newsgroup-method #'gnus-subscribe-interactively)
 
   ;; Don't save the list of killed groups.
   (setq gnus-save-killed-list nil)      ; WARNING -- As Gnus has no record of

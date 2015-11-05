@@ -208,6 +208,8 @@ The account label allows for multiple accounts on the same server (see =.authinf
 for logins).
 #+end_note
 
+See [[http://www.cataclysmicmutation.com/2010/11/multiple-gmail-accounts-in-gnus/][Multiple GMail Accounts in Gnus]].
+
 #+begin_warning
 When trying to access mail on a shared server, it's possible you have to use
 a username such as ~user@domain.com~. So, don't forget the ~@domain.com~ part, to
@@ -245,9 +247,12 @@ buffer.
 #+begin_src emacs-lisp
 ;;** 1.4 (info "(gnus)New Groups")
 
-  ;; Gnus will not check for new newsgroups at startup.
-  (setq gnus-check-new-newsgroups nil)  ; Save you some time at startup and when
-                                        ; you do the `g' command.
+  ;; ;; Gnus will not check for new newsgroups at startup.
+  ;; (setq gnus-check-new-newsgroups nil)  ; Save you some time at startup and when
+  ;;                                       ; you do the `g' command.
+
+  ;; Gnus will ask you to auto-subscribe on *all* new IMAP groups.
+  (setq gnus-subscribe-newsgroup-method #'gnus-subscribe-interactively)
 
   ;; Don't save the list of killed groups.
   (setq gnus-save-killed-list nil)      ; WARNING -- As Gnus has no record of
