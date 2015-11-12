@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20151105.1528
+;; Version: 20151111.2054
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -591,7 +591,7 @@
 ;;** 5.5 (info "(gnus)Archived Messages")
 
   ;; Group in which to save the messages you've written.
-  (setq gnus-message-archive-group "INBOX.Sent")
+  (setq gnus-message-archive-group "nnimap:INBOX.Sent")
 
   ;; The Gcc Header specifies a local mail box that receives a copy of the sent
   ;; article.
@@ -600,7 +600,7 @@
   (defun leuven-choose-gcc()
     (interactive)
     (let* (;; if this "group" is chosen the default "Gcc" remains
-           (default "INBOX")            ; INBOX.Sent?
+           (default "INBOX.Sent")
            ;; if this "group" is chosen the default "Gcc" is deleted
            (delete "INBOX.Trash")
            ;; else the choosen group is inserted as "Gcc:"

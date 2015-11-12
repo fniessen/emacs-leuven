@@ -1194,7 +1194,7 @@ a message buffer is *created*.
 ;;** 5.5 (info "(gnus)Archived Messages")
 
   ;; Group in which to save the messages you've written.
-  (setq gnus-message-archive-group "INBOX.Sent")
+  (setq gnus-message-archive-group "nnimap:INBOX.Sent")
 #+end_src
 
 The ~Gcc:~ header at the time of *sending* the message specifies where it is
@@ -1211,7 +1211,7 @@ header in the ~message-send-hook~.
   (defun leuven-choose-gcc()
     (interactive)
     (let* (;; if this "group" is chosen the default "Gcc" remains
-           (default "INBOX")            ; INBOX.Sent?
+           (default "INBOX.Sent")
            ;; if this "group" is chosen the default "Gcc" is deleted
            (delete "INBOX.Trash")
            ;; else the choosen group is inserted as "Gcc:"

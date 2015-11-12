@@ -262,7 +262,7 @@ This covers the basics of Gnus:
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151105.1511</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151111.2054</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, gnus, dotfile, config</span>
 </pre>
 </div>
@@ -1757,7 +1757,7 @@ a message buffer is <b>created</b>.
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** 5.5 (info "(gnus)Archived Messages")</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Group in which to save the messages you've written.</span>
-  (<span class="org-keyword">setq</span> gnus-message-archive-group <span class="org-string">"INBOX.Sent"</span>)
+  (<span class="org-keyword">setq</span> gnus-message-archive-group <span class="org-string">"nnimap:INBOX.Sent"</span>)
 </pre>
 </div>
 
@@ -1780,7 +1780,7 @@ header in the <code>message-send-hook</code>.
   (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-choose-gcc</span>()
     (<span class="org-keyword">interactive</span>)
     (<span class="org-keyword">let*</span> (<span class="org-comment-delimiter">;; </span><span class="org-comment">if this "group" is chosen the default "Gcc" remains</span>
-           (default <span class="org-string">"INBOX"</span>)            <span class="org-comment-delimiter">; </span><span class="org-comment">INBOX.Sent?</span>
+           (default <span class="org-string">"INBOX.Sent"</span>)
            <span class="org-comment-delimiter">;; </span><span class="org-comment">if this "group" is chosen the default "Gcc" is deleted</span>
            (delete <span class="org-string">"INBOX.Trash"</span>)
            <span class="org-comment-delimiter">;; </span><span class="org-comment">else the choosen group is inserted as "Gcc:"</span>
