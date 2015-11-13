@@ -481,7 +481,7 @@
   (add-to-list 'org-agenda-custom-commands
                '("rw" "Weekly review"
                  ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
-                        ((org-agenda-overriding-header "NEW TASKS")))
+                        ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")))
 
                   (agenda ""
                           ((org-agenda-clockreport-mode t)

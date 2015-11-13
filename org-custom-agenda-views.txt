@@ -27,6 +27,10 @@ alerts for approaching due dates (in the *warning period*); it /must be updated
 every time we want to snooze the reminder/ (once a day, week, month). We can do
 such an update via ~C-u C-u C-c C-d~.
 
+** Only show the REFILE section if items are there
+
+https://lists.gnu.org/archive/html/emacs-orgmode/2015-06/msg00266.html
+
 ** Count of items
 
 "3 of 6"
@@ -56,6 +60,11 @@ Dans ce cas, il faudrait que des tâches de niveau 3 ou plus qui aient un
 Cela permettrait de garder des status TODO sur les sous-tâches (ce qui
 bloquerait une fermeture trop aisée de la tâche parent, comme avec des [ ]),
 tout en ne polluant pas trop les agendas (et les comptes de tâches).
+
+** TODO Add limits to number of items in TODO views
+
+See Scrum + Kanban = Scrumban at
+https://dzone.com/articles/scrum-kanban-scrumban.
 
 * Key bindings
 
@@ -477,8 +486,8 @@ the *most urgent and important tasks* for you to be working on right now.
 It contains /active/ tasks (that is, not completed) that:
 
 - are *overdue*, or
-- are *due soon* (in the next 7 days), or
-- have a *high priority* (~#A~) [= next action?], or
+- are *due soon* (in the next 7 days) [= urgent], or
+- have a *high priority* (~#A~) [= important], or
 - are *FLAGGED* [= next action?].
 
 There is an exception to the above rule: *tasks with a future ~SCHEDULED~ date
@@ -532,8 +541,8 @@ to do each day.
 
 ** TODO Hot N Fast
 
-The *Hot N Fast* list is everything on the Hotlist that takes less than 10
-minutes. Tasks without a time estimate will NOT show up in this list.
+The *Hot N Fast* list is everything on the Hotlist that takes less than
+10 minutes. Tasks without a time estimate will NOT show up in this list.
 
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
@@ -603,7 +612,7 @@ for custom agenda views...
                '("ra" . "All Tasks...") t)
 #+end_src
 
-*** Sorted by due date
+*** Sorted by due date (= urgency)
 
 All *tasks*, grouped by *due date*:
 - Overdue
@@ -827,7 +836,7 @@ Well in every other one!!!  Bad.
                  "~/org___agenda-all-todo-entries.html") t)
 #+end_src
 
-*** Sorted by priority
+*** Sorted by priority (= importance)
 
 All *tasks*, grouped by *priority*:
 - Priority A
@@ -864,6 +873,8 @@ http://www.techsupportalert.com/best-free-project-time-keeping-utility.htm
 *************** TODO Add a custom view which is some "bill" to send to your boss/client (table view)
 
 ** Timesheet
+
+See [[https://www.youtube.com/watch?v=ryuS0fdA2z0&index=3&list=PLQ176FUIyIUbGE728KezWz1J15fHW0S_m][Weekly Time Report]] at 03:44 for a weekly time report.
 
 #+begin_note
 ~org-timeline~ has weaknesses and although not officially deprecated, should be
@@ -1132,7 +1143,7 @@ Read [[http://gridwriter.com/2012/11/14/omnifocus-series-flags-due-dates-daily-r
   (add-to-list 'org-agenda-custom-commands
                '("rw" "Weekly review"
                  ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
-                        ((org-agenda-overriding-header "NEW TASKS")))
+                        ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")))
 
                   (agenda ""
                           ((org-agenda-clockreport-mode t)
