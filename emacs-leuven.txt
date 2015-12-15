@@ -6804,6 +6804,19 @@ There is just 1 exception (made on purpose) to the 4-letter scheme:
 One could add a ~CLSD~ or ~VRFD~ state for bug fixes, for example, which need to be
 verified before really closing the task.
 
+Extra status for invoices:
+
+- ~DRAFT~ ::
+     Invoice created, but you have *not sent* it to your client.
+
+- ~UNPAID~ (or ~SENT~?) ::
+     Your client has been notified.
+
+- ~PAID~ ::
+     Your client has *paid* this invoice -- you have received their payment.
+
+(See FreshBooks, LessAccounting and BlinkSale)
+
 #+begin_src emacs-lisp
 ;;** 5.2 Use of (info "(org)TODO extensions")
 
@@ -8776,6 +8789,15 @@ SVG image on HTML export and insert TikZ "as is" on PDF export):
 
 See [[http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-LaTeX.html#sec-4-3][Backend dependent execution -- conditionally export tikz to SVG on HTML
 export]] for more information.
+
+
+*** Export settings
+
+#+begin_src emacs-lisp
+;;** 12.3 Export settings
+
+  (setq org-export-exclude-tags '("noexport" "crypt"))
+#+end_src
 
 *** HTML export
 
@@ -10752,6 +10774,8 @@ tags around a region you've specified.
 #+begin_src emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode))
                                         ; Alias for `nxml-mode'.
+
+  (add-to-list 'auto-mode-alist '("\\.axvw\\'" . xml-mode)) ; ARCHIBUS view
 #+end_src
 
 Alternatively, you can use [[http://ourcomments.org/Emacs/nXhtml/doc/nxhtml.html][nXhtml]] mode, derived from nXML mode.  It adds a lot
@@ -15441,6 +15465,23 @@ Or have it dedicated in a window.  Check out
 https://github.com/emacsmirror/dedicated.
 
 **** Interaction with Org mode
+
+For anyone who wants to try it, after cloning into =~/elisp/polymode=, I only
+needed to add this in my init (ESS was already in my init).
+
+#+begin_src emacs-lisp :tangle no
+    (setq load-path
+           (append '("~/elisp/polymode"  "~/elisp/polymode/modes")
+                   load-path))
+    (require 'poly-org)
+    (add-to-list 'auto-mode-alist '("\\.org" . poly-org-mode))
+#+end_src
+
+When point is inside a src-block the local mode prevails. So, ~C-c C-n~ inside an
+R src block sends the line point is on to the R process. ~C-c C-c~ sends the
+region (or function or paragraph) to the process when point is in the body. To
+execute ~org-ctrl-c-ctrl-c~ on the src block with the ~C-c C-c~ keying, it is
+necessary to move point to before or after the body.
 
 #+begin_src emacs-lisp
 )

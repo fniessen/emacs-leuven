@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20151103.1056
+;; Version: 20151215.1033
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20151103.1056"
+(defconst leuven--emacs-version "20151215.1033"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5312,6 +5312,10 @@ this with to-do items than with projects or headings."
   (defmacro by-backend (&rest body)
     `(case org-export-current-backend ,@body))
 
+;;** 12.3 Export settings
+
+  (setq org-export-exclude-tags '("noexport" "crypt"))
+
 ;;** 12.5 (info "(org)HTML export")
 
   ;; Org HTML export engine.
@@ -6534,6 +6538,8 @@ this with to-do items than with projects or headings."
 
   (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode))
                                         ; Alias for `nxml-mode'.
+
+  (add-to-list 'auto-mode-alist '("\\.axvw\\'" . xml-mode)) ; ARCHIBUS view
 
   (with-eval-after-load "web-mode-autoloads"
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
