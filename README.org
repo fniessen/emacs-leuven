@@ -297,10 +297,6 @@ I still have to sort them out, by mode (when applicable).
 | <             | scroll-calendar-right                     |
 | <C-backspace> | backward-kill-word                        |
 | <C-down>      | comint-next-matching-input-from-input     |
-| <C-S-left>    | hs-hide-block                             |
-| <C-S-right>   | hs-show-block                             |
-| <C-S-up>      | hs-hide-all                               |
-| <C-S-down>    | hs-show-all                               |
 | <C-S-tab>     | w3m-previous-buffer                       |
 | <C-tab>       | w3m-next-buffer                           |
 | <C-up>        | comint-previous-matching-input-from-input |
