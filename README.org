@@ -213,6 +213,14 @@ Global key bindings.
 | H-up     | hs-hide-all   |
 | H-down   | hs-show-all   |
 
+** Search / Find / Replace
+
+| Shortcut | What it runs          |
+|----------+-----------------------|
+| C-c o    | helm-occur            |
+| C-o      | leuven--isearch-occur |
+| C-o      | occur                 |
+
 ** Bookmarks
 
 | Shortcut | What it runs                               |
@@ -224,7 +232,7 @@ Global key bindings.
 | C-x r b  | helm-bookmark-ext                          |
 | C-x r l  | helm-bookmarks                             |
 
-** Shortcuts for Org mode
+** Org mode
 
 | Shortcut    | What it runs                                 |
 |-------------+----------------------------------------------|
@@ -261,7 +269,7 @@ Global key bindings.
 | N           | leuven-org-agenda-new                        |
 | Z           | leuven-org-agenda-mark-done-and-add-followup |
 
-** Shortcuts for Dired
+** Dired
 
 | Shortcut  | What it runs                    |
 |-----------+---------------------------------|
@@ -323,7 +331,6 @@ I still have to sort them out, by mode (when applicable).
 | C-c g s       | google                                    |
 | C-c g w       | leuven-google-search-word-at-point        |
 | C-c n         |                                           |
-| C-c o         | helm-occur                                |
 | C-c q         | boxquote-region                           |
 | C-c s         | yas-insert-snippet                        |
 | C-c t         | toggle-truncate-lines                     |
@@ -332,8 +339,6 @@ I still have to sort them out, by mode (when applicable).
 | C-h A         | apropos-variable                          |
 | C-h E         | elisp-index-search                        |
 | C-M-$         | leuven-flyspell-toggle-dictionary         |
-| C-o           | leuven--isearch-occur                     |
-| C-o           | occur                                     |
 | C-S-n         | hlt-next-highlight                        |
 | C-S-p         | hlt-previous-highlight                    |
 | C-t           | w3m-new-tab                               |
