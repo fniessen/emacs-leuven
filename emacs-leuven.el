@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20151215.1033
+;; Version: 20151218.1456
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20151215.1033"
+(defconst leuven--emacs-version "20151218.1456"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -386,7 +386,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         circe color-identifiers-mode company company-quickhelp csv-mode
         cygwin-mount dictionary diff-hl diminish dired+ emacs-eclim ess
         expand-region fancy-narrow fill-column-indicator flycheck
-        flycheck-ledger fuzzy git-commit-mode git-messenger git-timemachine
+        flycheck-ledger fuzzy git-commit git-messenger git-timemachine
         google-this google-translate goto-chg graphviz-dot-mode guide-key helm
         helm-descbinds helm-ls-git helm-swoop hideshowvis highlight-symbol
         htmlize indent-guide key-chord litable idle-require imenu-anywhere info+
@@ -1502,11 +1502,16 @@ These packages are neither built-in nor already installed nor ignored."
     (defun leuven--anzu-update-mode-line (here total)
       (when anzu--state
         (let ((status (cl-case anzu--state
-                        (search (format " %s/%d%s "
+                        (search (format (if (> total 1)
+                                            " %s of %d%s matches "
+                                          " %s of %d%s match ")
                                         (anzu--format-here-position here total)
                                         total (if anzu--overflow-p "+" "")))
                         (replace-query (format " %d replace " total))
-                        (replace (format " %d/%d " here total)))))
+                        (replace (format (if (> total 1)
+                                             " %d of %d matches "
+                                           " %d of %d match ")
+                                         here total)))))
           (propertize status 'face 'anzu-mode-line))))
     (setq anzu-mode-line-update-function #'leuven--anzu-update-mode-line)
 
@@ -7191,15 +7196,15 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "vc-git"
 
     ;; Major mode for editing git commit messages.
-    (try-require 'git-commit-mode))
+    (try-require 'git-commit))
 
-  (with-eval-after-load "git-commit-mode"
+  (with-eval-after-load "git-commit"
 
     ;; Turn on on-the-fly spell-checking.
-    (add-hook 'git-commit-mode-hook #'flyspell-mode)
+    (add-hook 'git-commit-setup-hook #'flyspell-mode)
 
     ;; Turn off save-place.
-    (add-hook 'git-commit-mode-hook
+    (add-hook 'git-commit-setup-hook
               (lambda ()
                 (toggle-save-place 0))))
 
